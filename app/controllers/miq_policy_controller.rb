@@ -573,13 +573,13 @@ class MiqPolicyController < ApplicationController
       end
 
       tree = @trees["#{name}_tree".to_sym]
-      presenter[:replace_partials]["#{tree.name}_div".to_sym] = r[
+      presenter.replace("#{tree.name}_div", r[
         :partial => "shared/tree",
         :locals  => {
           :tree => tree,
           :name => tree.name
         }
-      ]
+      ])
     end
 
     if params[:action].ends_with?('_delete') &&
@@ -722,7 +722,7 @@ class MiqPolicyController < ApplicationController
     end
 
     # Replace the searchbox
-    presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox', :locals => {:nameonly => true}]
+    presenter.replace(:adv_searchbox_div, r[:partial => 'layouts/x_adv_searchbox', :locals => {:nameonly => true}])
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(@show_adv_search, :adv_searchbox_div)

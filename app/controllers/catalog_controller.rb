@@ -1802,12 +1802,12 @@ class CatalogController < ApplicationController
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ])
     end
 
     if @sb[:buttons_node]

@@ -724,12 +724,12 @@ class ReportController < ApplicationController
     # With dynatree, simply replace the tree partials to reload the trees
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ])
     end
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
@@ -840,20 +840,20 @@ class ReportController < ApplicationController
       end
     elsif nodetype == "menu_default" || nodetype == "menu_reset"
       presenter[:update_partials][:main_div]   = r[:partial => partial]
-      presenter[:replace_partials][:menu_div1] = r[:partial => "menu_form1", :locals => {:folders => @grid_folders}]
+      presenter.replace(:menu_div1, r[:partial => "menu_form1", :locals => {:folders => @grid_folders}])
       presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
       # set changed to true if menu has been set to default
       session[:changed] = @sb[:menu_default] ? true : (@edit[:new] != @edit[:current])
     elsif nodetype == "menu_edit_reports"
-      presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}] if @flash_array
+      presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
       presenter.show(:menu_div1, :treeStatus)
-      presenter[:replace_partials][:menu_div2] = r[:partial => "menu_form2"]
+      presenter.replace(:menu_div2, r[:partial => "menu_form2"])
       presenter.hide(:menu_div1, :menu_div3).show(:menu_div2)
     elsif nodetype == "menu_commit_reports"
-      presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}] if @flash_array
+      presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
       if @refresh_div
         presenter.hide(:flash_msg_div_menu_list)
-        presenter[:replace_partials]["#{@refresh_div}".to_sym] = r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}]
+        presenter.replace("#{@refresh_div}", r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}])
         presenter.hide(:menu_div1)
         if params[:pressed] == "commit"
           presenter.show(:menu_div3).hide(:menu_div2)
@@ -861,7 +861,7 @@ class ReportController < ApplicationController
           presenter.hide(:menu_div3).show(:menu_div2)
         end
       elsif !@flash_array
-        presenter[:replace_partials][:menu_roles_div] = r[:partial => "role_list"]
+        presenter.replace(:menu_roles_div, r[:partial => "role_list"])
         if params[:pressed] == "commit"
           presenter.hide(:flash_msg_div_menu_list).show(:menu_div3).hide(:menu_div1, :menu_div2)
         else
@@ -872,8 +872,8 @@ class ReportController < ApplicationController
     elsif nodetype == 'menu_commit_folders'
       # Hide flash_msg if it's being shown from New folder add event
       if flash_errors?
-        presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg',
-                                                                   :locals  => {:div_num => '_menu_list'}]
+        presenter.replace(:flash_msg_div_menu_list, r[:partial => 'layouts/flash_msg',
+                                                                   :locals  => {:div_num => '_menu_list'}])
       else
         presenter.hide(:flash_msg_div_menu_list)
       end
@@ -881,13 +881,13 @@ class ReportController < ApplicationController
       if @sb[:tree_err]
         presenter.show(:menu_div1).hide(:menu_div2, :menu_div3)
       else
-        presenter[:replace_partials][:menu_roles_div] = r[:partial => "role_list"]
+        presenter.replace(:menu_roles_div, r[:partial => "role_list"])
         presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
       end
       @sb[:tree_err] = false
     elsif nodetype == 'menu_discard_folders' || nodetype == 'menu_discard_reports'
-      presenter[:replace_partials][:flash_msg_div_menu_list] = r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}]
-      presenter[:replace_partials][:menu_div1]               = r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}]
+      presenter.replace(:flash_msg_div_menu_list, r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}])
+      presenter.replace(:menu_div1,               r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}])
       presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
     end
 

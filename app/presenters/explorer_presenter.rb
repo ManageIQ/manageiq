@@ -79,6 +79,11 @@ class ExplorerPresenter
     self
   end
 
+  def replace(div_name, content)
+    @options[:replace_partials][div_name] = content
+    self
+  end
+
   def []=(key, value)
     @options[key] = value
   end
@@ -92,6 +97,8 @@ class ExplorerPresenter
     process
     @out.join("\n")
   end
+
+  private
 
   def process
     # see if any miq expression vars need to be set

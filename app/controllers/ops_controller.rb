@@ -502,7 +502,7 @@ class OpsController < ApplicationController
       diagnostics_replace_right_cell(nodetype, presenter, r)
     when :vmdb_tree # "root","tb", "ti","xx" # Check if vmdb root or table is selected
       # Need to replace all_tabs to show table name as tab label
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     when :analytics_tree
       analytics_replace_right_cell(presenter, r)
     end
@@ -513,7 +513,7 @@ class OpsController < ApplicationController
     # to show correct buttons on screen when tree node is selected
     if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
        %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "log_depot_edit"
       @right_cell_text = "Editing Log Depot settings"
       presenter[:update_partials][:diagnostics_collect_logs] = r[:partial => "ops/log_collection"]
@@ -526,7 +526,7 @@ class OpsController < ApplicationController
 
   def analytics_replace_right_cell(presenter, r)
     if params[:action] == "accordion_select"
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     else
       presenter[:update_partials][:analytics_details] = r[:partial => "analytics_details_tab"]
     end
@@ -610,9 +610,9 @@ class OpsController < ApplicationController
     else
       if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
          params[:tab_id] != "settings_advanced"
-        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
       elsif %w(zone_delete).include?(params[:pressed])
-        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
       else
         presenter[:update_partials][@sb[:active_tab.to_sym]] = r[:partial => "#{@sb[:active_tab]}_tab"]
       end
@@ -636,9 +636,9 @@ class OpsController < ApplicationController
     # Make sure the double_click var is there
     presenter[:extra_js] << "var miq_double_click = false;"
     if %w(accordion_select change_tab tree_select).include?(params[:action])
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "group_seq"
-      presenter[:replace_partials][:flash_msg_div] = r[:partial => "layouts/flash_msg"]
+      presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"])
       presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
     elsif nodetype == "tenant_edit"         # schedule edit
       # when editing/adding schedule in settings tree
@@ -750,12 +750,12 @@ class OpsController < ApplicationController
     end
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ] if tree
+      ]) if tree
     end
   end
 

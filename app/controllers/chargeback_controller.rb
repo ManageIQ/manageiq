@@ -757,12 +757,12 @@ class ChargebackController < ApplicationController
     replace_trees.each do |tree|
       case tree
       when :cb_rates
-        presenter[:replace_partials][:cb_rates_tree_div]   = r[
+        presenter.replace(:cb_rates_tree_div, r[
             :partial => 'shared/tree',
             :locals  => {:tree => chargeback_tree,
                          :name => chargeback_tree.name.to_s
             }
-        ]
+        ])
       end
     end
 

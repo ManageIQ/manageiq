@@ -1569,10 +1569,10 @@ module VmCommon
     } if add_ajax && ['performance', 'timeline'].include?(@sb[:action])
 
     # Replace the searchbox
-    presenter[:replace_partials][:adv_searchbox_div] = r[
+    presenter.replace(:adv_searchbox_div, r[
       :partial => 'layouts/x_adv_searchbox',
       :locals  => {:nameonly => ([:images_tree, :instances_tree, :vandt_tree].include?(x_active_tree))}
-    ]
+    ])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:clear_tree_cookies] = "edit_treeOpenStatex" if @sb[:action] == "policy_sim"

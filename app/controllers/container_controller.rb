@@ -272,12 +272,12 @@ class ContainerController < ApplicationController
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ])
     end
     presenter[:right_cell_text] = @right_cell_text
 
@@ -318,7 +318,7 @@ class ContainerController < ApplicationController
       :record_id  => @record.id
     } if ['performance', 'timeline'].include?(@sb[:action])
 
-    presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
+    presenter.replace(:adv_searchbox_div, r[:partial => 'layouts/x_adv_searchbox'])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 

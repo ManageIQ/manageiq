@@ -149,13 +149,13 @@ class PxeController < ApplicationController
 
     # Build hash of trees to replace and optional new node to be selected
     trees.each do |tree_name, tree|
-      presenter[:replace_partials]["#{tree_name}_tree_div".to_sym] = r[
+      presenter.replace("#{tree_name}_tree_div", r[
         :partial => "shared/tree",
         :locals  => {
           :tree => tree,
           :name => tree.name
         }
-      ]
+      ])
     end
 
     # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed

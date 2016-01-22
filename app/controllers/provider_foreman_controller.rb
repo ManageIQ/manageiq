@@ -736,9 +736,9 @@ class ProviderForemanController < ApplicationController
 
   def replace_search_box(presenter, r)
     # Replace the searchbox
-    presenter[:replace_partials][:adv_searchbox_div] =
+    presenter.replace(:adv_searchbox_div,
         r[:partial => 'layouts/x_adv_searchbox',
-          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
+          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
@@ -770,7 +770,7 @@ class ProviderForemanController < ApplicationController
   def replace_explorer_trees(replace_trees, presenter, r)
     build_foreman_tree(:providers, :foreman_providers_tree) if replace_trees
     replace_trees.each do |t|
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[:partial => "provider_foreman/#{t}_tree"]
+      presenter.replace("#{t}_tree_div", r[:partial => "provider_foreman/#{t}_tree"])
     end
   end
 

@@ -305,12 +305,12 @@ class MiqAeClassController < ApplicationController
 
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => ae_tree,
                      :name => ae_tree.name.to_s
         }
-      ]
+      ])
     end
 
     if @sb[:action] == "miq_ae_field_seq"
@@ -343,10 +343,10 @@ class MiqAeClassController < ApplicationController
       update_partial_div = :main_div
       update_partial = "all_tabs"
     end
-    presenter[:replace_partials][replace_partial_div] = r[
+    presenter.replace(replace_partial_div, r[
         :partial => "layouts/flash_msg",
         :locals  => {:div_num => replace_partial_div_num}
-    ] if replace_partial_div
+    ]) if replace_partial_div
     presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)

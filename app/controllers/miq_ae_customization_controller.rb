@@ -250,13 +250,13 @@ class MiqAeCustomizationController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
     trees.each do |tree_name, tree|
-      presenter[:replace_partials]["#{tree_name}_tree_div".to_sym] = r[
+      presenter.replace("#{tree_name}_tree_div", r[
           :partial => "shared/tree",
           :locals  => {
             :tree => tree,
             :name => tree.name
           }
-      ] if tree
+      ]) if tree
     end
     presenter[:osf_node] = x_node unless @in_a_form
 
