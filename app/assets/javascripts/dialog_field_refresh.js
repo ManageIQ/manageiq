@@ -9,7 +9,7 @@ var dialogFieldRefresh = {
 
   initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url) {
     miqInitSelectPicker();
-    $('.selectpicker').selectpicker('val', selectedValue);
+    $('#' + fieldName).selectpicker('val', selectedValue);
     miqSelectPickerEvent(fieldName, url);
     $('#' + fieldName).on('change', function(){
       dialogFieldRefresh.triggerAutoRefresh(fieldId, "true");
