@@ -215,7 +215,7 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def add_status_post_evaluate(target, result)
-    status = target.miq_alert_statuses.first_or_initialize
+    status = miq_alert_statuses.find_or_initialize_by(:resource => target)
     status.result = result
     status.evaluated_on = Time.now.utc
     status.save
