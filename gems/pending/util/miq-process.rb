@@ -127,7 +127,9 @@ class MiqProcess
   end
 
   def self.command_line(pid)
-    Sys::ProcTable.ps(pid).cmdline
+    # Already exited pids, or permission errors cause ps or ps.cmdline to be nil,
+    # so the best we can do is return an empty string.
+    Sys::ProcTable.ps(pid).try(:cmdline) || ""
   end
 
   def self.alive?(pid)
