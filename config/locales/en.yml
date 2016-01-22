@@ -5,13 +5,6 @@ en:
   product:
     name: ManageIQ
 
-  # Header text
-  cell_header:
-    evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
-    model: "%{model}"
-    model_for_record: '%{model} for "%{name}"'
-    name: '"%{name}"'
-
   activerecord:
     attributes:
       ems_cloud:
