@@ -204,7 +204,7 @@ describe Host do
     end
 
     it "with nil vendor" do
-      expect(FactoryGirl.create(:host, :vmm_vendor_display => nil).vmm_vendor_display).to eq("Unknown")
+      expect(FactoryGirl.create(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown")
     end
   end
 

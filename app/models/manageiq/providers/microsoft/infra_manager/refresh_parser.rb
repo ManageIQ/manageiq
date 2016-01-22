@@ -109,22 +109,22 @@ module ManageIQ::Providers::Microsoft
       host_name  = p[:Name]
 
       new_result = {
-        :name               => host_name,
-        :type               => 'ManageIQ::Providers::Microsoft::InfraManager::Host',
-        :uid_ems            => uid,
-        :ems_ref            => uid,
-        :hostname           => host_name,
-        :ipaddress          => identify_primary_ip(host[:NetworkAdapters], host_name),
-        :vmm_vendor_display => 'Microsoft',
-        :vmm_version        => p[:HyperVVersion],
-        :vmm_product        => p[:VirtualizationPlatform][:ToString],
-        :power_state        => lookup_power_state(p[:HyperVState][:ToString]),
-        :connection_state   => lookup_connected_state(p[:CommunicationState][:ToString]),
+        :name             => host_name,
+        :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Host',
+        :uid_ems          => uid,
+        :ems_ref          => uid,
+        :hostname         => host_name,
+        :ipaddress        => identify_primary_ip(host[:NetworkAdapters], host_name),
+        :vmm_vendor       => 'microsoft',
+        :vmm_version      => p[:HyperVVersion],
+        :vmm_product      => p[:VirtualizationPlatform][:ToString],
+        :power_state      => lookup_power_state(p[:HyperVState][:ToString]),
+        :connection_state => lookup_connected_state(p[:CommunicationState][:ToString]),
 
-        :operating_system   => process_os(p),
-        :hardware           => process_host_hardware(host),
-        :storages           => process_host_storages(p),
-        :switches           => process_virtual_switches(host)
+        :operating_system => process_os(p),
+        :hardware         => process_host_hardware(host),
+        :storages         => process_host_storages(p),
+        :switches         => process_virtual_switches(host)
       }
 
       @data_index.store_path(:hosts_by_host_name, host_name, new_result)

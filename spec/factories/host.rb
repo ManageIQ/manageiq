@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :host do
     sequence(:name)     { |n| "host_#{seq_padded_for_sorting(n)}" }
     sequence(:hostname) { |n| "host_#{seq_padded_for_sorting(n)}" }
-    vmm_vendor_display  "VMware"
+    vmm_vendor          "vmware"
     ipaddress           "127.0.0.1"
     user_assigned_os    "linux_generic"
     power_state         "on"
@@ -47,17 +47,17 @@ FactoryGirl.define do
 
   factory :host_redhat, :parent => :host, :class => "ManageIQ::Providers::Redhat::InfraManager::Host" do
     sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
-    vmm_vendor_display "RedHat"
+    vmm_vendor "redhat"
   end
 
   factory :host_openstack_infra, :parent => :host, :class => "ManageIQ::Providers::Openstack::InfraManager::Host" do
-    vmm_vendor_display ""
-    ems_ref            "openstack-perf-host"
-    ems_ref_obj        "openstack-perf-host-nova-instance"
+    vmm_vendor  "unknown"
+    ems_ref     "openstack-perf-host"
+    ems_ref_obj "openstack-perf-host-nova-instance"
   end
 
   factory :host_microsoft, :parent => :host, :class => "ManageIQ::Providers::Microsoft::InfraManager::Host" do
-    vmm_vendor_display  "Microsoft"
-    vmm_product         "Hyper-V"
+    vmm_vendor  "microsoft"
+    vmm_product "Hyper-V"
   end
 end

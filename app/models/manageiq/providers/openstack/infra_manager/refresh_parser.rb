@@ -193,7 +193,7 @@ module ManageIQ
           :ems_ref              => uid,
           :ems_ref_obj          => host.instance_uuid,
           :operating_system     => {:product_name => 'linux'},
-          :vmm_vendor_display   => 'RedHat',
+          :vmm_vendor           => 'redhat',
           :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
           # Can't get this from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
           :vmm_version          => nil,
