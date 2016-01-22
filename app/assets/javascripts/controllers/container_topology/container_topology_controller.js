@@ -35,7 +35,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   $scope.checkboxModel = {
     value: false
   };
-  $scope.legendTooltip = "Click here to show/hide entities of this type";
+  $scope.legendTooltip = __("Click here to show/hide entities of this type");
 
   $scope.show_hide_names = function() {
      var vertices = $scope.vs;
@@ -148,13 +148,13 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
 
   this.tooltip = function tooltip(d) {
     var status = [
-      "Name: " + d.item.name,
-      "Type: " + d.item.display_kind,
-      "Status: " + d.item.status
+      __("Name: ") + d.item.name,
+      __("Type: ") + d.item.display_kind,
+      __("Status: ") + d.item.status
     ];
 
     if (d.item.kind == 'Host' || d.item.kind == 'Vm') {
-      status.push("Provider: " + d.item.provider);
+      status.push(__("Provider: ") + d.item.provider);
     }
 
    return status;

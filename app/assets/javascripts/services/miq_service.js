@@ -38,7 +38,7 @@ ManageIQ.angularApplication.service('miqService', function() {
   this.miqFlash = function(type, msg) {
     $('#flash_msg_div').text("");
     $("#flash_msg_div").show();
-    var outerMost = $("<div id='flash_text_div' onclick=$('#flash_msg_div').text(''); title='Click to remove messages'>");
+    var outerMost = $("<div id='flash_text_div' onclick=$('#flash_msg_div').text(''); title='" + __("Click to remove messages") + "'>");
     var txt = $('<strong>' + msg + '</strong>');
 
     if(type == "error") {

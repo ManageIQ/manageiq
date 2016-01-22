@@ -102,7 +102,7 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
     $scope.$broadcast('resetClicked');
     $scope.logCollectionModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);
-    miqService.miqFlash("warn", "All changes have been reset");
+    miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
   $scope.cancelClicked = function() {

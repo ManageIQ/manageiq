@@ -142,7 +142,7 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
     $scope.hostModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
-    miqService.miqFlash("warn", "All changes have been reset");
+    miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
   var setFormToValid = function() {

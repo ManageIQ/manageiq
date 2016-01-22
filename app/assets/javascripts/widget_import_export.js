@@ -24,18 +24,18 @@ var getAndRenderWidgetJson = function(importFileUploadId, message) {
 
     var columns = [{
       id: "import",
-      name: "Import",
+      name: __("Import"),
       field: "import_checkbox",
       width: 65,
       formatter: inputCheckboxFormatter
     }, {
       id: "name",
-      name: "Widget Name",
+      name: __("Widget Name"),
       field: "name",
       width: 300
     }, {
       id: "status",
-      name: "Status",
+      name: __("Status"),
       field: "status",
       width: 300,
       formatter: statusFormatter

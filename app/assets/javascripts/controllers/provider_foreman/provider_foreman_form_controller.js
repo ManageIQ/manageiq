@@ -91,7 +91,7 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
       $scope.$broadcast ('resetClicked');
       $scope.providerForemanModel = angular.copy( $scope.modelCopy );
       $scope.angularForm.$setPristine(true);
-      miqService.miqFlash("warn", "All changes have been reset");
+      miqService.miqFlash("warn", __("All changes have been reset"));
     };
 
     $scope.saveClicked = function() {

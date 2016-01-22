@@ -1,14 +1,14 @@
 angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   var createProvidersStatus = function() {
     return {
-      title: "Providers",
+      title: __("Providers"),
       count: 0,
       notifications: []
     };
   };
   var createNodesStatus = function() {
     return {
-      title: "Nodes",
+      title: __("Nodes"),
       iconClass: "pficon pficon-container-node",
       count: 0,
       notification: {}
@@ -16,7 +16,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createContainersStatus = function() {
     return {
-      title: "Containers",
+      title: __("Containers"),
       iconClass: "fa fa-cube",
       count: 0,
       notification: {}
@@ -24,7 +24,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createRegistriesStatus = function() {
     return {
-      title:  "Registries",
+      title:  __("Registries"),
       iconClass: "pficon pficon-registry",
       count: 0,
       notification: {}
@@ -32,7 +32,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createProjectsStatus = function() {
     return {
-      title: "Projects",
+      title: __("Projects"),
       iconClass: "pficon pficon-project",
       count: 0,
       notification: {}
@@ -40,7 +40,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createPodsStatus = function() {
     return {
-      title: "Pods",
+      title: __("Pods"),
       iconClass: "fa fa-cubes",
       count: 0,
       notification: {}
@@ -48,7 +48,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createServicesStatus = function() {
     return {
-      title: "Services",
+      title: __("Services"),
       iconClass: "pficon pficon-service",
       count: 0,
       notification: {}
@@ -56,7 +56,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createImagesStatus = function() {
     return {
-      title: "Images",
+      title: __("Images"),
       iconClass: "pficon pficon-image",
       count: 0,
       notification: {}
@@ -64,7 +64,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   var createRoutesStatus = function() {
     return {
-      title: "Routes",
+      title: __("Routes"),
       iconClass: "pficon pficon-route",
       count: 0,
       notification: {}

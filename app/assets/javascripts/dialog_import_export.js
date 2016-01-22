@@ -17,12 +17,12 @@ var renderServiceDialogJson = function(rows_json, importFileUploadId) {
     checkboxSelector.getColumnDefinition(),
     {
       id: "name",
-      name: "Service Dialog Name",
+      name: __("Service Dialog Name"),
       field: "name",
       width: 300
     }, {
       id: "status",
-      name: "Status",
+      name: __("Status"),
       field: "status",
       width: 300,
       formatter: statusFormatter

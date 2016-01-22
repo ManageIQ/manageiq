@@ -21,13 +21,13 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
 
       // Heatmaps init
       $scope.nodeCpuUsage = {
-        title: 'CPU',
+        title: __('CPU'),
         id: 'nodeCpuUsageMap',
         loadingDone: false
       };
 
       $scope.nodeMemoryUsage = {
-        title: 'Memory',
+        title: __('Memory'),
         id: 'nodeMemoryUsageMap',
         loadingDone: false
       };

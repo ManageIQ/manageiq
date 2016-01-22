@@ -61,7 +61,7 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
     $scope.tenantQuotaModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
-    miqService.miqFlash("warn", "All changes have been reset");
+    miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
   $scope.saveClicked = function() {
