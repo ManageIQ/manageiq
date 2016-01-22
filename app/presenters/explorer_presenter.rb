@@ -72,6 +72,13 @@ class ExplorerPresenter
     set_visibility(true, *elements)
   end
 
+  def reload_toolbars(toolbars)
+    toolbars.each_pair do |div_name, toolbar_data|
+      @options[:reload_toolbars][div_name] = toolbar_data
+    end
+    self
+  end
+
   def []=(key, value)
     @options[key] = value
   end
