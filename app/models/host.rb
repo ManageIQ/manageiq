@@ -610,7 +610,7 @@ class Host < ApplicationRecord
   end
 
   def is_vmware?
-    vmm_vendor_display.to_s.strip.downcase == 'vmware'
+    vmm_vendor == 'vmware'
   end
 
   def is_vmware_esx?
