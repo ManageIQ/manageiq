@@ -93,18 +93,18 @@ module Authenticator
       # get_user will throw an exception (for less-privileged users)
 
       iam.client.get_user[:user][:user_name].present?
-    rescue AWS::IAM::Errors::AccessDenied
+    rescue Aws::IAM::Errors::AccessDenied
       true
     end
 
     def verify_credentials(access_key_id, secret_access_key)
       begin
-        aws_connect(access_key_id, secret_access_key, :EC2).regions.map(&:name)
-      rescue AWS::EC2::Errors::SignatureDoesNotMatch
+        aws_connect(access_key_id, secret_access_key, :EC2).client.describe_regions.regions.map(&:region_name)
+      rescue Aws::EC2::Errors::SignatureDoesNotMatch
         raise MiqException::MiqHostError, "SignatureMismatch - check your AWS Secret Access Key and signing method"
-      rescue AWS::EC2::Errors::AuthFailure
+      rescue Aws::EC2::Errors::AuthFailure
         raise MiqException::MiqHostError, "Login failed due to a bad username or password."
-      rescue AWS::EC2::Errors::UnauthorizedOperation
+      rescue Aws::EC2::Errors::UnauthorizedOperation
         # user unauthorized for ec2, but still a valid IAM login
         return true
       rescue Exception => err
@@ -117,13 +117,12 @@ module Authenticator
     def aws_connect(access_key_id, secret_access_key, service = :IAM)
       require 'aws-sdk'
 
-      AWS.const_get(service).new(
+      Aws.const_get(service)::Resource.new(
         :access_key_id     => access_key_id,
         :secret_access_key => secret_access_key,
-
         :logger            => $aws_log,
         :log_level         => :debug,
-        :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp),
+        :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp),
       )
     end
   end
