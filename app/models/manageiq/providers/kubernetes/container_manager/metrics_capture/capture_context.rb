@@ -74,11 +74,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
       mem_resid = "#{@target.name}/#{group_id}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
-
-      net_resid = "#{@target.name}/#{group_id}/network"
-      net_counters = [fetch_counters_rate("#{net_resid}/tx"),
-                      fetch_counters_rate("#{net_resid}/rx")]
-      process_net_counters_rate(compute_summation(net_counters))
     end
 
     def collect_group_metrics

@@ -10,8 +10,3 @@
   :columns:
   - derived_memory_used
   - derived_memory_available
-
-- :title: Network I/O (KBps)
-  :type: Line
-  :columns:
-  - net_usage_rate_average

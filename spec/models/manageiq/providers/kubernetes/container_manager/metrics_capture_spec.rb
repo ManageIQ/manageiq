@@ -76,7 +76,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
             ]
           }
         ],
-        :expected => {}
+        :node_expected      => {},
+        :container_expected => {}
       },
       {
         :counters => [
@@ -110,11 +111,17 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
             ]
           }
         ],
-        :expected => {
-          Time.at(1446500000).utc => {
+        :node_expected      => {
+          Time.at(1_446_500_000).utc => {
             "cpu_usage_rate_average"     => 10.0,
             "mem_usage_absolute_average" => 50.0,
             "net_usage_rate_average"     => 10.0
+          }
+        },
+        :container_expected => {
+          Time.at(1_446_500_000).utc => {
+            "cpu_usage_rate_average"     => 10.0,
+            "mem_usage_absolute_average" => 50.0
           }
         }
       }
@@ -138,7 +145,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
 
         _, values_by_ts = @node.perf_collect_metrics('realtime')
 
-        expect(values_by_ts['target']).to eq(exercise[:expected])
+        expect(values_by_ts['target']).to eq(exercise[:node_expected])
       end
     end
 
@@ -160,7 +167,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
 
         _, values_by_ts = @container.perf_collect_metrics('realtime')
 
-        expect(values_by_ts['target']).to eq(exercise[:expected])
+        expect(values_by_ts['target']).to eq(exercise[:container_expected])
       end
     end
   end
