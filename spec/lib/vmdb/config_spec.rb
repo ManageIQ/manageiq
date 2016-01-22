@@ -85,7 +85,7 @@ describe VMDB::Config do
     options = {:host => "16.1.2.119",
                :port => "389",
                :auth => {:basedn                      => "OU=Users,OU=Developers,OU=Manageiq,DC=manageiq,DC=com",
-                         :bind_dn                     => "CN=Joe Vlcek,OU=Users,OU=Developers,OU=ManageIQ,DC=manageiq,DC=com",
+                         :bind_dn                     => "CN=David Robert Jones,OU=Users,OU=Developers,OU=ManageIQ,DC=manageiq,DC=com",
                          :bind_pwd                    => "top_secret_bind_pwd",
                          :get_direct_groups           => true,
                          :group_memberships_max_depth => 2,
@@ -106,25 +106,25 @@ describe VMDB::Config do
                         }
               }
 
-    it "masks_passwors_in_log_auth" do
+    it "masks passwords in log auth" do
       log_auth = VMDB::Config.clone_auth_for_log(options)
       expect(log_auth[:auth][:bind_pwd]).to eql("********")
       expect(log_auth[:auth][:amazon_secret]).to eql("********")
     end
 
-    it "leaves_source_passwords_unaltered" do
+    it "leaves source passwords unaltered" do
       VMDB::Config.clone_auth_for_log(options)
       expect(options[:auth][:bind_pwd]).to eql("top_secret_bind_pwd")
       expect(options[:auth][:amazon_secret]).to eql("top_secret_secret")
     end
 
-    it "masks_user_proxies_passwors_in_log_auth" do
+    it "masks user proxies passwords in log auth" do
       log_auth = VMDB::Config.clone_auth_for_log(options)
       expect(log_auth[:auth][:user_proxies][0][:bind_pwd]).to eql("********")
       expect(log_auth[:auth][:user_proxies][0][:amazon_secret]).to eql("********")
     end
 
-    it "leaves_source_user_proxies_unaltered" do
+    it "leaves source user proxies unaltered" do
       VMDB::Config.clone_auth_for_log(options)
       expect(options[:auth][:user_proxies][0][:bind_pwd]).to eql("user_proxy_bind_pwd")
       expect(options[:auth][:user_proxies][0][:amazon_secret]).to eql("user_proxy_amazon_secret")
