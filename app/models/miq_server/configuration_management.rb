@@ -66,10 +66,7 @@ module MiqServer::ConfigurationManagement
 
   def sync_config_changed?
     stale = @vmdb_config.stale?
-    if stale
-      VMDB::Config.invalidate("vmdb")
-      @vmdb_config = VMDB::Config.new("vmdb")
-    end
+    @vmdb_config = VMDB::Config.new("vmdb") if stale
     stale || @blacklisted_events.nil?
   end
 
