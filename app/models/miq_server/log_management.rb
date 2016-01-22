@@ -111,7 +111,7 @@ module MiqServer::LogManagement
   end
 
   def last_log_sync_on
-    log_files.order(:updated_on => :desc).pluck(:updated_on).first
+    log_files.maximum(:updated_on)
   end
 
   def last_log_sync_message
