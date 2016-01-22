@@ -705,8 +705,7 @@ class MiqPolicyController < ApplicationController
     end
     presenter[:right_cell_text] = right_cell_text
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb)
 
     if ((@edit && @edit[:new]) || @assign) && params[:action] != "x_search_by_name"
       locals = {

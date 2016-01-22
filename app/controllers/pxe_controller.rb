@@ -163,7 +163,7 @@ class PxeController < ApplicationController
     presenter.set_visibility(c_tb.present?, :toolbar)
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = h_tb
+    presenter.reload_toolbars(:history => h_tb)
     case x_active_tree
     when :pxe_servers_tree
       presenter[:update_partials][:main_div] = r[:partial => "pxe_server_list"]

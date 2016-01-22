@@ -1615,10 +1615,7 @@ module VmCommon
 
     presenter[:right_cell_text] = @right_cell_text
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
-    presenter[:reload_toolbars][:custom]  = cb_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb, :custom => cb_tb)
 
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 

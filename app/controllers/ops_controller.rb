@@ -714,7 +714,7 @@ class OpsController < ApplicationController
       c_tb = build_toolbar(@sb[:center_tb_filename])
     end
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:center] = c_tb
+    presenter.reload_toolbars(:center => c_tb)
     presenter.set_visibility(c_tb.present? && @sb[:center_tb_filename] != "blank_view_tb", :toolbar)
     presenter[:record_id] = determine_record_id_for_presenter
   end

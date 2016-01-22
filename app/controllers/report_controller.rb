@@ -918,9 +918,7 @@ class ReportController < ApplicationController
     end
     presenter.set_visibility(!@in_a_form, :toolbar)
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
     presenter[:record_id] = (locals && locals[:record_id]) || determine_record_id_for_presenter
 

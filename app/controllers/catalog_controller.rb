@@ -1923,9 +1923,7 @@ class CatalogController < ApplicationController
       presenter.show(:form_buttons_div, :pc_div_1, :toolbar, :paging_div)
     end
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = determine_record_id_for_presenter

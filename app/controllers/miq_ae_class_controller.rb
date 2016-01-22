@@ -376,10 +376,10 @@ class MiqAeClassController < ApplicationController
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = h_tb
+    presenter.reload_toolbars(:history => h_tb)
     if c_tb.present?
       presenter.show(:toolbar)
-      presenter[:reload_toolbars][:center] = c_tb
+      presenter.reload_toolbars(:center => c_tb)
     else
       presenter.hide(:toolbar)
     end

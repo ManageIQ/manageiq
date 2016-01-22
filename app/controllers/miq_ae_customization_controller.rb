@@ -367,8 +367,7 @@ class MiqAeCustomizationController < ApplicationController
     end
 
     presenter.set_visibility(h_tb.present? || c_tb.present?, :toolbar)
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb)
   end
 
   def render_proc

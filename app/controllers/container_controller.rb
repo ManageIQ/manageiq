@@ -322,9 +322,7 @@ class ContainerController < ApplicationController
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 

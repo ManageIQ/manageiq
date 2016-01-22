@@ -777,7 +777,7 @@ class ChargebackController < ApplicationController
     when :cb_rates_tree
       # Rates accordion
       if c_tb.present?
-        presenter[:reload_toolbars][:center] = c_tb
+        presenter.reload_toolbars(:center => c_tb)
       end
       presenter.set_visibility(c_tb.present?, :toolbar)
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
@@ -787,7 +787,7 @@ class ChargebackController < ApplicationController
       presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]
     when :cb_reports_tree
       if c_tb.present?
-        presenter[:reload_toolbars][:center] = c_tb
+        presenter.reload_toolbars(:center => c_tb)
         presenter.show(:toolbar)
       else
         presenter.hide(:toolbar)

@@ -493,7 +493,7 @@ class MiqCapacityController < ApplicationController
     # clearing out any selection in tree if active node has been reset to "" upon returning to screen or when first time in
     presenter[:clear_selection] = x_node == ''
 
-    presenter[:reload_toolbars][:view] = v_tb
+    presenter.reload_toolbars(:view => v_tb)
     presenter.set_visibility(@sb[:active_tab] == 'report', :toolbar)
 
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
@@ -605,7 +605,7 @@ class MiqCapacityController < ApplicationController
 
     presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
-    presenter[:reload_toolbars][:view] = v_tb
+    presenter.reload_toolbars(:view => v_tb)
     presenter.set_visibility(@sb[:active_tab] == 'report', :toolbar)
 
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
