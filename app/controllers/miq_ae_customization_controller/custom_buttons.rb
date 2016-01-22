@@ -114,7 +114,7 @@ module MiqAeCustomizationController::CustomButtons
               when "Host"
                 _("Host / Node")
               when "EmsCluster"
-                ui_lookup(:ems_cluster_types => "cluster")
+                _("Cluster / Deployment Role")
               else
                 @nodetype[1]
               end

@@ -1201,15 +1201,14 @@ module ApplicationHelper
   end
 
   def title_for_cluster(plural = false)
-    key = case EmsCluster.node_types
-          when :non_openstack
-            "cluster_infra"
-          when :openstack
-            "cluster_openstack"
-          else
-            "cluster"
-          end
-    ui_lookup(:ems_cluster_types => plural ? key.pluralize : key)
+    case EmsCluster.node_types
+    when :non_openstack
+      plural ? _("Clusters") : _("Cluster")
+    when :openstack
+      plural ? _("Deployment Roles") : _("Deployment Role")
+    else
+      plural ? _("Clusters / Deployment Roles") : _("Cluster / Deployment Role")
+    end
   end
 
   def title_for_host_record(record)
@@ -1217,9 +1216,7 @@ module ApplicationHelper
   end
 
   def title_for_cluster_record(record)
-    record.openstack_cluster? ?
-      ui_lookup(:ems_cluster_types => 'cluster_openstack') :
-      ui_lookup(:ems_cluster_types => 'cluster_infra')
+    record.openstack_cluster? ? _("Deployment Role") : _("Cluster")
   end
 
   def start_page_allowed?(start_page)

@@ -10,13 +10,12 @@ class TreeBuilderUtilization < TreeBuilderRegion
     return total if count_only
     return [] if total == 0
 
-    click_to_open = _('Click to open')
     [
       {
         :id    => "folder_c_xx-#{to_cid(object.id)}",
-        :text  => ui_lookup(:ems_cluster_types => "cluster"),
+        :text  => _("Cluster / Deployment Role"),
         :image => "folder",
-        :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (#{click_to_open})"
+        :tip   => _("Cluster / Deployment Role (Click to open)")
       }
     ]
   end
