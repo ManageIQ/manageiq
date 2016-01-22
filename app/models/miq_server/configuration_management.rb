@@ -73,4 +73,8 @@ module MiqServer::ConfigurationManagement
   def sync_blacklisted_event_names
     @blacklisted_events = nil
   end
+
+  def sync_log_level
+    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
+  end
 end
