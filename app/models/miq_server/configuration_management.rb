@@ -6,18 +6,6 @@ module MiqServer::ConfigurationManagement
   end
 
   module ClassMethods
-    def activate_configuration
-      cfg = VMDB::Config.new("vmdb")
-      cfg.activate
-
-      up_to_date, *message = SchemaMigration.up_to_date?
-      message.to_miq_a.each { |msg| _log.send(up_to_date ? :info : :warn, msg) }
-
-      VMDB::Config.refresh_configs
-
-      cfg
-    end
-
     def config_updated
       cfg = VMDB::Config.new("vmdb")
       cfg.save

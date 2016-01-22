@@ -202,7 +202,10 @@ class MiqServer < ApplicationRecord
     EvmDatabase.seed_primordial
 
     setup_data_directory
-    cfg = activate_configuration
+    check_migrations_up_to_date
+    Vmdb::Settings.activate
+
+    cfg = VMDB::Config.new("vmdb")
 
     svr = my_server(true)
     svr_hash = {}
@@ -267,6 +270,13 @@ class MiqServer < ApplicationRecord
     prep_apache_proxying
     svr.start
     svr.monitor_loop
+  end
+
+  def self.check_migrations_up_to_date
+    up_to_date, *message = SchemaMigration.up_to_date?
+    level = up_to_date ? :info : :warn
+    message.to_miq_a.each { |msg| _log.send(level, msg) }
+    up_to_date
   end
 
   def validate_is_deleteable
