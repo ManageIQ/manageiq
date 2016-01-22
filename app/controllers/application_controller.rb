@@ -1519,7 +1519,7 @@ class ApplicationController < ActionController::Base
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
       @vmminfo.push(:vmminfo     => "Vendor",
-                    :description => db_record.vmm_vendor_display) unless db_record.vmm_vendor_display.nil? # This would never have been nil
+                    :description => db_record.vmm_vendor_display)
       @vmminfo.push(:vmminfo     => "Product",
                     :description => db_record.vmm_product) unless db_record.vmm_product.nil?
       @vmminfo.push(:vmminfo     => "Version",
