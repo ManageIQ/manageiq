@@ -55,10 +55,6 @@ class MiqServer < ApplicationRecord
     configuration  = VMDB::Config.new("vmdb")
     starting_roles = configuration.config.fetch_path(:server, :role)
 
-    monitor_class_names.each { |class_name| class_name.constantize.validate_config_settings(configuration) }
-
-    EmsInfra.merge_config_settings(configuration)
-
     # Change the database role to database_operations
     roles = configuration.config.fetch_path(:server, :role)
     if roles.gsub!(/\bdatabase\b/, 'database_operations')

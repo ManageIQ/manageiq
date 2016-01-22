@@ -4,11 +4,6 @@ class MiqReplicationWorker < MiqWorker
   self.required_roles = ["database_synchronization"]
   self.include_stopping_workers_on_synchronize = true
 
-  def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
-    configuration.merge_from_template_if_missing(:workers, :worker_base, :replication_worker)
-    configuration.merge_from_template_if_missing(:workers, :worker_base, :replication_worker, :replication)
-  end
-
   def self.replication_destination_connection_parameters
     config = worker_settings.fetch_path(:replication, :destination)
     MiqRegionRemote.connection_parameters_for(config)
