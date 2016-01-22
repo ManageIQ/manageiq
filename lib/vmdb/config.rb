@@ -2,6 +2,14 @@ module VMDB
   class Config
     include Vmdb::Logging
 
+    def self.for_miq_server(miq_server, name)
+      new(name).tap do |config|
+        if miq_server.is_remote?
+          config.config = Vmdb::Settings.for_miq_server(miq_server)
+        end
+      end
+    end
+
     @@sync_cfile = Sync.new
     @@cached_configs = {}
 

@@ -5,56 +5,35 @@ module MiqServer::ConfigurationManagement
     has_many :settings_changes, :as => :resource, :dependent => :destroy
   end
 
-  module ClassMethods
-    def config_updated
-      cfg = VMDB::Config.new("vmdb")
-      cfg.save
+  def get_config(type = "vmdb")
+    VMDB::Config.for_miq_server(self, type)
+  end
+
+  def set_config(config)
+    config = config.config if config.respond_to?(:config)
+    Vmdb::Settings.save!(self, config)
+    settings_updated
+  end
+
+  def settings_updated
+    if is_local?
+      Vmdb::Settings.reload!
+      Vmdb::Settings.activate
+    elsif started?
+      settings_updated_queue
     end
   end
 
-  def get_config(typ = "vmdb")
-    config = nil
-
-    if self.is_remote?
-      record = configurations.find_by_typ(typ)
-      if record
-        config = VMDB::Config.new(typ, false)
-        config.config = record.settings
-      end
-    end
-
-    config || VMDB::Config.new(typ)
-  end
-
-  def set_config(cfg)
-    unless cfg.kind_of?(VMDB::Config)
-      raise _("Assertion Failure (MiqServer.set_config) -- config expected to be <VMDB::Config> but actually is <%{name}>") %
-              {:name => cfg.class}
-    end
-    self.is_local? ? cfg.save : set_config_remote(cfg)
-    reload
-  end
-
-  def set_config_remote(cfg)
-    # Update the configuration
-    Configuration.create_or_update(self, cfg.config, cfg.name)
-    if cfg.name == "vmdb"
-      # Update associated value in MiqServer
-      unless cfg.config[:server].nil?
-        ost = OpenStruct.new(cfg.config[:server].stringify_keys)
-        config_updated(ost)
-      end
-
-      # Let the running server know that his config changed
-      MiqQueue.put(
-        :class_name  => "MiqServer",
-        :method_name => "config_updated",
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :zone        => nil,
-        :role        => nil,
-        :server_guid => guid
-      ) if started?
-    end
+  def settings_updated_queue
+    MiqQueue.put(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "settings_updated",
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :zone        => nil,
+      :role        => nil,
+      :server_guid => guid
+    )
   end
 
   # Callback from VMDB::Config::Activator#activate when the configuration has
