@@ -20,8 +20,8 @@ class ContainerDashboardService
   end
 
   def status
-    if @ems.present? && @ems.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
-      routes_count = @ems.container_routes.count
+    if @ems.present?
+      routes_count = @ems.respond_to?(:container_routes) ? @ems.container_routes.count : 0 # ems might not have routes
     else
       routes_count = ContainerRoute.count
     end
