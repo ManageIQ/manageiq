@@ -3,8 +3,9 @@
     .col-md-12
       .toolbar-pf-actions
         .form-group.text
-          %input#box{'ng-change' => "show_hide_names(checkboxModel.value)",  'ng-model' => "checkboxModel.value", :type => "checkbox", 'ng-true-value' => 'true', 'ng-false-value' => 'false'}
-          = _("Display Names")
+          %label.checkbox-inline
+            %input#box{'ng-change' => "show_hide_names(checkboxModel.value)",  'ng-model' => "checkboxModel.value", :type => "checkbox", 'ng-true-value' => 'true', 'ng-false-value' => 'false'}
+            = _("Display Names")
         .form-group
           %button.btn.btn-default
             %i{'ng-click' => "refresh()", :class => "fa fa-refresh fa-lg"}
