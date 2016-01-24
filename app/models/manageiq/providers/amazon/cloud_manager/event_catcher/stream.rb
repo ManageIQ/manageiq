@@ -80,7 +80,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
       $aws_log.debug("#{log_header} Looking for Amazon SQS Queue #{queue_name} ...")
       queue = sqs.queues.named(queue_name)
       $aws_log.debug("#{log_header} ... found Amazon SQS Queue")
-    rescue Aws::SQS::Errors::NonExistentQueue
+    rescue AWS::SQS::Errors::NonExistentQueue
       aws_config_topic = find_aws_config_topic
       if aws_config_topic
         $aws_log.info("#{log_header} Amazone SQS Queue #{queue_name} does not exist; creating queue")
@@ -164,15 +164,16 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def aws_connect(service)
-    require 'aws-sdk'
+    require 'aws-sdk-v1'
 
-    Aws.const_get(service)::Resource.new(
+    AWS.const_get(service).new(
       :access_key_id     => @aws_access_key_id,
       :secret_access_key => @aws_secret_access_key,
       :region            => @aws_region,
+
       :logger            => $aws_log,
       :log_level         => :debug,
-      :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp),
+      :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp),
     )
   end
 end
