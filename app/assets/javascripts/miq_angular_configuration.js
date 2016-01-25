@@ -34,12 +34,12 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
   $locationProvider.html5Mode({enabled: true,requireBase: false});
 }]);
 
-ManageIQ.angularApplication.run(['$rootScope', 'miqService', function($root, miqService) {
-  $root.$on('$stateChangeStart', function() {
+ManageIQ.angularApplication.run(['$rootScope', 'miqService', function($rootScope, miqService) {
+  $rootScope.$on('$stateChangeStart', function() {
     miqService.sparkleOn();
   });
 
-  $root.$on('$stateChangeSuccess', function() {
+  $rootScope.$on('$stateChangeSuccess', function() {
     miqService.sparkleOff();
   });
 

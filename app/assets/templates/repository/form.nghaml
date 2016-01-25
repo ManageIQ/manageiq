@@ -12,10 +12,10 @@
                             'ng-maxlength' => 10,
                             :required      => "",
                             :checkchange   => true,
-                            "auto-focus"  => ""}
+                            "auto-focus"   => ""}
         %span.help-block{"ng-show" => "angularForm.repo_name.$error.required"}
           = _("Required")
-    .form-group{"ng-class" => "{'has-error': angularForm.repo_path.$error.required ||angularForm.repo_path.$error.checkpath }"}
+    .form-group{"ng-class" => "{'has-error': angularForm.repo_path.$error.required ||angularForm.repo_path.$error.checkPath}"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Path')
       .col-md-8
@@ -24,10 +24,10 @@
                             'ng-model'     => "repoModel.repo_path",
                             'ng-maxlength' => 100,
                             :required      => "",
-                            :checkpath     => true,
+                            'check-path'   => true,
                             :checkchange   => true}
         %span.help-block{"ng-show" => "angularForm.repo_path.$error.required"}
           = _("Required")
-        %span.help-block{"ng-show" => "!angularForm.repo_path.$error.required && angularForm.repo_path.$error.checkpath"}
+        %span.help-block{"ng-show" => "!angularForm.repo_path.$error.required && angularForm.repo_path.$error.checkPath"}
           = _("Invalid UNC Path")
   %form-buttons

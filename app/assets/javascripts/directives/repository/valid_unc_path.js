@@ -1,46 +1,42 @@
-ManageIQ.angular.app.directive('checkpath', ['miqService', function (miqService){
+ManageIQ.angularApplication.directive('checkPath', function() {
   return {
     require: 'ngModel',
-       link: function (scope, elem, attrs, ctrl) {
-         scope.$watch("repoModel.repo_path", function() {
+       link: function (scope, elem, attr, ctrl) {
+         scope.$watch(attr.ngModel, function() {
            if(ctrl.$modelValue != undefined && scope.afterGet) {
-             setValidity(scope, ctrl, ctrl.$modelValue, false);
+             setValidity(scope, ctrl.$modelValue);
            }
          });
-         ctrl.$parsers.push(function(value) {
-           setValidity(scope, ctrl, ctrl.$viewValue, true);
-           return value;
-          });
 
-      validPath = function(scope, path, bClearMsg) {
-        modified_path = path.replace(/\\/g, "/");
-        if(new RegExp("^//[^/].*/.+$").test(modified_path)) {
-          if(bClearMsg) $('#flash_msg_div').text("");
-          scope.path_type = "NAS";
-          return true;
-        }
-        else if(/^\[[^\]].+\].*$/.test(modified_path)) {
-          if(bClearMsg) $('#flash_msg_div').text("");
-          scope.path_type = "VMFS";
-          return true;
-        }
-        else {
-          if(scope.formId == "new") {
-            miqService.miqFlash("warn", __("Need a valid UNC path"));
-          } else {
-            miqService.miqFlash("error", __("Incorrect UNC path"));
-          }
-          return false;
-        }
-      };
+         ctrl.$validators.checkPath = function (modelValue, viewValue) {
+           if (angular.isDefined(viewValue) && checkPath(scope, viewValue)) {
+             return true
+           }
+           return false;
+         };
 
-      var setValidity = function(scope, ctrl, value, bClearMsg) {
-        if(validPath(scope, value, bClearMsg)) {
-          ctrl.$setValidity("checkpath", true);
-        } else {
-          ctrl.$setValidity("checkpath", false);
-        }
-      };
+         var checkPath = function(scope, path) {
+           modified_path = path.replace(/\\/g, "/");
+           if(new RegExp("^//[^/].*/.+$").test(modified_path)) {
+             scope.path_type = "NAS";
+             return true;
+           }
+           else if(/^\[[^\]].+\].*$/.test(modified_path)) {
+             scope.path_type = "VMFS";
+             return true;
+           }
+           else {
+             return false;
+           }
+         };
+
+         var setValidity = function(scope, value) {
+           if(checkPath(scope, value)) {
+             ctrl.$setValidity("checkPath", true);
+           } else {
+             ctrl.$setValidity("checkPath", false);
+           }
+         };
+      }
     }
-  }
-}]);
+});
