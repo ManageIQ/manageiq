@@ -278,8 +278,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def assert_specific_vm_powered_on
     v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(
-        :name => "EmsRefreshSpec-PoweredOn-Basic3",
-        :raw_power_state => "running").first
+      :name            => "EmsRefreshSpec-PoweredOn-Basic3",
+      :raw_power_state => "running").first
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "i-680071e9",
@@ -358,8 +358,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def assert_specific_vm_powered_off
     v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(
-        :name => "EmsRefreshSpec-PoweredOff",
-        :raw_power_state => "stopped").first
+      :name            => "EmsRefreshSpec-PoweredOff",
+      :raw_power_state => "stopped").first
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "i-6eeb97ef",
@@ -477,12 +477,13 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_orchestration_stack
-    stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(:name => "EmsRefreshSpec-JoeV-050").first
+    stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(
+      :name => "EmsRefreshSpec-JoeV-050").first
     expect(stack.status_reason)
       .to eq("The following resource(s) failed to create: [WebServerWaitCondition, IPAddress]. ")
 
     @orch_stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(
-        :name => "EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I").first
+      :name => "EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I").first
     expect(@orch_stack).to have_attributes(
       :status  => "CREATE_COMPLETE",
       :ems_ref => "arn:aws:cloudformation:us-east-1:200278856672:stack/EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I/bff036f0-ba27-11e5-b4be-500c5242948e",
@@ -548,7 +549,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
     # orchestration stack can have security groups
     sg = SecurityGroup.where(
-        :name => "EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I-WebServerSecurityGroup-13RL8S2C6ZWI1").first
+      :name => "EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I-WebServerSecurityGroup-13RL8S2C6ZWI1").first
     expect(sg.orchestration_stack).to eq(@orch_stack)
 
     # orchestration stack can have cloud networks
