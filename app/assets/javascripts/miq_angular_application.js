@@ -7,7 +7,9 @@ miqHttpInject(ManageIQ.angular.app);
 
 function miqHttpInject(angular_app) {
   angular_app.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+    $httpProvider.defaults.headers.common['X-CSRF-Token'] = function() {
+      return $('meta[name=csrf-token]').attr('content');
+    };
   }]);
 
   return angular_app;
