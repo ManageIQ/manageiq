@@ -34,17 +34,7 @@ kubernetes-topology-icon.active {
    opacity: 1;
 }
 
-.kube-topology line.ServicePod {
-    stroke-linecap: round;
-    stroke-dasharray: 5.5;
-}
-
-.kube-topology line.PodReplicator {
-    stroke-linecap: round;
-    stroke-dasharray: 5.5;
-}
-
-.kube-topology line.ServiceRoute {
+.kube-topology line.ContainerServiceContainerGroup, .kube-topology line.ContainerGroupContainerReplicator, .kube-topology line.ContainerServiceContainerRoute {
     stroke-linecap: round;
     stroke-dasharray: 5.5;
 }
