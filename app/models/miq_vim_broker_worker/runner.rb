@@ -103,7 +103,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     ret = @ems_ids_for_notify[key] || begin
       zone_id = MiqServer.my_server.zone_id
       ems = ManageIQ::Providers::Vmware::InfraManager
-            .includes(:authentications)
+            .includes(:authentications, :endpoints)
             .where(:zone_id => zone_id)
             .detect { |e| e.hostname == address && e.authentication_userid == userid }
       ems_id = ems.nil? ? :ignore : ems.id
