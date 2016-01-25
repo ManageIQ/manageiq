@@ -100,6 +100,13 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     execute_power_operation("Resume", vm.uid_ems)
   end
 
+  def vm_destroy(vm, _options = {})
+    if vm.power_state == "on"
+      vm_stop(vm)
+    end
+    execute_power_operation("Remove", vm.uid_ems)
+  end
+
   def vm_create_evm_snapshot(vm, _options)
     log_prefix = "vm_create_evm_snapshot: vm=[#{vm.name}]"
 
