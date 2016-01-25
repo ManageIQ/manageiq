@@ -844,9 +844,10 @@ function miqEnterPressed(e) {
 }
 
 // Send login authentication via ajax
-function miqAjaxAuth() {
+function miqAjaxAuth(url) {
   miqEnableLoginFields(false);
-  miqJqueryRequest('/dashboard/authenticate', {
+
+  miqJqueryRequest(url || '/dashboard/authenticate', {
     beforeSend: true,
     data: miqSerializeForm('login_div'),
   });
