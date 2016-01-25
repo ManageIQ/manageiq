@@ -12,6 +12,10 @@ describe VmCloudController do
   # So we need a test for each possible value of 'presses' until all this is
   # converted into proper routes and test is changed to test the new routes.
   describe 'x_button' do
+    before do
+      ApplicationController.handle_exceptions = true
+    end
+
     context 'for allowed actions' do
       ApplicationController::Explorer::X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         prefixes = ["image", "instance"]
@@ -57,6 +61,8 @@ describe VmCloudController do
       subject { controller.instance_variable_get(:@breadcrumbs) }
 
       it 'skips dropping a breadcrumb when a button action is executed' do
+        ApplicationController.handle_exceptions = true
+
         post :x_button, :id => nil, :pressed => 'instance_ownership'
         expect(subject).to eq([{:name => "Instances", :url => "/vm_cloud/explorer"}])
       end

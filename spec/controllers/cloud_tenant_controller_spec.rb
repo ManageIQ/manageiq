@@ -3,6 +3,8 @@ describe CloudTenantController do
     before(:each) do
       set_user_privileges
       EvmSpecHelper.create_guid_miq_server_zone
+
+      ApplicationController.handle_exceptions = true
     end
 
     it "when Instance Retire button is pressed" do

@@ -13,6 +13,10 @@ describe CatalogController do
   end
 
   describe 'x_button' do
+    before do
+      ApplicationController.handle_exceptions = true
+    end
+
     describe 'corresponding methods are called for allowed actions' do
       CatalogController::CATALOG_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, actual_method|
         it "calls the appropriate method: '#{actual_method}' for action '#{action_name}'" do
@@ -122,6 +126,8 @@ describe CatalogController do
 
   context "#st_upload_image" do
     before do
+      ApplicationController.handle_exceptions = true
+
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
       @st = FactoryGirl.create(:service_template)

@@ -86,7 +86,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     EmsRefresh.debug_failures = true
-    ApplicationController.handle_exceptions = true
+    ApplicationController.handle_exceptions = false
   end
   config.after(:each) do
     EvmSpecHelper.clear_caches

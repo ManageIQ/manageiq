@@ -24,6 +24,8 @@ describe VmInfraController do
 
   # http://localhost:3000/vm_infra/show/10000000001403?display=vmtree_info
   it 'can render the genealogy tree' do
+    ApplicationController.handle_exceptions = true
+
     seed_session_trees('vm_infra', 'vms_instances_filter_tree')
     xhr :post, :show, :id => vm_vmware.id, :display => 'vmtree_info'
     expect(response.status).to eq(200)

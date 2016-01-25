@@ -122,6 +122,8 @@ describe MiqAeCustomizationController do
     before(:each) do
       allow_any_instance_of(described_class).to receive(:set_user_time_zone)
       allow(controller).to receive(:check_privileges).and_return(true)
+
+      ApplicationController.handle_exceptions = true
     end
 
     describe 'corresponding methods are called for allowed actions' do

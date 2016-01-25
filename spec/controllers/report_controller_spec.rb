@@ -857,6 +857,7 @@ describe ReportController do
   describe 'x_button' do
     before(:each) do
       set_user_privileges
+      ApplicationController.handle_exceptions = true
     end
 
     describe 'corresponding methods are called for allowed actions' do

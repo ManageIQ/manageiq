@@ -12,6 +12,10 @@ describe VmOrTemplateController do
   # So we need a test for each possible value of 'presses' until all this is
   # converted into proper routes and test is changed to test the new routes.
   describe 'x_button' do
+    before do
+      ApplicationController.handle_exceptions = true
+    end
+
     describe 'corresponding methods are called for allowed actions' do
       ApplicationController::Explorer::X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         actual_action = 'vm_' + action_name
@@ -56,6 +60,8 @@ describe VmOrTemplateController do
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
+      ApplicationController.handle_exceptions = true
+
       post :x_button, :id => nil, :pressed => 'miq_template_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(breadcrumbs).to eq([{:name => "VMs and Instances", :url => "/vm_or_template/explorer"}])
