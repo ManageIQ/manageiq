@@ -1,7 +1,4 @@
-angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts', 'miq.card', 'miq.util'])
-  .config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
-  }])
+miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts', 'miq.card', 'miq.util']))
   .controller('containerDashboardController', ['$scope', 'dashboardUtilsFactory', 'chartsMixin', '$http', '$interval', "$location",
     function($scope, dashboardUtilsFactory, chartsMixin, $http, $interval, $location) {
       document.getElementById("center_div").className += " miq-body";
@@ -151,6 +148,6 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
       var promise = $interval($scope.refresh, 1000*60*3);
 
       $scope.$on('$destroy', function() {
-          $interval.cancel(promise);
+        $interval.cancel(promise);
       });
     }]);

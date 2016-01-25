@@ -3,10 +3,15 @@ ManageIQ.angular.app = angular.module('ManageIQ', [
   'patternfly',
   'frapontillo.bootstrap-switch',
 ]);
+miqHttpInject(ManageIQ.angular.app);
 
-ManageIQ.angular.app.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
-}]);
+function miqHttpInject(angular_app) {
+  angular_app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+  }]);
+
+  return angular_app;
+}
 
 function miq_bootstrap(selector, app) {
   app = app || 'ManageIQ';
