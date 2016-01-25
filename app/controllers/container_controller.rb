@@ -272,17 +272,17 @@ class ContainerController < ApplicationController
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ])
     end
     presenter[:right_cell_text] = @right_cell_text
 
     if action == "container_edit" || action == "tag"
-      presenter[:update_partials][:main_div] = r[:partial => partial]
+      presenter.update(:main_div, r[:partial => partial])
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
       if params[:display] == "timeline"
@@ -294,28 +294,22 @@ class ContainerController < ApplicationController
       end
       presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
       presenter[:parent_class] = request[:controller] # Set parent class for URL also
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif record_showing
-      presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.update(:main_div, r[:partial => "container/container_show", :locals => {:controller => "container"}])
+      presenter.hide(:pc_div_1, :paging_div)
     else
-      presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
-      presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.update(:main_div, r[:partial => "layouts/x_gtl"])
+      presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
+      presenter.hide(:form_buttons_div).show(:pc_div_1, :paging_div)
     end
 
     if %w(tag).include?(action)
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:form_buttons_div).hide(:pc_div_1, :toolbar).show(:paging_div)
       locals = {:action_url => action_url}
       locals[:multi_record] = true # need save/cancel buttons on edit screen even tho @record.id is not there
       locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
-      presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+      presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
     end
 
     presenter[:ajax_action] = {
@@ -324,26 +318,24 @@ class ContainerController < ApplicationController
       :record_id  => @record.id
     } if ['performance', 'timeline'].include?(@sb[:action])
 
-    presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
+    presenter.replace(:adv_searchbox_div, r[:partial => 'layouts/x_adv_searchbox'])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
     presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

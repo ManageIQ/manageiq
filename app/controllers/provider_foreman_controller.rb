@@ -601,7 +601,7 @@ class ProviderForemanController < ApplicationController
   def render_form
     presenter, r = rendering_objects
     @in_a_form = true
-    presenter[:update_partials][:main_div] = r[:partial => 'form', :locals => {:controller => 'provider_foreman'}]
+    presenter.update(:main_div, r[:partial => 'form', :locals => {:controller => 'provider_foreman'}])
     update_title(presenter)
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
@@ -627,7 +627,7 @@ class ProviderForemanController < ApplicationController
     presenter, r = rendering_objects
     replace_explorer_trees(replace_trees, presenter, r)
 
-    presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+    presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
     render :js => presenter.to_html
@@ -712,10 +712,10 @@ class ProviderForemanController < ApplicationController
   def update_partials(record_showing, presenter, r)
     if record_showing
       get_tagdata(@record)
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:form_buttons_div)
       path_dir = "provider_foreman"
-      presenter[:update_partials][:main_div] =
-          r[:partial => "#{path_dir}/main", :locals => {:controller => 'provider_foreman'}]
+      presenter.update(:main_div, r[:partial => "#{path_dir}/main",
+                                    :locals => {:controller => 'provider_foreman'}])
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_add_provider"
@@ -724,21 +724,21 @@ class ProviderForemanController < ApplicationController
         @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
       end
       partial = 'form'
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif valid_configuration_profile_record?(@configuration_profile_record)
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
-                                                 :locals  => {:controller => 'provider_foreman'}]
+      presenter.hide(:form_buttons_div)
+      presenter.update(:main_div, r[:partial => "configuration_profile",
+                                    :locals  => {:controller => 'provider_foreman'}])
     else
-      presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
   end
 
   def replace_search_box(presenter, r)
     # Replace the searchbox
-    presenter[:replace_partials][:adv_searchbox_div] =
+    presenter.replace(:adv_searchbox_div,
         r[:partial => 'layouts/x_adv_searchbox',
-          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
+          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
@@ -748,31 +748,28 @@ class ProviderForemanController < ApplicationController
     if @pages || @in_a_form
       if @pages && !@in_a_form
         @ajax_paging_buttons = true
-        if @sb[:action] && @record  # Came in from an action link
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols',
-                                                       :locals  => {:action_url    => @sb[:action],
-                                                                    :action_method => @sb[:action],
-                                                                    :action_id     => @record.id
-                                                       }]
+        if @sb[:action] && @record # Came in from an action link
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols',
+                                          :locals  => {:action_url    => @sb[:action],
+                                                       :action_method => @sb[:action],
+                                                       :action_id     => @record.id}])
         else
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
-        presenter[:set_visible_elements][:pc_div_1] = false
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
   end
 
   def replace_explorer_trees(replace_trees, presenter, r)
     build_foreman_tree(:providers, :foreman_providers_tree) if replace_trees
     replace_trees.each do |t|
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[:partial => "provider_foreman/#{t}_tree"]
+      presenter.replace("#{t}_tree_div", r[:partial => "provider_foreman/#{t}_tree"])
     end
   end
 
@@ -795,19 +792,17 @@ class ProviderForemanController < ApplicationController
 
     h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox
+    presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
   end
 
@@ -839,10 +834,10 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_tagging_partials(presenter, r)
-    presenter[:update_partials][:main_div] = r[:partial => 'layouts/tagging',
-                                               :locals  => locals_for_tagging]
-    presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons',
-                                                       :locals  => locals_for_tagging]
+    presenter.update(:main_div, r[:partial => 'layouts/tagging',
+                                  :locals  => locals_for_tagging])
+    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
+                                          :locals  => locals_for_tagging])
   end
 
   def clear_flash_msg

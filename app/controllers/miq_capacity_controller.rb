@@ -493,10 +493,10 @@ class MiqCapacityController < ApplicationController
     # clearing out any selection in tree if active node has been reset to "" upon returning to screen or when first time in
     presenter[:clear_selection] = x_node == ''
 
-    presenter[:reload_toolbars][:view] = v_tb
+    presenter.reload_toolbars(:view => v_tb)
+    presenter.set_visibility(@sb[:active_tab] == 'report', :toolbar)
 
-    presenter[:set_visible_elements][:toolbar] = @sb[:active_tab] == 'report'
-    presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
+    presenter.update(:main_div, r[:partial => 'utilization_tabs'])
     presenter[:right_cell_text] = @right_cell_text
     presenter[:build_calendar] = {
       :date_from => @sb[:util][:options][:sdate],
@@ -605,10 +605,10 @@ class MiqCapacityController < ApplicationController
 
     presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
-    presenter[:reload_toolbars][:view] = v_tb
-    presenter[:set_visible_elements][:toolbar] = @sb[:active_tab] == 'report'
+    presenter.reload_toolbars(:view => v_tb)
+    presenter.set_visibility(@sb[:active_tab] == 'report', :toolbar)
 
-    presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
+    presenter.update(:main_div, r[:partial => 'planning_tabs'])
     presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
 
     presenter[:extra_js] << "curTab = $('#planning_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
@@ -623,7 +623,7 @@ class MiqCapacityController < ApplicationController
     r = proc { |opts| render_to_string(opts) }
 
     presenter[:osf_node] = x_node
-    presenter[:update_partials][:main_div] = r[:partial => 'bottlenecks_tabs']
+    presenter.update(:main_div, r[:partial => 'bottlenecks_tabs'])
     presenter[:build_calendar] = true
     presenter[:right_cell_text] = @right_cell_text
 

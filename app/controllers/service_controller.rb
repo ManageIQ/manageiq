@@ -356,18 +356,18 @@ class ServiceController < ApplicationController
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
           :partial => 'shared/tree',
           :locals  => {:tree => tree,
                        :name => tree.name.to_s
           }
-      ]
+      ])
     end
 
     presenter[:right_cell_text] = @right_cell_text
 
     # Replace right cell divs
-    presenter[:update_partials][:main_div] =
+    presenter.update(:main_div,
       if ["dialog_provision", "ownership", "retire", "service_edit", "tag"].include?(action)
         r[:partial => partial]
       elsif params[:display]
@@ -375,18 +375,16 @@ class ServiceController < ApplicationController
       elsif record_showing
         r[:partial => "service/svcs_show", :locals => {:controller => "service"}]
       else
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
         r[:partial => "layouts/x_gtl"]
       end
+    )
     if %w(dialog_provision ownership service_edit tag).include?(action)
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:form_buttons_div).hide(:pc_div_1, :toolbar).show(:paging_div)
       if action == "dialog_provision"
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
-                                                           :locals  => {:action_url => action_url,
-                                                                        :record_id  => @edit[:rec_id]}]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_dialog_buttons",
+                                              :locals  => {:action_url => action_url,
+                                                           :record_id  => @edit[:rec_id]}])
       else
         if action == "tag"
           locals = {:action_url => action_url}
@@ -397,20 +395,15 @@ class ServiceController < ApplicationController
           # need save/cancel buttons on edit screen even tho @record.id is not there
           locals[:multi_record] = true if action == "ownership"
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
       end
     elsif (action != "retire") && (record_showing ||
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
       # when trying to change a node on tree after saving a record
-      presenter[:set_visible_elements][:buttons_on]  = false
-      presenter[:set_visible_elements][:toolbar]   = true
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:buttons_on).show(:toolbar).hide(:paging_div)
     else
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1]         = true
-      presenter[:set_visible_elements][:toolbar]        = true
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.hide(:form_buttons_div).show(:pc_div_1, :toolbar, :paging_div)
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
@@ -426,12 +419,9 @@ class ServiceController < ApplicationController
       end
     end
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
-    presenter[:reload_toolbars][:custom]  = cb_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb, :custom => cb_tb)
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || !v_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present? || !v_tb.present?, :toolbar)
 
     presenter[:record_id] = determine_record_id_for_presenter
 

@@ -502,7 +502,7 @@ class OpsController < ApplicationController
       diagnostics_replace_right_cell(nodetype, presenter, r)
     when :vmdb_tree # "root","tb", "ti","xx" # Check if vmdb root or table is selected
       # Need to replace all_tabs to show table name as tab label
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     when :analytics_tree
       analytics_replace_right_cell(presenter, r)
     end
@@ -513,12 +513,12 @@ class OpsController < ApplicationController
     # to show correct buttons on screen when tree node is selected
     if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
        %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "log_depot_edit"
       @right_cell_text = "Editing Log Depot settings"
-      presenter[:update_partials][:diagnostics_collect_logs] = r[:partial => "ops/log_collection"]
+      presenter.update(:diagnostics_collect_logs, r[:partial => "ops/log_collection"])
     else
-      presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
+      presenter.update(@sb[:active_tab], r[:partial => "#{@sb[:active_tab]}_tab"])
     end
     # zone level
     presenter[:build_calendar] = {} if x_node.split("-").first == "z"
@@ -526,15 +526,15 @@ class OpsController < ApplicationController
 
   def analytics_replace_right_cell(presenter, r)
     if params[:action] == "accordion_select"
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     else
-      presenter[:update_partials][:analytics_details] = r[:partial => "analytics_details_tab"]
+      presenter.update(:analytics_details, r[:partial => "analytics_details_tab"])
     end
     if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
       # setting changed here to enable/disable Apply button
       @changed = @sb[:good] && @sb[:good] > 0 ? true : false
     end
-    presenter[:set_visible_elements][:buttons_on] = @changed if @in_a_form
+    presenter.set_visibility(@changed, :buttons_on) if @in_a_form
   end
 
   def settings_replace_right_cell(nodetype, presenter, r)
@@ -553,7 +553,7 @@ class OpsController < ApplicationController
       presenter[:update_partials][partial_div] = r[:partial => "zone_form"]
     when "ce"     # category edit
       # when editing/adding category in settings tree
-      presenter[:update_partials][:settings_co_categories] = r[:partial => "category_form"]
+      presenter.update(:settings_co_categories, r[:partial => "category_form"])
       if !@category
         @right_cell_text = _("Adding a new %s") % "Category"
       else
@@ -561,7 +561,7 @@ class OpsController < ApplicationController
       end
     when "sie"        # scanitemset edit
       #  editing/adding scanitem in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ap_form"]
+      presenter.update(:settings_list, r[:partial => "ap_form"])
       if !@scan.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ScanItemSet")
       else
@@ -571,7 +571,7 @@ class OpsController < ApplicationController
       end
     when "se"         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "schedule_form"]
+      presenter.update(:settings_list, r[:partial => "schedule_form"])
       presenter[:build_calendar] = {
         :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
@@ -585,7 +585,7 @@ class OpsController < ApplicationController
       end
     when "lde"          # ldap_region edit
       # when editing/adding ldap domain in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ldap_domain_form"]
+      presenter.update(:settings_list, r[:partial => "ldap_domain_form"])
       if !@ldap_domain.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapDomain")
       else
@@ -596,7 +596,7 @@ class OpsController < ApplicationController
       end
     when "lre"          # ldap_region edit
       # when edi ting/adding ldap region in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ldap_region_form"]
+      presenter.update(:settings_list, r[:partial => "ldap_region_form"])
       if !@ldap_region.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapRegion")
       else
@@ -610,9 +610,9 @@ class OpsController < ApplicationController
     else
       if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
          params[:tab_id] != "settings_advanced"
-        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
       elsif %w(zone_delete).include?(params[:pressed])
-        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
       else
         presenter[:update_partials][@sb[:active_tab.to_sym]] = r[:partial => "#{@sb[:active_tab]}_tab"]
       end
@@ -636,13 +636,13 @@ class OpsController < ApplicationController
     # Make sure the double_click var is there
     presenter[:extra_js] << "var miq_double_click = false;"
     if %w(accordion_select change_tab tree_select).include?(params[:action])
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "group_seq"
-      presenter[:replace_partials][:flash_msg_div] = r[:partial => "layouts/flash_msg"]
-      presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
+      presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"])
+      presenter.update(:rbac_details, r[:partial => "ldap_seq_form"])
     elsif nodetype == "tenant_edit"         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_form"]
+      presenter.update(:rbac_details, r[:partial => "tenant_form"])
       if !@tenant.id
         @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
       else
@@ -653,7 +653,7 @@ class OpsController < ApplicationController
       end
     elsif nodetype == "tenant_manage_quotas"         # manage quotas
       # when managing quotas for a tenant
-      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_quota_form"]
+      presenter.update(:rbac_details, r[:partial => "tenant_quota_form"])
       model = tenant_type_title_string(@tenant.divisible)
       @right_cell_text = @edit ?
           _("Manage quotas for %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
@@ -714,30 +714,26 @@ class OpsController < ApplicationController
       c_tb = build_toolbar(@sb[:center_tb_filename])
     end
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:center] = c_tb
-    presenter[:set_visible_elements][:toolbar] = c_tb.present?
-    presenter[:set_visible_elements][:toolbar] = false if @sb[:center_tb_filename] == "blank_view_tb"
+    presenter.reload_toolbars(:center => c_tb)
+    presenter.set_visibility(c_tb.present? && @sb[:center_tb_filename] != "blank_view_tb", :toolbar)
     presenter[:record_id] = determine_record_id_for_presenter
   end
 
   def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
     if nodetype == "log_depot_edit"
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter.hide(:form_buttons_div, :pc_div_1)
     elsif @pages || @in_a_form
       if @pages
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
       elsif @in_a_form
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
   end
 
@@ -754,12 +750,12 @@ class OpsController < ApplicationController
     end
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ] if tree
+      ]) if tree
     end
   end
 
