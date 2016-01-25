@@ -2,28 +2,34 @@ require "spec_helper"
 
 describe Vmdb::Settings do
   it ".walk" do
-    stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}})
+    stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}}, :i => [{:j => 'k'}, {:l => 'm'}])
 
     walked = []
-    described_class.walk do |key, value, path, settings|
-      expect(settings).to be_kind_of(Config::Options)
-      if Settings.keys.include?(key)
-        expect(settings).to eq Settings
-      else
-        expect(settings).to eq Settings.deep_send(*path[0...-1])
+    described_class.walk do |key, value, path, owning|
+      expect(owning).to be_kind_of(Config::Options)
+
+      if %i(a d e).include?(key)
+        expect(value).to be_kind_of(Config::Options)
+        value = value.to_hash
+      elsif %i(i).include?(key)
+        expect(value).to be_kind_of(Array)
+        value.each { |v| expect(v).to be_kind_of(Config::Options) }
+        value = value.collect(&:to_hash)
       end
 
-      expect(value).to be_kind_of(Config::Options) if %i(a d e).include?(key)
-
-      walked << [key, value.try(:to_hash) || value, path]
+      walked << [key, value, path]
     end
 
     expect(walked).to eq [
-      [:a, {:b => 'c'},         [:a]],
-      [:b, 'c',                 [:a, :b]],
-      [:d, {:e => {:f => 'g'}}, [:d]],
-      [:e, {:f => 'g'},         [:d, :e]],
-      [:f, 'g',                 [:d, :e, :f]],
+      #key value                       path
+      [:a, {:b => 'c'},                [:a]],
+      [:b, 'c',                        [:a, :b]],
+      [:d, {:e => {:f => 'g'}},        [:d]],
+      [:e, {:f => 'g'},                [:d, :e]],
+      [:f, 'g',                        [:d, :e, :f]],
+      [:i, [{:j => 'k'}, {:l => 'm'}], [:i]],
+      [:j, 'k',                        [:i, 0, :j]],
+      [:l, 'm',                        [:i, 1, :l]],
     ]
   end
 
@@ -117,48 +123,77 @@ describe Vmdb::Settings do
     end
   end
 
-  describe ".decrypted_password_fields (private)" do
-    let(:password)  { "pa$$word" }
-    let(:encrypted) { MiqPassword.encrypt(password) }
-
-    subject { described_class.send(:decrypted_password_fields, Settings) }
-
-    it "with passwords in clear text" do
-      stub_settings(:password => password)
-      expect(subject).to eq(:password => password)
+  shared_examples_for "password handling" do
+    subject do
+      described_class.send(method, Settings)
+      Settings.to_hash
     end
 
-    it "with passwords encrypted" do
-      stub_settings(:password => encrypted)
-      expect(subject).to eq(:password => password)
+    it "with password" do
+      stub_settings(:password => initial)
+      expect(subject).to eq(:password => expected)
     end
 
-    it "with passwords set to nil" do
+    it "with converted password" do
+      stub_settings(:password => expected)
+      expect(subject).to eq(:password => expected)
+    end
+
+    it "with password set to nil" do
       stub_settings(:password => nil)
-      expect(subject).to eq({})
+      expect(subject).to eq(:password => nil)
     end
 
-    it "with passwords set to blank" do
+    it "with password set to blank" do
       stub_settings(:password => "")
-      expect(subject).to eq({})
+      expect(subject).to eq(:password => "")
     end
 
     it "ignores non-password keys" do
-      stub_settings(:password => encrypted, :other => "other")
-      expect(subject).to eq(:password => password)
+      stub_settings(:password => initial, :other => "other")
+      expect(subject).to eq(:password => expected, :other => "other")
     end
 
     it "handles deeply nested passwords" do
-      stub_settings(:level1 => {:level2 => {:password => encrypted}})
-      expect(subject).to eq(:level1 => {:level2 => {:password => password}})
+      stub_settings(:level1 => {:level2 => {:password => initial}})
+      expect(subject).to eq(:level1 => {:level2 => {:password => expected}})
     end
 
-    it "decrypts all password keys" do
-      encypted_hash = described_class::PASSWORD_FIELDS.map { |key| [key.to_sym, encrypted] }.to_h
-      stub_settings(encypted_hash)
-
-      password_hash = described_class::PASSWORD_FIELDS.map { |key| [key.to_sym, password] }.to_h
-      expect(subject).to eq(password_hash)
+    it "handles deeply nested passwords in arrays" do
+      stub_settings(:level1 => {:level2 => [{:password => initial}]})
+      expect(subject).to eq(:level1 => {:level2 => [{:password => expected}]})
     end
+
+    it "handles all password keys" do
+      initial_hash = described_class::PASSWORD_FIELDS.map { |key| [key.to_sym, initial] }.to_h
+      stub_settings(initial_hash)
+
+      expected_hash = described_class::PASSWORD_FIELDS.map { |key| [key.to_sym, expected] }.to_h
+      expect(subject).to eq(expected_hash)
+    end
+  end
+
+  describe ".encrypt_passwords!" do
+    let(:method)   { :encrypt_passwords! }
+    let(:initial)  { "pa$$word" }
+    let(:expected) { MiqPassword.encrypt(initial) }
+
+    include_examples "password handling"
+  end
+
+  describe ".decrypt_passwords!" do
+    let(:method)   { :decrypt_passwords! }
+    let(:initial)  { MiqPassword.encrypt(expected) }
+    let(:expected) { "pa$$word" }
+
+    include_examples "password handling"
+  end
+
+  describe ".mask_passwords!" do
+    let(:method)   { :mask_passwords! }
+    let(:initial)  { "pa$$word" }
+    let(:expected) { "********" }
+
+    include_examples "password handling"
   end
 end
