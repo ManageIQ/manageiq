@@ -4,5 +4,6 @@ FactoryGirl.define do
     sequence(:ems_ref) { |n| "ems_ref_#{seq_padded_for_sorting(n)}" }
   end
 
-  factory :cloud_subnet_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet", :parent => :cloud_subnet
+  factory :cloud_subnet_openstack, :class  => "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet",
+                                   :parent => :cloud_subnet
 end

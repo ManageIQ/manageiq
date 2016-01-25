@@ -169,7 +169,7 @@ module Openstack
         x[:name] == vm_or_stack[:__flavor_name] || x[:name] == vm_or_stack.fetch_path(:parameters, "instance_type")
       end
       # Count only disks that have size bigger that 0
-      disks_count  = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
+      disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
       if with_volumes
         # Count also volumes attached to the VM
@@ -375,7 +375,7 @@ module Openstack
 
     def network_stacks(network)
       orchestration_data.stacks.select do |x|
-         x[:parameters][:__network_name] == network.name
+        x[:parameters][:__network_name] == network.name
       end
     end
 
@@ -547,7 +547,7 @@ module Openstack
       assert_objects_with_hashes(templates,
                                  image_data.images + image_data.servers_snapshots,
                                  image_data.images_translate_table,
-                                 {:is_public => -> (x) { x.nil? ? false : x }})
+                                 :is_public => -> (x) { x.nil? ? false : x })
     end
 
     def assert_specific_templates

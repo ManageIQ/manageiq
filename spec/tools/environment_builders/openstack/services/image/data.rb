@@ -7,10 +7,12 @@ module Openstack
         IMAGE_NAME = "EmsRefreshSpec-Image"
 
         def images
-          [{:name =>IMAGE_NAME},
-           {:name      => "EmsRefreshSpec-Image-Private",
-            :is_public => false}
-           ]
+          [{
+            :name => IMAGE_NAME
+          }, {
+            :name      => "EmsRefreshSpec-Image-Private",
+            :is_public => false
+          }]
         end
 
         def images_translate_table
