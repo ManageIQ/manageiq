@@ -76,6 +76,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
       :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
       :region            => region,
+      :http_proxy        => proxy_uri,
       :logger            => $aws_log,
       :log_level         => :debug,
       :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp)
@@ -94,10 +95,10 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     if options[:sdk_v2]
       self.class.raw_connect_v2(username, password, options[:service],
-                             provider_region, options[:proxy_uri])
+                                provider_region, options[:proxy_uri])
     else
       self.class.raw_connect(username, password, options[:service],
-                                provider_region, options[:proxy_uri])
+                             provider_region, options[:proxy_uri])
     end
   end
 
