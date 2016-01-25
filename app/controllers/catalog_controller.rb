@@ -1249,12 +1249,7 @@ class CatalogController < ApplicationController
     st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
     st.provision_cost = @edit[:new][:provision_cost]
     st.display = @edit[:new][:display]
-    if @edit[:new][:display]
-      stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
-      st.service_template_catalog = stc
-    else
-      st.service_template_catalog = nil
-    end
+    st.service_template_catalog = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
     st.prov_type = @edit[:new][:st_prov_type]
     st.remove_all_resources
     @add_rsc = true
