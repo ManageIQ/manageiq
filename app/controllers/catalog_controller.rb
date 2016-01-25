@@ -902,16 +902,10 @@ class CatalogController < ApplicationController
     st = @edit[:rec_id] ?
       ServiceTemplate.find_by_id(@edit[:rec_id]) :
       class_service_template(@edit[:new][:st_prov_type]).new
-    st.name = @edit[:new][:name]
-    st.description = @edit[:new][:description]
-    st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
-    st.provision_cost = @edit[:new][:provision_cost]
-    st.display = @edit[:new][:display]
-    stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
-    st.service_template_catalog = stc
+    common_st_record_vars(st)
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     st.service_type = "atomic"
-    st.prov_type = @edit[:new][:st_prov_type]
+
     if request
       st.remove_all_resources
       st.add_resource(request) if need_prov_dialogs?(@edit[:new][:st_prov_type])
@@ -1243,19 +1237,20 @@ class CatalogController < ApplicationController
     end
   end
 
-  def st_set_record_vars(st)
+  # sets record variables common to both atomic and composite service templates
+  def common_st_record_vars(st)
     st.name = @edit[:new][:name]
     st.description = @edit[:new][:description]
     st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
     st.provision_cost = @edit[:new][:provision_cost]
     st.display = @edit[:new][:display]
-    if @edit[:new][:display]
-      stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
-      st.service_template_catalog = stc
-    else
-      st.service_template_catalog = nil
-    end
+    st.service_template_catalog = @edit[:new][:catalog_id].nil? ?
+      nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
     st.prov_type = @edit[:new][:st_prov_type]
+  end
+
+  def st_set_record_vars(st)
+    common_st_record_vars(st)
     st.remove_all_resources
     @add_rsc = true
     unless @edit[:new][:selected_resources].empty?

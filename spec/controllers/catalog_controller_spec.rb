@@ -556,4 +556,29 @@ describe CatalogController do
       expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
     end
   end
+
+  context "#st_set_record_vars" do
+    before do
+      @st = FactoryGirl.create(:service_template)
+      @catalog = FactoryGirl.create(:service_template_catalog,
+                                  :name       => "foo",
+                                  :description => "FOO"
+      )
+      edit = {
+        :new          => {
+          :name               => "New Name",
+          :description        => "New Description",
+          :display            => false,
+          :catalog_id         => @catalog.id,
+          :selected_resources => [],
+        }
+      }
+      controller.instance_variable_set(:@edit, edit)
+    end
+
+    it "sets catalog for Catalog Bundle even when display is set to false" do
+      controller.send(:st_set_record_vars, @st)
+      expect(@st.service_template_catalog).to match(@catalog)
+    end
+  end
 end
