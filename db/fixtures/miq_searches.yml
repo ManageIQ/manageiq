@@ -155,17 +155,6 @@
     search_type: default
     db: Vm
 - attributes:
-    name: default_Platform / EC2
-    description: Platform / EC2
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: Host-vmm_vendor
-          value: EC2 # Is this a valid vendor?
-    search_type: default
-    search_key: _hidden_
-    db: Host
-- attributes:
     name: default_Platform / ESX 3.5
     description: Platform / ESX 3.5
     filter: !ruby/object:MiqExpression
