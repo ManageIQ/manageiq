@@ -47,12 +47,4 @@ describe Endpoint do
       end
     end
   end
-
-  context "#tenant" do
-    let(:tenant) { FactoryGirl.create(:tenant) }
-    it "has a tenant" do
-      provider = FactoryGirl.create(:provider, :tenant => tenant)
-      expect(tenant.providers).to include(provider)
-    end
-  end
 end
