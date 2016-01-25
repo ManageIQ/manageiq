@@ -1054,12 +1054,15 @@ class ApplicationController < ActionController::Base
 
     root = {:head => [], :rows => []}
 
+    has_checkbox = !@embedded && !@no_checkboxes
+    has_listicon = !%w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
+
     # Show checkbox or placeholder column
-    unless @embedded || @no_checkboxes
+    if has_checkbox
       root[:head] << {:is_narrow => true}
     end
 
-    unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)  # do not add listicon for AE class show_list
+    if has_listicon
       # Icon column
       root[:head] << {:is_narrow => true}
     end
@@ -1083,15 +1086,17 @@ class ApplicationController < ActionController::Base
       new_row = {:id => list_row_id(row), :cells => []}
       root[:rows] << new_row
 
-      unless @embedded || @no_checkboxes
+      if has_checkbox
         new_row[:cells] << {:is_checkbox => true}
       end
 
       # Generate html for the list icon
-      # do not add listicon for AE class show_list
-      unless %w(miqaeclass miqaeinstance).include?(view.db.downcase)
+      if has_listicon
+        item = listicon_item(view, row['id'])
+
         new_row[:cells] << {:title => 'View this item',
-                            :image => listicon_image(view, row['id'])}
+                            :image => listicon_image(item, view),
+                            :icon  => listicon_icon(item)}
       end
 
       view.col_order.each_with_index do |col, col_idx|
@@ -1132,39 +1137,40 @@ class ApplicationController < ActionController::Base
     val == 100 ? 20 : ((val + 2) / 5.25).round # val is the percentage value of free space
   end
 
-  # Return the image name for the list view icon of a db,id pair
-  def listicon_image(view, id = nil)
+  def listicon_item(view, id = nil)
     id = @id if id.nil?
-    item = if @targets_hash
-             @targets_hash[id] # Get the record from the view
-           else
-             klass = view.db.constantize
-             klass.find(id)    # Read the record from the db
-           end
+
+    if @targets_hash
+      @targets_hash[id] # Get the record from the view
+    else
+      klass = view.db.constantize
+      klass.find(id)    # Read the record from the db
+    end
+  end
+  private :listicon_item
+
+  # Return the icon classname for the list view icon of a db,id pair
+  # this always supersedes listicon_image if not nil
+  def listicon_icon(item)
+    item.decorate.try(:fonticon) if item.decorator_class?
+  end
+
+  # Return the image name for the list view icon of a db,id pair
+  def listicon_image(item, view)
+    default = "100/#{(@listicon || view.db).underscore}.png"
 
     image = case item
-            when ExtManagementSystem   then "100/vendor-#{item.image_name}.png"
-            when Filesystem            then "ico/win/#{item.image_name.downcase}.ico"
-            when Host                  then "100/vendor-#{item.vmm_vendor.downcase}.png"
-            when MiqEventDefinition    then "100/event-#{item.name.downcase}.png"
+            when EventLog, OsProcess
+              "100/#{@listicon.downcase}.png"
+            when Storage
+              "100/piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
             when MiqRequest
-              case item.request_status.to_s.downcase
-              when "ok"    then "100/checkmark.png"
-              when "error" then "100/x.png"
-              else              "100/#{@listicon.downcase}.png"
-              end
-            when RegistryItem          then "100/#{item.image_name.downcase}.png"
-            when ResourcePool          then "100/#{item.vapp ? "vapp" : "resource_pool"}.png"
-            when VmOrTemplate          then "100/vendor-#{item.vendor.downcase}.png"
-            when ServiceResource       then "100/#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-            when Storage               then "100/piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-            when OsProcess, EventLog   then "100/#{@listicon.downcase}.png"
-            when Service, ServiceTemplate
-              if item.try(:picture)
-                "/pictures/#{item.picture.basename}"
-              end
+              item.decorate.listicon_image || "100/#{@listicon.downcase}.png"
+            else
+              item.decorate.try(:listicon_image) if item.decorator_class?
             end
-    list_row_image("100/", image, (@listicon || view.db).underscore, item)
+
+    list_row_image(image || default, item)
   end
 
   def get_host_for_vm(vm)
@@ -2575,8 +2581,8 @@ class ApplicationController < ActionController::Base
     to_cid(row['id'])
   end
 
-  def list_row_image(image_path, image, model_image, _item)
-    ActionController::Base.helpers.image_path(image || "#{image_path}#{model_image}.png")
+  def list_row_image(image, _item)
+    image
   end
 
   def render_flash_not_applicable_to_model(type, model_type = "items")
