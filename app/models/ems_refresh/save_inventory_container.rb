@@ -1,437 +1,173 @@
 module EmsRefresh::SaveInventoryContainer
+  DEFAULT_FIND_KEY = [:ems_ref]
+  ALWAYS_IGNORED = [:namespace]
+  # Each element in ROOT_ITEMS corresponds to one in-coming hash in save_ems_container_inventory
+  ROOT_ITEMS = [
+    :container_projects, :container_quotas, :container_limits, :container_nodes, :container_builds,
+    :container_build_pods, :container_image_registries, :container_images, :container_replicators, :container_groups,
+    :container_services, :container_routes, :persistent_volumes, :container_component_statuses
+  ]
+  # Describes haw each element should be saved.
+  # Children: Nested entities, included inside their parent Hash. These correspond to another DESCRIPTOR item.
+  # Links:    Related entities previously inserted into the current hash, handled by LINKS.
+  # find key: These determine if an incoming items should update an existing saved entity or add a new one.
+  DESCRIPTOR = {
+    :container_project             => {
+      :children => :labels,
+    },
+    :label                         => {
+      :find_key => [:section, :name]
+    },
+    :container_quota               => {
+      :links    => :container_project,
+      :children => :container_quota_items,
+    },
+    :container_quota_item          => {
+      :find_key => :resource
+    },
+    :container_limit               => {
+      :links    => :container_project,
+      :children => :container_limit_items
+    },
+    :container_limit_item          => {
+      :find_key => [:resource, :item_type]
+    },
+    :container_node                => {
+      :children => [:labels, :computer_system, :container_conditions]
+    },
+    :computer_system               => {
+      :children => [:hardware, :operating_system]
+    },
+    :container_condition           => {
+      :find_key => :name
+    },
+    :container_build               => {
+      :links    => :container_project,
+      :children => :labels
+    },
+    :container_build_pod           => {
+      :links    => :container_build,
+      :children => :labels
+    },
+    :container_image_registry      => {
+      :find_key => [:host, :port]
+    },
+    :container_image               => {
+      :find_key => [:image_ref, :container_image_registry_id],
+      :links    => :container_image_registry
+    },
+    :container_replicator          => {
+      :links    => [:container_project],
+      :children => [:labels, :selector_parts]
+    },
+    :container_group               => {
+      :children => [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions,
+                    :container_volumes],
+      :links    => [:container_node, :container_replicator, :container_project, :container_build_pod]
+    },
+    :container_definition          => {
+      :children => [:container_port_configs, :container_env_vars, :security_context, :container]
+    },
+    :container_port_config         => {
+
+    },
+    :container_env_var             => {
+      :find_key => [:name, :value, :field_path]
+    },
+    :security_context              => {},
+    :container                     => {
+      :links    => :container_image
+    },
+    :node_selector_part            => {
+      :find_key => [:section, :name]
+    },
+    :container_volume              => {
+      :find_key => :name
+    },
+    :container_service             => {
+      :links    => [:container_groups, :container_project, :container_image_registry],
+      :children => [:labels, :selector_parts, :container_service_port_configs]
+    },
+    :selector_part                 => {
+      :find_key => [:section, :name]
+    },
+    :container_service_port_config => {},
+    :container_route               => {
+      :links    => [:container_project, :container_service],
+      :children => :labels
+    },
+    :persistent_volume             => {},
+    :container_component_status    => {
+      :find_key => :name
+    },
+  }
+  LINKS = {
+    :container_project        => ->(h, _) { h[:container_project_id] = h.fetch_path(:container_project, :id) },
+    :container_service        => ->(h, _) { h[:container_service_id] = h.fetch_path(:container_service, :id) },
+    :container_groups         => ->(h, _) { h[:container_group_ids] = h[:container_groups].map { |x| x[:id] } },
+    :container_node           => ->(h, _) { h[:container_node_id] = h.fetch_path(:container_node, :id) },
+    :container_replicator     => ->(h, _) { h[:container_replicator_id] = h.fetch_path(:container_replicator, :id) },
+    :container_image          => ->(h, _) { h[:container_image_id] = h[:container_image][:id] unless h.nil? },
+    :container_image_registry => lambda { |h, _|
+      h[:container_image_registry_id] = h.fetch_path(:container_image_registry, :id)
+    },
+    :container_build          => ->(h, _) { h[:container_build_id] = h.fetch_path(:container_build, :id) },
+    :container_build_pod      => lambda { |h, ems|
+      ems.container_build_pods.find_by_name(h[:build_pod_name]).try(:id)
+      h.delete(:build_pod_name)
+    }
+  }
+
   def save_ems_container_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
-                  :container_builds, :container_build_pods,
-                  :container_image_registries, :container_images, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :persistent_volumes, :container_component_statuses,
-                 ]
-
-    # Save and link other subsections
-    child_keys.each do |k|
-      send("save_#{k}_inventory", ems, hashes[k], target)
+    ROOT_ITEMS.each do |entities|
+      send("save_#{entities}_inventory", ems, hashes[entities], target)
     end
 
     ems.save!
   end
 
-  def save_container_projects_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_projects(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_projects.dup
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_projects, hashes, deletes, [:ems_ref],
-                         :labels)
-    store_ids_for_new_records(ems.container_projects, hashes, :ems_ref)
-  end
-
-  def save_persistent_volumes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.persistent_volumes(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.persistent_volumes.dup
-              else
-                []
-              end
-
-    save_inventory_multi(ems.persistent_volumes, hashes, deletes, [:ems_ref], [], [:namespace])
-    store_ids_for_new_records(ems.persistent_volumes, hashes, :ems_ref)
-  end
-
-  def save_container_quotas_inventory(ems, hashes, target = nil)
-    return if hash.nil?
-    target = ems if target.nil?
-
-    ems.container_quotas(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_quotas.dup
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
+  def method_missing(method_sym, *arguments, &block)
+    if (m = method_sym.to_s.match(/^save_(?<obj>.*)_inventory$/)) && DESCRIPTOR[m['obj'].singularize.to_sym]
+      singularize = m['obj'].singularize
+      find_key, links, children = get_item singularize.to_sym
+      if singularize == m['obj']
+        save_single_inventory(m['obj'], links, children, *arguments)
+      else
+        save_multiple_inventory(m['obj'], find_key, links, children, *arguments)
+      end
+    else
+      super
     end
-
-    save_inventory_multi(ems.container_quotas, hashes, deletes, [:ems_ref], :container_quota_items, :project)
-    store_ids_for_new_records(ems.container_quotas, hashes, :ems_ref)
   end
 
-  def save_container_quota_items_inventory(container_quota, hashes, target = nil)
-    return if hashes.nil?
-    container_quota.container_quota_items(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_quota.container_quota_items.dup
-              else
-                []
-              end
-    save_inventory_multi(container_quota.container_quota_items, hashes, deletes, [:resource])
-    store_ids_for_new_records(container_quota.container_quota_items, hashes, :resource)
+  def get_item(item)
+    desc = DESCRIPTOR[item]
+    [
+      Array.wrap((desc[:find_key] || DEFAULT_FIND_KEY)),
+      Array.wrap(desc[:links]),
+      Array.wrap(desc[:children]),
+    ]
   end
 
-  def save_container_limits_inventory(ems, hashes, target = nil)
-    return if hash.nil?
-    target = ems if target.nil?
-
-    ems.container_limits(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_limits.dup
-              else
-                []
-              end
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
+  def save_multiple_inventory(item, find_key, links, children, parent, hashes, target = nil)
+    unless hashes.nil?
+      target = parent if target.nil? && parent.kind_of?(ExtManagementSystem)
+      previous_entities = parent.send(item, true)
+      deletes = target.kind_of?(ExtManagementSystem) ? previous_entities.dup : []
+      links.each do |linked_key|
+        hashes.each do |h|
+          LINKS[linked_key].call(h, parent)
+        end
+      end
+      save_inventory_multi(parent.send(item), hashes, deletes, find_key, children, links + ALWAYS_IGNORED)
+      store_ids_for_new_records(parent.send(item), hashes, find_key)
     end
-
-    save_inventory_multi(ems.container_limits, hashes, deletes, [:ems_ref], :container_limit_items, :project)
-    store_ids_for_new_records(ems.container_limits, hashes, :ems_ref)
   end
 
-  def save_container_limit_items_inventory(container_limit, hashes, target = nil)
-    return if hashes.nil?
-    container_limit.container_limit_items(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_limit.container_limit_items.dup
-              else
-                []
-              end
-    save_inventory_multi(container_limit.container_limit_items, hashes, deletes, [:resource, :item_type])
-    store_ids_for_new_records(container_limit.container_limit_items, hashes, [:resource, :item_type])
-  end
-
-  def save_container_routes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_routes(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_routes.dup
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_service_id] = h.fetch_path(:container_service, :id)
+  def save_single_inventory(item, links, children, parent, hash)
+    links.each do |linked_key|
+      LINKS[linked_key].call(hash, parent)
     end
-
-    save_inventory_multi(ems.container_routes, hashes, deletes, [:ems_ref],
-                         :labels, [:container_service, :project, :namespace])
-    store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
-  end
-
-  def save_container_nodes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_nodes(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_nodes.dup
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_nodes, hashes, deletes, [:ems_ref],
-                         [:labels, :computer_system, :container_conditions], [:namespace])
-    store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
-  end
-
-  def save_computer_system_inventory(container_node, hash, _target = nil)
-    save_inventory_single(:computer_system, container_node, hash, [:hardware, :operating_system])
-  end
-
-  def save_container_replicators_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_replicators(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_replicators.dup
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
-    end
-
-    save_inventory_multi(ems.container_replicators, hashes, deletes, [:ems_ref],
-                         [:labels, :selector_parts], [:project, :namespace])
-    store_ids_for_new_records(ems.container_replicators, hashes, :ems_ref)
-  end
-
-  def save_container_services_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_services(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_services.dup
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_group_ids] = h[:container_groups].map { |x| x[:id] }
-      h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_image_registry_id] = h.fetch_path(:container_image_registry, :id)
-    end
-
-    save_inventory_multi(ems.container_services, hashes, deletes, [:ems_ref],
-                         [:labels, :selector_parts, :container_service_port_configs],
-                         [:container_groups, :project, :container_image_registry, :namespace])
-
-    store_ids_for_new_records(ems.container_services, hashes, :ems_ref)
-  end
-
-  def save_container_groups_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_groups(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_groups.dup
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_node_id] = h.fetch_path(:container_node, :id)
-      h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
-      h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_build_pod_id] = ems.container_build_pods.find_by_name(
-        h[:build_pod_name]).try(:id)
-    end
-
-    save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions,
-                          :container_volumes], [:container_node, :container_replicator, :project, :namespace, :build_pod_name])
-    store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
-  end
-
-  def save_container_definitions_inventory(container_group, hashes, target = nil)
-    return if hashes.nil?
-
-    container_group.container_definitions(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_group.container_definitions.dup
-              else
-                []
-              end
-
-    save_inventory_multi(container_group.container_definitions, hashes, deletes,
-                         [:ems_ref], [:container_port_configs, :container_env_vars, :security_context, :container])
-    store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
-  end
-
-  def save_container_port_configs_inventory(container_definition, hashes, target = nil)
-    return if hashes.nil?
-
-    container_definition.container_port_configs(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_definition.container_port_configs.dup
-              else
-                []
-              end
-
-    save_inventory_multi(container_definition.container_port_configs, hashes, deletes, [:ems_ref])
-    store_ids_for_new_records(container_definition.container_port_configs, hashes, :ems_ref)
-  end
-
-  def save_container_service_port_configs_inventory(container_service, hashes, target = nil)
-    return if hashes.nil?
-
-    container_service.container_service_port_configs(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_service.container_service_port_configs.dup
-              else
-                []
-              end
-
-    save_inventory_multi(container_service.container_service_port_configs, hashes, deletes, [:ems_ref])
-    store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
-  end
-
-  def save_container_env_vars_inventory(container_definition, hashes, target = nil)
-    return if hashes.nil?
-    container_definition.container_env_vars(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_definition.container_env_vars.dup
-              else
-                []
-              end
-    save_inventory_multi(container_definition.container_env_vars, hashes, deletes, [:name, :value, :field_path])
-    store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
-  end
-
-  def save_container_images_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-
-    ems.container_images(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_images.dup
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
-    end
-
-    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id], [],
-                         :container_image_registry)
-    store_ids_for_new_records(ems.container_images, hashes,
-                              [:image_ref, :container_image_registry_id])
-  end
-
-  def save_container_image_registries_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_image_registries(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_image_registries.dup
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_image_registries, hashes, deletes, [:host, :port])
-    store_ids_for_new_records(ems.container_image_registries, hashes, [:host, :port])
-  end
-
-  def save_container_component_statuses_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-
-    ems.container_component_statuses(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_component_statuses.dup
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_component_statuses, hashes, deletes, [:name])
-    store_ids_for_new_records(ems.container_component_statuses, hashes, :name)
-  end
-
-  def save_container_inventory(container_definition, hash, _target = nil)
-    # The hash could be nil when the container is in transition (still downloading
-    # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
-    # save_inventory_single is used to delete any pre-existing entity in containers,
-    hash[:container_image_id] = hash[:container_image][:id] unless hash.nil?
-    save_inventory_single(:container, container_definition, hash, [], :container_image)
-  end
-
-  def save_container_conditions_inventory(container_entity, hashes, target = nil)
-    return if hashes.nil?
-
-    container_entity.container_conditions(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_entity.container_conditions.dup
-              else
-                []
-              end
-
-    save_inventory_multi(container_entity.container_conditions, hashes, deletes, [:name])
-    store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
-  end
-
-  def save_security_context_inventory(container_definition, hash, _target = nil)
-    save_inventory_single(:security_context, container_definition, hash)
-  end
-
-  def save_container_volumes_inventory(container_group, hashes, target = nil)
-    return if hashes.nil?
-
-    container_group.container_volumes(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_group.container_volumes.dup
-              else
-                []
-              end
-
-    save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name])
-    store_ids_for_new_records(container_group.container_volumes, hashes, :name)
-  end
-
-  def save_labels_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.labels(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                entity.labels.dup
-              else
-                []
-              end
-
-    save_inventory_multi(entity.labels, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.labels, hashes, [:section, :name])
-  end
-
-  def save_selector_parts_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.selector_parts(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                entity.selector_parts.dup
-              else
-                []
-              end
-
-    save_inventory_multi(entity.selector_parts, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.selector_parts, hashes, [:section, :name])
-  end
-
-  def save_node_selector_parts_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.node_selector_parts(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                entity.node_selector_parts.dup
-              else
-                []
-              end
-
-    save_inventory_multi(entity.node_selector_parts, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
-  end
-
-  def save_container_builds_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_builds(true)
-    deletes = target.kind_of?(ExtManagementSystem) ? ems.container_builds.dup : []
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
-    end
-    save_inventory_multi(ems.container_builds, hashes, deletes, [:ems_ref], [:labels,],
-                         [:project, :resources])
-    store_ids_for_new_records(ems.container_builds, hashes, :ems_ref)
-  end
-
-  def save_container_build_pods_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_build_pods(true)
-    deletes = target.kind_of?(ExtManagementSystem) ? ems.container_build_pods.dup : []
-
-    hashes.each do |h|
-      h[:container_build_id] = h.fetch_path(:build_config, :id)
-    end
-
-    save_inventory_multi(ems.container_build_pods, hashes, deletes, [:ems_ref], [:labels,],
-                         [:build_config])
-    store_ids_for_new_records(ems.container_build_pods, hashes, :ems_ref)
+    save_inventory_single(item, parent, hash, children, links + ALWAYS_IGNORED)
   end
 end

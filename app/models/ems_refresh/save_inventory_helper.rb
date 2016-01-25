@@ -29,7 +29,7 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+  def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     deletes = deletes.to_a # make sure to load the association if it's an association
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
@@ -46,7 +46,7 @@ module EmsRefresh::SaveInventoryHelper
     unless deletes.blank?
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      association.delete(deletes)
+      disconnect ? deletes.map(&:disconnect_inv) : association.delete(deletes)
     end
 
     # Add the new items

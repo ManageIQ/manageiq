@@ -219,7 +219,7 @@ module ManageIQ::Providers::Kubernetes
         pc
       end
 
-      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
+      new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name,
                                                     service.metadata["table"][:namespace])
       new_result
     end
@@ -247,7 +247,7 @@ module ManageIQ::Providers::Kubernetes
           :container_nodes, :by_name, pod.spec.nodeName)
       end
 
-      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata["table"][:namespace])
+      new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata["table"][:namespace])
 
       # TODO, map volumes
       # TODO, podIP
@@ -329,7 +329,7 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_quota(resource_quota)
       new_result = parse_base_item(resource_quota).except(:namespace)
-      new_result[:project] = @data_index.fetch_path(
+      new_result[:container_project] = @data_index.fetch_path(
         :container_projects,
         :by_name,
         resource_quota.metadata["table"][:namespace])
@@ -364,7 +364,7 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_range(limit_range)
       new_result = parse_base_item(limit_range).except(:namespace)
-      new_result[:project] = @data_index.fetch_path(
+      new_result[:container_project] = @data_index.fetch_path(
         :container_projects,
         :by_name,
         limit_range.metadata["table"][:namespace])
@@ -427,7 +427,7 @@ module ManageIQ::Providers::Kubernetes
         :selector_parts   => parse_selector_parts(container_replicator)
       )
 
-      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
+      new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name,
                                                     container_replicator.metadata["table"][:namespace])
       new_result
     end

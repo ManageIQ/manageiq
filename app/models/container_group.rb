@@ -75,4 +75,10 @@ class ContainerGroup < ApplicationRecord
       ([container_project, container_replicator] + container_services).compact
     end
   end
+
+  def disconnect_inv
+    _log.info "Disconnecting Container group [#{name}] id [#{id}]#{log_text}" +
+    " from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}] "
+    self.ext_management_system = nil
+  end
 end
