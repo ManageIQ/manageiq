@@ -1,9 +1,10 @@
+include CompressedIds
+
 describe EmsCloudController do
-  let(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
+  let!(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
   let(:zone)   { FactoryGirl.build(:zone) }
   describe "#create" do
     before do
-      server
       allow(controller).to receive(:check_privileges).and_return(true)
       allow(controller).to receive(:assert_privileges).and_return(true)
       login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
@@ -132,7 +133,6 @@ describe EmsCloudController do
 
   describe "#ems_cloud_form_fields" do
     before do
-      server
       allow_any_instance_of(described_class).to receive(:set_user_time_zone)
       allow(controller).to receive(:check_privileges).and_return(true)
       allow(controller).to receive(:assert_privileges).and_return(true)
@@ -181,7 +181,6 @@ describe EmsCloudController do
 
   describe "#show_link" do
     before do
-      server
       allow_any_instance_of(described_class).to receive(:set_user_time_zone)
       allow(controller).to receive(:check_privileges).and_return(true)
       allow(controller).to receive(:assert_privileges).and_return(true)
@@ -269,6 +268,64 @@ describe EmsCloudController do
                                        :cred_type        => "default")
       expect(mocked_ems).to receive(:authentication_check).with("default", :save => false)
       controller.send(:update_ems_button_validate, mocked_ems)
+    end
+  end
+  describe "#test_toolbars" do
+    before do
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
+    end
+
+    it "refresh relationships and power states" do
+      session[:settings] = {:views => {}}
+      ems = FactoryGirl.create(:ems_amazon)
+      post :button, :id => ems.id, :pressed => "ems_cloud_refresh"
+      expect(response.status).to eq(200)
+    end
+
+    it "discover cloud providers" do
+      get :discover, :discover_type => "ems"
+      expect(response.status).to eq(200)
+      expect(response).to render_template('ems_cloud/discover')
+    end
+
+    it 'edit selected cloud provider' do
+      ems = FactoryGirl.create(:ems_amazon)
+      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_edit"
+      expect(response.status).to eq(200)
+    end
+
+    it 'edit cloud provider tags' do
+      ems = FactoryGirl.create(:ems_amazon)
+      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_tag"
+      expect(response.status).to eq(200)
+    end
+
+    it 'manage cloud provider policies' do
+      ems = FactoryGirl.create(:ems_amazon)
+      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_protect"
+      expect(response.status).to eq(200)
+
+      get :protect
+      expect(response.status).to eq(200)
+      expect(response).to render_template('shared/views/protect')
+    end
+
+    it 'edit cloud provider tags' do
+      ems = FactoryGirl.create(:ems_amazon)
+      post :button, :id => ems.id, :pressed => "ems_cloud_timeline"
+      expect(response.status).to eq(200)
+
+      session[:settings] = {:views => {}}
+      get :show, :display => "timeline", :id => ems.id
+      expect(response.status).to eq(200)
+    end
+
+    it 'edit cloud providers' do
+      ems = FactoryGirl.create(:ems_amazon)
+      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_edit"
+      expect(response.status).to eq(200)
     end
   end
 end
