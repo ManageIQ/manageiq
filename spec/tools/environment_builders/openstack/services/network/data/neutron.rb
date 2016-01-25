@@ -100,27 +100,26 @@ module Openstack
 
           def subnets(network_name = nil)
             subnets = {
-              PUBLIC_NETWORK_NAME  => [
-                {
-                  :name             => "EmsRefreshSpec-SubnetPublic",
-                  :cidr             => "172.16.17.0/24",
-                  :gateway_ip       => "172.16.17.1",
-                  :ip_version       => "4",
-                  :enable_dhcp      => false,
-                  :allocation_pools => [{
-                    "start" => "172.16.17.2",
-                    "end"   => "172.16.17.9"
-                  }, {
-                    "start" => "172.16.17.11",
-                    "end"   => "172.16.17.19"
-                  }]
-                }],
-              PUBLIC_NETWORK_NAME_10 => [{
-                :name             => "EmsRefreshSpec-SubnetPublic_10",
-                :cidr             => "172.16.18.0/24",
-                :gateway_ip       => "172.16.18.1",
+              PUBLIC_NETWORK_NAME => [{
+                :name             => "EmsRefreshSpec-SubnetPublic",
+                :cidr             => "172.16.17.0/24",
+                :gateway_ip       => "172.16.17.1",
                 :ip_version       => "4",
-                :enable_dhcp      => false}],
+                :enable_dhcp      => false,
+                :allocation_pools => [{
+                  "start" => "172.16.17.2",
+                  "end"   => "172.16.17.9"
+                }, {
+                  "start" => "172.16.17.11",
+                  "end"   => "172.16.17.19"
+                }]
+              }],
+              PUBLIC_NETWORK_NAME_10 => [{
+                :name        => "EmsRefreshSpec-SubnetPublic_10",
+                :cidr        => "172.16.18.0/24",
+                :gateway_ip  => "172.16.18.1",
+                :ip_version  => "4",
+                :enable_dhcp => false}],
               PUBLIC_NETWORK_NAME_20 => [{
                 :name             => "EmsRefreshSpec-SubnetPublic_20",
                 :cidr             => "172.16.19.0/24",
@@ -128,139 +127,130 @@ module Openstack
                 :ip_version       => "4",
                 :enable_dhcp      => false,
                 :allocation_pools => [{
-                   "start" => "172.16.19.21",
-                   "end"   => "172.16.19.23"}]}],
+                  "start" => "172.16.19.21",
+                  "end"   => "172.16.19.23"}]}],
               PUBLIC_NETWORK_NAME_30 => [{
-                :name             => "EmsRefreshSpec-SubnetPublic_30",
-                :cidr             => "172.16.20.0/24",
-                :gateway_ip       => "172.16.20.1",
-                :ip_version       => "4",
-                :enable_dhcp      => false
+                :name        => "EmsRefreshSpec-SubnetPublic_30",
+                :cidr        => "172.16.20.0/24",
+                :gateway_ip  => "172.16.20.1",
+                :ip_version  => "4",
+                :enable_dhcp => false
               }],
               PUBLIC_NETWORK_NAME_40 => [{
-                :name             => "EmsRefreshSpec-SubnetPublic_40",
-                :cidr             => "172.16.21.0/24",
-                :gateway_ip       => "172.16.21.1",
-                :ip_version       => "4",
-                :enable_dhcp      => false
+                :name        => "EmsRefreshSpec-SubnetPublic_40",
+                :cidr        => "172.16.21.0/24",
+                :gateway_ip  => "172.16.21.1",
+                :ip_version  => "4",
+                :enable_dhcp => false
               }],
               PUBLIC_NETWORK_NAME_50 => [{
-                :name             => "EmsRefreshSpec-SubnetPublic_50",
-                :cidr             => "172.16.50.0/24",
-                :gateway_ip       => "172.16.50.1",
-                :ip_version       => "4",
-                :enable_dhcp      => false
+                :name        => "EmsRefreshSpec-SubnetPublic_50",
+                :cidr        => "172.16.50.0/24",
+                :gateway_ip  => "172.16.50.1",
+                :ip_version  => "4",
+                :enable_dhcp => false
               }, {
-                :name             => "EmsRefreshSpec-SubnetPublic_51",
-                :cidr             => "172.16.51.0/24",
-                :gateway_ip       => "172.16.51.1",
-                :ip_version       => "4",
-                :enable_dhcp      => false
+                :name        => "EmsRefreshSpec-SubnetPublic_51",
+                :cidr        => "172.16.51.0/24",
+                :gateway_ip  => "172.16.51.1",
+                :ip_version  => "4",
+                :enable_dhcp => false
               }],
-              PRIVATE_NETWORK_NAME => [
-                {
-                  :name             => "EmsRefreshSpec-SubnetPrivate",
-                  :cidr             => "192.168.0.0/24",
-                  :gateway_ip       => "192.168.0.1",
-                  :dns_nameservers  => ["8.8.8.8"],
-                  :ip_version       => "4",
-                  :allocation_pools => [
-                    {
-                      "start" => "192.168.0.3",
-                      "end"   => "192.168.0.5"
-                    },{
-                      "start" => "192.168.0.8",
-                      "end"   => "192.168.0.8"
-                    }
-                  ]
+              PRIVATE_NETWORK_NAME => [{
+                :name             => "EmsRefreshSpec-SubnetPrivate",
+                :cidr             => "192.168.0.0/24",
+                :gateway_ip       => "192.168.0.1",
+                :dns_nameservers  => ["8.8.8.8"],
+                :ip_version       => "4",
+                :allocation_pools => [{
+                  "start" => "192.168.0.3",
+                  "end"   => "192.168.0.5"
                 }, {
-                  :name            => "EmsRefreshSpec-SubnetPrivate_12",
-                  :cidr            => "192.168.1.0/24",
-                  :gateway_ip      => "192.168.1.1",
-                  :dns_nameservers => ["8.8.8.8"],
-                  :ip_version      => "4"
+                  "start" => "192.168.0.8",
+                  "end"   => "192.168.0.8"
+                }]
+              }, {
+                :name            => "EmsRefreshSpec-SubnetPrivate_12",
+                :cidr            => "192.168.1.0/24",
+                :gateway_ip      => "192.168.1.1",
+                :dns_nameservers => ["8.8.8.8"],
+                :ip_version      => "4"
                 # TODO(lsmola) test also IPV6, fill in correct cidr and gateway
                 # }, {
                 #   :name       => "EmsRefreshSpec-SubnetPrivate3",
                 #   :cidr       => "192.168.2.0/24",
                 #   :gateway_ip => "192.168.3.1",
                 #   :ip_version => "6"
-                }],
-              PRIVATE_NETWORK_NAME_2 => [
-                {
-                  :name       => "EmsRefreshSpec-SubnetPrivate_2",
-                  :cidr       => "192.168.2.0/24",
-                  :gateway_ip => "192.168.2.1",
-                  :ip_version => "4"
-                }],
-              PRIVATE_NETWORK_NAME_3 => [
-                {
-                  :name             => "EmsRefreshSpec-SubnetPrivate_3",
-                  :cidr             => "192.168.3.0/24",
-                  :gateway_ip       => "192.168.3.1",
-                  :ip_version       => "4",
-                  :allocation_pools => [
-                    {
-                      "start" => "192.168.3.2",
-                      "end"   => "192.168.3.6"
-                    },{
-                      "start" => "192.168.3.8",
-                      "end"   => "192.168.3.10"
-                    }
-                  ]
-                }],
-              PRIVATE_NETWORK_NAME_20 => [
-                {
-                  :name       => "EmsRefreshSpec-SubnetPrivate_20",
-                  :cidr       => "192.168.20.0/24",
-                  :gateway_ip => "192.168.20.1",
-                  :ip_version => "4",
-                }],
-              PRIVATE_NETWORK_NAME_30 => [
-                {
-                  :name       => "EmsRefreshSpec-SubnetPrivate_30",
-                  :cidr       => "192.168.30.0/24",
-                  :gateway_ip => "192.168.30.1",
-                  :ip_version => "4",
-                } ,{
-                  :name       => "EmsRefreshSpec-SubnetPrivate_31",
-                  :cidr       => "192.168.31.0/24",
-                  :gateway_ip => "192.168.31.1",
-                  :ip_version => "4",
-                }],
-              ISOLATED_PRIVATE_NETWORK_NAME_1 => [
-                {
-                  :name       => "EmsRefreshSpec-IsolatedSubnetPrivate_1",
-                  :cidr       => "192.168.40.0/24",
-                  :gateway_ip => "192.168.40.1",
-                  :ip_version => "4"
-                }],
-              ISOLATED_PRIVATE_NETWORK_NAME_2 => [
-                {
-                  :name             => "EmsRefreshSpec-IsolatedSubnetPrivate_2",
-                  :cidr             => "192.168.50.0/24",
-                  :gateway_ip       => "192.168.50.1",
-                  :ip_version       => "4",
-                  :allocation_pools => [{
-                    "start" => "192.168.50.2",
-                    "end"   => "192.168.50.2"
+              }],
+              PRIVATE_NETWORK_NAME_2 => [{
+                :name       => "EmsRefreshSpec-SubnetPrivate_2",
+                :cidr       => "192.168.2.0/24",
+                :gateway_ip => "192.168.2.1",
+                :ip_version => "4"
+              }],
+              PRIVATE_NETWORK_NAME_3 => [{
+                :name             => "EmsRefreshSpec-SubnetPrivate_3",
+                :cidr             => "192.168.3.0/24",
+                :gateway_ip       => "192.168.3.1",
+                :ip_version       => "4",
+                :allocation_pools => [
+                  {
+                    "start" => "192.168.3.2",
+                    "end"   => "192.168.3.6"
                   }, {
-                    "start" => "192.168.50.4",
-                    "end"   => "192.168.50.4"
-                  }],
+                    "start" => "192.168.3.8",
+                    "end"   => "192.168.3.10"
+                  }
+                ]
+              }],
+              PRIVATE_NETWORK_NAME_20 => [{
+                :name       => "EmsRefreshSpec-SubnetPrivate_20",
+                :cidr       => "192.168.20.0/24",
+                :gateway_ip => "192.168.20.1",
+                :ip_version => "4",
+              }],
+              PRIVATE_NETWORK_NAME_30 => [{
+                :name       => "EmsRefreshSpec-SubnetPrivate_30",
+                :cidr       => "192.168.30.0/24",
+                :gateway_ip => "192.168.30.1",
+                :ip_version => "4",
+              }, {
+                :name       => "EmsRefreshSpec-SubnetPrivate_31",
+                :cidr       => "192.168.31.0/24",
+                :gateway_ip => "192.168.31.1",
+                :ip_version => "4",
+              }],
+              ISOLATED_PRIVATE_NETWORK_NAME_1 => [{
+                :name       => "EmsRefreshSpec-IsolatedSubnetPrivate_1",
+                :cidr       => "192.168.40.0/24",
+                :gateway_ip => "192.168.40.1",
+                :ip_version => "4"
+              }],
+              ISOLATED_PRIVATE_NETWORK_NAME_2 => [{
+                :name             => "EmsRefreshSpec-IsolatedSubnetPrivate_2",
+                :cidr             => "192.168.50.0/24",
+                :gateway_ip       => "192.168.50.1",
+                :ip_version       => "4",
+                :allocation_pools => [{
+                  "start" => "192.168.50.2",
+                  "end"   => "192.168.50.2"
                 }, {
-                  :name       => "EmsRefreshSpec-IsolatedSubnetPrivate_21",
-                  :cidr       => "192.168.51.0/24",
-                  :gateway_ip => "192.168.51.1",
-                  :ip_version => "4"
-                }],}
+                  "start" => "192.168.50.4",
+                  "end"   => "192.168.50.4"
+                }],
+              }, {
+                :name       => "EmsRefreshSpec-IsolatedSubnetPrivate_21",
+                :cidr       => "192.168.51.0/24",
+                :gateway_ip => "192.168.51.1",
+                :ip_version => "4"
+              }]}
 
             indexed_collection_return(subnets, network_name)
           end
 
           def routers(network_name = nil)
             routers = {
-              PUBLIC_NETWORK_NAME => [
+              PUBLIC_NETWORK_NAME    => [
                 {
                   :name      => ROUTER_NAME,
                   :__subnets => subnets(PRIVATE_NETWORK_NAME)

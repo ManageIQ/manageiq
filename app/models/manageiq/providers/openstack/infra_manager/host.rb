@@ -10,7 +10,8 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   has_many :network_routers, :through => :cloud_subnets
   has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
-  has_many :cloud_subnets, :through => :network_ports, :class_name => "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
+  has_many :cloud_subnets, :through    => :network_ports,
+                           :class_name => "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
   has_many :public_networks, :through => :cloud_subnets
 
   has_many :floating_ips

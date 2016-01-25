@@ -66,17 +66,17 @@ module Openstack
               volume = volumes.detect { |x| x.display_name == volume_name }
               server.merge!(
                 :block_device_mapping_v2 => [{
-                                               :source_type           => "image",
-                                               :destination_type      => "local",
-                                               :boot_index            => 0,
-                                               :delete_on_termination => true,
-                                               :uuid                  => image.id
-                                             }, {
-                                               :source_type           => "volume",
-                                               :uuid                  => volume.id,
-                                               :destination_type      => 'volume',
-                                               :delete_on_termination => "preserve",
-                                             }]) if volume
+                  :source_type           => "image",
+                  :destination_type      => "local",
+                  :boot_index            => 0,
+                  :delete_on_termination => true,
+                  :uuid                  => image.id
+                }, {
+                  :source_type           => "volume",
+                  :uuid                  => volume.id,
+                  :destination_type      => 'volume',
+                  :delete_on_termination => "preserve",
+                }]) if volume
             end
 
             if (network_names = server.delete(:__network_names))

@@ -40,7 +40,7 @@ module Openstack
             @data.networks.each do |network|
               begin
                 network = find_or_create(@service.networks, network.merge(:tenant_id => @project.id))
-              rescue => e
+              rescue
                 # Havana and below can't deal with the provider networks
                 network.delete("provider:physical_network")
                 network.delete("provider:network_type")

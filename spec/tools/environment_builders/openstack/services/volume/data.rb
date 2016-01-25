@@ -26,7 +26,7 @@ module Openstack
 
         def volumes(volume_type_name = nil)
           volumes = {
-            volume_type_name_2   => [{
+            volume_type_name_2 => [{
               :display_name        => volume_name_1,
               :display_description => "EmsRefreshSpec-Volume description",
               :size                => 1}]}
