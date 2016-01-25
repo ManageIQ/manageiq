@@ -14,6 +14,7 @@
 //= require moment-timezone
 //= require sprintf
 //= require numeral
+//= require miq_api
 //= require miq_angular_application
 //= require_tree ./directives/
 //= require_tree ./services/
