@@ -24,7 +24,7 @@ module Authenticator
     def admin_connect
       @admin_iam ||=
         begin
-          log_auth = VMDB::Config.clone_auth_for_log(config)
+          log_auth = Vmdb::Settings.mask_passwords!(config.deep_clone)
           _log.info("Server Settings: #{log_auth.inspect}")
 
           verify_credentials(config[:amazon_key], config[:amazon_secret])

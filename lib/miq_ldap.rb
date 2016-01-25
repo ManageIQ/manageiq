@@ -33,8 +33,10 @@ class MiqLdap
 
   def initialize(options = {})
     @auth = options[:auth] || VMDB::Config.new("vmdb").config[:authentication]
-    log_auth = VMDB::Config.clone_auth_for_log(@auth)
+
+    log_auth = Vmdb::Settings.mask_passwords!(@auth.deep_clone)
     _log.info("Server Settings: #{log_auth.inspect}")
+
     mode              = options.delete(:mode) || @auth[:mode]
     @basedn           = options.delete(:basedn) || @auth[:basedn]
     @user_type        = options.delete(:user_type) || @auth[:user_type]
@@ -53,7 +55,7 @@ class MiqLdap
     options[:host] = resolve_host(options[:host], options[:port])
 
     # Make sure we do NOT log the clear-text password
-    log_options = VMDB::Config.clone_auth_for_log(options)
+    log_options = Vmdb::Settings.mask_passwords!(options.deep_clone)
     $log.info "options: #{log_options.inspect}"
 
     @ldap = Net::LDAP.new(options)
