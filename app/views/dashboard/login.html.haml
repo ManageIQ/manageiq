@@ -72,7 +72,7 @@
                       :class                => "btn btn-primary",
                       :alt                  => "Login",
                       :title                => _("Login"),
-                      :onclick              => "miqAjaxAuth('#{j login_url}')")
+                      :onclick              => "miqAjaxAuth('#{j login_url}'); return false;")
 
             = link_to(_("SSO Login"), '',
                       :id                    => "sso_login",
@@ -80,7 +80,7 @@
                       :alt                   => "SSO Login",
                       :title                 => _("SSO Login"),
                       :style                 => "display: none;",
-                      :onclick              => "miqAjaxAuth('#{j sso_url}')")
+                      :onclick              => "miqAjaxAuth('#{j sso_url}'); return false;")
 
     .col-md-6.col-lg-7.details
       - if get_vmdb_config[:session][:show_login_info]
