@@ -17,7 +17,7 @@ class TreeBuilderChargebackRates < TreeBuilder
   def x_get_tree_roots(count_only, options)
     # TODO: Common code in CharbackRate & ChargebackAssignments, need to move into module
     case options[:type]
-    when :cb_assignments, :cb_rates
+    when :cb_assignments
       rate_types = ChargebackRate::VALID_CB_RATE_TYPES
 
       if count_only
@@ -31,6 +31,23 @@ class TreeBuilderChargebackRates < TreeBuilder
             :text  => rtype,
             :image => img,
             :tip   => rtype
+          )
+        end
+        objects
+      end
+    when :cb_rates
+      # the rate accordion merge the compute rate and the storage rate in one unic rate grouping by description
+      rates = ChargebackRate.all
+      grouped_rates = rates.group_by(&:description)
+      if count_only
+        grouped_rates.length
+      else
+        objects = []
+        grouped_rates.sort.each do |description_group|
+          objects.push(
+            :id    => description_group[0],
+            :text  => description_group[0],
+            :image => 'chargeback_rate',
           )
         end
         objects
