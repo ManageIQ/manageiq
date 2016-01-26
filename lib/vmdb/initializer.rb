@@ -17,6 +17,11 @@ module Vmdb
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update_attributes(:status => "started")
       end
+
+      # Rails console needs session store configured
+      if defined?(Rails::Console)
+        MiqUiWorker.preload_for_worker_role
+      end
     end
   end
 end
