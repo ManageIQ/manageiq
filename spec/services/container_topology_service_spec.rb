@@ -47,7 +47,7 @@ describe ContainerTopologyService do
     it "topology contains the expected structure and content" do
       # vm and host test cross provider correlation to infra provider
       hardware = FactoryGirl.create(:hardware, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8)
-      host = FactoryGirl.create(:host,
+      host = FactoryGirl.create(:host_redhat,
                                 :uid_ems => "abcd9a08-7b13-11e5-8546-129aa6621999",
                                 :ext_management_system => ems_rhev,
                                 :hardware => hardware)
