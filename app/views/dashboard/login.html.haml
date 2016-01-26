@@ -1,23 +1,21 @@
-- auth_mode   = get_vmdb_config[:authentication][:mode]
+- auth_mode = get_vmdb_config[:authentication][:mode]
+
 %span#badge
   %img{:src => "#{current_tenant.logo? ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
+
 .container
   .row
     .col-md-12
       #brand
         %img{:src => image_path("brand.svg"), :alt => "ManageIQ"}
+
     .col-md-6.col-lg-5.login
       .form-horizontal#login_div
         = render(:partial => "layouts/spinner",
                  :locals  => {:login => true})
-        #invalid_sso_credentials_flash{:style => "display: none;"}
-          #flash_text_div{:title => _("Click to remove message")}
-            .alert.alert-danger
-              %span.pficon-layered
-                %span.pficon.pficon-error-octagon
-                %span.pficon.pficon-warning-exclamation
-              %strong= _("Invalid Single Sign-On credentials")
+
         = render :partial => "layouts/flash_msg"
+
         .form-group
           %label.col-md-3.control-label= _('Username')
           .col-md-9
@@ -26,6 +24,7 @@
                              :placeholder => _('Username'),
                              :onkeypress => "if (miqEnterPressed(event)) miqAjaxAuth();")
             = javascript_tag(javascript_focus('user_name'))
+
         .form-group
           %label.col-md-3.control-label= _('Password')
           .col-md-9
