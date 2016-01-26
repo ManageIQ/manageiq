@@ -57,7 +57,11 @@ class MiqRequestWorkflow
     @values       = values
     @filters      = {}
     @requester    = requester.kind_of?(User) ? requester : User.lookup_by_identity(requester)
-    @requester.miq_group_description = values[:requester_group]
+    group_description = values[:requester_group]
+    if group_description && group_description != @requester.miq_group_description
+      @requester = @requester.clone
+      @requester.miq_group_description = group_description
+    end
     @values.merge!(options) unless options.blank?
   end
 
