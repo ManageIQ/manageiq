@@ -140,7 +140,7 @@ module AuthenticationMixin
         value[:auth_key] = '-----BEGIN RSA PRIVATE KEY-----' + fixed_auth_key + '-----END RSA PRIVATE KEY-----'
       end
 
-      unless value[:userid].blank?
+      unless value.key?(:userid) && value[:userid].blank?
         current[:new] = {:user => value[:userid], :password => value[:password], :auth_key => value[:auth_key]}
       end
       current[:old] = {:user => cred.userid, :password => cred.password, :auth_key => cred.auth_key} if cred
@@ -152,7 +152,7 @@ module AuthenticationMixin
       next if current[:old] == current[:new]
 
       # Check if it is a delete
-      if value[:userid].blank?
+      if value.key?(:userid) && value[:userid].blank?
         current[:new] = nil
         next if options[:save] == false
         authentication_delete(type)
