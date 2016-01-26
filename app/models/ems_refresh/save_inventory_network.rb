@@ -29,6 +29,7 @@ module EmsRefresh::SaveInventoryNetwork
 
     child_keys = [
       :cloud_networks,
+      :network_groups,
       :security_groups,
       :network_routers,
       :network_ports,
@@ -73,20 +74,43 @@ module EmsRefresh::SaveInventoryNetwork
     store_ids_for_new_records(ems.cloud_networks, hashes, :ems_ref)
   end
 
-  def save_cloud_subnets_inventory(cloud_network, hashes)
+  def save_network_groups_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.network_groups(true)
+    deletes = if (target == ems)
+                ems.network_groups.dup
+              else
+                []
+              end
+
+    hashes.each do |h|
+      h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
+    end
+
+    save_inventory_multi(ems.network_groups,
+                         hashes,
+                         deletes,
+                         [:ems_ref],
+                         :cloud_subnets,
+                         [:orchestration_stack])
+    store_ids_for_new_records(ems.network_groups, hashes, :ems_ref)
+  end
+
+  def save_cloud_subnets_inventory(network, hashes)
     # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
       %i(availability_zone).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
-      h[:ems_id] = cloud_network.ems_id
+      h[:ems_id] = network.ems_id
     end
 
-    save_inventory_multi(cloud_network.cloud_subnets, hashes, :use_association, [:ems_ref], nil, [:network_router])
+    save_inventory_multi(network.cloud_subnets, hashes, :use_association, [:ems_ref], nil, [:network_router])
 
-    cloud_network.save!
-    store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
+    network.save!
+    store_ids_for_new_records(network.cloud_subnets, hashes, :ems_ref)
   end
 
   def save_security_groups_inventory(ems, hashes, target = nil)
@@ -101,7 +125,7 @@ module EmsRefresh::SaveInventoryNetwork
 
     # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
-      %i(cloud_tenant cloud_network orchestration_stack).each do |relation|
+      %i(cloud_tenant cloud_network orchestration_stack network_group).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
     end
@@ -178,7 +202,7 @@ module EmsRefresh::SaveInventoryNetwork
 
     # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
-      %i(cloud_tenant cloud_network).each do |relation|
+      %i(cloud_tenant cloud_network network_group).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
     end
