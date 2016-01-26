@@ -22,44 +22,36 @@ class ApiController
     end
 
     #
-    # Returns an Arel definition for ActiveRecord's option for where()
-    # based on the filter attributes specified.
+    # Returns an MiqExpression based on the filter attributes specified.
     #
     def filter_param(klass)
       return nil if params['filter'].blank?
 
-      operators = {"!=" => {:default => :not_eq, :str => :does_not_match, :ruby => :!=},
-                   "<=" => {:default => :lteq},
-                   ">=" => {:default => :gteq},
-                   "<"  => {:default => :lt},
-                   ">"  => {:default => :gt},
-                   "="  => {:default => :eq, :str => :matches, :ruby => :==}
-                  }
+      operators = {
+        "!=" => {:default => "!=", :regex => "REGULAR EXPRESSION DOES NOT MATCH", :null => "IS NOT NULL"},
+        "<=" => {:default => "<="},
+        ">=" => {:default => ">="},
+        "<"  => {:default => "<"},
+        ">"  => {:default => ">"},
+        "="  => {:default => "=", :regex => "REGULAR EXPRESSION MATCHES", :null => "IS NULL"}
+      }
 
-      res_filter = nil
-      ruby_filters = []
+      and_expressions = []
+      or_expressions = []
 
       params['filter'].select(&:present?).each do |filter|
         parsed_filter = parse_filter(filter, operators)
-        if klass.column_names.include?(parsed_filter[:attr])
-          arel = klass.arel_table[parsed_filter[:attr]].send(parsed_filter[:method], parsed_filter[:value])
-          res_filter = if res_filter.nil?
-                         arel
-                       else
-                         parsed_filter[:logical_or] ? res_filter.or(arel) : res_filter.and(arel)
-                       end
-        elsif parsed_filter[:ruby_operator].present? && klass.virtual_attribute?(parsed_filter[:attr])
-          ruby_filters << lambda do |result_set|
-            result_set.select do |resource|
-              attr = resource.public_send("#{parsed_filter[:attr]}")
-              attr.send("#{parsed_filter[:ruby_operator]}", parsed_filter[:value])
-            end
-          end
-        else
+        unless klass.column_names.include?(parsed_filter[:attr]) || klass.virtual_attribute?(parsed_filter[:attr])
           raise BadRequestError, "attribute #{parsed_filter[:attr]} does not exist"
         end
+        field = "#{klass.name}-#{parsed_filter[:attr]}"
+        target = parsed_filter[:logical_or] ? or_expressions : and_expressions
+        target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
       end
-      [res_filter, ruby_filters]
+
+      and_part = and_expressions.one? ? and_expressions.first : {"AND" => and_expressions}
+      composite_expression = or_expressions.empty? ? and_part : {"OR" => [and_part, *or_expressions]}
+      MiqExpression.new(composite_expression)
     end
 
     def parse_filter(filter, operators)
@@ -70,9 +62,8 @@ class ApiController
             "Unknown operator specified in filter #{filter}" if operator.blank?
 
       filter_attr, _, filter_value = filter.partition(operator)
-
-      filter_value = filter_value.strip
-      str_method   = methods[:str] || methods[:default]
+      filter_value.strip!
+      str_method = filter_value =~ /%/ && methods[:regex] || methods[:default]
 
       filter_value, method =
         case filter_value
@@ -81,18 +72,17 @@ class ApiController
         when /^".*"$/
           [filter_value.gsub(/^"|"$/, ''), str_method]
         when /^(NULL|nil)$/i
-          [nil, methods[:default]]
+          [nil, methods[:null] || methods[:default]]
         else
           [filter_value, methods[:default]]
         end
 
-      {
-        :logical_or    => logical_or,
-        :method        => method,
-        :attr          => filter_attr.strip,
-        :value         => filter_value,
-        :ruby_operator => methods[:ruby]
-      }
+      if filter_value =~ /%/
+        filter_value = "/\\A#{Regexp.escape(filter_value)}\\z/"
+        filter_value.gsub!(/%/, ".*")
+      end
+
+      {:logical_or => logical_or, :operator => method, :attr => filter_attr.strip, :value => filter_value}
     end
 
     def by_tag_param

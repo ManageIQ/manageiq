@@ -236,6 +236,55 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
                                              {"name" => vm3.name, "guid" => vm3.guid}])
     end
+
+    it "supports filtering by virtual string attributes" do
+      host_a = FactoryGirl.create(:host, :name => "aa")
+      host_b = FactoryGirl.create(:host, :name => "bb")
+      vm_a = FactoryGirl.create(:vm, :host => host_a)
+      _vm_b = FactoryGirl.create(:vm, :host => host_b)
+
+      run_get(vms_url, :filter => ["host_name='aa'"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm_a.name, "guid" => vm_a.guid}])
+    end
+
+    it "supports flexible filtering by virtual string attributes" do
+      host_a = FactoryGirl.create(:host, :name => "ab")
+      host_b = FactoryGirl.create(:host, :name => "cd")
+      vm_a = FactoryGirl.create(:vm, :host => host_a)
+      _vm_b = FactoryGirl.create(:vm, :host => host_b)
+
+      run_get(vms_url, :filter => ["host_name='a%'"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm_a.name, "guid" => vm_a.guid}])
+    end
+
+    it "supports filtering by virtual boolean attributes" do
+      ems = FactoryGirl.create(:ext_management_system)
+      storage = FactoryGirl.create(:storage)
+      host = FactoryGirl.create(:host, :storages => [storage])
+      _vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems)
+      archived_vm = FactoryGirl.create(:vm)
+
+      run_get(vms_url, :filter => ["archived=true"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => archived_vm.name, "guid" => archived_vm.guid}])
+    end
+
+    it "supports filtering by comparison of virtual integer attributes" do
+      hardware_1 = FactoryGirl.create(:hardware, :cpu_sockets => 4)
+      hardware_2 = FactoryGirl.create(:hardware, :cpu_sockets => 8)
+      _vm_1 = FactoryGirl.create(:vm, :hardware => hardware_1)
+      vm_2 = FactoryGirl.create(:vm, :hardware => hardware_2)
+
+      run_get(vms_url, :filter => ["num_cpu > 4"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm_2.name, "guid" => vm_2.guid}])
+    end
   end
 
   describe "Querying vm attributes" do
