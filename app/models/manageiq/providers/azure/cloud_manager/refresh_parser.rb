@@ -36,7 +36,7 @@ module ManageIQ::Providers
         get_series
         get_availability_zones
         get_stacks
-        get_cloud_networks
+        get_network_groups
         get_instances
         get_images
         _log.info("#{log_header}...Complete")
@@ -105,13 +105,13 @@ module ManageIQ::Providers
         process_collection([stack], :orchestration_templates) { |the_stack| parse_stack_template(the_stack, content) }
       end
 
-      def get_cloud_networks
-        cloud_networks = gather_data_for_this_region(@vns)
-        process_collection(cloud_networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
+      def get_network_groups
+        network_groups = gather_data_for_this_region(@vns)
+        process_collection(network_groups, :network_groups) { |network_group| parse_network_group(network_group) }
       end
 
-      def get_cloud_subnets(cloud_network)
-        subnets = cloud_network.properties.subnets
+      def get_cloud_subnets(network_group)
+        subnets = network_group.properties.subnets
         process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
       end
 
@@ -189,20 +189,21 @@ module ManageIQ::Providers
         return id, new_result
       end
 
-      def parse_cloud_network(cloud_network)
-        cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
+      def parse_network_group(network_group)
+        cloud_subnets = get_cloud_subnets(network_group).collect do |raw_subnet|
           @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
         end
 
         uid = resource_uid(@subscription_id,
-                           cloud_network.resource_group.downcase,
-                           cloud_network.type.downcase,
-                           cloud_network.name)
+                           network_group.resource_group.downcase,
+                           network_group.type.downcase,
+                           network_group.name)
 
         new_result = {
-          :ems_ref             => cloud_network.id,
-          :name                => cloud_network.name,
-          :cidr                => cloud_network.properties.address_space.address_prefixes.join(", "),
+          :type                => ManageIQ::Providers::Azure::CloudManager::NetworkGroup.name,
+          :ems_ref             => network_group.id,
+          :name                => network_group.name,
+          :cidr                => network_group.properties.address_space.address_prefixes.join(", "),
           :enabled             => true,
           :cloud_subnets       => cloud_subnets,
           :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),

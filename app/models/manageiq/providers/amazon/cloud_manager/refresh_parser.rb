@@ -29,7 +29,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       get_availability_zones
       get_key_pairs
       get_stacks
-      get_cloud_networks
+      get_network_groups
       get_security_groups
       get_private_images if @options["get_private_images"]
       get_shared_images  if @options["get_shared_images"]
@@ -64,9 +64,9 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
   end
 
-  def get_cloud_networks
+  def get_network_groups
     vpcs = @connection.vpcs
-    process_collection(vpcs, :cloud_networks) { |vpc| parse_cloud_network(vpc) }
+    process_collection(vpcs, :network_groups) { |vpc| parse_network_group(vpc) }
   end
 
   def get_cloud_subnets(vpc)
@@ -204,7 +204,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     ManageIQ::Providers::Amazon::CloudManager::AuthKeyPair.name
   end
 
-  def parse_cloud_network(vpc)
+  def parse_network_group(vpc)
     uid    = vpc.id
 
     name   = get_name_from_tags(vpc)
@@ -216,6 +216,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     cloud_subnets = vpc.subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id) }
 
     new_result = {
+      :type                => ManageIQ::Providers::Amazon::CloudManager::NetworkGroup.name,
       :ems_ref             => uid,
       :name                => name,
       :cidr                => vpc.cidr_block,
@@ -253,7 +254,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   def parse_security_group(sg)
     uid, new_result = super
 
-    new_result[:cloud_network]       = @data_index.fetch_path(:cloud_networks, sg.vpc_id)
+    new_result[:network_group]       = @data_index.fetch_path(:network_groups, sg.vpc_id)
     new_result[:orchestration_stack] = @data_index.fetch_path(:orchestration_stacks, sg.tags["aws:cloudformation:stack-id"])
 
     return uid, new_result
@@ -371,8 +372,9 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
       :availability_zone   => @data_index.fetch_path(:availability_zones, instance.availability_zone),
       :flavor              => flavor,
-      :cloud_network       => @data_index.fetch_path(:cloud_networks, instance.vpc_id),
-      :cloud_subnet        => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
+      # TODO(lsmola) replace with network port
+      # :network_group       => @data_index.fetch_path(:network_groups, instance.vpc_id),
+      # :cloud_subnet        => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
       :key_pairs           => [@data_index.fetch_path(:key_pairs, instance.key_name)].compact,
       :security_groups     => instance.security_groups.to_a.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
       :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, instance.tags["aws:cloudformation:stack-id"]),
@@ -410,7 +412,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :type               => ManageIQ::Providers::Amazon::CloudManager::FloatingIp.name,
       :ems_ref            => uid,
       :address            => address,
-      :cloud_network_only => ip.vpc?,
+      :network_group_only => ip.vpc?,
 
       :vm                 => associated_vm
     }
