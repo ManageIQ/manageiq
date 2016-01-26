@@ -23,6 +23,12 @@ $(document).ready(function () {
     else
       miqJqueryRequest(url, options);
   });
+
+  // bind button click to call JS function to send up grid data
+  $(document).on('click', 'button[data-grid_submit]', function () {
+    return miqMenuChangeRow($(this).attr('data-grid_submit'), $(this));
+  });
+
   // Bind call to check/display text area max length on keyup
   $(document).on('keyup', 'textarea[data-miq_check_max_length]', function () {
     miqCheckMaxLength(this);
