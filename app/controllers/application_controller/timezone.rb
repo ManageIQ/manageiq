@@ -5,9 +5,6 @@ class ApplicationController
     included do
       helper_method :get_timezone_abbr, :get_timezone_offset
       helper_method :server_timezone
-
-      hide_action :get_timezone_abbr, :get_timezone_offset
-      hide_action :server_timezone
     end
 
     # return timezone abbreviation
