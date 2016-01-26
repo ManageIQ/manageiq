@@ -96,6 +96,7 @@ gem "rufus-scheduler",                "~>3.1.3",   :require => false
 gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
+gem "sshkey",                         "~>1.8.0",   :require => false
 
 
 ### Start of gems excluded from the appliances.

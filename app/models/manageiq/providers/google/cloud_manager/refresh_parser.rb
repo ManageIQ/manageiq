@@ -15,6 +15,7 @@ module ManageIQ::Providers
         @options           = options || {}
         @data              = {}
         @data_index        = {}
+        @project_key_pairs = Set.new
       end
 
       def ems_inv_to_hashes
@@ -61,8 +62,31 @@ module ManageIQ::Providers
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 
+      def get_key_pairs(instances)
+        ssh_keys = []
+
+        # Find all key pairs added directly to GCE instances
+        instances.each do |instance|
+          ssh_keys |= parse_compute_metadata_ssh_keys(instance.metadata)
+        end
+
+        # Add ssh keys that are common to all instances in the project
+        project_common_metadata = @connection.projects.get(@ems.project).common_instance_metadata
+        @project_key_pairs      = parse_compute_metadata_ssh_keys(project_common_metadata)
+
+        ssh_keys |= @project_key_pairs
+
+        process_collection(ssh_keys, :key_pairs) { |ssh_key| parse_ssh_key(ssh_key) }
+      end
+
       def get_instances
         instances = @connection.servers.all
+
+        # Since SSH keys are stored with the instances this is
+        # the only place we can get a complete and unique list
+        # of key-pairs
+        get_key_pairs(instances)
+
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
@@ -162,6 +186,19 @@ module ManageIQ::Providers
         }
       end
 
+      def parse_ssh_key(ssh_key)
+        uid = "#{ssh_key[:name]}:#{ssh_key[:fingerprint]}"
+
+        type = ManageIQ::Providers::Google::CloudManager::AuthKeyPair.name
+        new_result = {
+          :type        => type,
+          :name        => ssh_key[:name],
+          :fingerprint => ssh_key[:fingerprint],
+        }
+
+        return uid, new_result
+      end
+
       def parse_instance(instance)
         uid    = instance.id
         name   = instance.name
@@ -191,6 +228,7 @@ module ManageIQ::Providers
           :availability_zone => zone,
           :parent_vm         => parent_image,
           :operating_system  => operating_system,
+          :key_pairs         => [],
           :hardware          => {
             :cpu_sockets          => flavor[:cpus],
             :cpu_total_cores      => flavor[:cpu_cores],
@@ -202,6 +240,7 @@ module ManageIQ::Providers
         }
 
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
+        populate_key_pairs_with_ssh_keys(new_result[:key_pairs], instance)
 
         return uid, new_result
       end
@@ -236,6 +275,45 @@ module ManageIQ::Providers
         end
 
         parent_image_uid
+      end
+
+      def populate_key_pairs_with_ssh_keys(result_key_pairs, instance)
+        # Add project common ssh-keys with keys specific to this instance
+        instance_ssh_keys = parse_compute_metadata_ssh_keys(instance.metadata) | @project_key_pairs
+
+        instance_ssh_keys.each do |ssh_key|
+          key_uid = "#{ssh_key[:name]}:#{ssh_key[:fingerprint]}"
+          kp = @data_index.fetch_path(:key_pairs, key_uid)
+          result_key_pairs << kp unless kp.nil?
+        end
+      end
+
+      def parse_compute_metadata(metadata, key)
+        metadata_item = metadata["items"].to_a.detect { |x| x["key"] == key }
+        metadata_item.to_h["value"]
+      end
+
+      def parse_compute_metadata_ssh_keys(metadata)
+        require 'sshkey'
+
+        ssh_keys = []
+
+        # Find the sshKeys property in the instance metadata
+        metadata_ssh_keys = parse_compute_metadata(metadata, "sshKeys")
+
+        metadata_ssh_keys.to_s.split("\n").each do |ssh_key|
+          # Google returns the key in the form username:public_key
+          name, public_key = ssh_key.split(":", 2)
+          fingerprint      = SSHKey.sha1_fingerprint(public_key)
+
+          ssh_keys << {
+            :name        => name,
+            :public_key  => public_key,
+            :fingerprint => fingerprint
+          }
+        end
+
+        ssh_keys
       end
 
       def parse_uid_from_url(url)
