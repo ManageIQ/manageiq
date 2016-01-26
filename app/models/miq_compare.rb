@@ -173,6 +173,19 @@ class MiqCompare
     all_sections[name][:group] = group unless group.blank?
   end
 
+  def section_header_text(model)
+    case model
+    when "Host"
+      _("Host Properties")
+    when "Vm"
+      _("VM Properties")
+    when "VmOrTemplate"
+      _("Workload")
+    else
+      model.titleize
+    end
+  end
+
   # Resets the master_list to an initial version without dynamic subsections,
   # nor the tag columns
   def prepare_master_list
@@ -192,7 +205,7 @@ class MiqCompare
 
       # See if this section has a key
       if section == :_model_
-        section_header = Dictionary.gettext(@model.to_s, :type => :compare, :notfound => :titleize)
+        section_header = section_header_text(@model.to_s)
         key = nil
       elsif section == :categories
         column = column.to_s

@@ -690,11 +690,6 @@ en:
       write_hit_ios_per_sec:       Write Hit (IOPS)
       write_ios_per_sec:           Write (IOPS)
 
-    compare:
-      Host:         Host Properties
-      Vm:           VM Properties
-      VmOrTemplate: Workload
-
     discover_types:
       azure:           Azure
       ec2:             Amazon
