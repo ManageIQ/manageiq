@@ -586,6 +586,9 @@ module UiConstants
     "capacity"                 => "EVM Capacity Management Configuration"
   }.freeze
   AVAILABLE_CONFIG_NAMES_FOR_SELECT = AVAILABLE_CONFIG_NAMES.invert.sort.freeze
+
+  UTF_16BE_BOM = [254, 255].freeze
+  UTF_16LE_BOM = [255, 254].freeze
 end
 
 # Make these constants globally available
