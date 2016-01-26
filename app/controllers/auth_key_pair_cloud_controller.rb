@@ -40,7 +40,7 @@ class AuthKeyPairCloudController < ApplicationController
     @auth_key_pair_cloud = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@auth_key_pair_cloud)
 
-    @gtl_url = "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id.to_s}?"
+    @gtl_url = "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?"
     drop_breadcrumb(
       {:name => "Key Pairs", :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
       true
@@ -51,17 +51,17 @@ class AuthKeyPairCloudController < ApplicationController
       get_tagdata(@auth_key_pair_cloud)
       drop_breadcrumb(
         :name => @auth_key_pair_cloud.name + " (Summary)",
-        :url => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}"
+        :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}"
       )
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
-    when %w(instances)
+    when "instances"
       table = @display == "vm_cloud"
       title = ui_lookup(:tables => table)
       kls   = ManageIQ::Providers::CloudManager::Vm
       drop_breadcrumb(
         :name => @auth_key_pair_cloud.name + " (All #{title})",
-        :url => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?display=instances"
+        :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?display=instances"
       )
       @view, @pages = get_view(kls, :parent => @auth_key_pair_cloud) # Get the records (into a view) and the paginator
       @showtype = @display
@@ -69,9 +69,9 @@ class AuthKeyPairCloudController < ApplicationController
          @view.extras[:total_count] > @view.extras[:auth_count]
         count = @view.extras[:total_count] - @view.extras[:auth_count]
         @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
-                        :children => pluralize(count, "other #{title.singularize}"),
-                        :model => ui_lookup(:tables => "auth_key_pair_cloud")
-                      }
+          :children => pluralize(count, "other #{title.singularize}"),
+          :model    => ui_lookup(:tables => "auth_key_pair_cloud")
+        }
       end
     end
 
