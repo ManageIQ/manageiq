@@ -40,14 +40,14 @@ class AuthKeyPairCloudController < ApplicationController
     @auth_key_pair_cloud = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@auth_key_pair_cloud)
 
-    @gtl_url = "/auth_key_pair_cloud/show/" << @auth_key_pair_cloud.id.to_s << "?"
+    @gtl_url = "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id.to_s}?"
     drop_breadcrumb(
       {:name => "Key Pairs", :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
       true
     )
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when %w(download_pdf main summary_only)
       get_tagdata(@auth_key_pair_cloud)
       drop_breadcrumb(
         :name => @auth_key_pair_cloud.name + " (Summary)",
@@ -55,7 +55,7 @@ class AuthKeyPairCloudController < ApplicationController
       )
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
-    when "instances"
+    when %w(instances)
       table = @display == "vm_cloud"
       title = ui_lookup(:tables => table)
       kls   = ManageIQ::Providers::CloudManager::Vm
@@ -67,9 +67,11 @@ class AuthKeyPairCloudController < ApplicationController
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " +
-                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
-                      " on this " + ui_lookup(:tables => "auth_key_pair_cloud")
+        count = @view.extras[:total_count] - @view.extras[:auth_count]
+        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
+                        :children => pluralize(count, "other #{title.singularize}"),
+                        :model => ui_lookup(:tables => "auth_key_pair_cloud")
+                      }
       end
     end
 
@@ -86,7 +88,7 @@ class AuthKeyPairCloudController < ApplicationController
   private
 
   def get_session_data
-    @title      = "Key Pair"
+    @title      = _("Key Pair")
     @layout     = "auth_key_pair_cloud"
     @lastaction = session[:auth_key_pair_cloud_lastaction]
     @display    = session[:auth_key_pair_cloud_display]
