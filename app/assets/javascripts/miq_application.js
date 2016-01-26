@@ -846,10 +846,29 @@ function miqEnterPressed(e) {
 // Send login authentication via ajax
 function miqAjaxAuth(url) {
   miqEnableLoginFields(false);
+  miqSparkleOn(); // miqJqueryRequest starts sparkle either way, but API.login doesn't
 
-  miqJqueryRequest(url || '/dashboard/authenticate', {
-    beforeSend: true,
-    data: miqSerializeForm('login_div'),
+  var credentials = {
+    login: $('#user_name').val(),
+    password: $('#user_password').val(),
+    serialized: miqSerializeForm('login_div'),
+  }
+
+  API.login(credentials.login, credentials.password)
+  .then(function() {
+    // API login ok, now do the normal one
+    miqJqueryRequest(url || '/dashboard/authenticate', {
+      beforeSend: true,
+      data: credentials.serialized,
+    });
+
+    // TODO API.autorenew is called on (non-login) page load - when?
+  })
+  .then(null, function() {
+    // TODO add_flash(__("API Authentication failed"), 'error');
+
+    miqEnableLoginFields(true);
+    miqSparkleOff();
   });
 }
 
