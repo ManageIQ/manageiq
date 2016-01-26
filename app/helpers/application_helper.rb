@@ -1108,9 +1108,9 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(auth_key_pair_cloud cloud_volume container_node container_service ems_container container_group ems_cloud ems_cluster
-          container_route container_project container_replicator container_image container_image_registry
-          persistent_volume ems_infra host miq_template offline orchestration_stack repository
+       %w(auth_key_pair_cloud cloud_volume container_node container_service ems_container container_group ems_cloud
+          ems_cluster container_route container_project container_replicator container_image container_image_registry
+          ems_infra host miq_template offline orchestration_stack persistent_volume repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
