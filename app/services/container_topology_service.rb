@@ -102,7 +102,7 @@ class ContainerTopologyService
 
   def build_entity_data(entity)
     type = entity_type(entity)
-    status = entity_status(entity, type)
+    status = entity_status(entity)
     data = {:id           => entity_id(entity),
             :name         => entity.name,
             :status       => status,
@@ -117,35 +117,30 @@ class ContainerTopologyService
     data
   end
 
-  def entity_status(entity, kind)
-    case kind
-    when 'Vm', 'Host' then entity.power_state.capitalize
-    when 'ContainerNode'
-      ready_status = 'Unknown'
+  def entity_status(entity)
+    if entity.kind_of?(Host) || entity.kind_of?(Vm)
+      status = entity.power_state.capitalize
+    elsif entity.kind_of?(ContainerNode)
+      status = 'Unknown'
       entity.container_conditions.each do |condition|
         if condition.try(:name) == 'Ready' && condition.try(:status) == 'True'
-          ready_status = 'Ready'
+          status = condition.name
         else
-          ready_status = 'NotReady'
+          status = 'NotReady'
         end
       end
-      ready_status
-    when 'ContainerGroup' then entity.phase
-    when 'Container' then entity.state.capitalize
-    when 'ContainerReplicator'
-      if entity.current_replicas == entity.replicas
-        'OK'
-      else
-        'Warning'
-      end
-    when 'ContainerManager'
-      if entity.authentications.empty?
-        'Unknown'
-      else
-        entity.authentications.first.status.capitalize
-      end
-    else 'Unknown'
+    elsif entity.kind_of?(ContainerGroup)
+      status = entity.phase
+    elsif entity.kind_of?(Container)
+      status = entity.state.capitalize
+    elsif entity.kind_of?(ContainerReplicator)
+      status = (entity.current_replicas == entity.replicas) ? 'OK' : 'Warning'
+    elsif entity.kind_of?(ManageIQ::Providers::ContainerManager)
+      status = entity.authentications.empty? ? 'Unknown' : entity.authentications.first.status.capitalize
+    else
+      status = 'Unknown'
     end
+    status
   end
 
   def build_link(source, target)
