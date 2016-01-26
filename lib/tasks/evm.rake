@@ -28,8 +28,13 @@ namespace :evm do
     EvmApplication.status
   end
 
+  # update_start can be called in an environment where the database configuration is
+  # not set, so we need to give it a dummy config
   task :update_start do
-    EvmApplication.update_start
+    EvmRakeHelper.with_dummy_database_url_configuration do
+      Rake::Task["environment"].invoke
+      EvmApplication.update_start
+    end
   end
 
   task :update_stop => :environment do
