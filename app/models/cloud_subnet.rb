@@ -10,6 +10,7 @@ class CloudSubnet < ApplicationRecord
   belongs_to :cloud_network
   belongs_to :cloud_tenant
   belongs_to :availability_zone
+  belongs_to :network_group
   belongs_to :network_router
 
   has_many :cloud_subnet_network_ports, :dependent => :destroy

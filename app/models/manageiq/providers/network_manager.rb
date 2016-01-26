@@ -11,6 +11,7 @@ module ManageIQ::Providers
     has_many :cloud_subnets,   :foreign_key => :ems_id, :dependent => :destroy
     has_many :network_ports,   :foreign_key => :ems_id, :dependent => :destroy
     has_many :network_routers, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :network_groups,  :foreign_key => :ems_id, :dependent => :destroy
 
     alias all_cloud_networks cloud_networks
 
