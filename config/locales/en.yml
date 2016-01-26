@@ -22,14 +22,6 @@ en:
         # The variable :count is also available
         body: "There were problems with the following fields:"
 
-  model_name:
-    miq_policy_set: Policy Profile
-    miq_event_definition: Event
-    miq_action: Action
-    miq_policy: Policy
-    miq_alert: Alert
-    condition: Condition
-
   dictionary:
     column:
       # "." character not allowed in column key
@@ -780,6 +772,7 @@ en:
       MiqAlertSet:              Alert Profile
       MiqDialog:                Dialog
       MiqEnterprise:            Enterprise
+      MiqEventDefinition:       Event
       MiqGroup:                 EVM Group
       MiqPolicy:                Policy
       MiqPolicySet:             Policy Profile
