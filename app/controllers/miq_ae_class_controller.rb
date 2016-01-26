@@ -284,34 +284,19 @@ class MiqAeClassController < ApplicationController
     add_nodes = open_parent_nodes(@record) if params[:button] == "copy" ||
                                               params[:action] == "x_show"
     get_node_info(x_node) if !@in_a_form && @button != "reset"
-    ae_tree = build_ae_tree if replace_trees
 
     c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
     h_tb = build_toolbar("x_history_tb")
 
     presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
+      :active_tree     => x_active_tree,
+      :right_cell_text => @right_cell_text,
+      :remove_nodes    => add_nodes, # remove any existing nodes before adding child nodes to avoid duplication
+      :add_nodes       => add_nodes,
     )
-
-    if add_nodes
-      # remove any existing nodes before adding child nodes to avoid duplication
-      presenter[:remove_nodes] = true
-      presenter[:add_nodes]    = add_nodes
-    end
-
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:right_cell_text] = @right_cell_text
-
-    # Build hash of trees to replace and optional new node to be selected
-    replace_trees.each do |t|
-      presenter.replace("#{t}_tree_div", r[
-        :partial => 'shared/tree',
-        :locals  => {:tree => ae_tree,
-                     :name => ae_tree.name.to_s
-        }
-      ])
-    end
+    replace_trees_by_presenter(presenter, :ae => build_ae_tree) if replace_trees
 
     if @sb[:action] == "miq_ae_field_seq"
       if @flash_array

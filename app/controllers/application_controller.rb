@@ -2577,6 +2577,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def replace_trees_by_presenter(presenter, trees)
+    trees.each_pair do |name, tree|
+      next unless tree.present?
+
+      presenter.replace(
+        "#{name}_tree_div",
+        render_to_string(
+          :partial => 'shared/tree',
+          :locals  => {
+            :tree => tree,
+            :name => tree.name.to_s
+          }))
+    end
+  end
+
   def list_row_id(row)
     to_cid(row['id'])
   end

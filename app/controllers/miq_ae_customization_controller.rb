@@ -249,15 +249,7 @@ class MiqAeCustomizationController < ApplicationController
     presenter = ExplorerPresenter.new(:active_tree => x_active_tree)
 
     r = proc { |opts| render_to_string(opts) }
-    trees.each do |tree_name, tree|
-      presenter.replace("#{tree_name}_tree_div", r[
-          :partial => "shared/tree",
-          :locals  => {
-            :tree => tree,
-            :name => tree.name
-          }
-      ]) if tree
-    end
+    replace_trees_by_presenter(presenter, trees)
     presenter[:osf_node] = x_node unless @in_a_form
 
     if ['dialog_edit', 'dialog_copy'].include?(params[:pressed])

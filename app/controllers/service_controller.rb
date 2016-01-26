@@ -333,10 +333,6 @@ class ServiceController < ApplicationController
     get_node_info(x_node) if !@edit && !@in_a_form && !params[:display]
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     type, = x_node.split("_").last.split("-")
-    trees = {}
-    if replace_trees
-      trees[:svcs] = build_svcs_tree if replace_trees.include?(:svcs)
-    end
     record_showing = type && ["Service"].include?(TreeBuilder.get_model_for_prefix(type))
     if x_active_tree == :svcs_tree && !@in_a_form && !@sb[:action]
       if record_showing && @sb[:action].nil?
@@ -349,22 +345,14 @@ class ServiceController < ApplicationController
     h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
     presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
+      :active_tree     => x_active_tree,
+      :right_cell_text => @right_cell_text
     )
     r = proc { |opts| render_to_string(opts) }
 
-    # Build hash of trees to replace and optional new node to be selected
-    replace_trees.each do |t|
-      tree = trees[t]
-      presenter.replace("#{t}_tree_div", r[
-          :partial => 'shared/tree',
-          :locals  => {:tree => tree,
-                       :name => tree.name.to_s
-          }
-      ])
+    if Array(replace_trees).include?(:svcs)
+      replace_trees_by_presenter(presenter, :svcs => build_svcs_tree)
     end
-
-    presenter[:right_cell_text] = @right_cell_text
 
     # Replace right cell divs
     presenter.update(:main_div,
