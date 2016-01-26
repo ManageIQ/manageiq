@@ -21,9 +21,11 @@ module ManageIQ::Providers::Openstack
           :publicly_available => public?(image),
           :hardware           => {
             :bitness             => architecture(image),
-            :virtualization_type => image.properties.try(:[], 'hypervisor_type') || image.attributes['hypervisor_type'],
+            :disk_size_minimum   => (image.min_disk * 1.gigabyte),
+            :memory_mb_minimum   => image.min_ram,
             :root_device_type    => image.disk_format,
             :size_on_disk        => image.size,
+            :virtualization_type => image.properties.try(:[], 'hypervisor_type') || image.attributes['hypervisor_type'],
           }
         }
         new_result[:parent_vm_uid] = parent_server_uid unless parent_server_uid.nil?
