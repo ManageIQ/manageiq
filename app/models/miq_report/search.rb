@@ -100,9 +100,7 @@ module MiqReport::Search
 
     if options[:parent]
       targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
-      # filter out archived VMs
-      targets = targets.select { |target| !Vm.find_by(:id => target).try(:archived?) }
-      if targets.try(:empty?)
+      if targets.empty?
         search_results, attrs = [targets, {:auth_count => 0, :total_count => 0}]
       else
         search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
