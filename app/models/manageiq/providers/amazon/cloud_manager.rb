@@ -202,13 +202,14 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     known_emses = all_emses.select { |e| e.authentication_userid == access_key_id }
     known_ems_regions = known_emses.index_by(&:provider_region)
 
-    ec2 = raw_connect(access_key_id, secret_access_key, "EC2")
-    ec2.regions.each do |region|
-      next if known_ems_regions.include?(region.name)
-      next if region.instances.count == 0 && # instances
-              region.images.with_owner(:self).count == 0 && # private images
-              region.images.executable_by(:self).count == 0  # shared  images
-      new_emses << create_discovered_region(region.name, access_key_id, secret_access_key, all_ems_names)
+    ec2 = raw_connect_v2(access_key_id, secret_access_key, "EC2", "us-east-1")
+    ec2.client.describe_regions.regions.each do |region|
+      next if known_ems_regions.include?(region.region_name)
+      resource_for_region = raw_connect_v2(access_key_id, secret_access_key, "EC2", region.region_name)
+      next if resource_for_region.instances.count == 0 && # instances
+              resource_for_region.images(:owners => %w(self)).count == 0 && # private images
+              resource_for_region.images(:executable_users => %w(self)).count == 0 # shared  images
+      new_emses << create_discovered_region(region.region_name, access_key_id, secret_access_key, all_ems_names)
     end
 
     # If greenfield Amazon, at least create the us-east-1 region.
