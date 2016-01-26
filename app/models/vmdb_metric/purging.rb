@@ -1,5 +1,6 @@
 module VmdbMetric::Purging
   extend ActiveSupport::Concern
+  include PurgingMixin
 
   module ClassMethods
     def purge_date(interval)
@@ -60,40 +61,22 @@ module VmdbMetric::Purging
     # By Date
     #
 
+    # darn - an extra parameter than typical purge_scope
+    def purge_scope(older_than, interval)
+      where(:capture_interval_name => interval).where(arel_table[:timestamp].lt(older_than))
+    end
+
     def purge_count_by_date(older_than, interval)
-      where(:capture_interval_name => interval).where(arel_table[:timestamp].lt(older_than)).count
+      purge_scope(older_than, interval).count
     end
 
     def purge_by_date(older_than, interval, window = nil, &block)
       _log.info("Purging #{interval} metrics older than [#{older_than}]...")
 
-      window ||= purge_window_size
-      t = arel_table
-      conditions = [{:capture_interval_name => interval}, arel_table[:timestamp].lt(older_than)]
-      total = purge_in_batches(conditions, window, &block)
+      scope = purge_scope(older_than, interval)
+      total = purge_in_batches(scope, window || purge_window_size, &block)
 
       _log.info("Purging #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records")
-    end
-
-    #
-    # Common methods
-    #
-
-    def purge_in_batches(conditions, window, total = 0)
-      query = select(:id).limit(window)
-      [conditions].flatten.each { |c| query = query.where(c) }
-
-      until (batch = query.dup.to_a).empty?
-        ids = batch.collect(&:id)
-
-        _log.info("Purging #{ids.length} metrics.")
-        count  = delete_all(:id => ids)
-        total += count
-
-        purge_associated_records(ids) if self.respond_to?(:purge_associated_records)
-
-        yield(count, total) if block_given?
-      end
       total
     end
   end

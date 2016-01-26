@@ -1,14 +1,12 @@
 module Metric::Purging
   def self.purge_date(type)
     value = VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, type.to_sym)
-    return if value.nil?
 
     case value
     when Numeric
       value.days.ago.utc
     when String
       value.to_i_with_method.seconds.ago.utc
-    when nil
     end
   end
 
@@ -50,56 +48,84 @@ module Metric::Purging
     end
   end
 
-  def self.scope_for_interval(interval)
-    interval == 'realtime' ? Metric : MetricRollup.where(:capture_interval_name => interval)
+  def self.purge_window_size
+    VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000
+  end
+
+  def self.purge_scope(older_than, interval)
+    scope = interval == 'realtime' ? Metric : MetricRollup.where(:capture_interval_name => interval)
+    scope.where(scope.arel_table[:timestamp].lteq(older_than))
   end
 
   def self.purge_count(older_than, interval)
-    scope_for_interval(interval).where('timestamp <= ?', older_than).count
+    purge_scope(older_than, interval).count
   end
 
-  def self.purge(older_than, interval, window = nil, limit = nil)
-    _log.info("Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...")
+  def self.purge_associated_records(metric_type, ids)
+    # Since VimPerformanceTagValues are 6 * number of tags per performance
+    # record, we need to batch in smaller trips.
+    count_tag_values = 0
+    _log.info("Purging associated tag values.")
+    ids.each_slice(50) do |vp_ids|
+      tv_count, = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
+        VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => metric_type)
+      end
+      count_tag_values += tv_count
+    end
+    _log.info("Purged #{count_tag_values} associated tag values.")
+    count_tag_values
+  end
 
-    scope = scope_for_interval(interval)
+  def self.purge(older_than, interval, window = nil, total_limit = nil, &block)
+    scope = purge_scope(older_than, interval)
+    window ||= purge_window_size
+    _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...")
+    total, total_tag_values, timings = purge_in_batches(scope, window, 0, total_limit, &block)
+    _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...Complete - " +
+              "Deleted #{total} records and #{total_tag_values} associated tag values - Timings: #{timings.inspect}")
 
-    total = 0
+    total
+  end
+
+  def self.purge_in_batches(scope, window, total = 0, total_limit = nil)
     total_tag_values = 0
+    query = scope.select(:id).limit(window)
+
     _, timings = Benchmark.realtime_block(:total_time) do
-      window ||= (VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000)
-
-      while limit.nil? || total < limit
-        current_limit = limit.nil? ? window : [window, limit - total].min
-        ids, = Benchmark.realtime_block(:query_batch) do
-          scope.where('timestamp <= ?', older_than).limit(current_limit).pluck(:id)
+      loop do
+        left_to_delete = total_limit && (total_limit - total)
+        if total_limit && left_to_delete < window
+          current_window = left_to_delete
+          query = query.limit(current_window)
         end
-        break if ids.empty?
 
-        _log.info("Purging #{ids.length} #{interval} metrics.")
+        if scope.klass == MetricRollup
+          batch_ids, _ = Benchmark.realtime_block(:query_batch) do
+            query.pluck(:id)
+          end
+          break if batch_ids.empty?
+          current_window = batch_ids.size
+        else
+          batch_ids = query
+        end
+
+        _log.info("Purging #{current_window} metrics.")
         count, = Benchmark.realtime_block(:purge_metrics) do
-          scope.unscoped.delete_all(:id => ids)
+          scope.unscoped.delete_all(:id => batch_ids)
         end
+        break if count == 0
         total += count
 
-        if interval != 'realtime'
-          # Since VimPerformanceTagValues are 6 * number of tags per performance
-          # record, we need to batch in smaller trips.
-          count_tag_values = 0
-          _log.info("Purging associated tag values.")
-          ids.each_slice(50) do |vp_ids|
-            tv_count, = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
-              VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => scope.name)
-            end
-            count_tag_values += tv_count
-            total_tag_values += tv_count
-          end
-          _log.info("Purged #{count_tag_values} associated tag values.")
+        if scope.klass == MetricRollup
+          count_tag_values = purge_associated_records(scope.name, batch_ids)
+          total_tag_values += count_tag_values
         end
 
         yield(count, total) if block_given?
+        break if count < window || (total_limit && (total_limit <= total))
       end
     end
 
-    _log.info("Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records and #{total_tag_values} associated tag values - Timings: #{timings.inspect}")
+    [total, total_tag_values, timings]
   end
 end

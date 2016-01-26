@@ -1,82 +1,78 @@
 describe PurgingMixin do
-  describe ".purge" do
-    let(:example_class) { PolicyEvent }
-    let(:example_associated_class) { PolicyEventContent }
-    let(:purge_date) { 2.weeks.ago }
+  let(:example_class) { PolicyEvent }
+  let(:example_associated_class) { PolicyEventContent }
+  let(:purge_date) { 2.weeks.ago }
 
-    before do
-      events = (-2..2).collect do |date_modifier|
+  describe ".purge_date" do
+    it "purge_date should not raise exception" do
+      allow(example_class).to receive(:purge_config).with(:keep_policy_events).and_return(120)
+      expect(example_class.purge_date).to be_within(1.second).of(120.seconds.ago.utc)
+    end
+  end
+
+  describe ".purge" do
+    let(:events) do
+      (-2..2).collect do |date_modifier|
         FactoryGirl.create(:policy_event, :timestamp => purge_date + date_modifier.days)
       end
-      @unpurged_ids = events[-2, 2].collect(&:id)
+    end
+    let(:all_ids) { events.collect(&:id) }
+
+    it "with no records" do
+      expect(example_class.purge(purge_date)).to eq(0)
     end
 
     it "with a date out of range" do
-      expect(example_class).to receive(:delete_all).never
-      expect(example_associated_class).to receive(:delete_all).never
-      example_class.purge(6.months.ago)
+      events # create events
+      expect(example_class.purge(6.months.ago)).to eq(0)
+      expect(example_class.pluck(:id)).to match_array(all_ids)
     end
 
-    it "purge_date should not raise exception" do
-      allow(example_class).to receive(:purge_config).with(:keep_policy_events).and_return(120)
-      example_class.purge_date
-    end
-
-    it "with a date out of range from configuration" do
+    it "with a date out of range" do
+      events # create events
       allow(example_class).to receive(:purge_date).and_return(6.months.ago)
-
-      expect(example_class).to receive(:delete_all).never
-      expect(example_associated_class).to receive(:delete_all).never
-      example_class.purge
+      expect(example_class.purge).to eq(0)
+      expect(example_class.pluck(:id)).to match_array(all_ids)
     end
 
     it "with a date within range" do
-      expect(example_class).to receive(:delete_all).once.and_call_original
-      expect(example_associated_class).to receive(:delete_all).once.and_call_original
-      example_class.purge(purge_date + 1.second)
-      expect(example_class.pluck(:id)).to match_array @unpurged_ids
+      events # create events
+      expect(example_class.purge(purge_date + 1.second)).to eq(3)
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
 
     it "with a date within range from configuration" do
+      events # create events
       allow(example_class).to receive(:purge_date).and_return(purge_date + 1.second)
-
-      expect(example_class).to receive(:delete_all).once.and_call_original
-      expect(example_associated_class).to receive(:delete_all).once.and_call_original
-      example_class.purge
-      expect(example_class.pluck(:id)).to match_array @unpurged_ids
+      expect(example_class.purge).to eq(3)
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
 
     it "with a date covering the whole range" do
-      expect(example_class).to receive(:delete_all).once.and_call_original
-      expect(example_associated_class).to receive(:delete_all).once.and_call_original
-      example_class.purge(Time.now)
+      events # create events
+      expect(example_class.purge(Time.now.utc)).to eq(5)
       expect(example_class.pluck(:id)).to match_array []
     end
 
     it "with a date covering the whole range from configuration" do
+      events # create events
       allow(example_class).to receive(:purge_date).and_return(Time.now)
-
-      expect(example_class).to receive(:delete_all).once.and_call_original
-      expect(example_associated_class).to receive(:delete_all).once.and_call_original
-      example_class.purge
+      expect(example_class.purge(Time.now.utc)).to eq(5)
       expect(example_class.pluck(:id)).to match_array []
     end
 
     it "with a date and a window" do
-      expect(example_class).to receive(:delete_all).twice.and_call_original
-      expect(example_associated_class).to receive(:delete_all).twice.and_call_original
-      example_class.purge(purge_date + 1.second, 2)
-      expect(example_class.pluck(:id)).to match_array @unpurged_ids
+      events # create events
+      expect(example_class.purge(purge_date + 1.second, 2)).to eq(3)
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
 
     it "with a date and a window from configuration" do
+      events # create events
       allow(example_class).to receive(:purge_date).and_return(purge_date + 1.second)
       allow(example_class).to receive(:purge_window_size).and_return(2)
-
-      expect(example_class).to receive(:delete_all).twice.and_call_original
-      expect(example_associated_class).to receive(:delete_all).twice.and_call_original
-      example_class.purge
-      expect(example_class.pluck(:id)).to match_array @unpurged_ids
+      expect(example_class.purge).to eq(3)
+      expect(example_class.pluck(:id)).to match_array all_ids.last(2)
     end
   end
 end
