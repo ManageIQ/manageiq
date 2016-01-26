@@ -23,8 +23,7 @@
                           @discover_type_checked.include?(@discover_type[i]),
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
       .col-md-8
-        = h(Dictionary.gettext(@discover_type[i], :type     => :discover_types,
-                                                  :notfound => :titleize))
+        = h(discover_type(@discover_type[i]))
     - i += 1
   %hr
   #discover_credentials{:style => ("display:none" unless @discover_type_checked.include?("ipmi"))}

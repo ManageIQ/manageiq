@@ -1,5 +1,6 @@
 module ApplicationHelper
   include_concern 'Dialogs'
+  include_concern 'Discover'
   include_concern 'PageLayouts'
   include_concern 'FormTags'
   include Sandbox

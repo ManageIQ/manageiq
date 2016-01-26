@@ -675,19 +675,6 @@ en:
       write_hit_ios_per_sec:       Write Hit (IOPS)
       write_ios_per_sec:           Write (IOPS)
 
-    discover_types:
-      azure:           Azure
-      ec2:             Amazon
-      esx:             ESX
-      hyperv:          Hyper-V
-      ipmi:            IPMI
-      kvm:             KVM
-      msvirtualserver: MS vCenter
-      rhevm:           Red Hat Enterprise Virtualization Manager
-      scvmm:           Microsoft System Center VMM
-      virtualcenter:   VMware vCenter
-      vmwareserver:    VMware Server
-
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
