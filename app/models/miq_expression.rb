@@ -1092,7 +1092,6 @@ class MiqExpression
       :include_model => true,
       :include_table => true
     }.merge(options)
-    @company ||= VMDB::Config.new("vmdb").config[:server][:company]
     tables, col = val.split("-")
     first = true
     val_is_a_tag = false
@@ -1101,7 +1100,7 @@ class MiqExpression
       friendly = tables.split(".").collect do|t|
         if t.downcase == "managed"
           val_is_a_tag = true
-          @company + " Tags"
+          "#{Tenant.root_tenant.name} Tags"
         elsif t.downcase == "user_tag"
           "My Tags"
         else
