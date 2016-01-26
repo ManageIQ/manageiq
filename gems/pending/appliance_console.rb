@@ -39,7 +39,6 @@ require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
 
-REGION_FILE   = RAILS_ROOT.join("REGION")
 VERSION_FILE  = RAILS_ROOT.join("VERSION")
 LOGFILE       = RAILS_ROOT.join("log", "appliance_console.log")
 DB_RESTORE_FILE = "/tmp/evm_db.backup"
@@ -98,7 +97,7 @@ module ApplianceConsole
   ip = eth0.address
   # Because it takes a few seconds, get the database information once in the outside loop
   configured = ApplianceConsole::DatabaseConfiguration.configured?
-  dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database if configured
+  dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region if configured
 
   clear_screen
 
@@ -123,7 +122,6 @@ module ApplianceConsole
       dns1, dns2 = dns.nameservers
       order      = dns.search_order.join(' ')
       timezone   = LinuxAdmin::TimeDate.system_timezone
-      region     = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
       version    = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
       configured = ApplianceConsole::DatabaseConfiguration.configured?
 
@@ -138,7 +136,7 @@ module ApplianceConsole
         "MAC Address:", mac,
         "Timezone:", timezone,
         "Local Database:", ApplianceConsole::Utilities.pg_status,
-        "#{I18n.t("product.name")} Database:", configured ? "#{dbtype} @ #{dbhost}" : "not configured",
+        "#{I18n.t("product.name")} Database:", configured ? "postgres @ #{dbhost || "localhost"}" : "not configured",
         "Database/Region:", configured ? "#{database} / #{region || 0}" : "not configured",
         "External Auth:", ExternalHttpdAuthentication.config_status,
         "#{I18n.t("product.name")} Version:", version,
@@ -481,7 +479,7 @@ Date and Time Configuration
         if database_configuration.activate
           database_configuration.post_activation
           say("\nConfiguration activated successfully.\n")
-          dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database
+          dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
           press_any_key
         else
           say("\nConfiguration activation failed!\n")

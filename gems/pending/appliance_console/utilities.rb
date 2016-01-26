@@ -29,23 +29,23 @@ module ApplianceConsole
       end
     end
 
-    def self.db_host_type_database
-      result = AwesomeSpawn.run("bin/rails runner",
-                                :params => ["puts MiqDbConfig.current.options.values_at(:host, :adapter, :database)"],
-                                :chdir  => RAILS_ROOT
-                               )
+    def self.db_host_database_region
+      result = AwesomeSpawn.run(
+        "bin/rails runner",
+        :params => ["puts MiqDbConfig.current.options.values_at(:host, :database), ActiveRecord::Base.my_region_number"],
+        :chdir  => RAILS_ROOT
+      )
 
-      host, type, database = result.output.split("\n").last(3)
-      host = "localhost" if host.blank?
+      host, database, region = result.output.split("\n").last(3)
 
-      if [type, database].any?(&:blank?)
+      if database.blank?
         logger = ApplianceConsole::Logging.logger
         logger.error "db_host_type_database: Failed to detect some/all DB configuration"
         logger.error "Output: #{result.output.inspect}" unless result.output.blank?
         logger.error "Error:  #{result.error.inspect}"  unless result.error.blank?
       end
 
-      return host, type, database
+      return host.presence, database, region
     end
 
     def self.pg_status
