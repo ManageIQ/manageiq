@@ -832,14 +832,6 @@ en:
       ttl_warning:    Retirement Warning
       vm_description: VM Description
 
-    rate_detail_group:
-      cpu:     CPU
-      disk_io: Disk I/O
-      fixed:   Fixed
-      memory:  Memory
-      net_io:  Network I/O
-      storage: Storage
-
     table:
       availability_zone:           Availability Zone
       cdroms:                      CD/DVD Drives

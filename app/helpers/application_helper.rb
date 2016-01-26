@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include_concern 'Chargeback'
   include_concern 'Dialogs'
   include_concern 'PageLayouts'
   include_concern 'FormTags'
