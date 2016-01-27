@@ -63,7 +63,7 @@ module Sandbox
     policy_tree
     pxe_image_types_tree
     pxe_servers_tree
-    foreman_providers_tree
+    configuration_manager_providers_tree
     rbac_tree
     reports_tree
     roles_tree
@@ -104,7 +104,7 @@ module Sandbox
     dialogs
     event
     export
-    foreman_providers
+    configuration_manager_providers
     images
     images_filter
     instances

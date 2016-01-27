@@ -25,6 +25,7 @@ cols:
 - build_state
 - my_zone
 - configuration_environment_name
+- configuration_profile_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -37,6 +38,7 @@ col_order:
 - build_state
 - my_zone
 - configuration_environment_name
+- configuration_profile_name
 
 # Column titles, in order
 headers:
@@ -46,8 +48,10 @@ headers:
 - Build State
 - Zone
 - Environment
+- Configuration Profile
 
 col_formats:
+-
 -
 -
 -

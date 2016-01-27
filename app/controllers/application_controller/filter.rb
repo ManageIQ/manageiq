@@ -763,7 +763,7 @@ module ApplicationController::Filter
     if ["delete", "saveit"].include?(params[:button])
       if @edit[:in_explorer]
         if "cs_filter_tree" == x_active_tree.to_s
-          build_foreman_tree(:filter, x_active_tree)
+          build_configuration_mananger_tree(:filter, x_active_tree)
         else
           tree_type = x_active_tree.to_s.sub(/_tree/, '').to_sym
           builder = TreeBuilder.class_for_type(tree_type)

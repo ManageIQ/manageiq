@@ -95,8 +95,8 @@ class ApplicationHelper::ToolbarChooser
       elsif @layout == "miq_policy_rsop"
         return session[:rsop_tree] ? "miq_policy_rsop_center_tb" : "blank_view_tb"
       elsif @layout == "provider_foreman"
-        if x_active_tree == :foreman_providers_tree || :cs_filter_tree
-          return center_toolbar_filename_foreman_providers
+        if x_active_tree == :configuration_manager_providers_tree || :cs_filter_tree
+          return center_toolbar_filename_configuration_manager_providers
         end
       else
         if x_active_tree == :ae_tree
@@ -473,18 +473,19 @@ class ApplicationHelper::ToolbarChooser
     "blank_view_tb"
   end
 
-  def center_toolbar_filename_foreman_providers
+  def center_toolbar_filename_configuration_manager_providers
     nodes = x_node.split('-')
-    if x_active_tree == :foreman_providers_tree
-      foreman_providers_tree_center_tb(nodes)
+    if x_active_tree == :configuration_manager_providers_tree
+      configuration_manager_providers_tree_center_tb(nodes)
     elsif x_active_tree == :cs_filter_tree
       cs_filter_tree_center_tb(nodes)
     end
   end
 
-  def foreman_providers_tree_center_tb(nodes)
+  def configuration_manager_providers_tree_center_tb(nodes)
     case nodes.first
-    when "root" then  "provider_foreman_center_tb"
+      when "root"   then  "provider_foreman_center_tb"
+      when "xx"     then  "provider_foreman_center_tb"
     when "e"    then  "configuration_profile_foreman_center_tb"
     when "cp"   then  configuration_profile_center_tb
     else unassigned_configuration_profile_node(nodes)
@@ -493,7 +494,7 @@ class ApplicationHelper::ToolbarChooser
 
   def cs_filter_tree_center_tb(nodes)
     case nodes.first
-    when "root", "ms" then  "configured_system_foreman_center_tb"
+    when "root", "ms", "xx", "csa", "csf" then  "configured_system_foreman_center_tb"
     end
   end
 
