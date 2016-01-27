@@ -8,7 +8,7 @@ class RemoveReplicatedRowsFromNewlyExcludedTables < ActiveRecord::Migration
   end
 
   class Configuration < ActiveRecord::Base
-    serialize :settings, Vmdb::ConfigurationEncoder
+    serialize :settings, Hash
     self.inheritance_column = :_type_disabled
   end
 
