@@ -6,6 +6,10 @@ class ContainerGroupController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  def show_list
+    process_show_list(:where_clause => 'container_groups.deleted_on IS NULL')
+  end
+
   private ############################
 
   def display_name

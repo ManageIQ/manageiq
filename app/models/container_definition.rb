@@ -5,4 +5,12 @@ class ContainerDefinition < ApplicationRecord
   has_many :container_env_vars,     :dependent => :destroy
   has_one :container,               :dependent => :destroy
   has_one :security_context,        :as => :resource, :dependent => :destroy
+
+  def disconnect_inv
+    _log.info "Disconnecting Container definition [#{name}] id [#{id}]"
+    self.deleted_on = Time.now.utc
+    container.disconnect_inv
+    save
+  end
+
 end

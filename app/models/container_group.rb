@@ -75,4 +75,18 @@ class ContainerGroup < ApplicationRecord
       ([container_project, container_replicator] + container_services).compact
     end
   end
+
+  def disconnect_inv
+    _log.info "Disconnecting Container group [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] "
+    self.old_ems_id = ems_id
+    self.ext_management_system = nil
+    self.container_node_id = nil
+    self.container_services = []
+    self.container_replicator_id = nil
+    self.container_build_pod_id = nil
+    self.deleted_on = Time.now.utc
+    container_definitions.map(&:disconnect_inv)
+    save
+  end
 end
