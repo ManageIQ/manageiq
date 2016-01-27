@@ -5,7 +5,7 @@ class CreateSettingsChangesTable < ActiveRecord::Migration
       t.string     :name
       t.string     :key
       t.text       :value
-      t.timestamps
+      t.timestamps :null => false
     end
     add_index :settings_changes, :key
     add_index :settings_changes, [:resource_id, :resource_type]
