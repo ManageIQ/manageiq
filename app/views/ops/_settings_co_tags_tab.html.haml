@@ -1,11 +1,7 @@
 - if @sb[:active_tab] == "settings_co_tags"
   #tab_div
     - url = url_for(:action => 'ce_new_cat')
-    = form_tag({:action => 'ce_accept',
-                :id     => "config_form"},
-               :class  => "form-horizontal",
-               :remote => true,
-               :method => :post) do
+    .form-horizontal
       %h3
         = _("Choose a Category")
       .form-group
