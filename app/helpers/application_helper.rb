@@ -734,6 +734,14 @@ module ApplicationHelper
     _toolbar_chooser.history_toolbar_filename
   end
 
+  def x_view_toolbar_filename
+    _toolbar_chooser.x_view_toolbar_filename
+  end
+
+  def view_toolbar_filename
+    _toolbar_chooser.view_toolbar_filename
+  end
+
   def _toolbar_chooser
     ToolbarChooser.new(
       self,

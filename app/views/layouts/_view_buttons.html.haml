@@ -1,14 +1,1 @@
-- if render_gtl_view_tb?
-  - defered_toolbar_render('view_tb', 'gtl_view_tb')
-- elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"
-  - defered_toolbar_render('view_tb', 'compare_view_tb')
-- elsif @lastaction == "drift"
-  - defered_toolbar_render('view_tb', 'drift_view_tb')
-- elsif %w(ems_container).include?(@layout)
-  - defered_toolbar_render('view_tb', 'dashboard_summary_toggle_view_tb')
-- elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) |
-  && (!@layout.starts_with?("miq_request")) && !@treesize_buttons |
-  && @display == "main" && @showtype == "main" && !@in_a_form |
-  - defered_toolbar_render('view_tb', controller.send(:restful?) ? "summary_view_restful_tb" : "summary_view_tb")
-- else
-  - defered_toolbar_render('view_tb', 'blank_view_tb')
+- defered_toolbar_render('view_tb', view_toolbar_filename)
