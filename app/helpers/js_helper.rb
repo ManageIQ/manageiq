@@ -26,7 +26,7 @@ module JsHelper
     if options[:legend]
       "$('##{element}').html('#{escape_javascript(options[:legend]).html_safe}');"
     elsif options[:title]
-      "$('##{element}').html('#{escape_javascript(options[:title]).html_safe}');"
+      "$('##{element}').attr({'title': '#{escape_javascript(options[:title]).html_safe}'});"
     else
       ''
     end
