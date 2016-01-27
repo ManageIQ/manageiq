@@ -19,10 +19,7 @@ class EvmApplication
     _log.info("EVM Startup initiated")
 
     MiqServer.kill_all_workers
-    rr      = File.expand_path(Rails.root)
-    runner  = File.join(rr, "bin/rails runner")
-    program = File.join(rr, "lib/workers/bin/evm_server.rb")
-    command_line = "#{runner} #{program}"
+    command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
