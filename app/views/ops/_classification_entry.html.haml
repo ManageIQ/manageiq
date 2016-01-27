@@ -1,10 +1,15 @@
 - if edit
+  - url = url_for(:action => "ce_accept", :id => "accept")
   - if entry == "new"
     %tr#new_tr{:class => cycle('row0', 'row1')}
       %td
-        = image_submit_tag(image_path('toolbars/import.png'),
-          :class => "rollover small",
-          :id => "accept", :name => "accept", :alt => _("Add this entry"), :title => _("Add this entry"))
+        %button.btn.btn-default{:title => _("Add this entry"),
+          "data-submit"         => 'classification_entries_div',
+          "data-miq_sparkle_on" => true,
+          :remote               => true,
+          "data-method"         => :post,
+          'data-click_url'      => {:url => "#{url}"}.to_json}
+          %i.fa.fa-plus.fa-lg
       %td
         = text_field("entry", "name", :maxlength => MAX_NAME_LEN, :style => "width: 100%;")
       %td
@@ -12,9 +17,13 @@
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
       %td
-        = image_submit_tag(image_path('toolbars/import.png'),
-          :class => "rollover small",
-          :id => "accept", :name => "accept", :alt => _("Update this entry"), :title => _("Update this entry"))
+        %button.btn.btn-default{:title => _("Update this entry"),
+          "data-submit"         => 'classification_entries_div',
+          "data-miq_sparkle_on" => true,
+          :remote               => true,
+          "data-method"         => :post,
+          'data-click_url'      => {:url => "#{url}"}.to_json}
+          %i.fa.fa-save.fa-lg
       %td
         = text_field("entry", "name",
           :maxlength => MAX_NAME_LEN,
@@ -28,22 +37,20 @@
 - else
   - if entry == "new"
     %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => {:action => 'ce_select', :id => 'new'}), :title => _("Click to add a new entry")}
-      %td.icon
-        %ul.icons.list-unstyled
-          %li
-            %span.glyphicon.glyphicon-plus
+      %td
+        %button.btn.btn-default
+          %i.fa.fa-plus.fa-lg
       %td
         = _("<New Entry>")
       %td= _("<Click on this row to create a new entry>")
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
-      %td.icon{:onclick => remote_function(:url => {:action => 'ce_delete',
+      %td
+        %button.btn.btn-default{:onclick => remote_function(:url => {:action => 'ce_delete',
                                                     :id     => entry.id},
                                            :confirm => _("Deleting the '%s' entry will also unassign it from all items, are you sure?") % entry.name),
                                            :title => _("Click to delete this entry")}
-        %ul.icons.list-unstyled
-          %li
-            %span.pficon.pficon-delete
+          %i.fa.fa-minus.fa-lg
       %td{:onclick => remote_function(:url => {:action => 'ce_select', :id => entry.id, :field => "name"}), :title => _("Click to update this entry")}
         = entry.name
       %td{:onclick => remote_function(:url => {:action => 'ce_select', :id => entry.id, :field => "description"}), :title => _("Click to update this entry")}
