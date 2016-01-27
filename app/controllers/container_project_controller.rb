@@ -6,4 +6,7 @@ class ContainerProjectController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  def show_list
+    process_show_list(:where_clause => 'container_projects.deleted_on IS NULL')
+  end
 end

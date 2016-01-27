@@ -28,7 +28,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(ems.container_projects, hashes, deletes, [:ems_ref],
-                         :labels)
+                         :labels, [], true)
     store_ids_for_new_records(ems.container_projects, hashes, :ems_ref)
   end
 
@@ -214,7 +214,8 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
                          [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions,
-                          :container_volumes], [:container_node, :container_replicator, :project, :namespace, :build_pod_name])
+                          :container_volumes], [:container_node, :container_replicator, :project, :namespace, :build_pod_name],
+                         true)
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 
