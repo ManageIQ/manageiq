@@ -526,13 +526,14 @@ class MiqPolicyController < ApplicationController
 
     # we need to be able to replace trees even if explorer has never been called on the current instance
     @trees = {} unless @trees
+    trees  = {}
     replace_trees.each do |name|
       tree = @trees["#{name}_tree".to_sym]
       tree.reload! unless tree.nil?
 
       if tree.nil?
         feature = features.find { |f| f.name == name }
-        @trees[feature.tree_name] = feature.build_tree(@sb)
+        trees[name] = @trees[feature.tree_name] = feature.build_tree(@sb)
       end
     end
 
@@ -540,11 +541,12 @@ class MiqPolicyController < ApplicationController
     h_tb = build_toolbar('x_history_tb')
 
     # Build a presenter to render the JS
-    presenter ||= ExplorerPresenter.new(:active_tree => x_active_tree)
+    presenter ||= ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+      :open_accord => params[:accord]
+    )
 
     r = proc { |opts| render_to_string(opts) }
-
-    presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
 
     # With dynatree, simply replace the tree partials to reload the trees
     replace_trees.each do |name|
@@ -570,16 +572,8 @@ class MiqPolicyController < ApplicationController
       else
         raise "unknown tree in replace_trees: #{name}"
       end
-
-      tree = @trees["#{name}_tree".to_sym]
-      presenter.replace("#{tree.name}_div", r[
-        :partial => "shared/tree",
-        :locals  => {
-          :tree => tree,
-          :name => tree.name
-        }
-      ])
     end
+    replace_trees_by_presenter(presenter, trees)
 
     if params[:action].ends_with?('_delete') &&
        !x_node.starts_with?('p') &&

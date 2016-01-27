@@ -745,7 +745,6 @@ class ChargebackController < ApplicationController
   def replace_right_cell(replace_trees = [])
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
-    chargeback_tree = cb_rates_build_tree if replace_trees.include?(:cb_rates)
     c_tb = build_toolbar(center_toolbar_filename)
 
     # Build a presenter to render the JS
@@ -753,18 +752,7 @@ class ChargebackController < ApplicationController
       :active_tree => x_active_tree,
     )
     r = proc { |opts| render_to_string(opts) }
-
-    replace_trees.each do |tree|
-      case tree
-      when :cb_rates
-        presenter.replace(:cb_rates_tree_div, r[
-            :partial => 'shared/tree',
-            :locals  => {:tree => chargeback_tree,
-                         :name => chargeback_tree.name.to_s
-            }
-        ])
-      end
-    end
+    replace_trees_by_presenter(presenter, :cb_rates => cb_rates_build_tree) if replace_trees.include?(:cb_rates)
 
     # FIXME
     #  if params[:action].ends_with?("_delete")

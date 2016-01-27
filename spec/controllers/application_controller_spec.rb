@@ -257,4 +257,17 @@ describe ApplicationController do
       expect(@edit[:user_emails]).to include(@user1.email => "#{@user1.name} (#{@user1.email})")
     end
   end
+
+  describe "#replace_trees_by_presenter" do
+    let(:tree_1) { double(:name => 'tree_1') }
+    let(:tree_2) { double(:name => 'tree_2') }
+    let(:trees) { {'tree_1' => tree_1, 'tree_2' => tree_2, 'tree_3' => nil} }
+    let(:presenter) { double(:presenter) }
+
+    it "calls render and passes data to presenter for each pair w/ value" do
+      expect(controller).to receive(:render_to_string).with(any_args).twice
+      expect(presenter).to receive(:replace).with(any_args).twice
+      controller.send(:replace_trees_by_presenter, presenter, trees)
+    end
+  end
 end

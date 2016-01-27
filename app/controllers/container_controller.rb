@@ -265,21 +265,12 @@ class ContainerController < ApplicationController
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
+      :active_tree     => x_active_tree,
+      :right_cell_text => @right_cell_text
     )
     r = proc { |opts| render_to_string(opts) }
 
-    # Build hash of trees to replace and optional new node to be selected
-    replace_trees.each do |t|
-      tree = trees[t]
-      presenter.replace("#{t}_tree_div", r[
-        :partial => 'shared/tree',
-        :locals  => {:tree => tree,
-                     :name => tree.name.to_s
-        }
-      ])
-    end
-    presenter[:right_cell_text] = @right_cell_text
+    replace_trees_by_presenter(presenter, trees)
 
     if action == "container_edit" || action == "tag"
       presenter.update(:main_div, r[:partial => partial])

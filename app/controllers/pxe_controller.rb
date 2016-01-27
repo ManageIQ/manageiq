@@ -147,16 +147,7 @@ class PxeController < ApplicationController
     c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
     h_tb = build_toolbar('x_history_tb')
 
-    # Build hash of trees to replace and optional new node to be selected
-    trees.each do |tree_name, tree|
-      presenter.replace("#{tree_name}_tree_div", r[
-        :partial => "shared/tree",
-        :locals  => {
-          :tree => tree,
-          :name => tree.name
-        }
-      ])
-    end
+    replace_trees_by_presenter(presenter, trees)
 
     # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
     presenter[:reload_toolbars][:center] = c_tb if c_tb.present?

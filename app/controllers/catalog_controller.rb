@@ -1747,14 +1747,13 @@ class CatalogController < ApplicationController
     replace_trees   = @replace_trees   if @replace_trees    # get_node_info might set this
     right_cell_text = @right_cell_text if @right_cell_text  # get_node_info might set this too
 
-    type, id = x_node.split("_").last.split("-")
+    type, _id = x_node.split("_").last.split("-")
     trees = {}
     if replace_trees
-      trees[:sandt]  = build_st_tree     if replace_trees.include?(:sandt)  # rebuild Catalog Items tree
-      trees[:svccat] = build_svccat_tree if replace_trees.include?(:svccat) # rebuild Services tree
-      trees[:stcat]  = build_stcat_tree  if replace_trees.include?(:stcat)  # rebuild Service Template Catalog tree
-      # rebuild Orchestration Templates tree
-      trees[:ot]  = build_orch_tmpl_tree if replace_trees.include?(:ot)
+      trees[:sandt]  = build_st_tree        if replace_trees.include?(:sandt)
+      trees[:svccat] = build_svccat_tree    if replace_trees.include?(:svccat)
+      trees[:stcat]  = build_stcat_tree     if replace_trees.include?(:stcat)
+      trees[:ot]     = build_orch_tmpl_tree if replace_trees.include?(:ot)
     end
     allowed_records = %w(MiqTemplate OrchestrationTemplate Service ServiceTemplate ServiceTemplateCatalog)
     record_showing = (type && allowed_records.include?(TreeBuilder.get_model_for_prefix(type)) && !@view) ||
@@ -1787,21 +1786,10 @@ class CatalogController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
+      :add_nodes   => add_nodes
     )
-    # Update the tree with any new nodes
-    presenter[:add_nodes] = add_nodes if add_nodes
     r = proc { |opts| render_to_string(opts) }
-
-    # Build hash of trees to replace and optional new node to be selected
-    replace_trees.each do |t|
-      tree = trees[t]
-      presenter.replace("#{t}_tree_div", r[
-        :partial => 'shared/tree',
-        :locals  => {:tree => tree,
-                     :name => tree.name.to_s
-        }
-      ])
-    end
+    replace_trees_by_presenter(presenter, trees)
 
     if @sb[:buttons_node]
       if action == "button_edit"
