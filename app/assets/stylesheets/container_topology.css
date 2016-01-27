@@ -143,3 +143,33 @@ kubernetes-topology-icon svg {
     font-family: icomoon;
     fill: #0088ce;
 }
+
+.container_topology .canvas {
+    position: absolute;
+}
+
+.container_topology .popup {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    width: 180px;
+    border: 1px #ccc solid;
+    border-radius: 6px;
+    box-shadow: #333 2px 2px 4px;
+    padding: 6px;
+    font-size: 14px;
+}
+
+.container_topology .popup h5 {
+    font-weight: bold;
+}
+
+.container_topology .popup p {
+    margin: 0 0 4px;
+}
+
+.container_topology .popup p:hover {
+   color : #0099cc;
+   cursor: pointer;
+}

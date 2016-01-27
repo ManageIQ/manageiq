@@ -48,15 +48,16 @@ describe('containerTopologyController', function() {
       });
     });
 
-    describe('the dbl click gets correct navigation', function() {
+    describe('the dbl click gets correct navigation url', function() {
       it('to entity pages', function() {
         var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
-        expect($controller.dblclick(d)).toEqual("/ems_container/show/37");
+        expect($controller.geturl(d)).toEqual("/ems_container/show/37");
         d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30"}};
-        expect($controller.dblclick(d)).toEqual("/container_group/show/30");
+        expect($controller.geturl(d)).toEqual("/container_group/show/30");
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
-        expect($controller.dblclick(d)).toEqual("/vm/show/25");
-        expect($controller.dblclick(replicator)).toEqual("/container_replicator/show/10");
+        expect($controller.geturl(d)).toEqual("/vm/show/25");
+        expect($controller.geturl(replicator)).toEqual("/container_replicator/show/10");
+
       });
     });
 

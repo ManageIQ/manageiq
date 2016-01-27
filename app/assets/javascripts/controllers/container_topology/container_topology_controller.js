@@ -2,6 +2,7 @@ angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
   $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
 }])
+
 .controller('containerTopologyController',ContainerTopologyCtrl);
 
 ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location'];
@@ -10,6 +11,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   var self = this;
   $scope.vs = null;
 
+  var d3 = window.d3;
   $scope.refresh = function() {
     var id;
     if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
@@ -35,8 +37,9 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   $scope.checkboxModel = {
     value: false
   };
-  $scope.legendTooltip = __("Click here to show/hide entities of this type");
 
+  $scope.legendTooltip = __("Click here to show/hide entities of this type");
+  
   $scope.show_hide_names = function() {
      var vertices = $scope.vs;
 
@@ -55,6 +58,71 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   $scope.$on('$destroy', function() {
     $interval.cancel(promise);
   });
+
+
+  var contextMenuShowing = false;
+
+  d3.select("body").on('click', function() {
+    if(contextMenuShowing) {
+      removeContextMenu();
+    }
+  });
+
+  var removeContextMenu = function() {
+      d3.event.preventDefault();
+      d3.select(".popup").remove();
+      contextMenuShowing = false;
+  };
+
+  self.contextMenu = function contextMenu(that, data) {
+    if(contextMenuShowing) {
+      removeContextMenu();
+    } else {
+      d3.event.preventDefault();
+
+      var canvas = d3.select("kubernetes-topology-graph");
+      var mousePosition = d3.mouse(canvas.node());
+
+      var popup = canvas.append("div")
+          .attr("class", "popup")
+          .style("left", mousePosition[0] + "px")
+          .style("top", mousePosition[1] + "px");
+      popup.append("h5").text("Actions on " + data.item.display_kind);
+
+      buildContextMenuOptions(popup, data);
+
+      var canvasSize = [
+        canvas.node().offsetWidth,
+        canvas.node().offsetHeight
+      ];
+
+      var popupSize = [
+        popup.node().offsetWidth,
+        popup.node().offsetHeight
+      ];
+
+      if (popupSize[0] + mousePosition[0] > canvasSize[0]) {
+        popup.style("left", "auto");
+        popup.style("right", 0);
+      }
+
+      if (popupSize[1] + mousePosition[1] > canvasSize[1]) {
+        popup.style("top", "auto");
+        popup.style("bottom", 0);
+      }
+      contextMenuShowing = !contextMenuShowing;
+    }
+  };
+
+  var buildContextMenuOptions = function(popup, data) {
+    addContextMenuOption(popup, "Go to summary page", data, self.dblclick);
+  };
+
+
+  var addContextMenuOption = function(popup, text, data, callback) {
+    popup.append("p").text(text)
+        .on('click' , function() {callback(data);});
+  };
 
   $scope.$on("render", function(ev, vertices, added) {
     /*
@@ -93,12 +161,15 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
           case 'Terminated':
             return "Unknown";
         }
-      });
+      })
+    .on("contextmenu", function(d){
+          self.contextMenu(this, d);
+     });
 
     added.append("title");
 
     added.on("dblclick", function(d) {
-      return window.location.assign(self.dblclick(d));
+      return self.dblclick(d);
     });
 
     added.append("text")
@@ -118,6 +189,9 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       })
       .attr("x", function(d) {
         return self.getDimensions(d).x;
+      })
+      .on("contextmenu", function(d){
+        self.contextMenu(this, d);
       });
 
     added.append("text")
@@ -140,6 +214,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       return self.tooltip(d).join("\n");
     });
 
+
     $scope.vs = vertices;
 
     /* Don't do default rendering */
@@ -160,7 +235,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
    return status;
   };
   
-  this.dblclick = function dblclick(d) {
+  this.geturl = function geturl(d) {
     var entity_url = "";
     var action = '/show/' + d.item.miq_id;
     switch (d.item.kind) {
@@ -172,8 +247,11 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
     }
 
     return '/' + entity_url + action;
-  }
+  };
 
+  this.dblclick = function dblclick(d) {
+    window.location.assign(self.geturl(d));
+  };
 
   this.getIcon = function getIcon(d) {
     switch (d.item.kind) {
@@ -206,7 +284,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
             return '\uE62d'; //vendor-atomic-enterprise
         }
     }
-  }
+  };
 
   this.getDimensions = function getDimensions(d) {
     switch (d.item.kind) {
@@ -223,9 +301,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       default:
         return { x: 0, y: 9, r: 17 };
     }
-  }
-
-  var d3 = window.d3;
+  };
 
   function getSVG() {
     var graph = d3.select("kubernetes-topology-graph");
