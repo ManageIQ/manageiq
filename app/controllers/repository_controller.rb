@@ -335,6 +335,10 @@ class RepositoryController < ApplicationController
     end
   end
 
+  def angular_app?
+    true
+  end
+
   # gather up the repository records from the DB
   def get_repos
     page = params[:page].nil? ? 1 : params[:page].to_i
