@@ -4,6 +4,7 @@ module ApplicationHelper
   include_concern 'Discover'
   include_concern 'PageLayouts'
   include_concern 'FormTags'
+  include_concern 'Tasks'
   include Sandbox
   include CompressedIds
   include JsHelper

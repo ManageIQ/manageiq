@@ -1256,7 +1256,7 @@ module ApplicationController::CiProcessing
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{model} from the CFME Database") %
-      {:task  => display_name ? display_name.titleize : Dictionary.gettext(task, :type => :task).titleize,
+      {:task  => display_name ? display_name.titleize : task_name(task),
        :model => pluralize(objs.length, ui_lookup(:model => klass.to_s))})
   end
 
@@ -1291,8 +1291,7 @@ module ApplicationController::CiProcessing
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
-      {:task        => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems",
-                                                                              "#{ui_lookup(:ui_title => 'foreman')}"),
+      {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'foreman')}"),
        :controller  => ui_lookup(:ui_title => 'foreman'),
        :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
   end
@@ -1636,7 +1635,9 @@ module ApplicationController::CiProcessing
     case task
     when "refresh_ems"
       Host.refresh_ems(hosts)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => (display_name || Dictionary.gettext(task, :type => :task).titleize), :count_model => pluralize(hosts.length, "Host")})
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
+        {:task        => (display_name || task_name(task)),
+         :count_model => pluralize(hosts.length, "Host")})
       AuditEvent.success(:userid => session[:userid], :event => "host_#{task}",
           :message => "'#{task_name}' successfully initiated for #{pluralize(hosts.length, "Host")}",
           :target_class => "Host")
