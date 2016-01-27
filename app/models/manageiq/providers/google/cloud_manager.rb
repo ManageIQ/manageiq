@@ -4,6 +4,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
+  require_nested :SecurityGroup
   require_nested :Template
   require_nested :Vm
 
