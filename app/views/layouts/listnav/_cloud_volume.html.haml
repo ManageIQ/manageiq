@@ -37,9 +37,10 @@
         - if role_allows(:feature => "cloud_volume_snapshot_show")
           - if @record.number_of(:cloud_volume_snapshots) == 0
             %li.disabled
-              = link_to(_("#{ui_lookup(:tables => "cloud_volume_snapshots")} (0)"), "#")
+              = link_to(_("%{children} (0)") % {:children => ui_lookup(:tables => "cloud_volume_snapshots")}, "#")
           - else
             %li
-              = link_to(_("#{ui_lookup(:tables => "cloud_volume_snapshots")} (%s)") % @record.number_of(:cloud_volume_snapshots),
+              = link_to(_("%{children} (%{count})") % {:children => ui_lookup(:tables => "cloud_volume_snapshots",
+                                                                              :count  => @record.number_of(:cloud_volume_snapshots))},
                 {:action => 'show', :id => @record, :display => 'cloud_volumes'},
-                :title => _("Show all #{ui_lookup(:table => "cloud_volume_snapshots")}"))
+                :title => _("Show all %{children}") % {:children => ui_lookup(:tables => "cloud_volume_snapshots")})

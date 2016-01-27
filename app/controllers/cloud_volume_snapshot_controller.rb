@@ -29,10 +29,10 @@ class CloudVolumeSnapshotController < ApplicationController
     @snapshot = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@snapshot)
 
-    @gtl_url = "/cloud_volume_snapshot/show/" << @snapshot.id.to_s << "?"
+    @gtl_url = "/cloud_volume_snapshot/show/#{@snapshot.id}?"
     drop_breadcrumb(
       {
-        :name => "Cloud Volume Snapshots",
+        :name => ui_lookup(:tables => 'cloud_volume_snapshot'),
         :url  => "/cloud_volume_snapshot/show_list?page=#{@current_page}&refresh=y"
       },
       true
@@ -51,7 +51,7 @@ class CloudVolumeSnapshotController < ApplicationController
       title = ui_lookup(:table => 'based_volumes')
       kls   = CloudVolume
       drop_breadcrumb(
-        :name => @snapshot.name + " (All #{title})",
+        :name => _("%{name} (All %{children})") % {:name => @snapshot.name, :children => title},
         :url  => "/cloud_volume_snapshot/show/#{@snapshot.id}?display=based_volumes"
       )
       @view, @pages = get_view(kls, :parent => @snapshot, :association => :based_volumes)
@@ -59,9 +59,10 @@ class CloudVolumeSnapshotController < ApplicationController
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
         unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " +
-                      pluralize(unauthorized_count, "other #{title.singularize}") +
-                      " on this " + ui_lookup(:tables => "cloud_volume_snapshot")
+        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
+          :children => pluralize(unauthorized_count, "other #{title.singularize}"),
+          :model    => ui_lookup(:tables => "cloud_volume_snapshot")
+        }
       end
     end
 
@@ -78,7 +79,7 @@ class CloudVolumeSnapshotController < ApplicationController
   private
 
   def get_session_data
-    @title      = "Cloud Volume Snapshot"
+    @title      = ui_lookup(:table => 'cloud_volume_snapshot')
     @layout     = "cloud_volume_snapshot"
     @lastaction = session[:cloud_volume_snapshot_lastaction]
     @display    = session[:cloud_volume_snapshot_display]
