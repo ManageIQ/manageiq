@@ -13,7 +13,7 @@ def cloud?(prov_type)
 end
 
 def calculate_requested(options_hash = {})
-  {:memory  => get_total_requested(options_hash, :vm_memory),
+  {:memory  => get_total_requested(options_hash, :vm_memory) * 1024**2,
    :cpu     => get_total_requested(options_hash, :number_of_cpus),
    :storage => get_total_requested(options_hash, :storage),
    :vms     => get_total_requested(options_hash, :number_of_vms)}
@@ -110,16 +110,12 @@ def requested_number_of_cpus(args_hash)
   request_hash_value(args_hash)
 end
 
-def bytes_to_megabytes(bytes)
-  bytes / 1024**2
-end
-
 def vmdb_object(model, id)
   $evm.vmdb(model, id.to_i) if model && id
 end
 
 def requested_storage(args_hash)
-  vm_size = bytes_to_megabytes(args_hash[:resource].vm_template.provisioned_storage)
+  vm_size = args_hash[:resource].vm_template.provisioned_storage
   args_hash[:prov_value] = args_hash[:number_of_vms] * vm_size
   request_hash_value(args_hash)
 end
