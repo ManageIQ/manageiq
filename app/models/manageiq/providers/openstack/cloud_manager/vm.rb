@@ -87,7 +87,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   def memory_mb_available?
     true
   end
-  
+
   def validate_smartstate_analysis
     validate_supported_check("Smartstate Analysis")
   end
