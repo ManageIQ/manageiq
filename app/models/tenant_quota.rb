@@ -59,7 +59,22 @@ class TenantQuota < ApplicationRecord
 
   def self.quota_definitions
     @quota_definitions ||= QUOTA_BASE.each_with_object({}) do |(name, value), h|
-      h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil, :warn_value => nil)
+      h[name] = value.merge(:description => tenant_quota_description(name), :value => nil, :warn_value => nil)
+    end
+  end
+
+  def self.tenant_quota_description(name)
+    case name
+    when :cpu_allocated
+      _("Allocated Virtual CPUs")
+    when :mem_allocated
+      _("Allocated Memory in GB")
+    when :storage_allocated
+      _("Allocated Storage in GB")
+    when :vms_allocated
+      _("Allocated Number of Virtual Machines")
+    when :templates_allocated
+      _("Allocated Number of Templates")
     end
   end
 
