@@ -16,25 +16,25 @@
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
-            = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
+            = link_to(_("%{model}: %{name}") % {:model => ui_lookup(:table => "ext_management_system"), :name => @record.ext_management_system.name},
               ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show this Snapshot's parent %s") % ui_lookup(:table => "ems_cloud"))
+              :title => _("Show this Snapshot's parent %{parent}") % {:parent => ui_lookup(:table => "ems_cloud")})
         - if role_allows(:feature => "cloud_volume_show") && @record.cloud_volume
           %li
-            = link_to("#{ui_lookup(:table => "cloud_volume")}: #{@record.cloud_volume.name}",
-              cloud_volume_path(@record.cloud_volume.id),
-              :title => _("Show this Snapshot's parent %s") % ui_lookup(:table => "cloud_volume"))
+            = link_to(_("%{model}: %{name}") % {:model => ui_lookup(:table => "cloud_volume"), :name => @record.cloud_volume.name},
+              {:action => 'show', :id => @record.cloud_volume.id, :controller => 'cloud_volume'},
+              :title => _("Show this Snapshot's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_volume")})
         - if role_allows(:feature => "cloud_volume_show_list")
           - if @record.number_of(:based_volumes) == 0
             %li.disabled
-              = link_to(_('Cloud Volumes based on Snapshot (%s)') % @record.number_of(:based_volumes), "#")
+              = link_to(_('Cloud Volumes based on Snapshot (%{count})') % {:count => @record.number_of(:based_volumes)}, "#")
           - else
             %li
-              = link_to(_("Cloud Volumes based on Snapshot (%s)") % @record.number_of(:based_volumes),
+              = link_to(_("Cloud Volumes based on Snapshot (%{count})") % {:count => @record.number_of(:based_volumes)},
                 {:action => 'show', :id => @record, :display => 'cloud_volumes'},
                 :title => _("Show all Cloud Volumes based on this Snapshot"))
         - if role_allows(:feature => "cloud_tenant_show") && @record.cloud_tenant
           %li
-            = link_to("#{ui_lookup(:table => "cloud_tenant")}: #{@record.cloud_tenant.name}",
-              cloud_tenant_path(@record.cloud_tenant.id),
-              :title => _("Show this Snapshot's parent %s") % ui_lookup(:table => "cloud_tenant"))
+            = link_to(_("%{model}: %{name}") % {:model => ui_lookup(:table => "cloud_tenant"), :name => @record.cloud_tenant.name},
+              {:action => 'show', :id => @record.cloud_tenant.id, :controller => 'cloud_tenant'},
+              :title => _("Show this Snapshot's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_tenant")})
