@@ -7,12 +7,14 @@ var dialogFieldRefresh = {
     });
   },
 
-  initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url) {
+  initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url, triggerAutoRefresh) {
     miqInitSelectPicker();
-    $('#' + fieldName).selectpicker('val', selectedValue);
+    if (selectedValue !== undefined) {
+      $('#' + fieldName).selectpicker('val', selectedValue);
+    }
     miqSelectPickerEvent(fieldName, url);
-    $('#' + fieldName).on('change', function(){
-      dialogFieldRefresh.triggerAutoRefresh(fieldId, "true");
+    $('#' + fieldName).on('change', function() {
+      dialogFieldRefresh.triggerAutoRefresh(fieldId, triggerAutoRefresh || "true");
       return true;
     });
   },
