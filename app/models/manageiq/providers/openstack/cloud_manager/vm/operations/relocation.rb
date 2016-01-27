@@ -1,8 +1,8 @@
 module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
-  def raw_live_migrate(options = nil)
-    hostname         = options.try(:[], :hostname)
-    block_migration  = options.try(:[], :block_migration)  || false
-    disk_over_commit = options.try(:[], :disk_over_commit) || false
+  def raw_live_migrate(options = {})
+    hostname         = options[:hostname]
+    block_migration  = options[:block_migration]  || false
+    disk_over_commit = options[:disk_over_commit] || false
     with_provider_connection do |connection|
       connection.live_migrate_server(ems_ref, hostname, block_migration, disk_over_commit)
     end
@@ -10,7 +10,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
     self.update_attributes!(:raw_power_state => "MIGRATING")
   end
 
-  def live_migrate(options = nil)
+  def live_migrate(options = {})
     raw_live_migrate(options)
   end
 
