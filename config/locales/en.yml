@@ -935,13 +935,6 @@ en:
       zone:                        Zone
       zones:                       Zones
 
-    task:
-      check_compliance_queue: check compliance
-      destroy:                delete
-      reboot_guest:           restart guest
-      retire_now:             retirement
-      scan:                   analysis
-
     tenants:
       cpu_allocated: Allocated Virtual CPUs
       mem_allocated: Allocated Memory in GB
