@@ -90,7 +90,7 @@ module VmOrTemplate::RightSizing
 
   RIGHT_SIZING_MODES.each do |mode, meth|
     define_method("#{mode}_recommended_vcpus") do
-      base_recommended(send(meth[:cpu]), num_cpu, self.class.cpu_recommendation_minimum)  unless num_cpu.nil?
+      base_recommended(send(meth[:cpu]), cpu_total_cores, self.class.cpu_recommendation_minimum)  unless cpu_total_cores.nil?
     end
 
     define_method("#{mode}_recommended_mem") do
@@ -98,7 +98,7 @@ module VmOrTemplate::RightSizing
     end
 
     define_method("#{mode}_vcpus_recommended_change_pct") do
-      base_change_percentage(send("#{mode}_recommended_vcpus"), num_cpu) unless num_cpu.nil?
+      base_change_percentage(send("#{mode}_recommended_vcpus"), cpu_total_cores) unless cpu_total_cores.nil?
     end
 
     define_method("#{mode}_mem_recommended_change_pct") do
@@ -106,7 +106,7 @@ module VmOrTemplate::RightSizing
     end
 
     define_method("#{mode}_vcpus_recommended_change") do
-      base_change(send("#{mode}_recommended_vcpus"), num_cpu) unless num_cpu.nil?
+      base_change(send("#{mode}_recommended_vcpus"), cpu_total_cores) unless cpu_total_cores.nil?
     end
 
     define_method("#{mode}_mem_recommended_change") do
