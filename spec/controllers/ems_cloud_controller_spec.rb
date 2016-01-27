@@ -262,7 +262,6 @@ describe EmsCloudController do
       allow(controller).to receive(:render)
       controller.instance_variable_set(:@_params,
                                        :button           => "validate",
-                                       :id               => "new",
                                        :default_password => "[FILTERED]",
                                        :cred_type        => "default")
       expect(mocked_ems).to receive(:authentication_check).with("default", :save => false)
