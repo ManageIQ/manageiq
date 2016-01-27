@@ -1,7 +1,7 @@
 require 'winrm'
 
 class MiqWinRM
-  attr_reader :uri, :username, :password, :hostname, :port, :connection
+  attr_reader :uri, :username, :password, :hostname, :port, :connection, :executor
 
   def initialize
     @port = 5985
@@ -17,11 +17,12 @@ class MiqWinRM
     validate_options(options)
     @uri        = build_uri
     @connection = raw_connect(@username, @password, @uri)
+    @executor   = @connection.create_executor
   end
 
   def run_powershell_script(script)
     $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}" unless $log.nil?
-    @connection.run_powershell_script(script)
+    @executor.run_powershell_script(script)
   rescue WinRM::WinRMAuthorizationError
     $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
     raise

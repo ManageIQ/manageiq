@@ -4,7 +4,7 @@ require 'util/miq_winrm'
 require 'Scvmm/miq_scvmm_parse_powershell'
 
 class MiqScvmmVmSSAInfo
-  attr_reader :vhds, :hostname, :checkpoints, :connection, :vhd_type
+  attr_reader :vhds, :hostname, :checkpoints, :vhd_type
   def initialize(provider, user, pass, port = nil)
     @checkpoints = []
     @vhds        = []
@@ -14,8 +14,8 @@ class MiqScvmmVmSSAInfo
     winrmport    = port.nil? ? 5985 : port
     options      = {:port => winrmport, :user => user, :pass => pass, :hostname => provider}
 
-    @connection = @winrm.connect(options)
-    @parser     = MiqScvmmParsePowershell.new
+    @winrm.connect(options)
+    @parser = MiqScvmmParsePowershell.new
   end
 
   def vm_host(vm_name)
