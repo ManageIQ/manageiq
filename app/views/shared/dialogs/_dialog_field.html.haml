@@ -50,8 +50,7 @@
                        drop_down_options(field, url).merge(:multiple => true))
 
         :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent('#{field.name}', '#{url}');
+          dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}', '#{field.id}', undefined, '#{url}', '#{field.trigger_auto_refresh}');
 
       - else
         - value = wf.value(field.name) || ''
