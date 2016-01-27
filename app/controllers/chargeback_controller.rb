@@ -1015,8 +1015,6 @@ class ChargebackController < ApplicationController
       presenter.hide(:form_buttons_div).show(:pc_div_1)
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
          (x_active_tree == :cb_reports_tree && !@report)
-        presenter[:set_visible_elements][:toolbar] = false
-        presenter[:set_visible_elements][:pc_div_1] = false
         presenter.hide(:toolbar, :pc_div_1)
       end
       presenter.show(:paging_div)
