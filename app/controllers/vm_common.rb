@@ -1663,6 +1663,57 @@ module VmCommon
     session[:edit] = @edit
   end
 
+  def action_type(type, amount)
+    case type
+    when "advanced_settings"
+      n_("Advanced Setting", "Advanced Settings", amount)
+    when "disks"
+      n_("Number of Disk", "Number of Disks", amount)
+    when "drift_history"
+      n_("Drift History", "Drift History", amount)
+    when "event_logs"
+      n_("Event Log", "Event Logs", amount)
+    when "filesystem_drivers"
+      n_("Filesystem Driver", "Filesystem Drivers", amount)
+    when "filesystems"
+      n_("Filesystem", "Filesystems", amount)
+    when "groups"
+      n_("Group", "Groups", amount)
+    when "guest_applications"
+      n_("Guest Application", "Guest Applications", amount)
+    when "hv_info"
+      n_("Container", "Container", amount)
+    when "kernel_drivers"
+      n_("Kernel Driver", "Kernel Drivers", amount)
+    when "linux_initprocesses"
+      n_("Init Process", "Init Processes", amount)
+    when "os_info"
+      n_("OS Info", "OS Info", amount)
+    when "parent_vm"
+      n_("Parent VM", "Parent VM", amount)
+    when "patches"
+      n_("Patch", "Patches", amount)
+    when "processes"
+      n_("Running Process", "Running Processes", amount)
+    when "registry_items"
+      n_("Registry Item", "Registry Items", amount)
+    when "resources_info"
+      n_("Resource", "Resources", amount)
+    when "scan_history"
+      n_("Scan History", "Scan History", amount)
+    when "snapshot_info"
+      n_("Snapshot", "Snapshots", amount)
+    when "users"
+      n_("User", "Users", amount)
+    when "vmtree_info"
+      n_("Genealogy", "Genealogy", amount)
+    when "win32_services"
+      n_("Win32 Service", "Win32 Services", amount)
+    else
+      amount > 1 ? type.titleize : type.titleize.singularize
+    end
+  end
+
   # set partial name and cell header for edit screens
   def set_right_cell_vars
     name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
@@ -1769,10 +1820,19 @@ module VmCommon
         partial = "#{@showtype == "compliance_history" ? "shared/views" : "vm_common"}/#{@showtype}"
       end
       if @showtype == "item"
-        header = _("%{action} \"%{item_name}\" for %{model} \"%{name}\"") % {:model => ui_lookup(:table => table), :name => name, :item_name => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name, :action => Dictionary.gettext(@sb[:action], :type => :ui_action, :notfound => :titleize).singularize}
+        header = _("%{action} \"%{item_name}\" for %{model} \"%{name}\"") % {
+          :model     => ui_lookup(:table => table),
+          :name      => name,
+          :item_name => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
+          :action    => action_type(@sb[:action], 1)
+        }
         x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
       else
-        header = _("\"%{action}\" for %{model} \"%{name}\"") % {:model => ui_lookup(:table => table), :name => name, :action => Dictionary.gettext(@sb[:action], :type => :ui_action, :notfound => :titleize)}
+        header = _("\"%{action}\" for %{model} \"%{name}\"") % {
+          :model  => ui_lookup(:table => table),
+          :name   => name,
+          :action => action_type(@sb[:action], 2)
+        }
         if @display && @display != "main"
           x_history_add_item(:id => x_node, :text => header, :display => @display)
         else
