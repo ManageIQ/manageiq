@@ -17,7 +17,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
   def validate_live_migrate
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true,   :message => nil}
+    {:available => true,   :message => nil}
   end
 
   def validate_migrate
