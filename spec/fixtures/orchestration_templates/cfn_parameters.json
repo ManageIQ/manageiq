@@ -50,5 +50,14 @@
       "Description" : "The list of AvailabilityZones for your Virtual Private Cloud (VPC)",
       "ConstraintDescription" : "must be a list if valid EC2 availability zones for the selected Virtual Private Cloud"
     }
+  },
+
+  "Resources" : {
+    "MyEC2Instance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId" : "ami-2f726546"
+      }
+    }
   }
 }
