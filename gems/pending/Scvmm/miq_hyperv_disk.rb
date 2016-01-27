@@ -19,8 +19,8 @@ class MiqHyperVDisk
     @hostname  = hyperv_host
     @winrm     = MiqWinRM.new
     port ||= 5985
-    options       = {:port => port, :user => user, :pass => pass, :hostname => @hostname}
-    @connection   = @winrm.connect(options)
+    options = {:port => port, :user => user, :pass => pass, :hostname => @hostname}
+    @winrm.connect(options)
     @parser       = MiqScvmmParsePowershell.new
     @block_size   = 4096
     @file_size    = 0
@@ -51,8 +51,9 @@ STAT_EOL
 
   def close
     hit_or_miss if DEBUG_CACHE_STATS
-    @file_offset   = 0
-    @connection    = @winrm = nil
+    @file_offset = 0
+    @winrm.executor.close
+    @winrm = nil
   end
 
   def hit_or_miss
