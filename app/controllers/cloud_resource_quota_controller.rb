@@ -28,10 +28,13 @@ class CloudResourceQuotaController < ApplicationController
     return if record_no_longer_exists?(@resource_quota)
 
     @gtl_url = "/cloud_resource_quota/show/#{@resource_quota.id}?"
-    drop_breadcrumb({
-      :name => ui_lookup(:tables => 'cloud_resource_quota'),
-      :url  => "/cloud_resource_quota/show_list?page=#{@current_page}&refresh=y"
-    }, true)
+    drop_breadcrumb(
+      {
+        :name => ui_lookup(:tables => 'cloud_resource_quota'),
+        :url  => "/cloud_resource_quota/show_list?page=#{@current_page}&refresh=y"
+      },
+      true
+    )
 
     case @display
     when %w(download_pdf main summary_only)

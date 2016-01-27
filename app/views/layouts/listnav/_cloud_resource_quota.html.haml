@@ -13,8 +13,7 @@
         - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
             = link_to_with_icon(_("%{model}: %{name}") % {
-                :model => ui_lookup(:table => "ext_management_systems"),
-                :name => @record.ext_management_system.name
+                :model => ui_lookup(:table => "ext_management_systems"), :name => @record.ext_management_system.name
               },
               ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show this Cloud Resource Quota's parent %{parent}") % {:parent => ui_lookup(:table => "ems_cloud")})
