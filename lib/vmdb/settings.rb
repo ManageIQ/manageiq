@@ -48,8 +48,10 @@ module Vmdb
 
     def self.save!(miq_server, hash)
       raise "configuration invalid" unless VMDB::Config::Validator.new(hash).valid?
-      changes = HashDiffer.changes(template_settings, hash).map { |h| h.values_at(:key, :value) }
-      apply_settings_changes(miq_server, changes)
+      diff = HashDiffer.diff(template_settings, hash)
+      encrypt_passwords!(diff)
+      deltas = HashDiffer.diff_to_deltas(diff)
+      apply_settings_changes(miq_server, deltas)
     end
 
     def self.for_miq_server(miq_server)
@@ -98,20 +100,16 @@ module Vmdb
       end
     end
 
-    def self.apply_settings_changes(resource, changes)
+    def self.apply_settings_changes(resource, deltas)
       resource.transaction do
         index = resource.settings_changes.index_by(&:key)
 
-        changes.each do |key, value|
-          if value.present? && PASSWORD_FIELDS.include?(key.split("/").last.to_sym)
-            value = MiqPassword.try_encrypt(value)
-          end
-
-          record = index.delete(key)
+        deltas.each do |delta|
+          record = index.delete(delta[:key])
           if record
-            record.update_attributes!(:value => value)
+            record.update_attributes!(delta)
           else
-            resource.settings_changes.create!(:key => key, :value => value)
+            resource.settings_changes.create!(delta)
           end
         end
         resource.settings_changes.destroy(index.values)
