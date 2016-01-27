@@ -149,27 +149,24 @@ class PxeController < ApplicationController
 
     # Build hash of trees to replace and optional new node to be selected
     trees.each do |tree_name, tree|
-      presenter[:replace_partials]["#{tree_name}_tree_div".to_sym] = r[
+      presenter.replace("#{tree_name}_tree_div", r[
         :partial => "shared/tree",
         :locals  => {
           :tree => tree,
           :name => tree.name
         }
-      ]
+      ])
     end
 
     # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
-    if c_tb.present?
-      presenter[:reload_toolbars][:center] = c_tb
-    end
-
-    presenter[:set_visible_elements][:toolbar] = c_tb.present?
+    presenter[:reload_toolbars][:center] = c_tb if c_tb.present?
+    presenter.set_visibility(c_tb.present?, :toolbar)
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = h_tb
+    presenter.reload_toolbars(:history => h_tb)
     case x_active_tree
     when :pxe_servers_tree
-      presenter[:update_partials][:main_div] = r[:partial => "pxe_server_list"]
+      presenter.update(:main_div, r[:partial => "pxe_server_list"])
       if nodetype == "root"
         right_cell_text = _("All %s") % ui_lookup(:models => "PxeServer")
       else
@@ -188,7 +185,7 @@ class PxeController < ApplicationController
                           end
       end
     when :pxe_image_types_tree
-      presenter[:update_partials][:main_div] = r[:partial => "pxe_image_type_list"]
+      presenter.update(:main_div, r[:partial => "pxe_image_type_list"])
       right_cell_text = case nodetype
                         when 'root'
                           _("All %s") % ui_lookup(:models => "PxeImageType")
@@ -203,7 +200,7 @@ class PxeController < ApplicationController
                           _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
                         end
     when :customization_templates_tree
-      presenter[:update_partials][:main_div] = r[:partial => "template_list"]
+      presenter.update(:main_div, r[:partial => "template_list"])
       nodes = nodetype.split('_')
       if @in_a_form
         right_cell_text =
@@ -220,7 +217,7 @@ class PxeController < ApplicationController
         end
       end
     when :iso_datastores_tree
-      presenter[:update_partials][:main_div] = r[:partial => "iso_datastore_list"]
+      presenter.update(:main_div, r[:partial => "iso_datastore_list"])
       right_cell_text =
         case nodetype
         when 'root' then _("All %s") % ui_lookup(:models => "IsoDatastore")
@@ -235,10 +232,9 @@ class PxeController < ApplicationController
     if !@view || @in_a_form ||
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if @in_a_form
-        presenter[:set_visible_elements][:toolbar] = false
+        presenter.hide(:toolbar)
         # in case it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paging_div] = true
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.show(:paging_div, :form_buttons_div)
 
         action_url, multi_record = case x_active_tree
                                    when :pxe_servers_tree
@@ -267,7 +263,7 @@ class PxeController < ApplicationController
                                      "template_create_update"
                                    end
 
-        presenter[:update_partials][:form_buttons_div] = r[
+        presenter.update(:form_buttons_div, r[
           :partial => "layouts/x_edit_buttons",
           :locals  => {
             :record_id    => @edit[:rec_id],
@@ -275,14 +271,13 @@ class PxeController < ApplicationController
             :multi_record => multi_record,
             :serialize    => true
           }
-        ]
+        ])
       else
-        presenter[:set_visible_elements][:form_buttons_div] = false
+        presenter.hide(:form_buttons_div)
       end
-      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter.hide(:pc_div_1)
     else
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = true
+      presenter.hide(:form_buttons_div).show(:pc_div_1)
     end
 
     presenter[:record_id] = determine_record_id_for_presenter

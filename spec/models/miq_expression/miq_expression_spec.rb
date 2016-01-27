@@ -381,6 +381,9 @@ describe MiqExpression do
     end
 
     it "should not contain duplicate tag fields" do
+      # tags contain the root tenant's name
+      Tenant.seed
+
       category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
       FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
       tags = MiqExpression.model_details('Host',
@@ -849,7 +852,9 @@ describe MiqExpression do
       end
 
       it "TAG type" do
-        # Create tag category and tag for the next 2 tests
+        # tags contain the root tenant's name
+        Tenant.seed
+
         category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
         FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
 

@@ -34,9 +34,13 @@ module AuthenticationMixin
     authentications.select { |a| a.kind_of?(ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair) }
   end
 
+  def authentication_for_providers
+    authentications.where.not(:authtype => nil)
+  end
+
   def authentication_for_summary
     summary = []
-    authentications.each do |a|
+    authentication_for_providers.each do |a|
       summary << {
         :authtype       => a.authtype,
         :status         => a.status,
@@ -87,7 +91,7 @@ module AuthenticationMixin
   end
 
   def authentication_status
-    ordered_auths = authentications.sort_by(&:status_severity)
+    ordered_auths = authentication_for_providers.sort_by(&:status_severity)
     ordered_auths.last.try(:status) || "None"
   end
 
@@ -136,7 +140,7 @@ module AuthenticationMixin
         value[:auth_key] = '-----BEGIN RSA PRIVATE KEY-----' + fixed_auth_key + '-----END RSA PRIVATE KEY-----'
       end
 
-      unless value[:userid].blank?
+      unless value.key?(:userid) && value[:userid].blank?
         current[:new] = {:user => value[:userid], :password => value[:password], :auth_key => value[:auth_key]}
       end
       current[:old] = {:user => cred.userid, :password => cred.password, :auth_key => cred.auth_key} if cred
@@ -148,7 +152,7 @@ module AuthenticationMixin
       next if current[:old] == current[:new]
 
       # Check if it is a delete
-      if value[:userid].blank?
+      if value.key?(:userid) && value[:userid].blank?
         current[:new] = nil
         next if options[:save] == false
         authentication_delete(type)

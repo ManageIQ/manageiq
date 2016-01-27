@@ -3,9 +3,6 @@ module ApplicationController::Tenancy
 
   included do
     helper_method :current_tenant
-    hide_action :set_session_tenant
-    hide_action :current_tenant
-    hide_action :refresh_session_tenant
   end
 
   def current_tenant

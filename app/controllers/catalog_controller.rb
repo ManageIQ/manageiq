@@ -532,7 +532,7 @@ class CatalogController < ApplicationController
     when 'reconfigure' then :reconfigure_fqname
     end
   end
-  hide_action :get_ae_tree_edit_key
+  private :get_ae_tree_edit_key
 
   def ae_tree_select_toggle
     @edit = session[:edit]
@@ -679,7 +679,7 @@ class CatalogController < ApplicationController
       end
     end
   end
-  hide_action :process_sts
+  private :process_sts
 
   def template_to_node_name(object)
     ORCHESTRATION_TEMPLATES_NODES[object.class.name]
@@ -902,16 +902,10 @@ class CatalogController < ApplicationController
     st = @edit[:rec_id] ?
       ServiceTemplate.find_by_id(@edit[:rec_id]) :
       class_service_template(@edit[:new][:st_prov_type]).new
-    st.name = @edit[:new][:name]
-    st.description = @edit[:new][:description]
-    st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
-    st.provision_cost = @edit[:new][:provision_cost]
-    st.display = @edit[:new][:display]
-    stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
-    st.service_template_catalog = stc
+    common_st_record_vars(st)
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     st.service_type = "atomic"
-    st.prov_type = @edit[:new][:st_prov_type]
+
     if request
       st.remove_all_resources
       st.add_resource(request) if need_prov_dialogs?(@edit[:new][:st_prov_type])
@@ -1243,19 +1237,20 @@ class CatalogController < ApplicationController
     end
   end
 
-  def st_set_record_vars(st)
+  # sets record variables common to both atomic and composite service templates
+  def common_st_record_vars(st)
     st.name = @edit[:new][:name]
     st.description = @edit[:new][:description]
     st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
     st.provision_cost = @edit[:new][:provision_cost]
     st.display = @edit[:new][:display]
-    if @edit[:new][:display]
-      stc = @edit[:new][:catalog_id].nil? ? nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
-      st.service_template_catalog = stc
-    else
-      st.service_template_catalog = nil
-    end
+    st.service_template_catalog = @edit[:new][:catalog_id].nil? ?
+      nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
     st.prov_type = @edit[:new][:st_prov_type]
+  end
+
+  def st_set_record_vars(st)
+    common_st_record_vars(st)
     st.remove_all_resources
     @add_rsc = true
     unless @edit[:new][:selected_resources].empty?
@@ -1802,12 +1797,12 @@ class CatalogController < ApplicationController
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
       tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ])
     end
 
     if @sb[:buttons_node]
@@ -1826,7 +1821,7 @@ class CatalogController < ApplicationController
     presenter[:right_cell_text] = right_cell_text
 
     # Replace right cell divs
-    presenter[:update_partials][:main_div] =
+    presenter.update(:main_div,
       if @tagging
         action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
         r[:partial => "layouts/x_tagging", :locals => {:action_url => action_url}]
@@ -1849,9 +1844,10 @@ class CatalogController < ApplicationController
       elsif @sb[:buttons_node]
         r[:partial => "shared/buttons/ab_list"]
       else
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
         r[:partial => "layouts/x_gtl"]
       end
+    )
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
@@ -1859,8 +1855,7 @@ class CatalogController < ApplicationController
 
     # Decide whether to show paging controls
     if @tagging
-      presenter[:set_visible_elements][:toolbar] = false
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.hide(:toolbar).show(:paging_div)
       action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
       locals = {
         :record_id           => @edit[:object_ids][0],
@@ -1868,18 +1863,15 @@ class CatalogController < ApplicationController
         :force_cancel_button => true,
         :ajax_buttons        => true
       }
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+      presenter.show(:form_buttons_div).hide(:pc_div_1)
+      presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
     elsif record_showing || @in_a_form || @sb[:buttons_node] ||
           (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ['button_edit', 'group_edit', 'group_reorder', 'at_st_new',
           'st_new', 'st_catalog_new', 'st_catalog_edit'].include?(action)
-        presenter[:set_visible_elements][:toolbar] = false
-        presenter[:set_visible_elements][:paging_div] = true
+        presenter.hide(:toolbar).show(:paging_div)
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.show(:form_buttons_div).hide(:pc_div_1)
         locals = {:record_id => @edit[:rec_id]}
         case action
         when 'group_edit'
@@ -1895,13 +1887,11 @@ class CatalogController < ApplicationController
           locals[:action_url] = 'servicetemplate_edit'
           locals[:serialize] = true
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
       elsif action == "dialog_provision"
-        presenter[:set_visible_elements][:toolbar] = false
+        presenter.hide(:toolbar)
         # incase it was hidden for summary screen, and incase there were no records on show_list
-        presenter[:set_visible_elements][:paging_div] = true
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.show(:paging_div, :form_buttons_div).hide(:pc_div_1)
         @record.dialog_fields.each do |field|
           if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
             presenter[:build_calendar] = {
@@ -1909,39 +1899,28 @@ class CatalogController < ApplicationController
             }
           end
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}])
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
-        presenter[:set_visible_elements][:toolbar] = false
-        presenter[:set_visible_elements][:paging_div] = true
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.hide(:toolbar).show(:paging_div, :form_buttons_div).hide(:pc_div_1)
         locals = {:record_id  => @edit[:rec_id],
                   :action_url => "#{action}_submit",
                   :serialize  => true}
         if action == "ot_copy"
-          presenter[:set_visible_elements][:buttons_on] = true
-          presenter[:set_visible_elements][:buttons_off] = false
+          presenter.show(:buttons_on).hide(:buttons_off)
           locals[:record_id] = nil
         end
         locals[:no_reset] = true if %w(ot_copy service_dialog_from_ot).include?(action)
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
-        presenter[:set_visible_elements][:buttons_on] = false
-        presenter[:set_visible_elements][:toolbar] = true
-        presenter[:set_visible_elements][:paging_div] = false
+        presenter.hide(:buttons_on).show(:toolbar).hide(:paging_div)
       end
     else
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:set_visible_elements][:toolbar] = true
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:form_buttons_div, :pc_div_1, :toolbar, :paging_div)
     end
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = determine_record_id_for_presenter
 

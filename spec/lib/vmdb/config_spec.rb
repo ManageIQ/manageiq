@@ -80,4 +80,54 @@ describe VMDB::Config do
       expect(v).to eq(250.megabytes)
     end
   end
+
+  context "#clone_auth_for_log" do
+    options = {:host => "16.1.2.119",
+               :port => "389",
+               :auth => {:basedn                      => "OU=Users,OU=Developers,OU=Manageiq,DC=manageiq,DC=com",
+                         :bind_dn                     => "CN=David Robert Jones,OU=Users,OU=Developers,OU=ManageIQ,DC=manageiq,DC=com",
+                         :bind_pwd                    => "top_secret_bind_pwd",
+                         :get_direct_groups           => true,
+                         :group_memberships_max_depth => 2,
+                         :ldaphost                    => ["192.0.2.255"],
+                         :ldapport                    => "389",
+                         :mode                        => "ldap",
+                         :user_suffix                 => "manageiq.com",
+                         :user_type                   => "samaccountname",
+                         :amazon_key                  => nil,
+                         :amazon_secret               => "top_secret_secret",
+                         :ldap_role                   => true,
+                         :amazon_role                 => false,
+                         :httpd_role                  => false,
+                         :user_proxies                => [{:bind_pwd => "user_proxy_bind_pwd", :amazon_secret => "user_proxy_amazon_secret"}],
+                         :follow_referrals            => false,
+                         :sso_enabled                 => false,
+                         :domain_prefix               => "manageiq"
+                        }
+              }
+
+    it "masks passwords in log auth" do
+      log_auth = VMDB::Config.clone_auth_for_log(options)
+      expect(log_auth[:auth][:bind_pwd]).to eql("********")
+      expect(log_auth[:auth][:amazon_secret]).to eql("********")
+    end
+
+    it "leaves source passwords unaltered" do
+      VMDB::Config.clone_auth_for_log(options)
+      expect(options[:auth][:bind_pwd]).to eql("top_secret_bind_pwd")
+      expect(options[:auth][:amazon_secret]).to eql("top_secret_secret")
+    end
+
+    it "masks user proxies passwords in log auth" do
+      log_auth = VMDB::Config.clone_auth_for_log(options)
+      expect(log_auth[:auth][:user_proxies][0][:bind_pwd]).to eql("********")
+      expect(log_auth[:auth][:user_proxies][0][:amazon_secret]).to eql("********")
+    end
+
+    it "leaves source user proxies unaltered" do
+      VMDB::Config.clone_auth_for_log(options)
+      expect(options[:auth][:user_proxies][0][:bind_pwd]).to eql("user_proxy_bind_pwd")
+      expect(options[:auth][:user_proxies][0][:amazon_secret]).to eql("user_proxy_amazon_secret")
+    end
+  end
 end

@@ -6,9 +6,6 @@ describe ApplicationHelper do
     self.class.send(:include, ApplicationController::CurrentUser)
   end
 
-  def self.hide_action(*_args)
-  end
-
   def method_missing(sym, *args)
     b = _toolbar_builder
     if b.respond_to?(sym, true)

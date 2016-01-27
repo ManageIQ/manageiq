@@ -1,4 +1,3 @@
-- listicon_image ||= nil
 - button_div ||= "center_tb"
 - rec_display          = ""
 - no_rec_display       = "display:none"
@@ -28,4 +27,4 @@
       - elsif @gtl_type == "tile"
         = render :partial => "layouts/gtl/tile", :locals => {:table => table, :button_div => button_div, :view => view, :action_url => action_url}
       - elsif @gtl_type == "list"
-        = render :partial => "layouts/gtl/list", :locals => {:table => table, :button_div => button_div, :view => view, :action_url => action_url, :listicon_image => listicon_image}
+        = render :partial => "layouts/gtl/list", :locals => {:table => table, :button_div => button_div, :view => view, :action_url => action_url}

@@ -41,7 +41,7 @@ gem "ziya",                           "=2.3.0",    :require => false, :git => "g
 
 # Not vendored, but required
 gem "mime-types",                     "~>2.6.1",   :require => "mime/types/columnar"
-gem "acts_as_list",                   "~>0.1.4"
+gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be required so that it loads before ancestry
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
@@ -50,6 +50,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 gem "american_date"
 gem "azure-armrest",                  "=0.0.8"
 gem "default_value_for",              "~>3.0.1"
+gem "draper",                         "~>2.1.0"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
 gem "novnc-rails",                    "~>0.2"
@@ -95,6 +96,7 @@ gem "rufus-scheduler",                "~>3.1.3",   :require => false
 gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
+gem "sshkey",                         "~>1.8.0",   :require => false
 
 
 ### Start of gems excluded from the appliances.

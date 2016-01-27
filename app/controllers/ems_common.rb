@@ -767,7 +767,7 @@ module EmsCommon
       creds[:ssh_keypair] = {:userid => @edit[:new][:ssh_keypair_userid], :auth_key => @edit[:new][:ssh_keypair_password]}
     end
     if ems.supports_authentication?(:bearer) && !@edit[:new][:bearer_token].blank?
-      creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => "_"} # Must have userid
+      creds[:bearer] = {:auth_key => @edit[:new][:bearer_token]}
     end
     if ems.supports_authentication?(:auth_key) && !@edit[:new][:service_account].blank?
       creds[:default] = {:auth_key => @edit[:new][:service_account], :userid => "_"}

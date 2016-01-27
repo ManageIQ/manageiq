@@ -1488,20 +1488,19 @@ module VmCommon
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
 
-    presenter[:set_visible_elements][:default_left_cell] = true
-    presenter[:set_visible_elements][:custom_left_cell] = false
+    presenter.show(:default_left_cell).hide(:custom_left_cell)
 
     r = proc { |opts| render_to_string(opts) }
 
     add_ajax = false
     if record_showing
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:form_buttons_div)
       path_dir = @record.kind_of?(ManageIQ::Providers::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::CloudManager::Template) ? "vm_cloud" : "vm_common"
-      presenter[:update_partials][:main_div] = r[:partial => "#{path_dir}/main", :locals => {:controller => 'vm'}]
+      presenter.update(:main_div, r[:partial => "#{path_dir}/main", :locals => {:controller => 'vm'}])
     elsif @in_a_form
       partial_locals = {:controller => 'vm'}
       partial_locals[:action_url] = @lastaction if partial == 'layouts/x_gtl'
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
       if %w(clone migrate miq_request_new pre_prov publish reconfigure).include?(@sb[:action])
@@ -1541,10 +1540,9 @@ module VmCommon
       add_ajax = true
 
       if ['compare', 'drift'].include?(@sb[:action])
-        presenter[:update_partials][:custom_left_cell] = r[
-          :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}]
-        presenter[:set_visible_elements][:custom_left_cell] = true
-        presenter[:set_visible_elements][:default_left_cell] = false
+        presenter.update(:custom_left_cell, r[
+          :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}])
+        presenter.show(:custom_left_cell).hide(:default_left_cell)
       end
     elsif @sb[:action] || params[:display]
       partial_locals = {
@@ -1556,12 +1554,12 @@ module VmCommon
         presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
         presenter[:parent_class] = request[:controller] # Set parent class for URL also
       end
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
       add_ajax = true
       presenter[:build_calendar] = true
     else
-      presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
 
     presenter[:ajax_action] = {
@@ -1571,10 +1569,10 @@ module VmCommon
     } if add_ajax && ['performance', 'timeline'].include?(@sb[:action])
 
     # Replace the searchbox
-    presenter[:replace_partials][:adv_searchbox_div] = r[
+    presenter.replace(:adv_searchbox_div, r[
       :partial => 'layouts/x_adv_searchbox',
       :locals  => {:nameonly => ([:images_tree, :instances_tree, :vandt_tree].include?(x_active_tree))}
-    ]
+    ])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:clear_tree_cookies] = "edit_treeOpenStatex" if @sb[:action] == "policy_sim"
@@ -1584,57 +1582,52 @@ module VmCommon
       if @pages && !@in_a_form
         @ajax_paging_buttons = true # FIXME: this should not be done this way
         if @sb[:action] && @record  # Came in from an action link
-          presenter[:update_partials][:paging_div] = r[
+          presenter.update(:paging_div, r[
             :partial => 'layouts/x_pagingcontrols',
             :locals  => {
               :action_url    => @sb[:action],
               :action_method => @sb[:action], # FIXME: action method and url the same?!
               :action_id     => @record.id
             }
-          ]
+          ])
         else
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
         if @sb[:action] == 'dialog_provision'
-          presenter[:update_partials][:form_buttons_div] = r[
+          presenter.update(:form_buttons_div, r[
             :partial => 'layouts/x_dialog_buttons',
             :locals  => {
               :action_url => action,
               :record_id  => @edit[:rec_id],
             }
-          ]
+          ])
         elsif action != "retire"
-          presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
+          presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         end
-        presenter[:set_visible_elements][:pc_div_1] = false
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
 
     presenter[:right_cell_text] = @right_cell_text
 
-    presenter[:reload_toolbars][:history] = h_tb
-    presenter[:reload_toolbars][:center]  = c_tb
-    presenter[:reload_toolbars][:view]    = v_tb
-    presenter[:reload_toolbars][:custom]  = cb_tb
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb, :custom => cb_tb)
 
-    presenter[:set_visible_elements][:toolbar] = h_tb.present? || c_tb.present? || v_tb.present?
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
     presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    presenter[:set_visible_elements][:blocker_div] = false unless @edit && @edit[:adv_search_open]
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen

@@ -59,6 +59,36 @@ class ExplorerPresenter
     ).update(options)
   end
 
+  def set_visibility(value, *elements)
+    elements.each { |el| @options[:set_visible_elements][el] = value }
+    self
+  end
+
+  def hide(*elements)
+    set_visibility(false, *elements)
+  end
+
+  def show(*elements)
+    set_visibility(true, *elements)
+  end
+
+  def reload_toolbars(toolbars)
+    toolbars.each_pair do |div_name, toolbar_data|
+      @options[:reload_toolbars][div_name] = toolbar_data
+    end
+    self
+  end
+
+  def replace(div_name, content)
+    @options[:replace_partials][div_name] = content
+    self
+  end
+
+  def update(div_name, content)
+    @options[:update_partials][div_name] = content
+    self
+  end
+
   def []=(key, value)
     @options[key] = value
   end
@@ -72,6 +102,8 @@ class ExplorerPresenter
     process
     @out.join("\n")
   end
+
+  private
 
   def process
     # see if any miq expression vars need to be set

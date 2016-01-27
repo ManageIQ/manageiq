@@ -109,15 +109,11 @@ describe MiqReportResult do
       end
     end
 
-    it "#purge_ids_for_remaining" do
-      expect(described_class.send(:purge_ids_for_remaining, 1)).to eq({1 => @rr1.last.id, 2 => @rr2.last.id})
-    end
-
-    it "#purge_counts_for_remaining" do
+    it "#purge_counts_for_remaining (used by tools - avoid, it is very expensive)" do
       expect(described_class.send(:purge_counts_for_remaining, 1)).to eq({1 => 1, 2 => 2})
     end
 
-    context "#purge_count" do
+    context "#purge_count (used by tools - avoid, it is very expensive)" do
       it "by remaining" do
         expect(described_class.purge_count(:remaining, 1)).to eq(3)
       end

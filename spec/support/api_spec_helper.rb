@@ -376,7 +376,7 @@ module ApiSpecHelper
     expect(@result).to have_key("results")
     results = @result["results"]
     expect(results.size).to eq(tag_results.size)
-    [results, tag_results].transpose do |result, tag_result|
+    results.zip(tag_results) do |result, tag_result|
       expect(result["success"]).to      eq(tag_result[:success])
       expect(result["href"]).to         match(tag_result[:href])
       expect(result["tag_category"]).to eq(tag_result[:tag_category])

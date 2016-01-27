@@ -2,7 +2,7 @@ module ApplicationController::CiProcessing
   extend ActiveSupport::Concern
 
   included do
-    hide_action(:process_elements)
+    private(:process_elements)
   end
 
   # Set Ownership selected db records

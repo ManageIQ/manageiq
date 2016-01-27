@@ -5,9 +5,7 @@ module ApplicationController::CurrentUser
     helper_method :current_user,  :current_userid
     helper_method :current_group, :current_group_id
     helper_method :admin_user?, :super_admin_user?
-    hide_action :clear_current_user, :current_user=
-    hide_action :admin_user?, :super_admin_user?
-    hide_action :current_user, :current_userid, :current_group_id
+    private :clear_current_user
   end
 
   def clear_current_user

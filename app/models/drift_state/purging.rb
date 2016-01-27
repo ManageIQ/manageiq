@@ -1,5 +1,6 @@
 module DriftState::Purging
   extend ActiveSupport::Concern
+  include PurgingMixin
 
   module ClassMethods
     def purge_mode_and_value
@@ -28,6 +29,7 @@ module DriftState::Purging
       send("purge_count_by_#{mode}", value)
     end
 
+    # @param mode [:date, :remaining]
     def purge(mode, value, window = nil, &block)
       send("purge_by_#{mode}", value, window, &block)
     end
@@ -49,8 +51,8 @@ module DriftState::Purging
       total = 0
       purge_ids_for_remaining(remaining).each do |resource, id|
         resource_type, resource_id = *resource
-        conditions = [{:resource_type => resource_type, :resource_id => resource_id}, arel_table[:id].lt(id)]
-        total += purge_in_batches(conditions, window, total, &block)
+        scope = where(:resource_type => resource_type, :resource_id => resource_id).where(arel_table[:id].lt(id))
+        total += purge_in_batches(scope, window, total, &block)
       end
 
       _log.info("Purging drift states older than last #{remaining} results...Complete - Deleted #{total} records")
@@ -75,41 +77,8 @@ module DriftState::Purging
     # By Date
     #
 
-    def purge_count_by_date(older_than)
-      conditions = arel_table[:timestamp].lt(older_than)
-      where(conditions).count
-    end
-
-    def purge_by_date(older_than, window = nil, &block)
-      _log.info("Purging drift states older than [#{older_than}]...")
-
-      window ||= purge_window_size
-      conditions = arel_table[:timestamp].lt(older_than)
-      total = purge_in_batches(conditions, window, &block)
-
-      _log.info("Purging drift states older than [#{older_than}]...Complete - Deleted #{total} records")
-    end
-
-    #
-    # Common methods
-    #
-
-    def purge_in_batches(conditions, window, total = 0)
-      query = select(:id).limit(window)
-      [conditions].flatten.each { |c| query = query.where(c) }
-
-      until (batch = query.dup.to_a).empty?
-        ids = batch.collect(&:id)
-
-        _log.info("Purging #{ids.length} drift states.")
-        count  = delete_all(:id => ids)
-        total += count
-
-        purge_associated_records(ids) if self.respond_to?(:purge_associated_records)
-
-        yield(count, total) if block_given?
-      end
-      total
+    def purge_scope(older_than)
+      where(arel_table[:timestamp].lt(older_than))
     end
   end
 end

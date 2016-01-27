@@ -1,6 +1,7 @@
 describe('containerTopologyController', function() {
     var scope, $controller, $httpBackend;
     var mock_data =  getJSONFixture('container_topology_response.json');
+    var replicator = { id:"396086e5-7b0d-11e5-8286-18037327aaeb",  item:{display_kind:"Replicator", kind:"ContainerReplicator", id:"396086e5-7b0d-11e5-8286-18037327aaeb", miq_id:"10"}};
 
     beforeEach(module('topologyApp'));
 
@@ -43,6 +44,7 @@ describe('containerTopologyController', function() {
         expect($controller.getIcon(d)).toEqual("\uF1B3");
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4"}};
         expect($controller.getIcon(d)).toEqual("\uE600");
+        expect($controller.getIcon(replicator)).toEqual("\uE624");
       });
     });
 
@@ -54,6 +56,7 @@ describe('containerTopologyController', function() {
         expect($controller.dblclick(d)).toEqual("/container_group/show/30");
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
         expect($controller.dblclick(d)).toEqual("/vm/show/25");
+        expect($controller.dblclick(replicator)).toEqual("/container_replicator/show/10");
       });
     });
 
@@ -65,6 +68,7 @@ describe('containerTopologyController', function() {
         expect($controller.getDimensions(d)).toEqual({ x: 1, y: 6, r: 17 });
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
         expect($controller.getDimensions(d)).toEqual({ x: 0, y: 9, r: 21 });
+        expect($controller.getDimensions(replicator)).toEqual({ x: 0, y: 9, r: 17 });
       });
     });
 

@@ -305,12 +305,12 @@ class MiqAeClassController < ApplicationController
 
     # Build hash of trees to replace and optional new node to be selected
     replace_trees.each do |t|
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+      presenter.replace("#{t}_tree_div", r[
         :partial => 'shared/tree',
         :locals  => {:tree => ae_tree,
                      :name => ae_tree.name.to_s
         }
-      ]
+      ])
     end
 
     if @sb[:action] == "miq_ae_field_seq"
@@ -343,17 +343,16 @@ class MiqAeClassController < ApplicationController
       update_partial_div = :main_div
       update_partial = "all_tabs"
     end
-    presenter[:replace_partials][replace_partial_div] = r[
+    presenter.replace(replace_partial_div, r[
         :partial => "layouts/flash_msg",
         :locals  => {:div_num => replace_partial_div_num}
-    ] if replace_partial_div
-    presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
+    ]) if replace_partial_div
+    presenter.update(update_partial_div, r[:partial => update_partial]) if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:set_visible_elements][:paging_div] = true
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:update_partials][:form_buttons_div] = r[
+      presenter.show(:paging_div, :form_buttons_div)
+      presenter.update(:form_buttons_div, r[
         :partial => "layouts/x_edit_buttons",
         :locals  => {
           :record_id    => @edit[:rec_id],
@@ -362,28 +361,27 @@ class MiqAeClassController < ApplicationController
           :multi_record => @sb[:action] == "miq_ae_domain_priority_edit",
           :serialize    => @sb[:active_tab] == 'methods',
         }
-      ]
+      ])
     else
       # incase it was hidden for summary screen, and incase there were no records on show_list
-      presenter[:set_visible_elements][:paging_div] = false
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:paging_div, :form_buttons_div)
     end
 
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
 
     if @record.kind_of?(MiqAeMethod) && !@in_a_form
-      presenter[:set_visible_elements][:params_div] = !@record.inputs.blank?
+      presenter.set_visibility(!@record.inputs.blank?, :params_div)
     end
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = h_tb
+    presenter.reload_toolbars(:history => h_tb)
     if c_tb.present?
-      presenter[:set_visible_elements][:toolbar] = true
-      presenter[:reload_toolbars][:center] = c_tb
+      presenter.show(:toolbar)
+      presenter.reload_toolbars(:center => c_tb)
     else
-      presenter[:set_visible_elements][:toolbar] = false
+      presenter.hide(:toolbar)
     end
 
     presenter[:record_id] = determine_record_id_for_presenter

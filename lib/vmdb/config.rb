@@ -7,17 +7,21 @@ module VMDB
 
     require_relative 'configuration_encoder'
 
-    def self.clone_auth_for_log(auth)
-      log_auth = auth.deep_clone
-      [:bind_pwd, :amazon_secret].each do |key|
-        log_auth[key] = '********' if log_auth.key?(key)
-        if log_auth.key?(:user_proxies)
-          log_auth[:user_proxies].each do |p|
-            p[key] = '********' if p.key?(key)
-          end
-        end
+    def self.deep_clean_auth_for_log(log_auth)
+      log_auth.each do |key, val|
+        log_auth[key] = deep_clean_auth_for_log(val) if val.kind_of?(Hash)
+
+        log_auth[key] = "********" if Vmdb::ConfigurationEncoder::PASSWORD_FIELDS.include?(key.to_s)
+
+        log_auth[key].each do |p|
+          p.keys.each { |key2| p[key2] = "********" if Vmdb::ConfigurationEncoder::PASSWORD_FIELDS.include?(key2.to_s) }
+        end if [:user_proxies].include? key
       end
       log_auth
+    end
+
+    def self.clone_auth_for_log(auth)
+      deep_clean_auth_for_log(auth.deep_clone)
     end
 
     def self.invalidate(name)
