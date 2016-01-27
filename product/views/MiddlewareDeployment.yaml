@@ -23,10 +23,10 @@ cols:
 
 
 # Included tables (joined, has_one, has_many) and columns
-#include:
-#  middleware_server:
-#    columns:
-#    - name
+include:
+  middleware_server:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 
@@ -34,12 +34,12 @@ cols:
 # Order of columns (from all tables)
 col_order:
 - name
-#- middleware_server.name
+- middleware_server.name
 
 # Column titles, in order
 headers:
 - Deployment Name
-#- Server
+- Server
 
 # Condition(s) string for the SQL query
 conditions:
@@ -50,7 +50,7 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
-#- middleware_server.name
+- middleware_server.name
 
 # Group rows (y=yes,n=no,c=count)
 group: y

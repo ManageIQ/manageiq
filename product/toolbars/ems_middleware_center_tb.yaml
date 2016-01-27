@@ -7,23 +7,23 @@
 - :name: ems_middleware_vmdb
   :items:
   - :buttonSelect: ems_middleware_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ems_middleware_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: 'Refresh items and relationships'
       :title: 'Refresh items and relationships related to this #{ui_lookup(:table=>"ems_middleware")}'
       :confirm: 'Refresh items and relationships related to this #{ui_lookup(:table=>"ems_middleware")}?'
     - :separator:
     - :button: ems_middleware_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"ems_middleware")}'
       :title: 'Edit this #{ui_lookup(:table=>"ems_middleware")}'
       :url: '/edit'
     - :button: ems_middleware_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"ems_middleware")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"ems_middleware")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -31,12 +31,12 @@
 - :name: ems_middleware_monitoring
   :items:
   - :buttonSelect: ems_middlewarer_monitoring_choice
-    :image: monitoring
+    :icon: product product-monitoring fa-lg
     :title: Monitoring
     :text: Monitoring
     :items:
     - :button: ems_middleware_timeline
-      :image: timeline
+      :icon: product product-timeline fa-lg
       :text: 'Timelines'
       :title: 'Show Timelines for this #{ui_lookup(:table=>"ems_middleware")}'
       :url: '/show'
@@ -44,11 +44,11 @@
 - :name: ems_middleware_policy
   :items:
   - :buttonSelect: ems_middleware_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: ems_middleware_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"ems_middleware")}'

@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   class Hawkular::MiddlewareManager < ManageIQ::Providers::MiddlewareManager
     require_nested :RefreshParser
+    require_nested :RefreshWorker
     require_nested :Refresher
 
     include AuthenticationMixin
@@ -21,14 +22,23 @@ module ManageIQ::Providers
     end
 
     def connect
-      @connection ||= self.class.raw_connect(hostname, port, authentication_userid("default"), authentication_password("default"))
+      $hawk_log.info("Connecting to Hawkular on #{hostname}:#{port}")
+      @connection ||= self.class.raw_connect(hostname, port, authentication_userid('default'), authentication_password('default'))
     end
 
     def connection
       connect
     end
 
+    def browser_url
+      "http://#{hostname}:#{port}"
+    end
+
     def feeds
+      $hawk_log.info('connection class ' + connection.class.to_s)
+      if connection.respond_to? :to_s
+        $hawk_log.info(connection.to_s)
+      end
       connection.list_feeds
     end
 

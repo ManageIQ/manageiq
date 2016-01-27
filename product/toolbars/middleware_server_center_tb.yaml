@@ -7,17 +7,17 @@
 - :name: middleware_server_vmdb
   :items:
   - :buttonSelect: middleware_server_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: middleware_server_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this #{ui_lookup(:table=>"middleware_server")}'
       :title: 'Edit this #{ui_lookup(:table=>"middleware_server")}'
       :url: '/edit'
     - :button: middleware_server_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove this #{ui_lookup(:table=>"middleware_server")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"middleware_server")} from the VMDB'
       :url_parms: '&refresh=y'
@@ -25,11 +25,11 @@
 - :name: middleware_server_policy
   :items:
   - :buttonSelect: middleware_server_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: middleware_server_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"middleware_server")}'

@@ -7,24 +7,24 @@
 - :name: ems_middleware_vmdb
   :items:
   - :buttonSelect: ems_middleware_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ems_middleware_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :url: '/new'
       :text: 'Add a New #{ui_lookup(:table=>"ems_middleware")}'
       :title: 'Add a New #{ui_lookup(:table=>"ems_middleware")}'
     - :button: ems_middleware_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Selected #{ui_lookup(:table=>"ems_middleware")}'
       :title: 'Select a single #{ui_lookup(:table=>"ems_middleware")} to edit'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: ems_middleware_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove #{ui_lookup(:tables=>"ems_middlewares")} from the VMDB'
       :title: 'Remove selected #{ui_lookup(:tables=>"ems_middlewares")} from the VMDB'
       :url_parms: 'main_div'
@@ -34,14 +34,14 @@
 - :name: ems_middleware_policy
   :items:
   - :buttonSelect: ems_middleware_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: ems_middleware_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit Tags'
       :title: 'Edit Tags for this #{ui_lookup(:table=>"ems_middleware")}'
       :url_parms: 'main_div'
