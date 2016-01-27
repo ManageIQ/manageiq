@@ -19,13 +19,17 @@ class MiqWinRM
     @connection = raw_connect(@username, @password, @uri)
   end
 
-  def run_powershell_script(script)
+  def run_powershell_scripts(*scripts)
     $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}" unless $log.nil?
-    @connection.run_powershell_script(script)
+    @connection.create_executor do |exec|
+      scripts.each { |script| exec.run_powershell_script(script) }
+    end
   rescue WinRM::WinRMAuthorizationError
     $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
     raise
   end
+
+  alias_method :run_powershell_script, :run_powershell_scripts
 
   private
 

@@ -9,15 +9,34 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        File.open(script, "r") do |file|
-          begin
-            results = connection.run_powershell_script(file)
-            log_dos_error_results(results)
-            results
-          rescue Errno::ECONNREFUSED => err
-            $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
-            raise
+        begin
+          file = IO.read(script)
+          results = connection.create_executor do |exec|
+            exec.run_powershell_script(file)
           end
+          log_dos_error_results(results)
+          results
+        rescue Errno::ECONNREFUSED => err
+          $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
+          raise
+        end
+      end
+
+      def run_powershell_scripts(connection, *scripts)
+        log_header = "MIQ(#{self.class.name}.#{__method__})"
+        results = []
+        begin
+          connection.create_executor do |exec|
+            scripts.each do |script|
+              file = IO.read(script)
+              results << exec.run_powershell_script(file)
+            end
+          end
+          log_dos_error_results(results)
+          results
+        rescue Errno::ECONNREFUSED => err
+          $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
+          raise
         end
       end
 
@@ -30,10 +49,12 @@ class ManageIQ::Providers::Microsoft::InfraManager
         MiqPowerShell::Convert.new(xml).to_h
       end
 
-      def log_dos_error_results(results)
+      def log_dos_error_results(*results)
         log_header = "MIQ(#{self.class.name}##{__method__})"
-        error = results.stderr
-        $scvmm_log.error("#{log_header} #{error}") unless error.blank?
+        results.each do |result|
+          error = result.stderr
+          $scvmm_log.error("#{log_header} #{error}") unless error.blank?
+        end
       end
 
       def parse_json_results(results)
