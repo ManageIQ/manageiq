@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 
 
+## Unreleased - as of Sprint 35 end 2016-01-25
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+35+Ending+Jan+25%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - OpenStack: cleanup SSL support, VM operations
+  - Google Cloud Engine: Inventory, Power Operations
+  - Microsoft SCVMM: Ability to delete VMs
+- REST API
+  - Added primary collection for Instances.
+  - Added terminate action for instances.
+  - Ability to filter string equality/inequality on virtual attributes.
+  - For SSUI, ability to retrieve user’s default language
+ and support for Dynamic Dialogs.
+- User Interface
+  - I18n: Marked translated strings directly in UI, Gettext support
+  - Containers
+    - Dashboard network trends
+    - Container environment variables table
+    - Search functionality for Container topology
+    - Dashboard no data cards
+    - Refresh option in Configuration dropdown
+- Automate
+  - SSUI: Support dialogs with dynamic fields
+  - Simulate UI support for state machine retries
+  - Service Models: Support where method, find_by, and find_by!
+- Ansible
+  - Modeling for Provider, Configuration Manager, and Configured Systems
+  - Provider connection logic
+  - Support refresh of Configured Systems
+  - [ansible_tower_client](https://github.com/ManageIQ/ansible_tower_client) gem
+    - Credential validation
+    - Supported resources: Hosts, JobTemplates, Adhoc commands
+- SmartState Analysis Support for Microsoft SCVMM
+  -  Virtual hard disks residing on Hyper-V servers.
+  -  VHD, and newer VHDX disk formats.
+  -  Snapshotted disks.
+  -  Same filesystems as other providers.
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+35+Ending+Jan+25%2C+2016%22+label%3Aenhancement)
+
+- Appliance Core: Workers forked from main server process instead of spawned
+- User Interface
+  - Converted toolbar images to font icons
+  - Enabled font icon support in list views
+  - Implemented Bootstrap switch
+
 ## Unreleased - as of Sprint 34 end 2016-01-04
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+34+Ending+Jan+4%2C+2016%22+label%3Aenhancement)
@@ -27,7 +74,7 @@ All notable changes to this project will be documented in this file.
 - Service Model: Added “networks” relationship to Hardware model
 -  Services
   -  Added instances/methods to generate emails for consolidated quota (Denied, Pending, Warning)
-  - Enhanced Dialogs validation at build time to check tabs, and boxes in addition to fields. 
+  - Enhanced Dialogs validation at build time to check tabs, and boxes in addition to fields.
 
 ### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+34+Ending+Jan+4%2C+2016%22+label%3Aenhancement)
 
