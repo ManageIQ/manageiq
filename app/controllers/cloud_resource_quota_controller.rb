@@ -27,17 +27,17 @@ class CloudResourceQuotaController < ApplicationController
     @resource_quota = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@resource_quota)
 
-    @gtl_url = "/cloud_resource_quota/show/" << @resource_quota.id.to_s << "?"
-    drop_breadcrumb(
-      {:name => "Cloud Resource Quotas", :url => "/cloud_resource_quota/show_list?page=#{@current_page}&refresh=y"},
-      true
-    )
+    @gtl_url = "/cloud_resource_quota/show/#{@resource_quota.id}?"
+    drop_breadcrumb({
+      :name => ui_lookup(:tables => 'cloud_resource_quota'),
+      :url  => "/cloud_resource_quota/show_list?page=#{@current_page}&refresh=y"
+    }, true)
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when %w(download_pdf main summary_only)
       get_tagdata(@resource_quota)
       drop_breadcrumb(
-        :name => @resource_quota.name + " (Summary)",
+        :name => _("%{name} (Summary)") % {:name => @resource_quota.name},
         :url  => "/cloud_resource_quota/show/#{@resource_quota.id}"
       )
       @showtype = "main"
@@ -57,7 +57,7 @@ class CloudResourceQuotaController < ApplicationController
   private
 
   def get_session_data
-    @title      = "Cloud Resource Quota"
+    @title      = ui_lookup(:table => 'cloud_resource_quota')
     @layout     = "cloud_resource_quota"
     @lastaction = session[:cloud_resource_quota_lastaction]
     @display    = session[:cloud_resource_quota_display]
