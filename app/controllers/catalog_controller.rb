@@ -240,11 +240,9 @@ class CatalogController < ApplicationController
       @trees << build_stcat_tree
       @accords.push(:name => "stcat", :title => "Catalogs", :container => "stcat_accord")
     end
-    self.x_active_tree = default_active_tree
-    self.x_active_accord = default_active_accord.to_s
 
-    self.x_active_tree = x_last_active_tree if x_last_active_tree
-    self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
+    self.x_active_tree = x_last_active_tree ? x_last_active_tree : default_active_tree
+    self.x_active_accord = x_last_active_accord ? x_last_active_accord.to_s : default_active_accord.to_s
 
     if params[:id]  # If a tree node id came in, show in one of the trees
       @nodetype, id = params[:id].split("_").last.split("-")
