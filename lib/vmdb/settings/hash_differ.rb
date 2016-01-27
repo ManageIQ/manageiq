@@ -5,33 +5,36 @@ module Vmdb
     class HashDiffer
       class MissingKey; end
 
-      def self.changes(before, after)
-        diff_to_deltas(diff_hashes(before, after))
+      def self.changes(h1, h2)
+        diff_to_deltas(diff(h1, h2))
       end
 
-      def self.diff_hashes(before, after)
-        (before.keys + after.keys).uniq.each_with_object({}) do |key, result|
-          unless before.key?(key) && after.key?(key) && before[key] == after[key]
-            if before[key].kind_of?(Hash) && after[key].kind_of?(Hash)
-              result[key] = diff_hashes(before[key], after[key])
+      def self.diff(h1, h2)
+        keys = (h1.keys + h2.keys).uniq
+        keys.each_with_object({}) do |k, result|
+          v1 = h1.key?(k) ? h1[k] : MissingKey
+          v2 = h2.key?(k) ? h2[k] : MissingKey
+          next if v1 == v2
+
+          child =
+            if v1.kind_of?(Hash) && v2.kind_of?(Hash)
+              diff(v1, v2)
             else
-              value_before = before.key?(key) ? before[key] : MissingKey
-              value_after  = after.key?(key)  ? after[key]  : MissingKey
-              result[key] = [value_before, value_after]
+              v2
             end
-          end
+
+          result[k] = child if child != MissingKey
         end
       end
 
-      private_class_method def self.diff_to_deltas(diff, key_path = "")
-        diff.flat_map do |key, values|
-          new_key_path = [key_path, key].join("/")
-          case values
+      def self.diff_to_deltas(diff, key_path = "")
+        diff.flat_map do |k, v|
+          new_key_path = [key_path, k].join("/")
+          case v
           when Hash
-            diff_to_deltas(values, new_key_path)
+            diff_to_deltas(v, new_key_path)
           else
-            value = values.last
-            {:key => new_key_path, :value => value} unless value == MissingKey
+            {:key => new_key_path, :value => v}
           end
         end.compact
       end

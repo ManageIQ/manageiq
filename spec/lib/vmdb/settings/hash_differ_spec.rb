@@ -12,6 +12,7 @@ describe Vmdb::Settings::HashDiffer do
         :nil             => nil,
         :non_nil         => "some_value",
         :string          => "some_value",
+        :unchanged       => "some_value",
       },
       :very   => {
         :deeply => {
@@ -32,9 +33,10 @@ describe Vmdb::Settings::HashDiffer do
         :int_with_method => "20.minutes",
         :integer         => 99,
         :nil             => "not nil",
-        :non_existant    => "exists",
         :non_nil         => "not nil",
         :string          => "new value",
+        :unchanged       => "some_value",
+        :non_existant    => "exists",
       },
       :very   => {
         :deeply => {
@@ -46,8 +48,14 @@ describe Vmdb::Settings::HashDiffer do
     }
   end
 
-  it ".changes" do
-    expect(described_class.changes(before_hash, after_hash)).to eq [
+  let(:diff_hash) do
+    after_hash.deep_clone.tap do |h|
+      h.delete_path(:values, :unchanged)
+    end
+  end
+
+  let(:deltas) do
+    [
       {:key => "/values/array",              :value => ["new val1", "new val2"]},
       {:key => "/values/boolean",            :value => false},
       {:key => "/values/empty_hash/key1",    :value => "x"},
@@ -62,29 +70,15 @@ describe Vmdb::Settings::HashDiffer do
     ]
   end
 
-  it ".diff_hashes" do
-    expect(described_class.diff_hashes(before_hash, after_hash)).to eq(
-      :values => {
-        :array           => [["val1", "val2"], ["new val1", "new val2"]],
-        :boolean         => [true, false],
-        :empty_hash      => {
-          "key1" => [described_class::MissingKey, "x"],
-          "key2" => [described_class::MissingKey, "y"]
-        },
-        :int_with_method => ["10.minutes", "20.minutes"],
-        :integer         => [10, 99],
-        :nil             => [nil, "not nil"],
-        :non_nil         => ["some_value", "not nil"],
-        :string          => ["some_value", "new value"],
-        :non_existant    => [described_class::MissingKey, "exists"]
-      },
-      :very => {
-        :deeply => {
-          :nested => {
-            :string => ["deep_value", "new value"]
-          }
-        }
-      }
-    )
+  it ".changes" do
+    expect(described_class.changes(before_hash, after_hash)).to eq deltas
+  end
+
+  it ".diff" do
+    expect(described_class.diff(before_hash, after_hash)).to eq diff_hash
+  end
+
+  it ".diff_to_deltas" do
+    expect(described_class.diff_to_deltas(diff_hash)).to eq(deltas)
   end
 end

@@ -114,12 +114,18 @@ describe Vmdb::Settings do
         :authentication => {
           :mode          => "amazon",
           :amazon_key    => "key",
-          :amazon_secret => password
+          :amazon_secret => password,
+          :user_proxies  => [{:bind_pwd => password}]
         }
       )
 
-      change = miq_server.reload.settings_changes.find_by(:key => "/authentication/amazon_secret")
+      miq_server.reload
+
+      change = miq_server.settings_changes.find_by(:key => "/authentication/amazon_secret")
       expect(change.value).to eq encrypted
+
+      change = miq_server.settings_changes.find_by(:key => "/authentication/user_proxies")
+      expect(change.value).to eq [{:bind_pwd => encrypted}]
     end
   end
 
