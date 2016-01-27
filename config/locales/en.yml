@@ -688,10 +688,6 @@ en:
       virtualcenter:   VMware vCenter
       vmwareserver:    VMware Server
 
-    host_os_type:
-      linux_generic:   Linux
-      windows_generic: Windows
-
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
