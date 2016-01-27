@@ -1,0 +1,16 @@
+#cs_filter_tree_div{:style => "width:100%;height:100%;"}
+  #cs_filter_treebox{:style => "width:100%;height:100%;color:#000; overflow: hidden"}
+  = render(:partial => "layouts/dynatree",
+    :locals => {:tree_id           => "cs_filter_treebox",
+                :tree_name         => "cs_filter_tree",
+                :id_prefix         => "csft_",
+                :json_tree         => @cs_filter_tree,
+                :onclick           => "miqOnClickSelectTreeNode",
+                :select_node       => "#{x_node(:cs_filter_tree)}",
+                :base_id           => "root",
+                :no_base_exp       => true,
+                :exp_tree          => false,
+                :highlighting      => true,
+                :tree_state        => true,
+                :no_getitem_alerts => true,
+                :autoload          => true})

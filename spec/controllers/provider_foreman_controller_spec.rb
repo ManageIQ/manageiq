@@ -32,7 +32,7 @@ describe ProviderForemanController do
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned2",
                                                                                   :configuration_profile_id => nil,
                                                                                   :configuration_manager_id => @config_mgr2.id)
-    controller.instance_variable_set(:@sb, :active_tree => :foreman_providers_tree)
+    controller.instance_variable_set(:@sb, :active_tree => :@configuration_manager_providers_tree)
 
     [@configured_system, @configured_system2a, @configured_system2b, @configured_system_unprovisioned2].each do |cs|
       cs.tag_with(tag, :namespace => '')
@@ -79,7 +79,7 @@ describe ProviderForemanController do
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
-      expect(accords[0][:name]).to eq("foreman_providers")
+      expect(accords[0][:name]).to eq("configuration_manager_providers")
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
     end
@@ -140,7 +140,7 @@ describe ProviderForemanController do
     before do
       right_cell_text = nil
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
 
       allow(controller).to receive(:get_view_calculate_gtl_type)
       allow(controller).to receive(:get_view_pages)
@@ -154,7 +154,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     end
     it "renders right cell text for root node" do
       key = ems_key_for_provider(@provider)
@@ -173,7 +173,7 @@ describe ProviderForemanController do
   end
 
   it "builds foreman tree" do
-    controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+    controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     first_child = find_treenode_for_provider(@provider)
     expect(first_child["title"]).to eq("test Configuration Manager")
   end
@@ -194,7 +194,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     end
     it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
       controller.instance_variable_set(:@_params, :id => "root")
@@ -230,7 +230,7 @@ describe ProviderForemanController do
       controller.send(:accordion_select)
       controller.instance_variable_set(:@search_text, "brew")
       allow(controller).to receive(:x_tree).and_return(:type => :providers)
-      controller.instance_variable_set(:@_params, :id => "foreman_providers")
+      controller.instance_variable_set(:@_params, :id => "configuration_manager_providers")
       controller.send(:accordion_select)
 
       controller.instance_variable_set(:@_params, :id => "root")
@@ -290,7 +290,7 @@ describe ProviderForemanController do
   end
 
   it "renders tree_select as js" do
-    controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+    controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
 
     allow(controller).to receive(:process_show_list)
     allow(controller).to receive(:add_unassigned_configuration_profile_record)
@@ -317,11 +317,11 @@ describe ProviderForemanController do
       allow(controller).to receive(:replace_explorer_trees)
       allow(controller).to receive(:build_listnav_search_list)
       allow(controller).to receive(:replace_search_box)
-      allow(controller).to receive(:x_active_tree).and_return(:foreman_providers_tree)
+      allow(controller).to receive(:x_active_tree).and_return(:configuration_manager_providers_tree)
     end
 
     it "does not hide Configuration button in the toolbar" do
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       key = ems_key_for_provider(@provider)
       post :tree_select, :id => key
       expect(response.status).to eq(200)
@@ -344,12 +344,12 @@ describe ProviderForemanController do
                                        :per_page => {:list => 20},
                                        :views    => {:cm_providers          => "grid",
                                                      :cm_configured_systems => "tile"})
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     end
 
     it "fetches list type = 'grid' from settings for Providers accordion" do
       key = ems_key_for_provider(@provider)
-      allow(controller).to receive(:x_active_accord).and_return(:foreman_providers)
+      allow(controller).to receive(:x_active_accord).and_return(:configuration_manager_providers)
       controller.send(:get_node_info, key)
       list_type = controller.instance_variable_get(:@gtl_type)
       expect(list_type).to eq("grid")
@@ -389,7 +389,7 @@ describe ProviderForemanController do
     it "builds foreman tree with no nodes after rbac filtering" do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_foreman_tree, :providers, :configuration_manager_providers_tree)
       first_child = find_treenode_for_provider(@provider)
       expect(first_child).to eq(nil)
     end
@@ -403,7 +403,7 @@ describe ProviderForemanController do
                                        :object_ids => @configured_system.id,
                                        :add_ids    => quota_2gb_tag.id,
                                        :delete_ids => [])
-      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+      controller.send(:build_foreman_tree, :providers, :configuration_manager_providers_tree)
       node1 = find_treenode_for_provider(@provider)
       node2 = find_treenode_for_provider(@provider2)
       expect(node1).not_to be_nil
@@ -424,7 +424,7 @@ describe ProviderForemanController do
 
   def find_treenode_for_provider(provider)
     key =  ems_key_for_provider(provider)
-    tree =  JSON.parse(controller.instance_variable_get(:@foreman_providers_tree))
+    tree =  JSON.parse(controller.instance_variable_get(:@configuration_manager_providers_tree))
     tree[0]['children'].find { |c| c['key'] == key }
   end
 

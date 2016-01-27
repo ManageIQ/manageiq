@@ -9,45 +9,65 @@
 #
 
 # Report title
-title: ConfiguredSystem
+title: Providers
 
 # Menu name
-name: ConfiguredSystems
+name: ConfigurationManagerForeman
 
 # Main DB table report is based on
-db: ConfiguredSystem
+db: ManageIQ::Providers::ConfigurationManager
 
 # Columns to fetch from the main table
 cols:
-- hostname
+- name
+- url
 - type
-- last_checkin
-- build_state
-- my_zone
-- configuration_environment_name
+- zone.name
+- last_refresh_date
+- region_description
+- authentication_status
+- total_configured_systems
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  zone:
+    columns:
+    - name
+  provider:
+    columns:
+    - name
+    - url
+
+# Included tables and columns for query performance
+include_for_find:
+  :zone: {}
+  :provider: {}
 
 # Order of columns (from all tables)
 col_order:
-- hostname
+- name
+- provider.url
 - type
-- last_checkin
-- build_state
-- my_zone
-- configuration_environment_name
+- zone.name
+- last_refresh_date
+- region_description
+- authentication_status
+- total_configured_systems
 
 # Column titles, in order
 headers:
-- Hostname
+- Provider Name
+- URL
 - Type
-- Last Checkin
-- Build State
 - Zone
-- Environment
+- Last Refresh Date
+- Region Description
+- Status
+- Total Configured Systems
 
 col_formats:
+-
+-
 -
 -
 -
@@ -61,7 +81,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- hostname
+- name
 
 # Group rows (y=yes,n=no,c=count)
 group: n

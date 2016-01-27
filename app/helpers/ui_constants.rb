@@ -175,6 +175,8 @@ module UiConstants
       :availabilityzone                         => "list",
       :catalog                                  => "list",
       :cm_providers                             => "list",
+      :cm_foreman_providers                     => "list",
+      :cm_ansible_providers                     => "list",
       :cm_configured_systems                    => "list",
       :compare                                  => "expanded",
       :compare_mode                             => "details",

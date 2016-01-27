@@ -9,7 +9,7 @@
 #
 
 # Report title
-title: ConfiguredSystem
+title: AnsibleTowerConfiguredSystem
 
 # Menu name
 name: ConfiguredSystems
@@ -46,6 +46,7 @@ headers:
 - Build State
 - Zone
 - Environment
+
 
 col_formats:
 -

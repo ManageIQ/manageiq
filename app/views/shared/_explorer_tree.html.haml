@@ -12,4 +12,4 @@
   = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
 - else
   - tree = @trees.length == 1 ? @trees.first : @trees.detect { |t| t.type == name.to_sym }
-  = render :partial => 'shared/tree', :locals  => {:tree => tree, :name => tree.name.to_s}
+  = render :partial => 'shared/tree', :locals  => {:tree => tree, :name => tree.name.to_s} if !tree.nil?

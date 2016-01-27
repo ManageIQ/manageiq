@@ -61,9 +61,7 @@ class TreeBuilder
     when :cb_reports_tree               then [_("Saved Chargeback Reports"),       _("Saved Chargeback Reports")]
     when :containers_tree               then [_("All Containers"),                 _("All Containers")]
     when :containers_filter_tree        then [_("All Containers"),                 _("All Containers")]
-    when :cs_filter_tree                then
-      title = "All #{ui_lookup(:ui_title => "foreman")} Configured Systems"
-      [title, title]
+    when :cs_filter_tree                then [_("All Configured Systems"),    _("All Configured Systems")]
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
       [title, title]
@@ -81,8 +79,8 @@ class TreeBuilder
     when :iso_datastores_tree           then [_("All ISO Datastores"),           _("All ISO Datastores")]
     when :old_dialogs_tree              then [_("All Dialogs"),                  _("All Dialogs")]
     when :ot_tree                       then [_("All Orchestration Templates"),  _("All Orchestration Templates")]
-    when :foreman_providers_tree        then
-      title = "All #{ui_lookup(:ui_title => "foreman")} Providers"
+    when :configuration_manager_providers_tree        then
+      title = "All #{ui_lookup(:ui_title => "configuration_manager")} Providers"
       [title, title]
     when :pxe_image_types_tree          then [_("All System Image Types"),       _("All System Image Types")]
     when :pxe_servers_tree              then [_("All PXE Servers"),              _("All PXE Servers")]
@@ -134,7 +132,7 @@ class TreeBuilder
     elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
       # Creating empty record to show items under unassigned catalog node
       ServiceTemplateCatalog.new
-    elsif model.nil? && [:foreman_providers_tree].include?(@name)
+    elsif model.nil? && [:configuration_manager_providers_tree].include?(@name)
       # Creating empty record to show items under unassigned catalog node
       ConfigurationProfile.new
     else
@@ -293,6 +291,9 @@ class TreeBuilder
                           x_get_tree_roots(count_only, options.dup)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
                         when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, count_only)
+                        when ManageIQ::Providers::AnsibleTower::ConfigurationManager then x_get_tree_cmat_kids(parent, count_only)
+                        when ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem then x_get_tree_csf_kids(parent, count_only)
+                        when ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem then x_get_tree_csa_kids(parent, count_only)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, count_only)
                         when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
@@ -475,6 +476,7 @@ class TreeBuilder
     "ap"  => "MiqAlertSet",
     "az"  => "AvailabilityZone",
     "azu" => "OrchestrationTemplateAzure",
+    "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
     "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",
@@ -490,7 +492,10 @@ class TreeBuilder
     "e"   => "ExtManagementSystem",
     "ev"  => "MiqEventDefinition",
     "c"   => "EmsCluster",
+    "csf"  => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
+    "csa"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
     "f"   => "EmsFolder",
+    "fr"  => "ManageIQ::Providers::Foreman::ConfigurationManager",
     "g"   => "MiqGroup",
     "h"   => "Host",
     "hot" => "OrchestrationTemplateHot",
