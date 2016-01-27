@@ -1,7 +1,10 @@
 #taskbar_buttons_div-x
-  = render :partial => "layouts/x_history_buttons"
-  = render :partial => "layouts/center_buttons"
-  = render :partial => "layouts/x_custom_buttons"
+  - defered_toolbar_render('history_tb', history_toolbar_filename)
+  - defered_toolbar_render('center_tb', center_toolbar_filename)
+
+  - if fname = custom_toolbar_filename
+    - defered_toolbar_render('custom_tb', fname)
+
   = render :partial => "layouts/x_view_buttons"
   - unless request.xml_http_request?
     -# FIXME: do we need this condition?

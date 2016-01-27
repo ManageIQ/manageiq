@@ -1,6 +1,19 @@
 class ApplicationHelper::ToolbarChooser
-  def call
-    center_toolbar_filename
+  # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
+  def center_toolbar_filename
+    if @explorer
+      center_toolbar_filename_explorer
+    else
+      center_toolbar_filename_classic
+    end
+  end
+
+  def history_toolbar_filename
+    if x_active_tree == :dialogs_tree || %w(chargeback miq_ae_tools miq_capacity_planning miq_capacity_utilization miq_policy_rsop ops).include?(@layout)
+      'blank_view_tb'
+    else
+      'x_history_tb'
+    end
   end
 
   private
@@ -17,15 +30,6 @@ class ApplicationHelper::ToolbarChooser
   end
 
   ###
-
-  # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
-  def center_toolbar_filename
-    if @explorer
-      return center_toolbar_filename_explorer
-    else
-      return center_toolbar_filename_classic
-    end
-  end
 
   # Return explorer based toolbar file name
   def center_toolbar_filename_explorer
