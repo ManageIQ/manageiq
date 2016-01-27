@@ -294,6 +294,10 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
         return { x: 1, y: 5, r: 13 };
       case "ContainerGroup":
         return { x: 1, y: 6, r: 17 };
+      case "ContainerService":
+        return { x: -2, y: 9, r: 17 };
+      case "ContainerReplicator":
+        return { x: -1, y: 8, r: 17 };
       case "ContainerNode":
       case "Vm":
       case "Host":

@@ -69,7 +69,7 @@ describe('containerTopologyController', function() {
         expect($controller.getDimensions(d)).toEqual({ x: 1, y: 6, r: 17 });
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
         expect($controller.getDimensions(d)).toEqual({ x: 0, y: 9, r: 21 });
-        expect($controller.getDimensions(replicator)).toEqual({ x: 0, y: 9, r: 17 });
+        expect($controller.getDimensions(replicator)).toEqual({ x: -1, y: 8, r: 17 });
       });
     });
 
