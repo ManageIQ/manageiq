@@ -27,3 +27,7 @@
  *= require service_dialogs
  *= require xml_display
 */
+
+.display_none{
+    display: none;
+}

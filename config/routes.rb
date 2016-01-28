@@ -116,6 +116,13 @@ Vmdb::Application.routes.draw do
   )
 
   controller_routes = {
+    :deployment => {
+      :get => %w(
+                  new
+                  start_deployment
+      )
+
+    },
     :alert                    => {
       :get  => %w(
         index
@@ -806,6 +813,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        deployment
       ) +
                compare_get,
       :post => %w(

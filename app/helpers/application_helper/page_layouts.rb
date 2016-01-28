@@ -25,6 +25,7 @@ module ApplicationHelper::PageLayouts
       report
       rss
       server_build
+      deployment
     ).include?(@layout)
 
     return false if dashboard_no_listnav?
