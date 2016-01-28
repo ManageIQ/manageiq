@@ -26,7 +26,7 @@ describe MiqSystem do
   context ".disk_usage(file)" do
     require 'fileutils'
 
-    let(:file) { Pathname.new(__dir__).join("empty file") }
+    let(:file) { Pathname.new(__dir__).join("empty file").to_s }
 
     before do
       FileUtils.touch(file)
@@ -137,8 +137,8 @@ EOF
       ]
 
       stub_const("Sys::Platform::IMPL", :linux)
-      expect(AwesomeSpawn).to receive(:launch).with("df -T -P -l", {}).and_return([linux_df_output_bytes, "", 0])
-      expect(AwesomeSpawn).to receive(:launch).with("df -T -P -i -l", {}).and_return([linux_df_output_inodes, "", 0])
+      expect(AwesomeSpawn).to receive(:launch).with({}, "df -T -P -l", {}).and_return([linux_df_output_bytes, "", 0])
+      expect(AwesomeSpawn).to receive(:launch).with({}, "df -T -P -i -l", {}).and_return([linux_df_output_inodes, "", 0])
 
       expect(described_class.disk_usage).to eq(expected)
     end

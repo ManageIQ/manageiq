@@ -1665,7 +1665,7 @@ class ApplicationController < ActionController::Base
   def get_view(db, options = {})
     db     = db.to_s
     dbname = options[:dbname] || db.gsub('::', '_').downcase # Get db name as text
-    db_sym = dbname.to_sym                                    # Get db name as symbol
+    db_sym = (options[:gtl_dbname] || dbname).to_sym # Get db name as symbol
     refresh_view = false
 
     # Determine if the view should be refreshed or use the existing view
@@ -1705,7 +1705,7 @@ class ApplicationController < ActionController::Base
     # Set up the list view type (grid/tile/list)
     @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
 
-    @gtl_type = get_view_calculate_gtl_type(options[:gtl_dbname] || db_sym)
+    @gtl_type = get_view_calculate_gtl_type(db_sym)
 
     # Get the view for this db or use the existing one in the session
     view = refresh_view ? get_db_view(db.gsub('::', '_'), :association => association, :view_suffix => view_suffix) : session[:view]
@@ -2574,6 +2574,21 @@ class ApplicationController < ActionController::Base
       "vm"
     else
       controller_name
+    end
+  end
+
+  def replace_trees_by_presenter(presenter, trees)
+    trees.each_pair do |name, tree|
+      next unless tree.present?
+
+      presenter.replace(
+        "#{name}_tree_div",
+        render_to_string(
+          :partial => 'shared/tree',
+          :locals  => {
+            :tree => tree,
+            :name => tree.name.to_s
+          }))
     end
   end
 

@@ -483,7 +483,7 @@ class OpsController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
 
-    replace_explorer_trees(replace_trees, presenter, r)
+    replace_explorer_trees(replace_trees, presenter)
     rebuild_toolbars(presenter)
     handle_bottom_cell(nodetype, presenter, r, locals)
     x_active_tree_replace_cell(nodetype, presenter, r)
@@ -737,7 +737,7 @@ class OpsController < ApplicationController
     end
   end
 
-  def replace_explorer_trees(replace_trees, presenter, r)
+  def replace_explorer_trees(replace_trees, presenter)
     # Build hash of trees to replace and optional new node to be selected
     trees = {}
     if replace_trees
@@ -748,15 +748,7 @@ class OpsController < ApplicationController
       trees[:analytics]   = analytics_build_tree    if get_vmdb_config[:product][:analytics] &&
                                                        replace_trees.include?(:analytics)
     end
-    replace_trees.each do |t|
-      tree = trees[t]
-      presenter.replace("#{t}_tree_div", r[
-        :partial => 'shared/tree',
-        :locals  => {:tree => tree,
-                     :name => tree.name.to_s
-        }
-      ]) if tree
-    end
+    replace_trees_by_presenter(presenter, trees)
   end
 
   # Build the audit object when a profile is saved

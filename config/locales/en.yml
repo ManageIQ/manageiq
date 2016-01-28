@@ -5,13 +5,6 @@ en:
   product:
     name: ManageIQ
 
-  # Header text
-  cell_header:
-    evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
-    model: "%{model}"
-    model_for_record: '%{model} for "%{name}"'
-    name: '"%{name}"'
-
   activerecord:
     attributes:
       ems_cloud:
@@ -28,14 +21,6 @@ en:
           other:  "%{count} errors prohibited this %{model} from being saved"
         # The variable :count is also available
         body: "There were problems with the following fields:"
-
-  model_name:
-    miq_policy_set: Policy Profile
-    miq_event_definition: Event
-    miq_action: Action
-    miq_policy: Policy
-    miq_alert: Alert
-    condition: Condition
 
   dictionary:
     column:
@@ -690,28 +675,6 @@ en:
       write_hit_ios_per_sec:       Write Hit (IOPS)
       write_ios_per_sec:           Write (IOPS)
 
-    compare:
-      Host:         Host Properties
-      Vm:           VM Properties
-      VmOrTemplate: Workload
-
-    discover_types:
-      azure:           Azure
-      ec2:             Amazon
-      esx:             ESX
-      hyperv:          Hyper-V
-      ipmi:            IPMI
-      kvm:             KVM
-      msvirtualserver: MS vCenter
-      rhevm:           Red Hat Enterprise Virtualization Manager
-      scvmm:           Microsoft System Center VMM
-      virtualcenter:   VMware vCenter
-      vmwareserver:    VMware Server
-
-    host_os_type:
-      linux_generic:   Linux
-      windows_generic: Windows
-
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
@@ -787,6 +750,7 @@ en:
       MiqAlertSet:              Alert Profile
       MiqDialog:                Dialog
       MiqEnterprise:            Enterprise
+      MiqEventDefinition:       Event
       MiqGroup:                 EVM Group
       MiqPolicy:                Policy
       MiqPolicySet:             Policy Profile
@@ -854,14 +818,6 @@ en:
       time_to_live:   Time until Retirement
       ttl_warning:    Retirement Warning
       vm_description: VM Description
-
-    rate_detail_group:
-      cpu:     CPU
-      disk_io: Disk I/O
-      fixed:   Fixed
-      memory:  Memory
-      net_io:  Network I/O
-      storage: Storage
 
     table:
       availability_zone:           Availability Zone

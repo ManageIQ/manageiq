@@ -30,6 +30,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_zone
       assert_specific_key_pair
       assert_specific_cloud_network
+      assert_specific_security_group
       assert_specific_flavor
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
@@ -42,25 +43,30 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(Flavor.count).to              eql(18)
     expect(AvailabilityZone.count).to    eql(13)
     expect(AuthPrivateKey.count).to      eq(3)
-    expect(VmOrTemplate.count).to        eql(349)
+    expect(CloudNetwork.count).to        eql(1)
+    expect(SecurityGroup.count).to       eql(1)
+    expect(FirewallRule.count).to        eql(6)
+    expect(VmOrTemplate.count).to        eql(362)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(347)
+    expect(MiqTemplate.count).to         eql(360)
     expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
-    expect(Network.count).to             eql(0)
-    expect(OperatingSystem.count).to     eql(349)
+    expect(Network.count).to             eql(4)
+    expect(OperatingSystem.count).to     eql(362)
     expect(Relationship.count).to        eql(4)
-    expect(MiqQueue.count).to            eql(349)
+    expect(MiqQueue.count).to            eql(362)
   end
 
   def assert_ems
     expect(@ems.flavors.size).to            eql(18)
     expect(@ems.key_pairs.size).to          eql(3)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(349)
+    expect(@ems.vms_and_templates.size).to  eql(362)
+    expect(@ems.cloud_networks.size).to     eql(1)
+    expect(@ems.security_groups.size).to    eql(1)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(347)
+    expect(@ems.miq_templates.size).to      eq(360)
   end
 
   def assert_specific_zone
@@ -96,6 +102,74 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :status  => "active",
       :enabled => true
     )
+  end
+
+  def assert_specific_security_group
+    @sg = SecurityGroup.where(:name => "default").first
+    expect(@sg).to have_attributes(
+      :name    => "default",
+      :ems_ref => "default"
+    )
+
+    expected_firewall_rules = [
+      {
+        :name            => "default-allow-icmp",
+        :host_protocol   => "ICMP",
+        :direction       => "inbound",
+        :port            => -1,
+        :end_port        => -1,
+        :source_ip_range => "0.0.0.0/0"
+      },
+      {
+        :name            => "default-allow-internal",
+        :host_protocol   => "ICMP",
+        :direction       => "inbound",
+        :port            => -1,
+        :end_port        => -1,
+        :source_ip_range => "10.240.0.0/16"
+      },
+      {
+        :name            => "default-allow-internal",
+        :host_protocol   => "TCP",
+        :direction       => "inbound",
+        :port            => 0,
+        :end_port        => 65535,
+        :source_ip_range => "10.240.0.0/16"
+      },
+      {
+        :name            => "default-allow-internal",
+        :host_protocol   => "UDP",
+        :direction       => "inbound",
+        :port            => 0,
+        :end_port        => 65535,
+        :source_ip_range => "10.240.0.0/16"
+      },
+      {
+        :name            => "default-allow-rdp",
+        :host_protocol   => "TCP",
+        :direction       => "inbound",
+        :port            => 3389,
+        :end_port        => nil,
+        :source_ip_range => "0.0.0.0/0"
+      },
+      {
+        :name            => "default-allow-ssh",
+        :host_protocol   => "TCP",
+        :direction       => "inbound",
+        :port            => 22,
+        :end_port        => nil,
+        :source_ip_range => "0.0.0.0/0"
+      },
+    ]
+
+    expect(@sg.firewall_rules.size).to eq(6)
+
+    ordered_fw_rules = @sg.firewall_rules.order(
+      :name, :host_protocol, :direction, :port, :end_port, :source_ip_range)
+
+    ordered_fw_rules.zip(expected_firewall_rules).each do |actual, expected|
+      expect(actual).to have_attributes(expected)
+    end
   end
 
   def assert_specific_flavor
@@ -162,7 +236,6 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :virtualization_type => nil
     )
 
-    expect(v.hardware.disks.size).to         eql(1)
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to          eql(0)
 
@@ -171,11 +244,26 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_on_hardware_networks(v)
-    expect(v.hardware.networks.size).to eql(0)
-    # TODO inventory network hardware
+    expect(v.hardware.networks.size).to eql(2)
+
+    network = v.hardware.networks.where(:description => "default private").first
+    expect(network).to have_attributes(
+      :description => "default private",
+      :ipaddress   => "10.240.0.2",
+      :hostname    => nil
+    )
+
+    network = v.hardware.networks.where(:description => "default External NAT").first
+    expect(network).to have_attributes(
+      :description => "default External NAT",
+      :ipaddress   => "104.196.100.207",
+      :hostname    => nil
+    )
   end
 
   def assert_specific_vm_powered_on_hardware_disks(v)
+    expect(v.hardware.disks.size).to eql(1)
+
     disk = v.hardware.disks.first
     expect(disk).to have_attributes(
       :device_name     => "rhel7",
@@ -198,7 +286,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.ext_management_system).to  eql(@ems)
     expect(v.availability_zone).to      eql(zone1)
     expect(v.floating_ip).to            be_nil
-    expect(v.cloud_network).to          be_nil
+    expect(v.cloud_network).to          eql(@cn)
     expect(v.cloud_subnet).to           be_nil
     #TODO parse instance OS v.operating_system.product_name.should eql("Debian")
 
@@ -252,7 +340,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.hardware.disks.size).to         eql(1)
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to          eql(0)
-    expect(v.hardware.networks.size).to      eql(0)
+    expect(v.hardware.networks.size).to      eql(2)
   end
 
   def assert_specific_template

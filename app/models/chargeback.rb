@@ -174,6 +174,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.column_names
+    set_columns_hash(valids_columns)
     @column_names ||= columns.collect(&:name).sort
   end
 
@@ -267,6 +268,30 @@ class Chargeback < ActsAsArModel
     end
 
     [start_time, end_time]
+  end
+
+  def self.valids_columns
+    hash_columns = {:start_date    => :datetime,
+                    :end_date      => :datetime,
+                    :interval_name => :string,
+                    :display_range => :string,
+                    :vm_name       => :string,
+                    :owner_name    => :string
+                   }
+    ChargebackRate.where(:default => true).each do |cb|
+      cb.chargeback_rate_details.where.not(:rate => "0").each do |rd|
+        column = rd.group + "_" + rd.source
+        if rd.group != "fixed"
+          hash_columns = hash_columns.merge((column + "_metric").to_sym => :float, (column + "_cost").to_sym => :float)
+          hash_columns = hash_columns.merge((rd.group + "_metric").to_sym => :float, (rd.group + "_cost").to_sym => :float)
+        else
+          hash_columns = hash_columns.merge((column + "_cost").to_sym => :float)
+          hash_columns = hash_columns.merge((rd.group + "_cost").to_sym => :float)
+        end
+      end
+    end
+    hash_columns = hash_columns.merge(:total_cost => :float)
+    hash_columns
   end
 
   def self.report_col_options

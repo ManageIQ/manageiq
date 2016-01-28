@@ -763,7 +763,9 @@ module ApplicationController::CiProcessing
       if request.parameters[:controller] == 'ems_infra'
         @discover_type = ExtManagementSystem.ems_infra_discovery_types
       else
-        @discover_type = ExtManagementSystem.ems_cloud_discovery_types.invert.collect{ |type| [Dictionary.gettext(type[0], :type => :discover_types, :notfound => :titleize), type[1]]}
+        @discover_type = ExtManagementSystem.ems_cloud_discovery_types.invert.collect do |type|
+          [discover_type(type[0]), type[1]]
+        end
         @discover_type_selected = @discover_type.first.last
       end
     else

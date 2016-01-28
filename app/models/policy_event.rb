@@ -11,7 +11,7 @@ class PolicyEvent < ActiveRecord::Base
   virtual_has_many :miq_policy_sets, :uses => {:contents => :resource}
 
   def self.create_events(target, event, result)
-    event = MiqEventDefinition.find_by_name(event)
+    event = MiqEventDefinition.find_by(:name => event) if event.kind_of?(String)
     chain_id = nil
     result.each do |r|
       miq_policy_id = r[:miq_policy].kind_of?(MiqPolicy) ? r[:miq_policy].id : nil # handle built-in policies too

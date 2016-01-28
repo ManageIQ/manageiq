@@ -1,24 +1,26 @@
 #menu_div1
-  = form_tag({:action => 'menu_update',
-              :id     => "report_menu_form1"},
-             :method => :post) do
-    %fieldset{:style => "width: 320px; height: 450px;"}
-      %h3
-        %span#menu1_legend
-          = _('Manage Accordions')
-      #folder_lists
-        %table{:style => "width: 100%", :cellspacing => "3"}
-          %tr
-            %td{:valign => "top"}
-              #folder_grid
-                %ul.list-group
-                  - folders.each do |folder|
-                    %li.list-group-item{:id         => folder[:id],
-                                        :onclick    => "return miqMenuChangeRow('activate', this)",
-                                        :ondblclick => "return miqMenuChangeRow('edit', this)"}
-                      = h folder[:text]
+  - url = url_for(:action => 'menu_field_changed')
+  %fieldset
+    %h3
+      %span#menu1_legend
+        = _('Manage Accordions')
+    #folder_lists
+      %table{:style => "width: 100%", :cellspacing => "3"}
+        %tr
+          %td{:valign => "top"}
+            #folder_grid
+              .panel-group
+                - folders.each do |folder|
+                  .panel.panel-default
+                    .panel-heading{:id         => folder[:id],
+                                   :onclick    => "return miqMenuChangeRow('activate', this)",
+                                   :ondblclick => "return miqMenuChangeRow('edit', this)"}
+                      %h4.panel-title
+                        %a
+                          = h folder[:text]
 
-            %td{:width => "24", :valign => "middle"}
+          %td.text-center{:width => "40"}
+            .btn-group-vertical
               - buttons = [{:label => _("Move selected folder top"),
                             :icon => 'fa fa-angle-double-up',
                             :action => 'top',
@@ -36,7 +38,7 @@
                             :action => 'bottom',
                             :id => 'folder_bottom'},
                            {:label => _("Delete selected folder and its contents"),
-                            :icon => 'fa fa-times',
+                            :icon => 'fa fa-minus',
                             :action => 'delete',
                             :id => 'folder_delete'},
                            {:label => _("Add subfolder to selected folder"),
@@ -44,28 +46,34 @@
                             :action => 'add',
                             :id => 'folder_add'}]
               - buttons.each do |btn|
-                %i{:class => "rollover fa-2x #{h btn[:icon]}",
-                   :onclick => "return miqMenuChangeRow('#{j btn[:action]}')"}
-          %tr
-            %td{:colspan => "2", :style => "float: right;"}
+                %button.btn.btn-default{:title => _("#{btn[:label]}"), 'data-grid_submit' => "#{btn[:action]}"}
+                  %i{:class => "#{h btn[:icon]} fa-lg"}
+        %tr
+          %td{:colspan => "2"}
+            .spacer
+            .form-group.pull-right
               - t = _('Commit expression element changes')
-              = image_tag(image_path('toolbars/commit.png'),
-                :border                => "0",
-                :class                 => "rollover small",
-                :alt                   => t,
-                :title                 => t,
-                :id                    => "folder_commit",
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                :onclick               => "return miqMenuChangeRow('serialize')")
-              - t = _('Discard expression element changes')
-              = link_to(image_tag(image_path('toolbars/discard.png'), :id => "folder_discard", :class => "rollover small", :alt => t),
-                {:action => 'discard_changes', :pressed => 'discard_folders', :title => t},
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-method"          => :post,
-                :remote                => true)
-            %td
+              %button.btn.btn-primary{:title => t,
+                  "data-submit"         => 'column_lists',
+                  "data-miq_sparkle_on" => true,
+                  :remote               => true,
+                  "data-method"         => :post,
+                  :id                   => "folder_commit",
+                  'data-grid_submit'    => 'serialize'}
+                = _('Commit')
+
+              - t = _("Discard expression element changes")
+              - url = url_for(:action => 'discard_changes')
+              %button.btn.btn-default{:title => t,
+                  "data-submit"         => 'column_lists',
+                  "data-miq_sparkle_on" => true,
+                  :remote               => true,
+                  "data-method"         => :post,
+                  :remote               => true,
+                  :id                   => 'folder_discard',
+                  "data-method"         => :post,
+                  'data-click_url'      => {:url => "#{url}?pressed=discard_folders"}.to_json}
+                = _('Discard')
 
 #menu_div3{:style => "display: none;"}
   %fieldset{:style => "width: 300px; height: 450px;"}

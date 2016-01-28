@@ -12,45 +12,45 @@ class ContainerTopologyService
     links = []
 
     @providers.each do |provider|
-      topo_items[provider.id.to_s] =  build_entity_data(provider)
+      topo_items[entity_id(provider)] =  build_entity_data(provider)
       provider.container_nodes.each { |n|
-        topo_items[n.ems_ref] = build_entity_data(n)
-        links << build_link(provider.id.to_s, n.ems_ref)
+        topo_items[entity_id(n)] = build_entity_data(n)
+        links << build_link(entity_id(provider), entity_id(n))
         n.container_groups.each do |cg|
-          topo_items[cg.ems_ref] = build_entity_data(cg)
-          links << build_link(n.ems_ref, cg.ems_ref)
+          topo_items[entity_id(cg)] = build_entity_data(cg)
+          links << build_link(entity_id(n), entity_id(cg))
           cg.containers.each do |c|
-            topo_items[c.ems_ref] = build_entity_data(c)
-            links << build_link(cg.ems_ref, c.ems_ref)
+            topo_items[entity_id(c)] = build_entity_data(c)
+            links << build_link(entity_id(cg), entity_id(c))
           end
           if cg.container_replicator
             cr = cg.container_replicator
-            topo_items[cr.ems_ref] = build_entity_data(cr)
-            links << build_link(cg.ems_ref, cr.ems_ref)
+            topo_items[entity_id(cr)] = build_entity_data(cr)
+            links << build_link(entity_id(cg), entity_id(cr))
           end
         end
 
         if n.lives_on
           kind = entity_type(n.lives_on)
-          topo_items[n.lives_on.uid_ems] = build_entity_data(n.lives_on)
-          links << build_link(n.ems_ref, n.lives_on.uid_ems)
+          topo_items[entity_id(n.lives_on)] = build_entity_data(n.lives_on)
+          links << build_link(entity_id(n), entity_id(n.lives_on))
           if kind == 'Vm' # add link to Host
             host = n.lives_on.host
             if host
-              topo_items[host.uid_ems] = build_entity_data(host)
-              links << build_link(n.lives_on.uid_ems, host.uid_ems)
+              topo_items[entity_id(host)] = build_entity_data(host)
+              links << build_link(entity_id(n.lives_on), entity_id(host))
             end
           end
         end
       }
 
       provider.container_services.each { |s|
-        topo_items[s.ems_ref] = build_entity_data(s)
-        s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
+        topo_items[entity_id(s)] = build_entity_data(s)
+        s.container_groups.each { |cg| links << build_link(entity_id(s), entity_id(cg)) } if s.container_groups.size > 0
         if s.container_routes.size > 0
           s.container_routes.each { |r|
-            topo_items[r.ems_ref] = build_entity_data(r)
-            links << build_link(s.ems_ref, r.ems_ref)
+            topo_items[entity_id(r)] = build_entity_data(r)
+            links << build_link(entity_id(s), entity_id(r))
           }
         end
       }
@@ -89,22 +89,26 @@ class ContainerTopologyService
     end
   end
 
-  def build_entity_data(entity)
+  def entity_id(entity)
     type = entity_type(entity)
-    status = entity_status(entity, type)
-
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       id = entity.id.to_s
     else
       id = case type
-           when 'Vm', 'Host'
-             entity.uid_ems
-           else
-             entity.ems_ref
+             when 'Vm', 'Host'
+               entity.uid_ems
+             else
+               entity.ems_ref
            end
     end
+    id
+  end
 
-    data = {:id           => id,
+  def build_entity_data(entity)
+    type = entity_type(entity)
+    status = entity_status(entity, type)
+
+    data = {:id           => entity_id(entity),
             :name         => entity.name,
             :status       => status,
             :kind         => type,

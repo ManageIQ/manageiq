@@ -273,10 +273,9 @@ describe OpsController do
     it "build trees that are passed in and met other conditions" do
       controller.instance_variable_set(:@sb, {})
       allow(controller).to receive(:x_build_dyna_tree)
-      r = proc { |opts| opts }
       replace_trees = [:settings, :diagnostics, :analytics]
       presenter = ExplorerPresenter.new
-      controller.send(:replace_explorer_trees, replace_trees, presenter, r)
+      controller.send(:replace_explorer_trees, replace_trees, presenter)
       expect(response.status).to eq(200)
     end
   end
