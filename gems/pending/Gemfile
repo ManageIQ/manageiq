@@ -36,7 +36,6 @@ gem "net-scp",                 "~>1.2.1",           :require => false
 gem "nokogiri",                "~>1.6.0",           :require => false
 gem "openshift_client",        "=0.3.0",            :require => false
 gem "ovirt",                   "~>0.7.1",           :require => false
-gem "parallel",                "~>0.5.21",          :require => false
 gem "pg",                      "~>0.18.2",          :require => false
 gem "psych",                   "~>2.0.12"
 gem "rest-client",             "=2.0.0.rc1",        :require => false
