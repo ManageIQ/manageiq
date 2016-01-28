@@ -1441,13 +1441,13 @@ module ApplicationController::Compare
   end
 
   def drift_add_same_image(idx, val)
-    img_src = "new/compare-same.png"
+    img_src = "100/compare-same.png"
     img_bkg = "cell-stripe"
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
 
   def drift_add_diff_image(idx, val)
-    img_src = "new/drift-delta.png"
+    img_src = "100/drift-delta.png"
     img_bkg = "cell-plain"
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
@@ -1647,7 +1647,7 @@ module ApplicationController::Compare
     width = 55
     height = 25
     width = height = 24 if @compressed
-    img_src = "new/piecharts/compare/#{image}.png"
+    img_src = "100/piecharts/compare/#{image}.png"
     col = "<img src=\"#{ActionController::Base.helpers.image_path(img_src)}\" width=\"#{width}\" height=\"#{height}\"
            border=\"0\" align=\"middle\" alt=\"#{val}\" title=\"#{val}\">"
     html_text = "<div class='#{img_bkg}'>#{col}</div>"
@@ -1655,12 +1655,12 @@ module ApplicationController::Compare
   end
 
   def compare_add_same_image(idx, val, img_bkg = "")
-    img_src = "new/compare-same.png"
+    img_src = "100/compare-same.png"
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
 
   def compare_add_diff_image(idx, val)
-    img_src = "new/compare-diff.png"
+    img_src = "100/compare-diff.png"
     img_bkg = ""
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
@@ -1780,7 +1780,7 @@ module ApplicationController::Compare
   def comp_record_data_compressed_existsmode(idx, _match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row.merge!(drift_add_image_col(idx, "new/blank.gif", "cell-stripe", val))
+      row.merge!(drift_add_image_col(idx, "100/blank.gif", "cell-stripe", val))
     else
       if val == basval  # Compare this object's value to the base
         row.merge!(compare_add_same_image(idx, val))
@@ -1938,7 +1938,7 @@ module ApplicationController::Compare
     else
       passed_img = "compare-same"
       failed_img = "compare-diff"
-      img_path = "new"
+      img_path = "100"
     end
     row = {}
 
@@ -1963,7 +1963,7 @@ module ApplicationController::Compare
     else
       passed_img = "compare-same"
       failed_img = "compare-diff"
-      img_path = "new"
+      img_path = "100"
     end
     row = {}
 
@@ -2076,7 +2076,7 @@ module ApplicationController::Compare
           img = "compare-diff"
           unset_same_flag
         end
-        row.merge!(drift_add_image_col(idx, "new/#{img}.png", img_bkg, val))
+        row.merge!(drift_add_image_col(idx, "100/#{img}.png", img_bkg, val))
       end
     end
     row
