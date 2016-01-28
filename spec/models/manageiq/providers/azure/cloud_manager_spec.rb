@@ -52,9 +52,9 @@ describe ManageIQ::Providers::Azure::CloudManager do
     before do
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
 
-      @user              = "0123456789ABCDEFGHIJ"
-      @pass              = "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"
-      @tenant_id         = "0123456789ABCDEFGHIJ0123456789AB"
+      @user              = Rails.application.secrets.azure.try(:fetch, 'client_id') || '(AZURE_CLIENT_ID)'
+      @pass              = Rails.application.secrets.azure.try(:fetch, 'client_secret') || '(AZURE_CLIENT_SECRET)'
+      @tenant_id         = Rails.application.secrets.azure.try(:fetch, 'tenant_id') || '(AZURE_TENANT_ID)'
       @another_user      = "testuser"
       @another_password  = "secret"
       @another_tenant_id = "ABCDEFGHIJABCDEFGHIJ0123456789AB"
@@ -95,24 +95,24 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
     it "with no existing records" do |example|
       found = recorded_discover(example)
-      expect(found.count).to eq(2)
+      expect(found.count).to eq(3)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      expect(emses.count).to eq(2)
-      assert_region(emses[0], "Azure-eastus")
-      assert_region(emses[1], "Azure-westus")
+      expect(emses.count).to eq(3)
+      assert_region(emses[1], "Azure-eastus")
+      assert_region(emses[2], "Azure-westus")
     end
 
     it "with some existing records" do |example|
       create_factory_ems("Azure-eastus", "eastus")
 
       found = recorded_discover(example)
-      expect(found.count).to eq(1)
+      expect(found.count).to eq(2)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      expect(emses.count).to eq(2)
-      assert_region(emses[0], "Azure-eastus")
-      assert_region(emses[1], "Azure-westus")
+      expect(emses.count).to eq(3)
+      assert_region(emses[1], "Azure-eastus")
+      assert_region(emses[2], "Azure-westus")
     end
 
     it "with all existing records" do |example|
@@ -120,12 +120,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
       create_factory_ems("Azure-westus", "westus")
 
       found = recorded_discover(example)
-      expect(found.count).to eq(0)
+      expect(found.count).to eq(1)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      expect(emses.count).to eq(2)
-      assert_region(emses[0], "Azure-eastus")
-      assert_region(emses[1], "Azure-westus")
+      expect(emses.count).to eq(3)
+      assert_region(emses[1], "Azure-eastus")
+      assert_region(emses[2], "Azure-westus")
     end
 
     context "with records from a different account" do
@@ -133,13 +133,13 @@ describe ManageIQ::Providers::Azure::CloudManager do
         FactoryGirl.create(:ems_azure_with_authentication, :name => "Azure-westus", :provider_region => "westus")
 
         found = recorded_discover(example)
-        expect(found.count).to eq(2)
+        expect(found.count).to eq(3)
 
         emses = ManageIQ::Providers::Azure::CloudManager.order(:name).includes(:authentications)
-        expect(emses.count).to eq(3)
-        assert_region(emses[0], "Azure-eastus")
-        assert_region_on_another_account(emses[1], "Azure-westus")
-        assert_region(emses[2], "Azure-westus #{@user}")
+        expect(emses.count).to eq(4)
+        assert_region(emses[1], "Azure-eastus")
+        assert_region_on_another_account(emses[2], "Azure-westus")
+        assert_region(emses[3], "Azure-westus #{@user}")
       end
 
       it "with the same name and backup name" do |example|
@@ -153,15 +153,15 @@ describe ManageIQ::Providers::Azure::CloudManager do
           :provider_region => "westus")
 
         found = recorded_discover(example)
-        expect(found.count).to eq(2)
+        expect(found.count).to eq(3)
 
         emses = ManageIQ::Providers::Azure::CloudManager.order(:name).includes(:authentications)
-        expect(emses.count).to eq(4)
+        expect(emses.count).to eq(5)
 
-        assert_region(emses[0], "Azure-eastus")
-        assert_region_on_another_account(emses[1], "Azure-westus")
-        assert_region_on_another_account(emses[2], "Azure-westus #{@user}")
+        assert_region(emses[1], "Azure-eastus")
+        assert_region_on_another_account(emses[2], "Azure-westus")
         assert_region(emses[3], "Azure-westus 1")
+        assert_region_on_another_account(emses[4], "Azure-westus #{@user}")
       end
 
       it "with the same name, backup name, and secondary backup name" do |example|
@@ -173,16 +173,16 @@ describe ManageIQ::Providers::Azure::CloudManager do
         FactoryGirl.create(:ems_azure_with_authentication, :name => "Azure-westus 1", :provider_region => "westus")
 
         found = recorded_discover(example)
-        expect(found.count).to eq(2)
+        expect(found.count).to eq(3)
 
         emses = ManageIQ::Providers::Azure::CloudManager.order(:name).includes(:authentications)
-        expect(emses.count).to eq(5)
+        expect(emses.count).to eq(6)
 
-        assert_region(emses[0], "Azure-eastus")
-        assert_region_on_another_account(emses[1], "Azure-westus")
-        assert_region_on_another_account(emses[2], "Azure-westus #{@user}")
+        assert_region(emses[1], "Azure-eastus")
+        assert_region_on_another_account(emses[2], "Azure-westus")
         assert_region_on_another_account(emses[3], "Azure-westus 1")
         assert_region(emses[4], "Azure-westus 2")
+        assert_region_on_another_account(emses[5], "Azure-westus #{@user}")
       end
     end
   end
