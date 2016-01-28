@@ -987,8 +987,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ws_network_fields(values, fields, data)
     ws_customize_fields(values, fields, data)
     ws_schedule_fields(values, fields, data)
+    ws_environment_fields(values, fields, data)
 
     data.each { |k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>" }
+  end
+
+  def ws_environment_fields(values, _fields, data)
+    return if (dlg_fields = get_ws_dialog_fields(dialog_name = :environment)).nil?
+
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
   end
 
   def ws_service_fields(values, _fields, data)
@@ -1114,7 +1121,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
     p.refresh_field_values(values)
-    values[:placement_auto] = [true, 1]
+    # values[:placement_auto] = [true, 1]
 
     p.ws_vm_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
