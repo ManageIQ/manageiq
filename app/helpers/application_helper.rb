@@ -18,6 +18,7 @@ module ApplicationHelper
               :class => 'documentation-link', :target => '_blank')
     end
   end
+
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
@@ -44,7 +45,7 @@ module ApplicationHelper
       out = content_tag(:li) do
         link_to("#{name}: #{ent.name}",
                 {:controller => table_name, :action => 'show', :id => ent.id.to_s},
-                :title       => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
+                :title => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
                                 {:entity_name        => record.class.name.demodulize.titleize,
                                  :linked_entity_name => name})
       end
@@ -96,8 +97,8 @@ module ApplicationHelper
   def no_hover_class(item)
     klass = if item[:link]
               ""
-            elsif item.has_key?(:value)
-              "" if item[:value].kind_of?(Array) && item[:value].any? {|val| val[:link]}
+            elsif item.key?(:value)
+              "" if item[:value].kind_of?(Array) && item[:value].any? { |val| val[:link] }
             end
     klass.nil? ? 'no-hover' : ''
   end
@@ -636,7 +637,7 @@ module ApplicationHelper
   # checking if any of the toolbar is visible
   def toolbars_visible?
     (@toolbars['history_tb'] || @toolbars['center_tb'] || @toolbars['view_tb']) &&
-    (@toolbars['history_tb'] != 'blank_view_tb' && @toolbars['history_tb'] != 'blank_view_tb' && @toolbars['view_tb'] != 'blank_view_tb')
+      (@toolbars['history_tb'] != 'blank_view_tb' && @toolbars['history_tb'] != 'blank_view_tb' && @toolbars['view_tb'] != 'blank_view_tb')
   end
 
   def inner_layout_present?
@@ -727,21 +728,13 @@ module ApplicationHelper
   end
 
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
-  def center_toolbar_filename
-    _toolbar_chooser.center_toolbar_filename
-  end
+  delegate :center_toolbar_filename, :to => :_toolbar_chooser
 
-  def history_toolbar_filename
-    _toolbar_chooser.history_toolbar_filename
-  end
+  delegate :history_toolbar_filename, :to => :_toolbar_chooser
 
-  def x_view_toolbar_filename
-    _toolbar_chooser.x_view_toolbar_filename
-  end
+  delegate :x_view_toolbar_filename, :to => :_toolbar_chooser
 
-  def view_toolbar_filename
-    _toolbar_chooser.view_toolbar_filename
-  end
+  delegate :view_toolbar_filename, :to => :_toolbar_chooser
 
   def _toolbar_chooser
     ToolbarChooser.new(

@@ -1,0 +1,98 @@
+%form{:class => 'form-horizontal', :controller => :ems_container, :action => :start_deployment}
+  .form-group
+    %label.col-md-2.control-label
+      = _("Deployment type")
+    .col-md-6
+      = select_tag "Strategy", "<option>1 master 2 slaves</option>".html_safe, :class => 'form_input', :id => 'Srategy', :include_blank => true
+  .form-group.check_existing.display_none
+    %label.col-md-2.control-label
+      = _("Exisiting enviorment")
+    .col-md-6
+      = check_box_tag("existing_vms", true, "checkbox", :data => {:on_text => 'Yes', :off_text => 'No'})
+      :javascript
+          $("#existing_vms").bootstrapSwitch();
+
+
+  = render :partial => 'form_deployment_existing'
+
+  = render :partial => 'form_deployment_new'
+
+  %a{:id => "deployment_provision"}
+    provision
+  .form-group
+    .col-md-2.control-label
+      = submit_tag "Deploy"
+
+:javascript
+    function toggle_input(selector){
+      $(selector).each(function(index, element) {
+        $(element).toggleClass('display_none');
+      });
+    }
+
+    function hide_input(selector){
+      $(selector).each(function(index, element) {
+        $(element).addClass('display_none');
+      });
+    }
+
+    function show_input(selector){
+     $(selector).each(function(index, element) {
+        $(element).removeClass('display_none');
+      });
+    }
+
+    $(document).ready( function() {
+      var vms = #{@vms.to_json};
+      var providers = #{@providers.to_json};
+      $('#Provider_provider_id').change(function(){
+      toggle_input('.master_row');
+      toggle_input('.slave_row');
+      var valid_vms = [];
+      for(i=0; i < vms.length; i++){
+        if(vms[i].ems_id == parseInt($('#Provider_provider_id').val()))
+          valid_vms.push(vms[i]);
+      }
+      for(i=0; i < valid_vms.length; i++){
+        $('#Vm_master')
+         .append($("<option></option>")
+         .attr("value",valid_vms[i].id)
+         .text(valid_vms[i].name));
+        $('#Vm_vm1')
+        .append($("<option></option>")
+        .attr("value",valid_vms[i].id)
+        .text(valid_vms[i].name));
+        $('#Vm_vm2')
+        .append($("<option></option>")
+        .attr("value",valid_vms[i].id)
+        .text(valid_vms[i].name));
+      }
+      })
+      $('#Srategy').change(function(){
+          toggle_input('.check_existing')
+          toggle_input('.provider_row')
+      });
+
+      $('#Vm_master').change(function(){
+        if($('.master_row select')[0].value == ""){
+          hide_input('.master_row_ssh')
+        }
+        else{
+          show_input('.master_row_ssh')
+        }
+
+      });
+      $('#existing_vms').on('switchChange.bootstrapSwitch',function(){
+        toggle_input('.provider_row')
+        if($('.provider_row select')[0].value != ""){
+          toggle_input('.master_row');
+          toggle_input('.slave_row');
+        }
+        toggle_input('.master_ip');
+        toggle_input('.slave_ip1');
+        toggle_input('.slave_ip2');
+
+
+      });
+
+    });
