@@ -60,7 +60,7 @@ module VimPropMaps
     :Datastore              => {
       :baseName => "@dataStores",
       :keyPath  => ['summary', 'name'],
-      :props    => ["summary", "info", "capability"]
+      :props    => ["summary", "info", "host", "capability"]
     }
   }
 
@@ -305,6 +305,7 @@ module VimPropMaps
       :keyPath  => ['summary', 'name'],
       :props    => [
         "info",
+        "host",
         "capability.directoryHierarchySupported",
         "capability.perFileThinProvisioningSupported",
         "capability.rawDiskMappingsSupported",

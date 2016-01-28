@@ -47,7 +47,8 @@ class Host < ApplicationRecord
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms
   has_many                  :miq_templates
-  has_and_belongs_to_many   :storages, :join_table => :host_storages
+  has_many                  :host_storages
+  has_many                  :storages, :through => :host_storages
   has_many                  :switches, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
@@ -1717,6 +1718,16 @@ class Host < ApplicationRecord
     names = hostname.to_s.split(',').first.to_s.split('.')
     return names[1..-1].join('.') unless names.blank?
     nil
+  end
+
+  def writable_storages
+    # Check also for nil here in case a refresh has not added
+    # the true/false value to the host_storages records yet
+    storages.where(:host_storages => {:read_only => [false, nil]})
+  end
+
+  def read_only_storages
+    storages.where(:host_storages => {:read_only => true})
   end
 
   def base_storage_extents

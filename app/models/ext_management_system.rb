@@ -390,7 +390,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def total_storages
-    HostsStorages.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
+    HostStorage.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
   end
 
   def vm_count_by_state(state)
