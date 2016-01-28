@@ -1,9 +1,10 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil)
     case ems
-    when EmsCloud then     save_ems_cloud_inventory(ems, hashes, target)
-    when EmsInfra then     save_ems_infra_inventory(ems, hashes, target)
-    when ManageIQ::Providers::ContainerManager then save_ems_container_inventory(ems, hashes, target)
+    when EmsCloud                                  then save_ems_cloud_inventory(ems, hashes, target)
+    when EmsInfra                                  then save_ems_infra_inventory(ems, hashes, target)
+    when ManageIQ::Providers::ConfigurationManager then save_configuration_manager_inventory(ems, hashes, target)
+    when ManageIQ::Providers::ContainerManager     then save_ems_container_inventory(ems, hashes, target)
     end
   end
 
