@@ -450,7 +450,7 @@ module ApplicationController::Filter
     render :update do |page|
       if @edit[:adv_search_open] == true
         @edit[:adv_search_open] = false
-        page << "$('#adv_search_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-true.png')})"
+        page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-true.png')}')"
         page << javascript_hide("advsearchModal")
         page << javascript_hide("blocker_div")
       else
@@ -458,7 +458,7 @@ module ApplicationController::Filter
         page << "$('#clear_search').#{clear_search_show_or_hide}();"
         page.replace("adv_search_body", :partial => "layouts/adv_search_body")
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
-        page << "$('#adv_search_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')})"
+        page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')}')"
         page << ENABLE_CALENDAR if calendar_needed?
         if @edit.fetch_path(@expkey, :val1, :type)
           page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
