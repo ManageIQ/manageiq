@@ -111,7 +111,7 @@ class ServiceController < ApplicationController
     respond_to do |format|
       format.js do                  # AJAX, select the node
         @explorer = true
-        params[:id] = x_build_node_id(@record, nil, x_tree(:svcs_tree))  # Get the tree node id
+        params[:id] = x_build_node_id(@record, x_tree(:svcs_tree))  # Get the tree node id
         tree_select
       end
       format.html do                # HTML, redirect to explorer

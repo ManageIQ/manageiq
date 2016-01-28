@@ -208,8 +208,8 @@ module ApplicationController::Explorer
     tagging_edit_tags_save_and_replace_right_cell
   end
 
-  def x_build_node_id(object, pid = nil, options = {})
-    TreeNodeBuilder.build_id(object, pid, options)
+  def x_build_node_id(object, options = {})
+    TreeNodeBuilder.build_id(object, nil, options)
   end
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
