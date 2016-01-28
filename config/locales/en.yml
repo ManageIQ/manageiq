@@ -809,16 +809,6 @@ en:
       VmPerformance:            Performance - VM
       Zone:                     Zone
 
-    option:
-      email:          E-Mail
-      name_prefix:    VM Name/Prefix
-      number_of_vms:  Number of VMs
-      source_vm_id:   Source VM
-      storage:        Datastore
-      time_to_live:   Time until Retirement
-      ttl_warning:    Retirement Warning
-      vm_description: VM Description
-
     table:
       availability_zone:           Availability Zone
       cdroms:                      CD/DVD Drives
