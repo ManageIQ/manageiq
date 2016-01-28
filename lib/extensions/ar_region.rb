@@ -1,3 +1,5 @@
+require_relative './ar_virtual'
+
 module ArRegion
   extend ActiveSupport::Concern
 
