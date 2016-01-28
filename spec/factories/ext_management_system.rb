@@ -131,6 +131,9 @@ FactoryGirl.define do
 
   factory :configuration_manager_foreman, :aliases => ["manageiq/providers/foreman/configuration_manager"], :class => "ManageIQ::Providers::Foreman::ConfigurationManager", :parent => :configuration_manager
   factory :configuration_manager_ansible_tower, :aliases => ["manageiq/providers/ansible_tower/configuration_manager"], :class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager", :parent => :configuration_manager
+  trait(:provider) do
+    after(:create) { |x| x.create_provider }
+  end
 
   factory :configuration_manager_foreman_with_authentication, :parent => :configuration_manager_foreman do
     after :create do |x|
