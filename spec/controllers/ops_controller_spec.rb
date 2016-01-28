@@ -6,6 +6,10 @@ describe OpsController do
   end
 
   describe 'x_button' do
+    before do
+      ApplicationController.handle_exceptions = true
+    end
+
     describe 'corresponding methods are called for allowed actions' do
       OpsController::OPS_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
@@ -22,6 +26,8 @@ describe OpsController do
   end
 
   it 'can view the db_settings tab' do
+    ApplicationController.handle_exceptions = true
+
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_settings',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
@@ -30,6 +36,8 @@ describe OpsController do
   end
 
   it 'can view the db_connections tab' do
+    ApplicationController.handle_exceptions = true
+
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_connections',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
@@ -43,6 +51,10 @@ describe OpsController do
   #
   # def rbac_user_set_record_vars(user)
   describe 'rbac_user_edit' do
+    before do
+      ApplicationController.handle_exceptions = true
+    end
+
     it 'can add a user w/ group' do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       session[:edit] = {

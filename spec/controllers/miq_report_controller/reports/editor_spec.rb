@@ -21,6 +21,8 @@ describe ReportController do
       end
 
       it "should save the selected time zone with a chargeback report" do
+        ApplicationController.handle_exceptions = true
+
         user = FactoryGirl.create(:user)
         login_as user
         rep = FactoryGirl.create(
@@ -72,6 +74,8 @@ describe ReportController do
 
     context "#miq_report_edit" do
       it "should build tabs with correct tab id after reset button is pressed to prevent error when changing tabs" do
+        ApplicationController.handle_exceptions = true
+
         user = FactoryGirl.create(:user)
         login_as user
         rep = FactoryGirl.create(

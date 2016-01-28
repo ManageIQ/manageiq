@@ -87,6 +87,8 @@ describe ReportController do
       end
 
       it 'renders show of Dashboards in Dashboards tree' do
+        ApplicationController.handle_exceptions = true
+
         MiqWidgetSet.seed
         user = FactoryGirl.create(:user_with_group)
         login_as user
@@ -107,6 +109,8 @@ describe ReportController do
       end
 
       it 'renders show of Dashboard Widget in Widgets tree' do
+        ApplicationController.handle_exceptions = true
+
         widget = FactoryGirl.create(:miq_widget)
         post :tree_select, :id => "xx-r_-#{widget.id}", :format => :js, :accord => 'widgets'
         expect(response).to render_template('report/_widget_show')

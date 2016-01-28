@@ -90,7 +90,17 @@ class ApplicationController < ActionController::Base
   # This will rescue any un-handled exceptions
   rescue_from StandardError, :with => :error_handler
 
+  def self.handle_exceptions?
+    Thread.current[:application_controller_handles_exceptions] != false
+  end
+
+  def self.handle_exceptions=(v)
+    Thread.current[:application_controller_handles_exceptions] = v
+  end
+
   def error_handler(e)
+    raise e unless ApplicationController.handle_exceptions?
+
     logger.fatal "Error caught: [#{e.class.name}] #{e.message}\n#{e.backtrace.join("\n")}"
 
     msg = case e

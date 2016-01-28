@@ -109,6 +109,8 @@ module ApiSpecHelper
     define_entrypoint_url_methods
     define_url_methods(collections)
     define_user
+
+    ApplicationController.handle_exceptions = true
   end
 
   def define_entrypoint_url_methods

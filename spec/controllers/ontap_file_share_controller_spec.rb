@@ -3,6 +3,8 @@ describe OntapFileShareController do
     before(:each) do
       set_user_privileges
       EvmSpecHelper.create_guid_miq_server_zone
+
+      ApplicationController.handle_exceptions = true
     end
 
     it "when VM Right Size Recommendations is pressed" do

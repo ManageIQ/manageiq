@@ -5,6 +5,8 @@ describe ContainerImageController do
   end
 
   it "when Smart Analysis is pressed" do
+    ApplicationController.handle_exceptions = true
+
     expect(controller).to receive(:scan_images)
     post :button, :pressed => 'container_image_scan', :format => :js
     expect(controller.send(:flash_errors?)).not_to be_truthy

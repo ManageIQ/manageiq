@@ -2816,6 +2816,10 @@ describe ApplicationHelper do
   end
 
   describe "update_url_parms", :type => :request do
+    before do
+      MiqServer.seed
+    end
+
     context "when the given parameter exists in the request query string" do
       before do
         get("/vm/show_list/100", "type=grid")

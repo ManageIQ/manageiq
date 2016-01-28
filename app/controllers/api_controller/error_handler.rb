@@ -8,6 +8,7 @@ class ApiController
       def rescue_from_api_errors
         ERROR_MAPPING.each do |error, type|
           rescue_from error do |e|
+            raise e unless ApplicationController.handle_exceptions?
             api_exception_type(type, e)
           end
         end
