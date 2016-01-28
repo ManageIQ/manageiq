@@ -1,4 +1,5 @@
 #column_lists
+  - url = url_for(:action => 'st_catalog_form_field_changed', :id => "#{@edit[:rec_id] || "new"}")
   %table.form#formtest{:width => "100%"}
     %tr
       %td.widthed{:align => "left"}= _('Unassigned:')
@@ -12,34 +13,36 @@
                      :style    => "width: 450px",
                      :size     => 8,
                      :id       => "available_fields")
-      %td{:width => "30", :valign => "middle"}
-        - if @edit[:new][:available_fields].length == 0
-          = image_tag(image_path('toolbars/right.png'), :class => "dimmed rollover small")
-        - else
-          = link_to(image_tag(image_path('toolbars/right.png'),
-                              :class => "rollover small",
-                              :alt   => _("Move Selected fields right")),
-                    {:action => "st_catalog_form_field_changed",
-                     :button => "right",
-                     :id     => "#{@edit[:rec_id] || "new"}"},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => _("Move Selected buttons right"))
-        - if @edit[:new][:fields].length == 0
-          = image_tag(image_path('toolbars/left.png'),
-                      :class => "dimmed rollover small")
-        - else
-          = link_to(image_tag(image_path('toolbars/left.png'),
-                              :class => "rollover small",
-                              :alt   => _("Move Selected fields left")),
-                    {:action => "st_catalog_form_field_changed",
-                     :button => "left",
-                     :id     => "#{@edit[:rec_id] || "new"}"},
-                    "data-submit" => "column_lists",
-                    :remote       => true,
-                    "data-method" => :post,
-                    :title        => _("Move Selected buttons left"))
+      %td.text-center{:width => "40"}
+        .btn-group-vertical
+          - if @edit[:new][:available_fields].length == 0
+            %button.btn.btn-default.btn-disabled
+              %i.fa.fa-angle-right.fa-lg
+          - else
+            - t = _("Move Selected buttons right")
+            %button.btn.btn-default{:title => t,
+              "data-submit"         => 'column_lists',
+              "data-miq_sparkle_on" => true,
+              :remote               => true,
+              "data-method"         => :post,
+              'data-click_url'      => {:url => "#{url}?button=right"}.to_json}
+              %i.fa.fa-angle-right.fa-lg
+
+          - if @edit[:new][:fields].length == 0
+            %button.btn.btn-default.btn-disabled
+              %i.fa.fa-angle-left.fa-lg
+          - else
+            - t = _("Move Selected buttons left")
+            %button.btn.btn-default{:title => t,
+              "data-submit"         => 'column_lists',
+              "data-miq_sparkle_on" => true,
+              :remote               => true,
+              "data-method"         => :post,
+              'data-click_url'      => {:url => "#{url}?button=left"}.to_json}
+              %i.fa.fa-angle-left.fa-lg
+
+
+
       %td{:align => "left", :valign => "top"}
         = select_tag("selected_fields[]",
                      options_for_select(@edit[:new][:fields], @selected),
