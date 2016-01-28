@@ -32,12 +32,17 @@
   }
 
   /** @ngInject */
-  function StateController($state, services, ServicesState, $filter) {
+  function StateController($state, services, ServicesState, $filter, $rootScope) {
     /* jshint validthis: true */
     var vm = this;
 
     vm.title = 'Service List';
     vm.services = [];
+
+    if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
+      $rootScope.notifications.data.splice(0, $rootScope.notifications.data.length);
+    }
+
     angular.forEach(services.resources, function(item) {
       if (!angular.isDefined(item.service_id)) {
         vm.services.push(item);

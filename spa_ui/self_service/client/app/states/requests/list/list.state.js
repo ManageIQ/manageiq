@@ -33,12 +33,16 @@
   }
 
   /** @ngInject */
-  function StateController($state, requests, RequestsState, $filter) {
+  function StateController($state, requests, RequestsState, $filter, $rootScope) {
     var vm = this;
 
     vm.title = 'Request List';
     vm.requests = requests.resources;
     vm.requestsList = angular.copy(vm.requests);
+
+    if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
+      $rootScope.notifications.data.splice(0, $rootScope.notifications.data.length);
+    }
 
     vm.listConfig = {
       selectItems: false,
