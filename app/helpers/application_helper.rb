@@ -727,7 +727,19 @@ module ApplicationHelper
 
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
   def center_toolbar_filename
-    _toolbar_chooser.call
+    _toolbar_chooser.center_toolbar_filename
+  end
+
+  def history_toolbar_filename
+    _toolbar_chooser.history_toolbar_filename
+  end
+
+  def x_view_toolbar_filename
+    _toolbar_chooser.x_view_toolbar_filename
+  end
+
+  def view_toolbar_filename
+    _toolbar_chooser.view_toolbar_filename
   end
 
   def _toolbar_chooser

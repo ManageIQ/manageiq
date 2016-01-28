@@ -1,11 +1,58 @@
 class ApplicationHelper::ToolbarChooser
-  def call
-    center_toolbar_filename
+  # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
+  def center_toolbar_filename
+    if @explorer
+      center_toolbar_filename_explorer
+    else
+      center_toolbar_filename_classic
+    end
+  end
+
+  def history_toolbar_filename
+    if x_active_tree == :dialogs_tree || %w(chargeback miq_ae_tools miq_capacity_planning miq_capacity_utilization miq_policy_rsop ops).include?(@layout)
+      'blank_view_tb'
+    else
+      'x_history_tb'
+    end
+  end
+
+  def x_view_toolbar_filename
+    if x_gtl_view_tb_render?
+      'x_gtl_view_tb'
+    elsif %w(miq_capacity_planning miq_capacity_utilization).include?(@layout)
+      'miq_capacity_view_tb'
+    elsif @record && @explorer && (%w(services catalogs).include?(@layout) || %w(performance timeline).include?(@display))
+      'blank_view_tb'
+    elsif %w(report).include?(@layout)
+      @report ? "report_view_tb" : "blank_view_tb"
+    elsif %w(provider_foreman).include?(@layout)
+      @showtype == 'main' ? "x_summary_view_tb" : "x_gtl_view_tb"
+    else
+      'blank_view_tb'
+    end
+  end
+
+  def view_toolbar_filename
+    if render_gtl_view_tb?
+      'gtl_view_tb'
+    elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"
+      'compare_view_tb'
+    elsif @lastaction == "drift"
+      'drift_view_tb'
+    elsif %w(ems_container).include?(@layout)
+      'dashboard_summary_toggle_view_tb'
+    elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) &&
+          (!@layout.starts_with?("miq_request")) && !@treesize_buttons &&
+          @display == "main" && @showtype == "main" && !@in_a_form
+      @view_context.send(:restful?) ? "summary_view_restful_tb" : "summary_view_tb"
+    else
+      'blank_view_tb'
+    end
   end
 
   private
 
-  delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?,
+  delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?, :render_gtl_view_tb?, :x_gtl_view_tb_render?,
            :to => :@view_context
 
   def initialize(view_context, instance_data)
@@ -17,15 +64,6 @@ class ApplicationHelper::ToolbarChooser
   end
 
   ###
-
-  # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
-  def center_toolbar_filename
-    if @explorer
-      return center_toolbar_filename_explorer
-    else
-      return center_toolbar_filename_classic
-    end
-  end
 
   # Return explorer based toolbar file name
   def center_toolbar_filename_explorer
