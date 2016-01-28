@@ -287,23 +287,26 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   };
 
   this.getDimensions = function getDimensions(d) {
+    var defaultX = 0;
+    var defaultY = 9;
+    var defaultR = 17;
     switch (d.item.kind) {
       case "ContainerManager":
-        return { x: 0, y: 16, r: 28 };
+        return { x: defaultX, y: 16, r: 28 };
       case "Container":
         return { x: 1, y: 5, r: 13 };
       case "ContainerGroup":
-        return { x: 1, y: 6, r: 17 };
+        return { x: 1, y: 6, r: defaultR };
       case "ContainerService":
-        return { x: -2, y: 9, r: 17 };
+        return { x: -2, y: defaultY, r: defaultR };
       case "ContainerReplicator":
-        return { x: -1, y: 8, r: 17 };
+        return { x: -1, y: 8, r: defaultR };
       case "ContainerNode":
       case "Vm":
       case "Host":
-        return { x: 0, y: 9, r: 21 };
+        return { x: defaultX, y: defaultY, r: 21 };
       default:
-        return { x: 0, y: 9, r: 17 };
+        return { x: defaultX, y: defaultY, r: defaultR };
     }
   };
 
