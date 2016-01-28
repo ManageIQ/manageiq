@@ -1,4 +1,4 @@
-class ExtManagementSystem < ActiveRecord::Base
+class ExtManagementSystem < ApplicationRecord
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end

@@ -1,4 +1,4 @@
-class MiqAlert < ActiveRecord::Base
+class MiqAlert < ApplicationRecord
   include UuidMixin
 
   serialize :expression

@@ -1,4 +1,4 @@
-class ContainerImage < ActiveRecord::Base
+class ContainerImage < ApplicationRecord
   include ReportableMixin
   include ScanningMixin
 

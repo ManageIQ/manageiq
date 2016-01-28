@@ -1,4 +1,4 @@
-class MiqEventDefinitionSet < ActiveRecord::Base
+class MiqEventDefinitionSet < ApplicationRecord
   acts_as_miq_set
 
   def self.seed

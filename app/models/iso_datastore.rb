@@ -1,4 +1,4 @@
-class IsoDatastore < ActiveRecord::Base
+class IsoDatastore < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :iso_datastore
   has_many   :iso_images, :dependent => :destroy
 

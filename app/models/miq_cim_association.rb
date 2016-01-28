@@ -1,6 +1,6 @@
 require 'miq_storage_defs'
 
-class MiqCimAssociation < ActiveRecord::Base
+class MiqCimAssociation < ApplicationRecord
   belongs_to  :result_instance,
               :class_name  => "MiqCimInstance",
               :foreign_key => "result_instance_id"

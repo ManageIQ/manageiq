@@ -1,4 +1,4 @@
-class Job < ActiveRecord::Base
+class Job < ApplicationRecord
   include_concern 'StateMachine'
   include UuidMixin
   include ReportableMixin

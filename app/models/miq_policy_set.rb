@@ -1,4 +1,4 @@
-class MiqPolicySet < ActiveRecord::Base
+class MiqPolicySet < ApplicationRecord
   acts_as_miq_set
 
   before_validation :default_name_to_guid, :on => :create

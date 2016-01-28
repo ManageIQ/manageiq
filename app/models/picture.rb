@@ -1,4 +1,4 @@
-class Picture < ActiveRecord::Base
+class Picture < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
   include ReportableMixin
 

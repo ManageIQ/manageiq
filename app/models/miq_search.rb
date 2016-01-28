@@ -1,4 +1,4 @@
-class MiqSearch < ActiveRecord::Base
+class MiqSearch < ApplicationRecord
   serialize :options
   serialize :filter
 

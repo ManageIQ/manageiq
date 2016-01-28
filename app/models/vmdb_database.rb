@@ -1,4 +1,4 @@
-class VmdbDatabase < ActiveRecord::Base
+class VmdbDatabase < ApplicationRecord
   has_many :vmdb_tables,           :dependent => :destroy
   has_many :evm_tables,            :class_name => 'VmdbTableEvm'
   has_many :vmdb_database_metrics, :dependent => :destroy

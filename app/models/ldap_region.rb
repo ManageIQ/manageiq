@@ -1,4 +1,4 @@
-class LdapRegion < ActiveRecord::Base
+class LdapRegion < ApplicationRecord
   include ReportableMixin
 
   validates_presence_of   :name

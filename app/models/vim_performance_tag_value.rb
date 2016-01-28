@@ -1,4 +1,4 @@
-class VimPerformanceTagValue < ActiveRecord::Base
+class VimPerformanceTagValue < ApplicationRecord
   belongs_to :metric, :polymorphic => true
 
   serialize :assoc_ids

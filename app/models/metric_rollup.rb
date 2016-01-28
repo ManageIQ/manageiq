@@ -1,4 +1,4 @@
-class MetricRollup < ActiveRecord::Base
+class MetricRollup < ApplicationRecord
   include Metric::Common
 
   def self.find_all_by_interval_and_time_range(interval, start_time, end_time)

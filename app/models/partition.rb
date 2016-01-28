@@ -1,4 +1,4 @@
-class Partition < ActiveRecord::Base
+class Partition < ApplicationRecord
   belongs_to :disk
   belongs_to :hardware
   has_many :volumes,

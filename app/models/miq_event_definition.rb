@@ -1,4 +1,4 @@
-class MiqEventDefinition < ActiveRecord::Base
+class MiqEventDefinition < ApplicationRecord
   include UuidMixin
 
   validates_presence_of     :name

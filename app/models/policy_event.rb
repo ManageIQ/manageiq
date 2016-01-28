@@ -1,4 +1,4 @@
-class PolicyEvent < ActiveRecord::Base
+class PolicyEvent < ApplicationRecord
   include_concern 'Purging'
 
   belongs_to  :miq_event_definition

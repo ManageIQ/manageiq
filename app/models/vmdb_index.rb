@@ -1,4 +1,4 @@
-class VmdbIndex < ActiveRecord::Base
+class VmdbIndex < ApplicationRecord
   belongs_to :vmdb_table
 
   has_many :vmdb_metrics,          :as => :resource  # Destroy will be handled by purger

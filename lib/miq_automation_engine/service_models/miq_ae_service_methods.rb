@@ -148,7 +148,7 @@ module MiqAeMethodService
 
     def self.drb_undumped(klass)
       _log.info "Entered: klass=#{klass.name}"
-      klass.send(:include, DRbUndumped) unless klass.ancestors.include?(DRbUndumped)
+      klass.include(DRbUndumped) unless klass.ancestors.include?(DRbUndumped)
     end
 
     def self.ar_method

@@ -9,7 +9,7 @@ module ArRegion
 
   module ClassMethods
     def inherited(other)
-      if other.superclass == ActiveRecord::Base
+      if other == other.base_class
         other.class_eval do
           virtual_column :region_number,      :type => :integer
           virtual_column :region_description, :type => :string
@@ -150,4 +150,4 @@ module ArRegion
   end
 end
 
-ActiveRecord::Base.send(:include, ArRegion)
+ActiveRecord::Base.include ArRegion

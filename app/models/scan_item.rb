@@ -1,4 +1,4 @@
-class ScanItem < ActiveRecord::Base
+class ScanItem < ApplicationRecord
   serialize :definition
   acts_as_miq_set_member
   include UuidMixin

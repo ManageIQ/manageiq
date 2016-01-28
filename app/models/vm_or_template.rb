@@ -2,7 +2,7 @@ require 'ostruct'
 require 'cgi'
 require 'uri'
 
-class VmOrTemplate < ActiveRecord::Base
+class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include ScanningMixin
 
@@ -472,7 +472,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def self.invoke_tasks_remote(options)
-    ids_by_region = options[:ids].group_by { |id| ActiveRecord::Base.id_to_region(id.to_i) }
+    ids_by_region = options[:ids].group_by { |id| ApplicationRecord.id_to_region(id.to_i) }
     ids_by_region.each do |region, ids|
       remote_options = options.merge(:ids => ids)
       hostname = MiqRegion.find_by_region(region).remote_ws_address

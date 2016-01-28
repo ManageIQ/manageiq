@@ -1,6 +1,6 @@
 require 'time'
 
-class Snapshot < ActiveRecord::Base
+class Snapshot < ApplicationRecord
   acts_as_tree
 
   belongs_to :vm_or_template

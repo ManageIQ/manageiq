@@ -1,4 +1,4 @@
-class PxeServer < ActiveRecord::Base
+class PxeServer < ApplicationRecord
   autoload :WimParser, "win32/wim_parser" # via gems/pending
 
   include FileDepotMixin

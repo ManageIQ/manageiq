@@ -1,4 +1,4 @@
-class MiqUserRole < ActiveRecord::Base
+class MiqUserRole < ApplicationRecord
   SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
   ADMIN_ROLE_NAME       = "EvmRole-administrator"
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"

@@ -286,9 +286,9 @@ describe OpsController do
       allow(controller).to receive(:check_privileges).and_return(true)
       allow(controller).to receive(:assert_privileges).and_return(true)
       allow(controller).to receive(:x_active_tree).and_return(:diagnostics_tree)
-      allow(controller).to receive(:x_node).and_return("z-#{ActiveRecord::Base.compress_id(@zone.id)}")
+      allow(controller).to receive(:x_node).and_return("z-#{ApplicationRecord.compress_id(@zone.id)}")
       post :change_tab, :tab_id => "diagnostics_collect_logs"
-      allow(controller).to receive(:x_node).and_return("svr-#{ActiveRecord::Base.compress_id(@miq_server.id)}")
+      allow(controller).to receive(:x_node).and_return("svr-#{ApplicationRecord.compress_id(@miq_server.id)}")
     end
     it "does not render toolbar buttons when edit is clicked" do
       post :x_button, :id => @miq_server.id, :pressed => 'log_depot_edit', :format => :js

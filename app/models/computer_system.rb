@@ -1,4 +1,4 @@
-class ComputerSystem < ActiveRecord::Base
+class ComputerSystem < ApplicationRecord
   include ReportableMixin
 
   belongs_to :managed_entity, :polymorphic => true

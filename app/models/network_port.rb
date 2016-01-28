@@ -1,4 +1,4 @@
-class NetworkPort < ActiveRecord::Base
+class NetworkPort < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

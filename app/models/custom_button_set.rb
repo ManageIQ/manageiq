@@ -1,4 +1,4 @@
-class CustomButtonSet < ActiveRecord::Base
+class CustomButtonSet < ApplicationRecord
   acts_as_miq_set
 
   def self.find_all_by_class_name(class_name, class_id = nil)

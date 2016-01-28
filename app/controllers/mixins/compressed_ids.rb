@@ -5,10 +5,10 @@ module CompressedIds
   #
 
   def to_cid(id)
-    ActiveRecord::Base.compress_id(id)
+    ApplicationRecord.compress_id(id)
   end
 
   def from_cid(cid)
-    ActiveRecord::Base.uncompress_id(cid)
+    ApplicationRecord.uncompress_id(cid)
   end
 end

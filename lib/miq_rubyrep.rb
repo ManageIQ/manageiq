@@ -35,7 +35,7 @@ class MiqRubyrep
       config.options[setting] = value unless value.nil?
     end
 
-    config.options[:rep_prefix] = "rr#{ActiveRecord::Base.my_region_number}"
+    config.options[:rep_prefix] = "rr#{ApplicationRecord.my_region_number}"
 
     config.options[:replicator]                    = :one_way
     config.options[:syncer]                        = :one_way

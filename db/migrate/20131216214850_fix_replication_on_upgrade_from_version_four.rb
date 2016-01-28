@@ -136,7 +136,7 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
     end
 
     if RrSyncState.table_exists?
-      prefix = "rr#{ActiveRecord::Base.my_region_number}"
+      prefix = "rr#{ApplicationRecord.my_region_number}"
       RENAMED_TABLES.each do |old_name, new_name|
         drop_trigger(new_name, "#{prefix}_#{old_name}")
       end

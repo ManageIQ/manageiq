@@ -1,4 +1,4 @@
-class MiqTask < ActiveRecord::Base
+class MiqTask < ApplicationRecord
   serialize :context_data
   STATE_INITIALIZED = 'Initialized'.freeze
   STATE_QUEUED      = 'Queued'.freeze

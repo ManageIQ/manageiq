@@ -1591,7 +1591,7 @@ class ApplicationController < ActionController::Base
   end
 
   def filter_ids_in_region(ids, label)
-    in_reg, out_reg = ActiveRecord::Base.partition_ids_by_remote_region(ids)
+    in_reg, out_reg = ApplicationRecord.partition_ids_by_remote_region(ids)
     if ids.length == 1
       add_flash(_("The selected %s is not in the current region") % label, :error) if in_reg.empty?
     elsif in_reg.empty?

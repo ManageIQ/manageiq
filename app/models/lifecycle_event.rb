@@ -1,4 +1,4 @@
-class LifecycleEvent < ActiveRecord::Base
+class LifecycleEvent < ApplicationRecord
   belongs_to :vm_or_template
 
   include UuidMixin

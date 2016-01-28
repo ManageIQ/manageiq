@@ -1,6 +1,6 @@
 require 'miq_storage_defs'
 
-class StorageManager < ActiveRecord::Base
+class StorageManager < ApplicationRecord
   include AuthenticationMixin
   include FilterableMixin
   include RelationshipMixin

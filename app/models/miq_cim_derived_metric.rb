@@ -1,4 +1,4 @@
-class MiqCimDerivedMetric < ActiveRecord::Base
+class MiqCimDerivedMetric < ApplicationRecord
   belongs_to    :miq_storage_metric
 
   # acts_as_list was blindly upgraded from "~>0.1.4" to "~>0.7.2" to fix

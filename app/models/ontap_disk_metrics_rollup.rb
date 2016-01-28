@@ -1,4 +1,4 @@
-class OntapDiskMetricsRollup < ActiveRecord::Base
+class OntapDiskMetricsRollup < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance

@@ -60,7 +60,7 @@ describe EmsInfraController do
       ems_infra = FactoryGirl.create(:ext_management_system)
       post :button, :pressed => "vm_right_size", :id => ems_infra.id, :display => 'vms', :check_10r839 => '1'
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(response.body).to include("/vm/right_size/#{ActiveRecord::Base.uncompress_id('10r839')}")
+      expect(response.body).to include("/vm/right_size/#{ApplicationRecord.uncompress_id('10r839')}")
     end
 
     it "when Host Analyze then Check Compliance is pressed" do

@@ -1,4 +1,4 @@
-class Compliance < ActiveRecord::Base
+class Compliance < ApplicationRecord
   belongs_to  :resource,  :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 

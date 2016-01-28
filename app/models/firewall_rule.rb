@@ -1,4 +1,4 @@
-class FirewallRule < ActiveRecord::Base
+class FirewallRule < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :source_security_group, :class_name => "SecurityGroup"
 

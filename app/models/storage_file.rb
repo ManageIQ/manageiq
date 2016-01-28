@@ -1,4 +1,4 @@
-class StorageFile < ActiveRecord::Base
+class StorageFile < ApplicationRecord
   belongs_to :storage
   belongs_to :vm_or_template
   belongs_to :vm,           :foreign_key => :vm_or_template_id

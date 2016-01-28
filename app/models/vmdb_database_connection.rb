@@ -1,4 +1,4 @@
-class VmdbDatabaseConnection < ActiveRecord::Base
+class VmdbDatabaseConnection < ApplicationRecord
   self.table_name = 'pg_stat_activity'
   self.primary_key = nil
 

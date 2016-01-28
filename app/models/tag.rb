@@ -1,4 +1,4 @@
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   has_many :taggings, :dependent => :destroy
   has_one :classification
   virtual_has_one :category,       :class_name => "Classification"

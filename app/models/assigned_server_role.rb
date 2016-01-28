@@ -1,4 +1,4 @@
-class AssignedServerRole < ActiveRecord::Base
+class AssignedServerRole < ApplicationRecord
   belongs_to :miq_server
   belongs_to :server_role
 

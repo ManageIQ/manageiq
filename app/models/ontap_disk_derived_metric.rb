@@ -1,4 +1,4 @@
-class OntapDiskDerivedMetric < ActiveRecord::Base
+class OntapDiskDerivedMetric < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance

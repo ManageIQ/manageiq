@@ -1,4 +1,4 @@
-class OntapAggregateMetricsRollup < ActiveRecord::Base
+class OntapAggregateMetricsRollup < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance

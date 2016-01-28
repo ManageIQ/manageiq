@@ -1,4 +1,4 @@
-class ServiceTemplate < ActiveRecord::Base
+class ServiceTemplate < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
   include ServiceMixin
   include OwnershipMixin

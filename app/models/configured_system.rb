@@ -1,4 +1,4 @@
-class ConfiguredSystem < ActiveRecord::Base
+class ConfiguredSystem < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

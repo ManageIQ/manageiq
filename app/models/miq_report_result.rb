@@ -1,4 +1,4 @@
-class MiqReportResult < ActiveRecord::Base
+class MiqReportResult < ApplicationRecord
   include_concern 'Purging'
 
   belongs_to :miq_report

@@ -1,4 +1,4 @@
-class Volume < ActiveRecord::Base
+class Volume < ApplicationRecord
   belongs_to :hardware
   has_many :partitions, lambda { |_|
     p = Partition.quoted_table_name

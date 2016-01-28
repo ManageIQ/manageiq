@@ -1,5 +1,5 @@
 require 'ancestry'
-class OrchestrationStack < ActiveRecord::Base
+class OrchestrationStack < ApplicationRecord
   require_nested :Status
 
   include NewWithTypeStiMixin

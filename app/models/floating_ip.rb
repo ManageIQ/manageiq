@@ -1,4 +1,4 @@
-class FloatingIp < ActiveRecord::Base
+class FloatingIp < ApplicationRecord
   include NewWithTypeStiMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"

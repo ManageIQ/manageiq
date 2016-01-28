@@ -1,4 +1,4 @@
-class GuestDevice < ActiveRecord::Base
+class GuestDevice < ApplicationRecord
   belongs_to :hardware
   has_one :vm_or_template, :through => :hardware
   has_one :vm,             :through => :hardware

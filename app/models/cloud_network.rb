@@ -1,4 +1,4 @@
-class CloudNetwork < ActiveRecord::Base
+class CloudNetwork < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

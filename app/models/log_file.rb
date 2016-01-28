@@ -2,7 +2,7 @@ require 'net/ftp'
 require 'uri'
 require 'mount/miq_generic_mount_session'
 
-class LogFile < ActiveRecord::Base
+class LogFile < ApplicationRecord
   belongs_to :resource,    :polymorphic => true
   belongs_to :file_depot
   belongs_to :miq_task

@@ -1,6 +1,6 @@
 require 'net_app_manageability/types'
 
-class MiqStorageMetric < ActiveRecord::Base
+class MiqStorageMetric < ApplicationRecord
   has_one   :miq_cim_instance,
             :foreign_key => "metric_id"
 

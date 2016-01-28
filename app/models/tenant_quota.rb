@@ -1,4 +1,4 @@
-class TenantQuota < ActiveRecord::Base
+class TenantQuota < ApplicationRecord
   belongs_to :tenant
 
   QUOTA_BASE = {

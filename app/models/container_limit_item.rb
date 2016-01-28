@@ -1,3 +1,3 @@
-class ContainerLimitItem < ActiveRecord::Base
+class ContainerLimitItem < ApplicationRecord
   belongs_to :container_limit
 end

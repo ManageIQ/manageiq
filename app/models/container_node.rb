@@ -1,4 +1,4 @@
-class ContainerNode < ActiveRecord::Base
+class ContainerNode < ApplicationRecord
   include ReportableMixin
   include NewWithTypeStiMixin
 

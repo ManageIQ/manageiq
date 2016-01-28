@@ -1,4 +1,4 @@
-class VmdbDatabaseLock < ActiveRecord::Base
+class VmdbDatabaseLock < ApplicationRecord
   self.table_name = 'pg_locks'
   self.primary_key = nil
 

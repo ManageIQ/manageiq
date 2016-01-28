@@ -1,4 +1,4 @@
-class ServiceResource < ActiveRecord::Base
+class ServiceResource < ApplicationRecord
   belongs_to :service_template
   belongs_to :service
   belongs_to :resource, :polymorphic => true

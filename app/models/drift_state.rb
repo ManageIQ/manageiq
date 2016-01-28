@@ -1,4 +1,4 @@
-class DriftState < ActiveRecord::Base
+class DriftState < ApplicationRecord
   include_concern 'Purging'
 
   belongs_to :resource, :polymorphic => true

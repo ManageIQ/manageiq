@@ -1,4 +1,4 @@
-class ContainerRoute < ActiveRecord::Base
+class ContainerRoute < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
 

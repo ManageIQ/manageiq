@@ -1,4 +1,4 @@
-class CloudVolume < ActiveRecord::Base
+class CloudVolume < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

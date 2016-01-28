@@ -1,4 +1,4 @@
-class Network < ActiveRecord::Base
+class Network < ApplicationRecord
   belongs_to :hardware
   belongs_to :guest_device, :foreign_key => "device_id", :inverse_of => :network
 

@@ -126,7 +126,7 @@ describe ProviderForemanController do
     end
 
     it "renders the edit page when the configuration manager id is selected from a grid/tile" do
-      post :edit, "check_#{ActiveRecord::Base.compress_id(@config_mgr.id)}" => "1"
+      post :edit, "check_#{ApplicationRecord.compress_id(@config_mgr.id)}" => "1"
       expect(response.status).to eq(200)
     end
   end
@@ -425,12 +425,12 @@ describe ProviderForemanController do
 
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "e-" + ActiveRecord::Base.compress_id(ems.id)
+    "e-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def config_profile_key(config_profile)
     cp = ConfigurationProfile.where(:id => config_profile.id).first
-    "cp-" + ActiveRecord::Base.compress_id(cp.id)
+    "cp-" + ApplicationRecord.compress_id(cp.id)
   end
 
   def ems_id_for_provider(provider)

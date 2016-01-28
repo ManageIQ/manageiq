@@ -1,4 +1,4 @@
-class ChargebackRateDetailMeasure < ActiveRecord::Base
+class ChargebackRateDetailMeasure < ApplicationRecord
   serialize :units, Array
   serialize :units_display, Array
   validates :name, :presence => true, :length => {:maximum => 100}

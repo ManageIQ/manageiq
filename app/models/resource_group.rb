@@ -1,2 +1,2 @@
-class ResourceGroup < ActiveRecord::Base
+class ResourceGroup < ApplicationRecord
 end

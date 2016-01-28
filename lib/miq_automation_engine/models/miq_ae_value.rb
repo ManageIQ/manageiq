@@ -1,4 +1,4 @@
-class MiqAeValue < ActiveRecord::Base
+class MiqAeValue < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
   belongs_to :ae_field,    :class_name => "MiqAeField",    :foreign_key => :field_id

@@ -4,7 +4,7 @@ require 'miq_storage_defs'
 require 'wbem'
 require 'net_app_manageability/types'
 
-class MiqCimInstance < ActiveRecord::Base
+class MiqCimInstance < ApplicationRecord
   has_many  :miq_cim_associations,
             :dependent    => :destroy
 

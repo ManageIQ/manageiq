@@ -1,4 +1,4 @@
-class MiqServer < ActiveRecord::Base
+class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
   include_concern 'ServerMonitor'
   include_concern 'ServerSmartProxy'

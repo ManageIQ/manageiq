@@ -1,4 +1,4 @@
-class CustomAttribute < ActiveRecord::Base
+class CustomAttribute < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   include ReportableMixin

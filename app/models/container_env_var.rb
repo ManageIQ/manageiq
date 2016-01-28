@@ -1,2 +1,2 @@
-class ContainerEnvVar < ActiveRecord::Base
+class ContainerEnvVar < ApplicationRecord
 end

@@ -12,7 +12,7 @@ require 'LinuxUtils'
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/ScanProfile")
 require 'HostScanProfiles'
 
-class Host < ActiveRecord::Base
+class Host < ApplicationRecord
   include NewWithTypeStiMixin
 
   VENDOR_TYPES = {

@@ -1,4 +1,4 @@
-class OntapVolumeDerivedMetric < ActiveRecord::Base
+class OntapVolumeDerivedMetric < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance

@@ -1,4 +1,4 @@
-class PxeImage < ActiveRecord::Base
+class PxeImage < ApplicationRecord
   belongs_to :pxe_image_type
   belongs_to :pxe_server
   belongs_to :pxe_menu

@@ -1,4 +1,4 @@
-class DatabaseBackup < ActiveRecord::Base
+class DatabaseBackup < ApplicationRecord
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
     'nfs' => 'Network File System'

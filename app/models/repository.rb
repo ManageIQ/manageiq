@@ -1,4 +1,4 @@
-class Repository < ActiveRecord::Base
+class Repository < ApplicationRecord
   belongs_to :storage
 
   validates_presence_of     :name, :relative_path

@@ -1,4 +1,4 @@
-class Lan < ActiveRecord::Base
+class Lan < ApplicationRecord
   belongs_to :switch
 
   has_many :guest_devices

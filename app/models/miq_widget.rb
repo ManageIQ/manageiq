@@ -2,7 +2,7 @@
 #
 require 'simple-rss'
 
-class MiqWidget < ActiveRecord::Base
+class MiqWidget < ApplicationRecord
   default_value_for :enabled, true
   default_value_for :read_only, false
 

@@ -1,4 +1,4 @@
-class ResourceAction < ActiveRecord::Base
+class ResourceAction < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :dialog
 

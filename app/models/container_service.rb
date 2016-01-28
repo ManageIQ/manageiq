@@ -1,4 +1,4 @@
-class ContainerService < ActiveRecord::Base
+class ContainerService < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
   # :name, :uid, :creation_timestamp, :resource_version, :namespace

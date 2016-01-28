@@ -1,4 +1,4 @@
-class NetworkRouter < ActiveRecord::Base
+class NetworkRouter < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

@@ -1,4 +1,4 @@
-class OsProcess < ActiveRecord::Base
+class OsProcess < ApplicationRecord
   belongs_to :operating_system
 
   include ReportableMixin

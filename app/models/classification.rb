@@ -1,4 +1,4 @@
-class Classification < ActiveRecord::Base
+class Classification < ApplicationRecord
   acts_as_tree
 
   belongs_to :tag

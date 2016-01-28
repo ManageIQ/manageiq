@@ -1,3 +1,3 @@
-class ContainerVolume < ActiveRecord::Base
+class ContainerVolume < ApplicationRecord
   belongs_to :parent, :polymorphic => true
 end

@@ -1,4 +1,4 @@
-class ConfigurationTag < ActiveRecord::Base
+class ConfigurationTag < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

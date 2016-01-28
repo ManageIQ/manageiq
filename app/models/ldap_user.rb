@@ -1,4 +1,4 @@
-class LdapUser < ActiveRecord::Base
+class LdapUser < ApplicationRecord
   belongs_to :ldap_domain
 
   has_many   :ldap_managements, :dependent => :destroy

@@ -1,7 +1,7 @@
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
 require 'LinuxUtils'
 
-class Filesystem < ActiveRecord::Base
+class Filesystem < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_set    # ScanItemSet
   belongs_to :scan_item

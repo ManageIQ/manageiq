@@ -1,5 +1,5 @@
 require 'digest/md5'
-class OrchestrationTemplate < ActiveRecord::Base
+class OrchestrationTemplate < ApplicationRecord
   TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
 
   include NewWithTypeStiMixin

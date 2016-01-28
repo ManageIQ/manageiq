@@ -1,4 +1,4 @@
-class EventLog < ActiveRecord::Base
+class EventLog < ApplicationRecord
   belongs_to :operating_system
 
   include ReportableMixin

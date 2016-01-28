@@ -1,4 +1,4 @@
-class ContainerGroup < ActiveRecord::Base
+class ContainerGroup < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
   include NewWithTypeStiMixin
