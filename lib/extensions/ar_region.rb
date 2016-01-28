@@ -22,7 +22,7 @@ module ArRegion
 
     def my_region_number(force_reload = false)
       clear_region_cache if force_reload
-      @@my_region_number ||= File.read(File.join(Rails.root, "REGION")).to_i rescue 0
+      @@my_region_number ||= discover_my_region_number
     end
 
     def rails_sequence_factor
@@ -118,6 +118,18 @@ module ArRegion
     # Partition the passed ids into local and remote sets
     def partition_ids_by_remote_region(ids)
       ids.partition { |id| self.id_in_current_region?(id) }
+    end
+
+    private
+
+    def discover_my_region_number
+      region_file = File.join(Rails.root, "REGION")
+      region_num = File.read(region_file) if File.exist?(region_file)
+      region_num ||= ENV.fetch("REGION", nil)
+      region_num ||= id_to_region(connection.select_value("select last_value from miq_databases_id_seq"))
+      region_num.to_i
+    rescue ActiveRecord::StatementInvalid # sequence does not exist yet
+      0
     end
   end
 
