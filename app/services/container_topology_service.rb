@@ -80,26 +80,22 @@ class ContainerTopologyService
           "Container" # the container entity itself
         end
       else
-        if name.eql? "Vm"
-          'VM'
+        if entity.kind_of?(Vm)
+          name.upcase # turn Vm to VM because it's an abbreviation
         else
-          name # non container entities such as Host, Vm
+          name # non container entities such as Host
         end
       end
     end
   end
 
   def entity_id(entity)
-    type = entity_type(entity)
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       id = entity.id.to_s
+    elsif entity.kind_of?(Host) || entity.kind_of?(Vm)
+      id = entity.uid_ems
     else
-      id = case type
-             when 'Vm', 'Host'
-               entity.uid_ems
-             else
-               entity.ems_ref
-           end
+      id = entity.ems_ref
     end
     id
   end
@@ -107,7 +103,6 @@ class ContainerTopologyService
   def build_entity_data(entity)
     type = entity_type(entity)
     status = entity_status(entity, type)
-
     data = {:id           => entity_id(entity),
             :name         => entity.name,
             :status       => status,
@@ -115,7 +110,7 @@ class ContainerTopologyService
             :display_kind => entity_display_type(entity),
             :miq_id       => entity.id}
 
-    if %w(Vm Host).include? type
+    if entity.kind_of?(Host) || entity.kind_of?(Vm)
       data.merge!(:provider => entity.ext_management_system.name)
     end
 
