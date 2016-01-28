@@ -173,3 +173,7 @@ kubernetes-topology-icon svg {
    color : #0099cc;
    cursor: pointer;
 }
+
+.container_topology label.checkbox-inline {
+    font-size:14px;
+}
