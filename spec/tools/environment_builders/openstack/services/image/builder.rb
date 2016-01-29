@@ -53,6 +53,18 @@ module Openstack
             # Uploading cirros images with redefined attributes
             @images << find_or_create(@service.images, cirros_image_data.merge(image))
           end
+
+          # Glance v2 way of uploading image data
+          @images.each do |image|
+            begin
+              image.upload_data(File.binread(cirros_image_data[:location]))
+              puts "Uploading data for image: #{image.name}"
+            rescue
+              puts "Data already uploaded for image: #{image.name}"
+            end
+          end
+
+          wait_for_images(@images)
         end
 
         def wait_for_images(images)
@@ -102,7 +114,6 @@ module Openstack
           AwesomeSpawn.run!("wget -O #{cirros_image_path} #{image_url}")
 
           @cirros_image_data = {
-            :size             => File.size(cirros_image_path),
             :disk_format      => 'qcow2',
             :container_format => 'bare',
             :location         => cirros_image_path

@@ -10,8 +10,8 @@ module Openstack
           [{
             :name => IMAGE_NAME
           }, {
-            :name      => "EmsRefreshSpec-Image-Private",
-            :is_public => false
+            :name       => "EmsRefreshSpec-Image-Private",
+            :visibility => 'private'
           }]
         end
 
