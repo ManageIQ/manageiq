@@ -918,7 +918,6 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        toggle_policy_profile
         update
         users
         wait_for_task

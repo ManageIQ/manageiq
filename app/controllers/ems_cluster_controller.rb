@@ -214,24 +214,6 @@ class EmsClusterController < ApplicationController
     end
   end
 
-  def toggle_policy_profile
-    if session[:policy_assignment_compressed].nil?
-      session[:policy_assignment_compressed] = false
-    else
-      session[:policy_assignment_compressed] = !session[:policy_assignment_compressed]
-    end
-    session[:policy_assignment_compressed] = !session[:policy_assignment_compressed]
-    @compressed = session[:policy_assignment_compressed]
-    protect_build_screen
-    protect_set_db_record
-
-    # FIXME: does this still work?
-    render :update do |page|                                # Use RJS to update the display
-      page.replace_html("view_buttons_div", :partial => "layouts/view_buttons")   # Replace the view buttons
-      page.replace_html("main_div", :partial => "layouts/protecting")   # Replace the main div area contents
-    end
-  end
-
   private ############################
 
   def hosts_subsets

@@ -809,15 +809,6 @@ module VmCommon
     end
   end
 
-  def toggle_policy_profile
-    session[:policy_profile_compressed] = !session[:policy_profile_compressed]
-    @compressed = session[:policy_profile_compressed]
-    render :update do |page|                                # Use RJS to update the display
-      page.replace_html("view_buttons_div", :partial => "layouts/view_buttons")   # Replace the view buttons
-      page.replace_html("main_div", :partial => "policies")   # Replace the main div area contents
-    end
-  end
-
   # Set right_size selected db records
   def right_size
     @record = Vm.find_by_id(params[:id])

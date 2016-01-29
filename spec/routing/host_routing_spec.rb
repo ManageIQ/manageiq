@@ -255,12 +255,6 @@ describe "routes for HostController" do
     end
   end
 
-  describe "#toggle_policy_profile" do
-    it "routes with POST" do
-      expect(post("/host/toggle_policy_profile")).to route_to("host#toggle_policy_profile")
-    end
-  end
-
   describe "#users" do
     it "routes with GET" do
       expect(get("/host/users")).to route_to("host#users")
