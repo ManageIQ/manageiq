@@ -5,6 +5,21 @@ RSpec.describe "Instances API" do
     Vmdb::Application
   end
 
+  def update_raw_power_state(state, *instances)
+    instances.each { |instance| instance.update_attributes!(:raw_power_state => state) }
+  end
+
+  let(:zone) { FactoryGirl.create(:zone, :name => "api_zone") }
+  let(:ems) { FactoryGirl.create(:ems_openstack_infra, :zone => zone) }
+  let(:host) { FactoryGirl.create(:host_openstack_infra) }
+  let(:instance) { FactoryGirl.create(:vm_openstack, :ems_id => ems.id, :host => host) }
+  let(:instance1) { FactoryGirl.create(:vm_openstack, :ems_id => ems.id, :host => host) }
+  let(:instance2) { FactoryGirl.create(:vm_openstack, :ems_id => ems.id, :host => host) }
+  let(:instance_url) { instances_url(instance.id) }
+  let(:instance1_url) { instances_url(instance1.id) }
+  let(:instance2_url) { instances_url(instance2.id) }
+  let(:invalid_instance_url) { instances_url(999_999) }
+  let(:instances_list) { [instance1_url, instance2_url] }
   before(:each) { init_api_spec_env }
 
   context "Instance index" do
@@ -21,17 +36,8 @@ RSpec.describe "Instances API" do
     end
   end
 
-  context "Instance terminate action" do
-    let(:instance) { FactoryGirl.create(:vm_openstack) }
-    let(:instance1) { FactoryGirl.create(:vm_openstack) }
-    let(:instance2) { FactoryGirl.create(:vm_openstack) }
-    let(:instance_url) { instances_url(instance.id) }
-    let(:instance1_url) { instances_url(instance1.id) }
-    let(:instance2_url) { instances_url(instance2.id) }
-    let(:invalid_instance_url) { instances_url(999_999) }
-    let(:instances_list) { [instance1_url, instance2_url] }
-
-    it "to an invalid instance" do
+  describe "instance terminate action" do
+    it "responds not found for an invalid instance" do
       api_basic_authorize action_identifier(:instances, :terminate)
 
       run_post(invalid_instance_url, gen_request(:terminate))
@@ -39,7 +45,7 @@ RSpec.describe "Instances API" do
       expect_resource_not_found
     end
 
-    it "to an invalid instance without appropriate role" do
+    it "responds forbidden for an invalid instance without appropriate role" do
       api_basic_authorize
 
       run_post(invalid_instance_url, gen_request(:terminate))
@@ -47,15 +53,19 @@ RSpec.describe "Instances API" do
       expect_request_forbidden
     end
 
-    it "to a single Instance" do
+    it "terminates a single valid Instance" do
       api_basic_authorize action_identifier(:instances, :terminate)
 
       run_post(instance_url, gen_request(:terminate))
 
-      expect_single_action_result(:success => true, :message => /#{instance.id}.* terminating/i, :href => :instance_url)
+      expect_single_action_result(
+        :success => true,
+        :message => /#{instance.id}.* terminating/i,
+        :href    => :instance_url
+      )
     end
 
-    it "to multiple Instances" do
+    it "terminates multiple valid Instances" do
       api_basic_authorize collection_action_identifier(:instances, :terminate)
 
       run_post(instances_url, gen_request(:terminate, [{"href" => instance1_url}, {"href" => instance2_url}]))
@@ -67,6 +77,50 @@ RSpec.describe "Instances API" do
         "message",
         [/#{instance1.id}.* terminating/i, /#{instance2.id}.* terminating/i]
       )
+    end
+  end
+
+  describe "instance stop action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :stop)
+
+      run_post(invalid_instance_url, gen_request(:stop))
+
+      expect_resource_not_found
+    end
+
+    it "stopping an invalid instance without appropriate role is forbidden" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:stop))
+
+      expect_request_forbidden
+    end
+
+    it "fails to stop a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :stop)
+      update_raw_power_state("poweredOff", instance)
+
+      run_post(instance_url, gen_request(:stop))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "stops a valid instance" do
+      api_basic_authorize action_identifier(:instances, :stop)
+
+      run_post(instance_url, gen_request(:stop))
+
+      expect_single_action_result(:success => true, :message => "stopping", :href => :instance_url, :task => true)
+    end
+
+    it "stops multiple valid instances" do
+      api_basic_authorize action_identifier(:instances, :stop)
+
+      run_post(instances_url, gen_request(:stop, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
     end
   end
 end
