@@ -324,6 +324,16 @@ class MiqWorker < ApplicationRecord
   def self.after_fork
     close_pg_sockets_inherited_from_parent
     DRb.stop_service
+    reopen_file_objects_inherited_from_parent
+  end
+
+  def self.reopen_file_objects_inherited_from_parent
+    ObjectSpace.each_object(File) do |file|
+      next if file.closed?
+
+      file.reopen(file.path, 'a+')
+      file.sync = true
+    end
   end
 
   # When we fork, the children inherits the parent's file descriptors
