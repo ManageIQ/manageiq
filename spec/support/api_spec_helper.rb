@@ -325,16 +325,12 @@ module ApiSpecHelper
 
   def expect_empty_query_result(collection)
     expect_request_success
-    expect(@result).to have_key("name")
-    expect(@result["name"]).to eq(collection.to_s)
-    expect(@result["resources"]).to be_empty
+    expect(@result).to include("name" => collection.to_s, "resources" => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
     expect_request_success
-    expect(@result).to have_key("name")
-    expect(@result["name"]).to eq(collection.to_s)
-    expect(@result["subcount"]).to eq(fetch_value(subcount))
+    expect(@result).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
     expect(@result["resources"].size).to eq(fetch_value(subcount))
     expect(@result["count"]).to eq(fetch_value(count)) if count.present?
   end
@@ -346,19 +342,9 @@ module ApiSpecHelper
 
   def expect_single_action_result(options = {})
     expect_request_success
-    if options.key?(:success)
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to eq(options[:success])
-    end
-    if options[:message]
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match(options[:message])
-    end
-    if options[:href]
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(fetch_value(options[:href]))
-    end
-
+    expect(@result).to include("success" => options[:success]) if options.key?(:success)
+    expect(@result).to include("message" => a_string_matching(options[:message])) if options[:message]
+    expect(@result).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
     expect_result_to_represent_task(@result) if options[:task]
   end
 
@@ -379,10 +365,12 @@ module ApiSpecHelper
     results = @result["results"]
     expect(results.size).to eq(tag_results.size)
     results.zip(tag_results) do |result, tag_result|
-      expect(result["success"]).to      eq(tag_result[:success])
-      expect(result["href"]).to         match(tag_result[:href])
-      expect(result["tag_category"]).to eq(tag_result[:tag_category])
-      expect(result["tag_name"]).to     eq(tag_result[:tag_name])
+      expect(result).to include(
+        "success"      => tag_result[:success],
+        "href"         => a_string_matching(tag_result[:href]),
+        "tag_category" => tag_result[:tag_category],
+        "tag_name"     => tag_result[:tag_name]
+      )
     end
   end
 end
