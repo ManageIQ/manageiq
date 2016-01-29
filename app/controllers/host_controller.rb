@@ -220,22 +220,6 @@ class HostController < ApplicationController
     show_association('guest_applications', 'Packages', 'guest_application', :guest_applications, GuestApplication)
   end
 
-  def toggle_policy_profile
-    if session[:policy_assignment_compressed].nil?
-      session[:policy_assignment_compressed] = false
-    else
-      session[:policy_assignment_compressed] = !session[:policy_assignment_compressed]
-    end
-    @compressed = session[:policy_assignment_compressed]
-    protect_build_screen
-    protect_set_db_record
-
-    render :update do |page|
-      # FIXME: do we need to refresh the view toolbar here?
-      page.replace_html("main_div", :partial => "layouts/protecting")   # Replace the main div area contents
-    end
-  end
-
   # Show the main Host list view
   def show_list
     session[:host_items] = nil
