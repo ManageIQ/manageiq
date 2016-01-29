@@ -6,12 +6,12 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def initialize(ems, options = nil)
-    @ems             = ems
-    @connection      = ems.connect
-    @cloud_formation = ems.cloud_formation
-    @data            = {}
-    @data_index      = {}
-    @known_flavors   = Set.new
+    @ems                 = ems
+    @aws_ec2             = ems.ec2
+    @aws_cloud_formation = ems.cloud_formation
+    @data                = {}
+    @data_index          = {}
+    @known_flavors       = Set.new
 
     @options    = options || {}
     # Default the collection of images unless explicitly declined
@@ -24,19 +24,17 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
     $aws_log.info("#{log_header}...")
-    AWS.memoize do
-      get_flavors
-      get_availability_zones
-      get_key_pairs
-      get_stacks
-      get_cloud_networks
-      get_security_groups
-      get_private_images if @options["get_private_images"]
-      get_shared_images  if @options["get_shared_images"]
-      get_public_images  if @options["get_public_images"]
-      get_instances
-      get_floating_ips
-    end
+    get_flavors
+    get_availability_zones
+    get_key_pairs
+    get_stacks
+    get_cloud_networks
+    get_security_groups
+    get_private_images if @options["get_private_images"]
+    get_shared_images  if @options["get_shared_images"]
+    get_public_images  if @options["get_public_images"]
+    get_instances
+    get_floating_ips
     $aws_log.info("#{log_header}...Complete")
 
     filter_unused_disabled_flavors
@@ -47,7 +45,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   private
 
   def security_groups
-    @security_groups ||= @connection.security_groups
+    @security_groups ||= @aws_ec2.security_groups
   end
 
   def get_flavors
@@ -55,22 +53,21 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_availability_zones
-    azs = @connection.availability_zones
+    azs = @aws_ec2.client.describe_availability_zones[:availability_zones]
     process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
   end
 
   def get_key_pairs
-    kps = @connection.key_pairs
+    kps = @aws_ec2.client.describe_key_pairs[:key_pairs]
     process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
   end
 
   def get_cloud_networks
-    vpcs = @connection.vpcs
+    vpcs = @aws_ec2.client.describe_vpcs[:vpcs]
     process_collection(vpcs, :cloud_networks) { |vpc| parse_cloud_network(vpc) }
   end
 
-  def get_cloud_subnets(vpc)
-    subnets = vpc.subnets
+  def get_cloud_subnets(subnets)
     process_collection(subnets, :cloud_subnets) { |s| parse_cloud_subnet(s) }
   end
 
@@ -81,38 +78,46 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def get_firewall_rules
     security_groups.each do |sg|
-      new_sg = @data_index.fetch_path(:security_groups, sg.id)
+      new_sg = @data_index.fetch_path(:security_groups, sg.group_id)
       new_sg[:firewall_rules] = get_inbound_firewall_rules(sg) + get_outbound_firewall_rules(sg)
     end
   end
 
   def get_inbound_firewall_rules(sg)
-    sg.ip_permissions_list.collect { |perm| parse_firewall_rule(perm, "inbound") }.flatten
+    sg.ip_permissions.collect { |perm| parse_firewall_rule(perm, "inbound") }.flatten
   end
 
   def get_outbound_firewall_rules(sg)
-    sg.ip_permissions_list_egress.collect { |perm| parse_firewall_rule(perm, "outbound") }.flatten
+    sg.ip_permissions_egress.collect { |perm| parse_firewall_rule(perm, "outbound") }.flatten
   end
 
   def get_private_images
-    get_images(@connection.images.with_owner(:self))
+    get_images(
+      @aws_ec2.client.describe_images(:owners  => [:self],
+                                      :filters => [{:name   => "image-type",
+                                                    :values => ["machine"]}])[:images])
   end
 
   def get_shared_images
-    get_images(@connection.images.executable_by(:self))
+    get_images(
+      @aws_ec2.client.describe_images(:executable_users => [:self],
+                                      :filters          => [{:name   => "image-type",
+                                                             :values => ["machine"]}])[:images])
   end
 
   def get_public_images
-    get_images(@connection.images.executable_by(:all), true)
+    get_images(
+      @aws_ec2.client.describe_images(:executable_users => [:all],
+                                      :filters          => [{:name   => "image-type",
+                                                             :values => ["machine"]}])[:images], true)
   end
 
-  def get_images(image_collection, is_public = false)
-    images = image_collection.filter("image-type", "machine")
+  def get_images(images, is_public = false)
     process_collection(images, :vms) { |image| parse_image(image, is_public) }
   end
 
   def get_stacks
-    stacks = @cloud_formation.stacks
+    stacks = @aws_cloud_formation.stacks
     process_collection(stacks, :orchestration_stacks) { |stack| parse_stack(stack) }
     update_nested_stack_relations
   end
@@ -138,12 +143,12 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_instances
-    instances = @connection.instances
+    instances = @aws_ec2.instances
     process_collection(instances, :vms) { |instance| parse_instance(instance) }
   end
 
   def get_floating_ips
-    ips = @connection.elastic_ips
+    ips = @aws_ec2.client.describe_addresses.addresses
     process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
   end
 
@@ -187,7 +192,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def parse_availability_zone(az)
-    name = uid = az.name
+    name = uid = az.zone_name
 
     # power_state = (az.state == :available) ? "on" : "off",
 
@@ -200,20 +205,33 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     return uid, new_result
   end
 
+  def parse_key_pair(kp)
+    name = uid = kp.key_name
+
+    new_result = {
+      :type        => self.class.key_pair_type,
+      :name        => name,
+      :fingerprint => kp.key_fingerprint
+    }
+
+    return uid, new_result
+  end
+
   def self.key_pair_type
     ManageIQ::Providers::Amazon::CloudManager::AuthKeyPair.name
   end
 
   def parse_cloud_network(vpc)
-    uid    = vpc.id
+    uid    = vpc.vpc_id
 
-    name   = get_name_from_tags(vpc)
+    name   = get_from_tags(vpc, :name)
     name ||= uid
 
     status  = (vpc.state == :available) ? "active" : "inactive"
 
-    get_cloud_subnets(vpc)
-    cloud_subnets = vpc.subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id) }
+    subnets = @aws_ec2.client.describe_subnets(:filters => [{:name => "vpc-id", :values => [vpc.vpc_id]}])[:subnets]
+    get_cloud_subnets(subnets)
+    cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.subnet_id) }
 
     new_result = {
       :ems_ref             => uid,
@@ -222,16 +240,17 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :status              => status,
       :enabled             => true,
 
-      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, vpc.tags["aws:cloudformation:stack-id"]),
+      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
+                                                     get_from_tags(vpc, "aws:cloudformation:stack-id")),
       :cloud_subnets       => cloud_subnets,
     }
     return uid, new_result
   end
 
   def parse_cloud_subnet(subnet)
-    uid    = subnet.id
+    uid    = subnet.subnet_id
 
-    name   = get_name_from_tags(subnet)
+    name   = get_from_tags(subnet, :name)
     name ||= uid
 
     new_result = {
@@ -239,8 +258,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :name              => name,
       :cidr              => subnet.cidr_block,
       :status            => subnet.state.try(:to_s),
-
-      :availability_zone => @data_index.fetch_path(:availability_zones, subnet.availability_zone_name)
+      :availability_zone => @data_index.fetch_path(:availability_zones, subnet.availability_zone)
     }
 
     return uid, new_result
@@ -251,11 +269,17 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def parse_security_group(sg)
-    uid, new_result = super
+    uid = sg.group_id
 
-    new_result[:cloud_network]       = @data_index.fetch_path(:cloud_networks, sg.vpc_id)
-    new_result[:orchestration_stack] = @data_index.fetch_path(:orchestration_stacks, sg.tags["aws:cloudformation:stack-id"])
-
+    new_result = {
+      :type                => self.class.security_group_type,
+      :ems_ref             => uid,
+      :name                => sg.group_name,
+      :description         => sg.description.try(:truncate, 255),
+      :cloud_network       => @data_index.fetch_path(:cloud_networks, sg.vpc_id),
+      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
+                                                     get_from_tags(sg, "aws:cloudformation:stack-id")),
+    }
     return uid, new_result
   end
 
@@ -266,19 +290,19 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
     common = {
       :direction     => direction,
-      :host_protocol => perm[:ip_protocol].to_s.upcase,
-      :port          => perm[:from_port],
-      :end_port      => perm[:to_port],
+      :host_protocol => perm.ip_protocol.to_s.upcase,
+      :port          => perm.from_port,
+      :end_port      => perm.to_port,
     }
 
-    perm[:groups].each do |g|
+    perm.user_id_group_pairs.each do |g|
       new_result = common.dup
-      new_result[:source_security_group] = @data_index.fetch_path(:security_groups, g[:group_id])
+      new_result[:source_security_group] = @data_index.fetch_path(:security_groups, g.group_id)
       ret << new_result
     end
-    perm[:ip_ranges].each do |r|
+    perm.ip_ranges.each do |r|
       new_result = common.dup
-      new_result[:source_ip_range] = r[:cidr_ip]
+      new_result[:source_ip_range] = r.cidr_ip
       ret << new_result
     end
 
@@ -286,11 +310,11 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def parse_image(image, is_public)
-    uid      = image.id
-    location = image.location
+    uid      = image.image_id
+    location = image.image_location
     guest_os = (image.platform == "windows") ? "windows" : "linux"
 
-    name     = get_name_from_tags(image)
+    name     = get_from_tags(image, :name)
     name ||= image.name
     name ||= $1 if location =~ /^(.+?)(\.(image|img))?\.manifest\.xml$/
     name ||= uid
@@ -310,7 +334,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
       :hardware           => {
         :guest_os            => guest_os,
-        :bitness             => ARCHITECTURE_TO_BITNESS[image.architecture],
+        :bitness             => architecture_to_bitness(image.architecture),
         :virtualization_type => image.virtualization_type,
         :root_device_type    => image.root_device_type,
       },
@@ -320,11 +344,11 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def parse_instance(instance)
-    status = instance.status
-    return if @options["ignore_terminated_instances"] && status == :terminated
+    status = instance.state.name
+    return if @options["ignore_terminated_instances"] && status.to_sym == :terminated
 
     uid    = instance.id
-    name   = get_name_from_tags(instance)
+    name   = get_from_tags(instance, :name)
     name ||= uid
 
     flavor_uid = instance.instance_type
@@ -333,13 +357,13 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
              @data_index.fetch_path(:flavors, "unknown")
 
     private_network = {
-      :ipaddress => instance.private_ip_address,
-      :hostname  => instance.private_dns_name
+      :ipaddress => instance.private_ip_address.presence,
+      :hostname  => instance.private_dns_name.presence
     }.delete_nils
 
     public_network = {
-      :ipaddress => instance.public_ip_address,
-      :hostname  => instance.public_dns_name
+      :ipaddress => instance.public_ip_address.presence,
+      :hostname  => instance.public_dns_name.presence
     }.delete_nils
 
     parent_image = @data_index.fetch_path(:vms, instance.image_id)
@@ -354,10 +378,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :ems_ref             => uid,
       :name                => name,
       :vendor              => "amazon",
-      :raw_power_state     => status.to_s,
+      :raw_power_state     => status,
 
       :hardware            => {
-        :bitness              => ARCHITECTURE_TO_BITNESS[instance.architecture],
+        :bitness              => architecture_to_bitness(instance.architecture),
         :virtualization_type  => virtualization_type,
         :root_device_type     => root_device_type,
         :cpu_sockets          => flavor[:cpus],
@@ -369,13 +393,16 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
         :networks             => [], # Filled in later conditionally on what's available
       },
 
-      :availability_zone   => @data_index.fetch_path(:availability_zones, instance.availability_zone),
+      :availability_zone   => @data_index.fetch_path(:availability_zones, instance.placement.availability_zone),
       :flavor              => flavor,
       :cloud_network       => @data_index.fetch_path(:cloud_networks, instance.vpc_id),
       :cloud_subnet        => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
       :key_pairs           => [@data_index.fetch_path(:key_pairs, instance.key_name)].compact,
-      :security_groups     => instance.security_groups.to_a.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
-      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, instance.tags["aws:cloudformation:stack-id"]),
+      :security_groups     => instance.security_groups.to_a.collect do |sg|
+        @data_index.fetch_path(:security_groups, sg.group_id)
+      end.compact,
+      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
+                                                     get_from_tags(instance, "aws:cloudformation:stack-id")),
     }
     new_result[:location] = public_network[:hostname] if public_network[:hostname]
     new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
@@ -410,7 +437,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :type               => ManageIQ::Providers::Amazon::CloudManager::FloatingIp.name,
       :ems_ref            => uid,
       :address            => address,
-      :cloud_network_only => ip.vpc?,
+      :cloud_network_only => ip.domain["vpc"] ? true : false,
 
       :vm                 => associated_vm
     }
@@ -426,8 +453,8 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :ems_ref                => uid,
       :name                   => stack.name,
       :description            => stack.description,
-      :status                 => stack.status,
-      :status_reason          => stack.status_reason,
+      :status                 => stack.stack_status,
+      :status_reason          => stack.stack_status_reason,
       :children               => child_stacks,
       :resources              => resources,
       :outputs                => find_stack_outputs(stack),
@@ -444,7 +471,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def find_stack_parameters(stack)
-    raw_parameters = stack.parameters
+    raw_parameters = stack.parameters.each_with_object({}) { |sp, hash| hash[sp.parameter_key] = sp.parameter_value }
     get_stack_parameters(stack.stack_id, raw_parameters)
     raw_parameters.collect do |parameter|
       @data_index.fetch_path(:orchestration_stack_parameters, compose_ems_ref(stack.stack_id, parameter[0]))
@@ -455,23 +482,22 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     raw_outputs = stack.outputs
     get_stack_outputs(stack.stack_id, raw_outputs)
     raw_outputs.collect do |output|
-      @data_index.fetch_path(:orchestration_stack_outputs, compose_ems_ref(stack.stack_id, output.key))
+      @data_index.fetch_path(:orchestration_stack_outputs, compose_ems_ref(stack.stack_id, output.output_key))
     end
   end
 
   def find_stack_resources(stack)
-    # convert the AWS Resource Summary collection to an array to avoid the same API getting called twice
-    raw_resources = stack.resource_summaries.to_a
+    raw_resources = stack.resource_summaries.entries
 
     # physical_resource_id can be empty if the resource was not successfully created; ignore such
-    raw_resources.reject! { |r| r[:physical_resource_id].nil? }
+    raw_resources.reject! { |r| r.physical_resource_id.nil? }
 
     get_stack_resources(raw_resources)
 
     child_stacks = []
     resources = raw_resources.collect do |resource|
-      physical_id = resource[:physical_resource_id]
-      child_stacks << physical_id if resource[:resource_type] == "AWS::CloudFormation::Stack"
+      physical_id = resource.physical_resource_id
+      child_stacks << physical_id if resource.resource_type == "AWS::CloudFormation::Stack"
       @data_index.fetch_path(:orchestration_stack_resources, physical_id)
     end
 
@@ -485,7 +511,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :type        => "OrchestrationTemplateCfn",
       :name        => stack.name,
       :description => stack.description,
-      :content     => stack.template,
+      :content     => stack.client.get_template(:stack_name => stack.name).template_body,
     }
     return uid, new_result
   end
@@ -501,27 +527,27 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def parse_stack_output(output, stack_id)
-    uid = compose_ems_ref(stack_id, output.key)
+    uid = compose_ems_ref(stack_id, output.output_key)
     new_result = {
       :ems_ref     => uid,
-      :key         => output.key,
-      :value       => output.value,
+      :key         => output.output_key,
+      :value       => output.output_value,
       :description => output.description
     }
     return uid, new_result
   end
 
   def parse_stack_resource(resource)
-    uid = resource[:physical_resource_id]
+    uid = resource.physical_resource_id
     new_result = {
       :ems_ref                => uid,
-      :name                   => resource[:logical_resource_id],
-      :logical_resource       => resource[:logical_resource_id],
+      :name                   => resource.logical_resource_id,
+      :logical_resource       => resource.logical_resource_id,
       :physical_resource      => uid,
-      :resource_category      => resource[:resource_type],
-      :resource_status        => resource[:resource_status],
-      :resource_status_reason => resource[:resource_status_reason],
-      :last_updated           => resource[:last_updated_timestamp]
+      :resource_category      => resource.resource_type,
+      :resource_status        => resource.resource_status,
+      :resource_status_reason => resource.resource_status_reason,
+      :last_updated           => resource.last_updated_timestamp
     }
     return uid, new_result
   end
@@ -529,11 +555,14 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   #
   # Helper methods
   #
-
   ARCHITECTURE_TO_BITNESS = {
     :i386   => 32,
     :x86_64 => 64,
   }.freeze
+
+  def architecture_to_bitness(arch)
+    ARCHITECTURE_TO_BITNESS[arch.to_sym]
+  end
 
   # Remap from children to parent
   def update_nested_stack_relations
@@ -546,8 +575,8 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     end
   end
 
-  def get_name_from_tags(resource)
-    resource.tags.detect { |k, _| k.downcase == "name" }.try(:last)
+  def get_from_tags(resource, item)
+    resource.tags.detect { |tag, _| tag.key.downcase == item.to_s.downcase }.try(:value)
   end
 
   def add_instance_disk(disks, size, name, location)

@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   before(:each) do
-    guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_amazon, :zone => zone)
     @ems.update_authentication(:default => {:userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"})
   end
@@ -10,7 +10,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   it "will perform a full refresh" do
-    2.times do  # Run twice to verify that a second run with existing data does not change anything
+    2.times do # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
 
       VCR.use_cassette(described_class.name.underscore) do
@@ -45,25 +45,25 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(Flavor.count).to eq(55)
     expect(AvailabilityZone.count).to eq(5)
     expect(FloatingIp.count).to eq(5)
-    expect(AuthPrivateKey.count).to eq(7)
-    expect(CloudNetwork.count).to eq(3)
-    expect(CloudSubnet.count).to eq(4)
+    expect(AuthPrivateKey.count).to eq(11)
+    expect(CloudNetwork.count).to eq(4)
+    expect(CloudSubnet.count).to eq(6)
     expect(OrchestrationTemplate.count).to eq(2)
     expect(OrchestrationStack.count).to eq(2)
     expect(OrchestrationStackParameter.count).to eq(5)
     expect(OrchestrationStackOutput.count).to eq(1)
     expect(OrchestrationStackResource.count).to eq(24)
-    expect(SecurityGroup.count).to eq(13)
-    expect(FirewallRule.count).to eq(43)
+    expect(SecurityGroup.count).to eq(33)
+    expect(FirewallRule.count).to eq(88)
     expect(VmOrTemplate.count).to eq(46)
-    expect(Vm.count).to eq(27)
-    expect(MiqTemplate.count).to eq(19)
+    expect(Vm.count).to eq(26)
+    expect(MiqTemplate.count).to eq(20)
 
     expect(CustomAttribute.count).to eq(0)
     expect(Disk.count).to eq(14)
     expect(GuestDevice.count).to eq(0)
     expect(Hardware.count).to eq(46)
-    expect(Network.count).to eq(15)
+    expect(Network.count).to eq(13)
     expect(OperatingSystem.count).to eq(0) # TODO: Should this be 13 (set on all vms)?
     expect(Snapshot.count).to eq(0)
     expect(SystemService.count).to eq(0)
@@ -81,12 +81,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(@ems.flavors.size).to eq(55)
     expect(@ems.availability_zones.size).to eq(5)
     expect(@ems.floating_ips.size).to eq(5)
-    expect(@ems.key_pairs.size).to eq(7)
-    expect(@ems.cloud_networks.size).to eq(3)
-    expect(@ems.security_groups.size).to eq(13)
+    expect(@ems.key_pairs.size).to eq(11)
+    expect(@ems.cloud_networks.size).to eq(4)
+    expect(@ems.security_groups.size).to eq(33)
     expect(@ems.vms_and_templates.size).to eq(46)
-    expect(@ems.vms.size).to eq(27)
-    expect(@ems.miq_templates.size).to eq(19)
+    expect(@ems.vms.size).to eq(26)
+    expect(@ems.miq_templates.size).to eq(20)
     expect(@ems.orchestration_stacks.size).to eq(2)
 
     expect(@ems.direct_orchestration_stacks.size).to eq(1)
@@ -114,9 +114,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_az
-    @az = ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-east-1b").first
+    @az = ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-east-1e").first
     expect(@az).to have_attributes(
-      :name => "us-east-1b",
+      :name => "us-east-1e",
     )
   end
 
@@ -152,7 +152,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :name    => "EmsRefreshSpec-VPC",
       :ems_ref => "vpc-ff49ff91",
       :cidr    => "10.0.0.0/16",
-      :status  => "active",
+      :status  => "inactive",
       :enabled => true
     )
 
@@ -177,11 +177,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_security_group
-    @sg = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup").first
+    @sg = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup1").first
     expect(@sg).to have_attributes(
-      :name        => "EmsRefreshSpec-SecurityGroup",
-      :description => "EmsRefreshSpec-SecurityGroup",
-      :ems_ref     => "sg-88af19e3"
+      :name        => "EmsRefreshSpec-SecurityGroup1",
+      :description => "EmsRefreshSpec-SecurityGroup1",
+      :ems_ref     => "sg-038e8a69"
     )
 
     expected_firewall_rules = [
@@ -228,7 +228,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :uid_ems               => "ami-5769193e",
       :vendor                => "Amazon",
       :power_state           => "never",
-      :location              => "123456789012/EmsRefreshSpec-Image",
+      :location              => "200278856672/EmsRefreshSpec-Image",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -271,17 +271,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_shared_template
-    t = ManageIQ::Providers::Amazon::CloudManager::Template.where(:ems_ref => "ami-5e094837").first # TODO: Share an EmsRefreshSpec specific template
+    # TODO: Share an EmsRefreshSpec specific template
+    t = ManageIQ::Providers::Amazon::CloudManager::Template.where(:ems_ref => "ami-5769193e").first
     expect(t).not_to be_nil
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn-Basic", :raw_power_state => "running").first
+    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(
+      :name            => "EmsRefreshSpec-PoweredOn-Basic3",
+      :raw_power_state => "running").first
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "i-7ab3c301",
+      :ems_ref               => "i-680071e9",
       :ems_ref_obj           => nil,
-      :uid_ems               => "i-7ab3c301",
+      :uid_ems               => "i-680071e9",
       :vendor                => "Amazon",
       :power_state           => "on",
       :location              => "ec2-54-221-202-53.compute-1.amazonaws.com",
@@ -307,12 +310,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.floating_ip).to eq(@ip)
     expect(v.flavor).to eq(@flavor)
     expect(v.key_pairs).to eq([@kp])
-    expect(v.cloud_network).to          be_nil
-    expect(v.cloud_subnet).to           be_nil
+    expect(v.cloud_network).to     be_nil
+    expect(v.cloud_subnet).to      be_nil
     sg_2 = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup
            .where(:name => "EmsRefreshSpec-SecurityGroup2").first
     expect(v.security_groups)
-      .to match_array [@sg, sg_2]
+      .to match_array [sg_2, @sg]
 
     expect(v.operating_system).to       be_nil # TODO: This should probably not be nil
     expect(v.custom_attributes.size).to eq(0)
@@ -344,8 +347,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "private").first
     expect(network).to have_attributes(
       :description => "private",
-      :ipaddress   => "10.46.222.159",
-      :hostname    => "ip-10-46-222-159.ec2.internal"
+      :ipaddress   => "10.171.22.55",
+      :hostname    => "ip-10-171-22-55.ec2.internal"
     )
 
     v.with_relationship_type("genealogy") do
@@ -354,12 +357,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOff", :raw_power_state => "stopped").first
+    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(
+      :name            => "EmsRefreshSpec-PoweredOff",
+      :raw_power_state => "stopped").first
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "i-79188d11",
+      :ems_ref               => "i-6eeb97ef",
       :ems_ref_obj           => nil,
-      :uid_ems               => "i-79188d11",
+      :uid_ems               => "i-6eeb97ef",
       :vendor                => "Amazon",
       :power_state           => "off",
       :location              => "unknown",
@@ -382,7 +387,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
     expect(v.ext_management_system).to eq(@ems)
     expect(v.availability_zone)
-      .to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.find_by_name("us-east-1d"))
+      .to eq(ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.find_by_name("us-east-1e"))
     expect(v.floating_ip).to be_nil
     expect(v.key_pairs).to eq([@kp])
     expect(v.cloud_network).to be_nil
@@ -393,14 +398,34 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.snapshots.size).to eq(0)
 
     expect(v.hardware).to have_attributes(
-      :guest_os           => "linux",
-      :guest_os_full_name => nil,
-      :bios               => nil,
-      :annotation         => nil,
-      :cpu_sockets        => 1,
-      :memory_mb          => 613,
-      :disk_capacity      => 0, # TODO: Change to a flavor that has disks
-      :bitness            => 64
+      :config_version       => nil,
+      :virtual_hw_version   => nil,
+      :guest_os             => "linux",
+      :cpu_sockets          => 1,
+      :bios                 => nil,
+      :bios_location        => nil,
+      :time_sync            => nil,
+      :annotation           => nil,
+      :memory_mb            => 613,
+      :host_id              => nil,
+      :cpu_speed            => nil,
+      :cpu_type             => nil,
+      :size_on_disk         => nil,
+      :manufacturer         => "",
+      :model                => "",
+      :number_of_nics       => nil,
+      :cpu_usage            => nil,
+      :memory_usage         => nil,
+      :cpu_cores_per_socket => 1,
+      :cpu_total_cores      => 1,
+      :vmotion_enabled      => nil,
+      :disk_free_space      => nil,
+      :disk_capacity        => 0,
+      :guest_os_full_name   => nil,
+      :memory_console       => nil,
+      :bitness              => 64,
+      :virtualization_type  => "paravirtual",
+      :root_device_type     => "ebs",
     )
 
     expect(v.hardware.disks.size).to eq(0) # TODO: Change to a flavor that has disks
@@ -446,23 +471,22 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_orchestration_template
-    @orch_template = OrchestrationTemplateCfn.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
-    expect(@orch_template).to have_attributes(
-      :md5 => "e929859521d64ac28ee29f8526d33e8f",
-    )
+    @orch_template = OrchestrationTemplateCfn.where(:md5 => "e929859521d64ac28ee29f8526d33e8f").first
     expect(@orch_template.description).to start_with("AWS CloudFormation Sample Template WordPress_Simple:")
     expect(@orch_template.content).to start_with("{\n  \"AWSTemplateFormatVersion\" : \"2010-09-09\",")
   end
 
   def assert_specific_orchestration_stack
-    stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(:name => "cloudformation-spec").first
+    stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(
+      :name => "EmsRefreshSpec-JoeV-050").first
     expect(stack.status_reason)
-      .to eq("The following resource(s) failed to create: [IPAddress, WebServerWaitCondition]. ")
+      .to eq("The following resource(s) failed to create: [WebServerWaitCondition, IPAddress]. ")
 
-    @orch_stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
+    @orch_stack = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.where(
+      :name => "EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I").first
     expect(@orch_stack).to have_attributes(
       :status  => "CREATE_COMPLETE",
-      :ems_ref => "arn:aws:cloudformation:us-east-1:123456789012:stack/cloudformation-spec-WebServerInstance-QS899ZNAHZU6/1dedba70-5322-11e4-b33b-50e241629418",
+      :ems_ref => "arn:aws:cloudformation:us-east-1:200278856672:stack/EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I/bff036f0-ba27-11e5-b4be-500c5242948e",
     )
     expect(@orch_stack.description).to start_with("AWS CloudFormation Sample Template WordPress_Simple:")
 
@@ -491,7 +515,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(resources[3]).to have_attributes(
       :name                   => "WebServer",
       :logical_resource       => "WebServer",
-      :physical_resource      => "i-b98fdd57",
+      :physical_resource      => "i-7c3c64fd",
       :resource_category      => "AWS::EC2::Instance",
       :resource_status        => "CREATE_COMPLETE",
       :resource_status_reason => nil,
@@ -503,7 +527,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(outputs.size).to eq(1)
     expect(outputs[0]).to have_attributes(
       :key         => "WebsiteURL",
-      :value       => "http://ec2-54-205-248-16.compute-1.amazonaws.com/wordpress",
+      :value       => "http://ec2-54-205-48-36.compute-1.amazonaws.com/wordpress",
       :description => "WordPress Website"
     )
   end
@@ -516,19 +540,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(@orch_stack.orchestration_template).to eq(@orch_template)
 
     # orchestration stack can be nested
-    parent_stack = OrchestrationStack.where(:name => "cloudformation-spec").first
+    parent_stack = OrchestrationStack.where(:name => "EmsRefreshSpec-JoeV-050").first
     expect(@orch_stack.parent).to eq(parent_stack)
 
     # orchestration stack can have vms
-    vm = Vm.where(:name => "i-b98fdd57").first
+    vm = Vm.where(:name => "i-7c3c64fd").first
     expect(vm.orchestration_stack).to eq(@orch_stack)
 
     # orchestration stack can have security groups
-    sg = SecurityGroup.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6-WebServerSecurityGroup-F458PFAVKR11").first
+    sg = SecurityGroup.where(
+      :name => "EmsRefreshSpec-JoeV-050-WebServerInstance-1KRT71SKWBZ1I-WebServerSecurityGroup-13RL8S2C6ZWI1").first
     expect(sg.orchestration_stack).to eq(@orch_stack)
 
     # orchestration stack can have cloud networks
-    vpc = CloudNetwork.where(:name => "vpc-5b6fe83e").first
+    vpc = CloudNetwork.where(:name => "vpc-d7b4c7b3").first
     expect(vpc.orchestration_stack).to eq(parent_stack)
   end
 

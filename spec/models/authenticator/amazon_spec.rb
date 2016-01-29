@@ -1,4 +1,4 @@
-require "aws-sdk"
+require "aws-sdk-v1"
 
 describe Authenticator::Amazon do
   subject { Authenticator::Amazon.new(config) }

@@ -181,17 +181,19 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     end
 
     it "handles SignatureDoesNotMatch" do
-      allow(@ems).to receive(:with_provider_connection).and_raise(AWS::EC2::Errors::SignatureDoesNotMatch)
+      exception = Aws::EC2::Errors::SignatureDoesNotMatch.new(:no_context, :no_message)
+      allow(@ems).to receive(:with_provider_connection).and_raise(exception)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Signature.*match/)
     end
 
     it "handles AuthFailure" do
-      allow(@ems).to receive(:with_provider_connection).and_raise(AWS::EC2::Errors::AuthFailure)
+      exception = Aws::EC2::Errors::AuthFailure.new(:no_context, :no_message)
+      allow(@ems).to receive(:with_provider_connection).and_raise(exception)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Login failed/)
     end
 
     it "handles MissingCredentialsErrror" do
-      allow(@ems).to receive(:with_provider_connection).and_raise(AWS::Errors::MissingCredentialsError)
+      allow(@ems).to receive(:with_provider_connection).and_raise(Aws::Errors::MissingCredentialsError)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Missing credentials/i)
     end
   end

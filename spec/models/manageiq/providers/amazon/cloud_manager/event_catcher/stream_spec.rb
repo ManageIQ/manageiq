@@ -1,4 +1,4 @@
-require "aws-sdk"
+require "aws-sdk-v1"
 
 describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
   before do

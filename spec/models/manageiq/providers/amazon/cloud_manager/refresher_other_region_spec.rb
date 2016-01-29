@@ -2,7 +2,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_amazon, :provider_region => "us-west-1", :zone => zone)
-    @ems.update_authentication(:default => {:userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"})
+    @ems.update_authentication(:default => {
+                                 :userid   => "0123456789ABCDEFGHIJ",
+                                 :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"
+                               })
   end
 
   it "will perform a full refresh on another region" do
@@ -140,7 +143,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :uid_ems               => "ami-183e175d",
       :vendor                => "Amazon",
       :power_state           => "never",
-      :location              => "123456789012/EmsRefreshSpec-Image-OtherRegion",
+      :location              => "200278856672/EmsRefreshSpec-Image-OtherRegion",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,

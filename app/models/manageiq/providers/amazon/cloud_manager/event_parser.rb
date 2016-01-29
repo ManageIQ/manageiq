@@ -22,7 +22,7 @@ module ManageIQ::Providers::Amazon::CloudManager::EventParser
   def self.parse_vm_ref(event)
     resource_type = event["configurationItem"]["resourceType"]
     # other ways to find the VM?
-    event.fetch_path("configurationItem", "resourceId") if resource_type == "AWS::EC2::Instance"
+    event.fetch_path("configurationItem", "resourceId") if resource_type == "Aws::EC2::Instance"
   end
 
   def self.parse_availability_zone_ref(event)

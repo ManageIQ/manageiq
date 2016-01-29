@@ -54,7 +54,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     service ||= "EC2"
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
-    require 'aws-sdk'
+    require 'aws-sdk-v1'
     AWS.const_get(service).new(
       :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
@@ -64,6 +64,22 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
       :logger            => $aws_log,
       :log_level         => :debug,
       :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
+    )
+  end
+
+  def self.raw_connect_v2(access_key_id, secret_access_key, service, region, proxy_uri = nil)
+    service ||= "EC2"
+    proxy_uri ||= VMDB::Util.http_proxy_uri
+
+    require 'aws-sdk'
+    Aws.const_get(service)::Resource.new(
+      :access_key_id     => access_key_id,
+      :secret_access_key => secret_access_key,
+      :region            => region,
+      :http_proxy        => proxy_uri,
+      :logger            => $aws_log,
+      :log_level         => :debug,
+      :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp)
     )
   end
 
@@ -77,16 +93,22 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
 
-    self.class.raw_connect(username, password, options[:service], provider_region, options[:proxy_uri])
+    if options[:sdk_v2]
+      self.class.raw_connect_v2(username, password, options[:service],
+                                provider_region, options[:proxy_uri])
+    else
+      self.class.raw_connect(username, password, options[:service],
+                             provider_region, options[:proxy_uri])
+    end
   end
 
   def translate_exception(err)
     case err
-    when AWS::EC2::Errors::SignatureDoesNotMatch
+    when Aws::EC2::Errors::SignatureDoesNotMatch
       MiqException::MiqHostError.new "SignatureMismatch - check your AWS Secret Access Key and signing method"
-    when AWS::EC2::Errors::AuthFailure
+    when Aws::EC2::Errors::AuthFailure
       MiqException::MiqHostError.new "Login failed due to a bad username or password."
-    when AWS::Errors::MissingCredentialsError
+    when Aws::Errors::MissingCredentialsError
       MiqException::MiqHostError.new "Missing credentials"
     else
       MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
@@ -98,7 +120,9 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
-      with_provider_connection(options.merge(:auth_type => auth_type)) { |ec2| ec2.regions.map(&:name) }
+      with_provider_connection(options.merge(:auth_type => auth_type, :sdk_v2 => true)) do |ec2|
+        ec2.client.describe_regions.regions.map(&:region_name)
+      end
     rescue => err
       miq_exception = translate_exception(err)
       raise unless miq_exception
@@ -111,7 +135,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   def ec2
-    @ec2 ||= connect(:service => "EC2")
+    @ec2 ||= connect(:service => "EC2", :sdk_v2 => true)
   end
 
   def s3
@@ -123,7 +147,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   def cloud_formation
-    @cloud_formation ||= connect(:service => "CloudFormation")
+    @cloud_formation ||= connect(:service => "CloudFormation", :sdk_v2 => true)
   end
 
   #

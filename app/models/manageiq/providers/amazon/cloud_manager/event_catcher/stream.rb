@@ -164,7 +164,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def aws_connect(service)
-    require 'aws-sdk'
+    require 'aws-sdk-v1'
 
     AWS.const_get(service).new(
       :access_key_id     => @aws_access_key_id,
