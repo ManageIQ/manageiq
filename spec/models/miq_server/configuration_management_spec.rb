@@ -1,41 +1,33 @@
-describe MiqServer do
-  describe "ConfigurationManagement" do
-    describe "#get_config" do
-      context "local server" do
-        before do
-          _guid, @local_server, _zone = EvmSpecHelper.local_guid_miq_server_zone
-        end
-
-        it "with no changes in the database" do
-          expect(@local_server.get_config("vmdb").config).to be_kind_of(Hash)
-        end
-
-        it "with changes in the database" do
-          c = {"server" => {"name" => "XXX"}}
-          FactoryGirl.create(:configuration, :miq_server => @local_server, :typ => "vmdb", :settings => c)
-
-          actual = @local_server.get_config("vmdb").config.fetch_path(:server, :name)
-          expect(actual).to eq "XXX"
-        end
+describe MiqServer, "::ConfigurationManagement" do
+  describe "#get_config" do
+    shared_examples_for "#get_config" do
+      it "with no changes in the database" do
+        config = miq_server.get_config("vmdb")
+        expect(config).to be_kind_of(VMDB::Config)
+        expect(config.config.fetch_path(:api, :token_ttl)).to eq("10.minutes")
       end
 
-      context "remote server" do
-        before do
-          _, @remote_server, = EvmSpecHelper.remote_guid_miq_server_zone
-        end
+      it "with changes in the database" do
+        miq_server.settings_changes = [
+          FactoryGirl.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
+        ]
 
-        it "with no changes in the database" do
-          expect(@remote_server.get_config("vmdb").config).to be_kind_of(Hash)
-        end
-
-        it "with changes in the database" do
-          c = {"server" => {"name" => "XXX"}}
-          FactoryGirl.create(:configuration, :miq_server => @remote_server, :typ => "vmdb", :settings => c)
-
-          actual = @remote_server.get_config("vmdb").config.fetch_path(:server, :name)
-          expect(actual).to eq "XXX"
-        end
+        config = miq_server.get_config("vmdb")
+        expect(config).to be_kind_of(VMDB::Config)
+        expect(config.config.fetch_path(:api, :token_ttl)).to eq("2.minutes")
       end
+    end
+
+    context "local server" do
+      let(:miq_server) { EvmSpecHelper.local_miq_server }
+
+      include_examples "#get_config"
+    end
+
+    context "remote server" do
+      let(:miq_server) { EvmSpecHelper.remote_miq_server }
+
+      include_examples "#get_config"
     end
   end
 end

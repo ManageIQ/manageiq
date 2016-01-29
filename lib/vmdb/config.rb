@@ -4,9 +4,7 @@ module VMDB
 
     def self.for_miq_server(miq_server, name)
       new(name).tap do |config|
-        if miq_server.is_remote?
-          config.config = Vmdb::Settings.for_miq_server(miq_server)
-        end
+        config.config = Vmdb::Settings.for_miq_server(miq_server).to_hash
       end
     end
 
@@ -404,29 +402,25 @@ module VMDB
       end
     end
 
+    # NOTE: Used by Configuration -> Advanced
     def self.get_file(name)
       Vmdb::ConfigurationEncoder.dump(new(name.to_s).config)
     end
 
-    def self.validate_file(name, contents)
-      valid, new_cfg = load_and_validate_raw_contents(name, contents)
-      valid ? true : new_cfg
-    end
-
+    # NOTE: Used by Configuration -> Advanced
     def self.save_file(name, contents)
-      valid, new_cfg = load_and_validate_raw_contents(name, contents)
-      return new_cfg unless valid
-      new_cfg.save
-      true
-    end
+      config = new(name.to_s)
 
-    def self.load_and_validate_raw_contents(name, contents)
-      current = new(name.to_s)
-      current.config = Vmdb::ConfigurationEncoder.load(contents)
-      valid = current.validate
-      return valid ? [true, current] : [false, current.errors]
-    rescue StandardError, SyntaxError => err
-      return [false, [[:contents, "File contents are malformed, '#{err.message}'"]]]
+      begin
+        config.config = Vmdb::ConfigurationEncoder.load(contents)
+        config.validate
+      rescue StandardError, SyntaxError => err
+        config.errors = [[:contents, "File contents are malformed, '#{err.message}'"]]
+      end
+
+      return config.errors unless config.errors.blank?
+      config.save
+      true
     end
   end
 end
