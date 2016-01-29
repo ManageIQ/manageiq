@@ -103,10 +103,9 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     ret = @ems_ids_for_notify[key] || begin
       zone_id = MiqServer.my_server.zone_id
       ems = ManageIQ::Providers::Vmware::InfraManager
-            .includes(:authentications)
+            .includes(:authentications, :endpoints)
             .where(:zone_id => zone_id)
-            .where(:hostname => address)
-            .detect { |e| e.authentication_userid == userid }
+            .detect { |e| e.hostname == address && e.authentication_userid == userid }
       ems_id = ems.nil? ? :ignore : ems.id
       _log.warn("#{log_prefix} Ignoring updates for unknown connection, address: [#{address}], userid: [#{userid}]") if ems_id == :ignore
       @ems_ids_for_notify[key] = ems_id
@@ -187,7 +186,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     _log.info("#{log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
 
-    ems = ManageIQ::Providers::Vmware::InfraManager.find_by(:hostname => event[:server])
+    ems = ManageIQ::Providers::Vmware::InfraManager.with_hostname(event[:server]).first
     if ems.nil?
       _log.error "#{log_prefix} Unable to find EMS with address: [#{event[:server]}]"
       return

@@ -127,7 +127,7 @@ describe ApiController do
       run_get(providers_url(provider.id), :attributes => "authentications")
 
       expect_request_success
-      expect_result_to_match_hash(@result, "name" => "sample", "hostname" => "sample.com")
+      expect_result_to_match_hash(@result, "name" => "sample")
       expect_result_to_have_keys(%w(authentications))
       authentication = @result["authentications"].first
       expect(authentication["userid"]).to eq("admin")

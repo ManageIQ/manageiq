@@ -28,12 +28,16 @@ class ExtManagementSystem < ApplicationRecord
   belongs_to :provider
   belongs_to :tenant
 
-  has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
-  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
+  has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
+
+  has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
+           :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
 
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id", :inverse_of => :ext_management_system
+  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
+                                                      :inverse_of => :ext_management_system
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
@@ -49,17 +53,21 @@ class ExtManagementSystem < ApplicationRecord
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
-  validates :hostname,
-            :presence   => true,
-            :uniqueness => {:case_sensitive => false},
-            :if         => :hostname_required?
+  validates :hostname, :presence => true, :if => :hostname_required?
+  validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
-  # TODO: Remove all callers of address
-  alias_attribute :address, :hostname
+  def hostname_uniqueness_valid?
+    return unless hostname_required?
+    return unless hostname.present? # Presence is checked elsewhere
+
+    existing_hostnames = Endpoint.where.not(:resource_id => id).pluck(:hostname).compact.map(&:downcase)
+
+    errors.add(:hostname, "has already been taken") if existing_hostnames.include?(hostname.downcase)
+  end
 
   include NewWithTypeStiMixin
   include UuidMixin
@@ -94,6 +102,20 @@ class ExtManagementSystem < ApplicationRecord
   include Metric::CiMixin
   include AsyncDeleteMixin
 
+  delegate :ipaddress,
+           :ipaddress=,
+           :hostname,
+           :hostname=,
+           :port,
+           :port=,
+           :to => :default_endpoint
+
+  alias_method :address, :hostname # TODO: Remove all callers of address
+
+  virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
+  virtual_column :hostname,                :type => :string,  :uses => :endpoints
+  virtual_column :port,                    :type => :integer, :uses => :endpoints
+
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
   virtual_column :last_refresh_status,     :type => :string
@@ -103,7 +125,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_hosts,             :type => :integer
   virtual_column :total_storages,          :type => :integer
   virtual_column :total_clusters,          :type => :integer
-  virtual_column :zone_name,               :type => :string,  :uses => :zone
+  virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
   virtual_column :total_vms_off,           :type => :integer
   virtual_column :total_vms_unknown,       :type => :integer
@@ -124,10 +146,22 @@ class ExtManagementSystem < ApplicationRecord
     'amazon' => 'ec2',
   }
 
+  def self.with_ipaddress(ipaddress)
+    joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
+  end
+
+  def self.with_hostname(hostname)
+    joins(:endpoints).where(:endpoints => {:hostname => hostname})
+  end
+
+  def self.with_port(port)
+    joins(:endpoints).where(:endpoints => {:port => port})
+  end
+
   def self.create_discovered_ems(ost)
-    # add an ems entry
-    if ExtManagementSystem.find_by_ipaddress(ost.ipaddr).nil?
-      hostname = Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
+    ip = ost.ipaddr
+    unless with_ipaddress(ip).exist?
+      hostname = Socket.getaddrinfo(ip, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
                               [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
@@ -138,14 +172,15 @@ class ExtManagementSystem < ApplicationRecord
                             end
 
       ems = ems_klass.create(
-        :ipaddress => ost.ipaddr,
-        :name      => "#{ems_name} (#{ost.ipaddr})",
+        :ipaddress => ip,
+        :name      => "#{ems_name} (#{ip})",
         :hostname  => hostname,
         :zone_id   => MiqServer.my_server.zone.id
       )
 
       _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
-      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem", :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
+      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem",
+                         :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
     end
   end
 
@@ -222,6 +257,11 @@ class ExtManagementSystem < ApplicationRecord
   # UI method for determining which icon to show for a particular EMS
   def image_name
     emstype.downcase
+  end
+
+  def default_endpoint
+    default = endpoints.detect { |e| e.role == "default" }
+    default || endpoints.build(:role => "default")
   end
 
   def authentication_check_role
@@ -315,7 +355,7 @@ class ExtManagementSystem < ApplicationRecord
   alias_method_chain :clear_association_cache, :storages
 
   alias_method :storages,               :all_storages
-  alias_method :datastores,             :all_storages  # Used by web-services to return datastores as the property name
+  alias_method :datastores,             :all_storages # Used by web-services to return datastores as the property name
 
   alias_method :all_hosts,              :hosts
   alias_method :all_host_ids,           :host_ids
@@ -483,14 +523,14 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def stop_event_monitor_queue_on_change
-    if !event_monitor_class.nil? && !self.new_record? && changed.include_any?("hostname", "ipaddress")
+    if event_monitor_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
       _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
   end
 
   def stop_event_monitor_queue_on_credential_change
-    if !event_monitor_class.nil? && !self.new_record? && self.credentials_changed?
+    if event_monitor_class && !self.new_record? && self.credentials_changed?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end

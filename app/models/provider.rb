@@ -10,8 +10,14 @@ class Provider < ApplicationRecord
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
 
-  default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
-  validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
+  has_many :endpoints, :through => :managers
+
+  delegate :verify_ssl,
+           :verify_ssl=,
+           :verify_ssl?,
+           :to => :default_endpoint
+
+  virtual_column :verify_ssl, :type => :integer
 
   def self.leaf_subclasses
     descendants.select { |d| d.subclasses.empty? }
@@ -31,13 +37,9 @@ class Provider < ApplicationRecord
     self.class.short_token.underscore
   end
 
-  def verify_ssl=(val)
-    val = resolve_verify_ssl_value(val)
-    super
-  end
-
-  def verify_ssl?
-    verify_ssl != OpenSSL::SSL::VERIFY_NONE
+  def default_endpoint
+    default = endpoints.detect { |e| e.role == "default" }
+    default || endpoints.build(:role => "default")
   end
 
   def with_provider_connection(options = {})
@@ -55,15 +57,5 @@ class Provider < ApplicationRecord
     raise "no #{ui_lookup(:table => "provider")} credentials defined" if self.missing_credentials?
     raise "#{ui_lookup(:table => "provider")} failed last authentication check" unless self.authentication_status_ok?
     managers.each { |manager| EmsRefresh.queue_refresh(manager) }
-  end
-
-  private
-
-  def resolve_verify_ssl_value(val)
-    case val
-    when true  then OpenSSL::SSL::VERIFY_PEER
-    when false then OpenSSL::SSL::VERIFY_NONE
-    else            val
-    end
   end
 end

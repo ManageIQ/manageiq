@@ -172,7 +172,10 @@ describe EmsCloudController do
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
-      expect(ManageIQ::Providers::Openstack::CloudManager.where(:hostname => 'host_openstack', :name => 'foo_openstack', :port => '5000').count).to eq(1)
+      expect(ManageIQ::Providers::Openstack::CloudManager.with_hostname('host_openstack')
+                                                         .with_port('5000')
+                                                         .where(:name => 'foo_openstack')
+                                                         .count).to eq(1)
     end
   end
 
@@ -185,7 +188,7 @@ describe EmsCloudController do
     end
 
     it 'gets the restful show link and timeline link paths' do
-      session[:settings] = {:views =>{:vm_summary_cool => ""}}
+      session[:settings] = {:views => {:vm_summary_cool => ""}}
       post :create,
            "button"           => "add",
            "hostname"         => "host_openstack",
@@ -204,9 +207,9 @@ describe EmsCloudController do
       expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.id}")
 
       post :show,
-           "button"           => "timeline",
-           "display"          => "timeline",
-           "id"               => openstack.id
+           "button"  => "timeline",
+           "display" => "timeline",
+           "id"      => openstack.id
 
       expect(response.status).to eq(200)
       show_link_actual_path = controller.send(:show_link, openstack, :display => "timeline")
@@ -245,7 +248,7 @@ describe EmsCloudController do
   end
 
   context "#update_ems_button_validate" do
-    let(:mocked_ems) { double(ManageIQ::Providers::Openstack::CloudManager, id: 1) }
+    let(:mocked_ems) { double(ManageIQ::Providers::Openstack::CloudManager, :id => 1) }
     it "calls authentication_check with save = true if validation is done for an existing record" do
       allow(controller).to receive(:set_ems_record_vars)
       allow(controller).to receive(:render)

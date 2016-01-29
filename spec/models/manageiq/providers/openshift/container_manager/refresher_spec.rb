@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
   def assert_ems
     expect(@ems).to have_attributes(
-      :port => "8443",
+      :port => 8443,
       :type => "ManageIQ::Providers::Openshift::ContainerManager"
     )
   end
