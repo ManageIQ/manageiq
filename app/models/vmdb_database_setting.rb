@@ -1,5 +1,5 @@
 class VmdbDatabaseSetting < ApplicationRecord
-  self.table_name = 'pg_settings'
+  self.table_name = 'pg_catalog.pg_settings'
   self.primary_key = nil
 
   def self.sortable?
