@@ -2306,7 +2306,7 @@ class MiqAeClassController < ApplicationController
     @ae_class = MiqAeClass.find_by_id(from_cid(id))
     @edit[:rec_id] = @ae_class ? @ae_class.id : nil
     @edit[:ae_class_id] = @ae_class.id
-    @edit[:new][:fields] = @ae_class.ae_fields.deep_clone
+    @edit[:new][:fields] = @ae_class.ae_fields.to_a.deep_clone
     @edit[:new][:fields_list] = @edit[:new][:fields]
                                 .sort_by { |f| f.priority.to_i }
                                 .collect { |f| f.display_name ? "#{f.display_name} (#{f.name})" : "(#{f.name})" }
