@@ -132,7 +132,7 @@ module OpsController::OpsRbac
                     {:model => tenant_type_title_string(params[:divisible] == "true"), :name => tenant.name})
         if params[:button] == "add"
           rbac_tenants_list
-          rbac_get_info(x_node)
+          rbac_get_info
         else
           get_node_info(x_node)
         end
@@ -855,8 +855,8 @@ module OpsController::OpsRbac
   end
 
   # Get information for an access control node
-  def rbac_get_info(nodetype)
-    node, id = nodetype.split("-")
+  def rbac_get_info
+    node, id = x_node.split("-")
     case node
     when "xx"
       case id

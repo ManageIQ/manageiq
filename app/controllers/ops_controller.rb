@@ -228,10 +228,10 @@ class OpsController < ApplicationController
       @ldap_group = nil
       @flash_array = nil if MiqServer.my_server(true).logon_status == :ready  # don't reset if flash array
       if x_active_tree == :settings_tree
-        settings_get_info(x_node)
+        settings_get_info
         replace_right_cell("root")
       elsif x_active_tree == :vmdb_tree
-        db_get_info(x_node)
+        db_get_info
         replace_right_cell("root")
       elsif x_active_tree == :diagnostics_tree
         case @sb[:active_tab]
@@ -427,11 +427,11 @@ class OpsController < ApplicationController
     @explorer = true
     @nodetype = x_node.split("-").first
     case x_active_tree
-    when :analytics_tree   then analytics_get_info(x_node)
-    when :diagnostics_tree then diagnostics_get_info(x_node)
-    when :rbac_tree        then rbac_get_info(x_node)
-    when :settings_tree    then settings_get_info(x_node)
-    when :vmdb_tree        then db_get_info(x_node)
+    when :analytics_tree   then analytics_get_info
+    when :diagnostics_tree then diagnostics_get_info
+    when :rbac_tree        then rbac_get_info
+    when :settings_tree    then settings_get_info
+    when :vmdb_tree        then db_get_info
     end
 
     region_text = "[Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"

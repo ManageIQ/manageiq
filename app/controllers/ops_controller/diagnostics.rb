@@ -1068,9 +1068,9 @@ module OpsController::Diagnostics
   end
 
   # Get information for a node
-  def diagnostics_get_info(nodetype)
+  def diagnostics_get_info
     @in_a_form = false
-    node = nodetype.downcase.split("-").first
+    node = x_node.downcase.split("-").first
     case node
     when "root"
       @sb[:diag_tree_type] ||= "roles"
@@ -1081,7 +1081,7 @@ module OpsController::Diagnostics
       @sb[:diag_selected_id] = nil
       diagnostics_set_form_vars
     when "svr"
-      @selected_server = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
+      @selected_server = MiqServer.find(from_cid(x_node.downcase.split("-").last))
       @sb[:selected_server_id] = @selected_server.id
       diagnostics_set_form_vars
     end

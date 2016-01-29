@@ -25,7 +25,7 @@ module OpsController::Analytics
   end
 
   # Get information for a policy
-  def analytics_get_info(nodetype)
+  def analytics_get_info
     @sb[:active_tab] = "analytics_details"
     if x_node.split('-').first == "z"
       zone = Zone.find_by_id(from_cid(x_node.split('-').last))
@@ -34,7 +34,7 @@ module OpsController::Analytics
       @right_cell_text = my_zone_name == msg %
                                          {:typ => "Diagnostics", :model => ui_lookup(:model => zone.class.to_s), :name => zone.description}
     elsif x_node.split('-').first == "svr"
-      svr = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
+      svr = MiqServer.find(from_cid(x_node.downcase.split("-").last))
       @sb[:rpt_title] = "Analytics Report for '#{svr.name} [#{svr.id}]'"
       msg = svr.id ? _("%{typ} %{model} \"%{name}\" (current)") : _("%{typ} %{model} \"%{name}\"")
       @right_cell_text = my_server_id == msg %
