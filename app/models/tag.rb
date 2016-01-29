@@ -59,6 +59,9 @@ class Tag < ApplicationRecord
     unless list.kind_of? Array
       tag_names = []
 
+      # don't mangle the caller's copy
+      list = list.dup
+
       # first, pull out the quoted tags
       list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; "" }
 
