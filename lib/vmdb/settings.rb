@@ -11,9 +11,8 @@ module Vmdb
       reload!
     end
 
-    def self.reload!
-      ::Settings.reload!
-      decrypt_passwords!(::Settings)
+    def self.reload!(settings = ::Settings)
+      decrypt_passwords!(settings.reload!)
     end
 
     def self.walk(settings = ::Settings, path = [], &block)
@@ -55,7 +54,7 @@ module Vmdb
     end
 
     def self.for_miq_server(miq_server)
-      decrypt_passwords!(build_settings(miq_server))
+      reload!(build_settings(miq_server))
     end
 
     def self.template_settings
