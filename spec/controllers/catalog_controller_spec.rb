@@ -66,7 +66,7 @@ describe CatalogController do
     end
 
     it "Atomic Service Template and it's invalid Resource Actions are not saved" do
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => 'save')
       st = FactoryGirl.create(:service_template)
@@ -254,7 +254,7 @@ describe CatalogController do
 
     it "Orchestration Template content cannot be empty during edit" do
       controller.instance_variable_set(:@_params, :button => "save")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template)
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
@@ -287,7 +287,7 @@ describe CatalogController do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "add")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.x_node = "xx-otcfn_ot-#{ot.id}"
       @new_name = "New Name"
@@ -337,7 +337,7 @@ describe CatalogController do
 
     it "Orchestration Template is deleted" do
       ot = FactoryGirl.create(:orchestration_template)
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       controller.params.merge!(:id => ot.id)
       controller.send(:ot_remove_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
@@ -480,7 +480,7 @@ describe CatalogController do
         :rec_id => @ot.id
       }
       controller.instance_variable_set(:@sb, :trees => {:ot_tree => {:open_nodes => []}}, :active_tree => :ot_tree)
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
     end
 
     after(:each) do
