@@ -169,7 +169,7 @@ module OpsController::Db
   end
 
   # Get information for a DB tree node
-  def db_get_info(_nodetype)
+  def db_get_info
     if x_node == "root"
       # If root node is selected
       if @sb[:active_tab] == "db_summary"
@@ -234,7 +234,7 @@ module OpsController::Db
 
   def db_refresh
     assert_privileges("db_refresh")
-    db_get_info(x_node)
+    db_get_info
     render :update do |page|
       page.replace_html(@sb[:active_tab], :partial => "db_details_tab")
       page << "miqSparkle(false);"    # Need to turn off sparkle in case original ajax element gets replaced

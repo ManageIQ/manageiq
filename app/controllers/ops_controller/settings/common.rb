@@ -1055,7 +1055,7 @@ module OpsController::Settings::Common
   end
 
   # Get information for a settings node
-  def settings_get_info(nodetype)
+  def settings_get_info(nodetype = x_node)
     nodes = nodetype.downcase.split("-")
     case nodes[0]
     when "root"
