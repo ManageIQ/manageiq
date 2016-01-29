@@ -4,7 +4,7 @@ describe('miq_list_grid.js', function() {
       ManageIQ.actionUrl = 'show/1000000000015';
       ManageIQ.record.parentClass = 'ems_infra';
       ManageIQ.record.parentId = '1000000000015';
-      expect(miqGetSortUrl(1)).toEqual('/ems_infra/show/1000000000015?sortby=1&');
+      expect(miqGetSortUrl(1)).toMatch(/^\/ems_infra\/show\/1000000000015\?sortby=1&/);
     });
   });
 
