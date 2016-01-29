@@ -26,7 +26,7 @@
 
       function loginFailure(response) {
         Session.destroy();
-        Notifications.message('danger', '', 'Incorrect username or password.', false);
+        Notifications.message('danger', '', __('Incorrect username or password.'), false);
 
         return response;
       }

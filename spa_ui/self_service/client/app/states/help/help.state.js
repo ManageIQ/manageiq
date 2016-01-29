@@ -17,7 +17,7 @@
         templateUrl: 'app/states/help/help.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Help'
+        title: __('Help')
       }
     };
   }
@@ -26,6 +26,6 @@
   function StateController() {
     var vm = this;
 
-    vm.title = 'Help';
+    vm.title = __('Help');
   }
 })();

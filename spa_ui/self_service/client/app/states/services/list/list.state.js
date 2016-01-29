@@ -16,7 +16,7 @@
         templateUrl: 'app/states/services/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Service List',
+        title: __('Service List'),
         resolve: {
           services: resolveServices
         }
@@ -36,7 +36,7 @@
     /* jshint validthis: true */
     var vm = this;
 
-    vm.title = 'Service List';
+    vm.title = __('Service List');
     vm.services = [];
 
     if (angular.isDefined($rootScope.notifications) && $rootScope.notifications.data.length > 0) {
@@ -63,33 +63,33 @@
         fields: [
           {
             id: 'name',
-            title: 'Name',
-            placeholder: 'Filter by Name',
+            title: __('Name'),
+            placeholder: __('Filter by Name'),
             filterType: 'text'
           },
           {
             id: 'retirement',
-            title: 'Retirement Date',
-            placeholder: 'Filter by Retirement Date',
+            title: __('Retirement Date'),
+            placeholder: __('Filter by Retirement Date'),
             filterType: 'select',
-            filterValues: ['Current', 'Soon', 'Retired']
+            filterValues: [__('Current'), __('Soon'), __('Retired')]
           },
           {
             id: 'vms',
-            title: 'Number of VMs',
-            placeholder: 'Filter by VMs',
+            title: __('Number of VMs'),
+            placeholder: __('Filter by VMs'),
             filterType: 'text'
           },
           {
             id: 'owner',
-            title: 'Owner',
-            placeholder: 'Filter by Owner',
+            title: __('Owner'),
+            placeholder: __('Filter by Owner'),
             filterType: 'text'
           },
           {
             id: 'created',
-            title: 'Created',
-            placeholder: 'Filter by Created On',
+            title: __('Created'),
+            placeholder: __('Filter by Created On'),
             filterType: 'text'
           }
         ],
@@ -101,27 +101,27 @@
         fields: [
           {
             id: 'name',
-            title:  'Name',
+            title: __('Name'),
             sortType: 'alpha'
           },
           {
             id: 'retires',
-            title:  'Retirement Date',
+            title: __('Retirement Date'),
             sortType: 'numeric'
           },
           {
             id: 'vms',
-            title:  'Number of VMs',
+            title: __('Number of VMs'),
             sortType: 'numeric'
           },
           {
             id: 'owner',
-            title:  'Owner',
+            title: __('Owner'),
             sortType: 'alpha'
           },
           {
             id: 'created',
-            title:  'Created',
+            title: __('Created'),
             sortType: 'numeric'
           }
         ],

@@ -2,30 +2,30 @@
   <button type="button" class="close" ng-click="$dismiss()" aria-hidden="true">
     <span class="pficon pficon-close"></span>
   </button>
-  <h4 class="modal-title" id="myModalLabel">Schedule Service Retirement</h4>
+  <h4 class="modal-title" id="myModalLabel" translate>Schedule Service Retirement</h4>
 </div>
 <div class="modal-body">
   <form class="form-horizontal">
-      <div pf-form-group pf-input-class="col-sm-8" pf-label-class="col-sm-3" pf-label="Retirement Warning">
+      <div pf-form-group pf-input-class="col-sm-8" pf-label-class="col-sm-3" pf-label="{{'Retirement Warning'|translate}}">
         <select pf-select ng-model="vm.modalData.resource.warn">
-          <option value=0>No Warning </option>
-          <option value=7>1 Week </option>
-          <option value=14>2 Weeks</option>
-          <option value=21>3 Weeks</option>
-          <option value=28>4 Weeks</option>
+          <option value=0 translate>No Warning </option>
+          <option value=7 translate>1 Week </option>
+          <option value=14 translate>2 Weeks</option>
+          <option value=21 translate>3 Weeks</option>
+          <option value=28 translate>4 Weeks</option>
         </select>
       </div>
-    <div pf-form-group pf-input-class="col-sm-8" pf-label-class="col-sm-3" pf-label="Retirement Date">
+    <div pf-form-group pf-input-class="col-sm-8" pf-label-class="col-sm-3" pf-label="{{'Retirement Date'|translate}}">
       <div pf-datepicker options="vm.dateOptions" date="vm.modalData.resource.date"></div>
     </div>
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+  <button type="button" class="btn btn-default" ng-click="$dismiss()" translate>Cancel</button>
   <button type="button"
           class="btn btn-primary"
           ng-click="vm.retireService()"
           ng-disabled="vm.modalData.resource.name == vm.service.name &&
-          vm.modalData.resource.description == vm.service.description">Save
+          vm.modalData.resource.description == vm.service.description" translate>Save
   </button>
 </div>

@@ -1,7 +1,7 @@
 <header class="navbar navbar-pf-alt" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" ng-click="vm.toggleNavigation()">
-      <span class="sr-only">Toggle navigation</span>
+      <span class="sr-only" translate>Toggle navigation</span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -16,7 +16,7 @@
     <ul class="nav navbar-nav">
       <li>
         <a ng-href="{{vm.API_BASE}}" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">
-          <i class="fa fa-external-link" tooltip="Log into the full administrative UI" tooltip-placement="bottom" tooltip-append-to-body="true"></i>
+          <i class="fa fa-external-link" tooltip="{{'Log into the full administrative UI'|translate}}" tooltip-placement="bottom" tooltip-append-to-body="true"></i>
         </a>
       </li>
     </ul>
@@ -28,7 +28,7 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li class="action"><a ui-sref="logout">Logout</a></li>
+          <li class="action"><a ui-sref="logout" translate>Logout</a></li>
         </ul>
       </li>
     </ul>
