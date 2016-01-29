@@ -55,16 +55,15 @@
     %thead
       %tr
         %th
-          = link_to(image_tag(image_path("toolbars/squashed-#{@sb[:squash_state]}.png"),
-              :class => "rollover small",
-              :id    => "exp_collapse_img",
-              :style => "z-index:50",
-              :alt   => (t = (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters"))),
-              :title => t),
-            {:action => 'expand_toggle',
-             :id     => "exp_collapse"},
-            'data-method' => :post,
-            :remote       => true)
+          - icon = @sb[:squash_state] ? "down" : "up"
+          - url2 = url_for(:action => 'expand_toggle', :id => "exp_collapse")
+          %button.btn.btn-default{:title => (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters")),
+                  "data-miq_sparkle_on" => true,
+                  :remote               => true,
+                  "data-method"         => :post,
+                  :id                   => 'exp_collapse_img',
+                  'data-click_url'      => {:url => url2}.to_json}
+            %i{:class => "fa fa-angle-#{icon} fa-lg"}
 
   #inputs_div{:style => @sb[:squash_state] ? "display: none;" : ""}
     %table.table.table-striped.table-bordered.table-hover
