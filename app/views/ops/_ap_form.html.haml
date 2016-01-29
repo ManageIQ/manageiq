@@ -1,11 +1,7 @@
 - if x_active_tree == :settings_tree
   - url = url_for(:action => 'ap_form_field_changed', :id => "#{@scan.id || "new"}")
   #ap_form_div
-    = form_tag({:action => 'ap_edit',
-                :id     => @scan.id || "new"},
-               :class  => "form-horizontal",
-               :remote => true,
-               :method => :post) do
+    .form-horizontal
       = render :partial => "layouts/flash_msg"
       %fieldset
         %h3
