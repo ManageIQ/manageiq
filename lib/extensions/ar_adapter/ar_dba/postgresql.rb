@@ -14,26 +14,15 @@ module ActiveRecord
       end
 
       def client_connections
-        data = select(<<-SQL, "Client Connections")
+        data = select(<<-SQL, "Client Connections").to_a
                       SELECT client_addr   AS client_address
                            , datname       AS database
                            , pid           AS spid
-                           , waiting       AS number_waiting
+                           , waiting       AS is_waiting
                            , query
                         FROM pg_stat_activity
                        ORDER BY 1, 2
                       SQL
-
-        integer_columns = %w(
-          spid
-          number_waiting
-        )
-
-        data.each do |datum|
-          integer_columns.each   { |c| datum[c] = datum[c].to_i }
-        end
-
-        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
