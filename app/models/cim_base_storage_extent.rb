@@ -1,7 +1,7 @@
 class CimBaseStorageExtent < ActsAsArModel
   set_columns_hash(CimStorageExtent.columns_hash.keys.each_with_object({}) { |c, h| h[c.to_sym] = CimStorageExtent.columns_hash[c].type })
 
-  def self._virtual_colums_hash
+  def self._virtual_columns_hash
     CimStorageExtent._virtual_columns_hash
   end
 
