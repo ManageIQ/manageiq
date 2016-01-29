@@ -1,22 +1,6 @@
 class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
-  def event_monitor_handle
-    unless @event_monitor_handle
-      aws_access_key_id     = @ems.authentication_userid
-      aws_secret_access_key = @ems.authentication_password
-      aws_region            = @ems.provider_region
-      queue_id              = @ems.guid
-      @event_monitor_handle = ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream.new(
-        aws_access_key_id, aws_secret_access_key, aws_region, queue_id)
-    end
-    @event_monitor_handle
-  end
-
-  def reset_event_monitor_handle
-    @event_monitor_handle = nil
-  end
-
   def stop_event_monitor
-    @event_monitor_handle.try(:stop)
+    @event_monitor_handle.try!(:stop)
   ensure
     reset_event_monitor_handle
   end
@@ -42,7 +26,17 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ
     end
   end
 
+  private
+
   def filtered?(event)
     filtered_events.include?(event["messageType"])
+  end
+
+  def event_monitor_handle
+    @event_monitor_handle ||= ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream.new(@ems)
+  end
+
+  def reset_event_monitor_handle
+    @event_monitor_handle = nil
   end
 end
