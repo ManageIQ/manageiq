@@ -25,7 +25,7 @@ module Metric::CiMixin::Targets
     enable ? tag_add('capture_enabled', :ns => ns) : tag_with('', :ns => ns)
 
     # Clear tag association cache instead of full reload.
-    association_cache.except!(:tags, :taggings)
+    @association_cache.except!(:tags, :taggings)
 
     @perf_capture_enabled = (perf_capture_always? || enable)
   end
