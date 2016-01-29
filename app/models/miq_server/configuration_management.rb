@@ -6,7 +6,7 @@ module MiqServer::ConfigurationManagement
   end
 
   def get_config(type = "vmdb")
-    VMDB::Config.for_miq_server(self, type)
+    VMDB::Config.for_resource(type, self)
   end
 
   def set_config(config)

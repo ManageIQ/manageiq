@@ -2,9 +2,9 @@ module VMDB
   class Config
     include Vmdb::Logging
 
-    def self.for_miq_server(miq_server, name)
+    def self.for_resource(name, resource)
       new(name).tap do |config|
-        config.config = Vmdb::Settings.for_miq_server(miq_server).to_hash
+        config.config = Vmdb::Settings.for_resource(resource).to_hash
       end
     end
 
