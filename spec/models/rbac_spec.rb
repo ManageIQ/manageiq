@@ -211,6 +211,7 @@ describe Rbac do
   context "common setup" do
     let(:group) { FactoryGirl.create(:miq_group) }
     let(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
+
     before(:each) do
       @tags = {
         2 => "/managed/environment/prod",
@@ -218,6 +219,38 @@ describe Rbac do
         4 => "/managed/service_level/gold",
         5 => "/managed/service_level/silver"
       }
+    end
+
+    context "with User and Group" do
+      def get_rbac_results_for_and_expect_objects(klass, expected_objects)
+        User.current_user = user
+
+        results = Rbac.search(:class => klass, :results_format => :objects).first
+        expect(results).to match_array(expected_objects)
+      end
+
+      it "returns all users" do
+        get_rbac_results_for_and_expect_objects(User, [user, other_user])
+      end
+
+      it "returns all groups" do
+        _expected_groups = [group, other_group] # this will create more groups than 2
+        get_rbac_results_for_and_expect_objects(MiqGroup, MiqGroup.all)
+      end
+
+      context "with self-service user" do
+        before(:each) do
+          allow_any_instance_of(User).to receive_messages(:self_service? => true)
+        end
+
+        it "returns only the current user" do
+          get_rbac_results_for_and_expect_objects(User, [user])
+        end
+
+        it "returns only the current group" do
+          get_rbac_results_for_and_expect_objects(MiqGroup, [user.current_group])
+        end
+      end
     end
 
     context "with Hosts" do
