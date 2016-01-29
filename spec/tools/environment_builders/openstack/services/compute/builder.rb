@@ -33,9 +33,9 @@ module Openstack
         # Servers are separated from build_all, since it requires sources from several services
         #
         def build_servers(volume, network, image, networking)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking)
+          find_or_create_servers(volume.volumes, volume.volume_snapshots, network.networks, network.security_groups, image.images, networking)
           image.build_snapshots_from_servers(servers)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking,
+          find_or_create_servers(volume.volumes, volume.volume_snapshots, network.networks, network.security_groups, image.images, networking,
                                  :servers_from_snapshot)
           associate_ips(servers, network)
         end
@@ -53,7 +53,7 @@ module Openstack
 
         private
 
-        def find_or_create_servers(volumes, networks, security_groups, images, networking, data_method = :servers)
+        def find_or_create_servers(volumes, volume_snapshots, networks, security_groups, images, networking, data_method = :servers)
           servers = []
           @data.send(data_method).each do |server|
             image = nil
@@ -76,6 +76,33 @@ module Openstack
                   :uuid                  => volume.id,
                   :destination_type      => 'volume',
                   :delete_on_termination => "preserve",
+                # }, {
+                #   :source_type           => "snapshot",
+                #   :uuid                  => volume_snapshots.detect { |x| x.name == "EmsRefreshSpec-VolumeSnapshot" }.id,
+                #   :destination_type      => 'volume',
+                #   :delete_on_termination => "preserve",
+                #   :volume_size           => 2,
+                # }, {
+                #   :source_type           => "image",
+                #   :destination_type      => "volume",
+                #   :delete_on_termination => "preserve",
+                #   :uuid                  => image.id,
+                #   :volume_size           => 1,
+                #   :guest_format          => 'ext4',
+                }, {
+                  :source_type           => "blank",
+                  :destination_type      => "volume",
+                  :delete_on_termination => true,
+                  :volume_size           => 1,
+                  :guest_format          => 'ext4',
+                # }, {
+                #   :device_name           => '/dev/sdb1',
+                #   :source_type           => 'blank',
+                #   :destination_type      => 'local',
+                #   :delete_on_termination => true,
+                #   :volume_size           => 1,
+                #   :guest_format          => 'swap',
+                #   :boot_index            => -1,
                 }]) if volume
             end
 
