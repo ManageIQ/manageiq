@@ -8,7 +8,7 @@ class ApiController < ApplicationController
     head(:ok) if request.request_method == "OPTIONS"
   end
 
-  after_action :set_access_control_headers
+  before_action :set_access_control_headers
   def set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
