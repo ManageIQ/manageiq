@@ -922,7 +922,7 @@ module ApplicationHelper
 
       tag_attrs = {:title => title}
       check_changes = args[:check_changes] || args[:check_changes].nil?
-      tag_attrs[:onclick] = 'return miqCheckForChanges(this)' if check_changes
+      tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
       content_tag(:li) do
         if args[:record] && restful_routed?(args[:record])
           link_to(link_text, polymorphic_path(args[:record], :display => args[:display]))
@@ -977,7 +977,7 @@ module ApplicationHelper
 
   def link_to_with_icon(link_text, link_params, tag_args, _image_path = nil)
     tag_args ||= {}
-    default_tag_args = {:onclick => "return miqCheckForChanges(this)"}
+    default_tag_args = {:onclick => "return miqCheckForChanges()"}
     tag_args = default_tag_args.merge(tag_args)
     link_to(link_text, link_params, tag_args)
   end

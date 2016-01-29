@@ -25,7 +25,7 @@
                 :remote       => true,
                 "data-method" => :post,
                 :title        => _("Apply this filter"),
-                :onclick      => "return miqCheckForChanges(this)")
+                :onclick      => "return miqCheckForChanges()")
 
     - unless @my_searches.blank?
       - if @panels["#{@view.db}_my_searches"].nil?
@@ -45,7 +45,7 @@
                 :remote       => true,
                 "data-method" => :post,
                 :title        => _("Apply this filter"),
-                :onclick      => "return miqCheckForChanges(this)")
+                :onclick      => "return miqCheckForChanges()")
 
 
   - if @edit && @edit[:expression] && @edit[:expression][:selected] && (!@settings[:default_search] || (@settings[:default_search] && @edit[:expression][:selected][:id].to_i != @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym].to_i) || (!@settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]))

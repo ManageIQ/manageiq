@@ -3,7 +3,7 @@
 $(document).ready(function () {
   // Bind call to prompt if leaving an active edit
   $(document).on('ajax:beforeSend', 'a[data-miq_check_for_changes]', function () {
-    return miqCheckForChanges(this);
+    return miqCheckForChanges();
   });
 
   $(document).on('click', 'button[data-click_url]', function () {

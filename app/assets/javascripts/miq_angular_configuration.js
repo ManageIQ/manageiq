@@ -26,6 +26,10 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
         }
       }
     });
+  $stateProvider
+    .state("otherwise", {
+    url: "*path"
+  });
 
   // default fall back route
   //$urlRouterProvider.otherwise('/');
@@ -34,13 +38,27 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
   $locationProvider.html5Mode({enabled: true,requireBase: false});
 }]);
 
-ManageIQ.angularApplication.run(['$rootScope', 'miqService', function($rootScope, miqService) {
-  $rootScope.$on('$stateChangeStart', function() {
-    miqService.sparkleOn();
+ManageIQ.angularApplication.run(['$rootScope', 'miqService', '$window', function($rootScope, miqService, $window) {
+  var otherwisePath;
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+    if (toState.name === "otherwise") {
+      event.preventDefault();
+      otherwisePath = toParams.path;
+    }
+    else {
+      miqService.sparkleOn();
+    }
   });
 
-  $rootScope.$on('$stateChangeSuccess', function() {
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
     miqService.sparkleOff();
+  });
+
+  $rootScope.$on('$locationChangeSuccess', function(event, newURL, oldURL, newState, oldState) {
+    if (angular.isDefined(otherwisePath) && $window.location.pathname != otherwisePath ) {
+      miqService.sparkleOn();
+      $window.location.href = otherwisePath;
+    }
   });
 
 }]);
