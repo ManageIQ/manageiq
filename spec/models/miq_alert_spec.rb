@@ -101,7 +101,7 @@ describe MiqAlert do
       end
 
       it "should have a link from the MiqAlert to the miq alert status" do
-        expect(@alert.miq_alert_statuses.count(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id})).to eq(1)
+        expect(@alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).count).to eq(1)
       end
 
       it "should have a miq alert status for MiqAlert with a result of true" do
@@ -109,7 +109,7 @@ describe MiqAlert do
       end
 
       it "should have a link from the Vm to the miq alert status" do
-        expect(@vm.miq_alert_statuses.count(:conditions => {:miq_alert_id => @alert.id})).to eq(1)
+        expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
       end
 
       it "should have a miq alert status for Vm with a result of true" do
@@ -124,7 +124,7 @@ describe MiqAlert do
         end
 
         it "should have had the MiqAlert's miq_alert_statuses" do
-          expect(@alert.miq_alert_statuses.count(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id})).to eq(1)
+          expect(@alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).count).to eq(1)
         end
 
         it "should have a miq alert status for MiqAlert with a result of false" do
@@ -132,7 +132,7 @@ describe MiqAlert do
         end
 
         it "should have the Vm's miq_alert_statuses" do
-          expect(@vm.miq_alert_statuses.count(:conditions => {:miq_alert_id => @alert.id})).to eq(1)
+          expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
         end
 
         it "should have a miq alert status for Vm with a result of false" do
