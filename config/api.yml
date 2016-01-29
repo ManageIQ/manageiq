@@ -323,12 +323,16 @@
         :identifier: instance_terminate
       - :name: stop
         :identifier: instance_stop
+      - :name: start
+        :identifier: instance_start
     :resource_actions:
       :post:
       - :name: terminate
         :identifier: instance_terminate
       - :name: stop
         :identifier: instance_stop
+      - :name: start
+        :identifier: instance_start
   :pictures:
     :description: Pictures
     :options:
