@@ -17,8 +17,8 @@ describe Authenticator::Httpd do
   end
 
   before(:each) do
-    wibble = FactoryGirl.build_stubbed(:miq_group, :description => 'wibble')
-    wobble = FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
+    wibble = FactoryGirl.create(:miq_group, :description => 'wibble')
+    wobble = FactoryGirl.create(:miq_group, :description => 'wobble')
 
     allow(MiqServer).to receive(:my_server).and_return(
       double(:my_server, :permitted_groups => [wibble, wobble])
