@@ -78,36 +78,60 @@ describe DialogFieldTextBox do
   context "validation" do
     let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
-    context "#validate_field_data" do
+    describe "#validate_field_data" do
       let(:dt) { double('DialogTab', :label => 'tab') }
       let(:dg) { double('DialogGroup', :label => 'group') }
 
-      before do
-        df.validator_type = 'regex'
-        df.validator_rule = '[aA]bc'
-        df.required = true
+      context "when validation rule is present" do
+        before do
+          df.validator_type = 'regex'
+          df.validator_rule = '[aA]bc'
+          df.required = true
+        end
+
+        it "returns nil when no error is detected" do
+          df.value = 'Abc'
+          expect(df.validate_field_data(dt, dg)).to be_nil
+        end
+
+        it "returns an error when the value doesn't match the regex rule" do
+          df.value = '123'
+          expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
+        end
+
+        it "returns an error when no value is set" do
+          df.value = nil
+          expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
       end
 
-      it "should return nil when no error is detected" do
-        df.value = 'Abc'
-        expect(df.validate_field_data(dt, dg)).to be_nil
-      end
+      context "when validation rule is not present" do
+        it "accepts any value" do
+          ['abc', '123', nil].each do |value|
+            df.value = value
+            expect(df.validate_field_data(dt, dg)).to be_nil
+          end
+        end
 
-      it "should return an error when the value doesn't match the regex rule" do
-        df.value = '123'
-        expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
-      end
+        it "returns an error when a required value is nil" do
+          df.value = nil
+          df.required = true
+          expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
 
-      it "should return an error when a required value is not provided" do
-        df.value = ''
-        df.validator_rule = ''
-        expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
-      end
+        context "when data type is integer" do
+          before { df.data_type = 'integer' }
 
-      it "should return an error when a required value is nil" do
-        df.value = nil
-        df.validator_rule = nil
-        expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+          it "returns nil when the value is a number" do
+            df.value = '123'
+            expect(df.validate_field_data(dt, dg)).to be_nil
+          end
+
+          it "returns an error when the value is not a number" do
+            df.value = 'a12'
+            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
+          end
+        end
       end
     end
   end
