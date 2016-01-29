@@ -23,7 +23,6 @@ module Rbac
     ResourcePool
     SecurityGroup
     Service
-    ServiceTemplate
     Storage
     VmOrTemplate
   )
