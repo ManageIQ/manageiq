@@ -62,18 +62,14 @@ describe MiqStorageMetric do
   describe '.metrics_rollup_class_names' do
     it "works" do
       OntapAggregateMetric.create
-      expect(MiqStorageMetric.metrics_rollup_class_names).to match_array(
-        %w(OntapAggregateMetricsRollup OntapDiskMetricsRollup OntapLunMetricsRollup
-           OntapSystemMetricsRollup OntapVolumeMetricsRollup))
+      expect(MiqStorageMetric.metrics_rollup_class_names).to match_array(%w(OntapAggregateMetricsRollup))
     end
   end
 
   describe '.metrics_rollup_classes' do
     it "works" do
       OntapAggregateMetric.create
-      expect(MiqStorageMetric.metrics_rollup_classes).to match_array([
-        OntapAggregateMetricsRollup, OntapDiskMetricsRollup, OntapLunMetricsRollup,
-        OntapSystemMetricsRollup, OntapVolumeMetricsRollup])
+      expect(MiqStorageMetric.metrics_rollup_classes).to match_array([OntapAggregateMetricsRollup])
     end
   end
 
@@ -130,6 +126,14 @@ describe MiqStorageMetric do
       stub_server_configuration(:storage => {:metrics_history => {}})
       OntapAggregateMetric.create
       MiqStorageMetric.purge_all_timer
+    end
+  end
+
+  describe '.metrics_rollup_by_rollup_type' do
+    it "works" do
+      met = OntapDiskMetric.create()
+      rollups = 2.times.map { met.miq_metrics_rollups.create(:rollup_type => "hourly") }
+      expect(met.metrics_rollups_by_rollup_type("hourly")).to match_array(rollups)
     end
   end
 end
