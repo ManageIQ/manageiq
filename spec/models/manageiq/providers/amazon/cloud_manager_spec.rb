@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require_relative 'aws_helper'
 
 describe ManageIQ::Providers::Amazon::CloudManager do
   it ".ems_type" do
@@ -23,11 +23,12 @@ describe ManageIQ::Providers::Amazon::CloudManager do
 
     before do
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
-      Aws.config[:ec2] = {:stub_responses => stub_responses}
     end
 
-    after do
-      Aws.config[:ec2].delete(:stub_responses)
+    around do |example|
+      with_aws_stubbed(:ec2 => stub_responses) do
+        example.run
+      end
     end
 
     def assert_region(ems, name)
@@ -67,7 +68,7 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     context "on amazon with two populated regions" do
       let(:stub_responses) do
         {
-          :describe_regions => {
+          :describe_regions   => {
             :regions => [
               {:region_name => 'us-east-1'},
               {:region_name => 'us-west-1'},
@@ -230,26 +231,14 @@ describe ManageIQ::Providers::Amazon::CloudManager do
   end
 
   context "#orchestration_template_validate" do
-    def with_aws_stubbed(stub_responses_per_service)
-      begin
-        stub_responses_per_service.each do |service, stub_responses|
-          raise "Aws.config[#{service}][:stub_responses] already set" if Aws.config.fetch(service, {})[:stub_responses]
-          Aws.config[service] ||= {}
-          Aws.config[service][:stub_responses] = stub_responses
-        end
-        yield
-      ensure
-        stub_responses_per_service.keys.each do |service|
-          Aws.config[service].delete(:stub_responses)
-        end
-      end
-    end
-
     it "validates a correct template" do
       template = FactoryGirl.create(:orchestration_template_cfn_with_content)
-      with_aws_stubbed(:cloudformation => {
+      stubbed_response = {
+        :cloudformation => {
           :validate_template => {}
-      }) do
+        }
+      }
+      with_aws_stubbed(stubbed_response) do
         ems = FactoryGirl.create(:ems_amazon_with_authentication)
         expect(ems.orchestration_template_validate(template)).to be_nil
       end
@@ -258,9 +247,12 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     it "returns an error string for an incorrect template" do
       template = FactoryGirl.create(:orchestration_template_cfn_with_content)
       error_message = "Template format error: At least one Resources member must be defined"
-      with_aws_stubbed(:cloudformation => {
+      stubbed_response = {
+        :cloudformation => {
           :validate_template => Aws::CloudFormation::Errors::ValidationError.new(:no_context, error_message)
-      }) do
+        }
+      }
+      with_aws_stubbed(stubbed_response) do
         ems = FactoryGirl.create(:ems_amazon_with_authentication)
         expect(ems.orchestration_template_validate(template)).to eq(error_message)
       end
