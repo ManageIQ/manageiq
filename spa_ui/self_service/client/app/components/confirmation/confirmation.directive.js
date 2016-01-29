@@ -51,11 +51,13 @@
       function getSizeOfConfirmation() {
         var height;
         var width;
-        var sizerMessage = attrs.confirmationMessage || 'For Sizing';
+        var sizerMessage = attrs.confirmationMessage || __('For Sizing');
         var sizer = angular.element('<div class="confirmation__dialog"><div class="confirmation__content">' +
           '<div class="confirmation__body"><p class="confirmation_message">' + sizerMessage +
           '</p><div class="confirmation_buttons">' +
-          '<button type="button" class="confirmation__button btn-rounded">For Sizing</button>' +
+          '<button type="button" class="confirmation__button btn-rounded">' +
+          __('For Sizing') +
+          '</button>' +
           '</div></div></div></div>');
 
         sizer.css('visibility', 'hidden');
@@ -90,9 +92,9 @@
         angular.extend(vm, api);
         vm.position = angular.isDefined(vm.position) ? vm.position : 'top-center';
         vm.title = angular.isDefined(vm.title) ? vm.title : false;
-        vm.message = angular.isDefined(vm.message) ? vm.message : 'Are you sure you wish to proceed?';
+        vm.message = angular.isDefined(vm.message) ? vm.message : __('Are you sure you wish to proceed?');
         vm.ok = angular.isDefined(vm.ok) ? vm.ok : 'Ok';
-        vm.cancel = angular.isDefined(vm.cancel) ? vm.cancel : 'Cancel';
+        vm.cancel = angular.isDefined(vm.cancel) ? vm.cancel : __('Cancel');
         vm.onCancel = angular.isDefined(vm.onCancel) ? vm.onCancel : angular.noop;
         vm.okClass = angular.isDefined(vm.okStyle) ? 'btn-' + vm.okStyle : '';
         vm.confirmIf = angular.isDefined(vm.confirmIf) ? vm.confirmIf : true;

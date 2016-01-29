@@ -1,6 +1,6 @@
 <div>
   <div ng-if=" !vm.dialog.label">
-    <h2>No Provisioning Dialog Available.</h2>
+    <h2 translate>No Provisioning Dialog Available.</h2>
   </div>
   <div ng-if="vm.dialog.label">
     <div>
@@ -111,7 +111,7 @@
                   </div>
 
                   <div class="col-sm-1" ng-if="dialogField.dynamic && dialogField.show_refresh_button">
-                    <button type="button" class="btn" ng-click="dialogField.refreshSingleDialogField()">
+                    <button type="button" class="btn" ng-click="dialogField.refreshSingleDialogField()" translate>
                       Refresh
                     </button>
                   </div>

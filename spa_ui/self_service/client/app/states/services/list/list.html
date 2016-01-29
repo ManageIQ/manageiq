@@ -19,25 +19,25 @@
       </div>
       <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
         <span class="no-wrap">
-          <strong>Retirement Date</strong>&nbsp;
+          <strong translate>Retirement Date</strong>&nbsp;
           <span ng-if=(item.retires_on)>{{ item.retires_on | date }}</span>
-          <span ng-if=!(item.retires_on)>Never</span>
+          <span ng-if=!(item.retires_on) translate>Never</span>
         </span>
       </div>
        <div class="col-lg-2 col-md-2 hidden-sm hidden-xs">
         <span class="no-wrap">
-           <i class="pficon pficon-screen" tooltip="The number of instances running this service" tooltip-placement="bottom"></i>
-          <span><strong>{{ item.v_total_vms}}</strong> VMs</span>
+           <i class="pficon pficon-screen" tooltip="{{'The number of instances running this service'|translate}}" tooltip-placement="bottom"></i>
+          <span><strong>{{ item.v_total_vms}}</strong> {{'VMs'|translate}}</span>
         </span>
       </div>
       <div class="col-lg-2 col-md-2 hidden-sm hidden-xs">
         <span class="no-wrap">
-          <i class="pficon pficon-user" tooltip="Owner" tooltip-placement="bottom"></i>{{ item.evm_owner.name }}
+          <i class="pficon pficon-user" tooltip="{{'Owner'|translate}}" tooltip-placement="bottom"></i>{{ item.evm_owner.name }}
         </span>
       </div>
       <div class="col-lg-2 hidden-md hidden-sm hidden-xs">
         <span class="no-wrap">
-          <strong>Created On</strong>&nbsp;{{ item.created_at | date }}
+          <strong translate>Created On</strong>&nbsp;{{ item.created_at | date }}
         </span>
       </div>
     </div>

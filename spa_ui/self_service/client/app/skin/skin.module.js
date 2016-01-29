@@ -3,10 +3,10 @@
 
   var text = {
     app: {
-      name: 'ManageIQ Self Service'
+      name: __('ManageIQ Self Service')
     },
     login: {
-      brand: '<strong>ManageIQ</strong> Self Service'
+      brand: '<strong>ManageIQ</strong> ' + __('Self Service')
     }
   };
 

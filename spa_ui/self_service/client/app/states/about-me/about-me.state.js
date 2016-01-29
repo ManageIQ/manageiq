@@ -17,7 +17,7 @@
         templateUrl: 'app/states/about-me/about-me.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'About Me'
+        title: __('About Me')
       }
     };
   }
@@ -26,6 +26,6 @@
   function StateController() {
     var vm = this;
 
-    vm.title = 'About Me';
+    vm.title = __('About Me');
   }
 })();

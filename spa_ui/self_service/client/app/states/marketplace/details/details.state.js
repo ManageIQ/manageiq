@@ -16,7 +16,7 @@
         templateUrl: 'app/states/marketplace/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Service Template Details',
+        title: __('Service Template Details'),
         resolve: {
           dialogs: resolveDialogs,
           serviceTemplate: resolveServiceTemplate
@@ -43,7 +43,7 @@
   function StateController($state, CollectionsApi, dialogs, serviceTemplate, Notifications, DialogFieldRefresh) {
     var vm = this;
 
-    vm.title = 'Service Template Details';
+    vm.title = __('Service Template Details');
     vm.serviceTemplate = serviceTemplate;
 
     if (dialogs.subcount > 0) {
@@ -117,7 +117,7 @@
       }
 
       function submitFailure(result) {
-        Notifications.error('There was an error submitting this request: ' + result);
+        Notifications.error(__('There was an error submitting this request: ') + result);
       }
     }
   }

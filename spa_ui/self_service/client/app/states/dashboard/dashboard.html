@@ -6,7 +6,7 @@
           <span class="fa fa-file-o"></span>
           <div class="ss-dashboard__card-primary__count">
             <h2>{{ ::vm.servicesCount.total }}</h2>
-            <h3>Total Services</h3>
+            <h3 translate>Total Services</h3>
           </div>
         </div>
       </div>
@@ -17,7 +17,7 @@
           <span class="fa fa-file-text-o"></span>
           <div class="ss-dashboard__card-primary__count">
             <h2>{{ ::vm.requestsCount.total }}</h2>
-            <h3>Total Requests</h3>
+            <h3 translate>Total Requests</h3>
           </div>
         </div>
       </div>
@@ -29,12 +29,12 @@
         <div class="row row-cards-pf">
             <div class="card-pf card-pf-aggregate-status card-divider">
               <div class="card-pf-body">
-                <h2 class="card-pf-title">
+                <h2 class="card-pf-title" translate>
                   Retiring Soon
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">  
                   <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon pficon-warning-triangle-o" tooltip="The number of services retiring within the next 30 days" tooltip-placement="bottom"></span>
+                    <span class="pficon pficon-warning-triangle-o" tooltip="{{'The number of services retiring within the next 30 days'|translate}}" tooltip-placement="bottom"></span>
                   </span>
                   <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Soon')">{{ ::vm.servicesCount.soon }}</a></span>
                 </p>
@@ -42,12 +42,12 @@
             </div>
             <div class="card-pf card-pf-aggregate-status card-divider">
               <div class="card-pf-body">
-                <h2 class="card-pf-title">
+                <h2 class="card-pf-title" translate>
                   Current Services
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">    
                   <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon fa fa-check" tooltip="The number of active services" tooltip-placement="bottom"></span>
+                    <span class="pficon fa fa-check" tooltip="{{'The number of active services'|translate}}" tooltip-placement="bottom"></span>
                   </span>
                   <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Current')">{{ ::vm.servicesCount.current }}</a></span>
                 </p>
@@ -55,12 +55,12 @@
             </div>
             <div class="card-pf card-pf-aggregate-status">
               <div class="card-pf-body">
-                <h2 class="card-pf-title">
+                <h2 class="card-pf-title" translate>
                   Retired Services
                 </h2>
                 <p class="card-pf-aggregate-status-notifications">    
                   <span class="card-pf-aggregate-status-notification">
-                    <span class="pficon pficon-close" tooltip="The number of services which have hit their retirement period or been retired" tooltip-placement="bottom"></span>
+                    <span class="pficon pficon-close" tooltip="{{'The number of services which have hit their retirement period or been retired'|translate}}" tooltip-placement="bottom"></span>
                   </span>
                   <span class="card-pf-aggregate-status-notification"><a ng-click="vm.navigateToServicesList('Retired')">{{ ::vm.servicesCount.retired }}</a>
                   </span>
@@ -75,7 +75,7 @@
         <div class="row row-cards-pf">
           <div class="card-pf card-pf-aggregate-status card-divider">
             <div class="card-pf-body">
-              <h2 class="card-pf-title">
+              <h2 class="card-pf-title" translate>
                 Pending Requests
               </h2>
               <p class="card-pf-aggregate-status-notifications">
@@ -88,7 +88,7 @@
           </div>
           <div class="card-pf card-pf-aggregate-status card-divider">
             <div class="card-pf-body">
-              <h2 class="card-pf-title">
+              <h2 class="card-pf-title" translate>
                 Approved Requests
               </h2>
               <p class="card-pf-aggregate-status-notifications">  
@@ -101,7 +101,7 @@
           </div>
           <div class="card-pf card-pf-aggregate-status">
             <div class="card-pf-body">
-              <h2 class="card-pf-title">
+              <h2 class="card-pf-title" translate>
                 Denied Requests
               </h2>
               <p class="card-pf-aggregate-status-notifications">  

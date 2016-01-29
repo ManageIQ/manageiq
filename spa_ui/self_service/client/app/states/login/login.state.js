@@ -17,7 +17,7 @@
         templateUrl: 'app/states/login/login.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Login',
+        title: __('Login'),
         data: {
           layout: 'blank'
         }
@@ -29,7 +29,7 @@
   function StateController($state, Text, API_LOGIN, API_PASSWORD, AuthenticationApi, CollectionsApi, Session) {
     var vm = this;
 
-    vm.title = 'Login';
+    vm.title = __('Login');
     vm.text = Text.login;
 
     vm.credentials = {

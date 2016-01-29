@@ -16,7 +16,7 @@
         templateUrl: 'app/states/products/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Products Details'
+        title: __('Products Details')
       }
     };
   }
@@ -25,14 +25,14 @@
   function StateController(logger) {
     var vm = this;
 
-    vm.title = 'Service Details';
+    vm.title = __('Service Details');
 
     vm.activate = activate;
 
     activate();
 
     function activate() {
-      logger.info('Activated Products Details View');
+      logger.info(__('Activated Products Details View'));
     }
   }
 })();
