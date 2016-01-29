@@ -12,6 +12,8 @@ class MigrateUrlFromProviderToEndpoints < ActiveRecord::Migration
   end
 
   def up
+    Endpoint.connection.schema_cache.clear!
+    Endpoint.reset_column_information
     say_with_time("Migrating Provider URL attribute to Endpoints") do
       ExtManagementSystem.all.each do |ems|
         next if ems.provider_id.nil?
