@@ -300,7 +300,7 @@ class CatalogController < ApplicationController
       identify_catalog(from_cid(params[:id]))
       @record ||= ServiceTemplateCatalog.find_by_id(from_cid(params[:id]))
     end
-    params[:id] = x_build_node_id(@record, nil, x_tree(x_active_tree))  # Get the tree node id
+    params[:id] = x_build_node_id(@record, x_tree(x_active_tree))  # Get the tree node id
     tree_select
   end
 
@@ -1716,7 +1716,7 @@ class CatalogController < ApplicationController
            x_tree[:open_nodes].include?(parents.last[:id])
       parents.reverse_each do |p|
         unless p.nil?
-          p_node = x_build_node_id(p, nil, :full_ids => true)
+          p_node = x_build_node_id(p, :full_ids => true)
           unless x_tree[:open_nodes].include?(p_node)
             x_tree[:open_nodes].push(p_node)
             existing_node = p_node
