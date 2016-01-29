@@ -53,8 +53,8 @@ module Vmdb
       apply_settings_changes(miq_server, deltas)
     end
 
-    def self.for_miq_server(miq_server)
-      reload!(build_settings(miq_server))
+    def self.for_resource(resource)
+      reload!(build_settings(resource))
     end
 
     def self.template_settings
