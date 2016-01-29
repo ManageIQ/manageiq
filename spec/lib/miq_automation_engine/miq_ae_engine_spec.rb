@@ -743,4 +743,22 @@ module MiqAeEngineSpec
       expect(my_objects_array).to eq([])
     end
   end
+
+  describe MiqAeEngine do
+    include AutomationSpecHelper
+    before do
+      @user = FactoryGirl.create(:user_with_group)
+      ae_fields = {'var1' => {:aetype => 'attribute', :datatype => 'string'}}
+      ae_instances = {'.missing' => {'var1' => {:value => "${#_missing_instance}"}}}
+      create_ae_model(:name => 'DOM1', :ae_namespace => 'NS1', :ae_class => 'CLASS1',
+                      :instance_name => '.missing', :ae_fields => ae_fields,
+                      :ae_instances => ae_instances)
+    end
+
+    it "check _missing_instance" do
+      ws = MiqAeEngine.instantiate("/DOM1/NS1/CLASS1/FRED", @user)
+      expect(ws.root['var1']).to eq('FRED')
+      expect(ws.root['_missing_instance']).to eq('FRED')
+    end
+  end
 end
