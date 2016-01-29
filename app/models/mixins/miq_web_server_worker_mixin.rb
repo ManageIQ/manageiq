@@ -23,12 +23,14 @@ module MiqWebServerWorkerMixin
     end
 
     def self.configure_secret_token
-      Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
+      return if Rails.application.config.secret_token
 
-      # To set a secret token after the Vmdb::Application is initialized?,
+      Rails.application.config.secret_token = MiqDatabase.first.session_secret_token
+
+      # To set a secret token after the Rails.application is initialized,
       # we need to reset the secrets since they are cached:
       # https://github.com/rails/rails/blob/4-2-stable/railties/lib/rails/application.rb#L386-L401
-      Vmdb::Application.secrets = nil if Vmdb::Application.initialized?
+      Rails.application.secrets = nil
     end
 
     def self.rails_server
@@ -159,7 +161,7 @@ module MiqWebServerWorkerMixin
       params = {
         :Host        => self.class.binding_address,
         :environment => Rails.env.to_s,
-        :app         => Vmdb::Application
+        :app         => Rails.application
       }
 
       params[:Port] = port.kind_of?(Numeric) ? port : 3000
