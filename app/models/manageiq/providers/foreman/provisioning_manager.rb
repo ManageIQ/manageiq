@@ -1,7 +1,7 @@
 class ManageIQ::Providers::Foreman::ProvisioningManager < ManageIQ::Providers::ProvisioningManager
-  require_dependency 'manageiq/providers/foreman/provisioning_manager/refresher'
-  require_dependency 'manageiq/providers/foreman/provisioning_manager/refresh_parser'
-  require_dependency 'manageiq/providers/foreman/provisioning_manager/refresh_worker'
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
 
   delegate :authentication_check,
            :authentication_status,

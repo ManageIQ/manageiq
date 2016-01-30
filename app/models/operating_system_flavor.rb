@@ -1,4 +1,4 @@
-class OperatingSystemFlavor < ActiveRecord::Base
+class OperatingSystemFlavor < ApplicationRecord
   include ReportableMixin
 
   acts_as_miq_taggable

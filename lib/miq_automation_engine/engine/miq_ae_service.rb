@@ -1,4 +1,13 @@
+require_relative 'miq_ae_service/miq_ae_service_model_legacy'
+require_relative 'miq_ae_service/miq_ae_service_object_common'
+require_relative 'miq_ae_service/miq_ae_service_vmdb'
 module MiqAeMethodService
+  class Deprecation < Vmdb::Deprecation
+    def self.default_log
+      $miq_ae_logger
+    end
+  end
+
   class MiqAeServiceFront
     include DRbUndumped
     def find(id)
@@ -9,8 +18,11 @@ module MiqAeMethodService
   class MiqAeService
     include Vmdb::Logging
     include DRbUndumped
-    @@id_hash = Hash.new
-    @@current = Array.new
+    include MiqAeMethodService::MiqAeServiceModelLegacy
+    include MiqAeMethodService::MiqAeServiceVmdb
+
+    @@id_hash = {}
+    @@current = []
 
     def self.current
       @@current.last
@@ -65,7 +77,7 @@ module MiqAeMethodService
       @preamble_raw = data
       @preamble = begin
         lines = []
-         @preamble_raw.each_line { |l| lines << l.rstrip }
+        @preamble_raw.each_line { |l| lines << l.rstrip }
         lines
       end
       @preamble_lines = @preamble.length
@@ -102,13 +114,9 @@ module MiqAeMethodService
       ActiveRecord::Base.connection_pool.release_connection
     end
 
-    def inputs=(hash)
-      @inputs = hash
-    end
+    attr_writer :inputs
 
-    def inputs
-      @inputs
-    end
+    attr_reader :inputs
 
     ####################################################
 
@@ -129,26 +137,17 @@ module MiqAeMethodService
     end
 
     def instantiate(uri)
-      begin
-        obj = @workspace.instantiate(uri, @workspace.current_object)
-        return nil if obj.nil?
-        drb_return(MiqAeServiceObject.new(obj, self))
-      rescue => e
-        return nil
-      end
+      obj = @workspace.instantiate(uri, @workspace.ae_user, @workspace.current_object)
+      return nil if obj.nil?
+      MiqAeServiceObject.new(obj, self)
+    rescue => e
+      return nil
     end
 
-    def drb_return(obj)
-      # Save a reference to the object, so that we control when it gets deleted.  Otherwise, Ruby Garbage Collection may remove it prematurely.
-      # If it is removed prematurely and then referenced by the method, we get a DRb recycled object error
-      @drb_server_references << obj
-      obj
-    end
-
-    def object(path=nil)
+    def object(path = nil)
       obj = @workspace.get_obj_from_path(path)
       return nil if obj.nil?
-      drb_return MiqAeServiceObject.new(obj, self)
+      MiqAeServiceObject.new(obj, self)
     end
 
     def hash_to_query(hash)
@@ -176,7 +175,7 @@ module MiqAeMethodService
     end
 
     def current_object
-      @current_object ||= drb_return(MiqAeServiceObject.new(@workspace.current_object, self))
+      @current_object ||= MiqAeServiceObject.new(@workspace.current_object, self)
     end
 
     def current_method
@@ -188,25 +187,18 @@ module MiqAeMethodService
     end
 
     def root
-      @root_object    ||= self.object("/")
+      @root_object ||= object("/")
     end
 
     def parent
-      @parent_object  ||= self.object("..")
+      @parent_object ||= object("..")
     end
 
     def objects(aobj)
-      aobj.collect { |obj|
-        obj = drb_return(MiqAeServiceObject.new(obj, self)) unless obj.kind_of?(MiqAeServiceObject)
+      aobj.collect do |obj|
+        obj = MiqAeServiceObject.new(obj, self) unless obj.kind_of?(MiqAeServiceObject)
         obj
-      }
-    end
-
-    def vmdb(type, *args)
-      type = type.to_s.underscore
-      type = "ext_management_system" if type == "ems"
-      service = MiqAeMethodService.const_get("MiqAeService#{type.camelize}")
-      args.empty? ? service : service.find(*args)
+      end
     end
 
     def datastore
@@ -215,36 +207,10 @@ module MiqAeMethodService
     def ldap
     end
 
-    CUSTOMER_ROOT = File.expand_path(File.join(Rails.root, "..", "customer"))
-    $:.push CUSTOMER_ROOT
-    def new_object(what, *args)
-      begin
-        require what.underscore
-      rescue LoadError => err
-        _log.warn("Error requiring <#{what}> from #{CUSTOMER_ROOT} because <#{err.message}>")
-        return nil
-      end
-
-      begin
-        klass = what.constantize
-      rescue NameError => err
-        _log.warn("Error converting <#{what}> to a constant because <#{err.message}>")
-        ruby_file = File.join(CUSTOMER_ROOT, "#{what.underscore}.rb")
-        contents  = File.read(ruby_file) rescue nil
-        _log.warn("Contents of Customer Library <#{ruby_file}> are:\n#{contents}")
-        return nil
-      end
-
-      klass.send(:include, DRbUndumped) unless klass.ancestors.include?(DRbUndumped)
-      drb_return klass.new(*args)
-    end
-
     def execute(m, *args)
-      begin
-        drb_return MiqAeServiceMethods.send(m, *args)
-      rescue NoMethodError => err
-        raise MiqAeException::MethodNotFound, err.message
-      end
+      MiqAeServiceMethods.send(m, *args)
+    rescue NoMethodError => err
+      raise MiqAeException::MethodNotFound, err.message
     end
 
     def instance_exists?(path)
@@ -269,7 +235,7 @@ module MiqAeMethodService
       aei = MiqAeInstance.create(:name => instance, :class_id => aec.id)
       values_hash.each { |key, value| aei.set_field_value(key, value) }
 
-      return true
+      true
     end
 
     def instance_get_display_name(path)
@@ -284,7 +250,7 @@ module MiqAeMethodService
       return false if aei.nil?
 
       aei.update_attributes(:display_name => display_name)
-      return true
+      true
     end
 
     def instance_update(path, values_hash)
@@ -295,7 +261,7 @@ module MiqAeMethodService
       return false if aei.nil?
 
       values_hash.each { |key, value| aei.set_field_value(key, value) }
-      return true
+      true
     end
 
     def instance_find(path, options = {})
@@ -320,7 +286,7 @@ module MiqAeMethodService
         end
       end
 
-      return result
+      result
     end
 
     def instance_get(path)
@@ -339,13 +305,14 @@ module MiqAeMethodService
       return false if aei.nil?
 
       aei.destroy
-      return true
+      true
     end
 
     def __find_instance_from_path(path)
-      ns, klass, instance = MiqAeEngine::MiqAePath.split(path)
+      dom, ns, klass, instance = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      return false unless visible_domain?(dom)
 
-      aec = MiqAeClass.find_by_namespace_and_name(ns, klass)
+      aec = MiqAeClass.find_by_namespace_and_name("#{dom}/#{ns}", klass)
       return nil if aec.nil?
 
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
@@ -354,75 +321,32 @@ module MiqAeMethodService
     private
 
     def editable_instance?(path)
-      dom, _, _, _ = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      dom, = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      return false unless owned_domain?(dom)
       domain = MiqAeDomain.find_by_fqname(dom, false)
       return false unless domain
       $log.warn "path=#{path.inspect} : is not editable" unless domain.editable?
       domain.editable?
     end
-  end
 
-  module MiqAeServiceObjectCommon
-    def attributes
-      @object.attributes.each_with_object({}) do |(key, value), hash|
-        hash[key] = value.is_a?(MiqAePassword) ? value.to_s : value
-      end
+    def owned_domain?(dom)
+      domains = @workspace.ae_user.current_tenant.ae_domains.collect(&:name).map(&:upcase)
+      return true if domains.include?(dom.upcase)
+      $log.warn "domain=#{dom} : is not editable"
+      false
     end
 
-    def attributes=(hash)
-      @object.attributes = hash
-    end
-
-    def [](attr)
-      value = @object[attr.downcase]
-      value = value.to_s if value.kind_of?(MiqAePassword)
-      value
-    end
-
-    def []=(attr, value)
-      @object[attr.downcase] = value
-    end
-
-    # To explicitly override Object#id method, which is spewing deprecation warnings to use Object#object_id
-    def id
-      @object ? @object.id : nil
-    end
-
-    def decrypt(attr)
-      MiqAePassword.decrypt_if_password(@object[attr.downcase])
-    end
-
-    def current_field_name
-      @object.current_field_name
-    end
-
-    def current_field_type
-      @object.current_field_type
-    end
-
-    def current_message
-      @object.current_message
-    end
-
-    def namespace
-      @object.namespace
-    end
-
-    def class_name
-      @object.klass
-    end
-
-    def instance_name
-      @object.instance
-    end
-
-    def name
-      @object.object_name
+    def visible_domain?(dom)
+      domains = @workspace.ae_user.current_tenant.visible_domains.collect(&:name).map(&:upcase)
+      return true if domains.include?(dom.upcase)
+      $log.warn "domain=#{dom} : is not viewable"
+      false
     end
   end
+
 
   class MiqAeServiceObject
-    include MiqAeServiceObjectCommon
+    include MiqAeMethodService::MiqAeServiceObjectCommon
     include DRbUndumped
 
     def initialize(obj, svc)
@@ -431,15 +355,15 @@ module MiqAeMethodService
       @service = svc
     end
 
-    def children(name=nil)
+    def children(name = nil)
       objs = @object.children(name)
       return nil if objs.nil?
       objs = @service.objects([objs].flatten)
-      return objs.length == 1 ? objs.first : objs
+      objs.length == 1 ? objs.first : objs
     end
 
     def to_s
-      self.name
+      name
     end
 
     def inspect

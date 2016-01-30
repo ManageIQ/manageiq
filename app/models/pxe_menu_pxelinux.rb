@@ -44,7 +44,7 @@ class PxeMenuPxelinux < PxeMenu
     initrd   = options.detect { |o| o.starts_with?("initrd=") }
     initrd &&= initrd[7..-1]
 
-    rejects = %w{ initrd= }
+    rejects = %w( initrd= )
     options.reject! { |o| o.blank? || rejects.any? { |r| o.starts_with?(r) } }
     return options.join(' '), initrd
   end

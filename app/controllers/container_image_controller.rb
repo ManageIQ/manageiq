@@ -10,6 +10,10 @@ class ContainerImageController < ApplicationController
     process_show_list
   end
 
+  def guest_applications
+    show_association('guest_applications', 'Packages', 'guest_application', :guest_applications, GuestApplication)
+  end
+
   private ############################
 
   def display_name

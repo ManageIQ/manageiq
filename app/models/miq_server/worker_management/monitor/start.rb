@@ -18,7 +18,7 @@ module MiqServer::WorkerManagement::Monitor::Start
 
       if wait_for_started_timeout.seconds.ago.utc > entered_wait_for_started_loop
         _log.warn("After waiting #{wait_for_started_timeout} seconds, no longer waiting for the following workers to start:")
-        starting.each {|w| $log.warn("Worker type: #{w.class.name}, pid: #{w.pid}, guid: #{w.guid}, status: #{w.status}") }
+        starting.each { |w| $log.warn("Worker type: #{w.class.name}, pid: #{w.pid}, guid: #{w.guid}, status: #{w.status}") }
         break
       end
 

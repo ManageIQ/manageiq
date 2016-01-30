@@ -1,4 +1,3 @@
-require "spec_helper"
 require "appliance_console/service_group"
 require "linux_admin"
 
@@ -7,7 +6,7 @@ describe ApplianceConsole::ServiceGroup do
   let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
 
   before do
-    PostgresAdmin.stub(:service_name => "postgresql")
+    allow(PostgresAdmin).to receive_messages(:service_name => "postgresql")
   end
 
   describe "#postgresql?" do

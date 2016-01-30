@@ -14,9 +14,10 @@
               {:action => "vm_pre_prov", :sort_choice => h, :id => id.to_s},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
+              "data-method"          => :post,
               :remote                => true)
             - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
-              %img{:src => "/images/icons/16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+              %img{:src => image_path("16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
     %tbody
       - @vms.each do |row|
         - @id = row.id
@@ -29,7 +30,7 @@
           %td
             = h(row.platform)
           %td
-            = h(row.num_cpu)
+            = h(row.cpu_total_cores)
           %td
             = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
           %td

@@ -75,7 +75,7 @@ end
 def emailAlert(options)
   # Get to_email_address from model unless specified below
   to = nil
-  to  ||= $evm.object['to_email_address']
+  to ||= $evm.object['to_email_address']
 
   # Get from_email_address from model unless specified below
   from = nil

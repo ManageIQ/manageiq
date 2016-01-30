@@ -3,7 +3,7 @@ class MemCache
   LARGE_VALUE_SIZE = 1_048_064 # Chose 512 bytes less than 1MB due to memcache's seemingly random max limit
   CHUNK_SIZE = 1_048_064
 
-  alias orig_get get
+  alias_method :orig_get, :get
 
   ##
   # Retrieves +key+ from memcache.  If +raw+ is false, the value will be
@@ -12,7 +12,7 @@ class MemCache
   def get(key, raw = false)
     server, cache_key = request_setup key
 
-    value = if @multithread then
+    value = if @multithread
               threadsafe_cache_get server, cache_key
             else
               cache_get server, cache_key
@@ -31,9 +31,9 @@ class MemCache
   ##
   # Shortcut to get a value from the cache.
 
-  alias [] get
+  alias_method :[], :get
 
-  alias orig_set set
+  alias_method :orig_set, :set
 
   ##
   # Add +key+ to the cache with value +value+ that expires in +expiry+
@@ -68,7 +68,7 @@ class MemCache
     end
   end
 
-  alias orig_add add
+  alias_method :orig_add, :add
 
   ##
   # Add +key+ to the cache with value +value+ that expires in +expiry+
@@ -107,14 +107,14 @@ class MemCache
   # Methods added to support large values
 
   def large_value_key?(key)
-    key.is_a?(String) && key[0, LARGE_VALUE_KEY.length] == LARGE_VALUE_KEY
+    key.kind_of?(String) && key[0, LARGE_VALUE_KEY.length] == LARGE_VALUE_KEY
   end
 
   def cache_get_large(server, cache_key, large_value_key, raw)
     # Handle recollecting a split object
     chunks = (0...large_value_key[LARGE_VALUE_KEY.length..-1].to_i).collect { |c| "#{cache_key}:chunk_#{c}" }
     chunks_keys = chunks.join(' ')
-    values = if @multithread then
+    values = if @multithread
                threadsafe_cache_get_multi server, chunks_keys
              else
                cache_get_multi server, chunks_keys
@@ -125,7 +125,7 @@ class MemCache
 
     value = values.join
     value = Marshal.load(value) unless raw
-    return value
+    value
   end
 
   def cache_set_large(key, value, expiry = 0)

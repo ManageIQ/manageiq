@@ -1,10 +1,10 @@
 module MiqReport::Generator::Aggregation
   def build_subtotals(all_dims = false)
-    return unless self.group == "c" || (!self.col_options.blank? && !col_options.find {|c,h| h.has_key?(:grouping)}.blank?)
-    return if     self.sortby.blank?
+    return unless group == "c" || (!col_options.blank? && !col_options.find { |_c, h| h.key?(:grouping) }.blank?)
+    return if     sortby.blank?
 
-    grouping_keys = all_dims ? self.sortby : self.sortby.first
-    self.extras[:grouping] = self.generate_subtotals(self.table, grouping_keys, self.col_options)
+    grouping_keys = all_dims ? sortby : sortby.first
+    extras[:grouping] = generate_subtotals(table, grouping_keys, col_options)
   end
 
   def generate_subtotals(table, group_keys, options)
@@ -19,13 +19,13 @@ module MiqReport::Generator::Aggregation
         group = {:count => 0, :row => r.to_hash}
         gid = get_group_val(r, gkeys)
       end
-      self.aggregate_totals(r, group, totals, options)
+      aggregate_totals(r, group, totals, options)
       group[:count] += 1
     end
     process_group_break(gid, group, totals, result)
     process_totals(totals)
     result[:_total_] = totals
-    return result
+    result
   end
 
   def aggregate_totals(row, group, total, options)
@@ -68,5 +68,4 @@ module MiqReport::Generator::Aggregation
       end
     end
   end
-
 end

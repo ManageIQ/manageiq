@@ -14,18 +14,18 @@ module DriftStateMixin
   end
 
   def drift_state_timestamps
-    self.drift_states.select(:timestamp).order(:timestamp).collect(&:timestamp)
+    drift_states.select(:timestamp).order(:timestamp).collect(&:timestamp)
   end
 
   def first_drift_state_timestamp
-    self.first_drift_state_timestamp_rec.try(:timestamp)
+    first_drift_state_timestamp_rec.try(:timestamp)
   end
 
   def last_drift_state_timestamp
-    self.last_drift_state_timestamp_rec.try(:timestamp)
+    last_drift_state_timestamp_rec.try(:timestamp)
   end
 
   def save_drift_state
-    self.drift_states.create!(:timestamp => Time.now.utc, :data => self.to_model_hash)
+    drift_states.create!(:timestamp => Time.now.utc, :data => to_model_hash)
   end
 end

@@ -1,12 +1,13 @@
 require_relative './bundler_setup'
 
-begin
-  require 'coveralls/rake/task'
-rescue LoadError
-else
-  Coveralls::RakeTask.new
-end
-
 Dir[File.join(GEMS_PENDING_ROOT, "lib/tasks/**/*.rake")].sort.each { |ext| load ext }
 
-task :default => [:spec, :test, 'coveralls:push']
+task :default do
+  Rake::Task["spec"].invoke
+  Rake::Task["test"].invoke
+  if ENV["TRAVIS"]
+    require 'coveralls/rake/task'
+    Coveralls::RakeTask.new
+    Rake::Task["coveralls:push"].invoke
+  end
+end

@@ -4,10 +4,10 @@ class GenericMailer < ActionMailer::Base
 
   def self.deliver(method, options = {})
     _log.info("starting: method: #{method} options: #{options} ")
-    options[:attachment] &&= self.blob_to_attachment(options[:attachment])
+    options[:attachment] &&= blob_to_attachment(options[:attachment])
     options[:sent_on] = Time.now
 
-    msg = self.send(method,options)
+    msg = send(method, options)
     begin
       msg.deliver_now
 
@@ -20,7 +20,7 @@ class GenericMailer < ActionMailer::Base
       rcpts.each do |rcpt|
         rcpt.split(',').each do |to|
           options.merge! :to => to
-          individual =  self.send(method, options)
+          individual =  send(method, options)
           begin
             individual.deliver_now
           rescue Net::SMTPError
@@ -49,9 +49,9 @@ class GenericMailer < ActionMailer::Base
 
   def self.deliver_queue(method, options = {})
     _log.info("starting: method: #{method} args: #{options} ")
-    options[:attachment] &&= self.attachment_to_blob(options[:attachment])
+    options[:attachment] &&= attachment_to_blob(options[:attachment])
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'deliver',
       :role        => 'notifier',
       :args        => [method, options],
@@ -65,13 +65,13 @@ class GenericMailer < ActionMailer::Base
     case attachment
     when Array
       counter = 0
-      attachment.collect { |a| self.attachment_to_blob(a, "evm_attachment_#{counter += 1}") }
+      attachment.collect { |a| attachment_to_blob(a, "evm_attachment_#{counter += 1}") }
     when Numeric # Blob ID
-      self.attachment_to_blob( {:attachment_id => attachment})
+      attachment_to_blob(:attachment_id => attachment)
     when String  # Actual Body
-      self.attachment_to_blob({ :body => attachment })
+      attachment_to_blob(:body => attachment)
     when Hash
-      attachment[:filename]      ||= attachment_filename
+      attachment[:filename] ||= attachment_filename
       attachment[:attachment_id] ||= begin
         blob = BinaryBlob.new(:name => "GenericMailer", :data_type => "text")
         blob.binary = attachment.delete(:body)
@@ -89,11 +89,11 @@ class GenericMailer < ActionMailer::Base
 
     case attachment
     when Array
-      attachment.collect { |a| self.blob_to_attachment(a) }
+      attachment.collect { |a| blob_to_attachment(a) }
     when Numeric  # Blob ID
-      self.blob_to_attachment( { :attachment_id => attachment } )
+      blob_to_attachment(:attachment_id => attachment)
     when String   # Actual Body
-      self.blob_to_attachment( { :attachment => attachment } )
+      blob_to_attachment(:attachment => attachment)
     when Hash
       attachment[:body] ||= begin
         blob = BinaryBlob.find(attachment.delete(:attachment_id))
@@ -140,11 +140,11 @@ class GenericMailer < ActionMailer::Base
   end
 
   def self.openssl_verify_modes
-    %w{none peer client_once fail_if_no_peer_cert}
+    %w(none peer client_once fail_if_no_peer_cert)
   end
 
   def self.authentication_modes
-    %w{login plain none}
+    %w(login plain none)
   end
 
   protected
@@ -157,7 +157,7 @@ class GenericMailer < ActionMailer::Base
     options[:attachment].each do |a|
       name = a[:filename]
       next if name.nil?
-      attachments[name] = { :mime_type => a[:content_type], :content => a[:body] }
+      attachments[name] = {:mime_type => a[:content_type], :content => a[:body]}
     end
     mail(:subject => options[:subject], :to => options[:to], :from => options[:from], :cc => options[:cc], :bcc => options[:bcc], :date => options[:sent_on])
   end
@@ -174,12 +174,12 @@ class GenericMailer < ActionMailer::Base
 
     evm_settings[:authentication] ||= :none
     case evm_settings[:authentication].to_s.to_sym
-    when :none;           AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = nil }
-    when :plain, :login;  AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
+    when :none then           AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = nil }
+    when :plain, :login then  AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
     else                  raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
     end
 
-    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.has_key?(key) }
+    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.key?(key) }
 
     ActionMailer::Base.smtp_settings = am_settings
     log_smtp_settings = am_settings.dup

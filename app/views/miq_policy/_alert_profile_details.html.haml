@@ -1,7 +1,7 @@
 - if @edit
   - url = url_for(:action => 'alert_profile_field_changed', :id => "#{@alert_profile.id || 'new'}")
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
-#alert_profile_details_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#alert_profile_details_div
   - if @assign
     = render :partial => 'alert_profile_assign'
   - elsif @alert_profile
@@ -13,7 +13,7 @@
         %div{:class => "form-horizontal#{@edit ? "" : ".static"} "}
           .form-group
             %label.control-label.col-md-2= _("Description")
-            .col-md-10
+            .col-md-8
               - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,
@@ -35,7 +35,7 @@
                 %tr{:title => _("View this Alert"),
                   :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
                   %td.narrow
-                    %img{:src => "/images/icons/new/miq_alert.png"}
+                    %img{:src => image_path('100/miq_alert.png')}
                   %td
                     = h(a.description)
         %hr
@@ -55,25 +55,38 @@
                   :size     => 8,
                   :id       => "choices_chosen")
             %td{:width => "20", :valign => "middle"}
-              = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class  => "rollover small", :alt => (t = _("Move selected Alerts into this Profile"))),
-                {:action => 'alert_profile_edit', :button => 'move_right', :id => @alert_profile},
+              = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Move selected Alerts into this Profile"))),
+                {:action => 'alert_profile_edit',
+                 :button => 'move_right',
+                 :id     => @alert_profile},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
                 "data-submit"          => 'choices_chosen_div',
-                :remote => true, :title  => t)
-              = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => (t = _("Remove all Alerts from this Profile"))),
-                {:action => 'alert_profile_edit', :button => 'move_allleft', :id => @alert_profile},
+                "data-method"          => :post,
+                :remote                => true,
+                :title                 => t)
+
+              = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Remove all Alerts from this Profile"))),
+                {:action => 'alert_profile_edit',
+                 :button => 'move_allleft',
+                 :id     => @alert_profile},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
-                :remote => true,
-                :title  => t)
-              = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => (t = _("Remove selected Alerts from this Profile"))),
-                {:action => 'alert_profile_edit', :button => 'move_left', :id => @alert_profile},
+                "data-method"          => :post,
+                :remote                => true,
+                :title                 => t)
+
+              = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Remove selected Alerts from this Profile"))),
+                {:action => 'alert_profile_edit',
+                 :button => 'move_left',
+                 :id     => @alert_profile},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
                 "data-submit"          => 'members_chosen_div',
-                :remote => true,
-                :title  => t)
+                "data-method"          => :post,
+                :remote                => true,
+                :title                 => t)
+
             %td{:align => "right", :valign => "top"}
               %span#members_chosen_div
                 = select_tag('members_chosen[]', options_for_select(@edit[:new][:alerts].sort),
@@ -122,7 +135,7 @@
               .form-group
                 %label.control-label.col-md-2
                   = ui_lookup(:models => aa[:objects].first.class.to_s)
-                .col-md-10
+                .col-md-8
                   %table
                     %tbody
                       - objs = []
@@ -143,7 +156,7 @@
             .form-group
               %label.control-label.col-md-2
                 = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @alert_profile_tag.description]
-              .col-md-10
+              .col-md-8
                 - aa[:tags].sort_by { |a| a.first.description.downcase }.each do |tag|
                   = h(tag.first.description)
                   %br

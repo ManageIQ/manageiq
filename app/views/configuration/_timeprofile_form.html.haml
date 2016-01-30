@@ -105,6 +105,6 @@
                 - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
                   %tr
                     %td.icon
-                      %img{:src => "/images/icons/new/report.png", :valign => "middle", :border => "0", :height => "20", :width => "20"}
+                      %img{:src => image_path('100/report.png'), :valign => "middle", :border => "0", :height => "20", :width => "20"}
                     %td= r.name
                     %td= r.title

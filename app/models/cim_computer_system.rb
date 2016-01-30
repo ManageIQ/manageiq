@@ -52,11 +52,11 @@ class CimComputerSystem < MiqCimInstance
   CcsToBseShortcut        = CimAssociations.CIM_ComputerSystem_TO_CIM_StorageExtent_SC
 
   SHORTCUT_DEFS = {
-    :cim_vms_long       => CcsToVmShortcut,
-    :cim_datastores_long    => CcsToDatastoreShortcut,
-    :cim_hosts_long       => CcsToHostShortcut,
-    :local_file_systems_long  => CcsToLocalFileSystemShortcut,
-    :base_storage_extents_long  => CcsToBseShortcut
+    :cim_vms_long              => CcsToVmShortcut,
+    :cim_datastores_long       => CcsToDatastoreShortcut,
+    :cim_hosts_long            => CcsToHostShortcut,
+    :local_file_systems_long   => CcsToLocalFileSystemShortcut,
+    :base_storage_extents_long => CcsToBseShortcut
   }
 
   ##################
@@ -155,7 +155,7 @@ class CimComputerSystem < MiqCimInstance
   def local_file_systems_long
     dh = {}
     getLeafNodes(CcsToLfs, self, dh)
-    return dh.values
+    dh.values
   end
 
   def local_file_systems
@@ -218,16 +218,16 @@ class CimComputerSystem < MiqCimInstance
   # End associations
   ###################
 
-  def protocol_endpoints(resultClass=nil)
-    getAssociators( :AssocClass   => 'CIM_HostedAccessPoint',
-            :ResultClass  => resultClass,
-            :Role     => 'Antecedent',
-            :ResultRole   => 'Dependent'
-    )
+  def protocol_endpoints(resultClass = nil)
+    getAssociators(:AssocClass  => 'CIM_HostedAccessPoint',
+                   :ResultClass => resultClass,
+                   :Role        => 'Antecedent',
+                   :ResultRole  => 'Dependent'
+                  )
   end
 
   def zone_name
-    self.zone.nil? ? '' : self.zone.name
+    zone.nil? ? '' : zone.name
   end
 
   def evm_display_name
@@ -272,52 +272,52 @@ class CimComputerSystem < MiqCimInstance
 
   def storage_managers
     storageManagers = []
-    return storageManagers if self.class_name != "ONTAP_StorageSystem"
+    return storageManagers if class_name != "ONTAP_StorageSystem"
 
-    getAssociators( :AssocClass => 'CIM_HostedAccessPoint',
-            :Role   => "Antecedent",
-            :ResultRole => "Dependent"
-    ).each do |ap|
+    getAssociators(:AssocClass => 'CIM_HostedAccessPoint',
+                   :Role       => "Antecedent",
+                   :ResultRole => "Dependent"
+                  ).each do |ap|
       next if ap.property("CreationClassName") != "ONTAP_RemoteServiceAccessPoint"
       ai = ap.property("AccessInfo")
-      next unless (/http:\/\/([^\/]*)\/na_admin/ =~ ai)
+      next unless /http:\/\/([^\/]*)\/na_admin/ =~ ai
       sma = NetappRemoteService.where("ipaddress = ? or hostname = ?", $1, $1)
       storageManagers.concat(sma) unless sma.length == 0
     end
-    return storageManagers
+    storageManagers
   end
 
   def available_aggregates
-    nrs            = self.storage_managers.first
+    nrs            = storage_managers.first
     return if nrs.nil?
 
-    nrs.aggr_list_info.inject({}) do |h,aggr|
+    nrs.aggr_list_info.inject({}) do |h, aggr|
       free_space   = ActionView::Base.new.number_to_human_size(aggr.size_available.to_i, :precision => 2)
       h[aggr.name] = "#{aggr.name} (#{free_space} available)"
       h
     end
   end
 
-  def create_logical_disk(name, aggrName, size, spaceReserve="none")
+  def create_logical_disk(name, aggrName, size, _spaceReserve = "none")
     # Returns: Array of true || false, If false, object will have errors attached
 
     _log.info("Create logical disk: #{name} ...")
 
     # Get the management inteface for the storage system.
-    nrs = self.storage_managers.first
+    nrs = storage_managers.first
     if nrs.nil?
-      field, message = ["NetAppFiler:", "Could not find manager entry: #{self.evm_display_name}"]
+      field, message = ["NetAppFiler:", "Could not find manager entry: #{evm_display_name}"]
       _log.error("#{field} #{message}")
-      self.errors.add(field, message)
+      errors.add(field, message)
       return false
     end
-    _log.info("Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
+    _log.info("Found service entry for NetApp filer: #{evm_display_name} -> #{nrs.ipaddress}")
 
     # Check to see if the volume already exists.
     if nrs.has_volume?(name)
       field, message = ["LogicalDisk:", "#{name} already exists"]
       _log.error("#{field} #{message}")
-      self.errors.add(field, message)
+      errors.add(field, message)
       return false
     end
     _log.info("Logical Disk  #{name} does not exist, continuing...")
@@ -328,23 +328,23 @@ class CimComputerSystem < MiqCimInstance
       aggr_info = nrs.aggr_list_info(aggrName)
     rescue => err
       _log.log_backtrace(err)
-      self.errors.add("Aggregate:", err.message)
+      errors.add("Aggregate:", err.message)
       return false
     end
     aggr_free_space = aggr_info.size_available.to_i
     if aggr_free_space < size.to_i.gigabytes
       field, message = ["Size:", "Insufficient free space in #{aggrName}: #{aggr_free_space}"]
       _log.error("#{field} #{message}")
-      self.errors.add(field, message)
+      errors.add(field, message)
       return false
     end
     _log.info("Containing aggregate: #{aggrName} has sufficient free space")
 
     # Create the volume within the given aggregate.
-    _log.info("Queuing creation of logical disk: #{name} in aggregate: #{aggrName} on NAS server: #{self.evm_display_name}...")
+    _log.info("Queuing creation of logical disk: #{name} in aggregate: #{aggrName} on NAS server: #{evm_display_name}...")
     nrs.queue_volume_create(name, aggrName, "#{size}g")
     _log.info("Create logical disk: #{name} ... Complete")
 
-    return true
+    true
   end
 end

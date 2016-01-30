@@ -1,7 +1,5 @@
-require "spec_helper"
 include MiqAeYamlImportExportMixin
 describe MiqAeInstanceCompareValues do
-
   before do
     @domain = 'SPEC_DOMAIN'
     @namespace   = 'NS1'
@@ -52,13 +50,12 @@ describe MiqAeInstanceCompareValues do
       inst2 = MiqAeInstanceYaml.new(@instance2_file)
       instance_check_status(inst1, inst2, MiqAeInstanceCompareValues::COMPATIBLE_INSTANCE)
     end
-
   end
 
   def instance_check_status(instance1, instance2, status)
     diff_obj = MiqAeInstanceCompareValues.new(instance1, instance2)
     diff_obj.compare
-    diff_obj.status.should equal(status)
+    expect(diff_obj.status).to equal(status)
   end
 
   def prep_instance_file_names(inst1 = nil, inst2 = nil)

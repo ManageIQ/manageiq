@@ -1,11 +1,9 @@
 require_relative '../bundler_setup'
 
-require 'coveralls'
-Coveralls.wear_merged! do
-  add_filter("/spec/")
+if ENV["TRAVIS"]
+  require 'coveralls'
+  Coveralls.wear_merged! { add_filter("/spec/") }
 end
-
-require 'rspec/autorun'
 
 # Push the gems/pending directory onto the load path
 GEMS_PENDING_ROOT ||= File.expand_path(File.join(__dir__, ".."))
@@ -22,6 +20,12 @@ Dir[File.expand_path(File.join(__dir__, 'support/**/*.rb'))].each { |f| require 
 RSpec.configure do |config|
   config.after(:each) do
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
+  end
+
+  if ENV["TRAVIS"]
+    config.after(:suite) do
+      require "spec/coverage_helper.rb"
+    end
   end
 
   config.backtrace_exclusion_patterns -= [%r{/lib\d*/ruby/}, %r{/gems/}]

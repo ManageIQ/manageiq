@@ -1,8 +1,6 @@
 #
 # REST API Request Tests - Queries
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 
@@ -129,11 +127,11 @@ describe ApiController do
       run_get(providers_url(provider.id), :attributes => "authentications")
 
       expect_request_success
-      expect_result_to_match_hash(@result, "name" => "sample", "hostname" => "sample.com")
+      expect_result_to_match_hash(@result, "name" => "sample")
       expect_result_to_have_keys(%w(authentications))
       authentication = @result["authentications"].first
       expect(authentication["userid"]).to eq("admin")
-      expect(authentication.key?("password")).to be_false
+      expect(authentication.key?("password")).to be_falsey
     end
 
     it "hides them from configuration hashes" do
@@ -152,7 +150,7 @@ describe ApiController do
       authentication = configuration.fetch_path("settings", "authentication")
       expect(authentication).to_not be_nil
       expect(authentication["userid"]).to eq("admin")
-      expect(authentication.key?(password_field)).to be_false
+      expect(authentication.key?(password_field)).to be_falsey
     end
 
     it "hides them from provisioning hashes" do
@@ -163,7 +161,7 @@ describe ApiController do
 
       template = FactoryGirl.create(:template_vmware, :name => "template1")
       request  = FactoryGirl.create(:miq_provision_request,
-                                    :userid      => api_config(:user),
+                                    :requester   => @user,
                                     :description => "sample provision",
                                     :src_vm_id   => template.id,
                                     :options     => options)
@@ -175,7 +173,7 @@ describe ApiController do
       provision_attrs = @result.fetch_path("options", "attrs")
       expect(provision_attrs).to_not be_nil
       expect(provision_attrs["userid"]).to eq("admin")
-      expect(provision_attrs.key?(password_field)).to be_false
+      expect(provision_attrs.key?(password_field)).to be_falsey
     end
   end
 end

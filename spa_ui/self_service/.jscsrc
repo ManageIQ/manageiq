@@ -1,5 +1,4 @@
 {
-  "disallowDanglingUnderscores": true,
   "disallowImplicitTypeConversion": [
     "numeric",
     "binary",
@@ -47,12 +46,14 @@
   "disallowSpacesInNamedFunctionExpression": {
     "beforeOpeningRoundBrace": true
   },
-  "disallowTrailingComma": true,
   "maximumLineLength": {
-    "value": 120,
-    "allowComments": true,
-    "allowUrlComments": true,
-    "allowRegex": false
+    "value": 140,
+    "allExcept": [
+      "regex",
+      "comments",
+      "urlComments",
+      "functionSignature"
+    ]
   },
   "requireBlocksOnNewline": true,
   "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
@@ -146,9 +147,5 @@
   "safeContextKeyword": ["self", "vm"],
   "validateIndentation": 2,
   "validateLineBreaks": "LF",
-  "validateParameterSeparator": ", ",
-  "validateQuoteMarks": {
-    "mark": "'",
-    "escape": true
-  }
+  "validateParameterSeparator": ", "
 }

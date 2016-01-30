@@ -1,8 +1,7 @@
-require 'spec_helper'
-
 describe "amazon_check_pre_retirement Method Validation" do
   before(:each) do
     @zone = FactoryGirl.create(:zone)
+    @user = FactoryGirl.create(:user_with_group)
     @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @ebs_hardware = FactoryGirl.create(:hardware, :bitness             => 64,
                                                   :virtualization_type => 'paravirtual',
@@ -18,23 +17,23 @@ describe "amazon_check_pre_retirement Method Validation" do
 
   it "returns 'ok' for instance store instances even with power on" do
     @vm.hardware = @is_hardware
-    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon")
-    ws.root['ae_result'].should be == 'ok'
-    ws.root['vm'].power_state.should be == 'on'
+    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
+    expect(ws.root['ae_result']).to eq('ok')
+    expect(ws.root['vm'].power_state).to eq('on')
   end
 
   it "returns 'retry' for running ebs instances" do
     @vm.hardware = @ebs_hardware
-    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon")
-    ws.root['ae_result'].should be == 'retry'
-    ws.root['vm'].power_state.should be == 'on'
+    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
+    expect(ws.root['ae_result']).to eq('retry')
+    expect(ws.root['vm'].power_state).to eq('on')
   end
 
   it "returns 'ok' for stopped ebs instances" do
     @vm.hardware = @ebs_hardware
     @vm.update_attributes(:raw_power_state => "off")
-    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon")
-    ws.root['ae_result'].should be == 'ok'
-    ws.root['vm'].power_state.should be == 'off'
+    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
+    expect(ws.root['ae_result']).to eq('ok')
+    expect(ws.root['vm'].power_state).to eq('off')
   end
 end

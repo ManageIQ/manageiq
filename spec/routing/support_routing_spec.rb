@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "routes for AvailabilityZoneController" do
   let(:controller_name) { "support" }
 

@@ -80,7 +80,7 @@ shared_examples_for 'A controller that has vm_common routes' do
   describe '#evm_relationship_field_changed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/evm_relationship_field_changed")
+        post("/#{controller_name}/evm_relationship_field_changed")
       ).to route_to("#{controller_name}#evm_relationship_field_changed")
     end
   end
@@ -88,7 +88,7 @@ shared_examples_for 'A controller that has vm_common routes' do
   describe '#evm_relationship_update' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/evm_relationship_update")
+        post("/#{controller_name}/evm_relationship_update")
       ).to route_to("#{controller_name}#evm_relationship_update")
     end
   end
@@ -144,7 +144,7 @@ shared_examples_for 'A controller that has vm_common routes' do
   describe '#ownership_field_changed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/ownership_field_changed")
+        post("/#{controller_name}/ownership_field_changed")
       ).to route_to("#{controller_name}#ownership_field_changed")
     end
   end
@@ -248,7 +248,7 @@ shared_examples_for 'A controller that has vm_common routes' do
   describe '#sections_field_changed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/sections_field_changed")
+        post("/#{controller_name}/sections_field_changed")
       ).to route_to("#{controller_name}#sections_field_changed")
     end
   end

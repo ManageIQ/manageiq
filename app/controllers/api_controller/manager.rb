@@ -29,7 +29,7 @@ class ApiController
     end
 
     def put_resource(type, id)
-      edit_resource(type, id, json_body)
+      send(target_resource_method(false, type, "edit"), type, id, json_body)
     end
 
     #
@@ -62,12 +62,12 @@ class ApiController
           patched_attrs[attr] = nil if action == "remove"
         end
       end
-      edit_resource(type, id, patched_attrs)
+      send(target_resource_method(false, type, "edit"), type, id, patched_attrs)
     end
 
     def delete_subcollection_resource(type, id = nil)
       raise BadRequestError,
-            "Must specify and id for destroying a #{type} subcollection resource" if id.nil?
+            "Must specify an id for destroying a #{type} subcollection resource" if id.nil?
 
       parent_resource = parent_resource_obj
       typed_target    = "delete_resource_#{type}"
@@ -87,7 +87,9 @@ class ApiController
       else
         target = "#{action}_resource"
         typed_target = "#{target}_#{type}"
-        respond_to?(typed_target) ? typed_target : target
+        return typed_target if respond_to?(typed_target)
+        return target if respond_to?(target)
+        resource_can_have_custom_actions(type) ? "custom_action_resource" : "undefined_api_method"
       end
     end
 
@@ -116,11 +118,12 @@ class ApiController
     end
 
     def update_one_collection(is_subcollection, target, type, id, resource)
+      id = id.to_i unless id.blank?
       parent_resource = parent_resource_obj if is_subcollection
       if is_subcollection
-        send(target, parent_resource, type, id.to_i, resource)
+        send(target, parent_resource, type, id, resource)
       else
-        send(target, type, id.to_i, resource)
+        send(target, type, id, resource)
       end
     end
 
@@ -131,8 +134,11 @@ class ApiController
       results = resources.each.collect do |r|
         next if r.blank?
 
-        collection, rid = parse_href(r["href"])
-        r.except!(*ID_ATTRS) if collection == type && rid
+        rid = parse_id(r, type)
+        if rid && %w(create add).include?(action)
+          raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
+        end
+        r.except!(*ID_ATTRS) if rid
         processed += 1
         update_one_collection(is_subcollection, target, type, rid, r)
       end

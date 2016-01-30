@@ -1,5 +1,3 @@
-require "spec_helper"
-
 $LOAD_PATH << Rails.root.join("tools")
 
 require "fix_auth/auth_model"
@@ -10,14 +8,14 @@ describe FixAuth::AuthModel do
   let(:v0_key)  { CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555") }
   let(:v1_key)  { MiqPassword.generate_symmetric }
   let(:pass)    { "password" }
-  let(:enc_v1)  { MiqPassword.new.send(:encrypt_version_1, pass) }
-  let(:enc_v2)  { MiqPassword.new.send(:encrypt_version_2, pass) }
+  let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }
+  let(:enc_v2)  { MiqPassword.new.encrypt(pass) }
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
   let(:enc_leg) { v0_key.encrypt64(pass) }
 
   before do
     MiqPassword.add_legacy_key(v0_key, :v0)
-    MiqPassword.add_legacy_key(v1_key)
+    MiqPassword.add_legacy_key(v1_key, :v1)
   end
 
   after do
@@ -48,7 +46,7 @@ describe FixAuth::AuthModel do
     end
 
     it "should limit available_columns when not all columns are available" do
-      subject.stub(:column_names => %w(password id))
+      allow(subject).to receive_messages(:column_names => %w(password id))
       expect(subject.available_columns).to eq(%w(password))
     end
 
@@ -100,7 +98,7 @@ describe FixAuth::AuthModel do
       end
 
       it "should raise exception for bad encryption" do
-        expect { subject.fix_passwords(badv2) }.to raise_error("not decryptable string")
+        expect { subject.fix_passwords(badv2) }.to raise_error(MiqPassword::MiqPasswordError)
       end
 
       it "should replace for bad encryption" do

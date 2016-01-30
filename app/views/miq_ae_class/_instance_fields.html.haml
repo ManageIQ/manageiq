@@ -3,17 +3,55 @@
 #instance_fields_div
   - if !@in_a_form
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}
-    = render(:partial => 'layouts/dhtmlxgrid',
-      :locals         => {:options => {:grid_id => "inst_grid_div",
-        :grid_name                              => "instance_fields_grid",
-        :grid_url                               => "/miq_ae_class/tree_select/",
-        :grid_xml                               => @grid_inst_xml,
-        :no_resize                              => false,
-        :autosize                               => true,
-        :set_sizes                              => true,
-        :skin                                   => "style3",
-        :alt_row_no_hover                       => true,
-        :div_in_js                              => true}})
+
+    %table#instance_fields_grid.table.table-striped.table-bordered
+      %thead
+        %th= _('Name')
+        %th= _('Value')
+        %th= _('On Entry')
+        %th= _('On Exit')
+        %th= _('On Error')
+        %th= _('Collect')
+        %th= _('Max Retries')
+        %th= _('Max Time')
+        %th= _('Message')
+      %tbody
+        - @ae_class.ae_fields.each do |record|
+          - ae_value = record.ae_values.find_or_initialize_by_instance_id(@record)
+          %tr
+            %td
+              %ul.icons.list-unstyled.pull-left
+                %li
+                  %span.product{:class => "product-ae_#{record.aetype}", :title => _("Type: %s") % record.aetype}
+              - unless record.datatype.blank? || record.datatype == 'string'
+                %ul.icons.list-unstyled.pull-left
+                  %li
+                    %span.product{:class => "product-#{record.datatype}", :title => _("Data type: %s") % record.datatype}
+              %ul.icons.list-unstyled.pull-left
+                %li
+                  %span.pficon{:class => "pficon-ok#{record.substitute ? '' : '-closed'}", :title => _("Substitute: %s") % record.substitute}
+              &nbsp;
+              = record_name(record)
+            %td
+              - if record.datatype == 'password'
+                ********
+              - else
+                = nonblank(ae_value.value, record.default_value)
+            %td
+              = nonblank(ae_value.on_entry, record.on_entry)
+            %td
+              = nonblank(ae_value.on_exit, record.on_exit)
+            %td
+              = nonblank(ae_value.on_error, record.on_error)
+            %td
+              = nonblank(ae_value.collect, record.collect)
+            %td
+              = nonblank(ae_value.max_retries, record.max_retries)
+            %td
+              = nonblank(ae_value.max_time, record.max_time)
+            %td
+              = record.message
+
   - else
     #form_div
       = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}

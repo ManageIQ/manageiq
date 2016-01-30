@@ -19,11 +19,11 @@ class MiqCimVirtualDisk < MiqCimInstance
   # Downstream adjacency.
   #
   def cim_datastore
-    getAssociators( :AssocClass   => 'MIQ_VirtualDiskDatastore',
-            :ResultClass  => 'MIQ_CimDatastore',
-            :Role     => 'Antecedent',
-            :ResultRole   => 'Dependent'
-    ).first
+    getAssociators(:AssocClass  => 'MIQ_VirtualDiskDatastore',
+                   :ResultClass => 'MIQ_CimDatastore',
+                   :Role        => 'Antecedent',
+                   :ResultRole  => 'Dependent'
+                  ).first
   end
 
   def storage
@@ -35,11 +35,11 @@ class MiqCimVirtualDisk < MiqCimInstance
   # Upstream adjacency.
   #
   def cim_vm
-    getAssociators( :AssocClass   => 'MIQ_VmVirtualDisk',
-            :ResultClass  => 'MIQ_CimVirtualMachine',
-            :Role     => 'Dependent',
-            :ResultRole   => 'Antecedent'
-    ).first
+    getAssociators(:AssocClass  => 'MIQ_VmVirtualDisk',
+                   :ResultClass => 'MIQ_CimVirtualMachine',
+                   :Role        => 'Dependent',
+                   :ResultRole  => 'Antecedent'
+                  ).first
   end
 
   def vm
@@ -87,5 +87,4 @@ class MiqCimVirtualDisk < MiqCimInstance
   def base_storage_extents
     datastore_backing.collect(&:base_storage_extents).flatten.compact.uniq
   end
-
 end

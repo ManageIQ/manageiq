@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsRefresh::SaveInventory do
   context "save_vms_inventory handling duplicate uids" do
     before(:each) do
@@ -18,14 +16,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 2
+        expect(vms.length).to eq(2)
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
-        v1.uid_ems.should == @vm1.uid_ems
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        v2.id.should      == @vm2.id
-        v2.uid_ems.should == @vm2.uid_ems
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).to eq(@vm2.uid_ems)
       end
 
       it "should handle dups in the raw data" do
@@ -33,24 +31,24 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 3
+        expect(vms.length).to eq(3)
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        disconnected.length.should == 1
-        connected.length.should    == 2
+        expect(disconnected.length).to eq(1)
+        expect(connected.length).to eq(2)
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should      == @vm2.id
-        d.uid_ems.should == @vm2.uid_ems
+        expect(d.id).to eq(@vm2.id)
+        expect(d.uid_ems).to eq(@vm2.uid_ems)
 
-        c1.id.should      == @vm1.id
-        c1.uid_ems.should == @vm1.uid_ems
+        expect(c1.id).to eq(@vm1.id)
+        expect(c1.uid_ems).to eq(@vm1.uid_ems)
 
-        c2.id.should_not  == @vm1.id
-        c2.id.should_not  == @vm2.id
-        c2.uid_ems.should == @vm1.uid_ems
+        expect(c2.id).not_to eq(@vm1.id)
+        expect(c2.id).not_to eq(@vm2.id)
+        expect(c2.uid_ems).to eq(@vm1.uid_ems)
       end
     end
 
@@ -66,24 +64,24 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 3
+        expect(vms.length).to eq(3)
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        disconnected.length.should == 1
-        connected.length.should    == 2
+        expect(disconnected.length).to eq(1)
+        expect(connected.length).to eq(2)
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should           == @vm2.id
-        d.uid_ems.should      == @vm2.uid_ems
+        expect(d.id).to eq(@vm2.id)
+        expect(d.uid_ems).to eq(@vm2.uid_ems)
 
-        c1.id.should          == @vm1.id
-        c1.uid_ems.should     == @vm1.uid_ems
+        expect(c1.id).to eq(@vm1.id)
+        expect(c1.uid_ems).to eq(@vm1.uid_ems)
 
-        c2.id.should_not      == @vm1.id
-        c2.id.should_not      == @vm2.id
-        c2.uid_ems.should_not == @vm1.uid_ems
+        expect(c2.id).not_to eq(@vm1.id)
+        expect(c2.id).not_to eq(@vm2.id)
+        expect(c2.uid_ems).not_to eq(@vm1.uid_ems)
       end
 
       it "should handle dups in the raw data" do
@@ -91,14 +89,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 2
+        expect(vms.length).to eq(2)
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
-        v1.uid_ems.should == @vm1.uid_ems
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        v2.id.should      == @vm2.id
-        v2.uid_ems.should == @vm2.uid_ems
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).to eq(@vm2.uid_ems)
       end
     end
 
@@ -114,24 +112,24 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 3
+        expect(vms.length).to eq(3)
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        disconnected.length.should == 1
-        connected.length.should    == 2
+        expect(disconnected.length).to eq(1)
+        expect(connected.length).to eq(2)
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should           == @vm2.id
-        d.uid_ems.should      == @vm2.uid_ems
+        expect(d.id).to eq(@vm2.id)
+        expect(d.uid_ems).to eq(@vm2.uid_ems)
 
-        c1.id.should          == @vm1.id
-        c1.uid_ems.should     == @vm1.uid_ems
+        expect(c1.id).to eq(@vm1.id)
+        expect(c1.uid_ems).to eq(@vm1.uid_ems)
 
-        c2.id.should_not      == @vm1.id
-        c2.id.should_not      == @vm2.id
-        c2.uid_ems.should_not == @vm1.uid_ems
+        expect(c2.id).not_to eq(@vm1.id)
+        expect(c2.id).not_to eq(@vm2.id)
+        expect(c2.uid_ems).not_to eq(@vm1.uid_ems)
       end
 
       it "should handle dups in the raw data" do
@@ -139,15 +137,15 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 2
+        expect(vms.length).to eq(2)
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
-        v1.uid_ems.should == @vm1.uid_ems
-        v1.ems_id.should_not be_nil
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
+        expect(v1.ems_id).not_to be_nil
 
-        v2.id.should      == @vm2.id
-        v2.uid_ems.should == @vm2.uid_ems
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).to eq(@vm2.uid_ems)
       end
     end
 
@@ -164,16 +162,16 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 2
+        expect(vms.length).to eq(2)
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
-        v1.uid_ems.should == @vm1.uid_ems
-        v1.ems_id.should  == @ems2.id
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
+        expect(v1.ems_id).to eq(@ems2.id)
 
-        v2.id.should_not  == @vm1.id
-        v2.uid_ems.should == @vm1.uid_ems
-        v2.ems_id.should  == @ems.id
+        expect(v2.id).not_to eq(@vm1.id)
+        expect(v2.uid_ems).to eq(@vm1.uid_ems)
+        expect(v2.ems_id).to eq(@ems.id)
       end
     end
 
@@ -189,11 +187,11 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 1
+        expect(vms.length).to eq(1)
         v = vms.first
 
-        v.id.should      == @vm1.id
-        v.uid_ems.should == @vm1.uid_ems
+        expect(v.id).to eq(@vm1.id)
+        expect(v.uid_ems).to eq(@vm1.uid_ems)
       end
     end
 
@@ -217,14 +215,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 2
+        expect(vms.length).to eq(2)
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
-        v1.uid_ems.should == @vm1.uid_ems
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        v2.id.should      == @vm2.id
-        v2.uid_ems.should == @vm2.uid_ems
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).to eq(@vm2.uid_ems)
       end
 
       it "should handle dups in the raw data" do
@@ -234,24 +232,24 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        vms.length.should == 3
+        expect(vms.length).to eq(3)
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        disconnected.length.should == 1
-        connected.length.should    == 2
+        expect(disconnected.length).to eq(1)
+        expect(connected.length).to eq(2)
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should       == @vm2.id
-        d.uid_ems.should  == @vm2.uid_ems
+        expect(d.id).to eq(@vm2.id)
+        expect(d.uid_ems).to eq(@vm2.uid_ems)
 
-        c1.id.should      == @vm1.id
-        c1.uid_ems.should == @vm1.uid_ems
+        expect(c1.id).to eq(@vm1.id)
+        expect(c1.uid_ems).to eq(@vm1.uid_ems)
 
-        c2.id.should_not  == @vm1.id
-        c2.id.should_not  == @vm2.id
-        c2.uid_ems.should == @vm1.uid_ems
+        expect(c2.id).not_to eq(@vm1.id)
+        expect(c2.id).not_to eq(@vm2.id)
+        expect(c2.uid_ems).to eq(@vm1.uid_ems)
       end
     end
   end
@@ -269,13 +267,13 @@ describe EmsRefresh::SaveInventory do
   def raw_data_with_dups(*args)
     data = raw_data_process(*args)
     data[1][:uid_ems] = data[0][:uid_ems]
-    return data
+    data
   end
 
   def raw_data_without_dups(*args)
     data = raw_data_process(*args)
     data[1][:uid_ems] = MiqUUID.new_guid if data[0][:uid_ems] == data[1][:uid_ems]
-    return data
+    data
   end
 
   def dump_before(data)

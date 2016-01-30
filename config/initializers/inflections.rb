@@ -30,6 +30,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular(/quota$/, "quota")
   inflect.singular(/Quota$/, "Quota")
   inflect.plural(/quota$/, "quotas")
+  inflect.irregular("container_quota", "container_quotas")
 
   inflect.acronym 'ManageIQ'
 end

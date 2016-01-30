@@ -28,8 +28,13 @@ namespace :evm do
     EvmApplication.status
   end
 
+  # update_start can be called in an environment where the database configuration is
+  # not set, so we need to give it a dummy config
   task :update_start do
-    EvmApplication.update_start
+    EvmRakeHelper.with_dummy_database_url_configuration do
+      Rake::Task["environment"].invoke
+      EvmApplication.update_start
+    end
   end
 
   task :update_stop => :environment do
@@ -37,8 +42,16 @@ namespace :evm do
   end
 
   task :compile_assets do
-    ENV["DATABASE_URL"] ||= "postgresql://user:pass@127.0.0.1/dbname"
-    Rake::Task["assets:clobber"].invoke
-    Rake::Task["assets:precompile"].invoke
+    EvmRakeHelper.with_dummy_database_url_configuration do
+      Rake::Task["assets:clobber"].invoke
+      Rake::Task["assets:precompile"].invoke
+    end
+  end
+
+  task :compile_sti_loader do
+    EvmRakeHelper.with_dummy_database_url_configuration do
+      Rake::Task["environment"].invoke
+      DescendantLoader.instance.class_inheritance_relationships
+    end
   end
 end

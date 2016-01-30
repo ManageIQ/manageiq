@@ -2,20 +2,20 @@ require 'log4r'
 require 'ostruct'
 require 'disk/MiqDisk'
 
-VMDK	= "/Volumes/WDpassport/Virtual Machines/Red Hat Linux.vmwarevm/payload2.vmdk"
-MKFILE	= "rawmkfs"
+VMDK  = "/Volumes/WDpassport/Virtual Machines/Red Hat Linux.vmwarevm/payload2.vmdk"
+MKFILE  = "rawmkfs"
 
 #
 # Formatter to output log messages to the console.
 #
 class ConsoleFormatter < Log4r::Formatter
-	def format(event)
-		(event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-	end
+  def format(event)
+    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+  end
 end
 $log = Log4r::Logger.new 'toplog'
 $log.level = Log4r::DEBUG
-Log4r::StderrOutputter.new('err_console', :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
 diskInfo = OpenStruct.new
@@ -24,9 +24,9 @@ diskInfo.fileName = VMDK
 
 disk = MiqDisk.getDisk(diskInfo)
 
-if !disk
-    puts "Failed to open disk: #{diskInfo.fileName}"
-    exit(1)
+unless disk
+  puts "Failed to open disk: #{diskInfo.fileName}"
+  exit(1)
 end
 
 puts "Disk type: #{disk.diskType}"
@@ -41,8 +41,8 @@ puts
 parts = disk.getPartitions
 
 if parts && !parts.empty?
-	puts "Disk is partitioned, exiting"
-	exit(0)
+  puts "Disk is partitioned, exiting"
+  exit(0)
 end
 
 diskSize = disk.endByteAddr - disk.startByteAddr
@@ -56,8 +56,8 @@ puts "Disk offset: #{diskOffset}"
 mkf = File.open(MKFILE)
 
 disk.seek(diskOffset)
-while (buf = mkf.read(1024)) do
-	disk.write(buf, buf.length)
+while (buf = mkf.read(1024))
+  disk.write(buf, buf.length)
 end
 
 mkf.close

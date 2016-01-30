@@ -10,6 +10,7 @@ class Charting
       :sample_chart,
       :chart_names_for_select,
       :chart_themes_for_select,
+      :serialized,
       :js_load_statement      # javascript statement to reload charts
     ] => :instance
   end
@@ -28,8 +29,7 @@ class Charting
   end
 
   def self.detect_available_plugin
-    available = subclasses.select(&:available?)
-    available.max { |klass_a, klass_b| klass_a.priority <=> klass_b.priority }
+    subclasses.select(&:available?).max_by(&:priority)
   end
 end
 

@@ -24,6 +24,7 @@ cols:
 - phase
 - restart_policy
 - dns_policy
+- running_containers_summary
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -44,6 +45,7 @@ col_order:
 - ext_management_system.name
 - container_project.name
 - ready_condition_status
+- running_containers_summary
 - phase
 - restart_policy
 - dns_policy
@@ -54,6 +56,7 @@ headers:
 - Provider
 - Project Name
 - Ready
+- Containers
 - Phase
 - Restart Policy
 - DNS Policy
@@ -73,6 +76,7 @@ sortby:
 - restart_policy
 - dns_policy
 - ready_condition_status
+- running_containers_summary
 
 # Group rows (y=yes,n=no,c=count)
 group: n

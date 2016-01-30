@@ -115,7 +115,7 @@ module Authenticator
     end
 
     def aws_connect(access_key_id, secret_access_key, service = :IAM)
-      require 'aws-sdk'
+      require 'aws-sdk-v1'
 
       AWS.const_get(service).new(
         :access_key_id     => access_key_id,

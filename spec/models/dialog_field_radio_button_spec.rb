@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldRadioButton do
   let(:dialog_field_radio_button) do
     DialogFieldRadioButton.new(
@@ -26,7 +24,7 @@ describe DialogFieldRadioButton do
           before do
             dialog_field_radio_button.dynamic = true
             dialog_field_radio_button.default_value = "test"
-            DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field_radio_button).and_return(
+            allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field_radio_button).and_return(
               [["processor", 123]]
             )
 
@@ -75,7 +73,7 @@ describe DialogFieldRadioButton do
       context "when the dialog field is dynamic" do
         before do
           dialog_field_radio_button.dynamic = true
-          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field_radio_button).and_return(
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field_radio_button).and_return(
             [["processor", 123]]
           )
 
@@ -137,7 +135,7 @@ describe DialogFieldRadioButton do
     before do
       dialog_field_radio_button.dynamic = true
       dialog_field_radio_button.default_value = "123"
-      DynamicDialogFieldValueProcessor.stub(:values_from_automate).and_return(refreshed_values_from_automate)
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).and_return(refreshed_values_from_automate)
     end
 
     context "when the checked value is in the list of refreshed values" do

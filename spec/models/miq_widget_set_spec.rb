@@ -1,8 +1,6 @@
-require "spec_helper"
-
 describe MiqWidgetSet do
-  let(:group) { FactoryGirl.create(:miq_group, :description => 'dev group') }
-  let(:user)  { FactoryGirl.create(:user, :name => 'cloud', :userid => 'cloud', :miq_groups => [group]) }
+  let(:group) { user.current_group }
+  let(:user)  { FactoryGirl.create(:user_with_group) }
   before do
     @ws_group = FactoryGirl.create(:miq_widget_set, :name => 'Home', :owner => group)
   end
@@ -37,7 +35,7 @@ describe MiqWidgetSet do
     end
 
     it "the belong to group is being deleted" do
-      expect { group.destroy }.to raise_error
+      expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
       expect(MiqWidgetSet.count).to eq(2)
     end
 
@@ -51,10 +49,10 @@ describe MiqWidgetSet do
     let(:group2) { FactoryGirl.create(:miq_group, :description => 'dev group2') }
     let(:ws_1)   { FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id) }
 
-     before do
+    before do
       user.miq_groups << group2
       ws_1
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id )
+      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id)
     end
 
     it "initial state" do

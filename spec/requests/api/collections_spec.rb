@@ -1,8 +1,6 @@
 #
 # Rest API Collections Tests
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 
@@ -38,6 +36,11 @@ describe ApiController do
     it "query Availability Zones" do
       FactoryGirl.create(:availability_zone)
       test_collection_query(:availability_zones, availability_zones_url, AvailabilityZone)
+    end
+
+    it "query Categories" do
+      FactoryGirl.create(:category)
+      test_collection_query(:categories, categories_url, Category)
     end
 
     example "query Chargebacks" do
@@ -116,7 +119,7 @@ describe ApiController do
     end
 
     it "query Provision Requests" do
-      FactoryGirl.create(:miq_provision_request, :source => template, :userid => api_config(:user))
+      FactoryGirl.create(:miq_provision_request, :source => template, :requester => @user)
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)
     end
 
@@ -141,7 +144,7 @@ describe ApiController do
     end
 
     it "query Requests" do
-      FactoryGirl.create(:vm_migrate_request, :userid => FactoryGirl.create(:user).userid)
+      FactoryGirl.create(:vm_migrate_request, :requester => @user)
       test_collection_query(:requests, requests_url, MiqRequest)
     end
 
@@ -176,7 +179,7 @@ describe ApiController do
     end
 
     it "query Service Requests" do
-      FactoryGirl.create(:service_template_provision_request, :userid => api_config(:user))
+      FactoryGirl.create(:service_template_provision_request, :requester => @user)
       test_collection_query(:service_requests, service_requests_url, ServiceTemplateProvisionRequest)
     end
 
@@ -203,6 +206,12 @@ describe ApiController do
     it "query Templates" do
       template # create resource
       test_collection_query(:templates, templates_url, MiqTemplate, :guid)
+    end
+
+    it "query Tenants" do
+      api_basic_authorize "rbac_tenant_show_list"
+      Tenant.seed
+      test_collection_query(:tenants, tenants_url, Tenant)
     end
 
     it "query Users" do

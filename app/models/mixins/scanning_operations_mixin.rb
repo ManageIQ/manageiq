@@ -5,7 +5,7 @@ module ScanningOperationsMixin
   include Vmdb::Logging
   WS_TIMEOUT = 60
 
-  def save_metadata_op(xmlFile, type, jobid=nil)
+  def save_metadata_op(xmlFile, type, jobid = nil)
     begin
       Timeout.timeout(WS_TIMEOUT) do # TODO: do we need this timeout?
         _log.info "target [#{guid}],  job [#{jobid}] enter"
@@ -152,7 +152,7 @@ module ScanningOperationsMixin
     ScanningOperations.reconnect_to_db
   end
 
-  def test_statemachine(jobId, signal, data=nil)
+  def test_statemachine(jobId, signal, data = nil)
     begin
       _log.info "job [#{jobId}], signal [#{signal}]"
       job = Job.find_by_guid(jobId)
@@ -171,7 +171,7 @@ module ScanningOperationsMixin
     true
   end
 
-  def policy_check_vm(vmId, xmlFile)
+  def policy_check_vm(vmId, _xmlFile)
     _log.info "VmId:[#{vmId}]"
     ret, reason = false, "unknown"
     begin
@@ -180,7 +180,7 @@ module ScanningOperationsMixin
           vm = VmOrTemplate.find_by_guid(vmId)
           # Policy check is so outdated it doesn't even exist in the Vm model anymore.
           # TODO: Re-implement based on new policy routines if still viable.
-          #ret, reason = vm.policy_check(xmlFile)
+          # ret, reason = vm.policy_check(xmlFile)
           ret, reason = true, "OK"
         rescue
           ret, reason = false, $!.to_s
@@ -195,25 +195,23 @@ module ScanningOperationsMixin
     end
 
     # If we get here return false
-    return [false, reason].inspect
+    [false, reason].inspect
   end
 
   def start_service(service, userid, time)
-    begin
-      Timeout.timeout(WS_TIMEOUT) do
-        _log.info("Audit: req: <start_service>, user: <#{userid}>, service: <#{service}>, when: <#{time}>")
-        svc = Service.find_by_name(service)
-        return false if svc.nil?
+    Timeout.timeout(WS_TIMEOUT) do
+      _log.info("Audit: req: <start_service>, user: <#{userid}>, service: <#{service}>, when: <#{time}>")
+      svc = Service.find_by_name(service)
+      return false if svc.nil?
 
-        MiqQueue.put(:target_id => svc.id, :class_name => "Service", :method_name => "msg_handler", :data => "service")
+      MiqQueue.put(:target_id => svc.id, :class_name => "Service", :method_name => "msg_handler", :data => "service")
 
-        return true
-      end
-    rescue Exception => err
-      _log.log_backtrace(err)
-      ScanningOperations.reconnect_to_db
-      return false
+      return true
     end
+  rescue Exception => err
+    _log.log_backtrace(err)
+    ScanningOperations.reconnect_to_db
+    return false
   end
 
   def save_xmldata(hostId, xmlFile)
@@ -242,7 +240,7 @@ module ScanningOperationsMixin
     queue_parms = YAML.load(MIQEncode.decode(queue_parms))
     queue_parms.merge!(:args => [BinaryBlob.create(:binary => MIQEncode.decode(data)).id])
     MiqQueue.put(queue_parms)
-    return true
+    true
   end
 
   def miq_ping(data)

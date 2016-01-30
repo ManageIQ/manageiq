@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe FirewallRule do
   let(:firewall_rule) { FactoryGirl.create(:firewall_rule) }
 
@@ -8,14 +6,14 @@ describe FirewallRule do
       os = FactoryGirl.create(:operating_system)
       firewall_rule.update_attributes(:resource_type => "OperatingSystem", :resource_id => os.id)
 
-      firewall_rule.operating_system.should == os
+      expect(firewall_rule.operating_system).to eq(os)
     end
 
     it "with a non-OperatingSystem" do
       sg = FactoryGirl.create(:security_group)
       firewall_rule.update_attributes(:resource_type => "SecurityGroup", :resource_id => sg.id)
 
-      firewall_rule.operating_system.should be_nil
+      expect(firewall_rule.operating_system).to be_nil
     end
   end
 
@@ -25,7 +23,7 @@ describe FirewallRule do
 
       firewall_rule.operating_system = os
 
-      firewall_rule.should have_attributes(
+      expect(firewall_rule).to have_attributes(
         :resource_type => "OperatingSystem",
         :resource_id   => os.id
       )
@@ -34,7 +32,7 @@ describe FirewallRule do
     it "with a non-OperatingSystem" do
       sg = FactoryGirl.create(:security_group)
 
-      lambda { firewall_rule.operating_system = sg }.should raise_error(ArgumentError)
+      expect { firewall_rule.operating_system = sg }.to raise_error(ArgumentError)
     end
   end
 end

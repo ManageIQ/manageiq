@@ -14,7 +14,7 @@ cols:
 - vms.size
 - miq_templates.size
 - aggregate_cpu_speed
-- aggregate_logical_cpus
+- aggregate_cpu_total_cores
 - aggregate_physical_cpus
 - aggregate_memory
 - aggregate_vm_cpus
@@ -45,7 +45,7 @@ col_order:
 - vms.size
 - miq_templates.size
 - aggregate_cpu_speed
-- aggregate_logical_cpus
+- aggregate_cpu_total_cores
 - aggregate_physical_cpus
 - aggregate_memory
 - aggregate_vm_cpus

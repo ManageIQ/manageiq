@@ -3,12 +3,12 @@
   :module: api
   :name: API
   :description: REST API
-  :version: '2.1.0-pre'
+  :version: '2.2.0-pre'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '2.1.0-pre'
-    :ident: 'v2.1.0-pre'
+  - :name: '2.2.0-pre'
+    :ident: 'v2.2.0-pre'
 :method:
   :names:
   - :get
@@ -62,6 +62,37 @@
     - :collection
     :methods: *70174834086080
     :klass: AvailabilityZone
+  :categories:
+    :description: Categories
+    :options:
+    - :collection
+    :methods: *70174834085620
+    :klass: Category
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :post:
+      - :name: edit
+        :identifier: ops_settings
+      - :name: create
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
+      :delete:
+      - :name: delete
+        :identifier: ops_settings
+    :tags_subcollection_actions:
+      :post:
+      - :name: create
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
   :chargebacks:
     :description: Chargebacks
     :options:
@@ -166,13 +197,13 @@
     :description: Groups
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834084700
     :klass: MiqGroup
     :subcollections:
     - :tags
     :collection_actions:
       :post:
-      - :name: add
+      - :name: create
         :identifier: rbac_group_add
       - :name: edit
         :identifier: rbac_group_edit
@@ -182,6 +213,8 @@
       :post:
       - :name: edit
         :identifier: rbac_group_edit
+      - :name: delete
+        :identifier: rbac_group_delete
       :delete:
       - :name: delete
         :identifier: rbac_group_delete
@@ -208,7 +241,6 @@
         :disabled: true
       - :name: edit
         :identifier: host_edit
-        :disabled: true
       - :name: refresh
         :identifier: host_refresh
         :disabled: true
@@ -237,7 +269,6 @@
       :post:
       - :name: edit
         :identifier: host_edit
-        :disabled: true
       - :name: refresh
         :identifier: host_refresh
         :disabled: true
@@ -280,6 +311,28 @@
         :identifier: host_protect
       - :name: unassign
         :identifier: host_protect
+  :instances:
+    :description: Instances
+    :klass: ManageIQ::Providers::CloudManager::Vm
+    :methods: *70174834085860
+    :options:
+    - :collection
+    :collection_actions:
+      :post:
+      - :name: terminate
+        :identifier: instance_terminate
+      - :name: stop
+        :identifier: instance_stop
+      - :name: start
+        :identifier: instance_start
+    :resource_actions:
+      :post:
+      - :name: terminate
+        :identifier: instance_terminate
+      - :name: stop
+        :identifier: instance_stop
+      - :name: start
+        :identifier: instance_start
   :pictures:
     :description: Pictures
     :options:
@@ -451,7 +504,11 @@
     :collection_actions:
       :post:
       - :name: create
-        :identifier: chargeback_rates_create
+        :identifier: chargeback_rates_new
+      - :name: edit
+        :identifier: chargeback_rates_edit
+      - :name: delete
+        :identifier: chargeback_rates_delete
     :resource_actions:
       :post:
       - :name: edit
@@ -651,6 +708,8 @@
         :identifier: catalogitem_delete
       - :name: order
         :identifier: svc_catalog_provision
+      - :name: refresh_dialog_fields
+        :identifier: svc_catalog_provision
       - :name: assign
         :identifier: st_catalog_edit
       - :name: unassign
@@ -667,6 +726,8 @@
       - :name: edit
         :identifier: catalogitem_edit
       - :name: order
+        :identifier: svc_catalog_provision
+      - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
       - :name: assign
         :identifier: st_catalog_edit
@@ -685,6 +746,7 @@
     :description: Services
     :options:
     - :collection
+    - :custom_actions
     :methods: *70174834084700
     :klass: Service
     :subcollections:
@@ -696,6 +758,8 @@
         :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      - :name: set_ownership
+        :identifier: service_ownership
       - :name: delete
         :identifier: service_delete
     :resource_actions:
@@ -704,6 +768,8 @@
         :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      - :name: set_ownership
+        :identifier: service_ownership
       :delete:
       - :name: delete
         :identifier: service_delete
@@ -741,8 +807,29 @@
     - :subcollection
     :methods: *70174834085620
     :klass: Tag
+    :collection_actions:
+      :post:
+        - :name: create
+          :identifier: ops_settings
+        - :name: edit
+          :identifier: ops_settings
+        - :name: delete
+          :identifier: ops_settings
+    :resource_actions:
+      :post:
+        - :name: edit
+          :identifier: ops_settings
+        - :name: delete
+          :identifier: ops_settings
+      :delete:
+        - :name: delete
+          :identifier: ops_settings
     :subcollection_actions:
       :post:
+      - :name: create
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
       - :name: assign
       - :name: unassign
     :subresource_actions:
@@ -760,7 +847,7 @@
     :description: Templates
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085620
     :klass: MiqTemplate
     :subcollections:
     - :tags
@@ -770,16 +857,24 @@
       :post:
       - :name: refresh
         :identifier: miq_template_refresh
+        :disabled: true
       - :name: edit
         :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
       - :name: delete
         :identifier: miq_template_delete
     :resource_actions:
       :post:
       - :name: refresh
         :identifier: miq_template_refresh
+        :disabled: true
       - :name: edit
         :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
       :delete:
       - :name: delete
         :identifier: miq_template_delete
@@ -805,17 +900,54 @@
         :identifier: miq_template_protect
       - :name: resolve
         :identifier: miq_template_policy_sim
+  :tenants:
+    :description: Tenants
+    :options:
+    - :collection
+    :methods: *70174834084700
+    :klass: Tenant
+    :subcollections:
+    - :tags
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_show_list
+      :post:
+      - :name: create
+        :identifier: rbac_tenant_add
+      - :name: edit
+        :identifier: rbac_tenant_edit
+      - :name: delete
+        :identifier: rbac_tenant_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_show
+      :post:
+      - :name: edit
+        :identifier: rbac_tenant_edit
+      - :name: delete
+        :identifier: rbac_tenant_delete
+      :delete:
+      - :name: delete
+        :identifier: rbac_tenant_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: rbac_tenant_tags_edit
+      - :name: unassign
+        :identifier: rbac_tenant_tags_edit
   :users:
     :description: Users
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834084700
     :klass: User
     :subcollections:
     - :tags
     :collection_actions:
       :post:
-      - :name: add
+      - :name: create
         :identifier: rbac_user_add
       - :name: edit
         :identifier: rbac_user_edit
@@ -825,6 +957,8 @@
       :post:
       - :name: edit
         :identifier: rbac_user_edit
+      - :name: delete
+        :identifier: rbac_user_delete
       :delete:
       - :name: delete
         :identifier: rbac_user_delete
@@ -861,13 +995,10 @@
         :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
-        :disabled: true
-      - :name: shutdown
+      - :name: shutdown_guest
         :identifier: vm_guest_shutdown
-        :disabled: true
-      - :name: restart
+      - :name: reboot_guest
         :identifier: vm_guest_restart
-        :disabled: true
       - :name: start
         :identifier: vm_start
       - :name: stop
@@ -882,12 +1013,12 @@
         :identifier: vm_pause
       - :name: reset
         :identifier: vm_reset
-        :disabled: true
       - :name: retire
         :identifier: vm_retire
-        :disabled: true
       - :name: set_owner
         :identifier: vm_edit
+      - :name: set_ownership
+        :identifier: vm_ownership
       - :name: scan
         :identifier: vm_scan
       - :name: delete
@@ -903,13 +1034,10 @@
         :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
-        :disabled: true
-      - :name: shutdown
+      - :name: shutdown_guest
         :identifier: vm_guest_shutdown
-        :disabled: true
-      - :name: restart
+      - :name: reboot_guest
         :identifier: vm_guest_restart
-        :disabled: true
       - :name: start
         :identifier: vm_start
       - :name: stop
@@ -924,14 +1052,14 @@
         :identifier: vm_pause
       - :name: reset
         :identifier: vm_reset
-        :disabled: true
       - :name: retire
         :identifier: vm_retire
-        :disabled: true
       - :name: delete
         :identifier: vm_delete
       - :name: set_owner
         :identifier: vm_edit
+      - :name: set_ownership
+        :identifier: vm_ownership
       - :name: scan
         :identifier: vm_scan
       :delete:

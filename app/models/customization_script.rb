@@ -1,4 +1,4 @@
-class CustomizationScript < ActiveRecord::Base
+class CustomizationScript < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

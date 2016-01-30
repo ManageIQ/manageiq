@@ -13,4 +13,9 @@ FactoryGirl.define do
                                                     :password => "smartvm")
     end
   end
+
+  factory :provider_openstack, :class => "ManageIQ::Providers::Openstack::Provider", :parent => :provider
+  factory(:provider_ansible_tower, :class => "ManageIQ::Providers::AnsibleTower::Provider", :parent => :provider) do
+    url "example.com"
+  end
 end

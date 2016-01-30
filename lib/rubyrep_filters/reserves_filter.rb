@@ -6,7 +6,7 @@ class ReservesFilter
 
     clause = {:resource_type => exclude_models}
     {
-      :sync => clause,
+      :sync      => clause,
       :replicate => {
         :insert => {:new => clause},
         :update => {:new => clause},

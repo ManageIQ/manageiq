@@ -1,7 +1,5 @@
-require "spec_helper"
-
 describe DialogYamlSerializer do
-  let(:dialog_tab_serializer) { auto_loaded_instance_double("DialogTabSerializer") }
+  let(:dialog_tab_serializer) { double("DialogTabSerializer") }
   let(:dialog_yaml_serializer) { described_class.new(dialog_tab_serializer) }
 
   describe "#serialize" do
@@ -32,12 +30,12 @@ describe DialogYamlSerializer do
     end
 
     before do
-      dialog_tab_serializer.stub(:serialize).with(dialog_tab1).and_return("serialized_dialog1")
-      dialog_tab_serializer.stub(:serialize).with(dialog_tab2).and_return("serialized_dialog2")
+      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab1).and_return("serialized_dialog1")
+      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab2).and_return("serialized_dialog2")
     end
 
     it "serializes the dialog" do
-      YAML.load(dialog_yaml_serializer.serialize(dialogs)).should == expected_data
+      expect(YAML.load(dialog_yaml_serializer.serialize(dialogs))).to eq(expected_data)
     end
   end
 end

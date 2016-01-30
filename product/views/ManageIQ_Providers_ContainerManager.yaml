@@ -24,11 +24,6 @@ cols:
 - ipaddress
 - emstype_description
 - port
-#- total_hosts
-#- total_storages
-#- total_vms
-#- total_miq_templates
-#- region_description
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -46,26 +41,16 @@ col_order:
 - name
 - hostname
 - ipaddress
+- port
 - emstype_description
-#- zone.name
-#- total_hosts
-#- total_storages
-#- total_vms
-#- total_miq_templates
-#- region_description
 
 # Column titles, in order
 headers:
 - Name
 - Hostname
 - IP Address
+- Port
 - Type
-#- EVM Zone
-#- Hosts
-#- Datastores
-#- VMs
-#- Templates
-#- Region
 
 # Condition(s) string for the SQL query
 conditions: 

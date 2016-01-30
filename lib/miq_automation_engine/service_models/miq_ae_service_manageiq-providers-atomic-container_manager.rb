@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Atomic_ContainerManager < MiqAeServiceManageIQ_Providers_ContainerManager
+  end
+end

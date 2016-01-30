@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe VmdbDatabase do
   context "::MetricCapture" do
     context "#capture_database_metrics" do
@@ -26,35 +24,35 @@ describe VmdbDatabase do
           }]
 
           @db.update_attributes(:data_directory => "stubbed")
-          EvmDatabase.should_receive(:local?).and_return(true)
-          MiqSystem.should_receive(:disk_usage).and_return(pg_disk_usage)
+          expect(EvmDatabase).to receive(:local?).and_return(true)
+          expect(MiqSystem).to receive(:disk_usage).and_return(pg_disk_usage)
 
           @db.capture_database_metrics
           metric = @db.latest_hourly_metric
-          metric.should be_kind_of(VmdbDatabaseMetric)
+          expect(metric).to be_kind_of(VmdbDatabaseMetric)
 
           (standard_capture_columns + sql_capture_columns + os_capture_columns).each do |column|
-            metric.send(column).should_not be_nil
+            expect(metric.send(column)).not_to be_nil
           end
         end
       end
 
       context "when database is not local" do
         before(:each) do
-          EvmDatabase.stub(:local?).and_return(false)
+          allow(EvmDatabase).to receive(:local?).and_return(false)
         end
 
         it "populates columns from sql sources" do
           @db.capture_database_metrics
           metric = @db.latest_hourly_metric
-          metric.should be_kind_of(VmdbDatabaseMetric)
+          expect(metric).to be_kind_of(VmdbDatabaseMetric)
 
           (standard_capture_columns + sql_capture_columns).each do |column|
-            metric.send(column).should_not be_nil
+            expect(metric.send(column)).not_to be_nil
           end
 
           os_capture_columns.each do |column|
-            metric.send(column).should be_nil
+            expect(metric.send(column)).to be_nil
           end
         end
       end
@@ -63,9 +61,9 @@ describe VmdbDatabase do
   context ".collect_database_metrics_os" do
     it "returns a hash of os sourced columns" do
       actual = VmdbDatabase.collect_database_metrics_os("/")
-      actual.should be_kind_of(Hash)
+      expect(actual).to be_kind_of(Hash)
       os_capture_columns.each do |col|
-        actual[col.to_sym].should_not be_nil
+        expect(actual[col.to_sym]).not_to be_nil
       end
     end
   end
@@ -73,30 +71,30 @@ describe VmdbDatabase do
   context ".collect_database_metrics_sql" do
     it "returns a hash of sql sourced columns" do
       actual = VmdbDatabase.collect_database_metrics_sql
-      actual.should be_kind_of(Hash)
+      expect(actual).to be_kind_of(Hash)
       sql_capture_columns.each do |col|
-        actual[col.to_sym].should_not be_nil
+        expect(actual[col.to_sym]).not_to be_nil
       end
     end
   end
 
   def standard_capture_columns
-    %w{ timestamp capture_interval_name }
+    %w( timestamp capture_interval_name )
   end
 
   def sql_capture_columns
-    %w{ active_connections }
+    %w( active_connections )
   end
 
   def os_capture_columns
-    %w{
-        running_processes
-        disk_total_bytes
-        disk_used_bytes
-        disk_free_bytes
-        disk_total_inodes
-        disk_used_inodes
-        disk_free_inodes
-      }
+    %w(
+      running_processes
+      disk_total_bytes
+      disk_used_bytes
+      disk_free_bytes
+      disk_total_inodes
+      disk_used_inodes
+      disk_free_inodes
+    )
   end
 end

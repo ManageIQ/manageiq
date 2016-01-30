@@ -8,13 +8,13 @@ require 'ostruct'
 require 'MiqVm/MiqVm'
 
 class ConsoleFormatter < Log4r::Formatter
-	def format(event)
-		(event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-	end
+  def format(event)
+    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+  end
 end
 
 toplog = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level=>Log4r::DEBUG, :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 toplog.add 'err_console'
 $log = toplog if $log.nil?
 
@@ -25,42 +25,42 @@ REDO_FILE = "#{DDIR}/9e7075c5-a014-4ddf-a168-a33723d0c3cd"
 # DISK_FILE = BASE_FILE
 DISK_FILE = REDO_FILE
 
-diskid	  = "scsi0:0"
+diskid    = "scsi0:0"
 hardware  = "#{diskid}.present = \"TRUE\"\n"
 hardware += "#{diskid}.filename = \"#{DISK_FILE}\"\n"
 
 begin
-	puts
-	puts `file #{DISK_FILE}`
-	puts
+  puts
+  puts `file #{DISK_FILE}`
+  puts
 
-	ost = OpenStruct.new
-	ost.fileName = DISK_FILE
+  ost = OpenStruct.new
+  ost.fileName = DISK_FILE
 
-	unless (disk = MiqDisk.getDisk(ost))
-	    puts "Failed to open disk"
-	    exit(1)
-	end
+  unless (disk = MiqDisk.getDisk(ost))
+    puts "Failed to open disk"
+    exit(1)
+  end
 
-	unless (parts = disk.getPartitions)
-		puts "No partitions detected"
-	    exit(1)
-	end
+  unless (parts = disk.getPartitions)
+    puts "No partitions detected"
+    exit(1)
+  end
 
-	unless (part = parts.detect { |p| p.partNum == 1 })
-		puts "Could not find partition 1"
-	    exit(1)
-	end
+  unless (part = parts.detect { |p| p.partNum == 1 })
+    puts "Could not find partition 1"
+    exit(1)
+  end
 
-	unless (mfs = MiqFS.getFS(part))
-		puts "No filesystem detected"
-	    exit(1)
-	end
+  unless (mfs = MiqFS.getFS(part))
+    puts "No filesystem detected"
+    exit(1)
+  end
 
-	puts "Found #{mfs.fsType} filesystem"
+  puts "Found #{mfs.fsType} filesystem"
 rescue => err
-	$log.error err.to_s
-	$log.error err.backtrace.join("\n")
+  $log.error err.to_s
+  $log.error err.backtrace.join("\n")
 ensure
-	# vm.unmount if vm
+  # vm.unmount if vm
 end

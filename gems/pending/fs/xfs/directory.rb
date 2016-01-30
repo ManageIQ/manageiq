@@ -72,7 +72,7 @@ module XFS
         break if data_pointer > @data.length - 4 || @data[data_pointer, data_pointer + 4].nil?
         directory_entry = ShortFormDirectoryEntry.new(@data[data_pointer..@inode_object.length], small_inode, @sb)
         entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
-        data_pointer    += directory_entry.length
+        data_pointer += directory_entry.length
       end
       entries_by_name
     end
@@ -89,7 +89,7 @@ module XFS
         break if data_pointer > @data.length - 4 || @data[data_pointer, 4].nil? || data_pointer > last_directory_space
         directory_entry = DirectoryEntry.new(@data[data_pointer..-1], header.version_3)
         entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
-        data_pointer    += directory_entry.length
+        data_pointer += directory_entry.length
       end
       entries_by_name
     end
@@ -105,13 +105,13 @@ module XFS
       loop do
         header                = DirectoryDataHeader.new(@data[data_pointer..@sb.block_size * block_number], @sb)
         block_pointer         = header.header_end
-        data_pointer          += header.header_end
+        data_pointer += header.header_end
         loop do
           break if block_pointer > last_directory_space
           directory_entry = DirectoryEntry.new(@data[data_pointer..@sb.block_size * block_number], header.version_3)
           entries_by_name = add_entry_by_name(entries_by_name, directory_entry)
-          block_pointer   += directory_entry.length
-          data_pointer    += directory_entry.length
+          block_pointer += directory_entry.length
+          data_pointer += directory_entry.length
         end
         block_number += 1
         data_pointer = @sb.block_size * (block_number - 1)

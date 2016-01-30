@@ -1,4 +1,4 @@
-class AuditEvent < ActiveRecord::Base
+class AuditEvent < ApplicationRecord
   include ReportableMixin
 
   validates_presence_of     :event, :status, :message, :severity
@@ -7,10 +7,10 @@ class AuditEvent < ActiveRecord::Base
 
   def self.generate(attrs)
     attrs = {
-      :severity       =>  "info",
-      :status         =>  "success",
-      :userid         =>  "system",
-      :source         =>  AuditEvent.source(caller)
+      :severity => "info",
+      :status   => "success",
+      :userid   => "system",
+      :source   => AuditEvent.source(caller)
     }.merge(attrs)
 
     event = AuditEvent.create(attrs)
@@ -31,8 +31,7 @@ class AuditEvent < ActiveRecord::Base
   private
 
   def self.source(source)
-    %r{^([^:]+):[^`]+`([^']+).*$} =~ source[0]
+    /^([^:]+):[^`]+`([^']+).*$/ =~ source[0]
     "#{File.basename($1, ".*").camelize}.#{$2}"
   end
-
 end

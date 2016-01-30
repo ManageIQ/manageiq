@@ -11,16 +11,16 @@ module StorageMixin
   end
 
   STORAGE_FILE_TYPES.each do |m|
-    self.send(:define_method, "#{m}_size")  { self.add_files_sizes("#{m}_files") }
-    self.send(:define_method, "#{m}_files") { self.storage_files_by_type[m] }
+    send(:define_method, "#{m}_size")  { add_files_sizes("#{m}_files") }
+    send(:define_method, "#{m}_files") { storage_files_by_type[m] }
   end
 
   def storage_files_by_type
     return @storage_files_by_type unless @storage_files_by_type.nil?
-    @storage_files_by_type = StorageFile.split_file_types(self.storage_files_files)
+    @storage_files_by_type = StorageFile.split_file_types(storage_files_files)
   end
 
   def add_files_sizes(file_method, *args)
-    self.send(file_method, *args).inject(0) {|ts, f| ts + f.size.to_i}
+    send(file_method, *args).inject(0) { |ts, f| ts + f.size.to_i }
   end
 end

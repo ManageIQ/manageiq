@@ -1,27 +1,6 @@
 //= require import
 
 var Automate = {
-  listenForAutomatePostMessages: function() {
-    window.addEventListener('message', function(event) {
-      miqSparkleOff();
-      clearMessages();
-
-      var importFileUploadId = event.data.import_file_upload_id;
-
-      if (importFileUploadId) {
-        Automate.getAndRenderAutomateJson(importFileUploadId, event.data.message);
-      } else {
-        var messageData = JSON.parse(event.data.message);
-
-        if (messageData.level == 'warning') {
-          showWarningMessage(messageData.message);
-        } else {
-          showErrorMessage(messageData.message);
-        }
-      }
-    });
-  },
-
   getAndRenderAutomateJson: function(importFileUploadId, message) {
     $('.hidden-import-file-upload-id').val(importFileUploadId);
 
@@ -30,7 +9,7 @@ var Automate = {
       Automate.addDomainOptions(rows_json.children);
       Automate.setupInitialDynatree(rows_json.children);
 
-      $('.importing-domains').change(function() {
+      $('select.importing-domains').change(function() {
         Automate.importingDomainsChangeHandler(rows_json.children);
       });
 
@@ -41,7 +20,7 @@ var Automate = {
     })
     .fail(function(failedMessage) {
       var messageData = JSON.parse(failedMessage.responseText);
-      
+
       if (messageData.level == 'warning') {
         showWarningMessage(messageData.message);
       } else {
@@ -52,16 +31,18 @@ var Automate = {
   },
 
   addDomainOptions: function(domains) {
-    $('.importing-domains').empty();
+    $('select.importing-domains').empty();
 
     $.each(domains, function(index, child) {
-      $('.importing-domains').append(
+      $('select.importing-domains').append(
         $('<option>', {
           value: child.title,
           text: child.title
         })
       );
     });
+
+    $('select.importing-domains').selectpicker('refresh');
   },
 
   setupInitialDynatree: function(domains) {
@@ -74,7 +55,7 @@ var Automate = {
 
   importingDomainsChangeHandler: function(domains) {
     $.each(domains, function(index, child) {
-      if ($('.importing-domains').val() === child.title) {
+      if ($('select.importing-domains').val() === child.title) {
         $('.domain-tree').dynatree({
           checkbox: true,
           children: child.children,

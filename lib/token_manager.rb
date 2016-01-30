@@ -23,7 +23,7 @@ class TokenManager
     @instance ||= super
   end
 
-  delegate :configure, :gen_token, :token_set_info, :token_get_info, :token_valid?, :to => self
+  delegate :configure, :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :to => self
 
   def self.configure(_namespace, options = {})
     @config.merge!(options)
@@ -32,12 +32,25 @@ class TokenManager
   def self.gen_token(namespace, token_options = {})
     ts = global_token_store(namespace)
     token = SecureRandom.hex(16)
-    token_data = {:expires_on => Time.now.utc + @config[:token_ttl]}
+    token_ttl_config = token_options.delete(:token_ttl_config)
+    token_ttl = (token_ttl_config && @config[token_ttl_config]) ? @config[token_ttl_config] : @config[:token_ttl]
+    token_data = {:token_ttl => token_ttl, :expires_on => Time.now.utc + token_ttl}
 
     ts.write(token,
              token_data.merge!(prune_token_options(token_options)),
              :expires_in => @config[:token_ttl])
     token
+  end
+
+  def self.reset_token(namespace, token)
+    ts = global_token_store(namespace)
+    token_data = ts.read(token)
+    return {} if token_data.nil?
+
+    token_ttl = token_data[:token_ttl]
+    ts.write(token,
+             token_data.merge!(:expires_on => Time.now.utc + token_ttl),
+             :expires_in => token_ttl)
   end
 
   def self.token_set_info(namespace, token, token_options = {})

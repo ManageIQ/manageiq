@@ -1,25 +1,24 @@
 class SupportController < ApplicationController
+  # # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
+  # verify  :method => :post, :only => [ :destroy, :create, :update ],
+  #    :redirect_to => { :action => :index }
 
-# # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-# verify  :method => :post, :only => [ :destroy, :create, :update ],
-#    :redirect_to => { :action => :index }
-
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     about
-    render :action=>"show"
+    render :action => "show"
   end
 
   def show
   end
 
   def about
-#   @tabs ||= [ ["1", ""] ]
-#   @tabs.push( ["1", "Help"] )
+    #   @tabs ||= [ ["1", ""] ]
+    #   @tabs.push( ["1", "Help"] )
     @vmdb = {:version => Vmdb::Appliance.VERSION, :build => Vmdb::Appliance.BUILD}
     @user_role = User.current_user.miq_user_role_name
     @pdf_documents = pdf_documents
@@ -51,5 +50,4 @@ class SupportController < ApplicationController
       h[f] = f.titleize
     end
   end
-
 end

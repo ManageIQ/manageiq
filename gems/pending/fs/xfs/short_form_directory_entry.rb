@@ -41,10 +41,8 @@ module XFS
     end
 
     def device?
-      @file_type == Inode::FT_CHAR  ||
-      @file_type == Inode::FT_BLOCK ||
-      @file_type == Inode::FT_FIFO  ||
-      @file_type == Inode::FT_SOCKET
+      @file_type == Inode::FT_CHAR || @file_type == Inode::FT_BLOCK ||
+        @file_type == Inode::FT_FIFO || @file_type == Inode::FT_SOCKET
     end
 
     def dot_entry(dots, inode_number)
@@ -67,7 +65,7 @@ module XFS
       @directory_entry = SHORT_FORM_DIRECTORY_ENTRY.decode(data[0..siz])
       @name_length     = @directory_entry['name_length']
       unless @name_length == 0
-        @name_length     += 1 if sb.version_has_crc?
+        @name_length += 1 if sb.version_has_crc?
         @name   = data[siz, @name_length]
         start   = siz + @name_length
         if short_inode

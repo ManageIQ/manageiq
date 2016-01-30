@@ -1,7 +1,7 @@
 class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
   def set_or_default_hardware_field_values(vm)
     update_values = {
-      :vm_memory      => vm.hardware.memory_cpu.to_s,
+      :vm_memory      => vm.hardware.memory_mb.to_s,
       :cpu_limit      => vm.cpu_limit,
       :memory_limit   => vm.memory_limit,
       :cpu_reserve    => vm.cpu_reserve,
@@ -12,9 +12,9 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def get_cpu_values_hash(vm)
     {
-      :number_of_cpus    => vm.hardware.numvcpus,
-      :number_of_sockets => vm.hardware.logical_cpus,
-      :cores_per_socket  => vm.hardware.cores_per_socket
+      :number_of_cpus    => vm.hardware.cpu_total_cores,
+      :number_of_sockets => vm.hardware.cpu_sockets,
+      :cores_per_socket  => vm.hardware.cpu_cores_per_socket
     }
   end
 

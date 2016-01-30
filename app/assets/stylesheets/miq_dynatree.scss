@@ -4,9 +4,9 @@
 
 ul.dynatree-container
 {
-	overflow: auto;
+	overflow: hidden !important;
 	font: normal 12px OpenSansRegular,Arial,Helvetica,sans-serif;
-	white-space: nowrap;
+	white-space: nowrap !important;
 	padding: 0px;
 	padding-left: 5px;
 	margin: 0; /* issue 201 */
@@ -15,19 +15,35 @@ ul.dynatree-container
 	height: 100%; /* issue 263 */
 }
 
-/*formatting for old html accordions in DHTMLX layout (ie, compare) */
+/* makes tree scrollable within a modal */
 
-#accordion ul.dynatree-container
-{
-	overflow: hidden
+.modal-body ul.dynatree-container{
+  overflow: auto !important;
 }
 
 /* overrides dynatree styling within patternfly accordion */
 
 #accordion .panel-body {
   background-color: #f9f9f9 !important;
+  border-right: 1px solid #d4d4d4;
+  margin-right: -1px;
   padding-left: 0 !important;  /*needed so that dynatree hover effect goes to edges*/
   padding-right: 0 !important; /*needed so that dynatree hover effect goes to edges*/
+}
+
+
+// Report menu editor styling (report names not clickable)
+#menu_roles_treebox ul ul ul ul span.dynatree-node a {
+  cursor: default !important;
+}
+#menu_roles_treebox ul ul ul ul span.dynatree-node:hover {
+  background-color: transparent !important;
+}
+// C & U collection tab styling (report names not clickable)
+
+#clhosts_treebox span.dynatree-node a,
+#cu_datastore_treebox span.dynatree-node a{
+  cursor: default !important;
 }
 
 #accordion a.btn {
@@ -39,33 +55,14 @@ ul.dynatree-container
 }
 
 #accordion .panel-body .dynatree-title {
-  white-space: normal !important;
-}
-
-#accordion .panel-body ul li ul li:hover {
-  margin-left:-200px;
-  margin-right: -1000px;
-  margin-bottom: -1px;
-  padding: 2px 1000px 0 200px;
-  border: 1px solid #5db9de;
-  border-left: 0px;
-  background-color: #d6ecf8;
-}
-
-#accordion .panel-body ul li ul li.dynatree-lastsib:hover {
-  padding-bottom: 2px;
-}
-
-
-#accordion .panel-body ul li ul li span.dynatree-node:hover{
-  border: 0 !important;
+  white-space: nowrap !important;
 }
 
 /* end - overrides dynatree styling within patternfly accordion */
 
-.dhx_acc_base_dhx_blue ul.dynatree-container,   /*for accordion trees only*/
-.dhtmlx_no_accordion ul.dynatree-container
-{	
+.panel ul.dynatree-container,   /*for accordion trees only*/
+.panel ul.dynatree-container
+{
 	overflow: hidden;
 	overflow-y: visible;
 }
@@ -136,7 +133,7 @@ span.dynatree-drag-helper-img,
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
-	background-image: url(image_path('dynatree/icons.gif'));
+	background-image: image-url('dynatree/icons.gif');
 	background-position: 0 0;
 }
 
@@ -218,19 +215,18 @@ span.dynatree-expander:hover
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
 	background-position: 0 0;
-	background-image: url(image_path('dynatree/loading.gif'));
+	background-image: image-url('dynatree/loading.gif');
 }
 
 /* white arrows on active item - for accordion trees only*/
 
-.dhx_acc_base_dhx_blue span.dynatree-expanded.dynatree-active > span.dynatree-expander,
-.dhtmlx_no_accordion span.dynatree-expanded.dynatree-active > span.dynatree-expander
+.panel span.dynatree-expanded.dynatree-active > span.dynatree-expander
 {
 	background-position: -48px -112px !important;
 }
- 
-.dhx_acc_base_dhx_blue span.dynatree-active > span.dynatree-expander,
-.dhtmlx_no_accordion span.dynatree-expanded.dynatree-active > span.dynatree-expander
+
+.panel span.dynatree-active > span.dynatree-expander,
+.panel span.dynatree-expanded.dynatree-active > span.dynatree-expander
  {
 	background-position: -66px -110px;
  }
@@ -335,7 +331,7 @@ span.dynatree-icon /* Default icon */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url(image_path('dynatree/loading.gif'));
+	background-image: image-url('dynatree/loading.gif');
 }
 
 .dynatree-statusnode-error span.dynatree-icon
@@ -417,8 +413,7 @@ span.dynatree-selected a
 	font-style: italic;
 }
 
-.dhx_acc_base_dhx_blue span.dynatree-active,  /*for accordion trees only*/
-.dhtmlx_no_accordion span.dynatree-active
+.panel span.dynatree-active,  /*for accordion trees only*/
 {
 	margin-left:-200px;
 	padding: 2px 900px 5px 200px;
@@ -429,13 +424,11 @@ span.dynatree-selected a
 	-webkit-box-shadow: inset 0px 1px 2px 0px #2289ba;
      -moz-box-shadow: inset 0px 1px 2px 0px #2289ba;
           box-shadow: inset 0px 1px 2px 0px #2289ba;
-/*	background-image: url(active-node.gif) !important;*/
-	background-position:right; 
+	background-position:right;
   background-repeat:no-repeat;
 }
 
-.dhx_acc_base_dhx_blue span.dynatree-active a,  /*for accordion trees only*/
-.dhtmlx_no_accordion span.dynatree-active a
+.panel span.dynatree-active a  /*for accordion trees only*/
 {
   border: 0px solid #999999;
   color: #fff !important;
@@ -607,5 +600,7 @@ span.ae-valid-node a
 span.product-strikethru-node a
 {
   color: black !important; /* @ IE6 */
+  font: normal 12px OpenSansRegular,Arial,Helvetica,sans-serif;
+  line-height: 22px !important;
   text-decoration: line-through;
 }

@@ -8,8 +8,13 @@ evm_server_not_responding,EVM Server Not Responding,Default,evm_operations
 evm_server_memory_exceeded,EVM Server Exceeded Memory Limit,Default,evm_operations
 evm_server_is_master,EVM Server is Master,Default,evm_operations
 evm_server_system_disk_high_usage,EVM Server High System Disk Usage,Default,evm_operations
-evm_server_app_disk_high_usage,EVM Server High App Disk Usage,Default,evm_operations
-evm_server_log_disk_high_usage,EVM Server High Log Disk Usage,Default,evm_operations
+evm_server_boot_disk_high_usage,EVM Server High /boot Disk Usage,Default,evm_operations
+evm_server_home_disk_high_usage,EVM Server High /home Disk Usage,Default,evm_operations
+evm_server_var_disk_high_usage,EVM Server High /var Disk Usage,Default,evm_operations
+evm_server_var_log_disk_high_usage,EVM Server High /var/log Disk Usage,Default,evm_operations
+evm_server_var_log_audit_disk_high_usage,EVM Server High /var/log/audit Disk Usage,Default,evm_operations
+evm_server_miq_tmp_disk_high_usage,EVM Server High Temp Storage Disk Usage,Default,evm_operations
+evm_server_tmp_disk_high_usage,EVM Server High /tmp Disk Usage,Default,evm_operations
 evm_server_db_disk_high_usage,EVM Server High DB Disk Usage,Default,evm_operations
 evm_server_db_backup_low_space,EVM Server Database Backup Insufficient Space,Default,evm_operations
 evm_worker_start,EVM Worker Started,Default,evm_operations
@@ -51,6 +56,16 @@ host_auth_invalid,Host Auth Invalid,Default,auth_validation
 host_auth_unreachable,Host Auth Unreachable,Default,auth_validation
 host_auth_incomplete,Host Auth Incomplete Credentials,Default,auth_validation
 host_auth_error,Host Auth Error,Default,auth_validation
+request_host_reset,Host Reset Request,Default,host_operations
+request_host_start,Host Start Request,Default,host_operations
+request_host_stop,Host Stop Request,Default,host_operations
+request_host_standby,Host Standby Request,Default,host_operations
+request_host_enter_maintenance_mode,Host Maintenance Enter Request,Default,host_operations
+request_host_exit_maintenance_mode,Host Maintenance Exit Request,Default,host_operations
+request_host_shutdown,Host Shutdown Request,Default,host_operations
+request_host_reboot,Host Reboot Request,Default,host_operations
+request_host_enable_vmotion,Host Vmotion Enable Request,Default,host_operations
+request_host_disable_vmotion,Host Vmotion Disable Request,Default,host_operations
 #
 # Company tags
 #
@@ -81,7 +96,6 @@ request_vm_destroy,VM Delete (from Disk) Request,Default,vm_configurational
 #
 # VM lifecycle
 #
-vm_discover,VM Discovery,Default,vm_process
 vm_retired,VM Retired,Default,vm_process
 request_vm_retire,VM Retire Request,Default,vm_process
 vm_retire_warn,VM Retirement Warning,Default,vm_process
@@ -92,13 +106,19 @@ vm_provisioned,VM Provision Complete,Default,vm_process
 vm_start,VM Power On,Default,vm_operational
 request_vm_start,VM Power On Request,Default,vm_operational
 # vm_shutdown,VM Shutdown,Default,vm_operational
-# vm_resume,VM Resume,Default,vm_operational
+vm_resume,VM Resume,Default,vm_operational
 vm_migrate,VM Live Migration (VMOTION),Default,vm_operational
 # vm_relocate,VM Relocation to a New Host,Default,vm_operational
 vm_reset,VM Reset,Default,vm_operational
 request_vm_reset,VM Reset Request,Default,vm_operational
 vm_suspend,VM Suspend,Default,vm_operational
 request_vm_suspend,VM Suspend Request,Default,vm_operational
+vm_pause,VM Pause,Default,vm_operational
+request_vm_pause,VM Suspend Request,Default,vm_operational
+vm_shelve,VM Shelve,Default,vm_operational
+request_vm_shelve,VM Shelve offload Request,Default,vm_operational
+vm_shelve_offload,VM Suspend,Default,vm_operational
+request_vm_shelve_offload,VM Suspend Request,Default,vm_operational
 vm_poweroff,VM Power Off,Default,vm_operational
 request_vm_poweroff,VM Power Off Request,Default,vm_operational
 vm_shutdown_guest,VM Guest Shutdown,Default,vm_operational

@@ -1,17 +1,13 @@
-require "spec_helper"
-
 describe "availability_zone/show.html.haml" do
   shared_examples_for "miq_before_onload JS is needed" do
     it "renders proper JS" do
       js_string = "var miq_after_onload = \"miqAsyncAjax('/availability_zone/#{action}/#{availability_zone.id}');\""
       render
-      rendered.should include(js_string)
+      expect(rendered).to include(js_string)
     end
   end
 
-  # TODO: For speed, replace next line with active_record_instance_double when available
-  let(:availability_zone) { FactoryGirl.create(:availability_zone, :name => 'My AZ') }
-  # let(:az) { active_record_instance_double("AvailabilityZone", :name => 'My AZ', :id => 1) }
+  let(:availability_zone) { double("AvailabilityZone", :name => 'My AZ', :id => 1) }
   let(:action) { 'index' }
 
   before do
@@ -24,7 +20,7 @@ describe "availability_zone/show.html.haml" do
     let(:showtype) { "performance" }
 
     before do
-      assign(:perf_options, {:chart_type => :performance})
+      assign(:perf_options, :chart_type => :performance)
     end
 
     it_behaves_like "miq_before_onload JS is needed"

@@ -1,4 +1,3 @@
-require 'miq-iecunits'
 require 'shellwords'
 
 module ManageIQ::Providers::Kubernetes
@@ -15,13 +14,16 @@ module ManageIQ::Providers::Kubernetes
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
       get_namespaces(inventory)
+      get_resource_quotas(inventory)
+      get_limit_ranges(inventory)
       get_replication_controllers(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
+      get_persistent_volumes(inventory)
+      get_component_statuses(inventory)
       get_registries
       get_images
-
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
     end
@@ -86,6 +88,32 @@ module ManageIQ::Providers::Kubernetes
       end
     end
 
+    def get_persistent_volumes(inventory)
+      process_collection(inventory["persistent_volume"], :persistent_volumes) { |n| parse_persistent_volume(n) }
+      @data[:persistent_volumes].each do |pv|
+        @data_index.store_path(:persistent_volumes, :by_name, pv[:name], pv)
+      end
+    end
+
+    def get_resource_quotas(inventory)
+      process_collection(inventory["resource_quota"], :container_quotas) { |n| parse_quota(n) }
+    end
+
+    def get_limit_ranges(inventory)
+      process_collection(inventory["limit_range"], :container_limits) { |n| parse_range(n) }
+    end
+
+    def get_component_statuses(inventory)
+      process_collection(inventory["component_status"],
+                         :container_component_statuses) do |cs|
+        parse_component_status(cs)
+      end
+      @data[:container_component_statuses].each do |cs|
+        @data_index.store_path(:container_component_statuses,
+                               :by_name, cs[:name], cs)
+      end
+    end
+
     def process_collection(collection, key, &block)
       @data[key] ||= []
       collection.each { |item| process_collection_item(item, key, &block) }
@@ -116,13 +144,13 @@ module ManageIQ::Providers::Kubernetes
         :lives_on_type              => nil
       )
 
-      node_memory = node.status.capacity.memory
-      node_memory &&= MiqIECUnits.string_to_value(node_memory) / 1.megabyte
+      node_memory = node.status.capacity.try(:memory)
+      node_memory &&= parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
-        :hardware => {
-          :logical_cpus => node.status.capacity.cpu,
-          :memory_cpu   => node_memory
+        :hardware         => {
+          :cpu_total_cores => node.status.capacity.try(:cpu),
+          :memory_mb       => node_memory
         },
         :operating_system => {
           :distribution   => node.status.nodeInfo.osImage,
@@ -130,8 +158,8 @@ module ManageIQ::Providers::Kubernetes
         }
       }
 
-      max_container_groups = node.status.capacity.pods
-      new_result[:max_container_groups] = max_container_groups && MiqIECUnits.string_to_value(max_container_groups)
+      max_container_groups = node.status.capacity.try(:pods)
+      new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
 
@@ -175,6 +203,7 @@ module ManageIQ::Providers::Kubernetes
         # TODO: We might want to change portal_ip to clusterIP
         :portal_ip        => service.spec.clusterIP,
         :session_affinity => service.spec.sessionAffinity,
+        :service_type     => service.spec.type,
 
         :labels           => parse_labels(service),
         :selector_parts   => parse_selector_parts(service),
@@ -205,7 +234,8 @@ module ManageIQ::Providers::Kubernetes
         :reason                => pod.status.reason,
         :container_node        => nil,
         :container_definitions => [],
-        :container_replicator  => nil
+        :container_replicator  => nil,
+        :build_pod_name        => pod.metadata.try(:annotations).try("openshift.io/build.name".to_sym)
       )
 
       unless pod.spec.nodeName.nil?
@@ -250,6 +280,7 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:labels] = parse_labels(pod)
       new_result[:node_selector_parts] = parse_node_selector_parts(pod)
+      new_result[:container_volumes] = parse_volumes(pod.spec.volumes)
       new_result
     end
 
@@ -261,10 +292,10 @@ module ManageIQ::Providers::Kubernetes
         (subset.addresses || []).each do |address|
           next if address.targetRef.try(:kind) != 'Pod'
           cg = @data_index.fetch_path(
-              :container_groups, :by_namespace_and_name,
-              # namespace is overriden in more_core_extensions and hence needs
-              # a non method access
-              address.targetRef["table"][:namespace], address.targetRef.name)
+            :container_groups, :by_namespace_and_name,
+            # namespace is overriden in more_core_extensions and hence needs
+            # a non method access
+            address.targetRef["table"][:namespace], address.targetRef.name)
           new_result[:container_groups] << cg unless cg.nil?
         end
       end
@@ -274,6 +305,111 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_namespaces(container_projects)
       parse_base_item(container_projects).except(:namespace)
+    end
+
+    def parse_persistent_volume(persistent_volume)
+      new_result = parse_base_item(persistent_volume)
+      new_result.merge!(parse_volume_source(persistent_volume.spec))
+      new_result.merge!(
+        :type           => 'PersistentVolume',
+        :parent_type    => 'ManageIQ::Providers::Kubernetes::ContainerManager',
+        :capacity       => persistent_volume.spec.capacity.to_h.map { |k, v| "#{k}=#{v}" }.join(','),
+        :access_modes   => persistent_volume.spec.accessModes.join(','),
+        :reclaim_policy => persistent_volume.spec.persistentVolumeReclaimPolicy,
+        :status_phase   => persistent_volume.status.phase,
+        :status_message => persistent_volume.status.message,
+        :status_reason  => persistent_volume.status.reason
+      )
+      new_result
+    end
+
+    def parse_quota(resource_quota)
+      new_result = parse_base_item(resource_quota).except(:namespace)
+      new_result[:project] = @data_index.fetch_path(
+        :container_projects,
+        :by_name,
+        resource_quota.metadata["table"][:namespace])
+      new_result[:container_quota_items] = parse_quota_items resource_quota
+      new_result
+    end
+
+    def parse_quota_items(resource_quota)
+      new_result_h = Hash.new do |h, k|
+        h[k] = {
+          :resource       => k.to_s,
+          :quota_desired  => nil,
+          :quota_enforced => nil,
+          :quota_observed => nil
+        }
+      end
+
+      resource_quota.spec.hard.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_desired] = quota
+      end
+
+      resource_quota.status.hard.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_enforced] = quota
+      end
+
+      resource_quota.status.used.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_observed] = quota
+      end
+
+      new_result_h.values
+    end
+
+    def parse_range(limit_range)
+      new_result = parse_base_item(limit_range).except(:namespace)
+      new_result[:project] = @data_index.fetch_path(
+        :container_projects,
+        :by_name,
+        limit_range.metadata["table"][:namespace])
+      new_result[:container_limit_items] = parse_range_items limit_range
+      new_result
+    end
+
+    def parse_range_items(limit_range)
+      new_result_h = create_limits_matrix
+
+      limit_range.spec.limits.each do |item|
+        item[:max].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:max] = limit
+        end
+
+        item[:min].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:min] = limit
+        end
+
+        item[:default].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:default] = limit
+        end
+
+        item[:defaultRequest].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:default_request] = limit
+        end
+
+        item[:maxLimitRequestRatio].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:max_limit_request_ratio] = limit
+        end
+      end
+      new_result_h.values.collect(&:values).flatten
+    end
+
+    def create_limits_matrix
+      # example: h[:pod][:cpu][:max] = 8
+      Hash.new do |h, item_type|
+        h[item_type] = Hash.new do |j, resource|
+          j[resource] = {
+            :item_type               => item_type.to_s,
+            :resource                => resource.to_s,
+            :max                     => nil,
+            :min                     => nil,
+            :default                 => nil,
+            :default_request         => nil,
+            :max_limit_request_ratio => nil
+          }
+        end
+      end
     end
 
     def parse_replication_controllers(container_replicator)
@@ -289,6 +425,26 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
                                                     container_replicator.metadata["table"][:namespace])
+      new_result
+    end
+
+    def parse_component_status(container_component_status)
+      new_result = {}
+
+      # At this point components statuses use only one condition.
+      # In the case of a future change, this will need to be modified accordingly.
+      component_condition = container_component_status.conditions.first
+
+      new_result.merge!(
+        :name      => container_component_status.metadata.name,
+        :condition => component_condition.type,
+        :status    => component_condition.status,
+        :message   => component_condition.message,
+        # workaround for handling Kubernetes issue: "nil" string is returned in component status error
+        # https://github.com/kubernetes/kubernetes/issues/16721
+        :error     => (component_condition.error unless component_condition.error == "nil")
+      )
+
       new_result
     end
 
@@ -310,7 +466,7 @@ module ManageIQ::Providers::Kubernetes
       attributes.to_h.each do |key, value|
         custom_attr = {
           :section => section,
-          :name    => key,
+          :name    => key.to_s,
           :value   => value,
           :source  => "kubernetes"
         }
@@ -341,7 +497,7 @@ module ManageIQ::Providers::Kubernetes
         :image_pull_policy => container_def.imagePullPolicy,
         :command           => container_def.command ? Shellwords.join(container_def.command) : nil,
         :memory            => container_def.memory,
-         # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
+        # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
         :cpu_cores         => container_def.cpu.to_f / 1000,
         :capabilities_add  => container_def.securityContext.try(:capabilities).try(:add).to_a.join(','),
         :capabilities_drop => container_def.securityContext.try(:capabilities).try(:drop).to_a.join(','),
@@ -381,18 +537,11 @@ module ManageIQ::Providers::Kubernetes
       res = {}
       # state_hash key is the state and value are attributes e.g 'running': {...}
       (state, state_info), = state_hash.to_h.to_a
-      %w(finishedAt startedAt).each do |iso_date|
-        state_info[iso_date] = parse_date state_info[iso_date]
-      end
       res[:state] = state
       %w(reason started_at finished_at exit_code signal message).each do |attr|
         res[attr.to_sym] = state_info[attr.camelize(:lower)]
       end
       res
-    end
-
-    def parse_date(date)
-      date.nil? ? nil : DateTime.iso8601(date)
     end
 
     def parse_container_image(image, imageID)
@@ -439,9 +588,10 @@ module ManageIQ::Providers::Kubernetes
       {
         :ems_ref     => "#{service_id}_#{port_config.port}_#{port_config.targetPort}",
         :name        => port_config.name,
+        :protocol    => port_config.protocol,
         :port        => port_config.port,
-        :target_port => port_config.targetPort,
-        :protocol    => port_config.protocol
+        :target_port => (port_config.targetPort unless port_config.targetPort == 0),
+        :node_port   => (port_config.nodePort unless port_config.nodePort == 0)
       }
     end
 
@@ -499,6 +649,68 @@ module ManageIQ::Providers::Kubernetes
         :se_linux_role  => security_context.seLinuxOptions.try(:role),
         :se_linux_type  => security_context.seLinuxOptions.try(:type)
       }
+    end
+
+    def parse_volumes(volumes)
+      volumes.to_a.collect do |volume|
+        {
+          :type        => 'ContainerVolumeKubernetes',
+          :name        => volume.name,
+          :parent_type => 'ContainerGroup'
+        }.merge!(parse_volume_source(volume))
+      end
+    end
+
+    def parse_volume_source(volume)
+      {
+        :empty_dir_medium_type   => volume.emptyDir.try(:medium),
+        :gce_pd_name             => volume.gcePersistentDisk.try(:pdName),
+        :git_repository          => volume.gitRepo.try(:repository),
+        :git_revision            => volume.gitRepo.try(:revision),
+        :nfs_server              => volume.nfs.try(:server),
+        :iscsi_target_portal     => volume.iscsi.try(:targetPortal),
+        :iscsi_iqn               => volume.iscsi.try(:iqn),
+        :iscsi_lun               => volume.iscsi.try(:lun),
+        :glusterfs_endpoint_name => volume.glusterfs.try(:endpointsName),
+        :claim_name              => volume.persistentVolumeClaim.try(:claimName),
+        :rbd_ceph_monitors       => volume.rbd.try(:cephMonitors).to_a.join(','),
+        :rbd_image               => volume.rbd.try(:rbdImage),
+        :rbd_pool                => volume.rbd.try(:rbdPool),
+        :rbd_rados_user          => volume.rbd.try(:radosUser),
+        :rbd_keyring             => volume.rbd.try(:keyring),
+        :common_path             => [volume.hostPath.try(:path),
+                                     volume.nfs.try(:path),
+                                     volume.glusterfs.try(:path)].compact.first,
+        :common_fs_type          => [volume.gcePersistentDisk.try(:fsType),
+                                     volume.awsElasticBlockStore.try(:fsType),
+                                     volume.iscsi.try(:fsType),
+                                     volume.rbd.try(:fsType),
+                                     volume.cinder.try(:fsType)].compact.first,
+        :common_read_only        => [volume.gcePersistentDisk.try(:readOnly),
+                                     volume.awsElasticBlockStore.try(:readOnly),
+                                     volume.nfs.try(:readOnly),
+                                     volume.iscsi.try(:readOnly),
+                                     volume.glusterfs.try(:readOnly),
+                                     volume.persistentVolumeClaim.try(:readOnly),
+                                     volume.rbd.try(:readOnly),
+                                     volume.cinder.try(:readOnly)].compact.first,
+        :common_secret           => [volume.secret.try(:secretName),
+                                     volume.rbd.try(:secretRef).try(:name)].compact.first,
+        :common_volume_id        => [volume.awsElasticBlockStore.try(:volumeId),
+                                     volume.cinder.try(:volumeId)].compact.first,
+        :common_partition        => [volume.gcePersistentDisk.try(:partition),
+                                     volume.awsElasticBlockStore.try(:partition)].compact.first
+      }
+    end
+
+    IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti)
+    def parse_iec_number(value)
+      exp_index = IEC_SIZE_SUFFIXES.index(value[-2..-1])
+      if exp_index.nil?
+        return Integer(value)
+      else
+        return Integer(value[0..-3]) * 1024**(exp_index + 1)
+      end
     end
   end
 end

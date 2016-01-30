@@ -140,6 +140,65 @@ class ApiController
       end
     end
 
+    def retire_resource_vms(type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for retiring a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Retiring #{vm_ident(vm)}")
+        retire_vm(vm, id, data)
+      end
+    end
+
+    def reset_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for resetting a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Resetting #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "reset")
+        result = reset_vm(vm) if result[:success]
+        result
+      end
+    end
+
+    def reboot_guest_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for rebooting a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Rebooting #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "reboot_guest")
+        result = reboot_guest_vm(vm) if result[:success]
+        result
+      end
+    end
+
+    def shutdown_guest_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for shutting down a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Shutting down #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "shutdown_guest")
+        result = shutdown_guest_vm(vm) if result[:success]
+        result
+      end
+    end
+
+    def refresh_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for refreshing a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Refreshing #{vm_ident(vm)}")
+        refresh_vm(vm)
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -210,6 +269,7 @@ class ApiController
     def set_owner_vm(vm, owner)
       desc = "#{vm_ident(vm)} setting owner to '#{owner}'"
       user = User.lookup_by_identity(owner)
+      raise "Invalid user #{owner} specified" unless user
       vm.evm_owner = user
       vm.miq_group = user.current_group unless user.nil?
       vm.save!
@@ -247,6 +307,47 @@ class ApiController
 
       vm.add_ems_event(event_type, event_message, event_timestamp)
       action_result(true, desc)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def retire_vm(vm, id, data)
+      desc = "#{vm_ident(vm)} retiring"
+      desc << " on #{data['date']}" if Hash(data)['date'].present?
+      retire_resource(:vms, id, data)
+      action_result(true, desc)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def reset_vm(vm)
+      desc = "#{vm_ident(vm)} resetting"
+      task_id = queue_object_action(vm, desc, :method_name => "reset", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def refresh_vm(vm)
+      desc = "#{vm_ident(vm)} refreshing"
+      task_id = queue_object_action(vm, desc, :method_name => "refresh_ems", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def shutdown_guest_vm(vm)
+      desc = "#{vm_ident(vm)} shutting down"
+      task_id = queue_object_action(vm, desc, :method_name => "shutdown_guest", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def reboot_guest_vm(vm)
+      desc = "#{vm_ident(vm)} rebooting"
+      task_id = queue_object_action(vm, desc, :method_name => "reboot_guest", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
     end

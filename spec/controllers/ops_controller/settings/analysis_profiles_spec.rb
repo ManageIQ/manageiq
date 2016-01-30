@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe OpsController do
   describe '#ap_set_record_vars_set' do
     let(:scanitemset) { double }

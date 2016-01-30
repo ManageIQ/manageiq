@@ -36,7 +36,7 @@ class AtomFeedTest < MiniTest::Unit::TestCase
   end
 
   def test_should_allow_custom_feed_options
-    atom_feed_for @records, :feed => { :title => 'Custom Posts', :link => '/posts', :description => 'stuff', :self => '/posts.atom' }
+    atom_feed_for @records, :feed => {:title => 'Custom Posts', :link => '/posts', :description => 'stuff', :self => '/posts.atom'}
 
     assert_select 'feed>title', 'Custom Posts'
     assert_select "feed>link[href='/posts']"
@@ -49,7 +49,7 @@ class AtomFeedTest < MiniTest::Unit::TestCase
   end
 
   def test_should_allow_custom_item_attributes
-    atom_feed_for @records, :item => { :title => :name, :description => :body, :pub_date => :create_date, :link => :id }
+    atom_feed_for @records, :item => {:title => :name, :description => :body, :pub_date => :create_date, :link => :id}
 
     assert_select 'entry', 5 do
       assert_select 'title', :text => 'feed title (name)'
@@ -66,8 +66,8 @@ class AtomFeedTest < MiniTest::Unit::TestCase
   end
 
   def test_should_allow_custom_item_attribute_blocks
-    atom_feed_for @records, :item => { :title => lambda { |r| r.name }, :description => lambda { |r| r.body }, :pub_date => lambda { |r| r.create_date },
-      :link => lambda { |r| "/#{r.created_at.to_i}" }, :guid => lambda { |r| r.created_at.to_i } }
+    atom_feed_for @records, :item => {:title => lambda { |r| r.name }, :description => lambda { |r| r.body }, :pub_date => lambda { |r| r.create_date },
+      :link => lambda { |r| "/#{r.created_at.to_i}" }, :guid => lambda { |r| r.created_at.to_i }}
 
     assert_select 'entry', 5 do
       assert_select 'title', :text => 'feed title (name)'

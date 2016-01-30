@@ -1,7 +1,5 @@
-require "spec_helper"
-
 describe DialogFieldSerializer do
-  let(:resource_action_serializer) { auto_loaded_instance_double("ResourceActionSerializer") }
+  let(:resource_action_serializer) { double("ResourceActionSerializer") }
   let(:dialog_field_serializer) { described_class.new(resource_action_serializer) }
 
   describe "#serialize" do
@@ -18,7 +16,7 @@ describe DialogFieldSerializer do
         "display"                 => "display",
         "display_method"          => "display method",
         "display_method_options"  => {"display method options" => true},
-        "dynamic"                 => false,
+        "dynamic"                 => dynamic,
         "required"                => false,
         "required_method"         => "required method",
         "required_method_options" => {"required method options" => true},
@@ -41,13 +39,32 @@ describe DialogFieldSerializer do
     end
 
     before do
-      resource_action_serializer.stub(:serialize).with(resource_action).and_return("serialized resource action")
+      allow(resource_action_serializer).to receive(:serialize).with(resource_action).and_return("serialized resource action")
     end
 
-    it "serializes the dialog_field" do
-      dialog_field_serializer.serialize(dialog_field).should == expected_serialized_values.merge(
-        "resource_action" => "serialized resource action"
-      )
+    context "when the dialog_field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        allow(dialog_field).to receive(:trigger_automate_value_updates).and_return("dynamic values")
+      end
+
+      it "serializes the dialog_field with the correct values" do
+        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
+          "resource_action" => "serialized resource action",
+          "values"          => "dynamic values"
+        ))
+      end
+    end
+
+    context "when the dialog_field is not dynamic" do
+      let(:dynamic) { false }
+
+      it "serializes the dialog_field" do
+        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
+          "resource_action" => "serialized resource action"
+        ))
+      end
     end
   end
 end

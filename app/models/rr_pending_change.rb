@@ -1,4 +1,4 @@
-class RrPendingChange < ActiveRecord::Base
+class RrPendingChange < ApplicationRecord
   RR_TABLE_NAME_SUFFIX = "pending_changes"
   include RrModelCore
 
@@ -11,13 +11,10 @@ class RrPendingChange < ActiveRecord::Base
     is_called ? details["last_value"].to_i : details["start_value"].to_i - 1
   end
 
-  class << self; alias backlog count; end
+  class << self; alias_method :backlog, :count; end
 
   def self.backlog_details
-    counts = self.all(
-      :select => "change_table, COUNT(id) AS count_all",
-      :group  => "change_table"
-    )
+    counts = select("change_table, COUNT(id) AS count_all").group("change_table").order('count_all DESC').limit(20)
     counts.each_with_object({}) { |c, h| h[c.change_table] = c.count_all.to_i }
   end
 end

@@ -331,7 +331,7 @@ module ScanningMixin
 
       update_agent_state(ost, "Synchronize", "Synchronization in progress")
       categories.each do |c|
-        c.gsub!("\"", "")
+        c.delete!("\"")
         c.strip!
 
         # Grab data out of the bb.  (results may be limited by parms in ost like "from_time")

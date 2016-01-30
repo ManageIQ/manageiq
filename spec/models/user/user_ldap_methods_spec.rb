@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Authenticator::Ldap do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
@@ -23,7 +21,7 @@ describe Authenticator::Ldap do
       @fqusername  = "#{@username}@#{@user_suffix}"
 
       init_ldap_setup
-      @ldap.stub(:fqusername => @fqusername)
+      allow(@ldap).to receive_messages(:fqusername => @fqusername)
     end
 
     it "initial status" do
@@ -60,7 +58,7 @@ describe Authenticator::Ldap do
     end
 
     it "ldap bind fails" do
-      @login_ldap.stub(:bind => false)
+      allow(@login_ldap).to receive_messages(:bind => false)
 
       expect(AuditEvent).to receive(:failure)
       expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -69,7 +67,7 @@ describe Authenticator::Ldap do
     context "ldap binds" do
       it "get groups from ldap" do
         user = double("some user")
-        @auth.stub(:authorize_queue => user)
+        allow(@auth).to receive_messages(:authorize_queue => user)
         expect(subject).to eq(user)
       end
 
@@ -109,11 +107,11 @@ describe Authenticator::Ldap do
 
   def init_ldap_setup
     @login_ldap = double('login_ldap')
-    @login_ldap.stub(:bind => true)
-    MiqLdap.stub(:new).and_return(@login_ldap)
+    allow(@login_ldap).to receive_messages(:bind => true)
+    allow(MiqLdap).to receive(:new).and_return(@login_ldap)
 
     @ldap = double('ldap')
-    @auth.stub(:ldap => @ldap)
+    allow(@auth).to receive_messages(:ldap => @ldap)
   end
 
   def setup_vmdb_config
@@ -122,14 +120,14 @@ describe Authenticator::Ldap do
 
   def setup_to_create_user(group)
     setup_vmdb_config
-    @ldap.stub(:get_user_object => "A Net::LDAP::Entry object")
-    @ldap.stub(:normalize => "some unique string")
-    @ldap.stub(:get_attr => "xx@xx.com")
-    @auth.stub(:groups_for => [group.description])
+    allow(@ldap).to receive_messages(:get_user_object => "A Net::LDAP::Entry object")
+    allow(@ldap).to receive_messages(:normalize => "some unique string")
+    allow(@ldap).to receive_messages(:get_attr => "xx@xx.com")
+    allow(@auth).to receive_messages(:groups_for => [group.description])
   end
 
   def setup_to_get_fqdn
-    @ldap.stub(:fqusername => "some FQDN")
-    @ldap.stub(:normalize => "some normalized name")
+    allow(@ldap).to receive_messages(:fqusername => "some FQDN")
+    allow(@ldap).to receive_messages(:normalize => "some normalized name")
   end
 end

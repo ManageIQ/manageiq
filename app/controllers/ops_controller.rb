@@ -1,5 +1,4 @@
 class OpsController < ApplicationController
-
   # Methods for accordions
   include_concern 'Analytics'
   include_concern 'Db'
@@ -7,10 +6,10 @@ class OpsController < ApplicationController
   include_concern 'OpsRbac'
   include_concern 'Settings'
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     redirect_to :action => 'explorer'
@@ -46,6 +45,7 @@ class OpsController < ApplicationController
     'rbac_tenant_delete'        => :rbac_tenant_delete,
     'rbac_tenant_edit'          => :rbac_tenant_edit,
     'rbac_tenant_manage_quotas' => :rbac_tenant_manage_quotas,
+    'rbac_tenant_tags_edit'     => :rbac_tenant_tags_edit,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -96,12 +96,12 @@ class OpsController < ApplicationController
     raise ActionController::RoutingError.new('invalid button action') unless
       OPS_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
-    self.send(OPS_X_BUTTON_ALLOWED_ACTIONS[action])
+    send(OPS_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 
   def explorer
     @explorer = true
-    @built_trees = []
+    @trees = []
     return if perfmenu_click?
 
     # if AJAX request, replace right cell, and return
@@ -117,44 +117,44 @@ class OpsController < ApplicationController
     @trees   = []
     @accords = []
     if role_allows(:feature => "ops_settings")
-      @accords.push(:name => "settings", :title => "Settings", :container => "settings_tree_div")
+      @accords.push(:name => "settings", :title => "Settings", :container => "settings_accord")
       self.x_active_accord ||= 'settings'
-      self.x_active_tree  ||= 'settings_tree'
-      @sb[:active_tab]    ||= "settings_server"
-      @built_trees << settings_build_tree
+      self.x_active_tree ||= 'settings_tree'
+      @sb[:active_tab] ||= "settings_server"
+      @trees << settings_build_tree
     end
     if role_allows(:feature => "ops_rbac", :any => true)
-      @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_tree_div")
+      @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_accord")
       self.x_active_accord ||= 'rbac'
-      self.x_active_tree   ||= 'rbac_tree'
-      @built_trees << rbac_build_tree
+      self.x_active_tree ||= 'rbac_tree'
+      @trees << rbac_build_tree
       x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
       @sb[:active_tab] ||= "rbac_details"
     end
     if role_allows(:feature => "ops_diagnostics")
-      @accords.push(:name => "diagnostics", :title => "Diagnostics", :container => "diagnostics_tree_div")
+      @accords.push(:name => "diagnostics", :title => "Diagnostics", :container => "diagnostics_accord")
       self.x_active_accord ||= 'diagnostics'
-      self.x_active_tree   ||= 'diagnostics_tree'
-      @built_trees << diagnostics_build_tree
+      self.x_active_tree ||= 'diagnostics_tree'
+      @trees << diagnostics_build_tree
       x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
       @sb[:active_tab] ||= "diagnostics_summary"
     end
     if get_vmdb_config[:product][:analytics]
-      @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_tree_div")
+      @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_accord")
       self.x_active_accord ||= 'analytics'
-      @built_trees << analytics_build_tree
+      @trees << analytics_build_tree
       x_node_set("svr-#{to_cid(my_server_id)}", :analytics_tree) unless x_node(:analytics_tree)
     end
     if role_allows(:feature => "ops_db")
-      @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_tree_div")
+      @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_accord")
       self.x_active_accord ||= 'vmdb'
-      self.x_active_tree   ||= 'vmdb_tree'
-      @built_trees << db_build_tree
+      self.x_active_tree ||= 'vmdb_tree'
+      @trees << db_build_tree
       x_node_set("root", :vmdb_tree) unless x_node(:vmdb_tree)
       @sb[:active_tab] ||= "db_summary"
     end
 
-    @sb[:tab_label] ||= ui_lookup(:models=>"Zone")
+    @sb[:tab_label] ||= ui_lookup(:models => "Zone")
     @sb[:active_node] ||= {}
     if MiqServer.my_server(true).logon_status != :ready
       @sb[:active_tab]   = "diagnostics_audit_log"
@@ -164,7 +164,7 @@ class OpsController < ApplicationController
     end
 
     @sb[:rails_log] = $rails_log.filename.to_s.include?("production.log") ? "Production" : "Development"
-    get_node_info(x_node) if !params[:cls_id] #no need to do get_node_info if redirected from show_product_update
+    get_node_info(x_node) unless params[:cls_id] # no need to do get_node_info if redirected from show_product_update
     if !params[:no_refresh]
       @sb[:good] = nil
       @sb[:buildinfo] = nil
@@ -174,7 +174,7 @@ class OpsController < ApplicationController
       @ldap_group = nil
     else
       session[:changed] = @sb[:show_button] if params[:no_refresh] &&
-        %w(settings_import settings_import_tags).include?(@sb[:active_tab]) # show apply button enabled if this is set
+                                               %w(settings_import settings_import_tags).include?(@sb[:active_tab]) # show apply button enabled if this is set
     end
     # setting active record object here again, since they are no longer there due to redirect
     @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == "lg"
@@ -186,9 +186,9 @@ class OpsController < ApplicationController
   end
 
   def accordion_select
-    session[:flash_msgs] = @flash_array = nil           #clear out any messages from previous screen i.e import tab
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    session[:flash_msgs] = @flash_array = nil           # clear out any messages from previous screen i.e import tab
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{self.x_active_accord}_tree"
     session[:changed] = false
     set_active_tab(x_node)
     get_node_info(x_node)
@@ -196,12 +196,12 @@ class OpsController < ApplicationController
   end
 
   def tree_select
-    session[:flash_msgs] = @flash_array = nil           #clear out any messages from previous screen i.e import tab
-    @sb[:active_node] ||= Hash.new
+    session[:flash_msgs] = @flash_array = nil           # clear out any messages from previous screen i.e import tab
+    @sb[:active_node] ||= {}
     self.x_node = params[:id]
     set_active_tab(params[:id])
     session[:changed] = false
-    self.x_node = params[:id] #if x_active_tree == :vmdb_tree #params[:action] == "x_show"
+    self.x_node = params[:id] # if x_active_tree == :vmdb_tree #params[:action] == "x_show"
     get_node_info(params[:id])
     replace_right_cell(@nodetype)
   end
@@ -209,18 +209,18 @@ class OpsController < ApplicationController
   def change_tab(new_tab_id = nil)
     @explorer = true
     session[:changed] = false
-    session[:flash_msgs] = @flash_array = nil       #clear out any messages from previous screen i.e import tab
+    session[:flash_msgs] = @flash_array = nil       # clear out any messages from previous screen i.e import tab
     if params[:tab]
       @edit = session[:edit]
       @scan = @edit[:scan]
       case params[:tab].split("_")[0]
       when "new"
-        redirect_to(:action=>"ap_new", :tab=>params[:tab], :id=>"#{@scan.id || "new"}")
+        redirect_to(:action => "ap_new", :tab => params[:tab], :id => "#{@scan.id || "new"}")
       when "edit"
-        redirect_to(:action=>"ap_edit", :tab=>params[:tab], :id=>"#{@scan.id || "new"}")
+        redirect_to(:action => "ap_edit", :tab => params[:tab], :id => "#{@scan.id || "new"}")
       else
         @sb[:miq_tab] = "new#{params[:tab]}"
-        redirect_to(:action=>"ap_edit", :tab=>"edit#{params[:tab]}", :id=>"#{@scan.id || "new"}")
+        redirect_to(:action => "ap_edit", :tab => "edit#{params[:tab]}", :id => "#{@scan.id || "new"}")
       end
     else
       @sb[:active_tab] = params[:tab_id] || new_tab_id
@@ -228,10 +228,10 @@ class OpsController < ApplicationController
       @ldap_group = nil
       @flash_array = nil if MiqServer.my_server(true).logon_status == :ready  # don't reset if flash array
       if x_active_tree == :settings_tree
-        settings_get_info(x_node)
+        settings_get_info
         replace_right_cell("root")
       elsif x_active_tree == :vmdb_tree
-        db_get_info(x_node)
+        db_get_info
         replace_right_cell("root")
       elsif x_active_tree == :diagnostics_tree
         case @sb[:active_tab]
@@ -256,7 +256,7 @@ class OpsController < ApplicationController
   end
 
   def rbac_and_user_make_subarrays
-    if ! @set_filter_values.blank?
+    unless @set_filter_values.blank?
       temp_categories = []
       temp1arr = []
       @set_filter_values = @set_filter_values.flatten
@@ -279,7 +279,7 @@ class OpsController < ApplicationController
         end
         i += 1
       end
-      if ! temp_field.nil?
+      unless temp_field.nil?
         temp1arr.push(temp_field)
       end
       @set_filter_values.replace(temp1arr)
@@ -291,14 +291,14 @@ class OpsController < ApplicationController
     case x_active_tree
     when :settings_tree
       case node[0]
-        when "root"
-          @sb[:active_tab] = "settings_details"
-        when "z"
-          @sb[:active_tab] = "settings_evm_servers"
-        when "xx", "sis", "msc", "l", "lr","ld"
-          @sb[:active_tab] = "settings_list"
-        when "svr"
-          @sb[:active_tab] = "settings_server"
+      when "root"
+        @sb[:active_tab] = "settings_details"
+      when "z"
+        @sb[:active_tab] = "settings_evm_servers"
+      when "xx", "sis", "msc", "l", "lr", "ld"
+        @sb[:active_tab] = "settings_list"
+      when "svr"
+        @sb[:active_tab] = "settings_server"
       end
     when :rbac_tree
       @sb[:active_tab] = "rbac_details"
@@ -323,7 +323,7 @@ class OpsController < ApplicationController
   end
 
   def set_form_locals
-    locals = Hash.new
+    locals = {}
     if x_active_tree == :diagnostics_tree
       if @sb[:active_tab] == "diagnostics_cu_repair"
         action_url = "cu_repair"
@@ -400,7 +400,7 @@ class OpsController < ApplicationController
       elsif %w(rbac_group_add rbac_group_edit).include?(@sb[:action])
         action_url = "rbac_group_edit"
         record_id = @edit[:group_id] ? @edit[:group_id] : nil
-      elsif %(rbac_group_tags_edit rbac_user_tags_edit).include?(@sb[:action])
+      elsif %(rbac_group_tags_edit rbac_user_tags_edit rbac_tenant_tags_edit).include?(@sb[:action])
         action_url = "rbac_tags_edit"
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         record_id = @edit[:object_ids][0]
@@ -411,7 +411,7 @@ class OpsController < ApplicationController
     end
     locals[:action_url] = action_url
     locals[:record_id] = record_id
-    return locals
+    locals
   end
 
   # Get all info for the node about to be displayed
@@ -427,11 +427,11 @@ class OpsController < ApplicationController
     @explorer = true
     @nodetype = x_node.split("-").first
     case x_active_tree
-    when :analytics_tree   then analytics_get_info(x_node)
-    when :diagnostics_tree then diagnostics_get_info(x_node)
-    when :rbac_tree        then rbac_get_info(x_node)
-    when :settings_tree    then settings_get_info(x_node)
-    when :vmdb_tree        then db_get_info(x_node)
+    when :analytics_tree   then analytics_get_info
+    when :diagnostics_tree then diagnostics_get_info
+    when :rbac_tree        then rbac_get_info
+    when :settings_tree    then settings_get_info
+    when :vmdb_tree        then db_get_info
     end
 
     region_text = "[Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]]"
@@ -483,9 +483,9 @@ class OpsController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
 
-    replace_explorer_trees(replace_trees, presenter, r)
+    replace_explorer_trees(replace_trees, presenter)
     rebuild_toolbars(presenter)
-    handle_bottom_cell(presenter, r, locals)
+    handle_bottom_cell(nodetype, presenter, r, locals)
     x_active_tree_replace_cell(nodetype, presenter, r)
     extra_js_commands(presenter)
     # Render the JS responses to update the explorer screen
@@ -502,7 +502,7 @@ class OpsController < ApplicationController
       diagnostics_replace_right_cell(nodetype, presenter, r)
     when :vmdb_tree # "root","tb", "ti","xx" # Check if vmdb root or table is selected
       # Need to replace all_tabs to show table name as tab label
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     when :analytics_tree
       analytics_replace_right_cell(presenter, r)
     end
@@ -513,12 +513,12 @@ class OpsController < ApplicationController
     # to show correct buttons on screen when tree node is selected
     if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
        %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "log_depot_edit"
       @right_cell_text = "Editing Log Depot settings"
-      presenter[:update_partials][:diagnostics_collect_logs] = r[:partial => "ops/log_collection"]
+      presenter.update(:diagnostics_collect_logs, r[:partial => "ops/log_collection"])
     else
-      presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
+      presenter.update(@sb[:active_tab], r[:partial => "#{@sb[:active_tab]}_tab"])
     end
     # zone level
     presenter[:build_calendar] = {} if x_node.split("-").first == "z"
@@ -526,15 +526,15 @@ class OpsController < ApplicationController
 
   def analytics_replace_right_cell(presenter, r)
     if params[:action] == "accordion_select"
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     else
-      presenter[:update_partials][:analytics_details] = r[:partial => "analytics_details_tab"]
+      presenter.update(:analytics_details, r[:partial => "analytics_details_tab"])
     end
     if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
       # setting changed here to enable/disable Apply button
       @changed = @sb[:good] && @sb[:good] > 0 ? true : false
     end
-    presenter[:set_visible_elements][:buttons_on] = @changed if @in_a_form
+    presenter.set_visibility(@changed, :buttons_on) if @in_a_form
   end
 
   def settings_replace_right_cell(nodetype, presenter, r)
@@ -553,7 +553,7 @@ class OpsController < ApplicationController
       presenter[:update_partials][partial_div] = r[:partial => "zone_form"]
     when "ce"     # category edit
       # when editing/adding category in settings tree
-      presenter[:update_partials][:settings_co_categories] = r[:partial => "category_form"]
+      presenter.update(:settings_co_categories, r[:partial => "category_form"])
       if !@category
         @right_cell_text = _("Adding a new %s") % "Category"
       else
@@ -561,7 +561,7 @@ class OpsController < ApplicationController
       end
     when "sie"        # scanitemset edit
       #  editing/adding scanitem in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ap_form"]
+      presenter.update(:settings_list, r[:partial => "ap_form"])
       if !@scan.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ScanItemSet")
       else
@@ -571,9 +571,9 @@ class OpsController < ApplicationController
       end
     when "se"         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "schedule_form"]
-      presenter[:build_calendar]  = {
-        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]).to_i * 1000
+      presenter.update(:settings_list, r[:partial => "schedule_form"])
+      presenter[:build_calendar] = {
+        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
       if !@schedule.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqSchedule")
@@ -585,7 +585,7 @@ class OpsController < ApplicationController
       end
     when "lde"          # ldap_region edit
       # when editing/adding ldap domain in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ldap_domain_form"]
+      presenter.update(:settings_list, r[:partial => "ldap_domain_form"])
       if !@ldap_domain.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapDomain")
       else
@@ -596,7 +596,7 @@ class OpsController < ApplicationController
       end
     when "lre"          # ldap_region edit
       # when edi ting/adding ldap region in settings tree
-      presenter[:update_partials][:settings_list] = r[:partial => "ldap_region_form"]
+      presenter.update(:settings_list, r[:partial => "ldap_region_form"])
       if !@ldap_region.id
         @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapRegion")
       else
@@ -610,21 +610,21 @@ class OpsController < ApplicationController
     else
       if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
          params[:tab_id] != "settings_advanced"
-        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
       elsif %w(zone_delete).include?(params[:pressed])
-        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
       else
         presenter[:update_partials][@sb[:active_tab.to_sym]] = r[:partial => "#{@sb[:active_tab]}_tab"]
       end
       active_id = from_cid(x_node.split("-").last)
       # server node
-      if x_node.split("-").first == "svr" && @sb[:my_server_id] == active_id.to_i
+      if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
         # show all the tabs if on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
         if %w(save reset).include?(params[:button]) && is_browser_ie?
           presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true;"
         end
-      elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
+      elsif x_node.split("-").first.split("__")[1] == "svr" && my_server_id != active_id.to_i
         # show only 4 tabs if not on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       end
@@ -636,13 +636,13 @@ class OpsController < ApplicationController
     # Make sure the double_click var is there
     presenter[:extra_js] << "var miq_double_click = false;"
     if %w(accordion_select change_tab tree_select).include?(params[:action])
-      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "group_seq"
-      presenter[:replace_partials][:flash_msg_div] = r[:partial => "layouts/flash_msg"]
-      presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
+      presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"])
+      presenter.update(:rbac_details, r[:partial => "ldap_seq_form"])
     elsif nodetype == "tenant_edit"         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_form"]
+      presenter.update(:rbac_details, r[:partial => "tenant_form"])
       if !@tenant.id
         @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
       else
@@ -653,7 +653,7 @@ class OpsController < ApplicationController
       end
     elsif nodetype == "tenant_manage_quotas"         # manage quotas
       # when managing quotas for a tenant
-      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_quota_form"]
+      presenter.update(:rbac_details, r[:partial => "tenant_quota_form"])
       model = tenant_type_title_string(@tenant.divisible)
       @right_cell_text = @edit ?
           _("Manage quotas for %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
@@ -699,53 +699,45 @@ class OpsController < ApplicationController
   def extra_js_commands(presenter)
     presenter[:right_cell_text] = @right_cell_text
     presenter[:osf_node] = x_node
-    presenter[:extra_js] << "miqOneTrans = 0;"                  # resetting miqOneTrans when tab loads
+    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;" # resetting miqOneTrans when tab loads
     presenter[:extra_js] << "if ($('#server_company').length) $('#server_company').focus();"
     presenter[:ajax_action] = {
-      :action    => @ajax_action,
-      :record_id => @record.id
+      :controller => controller_name,
+      :action     => @ajax_action,
+      :record_id  => @record.id
     } if @ajax_action
   end
 
   def rebuild_toolbars(presenter)
     unless @in_a_form
       @sb[:center_tb_filename] = center_toolbar_filename
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
+      c_tb = build_toolbar(@sb[:center_tb_filename])
     end
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml}  if c_buttons && c_xml
-    presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
-    presenter[:show_hide_layout][:toolbar] = 'hide' if @sb[:center_tb_filename] == "blank_view_tb"
-
-    if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
-      # Create ManageIQ.record.recordId JS var, if @record is present
-      presenter[:record_id] =  @record ? @record.id : @edit[:rec_id]
-    else
-      # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
-      presenter[:record_id] = nil
-    end
+    presenter.reload_toolbars(:center => c_tb)
+    presenter.set_visibility(c_tb.present? && @sb[:center_tb_filename] != "blank_view_tb", :toolbar)
+    presenter[:record_id] = determine_record_id_for_presenter
   end
 
-  def handle_bottom_cell(presenter, r, locals)
+  def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
-    if @pages || @in_a_form
+    if nodetype == "log_depot_edit"
+      presenter.hide(:form_buttons_div, :pc_div_1)
+    elsif @pages || @in_a_form
       if @pages
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
       elsif @in_a_form
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter.show(:paging_div)
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter.hide(:paging_div)
     end
   end
 
-  def replace_explorer_trees(replace_trees, presenter, r)
+  def replace_explorer_trees(replace_trees, presenter)
     # Build hash of trees to replace and optional new node to be selected
     trees = {}
     if replace_trees
@@ -756,15 +748,7 @@ class OpsController < ApplicationController
       trees[:analytics]   = analytics_build_tree    if get_vmdb_config[:product][:analytics] &&
                                                        replace_trees.include?(:analytics)
     end
-    replace_trees.each do |t|
-      tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
-        :partial => 'shared/tree',
-        :locals  => {:tree => tree,
-                     :name => tree.name.to_s
-        }
-      ] if tree
-    end
+    replace_trees_by_presenter(presenter, trees)
   end
 
   # Build the audit object when a profile is saved
@@ -775,22 +759,22 @@ class OpsController < ApplicationController
     i = 0
     @edit[:new].each_key do |k|
       if @edit[:new][k] != @edit[:current][k]
-        if k.to_s.ends_with?("password2") || k.to_s.ends_with?("verify")      #do nothing
-        elsif k.to_s.ends_with?("password") || k.to_s.ends_with?("_pwd")  # Asterisk out password fields
-          msg = msg +  k.to_s + ":[*] to [*]"
+        if k.to_s.ends_with?("password2", "verify")      # do nothing
+        elsif k.to_s.ends_with?("password", "_pwd")  # Asterisk out password fields
+          msg = msg + k.to_s + ":[*] to [*]"
         else
-          msg = msg + ", " if i > 0
+          msg += ", " if i > 0
           i += 1
           if k == :members
-            msg = msg +  k.to_s + ":[" + @edit[:current][k].keys.join(",") + "] to [" + @edit[:new][k].keys.join(",") + "]"
+            msg = msg + k.to_s + ":[" + @edit[:current][k].keys.join(",") + "] to [" + @edit[:new][k].keys.join(",") + "]"
           else
-            msg = msg +  k.to_s + ":[" + @edit[:current][k].to_s + "] to [" + @edit[:new][k].to_s + "]"
+            msg = msg + k.to_s + ":[" + @edit[:current][k].to_s + "] to [" + @edit[:new][k].to_s + "]"
           end
         end
       end
     end
-    msg = msg + ")"
-    audit = {:event=>event, :target_id=>record.id, :target_class=>record.class.base_class.name, :userid => session[:userid], :message=>msg}
+    msg += ")"
+    audit = {:event => event, :target_id => record.id, :target_class => record.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
   def identify_tl_or_perf_record
@@ -806,5 +790,4 @@ class OpsController < ApplicationController
   def set_session_data
     session[:tasks_options] = @tasks_options unless @tasks_options.nil?
   end
-
 end

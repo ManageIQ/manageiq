@@ -22,9 +22,9 @@ rData = VixDiskLib_raw.read(dHandle, 0, 1)
 puts "Read #{rData.length} bytes of data."
 
 if rData == wData
-    puts "\tData check OK"
+  puts "\tData check OK"
 else
-    puts "\tRead data does not match data written"
+  puts "\tRead data does not match data written"
 end
 
 VixDiskLib_raw.close(dHandle)

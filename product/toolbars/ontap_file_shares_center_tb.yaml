@@ -7,17 +7,17 @@
 - :name: ontap_file_share_policy
   :items:
   - :buttonSelect: ontap_file_share_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: ontap_file_share_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit tags for the selected File Shares"
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '1+'  
+      :onwhen: '1+'
 

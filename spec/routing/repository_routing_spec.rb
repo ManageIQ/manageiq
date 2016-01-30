@@ -1,11 +1,9 @@
-require "spec_helper"
 require "routing/shared_examples"
 
 describe "routes for AvailabilityZoneController" do
   let(:controller_name) { "repository" }
 
   it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has download_data routes"
   it_behaves_like "A controller that has policy protect routes"
@@ -22,21 +20,21 @@ describe "routes for AvailabilityZoneController" do
   describe "#form_field_changed" do
     it "routes with POST" do
       expect(post("/repository/form_field_changed"))
-      .to route_to("repository#form_field_changed")
+        .to route_to("repository#form_field_changed")
     end
   end
 
   describe "#listnav_search_selected" do
     it "routes with POST" do
       expect(post("/repository/listnav_search_selected"))
-      .to route_to("repository#listnav_search_selected")
+        .to route_to("repository#listnav_search_selected")
     end
   end
 
   describe "#save_default_search" do
     it "routes with POST" do
       expect(post("/repository/save_default_search"))
-      .to route_to("repository#save_default_search")
+        .to route_to("repository#save_default_search")
     end
   end
 
@@ -56,5 +54,4 @@ describe "routes for AvailabilityZoneController" do
       expect(post("/repository/show")).to route_to("repository#show")
     end
   end
-
 end

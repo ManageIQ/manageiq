@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe CreateMiqGroupsUsersJoinTable do
@@ -12,8 +11,8 @@ describe CreateMiqGroupsUsersJoinTable do
       reserve_stub.create!(:resource_type => "User",
                            :resource_id   => user.id,
                            :reserved      => {:eligible_miq_group_ids => [101, 108, 111]}
-      )
-      reserve_stub.count.should eq(1)
+                          )
+      expect(reserve_stub.count).to eq(1)
 
       migrate
 
@@ -26,7 +25,7 @@ describe CreateMiqGroupsUsersJoinTable do
 
       migrate
 
-      join_table_stub.where(:user_id => user.id).count.should == 0
+      expect(join_table_stub.where(:user_id => user.id).count).to eq(0)
     end
   end
 end

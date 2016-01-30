@@ -17,7 +17,7 @@ module EmsRefresh::LinkInventory
     if root_id.nil?
       ems.remove_all_children
     else
-      ems.replace_children(EmsFolder.find_by_id(root_id))
+      ems.replace_children(instance_with_id(EmsFolder, root_id))
     end
 
     # Do the Folders to *, and Clusters to * relationships
@@ -26,43 +26,47 @@ module EmsRefresh::LinkInventory
     do_disconnect = target.kind_of?(ExtManagementSystem)
 
     # Do the Folders to Folders relationships
-    self.update_relats(:folders_to_folders, prev_relats, new_relats) do |f|
-      folder = EmsFolder.find_by_id(f)
+    update_relats(:folders_to_folders, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      [ do_disconnect ? Proc.new { |f2| folder.remove_folder(EmsFolder.find_by_id(f2)) } : nil, # Disconnect proc
-        Proc.new { |f2| folder.add_folder(EmsFolder.find_by_id(f2)) } ]                         # Connect proc
+      [do_disconnect ? proc { |f2| folder.remove_folder(instance_with_id(EmsFolder, f2)) } : nil, # Disconnect proc
+       proc { |f2|  folder.add_folder(instance_with_id(EmsFolder, f2)) },                         # Connect proc
+       proc { |f2s| folder.add_folder(instances_with_ids(EmsFolder, f2s)) }]                      # Bulk connect proc
     end
 
     # Do the Folders to Clusters relationships
-    self.update_relats(:folders_to_clusters, prev_relats, new_relats) do |f|
-      folder = EmsFolder.find_by_id(f)
+    update_relats(:folders_to_clusters, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      [ do_disconnect ? Proc.new { |c| folder.remove_cluster(EmsCluster.find_by_id(c)) } : nil, # Disconnect proc
-        Proc.new { |c| folder.add_cluster(EmsCluster.find_by_id(c)) } ]                         # Connect proc
+      [do_disconnect ? proc { |c| folder.remove_cluster(instance_with_id(EmsCluster, c)) } : nil, # Disconnect proc
+       proc { |c|  folder.add_cluster(instance_with_id(EmsCluster, c)) },                         # Connect proc
+       proc { |cs| folder.add_cluster(instances_with_ids(EmsCluster, cs)) }]                      # Bulk connect proc
     end
 
     # Do the Folders to Hosts relationships
-    self.update_relats(:folders_to_hosts, prev_relats, new_relats) do |f|
-      folder = EmsFolder.find_by_id(f)
+    update_relats(:folders_to_hosts, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      [ do_disconnect ? Proc.new { |h| folder.remove_host(Host.find_by_id(h)) } : nil,             # Disconnect proc
-        Proc.new { |h| host = Host.find_by_id(h); host.replace_parent(folder) unless host.nil? } ] # Connect proc
+      [do_disconnect ? proc { |h| folder.remove_host(instance_with_id(Host, h)) } : nil,            # Disconnect proc
+       proc { |h| host = instance_with_id(Host, h); host.replace_parent(folder) unless host.nil? }] # Connect proc
     end
 
     # Do the Folders to Vms relationships
-    self.update_relats(:folders_to_vms, prev_relats, new_relats) do |f|
-      folder = EmsFolder.find_by_id(f)
+    update_relats(:folders_to_vms, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      [ do_disconnect ? Proc.new { |v| folder.remove_vm(VmOrTemplate.find_by_id(v)) } : nil, # Disconnect proc
-        Proc.new { |v| folder.add_vm(VmOrTemplate.find_by_id(v)) } ]                         # Connect proc
+      [do_disconnect ? proc { |v| folder.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
+       proc { |v| folder.add_vm(instance_with_id(VmOrTemplate, v)) },                          # Connect proc
+       proc { |vs| folder.add_vm(instances_with_ids(VmOrTemplate, vs)) }]                      # Bulk connect proc
     end
 
     # Do the Clusters to ResourcePools relationships
-    self.update_relats(:clusters_to_resource_pools, prev_relats, new_relats) do |c|
-      cluster = EmsCluster.find_by_id(c)
+    update_relats(:clusters_to_resource_pools, prev_relats, new_relats) do |c|
+      cluster = instance_with_id(EmsCluster, c)
       break if cluster.nil?
-      [ do_disconnect ? Proc.new { |r| cluster.remove_resource_pool(ResourcePool.find_by_id(r)) } : nil, # Disconnect proc
-        Proc.new { |r| cluster.add_resource_pool(ResourcePool.find_by_id(r)) } ]                         # Connect proc
+      [do_disconnect ? proc { |r| cluster.remove_resource_pool(instance_with_id(ResourcePool, r)) } : nil, # Disconnect proc
+       proc { |r| cluster.add_resource_pool(instance_with_id(ResourcePool, r)) },                          # Connect proc
+       proc { |rs| cluster.add_resource_pool(instances_with_ids(ResourcePool, rs)) }]                      # Bulk connect proc
     end
 
     # Do the Hosts to * relationships, ResourcePool to * relationships
@@ -71,19 +75,20 @@ module EmsRefresh::LinkInventory
     do_disconnect ||= target.kind_of?(Host)
 
     # Do the Hosts to ResourcePools relationships
-    self.update_relats(:hosts_to_resource_pools, prev_relats, new_relats) do |h|
-      host = Host.find_by_id(h)
+    update_relats(:hosts_to_resource_pools, prev_relats, new_relats) do |h|
+      host = instance_with_id(Host, h)
       break if host.nil?
-      [ do_disconnect ? Proc.new { |r| rp = ResourcePool.find_by_id(r); rp.remove_parent(host) unless rp.nil? } : nil, # Disconnect proc
-        Proc.new { |r| rp = ResourcePool.find_by_id(r); rp.set_parent(host) unless rp.nil? } ]                         # Connect proc
+      [do_disconnect ? proc { |r| rp = instance_with_id(ResourcePool, r); rp.remove_parent(host) unless rp.nil? } : nil, # Disconnect proc
+       proc { |r| rp = instance_with_id(ResourcePool, r); rp.set_parent(host) unless rp.nil? }]                          # Connect proc
     end
 
     # Do the ResourcePools to ResourcePools relationships
-    self.update_relats(:resource_pools_to_resource_pools, prev_relats, new_relats) do |r|
-      rp = ResourcePool.find_by_id(r)
+    update_relats(:resource_pools_to_resource_pools, prev_relats, new_relats) do |r|
+      rp = instance_with_id(ResourcePool, r)
       break if rp.nil?
-      [ do_disconnect ? Proc.new { |r2| rp.remove_resource_pool(ResourcePool.find_by_id(r2)) } : nil, # Disconnect proc
-        Proc.new { |r2| rp.add_resource_pool(ResourcePool.find_by_id(r2)) } ]                         # Connect proc
+      [do_disconnect ? proc { |r2| rp.remove_resource_pool(instance_with_id(ResourcePool, r2)) } : nil, # Disconnect proc
+       proc { |r2|  rp.add_resource_pool(instance_with_id(ResourcePool, r2)) },                         # Connect proc
+       proc { |r2s| rp.add_resource_pool(instances_with_ids(ResourcePool, r2s)) }]                      # Bulk connect proc
     end
 
     # Do the VMs to * relationships
@@ -91,14 +96,23 @@ module EmsRefresh::LinkInventory
     #   information in the filtered data for all refresh types
 
     # Do the ResourcePools to VMs relationships
-    self.update_relats(:resource_pools_to_vms, prev_relats, new_relats) do |r|
-      rp = ResourcePool.find_by_id(r)
+    update_relats(:resource_pools_to_vms, prev_relats, new_relats) do |r|
+      rp = instance_with_id(ResourcePool, r)
       break if rp.nil?
-      [ Proc.new { |v| rp.remove_vm(VmOrTemplate.find_by_id(v)) }, # Disconnect proc
-        Proc.new { |v| rp.add_vm(VmOrTemplate.find_by_id(v)) } ]   # Connect proc
+      [proc { |v|  rp.remove_vm(instance_with_id(VmOrTemplate, v)) }, # Disconnect proc
+       proc { |v|  rp.add_vm(instance_with_id(VmOrTemplate, v)) },    # Connect proc
+       proc { |vs| rp.add_vm(instances_with_ids(VmOrTemplate, vs)) }] # Bulk connect proc
     end
 
     _log.info "#{log_header} Linking EMS Inventory...Complete"
+  end
+
+  def instance_with_id(klass, id)
+    instances_with_ids(klass, id).first
+  end
+
+  def instances_with_ids(klass, id)
+    klass.where(:id => id).select(:id, :name).to_a
   end
 
   # Link HABTM relationships for the object, via the accessor, for the records
@@ -108,10 +122,11 @@ module EmsRefresh::LinkInventory
 
     prev_ids = object.send(accessor).collect(&:id)
     new_ids  = hashes.collect { |s| s[:id] }.compact unless hashes.nil?
-    self.update_relats_by_ids(prev_ids, new_ids,
-      do_disconnect ? Proc.new { |s| object.send(accessor).delete(model.find_by_id(s)) } : nil, # Disconnect proc
-      Proc.new { |s| object.send(accessor) << model.find_by_id(s) }                             # Connect proc
-    )
+    update_relats_by_ids(prev_ids, new_ids,
+                         do_disconnect ? proc { |s| object.send(accessor).delete(instance_with_id(model, s)) } : nil, # Disconnect proc
+                         proc { |s| object.send(accessor) << instance_with_id(model, s) },                            # Connect proc
+                         proc { |ss| object.send(accessor) << instances_with_ids(model, ss) }                         # Bulk connect proc
+                        )
   end
 
   #
@@ -123,18 +138,18 @@ module EmsRefresh::LinkInventory
 
     if new_relats[type].kind_of?(Array) || prev_relats[type].kind_of?(Array)
       # Case where we have a single set of ids
-      disconnect_proc, connect_proc = yield
-      self.update_relats_by_ids(prev_relats[type], new_relats[type], disconnect_proc, connect_proc)
+      disconnect_proc, connect_proc, bulk_connect = yield
+      update_relats_by_ids(prev_relats[type], new_relats[type], disconnect_proc, connect_proc, bulk_connect)
     else
       # Case where we have multiple sets of ids
       (prev_relats[type].keys | new_relats[type].keys).each do |k|
-        disconnect_proc, connect_proc = yield(k)
-        self.update_relats_by_ids(prev_relats[type][k], new_relats[type][k], disconnect_proc, connect_proc)
+        disconnect_proc, connect_proc, bulk_connect = yield(k)
+        update_relats_by_ids(prev_relats[type][k], new_relats[type][k], disconnect_proc, connect_proc, bulk_connect)
       end
     end
   end
 
-  def update_relats_by_ids(prev_ids, new_ids, disconnect_proc, connect_proc)
+  def update_relats_by_ids(prev_ids, new_ids, disconnect_proc, connect_proc, bulk_connect)
     common = prev_ids & new_ids unless prev_ids.nil? || new_ids.nil?
     unless common.nil?
       prev_ids -= common
@@ -152,13 +167,22 @@ module EmsRefresh::LinkInventory
       end
     end
 
-    unless new_ids.nil? || connect_proc.nil?
-      new_ids.each do |n|
+    unless new_ids.nil?
+      if bulk_connect
         begin
-          connect_proc.call(n)
+          bulk_connect.call(new_ids)
         rescue => err
-          _log.error "An error occurred while connecting id [#{n}]: #{err}"
+          _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting ids [#{new_ids.join(',')}]: #{err}"
           _log.log_backtrace(err)
+        end
+      elsif connect_proc
+        new_ids.each do |n|
+          begin
+            connect_proc.call(n)
+          rescue => err
+            _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
+            _log.log_backtrace(err)
+          end
         end
       end
     end

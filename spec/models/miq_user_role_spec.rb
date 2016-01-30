@@ -1,18 +1,17 @@
-require "spec_helper"
-
 describe MiqUserRole do
+  before do
+    @expected_user_role_count = 14
+  end
   context ".seed" do
     it "empty table" do
-      MiqRegion.seed
       MiqUserRole.seed
-      MiqUserRole.count.should == 12
+      expect(MiqUserRole.count).to eq(@expected_user_role_count)
     end
 
     it "run twice" do
-      MiqRegion.seed
       MiqUserRole.seed
       MiqUserRole.seed
-      MiqUserRole.count.should == 12
+      expect(MiqUserRole.count).to eq(@expected_user_role_count)
     end
 
     it "with existing records" do
@@ -20,19 +19,16 @@ describe MiqUserRole do
       unchanged = FactoryGirl.create(:miq_user_role, :name => "xxx", :read_only => false)
       unchanged_orig_updated_at = unchanged.updated_at
 
-      MiqRegion.seed
       MiqUserRole.seed
 
-      MiqUserRole.count.should == 13
-      changed.reload.read_only.should    be_true
-      unchanged.reload.updated_at.should be_same_time_as unchanged_orig_updated_at
+      expect(MiqUserRole.count).to eq(@expected_user_role_count + 1)
+      expect(changed.reload.read_only).to    be_truthy
+      expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
     end
   end
 
   context "testing allows methods" do
     before(:each) do
-      MiqRegion.seed
-
       EvmSpecHelper.seed_specific_product_features(%w(
         dashboard_add
         dashboard_view
@@ -61,89 +57,169 @@ describe MiqUserRole do
     end
 
     it "should return the correct answer calling allows? when requested feature is directly assigned or a descendant of a feature in a role" do
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin").should  == true
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_add").should == true
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view").should   == false
-      MiqUserRole.allows?(@role1.name, :identifier => "policy").should           == false
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_add")).to eq(true)
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view")).to eq(false)
+      expect(MiqUserRole.allows?(@role1.name, :identifier => "policy")).to eq(false)
 
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin").should  == true
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_add").should == true
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view").should   == true
-      MiqUserRole.allows?(@role2.name, :identifier => "policy").should           == true
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_add")).to eq(true)
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view")).to eq(true)
+      expect(MiqUserRole.allows?(@role2.name, :identifier => "policy")).to eq(true)
 
       # Test calling with an id of a role
       ident = MiqProductFeature.find_by_identifier("dashboard_admin")
-      MiqUserRole.allows?(@role1.id, :identifier => ident).should  == true
+      expect(MiqUserRole.allows?(@role1.id, :identifier => ident)).to eq(true)
     end
 
-    it "should return the correct answer calling allows_*? with scope => :base)" do
-      MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+    it "should return the correct answer calling allows_any? with scope => :base)" do
+      expect(MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
+      expect(MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should  == true
-      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"]).should  == false
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"])).to eq(false)
     end
 
-    it "should return the correct answer calling allows_*? with scope => :one)" do
-      MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+    it "should return the correct answer calling allows_any? with scope => :one)" do
+      expect(MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+      expect(MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
 
-      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should  == true
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"]).should  == false
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"])).to eq(false)
     end
 
-    it "should return the correct answer calling allows_*? with default scope => :sub" do
-      MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
-
-      MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-
-      MiqUserRole.allows_all?(@role3.name, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should  == true
-      MiqUserRole.allows_all?(@role3.name, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"]).should  == true
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"]).should  == true
+    it "should return the correct answer calling allows_any? with default scope => :sub" do
+      expect(MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"])).to eq(true)
+      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"])).to eq(false)
+      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"])).to eq(true)
     end
 
-    it "should return the correct answer calling allows_*_children?" do
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin").should  == true
-      MiqUserRole.allows_all_children?(@role1.name, :identifier => "dashboard_admin").should  == true
-
-      MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin").should  == true
-      MiqUserRole.allows_all_children?(@role2.name, :identifier => "dashboard_admin").should  == true
-
-      MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything").should  == true
-      MiqUserRole.allows_all_children?(@role2.name, :identifier => "everything").should  == true
-
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything").should  == true
-      MiqUserRole.allows_all_children?(@role1.name, :identifier => "everything").should  == false
-
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard").should  == true
-      MiqUserRole.allows_all_children?(@role1.name, :identifier => "dashboard").should  == false
+    it "should return the correct answer calling allows_any_children?" do
+      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything")).to eq(true)
+      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard")).to eq(true)
     end
   end
 
-  it "should not be deleted while a group is still assigned" do
+  describe "#allow?" do
+    it "allows everything" do
+      EvmSpecHelper.seed_specific_product_features(%w(everything miq_report))
+      user = FactoryGirl.create(:user, :features => "everything")
+      expect(user).to be_role_allows(:identifier => "miq_report")
+    end
+
+    it "dissallows unentitled" do
+      EvmSpecHelper.seed_specific_product_features(%w(miq_report container_dashboard))
+      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      expect(user).not_to be_role_allows(:identifier => "miq_report")
+    end
+
+    it "allows entitled" do
+      EvmSpecHelper.seed_specific_product_features(%w(miq_report))
+      user = FactoryGirl.create(:user, :features => "miq_report")
+      expect(user).to be_role_allows(:identifier => "miq_report")
+    end
+
+    # - container_dashboard
+    # - miq_report_view
+    #   - render_report_csv (H)
+
+    it "disallows hidden child with not-entitled parent" do
+      EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv container_dashboard))
+      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      expect(user).not_to be_role_allows(:identifier => "render_report_csv")
+    end
+
+    it "allows hidden child with entitled parent" do
+      EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv))
+      user = FactoryGirl.create(:user, :features => "miq_report_view")
+      expect(user).to be_role_allows(:identifier => "render_report_csv")
+    end
+
+    # - container_dashboard
+    # - miq_report_widget_admin
+    #   - widget_edit
+    #   - widget_copy
+    #   - widget_refresh (H)
+
+    it "allows hidden child of not entitled, if a sibling is entitled" do
+      EvmSpecHelper.seed_specific_product_features(
+        %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+      )
+      user = FactoryGirl.create(:user, :features => "widget_edit")
+      expect(user).to be_role_allows(:identifier => "widget_refresh")
+    end
+
+    it "disallows hidden child of not entitled, if no sibling is entitled" do
+      EvmSpecHelper.seed_specific_product_features(
+        %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+      )
+      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      expect(user).not_to be_role_allows(:identifier => "widget_refresh")
+    end
+
+    # - container_dashboard
+    # - policy_profile_admin (H)
+    #   - profile_new (H)
+    it "allows hidden child of hidden parent" do
+      EvmSpecHelper.seed_specific_product_features(
+        %w(policy_profile_admin profile_new container_dashboard)
+      )
+      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      expect(user).to be_role_allows(:identifier => "profile_new")
+    end
+  end
+
+  it "deletes with no group assigned" do
+    role = FactoryGirl.create(:miq_user_role, :name => "test role")
+    role.destroy
+    expect(MiqUserRole.count).to eq(0)
+  end
+
+  it "does not delete with group assigned" do
     role = FactoryGirl.create(:miq_user_role, :name => "test role")
     FactoryGirl.create(:miq_group, :description => "test group", :miq_user_role => role)
 
     expect { role.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError)
-    MiqUserRole.count.should eq 1
+    expect(MiqUserRole.count).to eq(1)
+  end
+
+  # SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
+  # ADMIN_ROLE_NAME       = "EvmRole-administrator"
+
+  describe "#super_admin_user?" do
+    it "detects super admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_super_admin_user
+    end
+
+    it "detects admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).not_to be_super_admin_user
+    end
+
+    it "detects non-admin" do
+      expect(FactoryGirl.build(:miq_user_role)).not_to be_super_admin_user
+    end
+  end
+
+  describe "#admin_user?" do
+    it "detects super admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_admin_user
+    end
+
+    it "detects admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).to be_admin_user
+    end
+
+    it "detects non-admin" do
+      expect(FactoryGirl.build(:miq_user_role)).not_to be_admin_user
+    end
   end
 end

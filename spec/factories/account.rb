@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :account do
   end
 
@@ -15,5 +14,4 @@ FactoryGirl.define do
     acctid 175
     accttype 'group'
   end
-
 end

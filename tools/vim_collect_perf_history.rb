@@ -1,6 +1,6 @@
 require 'trollop'
 ARGV.shift if ARGV.first == "--" # Handle when called through script/runner
-opts = Trollop::options do
+opts = Trollop.options do
   opt :ip,     "IP address", :type => :string, :required => true
   opt :user,   "User Name",  :type => :string, :required => true
   opt :pass,   "Password",   :type => :string, :required => true
@@ -8,7 +8,7 @@ opts = Trollop::options do
   opt :bypass, "Bypass broker usage", :type => :boolean
   opt :dir,    "Output directory",    :default => "."
 end
-Trollop::die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Trollop.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
 
 targets = eval(ARGV.first) rescue nil
 if targets.nil? || !targets.kind_of?(Array) || targets.empty?
@@ -29,27 +29,27 @@ targets.each do |t|
   else
     mor = t[0]
     vim_type = case mor
-    when /^vm-/      then "VirtualMachine"
-    when /^host-/    then "HostSystem"
-    when /^cluster-/ then "ClusterComputerResource"
-    else
-      puts "Validation Errors:"
-      puts "  target must be a valid MOR"
-      exit 1
-    end
+               when /^vm-/      then "VirtualMachine"
+               when /^host-/    then "HostSystem"
+               when /^cluster-/ then "ClusterComputerResource"
+               else
+                 puts "Validation Errors:"
+                 puts "  target must be a valid MOR"
+                 exit 1
+               end
 
     t[0] = VimString.new(mor, vim_type, "ManagedObjectReference")
   end
 
   # Adjust the second argument to be a perf interval
   t[1] = case t[1]
-  when "realtime" then "20"
-  when "hourly"   then "7200"
-  else
-    puts "Validation Errors:"
-    puts "  unknown interval '#{t[1]}'"
-    exit 1
-  end
+         when "realtime" then "20"
+         when "hourly"   then "7200"
+         else
+           puts "Validation Errors:"
+           puts "  unknown interval '#{t[1]}'"
+           exit 1
+         end
 end
 mors = targets.collect { |t| t[0] }.uniq
 
@@ -58,7 +58,7 @@ def process(accessor, dir)
   data = yield
   puts "Writing #{accessor}..."
   File.open(File.join(dir, "#{accessor}.yml"), "w") { |f| f.write(data.to_yaml(:SortKeys => true)) }
-  return data
+  data
 end
 
 dir = File.expand_path(File.join(opts[:dir], "miq_vim_perf_history"))
@@ -68,10 +68,10 @@ puts "Output in #{dir}"
 begin
   require 'miq_fault_tolerant_vim'
   vim = MiqFaultTolerantVim.new(
-    :ip         => opts[:ip],
-    :user       => opts[:user],
-    :pass       => opts[:pass],
-    :use_broker => !opts[:bypass],
+    :ip                  => opts[:ip],
+    :user                => opts[:user],
+    :pass                => opts[:pass],
+    :use_broker          => !opts[:bypass],
     :vim_broker_drb_port => MiqVimBrokerWorker.drb_port
   )
 
@@ -93,7 +93,7 @@ begin
 
   a = :availMetricsForEntity
   metrics_data = process(a, dir) do
-    targets.each_with_object({}) do |(mor, interval, start_time, end_time), data|
+    targets.each_with_object({}) do |(mor, interval, _start_time, _end_time), data|
       puts "Reading #{a} for #{mor.inspect}, #{interval.inspect}..."
       data.store_path(mor, interval, ph.send(a, mor, :intervalId => interval))
     end
@@ -103,12 +103,12 @@ begin
   process(a, dir) do
     targets.each_with_object({}) do |(mor, interval, start_time, end_time), data|
       query = [{
-          :entity     => mor,
-          :intervalId => interval,
-          :startTime  => start_time,
-          :endTime    => end_time,
-          :metricId   => metrics_data.fetch_path(mor, interval).collect { |m| {:counterId => m["counterId"], :instance => m["instance"]} }
-        }]
+        :entity     => mor,
+        :intervalId => interval,
+        :startTime  => start_time,
+        :endTime    => end_time,
+        :metricId   => metrics_data.fetch_path(mor, interval).collect { |m| {:counterId => m["counterId"], :instance => m["instance"]} }
+      }]
 
       puts "Reading #{a} for #{mor.inspect}, #{interval.inspect}, #{start_time.inspect}, #{end_time.inspect}..."
       data.store_path(mor, interval, start_time, end_time, ph.send(a, query))

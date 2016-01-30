@@ -6,8 +6,6 @@
 # - Delete service template             /api/service_templates/:id    DELETE
 # - Delete multiple service templates   /api/service_templates        action "delete"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 

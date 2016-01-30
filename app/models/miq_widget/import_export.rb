@@ -2,10 +2,10 @@ module MiqWidget::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def import_from_hash(widget, options={})
+    def import_from_hash(widget, options = {})
       raise "No Widget to Import" if widget.nil?
 
-      status = { :class => self.name, :description => widget["description"], :children => [] }
+      status = {:class => name, :description => widget["description"], :children => []}
 
       if rep = widget.delete("MiqReportContent")
         report_klass = Object.const_get(rep.first.keys.first)
@@ -18,7 +18,7 @@ module MiqWidget::ImportExport
         end
       end
 
-      w = MiqWidget.where(:guid => widget["guid"]).first
+      w = MiqWidget.find_by(:guid => widget["guid"])
       if w.nil?
         w = MiqWidget.new(widget)
         status.merge!(:status => :add, :message => "Imported Widget: [#{widget["description"]}]")
@@ -53,7 +53,7 @@ module MiqWidget::ImportExport
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     %w(id created_at updated_at last_generated_content_on miq_schedule_id miq_task_id).each { |k| h.delete(k) }
     h["MiqReportContent"] = resource.export_to_array if resource
     if miq_schedule

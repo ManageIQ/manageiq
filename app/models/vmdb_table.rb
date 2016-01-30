@@ -1,4 +1,4 @@
-class VmdbTable < ActiveRecord::Base
+class VmdbTable < ApplicationRecord
   belongs_to :vmdb_database
 
   has_many :vmdb_indexes,                            :dependent => :destroy
@@ -13,6 +13,6 @@ class VmdbTable < ActiveRecord::Base
   serialize :prior_raw_metrics
 
   def my_metrics
-    self.vmdb_metrics
+    vmdb_metrics
   end
 end

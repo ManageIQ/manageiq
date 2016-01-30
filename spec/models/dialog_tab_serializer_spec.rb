@@ -1,7 +1,5 @@
-require "spec_helper"
-
 describe DialogTabSerializer do
-  let(:dialog_group_serializer) { auto_loaded_instance_double("DialogGroupSerializer") }
+  let(:dialog_group_serializer) { double("DialogGroupSerializer") }
   let(:dialog_tab_serializer) { described_class.new(dialog_group_serializer) }
 
   describe "#serialize" do
@@ -31,11 +29,11 @@ describe DialogTabSerializer do
     end
 
     before do
-      dialog_group_serializer.stub(:serialize).with(dialog_group).and_return("serialized dialog group")
+      allow(dialog_group_serializer).to receive(:serialize).with(dialog_group).and_return("serialized dialog group")
     end
 
     it "serializes the dialog tab" do
-      dialog_tab_serializer.serialize(dialog_tab).should == expected_serialized_values
+      expect(dialog_tab_serializer.serialize(dialog_tab)).to eq(expected_serialized_values)
     end
   end
 end

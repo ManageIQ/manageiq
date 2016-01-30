@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe RenameMiqGroupIdColumnInUsers do
@@ -13,7 +12,7 @@ describe RenameMiqGroupIdColumnInUsers do
 
       migrate
 
-      user_stub.find(user_id).current_group_id.should eq miq_group.id
+      expect(user_stub.find(user_id).current_group_id).to eq miq_group.id
     end
   end
 end

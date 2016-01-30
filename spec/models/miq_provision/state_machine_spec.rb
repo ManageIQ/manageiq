@@ -1,24 +1,31 @@
-require "spec_helper"
-
 describe MiqProvision do
   context "::StateMachine" do
+    let(:req_user) { FactoryGirl.create(:user_with_group) }
     let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
     let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => 24) }
     let(:options)  { {:src_vm_id => template.id, :vm_target_name => "test_vm_1"} }
     let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems, :ems_ref => MiqUUID.new_guid) }
-    let(:vm)       { FactoryGirl.create(:vm_openstack) }
+    let(:vm)       { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
 
-    let(:task)     { FactoryGirl.create(:miq_provision_openstack, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options) }
+    let(:task) do
+      FactoryGirl.create(:miq_provision_openstack,
+                         :source      => template,
+                         :destination => vm,
+                         :state       => 'pending',
+                         :status      => 'Ok',
+                         :userid      => req_user.userid,
+                         :options     => options)
+    end
 
     context "#prepare_provision" do
       before do
-        task.stub(:update_and_notify_parent)
-        task.stub(:instance_type => flavor)
+        allow(task).to receive(:update_and_notify_parent)
+        allow(task).to receive_messages(:instance_type => flavor)
       end
 
       it "sets default :clone_options" do
-        task.should_receive(:signal).with(:prepare_provision).and_call_original
-        task.should_receive(:signal).with(:start_clone_task)
+        expect(task).to receive(:signal).with(:prepare_provision).and_call_original
+        expect(task).to receive(:signal).with(:start_clone_task)
 
         task.signal(:prepare_provision)
 
@@ -34,8 +41,8 @@ describe MiqProvision do
         options[:clone_options] = {:security_groups => ["test_sg"], :test_key => "test_value"}
         task.update_attributes(:options => options)
 
-        task.should_receive(:signal).with(:prepare_provision).and_call_original
-        task.should_receive(:signal).with(:start_clone_task)
+        expect(task).to receive(:signal).with(:prepare_provision).and_call_original
+        expect(task).to receive(:signal).with(:start_clone_task)
 
         task.signal(:prepare_provision)
 
@@ -52,8 +59,8 @@ describe MiqProvision do
         options[:clone_options] = {:image_ref => nil, :test_key => "test_value"}
         task.update_attributes(:options => options)
 
-        task.should_receive(:signal).with(:prepare_provision).and_call_original
-        task.should_receive(:signal).with(:start_clone_task)
+        expect(task).to receive(:signal).with(:prepare_provision).and_call_original
+        expect(task).to receive(:signal).with(:start_clone_task)
 
         task.signal(:prepare_provision)
 
@@ -67,13 +74,13 @@ describe MiqProvision do
     end
 
     context "#post_create_destination" do
-      let(:user) { FactoryGirl.create(:user, :email => "foo@example.com") }
+      let(:user) { FactoryGirl.create(:user_with_email_and_group) }
 
       it "sets description" do
         options[:vm_description] = description = "foo bar"
         task.update_attributes(:options => options)
 
-        task.should_receive(:mark_as_completed)
+        expect(task).to receive(:mark_as_completed)
 
         task.signal(:post_create_destination)
 
@@ -82,17 +89,21 @@ describe MiqProvision do
       end
 
       it "sets ownership" do
+        group_owner = FactoryGirl.create(:miq_group, :description => "desired")
+        group_current = FactoryGirl.create(:miq_group, :description => "current")
+        user.update_attributes!(:miq_groups => [group_owner, group_current], :current_group => group_current)
         options[:owner_email] = user.email
+        options[:owner_group] = group_owner.description
         task.update_attributes(:options => options)
 
-        task.stub(:miq_request => double("MiqRequest").as_null_object)
-
-        task.should_receive(:mark_as_completed)
+        expect(task).to receive(:mark_as_completed)
 
         task.signal(:post_create_destination)
 
         expect(task.destination.evm_owner).to eq(user)
-        expect(vm.reload.evm_owner).to        eq(user)
+        vm.reload
+        expect(vm.evm_owner).to eq(user)
+        expect(vm.miq_group).to eq(group_owner)
       end
 
       context "sets retirement" do
@@ -101,14 +112,14 @@ describe MiqProvision do
           retires_on           = (Time.now.utc + retirement).to_date
           task.update_attributes(:options => options)
 
-          task.should_receive(:mark_as_completed)
+          expect(task).to receive(:mark_as_completed)
 
           task.signal(:post_create_destination)
 
           expect(task.destination.retires_on).to eq(retires_on)
           expect(vm.reload.retires_on).to        eq(retires_on)
           expect(vm.retirement_warn).to          eq(0)
-          expect(vm.retired).to                  be_false
+          expect(vm.retired).to                  be_falsey
         end
 
         it "with :retirement_time option" do
@@ -119,19 +130,19 @@ describe MiqProvision do
           retires_on                = retirement_time.to_date
           task.update_attributes(:options => options)
 
-          task.should_receive(:mark_as_completed)
+          expect(task).to receive(:mark_as_completed)
 
           task.signal(:post_create_destination)
 
           expect(task.destination.retires_on).to eq(retires_on)
           expect(vm.reload.retires_on).to        eq(retires_on)
           expect(vm.retirement_warn).to          eq(retirement_warn_days)
-          expect(vm.retired).to                  be_false
+          expect(vm.retired).to                  be_falsey
         end
       end
 
       it "sets genealogy" do
-        task.should_receive(:mark_as_completed)
+        expect(task).to receive(:mark_as_completed)
 
         task.signal(:post_create_destination)
 

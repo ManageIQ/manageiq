@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldImporter do
   let(:dialog_field_importer) { described_class.new }
 
@@ -37,7 +35,7 @@ describe DialogFieldImporter do
       end
 
       it "creates a DialogFieldDropDownList with dynamic true" do
-        expect(DialogFieldDropDownList.first.dynamic).to be_true
+        expect(DialogFieldDropDownList.first.dynamic).to be_truthy
       end
 
       it "creates a ResourceAction with the given attributes" do
@@ -54,12 +52,12 @@ describe DialogFieldImporter do
 
       it "creates a DialogFieldTextBox with the correct name" do
         dialog_field_importer.import_field(dialog_field)
-        DialogFieldTextBox.first.name.should == "Something"
+        expect(DialogFieldTextBox.first.name).to eq("Something")
       end
 
       it "creates a DialogFieldTextBox with the correct label" do
         dialog_field_importer.import_field(dialog_field)
-        DialogFieldTextBox.first.label.should == "Something else"
+        expect(DialogFieldTextBox.first.label).to eq("Something else")
       end
 
       it "creates a ResourceAction with the given attributes" do
@@ -69,7 +67,7 @@ describe DialogFieldImporter do
 
       it "returns the created object of that type" do
         result = dialog_field_importer.import_field(dialog_field)
-        result.should == DialogFieldTextBox.first
+        expect(result).to eq(DialogFieldTextBox.first)
       end
     end
 
@@ -78,17 +76,17 @@ describe DialogFieldImporter do
 
       it "creates a DialogField with the correct name" do
         dialog_field_importer.import_field(dialog_field)
-        DialogField.first.name.should == "Something"
+        expect(DialogField.first.name).to eq("Something")
       end
 
       it "creates a DialogField with the correct label" do
         dialog_field_importer.import_field(dialog_field)
-        DialogField.first.label.should == "Something else"
+        expect(DialogField.first.label).to eq("Something else")
       end
 
       it "returns the created DialogField object" do
         result = dialog_field_importer.import_field(dialog_field)
-        result.should == DialogField.first
+        expect(result).to eq(DialogField.first)
       end
     end
 
@@ -96,9 +94,9 @@ describe DialogFieldImporter do
       let(:type) { "potato" }
 
       it "raises an InvalidDialogFieldTypeError" do
-        expect {
+        expect do
           dialog_field_importer.import_field(dialog_field)
-        }.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError)
+        end.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError)
       end
     end
   end

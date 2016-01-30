@@ -30,19 +30,19 @@ module OpsController::Settings
       err = true
     end
     @sb[:show_button] = err
-    redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
+    redirect_to :action => 'explorer', :flash_msg => msg, :flash_error => err, :no_refresh => true
   end
 
   def forest_get_form_vars
     @edit = session[:edit]
-    @ldap_info = Hash.new
+    @ldap_info = {}
     @ldap_info[:mode] = params[:user_proxies][:mode] if params[:user_proxies] && params[:user_proxies][:mode]
     @ldap_info[:ldaphost] = params[:user_proxies][:ldaphost] if params[:user_proxies] && params[:user_proxies][:ldaphost]
     @ldap_info[:ldapport] = params[:user_proxies][:ldapport] if params[:user_proxies] && params[:user_proxies][:ldapport]
     @ldap_info[:basedn] = params[:user_proxies][:basedn] if params[:user_proxies] && params[:user_proxies][:basedn]
     @ldap_info[:bind_dn] = params[:user_proxies][:bind_dn] if params[:user_proxies] && params[:user_proxies][:bind_dn]
     @ldap_info[:bind_pwd] = params[:user_proxies][:bind_pwd] if params[:user_proxies] && params[:user_proxies][:bind_pwd]
-    return
+    nil
   end
 
   def forest_form_field_changed
@@ -58,8 +58,8 @@ module OpsController::Settings
     forest_get_form_vars
     if params[:ldaphost_id] == "new"
       render :update do |page|                    # Use JS to update the display
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page.replace("forest_entries_div", :partial=>"ldap_forest_entries", :locals=>{:entry=>"new", :edit=>true})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => "new", :edit => true})
       end
       session[:entry] = "new"
     else
@@ -68,8 +68,8 @@ module OpsController::Settings
         entry = f if f[:ldaphost] == params[:ldaphost_id]
       end
       render :update do |page|                    # Use JS to update the display
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page.replace("forest_entries_div", :partial=>"ldap_forest_entries", :locals=>{:entry=>entry, :edit=>true})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => entry, :edit => true})
       end
       session[:entry] = entry
     end
@@ -79,15 +79,15 @@ module OpsController::Settings
   def forest_delete
     forest_get_form_vars
     idx = nil
-    @edit[:new][:authentication][:user_proxies].each_with_index do |f,i|
+    @edit[:new][:authentication][:user_proxies].each_with_index do |f, i|
       idx = i if f[:ldaphost] == params[:ldaphost_id]
     end
-    @edit[:new][:authentication][:user_proxies].delete_at(idx) if !idx.nil?
+    @edit[:new][:authentication][:user_proxies].delete_at(idx) unless idx.nil?
     @changed = (@edit[:new] != @edit[:current].config)
     render :update do |page|                        # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << javascript_for_miq_button_visibility(@changed)
-      page.replace("forest_entries_div", :partial=>"ldap_forest_entries", :locals=>{:entry=>nil, :edit=>false})
+      page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => nil, :edit => false})
     end
   end
 
@@ -102,7 +102,7 @@ module OpsController::Settings
       @edit[:new][:authentication][:user_proxies].delete_at(0)
     else
       @edit[:new][:authentication][:user_proxies].each do |f|
-        if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry][:ldaphost] != @ldap_info[:ldaphost]   #check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
+        if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry][:ldaphost] != @ldap_info[:ldaphost]   # check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
           no_changes = false
           add_flash(_("%s should be unique") % "LDAP Host", :error)
           break
@@ -113,7 +113,7 @@ module OpsController::Settings
       if session[:entry] == "new"
         @edit[:new][:authentication][:user_proxies].push(@ldap_info)
       else
-        @edit[:new][:authentication][:user_proxies].each_with_index do |f,i|
+        @edit[:new][:authentication][:user_proxies].each_with_index do |f, i|
           @edit[:new][:authentication][:user_proxies][i] = @ldap_info if f[:ldaphost] == session[:entry][:ldaphost]
         end
       end
@@ -122,7 +122,7 @@ module OpsController::Settings
     render :update do |page|                        # Use JS to update the display
       page << javascript_for_miq_button_visibility(@changed)
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("forest_entries_div", :partial=>"ldap_forest_entries", :locals=>{:entry=>nil, :edit=>false})  if no_changes
+      page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => nil, :edit => false})  if no_changes
     end
   end
 
@@ -131,32 +131,32 @@ module OpsController::Settings
     return unless @edit
     wb = @edit[:new].config[:workers][:worker_base]
     w = wb[:replication_worker][:replication][:destination]
-    valid = MiqRegionRemote.validate_connection_settings(w[:host],w[:port],w[:username],w[:password],w[:database])
+    valid = MiqRegionRemote.validate_connection_settings(w[:host], w[:port], w[:username], w[:password], w[:database])
     if valid.nil?
       add_flash(_("%s Credentials validated successfully") % "Replication Worker")
     else
       valid.each do |v|
-        add_flash(v,:error)
+        add_flash(v, :error)
       end
     end
     render :update do |page|
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
 
   def region_edit
     settings_set_view_vars
-    @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
+    @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => "Settings", :name => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model => ui_lookup(:model => "MiqRegion")}
     case params[:button]
     when "cancel"
       session[:edit] = @edit = nil
       replace_right_cell("root")
     when "save"
-      return unless load_edit("region_edit__#{params[:id]}","replace_cell__explorer")
+      return unless load_edit("region_edit__#{params[:id]}", "replace_cell__explorer")
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("%s is required") % "Region description", :error)
       end
-      if @flash_array != nil
+      unless @flash_array.nil?
         session[:changed] = @changed = true
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -167,7 +167,7 @@ module OpsController::Settings
       begin
         @edit[:region].save!
       rescue StandardError => bang
-        @edit[:region].errors.each do |field,msg|
+        @edit[:region].errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = true
@@ -175,10 +175,10 @@ module OpsController::Settings
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqRegion"), :name=>@edit[:region].description})
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqRegion"), :name => @edit[:region].description})
         AuditEvent.success(build_saved_audit(@edit[:region], params[:button] == "edit"))
         @edit = session[:edit] = nil  # clean out the saved info
-        replace_right_cell("root",[:settings])
+        replace_right_cell("root", [:settings])
       end
     when "reset", nil # Reset or first time in
       region_set_form_vars
@@ -190,7 +190,7 @@ module OpsController::Settings
   end
 
   def region_form_field_changed
-    return unless load_edit("region_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("region_edit__#{params[:id]}", "replace_cell__explorer")
     region_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|
@@ -201,11 +201,11 @@ module OpsController::Settings
   private ############################
 
   def region_set_form_vars
-    @edit = Hash.new
+    @edit = {}
     @edit[:region] = MiqRegion.my_region
     @edit[:key] = "region_edit__#{@edit[:region].id}"
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit[:new] = {}
+    @edit[:current] = {}
     @edit[:new][:description] = @edit[:region].description
     @edit[:current] = copy_hash(@edit[:new])
   end
@@ -217,7 +217,7 @@ module OpsController::Settings
   # Set filters in the user record from the @edit[:new] hash values
   def user_set_filters(user)
     @set_filter_values = []
-    @edit[:new][:filters].each do | key, value |
+    @edit[:new][:filters].each do |_key, value|
       @set_filter_values.push(value)
     end
     user_make_subarrays # Need to have category arrays of item arrays for and/or logic
@@ -235,5 +235,4 @@ module OpsController::Settings
   def set_verify_status
     @edit[:default_verify_status] = (@edit[:new][:password] == @edit[:new][:verify])
   end
-
 end

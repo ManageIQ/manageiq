@@ -1,8 +1,14 @@
 module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   extend ActiveSupport::Concern
+  # 'Created', 'Failed', 'Started', 'Killing', 'Stopped' and 'Unhealthy' are in fact container related events,
+  # returned as part of a pod event.
   ENABLED_EVENTS = {
-    'Node' => %w(NodeReady NodeNotReady rebooted),
-    'Pod'  => %w(scheduled failedScheduling failedValidation HostPortConflict created failed started killing)
+    'Node'                  => %w(NodeReady NodeNotReady Rebooted NodeSchedulable NodeNotSchedulable InvalidDiskCapacity
+                                  FailedMount),
+    'Pod'                   => %w(Scheduled FailedScheduling FailedValidation HostPortConflict DeadlineExceeded
+                                  FailedSync OutOfDisk NodeSelectorMismatching InsufficientFreeCPU
+                                  InsufficientFreeMemory Created Failed Started Killing Stopped Unhealthy),
+    'ReplicationController' => %w(SuccessfulCreate FailedCreate)
   }
 
   def event_monitor_handle
@@ -26,6 +32,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
 
   def monitor_events
     event_monitor_handle.start
+    event_monitor_running
     # TODO: since event_monitor_handle is returning only events that
     # are generated starting from this moment we need to pull the
     # entire # inventory to make sure that it's up-to-date.
@@ -45,7 +52,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       :name      => event.object.involvedObject.name,
       :namespace => event.object.involvedObject['table'][:namespace],
       :reason    => event.object.reason,
-      :message   => event.object.message
+      :message   => event.object.message,
+      :uid       => event.object.involvedObject.uid
     }
 
     unless event.object.involvedObject.fieldPath.nil?
@@ -73,6 +81,9 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
         event_data[:container_name] = container_name
       end
       event_data[:container_group_name] = event_data[:name]
+      event_data[:container_namespace] = event_data[:namespace]
+    when 'ReplicationController'
+      event_data[:container_replicator_name] = event_data[:name]
       event_data[:container_namespace] = event_data[:namespace]
     end
 

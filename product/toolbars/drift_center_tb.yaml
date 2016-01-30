@@ -6,27 +6,27 @@
 - :name: drift_tasks
   :items:
   - :buttonTwoState: drift_all
-    :image: compare_all
+    :icon: product product-compare_all fa-lg
     :title: "All attributes"
     :url: 'drift_all'
     :url_parms: '?id=#{$vms_comp}&compare_task=all&db=#{@compare_db}&id=#{@drift_obj.id}'
   - :buttonTwoState: drift_diff
-    :image: compare_diff
+    :icon: product product-compare_diff fa-lg
     :title: "Attributes with different values"
     :url: 'drift_differences'
     :url_parms: '?id=#{$vms_comp}&compare_task=different&db=#{@compare_db}&id=#{@drift_obj.id}'
   - :buttonTwoState: drift_same
-    :image: compare_same
+    :icon: product product-compare_same fa-lg
     :title: "Attributes with same values"
     :url: 'drift_same'
     :url_parms: '?id=#{$vms_comp}&compare_task=same&db=#{@compare_db}&id=#{@drift_obj.id}'
 - :name: compare_mode
   :items:
   - :buttonTwoState: driftmode_details
-    :image: view_list
+    :icon: fa fa-bars fa-lg
     :title: "Details Mode"
     :url: 'drift_mode'
   - :buttonTwoState: driftmode_exists
-    :image: exists
+    :icon: product product-exists fa-lg
     :title: "Exists Mode"
     :url: 'drift_mode'

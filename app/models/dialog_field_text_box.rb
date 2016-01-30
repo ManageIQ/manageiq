@@ -33,15 +33,17 @@ class DialogFieldTextBox < DialogField
     super
   end
 
-  def validate(dialog_tab, dialog_group)
+  def validate_field_data(dialog_tab, dialog_group)
     return if !required? && value.blank?
 
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && value.blank?
 
-    case validator_type
-    when 'regex'
-      return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{validator_rule}/)
-    end
+    # currently only regex is supported
+    rule = validator_rule if validator_type == 'regex'
+    rule ||= "^[0-9]+$" if data_type == "integer"
+
+    return unless rule
+    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{rule}/)
   end
 
   def script_error_values
@@ -66,9 +68,7 @@ class DialogFieldTextBox < DialogField
     {:text => @value}
   end
 
-  private
-
-  def values_from_automate
-    DynamicDialogFieldValueProcessor.values_from_automate(self)
+  def trigger_automate_value_updates
+    values_from_automate
   end
 end

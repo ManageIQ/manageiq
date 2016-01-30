@@ -1,46 +1,75 @@
 module ApplicationHelper
+  include_concern 'Chargeback'
   include_concern 'Dialogs'
+  include_concern 'Discover'
   include_concern 'PageLayouts'
   include_concern 'FormTags'
   include Sandbox
   include CompressedIds
+  include JsHelper
+  include StiRoutingHelper
+  include ToolbarHelper
   include TextualSummaryHelper
 
-  def css_background_color
-    (@css || {}).fetch_path(:background_color) || 'black'
+  def documentation_link(url = nil, documentation_subject = "")
+    if url
+      link_to(_("For more information, visit the %s documentation.") % documentation_subject, url, :rel => 'external',
+              :class => 'documentation-link', :target => '_blank')
+    end
   end
-
-  # From http://www.juixe.com/techknow/index.php/2006/07/15/acts-as-taggable-tag-cloud
-  #   which refers to http://blog.craz8.com/articles/2005/10/28/acts_as_taggable-is-a-cool-piece-of-code
-  def tag_cloud(tags, classes)
-    max, min = 0, 0
-    tags.each { |t|
-      max = t.count.to_i if t.count.to_i > max
-      min = t.count.to_i if t.count.to_i < min
-    }
-
-    divisor = ((max - min) / classes.size) + 1
-
-    tags.each { |t|
-      yield t.name, classes[(t.count.to_i - min) / divisor]
-    }
-  end
-
   # Create a collapsed panel based on a condition
-  def patternfly_accordion_panel(title, condition, id, &block)
+  def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
-      out  = content_tag(:div, :class => "panel-heading") do
+      out = content_tag(:div, :class => "panel-heading") do
         content_tag(:h4, :class => "panel-title") do
           link_to(title, "##{id}",
-            'data-parent' => '#accordion',
-            'data-toggle' => 'collapse',
-            :class        => condition ? '' : 'collapsed')
+                  'data-parent' => '#accordion',
+                  'data-toggle' => 'collapse',
+                  :class        => condition ? '' : 'collapsed')
         end
       end
       out << content_tag(:div, :id => id, :class => "panel-collapse collapse #{condition ? 'in' : ''}") do
         content_tag(:div, :class => "panel-body", &block)
       end
     end
+  end
+
+  def single_relationship_link(record, table_name, property_name = nil)
+    out = ''
+    property_name ||= table_name
+    ent = record.send(property_name)
+    name = ui_lookup(:table => table_name.to_s)
+    if role_allows(:feature => "#{table_name}_show") && !ent.nil?
+      out = content_tag(:li) do
+        link_to("#{name}: #{ent.name}",
+                {:controller => table_name, :action => 'show', :id => ent.id.to_s},
+                :title       => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
+                                {:entity_name        => record.class.name.demodulize.titleize,
+                                 :linked_entity_name => name})
+      end
+    end
+    out
+  end
+
+  def multiple_relationship_link(record, table_name)
+    out = ''
+    if role_allows(:feature => "#{table_name}_show_list") &&
+       (table_name != 'container_route' || record.respond_to?(:container_routes))
+      plural = ui_lookup(:tables => table_name.to_s)
+      count = record.number_of(table_name.to_s.pluralize)
+      if count == 0
+        out = content_tag(:li, :class => "disabled") do
+          link_to("#{plural} (0)", "#")
+        end
+      else
+        out = content_tag(:li) do
+          link_to("#{plural} (#{count})",
+                  {:action => 'show', :id => @record, :display => table_name.to_s.pluralize},
+                  :title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural})
+        end
+      end
+    end
+    out
   end
 
   # Create a hidden div area based on a condition (using for hiding nav panes)
@@ -63,8 +92,17 @@ module ApplicationHelper
     end
   end
 
+  def no_hover_class(item)
+    klass = if item[:link]
+              ""
+            elsif item.has_key?(:value)
+              "" if item[:value].kind_of?(Array) && item[:value].any? {|val| val[:link]}
+            end
+    klass.nil? ? 'no-hover' : ''
+  end
+
   # Check role based authorization for a UI task
-  def role_allows(options={})
+  def role_allows(options = {})
     ApplicationHelper.role_allows_intern(options) rescue false
   end
   module_function :role_allows
@@ -85,13 +123,8 @@ module ApplicationHelper
   end
   module_function :role_allows_intern
 
-  # Check group based filtered authorization for a UI task
-  def group_allows(options={})
-    auth = MiqGroup.allows?(session[:group], :identifier=>options[:identifier])
-    $log.debug("Group Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], group id [#{session[:group]}], feature identifier [#{options[:identifier]}]")
-    return auth
-  end
-
+  # NB: This differs from controller_for_model; until they're unified,
+  # make sure you have the right one.
   def model_to_controller(record)
     record.class.base_model.name.underscore
   end
@@ -105,44 +138,62 @@ module ApplicationHelper
     end
   end
 
-  def url_for_record(record, action="show") # Default action is show
+  def restful_routed?(record_or_model)
+    model = if record_or_model.kind_of?(Class)
+              record_or_model
+            else
+              record_or_model.class
+            end
+    model = ui_base_model(model)
+    respond_to?("#{model.model_name.route_key}_path")
+  end
+
+  def restful_routed_action?(controller = controller_name, action = action_name)
+    restful_routed?(("#{controller.camelize}Controller").constantize.model) && !%w(explorer show_list).include?(action)
+  rescue
+    false
+  end
+
+  def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
-    if record.kind_of?(VmOrTemplate)
-      return url_for_db(controller_for_vm(model_for_vm(record)), action, record)
-    elsif record.class.respond_to?(:db_name)
-      return url_for_db(record.class.db_name, action, record)
-    else
-      return url_for_db(record.class.base_class.to_s, action, record)
-    end
+    db =
+      if record.kind_of?(VmOrTemplate)
+        controller_for_vm(model_for_vm(record))
+      elsif record.class.respond_to?(:db_name)
+        record.class.db_name
+      else
+        record.class.base_class.to_s
+      end
+    url_for_db(db, action, record)
   end
 
   # Create a url for a record that links to the proper controller
-  def url_for_db(db, action="show", item = nil) # Default action is show
-    if item && EmsCloud === item
-      return ems_cloud_path(item.id)
+  def url_for_db(db, action = "show", item = nil) # Default action is show
+    if item && restful_routed?(item)
+      return polymorphic_path(item)
     end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
                      :action     => @lastaction,
                      :id         => @vm,
                      :show       => @id
-      )
+                    )
     elsif @host && ["Patch", "GuestApplication"].include?(db)
-      return url_for(:controller=>"host", :action=>@lastaction, :id=>@host, :show=>@id)
+      return url_for(:controller => "host", :action => @lastaction, :id => @host, :show => @id)
     elsif db == "MiqCimInstance" && @db && @db == "snia_local_file_system"
-      return url_for(:controller=>@record.class.to_s.underscore, :action=>"snia_local_file_systems", :id=>@record, :show=>@id)
+      return url_for(:controller => @record.class.to_s.underscore, :action => "snia_local_file_systems", :id => @record, :show => @id)
     elsif db == "MiqCimInstance" && @db && @db == "cim_base_storage_extent"
-      return url_for(:controller=>@record.class.to_s.underscore, :action=>"cim_base_storage_extents", :id=>@record, :show=>@id)
+      return url_for(:controller => @record.class.to_s.underscore, :action => "cim_base_storage_extents", :id => @record, :show => @id)
     elsif %w(ConfiguredSystem ConfigurationProfile).include?(db)
       return url_for(:controller => "provider_foreman", :action => @lastaction, :id => @record, :show => @id)
     else
       controller, action = db_to_controller(db, action)
-      return url_for(:controller=>controller, :action=>action, :id=>@id)
+      return url_for(:controller => controller, :action => action, :id => @id)
     end
   end
 
   # Create a url to show a record from the passed in view
-  def view_to_url(view, parent=nil)
+  def view_to_url(view, parent = nil)
     association = view.scoped_association
     # Handle other sub-items of a VM or Host
     case view.db
@@ -163,46 +214,46 @@ module ApplicationHelper
       when "vm"   then association = @lastaction
       end
     end
-    if association == nil
+    if association.nil?
       controller, action = db_to_controller(view.db)
       if controller == "ems_cloud" && action == "show"
         return ems_clouds_path
       end
-      if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent","SniaLocalFileSystem"].include?(view.db)
-        return url_for(:controller=>controller, :action=>action, :id=>parent.id) + "?show="
+      if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent", "SniaLocalFileSystem"].include?(view.db)
+        return url_for(:controller => controller, :action => action, :id => parent.id) + "?show="
       else
         if @explorer
-          #showing a list view of another CI inside vmx
+          # showing a list view of another CI inside vmx
           if %w(OntapStorageSystem
                 OntapLogicalDisk
                 OntapStorageVolume
                 OntapFileShare
                 SecurityGroup).include?(view.db)
-            return url_for(:controller=>controller, :action=>"show") + "/"
+            return url_for(:controller => controller, :action => "show") + "/"
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
             # this is to handle link to a vm in vm explorer from service explorer
-            return url_for(:controller=>"vm_or_template", :action=>"show") + "/"
+            return url_for(:controller => "vm_or_template", :action => "show") + "/"
           elsif %w(ConfigurationProfile).include?(view.db) &&
                 request.parameters[:controller] == "provider_foreman"
             return url_for(:action => action, :id => nil) + "/"
           elsif %w(ConfiguredSystem).include?(view.db) && request.parameters[:controller] == "provider_foreman"
             return url_for(:action => action, :id => nil) + "/"
           else
-            return url_for(:action=>action) + "/" # In explorer, don't jump to other controllers
+            return url_for(:action => action) + "/" # In explorer, don't jump to other controllers
           end
         else
           controller = "vm_cloud" if controller == "template_cloud"
           controller = "vm_infra" if controller == "template_infra"
-          return url_for(:controller=>controller, :action=>action) + "/"
+          return url_for(:controller => controller, :action => action) + "/"
         end
       end
 
     else
-      #need to add a check for @explorer while setting controller incase building a link for details screen to show items
-      #i.e users list view screen inside explorer needs to point to vm_or_template controller
-      return url_for(:controller=>parent.kind_of?(VmOrTemplate) && !@explorer ? parent.class.base_model.to_s.underscore : request.parameters["controller"],
-                    :action=>association,
-                    :id=>parent.id) + "?#{@explorer ? "x_show" : "show"}="
+      # need to add a check for @explorer while setting controller incase building a link for details screen to show items
+      # i.e users list view screen inside explorer needs to point to vm_or_template controller
+      return url_for(:controller => parent.kind_of?(VmOrTemplate) && !@explorer ? parent.class.base_model.to_s.underscore : request.parameters["controller"],
+                     :action     => association,
+                     :id         => parent.id) + "?#{@explorer ? "x_show" : "show"}="
     end
   end
 
@@ -274,7 +325,7 @@ module ApplicationHelper
   end
 
   # Method to create the center toolbar XML
-  def build_toolbar_buttons_and_xml(tb_name)
+  def build_toolbar(tb_name)
     _toolbar_builder.call(tb_name)
   end
 
@@ -310,34 +361,29 @@ module ApplicationHelper
       :settings              => @settings,
       :showtype              => @showtype,
       :tabform               => @tabform,
-      :usage_options         => @usage_options,
       :widget_running        => @widget_running,
       :widgetsets            => @widgetsets,
       :zgraph                => @zgraph,
     )
   end
 
-  def get_console_url
-    return url = @record.hostname ? @record.hostname : @record.ipaddress
-  end
-
   # Convert a field (Vm.hardware.disks-size) to a col (disks.size)
   def field_to_col(field)
     dbs, fld = field.split("-")
-    return (dbs.include?(".") ? "#{dbs.split(".").last}.#{fld}": fld)
+    (dbs.include?(".") ? "#{dbs.split(".").last}.#{fld}" : fld)
   end
 
   # Get the dynamic list of tags for the expression atom editor
   def exp_available_tags(model, use_mytags = false)
     # Generate tag list unless already generated during this transaction
-    @exp_available_tags ||= MiqExpression.model_details(model, :typ=>"tag",
-                                                    :include_model=>true,
-                                                    :include_my_tags=>use_mytags,
-                                                    :userid => session[:userid])
-    return @exp_available_tags
+    @exp_available_tags ||= MiqExpression.model_details(model, :typ             => "tag",
+                                                               :include_model   => true,
+                                                               :include_my_tags => use_mytags,
+                                                               :userid          => session[:userid])
+    @exp_available_tags
   end
 
-  #Replacing calls to VMDB::Config.new in the views/controllers
+  # Replacing calls to VMDB::Config.new in the views/controllers
   def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
@@ -393,20 +439,20 @@ module ApplicationHelper
       title += ": Optimize"
     elsif layout.starts_with?("miq_request")
       title += ": Requests"
-    elsif layout.starts_with?("cim_") ||
-          layout.starts_with?("snia_")
-      title += ": Storage - #{ui_lookup(:tables=>layout)}"
+    elsif layout.starts_with?("cim_",
+                              "snia_")
+      title += ": Storage - #{ui_lookup(:tables => layout)}"
     elsif layout == "login"
       title += ": Login"
     # Assume layout is a table name and look up the plural version
     else
-      title += ": #{ui_lookup(:tables=>layout)}"
+      title += ": #{ui_lookup(:tables => layout)}"
     end
-    return title
+    title
   end
 
   def controller_model_name(controller)
-    ui_lookup(:model=>(controller.camelize + "Controller").constantize.model.name)
+    ui_lookup(:model => (controller.camelize + "Controller").constantize.model.name)
   end
 
   def is_browser_ie?
@@ -433,37 +479,45 @@ module ApplicationHelper
 
   ############# Following methods generate JS lines for render page blocks
   def javascript_for_timer_type(timer_type)
-    js_array = []
-    unless timer_type.nil?
-      case timer_type
-      when "Monthly"
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_show("monthly_span")
-      when "Weekly"
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_show("weekly_span")
-      when "Daily"
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_show("daily_span")
-      when "Hourly"
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-        js_array << javascript_show("hourly_span")
-      else
-        js_array << javascript_hide("daily_span")
-        js_array << javascript_hide("hourly_span")
-        js_array << javascript_hide("monthly_span")
-        js_array << javascript_hide("weekly_span")
-      end
+    case timer_type
+    when "Monthly"
+      [
+        javascript_hide("weekly_span"),
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_show("monthly_span")
+      ]
+    when "Weekly"
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_show("weekly_span")
+      ]
+    when "Daily"
+      [
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span"),
+        javascript_show("daily_span")
+      ]
+    when "Hourly"
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span"),
+        javascript_show("hourly_span")
+      ]
+    when nil
+      []
+    else
+      [
+        javascript_hide("daily_span"),
+        javascript_hide("hourly_span"),
+        javascript_hide("monthly_span"),
+        javascript_hide("weekly_span")
+      ]
     end
-    js_array
   end
 
   # Show/hide the Save and Reset buttons based on whether changes have been made
@@ -488,9 +542,10 @@ module ApplicationHelper
     if params[:check] # Tree checkbox clicked?
       # MyCompany tag checked or Belongsto checked
       key = params[:tree_typ] == 'myco' ? :filters : :belongsto
-      future  = @edit[:new    ][key][params[:id].split('___').last]
+      future  = @edit[:new][key][params[:id].split('___').last]
       current = @edit[:current][key][params[:id].split('___').last]
-      css_class = future == current ? 'dynatree-title' : 'cfme-blue-bold-node'
+      title_class = params[:tree_typ] == "vat" || params[:tree_typ] == "hac" ? 'cfme-no-cursor-node' : 'dynatree-title'
+      css_class = future == current ? title_class : 'cfme-blue-bold-node'
       js_array << "$('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
     end
     # need to redraw the tree to change node colors
@@ -499,51 +554,22 @@ module ApplicationHelper
     js_array.join("\n")
   end
 
-  # Reload toolbars using new buttons object and xml
-  def javascript_for_toolbar_reload(tb, buttons, xml)
-    %Q{
-      if (ManageIQ.toolbars.#{tb} && ManageIQ.toolbars.#{tb}.obj)
-        ManageIQ.toolbars.#{tb}.obj.unload();
-
-      if (document.getElementById('#{tb}') == null) {
-        var tb_div = $('<div id="#{tb}" />');
-        parent_div_id = '#{tb}'.split('_')[0] + '_buttons_div';
-        $("#" + parent_div_id).append(tb_div);
-      }
-
-      window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
-      ManageIQ.toolbars['#{tb}'] = {
-        obj: window.#{tb},
-        buttons: #{buttons},
-        xml: "#{xml}"
-      };
-
-      miqInitToolbar(ManageIQ.toolbars['#{tb}']);
-    }
+  def javascript_pf_toolbar_reload(div_id, toolbar)
+    out = []
+    out << javascript_update_element(div_id, buttons_to_html(toolbar))
+    out << "miqInitToolbars();"
+    out.join('')
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
     "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
-
-  # Generate lines of JS <text> for render page, replacing "~" with the <sub_array> elements
-  def js_multi_lines(sub_array, text)
-    js_array = []
-    sub_array.each do |i|
-      js_array << text.gsub("~", i.to_s)
-    end
-    js_array
-  end
-
-  def javascript_set_value(element_id, value)
-    "$('##{element_id}').val('#{value}');"
-  end
   ############# End of methods that generate JS lines for render page blocks
 
   def set_edit_timer_from_schedule(schedule)
     t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-    @edit[:new][:timer_months ] = "1"
-    @edit[:new][:timer_weeks ]  = "1"
+    @edit[:new][:timer_months] = "1"
+    @edit[:new][:timer_weeks]  = "1"
     @edit[:new][:timer_days]    = "1"
     @edit[:new][:timer_hours]   = "1"
     if schedule.run_at.nil?
@@ -565,20 +591,20 @@ module ApplicationHelper
 
   # Check if a parent chart has been selected and applies
   def perf_parent?
-    return @perf_options[:model] == "VmOrTemplate" &&
-           @perf_options[:typ] != "realtime" &&
-           VALID_PERF_PARENTS.keys.include?(@perf_options[:parent])
+    @perf_options[:model] == "VmOrTemplate" &&
+      @perf_options[:typ] != "realtime" &&
+      VALID_PERF_PARENTS.keys.include?(@perf_options[:parent])
   end
 
   # Check if a parent chart has been selected and applies
   def perf_compare_vm?
-    return @perf_options[:model] == "OntapLogicalDisk" && @perf_options[:typ] != "realtime" && !@perf_options[:compare_vm].nil?
+    @perf_options[:model] == "OntapLogicalDisk" && @perf_options[:typ] != "realtime" && !@perf_options[:compare_vm].nil?
   end
 
   # Determine the type of report (performance/trend/chargeback) based on the model
   def model_report_type(model)
     if model
-      if (model.ends_with?("Performance") || model.ends_with?("MetricsRollup"))
+      if model.ends_with?("Performance", "MetricsRollup")
         return :performance
       elsif model == UiConstants::TREND_MODEL
         return :trend
@@ -592,33 +618,38 @@ module ApplicationHelper
   def taskbar_in_header?
     if @show_taskbar.nil?
       @show_taskbar = false
-      if ! (@layout == ""  &&
-        %w(auth_error change_tab show).include?(controller.action_name) ||
+      if ! (@layout == "" && %w(auth_error change_tab show).include?(controller.action_name) ||
         %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build container_topology).include?(@layout) ||
+           server_build container_topology container_dashboard).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
         end
       end
     end
-    return @show_taskbar
+    @show_taskbar
+  end
+
+  # checking if any of the toolbar is visible
+  def toolbars_visible?
+    (@toolbars['history_tb'] || @toolbars['center_tb'] || @toolbars['view_tb']) &&
+    (@toolbars['history_tb'] != 'blank_view_tb' && @toolbars['history_tb'] != 'blank_view_tb' && @toolbars['view_tb'] != 'blank_view_tb')
   end
 
   def inner_layout_present?
     if @inner_layout_present.nil?
       @inner_layout_present = false
       if @explorer || params[:action] == "explorer" ||
-          (params[:controller] == "chargeback" && params[:action] == "chargeback") ||
-          (params[:controller] == "miq_ae_tools" && (params[:action] == "resolve" || params[:action] == "show")) ||
-          (params[:controller] == "miq_policy" && params[:action] == "rsop") ||
-          (params[:controller] == "miq_capacity")
+         (params[:controller] == "chargeback" && params[:action] == "chargeback") ||
+         (params[:controller] == "miq_ae_tools" && (params[:action] == "resolve" || params[:action] == "show")) ||
+         (params[:controller] == "miq_policy" && params[:action] == "rsop") ||
+         (params[:controller] == "miq_capacity")
         @inner_layout_present = true
       end
     end
-    return @inner_layout_present
+    @inner_layout_present
   end
 
   # Format a column in a report view for display on the screen
@@ -626,9 +657,9 @@ module ApplicationHelper
     tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
     celltext = view.format(col,
                            row[col],
-                           :tz=>tz
-    ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
-    return celltext
+                           :tz => tz
+                          ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
+    celltext
   end
 
   def check_if_button_is_implemented
@@ -650,31 +681,31 @@ module ApplicationHelper
     return value if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
-      return value[0...TRUNC_TO] + "..."
+      value.first(TRUNC_TO) + "..."
     when "f"  # Chop off front
-      return "..." + value[(value.length - TRUNC_TO)..-1]
+      "..." + value.last(TRUNC_TO)
     else      # Chop out the middle
       numchars = TRUNC_TO / 2
-      return value[0...numchars] + "..." + value[(value.length - numchars)..-1]
+      value.first(numchars) + "..." + value.last(numchars)
     end
   end
 
   def url_for_item_quad_text(record, id, action)
-    url_for(:controller => model_to_controller(record),
+    url_for(:controller => controller_for_model(record.class),
             :action     => action,
             :id         => record.id.to_s,
             :show       => id.to_s)
   end
 
   CUSTOM_TOOLBAR_CONTROLLERS = [
-      "service",
-      "vm_cloud",
-      "vm_infra",
-      "vm_or_template"
+    "service",
+    "vm_cloud",
+    "vm_infra",
+    "vm_or_template"
   ]
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no custom toolbar to be shown
   def custom_toolbar_filename
-    if ["ems_cloud","ems_cluster","ems_infra","host","miq_template","storage"].include?(@layout)  # Classic CIs
+    if ["ems_cloud", "ems_cluster", "ems_infra", "host", "miq_template", "storage"].include?(@layout)  # Classic CIs
       return "custom_buttons_tb" if @record && @lastaction == "show" && @display == "main"
     end
 
@@ -691,12 +722,24 @@ module ApplicationHelper
       end
     end
 
-    return nil
+    nil
   end
 
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
   def center_toolbar_filename
-    _toolbar_chooser.call
+    _toolbar_chooser.center_toolbar_filename
+  end
+
+  def history_toolbar_filename
+    _toolbar_chooser.history_toolbar_filename
+  end
+
+  def x_view_toolbar_filename
+    _toolbar_chooser.x_view_toolbar_filename
+  end
+
+  def view_toolbar_filename
+    _toolbar_chooser.view_toolbar_filename
   end
 
   def _toolbar_chooser
@@ -736,7 +779,7 @@ module ApplicationHelper
   end
 
   def display_adv_search?
-    %w(availability_zone container_group container_node container_service
+    %w(availability_zone cloud_volume container_group container_node container_service
        container_route container_project container_replicator container_image container_image_registry
        ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
@@ -751,34 +794,24 @@ module ApplicationHelper
     @edit && @edit.fetch_path(:adv_search_applied, :text) ? "show" : "hide"
   end
 
-  # Create time zone list for perf chart options screen
-  def perf_options_timezones
-    if @perf_record && @perf_record.is_a?(MiqCimInstance) && @perf_options[:typ] == "Daily"
-      tp_tzs = TimeProfile.rollup_daily_metrics.all_timezones
-      ALL_TIMEZONES.dup.delete_if{|tz| !tp_tzs.include?(tz.last)}
-    else
-      ALL_TIMEZONES
-    end
-  end
-
   # Should we allow the user input checkbox be shown for an atom in the expression editor
   QS_VALID_USER_INPUT_OPERATORS = ["=", "!=", ">", ">=", "<", "<=", "INCLUDES", "STARTS WITH", "ENDS WITH", "CONTAINS"]
   QS_VALID_FIELD_TYPES = [:string, :boolean, :integer, :float, :percent, :bytes, :megabytes]
   def qs_show_user_input_checkbox?
     return false unless @edit[:adv_search_open]  # Only allow user input for advanced searches
     return false unless QS_VALID_USER_INPUT_OPERATORS.include?(@edit[@expkey][:exp_key])
-    val = (@edit[@expkey][:exp_typ] == "field" &&     # Field atoms with certain field types return true
+    val = (@edit[@expkey][:exp_typ] == "field" && # Field atoms with certain field types return true
            QS_VALID_FIELD_TYPES.include?(@edit[@expkey][:val1][:type])) ||
-          (@edit[@expkey][:exp_typ] == "tag" &&       # Tag atoms with a tag category chosen return true
+          (@edit[@expkey][:exp_typ] == "tag" && # Tag atoms with a tag category chosen return true
            @edit[@expkey][:exp_tag]) ||
-          (@edit[@expkey][:exp_typ] == "count" &&     # Count atoms with a count col chosen return true
+          (@edit[@expkey][:exp_typ] == "count" && # Count atoms with a count col chosen return true
               @edit[@expkey][:exp_count])
-    return val
+    val
   end
 
   # Should we allow the field alias checkbox to be shown for an atom in the expression editor
   def adv_search_show_alias_checkbox?
-    return @edit[:adv_search_open]  # Only allow field aliases for advanced searches
+    @edit[:adv_search_open]  # Only allow field aliases for advanced searches
   end
 
   def saved_report_paging?
@@ -817,53 +850,43 @@ module ApplicationHelper
 
   def controller_for_vm(model)
     case model.to_s
-      when "ManageIQ::Providers::CloudManager::Template", "ManageIQ::Providers::CloudManager::Vm"
-        "vm_cloud"
-      when "ManageIQ::Providers::InfraManager::Template", "ManageIQ::Providers::InfraManager::Vm"
-        "vm_infra"
-      else
-        "vm_or_template"
+    when "ManageIQ::Providers::CloudManager::Template", "ManageIQ::Providers::CloudManager::Vm"
+      "vm_cloud"
+    when "ManageIQ::Providers::InfraManager::Template", "ManageIQ::Providers::InfraManager::Vm"
+      "vm_infra"
+    else
+      "vm_or_template"
     end
   end
 
   def vm_model_from_active_tree(tree)
     case tree
-      when :instances_filter_tree
-        "ManageIQ::Providers::CloudManager::Vm"
-      when :images_filter_tree
-        "ManageIQ::Providers::CloudManager::Template"
-      when :vms_filter_tree
-        "ManageIQ::Providers::InfraManager::Vm"
-      when :templates_filter_tree
-        "ManageIQ::Providers::InfraManager::Template"
-      when :instances_filter_tree
-        "ManageIQ::Providers::CloudManager::Vm"
-      when :templates_images_filter_tree
-        "MiqTemplate"
-      when :vms_instances_filter_tree
-        "Vm"
+    when :instances_filter_tree
+      "ManageIQ::Providers::CloudManager::Vm"
+    when :images_filter_tree
+      "ManageIQ::Providers::CloudManager::Template"
+    when :vms_filter_tree
+      "ManageIQ::Providers::InfraManager::Vm"
+    when :templates_filter_tree
+      "ManageIQ::Providers::InfraManager::Template"
+    when :instances_filter_tree
+      "ManageIQ::Providers::CloudManager::Vm"
+    when :templates_images_filter_tree
+      "MiqTemplate"
+    when :vms_instances_filter_tree
+      "Vm"
     end
   end
 
   def object_types_for_flash_message(klass, record_ids)
     if klass == VmOrTemplate
-      object_ary = klass.where(:id => record_ids).collect {|rec| ui_lookup(:model => model_for_vm(rec).to_s)}
-      obj_hash = object_ary.each.with_object(Hash.new(0)) { |obj, h| h[obj] += 1}
+      object_ary = klass.where(:id => record_ids).collect { |rec| ui_lookup(:model => model_for_vm(rec).to_s) }
+      obj_hash = object_ary.each.with_object(Hash.new(0)) { |obj, h| h[obj] += 1 }
       obj_hash.collect { |k, v| v == 1 ? k : k.pluralize }.sort.to_sentence
     else
       object = ui_lookup(:model => klass.to_s)
       record_ids.length == 1 ? object : object.pluralize
     end
-  end
-
-  # Same as li_link_if_condition for cases where the condition is a zero equality
-  # test.
-  #
-  # args (same as link_if_condition) plus:
-  #   :count    --- fixnum  - the number to test and present
-  #
-  def li_link_if_nonzero(args)
-    li_link_if_condition(args.update(:condition => args[:count] != 0))
   end
 
   # Function returns a HTML fragment that represents a link to related entity
@@ -884,21 +907,11 @@ module ApplicationHelper
   #     :[action]     --- controller action
   #     :record_id    --- id of record
   #
-  def li_link_if_condition(args)
-    if args.key?(:tables) # plural case
-      entity_name = ui_lookup(:tables => args[:tables])
-      link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
-      none        = '(0)'
-      title       = "Show all #{entity_name}"
-    else                  # singular case
-      entity_name = ui_lookup(:table  => args[:table])
-      link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
-      link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
-      none        = '(0)'
-      title       = "Show #{entity_name}"
-    end
-    title = args[:title] if args.key?(:title)
-    if args[:condition]
+  def li_link(args)
+    args[:if] = (args[:count] != 0) if args[:count]
+    link_text, title = build_link_text(args)
+
+    if args[:if]
       link_params = {
         :action  => args[:action].present? ? args[:action] : 'show',
         :display => args[:display],
@@ -910,15 +923,35 @@ module ApplicationHelper
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
       content_tag(:li) do
-        link_to(link_text, link_params, tag_attrs)
+        if args[:record] && restful_routed?(args[:record])
+          link_to(link_text, polymorphic_path(args[:record], :display => args[:display]))
+        else
+          link_to(link_text, link_params, tag_attrs)
+        end
       end
     else
       content_tag(:li, :class => "disabled") do
-        content_tag(:a, :href => "#") do
-          "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
-        end
+        link_to(link_text, "#")
       end
     end
+  end
+
+  def build_link_text(args)
+    if args.key?(:tables)
+      entity_name = ui_lookup(:tables => args[:tables])
+      link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
+      title       = "Show all #{entity_name}"
+    elsif args.key?(:text)
+      count     = args[:count] ? "(#{args[:count]})" : ""
+      link_text = "#{args[:text]} #{count}"
+    elsif args.key?(:table)
+      entity_name = ui_lookup(:table => args[:table])
+      link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
+      link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
+      title       = "Show #{entity_name}"
+    end
+    title = args[:title] if args.key?(:title)
+    return link_text, title
   end
 
   # Function returns a HTML fragment that represents an image with certain
@@ -941,17 +974,17 @@ module ApplicationHelper
     end
   end
 
-  def link_to_with_icon(link_text, link_params, tag_args, image_path=nil)
+  def link_to_with_icon(link_text, link_params, tag_args, _image_path = nil)
     tag_args ||= {}
-    default_tag_args = { :onclick => "return miqCheckForChanges()" }
+    default_tag_args = {:onclick => "return miqCheckForChanges()"}
     tag_args = default_tag_args.merge(tag_args)
-      link_to(link_text, link_params, tag_args)
+    link_to(link_text, link_params, tag_args)
   end
 
   def center_div_height(toolbar = true, min = 200)
     max = toolbar ? 627 : 757
     height = @winH < max ? min : @winH - (max - min)
-    return height
+    height
   end
 
   def primary_nav_class(nav_id)
@@ -983,7 +1016,7 @@ module ApplicationHelper
     # Don't render flash message in gtl, partial is already being rendered on screen
     return false if request.parameters[:controller] == "miq_request" && @lastaction == "show_list"
     return false if request.parameters[:controller] == "service" && @lastaction == "show" && @view
-    return true
+    true
   end
 
   def control_selected?
@@ -1000,7 +1033,7 @@ module ApplicationHelper
   def record_no_longer_exists?(what, model = nil)
     return false unless what.nil?
     add_flash(@bang || model.present? ?
-      _("%s no longer exists") %  ui_lookup(:model => model) :
+      _("%s no longer exists") % ui_lookup(:model => model) :
       _("Error: Record no longer exists in the database"))
     session[:flash_msgs] = @flash_array
     # Error message is displayed in 'show_list' action if such action exists
@@ -1012,9 +1045,9 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
                         container_route container_project container_replicator container_image container_image_registry
-                        container_topology
+                        container_topology container_dashboard
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1027,19 +1060,23 @@ module ApplicationHelper
       %w(show show_list).include?(params[:action])
   end
 
-  def update_paging_url_parms(action_url, parameter_to_update = {})
+  def update_paging_url_parms(action_url, parameter_to_update = {}, post = false)
     url = update_query_string_params(parameter_to_update)
     action, an_id = action_url.split("/", 2)
-    url[:action] = action
-    url[:id] = an_id unless an_id.nil?
-    url_for(url)
+    if !post && controller.send(:restful?) && action == 'show'
+      polymorphic_path(@record, url)
+    else
+      url[:action] = action
+      url[:id] = an_id unless an_id.nil?
+      url_for(url)
+    end
   end
 
   def update_query_string_params(update_this_param)
-    exclude_params = %w(button flash_msg page pressed sortby sort_choice type)
+    exclude_params = %w(button flash_msg page ppsetting pressed sortby sort_choice type)
     query_string = Rack::Utils.parse_query URI("?#{request.query_string}").query
     updated_query_string = query_string.symbolize_keys
-    updated_query_string.delete_if { | k, _v | exclude_params.include? k.to_s }
+    updated_query_string.delete_if { |k, _v| exclude_params.include? k.to_s }
     updated_query_string.merge!(update_this_param)
   end
 
@@ -1049,16 +1086,18 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(container_node container_service ems_container container_group ems_cloud ems_cluster
+       %w(cloud_volume container_node container_service ems_container container_group ems_cloud ems_cluster
           container_route container_project container_replicator container_image container_image_registry
           ems_infra host miq_template offline orchestration_stack repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
+    elsif @explorer
+      "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
@@ -1066,23 +1105,18 @@ module ApplicationHelper
              scan_profile security_group service snia_local_file_system storage
              storage_manager timeline).include?(@layout)
       @layout
-    else
-      nil
     end
   end
 
   def show_adv_search?
-    show_search = %w(availability_zone cim_base_storage_extent container_group container_node container_service
+    show_search = %w(availability_zone cim_base_storage_extent cloud_volume container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer &&
-       x_tree &&
-       [:containers, :filter, :images, :instances, :providers, :vandt].include?(x_tree[:type]) &&
-       !@record)
+      (@explorer && x_tree && tree_with_advanced_search? && !@record)
   end
 
   def need_prov_dialogs?(type)
@@ -1166,15 +1200,14 @@ module ApplicationHelper
   end
 
   def title_for_host(plural = false)
-    key = case Host.node_types
-          when :non_openstack
-            "host_infra"
-          when :openstack
-            "host_openstack"
-          else
-            "host"
-          end
-    ui_lookup(:host_types => plural ? key.pluralize : key)
+    case Host.node_types
+    when :non_openstack
+      plural ? _("Hosts") : _("Host")
+    when :openstack
+      plural ? _("Nodes") : _("Node")
+    else
+      plural ? _("Hosts / Nodes") : _("Host / Node")
+    end
   end
 
   def title_for_clusters
@@ -1182,25 +1215,22 @@ module ApplicationHelper
   end
 
   def title_for_cluster(plural = false)
-    key = case EmsCluster.node_types
-          when :non_openstack
-            "cluster_infra"
-          when :openstack
-            "cluster_openstack"
-          else
-            "cluster"
-          end
-    ui_lookup(:ems_cluster_types => plural ? key.pluralize : key)
+    case EmsCluster.node_types
+    when :non_openstack
+      plural ? _("Clusters") : _("Cluster")
+    when :openstack
+      plural ? _("Deployment Roles") : _("Deployment Role")
+    else
+      plural ? _("Clusters / Deployment Roles") : _("Cluster / Deployment Role")
+    end
   end
 
   def title_for_host_record(record)
-    record.openstack_host? ? ui_lookup(:host_types => 'host_openstack') : ui_lookup(:host_types => 'host_infra')
+    record.openstack_host? ? _("Node") : _("Host")
   end
 
   def title_for_cluster_record(record)
-    record.openstack_cluster? ?
-      ui_lookup(:ems_cluster_types => 'cluster_openstack') :
-      ui_lookup(:ems_cluster_types => 'cluster_infra')
+    record.openstack_cluster? ? _("Deployment Role") : _("Cluster")
   end
 
   def start_page_allowed?(start_page)
@@ -1220,7 +1250,7 @@ module ApplicationHelper
     role_allows(:feature => start_page, :any => true)
   end
 
-  def miq_tab_header(id, active = nil, options = {}, &block)
+  def miq_tab_header(id, active = nil, options = {}, &_block)
     content_tag(:li,
                 :class     => "#{options[:class]} #{active == id ? 'active' : ''}",
                 :id        => "#{id}_tab",
@@ -1231,23 +1261,24 @@ module ApplicationHelper
     end
   end
 
-  def miq_tab_content(id, active = nil, options = {}, &block)
+  def miq_tab_content(id, active = nil, options = {}, &_block)
     content_tag(:div, :id => id, :class => "tab-pane #{options[:class]} #{active == id ? 'active' : ''}") do
       yield
     end
   end
 
-  def controller_referrer?
-    controller_name == Rails.application.routes.recognize_path(request.referrer)[:controller]
+  def skip_days_from_time_profile(time_profile_days)
+    (1..7).to_a.delete_if do |d|
+      # time_profile_days has 0 for sunday, skip_days needs 7 for sunday
+      time_profile_days.include?(d % 7)
+    end
   end
 
   def breadcrumb_prohibited_for_action?
-    !%w(accordion_select tree_select).include?(action_name)
+    !%w(accordion_select explorer tree_select).include?(action_name)
   end
 
-  def my_server_id
-    my_server.id
-  end
+  delegate :id, :to => :my_server, :prefix => true
 
   def my_zone_name
     my_server.my_zone
@@ -1257,16 +1288,17 @@ module ApplicationHelper
     @my_server ||= MiqServer.my_server(true)
   end
 
-  def vm_explorer_tree?
-    [:filter, :images, :instances, :templates_images_filter, :vandt, :vms_instances_filter].include?(x_tree[:type])
+  def tree_with_advanced_search?
+    %i(containers images instances providers vandt
+     images_filter instances_filter templates_filter templates_images_filter containers_filter
+     vms_filter vms_instances_filter).include?(x_tree[:type])
   end
 
   def show_advanced_search?
-    x_tree && ((vm_explorer_tree? && !@record) || @show_adv_search)
+    x_tree && ((tree_with_advanced_search? && !@record) || @show_adv_search)
   end
 
   def listicon_image_tag(db, row)
-    img_path = "/images/icons/"
     img_attr = {:valign => "middle", :width => "20", :height => "20", :alt => nil, :border => "0"}
     if %w(Job MiqTask).include?(db)
       img_attr = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
@@ -1315,7 +1347,7 @@ module ApplicationHelper
       image = db.underscore
     end
 
-    image_tag("#{img_path}new/#{image.downcase}.png", img_attr)
+    image_tag(ActionController::Base.helpers.image_path("100/#{image.downcase}.png"), img_attr)
   end
 
   def listicon_glyphicon_tag(db, row)
@@ -1399,5 +1431,24 @@ module ApplicationHelper
     when "rbac_project_add", "rbac_tenant_add"
       "rbac_tenant_add"
     end
+  end
+
+  def action_url_for_views
+    if @lastaction == "scan_history"
+      "scan_history"
+    elsif %w(all_jobs jobs ui_jobs all_ui_jobs).include?(@lastaction)
+      "jobs"
+    else
+      @lastaction && @lastaction != "get_node_info" ? @lastaction : "show_list"
+    end
+  end
+
+  def route_exists?(hash)
+    begin
+      url_for(hash)
+    rescue
+      return false
+    end
+    true
   end
 end

@@ -7,7 +7,10 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       provider_id: '',
       zone: '',
       hostname: '',
+      project: '',
       api_port: '',
+      api_version: '',
+      security_protocol: '',
       provider_region: '',
       default_userid: '',
       default_password: '',
@@ -21,17 +24,14 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       ssh_keypair_userid: '',
       ssh_keypair_password: '',
       ssh_keypair_verify: '',
-      host_default_vnc_port_start: '',
-      host_default_vnc_port_end: '',
+      service_account: '',
       emstype_vm: false,
       ems_common: true,
       azure_tenant_id: ''
     };
     $scope.formId = emsCommonFormId;
     $scope.afterGet = false;
-    $scope.saveable = miqService.saveable;
-    $scope.restAjaxButton = miqService.restAjaxButton;
-    $scope.validateClicked = miqService.validateClicked;
+    $scope.validateClicked = miqService.validateWithREST;
     $scope.modelCopy = angular.copy( $scope.emsCommonModel );
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
@@ -49,6 +49,8 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.api_port                        = 5000;
+        $scope.emsCommonModel.api_version                     = 'v2';
+        $scope.emsCommonModel.security_protocol               = 'ssl';
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -63,22 +65,35 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.emstype                         = data.emstype;
         $scope.emsCommonModel.zone                            = data.zone;
         $scope.emsCommonModel.hostname                        = data.hostname;
+        $scope.emsCommonModel.project                         = data.project;
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.provider_id                     = data.provider_id.toString();
 
         $scope.emsCommonModel.api_port                        = data.api_port;
+        $scope.emsCommonModel.api_version                     = data.api_version;
+        $scope.emsCommonModel.security_protocol               = data.security_protocol;
         $scope.emsCommonModel.provider_region                 = data.provider_region;
 
         $scope.emsCommonModel.default_userid                  = data.default_userid;
-        $scope.emsCommonModel.default_password                = data.default_password;
-        $scope.emsCommonModel.default_verify                  = data.default_verify;
-
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
-        $scope.emsCommonModel.amqp_password                   = data.amqp_password;
-        $scope.emsCommonModel.amqp_verify                     = data.amqp_verify;
+
+        $scope.emsCommonModel.service_account                 = data.service_account;
 
         $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
+
+        if($scope.emsCommonModel.default_userid != '') {
+          $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
+        }
+        if($scope.emsCommonModel.amqp_userid != '') {
+          $scope.emsCommonModel.amqp_password = $scope.emsCommonModel.amqp_verify = miqService.storedPasswordPlaceholder;
+        }
+        if($scope.emsCommonModel.metrics_userid != '') {
+          $scope.emsCommonModel.metrics_password = $scope.emsCommonModel.metrics_verify = miqService.storedPasswordPlaceholder;
+        }
+        if($scope.emsCommonModel.ssh_keypair_userid != '') {
+          $scope.emsCommonModel.ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_verify = miqService.storedPasswordPlaceholder;
+        }
 
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
@@ -86,7 +101,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         miqService.sparkleOff();
       });
     }
-    $scope.currentTab = "default"
+    $scope.currentTab = "default";
 
     $scope.$watch("emsCommonModel.name", function() {
       $scope.form = $scope.angularForm;
@@ -99,10 +114,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
   }
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
+    return $scope.isBasicInfoValid()
   }
 
   $scope.isBasicInfoValid = function() {
@@ -123,6 +135,10 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
+      return true;
+    } else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
+      ($scope.currentTab == "default" || 
+      ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
     }
     else
@@ -152,9 +168,10 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
   };
 
   $scope.resetClicked = function() {
+    $scope.$broadcast ('resetClicked');
     $scope.emsCommonModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);
-    miqService.miqFlash("warn", "All changes have been reset");
+    miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
   $scope.saveClicked = function($event, formSubmit) {
@@ -162,18 +179,6 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       angular.element('#button_name').val('save');
       emsCommonEditButtonClicked('save', true, $event);
       $scope.angularForm.$setPristine(true);
-    }
-    else {
-      $event.preventDefault();
-    }
-  };
-
-  $scope.validateBClicked = function($event, credType, url, formSubmit) {
-    angular.element('#button_name').val('validate');
-    angular.element('#cred_type').val(credType);
-    if(formSubmit) {
-      miqService.sparkleOn();
-      miqService.restAjaxButton(url, $event.target);
     }
     else {
       $event.preventDefault();
@@ -191,9 +196,13 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
     }
   };
 
-  $scope.$watch('$viewContentLoaded', function() {
-    $scope.afterGet = true;
-  });
+  $scope.isRegionSupported = function() {
+    if ($scope.emsCommonModel.emstype === 'ec2' || $scope.emsCommonModel.emstype === 'azure') {
+      return true;
+    }
+
+    return false;
+  };
 
   init();
 }]);

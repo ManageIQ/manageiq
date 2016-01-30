@@ -1,7 +1,6 @@
 require 'binary_struct'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -15,7 +14,6 @@ module Ext4
   SIZEOF_HASH_TREE_HEADER = HASH_TREE_HEADER.size
 
   class HashTreeHeader
-
     attr_reader :hash_version, :length, :leaf_level
 
     def initialize(buf)
@@ -26,9 +24,9 @@ module Ext4
       @length       = @hth['length']
       @leaf_level   = @hth['leaf_level']
     end
-    
+
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       out += "Hash Version : #{@hash_version}\n"
       out += "Length       : #{@length}\n"
       out += "Leaf Level   : #{@leaf_level}\n"

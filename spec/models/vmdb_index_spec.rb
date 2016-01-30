@@ -1,51 +1,34 @@
-require "spec_helper"
-
 describe VmdbIndex do
   context "#capture_metrics" do
-    before(:each) do
-      MiqDatabase.seed
-      VmdbDatabase.seed
-      MiqRegion.seed
-      table = VmdbTable.where(:name => 'miq_regions').first
-      @index = table.vmdb_indexes.first
-    end
+    let(:index) { FactoryGirl.create(:vmdb_index, :name => "accounts_pkey") }
 
-    it "populates vmdb_metrics columns" do
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should == 0
+    it "creates a vmdb_metrics record" do
+      # The first capture just gets the raw data
+      index.capture_metrics
+      expect(index.vmdb_metrics).to be_empty
+      expect(index.prior_raw_metrics).to_not be_nil
 
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should_not == 0
+      # The next capture starts creating the metrics rows
+      index.capture_metrics
+      expect(index.vmdb_metrics.count).to eq(1)
 
-      metric = metrics.first
-      columns = %w{ rows pages otta percent_bloat wasted_bytes timestamp }
+      metric = index.vmdb_metrics.first
 
+      # Verify the column contents
+      columns = %w( rows pages otta percent_bloat wasted_bytes timestamp )
       columns.each do |column|
-        metric.send(column).should_not be_nil
+        expect(metric.send(column)).to_not be_nil
+      end
+
+      # Verify the non-index columns are nil
+      columns = %w(
+        table_scans sequential_rows_read rows_inserted rows_updated rows_deleted
+        rows_hot_updated rows_live rows_dead
+      )
+      columns.each do |column|
+        expect(metric.send(column)).to be_nil
       end
     end
-
-    it "verifies non-index related metrics columns are nil" do
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should == 0
-
-      @index.capture_metrics
-      metrics = @index.vmdb_metrics
-      metrics.length.should_not == 0
-
-      metric = metrics.first
-      columns = %w{ table_scans sequential_rows_read
-        rows_inserted rows_updated rows_deleted rows_hot_updated rows_live rows_dead
-      }
-
-      columns.each do |column|
-        metric.send(column).should be_nil
-      end
-    end
-
   end
 
   context "#rollup_metrics" do
@@ -99,15 +82,15 @@ describe VmdbIndex do
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 11.hours, :rows => 380, :size => 3800, :wasted_bytes => 42, :percent_bloat => 38.8)
 
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 10.hours, :rows => 400, :size => 4000, :wasted_bytes => 44, :percent_bloat => 40.9)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  9.hours, :rows => 410, :size => 4100, :wasted_bytes => 60, :percent_bloat => 41.1)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  8.hours, :rows => 420, :size => 4200, :wasted_bytes => 62, :percent_bloat => 42.0)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  7.hours, :rows => 420, :size => 4200, :wasted_bytes => 64, :percent_bloat => 42.0)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  6.hours, :rows => 430, :size => 4300, :wasted_bytes => 70, :percent_bloat => 43.4)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  5.hours, :rows => 440, :size => 4400, :wasted_bytes => 72, :percent_bloat => 44.7)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  4.hours, :rows => 460, :size => 4600, :wasted_bytes => 74, :percent_bloat => 46.3)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  3.hours, :rows => 470, :size => 4700, :wasted_bytes => 76, :percent_bloat => 47.0)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  2.hours, :rows => 480, :size => 4800, :wasted_bytes => 80, :percent_bloat => 48.5)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts -  1.hour,  :rows => 490, :size => 4900, :wasted_bytes => 84, :percent_bloat => 49.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 9.hours, :rows => 410, :size => 4100, :wasted_bytes => 60, :percent_bloat => 41.1)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 8.hours, :rows => 420, :size => 4200, :wasted_bytes => 62, :percent_bloat => 42.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 7.hours, :rows => 420, :size => 4200, :wasted_bytes => 64, :percent_bloat => 42.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 6.hours, :rows => 430, :size => 4300, :wasted_bytes => 70, :percent_bloat => 43.4)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 5.hours, :rows => 440, :size => 4400, :wasted_bytes => 72, :percent_bloat => 44.7)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 4.hours, :rows => 460, :size => 4600, :wasted_bytes => 74, :percent_bloat => 46.3)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 3.hours, :rows => 470, :size => 4700, :wasted_bytes => 76, :percent_bloat => 47.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 2.hours, :rows => 480, :size => 4800, :wasted_bytes => 80, :percent_bloat => 48.5)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts - 1.hour,  :rows => 490, :size => 4900, :wasted_bytes => 84, :percent_bloat => 49.0)
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts,            :rows => 500, :size => 5000, :wasted_bytes => 90, :percent_bloat => 50.7)
     end
 
@@ -119,13 +102,11 @@ describe VmdbIndex do
       rollup_record = @evm_index.vmdb_metrics.where(:capture_interval_name => 'daily').first
       # rollup_record = Metrics::Finders.find_all_by_range(@index, Time.gm(2012, 8, 14, 00, 00, 01), Time.gm(2012, 8, 14, 23, 59, 59), interval_name)
 
-      rollup_record.should_not be_nil
-      rollup_record.rows.should           == 227
-      rollup_record.size.should           == 2270
-      rollup_record.wasted_bytes.should   be_within(0.01).of(33.83)
-      rollup_record.percent_bloat.should  be_within(0.01).of(22.54)
+      expect(rollup_record).not_to be_nil
+      expect(rollup_record.rows).to eq(227)
+      expect(rollup_record.size).to eq(2270)
+      expect(rollup_record.wasted_bytes).to   be_within(0.01).of(33.83)
+      expect(rollup_record.percent_bloat).to  be_within(0.01).of(22.54)
     end
-
   end
-
 end

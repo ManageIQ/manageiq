@@ -8,27 +8,22 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
                           :class_name              => "ManageIQ::Providers::Openstack::CloudManager::CloudTenant"
 
   def provider_object(connection = nil)
-    connection ||= self.ext_management_system.connect
-    connection.images.get(self.ems_ref)
+    connection ||= ext_management_system.connect
+    connection.images.get(ems_ref)
   end
 
   def perform_metadata_scan(ost)
     require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 
-    image_id = self.ems_ref
+    image_id = ems_ref
     _log.debug "image_id = #{image_id}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
-    ems = self.ext_management_system
-
-    #
-    # TODO: Convert to use OpenstackHandle.
-    #
-    fog_compute = ems.connect(:service => "Compute")
-    fog_image   = ems.connect(:service => "Image")
+    ems = ext_management_system
+    os_handle = ems.openstack_handle
 
     begin
-      miqVm = MiqOpenStackImage.new(image_id, :fog_compute => fog_compute, :fog_image => fog_image)
+      miqVm = MiqOpenStackImage.new(image_id, :os_handle => os_handle)
       scan_via_miq_vm(miqVm, ost)
     ensure
       miqVm.unmount if miqVm
@@ -40,16 +35,26 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
   end
 
   # TODO: Does this code need to be reimplemented?
-  def proxies4job(job=nil)
+  def proxies4job(_job = nil)
     {
       :proxies => [MiqServer.my_server],
       :message => 'Perform SmartState Analysis on this Image'
     }
   end
-  def has_active_proxy?
-    return true
+
+  def allocated_disk_storage
+    hardware.try(:size_on_disk)
   end
+
+  def has_active_proxy?
+    true
+  end
+
   def has_proxy?
-    return true
+    true
+  end
+
+  def validate_smartstate_analysis
+    validate_supported_check("Smartstate Analysis")
   end
 end

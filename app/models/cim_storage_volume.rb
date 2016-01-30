@@ -40,10 +40,10 @@ class CimStorageVolume < CimStorageExtent
   StorageVolumeToHostShortcut     = CimAssociations.CIM_StorageVolume_TO_MIQ_CimHostSystem_SC
 
   SHORTCUT_DEFS = {
-    :base_storage_extents_long  => StorageVolumeToBseShortcut,
-    :cim_virtual_disks_long   => StorageVolumeToVirtualDiskShortcut,
-    :cim_vms_long       => StorageVolumeToVmShortcut,
-    :cim_hosts_long       => StorageVolumeToHostShortcut
+    :base_storage_extents_long => StorageVolumeToBseShortcut,
+    :cim_virtual_disks_long    => StorageVolumeToVirtualDiskShortcut,
+    :cim_vms_long              => StorageVolumeToVmShortcut,
+    :cim_hosts_long            => StorageVolumeToHostShortcut
   }
 
   #####################################################
@@ -216,6 +216,6 @@ class CimStorageVolume < CimStorageExtent
   end
 
   def correlatable_id
-    self.name
+    name
   end
 end

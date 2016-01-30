@@ -13,18 +13,18 @@ module AlertMixin
     _log.info("options: #{options.inspect}")
 
     cond, sel = build_conditions_and_selects(options)
-    logs = self.operating_system.nil? ? [] : self.operating_system.event_logs.where(cond).select(sel)
+    logs = operating_system.nil? ? [] : operating_system.event_logs.where(cond).select(sel)
 
     _log.info("Found [#{logs.length}], conditions: #{cond.inspect}")
 
     logs = case options[:message_filter_type]
-    when "STARTS WITH";          logs.find_all {|l| l.message.to_s.starts_with?(options[:message_filter_value])}
-    when "ENDS WITH";            logs.find_all {|l| l.message.to_s.ends_with?(options[:message_filter_value])}
-    when "INCLUDES";            logs.find_all {|l| l.message.to_s.include?(options[:message_filter_value])}
-    when "REGULAR EXPRESSION";  logs.find_all {|l| l.message.to_s =~ options[:message_filter_value]}
-    else
-      logs
-    end
+           when "STARTS WITH" then          logs.find_all { |l| l.message.to_s.starts_with?(options[:message_filter_value]) }
+           when "ENDS WITH" then            logs.find_all { |l| l.message.to_s.ends_with?(options[:message_filter_value]) }
+           when "INCLUDES" then            logs.find_all { |l| l.message.to_s.include?(options[:message_filter_value]) }
+           when "REGULAR EXPRESSION" then  logs.find_all { |l| l.message.to_s =~ options[:message_filter_value] }
+           else
+             logs
+           end
 
     _log.info("After filtering: [#{logs.length}], filter: #{options[:message_filter_type]} #{options[:message_filter_value]}...Checking freq_threshold: #{options[:freq_threshold]}")
     logs.length >= options[:freq_threshold].to_i

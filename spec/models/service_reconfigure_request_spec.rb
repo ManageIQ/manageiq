@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceReconfigureRequest do
   let(:request) do
     described_class.new(:options => {:src_id => 123})
@@ -7,13 +5,13 @@ describe ServiceReconfigureRequest do
 
   describe "#requested_task_idx" do
     it "should be associated to the source Service" do
-      request.requested_task_idx.should == [123]
+      expect(request.requested_task_idx).to eq([123])
     end
   end
 
   describe "#my_role" do
     it "should be 'ems_operations'" do
-      request.my_role.should == 'ems_operations'
+      expect(request.my_role).to eq('ems_operations')
     end
   end
 end

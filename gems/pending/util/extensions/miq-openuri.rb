@@ -1,7 +1,7 @@
 require 'open-uri'
 
 module OpenURI
-  def OpenURI.open_http(buf, target, proxy, options) # :nodoc:
+  def self.open_http(buf, target, proxy, options) # :nodoc:
     if proxy
       raise "Non-HTTP proxy URI: #{proxy}" if proxy.class != URI::HTTP
     end
@@ -31,7 +31,7 @@ module OpenURI
     if target.class == URI::HTTPS
       require 'net/https'
       http.use_ssl = true
-      #GMM http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      # GMM http.verify_mode = OpenSSL::SSL::VERIFY_PEER
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       store = OpenSSL::X509::Store.new
       store.set_default_paths
@@ -39,10 +39,10 @@ module OpenURI
     end
 
     header = {}
-    options.each {|k, v| header[k] = v if String === k }
+    options.each { |k, v| header[k] = v if String === k }
 
     resp = nil
-    http.start {
+    http.start do
       if target.class == URI::HTTPS
         # xxx: information hiding violation
         sock = http.instance_variable_get(:@socket)
@@ -51,14 +51,14 @@ module OpenURI
         else
           sock = sock.instance_variable_get(:@socket) # 1.8
         end
-        #GMM sock.post_connection_check(target_host)
+        # GMM sock.post_connection_check(target_host)
       end
       req = Net::HTTP::Get.new(request_uri, header)
       if options.include? :http_basic_authentication
         user, pass = options[:http_basic_authentication]
         req.basic_auth user, pass
       end
-      http.request(req) {|response|
+      http.request(req) do|response|
         resp = response
         if options[:content_length_proc] && Net::HTTPSuccess === resp
           if resp.key?('Content-Length')
@@ -67,18 +67,18 @@ module OpenURI
             options[:content_length_proc].call(nil)
           end
         end
-        resp.read_body {|str|
+        resp.read_body do|str|
           buf << str
           if options[:progress_proc] && Net::HTTPSuccess === resp
             options[:progress_proc].call(buf.size)
           end
-        }
-      }
-    }
+        end
+      end
+    end
     io = buf.io
     io.rewind
     io.status = [resp.code, resp.message]
-    resp.each {|name,value| buf.io.meta_add_field name, value }
+    resp.each { |name, value| buf.io.meta_add_field name, value }
     case resp
     when Net::HTTPSuccess
     when Net::HTTPMovedPermanently, # 301

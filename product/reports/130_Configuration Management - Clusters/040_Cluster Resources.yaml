@@ -16,7 +16,7 @@ priority:
 col_order: 
 - name
 - aggregate_physical_cpus
-- aggregate_logical_cpus
+- aggregate_cpu_total_cores
 - aggregate_vm_cpus
 - v_cpu_vr_ratio
 - aggregate_cpu_speed
@@ -48,7 +48,7 @@ db: EmsCluster
 cols: 
 - name
 - aggregate_physical_cpus
-- aggregate_logical_cpus
+- aggregate_cpu_total_cores
 - aggregate_vm_cpus
 - v_cpu_vr_ratio
 - aggregate_cpu_speed

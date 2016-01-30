@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker < ::MiqEmsMetricsCollectorWorker
-  require_dependency 'manageiq/providers/openstack/infra_manager/metrics_collector_worker/runner'
+  require_nested :Runner
 
   self.default_queue_name = "openstack_infra"
 
@@ -9,5 +9,9 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker < ::M
 
   def self.ems_class
     ManageIQ::Providers::Openstack::InfraManager
+  end
+
+  def self.settings_name
+    :ems_metrics_collector_worker_openstack_infra
   end
 end

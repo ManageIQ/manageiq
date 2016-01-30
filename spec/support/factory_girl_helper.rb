@@ -1,5 +1,5 @@
 def toggle_on_name_seq(seq)
-  seq.name.split("_").last.to_i % 2 != 0
+  seq.name.split("_").last.to_i.odd?
 end
 
 def ip_from_seq(seq)

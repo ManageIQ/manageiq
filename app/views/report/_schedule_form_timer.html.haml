@@ -64,7 +64,6 @@
         = _("Starting Date")
       .col-md-8
         = datepicker_input_tag("miq_date_1", @edit[:new][:start_date],
-          :class                  => "css1",
           :readonly               => "true",
           "data-miq_observe_date" => {:url => url}.to_json)
     .form-group
@@ -77,7 +76,7 @@
       .col-md-8
         = select_tag("start_hour",
           options_for_select((0..23).to_a, @edit[:new][:start_hour].to_i),
-          :class => "selectpicker")
+          :class => "selectpicker selectWidth")
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("start_hour", "#{url}");
@@ -86,7 +85,7 @@
         = _("h")
         = select_tag("start_min",
           options_for_select((0..55).step(5).to_a, @edit[:new][:start_min].to_i),
-          :class => "selectpicker")
+          :class => "selectpicker selectWidth")
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("start_min", "#{url}");

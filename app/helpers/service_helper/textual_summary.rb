@@ -1,5 +1,4 @@
 module ServiceHelper::TextualSummary
-
   #
   # Groups
   #
@@ -47,27 +46,27 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_aggregate_all_vm_cpus
-    {:label => "CPU", :value => @record.aggregate_all_vm_cpus }
+    {:label => "CPU", :value => @record.aggregate_all_vm_cpus}
   end
 
   def textual_aggregate_all_vm_memory
-    {:label => "Memory", :value => number_to_human_size(@record.aggregate_all_vm_memory.megabytes, :precision => 2) }
+    {:label => "Memory", :value => number_to_human_size(@record.aggregate_all_vm_memory.megabytes, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_disk_count
-    {:label => "Disk Count", :value => @record.aggregate_all_vm_disk_count }
+    {:label => "Disk Count", :value => @record.aggregate_all_vm_disk_count}
   end
 
   def textual_aggregate_all_vm_disk_space_allocated
-    {:label => "Disk Space Allocated", :value => number_to_human_size(@record.aggregate_all_vm_disk_space_allocated,:precision=>2) }
+    {:label => "Disk Space Allocated", :value => number_to_human_size(@record.aggregate_all_vm_disk_space_allocated, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_disk_space_used
-    {:label => "Disk Space Used", :value => number_to_human_size(@record.aggregate_all_vm_disk_space_used,:precision=>2) }
+    {:label => "Disk Space Used", :value => number_to_human_size(@record.aggregate_all_vm_disk_space_used, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_memory_on_disk
-    {:label => "Memory on Disk", :value => number_to_human_size(@record.aggregate_all_vm_memory_on_disk, :precision => 2) }
+    {:label => "Memory on Disk", :value => number_to_human_size(@record.aggregate_all_vm_memory_on_disk, :precision => 2)}
   end
 
   def textual_retirement_date
@@ -79,10 +78,10 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_catalog_item
-    #{:label => "Parent Catalog Item", :value => @record.service_template.name }
+    # {:label => "Parent Catalog Item", :value => @record.service_template.name }
     st = @record.service_template
     s = {:label => "Parent Catalog Item", :image => "service_template", :value => (st.nil? ? "None" : st.name)}
-    if st && role_allows(:feature=>"catalog_items_accord")
+    if st && role_allows(:feature => "catalog_items_accord")
       s[:title] = "Show this Service's Parent Service Catalog"
       s[:link]  = url_for(:controller => 'catalog', :action => 'show', :id => st)
     end

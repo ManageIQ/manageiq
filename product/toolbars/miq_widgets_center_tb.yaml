@@ -8,16 +8,16 @@
   :items:
   # Roles by Servers tab
   - :button: widget_refresh
-    :image: reload
+    :icon: fa fa-repeat fa-lg
     :title: 'Reload Widgets'
 - :name: widget_vmdb
   :items:
   - :buttonSelect: widget_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: widget_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new Widget"
       :title: "Add a new Widget"

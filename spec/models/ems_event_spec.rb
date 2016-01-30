@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EmsEvent do
   context ".add_vc" do
     DATA_DIR = Rails.root.join("spec/models/manageiq/providers/vmware/infra_manager/event_data")
@@ -18,10 +16,10 @@ describe EmsEvent do
 
       EmsEvent.add_vc(@ems.id, raw_event)
 
-      EmsEvent.count.should == 1
+      expect(EmsEvent.count).to eq(1)
       event = EmsEvent.first
 
-      event.should have_attributes(
+      expect(event).to have_attributes(
         :event_type        => "GeneralUserEvent",
         :chain_id          => 5361104,
         :is_task           => false,
@@ -46,11 +44,11 @@ describe EmsEvent do
 
         EmsEvent.add_vc(@ems.id, raw_event)
 
-        EmsEvent.count.should == 1
+        expect(EmsEvent.count).to eq(1)
         event = EmsEvent.first
 
         assert_result_fields(event)
-        event.should have_attributes(
+        expect(event).to have_attributes(
           :event_type => "vprob.vmfs.resource.corruptondisk",
           :message    => "event.vprob.vmfs.resource.corruptondisk.fullFormat (vprob.vmfs.resource.corruptondisk)",
         )
@@ -62,18 +60,18 @@ describe EmsEvent do
 
         EmsEvent.add_vc(@ems.id, raw_event)
 
-        EmsEvent.count.should == 1
+        expect(EmsEvent.count).to eq(1)
         event = EmsEvent.first
 
         assert_result_fields(event)
-        event.should have_attributes(
+        expect(event).to have_attributes(
           :event_type => "EventEx",
           :message    => "",
         )
       end
 
       def assert_result_fields(event)
-        event.should have_attributes(
+        expect(event).to have_attributes(
           :chain_id          => 297179,
           :is_task           => false,
           :source            => "VC",
@@ -102,6 +100,62 @@ describe EmsEvent do
     end
   end
 
+  context ".process_container_entities_in_event!" do
+    before :each do
+      @ems = FactoryGirl.create(:ems_kubernetes)
+      @container_project = FactoryGirl.create(:container_project, :ext_management_system => @ems)
+      EMS_REF = "test_ems_ref"
+      @event_hash = {
+        :ems_ref => EMS_REF,
+        :ems_id  => @ems.id
+      }
+    end
+
+    context "process node in events" do
+      before :each do
+        @container_node = FactoryGirl.create(:container_node,
+                                             :ext_management_system => @ems,
+                                             :name                  => "Test Node",
+                                             :ems_ref               => EMS_REF)
+      end
+
+      it "should link node id to event" do
+        EmsEvent.process_container_entities_in_event!(@event_hash)
+        expect(@event_hash[:container_node_id]).to eq @container_node.id
+      end
+    end
+
+    context "process pods in events" do
+      before :each do
+        @container_group = FactoryGirl.create(:container_group,
+                                              :ext_management_system => @ems,
+                                              :container_project     => @container_project,
+                                              :name                  => "Test Group",
+                                              :ems_ref               => EMS_REF)
+      end
+
+      it "should link pod id to event" do
+        EmsEvent.process_container_entities_in_event!(@event_hash)
+        expect(@event_hash[:container_group_id]).to eq @container_group.id
+      end
+    end
+
+    context "process replicator in events" do
+      before :each do
+        @container_replicator = FactoryGirl.create(:container_replicator,
+                                                   :ext_management_system => @ems,
+                                                   :container_project     => @container_project,
+                                                   :name                  => "Test Replicator",
+                                                   :ems_ref               => EMS_REF)
+      end
+
+      it "should link replicator id to event" do
+        EmsEvent.process_container_entities_in_event!(@event_hash)
+        expect(@event_hash[:container_replicator_id]).to eq @container_replicator.id
+      end
+    end
+  end
+
   context "with availability zones" do
     before :each do
       @zone = FactoryGirl.create(:small_environment)
@@ -124,7 +178,7 @@ describe EmsEvent do
 
         it "should use the availability zone from the event" do
           EmsEvent.process_availability_zone_in_event!(@event_hash)
-          @event_hash[:availability_zone_id].should eq @availability_zone.id
+          expect(@event_hash[:availability_zone_id]).to eq @availability_zone.id
         end
       end
 
@@ -137,14 +191,14 @@ describe EmsEvent do
 
           it "should use the VM's availability zone" do
             EmsEvent.process_availability_zone_in_event!(@event_hash)
-            @event_hash[:availability_zone_id].should eq @availability_zone.id
+            expect(@event_hash[:availability_zone_id]).to eq @availability_zone.id
           end
         end
 
         context "and the VM does not have an availability zone" do
           it "should not put an availability zone in the event hash" do
             EmsEvent.process_availability_zone_in_event!(@event_hash)
-            @event_hash[:availability_zone_id].should be_nil
+            expect(@event_hash[:availability_zone_id]).to be_nil
           end
         end
       end
@@ -166,7 +220,7 @@ describe EmsEvent do
           @vm.save
 
           new_event = EmsEvent.add(@vm.ems_id, @event_hash)
-          new_event.availability_zone_id.should eq @availability_zone.id
+          expect(new_event.availability_zone_id).to eq @availability_zone.id
         end
       end
 
@@ -177,22 +231,22 @@ describe EmsEvent do
           @vm.save
 
           new_event = EmsEvent.add(@vm.ems_id, @event_hash)
-          new_event.availability_zone_id.should eq @availability_zone.id
+          expect(new_event.availability_zone_id).to eq @availability_zone.id
         end
       end
     end
 
     context ".purge_date" do
       it "using '3.month' syntax" do
-        described_class.stub(:keep_ems_events => "3.months")
+        allow(described_class).to receive_messages(:keep_ems_events => "3.months")
 
         # Exposes 3.months.seconds.ago.utc != 3.months.ago.utc
-        described_class.purge_date.should be_within(2.days).of(3.months.ago.utc)
+        expect(described_class.purge_date).to be_within(2.days).of(3.months.ago.utc)
       end
 
       it "defaults to 6 months" do
-        described_class.stub(:keep_ems_events => nil)
-        described_class.purge_date.should be_within(1.day).of(6.months.ago.utc)
+        allow(described_class).to receive_messages(:keep_ems_events => nil)
+        expect(described_class.purge_date).to be_within(1.day).of(6.months.ago.utc)
       end
     end
 
@@ -206,8 +260,8 @@ describe EmsEvent do
 
       it "with nothing in the queue" do
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
+        expect(q.length).to eq(1)
+        expect(q.first).to have_attributes(
           :class_name  => described_class.name,
           :method_name => "purge",
           :args        => [purge_time]
@@ -219,8 +273,8 @@ describe EmsEvent do
         described_class.purge_queue(new_purge_time)
 
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
+        expect(q.length).to eq(1)
+        expect(q.first).to have_attributes(
           :class_name  => described_class.name,
           :method_name => "purge",
           :args        => [new_purge_time]
@@ -237,52 +291,33 @@ describe EmsEvent do
         @new_event        = FactoryGirl.create(:ems_event, :timestamp => purge_date + 1.day)
       end
 
-      def assert_delete_calls_and_unpurged_ids(options)
-        described_class.should_receive(:delete_all).public_send(options[:delete_calls]).and_call_original
-        described_class.purge(purge_date, options[:window], options[:limit])
-        described_class.order(:id).pluck(:id).should == Array(options[:unpurged_ids]).sort
+      def assert_unpurged_ids(unpurged_ids)
+        expect(described_class.order(:id).pluck(:id)).to eq(Array(unpurged_ids).sort)
       end
 
       it "purge_date and older" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :once,
-          :unpurged_ids => @new_event.id
-        )
+        described_class.purge(purge_date)
+        assert_unpurged_ids(@new_event.id)
       end
 
       it "with a window" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :twice,
-          :unpurged_ids => @new_event.id,
-          :window       => 1
-        )
+        described_class.purge(purge_date, 1)
+        assert_unpurged_ids(@new_event.id)
       end
 
       it "with a limit" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :once,
-          :unpurged_ids => [@purge_date_event.id, @new_event.id],
-          :window       => nil,
-          :limit        => 1
-        )
+        described_class.purge(purge_date, nil, 1)
+        assert_unpurged_ids([@purge_date_event.id, @new_event.id])
       end
 
       it "with window > limit" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :once,
-          :unpurged_ids => [@purge_date_event.id, @new_event.id],
-          :window       => 2,
-          :limit        => 1
-        )
+        described_class.purge(purge_date, 2, 1)
+        assert_unpurged_ids([@purge_date_event.id, @new_event.id])
       end
 
       it "with limit > window" do
-        assert_delete_calls_and_unpurged_ids(
-          :delete_calls => :twice,
-          :unpurged_ids => @new_event.id,
-          :window       => 1,
-          :limit        => 2
-        )
+        described_class.purge(purge_date, 1, 2)
+        assert_unpurged_ids(@new_event.id)
       end
     end
   end

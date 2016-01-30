@@ -6,9 +6,10 @@ class QueryCounter
   end
 
   IGNORED_STATEMENTS = %w(CACHE SCHEMA)
+  IGNORED_QUERIES    = /^(?:ROLLBACK|BEGIN|COMMIT|SAVEPOINT|RELEASE)/
 
   def callback(_name, _start, _finish, _id, payload)
-    @count += 1 unless IGNORED_STATEMENTS.include?(payload[:name])
+    @count += 1 unless IGNORED_STATEMENTS.include?(payload[:name]) || IGNORED_QUERIES.match(payload[:sql])
   end
 
   def callback_proc

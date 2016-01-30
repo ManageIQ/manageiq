@@ -1,4 +1,3 @@
-require "spec_helper"
 require_relative "menu_spec_helper"
 
 include MenuSpecHelper
@@ -38,4 +37,3 @@ describe Menu::CustomLoader do
     end
   end
 end
-

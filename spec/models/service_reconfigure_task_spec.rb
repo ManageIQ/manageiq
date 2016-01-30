@@ -1,12 +1,10 @@
-require "spec_helper"
-
 describe ServiceReconfigureTask do
-  let(:user)     { FactoryGirl.create(:user) }
+  let(:user)     { FactoryGirl.create(:user_with_group) }
   let(:template) { FactoryGirl.create(:service_template, :name => 'Test Template') }
   let(:service)  { FactoryGirl.create(:service, :name => 'Test Service', :service_template => template) }
 
   let(:request) do
-    ServiceReconfigureRequest.create(:userid       => user.userid,
+    ServiceReconfigureRequest.create(:requester    => user,
                                      :options      => {:src_id => service.id},
                                      :request_type => 'service_reconfigure')
   end
@@ -20,19 +18,19 @@ describe ServiceReconfigureTask do
 
   describe "#self.base_model" do
     it "should return ServiceReconfigureTask" do
-      ServiceReconfigureTask.base_model.should == ServiceReconfigureTask
+      expect(ServiceReconfigureTask.base_model).to eq(ServiceReconfigureTask)
     end
   end
 
   describe "#self.get_description" do
     it "returns a description based upon the source service name" do
-      ServiceReconfigureTask.get_description(request).should == "Service Reconfigure for: Test Service"
+      expect(ServiceReconfigureTask.get_description(request)).to eq("Service Reconfigure for: Test Service")
     end
   end
 
   describe "#after_ae_delivery" do
     it "updates the task status to Ok if automation run successfully" do
-      task.should_receive(:update_and_notify_parent).with(
+      expect(task).to receive(:update_and_notify_parent).with(
         :state   => 'finished',
         :status  => 'Ok',
         :message => 'Service Reconfigure completed')
@@ -40,7 +38,7 @@ describe ServiceReconfigureTask do
     end
 
     it "updates the task status to Error if automation encountered an error" do
-      task.should_receive(:update_and_notify_parent).with(
+      expect(task).to receive(:update_and_notify_parent).with(
         :state   => 'finished',
         :status  => 'Error',
         :message => 'Service Reconfigure failed')
@@ -51,13 +49,13 @@ describe ServiceReconfigureTask do
   describe "#after_request_task_create" do
     it "should set the task description" do
       task.after_request_task_create
-      task.description.should == "Service Reconfigure for: Test Service"
+      expect(task.description).to eq("Service Reconfigure for: Test Service")
     end
   end
 
   describe "#deliver_to_automate" do
     before(:each) do
-      request.stub(:approved?).and_return(true)
+      allow(request).to receive(:approved?).and_return(true)
     end
 
     context "automation entry point available" do
@@ -79,9 +77,12 @@ describe ServiceReconfigureTask do
           :instance_name    => 'instance',
           :automate_message => 'create',
           :attrs            => task.options[:dialog].merge("request" => task.request_type),
-          :user_id          => user.id
+          :user_id          => user.id,
+          :miq_group_id     => user.current_group_id,
+          :tenant_id        => user.current_tenant.id,
         }
-        MiqQueue.should_receive(:put).with(
+        expect(user.current_tenant).to be_truthy
+        expect(MiqQueue).to receive(:put).with(
           :class_name  => 'MiqAeEngine',
           :method_name => 'deliver',
           :args        => [automate_args],
@@ -92,8 +93,8 @@ describe ServiceReconfigureTask do
       end
 
       it "updates the task state to pending" do
-        MiqQueue.stub(:put)
-        task.should_receive(:update_and_notify_parent).with(
+        allow(MiqQueue).to receive(:put)
+        expect(task).to receive(:update_and_notify_parent).with(
           :state   => 'pending',
           :status  => 'Ok',
           :message => 'Automation Starting')
@@ -103,7 +104,7 @@ describe ServiceReconfigureTask do
 
     context "automation entry point missing" do
       it "updates the task state to finished" do
-        task.should_receive(:update_and_notify_parent).with(
+        expect(task).to receive(:update_and_notify_parent).with(
           :state   => 'finished',
           :status  => 'Ok',
           :message => 'Service Reconfigure completed')

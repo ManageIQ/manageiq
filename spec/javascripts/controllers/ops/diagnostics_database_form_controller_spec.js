@@ -64,9 +64,9 @@ describe('diagnosticsDatabaseFormController', function() {
       depot_name:   'my_nfs_depot',
       uri:          'nfs://nfs_location',
       uri_prefix:   'nfs',
-      log_userid:   null,
-      log_password: null,
-      log_verify:   null
+      log_userid:   '',
+      log_password: '',
+      log_verify:   ''
     };
 
     beforeEach(inject(function() {
@@ -89,15 +89,15 @@ describe('diagnosticsDatabaseFormController', function() {
     });
 
     it('sets the log_userid to the value returned from the http request', function () {
-      expect($scope.diagnosticsDatabaseModel.log_userid).toBeNull();
+      expect($scope.diagnosticsDatabaseModel.log_userid).toEqual('');
     });
 
     it('sets the log_password to the value returned from the http request', function () {
-      expect($scope.diagnosticsDatabaseModel.log_password).toBeNull();
+      expect($scope.diagnosticsDatabaseModel.log_password).toEqual('');
     });
 
     it('sets the log_verify to the value returned from the http request', function () {
-      expect($scope.diagnosticsDatabaseModel.log_verify).toBeNull();
+      expect($scope.diagnosticsDatabaseModel.log_verify).toEqual('');
     });
   });
 
@@ -106,13 +106,12 @@ describe('diagnosticsDatabaseFormController', function() {
       depot_name:   'my_samba_depot',
       uri:          'smb://smb_location',
       uri_prefix:   'smb',
-      log_userid:   'admin',
-      log_password: 'smartvm',
-      log_verify:   'smartvm'
+      log_userid:   'admin'
     };
 
     beforeEach(inject(function() {
       $httpBackend.whenPOST('/ops/db_backup_form_field_changed/123456').respond(200, diagnosticsDBFormResponse);
+      $scope.diagnosticsDatabaseModel.log_protocol = 'Samba';
       $scope.diagnosticsDatabaseModel.backup_schedule_type = '123456';
       $scope.backupScheduleTypeChanged();
       $httpBackend.flush();
@@ -135,11 +134,11 @@ describe('diagnosticsDatabaseFormController', function() {
     });
 
     it('sets the log_password to the value returned from the http request', function () {
-      expect($scope.diagnosticsDatabaseModel.log_password).toEqual('smartvm');
+      expect($scope.diagnosticsDatabaseModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the log_verify to the value returned from the http request', function () {
-      expect($scope.diagnosticsDatabaseModel.log_verify).toEqual('smartvm');
+      expect($scope.diagnosticsDatabaseModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 });

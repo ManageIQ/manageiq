@@ -1,4 +1,6 @@
 class MiqUiWorker < MiqWorker
+  require_nested :Runner
+
   REQUIRED_ROLE = 'user_interface'
   self.required_roles = [REQUIRED_ROLE]
   self.check_for_minimal_role = false
@@ -8,7 +10,7 @@ class MiqUiWorker < MiqWorker
       # done when the UI worker is debugged externally, such as in Netbeans.
       MiqServer.minimal_env_options.include?("noui") ? 0 : 1
     else
-      self.worker_settings[:count]
+      worker_settings[:count]
     end
   end
 
@@ -26,7 +28,7 @@ class MiqUiWorker < MiqWorker
   def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
     if configuration.config.fetch_path(:workers, :worker_base, :ui_worker).nil?
       _log.info("Migrating Settings")
-      configuration.merge_from_template(:workers, :worker_base, :ui_worker)
+      configuration.merge_from_template_if_missing(:workers, :worker_base, :ui_worker)
       roles = configuration.config.fetch_path(:server, :role).split(',')
       unless roles.include?(REQUIRED_ROLE)
         _log.info("Adding Default Role #{REQUIRED_ROLE}")

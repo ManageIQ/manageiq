@@ -1,13 +1,13 @@
-require 'workers/worker_base'
 require 'thread'
+require 'active_support/concurrency/latch'
 
-class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
+class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
   class EventCatcherHandledException < StandardError
   end
 
   self.wait_for_worker_monitor = false
 
-  OPTIONS_PARSER_SETTINGS = WorkerBase::OPTIONS_PARSER_SETTINGS + [
+  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:ems_id, 'EMS Instance ID', String],
   ]
 
@@ -32,7 +32,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
-  def before_exit(message, exit_code)
+  def before_exit(message, _exit_code)
     @exit_requested = true
 
     #
@@ -46,7 +46,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     #
     unless @tid.nil?
       safe_log("#{message} Waiting for Event Monitor Thread to Stop.")
-      @tid.join(self.worker_settings[:ems_event_thread_shutdown_timeout]) rescue nil
+      @tid.join(worker_settings[:ems_event_thread_shutdown_timeout]) rescue nil
     end
 
     #
@@ -58,9 +58,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     end
   end
 
-  def filtered_events
-    @filtered_events
-  end
+  attr_reader :filtered_events
 
   # Called when there is any change in BlacklistedEvent
   def sync_blacklisted_events
@@ -82,47 +80,53 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     raise NotImplementedError, "must be implemented in subclass"
   end
 
-  def event_monitor_handle
-    raise NotImplementedError, "must be implemented in subclass"
-  end
-
   def monitor_events
     raise NotImplementedError, "must be implemented in subclass"
   end
 
-  def process_event
+  def process_event(_event)
     raise NotImplementedError, "must be implemented in subclass"
+  end
+
+  def event_monitor_running
+    @thread_start_latch.release
   end
 
   def start_event_monitor
     @log_prefix = nil
     @exit_requested = false
+    @thread_start_latch = ActiveSupport::Concurrency::Latch.new
 
     begin
-      _log.info("#{self.log_prefix} Validating Connection/Credentials")
+      _log.info("#{log_prefix} Validating Connection/Credentials")
       @ems.verify_credentials
     rescue => err
-      _log.warn("#{self.log_prefix} #{err.message}")
+      _log.warn("#{log_prefix} #{err.message}")
       return nil
     end
 
-    _log.info("#{self.log_prefix} Starting Event Monitor Thread")
+    _log.info("#{log_prefix} Starting Event Monitor Thread")
 
     tid = Thread.new do
       begin
         monitor_events
       rescue EventCatcherHandledException
         Thread.exit
+      rescue TemporaryFailure
+        raise
       rescue => err
-        _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+        _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
         _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
+      ensure
+        @thread_start_latch.release
       end
     end
 
-    _log.info("#{self.log_prefix} Started Event Monitor Thread")
+    @thread_start_latch.await
+    _log.info("#{log_prefix} Started Event Monitor Thread")
 
-    return tid
+    tid
   end
 
   def drain_queue
@@ -141,7 +145,13 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      _log.info("#{self.log_prefix} Event Monitor Thread gone. Restarting...")
+      if !@tid.nil? && @tid.status.nil?
+        dead_tid, @tid = @tid, nil
+        _log.info("#{log_prefix} Waiting for the Monitor Thread to exit...")
+        dead_tid.join # raise the exception the dead thread failed with
+      end
+
+      _log.info("#{log_prefix} Event Monitor Thread gone. Restarting...")
       @tid = start_event_monitor
     end
 

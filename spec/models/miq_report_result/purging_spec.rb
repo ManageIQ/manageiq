@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqReportResult do
   context "::Purging" do
     before(:each) do
@@ -31,20 +29,20 @@ describe MiqReportResult do
       it "with missing config value" do
         @vmdb_config.delete_path(:reporting, :history, :keep_reports)
         Timecop.freeze(Time.now) do
-          described_class.purge_mode_and_value.should == [:date, 6.months.to_i.seconds.ago.utc]
+          expect(described_class.purge_mode_and_value).to eq([:date, 6.months.to_i.seconds.ago.utc])
         end
       end
 
       it "with date" do
         @vmdb_config.store_path(:reporting, :history, :keep_reports, "1.day")
         Timecop.freeze(Time.now) do
-          described_class.purge_mode_and_value.should == [:date, 1.day.to_i.seconds.ago.utc]
+          expect(described_class.purge_mode_and_value).to eq([:date, 1.day.to_i.seconds.ago.utc])
         end
       end
 
       it "with count" do
         @vmdb_config.store_path(:reporting, :history, :keep_reports, 50)
-        described_class.purge_mode_and_value.should == [:remaining, 50]
+        expect(described_class.purge_mode_and_value).to eq([:remaining, 50])
       end
     end
 
@@ -52,14 +50,14 @@ describe MiqReportResult do
       it "with missing config value" do
         @vmdb_config.delete_path(:reporting, :history, :purge_window_size)
         Timecop.freeze(Time.now) do
-          described_class.purge_window_size.should == 100
+          expect(described_class.purge_window_size).to eq(100)
         end
       end
 
       it "with value" do
         @vmdb_config.store_path(:reporting, :history, :purge_window_size, 1000)
         Timecop.freeze(Time.now) do
-          described_class.purge_window_size.should == 1000
+          expect(described_class.purge_window_size).to eq(1000)
         end
       end
     end
@@ -71,14 +69,14 @@ describe MiqReportResult do
         described_class.purge_timer
 
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
+        expect(q.length).to eq(1)
+        expect(q.first).to have_attributes(
           :class_name  => described_class.name,
           :method_name => "purge"
         )
 
-        q.first.args[0].should == :date
-        q.first.args[1].should be_same_time_as 6.months.to_i.seconds.ago.utc
+        expect(q.first.args[0]).to eq(:date)
+        expect(q.first.args[1]).to be_same_time_as 6.months.to_i.seconds.ago.utc
       end
     end
 
@@ -90,8 +88,8 @@ describe MiqReportResult do
 
       it "with nothing in the queue" do
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
+        expect(q.length).to eq(1)
+        expect(q.first).to have_attributes(
           :class_name  => described_class.name,
           :method_name => "purge",
           :args        => [:remaining, 1]
@@ -102,8 +100,8 @@ describe MiqReportResult do
         described_class.purge_queue(:remaining, 2)
 
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
+        expect(q.length).to eq(1)
+        expect(q.first).to have_attributes(
           :class_name  => described_class.name,
           :method_name => "purge",
           :args        => [:remaining, 2]
@@ -111,37 +109,33 @@ describe MiqReportResult do
       end
     end
 
-    it "#purge_ids_for_remaining" do
-      described_class.send(:purge_ids_for_remaining, 1).should == {1 => @rr1.last.id, 2 => @rr2.last.id}
+    it "#purge_counts_for_remaining (used by tools - avoid, it is very expensive)" do
+      expect(described_class.send(:purge_counts_for_remaining, 1)).to eq({1 => 1, 2 => 2})
     end
 
-    it "#purge_counts_for_remaining" do
-      described_class.send(:purge_counts_for_remaining, 1).should == {1 => 1, 2 => 2}
-    end
-
-    context "#purge_count" do
+    context "#purge_count (used by tools - avoid, it is very expensive)" do
       it "by remaining" do
-        described_class.purge_count(:remaining, 1).should == 3
+        expect(described_class.purge_count(:remaining, 1)).to eq(3)
       end
 
       it "by date" do
-        described_class.purge_count(:date, 6.months.to_i.seconds.ago.utc).should == 3
+        expect(described_class.purge_count(:date, 6.months.to_i.seconds.ago.utc)).to eq(3)
       end
     end
 
     context "#purge" do
       it "by remaining" do
         described_class.purge(:remaining, 1)
-        described_class.where(:miq_report_id => 1).should   == [@rr1.last]
-        described_class.where(:miq_report_id => 2).should   == [@rr2.last]
-        described_class.where(:miq_report_id => nil).should == @rr_orphaned
+        expect(described_class.where(:miq_report_id => 1)).to eq([@rr1.last])
+        expect(described_class.where(:miq_report_id => 2)).to eq([@rr2.last])
+        expect(described_class.where(:miq_report_id => nil)).to eq(@rr_orphaned)
       end
 
       it "by date" do
         described_class.purge(:date, 6.months.to_i.seconds.ago.utc)
-        described_class.where(:miq_report_id => 1).should   == [@rr1.last]
-        described_class.where(:miq_report_id => 2).should   == [@rr2.last]
-        described_class.where(:miq_report_id => nil).should == @rr_orphaned
+        expect(described_class.where(:miq_report_id => 1)).to eq([@rr1.last])
+        expect(described_class.where(:miq_report_id => 2)).to eq([@rr2.last])
+        expect(described_class.where(:miq_report_id => nil)).to eq(@rr_orphaned)
       end
     end
   end

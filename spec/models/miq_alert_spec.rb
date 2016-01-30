@@ -1,23 +1,12 @@
-require "spec_helper"
-
 describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
-
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone            = FactoryGirl.create(:zone)
-      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      @miq_server.role = 'notifier'
-      MiqServer.stub(:my_server).and_return(@miq_server)
-
+      @miq_server = EvmSpecHelper.local_miq_server(:role => 'notifier')
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryGirl.create(:vm_vmware)
 
-      MiqRegion.seed
       MiqAlert.seed
-      @events_to_alerts = MiqAlert.all.inject([]) do |arr,a|
+      @events_to_alerts = MiqAlert.all.inject([]) do |arr, a|
         next(arr) if a.responds_to_events.nil?
         next(arr) unless a.db == "Vm"
 
@@ -36,23 +25,23 @@ describe MiqAlert do
 
     context "where a vm_scan_complete event is raised for a VM" do
       before(:each) do
-        MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
+        MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         MiqAlert.evaluate_alerts(@vm, "vm_scan_complete")
       end
 
       it "should alert 'VM Guest Windows Event Log Error - NtpClient' should be evaluated" do
         msg = MiqQueue.get(:role => "notifier")
-        msg.should_not be_nil
+        expect(msg).not_to be_nil
 
         alert = MiqAlert.find_by_id(msg.instance_id)
-        alert.should_not be_nil
-        alert.description.should == 'VM Guest Windows Event Log Error - NtpClient'
+        expect(alert).not_to be_nil
+        expect(alert.description).to eq('VM Guest Windows Event Log Error - NtpClient')
       end
     end
 
     context "where a vm_scan_complete event is raised for a VM" do
       before(:each) do
-        MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
+        MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
 
         @events_to_alerts.each do |arr|
           MiqAlert.evaluate_alerts([@vm.class.base_class.name, @vm.id], arr.first)
@@ -62,14 +51,14 @@ describe MiqAlert do
       it "should queue up the correct alert for each event" do
         guids = @events_to_alerts.collect(&:last).uniq
         messages = MiqQueue.order("id")
-        messages.length.should == @events_to_alerts.length
+        expect(messages.length).to eq(@events_to_alerts.length)
 
         messages.each_with_index do |msg, i|
           alert = MiqAlert.find_by(:id => msg.instance_id)
-          alert.should_not be_nil
+          expect(alert).not_to be_nil
 
           event, guid = @events_to_alerts[i]
-          guids.include?(alert.guid).should be_true
+          expect(guids.include?(alert.guid)).to be_truthy
         end
       end
     end
@@ -81,7 +70,7 @@ describe MiqAlert do
 
       it "should not evaluate any alerts" do
         @msg = MiqQueue.get(:role => "notifier")
-        @msg.should be_nil
+        expect(@msg).to be_nil
       end
     end
 
@@ -98,7 +87,7 @@ describe MiqAlert do
 
         it "should always perform evaluation if not previously evaluated (after 4 minutes)" do
           Timecop.travel 4.minutes do
-            @alert.postpone_evaluation?(@vm).should be_false
+            expect(@alert.postpone_evaluation?(@vm)).to be_falsey
           end
         end
       end
@@ -107,47 +96,47 @@ describe MiqAlert do
     context "with a single alert, evaluated to true" do
       before(:each) do
         @alert = MiqAlert.find_by_description("VM Unregistered")
-        @alert.stub(:eval_expression => true)
+        allow(@alert).to receive_messages(:eval_expression => true)
         @alert.evaluate([@vm.class.base_class.name, @vm.id])
       end
 
       it "should have a link from the MiqAlert to the miq alert status" do
-        @alert.miq_alert_statuses.count(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id}).should == 1
+        expect(@alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).count).to eq(1)
       end
 
       it "should have a miq alert status for MiqAlert with a result of true" do
-        @alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result.should be_true
+        expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_truthy
       end
 
       it "should have a link from the Vm to the miq alert status" do
-        @vm.miq_alert_statuses.count(:conditions => {:miq_alert_id => @alert.id}).should == 1
+        expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
       end
 
       it "should have a miq alert status for Vm with a result of true" do
-        @vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result.should be_true
+        expect(@vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result).to be_truthy
       end
 
       context "with the alert now evaluated to false" do
         before(:each)  do
-          @alert.stub(:eval_expression => false)
+          allow(@alert).to receive_messages(:eval_expression => false)
           @alert.options.store_path(:notifications, :delay_next_evaluation, 0)
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
         end
 
         it "should have had the MiqAlert's miq_alert_statuses" do
-          @alert.miq_alert_statuses.count(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id}).should == 1
+          expect(@alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).count).to eq(1)
         end
 
         it "should have a miq alert status for MiqAlert with a result of false" do
-          @alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result.should be_false
+          expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_falsey
         end
 
         it "should have the Vm's miq_alert_statuses" do
-          @vm.miq_alert_statuses.count(:conditions => {:miq_alert_id => @alert.id}).should == 1
+          expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
         end
 
         it "should have a miq alert status for Vm with a result of false" do
-          @vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result.should be_false
+          expect(@vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result).to be_falsey
         end
       end
 
@@ -160,13 +149,13 @@ describe MiqAlert do
 
         it "should retry evaluation (after 10 minutes)" do
           Timecop.travel 10.minutes do
-            @alert.postpone_evaluation?(@vm).should be_false
+            expect(@alert.postpone_evaluation?(@vm)).to be_falsey
           end
         end
 
         it "should skip evaluation (after 4 minutes)" do
           Timecop.travel 4.minutes do
-            @alert.postpone_evaluation?(@vm).should be_true
+            expect(@alert.postpone_evaluation?(@vm)).to be_truthy
           end
         end
       end
@@ -174,7 +163,7 @@ describe MiqAlert do
 
     context "where all alerts are unassigned" do
       before(:each) do
-        MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
+        MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         @original_assigned     = MiqAlert.assigned_to_target(@vm, "vm_perf_complete") # force cache load
         @original_assigned_all = MiqAlert.assigned_to_target(@vm)                     # force cache load
         MiqAlertSet.all.each(&:remove_all_assigned_tos)
@@ -189,13 +178,13 @@ describe MiqAlert do
       end
 
       it "should still have alerts assigned to vm now" do
-        @assigned_now.length.should     == @original_assigned.length
-        @assigned_all_now.length.should == @original_assigned_all.length
+        expect(@assigned_now.length).to eq(@original_assigned.length)
+        expect(@assigned_all_now.length).to eq(@original_assigned_all.length)
       end
 
       it "should not have any alerts assigned to vm later" do
-        @assigned_later.length.should     == 0
-        @assigned_all_later.length.should == 0
+        expect(@assigned_later.length).to eq(0)
+        expect(@assigned_all_later.length).to eq(0)
       end
     end
   end
@@ -203,7 +192,7 @@ describe MiqAlert do
   context ".assigned_to_target" do
     before do
       cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
-      FactoryGirl.create(:classification, :name=>"prod", :description=>"Production", :parent_id => cat.id)
+      FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
 
       @vm   = FactoryGirl.create(:vm_vmware)
       @mode = @vm.class.base_model.name
@@ -217,13 +206,13 @@ describe MiqAlert do
     end
 
     it "should get assignment by tagged VM" do
-      MiqAlert.assigned_to_target(@vm).should == [@alert]
+      expect(MiqAlert.assigned_to_target(@vm)).to eq([@alert])
     end
   end
 
   context "With a VM assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm         = FactoryGirl.create(:vm_vmware)
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
@@ -232,24 +221,24 @@ describe MiqAlert do
     end
 
     it "should return true when calling target_needs_realtime_capture?" do
-      MiqAlert.target_needs_realtime_capture?(@vm).should be_true
+      expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_truthy
     end
   end
 
   context "With a VM NOT assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm     = FactoryGirl.create(:vm_vmware)
     end
 
     it "should return false when calling target_needs_realtime_capture?" do
-      MiqAlert.target_needs_realtime_capture?(@vm).should be_false
+      expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_falsey
     end
   end
 
   context "With a Host assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
       @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
@@ -258,24 +247,24 @@ describe MiqAlert do
     end
 
     it "should return true when calling target_needs_realtime_capture?" do
-      MiqAlert.target_needs_realtime_capture?(@host).should be_true
+      expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_truthy
     end
   end
 
   context "With a Host NOT assigned to a realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
     end
 
     it "should return false when calling target_needs_realtime_capture?" do
-      MiqAlert.target_needs_realtime_capture?(@host).should be_false
+      expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_falsey
     end
   end
 
   context "With a VM assigned to a v4-style realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm         = FactoryGirl.create(:vm_vmware)
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
@@ -287,13 +276,13 @@ describe MiqAlert do
     end
 
     it "should return true when calling target_needs_realtime_capture?" do
-      MiqAlert.target_needs_realtime_capture?(@vm).should be_true
+      expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_truthy
     end
   end
 
   context "With a Host assigned to a v4-style realtime C&U alert" do
     before(:each) do
-      MiqAlert.any_instance.stub(:validate => true)
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
       @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
@@ -305,22 +294,16 @@ describe MiqAlert do
     end
 
     it "should return true when calling target_needs_realtime_capture?" do
-      MiqAlert.target_needs_realtime_capture?(@host).should be_true
+      expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_truthy
     end
   end
 
   context ".evaluate_hourly_timer" do
     before do
-      MiqAlert.any_instance.stub(:validate => true)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone            = FactoryGirl.create(:zone)
-      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@miq_server)
-
-      @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
-      @ems_other = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
+      @miq_server = EvmSpecHelper.local_miq_server
+      @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
+      @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :responds_to_events => "_hourly_timer_")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}")
       @alert_prof.add_member(@alert)
@@ -331,7 +314,7 @@ describe MiqAlert do
       @alert_prof.mode = @ems.class.base_model.name
       @alert_prof.assign_to_objects(@ems.id, "ExtManagementSystem")
 
-      MiqAlert.should_receive(:evaluate_alerts).with(@ems, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).with(@ems, "_hourly_timer_")
       MiqAlert.evaluate_hourly_timer
     end
 
@@ -343,9 +326,9 @@ describe MiqAlert do
       @alert_prof.mode = vm_in_zone.class.base_model.name
       @alert_prof.assign_to_objects(vm_in_zone.id, "Vm")
 
-      MiqAlert.should_receive(:evaluate_alerts).once.with(vm_in_zone, "_hourly_timer_")
-      MiqAlert.should_receive(:evaluate_alerts).once.with(vm_no_ems, "_hourly_timer_")
-      MiqAlert.should_not_receive(:evaluate_alerts).with(vm_in_other, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).once.with(vm_in_zone, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).once.with(vm_no_ems, "_hourly_timer_")
+      expect(MiqAlert).not_to receive(:evaluate_alerts).with(vm_in_other, "_hourly_timer_")
       MiqAlert.evaluate_hourly_timer
     end
 
@@ -365,10 +348,10 @@ describe MiqAlert do
       @alert_prof.mode = storage_in_zone.class.base_model.name
       @alert_prof.assign_to_objects(storage_in_zone.id, "Storage")
 
-      MiqAlert.should_receive(:evaluate_alerts).once.with(storage_in_zone, "_hourly_timer_")
-      MiqAlert.should_receive(:evaluate_alerts).once.with(storage_in_host_no_ems, "_hourly_timer_")
-      MiqAlert.should_receive(:evaluate_alerts).once.with(storage_no_ems, "_hourly_timer_")
-      MiqAlert.should_not_receive(:evaluate_alerts).with(storage_in_another, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).once.with(storage_in_zone, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).once.with(storage_in_host_no_ems, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).once.with(storage_no_ems, "_hourly_timer_")
+      expect(MiqAlert).not_to receive(:evaluate_alerts).with(storage_in_another, "_hourly_timer_")
       MiqAlert.evaluate_hourly_timer
     end
   end

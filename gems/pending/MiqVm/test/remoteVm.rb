@@ -41,14 +41,14 @@ begin
 
   vm = MiqVm.new(vmx, ost)
 
-  vm.rootTrees.each do | fs |
+  vm.rootTrees.each do |fs|
     puts "*** Found root tree for #{fs.guestOS}"
     puts "Listing files in #{fs.pwd} directory:"
     fs.dirEntries.each { |de| puts "\t#{de}" }
     puts
   end
 
-  CATEGORIES	= %w(accounts services software system)
+  CATEGORIES  = %w(accounts services software system)
   CATEGORIES.each do |cat|
     puts "Extracting: #{cat}:"
     xml = vm.extract(cat)
@@ -60,6 +60,6 @@ begin
 
   vim.disconnect
 rescue => err
-    puts err.to_s
-    puts err.backtrace.join("\n")
+  puts err.to_s
+  puts err.backtrace.join("\n")
 end

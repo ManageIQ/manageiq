@@ -1,4 +1,4 @@
-class Patch < ActiveRecord::Base
+class Patch < ApplicationRecord
   belongs_to :vm_or_template
   belongs_to :host
 
@@ -23,13 +23,9 @@ class Patch < ActiveRecord::Base
     EmsRefresh.save_patches_inventory(parent, hashes) unless hashes.blank?
   end
 
-  def self.highest_patch_level(target)
-    ret_val = 0
-    target.patches.find(:all, :select => "id, name").collect do |rec|
-      level  = rec[:name].split("-")[-1].to_i
-      ret_val = level if level > ret_val
-    end
-    return ret_val.to_s
+  def self.highest_patch_level
+    levels = all.pluck(:name).collect { |name| name.split("-").last.to_i }
+    (levels.max || 0).to_s
   end
 
   def self.xml_to_hashes(xmlNode, findPath)
@@ -47,6 +43,6 @@ class Patch < ActiveRecord::Base
 
   def v_install_date
     # Windows install dates do not include times, so only display YYYY-MM-DD format
-    self.installed_on.strftime("%Y-%m-%d") unless self.installed_on.nil?
+    installed_on.strftime("%Y-%m-%d") unless installed_on.nil?
   end
 end

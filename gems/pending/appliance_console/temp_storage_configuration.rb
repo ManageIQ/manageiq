@@ -72,7 +72,7 @@ module ApplianceConsole
       LinuxAdmin.run!("parted -s #{disk.path} mkpart primary 0% 100%")
 
       # FIXME: Refetch the disk after creating the partition
-      disk = LinuxAdmin::Disk.local.select { |d| d.path == disk.path }.first
+      disk = LinuxAdmin::Disk.local.find { |d| d.path == disk.path }
       disk.partitions.first
     end
   end # class TempStorageConfiguration

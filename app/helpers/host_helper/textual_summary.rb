@@ -7,12 +7,12 @@ module HostHelper::TextualSummary
 
   def textual_group_properties
     %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
-       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
+       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cpu_cores_per_socket memory
        guid)
   end
 
   def textual_group_relationships
-    %i(ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history)
+    %i(ems cluster availability_zone used_tenants storages resource_pools vms templates drift_history)
   end
 
   def textual_group_storage_relationships
@@ -92,7 +92,7 @@ module HostHelper::TextualSummary
       configuration = {:title => _("Show list of configuration files of %s") % (x.name),
                        :image => 'filesystems',
                        :value => _("Configuration (%s)") % configuration_count,
-                       :link => configuration_count > 0 ? url_for(:controller => controller.controller_name,
+                       :link  => configuration_count > 0 ? url_for(:controller => controller.controller_name,
                                                                   :action => 'filesystems', :id => @record,
                                                                   :db => controller.controller_name,
                                                                   :host_service_group => x.id) : nil}
@@ -103,13 +103,12 @@ module HostHelper::TextualSummary
     end
   end
 
-
   def textual_hostname
     @record.hostname
   end
 
   def textual_ipaddress
-    @record.ipaddress
+    {:label => "IP Address", :value => "#{@record.ipaddress}"}
   end
 
   def textual_ipmi_ipaddress
@@ -125,7 +124,7 @@ module HostHelper::TextualSummary
 
   def textual_vmm_vendor
     h = {:label => "VMM Information"}
-    if @vmminfo == nil || @vmminfo.empty?
+    if @vmminfo.nil? || @vmminfo.empty?
       h[:value] = "None"
       h[:image] = "unknown"
     else
@@ -140,7 +139,7 @@ module HostHelper::TextualSummary
   def textual_model
     h = {:label => "Manufacturer / Model"}
     if !@record.hardware.nil? && (!@record.hardware.manufacturer.blank? || !@record.hardware.model.blank?)
-     h[:value] = "#{@record.hardware.manufacturer} / #{@record.hardware.model}"
+      h[:value] = "#{@record.hardware.manufacturer} / #{@record.hardware.model}"
     else
       h[:value] = "N/A"
     end
@@ -157,16 +156,16 @@ module HostHelper::TextualSummary
 
   def textual_osinfo
     h = {:label => "Operating System"}
-    if @osinfo == nil || @osinfo.empty?
+    if @osinfo.nil? || @osinfo.empty?
       h[:value] = "Unknown"
       h[:image] = "os-unknown"
     else
       h[:image] = "os-#{@record.os_image_name.downcase}"
       h[:value] = @osinfo[0][:description]
-      if !@record.operating_system.version.blank?
+      unless @record.operating_system.version.blank?
         h[:value] << " #{@record.operating_system.version}"
       end
-      if !@record.operating_system.build_number.blank?
+      unless @record.operating_system.build_number.blank?
         h[:value] << " Build #{@record.operating_system.build_number}"
       end
 
@@ -209,7 +208,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_devices
-    h = {:label => "Devices", :image => "devices", :value => (@devices == nil || @devices.empty? ? "None" : @devices.length)}
+    h = {:label => "Devices", :image => "devices", :value => (@devices.nil? || @devices.empty? ? "None" : @devices.length)}
     if @devices.length > 0
       h[:title] = "Show #{host_title} devices"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'devices')
@@ -218,19 +217,19 @@ module HostHelper::TextualSummary
   end
 
   def textual_num_cpu
-    {:label => "Number of CPUs", :value => @record.hardware.nil? ? "N/A" : @record.hardware.numvcpus}
+    {:label => "Number of CPUs", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_sockets}
   end
 
   def textual_num_cpu_cores
-    {:label => "Number of CPU Cores", :value => @record.hardware.nil? ? "N/A" : @record.hardware.logical_cpus}
+    {:label => "Number of CPU Cores", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_total_cores}
   end
 
-  def textual_cores_per_socket
-    {:label => "CPU Cores Per Socket", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cores_per_socket}
+  def textual_cpu_cores_per_socket
+    {:label => "CPU Cores Per Socket", :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_cores_per_socket}
   end
 
   def textual_memory
-    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_cpu.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_cpu.to_i * 1.megabyte,:precision=>0)}
+    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_mb.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_mb.to_i * 1.megabyte, :precision => 0)}
   end
 
   def textual_guid
@@ -238,7 +237,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_cluster
@@ -264,7 +263,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_drift_history
-    return nil unless role_allows(:feature=>"host_drift")
+    return nil unless role_allows(:feature => "host_drift")
     label = "Drift History"
     num   = @record.number_of(:drift_states)
     h     = {:label => label, :image => "drift", :value => num}
@@ -295,10 +294,17 @@ module HostHelper::TextualSummary
   end
 
   def textual_vms
-    @record.vms
+    label = "VMs"
+    num   = @record.number_of(:vms)
+    h     = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "vm_show_list")
+      h[:title] = "Show all #{label}"
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
+    end
+    h
   end
 
-  def textual_miq_templates
+  def textual_templates
     return nil if @record.openstack_host?
     @record.miq_templates
   end
@@ -493,11 +499,11 @@ module HostHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "ipmi"; "IPMI"
-        when "remote";  "Remote Login"
-        when "ws"; "Web Services"
-        when "ssh_keypair"; "SSH keypair"
+        when "default" then "Default"
+        when "ipmi" then "IPMI"
+        when "remote" then  "Remote Login"
+        when "ws" then "Web Services"
+        when "ssh_keypair" then "SSH keypair"
         else;           "<Unknown>"
         end
 

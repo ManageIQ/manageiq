@@ -14,25 +14,27 @@ RSpec::Matchers.define :have_attributes do |attrs|
             RuntimeError.new("Unknown attribute '#{attr}'")
           end
 
-        comparing_times = actual.respond_to?(:acts_like_time?) && expected.respond_to?(:acts_like_time?)
-        matcher = comparing_times ? BeSameTimeAs : RSpec::Matchers::BuiltIn::Eq
-        matcher = matcher.new(expected)
+        matcher = if actual.respond_to?(:acts_like_time?) && expected.respond_to?(:acts_like_time?)
+                    be_same_time_as(expected)
+                  else
+                    eq(expected)
+                  end
 
         unless matcher.matches?(actual)
           name_key = [:name, :id, :object_id].detect { |k| obj.respond_to?(k) }
           @err_msg ||= "with #{obj.class.name} #{name_key}:#{obj.send(name_key).inspect}\n\n"
-          @err_msg << "testing attribute: \"#{attr}\"\n#{matcher.failure_message_for_should}\n\n"
+          @err_msg << "testing attribute: \"#{attr}\"\n#{matcher.failure_message}\n\n"
         end
       end
     end
     @err_msg.nil?
   end
 
-  failure_message_for_should do |obj|
+  failure_message do |_obj|
     @err_msg
   end
 
-  failure_message_for_should_not do |obj|
+  failure_message_when_negated do |_obj|
     @err_msg
   end
 

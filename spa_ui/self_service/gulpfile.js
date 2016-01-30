@@ -38,17 +38,22 @@ gulp.task('sass', task('sass'));
 gulp.task('wiredep', task('wiredep'));
 gulp.task('fonts', task('fonts'));
 gulp.task('images', task('images'));
-gulp.task('imgs', task('images', {key: 'imgs'}));
+gulp.task('skin-images', ['images'], task('images', {key: 'skinImages'}));
+gulp.task('imgs', ['images'], task('images', {key: 'imgs'}));
 gulp.task('dev-fonts', task('fonts', {key: 'devFonts'}));
 gulp.task('dev-images', task('images', {key: 'devImages'}));
+gulp.task('dev-skin-images', ['dev-images'], task('images', {key: 'devSkinImages'}));
 gulp.task('dev-imgs', task('images', {key: 'devImgs'}));
+gulp.task('gettext-extract', task('gettext-extract'));
+gulp.task('gettext-compile', task('gettext-compile'));
+gulp.task('gettext-copy', task('gettext-copy'));
 
 /**
  * Build tasks
  */
 gulp.task('inject', ['wiredep', 'sass', 'templatecache'], task('inject'));
 gulp.task('optimize', ['inject'], task('optimize'));
-gulp.task('build', ['optimize', 'images', 'imgs', 'fonts'], task('build'));
+gulp.task('build', ['optimize', 'images', 'imgs', 'skin-images', 'fonts', 'gettext-copy'], task('build'));
 gulp.task('build-specs', ['templatecache'], task('buildSpecs'));
 
 /**
@@ -60,7 +65,7 @@ gulp.task('autotest', task('test', {singleRun: false}));
 /**
  * Serves up injected html for dev, builds for evything else.
  */
-gulp.task('serve-dev', ['dev-fonts', 'dev-images', 'dev-imgs', 'inject'], task('serve', {
+gulp.task('serve-dev', ['dev-fonts', 'dev-images', 'dev-skin-images', 'dev-imgs', 'inject'], task('serve', {
   isDev: true,
   specRunner: false
 }));

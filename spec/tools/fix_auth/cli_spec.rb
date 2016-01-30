@@ -1,5 +1,3 @@
-require "spec_helper"
-
 $LOAD_PATH << Rails.root.join("tools")
 
 require "fix_auth/cli"
@@ -63,6 +61,18 @@ describe FixAuth::Cli do
       opts = described_class.new.parse(%w(--key --db --databaseyml))
              .options.slice(:db, :databaseyml, :key)
       expect(opts).to eq(:db => true, :databaseyml => true, :key => true)
+    end
+
+    it "parses legacy_keys" do
+      opts = described_class.new.parse(%w(--legacy-key v2.bak))
+             .options.slice(:legacy_key)
+      expect(opts).to eq(:legacy_key => "v2.bak")
+    end
+
+    it "parses without legacy_keys specified" do
+      opts = described_class.new.parse(%w())
+             .options.slice(:legacy_key)
+      expect(opts[:legacy_key]).not_to be
     end
 
     describe "v2" do

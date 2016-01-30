@@ -35,7 +35,7 @@ def buildDetails(ems_cluster)
   body += "<br>Total Host CPU Resources: #{ems_cluster.aggregate_cpu_speed}"
   body += "<br>Total Host Memory: #{ems_cluster.aggregate_memory}"
   body += "<br>Total Host CPUs: #{ems_cluster.aggregate_physical_cpus}"
-  body += "<br>Total Host CPU Cores: #{ems_cluster.aggregate_logical_cpus}"
+  body += "<br>Total Host CPU Cores: #{ems_cluster.aggregate_cpu_total_cores}"
   body += "<br>Total Configured VM Memory: #{ems_cluster.aggregate_vm_memory}"
   body += "<br>Total Configured VM CPUs: #{ems_cluster.aggregate_vm_cpus}"
   body += "<br><br>"
@@ -76,7 +76,7 @@ end
 def emailAlert(options)
   # Get to_email_address from model unless specified below
   to = nil
-  to  ||= $evm.object['to_email_address']
+  to ||= $evm.object['to_email_address']
 
   # Get from_email_address from model unless specified below
   from = nil

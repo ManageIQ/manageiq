@@ -13,11 +13,12 @@
       = render :partial => 'layouts/exp_editor'
     - else
       -# FIXME: alt/title incosistency
-      = link_to(image_tag("/images/toolbars/edit.png", :class => "rollover small", :alt => _("Edit this Expression")),
+      = link_to(image_tag(image_path('toolbars/edit.png'), :class => "rollover small", :alt => _("Edit this Expression")),
         {:action => 'filter_change', :button => "record_filter", :id => "#{@edit[:rpt_id] || 'new'}"},
         "data-miq_sparkle_on"  => true,
         "data-miq_sparkle_off" => true,
         :remote                => true,
+        "data-method"          => :post,
         :title                 => _("Edit the Record Filter"))
       %br
       - if @edit[:record_filter][:expression].key?("???")
@@ -38,11 +39,12 @@
         - if @expkey == :display_filter
           = render :partial => 'layouts/exp_editor'
         - else
-          = link_to(image_tag("/images/toolbars/edit.png", :class => "rollover small", :alt => _("Edit this Expression")),
+          = link_to(image_tag(image_path('toolbars/edit.png'), :class => "rollover small", :alt => _("Edit this Expression")),
             {:action => 'filter_change', :button => "display_filter", :id => "#{@edit[:rpt_id] || 'new'}"},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
+            "data-method"          => :post,
             :title                 => "Edit the Display Filter")
           %br
           - if @edit[:display_filter][:expression].key?("???")

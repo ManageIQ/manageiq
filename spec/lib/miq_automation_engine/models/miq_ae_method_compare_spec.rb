@@ -1,8 +1,6 @@
-require "spec_helper"
 include MiqAeYamlImportExportMixin
 
 describe MiqAeMethodCompare do
-
   before do
     @domain = 'SPEC_DOMAIN'
     @namespace   = 'NS1'
@@ -77,7 +75,7 @@ describe MiqAeMethodCompare do
   def method_check_status(method1, method2, status)
     diff_obj = MiqAeMethodCompare.new(method1, method2)
     diff_obj.compare
-    diff_obj.status.should equal(status)
+    expect(diff_obj.status).to equal(status)
   end
 
   def prep_method_file_names(meth1 = nil, meth2 = nil)

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceServiceTemplateProvisionRequestSpec
   describe MiqAeMethodService::MiqAeServiceServiceTemplateProvisionRequest do
     let(:service_service_template_provision_request) do
@@ -11,12 +9,12 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
-      user           = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => user, :userid => user.userid)
+      @user          = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')
+      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionRequest::service_template_provision_request=#{@service_template_provision_request.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionRequest::service_template_provision_request=#{@service_template_provision_request.id}", @user)
     end
 
     it "#approve" do
@@ -24,8 +22,8 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
       reason   = "Why Not?"
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template_provision_request'].approve('#{approver}', '#{reason}')"
       @ae_method.update_attributes(:data => method)
-      MiqRequest.any_instance.should_receive(:approve).with(approver, reason).once
-      invoke_ae.root(@ae_result_key).should be_true
+      expect_any_instance_of(MiqRequest).to receive(:approve).with(approver, reason).once
+      expect(invoke_ae.root(@ae_result_key)).to be_truthy
     end
 
     it "#user_message" do

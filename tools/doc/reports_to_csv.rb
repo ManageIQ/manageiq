@@ -1,6 +1,6 @@
 require 'csv'
 CSV.open("reports.csv", "w") do |csv|
-  csv << %w{Name Title Group Sorting Graph Filter}
+  csv << %w(Name Title Group Sorting Graph Filter)
 
   MiqReport.order(:name).each do |rpt|
     next if rpt.rpt_group == "Custom" || rpt.rpt_group == "Compare"

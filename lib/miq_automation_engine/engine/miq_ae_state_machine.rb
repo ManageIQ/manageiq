@@ -78,19 +78,19 @@ module MiqAeEngine
         elsif @workspace.root['ae_result'] == 'skip'
           $miq_ae_logger.warn "Skipping State =[#{f['name']}]"
           return set_next_state(f, message)
-        elsif @workspace.root['ae_result'] == 'retry'
+        elsif %w(retry restart).include?(@workspace.root['ae_result'])
           increment_state_retries
         elsif @workspace.root['ae_result'] == 'error'
           $miq_ae_logger.warn "Error in State=[#{f['name']}]"
           # Process on_error method
 
           return process_state_step_with_error_handling(f, 'on_error') do
-               process_state_method(f, 'on_error')
-               if @workspace.root['ae_result'] == 'continue'
-                 $miq_ae_logger.warn "Resetting Error in State=[#{f['name']}]"
-                 @workspace.root['ae_result'] = 'ok'
-                 set_next_state(f, message)
-               end
+            process_state_method(f, 'on_error')
+            if @workspace.root['ae_result'] == 'continue'
+              $miq_ae_logger.warn "Resetting Error in State=[#{f['name']}]"
+              @workspace.root['ae_result'] = 'ok'
+              set_next_state(f, message)
+            end
           end
         end
 
@@ -113,20 +113,18 @@ module MiqAeEngine
     end
 
     def process_state_method(f, method_name)
-      begin
-        f[method_name].split(";").each do |method|
-          method = substitute_value(method.strip)
-          unless method.blank? || method.lstrip[0, 1] == '#'
-            $miq_ae_logger.info "In State=[#{f['name']}], invoking [#{method_name}] method=[#{method}]"
-            @workspace.root['ae_status_state'] = method_name
-            @workspace.root['ae_state']        = f['name']
-            @workspace.root['ae_state_step'] = method_name
-            process_method_raw(method)
-          end
-        end unless f[method_name].blank?
-      rescue MiqAeException::MethodNotFound => err
-        raise MiqAeException::MethodNotFound, "In State=[#{f['name']}], #{method_name} #{err.message}"
-      end
+      f[method_name].split(";").each do |method|
+        method = substitute_value(method.strip)
+        unless method.blank? || method.lstrip[0, 1] == '#'
+          $miq_ae_logger.info "In State=[#{f['name']}], invoking [#{method_name}] method=[#{method}]"
+          @workspace.root['ae_status_state'] = method_name
+          @workspace.root['ae_state']        = f['name']
+          @workspace.root['ae_state_step'] = method_name
+          process_method_raw(method)
+        end
+      end unless f[method_name].blank?
+    rescue MiqAeException::MethodNotFound => err
+      raise MiqAeException::MethodNotFound, "In State=[#{f['name']}], #{method_name} #{err.message}"
     end
 
     def next_state(current, message)
@@ -144,7 +142,18 @@ module MiqAeEngine
         reset_state_maxima_metadata
         $miq_ae_logger.info "Next State=[#{@workspace.root['ae_state']}]"
         @workspace.root['ae_result'] = 'ok'
+      elsif @workspace.root['ae_result'] == 'restart'
+        $miq_ae_logger.info "State=[#{f['name']}] has requested a restart"
+        @workspace.root['ae_result'] = 'retry'
+        @workspace.root['ae_state'] = restart_state(message).to_s
+        $miq_ae_logger.info "Will restart at State=[#{@workspace.root['ae_state']}]"
       end
+    end
+
+    def restart_state(message)
+      states = fields(message).collect { |f| f['name'] if f['aetype'] == 'state' }.compact
+      validate_state(states)
+      @workspace.root['ae_next_state'].presence || states[0]
     end
 
     def validate_state(states)

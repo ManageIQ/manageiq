@@ -12,9 +12,9 @@ module ArNestedCountBy
     #   => {'role1' => { 'error' => 5, 'ready' => 2}}
 
     def nested_count_by(*fields)
-      group(fields.flatten).count.each.with_object({}) {|v, h| h.store_path(*v.flatten) }
+      group(fields.flatten).count.each.with_object({}) { |v, h| h.store_path(*v.flatten) }
     end
   end
 end
 
-ActiveRecord::Base.send(:include, ArNestedCountBy)
+ApplicationRecord.include ArNestedCountBy

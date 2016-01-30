@@ -13,10 +13,10 @@ module MiqServer::LogManagement
   end
 
   def format_log_time(time)
-    return time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
+    time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end
 
-  def post_historical_logs(taskid)
+  def post_historical_logs(taskid, log_depot)
     task = MiqTask.find(taskid)
     resource = who_am_i
 
@@ -26,17 +26,17 @@ module MiqServer::LogManagement
       next if evm.nil?
 
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-      date = File.basename(pattern).gsub!(/\*|\.gz/,"")
+      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
 
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
       name = "Archived #{self.name} logs #{date_string} "
-      desc = "Logs for Zone #{self.zone.name rescue nil} Server #{self.name} #{date_string}"
+      desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
 
       cond = {:historical => true, :name => name, :state => 'available'}
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
-      logfile = self.log_files.where(cond).first
+      logfile = log_files.find_by(cond)
       if logfile && logfile.log_uri.nil?
         _log.info("Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
@@ -49,15 +49,15 @@ module MiqServer::LogManagement
       _log.info(msg)
 
       begin
-        self.log_files << logfile
-        self.save
+        log_files << logfile
+        save
         msg = "Zipping and posting historical logs and configs on #{resource}"
         task.update_status("Active", "Ok", msg)
         _log.info(msg)
 
         patterns = [pattern]
         cfg_pattern = get_config("vmdb").config.fetch_path(:log, :collection, :archive, :pattern)
-        patterns += cfg_pattern if cfg_pattern.is_a?(Array)
+        patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
 
         local_file = VMDB::Util.zip_logs("evm_server_daily.zip", patterns, "admin")
 
@@ -72,8 +72,8 @@ module MiqServer::LogManagement
         )
 
         logfile.upload
-      rescue StandardError, TimeoutError => err
-        logfile.update_attributes(:state => "error" )
+      rescue StandardError, Timeout::Error => err
+        logfile.update_attributes(:state => "error")
         _log.error("Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
         raise
       end
@@ -82,20 +82,20 @@ module MiqServer::LogManagement
       task.update_status("Active", "Ok", msg)
       _log.info(msg)
 
-      #TODO: If the gz has been posted and the gz is more than X days old, delete it
+      # TODO: If the gz has been posted and the gz is more than X days old, delete it
     end
   end
 
   def _post_my_logs(options)
     # Make the request to the MiqServer whose logs are needed
     MiqQueue.put_or_update(
-      :class_name => self.class.name,
-      :instance_id => self.id,
+      :class_name  => self.class.name,
+      :instance_id => id,
       :method_name => "post_logs",
-      :server_guid => self.guid,
-      :zone => self.my_zone,
+      :server_guid => guid,
+      :zone        => my_zone,
     ) do |msg, item|
-      _log.info("Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{self.id}]") unless msg.nil?
+      _log.info("Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{id}]") unless msg.nil?
       item.merge(
         :miq_callback => options.delete(:callback),
         :msg_timeout  => options.delete(:timeout),
@@ -111,26 +111,25 @@ module MiqServer::LogManagement
   end
 
   def last_log_sync_on
-    rec = LogFile.where(:resource_type => self.class.name, :resource_id => self.id).order("updated_on DESC").select("updated_on").first
-    return rec.nil? ? nil : rec.updated_on
+    log_files.maximum(:updated_on)
   end
 
   def last_log_sync_message
-    last_log = LogFile.where(:resource_type => self.class.name, :resource_id => self.id).order("updated_on DESC").first
-    return nil if last_log.nil? || last_log.miq_task.nil?
-    return last_log.miq_task.message
+    last_log = log_files.order(:updated_on => :desc).first
+    last_log.try(:miq_task).try!(:message)
   end
 
   def post_logs(options)
     taskid = options[:taskid]
     task = MiqTask.find(taskid)
+    context_log_depot = log_depot(options[:context])
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-    raise "Log depot settings not configured" unless log_depot
-    log_depot.update_attributes(:support_case => options[:support_case].presence)
+    raise "Log depot settings not configured" unless context_log_depot
+    context_log_depot.update_attributes(:support_case => options[:support_case].presence)
 
-    self.post_historical_logs(taskid) unless options[:only_current]
-    self.post_current_logs(taskid)
+    post_historical_logs(taskid, context_log_depot) unless options[:only_current]
+    post_current_logs(taskid, context_log_depot)
     task.update_status("Finished", "Ok", "Log files were successfully collected")
   end
 
@@ -152,18 +151,18 @@ module MiqServer::LogManagement
     return [] unless pg_data
 
     pg_data = Pathname.new(pg_data)
-    return [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
+    [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
   end
 
-  def post_current_logs(taskid)
+  def post_current_logs(taskid, log_depot)
     resource = who_am_i
     task = MiqTask.find(taskid)
 
-    self.delete_old_requested_logs
+    delete_old_requested_logs
     logfile = LogFile.current_logfile
     begin
-      self.log_files << logfile
-      self.save
+      log_files << logfile
+      save
 
       log_prefix = "Task: [#{task.id}]"
       msg = "Posting logs for: #{resource}"
@@ -183,7 +182,7 @@ module MiqServer::LogManagement
 
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       name = "Requested #{self.name} logs #{date_string} "
-      desc = "Logs for Zone #{self.zone.name rescue nil} Server #{self.name} #{date_string}"
+      desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
 
       logfile.update_attributes(
         :file_depot         => log_depot,
@@ -196,7 +195,7 @@ module MiqServer::LogManagement
       )
 
       logfile.upload
-    rescue StandardError, TimeoutError => err
+    rescue StandardError, Timeout::Error => err
       _log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
@@ -207,15 +206,15 @@ module MiqServer::LogManagement
   end
 
   def delete_old_requested_logs
-    LogFile.destroy_all(:historical => false, :resource_id => self.id, :resource_type => self.class.name)
+    log_files.where(:historical => false).destroy_all
   end
 
   def delete_active_log_collections_queue
     MiqQueue.put_or_update(
-      :class_name => self.class.name,
-      :instance_id => self.id,
+      :class_name  => self.class.name,
+      :instance_id => id,
       :method_name => "delete_active_log_collections",
-      :server_guid => self.guid
+      :server_guid => guid
     ) do |msg, item|
       _log.info("Previous cleanup is still running, skipping...") unless msg.nil?
       item.merge(:priority => MiqQueue::HIGH_PRIORITY)
@@ -223,7 +222,7 @@ module MiqServer::LogManagement
   end
 
   def delete_active_log_collections
-    self.log_files.each do |lf|
+    log_files.each do |lf|
       if lf.state == 'collecting'
         _log.info("Deleting #{lf.description}")
         lf.miq_task.update_attributes(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup') unless lf.miq_task.nil?
@@ -239,22 +238,22 @@ module MiqServer::LogManagement
 
   def log_collection_active_recently?(since = nil)
     since ||= 15.minutes.ago.utc
-    return true if self.log_files.exists?(["created_on > ? AND state = ?", since, "collecting"])
-    return MiqTask.exists?(["miq_server_id = ? and name like ? and state != ? and created_on > ?", self.id, "Zipped log retrieval for %", "Finished", since])
+    return true if log_files.exists?(["created_on > ? AND state = ?", since, "collecting"])
+    MiqTask.exists?(["miq_server_id = ? and name like ? and state != ? and created_on > ?", id, "Zipped log retrieval for %", "Finished", since])
   end
 
   def log_collection_active?
-    return true if self.log_files.exists?(:state => "collecting")
-    return MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", self.id, "Zipped log retrieval for %", "Finished"])
+    return true if log_files.exists?(:state => "collecting")
+    MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", id, "Zipped log retrieval for %", "Finished"])
   end
 
-  def log_depot
-    log_file_depot || zone.log_file_depot
+  def log_depot(context)
+    context == "Zone" ? zone.log_file_depot : log_file_depot
   end
 
   def base_zip_log_name
-    t = Time.now.utc.iso8601
+    t = Time.now.utc.strftime('%FT%H_%M_%SZ'.freeze)
     # Name the file based on GUID and time.  GUID and Date/time of the request are as close to unique filename as we're going to get
-    %Q/App-#{self.guid}-#{t}/.gsub!(/:|\./,"_")
+    "App-#{guid}-#{t}"
   end
 end

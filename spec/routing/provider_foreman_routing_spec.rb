@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'routing/shared_examples'
 
 describe 'routes for ProviderForeman' do
@@ -40,7 +39,6 @@ describe 'routes for ProviderForeman' do
     quick_search
     refresh
     reload
-    save_col_widths
     show
     show_list
     tagging

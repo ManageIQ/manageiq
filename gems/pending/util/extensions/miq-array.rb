@@ -1,36 +1,19 @@
 require 'more_core_extensions/core_ext/array'
+require 'active_support/core_ext/array/wrap'
 
 class Object #:nodoc:
   def to_miq_a
-    [*self]
+    Array.wrap(self)
   end
 end
 
 class String
   def to_miq_a
-    self.lines.to_a
+    lines.to_a
   end
 end
 
-class Array
-  def to_miq_a
-    self.to_a
-  end
-end
-
-class Hash
-  def to_miq_a
-    [self]
-  end
-end
-
-class NilClass
-  def to_miq_a
-    []
-  end
-end
-
-# ActiveRecord's AssociationProxy (base class for HasOne, HasMany, etc.) 
+# ActiveRecord's AssociationProxy (base class for HasOne, HasMany, etc.)
 #   undefines nearly every method from Object, as part of it's delayed loading
 #   infrastructure.  However, since we may define to_miq_a after this happens,
 #   we end up adding the method at the wrong level.  This ends up causing the

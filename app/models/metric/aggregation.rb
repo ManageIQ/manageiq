@@ -18,11 +18,14 @@ module Metric::Aggregation
 
     def self.cpu_usage_rate_average(col, state, result, counts, value)
       return if value.nil?
-      if state && state.total_cpu
+      if state.try(:total_cpu).to_i > 0
         pct = value / 100
         total = state.total_cpu
         value = total * pct
         result[col] += value
+      elsif state.try(:numvcpus).to_i > 0
+        result[col] += value * state.numvcpus
+        counts[col] += state.numvcpus
       else
         average(col, state, result, counts, value)
       end
@@ -57,7 +60,7 @@ module Metric::Aggregation
 
     def self.cpu_usage_rate_average(col, state, result, counts, aggregate_only = false)
       return if result[col].nil?
-      if state && state.total_cpu
+      if state.try(:total_cpu).to_i > 0
         total = state.total_cpu
         result[col] = result[col] / total * 100 unless total == 0
       else

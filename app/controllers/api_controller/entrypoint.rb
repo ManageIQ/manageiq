@@ -10,6 +10,8 @@ class ApiController
         :description => @description,
         :version     => @version,
         :versions    => entrypoint_versions,
+        :identity    => auth_identity,
+        :settings    => user_settings,
         :collections => entrypoint_collections
       }
       render_resource :entrypoint, res
@@ -20,7 +22,7 @@ class ApiController
         if version_specification.key?(:ident)
           {
             :name => version_specification[:name],
-            :href => "#{@req[:base]}#{@prefix}/#{version_specification[:ident]}"
+            :href => "#{@req[:api_prefix]}/#{version_specification[:ident]}"
           }
         end
       end.compact

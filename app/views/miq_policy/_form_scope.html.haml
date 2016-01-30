@@ -5,11 +5,14 @@
     %hr
   - else
     %h3= _('Scope (Press the "Edit" button to edit the scope)')
-    = link_to(image_tag("/images/toolbars/edit.png", :border => "0", :alt => (t = _("Edit this Scope"))),
-      {:action => 'condition_edit', :button => "applies_to_exp", :id => "#{@condition.id || 'new'}"},
+    = link_to(image_tag(image_path('toolbars/edit.png'), :border => "0", :alt => (t = _("Edit this Scope"))),
+      {:action => 'condition_edit',
+       :button => "applies_to_exp",
+       :id => @condition.id || 'new'},
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
+      "data-method"          => :post,
       :title                 => t)
     %br
     - if @edit[:scope_table].nil?

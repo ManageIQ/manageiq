@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" aria-hidden="true">
+    <span class="pficon pficon-close"></span>
+  </button>
+  <h4 class="modal-title" id="myModalLabel">Schedule Service Retirement</h4>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal">
+      <div pf-form-group pf-input-class="col-sm-8" pf-label-class="col-sm-3" pf-label="Retirement Warning">
+        <select pf-select ng-model="vm.modalData.resource.warn">
+          <option value=0>No Warning </option>
+          <option value=7>1 Week </option>
+          <option value=14>2 Weeks</option>
+          <option value=21>3 Weeks</option>
+          <option value=28>4 Weeks</option>
+        </select>
+      </div>
+    <div pf-form-group pf-input-class="col-sm-8" pf-label-class="col-sm-3" pf-label="Retirement Date">
+      <div pf-datepicker options="vm.dateOptions" date="vm.modalData.resource.date"></div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+  <button type="button"
+          class="btn btn-primary"
+          ng-click="vm.retireService()"
+          ng-disabled="vm.modalData.resource.name == vm.service.name &&
+          vm.modalData.resource.description == vm.service.description">Save
+  </button>
+</div>

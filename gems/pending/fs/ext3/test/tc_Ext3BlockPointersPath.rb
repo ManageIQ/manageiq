@@ -5,7 +5,6 @@ require 'fs/ext3/block_pointers_path'
 include  Ext3
 
 class TestBlockPointersPath < MiniTest::Unit::TestCase
-
   NUM_INDIRECTS = 15
   MAX_BLOCK = 3626
 
@@ -36,7 +35,7 @@ class TestBlockPointersPath < MiniTest::Unit::TestCase
     MAX_BLOCK, [14,  14,  14,  14], :triple_indirect
   ]
 
-	def test_block_set
+  def test_block_set
     path = BlockPointersPath.new(NUM_INDIRECTS)
 
     assert_raise(ArgumentError) { path.block = -1 }
@@ -48,7 +47,7 @@ class TestBlockPointersPath < MiniTest::Unit::TestCase
       assert_equal path_a, path.to_a
       assert_equal type, path.index_type
     end
-	end
+  end
 
   def test_succ!
     path = BlockPointersPath.new(NUM_INDIRECTS)
@@ -67,7 +66,7 @@ class TestBlockPointersPath < MiniTest::Unit::TestCase
   def test_path_to_block
     path = BlockPointersPath.new(NUM_INDIRECTS)
 
-    EXPECTED.each_slice(3) do |block, path_a, type|
+    EXPECTED.each_slice(3) do |block, _path_a, _type|
       path.block = block
       assert_equal block, path.send(:path_to_block)
     end

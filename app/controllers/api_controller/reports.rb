@@ -40,7 +40,7 @@ class ApiController
     end
 
     def import_resource_reports(_type, _id, data)
-      options = data.fetch("options", {}).symbolize_keys.merge(:userid => @auth_user)
+      options = data.fetch("options", {}).symbolize_keys.merge(:user => @auth_user_obj)
       result, meta = MiqReport.import_from_hash(data["report"], options)
       action_result(meta[:level] == :info, meta[:message], :result => result)
     end

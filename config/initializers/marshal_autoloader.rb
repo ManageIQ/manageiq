@@ -1,6 +1,6 @@
-module Marshal
-  def self.load_with_autoload_missing_constants(data)
-    load_without_autoload_missing_constants(data)
+module MarshalAutoloader
+  def load(data)
+    super
   rescue ArgumentError => error
     if error.to_s.include?('undefined class')
       begin
@@ -12,7 +12,9 @@ module Marshal
     end
     raise error
   end
+end
+module Marshal
   class << self
-    alias_method_chain :load, :autoload_missing_constants
+    prepend MarshalAutoloader
   end
 end

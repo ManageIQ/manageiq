@@ -1,9 +1,7 @@
-require "spec_helper"
-
 describe MiqServer do
   before do
     MiqDatabase.seed
-    guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _, @server, = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   let(:database)    { MiqDatabase.first }
@@ -12,7 +10,7 @@ describe MiqServer do
 
   context "Queue multiple servers" do
     before do
-      FactoryGirl.create(:miq_server_not_master, :zone => @zone, :guid => MiqUUID.new_guid)
+      FactoryGirl.create(:miq_server, :zone => @server.zone)
     end
 
     it ".queue_update_registration_status" do
@@ -57,13 +55,13 @@ describe MiqServer do
   context "#update_registration_status" do
     it "rhn_client" do
       @server.update_attribute(:rhn_mirror, true)
-      @server.should_receive(:check_updates).once
+      expect(@server).to receive(:check_updates).once
 
       @server.update_registration_status
     end
     it "not rhn_client" do
-      @server.should_receive(:attempt_registration).once
-      @server.should_receive(:check_updates).once
+      expect(@server).to receive(:attempt_registration).once
+      expect(@server).to receive(:check_updates).once
 
       @server.update_registration_status
     end
@@ -71,36 +69,26 @@ describe MiqServer do
 
   context "#attempt_registration" do
     it "does not continue if registration fails" do
-      @server.should_receive(:register).and_return(false)
-      @server.should_not_receive(:attach_products)
+      expect(@server).to receive(:register).and_return(false)
+      expect(@server).not_to receive(:attach_products)
 
       @server.attempt_registration
     end
 
     it "should not try to enable the repo if already enabled" do
-      @server.should_receive(:register).and_return(true)
-      @server.should_receive(:attach_products)
-      @server.should_receive(:repos_enabled?).and_return(true)
-      @server.should_not_receive(:enable_repos)
+      expect(@server).to receive(:register).and_return(true)
+      expect(@server).to receive(:attach_products)
+      expect(@server).to receive(:repos_enabled?).and_return(true)
+      expect(@server).not_to receive(:enable_repos)
 
       @server.attempt_registration
     end
 
     it "should enable the repo if not enabled" do
-      @server.should_receive(:register).and_return(true)
-      @server.should_receive(:attach_products)
-      reg_system.should_receive(:enabled_repos).and_return([], [], database.update_repo_name.split)
-      @server.should_receive(:enable_repos).twice
-
-      @server.attempt_registration
-    end
-
-    it "rhn should not call #attach_products" do
-      database.update_attributes!(:registration_type => "rhn_satellite", :registration_server => "https://server.example.com/XMLRPC")
-
-      @server.should_receive(:register).and_return(true)
-      @server.should_not_receive(:attach_products)
-      @server.should_receive(:repos_enabled?).and_return(true)
+      expect(@server).to receive(:register).and_return(true)
+      expect(@server).to receive(:attach_products)
+      expect(reg_system).to receive(:enabled_repos).and_return([], [], database.update_repo_name.split)
+      expect(@server).to receive(:enable_repos).twice
 
       @server.attempt_registration
     end
@@ -109,7 +97,7 @@ describe MiqServer do
   context "#register" do
     let(:default_params) { {:server_url => "subscription.rhn.redhat.com"} }
     it "already registered" do
-      reg_system.stub(:registered?).and_return(true)
+      allow(reg_system).to receive(:registered?).and_return(true)
 
       @server.register
 
@@ -118,10 +106,9 @@ describe MiqServer do
     end
 
     it "unregistered should use subscription-manager" do
-      reg_system.stub(:registered?).once.and_return(false, true)
-      LinuxAdmin::SubscriptionManager.should_receive(:register).once.with(default_params).and_return(true)
-      File.should_receive(:exist?).once.and_return(true)
-      reg_system.should_receive(:registration_type).once
+      allow(reg_system).to receive(:registered?).once.and_return(false, true)
+      expect(LinuxAdmin::SubscriptionManager).to receive(:register).once.with(default_params).and_return(true)
+      expect(reg_system).to receive(:registration_type).once
 
       @server.register
 
@@ -135,35 +122,20 @@ describe MiqServer do
       database.update_attribute(:registration_type, "rhn_satellite6")
       database.update_attribute(:registration_server, expected_params[:server_url])
 
-      reg_system.stub(:registered?).once.and_return(false, true)
-      LinuxAdmin::SubscriptionManager.should_receive(:register).once.with(expected_params).and_return(true)
-      File.should_receive(:exist?).once.and_return(true)
-      reg_system.should_receive(:registration_type).once
+      allow(reg_system).to receive(:registered?).once.and_return(false, true)
+      expect(LinuxAdmin::SubscriptionManager).to receive(:register).once.with(expected_params).and_return(true)
+      expect(reg_system).to receive(:registration_type).once
 
       @server.register
 
       expect(@server.reload).to be_rh_registered
       expect(@server.upgrade_message).to eq("registration successful")
     end
-
-    it "unregistered should use rhn" do
-      database.update_attribute(:registration_type, "rhn_satellite")
-
-      reg_system.stub(:registered?).once.and_return(false, true)
-      LinuxAdmin::Rhn.should_receive(:register).once.with(default_params).and_return(true)
-      File.should_receive(:exist?).twice.and_return(false, true)
-      reg_system.should_receive(:registration_type).once
-
-      @server.register
-
-      expect(@server.reload.rh_registered).to be_true
-      expect(@server.upgrade_message).to eq("registration successful")
-    end
   end
 
   context "#attach_products" do
     it "attaches products for SubscriptionManager" do
-      reg_system.should_receive(:subscribe)
+      expect(reg_system).to receive(:subscribe)
 
       @server.attach_products
       expect(@server.upgrade_message).to eq("attaching products")
@@ -172,30 +144,30 @@ describe MiqServer do
 
   context "#repo_enabled?" do
     it "true" do
-      reg_system.should_receive(:enabled_repos).and_return(["abc", database.update_repo_names].flatten)
+      expect(reg_system).to receive(:enabled_repos).and_return(["abc", database.update_repo_names].flatten)
 
-      expect(@server.repos_enabled?).to be_true
+      expect(@server.repos_enabled?).to be_truthy
       expect(@server.upgrade_message).to eq("registered")
     end
 
     it "false" do
-      reg_system.should_receive(:enabled_repos).and_return(["abc", "def"])
+      expect(reg_system).to receive(:enabled_repos).and_return(["abc", "def"])
 
-      expect(@server.repos_enabled?).to be_false
+      expect(@server.repos_enabled?).to be_falsey
     end
   end
 
   it "#enable_repos" do
-    reg_system.should_receive(:enable_repo).twice
+    expect(reg_system).to receive(:enable_repo).twice
 
     @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling rhel-server-rhscl-6-rpms")
+    expect(@server.upgrade_message).to eq("enabling rhel-server-rhscl-7-rpms")
   end
 
   it "#check_updates" do
-    yum.should_receive(:updates_available?).twice.and_return(true)
-    yum.should_receive(:version_available).with("cfme-appliance").once.and_return({"cfme-appliance" => "3.1"})
-    MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+    expect(yum).to receive(:updates_available?).twice.and_return(true)
+    expect(yum).to receive(:version_available).with("cfme-appliance").once.and_return({"cfme-appliance" => "3.1"})
+    allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
 
     @server.check_updates
 
@@ -204,36 +176,36 @@ describe MiqServer do
 
   context "#apply_updates" do
     before do
-      MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+      allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
     end
 
     it "will apply cfme updates only with local database" do
-      yum.should_receive(:updates_available?).twice.and_return(true)
-      yum.should_receive(:version_available).once.and_return({})
-      Dir.should_receive(:glob).and_return(["/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release", "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta"])
-      LinuxAdmin::Rpm.should_receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
-      LinuxAdmin::Rpm.should_receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta").and_return(true)
-      EvmDatabase.should_receive(:local?).and_return(true)
-      yum.should_receive(:update).once.with("cfme-appliance")
+      expect(yum).to receive(:updates_available?).twice.and_return(true)
+      expect(yum).to receive(:version_available).once.and_return({})
+      expect(Dir).to receive(:glob).and_return(["/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release", "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta"])
+      expect(LinuxAdmin::Rpm).to receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
+      expect(LinuxAdmin::Rpm).to receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta").and_return(true)
+      expect(EvmDatabase).to receive(:local?).and_return(true)
+      expect(yum).to receive(:update).once.with("cfme-appliance")
 
       @server.apply_updates
     end
 
     it "will apply all updates with remote database" do
-      yum.should_receive(:updates_available?).twice.and_return(true)
-      yum.should_receive(:version_available).once.and_return({})
-      Dir.should_receive(:glob).and_return(["/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"])
-      LinuxAdmin::Rpm.should_receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
-      EvmDatabase.should_receive(:local?).and_return(false)
-      yum.should_receive(:update).once.with(no_args)
+      expect(yum).to receive(:updates_available?).twice.and_return(true)
+      expect(yum).to receive(:version_available).once.and_return({})
+      expect(Dir).to receive(:glob).and_return(["/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"])
+      expect(LinuxAdmin::Rpm).to receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
+      expect(EvmDatabase).to receive(:local?).and_return(false)
+      expect(yum).to receive(:update).once.with(no_args)
 
       @server.apply_updates
     end
 
     it "does not have updates to apply" do
-      yum.should_receive(:updates_available?).twice.and_return(false)
-      yum.should_receive(:version_available).once.and_return({})
-      MiqDatabase.stub(:postgres_package_name => "postgresql-server")
+      expect(yum).to receive(:updates_available?).twice.and_return(false)
+      expect(yum).to receive(:version_available).once.and_return({})
+      allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
 
       @server.apply_updates
     end

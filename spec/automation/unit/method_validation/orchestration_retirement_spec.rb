@@ -1,11 +1,10 @@
-require 'spec_helper'
-
 describe "Orchestration retirement state machine Methods Validation" do
+  let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do
     @ae_state   = {'stack_exists_in_provider' => stack_in_provider}
     MiqAeEngine.instantiate("/Cloud/Orchestration/Retirement/StateMachines/Methods/#{method_name}?" \
       "OrchestrationStack::orchestration_stack=#{stack.id}" \
-      "&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}")
+      "&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}", user)
   end
 
   let(:stack) do
@@ -19,7 +18,7 @@ describe "Orchestration retirement state machine Methods Validation" do
 
     it "starts a retirement request" do
       ws
-      OrchestrationStack.where(:id => stack.id).first.retirement_state.should == 'retiring'
+      expect(OrchestrationStack.where(:id => stack.id).first.retirement_state).to eq('retiring')
     end
 
     it "aborts if stack is already retired" do
@@ -37,14 +36,14 @@ describe "Orchestration retirement state machine Methods Validation" do
     let(:method_name) { "RemoveFromProvider" }
 
     it "requests stack to be deleted from provider if stack exists in provider" do
-      OrchestrationStack.any_instance.stub(:raw_exists?) { true }
-      OrchestrationStack.any_instance.should_receive(:raw_delete_stack)
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_exists?) { true }
+      expect_any_instance_of(OrchestrationStack).to receive(:raw_delete_stack)
       ws
     end
 
     it "does nothing if stack no longer exists in provider" do
-      OrchestrationStack.any_instance.stub(:raw_exists?) { false }
-      OrchestrationStack.any_instance.should_not_receive(:raw_delete_stack)
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_exists?) { false }
+      expect_any_instance_of(OrchestrationStack).not_to receive(:raw_delete_stack)
       ws
     end
   end
@@ -53,18 +52,26 @@ describe "Orchestration retirement state machine Methods Validation" do
     let(:method_name) { "CheckRemovedFromProvider" }
 
     it "completes the step when stack is removed from provider" do
-      OrchestrationStack.any_instance.stub(:raw_status) { ['DELETE_COMPLETE', nil] }
-      ws.root['ae_result'].should == 'ok'
+      status = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('DELETE_COMPLETE', nil)
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_status) { status }
+      expect(ws.root['ae_result']).to eq('ok')
+    end
+
+    it "completes the step when stack no longer exists" do
+      allow_any_instance_of(OrchestrationStack)
+        .to receive(:raw_status) { raise MiqException::MiqOrchestrationStackNotExistError, 'stack not exist' }
+      expect(ws.root['ae_result']).to eq("ok")
     end
 
     it "retries if stack has not been removed from provider" do
-      OrchestrationStack.any_instance.stub(:raw_status) { ['DELETING', nil] }
-      ws.root['ae_result'].should == 'retry'
+      status = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('DELETING', nil)
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_status) { status }
+      expect(ws.root['ae_result']).to eq('retry')
     end
 
     it "reports error if cannot get stack status" do
-      OrchestrationStack.any_instance.stub(:raw_status) { [nil, nil] }
-      ws.root['ae_result'].should == 'error'
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_status) { raise "an error" }
+      expect(ws.root['ae_result']).to eq('error')
     end
   end
 
@@ -74,7 +81,7 @@ describe "Orchestration retirement state machine Methods Validation" do
 
     it "deletes stack from vmdb" do
       ws
-      OrchestrationStack.where(:id => stack.id).first.should be_nil
+      expect(OrchestrationStack.where(:id => stack.id).first).to be_nil
     end
   end
 end

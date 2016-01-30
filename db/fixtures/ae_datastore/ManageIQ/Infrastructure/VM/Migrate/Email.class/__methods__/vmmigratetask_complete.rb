@@ -5,7 +5,7 @@
 # Model Notes:
 # 1. to_email_address - used to specify an email address in the case where the
 #    vm's owner does not have an  email address. To specify more than one email
-#    address separate email address with commas. (I.e. admin@company.com,user@company.com)
+#    address separate email address with commas. (I.e. admin@example.com,user@example.com)
 # 2. from_email_address - used to specify an email address in the event the
 #    requester replies to the email
 # 3. signature - used to stamp the email with a custom signature
@@ -17,26 +17,7 @@ miq_server = $evm.root['miq_server']
 
 $evm.log("info", "Inspecting miq_task: #{miq_task.inspect}")
 
-# Look in the current object for a VM
-vm = $evm.object['vm']
-if vm.nil?
-  vm_id = $evm.object['vm_id'].to_i
-  vm = $evm.vmdb('vm', vm_id) unless vm_id == 0
-end
-
-# Look in the Root Object for a VM
-if vm.nil?
-  vm = $evm.root['vm']
-  if vm.nil?
-    vm_id = $evm.root['vm_id'].to_i
-    vm = $evm.vmdb('vm', vm_id) unless vm_id == 0
-  end
-end
-
-if vm.nil?
-  vm = miq_task.vm unless miq_task.nil?
-end
-
+vm = miq_task.source
 raise "VM not found" if vm.nil?
 
 # Get VM Owner Name and Email

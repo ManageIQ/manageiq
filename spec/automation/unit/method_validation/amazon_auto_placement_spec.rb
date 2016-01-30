@@ -1,11 +1,11 @@
-require "spec_helper"
-
 describe "AMAZON best fit" do
+
+  let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Cloud/VM/Provisioning&class=Placement" \
                             "&instance=default&message=amazon&" \
-                            "MiqProvision::miq_provision=#{miq_provision.id}")
+                            "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
 
   let(:ems) do
@@ -20,6 +20,7 @@ describe "AMAZON best fit" do
   let(:miq_provision) do
     FactoryGirl.create(:miq_provision_amazon,
                        :options => {:src_vm_id => vm_template.id},
+                       :userid  => user.userid,
                        :state   => 'active',
                        :status  => 'Ok')
   end
@@ -79,8 +80,8 @@ describe "AMAZON best fit" do
     def check_attributes_not_set
       miq_provision.reload
       keys = miq_provision.options.keys
-      expect(keys.include?(:cloud_network)).to be_false
-      expect(keys.include?(:cloud_subnet)).to be_false
+      expect(keys.include?(:cloud_network)).to be_falsey
+      expect(keys.include?(:cloud_subnet)).to be_falsey
     end
   end
 end

@@ -5,6 +5,6 @@
     .run(mock);
 
   function mock($httpBackend) {
-    $httpBackend.whenGET(/.*/).passThrough();
+    // $httpBackend.whenGET(/.*/).passThrough();
   }
 })();

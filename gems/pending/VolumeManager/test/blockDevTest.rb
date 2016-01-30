@@ -12,7 +12,7 @@ class ConsoleFormatter < Log4r::Formatter
 end
 
 toplog = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level=>Log4r::DEBUG, :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 toplog.add 'err_console'
 $vim_log = $log = toplog if $log.nil?
 
@@ -33,7 +33,7 @@ begin
   end
 
   volMgr.closeAll
-  
+
 rescue  => err
   puts err.to_s
   puts err.backtrace.join("\n")

@@ -1,44 +1,59 @@
 class ContainerTopologyService
+  include ActionView::Helpers::AssetUrlHelper
+
   def initialize(provider_id)
     @provider_id = provider_id
+    @providers = retrieve_providers
   end
 
   def build_topology
-    nodes, services = entities
     topology = {}
     topo_items = {}
     links = []
-    nodes.each do |n|
-      topo_items[n.ems_ref] = build_entity_data(n, "Node")
-      n.container_groups.each do |cg|
-        topo_items[cg.ems_ref] = build_entity_data(cg, "Pod")
-        links << build_link(n.ems_ref, cg.ems_ref)
-        cg.containers.each do |c|
-          topo_items[c.ems_ref] = build_entity_data(c, "Container")
-          links << build_link(cg.ems_ref, c.ems_ref)
-        end
-        if cg.container_replicator
-          cr = cg.container_replicator
-          topo_items[cr.ems_ref] = build_entity_data(cr, "Replicator")
-          links << build_link(cg.ems_ref, cr.ems_ref)
-        end
-      end
 
-      if n.lives_on
-        kind = n.lives_on.kind_of?(Vm) ? "VM" : "Host"
-        topo_items[n.lives_on.uid_ems] = build_entity_data(n.lives_on, kind)
-        links << build_link(n.ems_ref, n.lives_on.uid_ems)
-        if kind == 'VM' # add link to Host
-          host = n.lives_on.host
-          topo_items[host.uid_ems] = build_entity_data(host, "Host")
-          links << build_link(n.lives_on.uid_ems, host.uid_ems)
+    @providers.each do |provider|
+      topo_items[entity_id(provider)] =  build_entity_data(provider)
+      provider.container_nodes.each { |n|
+        topo_items[entity_id(n)] = build_entity_data(n)
+        links << build_link(entity_id(provider), entity_id(n))
+        n.container_groups.each do |cg|
+          topo_items[entity_id(cg)] = build_entity_data(cg)
+          links << build_link(entity_id(n), entity_id(cg))
+          cg.containers.each do |c|
+            topo_items[entity_id(c)] = build_entity_data(c)
+            links << build_link(entity_id(cg), entity_id(c))
+          end
+          if cg.container_replicator
+            cr = cg.container_replicator
+            topo_items[entity_id(cr)] = build_entity_data(cr)
+            links << build_link(entity_id(cg), entity_id(cr))
+          end
         end
-      end
-    end
 
-    services.each do |s|
-      topo_items[s.ems_ref] = build_entity_data(s, "Service")
-      s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
+        if n.lives_on
+          kind = entity_type(n.lives_on)
+          topo_items[entity_id(n.lives_on)] = build_entity_data(n.lives_on)
+          links << build_link(entity_id(n), entity_id(n.lives_on))
+          if kind == 'Vm' # add link to Host
+            host = n.lives_on.host
+            if host
+              topo_items[entity_id(host)] = build_entity_data(host)
+              links << build_link(entity_id(n.lives_on), entity_id(host))
+            end
+          end
+        end
+      }
+
+      provider.container_services.each { |s|
+        topo_items[entity_id(s)] = build_entity_data(s)
+        s.container_groups.each { |cg| links << build_link(entity_id(s), entity_id(cg)) } if s.container_groups.size > 0
+        if s.container_routes.size > 0
+          s.container_routes.each { |r|
+            topo_items[entity_id(r)] = build_entity_data(r)
+            links << build_link(entity_id(s), entity_id(r))
+          }
+        end
+      }
     end
 
     topology[:items] = topo_items
@@ -46,31 +61,90 @@ class ContainerTopologyService
     topology[:kinds] = build_kinds
     topology
   end
+  
+  def entity_type(entity)
+      entity.class.name.demodulize
+  end
 
-  def build_entity_data(entity, kind)
-    status = entity_status(entity, kind)
+  def entity_display_type(entity)
+    if entity.kind_of?(ManageIQ::Providers::ContainerManager)
+      entity.type.split('::')[2]
+    elsif entity.kind_of?(ManageIQ::Providers::ContainerManager::ContainerGroup)
+      "Pod"
+    else
+      name = entity.class.name.demodulize
+      if name.start_with? "Container"
+        if name.length > "Container".length # container related entities such as ContainerService
+          name["Container".length..-1]
+        else
+          "Container" # the container entity itself
+        end
+      else
+        if entity.kind_of?(Vm)
+          name.upcase # turn Vm to VM because it's an abbreviation
+        else
+          name # non container entities such as Host
+        end
+      end
+    end
+  end
 
-    id = case kind
-         when 'VM', 'Host' then entity.uid_ems
-         else entity.ems_ref
-         end
+  def entity_id(entity)
+    if entity.kind_of?(ManageIQ::Providers::ContainerManager)
+      id = entity.id.to_s
+    elsif entity.kind_of?(Host) || entity.kind_of?(Vm)
+      id = entity.uid_ems
+    else
+      id = entity.ems_ref
+    end
+    id
+  end
 
-    {:metadata => {:id => id}, :name => entity.name, :status => status, :kind => kind}
+  def build_entity_data(entity)
+    type = entity_type(entity)
+    status = entity_status(entity, type)
+    data = {:id           => entity_id(entity),
+            :name         => entity.name,
+            :status       => status,
+            :kind         => type,
+            :display_kind => entity_display_type(entity),
+            :miq_id       => entity.id}
+
+    if entity.kind_of?(Host) || entity.kind_of?(Vm)
+      data.merge!(:provider => entity.ext_management_system.name)
+    end
+
+    data
   end
 
   def entity_status(entity, kind)
     case kind
-    when 'VM', 'Host' then entity.power_state
-    when 'Node'
-      condition = entity.container_conditions.first
-      if condition.name == 'Ready' && condition.status == 'True'
-        'Ready'
-      else
-        'NotReady'
+    when 'Vm', 'Host' then entity.power_state.capitalize
+    when 'ContainerNode'
+      ready_status = 'Unknown'
+      entity.container_conditions.each do |condition|
+        if condition.try(:name) == 'Ready' && condition.try(:status) == 'True'
+          ready_status = 'Ready'
+        else
+          ready_status = 'NotReady'
+        end
       end
-    when 'Pod' then entity.phase
-    when 'Container' then entity.state
-    else 'unknown'
+      ready_status
+    when 'ContainerGroup' then entity.phase
+    when 'Container' then entity.state.capitalize
+    when 'ContainerReplicator'
+      if entity.current_replicas == entity.replicas
+        'OK'
+      else
+        'Warning'
+      end
+    when 'ContainerManager'
+      if entity.authentications.empty?
+        'Unknown'
+      else
+        entity.authentications.first.status.capitalize
+      end
+    else 'Unknown'
     end
   end
 
@@ -78,32 +152,22 @@ class ContainerTopologyService
     {:source => source, :target => target}
   end
 
-  def entities
-    # provider id is empty when the topology is generated for all the providers together
+  def retrieve_providers
     if @provider_id
-      provider = ExtManagementSystem.find(@provider_id.to_i)
-      if provider.kind_of?(ManageIQ::Providers::Openshift::ContainerManager) || provider.kind_of?(ManageIQ::Providers::Kubernetes::ContainerManager)
-        nodes = provider.container_nodes
-        services = provider.container_services
-      else
-        nodes = ContainerNode.all
-        services = ContainerService.all
-      end
-    else
-      nodes = ContainerNode.all
-      services = ContainerService.all
+      providers = ManageIQ::Providers::ContainerManager.where(:id => @provider_id)
+    else  # provider id is empty when the topology is generated for all the providers together
+      providers = ManageIQ::Providers::ContainerManager.all
     end
-    [nodes, services]
+    providers
   end
 
   def build_kinds
-    {:Replicator => true,
-     :Pod        => true,
-     :Container  => true,
-     :Node       => true,
-     :Service    => true,
-     :Host       => true,
-     :VM         => true
-    }
+    kinds = [:ContainerReplicator, :ContainerGroup, :Container, :ContainerNode,
+             :ContainerService, :Host, :Vm, :ContainerRoute]
+
+    if @providers.size > 0
+      kinds << :ContainerManager
+    end
+    kinds.each_with_object({}) { |kind, h| h[kind] = true }
   end
 end

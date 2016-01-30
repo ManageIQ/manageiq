@@ -10,9 +10,8 @@ module OpsController::Settings::RHN
   #
 
   SUBSCRIPTION_TYPES =
-    [['Red Hat Subscription Management', 'sm_hosted'      ],
-     ['Red Hat Satellite 5',             'rhn_satellite'  ],
-     ['Red Hat Satellite 6',             'rhn_satellite6' ]]
+    [['Red Hat Subscription Management', 'sm_hosted'],
+     ['Red Hat Satellite 6',             'rhn_satellite6']]
 
   def rhn_subscription_types
     SUBSCRIPTION_TYPES
@@ -23,29 +22,26 @@ module OpsController::Settings::RHN
   end
 
   included do
-    self.hide_action(:rhn_subscription_map)
-    self.hide_action(:rhn_update_information)
-    self.hide_action(:rhn_subscription)
-    self.hide_action(:rhn_save_subscription)
-    self.hide_action(:rhn_credentials_from_edit)
-    self.hide_action(:rhn_fire_available_organizations)
-    self.hide_action(:rhn_load_session)
-    self.hide_action(:rhn_gather_checks)
+    private(:rhn_subscription_map)
+    private(:rhn_update_information)
+    private(:rhn_subscription)
+    private(:rhn_save_subscription)
+    private(:rhn_credentials_from_edit)
+    private(:rhn_fire_available_organizations)
+    private(:rhn_load_session)
+    private(:rhn_gather_checks)
 
-    self.helper_method(:rhn_subscription_types)
-    self.hide_action(:rhn_subscription_types)
+    helper_method(:rhn_subscription_types)
+    private(:rhn_subscription_types)
 
-    self.helper_method(:rhn_address_string)
-    self.hide_action(:rhn_address_string)
+    helper_method(:rhn_address_string)
+    private(:rhn_address_string)
 
-    self.helper_method(:rhn_account_info_string)
-    self.hide_action(:rhn_account_info_string)
+    helper_method(:rhn_account_info_string)
+    private(:rhn_account_info_string)
 
-    self.helper_method(:rhn_validate_enabled)
-    self.hide_action(:rhn_validate_enabled)
-
-    self.helper_method(:rhn_default_enabled)
-    self.hide_action(:rhn_default_enabled)
+    helper_method(:rhn_default_enabled)
+    private(:rhn_default_enabled)
   end
 
   def rhn_address_string
@@ -56,10 +52,6 @@ module OpsController::Settings::RHN
 
   def rhn_account_info_string
     "Enter your Red Hat#{@edit[:new][:register_to] == "sm_hosted" ? "" : " Network Satellite"} account information"
-  end
-
-  def rhn_validate_enabled
-    @edit[:new][:register_to] != 'rhn_satellite'
   end
 
   def rhn_default_enabled
@@ -153,20 +145,20 @@ module OpsController::Settings::RHN
   # prepare credentials from @edit into a hash for async call
   def rhn_credentials_from_edit
     {
-      :registration_type    => @edit[:new][:register_to],
-      :userid               => @edit[:new][:customer_userid],
-      :password             => @edit[:new][:customer_password],
-      :registration_server  => @edit[:new][:server_url],
-      :update_repo_name     => @edit[:new][:repo_name],
-    }.update( @edit[:new][:use_proxy].to_i == 1 ? {
-        :registration_http_proxy_server   => @edit[:new][:proxy_address],
-        :registration_http_proxy_username => @edit[:new][:proxy_userid],
-        :registration_http_proxy_password => @edit[:new][:proxy_password]
-      } : {
-        :registration_http_proxy_server   => nil,
-        :registration_http_proxy_username => nil,
-        :registration_http_proxy_password => nil }
-    )
+      :registration_type   => @edit[:new][:register_to],
+      :userid              => @edit[:new][:customer_userid],
+      :password            => @edit[:new][:customer_password],
+      :registration_server => @edit[:new][:server_url],
+      :update_repo_name    => @edit[:new][:repo_name],
+    }.update(@edit[:new][:use_proxy].to_i == 1 ? {
+               :registration_http_proxy_server   => @edit[:new][:proxy_address],
+               :registration_http_proxy_username => @edit[:new][:proxy_userid],
+               :registration_http_proxy_password => @edit[:new][:proxy_password]
+             } : {
+               :registration_http_proxy_server   => nil,
+               :registration_http_proxy_username => nil,
+               :registration_http_proxy_password => nil}
+            )
   end
 
   def rhn_fire_available_organizations
@@ -195,7 +187,7 @@ module OpsController::Settings::RHN
   def rhn_gather_checks
     @edit[:new][:servers] = {}
 
-    params.each do |key,value|
+    params.each do |key, value|
       if key =~ /^check_server_(\d+)$/
         server_id = $1.to_i
         if MiqServer.find(server_id) && (value == '1')
@@ -226,7 +218,7 @@ module OpsController::Settings::RHN
       if @edit[:new][field].present?
         false
       else
-        add_flash(_("%s is required") %  RHN_OBLIGATORY_FIELD_NAMES[field], :error)
+        add_flash(_("%s is required") % RHN_OBLIGATORY_FIELD_NAMES[field], :error)
         true
       end
     end.empty?
@@ -246,7 +238,7 @@ module OpsController::Settings::RHN
   end
 
   def rhn_organizations
-    rhn_fire_available_organizations do |organizations|
+    rhn_fire_available_organizations do |_organizations|
       render :update do |page|
         # TODO: replace following line with this after 5.2: page << set_spinner_off
         page << "miqSparkle(false);"
@@ -271,9 +263,9 @@ module OpsController::Settings::RHN
     if params[:task_id]
       render :update do |page|
         if 'rhn_satellite6' == @edit[:new][:register_to]
-          page.replace_html('settings_rhn', :partial=>'settings_rhn_edit_tab')
+          page.replace_html('settings_rhn', :partial => 'settings_rhn_edit_tab')
         else
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
 
         # TODO: replace following line with this after 5.2: page << set_spinner_off
@@ -304,9 +296,9 @@ module OpsController::Settings::RHN
             MiqServer.queue_apply_updates(server_ids)
           end
 
-          add_flash(_("%s has been initiated for the selected Servers") %  verb)
+          add_flash(_("%s has been initiated for the selected Servers") % verb)
         rescue => error
-          add_flash(_("Error occured when queuing action: %s") %  error.message, :error)
+          add_flash(_("Error occured when queuing action: %s") % error.message, :error)
         end
       end
     end
@@ -350,6 +342,6 @@ module OpsController::Settings::RHN
   private
 
   def reset_repo_name_from_default
-    MiqDatabase.registration_default_value_for_update_repo_name(@edit[:new][:register_to])
+    MiqDatabase.registration_default_value_for_update_repo_name
   end
 end

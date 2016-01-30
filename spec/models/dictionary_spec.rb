@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Dictionary do
   context ".gettext" do
     context "with text only" do

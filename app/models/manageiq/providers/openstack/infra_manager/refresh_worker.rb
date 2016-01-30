@@ -1,7 +1,11 @@
 class ManageIQ::Providers::Openstack::InfraManager::RefreshWorker < ::MiqEmsRefreshWorker
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresh_worker/runner'
+  require_nested :Runner
 
   def self.ems_class
     ManageIQ::Providers::Openstack::InfraManager
+  end
+
+  def self.settings_name
+    :ems_refresh_worker_openstack_infra
   end
 end

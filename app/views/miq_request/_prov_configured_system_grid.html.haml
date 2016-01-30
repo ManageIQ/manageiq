@@ -14,9 +14,10 @@
               {:action => "sort_configured_system_grid", :sort_choice => header, :field_id => field_id, :id => id.to_s},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
+              "data-method"          => :post,
               :remote                => true)
             - if name == options[:configured_system_sortcol]
-              %img{:src => "/images/icons/16/sort_#{@edit[:configured_system_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+              %img{:src => image_path("16/sort_#{@edit[:configured_system_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
           - else
             = h(header)
     %tbody

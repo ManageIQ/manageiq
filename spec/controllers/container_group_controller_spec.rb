@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerGroupController do
   render_views
   before(:each) do
@@ -9,7 +7,7 @@ describe ContainerGroupController do
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
-    response.should redirect_to(:action => 'show_list')
+    expect(response).to redirect_to(:action => 'show_list')
   end
 
   it "renders show screen" do
@@ -17,20 +15,21 @@ describe ContainerGroupController do
     ems = FactoryGirl.create(:ems_kubernetes)
     container_project = ContainerProject.create(:ext_management_system => ems)
     container_group = ContainerGroup.create(:ext_management_system => ems,
-                                            :container_project => container_project,
-                                            :name => "Test Group")
+                                            :container_project     => container_project,
+                                            :name                  => "Test Group")
     get :show, :id => container_group.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([:name => "Test Group (Summary)",
-                                         :url  => "/container_group/show/#{container_group.id}"])
+    expect(assigns(:breadcrumbs)).to eq([{:name => "Pods",
+                                          :url  => "/container_group/show_list?page=&refresh=y"},
+                                         {:name => "Test Group (Summary)",
+                                          :url  => "/container_group/show/#{container_group.id}"}])
   end
 
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containergroup => 'list'},
                           :perpage        => {:list => 10}}
-    FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
 
     get :show_list

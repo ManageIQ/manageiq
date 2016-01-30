@@ -1,6 +1,6 @@
 module Vmdb
   class ConfigurationEncoder
-    PASSWORD_FIELDS = %w{bind_pwd password amazon_secret}
+    PASSWORD_FIELDS = %w(bind_pwd password amazon_secret)
 
     def self.validate!(hash)
       load(dump(hash))

@@ -1,7 +1,5 @@
-class CloudResourceQuota < ActiveRecord::Base
+class CloudResourceQuota < ApplicationRecord
   include ReportableMixin
-
-  #attr_accessible :ems_ref, :service_name, :name, :value, :type, :cloud_tenant_id
 
   belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :cloud_tenant

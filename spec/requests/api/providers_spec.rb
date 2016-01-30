@@ -13,14 +13,20 @@
 # - Refresh a provider                    /api/providers/:id                    action "refresh"
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
+
+  ENDPOINT_ATTRS = ApiController::Providers::ENDPOINT_ATTRS
 
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }
   let(:metrics_credentials) { {"userid" => "admin2", "password" => "password2", "auth_type" => "metrics"} }
   let(:compound_credentials) { [default_credentials, metrics_credentials] }
+  let(:openshift_credentials) do
+    {
+      "auth_type" => "bearer",
+      "auth_key"  => SecureRandom.hex
+    }
+  end
   let(:sample_vmware) do
     {
       "type"      => "ManageIQ::Providers::Vmware::InfraManager",
@@ -33,9 +39,18 @@ describe ApiController do
     {
       "type"      => "ManageIQ::Providers::Redhat::InfraManager",
       "name"      => "sample rhevm",
-      "port"      => "5000",
+      "port"      => 5000,
       "hostname"  => "sample_rhevm.provider.com",
       "ipaddress" => "100.200.300.2"
+    }
+  end
+  let(:sample_openshift) do
+    {
+      "type"      => "ManageIQ::Providers::Openshift::ContainerManager",
+      "name"      => "sample openshift",
+      "port"      => "8443",
+      "hostname"  => "sample_openshift.provider.com",
+      "ipaddress" => "100.200.300.3",
     }
   end
 
@@ -100,10 +115,26 @@ describe ApiController do
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_rhevm])
+      expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
+      endpoint = ExtManagementSystem.find(provider_id).default_endpoint
+      expect_result_to_match_hash(endpoint.attributes, sample_rhevm.slice(*ENDPOINT_ATTRS))
+    end
+
+    it "supports openshift creation with auth_key specified" do
+      api_basic_authorize collection_action_identifier(:providers, :create)
+
+      run_post(providers_url, sample_openshift.merge("credentials" => [openshift_credentials]))
+
+      expect_request_success
+      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect_results_to_match_hash("results", [sample_openshift.except(*ENDPOINT_ATTRS)])
+
+      provider_id = @result["results"].first["id"]
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
+      expect(ExtManagementSystem.find(provider_id).authentications.size).to eq(1)
     end
 
     it "supports single provider creation via action" do
@@ -113,10 +144,10 @@ describe ApiController do
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_rhevm])
+      expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
     end
 
     it "supports single provider creation with simple credentials" do
@@ -126,10 +157,10 @@ describe ApiController do
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_vmware])
+      expect_results_to_match_hash("results", [sample_vmware.except(*ENDPOINT_ATTRS)])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid).to eq(default_credentials["userid"])
       expect(provider.authentication_password).to eq(default_credentials["password"])
@@ -142,10 +173,10 @@ describe ApiController do
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_rhevm])
+      expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
       provider_id = @result["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_true
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid(:default)).to eq(default_credentials["userid"])
       expect(provider.authentication_password(:default)).to eq(default_credentials["password"])
@@ -160,12 +191,13 @@ describe ApiController do
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_vmware, sample_rhevm])
+      expect_results_to_match_hash("results",
+                                   [sample_vmware.except(*ENDPOINT_ATTRS), sample_rhevm.except(*ENDPOINT_ATTRS)])
 
       results = @result["results"]
       p1_id, p2_id = results.first["id"], results.second["id"]
-      expect(ExtManagementSystem.exists?(p1_id)).to be_true
-      expect(ExtManagementSystem.exists?(p2_id)).to be_true
+      expect(ExtManagementSystem.exists?(p1_id)).to be_truthy
+      expect(ExtManagementSystem.exists?(p2_id)).to be_truthy
     end
   end
 
@@ -193,9 +225,9 @@ describe ApiController do
 
       run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
 
-      expect_single_resource_query("id" => provider.id, "name" => "updated provider", "port" => "8080")
+      expect_single_resource_query("id" => provider.id, "name" => "updated provider")
       expect(provider.reload.name).to eq("updated provider")
-      expect(provider.port).to eq("8080")
+      expect(provider.port).to eq(8080)
     end
 
     it "supports updates of credentials" do
@@ -327,7 +359,7 @@ describe ApiController do
     it "supports single provider refresh" do
       api_basic_authorize collection_action_identifier(:providers, :refresh)
 
-      provider  = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
+      provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
 
       run_post(providers_url(provider.id), gen_request(:refresh))
@@ -338,10 +370,10 @@ describe ApiController do
     it "supports multiple provider refreshes" do
       api_basic_authorize collection_action_identifier(:providers, :refresh)
 
-      p1  = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
+      p1 = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
       p1.update_authentication(:default => default_credentials.symbolize_keys)
 
-      p2  = FactoryGirl.create(:ext_management_system, sample_rhevm.symbolize_keys.except(:type))
+      p2 = FactoryGirl.create(:ext_management_system, sample_rhevm.symbolize_keys.except(:type))
       p2.update_authentication(:default => default_credentials.symbolize_keys)
 
       run_post(providers_url, gen_request(:refresh, [{"href" => providers_url(p1.id)},

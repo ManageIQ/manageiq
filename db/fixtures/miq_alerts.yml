@@ -77,7 +77,7 @@
     :mode: internal
     :options: 
       :operator: Decreased
-      :hdw_attr: :numvcpus
+      :hdw_attr: :cpu_total_cores
     :eval_method: reconfigured_hardware_value
   description: VM CPU count was decreased
   db: Vm
@@ -101,7 +101,7 @@
     :mode: internal
     :options: 
       :operator: Increased
-      :hdw_attr: memory_cpu
+      :hdw_attr: memory_mb
     :eval_method: reconfigured_hardware_value
   description: VM Memory was increased
   db: Vm
@@ -125,7 +125,7 @@
     :mode: internal
     :options: 
       :operator: Increased
-      :hdw_attr: :numvcpus
+      :hdw_attr: :cpu_total_cores
     :eval_method: reconfigured_hardware_value
   description: VM CPU count was increased
   db: Vm
@@ -136,7 +136,7 @@
     :mode: internal
     :options: 
       :operator: Decreased
-      :hdw_attr: memory_cpu
+      :hdw_attr: memory_mb
     :eval_method: reconfigured_hardware_value
   description: VM Memory was decreased
   db: Vm
@@ -202,8 +202,8 @@
       - CONTAINS: 
           tag: Vm.managed-service_level
           value: silver
-      - ">": 
-          field: Vm.hardware-numvcpus
+      - ">":
+          field: Vm.hardware-cpu_total_cores
           value: 1
   :db: Vm
   :guid: fdee2784-bf2c-11de-b3b4-000c290de4f9
@@ -215,8 +215,8 @@
       - CONTAINS: 
           tag: Vm.managed-service_level
           value: silver
-      - ">": 
-          field: Vm.hardware-memory_cpu
+      - ">":
+          field: Vm.hardware-memory_mb
           value: 2048
   :db: Vm
   :guid: 9b61fd9e-bf35-11de-b3b4-000c290de4f9

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "RegistrationSystem" do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
@@ -15,7 +13,7 @@ describe "RegistrationSystem" do
     end
 
     it "validate that a task was created" do
-      expect(MiqTask.find(RegistrationSystem.available_organizations_queue(@creds))).to be_true
+      expect(MiqTask.find(RegistrationSystem.available_organizations_queue(@creds))).to be_truthy
     end
 
     it "validate that one queue item was created for this task" do
@@ -33,12 +31,12 @@ describe "RegistrationSystem" do
 
   context ".available_organizations" do
     it "with valid credentials" do
-      LinuxAdmin::SubscriptionManager.any_instance.should_receive(:organizations).once.with({:username=>"SomeUser", :password=>"SomePass"}).and_return({"SomeOrg"=>{:name=>"SomeOrg", :key=>"1234567"}, "SomeOrg2"=>{:name=>"SomeOrg2", :key=>"12345672"}})
+      expect_any_instance_of(LinuxAdmin::SubscriptionManager).to receive(:organizations).once.with(:username => "SomeUser", :password => "SomePass").and_return("SomeOrg" => {:name => "SomeOrg", :key => "1234567"}, "SomeOrg2" => {:name => "SomeOrg2", :key => "12345672"})
       expect(RegistrationSystem.available_organizations(@creds)).to eq("SomeOrg" => "1234567", "SomeOrg2" => "12345672")
     end
 
     it "with invalid credentials" do
-      LinuxAdmin::SubscriptionManager.any_instance.should_receive(:organizations).once.and_raise(LinuxAdmin::CredentialError, "Invalid username or password")
+      expect_any_instance_of(LinuxAdmin::SubscriptionManager).to receive(:organizations).once.and_raise(LinuxAdmin::CredentialError, "Invalid username or password")
       expect { RegistrationSystem.available_organizations(@creds) }.to raise_error(LinuxAdmin::CredentialError)
     end
 
@@ -50,7 +48,7 @@ describe "RegistrationSystem" do
         :registration_server            => "http://abc.net",
         :registration_http_proxy_server => "1.1.1.1"
       )
-      LinuxAdmin::SubscriptionManager.any_instance.should_receive(:organizations).once.with({:username=>"SomeUser", :password=>"SomePass", :server_url=>"http://abc.net", :registration_type=>"sm_hosted", :proxy_address=>"1.1.1.1", :proxy_username=>"bob", :proxy_password=>"pass"}).and_return({"SomeOrg"=>{:name=>"SomeOrg", :key=>"1234567"}, "SomeOrg2"=>{:name=>"SomeOrg2", :key=>"12345672"}})
+      expect_any_instance_of(LinuxAdmin::SubscriptionManager).to receive(:organizations).once.with(:username => "SomeUser", :password => "SomePass", :server_url => "http://abc.net", :registration_type => "sm_hosted", :proxy_address => "1.1.1.1", :proxy_username => "bob", :proxy_password => "pass").and_return("SomeOrg" => {:name => "SomeOrg", :key => "1234567"}, "SomeOrg2" => {:name => "SomeOrg2", :key => "12345672"})
       expect(RegistrationSystem.available_organizations).to eq("SomeOrg" => "1234567", "SomeOrg2" => "12345672")
     end
   end
@@ -63,7 +61,7 @@ describe "RegistrationSystem" do
     end
 
     it "validate that a task was created" do
-      expect(MiqTask.find(RegistrationSystem.verify_credentials_queue(@creds))).to be_true
+      expect(MiqTask.find(RegistrationSystem.verify_credentials_queue(@creds))).to be_truthy
     end
 
     it "validate that one queue item was created for this task" do
@@ -81,18 +79,18 @@ describe "RegistrationSystem" do
 
   context ".verify_credentials" do
     it "with valid credentials" do
-      LinuxAdmin::RegistrationSystem.should_receive(:validate_credentials).once.with({:username=>"SomeUser", :password=>"SomePass"}).and_return(true)
-      expect(RegistrationSystem.verify_credentials(@creds)).to be_true
+      expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass").and_return(true)
+      expect(RegistrationSystem.verify_credentials(@creds)).to be_truthy
     end
 
     it "with invalid credentials" do
-      LinuxAdmin::RegistrationSystem.should_receive(:validate_credentials).once.and_raise(LinuxAdmin::CredentialError, "Invalid username or password")
-      expect(RegistrationSystem.verify_credentials(@creds)).to be_false
+      expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.and_raise(LinuxAdmin::CredentialError, "Invalid username or password")
+      expect(RegistrationSystem.verify_credentials(@creds)).to be_falsey
     end
 
     it "should rescue NotImplementedError" do
-      LinuxAdmin::Rhn.any_instance.stub(:registered? => true)
-      expect(RegistrationSystem.verify_credentials(@creds)).to be_false
+      allow_any_instance_of(LinuxAdmin::Rhn).to receive_messages(:registered? => true)
+      expect(RegistrationSystem.verify_credentials(@creds)).to be_falsey
     end
 
     it "with no options" do
@@ -103,8 +101,8 @@ describe "RegistrationSystem" do
         :registration_server            => "http://abc.net",
         :registration_http_proxy_server => "1.1.1.1"
       )
-      LinuxAdmin::RegistrationSystem.should_receive(:validate_credentials).once.with({:username=>"SomeUser", :password=>"SomePass", :server_url=>"http://abc.net", :registration_type=>"sm_hosted", :proxy_address=>"1.1.1.1", :proxy_username=>"bob", :proxy_password=>"pass"}).and_return(true)
-      expect(RegistrationSystem.verify_credentials).to be_true
+      expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass", :server_url => "http://abc.net", :registration_type => "sm_hosted", :proxy_address => "1.1.1.1", :proxy_username => "bob", :proxy_password => "pass").and_return(true)
+      expect(RegistrationSystem.verify_credentials).to be_truthy
     end
   end
 end

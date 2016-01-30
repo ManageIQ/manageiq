@@ -1,7 +1,4 @@
-require "spec_helper"
-
 describe PidFile do
-
   before(:each) do
     @fname = 'foo.bar'
     @pid_file = PidFile.new(@fname)
@@ -9,43 +6,43 @@ describe PidFile do
 
   context "#pid" do
     it "returns nil when file does not exist" do
-      File.stub(:file?).with(@fname).and_return(false)
-      @pid_file.pid.should be_nil
+      allow(File).to receive(:file?).with(@fname).and_return(false)
+      expect(@pid_file.pid).to be_nil
     end
 
     context "file does exist" do
       before(:each) do
-        File.stub(:file?).with(@fname).and_return(true)
+        allow(File).to receive(:file?).with(@fname).and_return(true)
       end
 
       it "returns nil when file contents blank" do
-        IO.stub(:read).with(@fname).and_return("  ")
-        @pid_file.pid.should be_nil
+        allow(IO).to receive(:read).with(@fname).and_return("  ")
+        expect(@pid_file.pid).to be_nil
       end
 
       it "returns nil when file contents are non numeric" do
-        IO.stub(:read).with(@fname).and_return("text")
-        @pid_file.pid.should be_nil
+        allow(IO).to receive(:read).with(@fname).and_return("text")
+        expect(@pid_file.pid).to be_nil
       end
 
       it "returns pid when file contents have pid" do
         pid = 42
-        IO.stub(:read).with(@fname).and_return("#{pid} ")
-        @pid_file.pid.should == pid
+        allow(IO).to receive(:read).with(@fname).and_return("#{pid} ")
+        expect(@pid_file.pid).to eq(pid)
       end
     end
   end
 
   context "#remove" do
     it "noops when file does not exist" do
-      File.stub(:file?).with(@fname).and_return(false)
-      FileUtils.should_receive(:rm).with(@fname).never
+      allow(File).to receive(:file?).with(@fname).and_return(false)
+      expect(FileUtils).to receive(:rm).with(@fname).never
       @pid_file.remove
     end
 
     it "deletes when file does exist" do
-      File.stub(:file?).with(@fname).and_return(true)
-      FileUtils.should_receive(:rm).with(@fname).once
+      allow(File).to receive(:file?).with(@fname).and_return(true)
+      expect(FileUtils).to receive(:rm).with(@fname).once
       @pid_file.remove
     end
   end
@@ -53,12 +50,12 @@ describe PidFile do
   context "#create" do
     it "creates file whose contents are Process.pid" do
       @dirname = "/test/dir"
-      File.stub(:dirname).with(@fname).and_return(@dirname)
-      FileUtils.should_receive(:mkdir_p).with(@dirname).once
+      allow(File).to receive(:dirname).with(@fname).and_return(@dirname)
+      expect(FileUtils).to receive(:mkdir_p).with(@dirname).once
 
       @fhandle = double('file_handle')
-      @fhandle.should_receive(:write).with(Process.pid).once
-      File.stub(:open).with(@fname, 'w').and_yield(@fhandle)
+      expect(@fhandle).to receive(:write).with(Process.pid).once
+      allow(File).to receive(:open).with(@fname, 'w').and_yield(@fhandle)
 
       @pid_file.create
     end
@@ -66,52 +63,47 @@ describe PidFile do
 
   context "#running?" do
     it "returns false if #pid returns nil" do
-      @pid_file.stub(:pid).and_return(nil)
-      @pid_file.running?.should be_false
+      allow(@pid_file).to receive(:pid).and_return(nil)
+      expect(@pid_file.running?).to be_falsey
     end
 
     context "#pid returns valid value" do
       before(:each) do
         @pid = 42
-        @pid_file.stub(:pid).and_return(@pid)
+        allow(@pid_file).to receive(:pid).and_return(@pid)
       end
 
       it "returns false if MiqProcess.command_line returns nil" do
-        MiqProcess.stub(:command_line).and_return(nil)
-        @pid_file.running?.should be_false
+        allow(MiqProcess).to receive(:command_line).and_return(nil)
+        expect(@pid_file.running?).to be_falsey
       end
 
       context "MiqProcess.command_line returns valid value" do
         before(:each) do
           @cmd_line = "my favorite program"
-          MiqProcess.stub(:command_line).and_return(@cmd_line)
+          allow(MiqProcess).to receive(:command_line).and_return(@cmd_line)
         end
 
         it "returns true with no parms" do
-          @pid_file.running?.should be_true
+          expect(@pid_file.running?).to be_truthy
         end
 
         it "returns true with valid Regexp" do
-          @pid_file.running?(/program/).should be_true
+          expect(@pid_file.running?(/program/)).to be_truthy
         end
 
         it "returns true with valid Regexp as String" do
-          @pid_file.running?('program').should be_true
+          expect(@pid_file.running?('program')).to be_truthy
         end
 
         it "returns false with invalid Regexp" do
-          @pid_file.running?(/programme/).should be_false
+          expect(@pid_file.running?(/programme/)).to be_falsey
         end
 
         it "returns false with invalid Regexp as String" do
-          @pid_file.running?('programme').should be_false
+          expect(@pid_file.running?('programme')).to be_falsey
         end
-
       end
-
     end
-
   end
-
-
 end

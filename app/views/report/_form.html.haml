@@ -2,7 +2,10 @@
 #form_div
   = render :partial => '/layouts/tabs'
   = render :partial => "layouts/flash_msg"
-  = form_tag({:action => 'create', :id => "report_basic_form"}, {:class => "form-horizontal"}) do
+  = form_tag({:action => 'create',
+              :id     => "report_basic_form"},
+             :class  => "form-horizontal",
+             :method => :post) do
     %h3
       = _('Basic Report Info')
     .form-group

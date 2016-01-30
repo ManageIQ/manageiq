@@ -1,11 +1,9 @@
-require "spec_helper"
-
 describe MiqRequestTask do
   before do
     MiqRegion.seed
     EvmSpecHelper.create_guid_miq_server_zone
     user        = FactoryGirl.create(:user)
-    miq_request = FactoryGirl.create(:miq_host_provision_request, :userid => user.userid)
+    miq_request = FactoryGirl.create(:miq_host_provision_request, :requester => user)
     @task       = FactoryGirl.create(:miq_request_task, :miq_request => miq_request, :type => 'MiqRequestTask')
   end
 

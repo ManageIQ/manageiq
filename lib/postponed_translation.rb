@@ -25,6 +25,6 @@ class PostponedTranslation
 
   # when we have a generic Proc support - TreeBuilder for example
   def to_proc
-    lambda { self.translate }
+    -> { translate }
   end
 end

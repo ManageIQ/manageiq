@@ -1,8 +1,9 @@
 - if is_browser_ie?
-  %html
+  %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title
         = _("VM %s Remote Console") % @record.name
+      = favicon_link_tag
       :javascript
         function connect() {
           mks.Connect("#{host}", 902, "#{cfgFile}", "#{ticket}", "#{ticket}");
@@ -43,7 +44,7 @@
         %object#mks{:classid => "CLSID:#{mks_classid}", :height => "100%", :width => "100%"}
 
 - elsif is_browser?("firefox")
-  %html
+  %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title
         = _("VM %s Remote Console") % @record.name

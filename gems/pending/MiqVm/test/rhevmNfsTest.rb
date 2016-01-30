@@ -8,13 +8,13 @@ require 'ostruct'
 require 'MiqVm/MiqVm'
 
 class ConsoleFormatter < Log4r::Formatter
-	def format(event)
-		(event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-	end
+  def format(event)
+    (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+  end
 end
 
 toplog = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level=>Log4r::DEBUG, :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 toplog.add 'err_console'
 $log = toplog if $log.nil?
 
@@ -25,38 +25,38 @@ REDO_FILE = "#{DDIR}/9e7075c5-a014-4ddf-a168-a33723d0c3cd"
 # DISK_FILE = BASE_FILE
 DISK_FILE = REDO_FILE
 
-diskid	  = "scsi0:0"
+diskid    = "scsi0:0"
 hardware  = "#{diskid}.present = \"TRUE\"\n"
 hardware += "#{diskid}.filename = \"#{DISK_FILE}\"\n"
 
 begin
-	puts
-	puts `file #{DISK_FILE}`
-	puts
+  puts
+  puts `file #{DISK_FILE}`
+  puts
 
-	ost = OpenStruct.new
-	ost.fileName = DISK_FILE
+  ost = OpenStruct.new
+  ost.fileName = DISK_FILE
 
-	vm = MiqVm.new(hardware, ost)
+  vm = MiqVm.new(hardware, ost)
 
-	raise "No filesystems detected." if vm.rootTrees.empty?
+  raise "No filesystems detected." if vm.rootTrees.empty?
 
-	puts "\nChecking for file systems..."
-	vm.rootTrees.each do | fs |
-	    puts "*** Found root tree for #{fs.guestOS}"
-	    puts "Listing files in #{fs.pwd} directory:"
-	    fs.dirEntries.each { |de| puts "\t#{de}" }
-	    puts
-	end
+  puts "\nChecking for file systems..."
+  vm.rootTrees.each do |fs|
+    puts "*** Found root tree for #{fs.guestOS}"
+    puts "Listing files in #{fs.pwd} directory:"
+    fs.dirEntries.each { |de| puts "\t#{de}" }
+    puts
+  end
 
-	["services", "software", "system", "vmconfig"].each do |c|
-    	puts
-    	puts "Extracting #{c}"
-    	vm.extract(c) # .to_xml.write($stdout, 4)
-	end
+  ["services", "software", "system", "vmconfig"].each do |c|
+    puts
+    puts "Extracting #{c}"
+    vm.extract(c) # .to_xml.write($stdout, 4)
+  end
 rescue => err
-	$log.error err.to_s
-	$log.error err.backtrace.join("\n")
+  $log.error err.to_s
+  $log.error err.backtrace.join("\n")
 ensure
-	# vm.unmount if vm
+  # vm.unmount if vm
 end

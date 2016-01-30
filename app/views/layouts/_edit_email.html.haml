@@ -29,3 +29,4 @@
           = _("(Default: %s)") % get_vmdb_config[:smtp][:from]
   - if @edit[:new][:send_email]
     = render(:partial => "layouts/edit_to_email", :locals => {:action_url => action_url, :record => record})
+  %hr

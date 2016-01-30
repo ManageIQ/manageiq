@@ -9,10 +9,10 @@
 - else
   - edit = !@edit.nil?
 
-%tr{:id => "field_#{field.id}_tr"}
-  %td.key{:title => field.description}
+.form-group{:id => "field_#{field.id}_tr"}
+  %label.control-label.col-md-2{:title => field.description}
     = field.label
-  %td{:title => field.description}
+  .col-md-8{:title => field.description}
     - locals = {:edit => edit, :field => field, :url => url, :wf => wf}
     - case field.type
     - when 'DialogFieldTextBox'
@@ -25,7 +25,7 @@
       = render(:partial => "shared/dialogs/dialog_field_check_box", :locals => locals)
 
     - when 'DialogFieldDateControl', 'DialogFieldDateTimeControl'
-      = render(:partial => "shared/dialogs/dialog_field_date_and_date_time_control.haml", :locals => locals)
+      = render(:partial => "shared/dialogs/dialog_field_date_and_date_time_control", :locals => locals)
 
     - when "DialogFieldRadioButton"
       = render(:partial => "shared/dialogs/dialog_field_radio_button", :locals => locals)
@@ -48,6 +48,10 @@
           = select_tag(field.name,
                        options_for_select(category_tags, wf.value(field.name)),
                        drop_down_options(field, url).merge(:multiple => true))
+
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('#{field.name}', '#{url}');
 
       - else
         - value = wf.value(field.name) || ''

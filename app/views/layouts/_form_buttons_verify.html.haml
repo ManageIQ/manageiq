@@ -16,7 +16,7 @@
 %div{:id => "#{valtype}_validate_buttons_on", :style => ("display:none" unless @edit[statuskey])}
   - if serialize
     = button_tag(_("Validate"),
-                 :class   => "btn btn-primary btn-xs",
+                 :class   => "btn btn-primary btn-xs pull-right",
                  :alt     => verify_title_on,
                  :title   => verify_title_on,
                  :onclick => "miqAjaxButton('#{url_for(:action => validate_url,
@@ -28,15 +28,16 @@
                :button => "validate",
                :type   => valtype,
                :id     => id},
-              :class                 => "btn btn-primary btn-xs",
+              :class                 => "btn btn-primary btn-xs pull-right",
               :alt                   => verify_title_on,
               :title                 => verify_title_on,
               :id                    => "val",
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
-              :remote                => true)
+              :remote                => true,
+              "data-method"          => :post)
 
 %div{:id => "#{valtype}_validate_buttons_off", :style => ("display:none" if @edit[statuskey])}
   = button_tag(_("Validate"),
-               :class    => "btn btn-primary btn-xs btn-disabled",
+               :class    => "btn btn-primary btn-disabled btn-xs pull-right",
                :disabled => true)

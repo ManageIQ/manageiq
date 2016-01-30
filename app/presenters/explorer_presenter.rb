@@ -4,6 +4,10 @@ class ExplorerPresenter
   include JsHelper
   include ActionView::Helpers::JavaScriptHelper
 
+  include ToolbarHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context
+
   attr_reader :options
 
   # Renders JS to replace the contents of an explorer view as directed by the controller
@@ -13,14 +17,10 @@ class ExplorerPresenter
   #
   #   add_nodes                        -- JSON string of nodes to add to the active tree
   #   delete_node                      -- key of node to be deleted from the active tree
-  #   cal_date_from
-  #   cal_date_to
-  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash with
-  #                                       compulsory key :skip_days
+  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
   #   init_dashboard
   #   ajax_action                      -- Hash of options for AJAX action to fire
-  #   cell_a_view
-  #   clear_gtl_list_grid
+  #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
   #   ManageIQ.record.parentId
   #   ManageIQ.record.parentClass
@@ -41,24 +41,52 @@ class ExplorerPresenter
   #   replace_partials          -- partials to replace (also wrapping tag)
   #   element_updates           -- do we need all 3 of the above?
   #   set_visible_elements      -- elements to cal 'set_visible' on
-  #   show_hide_layout          -- layout elements to show/hide
   #   reload_toolbars
   #
 
-  def initialize(options={})
+  def initialize(options = {})
     @options = HashWithIndifferentAccess.new(
-      :lock_unlock_trees     => {},
-      :set_visible_elements  => {},
-      :show_hide_layout      => {},
-      :update_partials       => {},
-      :element_updates       => {},
-      :replace_partials      => {},
-      :reload_toolbars       => {},
-      :extra_js              => [],
-      :object_tree_json      => '',
-      :exp                   => {},
-      :osf_node              => ''
+      :lock_unlock_trees    => {},
+      :set_visible_elements => {},
+      :update_partials      => {},
+      :element_updates      => {},
+      :replace_partials     => {},
+      :reload_toolbars      => {},
+      :extra_js             => [],
+      :object_tree_json     => '',
+      :exp                  => {},
+      :osf_node             => ''
     ).update(options)
+  end
+
+  def set_visibility(value, *elements)
+    elements.each { |el| @options[:set_visible_elements][el] = value }
+    self
+  end
+
+  def hide(*elements)
+    set_visibility(false, *elements)
+  end
+
+  def show(*elements)
+    set_visibility(true, *elements)
+  end
+
+  def reload_toolbars(toolbars)
+    toolbars.each_pair do |div_name, toolbar_data|
+      @options[:reload_toolbars][div_name] = toolbar_data
+    end
+    self
+  end
+
+  def replace(div_name, content)
+    @options[:replace_partials][div_name] = content
+    self
+  end
+
+  def update(div_name, content)
+    @options[:update_partials][div_name] = content
+    self
   end
 
   def []=(key, value)
@@ -75,6 +103,8 @@ class ExplorerPresenter
     @out.join("\n")
   end
 
+  private
+
   def process
     # see if any miq expression vars need to be set
     unless @options[:exp].empty?
@@ -89,7 +119,10 @@ class ExplorerPresenter
 
     @out << "miqDeleteDynatreeCookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
 
-    @out << "dhxAccord.openItem('#{@options[:open_accord]}');" unless @options[:open_accord].to_s.empty?
+    # Open an accordion inside an other AJAX call
+    unless @options[:open_accord].to_s.empty?
+      @out << "miqAccordionSwap('#accordion .panel-collapse.collapse.in', '##{j(@options[:open_accord])}_accord');"
+    end
 
     if @options[:remove_nodes]
       @out << "miqRemoveNodeChildren('#{@options[:active_tree]}',
@@ -117,7 +150,6 @@ class ExplorerPresenter
     @out << "ManageIQ.widget.dashboardUrl = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "if (miqDomElementExists('custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
     @out << "var show_clear_search = undefined"
     @out << "
       if ($('#advsearchModal').hasClass('modal fade in')){
@@ -138,45 +170,37 @@ class ExplorerPresenter
 
     @out << ajax_action(@options[:ajax_action]) if @options[:ajax_action]
 
-    @out << "dhxLayout.cells('a').view('#{@options[:cell_a_view]}').setActive();" if @options[:cell_a_view]
-
-    @out << "ManageIQ.grids.grids['gtl_list_grid'] = undefined;" if @options[:clear_gtl_list_grid]
+    @out << "ManageIQ.grids.gtl_list_grid = undefined;" if @options[:clear_gtl_list_grid]
 
     @options[:set_visible_elements].each do |el, visible|
       @out << set_element_visible(el, visible)
     end
 
-    @options[:show_hide_layout].each do |element, action|
-      @out << "ManageIQ.layout.#{element}.#{action}();"
-    end
-
     # Scroll to top of main div
     @out << "$('#main_div').scrollTop(0);"
 
-    @out << "ManageIQ.layout.content.title('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
+    @out << "$('h1#explorer_title > span#explorer_title_text').html('#{j ERB::Util.h(URI.unescape(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 
     # Reload toolbars
-    @options[:reload_toolbars].each do |tb, opts|
-      @out << javascript_for_toolbar_reload("#{tb}_tb", opts[:buttons], opts[:xml]).html_safe
+    @options[:reload_toolbars].each_pair do |div_name, toolbar|
+      # we need to render even empty toolbar to actually remove the buttons
+      # that might be there
+      @out << javascript_pf_toolbar_reload("#{div_name}_tb", Array(toolbar)).html_safe
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
     [:record_id, :parent_id, :parent_class].each { |variable| @out << set_or_undef(variable.to_s) }
 
     # Open, select, and focus node in current tree
-    #   using dynatree if dhtmlxtree object is undefined
     @out << "miqDynatreeActivateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].empty?
 
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
 
     @out << @options[:extra_js].join("\n")
 
-    # Position the clear_search link
-    @out << "$('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);
-    miqResizeTaskbarCell();"
-
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
-
+    # always replace content partial to adjust height of content div
+    @out << "miqInitMainContent();"
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
 
     # Don't turn off spinner for charts/timelines
@@ -184,21 +208,13 @@ class ExplorerPresenter
   end
 
   def build_calendar
-    out = []
-    if Hash === @options[:build_calendar]
+    if @options[:build_calendar].kind_of? Hash
       calendar_options = @options[:build_calendar]
-      out << "ManageIQ.calendar.calDateFrom = #{format_cal_date(calendar_options[:date_from])};" if calendar_options.key?(:date_from)
-      out << "ManageIQ.calendar.calDateTo   = #{format_cal_date(calendar_options[:date_to])};"   if calendar_options.key?(:date_to)
-
-      if calendar_options.key?(:skip_days)
-        skip_days = calendar_options[:skip_days].nil? ?
-          'null' : ("'" + calendar_options[:skip_days] + "'")
-        out << "miq_cal_skipDays = #{skip_days};"
-      end
+    else
+      calendar_options = {}
     end
 
-    out << 'miqBuildCalendar();'
-    out.join("\n")
+    js_build_calendar(calendar_options)
   end
 
   # Fire an AJAX action
@@ -225,11 +241,7 @@ class ExplorerPresenter
   end
 
   def update_partial(element, content)
+    # FIXME: replace with javascript_update_element
     "$('##{element}').html('#{escape_javascript(content)}');"
-  end
-
-  private
-  def format_cal_date(value)
-    value.nil? ?  'undefined' : "new Date(#{value})"
   end
 end

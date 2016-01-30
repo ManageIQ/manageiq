@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe RequestRefererService do
   let(:request_referer_service) { described_class.new }
 
@@ -26,7 +24,7 @@ describe RequestRefererService do
       let(:string_to_test) { "Potato" }
 
       it "returns true" do
-        request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_true
+        expect(request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action)).to be_truthy
       end
     end
 
@@ -34,7 +32,7 @@ describe RequestRefererService do
       let(:string_to_test) { "Tomato" }
 
       it "returns false" do
-        request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_false
+        expect(request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action)).to be_falsey
       end
 
       describe "when the controller and action are on the IE8 exception list" do
@@ -44,7 +42,7 @@ describe RequestRefererService do
         let(:action)         { "download_data" }
 
         it "returns true" do
-          request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_true
+          expect(request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action)).to be_truthy
         end
       end
 
@@ -55,34 +53,33 @@ describe RequestRefererService do
         let(:action)         { "SpuddaFett" }
 
         it "returns false" do
-          request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action).should be_false
+          expect(request_referer_service.referer_valid?(referer, string_to_test, useragent, controller, action)).to be_falsey
         end
       end
     end
   end
 
   describe '#access_whitelisted?' do
-
     it "allows only GET" do
-      request_referer_service.access_whitelisted?(get_request,   controller_name, action_name).should be_true
-      request_referer_service.access_whitelisted?(post_request,  controller_name, action_name).should be_false
+      expect(request_referer_service.access_whitelisted?(get_request,   controller_name, action_name)).to be_truthy
+      expect(request_referer_service.access_whitelisted?(post_request,  controller_name, action_name)).to be_falsey
     end
 
     it "allows only whitelistet entry points" do
-      request_referer_service.access_whitelisted?(get_request, controller_name, dissallowed_action_name).should be_false
-      request_referer_service.access_whitelisted?(get_request, dissallowed_controller_name, action_name).should be_false
+      expect(request_referer_service.access_whitelisted?(get_request, controller_name, dissallowed_action_name)).to be_falsey
+      expect(request_referer_service.access_whitelisted?(get_request, dissallowed_controller_name, action_name)).to be_falsey
     end
 
     it "requires an 'id' when specified" do
-      request_referer_service.access_whitelisted?(get_request_no_id, controller_name, action_name).should be_false
+      expect(request_referer_service.access_whitelisted?(get_request_no_id, controller_name, action_name)).to be_falsey
     end
 
     it "requires no params, where none specified" do
-      request_referer_service.access_whitelisted?(get_request_no_id, controller_name_no_params, action_name_no_params).should be_true
+      expect(request_referer_service.access_whitelisted?(get_request_no_id, controller_name_no_params, action_name_no_params)).to be_truthy
     end
 
     it "disallows xml_http requests" do
-      request_referer_service.access_whitelisted?(get_request_xml_http, controller_name, action_name).should be_false
+      expect(request_referer_service.access_whitelisted?(get_request_xml_http, controller_name, action_name)).to be_falsey
     end
   end
 end

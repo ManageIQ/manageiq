@@ -89,7 +89,7 @@ class ApiController
     #
     def normalize_url(_type, value)
       svalue = value.to_s
-      pref   = "#{@req[:base]}#{@req[:prefix]}"
+      pref   = @req[:api_prefix]
       svalue.match(pref) ? svalue : "#{pref}/#{svalue}"
     end
 

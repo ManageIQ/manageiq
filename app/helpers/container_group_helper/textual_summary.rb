@@ -9,7 +9,7 @@ module ContainerGroupHelper::TextualSummary
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    %i(ems container_project container_replicator container_services containers container_node lives_on)
+    %i(ems container_project container_services container_replicator containers container_node lives_on)
   end
 
   def textual_group_conditions
@@ -29,13 +29,46 @@ module ContainerGroupHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  @@key_dictionary = [
+    [:empty_dir_medium_type, _('Storage Medium Type')],
+    [:gce_pd_name, _('GCE PD Resource')],
+    [:git_repository, _('Git Repository')],
+    [:git_revision, _('Git Revision')],
+    [:nfs_server, _('NFS Server')],
+    [:iscsi_target_portal, _('ISCSI Target Portal')],
+    [:iscsi_iqn, _('ISCSI Target Qualified Name')],
+    [:iscsi_lun, _('ISCSI Target Lun Number')],
+    [:glusterfs_endpoint_name, _('Glusterfs Endpoint Name')],
+    [:claim_name, _('Persistent Volume Claim Name')],
+    [:rbd_ceph_monitors, _('Rados Ceph Monitors')],
+    [:rbd_image, _('Rados Image Name')],
+    [:rbd_pool, _('Rados Pool Name')],
+    [:rbd_rados_user, _('Rados User Name')],
+    [:rbd_keyring, _('Rados Keyring')],
+    [:common_path, _('Volume Path')],
+    [:common_fs_type, _('FS Type')],
+    [:common_read_only, _('Read-Only')],
+    [:common_volume_id, _('Volume ID')],
+    [:common_partition, _('Partition')],
+    [:common_secret, _('Secret Name')]
+  ]
+
+  def textual_group_volumes
+    h = {:labels => [_("Name"), _("Property"), _("Value")], :values => []}
+    @record.container_volumes.each do |volume|
+      volume_values = @@key_dictionary.collect do |key, name|
+        [nil, name, volume[key]] if volume[key].present?
+      end.compact
+      # Set the volume name only  for the first item in the list
+      volume_values[0][0] = volume.name if volume_values.length > 0
+      h[:values] += volume_values
+    end
+    h
+  end
+
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
 
   def textual_phase
     @record.phase
@@ -49,20 +82,12 @@ module ContainerGroupHelper::TextualSummary
     @record.reason
   end
 
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
-  def textual_resource_version
-    @record.resource_version
-  end
-
   def textual_restart_policy
     @record.restart_policy
   end
 
   def textual_dns_policy
-    @record.dns_policy
+    {:label => "DNS Policy", :value => @record.dns_policy}
   end
 
   def textual_ip
@@ -84,5 +109,25 @@ module ContainerGroupHelper::TextualSummary
         :id         => @record.container_node.lives_on.id
       )
     }
+  end
+
+  def textual_container_statuses_summary
+    %i(waiting running terminated)
+  end
+
+  def container_statuses_summary
+    @container_statuses_summary ||= @record.container_states_summary
+  end
+
+  def textual_waiting
+    container_statuses_summary[:waiting] || 0
+  end
+
+  def textual_running
+    container_statuses_summary[:running] || 0
+  end
+
+  def textual_terminated
+    container_statuses_summary[:terminated] || 0
   end
 end

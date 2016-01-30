@@ -1,17 +1,17 @@
 class PxeImagePxelinux < PxeImage
   def build_pxe_contents(ks_access_path, ks_device)
     options = super
-    options.insert(0, "initrd=#{self.initrd} ") unless self.initrd.blank?
+    options.insert(0, "initrd=#{initrd} ") unless initrd.blank?
 
     pxe = <<-PXE
 timeout 0
-default #{self.name}
+default #{name}
 
-label #{self.name}
-   menu label #{self.description}
+label #{name}
+   menu label #{description}
 PXE
 
-    pxe << "   kernel #{self.kernel}\n" unless self.kernel.nil?
+    pxe << "   kernel #{kernel}\n" unless kernel.nil?
     pxe << "   append #{options}\n"     unless options.blank?
     pxe << "\n"
   end
@@ -20,7 +20,7 @@ PXE
     "01-#{mac_address.gsub(/:/, "-").downcase.strip}"
   end
 
-  def self.parse_contents(contents, label = nil)
-    self.corresponding_menu.parse_contents(contents)
+  def self.parse_contents(contents, _label = nil)
+    corresponding_menu.parse_contents(contents)
   end
 end

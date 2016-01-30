@@ -7,21 +7,21 @@
 - :name: scan_vmdb
   :items:
   - :buttonSelect: scan_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: ap_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit this Analysis Profile"
       :title: "Edit this Analysis Profile"
     - :button: ap_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: Copy this selected Analysis Profile
       :title: Copy this selected Analysis Profile
       :url_parms: '?typ=copy'
     - :button: ap_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: "Delete this Analysis Profile from the VMDB"
       :title: "Delete this Analysis Profile from the VMDB"
       :url_parms: '&refresh=y'

@@ -6,7 +6,7 @@
            ui-sref="{{ ::item.state }}">
           <i class="{{ ::item.icon }}" title="{{ ::item.title }}"></i>
           <span class="list-group-item-value">{{ ::item.title }}</span>
-          <span ng-if="item.count" class="badge">{{ item.count }}</span>
+          <span ng-if="item.count" class="badge" tooltip="{{ item.tooltip }}" tooltip-placement="right" tooltip-append-to-body="true">{{ item.count }}</span>
         </a>
       </li>
       <div ng-if="vm.state.showMobileNav" class="list-group-item-secondary">
@@ -15,7 +15,7 @@
             ui-sref="{{ ::item.state }}">
             <i class="{{ ::item.icon }}" title="{{ ::item.title }}"></i>
             <span class="list-group-item-value">{{ ::item.title }}</span>
-            <span ng-if="item.count" class="badge">{{ item.count }}</span>
+            <span ng-if="item.count" class="badge" tooltip="{{ item.tooltip }}" tooltip-placement="right" tooltip-append-to-body="true">{{ item.count }}</span>
           </a>
         </li>
       </div>

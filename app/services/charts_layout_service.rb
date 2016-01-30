@@ -1,6 +1,6 @@
 class ChartsLayoutService
   def self.layout(perf_record, charts_folder, layout, fname = nil)
-    self.new(perf_record, charts_folder, layout, fname).layout
+    new(perf_record, charts_folder, layout, fname).layout
   end
 
   def initialize(perf_record, charts_folder, layout, fname = nil)
@@ -26,7 +26,7 @@ class ChartsLayoutService
   private
 
   def build_charts
-    YAML::load(File.open(find_chart_path))
+    YAML.load(File.open(find_chart_path))
   end
 
   def find_chart_path

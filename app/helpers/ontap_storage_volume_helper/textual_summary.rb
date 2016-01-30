@@ -67,7 +67,7 @@ module OntapStorageVolumeHelper::TextualSummary
   end
 
   def textual_number_of_blocks
-    {:label => "Number of Blocks", :value => number_with_delimiter(@record.number_of_blocks,:delimiter=>',')}
+    {:label => "Number of Blocks", :value => number_with_delimiter(@record.number_of_blocks, :delimiter => ',')}
   end
 
   def textual_block_size
@@ -75,7 +75,7 @@ module OntapStorageVolumeHelper::TextualSummary
   end
 
   def textual_consumable_blocks
-    {:label => "Consumable Blocks", :value => number_with_delimiter(@record.consumable_blocks,:delimiter=>',')}
+    {:label => "Consumable Blocks", :value => number_with_delimiter(@record.consumable_blocks, :delimiter => ',')}
   end
 
   def textual_device_id
@@ -83,7 +83,7 @@ module OntapStorageVolumeHelper::TextualSummary
   end
 
   def textual_extent_status
-    #TODO: extent_status is being returned as array, without .to_s it shows 0 0 in two lines with a link.
+    # TODO: extent_status is being returned as array, without .to_s it shows 0 0 in two lines with a link.
     {:label => "Extent Status", :value => @record.extent_status.to_s}
   end
 
@@ -110,7 +110,7 @@ module OntapStorageVolumeHelper::TextualSummary
   def textual_storage_system
     label = ui_lookup(:table => "ontap_storage_system")
     ss   = @record.storage_system
-    h     = {:label => label , :image => "ontap_storage_system", :value => ss.evm_display_name}
+    h     = {:label => label, :image => "ontap_storage_system", :value => ss.evm_display_name}
     if role_allows(:feature => "ontap_storage_system_show")
       h[:title] = "Show #{label} '#{ss.evm_display_name}'"
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
@@ -119,10 +119,10 @@ module OntapStorageVolumeHelper::TextualSummary
   end
 
   def textual_base_storage_extents
-    label = ui_lookup(:tables=>"cim_base_storage_extent")
+    label = ui_lookup(:tables => "cim_base_storage_extent")
     num   = @record.base_storage_extents_size
     h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature=>"cim_base_storage_extent_show")
+    if num > 0 && role_allows(:feature => "cim_base_storage_extent_show")
       h[:title] = "Show all #{label}"
       h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
     end

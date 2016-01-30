@@ -22,6 +22,6 @@ class PrivilegeCheckerService
   end
 
   def server_ready?(current_user)
-    current_user.super_admin_user? || MiqServer.my_server(true).logon_status == :ready
+    current_user.try(:super_admin_user?) || MiqServer.my_server(true).logon_status == :ready
   end
 end

@@ -27,7 +27,7 @@ module MiqAeMethodService
     def get_retirement_days
       days = get_option(:retirement)
       return day if days.blank?
-      days / ( 60 * 60 * 24 )   # Convert from seconds to days
+      days / (60 * 60 * 24)   # Convert from seconds to days
     end
 
     def set_folder(folder_path)

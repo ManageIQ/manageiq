@@ -96,7 +96,7 @@
           %tr{:onclick => "#{remote_function(:url => "/ops/x_show/#{ind.id}")}",
             :title => _("Click to view index")}
             %td.narrow
-              %img{:src => "/images/icons/new/vmdbindex.png"}/
+              %img{:src => image_path('100/vmdbindex.png')}/
             %td= ind.name
             - metrics = ind.latest_hourly_metric
             - if metrics

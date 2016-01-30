@@ -5,8 +5,6 @@
 # - Create single automation request    /api/automation_requests    action "create"
 # - Create multiple automation requests /api/automation_requests    action "create"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 
@@ -43,7 +41,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash])
 
       task_id = @result["results"].first["id"]
-      expect(AutomationRequest.exists?(task_id)).to be_true
+      expect(AutomationRequest.exists?(task_id)).to be_truthy
     end
 
     it "supports single request with create action" do
@@ -56,7 +54,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash])
 
       task_id = @result["results"].first["id"]
-      expect(AutomationRequest.exists?(task_id)).to be_true
+      expect(AutomationRequest.exists?(task_id)).to be_truthy
     end
 
     it "supports multiple requests" do
@@ -69,8 +67,8 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
       task_id1, task_id2 = @result["results"].collect { |r| r["id"] }
-      expect(AutomationRequest.exists?(task_id1)).to be_true
-      expect(AutomationRequest.exists?(task_id2)).to be_true
+      expect(AutomationRequest.exists?(task_id1)).to be_truthy
+      expect(AutomationRequest.exists?(task_id2)).to be_truthy
     end
   end
 end

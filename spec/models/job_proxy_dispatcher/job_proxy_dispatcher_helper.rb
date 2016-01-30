@@ -1,7 +1,6 @@
 module JobProxyDispatcherHelper
-
   def build_hosts_proxies_storages_vms(options = {})
-    options = {:hosts=>2, :storages => 2, :vms => 3, :repo_vms => 3}.merge(options)
+    options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3}.merge(options)
 
     proxies = []
     storages = []

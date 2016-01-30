@@ -1,7 +1,10 @@
 - url = url_for(:action => 'forest_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
 #forest_entries_div
   %h3= _("Trusted Forest Settings")
-  = form_tag(url_for(:action => 'forest_accept', :id => "ldap_form"), :remote => true) do
+  = form_tag({:action => 'forest_accept',
+              :id     => "ldap_form"},
+             :remote => true,
+             :method => :post) do
     %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
@@ -16,7 +19,7 @@
         - if entry != "new"
           %tr{:onclick => remote_function(:url => {:action => 'forest_select', :ldaphost_id => "new"}), :title => _("Click to add a new forest")}
             %td
-              = image_tag("/images/toolbars/new.png")
+              = image_tag(image_path('toolbars/new.png'))
             %td
               = _("<Click on this row to create a new forest>")
             %td
@@ -27,7 +30,7 @@
         - else
           %tr
             %td
-              = image_submit_tag("/images/toolbars/import.png",
+              = image_submit_tag(image_path('toolbars/import.png'),
                 :class => "listbutton",
                 :id => "accept", :name => "accept",
                 :alt => _("Add this entry"), :title => _("Add this entry"))
@@ -49,7 +52,7 @@
           - if entry != nil && entry != "new" && entry[:ldaphost] == forest[:ldaphost]
             %tr
               %td
-                = image_submit_tag("/images/toolbars/import.png",
+                = image_submit_tag(image_path('toolbars/import.png'),
                   :class => "listbutton",
                   :id => "accept", :name => "accept",
                   :alt => _("Update this entry"), :title => _("Update this entry"))
@@ -75,7 +78,7 @@
                 :title => _("Click to delete this forest")}
                   %ul#list
                     %li
-                      = image_tag("/images/toolbars/delete.png")
+                      = image_tag(image_path('toolbars/delete.png'))
                 %td{:onclick => remote_function(:url => {:action => 'forest_select', :ldaphost_id => forest[:ldaphost].to_s}), :title => _("Click to edit this forest")}
                   = h(forest[:ldaphost])
                 %td{:onclick => remote_function(:url => {:action => 'forest_select', :ldaphost_id => forest[:ldaphost].to_s}), :title => _("Click to edit this forest")}

@@ -22,12 +22,10 @@ cols:
 - name
 - tag
 - image_ref
+- display_registry
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  container_image_registry:
-    columns:
-    - full_name
   ext_management_system:
     columns:
     - name
@@ -41,7 +39,7 @@ col_order:
 - ext_management_system.name
 - tag
 - image_ref
-- container_image_registry.full_name
+- display_registry
 
 # Column titles, in order
 headers:

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogField do
   context "legacy tests" do
     before(:each) do
@@ -7,16 +5,16 @@ describe DialogField do
     end
 
     it "sets default value for required attribute" do
-      @df.required.should == false
+      expect(@df.required).to eq(false)
     end
 
     it "fields named 'action' or 'controller' are invalid" do
       action_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'action')
-      action_field.should_not be_valid
+      expect(action_field).not_to be_valid
       controller_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'controller')
-      controller_field.should_not be_valid
+      expect(controller_field).not_to be_valid
       foo_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'foo')
-      foo_field.should be_valid
+      expect(foo_field).to be_valid
     end
 
     it "supports more than 255 characters within default_value" do
@@ -24,7 +22,7 @@ describe DialogField do
       @df.default_value = str
       expect { @df.save }.to_not raise_error
       @df.reload
-      @df.default_value.should == str
+      expect(@df.default_value).to eq(str)
     end
 
     describe "#validate" do
@@ -34,12 +32,12 @@ describe DialogField do
                             :required => required,
                             :value    => value)
       end
-      let(:dialog_tab)   { active_record_instance_double('DialogTab',   :label => 'tab') }
-      let(:dialog_group) { active_record_instance_double('DialogGroup', :label => 'group') }
+      let(:dialog_tab)   { double('DialogTab',   :label => 'tab') }
+      let(:dialog_group) { double('DialogGroup', :label => 'group') }
 
       shared_examples_for "DialogField#validate that returns nil" do
         it "returns nil" do
-          dialog_field.validate(dialog_tab, dialog_group).should be_nil
+          expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to be_nil
         end
       end
 
@@ -50,7 +48,7 @@ describe DialogField do
           let(:value) { "" }
 
           it "returns error message" do
-            dialog_field.validate(dialog_tab, dialog_group).should eq("tab/group/dialog_field is required")
+            expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to eq("tab/group/dialog_field is required")
           end
         end
 
@@ -82,33 +80,33 @@ describe DialogField do
       it "uses #automate_key_name for extracting initial dialog values" do
         dialog_value = "dummy dialog value"
         @df.initialize_with_values(@df.automate_key_name => dialog_value)
-        @df.value.should == dialog_value
+        expect(@df.value).to eq(dialog_value)
       end
 
       it "initializes to nil with no initial value and no default value" do
         initial_dialog_values = {}
         @df.initialize_with_values(initial_dialog_values)
-        @df.value.should be_nil
+        expect(@df.value).to be_nil
       end
 
       it "initializes to the default value with no initial value and a default value" do
         initial_dialog_values = {}
         @df.default_value = "default_test"
         @df.initialize_with_values(initial_dialog_values)
-        @df.value.should == "default_test"
+        expect(@df.value).to eq("default_test")
       end
 
       it "initializes to the dialog value with a dialog value and no default value" do
         initial_dialog_values = {@df.automate_key_name => "test"}
         @df.initialize_with_values(initial_dialog_values)
-        @df.value.should == "test"
+        expect(@df.value).to eq("test")
       end
 
       it "initializes to the dialog value with a dialog value and a default value" do
         initial_dialog_values = {@df.automate_key_name => "test"}
         @df.default_value = "default_test"
         @df.initialize_with_values(initial_dialog_values)
-        @df.value.should == "test"
+        expect(@df.value).to eq("test")
       end
     end
   end
@@ -130,6 +128,19 @@ describe DialogField do
       it "returns the value" do
         expect(dialog_field.automate_output_value).to eq("123")
       end
+    end
+  end
+
+  describe "#update_and_serialize_values" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+    end
+
+    it "serializes the dialog field" do
+      expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+      dialog_field.update_and_serialize_values
     end
   end
 end

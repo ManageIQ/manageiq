@@ -9,12 +9,10 @@
       = select_tag('chosen_interval',
         options_for_select([[_("Daily"), "daily"], [_("Hourly"), "hourly"]], @edit[:new][:perf_interval]),
         :multiple              => false,
-        :class                 => "selectpicker",
-        "data-miq_sparkle_on"  => true,
-        "data-miq_sparkle_off" => true)
+        :class                 => "selectpicker")
       :javascript
         miqInitSelectPicker();
-        miqSelectPickerEvent("chosen_interval", "#{url}")
+        miqSelectPickerEvent('chosen_interval', '#{url}', {beforeSend: true, complete: true});
 .form-group
   %label.control-label.col-md-2
     = _('Averages Based On')
@@ -22,9 +20,7 @@
     = select_tag('perf_avgs',
       options_for_select([[_("Performance Interval"), "time_interval"], [_("Available Active Data"), "active_data"]], @edit[:new][:perf_avgs]),
       :multiple                => false,
-      :class                   => "selectpicker",
-      "data-miq_sparkle_on"    => true,
-      "data-miq_sparkle_off"   => true)
+      :class                   => "selectpicker")
     :javascript
       miqInitSelectPicker();
-      miqSelectPickerEvent("perf_avgs", "#{url}")
+      miqSelectPickerEvent('perf_avgs', '#{url}', {beforeSend: true, complete: true});

@@ -1,51 +1,19 @@
-require_relative 'data'
+require_relative 'builder/keystone_v2'
+require_relative 'builder/keystone_v3'
 
 module Openstack
   module Services
     module Identity
       class Builder
-        attr_reader :projects, :service
+        def self.build_all(ems, service_type = :v2)
+          builder_class = case service_type
+                          when :v2
+                            Openstack::Services::Identity::Builder::KeystoneV2
+                          when :v3
+                            Openstack::Services::Identity::Builder::KeystoneV3
+                          end
 
-        def self.build_all(ems)
-          new(ems).build_all
-        end
-
-        def initialize(ems)
-          @service = ems.connect(:service => "Identity")
-          @data    = Data.new
-
-          # Collected data
-          @projects = []
-        end
-
-        def build_all
-          find_or_create_projects
-          find_or_create_roles
-
-          self
-        end
-
-        private
-
-        def find_or_create_projects
-          @data.projects.each do |project|
-            @projects << find_or_create(@service.tenants, project)
-          end
-        end
-
-        def find_or_create_roles
-          @data.roles.each do |role|
-            admin_user = @service.users.find_by_name(role)
-            admin_role = @service.roles.detect { |x| x.name == role }
-            @projects.each do |p|
-              begin
-                p.grant_user_role(admin_user.id, admin_role.id)
-              rescue Excon::Errors::Conflict
-                # Tenant already has the admin role
-                puts "Finding role {:name => 'admin', :tenant_id => '#{p.name}'} role in Fog::Identity::OpenStack:Roles"
-              end
-            end
-          end
+          builder_class.new(ems).build_all
         end
       end
     end

@@ -8,20 +8,16 @@ module ReportFormatter
       value.blank? ? BLANK_VALUE : value.to_s
     end
 
-    def mri
-      options.mri
-    end
+    delegate :mri, :to => :options
 
     def build_document_header
       raise "Can't create a graph without a sortby column" if mri.sortby.nil? &&
-          mri.db != "MiqReport" # MiqReport based charts are already sorted
+                                                              mri.db != "MiqReport" # MiqReport based charts are already sorted
       raise "Graph type not specified" if mri.graph.nil? ||
-          (mri.graph.kind_of?(Hash) && mri.graph[:type].nil?)
+                                          (mri.graph.kind_of?(Hash) && mri.graph[:type].nil?)
     end
 
-    def graph_options
-      options.graph_options
-    end
+    delegate :graph_options, :to => :options
 
     def build_document_body
       return no_records_found_chart if mri.table.nil? || mri.table.data.blank?
@@ -33,7 +29,7 @@ module ReportFormatter
         maxval = 0
         mri.graph[:columns].each_with_index do |col, col_idx|
           next if col_idx >= maxcols
-          newmax = mri.table.data.collect { |r| r[col].nil? ? 0 : r[col] }.sort.last
+          newmax = mri.table.data.collect { |r| r[col].nil? ? 0 : r[col] }.max
           maxval = newmax if newmax > maxval
         end
         if maxval > 10.gigabytes
@@ -72,15 +68,15 @@ module ReportFormatter
       tz = mri.get_time_zone(Time.zone.name)
       nils2zero = false # Allow gaps in charts for nil values
 
-  #### To do - Uncomment to handle long term averages
-  #   if mri.extras && mri.extras[:long_term_averages]  # If averages are present
-  #     mri.extras[:long_term_averages].keys.each do |avg_col|
-  #       if mri.graph[:columns].include?(avg_col.to_s)
-  #         mri.graph[:columns].push("avg__#{avg_col.to_s}")
-  #       end
-  #     end
-  #   end
-  ####
+      #### To do - Uncomment to handle long term averages
+      #   if mri.extras && mri.extras[:long_term_averages]  # If averages are present
+      #     mri.extras[:long_term_averages].keys.each do |avg_col|
+      #       if mri.graph[:columns].include?(avg_col.to_s)
+      #         mri.graph[:columns].push("avg__#{avg_col.to_s}")
+      #       end
+      #     end
+      #   end
+      ####
 
       mri.graph[:columns].each_with_index do |col, col_idx|
         next if col_idx >= maxcols
@@ -89,7 +85,6 @@ module ReportFormatter
         categories = []                      # Store categories and series counts in an array of arrays
         series = series_class.new
         mri.table.data.each_with_index do |r, d_idx|
-
           # Use timestamp or statistic_time (metrics vs ontap)
           rec_time = (r["timestamp"] || r["statistic_time"]).in_time_zone(tz)
 
@@ -100,15 +95,15 @@ module ReportFormatter
           else
             categories.push(rec_time.hour.to_s + ":00")
           end
-  #           r[col] = nil if rec_time.day == 12  # Test code, uncomment to skip 12th day of the month
+          #           r[col] = nil if rec_time.day == 12  # Test code, uncomment to skip 12th day of the month
 
-  #### To do - Uncomment to handle long term averages
-  #       if col.starts_with?("avg__")
-  #         val = mri.extras[:long_term_averages][col.split("__").last.to_sym]
-  #       else
-            val = r[col].nil? && (nils2zero) ? 0 : r[col]
-  #       end
-  ####
+          #### To do - Uncomment to handle long term averages
+          #       if col.starts_with?("avg__")
+          #         val = mri.extras[:long_term_averages][col.split("__").last.to_sym]
+          #       else
+          val = r[col].nil? && (nils2zero) ? 0 : r[col]
+          #       end
+          ####
 
           val /= divider.to_f unless val.nil? || divider == 1
           if d_idx == mri.table.data.length - 1 && !tip.nil?
@@ -121,13 +116,13 @@ module ReportFormatter
         series[-1] = 0 if allnil                    # XML/SWF Charts can't handle all nils, set the last value to 0
         add_axis_category_text(categories)
 
-  #### To do - Uncomment to handle long term averages
-  #     if col.starts_with?("avg__")
-  #       head = "#{col.split("__").last.titleize}"
-  #     else
-          head = mri.graph[:legends] ? mri.graph[:legends][col_idx] : mri.headers[mri.col_order.index(col)] # Use legend overrides, if present
-  #     end
-  ####
+        #### To do - Uncomment to handle long term averages
+        #     if col.starts_with?("avg__")
+        #       head = "#{col.split("__").last.titleize}"
+        #     else
+        head = mri.graph[:legends] ? mri.graph[:legends][col_idx] : mri.headers[mri.col_order.index(col)] # Use legend overrides, if present
+        #     end
+        ####
 
         add_series(slice_legend(head), series)
       end
@@ -190,15 +185,15 @@ module ReportFormatter
           end
         end
 
-  #     # Remove categories (and associated series values) that have all zero or nil values
-  #     (categories.length - 1).downto(0) do |i|            # Go thru all cats
-  #       t = 0.0
-  #       series.each{|s| t += s[:data][i][:value].to_f}    # Add up the values for this cat across all series
-  #       next if t != 0                                    # Not zero, keep this cat
-  #       categories.delete_at(i)                           # Remove this cat
-  #       series.each{|s| s[:data].delete_at(i)}            # Remove the data for this cat across all series
-  #     end
-  #
+        #     # Remove categories (and associated series values) that have all zero or nil values
+        #     (categories.length - 1).downto(0) do |i|            # Go thru all cats
+        #       t = 0.0
+        #       series.each{|s| t += s[:data][i][:value].to_f}    # Add up the values for this cat across all series
+        #       next if t != 0                                    # Not zero, keep this cat
+        #       categories.delete_at(i)                           # Remove this cat
+        #       series.each{|s| s[:data].delete_at(i)}            # Remove the data for this cat across all series
+        #     end
+        #
         # Remove any series where all values are zero or nil
         series.delete_if { |s| s[:data].sum == 0 }
 
@@ -238,10 +233,10 @@ module ReportFormatter
             tip = case r[0] # Override the formatting for certain column groups on single day percent utilization chart
                   when "CPU"
                     mri.format(tip_key, r[tip_key], :format => {
-                      :function => {
-                        :name      => "mhz_to_human_size",
-                        :precision => "1"
-                      }})
+                                 :function => {
+                                   :name      => "mhz_to_human_size",
+                                   :precision => "1"
+                                 }})
                   when "Memory"
                     mri.format(tip_key, r[tip_key].to_f * 1024 * 1024, :format => format_bytes_human_size_1)
                   when "Disk"
@@ -351,12 +346,36 @@ module ReportFormatter
       counts
     end
 
+    def extract_column_names
+      # examples:
+      #  'Vm.hardware-cpu_sockets' gives 'hardware-cpu_sockets'
+      #  'Host-v_total_vms'        gives 'v_total_vms'
+      #  'Vm-num_cpu:total'        gives 'num_cpu' and 'num_cpu__total'
+      #  "Vm::Providers::InfraManager::Vm-num_cpu:total"
+      #                            gives 'Vm::Providers::InfraManager::Vm' and 'num_cpu__total'
+
+      stage1, aggreg = mri.graph[:column].split(/(?<!:):(?!:)/) # split by ':', NOT by '::'
+      model1, column = stage1.split('-', 2)
+      _model, sub_model = model1.split('.', 2)
+
+      @raw_column_name  = sub_model.present? ? "#{sub_model}.#{column}" : column
+      @data_column_name = aggreg.blank? ? @raw_column_name : "#{@raw_column_name}__#{aggreg}"
+      @aggreg = aggreg.blank? ? nil : aggreg.to_sym
+    end
+
+    def aggreg
+      extract_column_names unless @raw_column_name
+      @aggreg
+    end
+
+    def raw_column_name
+      extract_column_names unless @raw_column_name
+      @raw_column_name
+    end
+
     def data_column_name
-      @data_column_name ||= (
-        _model, col = mri.graph[:column].split('-', 2)
-        col, aggreg = col.split(':', 2)
-        aggreg.blank? ? col : "#{col}__#{aggreg}"
-      )
+      extract_column_names unless @data_column_name
+      @data_column_name
     end
 
     # Options:
@@ -380,7 +399,7 @@ module ReportFormatter
 
       if show_other
         other_sum = Array(sorted_data[0, sorted_data.length - keep])
-                    .inject(0) { |sum, row| sum + row[data_column_name] }
+                    .inject(0) { |sum, row| sum + (row[data_column_name] || 0) }
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
       end
@@ -394,30 +413,25 @@ module ReportFormatter
     end
 
     def build_numeric_chart_grouped
-      groups = mri.build_subtotals.reject { |k, _| k == :_total_ }
-
-      match = mri.graph[:column].match(/^(\w*)-(\w*):(\w*)$/)
-      (_model, column_name, aggreg) = match[1..3]
-      aggreg = aggreg.to_sym
-
       (keep, show_other) = keep_and_show_other
       show_other &&= (aggreg == :total) # FIXME: we only support :total
 
-      sorted_data = groups.sort_by { |_, data| data[aggreg][column_name] || 0 }
+      groups = mri.build_subtotals.reject { |k, _| k == :_total_ }
+      sorted_data = groups.sort_by { |_, data| data[aggreg][raw_column_name] || 0 }
 
       categories = []
       series = sorted_data.reverse.take(keep)
                .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
         tooltip = key
         tooltip = _('no value') if key.blank?
-        a.push(:value   => data[aggreg][column_name],
+        a.push(:value   => data[aggreg][raw_column_name],
                :tooltip => key)
-        categories.push([tooltip, data[aggreg][column_name]])
+        categories.push([tooltip, data[aggreg][raw_column_name]])
       end
 
       if show_other
         other_sum = Array(sorted_data[0, sorted_data.length - keep])
-                    .inject(0) { |sum, (_key, row)| sum + row[aggreg][column_name] }
+                    .inject(0) { |sum, (_key, row)| sum + row[aggreg][raw_column_name] }
 
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
@@ -434,9 +448,6 @@ module ReportFormatter
     def build_numeric_chart_grouped_2dim
       (sort1, sort2) = mri.sortby
       (keep, show_other) = keep_and_show_other
-      match = mri.graph[:column].match(/^([\w:]*)-([\w_]*):(\w*)$/)
-      (_model, column_name, aggreg) = match[1..3]
-      aggreg = aggreg.to_sym
       show_other &&= (aggreg == :total) # FIXME: we only support :total
 
       subtotals = mri.build_subtotals(true).reject { |k, _| k == :_total_ }
@@ -450,7 +461,7 @@ module ReportFormatter
       group_sums = groups.keys.each_with_object({}) do |key1, h|
         h[key1] = def_range_key2.inject(0) do |sum, key2|
           sub_key = "#{key1}__#{key2}"
-          subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][column_name] : sum
+          subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][raw_column_name] : sum
         end
       end
 
@@ -470,7 +481,7 @@ module ReportFormatter
       if show_other
         other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
         other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
-          groups[key].each { |row| o[row[sort2]] += row[column_name] }
+          groups[key].each { |row| o[row[sort2]] += row[raw_column_name] }
         end
       end
 
@@ -479,7 +490,7 @@ module ReportFormatter
       sort2_values.each do |val2|
         series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
           sub_key = "#{key1}__#{val2}"
-          value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][column_name] : 0
+          value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][raw_column_name] : 0
 
           a.push(:value   => value,
                  :tooltip => "#{key1} / #{val2}: #{value}")
@@ -554,6 +565,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
+      return no_records_found_chart(_('Invalid chart definition')) unless mri.graph[:column].present?
       if mri.group.nil?
         build_numeric_chart_simple
       else

@@ -46,7 +46,7 @@ module CimBaseStorageExtentHelper::TextualSummary
   end
 
   def textual_number_of_blocks
-    {:label => "Number of Blocks", :value => number_with_delimiter(@item.number_of_blocks,:delimiter=>',')}
+    {:label => "Number of Blocks", :value => number_with_delimiter(@item.number_of_blocks, :delimiter => ',')}
   end
 
   def textual_block_size
@@ -54,7 +54,7 @@ module CimBaseStorageExtentHelper::TextualSummary
   end
 
   def textual_consumable_blocks
-    {:label => "Consumable Blocks", :value => number_with_delimiter(@item.consumable_blocks,:delimiter=>',')}
+    {:label => "Consumable Blocks", :value => number_with_delimiter(@item.consumable_blocks, :delimiter => ',')}
   end
 
   def textual_device_id
@@ -62,7 +62,7 @@ module CimBaseStorageExtentHelper::TextualSummary
   end
 
   def textual_extent_status
-    #TODO: extent_status is being returned as array, without .to_s it shows 0 0 in two lines with a link.
+    # TODO: extent_status is being returned as array, without .to_s it shows 0 0 in two lines with a link.
     {:label => "Extent Status", :value => @item.extent_status.to_s}
   end
 

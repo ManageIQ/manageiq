@@ -1,0 +1,433 @@
+---
+- description: 
+  buttons: submit,cancel
+  label: azure-single-vm-from-user-image
+  dialog_tabs:
+  - description: 
+    display: edit
+    label: Basic Information
+    display_method: 
+    display_method_options: 
+    position: 0
+    dialog_groups:
+    - description: 
+      display: edit
+      label: Options
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: tenant_name
+        description: Tenant where the stack will be deployed
+        type: DialogFieldDropDownList
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: []
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: Tenant
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/Orchestration/Operations
+          ae_class: Methods
+          ae_instance: Available_Tenants
+          ae_message: 
+          ae_attributes: {}
+      - name: stack_name
+        description: Name of the stack
+        type: DialogFieldTextBox
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Stack Name
+        position: 1
+        validator_type: regex
+        validator_rule: "^[A-Za-z][A-Za-z0-9\\-]*$"
+        reconfigurable: 
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: resource_group
+        description: Select an existing resource group for deployment
+        type: DialogFieldDropDownList
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: []
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: Existing Resource Group
+        position: 2
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/Orchestration/Operations
+          ae_class: Methods
+          ae_instance: Available_Resource_Groups
+          ae_message: 
+          ae_attributes: {}
+      - name: new_resource_group
+        description: Create a new resource group upon deployment
+        type: DialogFieldTextBox
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: "(or) New Resource Group"
+        position: 3
+        validator_type: regex
+        validator_rule: "^[A-Za-z][A-Za-z0-9\\-_]*$"
+        reconfigurable: 
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: deploy_mode
+        description: Select deployment mode
+        type: DialogFieldDropDownList
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: Incremental
+        values:
+        - - Complete
+          - Complete
+        - - Incremental
+          - Incremental
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :description
+          :sort_order: :ascending
+        label: Mode
+        position: 4
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+    - description: 
+      display: edit
+      label: Parameters
+      display_method: 
+      display_method_options: 
+      position: 1
+      dialog_fields:
+      - name: param_virtualMachineName
+        description: Name of the virtual machine
+        type: DialogFieldTextBox
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Virtual Machine Name
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: true
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: param_adminUserName
+        description: Administrator user name for the virtual machine
+        type: DialogFieldTextBox
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Admin User Name
+        position: 1
+        validator_type: 
+        validator_rule: 
+        reconfigurable: true
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: param_adminPassword
+        description: Password for the administrator
+        type: DialogFieldTextBox
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: true
+        label: Admin Password
+        position: 2
+        validator_type: 
+        validator_rule: 
+        reconfigurable: true
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: param_userImageName
+        description: The image used to provision the virtual machine
+        type: DialogFieldDropDownList
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: []
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: User Image Name
+        position: 3
+        validator_type: 
+        validator_rule: 
+        reconfigurable: true
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: true
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/Orchestration/Operations
+          ae_class: Methods
+          ae_instance: Available_Images
+          ae_message: 
+          ae_attributes: {}
+      - name: param_operatingSystemType
+        description: Operating system of the virtual machine
+        type: DialogFieldDropDownList
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: []
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: Operating System Type
+        position: 4
+        validator_type: 
+        validator_rule: 
+        reconfigurable: true
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: 
+        auto_refresh: true
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/Orchestration/Operations
+          ae_class: Methods
+          ae_instance: Available_Os_Types
+          ae_message: 
+          ae_attributes: {}
+      - name: param_virtualMachineSize
+        description: Standard size of the virtual machine
+        type: DialogFieldDropDownList
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: []
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: Virtual Machine Size
+        position: 5
+        validator_type: 
+        validator_rule: 
+        reconfigurable: true
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/Orchestration/Operations
+          ae_class: Methods
+          ae_instance: Available_Flavors
+          ae_message: 
+          ae_attributes: {}

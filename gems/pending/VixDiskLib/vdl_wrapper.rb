@@ -125,8 +125,8 @@ class VdlConnection
     @disks.each do |d|
       $vim_log.warn "    VdlDisk: #{d.path}, opened: #{d.timeStamp}" if $vim_log
     end
-    ensure
-      @disk_lock.sync_unlock if unlock
+  ensure
+    @disk_lock.sync_unlock if unlock
   end
 
   def getDisk(path, flags)
@@ -159,8 +159,8 @@ class VdlConnection
       nd = VdlWrapper.dec_server_disk_count
       $vim_log.warn "VdlConnection.__close_disk__: #{@serverName} open disks = #{nd}" if $vim_log
     end
-    ensure
-      @disk_lock.sync_unlock if unlock
+  ensure
+    @disk_lock.sync_unlock if unlock
   end
 
   def __close_disks__
@@ -223,8 +223,8 @@ class VdlDisk
     num_sectors = @num_sectors - start_sector if (start_sector + num_sectors) > @num_sectors
 
     return VixDiskLibApi.read(@handle, start_sector, num_sectors)
-    ensure
-      @handle_lock.sync_unlock if unlock
+  ensure
+    @handle_lock.sync_unlock if unlock
   end
 
   def bwrite(start_sector, num_sectors, buf)
@@ -237,8 +237,8 @@ class VdlDisk
 
     VixDiskLibApi.write(@handle, start_sector, num_sectors, buf)
     return num_sectors
-    ensure
-      @handle_lock.sync_unlock if unlock
+  ensure
+    @handle_lock.sync_unlock if unlock
   end
 
   def breadCached(start_sector, num_sectors)
@@ -253,9 +253,9 @@ class VdlDisk
       @cache_range   = Range.new(start_sector, end_sector)
     end
 
-    sector_offset = start_sector  - @cache_range.first
+    sector_offset = start_sector - @cache_range.first
     buffer_offset = sector_offset * @sectorSize
-    length       = num_sectors   * @sectorSize
+    length       = num_sectors * @sectorSize
 
     @cache[buffer_offset, length]
   end

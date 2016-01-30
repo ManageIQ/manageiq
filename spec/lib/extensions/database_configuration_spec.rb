@@ -1,8 +1,6 @@
-require "spec_helper"
-
 describe "DatabaseConfiguration patch" do
   before(:each) do
-    Rails.stub(:env => ActiveSupport::StringInquirer.new("production"))
+    allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
 
     @app = Vmdb::Application.new
     @app.config.paths["config/database"] = "does/not/exist" # ignore real database.yml
@@ -26,9 +24,14 @@ describe "DatabaseConfiguration patch" do
 
   context "when DATABASE_URL is set" do
     around(:each) do |example|
-      old_env, ENV['DATABASE_URL'] = ENV['DATABASE_URL'], 'postgres://'
-      example.run
-      ENV['DATABASE_URL'] = old_env
+      begin
+        old_env = ENV.delete('DATABASE_URL')
+        ENV['DATABASE_URL'] = 'postgres://'
+        example.run
+      ensure
+        # ENV['x'] = nil deletes the key because ENV accepts only string values
+        ENV['DATABASE_URL'] = old_env
+      end
     end
 
     it "ignores a missing file" do
@@ -38,7 +41,13 @@ describe "DatabaseConfiguration patch" do
 
   context "with no source of configuration" do
     it "explains the problem" do
-      expect { @app.config.database_configuration }.to raise_error(/Could not load database configuration/)
+      begin
+        old = ENV.delete('DATABASE_URL')
+        expect { @app.config.database_configuration }.to raise_error(/Could not load database configuration/)
+      ensure
+        # ENV['x'] = nil deletes the key because ENV accepts only string values
+        ENV['DATABASE_URL'] = old
+      end
     end
   end
 end

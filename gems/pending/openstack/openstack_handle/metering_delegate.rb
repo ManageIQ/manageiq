@@ -1,5 +1,8 @@
 module OpenstackHandle
   class MeteringDelegate < DelegateClass(Fog::Metering::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Metering"
 
     attr_reader :name

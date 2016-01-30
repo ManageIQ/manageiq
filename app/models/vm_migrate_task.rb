@@ -32,11 +32,11 @@ class VmMigrateTask < MiqRequestTask
     new_settings << "Resource Pool: #{respool_name}" unless respool_name.blank?
     storage = req_obj.get_option_last(:placement_ds_name)
     new_settings << "Storage: #{storage}" unless storage.blank?
-    return "#{self.request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
+    "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
 
   def after_request_task_create
-    self.update_attribute(:description, self.get_description)
+    update_attribute(:description, get_description)
   end
 
   def do_request
@@ -50,32 +50,30 @@ class VmMigrateTask < MiqRequestTask
     datastore = Storage.find_by_id(datastore_id)
 
     disk_transform = case get_option(:disk_format)
-    when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
-    when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
-    else nil
-    end
+                     when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
+                     when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
+                     end
 
     # Determine if we call migrate for relocate
     vc_method = if datastore || disk_transform
-      :relocate
-    elsif respool && host.nil?
-      :relocate
-    else
-      :migrate
-    end
+                  :relocate
+                elsif respool && host.nil?
+                  :relocate
+                else
+                  :migrate
+                end
 
-    _log.warn "Calling VM #{vc_method} for #{self.vm.id}:#{self.vm.name}"
+    _log.warn "Calling VM #{vc_method} for #{vm.id}:#{vm.name}"
     if vc_method == :migrate
-      self.vm.migrate(host, respool)
+      vm.migrate(host, respool)
     else
-      self.vm.relocate(host, respool, datastore, nil, disk_transform)
+      vm.relocate(host, respool, datastore, nil, disk_transform)
     end
 
     if AUTOMATE_DRIVES
-      update_and_notify_parent(:state => 'migrated', :message => "Finished #{self.request_class::TASK_DESCRIPTION}")
+      update_and_notify_parent(:state => 'migrated', :message => "Finished #{request_class::TASK_DESCRIPTION}")
     else
-      update_and_notify_parent(:state => 'finished', :message => "#{self.request_class::TASK_DESCRIPTION} complete")
+      update_and_notify_parent(:state => 'finished', :message => "#{request_class::TASK_DESCRIPTION} complete")
     end
   end
-
 end

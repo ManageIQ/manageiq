@@ -1,4 +1,4 @@
---- 
+---
 - :name: dashboard_show
   :description: Cloud Intelligence / Dashboard
   :url: /dashboard/show
@@ -68,6 +68,11 @@
   :description: Clouds / Flavors
   :url: /flavor/show_list
   :rbac_feature_name: flavor_show_list
+  :startup: true
+- :name: cloud_volumes
+  :description: Clouds / Volumes
+  :url: /cloud_volume/show_list
+  :rbac_feature_name: cloud_volume_show_list
   :startup: true
 - :name: vm_cloud_instances_accord
   :description: Clouds / Instances / Instances By Providers
@@ -186,7 +191,7 @@
 - :name: container_containers
   :description: Containers / Explorer
   :url: /container/explorer
-  :rbac_feature_name: container_view
+  :rbac_feature_name: containers
   :startup: true
 - :name: control_explorer
   :description: Control / Explorer
@@ -215,6 +220,11 @@
   :startup: true
 - :name: miq_proxy_tasks
   :description: Configure / Tasks
-  :url: /configuration/index?jobs_tab=alltasks
+  :url: /miq_task/index?jobs_tab=alltasks
   :rbac_feature_name: tasks
+  :startup: true
+- :name: miq_automate_log
+  :description: Automate Log
+  :url: /miq_ae_tools/log
+  :rbac_feature_name: miq_ae_class_log
   :startup: true

@@ -1,1 +1,0 @@
-require 'prototype_legacy_helper/lib/prototype_legacy_helper'

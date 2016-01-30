@@ -9,7 +9,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
         req_task.userid         = service_task.userid
 
         task_options     = req_task.options.merge(service_options(parent_svc, template_service_resource))
-        task_options     = task_options.merge(owner_options(req_task))
+        task_options     = task_options.merge(owner_options(service_task))
         req_task.options = task_options
       end
     end
@@ -35,12 +35,15 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     }
   end
 
-  def owner_options(task)
-    user = User.find_by_userid(task.userid)
+  # NOTE: for services, the requester is the owner
+  def owner_options(service_task)
+    user = User.find_by_userid(service_task.userid)
     return {} if user.nil?
 
     {
+      :requester_group  => service_task.options[:requester_group],
       :owner_email      => user.email,
+      :owner_group      => service_task.options[:requester_group],
       :owner_first_name => user.first_name,
       :owner_last_name  => user.last_name
     }

@@ -24,13 +24,13 @@ class CustomizationTemplateKickstart < CustomizationTemplate
     DEFAULT_FILENAME
   end
 
-  def create_files_on_server(pxe_server, pxe_image, mac_address, windows_image, substitution_options)
+  def create_files_on_server(pxe_server, pxe_image, mac_address, _windows_image, substitution_options)
     filepath = self.class.pxe_server_filepath(pxe_server, pxe_image, mac_address)
-    contents = self.script_with_substitution(substitution_options)
+    contents = script_with_substitution(substitution_options)
     pxe_server.write_file(filepath, contents)
   end
 
-  def delete_files_on_server(pxe_server, pxe_image, mac_address, windows_image)
+  def delete_files_on_server(pxe_server, pxe_image, mac_address, _windows_image)
     filepath = self.class.pxe_server_filepath(pxe_server, pxe_image, mac_address)
     pxe_server.delete_file(filepath)
   end

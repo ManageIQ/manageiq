@@ -1,8 +1,8 @@
 # Description: This sample method allows the customer to control which services
-#	       get processed. By default it allows all services to be included
-#	       from the bundle. If the user wants to do be selective about which
-#	       services from a bundle get installed, they can copy this method and
-#	       apply custom logic
+#        get processed. By default it allows all services to be included
+#        from the bundle. If the user wants to do be selective about which
+#        services from a bundle get installed, they can copy this method and
+#        apply custom logic
 #
 # This example is for bundled services, which is composed of multiple catalog items.
 # The root service is always included.
@@ -12,14 +12,14 @@
 #
 
 # Input Parameters:
-#	   $evm.root['service_template']  contains the current Service Template Object being evaluated
-#	   $evm.root['service'] 	  contains the parent service object, will be nil if
-#					  this is the first service
+#    $evm.root['service_template']  contains the current Service Template Object being evaluated
+#    $evm.root['service']     contains the parent service object, will be nil if
+#           this is the first service
 #      $evm.root['service_template_provision_task']
 #
 # Output : The evm.root should have an attribute called include_service which is
-#	   evaluated by the internal state machine to decide if the service gets
-#	   included or excluded
+#    evaluated by the internal state machine to decide if the service gets
+#    included or excluded
 #
 
 $evm.root['include_service'] = false

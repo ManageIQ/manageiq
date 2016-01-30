@@ -1,9 +1,9 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
+    = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    = patternfly_accordion_panel(_("Properties"), false, "storage_manager_prop") do
+    = miq_accordion_panel(_("Properties"), false, "storage_manager_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_("Summary"),

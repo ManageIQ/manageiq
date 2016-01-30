@@ -6,8 +6,8 @@ require 'yaml'
 module Psych
   module Visitors
     class ToRuby
-      def revive_hash hash, o
-          o.children.each_slice(2) { |k,v|
+      def revive_hash(hash, o)
+        o.children.each_slice(2) do |k, v|
           key = accept(k)
 
           if key == '<<'.freeze
@@ -24,17 +24,15 @@ module Psych
 
           # We need to migrate all old YAML before we can remove this
           #### Reapply the instance variables, see https://github.com/tenderlove/psych/issues/43
-          elsif key.to_s[0..5] == "__iv__".freeze
+          elsif key.to_s.start_with?('__iv__'.freeze)
             hash.instance_variable_set(key.to_s[6..-1], accept(v))
 
           else
             hash[key] = accept(v)
           end
-
-        }
+        end
         hash
       end
     end
   end
 end
-

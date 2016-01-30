@@ -39,6 +39,7 @@ class WsProxy
       Rails.logger.error("error running websocket proxy: 'No TCP ports available'")
       return nil
     end
+    $log.info("MIQ(WsProxy.start_proxy) Websocket proxy to #{host}:#{host_port} on port #{proxy_port}, password: #{password}, encrypt: #{encrypt}")
     {:host => host, :port => host_port, :password => password, :proxy_port => proxy_port, :encrypt => encrypt}
   end
 

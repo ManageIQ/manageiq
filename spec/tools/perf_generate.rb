@@ -1,6 +1,6 @@
 require 'trollop'
 ARGV.shift if ARGV[0] == '--'
-opts = Trollop::options do
+opts = Trollop.options do
   banner "Generate metrics records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
   opt :realtime,    "Realtime range",      :default => "4.hours"
   opt :hourly,      "Hourly range",        :default => "6.months"
@@ -14,9 +14,9 @@ opts = Trollop::options do
   opt :no_delete,   "Skips deleting of the generated files"
   opt :dry_run,     "Same as --no-generate --no-import --no-delete"
 end
-Trollop::die "script must be run with rails runner" unless Object.const_defined?(:Rails)
-Trollop::die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
-Trollop::die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
+Trollop.die "script must be run with rails runner" unless Object.const_defined?(:Rails)
+Trollop.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
+Trollop.die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
 opts[:no_generate] = opts[:no_import] = opts[:no_delete] = true if opts[:dry_run]
 
 require 'ruby-progressbar'
@@ -37,7 +37,7 @@ REALTIME_PER_HOUR = (NUM_VMS + NUM_HOSTS) * 180
 realtime_count = hourly_count = 0
 (HOURLY_START...Time.now.utc).step_value(1.hour) do |hour|
   realtime_count += REALTIME_PER_HOUR if hour >= REALTIME_START
-  hourly_count   += HOURLY_PER_HOUR
+  hourly_count += HOURLY_PER_HOUR
 end
 
 IMPORT_REALTIME_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "import_realtime.csv"))
@@ -65,7 +65,7 @@ unless opts[:no_generate]
   $out_csv_realtime = CSV.open(IMPORT_REALTIME_FNAME, "wb", :row_sep => "\n")
   $out_csv_realtime << METRICS_COLS
   $out_csv_hourly   = CSV.open(IMPORT_HOURLY_FNAME, "wb", :row_sep => "\n")
-  $out_csv_hourly   << METRICS_COLS
+  $out_csv_hourly << METRICS_COLS
 
   def insert_realtime(klass, id, timestamp)
     180.times do |rt_count|

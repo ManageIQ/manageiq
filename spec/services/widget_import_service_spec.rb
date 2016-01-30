@@ -1,31 +1,29 @@
-require "spec_helper"
-
 describe WidgetImportService do
   let(:widget_import_service) { described_class.new(widget_import_validator) }
-  let(:widget_import_validator) { auto_loaded_instance_double("WidgetImportValidator") }
+  let(:widget_import_validator) { double("WidgetImportValidator") }
 
   before do
-    MiqServer.stub(:my_server).and_return(active_record_instance_double("MiqServer", :zone_id => 1))
+    allow(MiqServer).to receive(:my_server).and_return(double("MiqServer", :zone_id => 1))
   end
 
   describe "#cancel_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 42) }
-    let(:miq_queue) { active_record_instance_double("MiqQueue") }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 42) }
+    let(:miq_queue) { double("MiqQueue") }
 
     before do
-      ImportFileUpload.stub(:find).with("42").and_return(import_file_upload)
-      import_file_upload.stub(:destroy)
+      allow(ImportFileUpload).to receive(:find).with("42").and_return(import_file_upload)
+      allow(import_file_upload).to receive(:destroy)
 
-      MiqQueue.stub(:unqueue)
+      allow(MiqQueue).to receive(:unqueue)
     end
 
     it "destroys the import file upload" do
-      import_file_upload.should_receive(:destroy)
+      expect(import_file_upload).to receive(:destroy)
       widget_import_service.cancel_import("42")
     end
 
     it "destroys the queued deletion" do
-      MiqQueue.should_receive(:unqueue).with(
+      expect(MiqQueue).to receive(:unqueue).with(
         :class_name  => "ImportFileUpload",
         :instance_id => 42,
         :method_name => "destroy"
@@ -35,10 +33,10 @@ describe WidgetImportService do
   end
 
   describe "#import_widgets" do
-    let(:miq_queue) { active_record_instance_double("MiqQueue") }
+    let(:miq_queue) { double("MiqQueue") }
     let(:yaml_data) { "the yaml" }
     let(:import_file_upload) do
-      active_record_instance_double("ImportFileUpload", :id => 42, :uploaded_content => yaml_data)
+      double("ImportFileUpload", :id => 42, :uploaded_content => yaml_data)
     end
     let(:widgets_to_import) { %w(potato not_potato) }
 
@@ -88,18 +86,18 @@ describe WidgetImportService do
     end
 
     before do
-      import_file_upload.stub(:destroy)
-      MiqQueue.stub(:unqueue)
+      allow(import_file_upload).to receive(:destroy)
+      allow(MiqQueue).to receive(:unqueue)
     end
 
     shared_examples_for "WidgetImportService#import_widgets that destroys temporary data" do
       it "destroys the import file upload" do
-        import_file_upload.should_receive(:destroy)
+        expect(import_file_upload).to receive(:destroy)
         widget_import_service.import_widgets(import_file_upload, widgets_to_import)
       end
 
       it "unqueues the miq_queue item" do
-        MiqQueue.should_receive(:unqueue).with(
+        expect(MiqQueue).to receive(:unqueue).with(
           :class_name  => "ImportFileUpload",
           :instance_id => 42,
           :method_name => "destroy"
@@ -111,7 +109,7 @@ describe WidgetImportService do
     shared_examples_for "WidgetImportService#import_widgets with a non existing widget" do
       it "builds a new widget" do
         widget_import_service.import_widgets(import_file_upload, widgets_to_import)
-        MiqWidget.first.should_not be_nil
+        expect(MiqWidget.first).not_to be_nil
       end
     end
 
@@ -119,8 +117,8 @@ describe WidgetImportService do
       context "when the list of widgets to import from the yaml includes an existing widget" do
         before do
           MiqWidget.create!(:description => "Test2", :title => "potato", :content_type => "report")
-          YAML.stub(:load).with(yaml_data) do
-            YAML.unstub(:load)
+          allow(YAML).to receive(:load).with(yaml_data) do
+            allow(YAML).to receive(:load).and_call_original
             widgets
           end
         end
@@ -147,8 +145,8 @@ describe WidgetImportService do
           context "when the RssFeed already exists" do
             before do
               RssFeed.create!(:name => "name", :title => "old title")
-              YAML.stub(:load).with(yaml_data) do
-                YAML.unstub(:load)
+              allow(YAML).to receive(:load).with(yaml_data) do
+                allow(YAML).to receive(:load).and_call_original
                 widgets
               end
             end
@@ -163,8 +161,8 @@ describe WidgetImportService do
 
           context "when the RssFeed does not already exist" do
             before do
-              YAML.stub(:load).with(yaml_data) do
-                YAML.unstub(:load)
+              allow(YAML).to receive(:load).with(yaml_data) do
+                allow(YAML).to receive(:load).and_call_original
                 widgets
               end
             end
@@ -187,8 +185,8 @@ describe WidgetImportService do
               :rpt_type  => "Custom",
               :title     => "original report title"
             )
-            YAML.stub(:load).with(yaml_data) do
-              YAML.unstub(:load)
+            allow(YAML).to receive(:load).with(yaml_data) do
+              allow(YAML).to receive(:load).and_call_original
               widgets
             end
           end
@@ -206,8 +204,8 @@ describe WidgetImportService do
 
         context "when the report does not exist" do
           before do
-            YAML.stub(:load).with(yaml_data) do
-              YAML.unstub(:load)
+            allow(YAML).to receive(:load).with(yaml_data) do
+              allow(YAML).to receive(:load).and_call_original
               widgets
             end
           end
@@ -224,8 +222,8 @@ describe WidgetImportService do
 
         context "when the schedule does not exist" do
           before do
-            YAML.stub(:load).with(yaml_data) do
-              YAML.unstub(:load)
+            allow(YAML).to receive(:load).with(yaml_data) do
+              allow(YAML).to receive(:load).and_call_original
               widgets
             end
           end
@@ -252,8 +250,8 @@ describe WidgetImportService do
               }
             )
 
-            YAML.stub(:load).with(yaml_data) do
-              YAML.unstub(:load)
+            allow(YAML).to receive(:load).with(yaml_data) do
+              allow(YAML).to receive(:load).and_call_original
               widgets
             end
           end
@@ -281,7 +279,7 @@ describe WidgetImportService do
 
     context "when the loaded yaml does not return widgets" do
       before do
-        YAML.stub(:load).with(yaml_data).and_return([{"MiqWidget" => {"not a" => "widget"}}])
+        allow(YAML).to receive(:load).with(yaml_data).and_return([{"MiqWidget" => {"not a" => "widget"}}])
       end
 
       it "raises a ParsedNonWidgetYamlError" do
@@ -293,21 +291,21 @@ describe WidgetImportService do
   end
 
   describe "#store_for_import" do
-    let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 42).as_null_object }
+    let(:import_file_upload) { double("ImportFileUpload", :id => 42).as_null_object }
 
     before do
-      ImportFileUpload.stub(:create).and_return(import_file_upload)
-      import_file_upload.stub(:store_binary_data_as_yml)
-      MiqQueue.stub(:put)
+      allow(ImportFileUpload).to receive(:create).and_return(import_file_upload)
+      allow(import_file_upload).to receive(:store_binary_data_as_yml)
+      allow(MiqQueue).to receive(:put)
     end
 
     context "when the imported file does not raise any errors while determining validity" do
       before do
-        widget_import_validator.stub(:determine_validity).with(import_file_upload).and_return(nil)
+        allow(widget_import_validator).to receive(:determine_validity).with(import_file_upload).and_return(nil)
       end
 
       it "stores the data" do
-        import_file_upload.should_receive(:store_binary_data_as_yml).with("the data", "Widget import")
+        expect(import_file_upload).to receive(:store_binary_data_as_yml).with("the data", "Widget import")
         widget_import_service.store_for_import("the data")
       end
 
@@ -317,7 +315,7 @@ describe WidgetImportService do
 
       it "queues a deletion" do
         Timecop.freeze(2014, 3, 5) do
-          MiqQueue.should_receive(:put).with(
+          expect(MiqQueue).to receive(:put).with(
             :class_name  => "ImportFileUpload",
             :instance_id => 42,
             :deliver_on  => 1.day.from_now,
@@ -332,18 +330,18 @@ describe WidgetImportService do
     context "when the imported file raises an error while determining validity" do
       before do
         error_to_be_raised = WidgetImportValidator::NonYamlError.new("Test message")
-        widget_import_validator.stub(:determine_validity).with(import_file_upload).and_raise(error_to_be_raised)
+        allow(widget_import_validator).to receive(:determine_validity).with(import_file_upload).and_raise(error_to_be_raised)
       end
 
       it "reraises with the original error" do
-        expect {
+        expect do
           widget_import_service.store_for_import("the data")
-        }.to raise_error(WidgetImportValidator::NonYamlError, "Test message")
+        end.to raise_error(WidgetImportValidator::NonYamlError, "Test message")
       end
 
       it "queues a deletion" do
         Timecop.freeze(2014, 3, 5) do
-          MiqQueue.should_receive(:put).with(
+          expect(MiqQueue).to receive(:put).with(
             :class_name  => "ImportFileUpload",
             :instance_id => 42,
             :deliver_on  => 1.day.from_now,

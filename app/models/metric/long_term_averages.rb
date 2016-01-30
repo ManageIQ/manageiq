@@ -47,9 +47,9 @@ module Metric::LongTermAverages
       end
 
       avg_cols.each do |c|
-        vals[c]          ||= []
+        vals[c] ||= []
         results[:avg][c] ||= 0
-        counts[c]        ||= 0
+        counts[c] ||= 0
 
         val =  p.send(c) || 0
         vals[c] << val
@@ -68,6 +68,6 @@ module Metric::LongTermAverages
       end
     end
 
-    return results
+    results
   end
 end

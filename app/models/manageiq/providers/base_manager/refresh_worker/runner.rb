@@ -1,7 +1,5 @@
-require 'workers/queue_worker_base'
-
-class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::QueueWorkerBase
-  OPTIONS_PARSER_SETTINGS = WorkerBase::OPTIONS_PARSER_SETTINGS + [
+class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorkerBase::Runner
+  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:ems_id, 'EMS Instance ID', String],
   ]
 
@@ -16,8 +14,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::QueueWorkerBas
   end
 
   def do_before_work_loop
-    _log.info("#{self.log_prefix} Queueing initial refresh for EMS.")
+    _log.info("#{log_prefix} Queueing initial refresh for EMS.")
     EmsRefresh.queue_refresh(@ems)
   end
-
 end

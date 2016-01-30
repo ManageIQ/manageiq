@@ -8,7 +8,7 @@ require_relative '../../MiqVm/MiqVm'
 
 class MiqOpenStackInstance
   attr_reader :vmConfigFile
-  
+
   SUPPORTED_METHODS = [:rootTrees, :extract, :diskInitErrors]
 
   def initialize(instance_id, openstack_handle)
@@ -30,7 +30,7 @@ class MiqOpenStackInstance
   end
 
   def snapshot_metadata
-    @snapshot_metadata ||= instance.metadata.get(:miq_snapshot)
+    @snapshot_metadata ||= instance.metadata.length > 0 && instance.metadata.get(:miq_snapshot)
   end
 
   def snapshot_image_id
@@ -74,7 +74,7 @@ class MiqOpenStackInstance
     miq_snapshot = Fog::Image::OpenStack::Image.new(rv.body['image'])
     miq_snapshot.collection = image_service.images
 
-    until miq_snapshot.status == "active"
+    until miq_snapshot.status.upcase == "ACTIVE"
       $log.debug "#{log_prefix}: #{miq_snapshot.status}"
       sleep 1
       miq_snapshot.reload
@@ -126,19 +126,25 @@ class MiqOpenStackInstance
       @temp_image_file = get_image_file(snapshot_image_id)
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
-      MiqVm.new(hardware)
+
+      diskFormat = image_service.get_image(snapshot_image_id).headers['X-Image-Meta-Disk_format']
+      $log.debug "diskFormat = #{diskFormat}"
+
+      ost = OpenStruct.new
+      ost.rawDisk = diskFormat == "raw"
+      MiqVm.new(hardware, ost)
     end
   end
 
   def get_image_file(image_id)
     log_prefix = "#{self.class.name}##{__method__}"
 
-    cimage = compute_service.images.get(image_id)
-    raise "Image #{image_id} not found" unless cimage
-    $log.debug "#{log_prefix}: cimage = #{cimage.class.name}"
+    image = image_service.get_image(image_id)
+    raise "Image #{image_id} not found" unless image
+    $log.debug "#{log_prefix}: image = #{image.class.name}"
 
-    iname = cimage.attributes[:name]
-    isize = cimage.attributes['OS-EXT-IMG-SIZE:size'].to_i
+    iname = image.headers['X-Image-Meta-Name']
+    isize = image.headers['X-Image-Meta-Size'].to_i
     $log.debug "#{log_prefix}: iname = #{iname}"
     $log.debug "#{log_prefix}: isize = #{isize}"
 
@@ -147,7 +153,7 @@ class MiqOpenStackInstance
     tot = 0
     tf = MiqTempfile.new(iname, :encoding => 'ascii-8bit')
     $log.debug "#{log_prefix}: saving image to #{tf.path}"
-    response_block = lambda do |buf, rem, sz|
+    response_block = lambda do |buf, _rem, sz|
       tf.write buf
       tot += buf.length
       $log.debug "#{log_prefix}: response_block: #{tot} bytes written of #{sz}"
@@ -185,5 +191,13 @@ class MiqOpenStackInstance
     return super unless SUPPORTED_METHODS.include? sym
     return miq_vm.send(sym) if args.empty?
     miq_vm.send(sym, args)
+  end
+
+  def respond_to_missing?(sym, *args)
+    if SUPPORTED_METHODS.include?(sym)
+      true
+    else
+      super
+    end
   end
 end

@@ -21,7 +21,7 @@ module Vmdb
     end
 
     def self.fix_i18n_available_locales
-      I18n.available_locales += FastGettext.available_locales.grep(/_/).map { |i| i.gsub("_", "-") }
+      I18n.available_locales += FastGettext.available_locales.grep(/_/).map { |i| i.tr("_", "-") }
     end
 
     def self.find_available_locales_via_directories

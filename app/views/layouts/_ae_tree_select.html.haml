@@ -43,29 +43,33 @@
           = link_to(t = _("Apply"),
                     {:action => "ae_tree_select_toggle",
                      :button => "submit"},
-                    :class  => "btn btn-primary",
-                    :alt    => t,
-                    :remote => true,
-                    :title  => t)
+                    :class        => "btn btn-primary",
+                    :alt          => t,
+                    :remote       => true,
+                    "data-method" => :post,
+                    :title        => t)
           = link_to(t = _("Cancel"),
                     {:action => "ae_tree_select_toggle",
                      :button => "cancel"},
-                    :class  => "btn btn-default",
-                    :alt    => t,
-                    :remote => true,
-                    :title  => t)
+                    :class        => "btn btn-default",
+                    :alt          => t,
+                    :remote       => true,
+                    "data-method" => :post,
+                    :title        => t)
         #automate_buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
           = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
           = link_to(t = _("Cancel"),
                     {:action => "ae_tree_select_toggle",
                      :button => "cancel"},
-                    :class  => "btn btn-default",
-                    :alt    => t,
-                    :remote => true,
-                    :title  => t)
+                    :class        => "btn btn-default",
+                    :alt          => t,
+                    :remote       => true,
+                    "data-method" => :post,
+                    :title        => t)
 :javascript
   $(function(){
-    $("button[data-dismiss='modal']").click(function(){
+    $("button[data-dismiss='modal']").off('click');
+    $("button[data-dismiss='modal']").on('click', function(){
       miqJqueryRequest("ae_tree_select_toggle?button=cancel", {beforeSend: true});
       return true;
     });

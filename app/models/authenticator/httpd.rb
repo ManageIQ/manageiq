@@ -39,7 +39,7 @@ module Authenticator
       membership_list
     end
 
-    def update_user_attributes(user, username, identity)
+    def update_user_attributes(user, _username, identity)
       user_attrs, _membership_list = identity
 
       user.userid     = user_attrs[:username]

@@ -62,8 +62,8 @@ class String
   #   "active_record/errors".camelize(:lower) # => "activeRecord::Errors"
   def camelize(first_letter = :upper)
     case first_letter
-      when :upper then ActiveSupport::Inflector.camelize(self, true)
-      when :lower then ActiveSupport::Inflector.camelize(self, false)
+    when :upper then ActiveSupport::Inflector.camelize(self, true)
+    when :lower then ActiveSupport::Inflector.camelize(self, false)
     end
   end unless method_defined?(:camelize)
 
@@ -148,5 +148,4 @@ class String
   def foreign_key(separate_class_name_and_id_with_underscore = true)
     ActiveSupport::Inflector.foreign_key(self, separate_class_name_and_id_with_underscore)
   end unless method_defined?(:foreign_key)
-
 end

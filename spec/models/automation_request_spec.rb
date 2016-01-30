@@ -1,11 +1,8 @@
-require "spec_helper"
-
 describe AutomationRequest do
+  let(:admin) { FactoryGirl.create(:user, :role => "admin") }
   before(:each) do
-    MiqServer.stub(:my_zone).and_return("default")
+    allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
     @zone        = FactoryGirl.create(:zone, :name => "fred")
-    User.any_instance.stub(:role).and_return("admin")
-    @user        = FactoryGirl.create(:user)
     @approver    = FactoryGirl.create(:user_miq_request_approver)
 
     @version     = 1
@@ -14,145 +11,156 @@ describe AutomationRequest do
     @ae_var1     = "vvvv"
     @ae_var2     = "wwww"
     @ae_var3     = "xxxx"
-    @uri_parts   = "instance=#{@ae_instance}|message=#{@ae_message}"
-    @parameters  = "var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
+    @uri_parts   = {'instance' => "#{@ae_instance}", 'message' => "#{@ae_message}"}
+    @parameters  = {'var1' => "#{@ae_var1}", 'var2' => "#{@ae_var2}", 'var3' => "#{@ae_var3}"}
   end
 
   it ".request_task_class" do
-    AutomationRequest.request_task_class.should == AutomationTask
+    expect(AutomationRequest.request_task_class).to eq(AutomationTask)
   end
 
   context ".create_from_ws" do
     it "with empty requester string" do
-      ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
-      ar.should be_kind_of(AutomationRequest)
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
+      expect(ar).to be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "pending_approval"
-      ar.userid.should                    == @user.userid
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         == @user.id
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == @user.userid
+      expect(ar).to eq(AutomationRequest.first)
+      expect(ar.request_state).to eq("pending")
+      expect(ar.status).to eq("Ok")
+      expect(ar.approval_state).to eq("pending_approval")
+      expect(ar.userid).to eq(admin.userid)
+      expect(ar.options[:message]).to eq(@ae_message)
+      expect(ar.options[:instance_name]).to eq(@ae_instance)
+      expect(ar.options[:user_id]).to eq(admin.id)
+      expect(ar.options[:attrs][:var1]).to eq(@ae_var1)
+      expect(ar.options[:attrs][:var2]).to eq(@ae_var2)
+      expect(ar.options[:attrs][:var3]).to eq(@ae_var3)
+      expect(ar.options[:attrs][:userid]).to eq(admin.userid)
     end
 
-    it "with requester string overriding userid who is NOT in the database" do
+    it "doesnt allow overriding userid who is NOT in the database" do
       user_name = 'oleg'
-      ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "user_name=#{user_name}")
-      ar.should be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "pending_approval"
-      ar.userid.should                    == user_name
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         be_nil
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == user_name
+      expect do
+        AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name" => "#{user_name}")
+      end.to raise_error(ActiveRecord::RecordNotFound)
+
     end
 
     it "with requester string overriding userid who is in the database" do
-      ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "user_name=#{@approver.userid}")
-      ar.should be_kind_of(AutomationRequest)
+      ar = AutomationRequest.create_from_ws(@version, admin,
+                                            @uri_parts, @parameters,
+                                            "user_name" => "#{@approver.userid}")
+      expect(ar).to be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "pending_approval"
-      ar.userid.should                    == @approver.userid
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         == @approver.id
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == @approver.userid
+      expect(ar).to eq(AutomationRequest.first)
+      expect(ar.request_state).to eq("pending")
+      expect(ar.status).to eq("Ok")
+      expect(ar.approval_state).to eq("pending_approval")
+      expect(ar.userid).to eq(@approver.userid)
+      expect(ar.options[:message]).to eq(@ae_message)
+      expect(ar.options[:instance_name]).to eq(@ae_instance)
+      expect(ar.options[:user_id]).to eq(@approver.id)
+      expect(ar.options[:attrs][:var1]).to eq(@ae_var1)
+      expect(ar.options[:attrs][:var2]).to eq(@ae_var2)
+      expect(ar.options[:attrs][:var3]).to eq(@ae_var3)
+      expect(ar.options[:attrs][:userid]).to eq(@approver.userid)
     end
 
     it "with requester string overriding userid AND auto_approval" do
-      ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "user_name=#{@approver.userid}|auto_approve=true")
-      ar.should be_kind_of(AutomationRequest)
+      ar = AutomationRequest.create_from_ws(@version, admin,
+                                            @uri_parts, @parameters,
+                                            "user_name" => "#{@approver.userid}", 'auto_approve' => 'true')
+      expect(ar).to be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "approved"
-      ar.userid.should                    == @approver.userid
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         == @approver.id
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == @approver.userid
+      expect(ar).to eq(AutomationRequest.first)
+      expect(ar.request_state).to eq("pending")
+      expect(ar.status).to eq("Ok")
+      expect(ar.approval_state).to eq("approved")
+      expect(ar.userid).to eq(@approver.userid)
+      expect(ar.options[:message]).to eq(@ae_message)
+      expect(ar.options[:instance_name]).to eq(@ae_instance)
+      expect(ar.options[:user_id]).to eq(@approver.id)
+      expect(ar.options[:attrs][:var1]).to eq(@ae_var1)
+      expect(ar.options[:attrs][:var2]).to eq(@ae_var2)
+      expect(ar.options[:attrs][:var3]).to eq(@ae_var3)
+      expect(ar.options[:attrs][:userid]).to eq(@approver.userid)
     end
   end
 
   context "#approve" do
     context "an unapproved request with a single approver" do
       before(:each) do
-        @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
+        @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
         @reason = "Why Not?"
       end
 
       it "updates approval_state" do
-        @ar.approve(@approver.userid, @reason)
-        @ar.reload.approval_state.should == "approved"
+        @ar.approve(@approver, @reason)
+        expect(@ar.reload.approval_state).to eq("approved")
       end
 
       it "calls #call_automate_event_queue('request_approved')" do
-        AutomationRequest.any_instance.should_receive(:call_automate_event_queue).with('request_approved').once
-        @ar.approve(@approver.userid, @reason)
+        expect_any_instance_of(AutomationRequest).to receive(:call_automate_event_queue).with('request_approved').once
+        @ar.approve(@approver, @reason)
       end
 
       it "calls #execute" do
-        AutomationRequest.any_instance.should_receive(:execute).once
-        @ar.approve(@approver.userid, @reason)
+        expect_any_instance_of(AutomationRequest).to receive(:execute).once
+        @ar.approve(@approver, @reason)
       end
+    end
+  end
 
+  describe "#make_request" do
+    let(:alt_user) { FactoryGirl.create(:user_with_group) }
+    it "creates and update a request" do
+      expect(AuditEvent).not_to receive(:success)
+      values = {}
+
+      request = described_class.make_request(nil, values, admin)
+
+      expect(request).to be_valid
+      expect(request).to be_a_kind_of(AutomationRequest)
+      expect(request.request_type).to eq("automation")
+      expect(request.description).to eq("Automation Task")
+      expect(request.requester).to eq(admin)
+      expect(request.userid).to eq(admin.userid)
+      expect(request.requester_name).to eq(admin.name)
     end
   end
 
   context "#create_request_tasks" do
     before(:each) do
-      @ar = AutomationRequest.create_from_ws(@version, @user.userid, @uri_parts, @parameters, "")
-      root = { 'ae_result' => 'ok' }
+      @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
+      root = {'ae_result' => 'ok'}
       ws = double('ws')
-      ws.stub(:root => root)
-      AutomationRequest.any_instance.stub(:call_automate_event).and_return(ws)
+      allow(ws).to receive_messages(:root => root)
+      allow_any_instance_of(AutomationRequest).to receive(:call_automate_event_sync).and_return(ws)
 
       @ar.create_request_tasks
       @ar.reload
     end
 
     it "should create AutomationTask" do
-      @ar.automation_tasks.length.should == 1
-      AutomationTask.count.should == 1
-      AutomationTask.first.should == @ar.automation_tasks.first
+      expect(@ar.automation_tasks.length).to eq(1)
+      expect(AutomationTask.count).to eq(1)
+      expect(AutomationTask.first).to eq(@ar.automation_tasks.first)
     end
-
   end
 
   context "validate zone" do
-
     before do
-      MiqRequest.any_instance.stub(:automate_event_failed?).and_return(false)
+      allow_any_instance_of(MiqRequest).to receive(:automate_event_failed?).and_return(false)
     end
 
     def deliver(zone_name)
-      parameters  = "miq_zone=#{zone_name}|var1=#{@ae_var1}|var2=#{@ae_var2}|var3=#{@ae_var3}"
-      AutomationRequest.create_from_ws(@version, @approver.userid, @uri_parts, parameters,
-                                       "auto_approve=true")
-      MiqQueue.where(:method_name => "create_request_tasks").first.deliver
+      parameters = {'miq_zone' => "#{zone_name}",
+                    'var1'     => "#{@ae_var1}",
+                    'var2'     => "#{@ae_var2}",
+                    'var3'     => "#{@ae_var3}"}
+      AutomationRequest.create_from_ws(@version, @approver, @uri_parts, parameters, 'auto_approve' => 'true')
+      MiqQueue.find_by(:method_name => "create_request_tasks").deliver
     end
 
     def check_zone(zone_name)
@@ -166,9 +174,8 @@ describe AutomationRequest do
     end
 
     it "zone not specified" do
-      AutomationRequest.create_from_ws(@version, @approver.userid, @uri_parts, @parameters,
-                                       "auto_approve=true")
-      MiqQueue.where(:method_name => "create_request_tasks").first.deliver
+      AutomationRequest.create_from_ws(@version, @approver, @uri_parts, @parameters, 'auto_approve' => 'true')
+      MiqQueue.find_by(:method_name => "create_request_tasks").deliver
       check_zone("default")
     end
 
@@ -185,7 +192,5 @@ describe AutomationRequest do
       deliver(nil)
       check_zone(nil)
     end
-
   end
-
 end

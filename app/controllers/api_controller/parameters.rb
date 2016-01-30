@@ -28,31 +28,43 @@ class ApiController
     def filter_param(klass)
       return nil if params['filter'].blank?
 
-      operators = {"!=" => {:default => :not_eq, :str => :does_not_match},
+      operators = {"!=" => {:default => :not_eq, :str => :does_not_match, :ruby => :!=},
                    "<=" => {:default => :lteq},
                    ">=" => {:default => :gteq},
                    "<"  => {:default => :lt},
                    ">"  => {:default => :gt},
-                   "="  => {:default => :eq, :str => :matches}
+                   "="  => {:default => :eq, :str => :matches, :ruby => :==}
                   }
 
       res_filter = nil
+      ruby_filters = []
+
       params['filter'].select(&:present?).each do |filter|
         parsed_filter = parse_filter(filter, operators)
-
-        arel = klass.arel_table[parsed_filter[:attr]].send(parsed_filter[:method], parsed_filter[:value])
-        res_filter = if res_filter.nil?
-                       arel
-                     else
-                       parsed_filter[:logical_or] ? res_filter.or(arel) : res_filter.and(arel)
-                     end
+        if klass.column_names.include?(parsed_filter[:attr])
+          arel = klass.arel_table[parsed_filter[:attr]].send(parsed_filter[:method], parsed_filter[:value])
+          res_filter = if res_filter.nil?
+                         arel
+                       else
+                         parsed_filter[:logical_or] ? res_filter.or(arel) : res_filter.and(arel)
+                       end
+        elsif parsed_filter[:ruby_operator].present? && klass.virtual_column?(parsed_filter[:attr])
+          ruby_filters << lambda do |result_set|
+            result_set.select do |resource|
+              attr = resource.public_send("#{parsed_filter[:attr]}")
+              attr.send("#{parsed_filter[:ruby_operator]}", parsed_filter[:value])
+            end
+          end
+        else
+          raise BadRequestError, "attribute #{parsed_filter[:attr]} does not exist"
+        end
       end
-      res_filter
+      [res_filter, ruby_filters]
     end
 
     def parse_filter(filter, operators)
       logical_or = filter.gsub!(/^or /i, '').present?
-      operator, methods  = operators.select { |op, _methods| filter.partition(op).second == op }.first
+      operator, methods = operators.find { |op, _methods| filter.partition(op).second == op }
 
       raise BadRequestError,
             "Unknown operator specified in filter #{filter}" if operator.blank?
@@ -62,15 +74,25 @@ class ApiController
       filter_value = filter_value.strip
       str_method   = methods[:str] || methods[:default]
 
-      if filter_value.match(/^'.*'$/)
-        filter_value, method = filter_value.gsub(/^'|'$/, ''), str_method
-      elsif filter_value.match(/^".*"$/)
-        filter_value, method = filter_value.gsub(/^"|"$/, ''), str_method
-      else
-        method = methods[:default]
-      end
+      filter_value, method =
+        case filter_value
+        when /^'.*'$/
+          [filter_value.gsub(/^'|'$/, ''), str_method]
+        when /^".*"$/
+          [filter_value.gsub(/^"|"$/, ''), str_method]
+        when /^(NULL|nil)$/i
+          [nil, methods[:default]]
+        else
+          [filter_value, methods[:default]]
+        end
 
-      {:logical_or => logical_or, :method => method, :attr => filter_attr.strip, :value => filter_value}
+      {
+        :logical_or    => logical_or,
+        :method        => method,
+        :attr          => filter_attr.strip,
+        :value         => filter_value,
+        :ruby_operator => methods[:ruby]
+      }
     end
 
     def by_tag_param
@@ -107,15 +129,17 @@ class ApiController
       return [] if params['sort_by'].blank?
 
       orders = String(params['sort_order']).split(",")
+      options = String(params['sort_options']).split(",")
       params['sort_by'].split(",").zip(orders).collect do |attr, order|
         raise BadRequestError,
               "#{attr} is not a valid attribute for #{klass.name}" if !klass.respond_to?(attr) && attr != "id"
-        sort_directive(attr, order)
+        sort_directive(attr, order, options)
       end.compact
     end
 
-    def sort_directive(attr, order)
+    def sort_directive(attr, order, options)
       sort_item = attr
+      sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?("ignore_case")
       sort_item << " ASC"  if order && order.downcase.start_with?("asc")
       sort_item << " DESC" if order && order.downcase.start_with?("desc")
       sort_item

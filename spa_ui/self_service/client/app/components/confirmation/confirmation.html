@@ -1,0 +1,20 @@
+<div class="modal-header" ng-if="::vm.title">
+  <button type="button" class="close" ng-click="$dismiss()" aria-hidden="true">
+    <span class="pficon pficon-close"></span>
+  </button>
+  <h4 class="modal-title" id="myModalLabel"> {{ ::vm.title }}</h4>
+</div>
+<div class="modal-body">
+  <p class="confirmation__message">{{ ::vm.message }}</p>
+</div>
+<div class="modal-footer">
+  <div class="confirmation__buttons">
+    <button ng-if="vm.showCancel" type="button" class="confirmation__button btn btn-default" ng-click="$dismiss()">
+      {{ ::vm.cancel }}
+    </button>
+    <button type="button" class="confirmation__button btn btn-rounded" ng-class="::vm.okClass" ng-click="$close()">
+      {{ ::vm.ok }}
+    </button>
+  </div>
+</div>
+

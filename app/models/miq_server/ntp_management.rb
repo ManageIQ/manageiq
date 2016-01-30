@@ -1,5 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/ntp")
-require 'miq-ntp'
+require 'linux_admin'
 
 module MiqServer::NtpManagement
   extend ActiveSupport::Concern
@@ -8,7 +7,7 @@ module MiqServer::NtpManagement
     # Get the ntp servers from the vmdb.yml first, zone second, else use some defaults
     ntp = ntp_config
     if server_ntp_settings_blank?(ntp)
-      self.zone.ntp_settings
+      zone.ntp_settings
     else
       ntp.merge!(:source => :server)
       ntp
@@ -27,6 +26,8 @@ module MiqServer::NtpManagement
   # Called when zone ntp settings changed... run by the appropriate server
   # Also, called in atStartup of miq_server and on a configuration change for the server
   def ntp_reload(ntp_settings = server_ntp_settings)
+    return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload_queue's guard clause
+
     if @ntp_settings && @ntp_settings == ntp_settings
       _log.info("Skipping reload of ntp settings since they are unchanged")
       return
@@ -47,8 +48,18 @@ module MiqServer::NtpManagement
       return
     end
     _log.info("Synchronizing ntp settings: #{ntp_settings.inspect}")
-    MiqNtp.sync_settings(ntp_settings)
+    apply_ntp_server_settings(ntp_settings)
     @ntp_settings = ntp_settings
   end
 
+  private
+
+  def apply_ntp_server_settings(settings)
+    chrony_conf = LinuxAdmin::Chrony.new
+    chrony_conf.clear_servers
+
+    servers = settings[:server]
+    servers = [servers] unless servers.kind_of?(Array)
+    chrony_conf.add_servers(*servers)
+  end
 end

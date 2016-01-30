@@ -20,18 +20,18 @@ module ActiveRecord
 
     module ClassMethods
       def attr_accessor_that_yamls(*args)
-        self.module_eval { attr_accessor *args }
-        self.append_to_attrs_that_yaml(*args)
+        module_eval { attr_accessor *args }
+        append_to_attrs_that_yaml(*args)
       end
 
       def attr_reader_that_yamls(*args)
-        self.module_eval { attr_reader *args }
-        self.append_to_attrs_that_yaml(*args)
+        module_eval { attr_reader *args }
+        append_to_attrs_that_yaml(*args)
       end
 
       def attr_writer_that_yamls(*args)
-        self.module_eval { attr_writer *args }
-        self.append_to_attrs_that_yaml(*args)
+        module_eval { attr_writer *args }
+        append_to_attrs_that_yaml(*args)
       end
 
       def append_to_attrs_that_yaml(*args)

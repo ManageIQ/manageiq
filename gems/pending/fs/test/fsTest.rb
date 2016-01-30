@@ -14,7 +14,7 @@ class ConsoleFormatter < Log4r::Formatter
 end
 $log = Log4r::Logger.new 'toplog'
 $log.level = Log4r::DEBUG
-Log4r::StderrOutputter.new('err_console', :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
 #

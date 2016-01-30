@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'util/MiqSshUtilV2'
 
 describe MiqSshUtil do

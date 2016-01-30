@@ -20,16 +20,16 @@ module MiqAeMethodService
     expose :files,                 :association => true
     expose :directories,           :association => true
 
-    METHODS_WITH_NO_ARGS = %w{scan}
+    METHODS_WITH_NO_ARGS = %w(scan)
     METHODS_WITH_NO_ARGS.each do |m|
       define_method(m) do
         ar_method do
           MiqQueue.put(
-            :class_name   => @object.class.name,
-            :instance_id  => @object.id,
-            :method_name  => m,
-            :zone         => @object.my_zone,
-            :role         => "ems_operations"
+            :class_name  => @object.class.name,
+            :instance_id => @object.id,
+            :method_name => m,
+            :zone        => @object.my_zone,
+            :role        => "ems_operations"
           )
           true
         end
@@ -37,7 +37,7 @@ module MiqAeMethodService
     end
 
     def credentials(type = :remote)
-       object_send(:auth_user_pwd, type)
+      object_send(:auth_user_pwd, type)
     end
 
     def ems_custom_keys
@@ -55,12 +55,12 @@ module MiqAeMethodService
 
     def ems_custom_set(attribute, value)
       MiqQueue.put(
-        :class_name   => @object.class.name,
-        :instance_id  => @object.id,
-        :method_name  => 'set_custom_field',
-        :zone         => @object.my_zone,
-        :role         => 'ems_operations',
-        :args         => [attribute, value]
+        :class_name  => @object.class.name,
+        :instance_id => @object.id,
+        :method_name => 'set_custom_field',
+        :zone        => @object.my_zone,
+        :role        => 'ems_operations',
+        :args        => [attribute, value]
       ) if @object.is_vmware?
       true
     end

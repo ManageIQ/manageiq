@@ -11,12 +11,12 @@ include:
     include:
       hardware:
         columns:
-        - logical_cpus
-        - memory_cpu
+        - cpu_total_cores
+        - memory_mb
 col_order:
 - name
-- hardware.logical_cpus
-- hardware.memory_cpu
+- hardware.cpu_total_cores
+- hardware.memory_mb
 headers:
 - Name
 - CPU Cores
@@ -24,8 +24,8 @@ headers:
 conditions:
 order: Descending
 sortby:
-- hardware.logical_cpus
-- hardware.memory_cpu
+- hardware.cpu_total_cores
+- hardware.memory_mb
 group:
 graph:
 dims:

@@ -5,4 +5,3 @@ end
 class ActionController::TestSession < Rack::Session::Abstract::SessionHash
   include MoreCoreExtensions::Shared::Nested
 end
-

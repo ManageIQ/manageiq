@@ -1,37 +1,35 @@
-require "spec_helper"
-
 describe VmInfraController do
-  describe ApplicationController::Explorer do
+  describe "ApplicationController::Explorer concern" do
     context "#valid_active_node" do
       let(:active_tree) { :stcat_tree }
 
       it "root node" do
         active_node = "root"
 
-        controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
+        controller.instance_variable_set(:@sb, :trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree)
         res = controller.send(:valid_active_node, active_node)
-        controller.send(:flash_errors?).should_not be_true
-        res.should == active_node
+        expect(controller.send(:flash_errors?)).not_to be_truthy
+        expect(res).to eq(active_node)
       end
 
       it "valid node" do
         rec = FactoryGirl.create(:service_template_catalog)
         active_node = "stc-#{rec.id}"
 
-        controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
+        controller.instance_variable_set(:@sb, :trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree)
         res = controller.send(:valid_active_node, active_node)
-        controller.send(:flash_errors?).should_not be_true
-        res.should == active_node
+        expect(controller.send(:flash_errors?)).not_to be_truthy
+        expect(res).to eq(active_node)
       end
 
       it "node no longer exists" do
         rec = FactoryGirl.create(:service_template_catalog)
         active_node = "stc-#{rec.id + 1}"
 
-        controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
+        controller.instance_variable_set(:@sb, :trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree)
         res = controller.send(:valid_active_node, active_node)
-        controller.send(:flash_errors?).should be_true
-        res.should == "root"
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(res).to eq("root")
       end
     end
 
@@ -45,87 +43,9 @@ describe VmInfraController do
         user.current_group.set_managed_filters([["/managed/service_level/gold"]])
         login_as user
 
-        Rbac.should_receive(:search).with(:targets => [ems_folder], :results_format=>:objects).and_call_original
+        expect(Rbac).to receive(:search).with(:targets => [ems_folder], :results_format => :objects).and_call_original
 
         controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")
-      end
-    end
-
-    describe "#x_get_tree_roots" do
-      let(:options) { {:count_only => count_only, :type => type} }
-
-      context "when the options type is export" do
-        let(:type) { :export }
-
-        context "when the options count_only is true" do
-          let(:count_only) { true }
-
-          it "returns the count of the export children" do
-            expect(controller.send(:x_get_tree_roots, options)).to eq(2)
-          end
-        end
-
-        context "when the options count_only is false" do
-          let(:count_only) { false }
-
-          it "returns the export children" do
-            expect(controller.send(:x_get_tree_roots, options)).to eq(
-              [{
-                :id    => "exportcustomreports",
-                :tree  => "export_tree",
-                :text  => "Custom Reports",
-                :image => "report"
-              }, {
-                :id    => "exportwidgets",
-                :tree  => "export_tree",
-                :text  => "Widgets",
-                :image => "report"
-              }]
-            )
-          end
-        end
-      end
-    end
-
-    context "#x_get_tree_region_kids" do
-      it "does not return Cloud Providers nodes for Utilization tree" do
-        MiqRegion.seed
-        region = MiqRegion.my_region
-        ems_cloud = FactoryGirl.create(:ems_amazon)
-        ems_infra = FactoryGirl.create(:ems_redhat)
-        controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
-        options = {
-                    :tree => :utilization_tree,
-                    :type => :utilization,
-                    :parent => region
-                  }
-
-        objects = controller.send(:x_get_tree_region_kids, region, options)
-        objects.should have(1).items
-      end
-    end
-
-    context "#x_get_tree_custom_kids" do
-      before(:each) do
-        MiqRegion.seed
-        @region = MiqRegion.my_region
-      end
-
-      it "Return only Infra Providers nodes for Utilization tree" do
-        ems_cloud = FactoryGirl.create(:ems_amazon)
-        ems_infra = FactoryGirl.create(:ems_redhat)
-        folder_node_id = {:id => "folder_e_xx-#{MiqRegion.compress_id(@region.id)}"}
-        controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
-        options = {
-                    :tree => :utilization_tree,
-                    :type => :utilization,
-                    :parent => @region
-                  }
-
-        objects = controller.send(:x_get_tree_custom_kids, folder_node_id , options)
-        objects.should have(1).items
-        objects.first[:id].should_not == ems_cloud.id
-        objects.first[:id].should == ems_infra.id
       end
     end
 
@@ -137,15 +57,15 @@ describe VmInfraController do
 
       it "sets the width of left pane for session's user" do
         session[:settings] = {}
-        User.stub(:find_by_userid).and_return(user)
+        allow(User).to receive(:find_by_userid).and_return(user)
 
         controller.instance_variable_set(:@settings,  {})
-        user.should_receive(:save)
+        expect(user).to receive(:save)
         width = '100'
         get :x_settings_changed, :width => width
 
-        user.settings[:explorer][controller.controller_name][:width].should == width
-        session[:settings][:explorer][controller.controller_name][:width].should == width
+        expect(user.settings[:explorer][controller.controller_name][:width]).to eq(width)
+        expect(session[:settings][:explorer][controller.controller_name][:width]).to eq(width)
       end
     end
 
@@ -163,7 +83,7 @@ describe VmInfraController do
       before(:each) do
         sb = {
           :active_tree => 'foo_tree',
-          :history => {
+          :history     => {
             'foo_tree' => (1..11).collect { |i| make_item(i) }
           }
         }
@@ -173,25 +93,47 @@ describe VmInfraController do
       it 'adds new item into the history' do
         controller.send(:x_history_add_item, make_item(12))
 
-        assigns(:sb)[:history]['foo_tree'].first[:id].should == '12_id'
+        expect(assigns(:sb)[:history]['foo_tree'].first[:id]).to eq('12_id')
 
-        assigns(:sb)[:history]['foo_tree'].find { |item|
+        expect(assigns(:sb)[:history]['foo_tree'].find do |item|
           item[:id] == '11_id'
-        }.should be_nil
+        end).to be_nil
       end
 
       it 'it removes duplicate items from the history' do
-        item = make_item(1).update( :foo => 'bar' )
+        item = make_item(1).update(:foo => 'bar')
 
         controller.send(:x_history_add_item, item)
 
-        items = assigns(:sb)[:history]['foo_tree'].find_all { |item|
+        items = assigns(:sb)[:history]['foo_tree'].find_all do |item|
           item[:id] == '1_id'
-        }
+        end
 
-        items.length.should == 1
-        items[0][:foo].should == 'bar'
+        expect(items.length).to eq(1)
+        expect(items[0][:foo]).to eq('bar')
       end
+    end
+  end
+end
+
+describe ReportController do
+  context '#tree_add_child_nodes' do
+    it 'calls tree_add_child_nodes TreeBuilder method' do
+      widget = FactoryGirl.create(:miq_widget, :description => "Foo", :title => "Foo", :content_type => "report")
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:widgets_tree => {:active_node => "root",
+                                                                          :klass_name  => "TreeBuilderReportWidgets",
+                                                                          :open_nodes  => []}},
+                                       :active_tree => :widgets_tree
+
+                                      )
+      TreeBuilderReportWidgets.new('widgets_tree', 'widgets', {})
+      nodes = controller.send(:tree_add_child_nodes, 'xx-r')
+      expected = [{:key     => "-#{controller.to_cid(widget.id)}",
+                   :title   => "Foo",
+                   :icon    => ActionController::Base.helpers.image_path('100/report_widget.png'),
+                   :tooltip => "Foo"}]
+      expect(nodes).to eq(expected)
     end
   end
 end

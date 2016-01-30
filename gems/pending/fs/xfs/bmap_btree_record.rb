@@ -35,11 +35,11 @@ module XFS
     end
 
     def bmbt_get_start_block(doubleword)
-      doubleword  >> 21
+      doubleword >> 21
     end
 
     def bmbt_get_big_start_block(word0, word1)
-      ((word0 & xfs_mask64lo(9) << 43)) | (word1  >> 21)
+      ((word0 & xfs_mask64lo(9) << 43)) | (word1 >> 21)
     end
 
     def initialize(data, sb)

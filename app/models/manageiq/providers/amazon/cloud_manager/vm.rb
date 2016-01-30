@@ -2,8 +2,8 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   include_concern 'Operations'
 
   def provider_object(connection = nil)
-    connection ||= self.ext_management_system.connect
-    connection.instances[self.ems_ref]
+    connection ||= ext_management_system.connect
+    connection.instances[ems_ref]
   end
 
   #
@@ -14,11 +14,11 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
     super
 
     # Mark all instances no longer found as terminated
-    self.power_state == "off"
-    self.save
+    power_state == "off"
+    save
   end
 
-  def proxies4job(job=nil)
+  def proxies4job(_job = nil)
     {
       :proxies => [MiqServer.my_server],
       :message => 'Perform SmartState Analysis on this VM'

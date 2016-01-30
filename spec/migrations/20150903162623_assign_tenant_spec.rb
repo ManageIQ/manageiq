@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe AssignTenant do
@@ -26,6 +25,7 @@ describe AssignTenant do
 
         expect(tenant_stub.count).to eq(1)
         expect(tenant_stub.first).to be_use_config_for_attributes
+        expect(tenant_stub.first).to be_divisible
       end
 
       it "doesnt creates additional root_tenant" do
@@ -37,6 +37,7 @@ describe AssignTenant do
         expect(tenant_stub.count).to eq(1)
         # make sure tenant was not modified
         expect(tenant_stub.first).not_to be_use_config_for_attributes
+        expect(tenant_stub.first).not_to be_divisible
       end
     end
 
@@ -49,7 +50,7 @@ describe AssignTenant do
 
       expect(tenant_stub.count).to eq(1)
       stubs.each do |stub|
-        expect(stub.where(:tenant_id => nil).exists?).to be_false
+        expect(stub.where(:tenant_id => nil).exists?).to be_falsey
       end
     end
   end

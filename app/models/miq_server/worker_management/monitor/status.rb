@@ -3,7 +3,7 @@ module MiqServer::WorkerManagement::Monitor::Status
 
   def worker_set_monitor_status(pid, status)
     @workers_lock.synchronize(:EX) do
-      @workers[pid][:monitor_status] = status if @workers.has_key?(pid)
+      @workers[pid][:monitor_status] = status if @workers.key?(pid)
     end unless @workers_lock.nil?
   end
 

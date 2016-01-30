@@ -10,11 +10,11 @@ require 'util/runcmd'
 require 'util/miq-extensions'
 
 class MiqIPMI
-  def initialize(server=nil, username=nil, password=nil)
+  def initialize(server = nil, username = nil, password = nil)
     @server = server
     @username = username
     @password = password
-    @status = self.chassis_status rescue nil
+    @status = chassis_status rescue nil
     @vendor = nil
   end
 
@@ -36,15 +36,15 @@ class MiqIPMI
   end
 
   def power_reset
-    if self.power_state == "off"
-      self.power_on
+    if power_state == "off"
+      power_on
     else
-      self.power_state_change('reset')
+      power_state_change('reset')
     end
   end
 
   def power_state_change(new_state)
-    #status, on, off, cycle, reset, diag, soft
+    # status, on, off, cycle, reset, diag, soft
     run_command("chassis power #{new_state}")
   end
 
@@ -61,15 +61,15 @@ class MiqIPMI
   end
 
   def manufacturer
-    self.mc_info['Manufacturer Name']
+    mc_info['Manufacturer Name']
   end
 
   def model
     # This method tries to return the model of the device, but depending on what inforamtion
     # comes back from the RFU (Field Replaceable Unit) this may not be accurate.
-    fru = self.fru_info.first
+    fru = fru_info.first
     return fru["Board Product"] unless fru.blank?
-    return nil
+    nil
   end
 
   def fru_info
@@ -90,7 +90,7 @@ class MiqIPMI
     end
 
     @devices << fru_process_info(dev_id, dev_descript, dev_lines)
-    return @devices.compact
+    @devices.compact
   end
 
   def fru_process_info(id, description, lines)
@@ -98,31 +98,31 @@ class MiqIPMI
     unless lines.blank?
       dh = parse_output(lines)
       dh.merge!("output" => lines) if dh.blank?
-      dh.merge!({"ID" => id, "Description" => description})
+      dh.merge!("ID" => id, "Description" => description)
     end
-    return dh
+    dh
   end
 
   def mac_address
-    macs = self.mac_addresses
+    macs = mac_addresses
     return nil if macs.blank?
-    result = macs.detect {|mac| mac[:enabled] == true}
+    result = macs.detect { |mac| mac[:enabled] == true }
     return result[:address] unless result.nil?
-    return nil
+    nil
   end
 
   def mac_addresses
-    vendor = self.manufacturer.to_s.downcase
-    return self.dell_mac_addresses if vendor.include?('dell')
-    return nil
+    vendor = manufacturer.to_s.downcase
+    return dell_mac_addresses if vendor.include?('dell')
+    nil
   end
 
-  #Sample "delloem mac" output
+  # Sample "delloem mac" output
   #   System LOMs
-  #   NIC Number	MAC Address		Status
+  #   NIC Number  MAC Address   Status
   #
-  #   0		78:2b:cb:00:f6:6c	Enabled
-  #   1		78:2b:cb:00:f6:6d	Enabled
+  #   0   78:2b:cb:00:f6:6c Enabled
+  #   1   78:2b:cb:00:f6:6d Enabled
   #
   #   iDRAC6 MAC Address 78:2b:cb:00:f6:6e
   #
@@ -140,10 +140,10 @@ class MiqIPMI
         end
       end
     end
-    return macs
+    macs
   end
 
-  def parse_key_value(ipmi_cmd, continue_on_error=false)
+  def parse_key_value(ipmi_cmd, continue_on_error = false)
     parse_output(run_command(ipmi_cmd, continue_on_error))
   end
 
@@ -157,7 +157,7 @@ class MiqIPMI
         value = line.strip
       else
         key = line[0, idx].strip
-        value = line[idx+1..-1].strip
+        value = line[idx + 1..-1].strip
       end
       next(a) if key.blank? && value.blank?
 
@@ -175,9 +175,9 @@ class MiqIPMI
     end
   end
 
-  def run_command(ipmi_cmd, continue_on_error=false)
+  def run_command(ipmi_cmd, continue_on_error = false)
     # -E: The remote server password is specified by the environment variable IPMI_PASSWORD.
-    ENV['IPMI_PASSWORD']=@password
+    ENV['IPMI_PASSWORD'] = @password
     command_line = "ipmitool -I #{interface_mode} -H #{@server} -U #{@username} -E #{ipmi_cmd}"
 
     begin
@@ -189,15 +189,15 @@ class MiqIPMI
   end
 
   def self.is_available?(ip_address)
-    return self.is_any_available?(ip_address)
-    #return true if self.is_2_0_available?(ip_address)
-    #return true if self.is_1_5_available?(ip_address)
-    #false
+    self.is_any_available?(ip_address)
+    # return true if self.is_2_0_available?(ip_address)
+    # return true if self.is_1_5_available?(ip_address)
+    # false
   end
 
   def self.is_any_available?(ip_address)
     # One ping reply if machine supports IPMI
-    self.is_available_check(ip_address, nil)
+    is_available_check(ip_address, nil)
   end
 
   def interface_mode
@@ -206,23 +206,21 @@ class MiqIPMI
 
   def self.is_2_0_available?(ip_address)
     # One ping reply if machine supports IPMI V2.0
-    self.is_available_check(ip_address, "2.0")
+    is_available_check(ip_address, "2.0")
   end
 
   def self.is_1_5_available?(ip_address)
     # One ping reply if machine supports IPMI V1.5
-    self.is_available_check(ip_address, "1.5")
+    is_available_check(ip_address, "1.5")
   end
 
-  def self.is_available_check(ip_address, version=nil)
-    begin
-      if version.nil?
-        MiqUtil.runcmd("ipmiping #{ip_address} -c 1")
-      else
-        MiqUtil.runcmd("ipmiping #{ip_address} -r #{version} -c 1")
-      end
-    rescue
-      false
+  def self.is_available_check(ip_address, version = nil)
+    if version.nil?
+      MiqUtil.runcmd("ipmiping #{ip_address} -c 1")
+    else
+      MiqUtil.runcmd("ipmiping #{ip_address} -r #{version} -c 1")
     end
+  rescue
+    false
   end
 end

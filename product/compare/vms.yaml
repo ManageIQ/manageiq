@@ -43,8 +43,8 @@ include:
     columns:
     - guest_os_full_name
     - guest_os
-    - numvcpus
-    - memory_cpu
+    - cpu_total_cores
+    - memory_mb
     - bios
     - config_version
     - annotation
@@ -224,8 +224,8 @@ col_order:
 - last_compliance_timestamp
 - hardware.guest_os_full_name
 - hardware.guest_os
-- hardware.numvcpus
-- hardware.memory_cpu
+- hardware.cpu_total_cores
+- hardware.memory_mb
 - hardware.bios
 - hardware.config_version
 - hardware.annotation

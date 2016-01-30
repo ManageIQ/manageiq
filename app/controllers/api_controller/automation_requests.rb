@@ -10,9 +10,8 @@ class ApiController
       uri_parts   = hash_fetch(data, "uri_parts")
       parameters  = hash_fetch(data, "parameters")
       requester   = hash_fetch(data, "requester")
-      user_name   = requester["user_name"] || @auth_user
 
-      AutomationRequest.create_from_ws(version_str, user_name, uri_parts, parameters, requester)
+      AutomationRequest.create_from_ws(version_str, @auth_user_obj, uri_parts, parameters, requester)
     end
   end
 end

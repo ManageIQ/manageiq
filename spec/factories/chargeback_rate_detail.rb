@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :chargeback_rate_detail do
     rate    0
+    group   "unknown"
+    source  "unknown"
   end
 
   factory :chargeback_rate_detail_cpu_used, :parent => :chargeback_rate_detail do
@@ -9,7 +11,7 @@ FactoryGirl.define do
     source      "used"
     metric      "cpu_usagemhz_rate_average"
     per_unit    "megahertz"
-  end 
+  end
 
   factory :chargeback_rate_detail_cpu_allocated, :parent => :chargeback_rate_detail do
     description "Allocated CPU Count"
@@ -17,7 +19,7 @@ FactoryGirl.define do
     source      "allocated"
     metric      "derived_vm_numvcpus"
     per_unit    "cpu"
-  end 
+  end
 
   factory :chargeback_rate_detail_memory_allocated, :parent => :chargeback_rate_detail do
     description "Allocated Memory in MB"
@@ -25,7 +27,7 @@ FactoryGirl.define do
     source      "allocated"
     metric      "derived_memory_available"
     per_unit    "megabytes"
-  end 
+  end
 
   factory :chargeback_rate_detail_memory_used, :parent => :chargeback_rate_detail do
     per_unit    "megabytes"
@@ -33,7 +35,7 @@ FactoryGirl.define do
     group       "memory"
     source      "used"
     metric      "derived_memory_used"
-  end 
+  end
 
   factory :chargeback_rate_detail_disk_io_used, :parent => :chargeback_rate_detail do
     description "Used Disk I/O in KBps"
@@ -41,7 +43,7 @@ FactoryGirl.define do
     source      "used"
     metric      "disk_usage_rate_average"
     per_unit    "kbps"
-  end 
+  end
 
   factory :chargeback_rate_detail_net_io_used, :parent => :chargeback_rate_detail do
     description "Used Network I/O in KBps"

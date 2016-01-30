@@ -4,6 +4,8 @@ require 'base64'
 require 'yaml'
 
 class MiqPassword
+  class MiqPasswordError < StandardError; end
+
   CURRENT_VERSION = "2"
   REGEXP = /v([0-9]+):\{([^}]*)\}/
   REGEXP_START_LINE = /^#{REGEXP}/
@@ -16,11 +18,12 @@ class MiqPassword
     @encStr = encrypt(str)
   end
 
-  def encrypt(str)
-    encrypt_version_2(str)
+  def encrypt(str, ver = "v2", key = self.class.keys[ver])
+    value = key.encrypt64(str).delete("\n") unless str.nil? || str.empty?
+    "#{ver}:{#{value}}"
   end
 
-  def decrypt(str)
+  def decrypt(str, legacy = false)
     if str.nil? || str.empty?
       str
     else
@@ -28,12 +31,13 @@ class MiqPassword
       return "" if enc.empty?
 
       ver ||= "0" # if we don't know what it is, just assume legacy
+      key_name = (ver == "2" && legacy) ? "alt" : "v#{ver}"
 
-      decrypt_method = "decrypt_version_#{ver}"
-      raise "unknown encryption version, '#{ver}'" if ver.nil? || !self.respond_to?(decrypt_method, true)
-      raise "no encryption key v#{ver}_key" unless self.class.send("v#{ver}_key")
-
-      send(decrypt_method, enc)
+      begin
+        self.class.keys[key_name].decrypt64(enc).force_encoding('UTF-8')
+      rescue
+        raise MiqPasswordError, "can not decrypt v#{ver}_key encrypted string"
+      end
     end
   end
 
@@ -41,13 +45,16 @@ class MiqPassword
     return str if str.nil? || str.empty?
     decrypted_str =
       begin
-        decrypt(str)
+        # if a legacy v2 key exists, give decrypt the option to use that
+        decrypt(str, self.class.keys["alt"])
       rescue
         source_version = self.class.split(str).first || "0"
         if source_version == "0" # it probably wasn't encrypted
           return str
+        elsif source_version == "2" # tried with an alt key, see if regular v2 key works
+          decrypt(str)
         else
-          raise "not decryptable string"
+          raise
         end
       end
     encrypt(decrypted_str)
@@ -119,15 +126,23 @@ class MiqPassword
   end
 
   def self.clear_keys
-    @@v2_key = @v1_key = @v0_key = nil
+    @@all_keys = nil
   end
 
   def self.all_keys
-    [v2_key] + legacy_keys
+    keys.values
+  end
+
+  def self.keys
+    @@all_keys ||= {"v2" => load_v2_key}.delete_if { |_n, v| v.nil? }
   end
 
   def self.v2_key
-    @@v2_key ||= ez_load("v2_key") || begin
+    keys["v2"]
+  end
+
+  def self.load_v2_key
+    ez_load("v2_key") || begin
       key_file = File.expand_path("v2_key", key_root)
       msg = <<-EOS
 #{key_file} doesn't exist!
@@ -142,26 +157,15 @@ EOS
     end
   end
 
-  def self.legacy_keys
-    [v1_key, v0_key].compact
+  def self.add_legacy_key(filename, type = "alt")
+    key = ez_load(filename, type != :v0)
+    keys[type.to_s] = key if key
+    key
   end
 
-  def self.add_legacy_key(filename, type = :v1)
-    case type
-    when :v0
-      @v0_key = ez_load(filename, false)
-    when :v1
-      @v1_key = ez_load(filename)
-    end
-  end
-
-  class << self
-    attr_accessor :v0_key
-    attr_accessor :v1_key
-
-    def v2_key=(key)
-      @@v2_key = key
-    end
+  # used by tests only
+  def self.v2_key=(key)
+    (@@all_keys ||= {})["v2"] = key
   end
 
   def self.generate_symmetric(filename = nil)
@@ -174,7 +178,10 @@ EOS
 
   def self.ez_load(filename, recent = true)
     return filename if filename.respond_to?(:decrypt64)
-    filename = File.expand_path(filename, key_root)
+
+    # if it is an absolute path, or relative to pwd, leave as is
+    # otherwise, look in key root for it
+    filename = File.expand_path(filename, key_root) unless File.exist?(filename)
     if !File.exist?(filename)
       nil
     elsif recent
@@ -183,28 +190,6 @@ EOS
       params = YAML.load_file(filename)
       CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
     end
-  end
-
-  def encrypt_version_2(str)
-    return "v2:{}" if str.nil? || str.empty?
-    "v2:{#{self.class.v2_key.encrypt64(str).chomp.gsub("\n", "")}}"
-  end
-
-  def encrypt_version_1(str)
-    return "v1:{}" if str.nil? || str.empty?
-    "v1:{#{self.class.v1_key.encrypt64(str).chomp}}"
-  end
-
-  def decrypt_version_2(str)
-    self.class.v2_key.decrypt64(str)
-  end
-
-  def decrypt_version_1(str)
-    self.class.v1_key.decrypt64(str)
-  end
-
-  def decrypt_version_0(str)
-    self.class.v0_key.decrypt64(str)
   end
 
   def self.extract_erb_encrypted_value(value)

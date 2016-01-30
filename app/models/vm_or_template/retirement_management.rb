@@ -12,11 +12,10 @@ module VmOrTemplate::RetirementManagement
   end
 
   def retired_validated?
-    ['off', 'never'].include?(self.state)
+    ['off', 'never'].include?(state)
   end
 
   def retired_invalid_reason
-    "has state: [#{self.state}]"
+    "has state: [#{state}]"
   end
-
 end

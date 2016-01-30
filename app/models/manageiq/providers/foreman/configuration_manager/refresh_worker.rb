@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker < MiqEmsRefreshWorker
-  require_dependency 'manageiq/providers/foreman/configuration_manager/refresh_worker/runner'
+  require_nested :Runner
 
   def self.ems_class
     parent

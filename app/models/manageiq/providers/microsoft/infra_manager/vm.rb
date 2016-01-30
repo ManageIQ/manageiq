@@ -1,4 +1,6 @@
 class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
+  include_concern 'ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared'
+
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
     when "Running"         then "on"

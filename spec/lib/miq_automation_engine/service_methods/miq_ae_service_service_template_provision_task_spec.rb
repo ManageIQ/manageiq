@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceServiceTemplateProvisionTaskSpec
   describe MiqAeMethodService::MiqAeServiceServiceTemplateProvisionTask do
     let(:service_service_template_provision_task) do
@@ -10,20 +8,21 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
+      @user          = FactoryGirl.create(:user_with_group)
       @ae_result_key = 'foo'
       @options       = {}
       @service_template_provision_task = FactoryGirl.create(:service_template_provision_task,  :state => 'pending', :status => 'Ok', :request_type => "clone_to_service", :options => @options)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionTask::service_template_provision_task=#{@service_template_provision_task.id}")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionTask::service_template_provision_task=#{@service_template_provision_task.id}", @user)
     end
 
     it "#execute" do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template_provision_task'].execute"
       @ae_method.update_attributes(:data => method)
-      ServiceTemplateProvisionTask.any_instance.should_receive(:execute_queue).once
-      invoke_ae.root(@ae_result_key).should be_true
+      expect_any_instance_of(ServiceTemplateProvisionTask).to receive(:execute_queue).once
+      expect(invoke_ae.root(@ae_result_key)).to be_truthy
     end
 
     it "#user_message" do
@@ -49,7 +48,7 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template_provision_task'].status"
         @ae_method.update_attributes!(:data => method)
 
-        invoke_ae.root(@ae_result_key).should == 'ok'
+        expect(invoke_ae.root(@ae_result_key)).to eq('ok')
       end
 
       it "when state is finished" do
@@ -57,7 +56,7 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template_provision_task'].status"
         @ae_method.update_attributes!(:data => method)
 
-        invoke_ae.root(@ae_result_key).should == 'ok'
+        expect(invoke_ae.root(@ae_result_key)).to eq('ok')
       end
 
       it "when state is pending" do
@@ -65,9 +64,8 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template_provision_task'].status"
         @ae_method.update_attributes!(:data => method)
 
-        invoke_ae.root(@ae_result_key).should == 'retry'
+        expect(invoke_ae.root(@ae_result_key)).to eq('retry')
       end
     end
-
   end
 end

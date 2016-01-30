@@ -1,12 +1,12 @@
 class PxeImageIpxe < PxeImage
   def build_pxe_contents(ks_access_path, ks_device)
-    new_kernel  = self.kernel.to_s.dup
+    new_kernel  = kernel.to_s.dup
     new_kernel << " #{super}"
 
     <<-PXE
 #!ipxe
 kernel #{new_kernel.strip}
-initrd #{self.initrd}
+initrd #{initrd}
 boot
 PXE
   end

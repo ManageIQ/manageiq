@@ -1,9 +1,9 @@
-require "spec_helper"
 include ServiceTemplateHelper
 
 describe "DialogParser Automate Method" do
   before(:each) do
     @root_stp = FactoryGirl.create(:miq_request_task, :type => 'ServiceTemplateProvisionTask')
+    @user = FactoryGirl.create(:user_with_group)
   end
 
   def run_automate_method
@@ -13,7 +13,7 @@ describe "DialogParser Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning/StateMachines&class=Methods" \
                             "&instance=DialogParser&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def create_tags
@@ -90,7 +90,13 @@ describe "DialogParser Automate Method" do
     it "with no dialogs set" do
       @root_stp.options = @root_stp.options.merge(:dialog => {})
       @root_stp.save
-      expect { run_automate_method }.to raise_exception
+      expect { run_automate_method }.not_to raise_exception
+    end
+
+    it "with blank dialog set" do
+      @root_stp.options = @root_stp.options.merge(:dialog => {:dialog_text_box => ""})
+      @root_stp.save
+      expect { run_automate_method }.not_to raise_exception
     end
   end
 end

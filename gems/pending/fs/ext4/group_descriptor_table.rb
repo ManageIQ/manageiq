@@ -2,9 +2,7 @@ require 'fs/ext4/group_descriptor_entry'
 require 'fs/ext4/alloc_bitmap'
 
 module Ext4
-
   class GroupDescriptorTable
-
     def initialize(sb)
       raise "Ext4::GroupDescriptorTable.initialize: Nil Superblock" if sb.nil?
 
@@ -26,15 +24,15 @@ module Ext4
     end
 
     def each
-      @gdt.each {|gde| yield(gde)}
+      @gdt.each { |gde| yield(gde) }
     end
 
-    def [] (group)
-      return @gdt[group]
+    def [](group)
+      @gdt[group]
     end
 
     def dump(dump_bitmaps = false)
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       @gdt.each do |gde|
         out += gde.dump
         if dump_bitmaps
@@ -42,7 +40,7 @@ module Ext4
           out += "Inode allocation\n#{gde.inodeAllocBmp.dump}"
         end
       end
-      return out
+      out
     end
 
     private
@@ -51,6 +49,5 @@ module Ext4
       sb.stream.seek(sb.blockToAddress(block))
       AllocBitmap.new(sb.stream.read(size))
     end
-
-  end #class
-end #module
+  end # class
+end # module

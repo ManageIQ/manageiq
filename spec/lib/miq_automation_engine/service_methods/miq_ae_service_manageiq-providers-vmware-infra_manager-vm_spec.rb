@@ -1,13 +1,11 @@
-require 'spec_helper'
-
 module MiqAeServiceVmVmwareSpec
   describe MiqAeMethodService::MiqAeServiceUser do
     let(:vm)         { FactoryGirl.create(:vm_vmware) }
     let(:service_vm) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.find(vm.id) }
 
     before do
-      Vm.any_instance.stub(:my_zone).and_return('default')
-      MiqServer.stub(:my_zone).and_return('default')
+      allow_any_instance_of(Vm).to receive(:my_zone).and_return('default')
+      allow(MiqServer).to receive(:my_zone).and_return('default')
       @base_queue_options = {
         :class_name  => vm.class.name,
         :instance_id => vm.id,
@@ -26,7 +24,7 @@ module MiqAeServiceVmVmwareSpec
     it "#set_number_of_cpus" do
       service_vm.set_number_of_cpus(1)
 
-      MiqQueue.first.should have_attributes(
+      expect(MiqQueue.first).to have_attributes(
         @base_queue_options.merge(
           :method_name => 'set_number_of_cpus',
           :args        => [1])
@@ -36,7 +34,7 @@ module MiqAeServiceVmVmwareSpec
     it "#set_memory" do
       service_vm.set_memory(100)
 
-      MiqQueue.first.should have_attributes(
+      expect(MiqQueue.first).to have_attributes(
         @base_queue_options.merge(
           :method_name => 'set_memory',
           :args        => [100])
@@ -46,7 +44,7 @@ module MiqAeServiceVmVmwareSpec
     it "#add_disk" do
       service_vm.add_disk('disk_1', 100)
 
-      MiqQueue.first.should have_attributes(
+      expect(MiqQueue.first).to have_attributes(
         @base_queue_options.merge(
           :method_name => 'add_disk',
           :args        => ['disk_1', 100])
@@ -56,7 +54,7 @@ module MiqAeServiceVmVmwareSpec
     it "#remove_from_disk async"do
       service_vm.remove_from_disk(false)
 
-      MiqQueue.first.should have_attributes(
+      expect(MiqQueue.first).to have_attributes(
         @base_queue_options.merge(
           :method_name => 'vm_destroy',
           :args        => [])
@@ -66,7 +64,7 @@ module MiqAeServiceVmVmwareSpec
     it "#create_snapshot without memory" do
       service_vm.create_snapshot('snap', 'crackle & pop')
 
-      MiqQueue.first.args.first.should have_attributes(
+      expect(MiqQueue.first.args.first).to have_attributes(
         :task        => 'create_snapshot',
         :memory      => false,
         :name        => 'snap',
@@ -77,7 +75,7 @@ module MiqAeServiceVmVmwareSpec
     it "#create_snapshot with memory" do
       service_vm.create_snapshot('snap', 'crackle & pop', true)
 
-      MiqQueue.first.args.first.should have_attributes(
+      expect(MiqQueue.first.args.first).to have_attributes(
         :task        => 'create_snapshot',
         :memory      => true,
         :name        => 'snap',

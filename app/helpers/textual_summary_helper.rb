@@ -62,9 +62,9 @@ module TextualSummaryHelper
   def textual_object_link(object, as: nil, controller: nil, feature: nil, label: nil)
     return if object.nil?
 
-    klass = as || object.class.base_model
+    klass = as || ui_base_model(object.class)
 
-    controller ||= klass.name.underscore
+    controller ||= controller_for_model(klass)
     feature ||= "#{controller}_show"
 
     label ||= ui_lookup(:model => klass.name)
@@ -78,9 +78,13 @@ module TextualSummaryHelper
     h = {:label => label, :image => image, :value => value}
 
     if role_allows(:feature => feature)
-      h[:link] = url_for(:controller => controller,
-                         :action     => 'show',
-                         :id         => object)
+      if restful_routed?(object)
+        h[:link] = polymorphic_path(object)
+      else
+        h[:link] = url_for(:controller => controller,
+                           :action     => 'show',
+                           :id         => object)
+      end
       h[:title] = "Show #{label} '#{value}'"
     end
 
@@ -95,7 +99,7 @@ module TextualSummaryHelper
       end
     end
 
-    klass = as || collection.klass.base_model
+    klass = as || ui_base_model(collection.klass)
 
     controller_collection ||= klass.name.underscore
     feature ||= "#{controller_collection}_show_list"
@@ -110,15 +114,16 @@ module TextualSummaryHelper
       if link
         h[:link] = link
       elsif collection.respond_to?(:proxy_association)
-        if controller.send(:restful?)
-          h[:link] = send("#{controller_name}_path",
-                          collection.proxy_association.owner,
-                          :display => collection.proxy_association.reflection.name)
+        owner = collection.proxy_association.owner
+        display = collection.proxy_association.reflection.name
+
+        if restful_routed?(owner)
+          h[:link] = polymorphic_path(owner, :display => display)
         else
-          h[:link] = url_for(:controller => controller_name,
+          h[:link] = url_for(:controller => controller_for_model(owner.class),
                              :action     => 'show',
-                             :id         => collection.proxy_association.owner,
-                             :display    => collection.proxy_association.reflection.name)
+                             :id         => owner,
+                             :display    => display)
         end
       else
         h[:link] = url_for(:controller => controller_collection,

@@ -16,7 +16,7 @@ module MiqBulkImport
 
     tags = (header - keys).collect(&:dup) if tags.nil?
 
-    verified_tags = tags.collect {|t| t if header.include?(t)}.compact
+    verified_tags = tags.collect { |t| t if header.include?(t) }.compact
     unless verified_tags.empty?
       _log.info "The following columns are verified in the csv file: #{verified_tags.join(" and ")}"
     else
@@ -24,12 +24,12 @@ module MiqBulkImport
     end
 
     matched_keys = []
-    keys.each {|k|
+    keys.each do|k|
       if header.include?(k)
         matched_keys.push(k)
         tags = tags.unshift(k)
       end
-    }
+    end
 
     if matched_keys.empty?
       _log.error "The following required columns used for matching are missing: #{keys.join(" or ")}"
@@ -37,16 +37,16 @@ module MiqBulkImport
     end
 
     result = []
-    reader.each {|row|
+    reader.each do|row|
       next if row.first.nil?
       line = {}
-      header.each_index{|i|
+      header.each_index do|i|
         next unless tags.include?(header[i])
         line[header[i]] = row[i].strip if row[i]
-      }
+      end
       result.push(line)
-    }
-    return [result, matched_keys, verified_tags]
+    end
+    [result, matched_keys, verified_tags]
   end
 
   def self.find_entry_by_keys(klass, keys)
@@ -62,18 +62,18 @@ module MiqBulkImport
       sub_key, sub_key_value = keys2array.shift
       next if sub_key_value.blank?
 
-      filtered_result = result.collect {|rec|
-        rec if self.get_sub_key_values(rec, sub_key).include?(sub_key_value.downcase)
-      }.compact
+      filtered_result = result.collect do|rec|
+        rec if get_sub_key_values(rec, sub_key).include?(sub_key_value.downcase)
+      end.compact
 
       return filtered_result if filtered_result.length == 1
     end
 
-    return result # return original result if we were unable to resolve dups
+    result # return original result if we were unable to resolve dups
   end
 
   def self.get_sub_key_values(rec, sub_key)
-    if !sub_key.include?(".")
+    unless sub_key.include?(".")
       return [] unless rec.respond_to?(sub_key)
       return rec.send(sub_key).downcase
     end
@@ -83,19 +83,19 @@ module MiqBulkImport
     attr = parts.pop
 
     current = rec
-    parts.each {|p|
-      return [] if !current.is_a?(ActiveRecord::Base) && p != parts.last # we're only supporting multi-value for the last relationship
+    parts.each do|p|
+      return [] if !current.kind_of?(ActiveRecord::Base) && p != parts.last # we're only supporting multi-value for the last relationship
       return [] unless current.respond_to?(p)
 
       current = current.send(p)
-    }
-    current = current.is_a?(ActiveRecord::Base) ? [current] : current
+    end
+    current = current.kind_of?(ActiveRecord::Base) ? [current] : current
 
-    results = current.collect {|c|
+    results = current.collect do|c|
       return [] unless c.respond_to?(attr)
       c.send(attr)
-    }.compact
+    end.compact
 
-    return results
+    results
   end
 end

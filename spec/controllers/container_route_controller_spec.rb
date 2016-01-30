@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ContainerRouteController do
   render_views
   before(:each) do
@@ -9,7 +7,7 @@ describe ContainerRouteController do
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
-    response.should redirect_to(:action => 'show_list')
+    expect(response).to redirect_to(:action => 'show_list')
   end
 
   it "renders show screen" do
@@ -19,8 +17,10 @@ describe ContainerRouteController do
     get :show, :id => container_route.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([:name => "Test Route (Summary)",
-                                         :url  => "/container_route/show/#{container_route.id}"])
+    expect(assigns(:breadcrumbs)).to eq([{:name => "Container Routes",
+                                          :url  => "/container_route/show_list?page=&refresh=y"},
+                                         {:name => "Test Route (Summary)",
+                                          :url  => "/container_route/show/#{container_route.id}"}])
   end
 
   it "renders show_list" do
@@ -28,7 +28,6 @@ describe ContainerRouteController do
                           :views          => {:containerroute => 'list'},
                           :perpage        => {:list => 10}}
 
-    FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
 
     get :show_list

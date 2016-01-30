@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'metadata/linux/LinuxUtils'
 
 describe MiqLinux::Utils do
@@ -56,36 +55,35 @@ EOS
     let(:subject) { MiqLinux::Utils.parse_openstack_status(text) }
 
     it "should return Array" do
-      should be_a Array
+      is_expected.to be_a Array
     end
 
     # we omit Keystone users section
     it "should have 9 OpenStack services" do
-      subject.count.should be_equal 9
+      expect(subject.count).to be_equal 9
     end
 
     %w(Nova Glance Keystone Swift neutron Ceilometer Heat Support).map do |service|
       it "should have contain correct OpenStack #{service} service" do
-        subject.select { |service_hash| service_hash['name'].include?(service) }.count.should be_equal 1
+        expect(subject.count { |service_hash| service_hash['name'].include?(service) }).to be_equal 1
       end
     end
 
     describe "Nova services" do
       let(:subject) do
-        MiqLinux::Utils.parse_openstack_status(text).select { |service| service['name'].include?('Nova') }
-          .first['services']
+        MiqLinux::Utils.parse_openstack_status(text).find { |service| service['name'].include?('Nova') }['services']
       end
 
       it "should have 6 services total" do
-        subject.count.should be_equal 6
+        expect(subject.count).to be_equal 6
       end
 
       it "should have 4 active services" do
-        subject.select { |service| service['active'] }.count.should be_equal 4
+        expect(subject.count { |service| service['active'] }).to be_equal 4
       end
 
       it "should have 2 inactive services" do
-        subject.select { |service| !service['active'] }.count.should be_equal 2
+        expect(subject.count { |service| !service['active'] }).to be_equal 2
       end
     end
   end

@@ -20,7 +20,7 @@
                     :class    => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("user_name")
+          miqSelectPickerEvent("user_name", "#{url}")
       %td{:width => "100"}
     .form-group
       %label.col-md-2.control-label
@@ -37,8 +37,7 @@
                       "data-miq_sparkle_off" => true,
                     :class    => "selectpicker")
         :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("group_name")
+          miqSelectPickerEvent("group_name", "#{url}")
   - unless @edit[:explorer]
     = render :partial => '/layouts/edit_form_buttons', :locals => {:action_url => 'ownership_update', :ajax_buttons => true}
 

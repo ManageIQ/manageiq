@@ -1,24 +1,24 @@
 # EventMixin expects that event_where_clause is defined in the model.
 module EventMixin
-  def first_event(assoc=:ems_events)
+  def first_event(assoc = :ems_events)
     event = find_one_event(assoc, "timestamp ASC")
-    return event.nil? ? nil : event.timestamp
+    event.nil? ? nil : event.timestamp
   end
 
-  def last_event(assoc=:ems_events)
+  def last_event(assoc = :ems_events)
     event = find_one_event(assoc, "timestamp DESC")
-    return event.nil? ? nil : event.timestamp
+    event.nil? ? nil : event.timestamp
   end
 
-  def first_and_last_event(assoc=:ems_events)
-    return [first_event(assoc), last_event(assoc)].compact
+  def first_and_last_event(assoc = :ems_events)
+    [first_event(assoc), last_event(assoc)].compact
   end
 
-  def has_events?(assoc=:ems_events)
+  def has_events?(assoc = :ems_events)
     # TODO: homemade caching is probably harfmul as it's not expected.
     # It should be considered for removal.
     @has_events ||= {}
-    return @has_events[assoc] if @has_events.has_key?(assoc)
+    return @has_events[assoc] if @has_events.key?(assoc)
     @has_events[assoc] = events_assoc_class(assoc).where(event_where_clause(assoc)).exists?
   end
 
@@ -36,5 +36,4 @@ module EventMixin
     ewc = event_where_clause(assoc)
     events_assoc_class(assoc).where(ewc).order(order).first unless ewc.blank?
   end
-
 end

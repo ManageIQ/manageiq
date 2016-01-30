@@ -32,12 +32,12 @@ puts
 
 puts "[#{Time.now}] Removing previously migrated conditions..."
 guid_re = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/
-Condition.find(:all).each {|c| c.destroy unless (c.name =~ guid_re).nil?}
+Condition.all.each {|c| c.destroy unless (c.name =~ guid_re).nil?}
 puts "[#{Time.now}] Removing previously migrated conditions... Complete"
 puts
 
 puts "[#{Time.now}] Migrating policies..."
-Policy.find(:all).each do |p|
+Policy.all.each do |p|
   puts "[#{Time.now}] Create: MiqPolicy: [#{p.description}]"
   npolicy = MiqPolicy.create(clean_attrs(p.attributes))
   
@@ -80,7 +80,7 @@ puts "[#{Time.now}] Migrating policies... Complete"
 
 puts
 puts "[#{Time.now}] Migrating policy profiles and assignments..."
-PolicySet.find(:all).each do |ps|
+PolicySet.all.each do |ps|
   ps_attrs = ps.attributes
   ps_attrs.delete("name")
   puts "[#{Time.now}] Create: Profile:   [#{ps.description}]"

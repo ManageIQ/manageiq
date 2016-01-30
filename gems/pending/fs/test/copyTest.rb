@@ -15,23 +15,23 @@ MK_FILE = "mkfs"
 $stderr.sync = true
 $stdout.sync = true
 class ConsoleFormatter < Log4r::Formatter
-	def format(event)
-		t = Time.now
-		"#{t.hour}:#{t.min}:#{t.sec}: " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-	end
+  def format(event)
+    t = Time.now
+    "#{t.hour}:#{t.min}:#{t.sec}: " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+  end
 end
 $log = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level=>Log4r::DEBUG, :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
 #
 # First, copy files from the local filesystem to another directory in the local filesystem.
 #
 
-fromFs	= MiqFS.new(LocalFS, nil)
-toFs	= MiqFS.new(LocalFS, nil)
+fromFs  = MiqFS.new(LocalFS, nil)
+toFs  = MiqFS.new(LocalFS, nil)
 
-cf		= MiqFsUtil.new(fromFs, toFs)
+cf    = MiqFsUtil.new(fromFs, toFs)
 cf.verbose = true
 
 #
@@ -55,10 +55,10 @@ dd = File.join(DST_DIR, File.basename(SRC_DIR))
 puts "Comparing #{SRC_DIR} to #{dd}"
 system("diff", "-qr", SRC_DIR, dd)
 if $?.exitstatus != 0
-	puts "FAIL: Directory contents are not the same"
-	exit($?.exitstatus)
+  puts "FAIL: Directory contents are not the same"
+  exit($?.exitstatus)
 else
-	puts "SUCCESS: Directory contents match"
+  puts "SUCCESS: Directory contents match"
 end
 
 #
@@ -113,10 +113,10 @@ puts
 puts "Comparing #{SRC_DIR} to #{dd}"
 system("diff", "-qr", SRC_DIR, dd)
 if $?.exitstatus != 0
-	puts "FAIL: Directory contents are not the same"
-	exit($?.exitstatus)
+  puts "FAIL: Directory contents are not the same"
+  exit($?.exitstatus)
 else
-	puts "SUCCESS: Directory contents match"
+  puts "SUCCESS: Directory contents match"
 end
 
 #

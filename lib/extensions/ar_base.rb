@@ -10,6 +10,5 @@ module ActiveRecord
     def self.truncate
       connection.truncate(table_name, "#{name} Truncate")
     end
-
   end
 end

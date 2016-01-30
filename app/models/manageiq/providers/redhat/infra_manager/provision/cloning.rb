@@ -19,7 +19,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
   end
 
   def find_destination_in_vmdb(ems_ref)
-    ManageIQ::Providers::Redhat::InfraManager::Vm.where(:name => dest_name, :ems_ref => ems_ref).first
+    ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => dest_name, :ems_ref => ems_ref)
   end
 
   def prepare_for_clone_task

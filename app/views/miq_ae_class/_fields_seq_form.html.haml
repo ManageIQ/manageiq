@@ -16,7 +16,7 @@
                   :multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields")
               %td{:width => "30", :align => "left", :valign => "middle"}
                 = link_image_if(:cond => (@edit[:new][:fields].length < 2),
-                  :image              => "/images/toolbars/up.png",
+                  :image              => image_path('toolbars/up.png'),
                   :opts_true          => {:class => "dimmed small"},
                   :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields up"))},
                   :link               => {:action => 'fields_seq_field_changed', :button => 'up', :id => "seq"},
@@ -24,9 +24,10 @@
                     "data-miq_sparkle_on"        => true,
                     "data-miq_sparkle_off"       => true,
                     "data-submit"                => 'column_lists',
+                    "data-method"                => :post,
                     :remote                      => true})
                 = link_image_if(:cond => (@edit[:new][:fields].length < 2),
-                  :image              => "/images/toolbars/down.png",
+                  :image              => image_path('toolbars/down.png'),
                   :opts_true          => {:class => "dimmed small"},
                   :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields down"))},
                   :link               => {:action => 'fields_seq_field_changed', :button => 'down', :id => "seq"},
@@ -34,6 +35,7 @@
                     "data-miq_sparkle_on"        => true,
                     "data-miq_sparkle_off"       => true,
                     "data-submit"                => 'column_lists',
+                    "data-method"                => :post,
                     :remote                      => true})
           .note= _('* Select one or more consecutive fields to move up or down.')
 :javascript

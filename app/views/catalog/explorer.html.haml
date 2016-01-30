@@ -1,21 +1,7 @@
-- content_for :trees do
-  - @built_trees.each do |tree|
-    %div{:style => "display:none;"}
-      = render(:partial => "shared/tree",
-               :locals  => {:tree => tree,
-                            :name => tree.name.to_s})
-
-- content_for :accords do
-  -# Create the explorer dhtmlx layout/accordion JS objects
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-           :locals  => {:accords                => @accords,
-                        :active_accord          => @sb[:active_accord],
-                        :accord_select_function => "miqAccordCTSelect"})
-
 -# Include the center cell divs
 - nodetypes = %w(MiqTemplate OrchestrationTemplate ServiceResource ServiceTemplate ServiceTemplateCatalog)
 - if nodetypes.include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@view
-  #main_div.main_div
+  #main_div
     - if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
       = render(:partial => "vm_common/main",
                :locals  => {:controller => "vm"})
@@ -23,7 +9,7 @@
       = render(:partial => "#{x_active_tree}_show",
                :locals  => {:controller => "catalog"})
 - else
-  #main_div.main_div
+  #main_div
     - if @sb[:buttons_node]
       = render :partial => "shared/buttons/ab_list"
     - elsif @upload_sysprep_file
@@ -39,5 +25,5 @@
 = render :partial => "/layouts/my_code_mirror",
          :locals  => {:text_area_id => "miq_none",
                       :mode         => "htmlmixed",
-                      :height       => 350,
-                      :width        => 600}
+                      :height       => '350px',
+                      :width        => '600px'}

@@ -1,35 +1,37 @@
 language: ruby
 rvm:
-- "2.2.3"
+- '2.2'
 sudo: false
 cache: bundler
 env:
   global:
-  - RUBY_GC_MALLOC_LIMIT=90000000
+  - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
+  - RUBY_GC_HEAP_INIT_SLOTS=600000
+  - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
   matrix:
-  - "GEM=manageiq_foreman"
-  - "GEM=pending"
-  - "TEST_SUITE=vmdb"
-  - "TEST_SUITE=migrations"
-  - "TEST_SUITE=replication"
-  - "TEST_SUITE=automation"
-  - "TEST_SUITE=javascript"
-  - "TEST_SUITE=brakeman"
+  - TEST_SUITE=vmdb
+  - TEST_SUITE=automation
+  - TEST_SUITE=migrations
+  - TEST_SUITE=self_service SPA_UI=self_service
+  - TEST_SUITE=brakeman
+  - TEST_SUITE=replication
+  - GEM=pending
+  - TEST_SUITE=javascript
+  - GEM=manageiq_foreman
 matrix:
   fast_finish: true
 addons:
   postgresql: '9.4'
 before_install:
-- "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
-- "[[ -f certs/v2_key.dev ]] && cp certs/v2_key.dev certs/v2_key"
-- "[[ -n \"$GEM\" ]] || echo \"1\" > REGION"
-- "[[ -n \"$GEM\" ]] || cp config/database.pg.yml config/database.yml"
-- "[[ -n \"$GEM\" ]] || psql -c \"CREATE USER root SUPERUSER PASSWORD 'smartvm';\" -U postgres"
-- "[[ -z \"$GEM\" ]] || cd gems/$GEM"
-- "export BUNDLE_WITHOUT=qpid"
-- "[[ -n \"$GEM\" ]] || export BUNDLE_WITHOUT=development:$BUNDLE_WITHOUT"
-- "export BUNDLE_GEMFILE=$PWD/Gemfile"
+- source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
-- "[[ -z \"$TEST_SUITE\" ]] || bundle exec rake test:$TEST_SUITE:setup"
+- source ${TRAVIS_BUILD_DIR}/tools/ci/before_script.sh
 script:
-- "bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}"
+- bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
+notifications:
+  webhooks:
+    urls:
+    - https://webhooks.gitter.im/e/7af45001fe6b7a4039f2
+    on_success: change
+    on_failure: always
+    on_start: never

@@ -5,5 +5,10 @@ module MiqAeMethodService
     expose :category
     expose :name
     expose :to_tag
+    expose :entries
+
+    def self.categories
+      wrap_results(Classification.categories)
+    end
   end
 end

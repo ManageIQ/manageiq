@@ -7,10 +7,10 @@ class MiqUserScope
 
   def initialize(scope)
     @scope = scope
-    FEATURE_TYPES.each {|f| instance_variable_set("@#{f}", scope[f])}
+    FEATURE_TYPES.each { |f| instance_variable_set("@#{f}", scope[f]) }
   end
 
-  def get_filters(options={})
+  def get_filters(options = {})
     # Options:
     # => :feature_type => view | admin | control
     # => :class        => Vm, Host, etc.
@@ -21,26 +21,26 @@ class MiqUserScope
     raise "No value provided for option :class" if klass.nil?
 
     result = {}
-    FILTER_TYPES.each {|filter_type| result[filter_type] = self.filters_by_class_feature_filter(klass, feature_type, filter_type)}
+    FILTER_TYPES.each { |filter_type| result[filter_type] = filters_by_class_feature_filter(klass, feature_type, filter_type) }
 
-    return result
+    result
   end
 
   def filters_by_class_feature_filter(klass, feature_type, filter_type)
     raise "Filter type must be one of #{FILTER_TYPES.inspect}" unless FILTER_TYPES.include?(filter_type.to_sym)
 
-    filter = self.scope.fetch_path(feature_type.to_sym, filter_type.to_sym)
+    filter = scope.fetch_path(feature_type.to_sym, filter_type.to_sym)
     return if filter.nil?
 
     all       = filter[:_all_]
     for_class = filter[klass.to_s.downcase.to_sym]
-    result    = self.send("merge_#{filter_type}", all, for_class)
+    result    = send("merge_#{filter_type}", all, for_class)
 
-    return result.blank? ? nil : result
+    result.blank? ? nil : result
   end
 
   def merge_managed(*args)
-    grouped = args.flatten.compact.group_by {|v| v.split("/")[0..2]}
+    grouped = args.flatten.compact.group_by { |v| v.split("/")[0..2] }
     grouped.values.collect(&:uniq)
   end
 
@@ -56,19 +56,19 @@ class MiqUserScope
     exps = args.inject([]) do |a, exp|
       a << exp.exp
     end
-    return exps.empty? ? nil : MiqExpression.new("or" => exps)
+    exps.empty? ? nil : MiqExpression.new("or" => exps)
   end
 
   def self.hash_to_scope(hash)
     # Convert original hash style filters to MiqUserScope instance
-    managed = hash["managed"]   if hash.has_key?("managed")
-    belongs = hash["belongsto"] if hash.has_key?("belongsto")
+    managed = hash["managed"]   if hash.key?("managed")
+    belongs = hash["belongsto"] if hash.key?("belongsto")
     return if managed.blank? && belongs.blank?
 
     newh = {:view => {}}
     newh[:view][:managed]   = {:_all_ => managed} unless managed.blank?
     newh[:view][:belongsto] = {:_all_ => belongs} unless belongs.blank?
 
-    self.new(newh)
+    new(newh)
   end
 end

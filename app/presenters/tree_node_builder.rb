@@ -6,9 +6,9 @@ class TreeNodeBuilder
   def self.generic_tree_node(key, text, image, tip = nil, options = {})
     text = ERB::Util.html_escape(text) unless text.html_safe?
     node = {
-        :key   => key,
-        :title => text,
-        :icon  => image,
+      :key   => key,
+      :title => text,
+      :icon  => ActionController::Base.helpers.image_path("100/#{image}"),
     }
     node[:addClass]     = options[:style_class]      if options[:style_class]
     node[:cfmeNoClick]  = true                       if options[:cfme_no_click]
@@ -26,12 +26,12 @@ class TreeNodeBuilder
   #   FIXME: fill in missing docs
   #
   def self.build(object, parent_id, options)
-    builder = self.new(object, parent_id, options)
+    builder = new(object, parent_id, options)
     builder.build
   end
 
   def self.build_id(object, parent_id, options)
-    builder = self.new(object, parent_id, options)
+    builder = new(object, parent_id, options)
     builder.build_id
   end
 
@@ -64,7 +64,7 @@ class TreeNodeBuilder
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
     when Container            then generic_node(object.name, "container.png")
     when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
-      "Button: #{object.description}")
+                                                "Button: #{object.description}")
     when CustomButtonSet      then custom_button_set_node
     when CustomizationTemplate then generic_node(object.name, "customizationtemplate.png")
     when Dialog               then generic_node(object.label, "dialog.png")
@@ -72,8 +72,8 @@ class TreeNodeBuilder
     when DialogGroup          then generic_node(object.label, "dialog_group.png")
     when DialogField          then generic_node(object.label, "dialog_field.png")
     when EmsFolder            then ems_folder_node
-    when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table=>"ems_cluster")}: #{object.name}")
-    when Host                 then generic_node(object.name, "host.png",    "#{ui_lookup(:table=>"host")}: #{object.name}")
+    when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
+    when Host                 then generic_node(object.name, "host.png",    "#{ui_lookup(:table => "host")}: #{object.name}")
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
@@ -101,14 +101,15 @@ class TreeNodeBuilder
     when MiqUserRole          then generic_node(object.name, "miq_user_role.png")
     when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
     when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
+    when OrchestrationTemplateAzure then generic_node(object.name, "orchestration_template_azure.png")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
     when PxeServer            then generic_node(object.name, "pxeserver.png")
     when ScanItemSet          then generic_node(object.name, "scan_item_set.png")
-    when Service              then generic_node(object.name, object.picture ?  "../../../pictures/#{object.picture.basename}" : "service.png")
+    when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service.png")
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
-    when ServiceTemplate      then generic_node(object.name, object.picture ?  "../../../pictures/#{object.picture.basename}" : "service_template.png")
+    when ServiceTemplate      then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service_template.png")
     when ServiceTemplateCatalog then generic_node(object.name, "service_template_catalog.png")
     when Storage              then generic_node(object.name, "storage.png")
     when User                 then generic_node(object.name, "user.png")
@@ -127,6 +128,7 @@ class TreeNodeBuilder
   end
 
   private
+
   def get_rr_status_image(rec)
     case rec.status.downcase
     when 'error'    then 'report_result_error.png'
@@ -140,17 +142,21 @@ class TreeNodeBuilder
   def tooltip(tip)
     unless tip.blank?
       tip = tip.kind_of?(Proc) ? tip.call : _(tip)
-      tip = ERB::Util.html_escape(tip) unless tip.html_safe?
+      tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.html_safe?
       @node[:tooltip] = tip
     end
   end
 
+  def node_icon(icon)
+    ActionController::Base.helpers.image_path("100/#{icon}")
+  end
+
   def generic_node(text, image, tip = nil)
-    text = ERB::Util.html_escape(text) unless text.html_safe?
+    text = ERB::Util.html_escape(URI.unescape(text)) unless text.html_safe?
     @node = {
       :key   => build_object_id,
       :title => text,
-      :icon  => image
+      :icon  => node_icon(image)
     }
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = true if options[:open_all] && options[:expand] != false
@@ -169,7 +175,7 @@ class TreeNodeBuilder
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
-      :icon  => "#{object[:image] || text}.png",
+      :icon  => node_icon("#{object[:image] || text}.png"),
       :title => ERB::Util.html_escape(text),
     }
     # Start with all nodes open unless expand is explicitly set to false
@@ -185,12 +191,19 @@ class TreeNodeBuilder
 
   def node_with_display_name(image)
     text = object.display_name.blank? ? object.name : "#{object.display_name} (#{object.name})"
-    if object.kind_of?(MiqAeNamespace) && object.domain? && (!object.editable? || !object.enabled)
-      text = add_read_only_suffix(object, text)
-      miq_ae_node(object.enabled, text, image_for_node(object, image), "#{tooltip_prefix_for_node(object)}: #{text}")
-    else
-      generic_node(text, image_for_node(object, image), "#{tooltip_prefix_for_node(object)}: #{text}")
+    if object.kind_of?(MiqAeNamespace) && object.domain?
+      editable_domain = editable_domain?(object)
+      enabled_domain  = object.enabled
+      unless editable_domain && enabled_domain
+        text = add_read_only_suffix(text, editable_domain, enabled_domain)
+        return miq_ae_node(enabled_domain,
+                           text,
+                           image_for_node(object, image),
+                           "#{tooltip_prefix_for_node(object)}: #{text}"
+                          )
+      end
     end
+    generic_node(text, image_for_node(object, image), "#{tooltip_prefix_for_node(object)}: #{text}")
   end
 
   def miq_ae_node(enabled, text, image, tip)
@@ -198,7 +211,7 @@ class TreeNodeBuilder
     @node = {
       :key   => build_object_id,
       :title => text,
-      :icon  => image
+      :icon  => node_icon(image)
     }
     @node[:addClass] = "product-strikethru-node" unless enabled
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
@@ -211,7 +224,7 @@ class TreeNodeBuilder
     @node = {
       :key   => build_object_id,
       :title => title,
-      :icon  => title == _("Unassigned Profiles Group") ? "folder.png" : image
+      :icon  => node_icon(title == _("Unassigned Profiles Group") ? "folder.png" : image)
     }
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
@@ -270,8 +283,8 @@ class TreeNodeBuilder
         policy_id = parent_id.split('_')[2].split('-').last
         event_id  = parent_id.split('_').last.split('-').last
       end
-      p  = MiqPolicy.find_by_id(ActiveRecord::Base.uncompress_id(policy_id))
-      ev = MiqEventDefinition.find_by_id(ActiveRecord::Base.uncompress_id(event_id))
+      p  = MiqPolicy.find_by_id(ApplicationRecord.uncompress_id(policy_id))
+      ev = MiqEventDefinition.find_by_id(ApplicationRecord.uncompress_id(event_id))
       image = p.action_result_for_event(object, ev) ? "check" : "x"
     else
       image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"
@@ -330,7 +343,7 @@ class TreeNodeBuilder
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
       base_class = "Datacenter" if base_class == "EmsFolder" && object.is_datacenter
       prefix = TreeBuilder.get_prefix_for_model(base_class)
-      cid = ActiveRecord::Base.compress_id(object.id)
+      cid = ApplicationRecord.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"
     end
   end

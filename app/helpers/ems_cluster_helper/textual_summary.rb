@@ -1,11 +1,10 @@
 module EmsClusterHelper::TextualSummary
-
   #
   # Groups
   #
 
   def textual_group_host_totals
-    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus)
+    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_cpu_total_cores aggregate_disk_capacity block_storage_disk_usage object_storage_disk_usage)
   end
 
   def textual_group_vm_totals
@@ -21,8 +20,8 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_group_configuration
-    return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? &&  @record.drs_enabled.nil? &&
-        @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
+    return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? && @record.drs_enabled.nil? &&
+                  @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
     %i(ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold)
   end
 
@@ -85,8 +84,8 @@ module EmsClusterHelper::TextualSummary
     {:label => "Total CPUs", :value => number_with_delimiter(@record.aggregate_physical_cpus)}
   end
 
-  def textual_aggregate_logical_cpus
-    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
+  def textual_aggregate_cpu_total_cores
+    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_cpu_total_cores)}
   end
 
   def textual_aggregate_vm_memory
@@ -98,7 +97,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_parent_datacenter
@@ -161,7 +160,7 @@ module EmsClusterHelper::TextualSummary
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
     textual_link(@record.resource_pools,
-                 :as => EmsCluster,
+                 :as   => EmsCluster,
                  :link => url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools'))
   end
 
@@ -248,6 +247,20 @@ module EmsClusterHelper::TextualSummary
     value = @record.drs_migration_threshold
     return nil if value.nil?
     {:label => "DRS Migration Threshold", :value => value}
+  end
+
+  def textual_aggregate_disk_capacity
+    {:value => number_to_human_size(@record.aggregate_disk_capacity.gigabytes, :precision => 2)}
+  end
+
+  def textual_block_storage_disk_usage
+    return nil unless @record.respond_to?(:block_storage?) && @record.block_storage? && !@record.cloud.nil?
+    {:value => number_to_human_size(@record.cloud_block_storage_disk_usage.bytes, :precision => 2)}
+  end
+
+  def textual_object_storage_disk_usage
+    return nil unless @record.respond_to?(:object_storage?) && @record.object_storage? && !@record.cloud.nil?
+    {:value => number_to_human_size(@record.cloud_object_storage_disk_usage.bytes, :precision => 2)}
   end
 
   def cluster_title

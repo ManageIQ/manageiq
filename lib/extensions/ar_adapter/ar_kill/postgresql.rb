@@ -30,7 +30,6 @@ module ActiveRecord
           result
         end
       end
-
     end
   end
 end

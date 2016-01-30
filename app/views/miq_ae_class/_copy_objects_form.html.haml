@@ -64,12 +64,12 @@
           = text_field_tag("namespace",
                            @edit[:new][:namespace],
                            :onFocus => 'miqShowAE_Tree("namespace");miqButtons("hide");')
-%p
-  %table.table.table-striped.table-bordered
-    %thead
-      %th #{@edit[:selected_items].count} #{n_('Item', 'Items', @edit[:selected_items].count)} #{_('selected to copy')}
-    %tbody
-      - @edit[:selected_items].values.each do |item|
-        %tr
-          %td
-            = item
+  %p
+    %table.table.table-striped.table-bordered
+      %thead
+        %th #{@edit[:selected_items].count} #{n_('Item', 'Items', @edit[:selected_items].count)} #{_('selected to copy')}
+      %tbody
+        - @edit[:selected_items].values.each do |item|
+          %tr
+            %td
+              = item

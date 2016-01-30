@@ -8,10 +8,10 @@ class VimUsage < ActsAsArModel
     :disk_usage_rate_average      => :float,
     :net_usage_rate_average       => :float
 
-    # :derived_storage_used_managed => {:type => :float, :daily_pfx => "max"},
-    # :cpu_usagemhz_rate_average    => {:type => :float, :mult => 180},
-    # :disk_usage_rate_average      => {:type => :float, :mult => 1.hour},
-    # :net_usage_rate_average       => {:type => :float, :mult => 1.hour}
+  # :derived_storage_used_managed => {:type => :float, :daily_pfx => "max"},
+  # :cpu_usagemhz_rate_average    => {:type => :float, :mult => 180},
+  # :disk_usage_rate_average      => {:type => :float, :mult => 1.hour},
+  # :net_usage_rate_average       => {:type => :float, :mult => 1.hour}
   )
 
   def self.vms_by_category(options)
@@ -38,13 +38,13 @@ class VimUsage < ActsAsArModel
     end
 
     rows = model.where(cond).to_a
-    return self.build(rows, options[:interval_name]), interval
+    return build(rows, options[:interval_name]), interval
   end
 
   def self.build(perfs, interval)
-    perfs.inject([]) do |arr,perf|
-      cols_hash = self.column_names.inject({:id => perf.resource_id}) do |h,c|
-        col_options = self.columns_hash[c].options
+    perfs.inject([]) do |arr, perf|
+      cols_hash = column_names.inject(:id => perf.resource_id) do |h, c|
+        col_options = columns_hash[c].options
         if interval == "daily"
           col = col_options[:daily_pfx] ? [col_options[:daily_pfx], c.to_s].join("_") : c
           value = perf.send(col)
@@ -56,7 +56,7 @@ class VimUsage < ActsAsArModel
         h[c] = value
         h
       end
-      arr.push(self.new(cols_hash))
+      arr.push(new(cols_hash))
       arr
     end
   end
@@ -72,13 +72,13 @@ class VimUsage < ActsAsArModel
   def self.first_and_last_capture(interval_name = "hourly")
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
     perf = klass
-      .where(:capture_interval_name => interval_name, :resource_type => "VmOrTemplate")
-      .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
-      .group(:resource_type)
-      .limit(1).to_a.first
+           .where(:capture_interval_name => interval_name, :resource_type => "VmOrTemplate")
+           .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
+           .group(:resource_type)
+           .limit(1).to_a.first
     perf.nil? ? [] : [
       perf.first_ts.kind_of?(String) ? Time.zone.parse(perf.first_ts) : perf.first_ts,
-      perf.last_ts.kind_of?(String)  ? Time.zone.parse(perf.last_ts)  : perf.last_ts
+      perf.last_ts.kind_of?(String) ? Time.zone.parse(perf.last_ts) : perf.last_ts
     ]
   end
 end

@@ -1,32 +1,11 @@
 //= require import
 
-var listenForWidgetPostMessages = function() {
-  window.addEventListener('message', function(event) {
-    miqSparkleOff();
-    clearMessages();
-
-    var importFileUploadId = event.data.import_file_upload_id;
-
-    if (importFileUploadId) {
-      getAndRenderWidgetJson(importFileUploadId, event.data.message);
-    } else {
-      var messageData = JSON.parse(event.data.message);
-
-      if (messageData.level == 'warning') {
-        showWarningMessage(messageData.message);
-      } else {
-        showErrorMessage(messageData.message);
-      }
-    }
-  });
-};
-
 var getAndRenderWidgetJson = function(importFileUploadId, message) {
   $('.hidden-import-file-upload-id').val(importFileUploadId);
 
   $.getJSON("widget_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
     var statusFormatter = function(row, cell, value, columnDef, dataContext) {
-      var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
+      var status_img = "<img src=\"" + dataContext.status_icon + "\" />";
 
       return status_img + dataContext.status;
     };
@@ -35,7 +14,7 @@ var getAndRenderWidgetJson = function(importFileUploadId, message) {
       var checked = '';
       var value = dataContext.name;
       var attributes = "class='import-checkbox' type='checkbox' name='widgets_to_import[]' value = '" + value + "'";
-      if (dataContext.status_icon == 'equal-green') {
+      if (dataContext.status_icon.indexOf('/equal-green') > -1) {
         checked = "checked='checked'";
       }
       return "<input " + attributes + checked + "></input>";
@@ -45,18 +24,18 @@ var getAndRenderWidgetJson = function(importFileUploadId, message) {
 
     var columns = [{
       id: "import",
-      name: "Import",
+      name: __("Import"),
       field: "import_checkbox",
       width: 65,
       formatter: inputCheckboxFormatter
     }, {
       id: "name",
-      name: "Widget Name",
+      name: __("Widget Name"),
       field: "name",
       width: 300
     }, {
       id: "status",
-      name: "Status",
+      name: __("Status"),
       field: "status",
       width: 300,
       formatter: statusFormatter

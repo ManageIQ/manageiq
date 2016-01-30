@@ -1,0 +1,2 @@
+class ResourceGroup < ApplicationRecord
+end

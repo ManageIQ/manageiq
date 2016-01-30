@@ -16,7 +16,7 @@ class XmlData < ActiveRecord::Base
     Document.parse_stream(data, handler)
     $log.debug "#{handler.result.inspect}"
 
-    handler.result.each {|event| eval "VmwareEmsEvent.#{event[:type]}(event)" }
+    handler.result.each { |event| eval "VmwareEmsEvent.#{event[:type]}(event)" }
   end
 end
 
@@ -29,18 +29,16 @@ class EventXmlHandler
   include StreamListener
 
   def initialize
-    @tags = Array.new
-    @result = Array.new
-    @event = Hash.new
-    @host = Hash.new
-    @vm = Hash.new
+    @tags = []
+    @result = []
+    @event = {}
+    @host = {}
+    @vm = {}
   end
 
-  def result
-    return @result
-  end
+  attr_reader :result
 
-  def tag_start(name, attrs)
+  def tag_start(name, _attrs)
     @tags.push name
   end
 
@@ -51,17 +49,17 @@ class EventXmlHandler
     when "emsEvents"
     when "event"
       @result.push(@event)
-      @event = Hash.new
+      @event = {}
     when "host", "srcHost", "destHost"
       @event[name.to_sym] = @host
-      @host = Hash.new
+      @host = {}
     when "vm", "srcVm", "destVm"
       @event[name.to_sym] = @vm
-      @vm = Hash.new
+      @vm = {}
     end
   end
 
-  def text value
+  def text(value)
     return if value.strip.blank?
     obj, name = @tags.last(2)
     case obj

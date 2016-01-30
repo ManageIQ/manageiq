@@ -20,14 +20,14 @@ module ProviderObjectMixin
     end
   end
 
-  def provider_object(connection = nil)
+  def provider_object(_connection = nil)
     raise NotImplementedError, "not implemented in #{self.class.name}"
   end
 
   private
 
   def connection_source(options = {})
-    source = options[:connection_source] || self.ext_management_system
+    source = options[:connection_source] || ext_management_system
     raise "no connection source available" if source.nil?
     source
   end

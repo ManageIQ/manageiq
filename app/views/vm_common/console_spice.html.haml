@@ -1,19 +1,12 @@
 - record_name = (@record.name rescue '')
 = render :partial => 'layouts/doctype'
-%html
+%html{:lang => I18n.locale.to_s.sub('-', '_')}
   %head
     %title
       = _('SPICE Console')
+    = favicon_link_tag
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'application', 'spiceHTML5/enums', 'spiceHTML5/atKeynames', 'spiceHTML5/utils',
-    'spiceHTML5/png', 'spiceHTML5/lz', 'spiceHTML5/quic', 'spiceHTML5/bitmap',
-    'spiceHTML5/spicedataview', 'spiceHTML5/spicetype', 'spiceHTML5/spicemsg', 'spiceHTML5/wire',
-    'spiceHTML5/spiceconn', 'spiceHTML5/display', 'spiceHTML5/main', 'spiceHTML5/inputs',
-    'spiceHTML5/cursor', 'spiceHTML5/thirdparty/jsbn', 'spiceHTML5/thirdparty/rsa',
-    'spiceHTML5/thirdparty/prng4', 'spiceHTML5/thirdparty/rng', 'spiceHTML5/thirdparty/sha1',
-    'spiceHTML5/ticket', 'spice-html5'
-    - if Rails.env.development?
-      = javascript_include_tag 'miq_debug'
+    = javascript_include_tag 'application', 'spiceHTML5/spicearraybuffer', 'spice-html5'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
@@ -29,11 +22,12 @@
         var encrypt;
 
         $(function () {
-
-          var host     = window.location.hostname;
-          var port     = $('#spice-area').data('port');
-          var password = $('#spice-area').data('password');
-          encrypt      = $('#spice-area').data('encrypt') !== undefined;
+          var host         = window.location.hostname;
+          var element      = $('#spice-area');
+          var port         = element.data('port');
+          var password     = element.data('password');
+          var encrypt_attr = element.attr('data-encrypt');
+          encrypt = (encrypt_attr !== undefined) && (encrypt_attr !== 'false');
           var scheme   = (encrypt ? "wss://" : "ws://"), uri;
 
           if (!host || !port || !password) {

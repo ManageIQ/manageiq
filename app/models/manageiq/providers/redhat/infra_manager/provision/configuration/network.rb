@@ -1,5 +1,4 @@
 module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Network
-
   def configure_network_adapters
     configure_dialog_nic
     requested_vnics   = options[:networks]
@@ -57,7 +56,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
   def configure_dialog_nic
     vlan = get_option(:vlan)
     return if vlan.blank?
-    options[:networks]    ||= []
+    options[:networks] ||= []
     options[:networks][0] ||= begin
       _log.info("vlan: #{vlan.inspect}")
       {:network => vlan, :mac_address => get_option_last(:mac_address)}

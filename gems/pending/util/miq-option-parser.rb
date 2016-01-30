@@ -4,9 +4,9 @@ module MiqOptionParser
   class PartialMatchHash < Hash
     def [](key_name)
       return fetch(key_name) if keys.include?(key_name)
-      matches = keys.select {|key| key =~ /^#{key_name}.*/ }
+      matches = keys.select { |key| key =~ /^#{key_name}.*/ }
       return nil unless matches.size == 1
-      return fetch(matches.first)
+      fetch(matches.first)
     end
   end
 
@@ -21,7 +21,7 @@ module MiqOptionParser
       @commands        = PartialMatchHash.new
       @command_parser  = command_parser
     end
-    
+
     def command_parser
       @command_parser ||= parent.command_parser
     end
@@ -29,7 +29,7 @@ module MiqOptionParser
     def has_commands?
       @commands.keys.length > 0
     end
-    
+
     def add_command(command, default = false)
       @commands[command.name] = command
       @default_command        = command.name if default
@@ -44,27 +44,28 @@ module MiqOptionParser
     def parents
       cmds = []
       cmd  = self
-      while not cmd.nil?
+      until cmd.nil?
         cmds << cmd
         cmd = cmd.parent
       end
       cmds
     end
-    
-    #######
-    private
+
     #######
 
-    def print_commands( level = 1, command = self )
+    private
+
+    #######
+
+    def print_commands(level = 1, command = self)
       puts "Available commands:" if level == 1
       command.commands.sort.each do |name, cmd|
-        print "  "*level + name.ljust( 15 ) + cmd.short_desc.to_s
+        print "  " * level + name.ljust(15) + cmd.short_desc.to_s
         print " (=default command)" if name == command.default_command
         print "\n"
-        print_commands( level + 1, cmd ) if cmd.has_commands?
+        print_commands(level + 1, cmd) if cmd.has_commands?
       end
     end
-    
   end
 
   class MiqCommandParser
@@ -79,13 +80,13 @@ module MiqOptionParser
       @exit_on_version   = true
       @root_command      = MiqCommand.new('root', self)
       add_command(DefaultHelpCommand.new)
-  		add_command(DefaultVersionCommand.new)
+      add_command(DefaultVersionCommand.new)
     end
 
     def option_parser
       @root_command.option_parser
     end
-    
+
     def option_parser=(parser)
       @root_command.option_parser = parser
     end
@@ -97,12 +98,12 @@ module MiqOptionParser
     def help
       @root_command.commands['help']
     end
-    
+
     def parse(argv = ARGV)
       depth   = 0
       command = @root_command
 
-      while !command.nil?
+      until command.nil?
         argv = command.has_commands? ? command.option_parser.order(argv) : command.option_parser.permute(argv)
         yield(depth, command.name) if block_given?
 
@@ -128,14 +129,12 @@ module MiqOptionParser
       help.execute(command.parents.reverse.collect(&:name)) unless help.nil?
       exit
     end
-    
   end
 
   # Base class for all MiqOptionParser errors.
   class ParseError < RuntimeError
-
     # Sets the reason for a subclass.
-    def self.reason( reason, has_arguments = true )
+    def self.reason(reason, has_arguments = true)
       (@@reason ||= {})[self] = [reason, has_arguments]
     end
 
@@ -144,9 +143,7 @@ module MiqOptionParser
       data = @@reason[self.class] || ['Unknown error', true]
       data[0] + (data[1] ? ": " + super : '')
     end
-
   end
-
 
   class DefaultHelpCommand < MiqCommand
     def initialize
@@ -156,47 +153,49 @@ module MiqOptionParser
       'If one or more command names are given as arguments, these arguments are interpreted ' \
       'as a hierachy of commands and the help for the right most command is show.'
     end
-    
+
     def post_initialize
-      self.command_parser.root_command.option_parser.on_tail( "-h", "--help", "Show help" ) do
-        execute( [] )
+      command_parser.root_command.option_parser.on_tail("-h", "--help", "Show help") do
+        execute([])
       end
     end
 
     def usage
-      "Usage: #{self.command_parser.program_name} help [COMMAND SUBCOMMAND ...]"
+      "Usage: #{command_parser.program_name} help [COMMAND SUBCOMMAND ...]"
     end
 
-    def execute( args )
+    def execute(args)
       if args.length > 0
-        cmd = self.command_parser.root_command
+        cmd = command_parser.root_command
         arg = args.shift
-        while !arg.nil? && cmd.commands[ arg ]
+        while !arg.nil? && cmd.commands[arg]
           cmd = cmd.commands[arg]
           arg = args.shift
         end
         if arg.nil?
           cmd.show_help
         else
-          raise InvalidArgumentError, args.unshift( arg ).join(' ')
+          raise InvalidArgumentError, args.unshift(arg).join(' ')
         end
       else
         show_program_help
       end
-      exit  if self.command_parser.exit_on_help == true
+      exit  if command_parser.exit_on_help == true
     end
 
     #######
+
     private
+
     #######
 
     def show_program_help
-      puts self.command_parser.banner + "\n" if self.command_parser.banner
-      puts "Usage: #{self.command_parser.program_name} [options] COMMAND [options] [COMMAND [options] ...] [args]"
+      puts command_parser.banner + "\n" if command_parser.banner
+      puts "Usage: #{command_parser.program_name} [options] COMMAND [options] [COMMAND [options] ...] [args]"
       puts ""
-      print_commands( 1, self.command_parser.root_command )
+      print_commands(1, command_parser.root_command)
       puts ""
-      puts self.command_parser.root_command.option_parser.summarize
+      puts command_parser.root_command.option_parser.summarize
       puts
     end
   end
@@ -206,24 +205,23 @@ module MiqOptionParser
       super('version')
       self.short_desc = "Show the version of the program"
     end
-    
+
     def post_initialize
-      self.command_parser.root_command.option_parser.on_tail( "--version", "-v", "Show the version of the program" ) do
-        execute( [] )
+      command_parser.root_command.option_parser.on_tail("--version", "-v", "Show the version of the program") do
+        execute([])
       end
     end
 
     def usage
-      "Usage: #{self.command_parser.program_name} version"
+      "Usage: #{command_parser.program_name} version"
     end
 
-    def execute( args )
-      version = self.command_parser.program_version
-      version = version.join( '.' ) if version.instance_of?( Array )
-      puts self.command_parser.banner + "\n" if self.command_parser.banner
+    def execute(_args)
+      version = command_parser.program_version
+      version = version.join('.') if version.instance_of?(Array)
+      puts command_parser.banner + "\n" if command_parser.banner
       puts version
-      exit if self.command_parser.exit_on_version == true
+      exit if command_parser.exit_on_version == true
     end
   end
-
 end

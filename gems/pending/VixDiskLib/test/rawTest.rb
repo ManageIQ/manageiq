@@ -6,11 +6,11 @@ require "VixDiskLib_raw"
 vmdk =  "/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk"
 
 conParms = {
-    :serverName => "",
-    :port       => 902,
-    :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
-    :userName   => "",
-    :password   => "",
+  :serverName => "",
+  :port       => 902,
+  :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
+  :userName   => "",
+  :password   => "",
 }
 
 def getKey
@@ -64,12 +64,12 @@ bytesRead = 0
 t0 = Time.now
 
 (0...nReads).each do |rn|
-    rData = VixDiskLib_raw.read(dHandle, rn, 1)
-    bytesRead += rData.length
+  rData = VixDiskLib_raw.read(dHandle, rn, 1)
+  bytesRead += rData.length
 end
 
 t1 = Time.now
-bps = bytesRead/(t1-t0)
+bps = bytesRead / (t1 - t0)
 
 puts "Read throughput: #{bps} B/s"
 

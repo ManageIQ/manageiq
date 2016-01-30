@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe GuestDevice do
   before(:each) do
     @vm_gd = FactoryGirl.create(:guest_device_nic)
@@ -13,26 +11,26 @@ describe GuestDevice do
   end
 
   it "#vm_or_template" do
-    @vm_gd.vm_or_template.should       == @vm
-    @template_gd.vm_or_template.should == @template
-    @host_gd.vm_or_template.should     be_nil
+    expect(@vm_gd.vm_or_template).to eq(@vm)
+    expect(@template_gd.vm_or_template).to eq(@template)
+    expect(@host_gd.vm_or_template).to     be_nil
   end
 
   it "#vm" do
-    @vm_gd.vm.should       == @vm
-    @template_gd.vm.should be_nil
-    @host_gd.vm.should     be_nil
+    expect(@vm_gd.vm).to eq(@vm)
+    expect(@template_gd.vm).to be_nil
+    expect(@host_gd.vm).to     be_nil
   end
 
   it "#miq_template" do
-    @vm_gd.miq_template.should       be_nil
-    @template_gd.miq_template.should == @template
-    @host_gd.miq_template.should     be_nil
+    expect(@vm_gd.miq_template).to       be_nil
+    expect(@template_gd.miq_template).to eq(@template)
+    expect(@host_gd.miq_template).to     be_nil
   end
 
   it "#host" do
-    @vm_gd.host.should       be_nil
-    @template_gd.host.should be_nil
-    @host_gd.host.should     == @host
+    expect(@vm_gd.host).to       be_nil
+    expect(@template_gd.host).to be_nil
+    expect(@host_gd.host).to eq(@host)
   end
 end

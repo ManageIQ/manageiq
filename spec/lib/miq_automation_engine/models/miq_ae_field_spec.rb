@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeField do
   describe "#to_export_xml" do
     let(:default_value) { nil }
@@ -51,14 +49,14 @@ describe MiqAeField do
       # remove the invalid unsaved record in the association by clearing it
       @c1.ae_fields.clear
       f1 = @c1.ae_fields.build(:name => "TEST")
-      f1.should_not be_nil
-      f1.save!.should be_true
+      expect(f1).not_to be_nil
+      expect(f1.save!).to be_truthy
     end
 
     it "should not create fields with invalid names" do
       ["fie ld1", "fie-ld1", "fie:ld1"].each do |name|
         f1 = @c1.ae_fields.build(:name => name)
-        f1.should_not be_nil
+        expect(f1).not_to be_nil
         expect { f1.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
@@ -66,43 +64,43 @@ describe MiqAeField do
     it "should process boolean fields properly" do
       fname1 = "TEST_EVALUATE"
       f1 = @c1.ae_fields.build(:name => fname1)
-      f1.save!.should be_true
-      f1.substitute?.should be_true
+      expect(f1.save!).to be_truthy
+      expect(f1.substitute?).to be_truthy
 
       f1.substitute = false
-      f1.save!.should be_true
-      f1.substitute?.should be_false
+      expect(f1.save!).to be_truthy
+      expect(f1.substitute?).to be_falsey
 
       f1.substitute = nil
-      f1.should be_valid
+      expect(f1).to be_valid
 
       f1.destroy
 
       f1 = @c1.ae_fields.build(:name => fname1, :substitute => false)
-      f1.save!.should be_true
-      f1.substitute?.should be_false
+      expect(f1.save!).to be_truthy
+      expect(f1.substitute?).to be_falsey
 
       f1.destroy
 
       f1 = @c1.ae_fields.build(:name => fname1, :substitute => "FRANK")
       # f1 = @c1.ae_fields.new
-      f1.should be_valid
-      f1.substitute?.should be_true
-      f1.save!.should be_true
+      expect(f1).to be_valid
+      expect(f1.substitute?).to be_truthy
+      expect(f1.save!).to be_truthy
 
       f1.destroy
     end
 
     it "should set the updated_by field on save" do
       f1 =  @c1.ae_fields.create(:name => "field")
-      f1.updated_by.should == 'system'
+      expect(f1.updated_by).to eq('system')
     end
 
     it "should validate unique case-independent names" do
       fname1 = "TEST_UNIQ"
       fname2 = "Test_Uniq"
       f1 = @c1.ae_fields.build(:name => fname1)
-      f1.save!.should be_true
+      expect(f1.save!).to be_truthy
       f2 = @c1.ae_fields.build(:name => fname2)
       expect { f2.save! }.to raise_error(ActiveRecord::RecordInvalid)
 
@@ -114,14 +112,14 @@ describe MiqAeField do
       fname1 = "test1"
       fname2 = "test2"
       f2 = @c1.ae_fields.build(:name => fname2, :aetype => "attribute", :priority => 2)
-      f2.save!.should be_true
+      expect(f2.save!).to be_truthy
       @c1.reload
       fields = @c1.ae_fields
       expect(fields.length).to eq(1)
       expect(fields[0].priority).to eq(2)
 
       f1 = @c1.ae_fields.build(:name => fname1, :aetype => "attribute", :priority => 1)
-      f1.save!.should be_true
+      expect(f1.save!).to be_truthy
       @c1.reload
 
       fields = @c1.ae_fields
@@ -136,8 +134,8 @@ describe MiqAeField do
     it "should validate datatypes" do
       MiqAeField.available_datatypes.each do |datatype|
         f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
-        f.should be_valid
-        f.save!.should be_true
+        expect(f).to be_valid
+        expect(f.save!).to be_truthy
       end
       expect(@c1.reload.ae_fields.length).to eq(MiqAeField.available_datatypes.length)
 
@@ -146,30 +144,30 @@ describe MiqAeField do
 
       %w(foo bar).each do |datatype|
         f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
-        f.should_not be_valid
+        expect(f).not_to be_valid
       end
     end
 
     it "should not change boolean value for substitute field when updating existing AE field record" do
       field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false)
-      field1.substitute.should be_false
+      expect(field1.substitute).to be_falsey
       field2 = MiqAeField.find_by_name_and_class_id("test_field", @c1.id)
-      field2.save.should be_true
-      field2.substitute.should be_false
+      expect(field2.save).to be_truthy
+      expect(field2.substitute).to be_falsey
     end
 
     it "should return editable as false if the parent namespace/class is not editable" do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       f1 = FactoryGirl.create(:miq_ae_field, :class_id => c1.id, :name => "foo_field")
-      f1.should_not be_editable
+      expect(f1).not_to be_editable
     end
 
     it "should return editable as true if the parent namespace/class is editable" do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       f1 = FactoryGirl.create(:miq_ae_field, :class_id => c1.id, :name => "foo_field")
-      f1.should be_editable
+      expect(f1).to be_editable
     end
   end
 end

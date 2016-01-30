@@ -5,14 +5,15 @@
 
       %li
         - t = _("Paste object details for use in a Button.")
-        = link_to(image_tag("/images/toolbars/paste.png", :border => "0", :class  => "", :alt => t),
+        = link_to(image_tag(image_path('toolbars/paste.png'), :border => "0", :class  => "", :alt => t),
           {:action => "resolve", :button => "paste"},
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           :remote                => true,
+          "data-method"          => :post,
           :title                 => t)
     - else
-      = image_tag("/images/toolbars/paste.png",
+      = image_tag(image_path('toolbars/paste.png'),
         :class => "dimmed",
         :title => _("Paste is not available, no object information has been copied from the Simulation screen"))
   = render :partial => "layouts/flash_msg"
@@ -22,15 +23,17 @@
     .form-group
       %label.control-label.col-md-2
         = _('Button Text')
-      .col-md-6
-        = text_field_tag("name", @edit[:new][:name],
-                        :maxlength         => 30,
-                        :class             => "form-control",
-                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      %label.checkbox-inline
-        = check_box_tag("display", "1", @edit[:new][:display],
-                         "data-miq_observe_checkbox" => {:interval => '.5', :url => url}.to_json)
-        = _('Display on Button')
+      .col-md-8
+        .input-group
+          = text_field_tag("name", @edit[:new][:name],
+                          :maxlength         => 30,
+                          :class             => "form-control",
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          .input-group-addon
+            %label.checkbox-inline
+              = check_box_tag("display", "1", @edit[:new][:display],
+                               "data-miq_observe_checkbox" => {:interval => '.5', :url => url}.to_json)
+              = _('Display on Button')
       - unless is_browser_ie?
         = javascript_tag(javascript_focus('name'))
     .form-group

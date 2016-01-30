@@ -1,21 +1,14 @@
-require "spec_helper"
-
 describe "Service Retirement Management" do
   before(:each) do
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.stub(:my_server).and_return(@miq_server)
+    @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
   end
 
   it "#retirement_check" do
-    MiqAeEvent.should_receive(:raise_evm_event)
+    expect(MiqEvent).to receive(:raise_evm_event)
     @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@stack.retirement_last_warn).to be_nil
-    @stack.class.any_instance.should_receive(:retire_now).once
+    expect_any_instance_of(@stack.class).to receive(:retire_now).once
     @stack.retirement_check
     @stack.reload
     expect(@stack.retirement_last_warn).not_to be_nil
@@ -31,7 +24,7 @@ describe "Service Retirement Management" do
 
   it "#retire_now" do
     expect(@stack.retirement_state).to be_nil
-    expect(MiqAeEvent).to receive(:raise_evm_event).once
+    expect(MiqEvent).to receive(:raise_evm_event).once
     @stack.retire_now
     @stack.reload
   end
@@ -42,7 +35,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "user", :user_id => "freddy"}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @stack, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
 
     @stack.retire_now('freddy')
     @stack.reload
@@ -54,7 +47,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "system"}
 
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @stack, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
 
     @stack.retire_now
     @stack.reload
@@ -82,54 +75,54 @@ describe "Service Retirement Management" do
     expect(@stack.retirement_state).to be_nil
     @stack.finish_retirement
     @stack.reload
-    expect(@stack.retired).to be_true
+    expect(@stack.retired).to be_truthy
     expect(@stack.retires_on).to eq(Date.today)
     expect(@stack.retirement_state).to eq("retired")
   end
 
   it "#retiring - false" do
     expect(@stack.retirement_state).to be_nil
-    expect(@stack.retiring?).to be_false
+    expect(@stack.retiring?).to be_falsey
   end
 
   it "#retiring - true" do
     @stack.update_attributes(:retirement_state => 'retiring')
-    expect(@stack.retiring?).to be_true
+    expect(@stack.retiring?).to be_truthy
   end
 
   it "#error_retiring - false" do
     expect(@stack.retirement_state).to be_nil
-    expect(@stack.error_retiring?).to be_false
+    expect(@stack.error_retiring?).to be_falsey
   end
 
   it "#error_retiring - true" do
     @stack.update_attributes(:retirement_state => 'error')
-    expect(@stack.error_retiring?).to be_true
+    expect(@stack.error_retiring?).to be_truthy
   end
 
   it "#retires_on - today" do
-    expect(@stack.retirement_due?).to be_false
+    expect(@stack.retirement_due?).to be_falsey
     @stack.retires_on = Date.today
-    expect(@stack.retirement_due?).to be_true
+    expect(@stack.retirement_due?).to be_truthy
   end
 
   it "#retires_on - tomorrow" do
-    expect(@stack.retirement_due?).to be_false
+    expect(@stack.retirement_due?).to be_falsey
     @stack.retires_on = Date.today + 1
-    expect(@stack.retirement_due?).to be_false
+    expect(@stack.retirement_due?).to be_falsey
   end
 
   it "#retirement_due?" do
-    expect(@stack.retirement_due?).to be_false
+    expect(@stack.retirement_due?).to be_falsey
 
     @stack.update_attributes(:retires_on => Date.today + 1.day)
-    expect(@stack.retirement_due?).to be_false
+    expect(@stack.retirement_due?).to be_falsey
 
     @stack.update_attributes(:retires_on => Date.today)
-    expect(@stack.retirement_due?).to be_true
+    expect(@stack.retirement_due?).to be_truthy
 
     @stack.update_attributes(:retires_on => Date.today - 1.day)
-    expect(@stack.retirement_due?).to be_true
+    expect(@stack.retirement_due?).to be_truthy
   end
 
   it "#raise_retirement_event" do
@@ -139,7 +132,7 @@ describe "Service Retirement Management" do
       :type                 => "OrchestrationStack",
       :retirement_initiator => "system"
     }
-    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @stack, event_hash)
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash)
     @stack.raise_retirement_event(event_name)
   end
 

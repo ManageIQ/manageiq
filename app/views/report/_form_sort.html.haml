@@ -14,23 +14,19 @@
         = select_tag('chosen_sort1',
           options_for_select([NOTHING_STRING] + @sort1, sortby1),
           :multiple              => false,
-          :class                 => "selectpicker",
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true)
+          :class                 => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("chosen_sort1", "#{url}");
+          miqSelectPickerEvent('chosen_sort1', '#{url}', {beforeSend: true, complete: true});
         - unless MiqReport.get_col_break_suffixes(@sortby1.split("__").first).empty?
           - opts = [["<#{_('Original Value')}>", nil]] + MiqReport.get_col_break_suffixes(@sortby1.split("__").first)
           = select_tag('sort1_suffix',
             options_for_select(opts, @sortby1.split("__")[1]),
             :multiple              => false,
-            :class                 => "selectpicker",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+            :class                 => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("sort1_suffix", "#{url}");
+            miqSelectPickerEvent('sort1_suffix', '#{url}', {beforeSend: true, complete: true});
     - if @sortby1 != NOTHING_STRING
       .form-group
         %label.control-label.col-md-2
@@ -40,12 +36,10 @@
           = select_tag('sort_order',
             options_for_select(opts, @edit[:new][:order]),
             :multiple              => false,
-            :class                 => "selectpicker",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+            :class                 => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("sort_order", "#{url}");
+            miqSelectPickerEvent('sort_order', '#{url}', {beforeSend: true, complete: true});
       .form-group
         %label.control-label.col-md-2
           = _('Show Sort Breaks')
@@ -54,12 +48,10 @@
           = select_tag('sort_group',
             options_for_select(opts, @edit[:new][:group]),
             :multiple              => false,
-            :class                 => "selectpicker",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+            :class                 => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("sort_group", "#{url}");
+            miqSelectPickerEvent('sort_group', '#{url}', {beforeSend: true, complete: true});
       - unless @edit[:new][:group] == "No"
         .form-group
           %label.control-label.col-md-2
@@ -79,12 +71,10 @@
               = select_tag('break_format',
                 options_for_select(opts, @edit[:new].fetch_path(:col_options, @sortby1.split("-").last, :break_format) || ci[:default_format]),
                   :multiple              => false,
-                  :class                 => "selectpicker",
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true)
+                  :class                 => "selectpicker")
               :javascript
                 miqInitSelectPicker();
-                miqSelectPickerEvent("break_format", "#{url}");
+                miqSelectPickerEvent('break_format', '#{url}', {beforeSend: true, complete: true});
           - if false
             -# TODO: Commented out as this observe causes double transactions until we can undo the form observe
             .form-group
@@ -111,23 +101,19 @@
           = select_tag('chosen_sort2',
             options_for_select([NOTHING_STRING] + @sort2, sortby2),
             :multiple              => false,
-            :class                 => "selectpicker",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+            :class                 => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("chosen_sort2", "#{url}");
+            miqSelectPickerEvent('chosen_sort2', '#{url}', {beforeSend: true, complete: true});
           - unless MiqReport.get_col_break_suffixes(@sortby2.split("__").first).empty?
             - opts = [["<#{_('Original Value')}>", nil]] + MiqReport.get_col_break_suffixes(@sortby2.split("__").first)
             = select_tag('sort2_suffix',
               options_for_select(opts, @sortby2.split("__")[1]),
               :multiple              => false,
-              :class                 => "selectpicker",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true)
+              :class                 => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent("sort2_suffix", "#{url}");
+              miqSelectPickerEvent('sort2_suffix', '#{url}', {beforeSend: true, complete: true});
       .form-group
         %label.control-label.col-md-2
           = _('Number of Rows to Show')
@@ -137,12 +123,10 @@
             = select_tag('row_limit',
               options_for_select(opts, @edit[:new][:row_limit]),
               :multiple              => false,
-              :class                 => "selectpicker",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true)
+              :class                 => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent("row_limit", "#{url}");
+              miqSelectPickerEvent('row_limit', '#{url}', {beforeSend: true, complete: true});
           - else
             = _('All')
   - unless @sortby1 == NOTHING_STRING || @edit[:new][:group] == "No"

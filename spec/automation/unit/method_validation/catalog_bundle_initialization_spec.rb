@@ -1,4 +1,3 @@
-require "spec_helper"
 include ServiceTemplateHelper
 
 describe "CatalogBundleInitialization Automate Method" do
@@ -10,7 +9,7 @@ describe "CatalogBundleInitialization Automate Method" do
   end
 
   def create_request_and_tasks(dialog_options = {})
-    @request = build_service_template_request("top", @user.userid, dialog_options)
+    @request = build_service_template_request("top", @user, dialog_options)
     service_template_stubs
     request_stubs
     @request.create_request_tasks
@@ -23,11 +22,11 @@ describe "CatalogBundleInitialization Automate Method" do
                                                   'vm_service2' => {:provision_index => 1}}},
              "vm_service1" => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
-                                            :number_of_vms => 1, :userid => @user.userid}
+                                            :number_of_vms => 1, :requester => @user}
                               },
              "vm_service2" => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
-                                            :number_of_vms => 1, :userid => @user.userid}
+                                            :number_of_vms => 1, :requester => @user}
                               }
             }
     build_service_template_tree(model)
@@ -40,7 +39,7 @@ describe "CatalogBundleInitialization Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning/StateMachines&class=Methods" \
                             "&instance=CatalogBundleInitialization&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def root_service_template_task
@@ -70,9 +69,9 @@ describe "CatalogBundleInitialization Automate Method" do
     def check_svc_attrs
       @stp.reload
       service = @stp.destination
-      service.description.should eql(@service_description)
-      service.name.should eql(@service_name)
-      service.tags[0].name.should eql('/managed/tracker/gps')
+      expect(service.description).to eql(@service_description)
+      expect(service.name).to eql(@service_name)
+      expect(service.tags[0].name).to eql('/managed/tracker/gps')
     end
 
     def process_stp(options)
@@ -93,6 +92,10 @@ describe "CatalogBundleInitialization Automate Method" do
     it "backward compatibility" do
       process_stp(:dialog => @dialog_hash)
       check_svc_attrs
+    end
+
+    it "allows blank dialogs" do
+      expect { process_stp(:dialog => {'dialog_option_1_service_name' => ''}) }.not_to raise_exception
     end
   end
 end

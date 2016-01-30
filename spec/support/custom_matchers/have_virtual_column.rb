@@ -1,16 +1,16 @@
 RSpec::Matchers.define :have_virtual_column do |name, type|
   match do |klass|
     vcol = klass.virtual_columns_hash[name.to_s]
-    vcol.should_not  be_nil
-    vcol.type.should == type
-    klass.instance_methods.include?(name.to_sym).should be_true
+    expect(vcol).to_not be_nil
+    expect(vcol.type).to eq(type)
+    klass.instance_methods.include?(name.to_sym)
   end
 
-  failure_message_for_should do |klass|
+  failure_message do |klass|
     "expected #{klass.name} to have virtual column #{name.inspect} with type #{type.inspect}"
   end
 
-  failure_message_for_should_not do |klass|
+  failure_message_when_negated do |klass|
     "expected #{klass.name} to not have virtual column #{name.inspect} with type #{type.inspect}"
   end
 

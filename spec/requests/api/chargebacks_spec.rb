@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe "chargebacks API" do
   include Rack::Test::Methods
 
@@ -55,7 +53,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can fetch an individual chargeback rate detail" do
-    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 5)
+    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => "5")
     chargeback_rate = FactoryGirl.create(:chargeback_rate,
                                          :chargeback_rate_details => [chargeback_rate_detail])
 
@@ -76,18 +74,34 @@ RSpec.describe "chargebacks API" do
     it "can create a new chargeback rate detail" do
       api_basic_authorize action_identifier(:rates, :create, :collection_actions)
 
-      expect { run_post rates_url, :rate => 0, :enabled => true }.to change(ChargebackRateDetail, :count).by(1)
-      actual = @result["results"].first
-      expect(actual["rate"]).to eq("0")
-      expect(actual["enabled"]).to be true
+      expect do
+        run_post rates_url,
+                 :rate    => "0",
+                 :group   => "fixed",
+                 :source  => "used",
+                 :enabled => true
+      end.to change(ChargebackRateDetail, :count).by(1)
+      expect_result_to_match_hash(@result["results"].first, "rate" => "0", "enabled" => true)
       expect_request_success
     end
 
+    it "returns bad request for incomplete chargeback rate detail" do
+      api_basic_authorize action_identifier(:rates, :create, :collection_actions)
+
+      expect do
+        run_post rates_url,
+                 :rate    => "0",
+                 :enabled => true
+      end.not_to change(ChargebackRateDetail, :count)
+      expect_bad_request(/group can't be blank/i)
+      expect_bad_request(/source can't be blank/i)
+    end
+
     it "can edit a chargeback rate detail through POST" do
-      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => "0")
 
       api_basic_authorize action_identifier(:rates, :edit)
-      run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => 0.02)
+      run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => "0.02")
 
       expect(@result["rate"]).to eq("0.02")
       expect_request_success
@@ -95,10 +109,10 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can edit a chargeback rate detail through PATCH" do
-      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => "0")
 
       api_basic_authorize action_identifier(:rates, :edit)
-      run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "rate", :value => 0.02}]
+      run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "rate", :value => "0.02"}]
 
       expect(@result["rate"]).to eq("0.02")
       expect_request_success
@@ -132,17 +146,17 @@ RSpec.describe "chargebacks API" do
     it "cannot create a chargeback rate detail" do
       api_basic_authorize
 
-      expect { run_post rates_url, :rate => 0, :enabled => true }.not_to change(ChargebackRateDetail, :count)
+      expect { run_post rates_url, :rate => "0", :enabled => true }.not_to change(ChargebackRateDetail, :count)
       expect_request_forbidden
     end
 
     it "cannot edit a chargeback rate detail" do
-      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => "0")
 
       api_basic_authorize
 
       expect do
-        run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => 0.02)
+        run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => "0.02")
       end.not_to change { chargeback_rate_detail.reload.rate }
       expect_request_forbidden
     end

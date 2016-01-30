@@ -1,9 +1,12 @@
-- url = url_for(:action => "form_field_changed")
-- url_json = {:url => url}.to_json
+- url = "form_field_changed"
+- url_json = {:url => url_for(:action => "form_field_changed")}.to_json
 = render :partial => "layouts/flash_msg"
 
 #tab_div
-  = form_tag({:action => "update"}, :id => "config_form", :class => "form-horizontal") do
+  = form_tag({:action => "update"},
+             :id     => "config_form",
+             :class  => "form-horizontal",
+             :method => :post) do
     .row
       .col-md-12.col-lg-6
         %fieldset
@@ -23,9 +26,10 @@
                   = _("Show %s Quadrants") % icons_checkbox[1]
                 .col-md-8
                   = check_box_tag("quadicons_#{icons_checkbox[2]}",
-                                  "1",
-                                  @edit[:new][:quadicons][icons_checkbox[2].to_sym],
-                                  "data-miq_observe_checkbox" => url_json)
+                                  true,
+                                  @edit[:new][:quadicons][icons_checkbox[2].to_sym], :data => {:on_text => 'Yes', :off_text => 'No'})
+                :javascript
+                  miqInitBootstrapSwitch("quadicons_#{icons_checkbox[2]}", "#{url}")
           .form-group
             %label.col-md-3.control-label
               = _('Truncate Long Text')
@@ -38,7 +42,6 @@
                            :class    => "selectpicker")
 
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent("quad_truncate", "#{url}")
         %fieldset
           %h3
@@ -52,8 +55,7 @@
                            :class    => "selectpicker")
 
             :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent("start_page")
+              miqSelectPickerEvent("start_page", "#{url}")
       .col-md-12.col-lg-6
         %fieldset
           %h3
@@ -71,8 +73,7 @@
                            :class    => "selectpicker")
 
             :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent(_(item_per_page[1]))
+              miqSelectPickerEvent("#{item_per_page[1]}", "#{url}")
         %fieldset
           %h3
             = _('Display Settings')
@@ -90,6 +91,6 @@
 
               :javascript
                 miqInitSelectPicker();
-                miqSelectPickerEvent(display_settings[1])
+                miqSelectPickerEvent("#{display_settings[1]}", "#{url}")
 
     = render :partial => '/layouts/form_buttons'

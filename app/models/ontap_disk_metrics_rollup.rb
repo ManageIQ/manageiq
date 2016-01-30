@@ -1,4 +1,4 @@
-class OntapDiskMetricsRollup < ActiveRecord::Base
+class OntapDiskMetricsRollup < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance
@@ -8,7 +8,7 @@ class OntapDiskMetricsRollup < ActiveRecord::Base
   serialize   :base_counters
 
   def self.additional_counters
-    [ "base_for_disk_busy" ]
+    ["base_for_disk_busy"]
   end
 
   include OntapMetricsRollupMixin

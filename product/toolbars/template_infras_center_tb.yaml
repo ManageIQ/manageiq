@@ -7,14 +7,14 @@
 - :name: miq_template_vmdb
   :items:
   - :buttonSelect: miq_template_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: miq_template_refresh
-      :image: refresh
+      :icon: fa fa-refresh fa-lg
       :text: "Refresh Relationships and Power States"
       :title: "Refresh relationships and power states for all items related to the selected Templates"
       :url_parms: 'main_div'
@@ -22,7 +22,7 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_scan
-      :image: scan
+      :icon: fa fa-search fa-lg
       :text: "Perform SmartState Analysis"
       :title: "Perform SmartState Analysis on the selected Templates"
       :url_parms: 'main_div'
@@ -30,29 +30,29 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_compare
-      :image: compare
+      :icon: product product-compare fa-lg
       :text: "Compare Selected Templates"
       :title: "Select two or more Templates to compare"
       :url_parms: 'main_div'
       :enabled: 'false'
-      :onwhen: '2+'    
+      :onwhen: '2+'
     - :separator:
     - :button: miq_template_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit Selected Template
       :title: Select a single Template to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: miq_template_ownership
-      :image: ownership
+      :icon: pficon pficon-user fa-lg
       :text: "Set Ownership"
       :title: "Set Ownership for the selected Templates"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: Remove Templates from the VMDB
       :title: Remove selected Templates from the VMDB
       :url_parms: 'main_div'
@@ -62,35 +62,35 @@
 - :name: miq_template_policy
   :items:
   - :buttonSelect: miq_template_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: miq_template_protect
-      :image: protect
+      :icon: pficon pficon-edit fa-lg
       :text: "Manage Policies"
       :title: "Manage Policies for the selected Templates"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_policy_sim
-      :image: vm_policy_sim
+      :icon: fa fa-play-circle-o fa-lg
       :text: "Policy Simulation"
       :title: "View Policy Simulation for the selected Templates"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: "Edit tags for the selected Templates"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: miq_template_check_compliance
-      :image: compliance
+      :icon: fa fa-search fa-lg
       :text: "Check Compliance of Last Known Configuration"
       :title: "Check Compliance of the last known configuration for the selected Templates"
       :url_parms: 'main_div'
@@ -100,12 +100,12 @@
 - :name: miq_template_lifecycle
   :items:
   - :buttonSelect: miq_template_lifecycle_choice
-    :image: lifecycle
+    :icon: fa fa-recycle fa-lg
     :title: Lifecycle
     :text: Lifecycle
     :items:
     - :button: miq_template_clone
-      :image: clone
+      :icon: product product-clone fa-lg
       :text: "Clone selected Template"
       :title: "Clone this Template"
       :url_parms: 'main_div'

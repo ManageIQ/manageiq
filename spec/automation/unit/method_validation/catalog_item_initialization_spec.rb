@@ -1,4 +1,3 @@
-require "spec_helper"
 include ServiceTemplateHelper
 
 describe "CatalogItemInitialization Automate Method" do
@@ -10,7 +9,7 @@ describe "CatalogItemInitialization Automate Method" do
   end
 
   def create_request_and_tasks(dialog_options = {})
-    @request = build_service_template_request("top", @user.userid, dialog_options)
+    @request = build_service_template_request("top", @user, dialog_options)
     service_template_stubs
     request_stubs
     @request.create_request_tasks
@@ -23,11 +22,11 @@ describe "CatalogItemInitialization Automate Method" do
                                                   'vm_service2' => {:provision_index => 1}}},
              "vm_service1" => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              },
              "vm_service2" => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              }
             }
     build_service_template_tree(model)
@@ -40,7 +39,7 @@ describe "CatalogItemInitialization Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning/StateMachines&class=Methods" \
                             "&instance=CatalogItemInitialization&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def root_service_template_task
@@ -73,11 +72,17 @@ describe "CatalogItemInitialization Automate Method" do
       process_stp(stp2, parsed_options, required_options, required_tags)
     end
 
+    it "allows blank dialogs" do
+      create_request_and_tasks
+      process_stp(root_service_template_task, {0 => {:location => ""}}, {}, {})
+    end
+
     def process_stp(stp, parsed_options, required_options, required_tags)
       stp.options = stp.options.merge(parsed_options)
       stp.save
       run_automate_method(stp)
       stp.reload
+      check_destination_options(stp.destination, required_options)
       request_task = stp.miq_request_tasks[0].miq_request_tasks[0]
       check_vm_task(request_task, required_options, required_tags)
     end
@@ -89,12 +94,16 @@ describe "CatalogItemInitialization Automate Method" do
 
     def check_options(request_task, required_options)
       options = request_task.options
-      required_options.each { |k, v| options[k].should eql(v) }
+      required_options.each { |k, v| expect(options[k]).to eql(v) }
     end
 
     def check_tags(request_task, required_tags)
       tags = request_task.get_tags
-      required_tags.each { |k, v| tags[k].should eql(v) }
+      required_tags.each { |k, v| expect(tags[k]).to eql(v) }
+    end
+
+    def check_destination_options(service, required_options)
+      required_options.each { |k, v| expect(service.options[:dialog]["dialog_#{k}"]).to eql(v) }
     end
   end
 end

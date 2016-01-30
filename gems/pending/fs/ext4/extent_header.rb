@@ -1,7 +1,6 @@
 require 'binary_struct'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -9,13 +8,12 @@ module Ext4
     'S',  'magic',      # Signature.
     'S',  'entries',    # Number of Valid Entries
     'S',  'max',        # Capacity of Store in Entries
-    'S',  'depth',      # Has tree real underlying blocks? 
+    'S',  'depth',      # Has tree real underlying blocks?
     'L',  'generation', # Generation of the tree.
   ])
   SIZEOF_EXTENT_HEADER = EXTENT_HEADER.size
 
   class ExtentHeader
-
     attr_reader :magic, :entries, :max, :depth, :generation
 
     def initialize(buf)
@@ -30,7 +28,7 @@ module Ext4
     end
 
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       out += "Magic        : #{@magic}\n"
       out += "Entries      : #{@entries}\n"
       out += "Max          : #{@max}\n"

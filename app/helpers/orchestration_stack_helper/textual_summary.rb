@@ -7,6 +7,10 @@ module OrchestrationStackHelper::TextualSummary
     %i(name description type status status_reason)
   end
 
+  def textual_group_lifecycle
+    %i(retirement_date)
+  end
+
   def textual_group_relationships
     %i(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
   end
@@ -39,8 +43,12 @@ module OrchestrationStackHelper::TextualSummary
     @record.status_reason
   end
 
+  def textual_retirement_date
+    {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
+  end
+
   def textual_ems_cloud
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_orchestration_template

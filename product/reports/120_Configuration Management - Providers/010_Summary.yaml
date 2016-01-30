@@ -16,7 +16,7 @@ col_order:
 - emstype
 - aggregate_memory
 - aggregate_cpu_speed
-- aggregate_logical_cpus
+- aggregate_cpu_total_cores
 - aggregate_physical_cpus
 timeline: 
 id: 78
@@ -34,7 +34,7 @@ cols:
 - emstype
 - aggregate_memory
 - aggregate_cpu_speed
-- aggregate_logical_cpus
+- aggregate_cpu_total_cores
 - aggregate_physical_cpus
 template_type: report
 group: 

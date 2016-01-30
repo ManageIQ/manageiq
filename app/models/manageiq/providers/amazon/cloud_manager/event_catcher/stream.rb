@@ -7,6 +7,9 @@
 # queue to the AWS Config topic.
 #
 class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
+  class ProviderUnreachable < ManageIQ::Providers::BaseManager::EventCatcher::Runner::TemporaryFailure
+  end
+
   #
   # Creates an event monitor
   #
@@ -91,7 +94,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
                       "Cannot collect Amazon events for AWS Access Key ID #{@aws_access_key_id}")
         $aws_log.warn("#{log_header} Contact Amazon to create the AWS Config service and topic for Amazon events.")
         queue = nil
-        # no need to raise an error
+        raise ProviderUnreachable
       end
     end
     queue
@@ -149,7 +152,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     return change_type if change_type == "CREATE"
 
     state_changed = event.fetch_path("configurationItemDiff", "changedProperties", "Configuration.State.Name")
-    return state_changed ? state_changed["updatedValue"] : change_type
+    state_changed ? state_changed["updatedValue"] : change_type
   end
 
   def sns
@@ -161,7 +164,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def aws_connect(service)
-    require 'aws-sdk'
+    require 'aws-sdk-v1'
 
     AWS.const_get(service).new(
       :access_key_id     => @aws_access_key_id,

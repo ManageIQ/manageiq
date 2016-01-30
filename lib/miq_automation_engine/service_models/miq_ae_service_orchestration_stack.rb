@@ -11,9 +11,9 @@ module MiqAeMethodService
     expose :cloud_networks,         :association => true
     expose :orchestration_template, :association => true
     expose :ext_management_system,  :association => true
+    expose :ems_ref
     expose :raw_delete_stack
     expose :raw_update_stack
-    expose :raw_status
     expose :raw_exists?
 
     def add_to_service(service)
@@ -27,6 +27,12 @@ module MiqAeMethodService
       object_send(:destroy)
       @object = nil
       true
+    end
+
+    def normalized_live_status
+      @object.raw_status.try(:normalized_status)
+    rescue MiqException::MiqOrchestrationStackNotExistError => err
+      ['not_exist', err.message]
     end
   end
 end

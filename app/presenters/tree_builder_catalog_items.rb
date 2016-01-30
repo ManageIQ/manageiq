@@ -1,7 +1,7 @@
 class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:full_ids => true, :leaf => 'ServiceTemplateCatalog'}
   end
 
@@ -13,20 +13,18 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
     )
   end
 
-  def x_get_tree_stc_kids(object, options)
-    return count_only_or_objects(options[:count_only],
-                                 rbac_filtered_objects(object.service_templates),
-                                 'name') unless object.id.nil?
-    objects = []
-    items = rbac_filtered_objects(ServiceTemplate.find(:all))
-    items.sort_by { |o| o.name.downcase }.each do |item|
-      objects.push(item) if item.service_template_catalog_id.nil?
-    end
-    count_only_or_objects(options[:count_only], objects, 'name')
+  def x_get_tree_stc_kids(object, count_only)
+    # TODO: may want to order in rbac and not in sql
+    templates = if object.id.nil?
+                  ServiceTemplate.where(:service_template_catalog_id => nil).order("lower(name)")
+                else
+                  object.service_templates
+                end
+    count_only_or_objects(count_only, rbac_filtered_objects(templates), 'name')
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(object, count_only, _options)
     # build node showing any button groups or buttons under selected CatalogItem
     @resolve ||= {}
     @resolve[:target_classes] = {}
@@ -44,12 +42,12 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
         end
       end
     end
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_st_kids(object, options)
-    count = options[:type] == :svvcat ? 0 : object.custom_button_sets.count + object.custom_buttons.count
+  def x_get_tree_st_kids(object, count_only, type)
+    count = type == :svvcat ? 0 : object.custom_button_sets.count + object.custom_buttons.count
     objects = count > 0 ? [{:id => object.id.to_s, :text => 'Actions', :image => 'folder', :tip => 'Actions'}] : []
-    count_only_or_objects(options[:count_only], objects, nil)
+    count_only_or_objects(count_only, objects, nil)
   end
 end

@@ -1,50 +1,49 @@
 class MiqSmisProfiles
-
   SelfContainedNAS1 = [
     {
       #
       # Exported file shares
       #
-      :flags => {},
+      :flags       => {},
       :association => {
-        :AssocClass   => 'CIM_HostedShare',
-        :ResultClass  => 'CIM_FileShare',
-        :Role     => "Antecedent",
-        :ResultRole   => "Dependent"
+        :AssocClass  => 'CIM_HostedShare',
+        :ResultClass => 'CIM_FileShare',
+        :Role        => "Antecedent",
+        :ResultRole  => "Dependent"
       },
-      :next => [
+      :next        => [
         {
           #
           # Protocol End Point for the file share.
           #
-          :flags => { :pruneUnless => 'Protocol' },
+          :flags       => {:pruneUnless => 'Protocol'},
           :association => {
-            :AssocClass   => 'CIM_SAPAvailableForElement',
-            :ResultClass  => 'CIM_ProtocolEndpoint',
-            :Role     => "ManagedElement",
-            :ResultRole   => "AvailableSAP"
+            :AssocClass  => 'CIM_SAPAvailableForElement',
+            :ResultClass => 'CIM_ProtocolEndpoint',
+            :Role        => "ManagedElement",
+            :ResultRole  => "AvailableSAP"
           },
-          :next => {
+          :next        => {
             #
             # The network port supported by the Protocol End Point.
             #
-            :flags => {},
+            :flags       => {},
             :association => {
-              :AssocClass   => 'CIM_DeviceSAPImplementation',
-              :ResultClass  => 'CIM_NetworkPort',
-              :Role     => "Dependent",
-              :ResultRole   => "Antecedent"
+              :AssocClass  => 'CIM_DeviceSAPImplementation',
+              :ResultClass => 'CIM_NetworkPort',
+              :Role        => "Dependent",
+              :ResultRole  => "Antecedent"
             },
-            :next => {
+            :next        => {
               #
               # Find the IP Protocol Endpoint for the network port.
               #
-              :flags => {},
+              :flags       => {},
               :association => {
-                :AssocClass   => 'CIM_DeviceSAPImplementation',
-                :ResultClass  => 'CIM_IPProtocolEndpoint',
-                :Role     => "Antecedent",
-                :ResultRole   => "Dependent"
+                :AssocClass  => 'CIM_DeviceSAPImplementation',
+                :ResultClass => 'CIM_IPProtocolEndpoint',
+                :Role        => "Antecedent",
+                :ResultRole  => "Dependent"
               }
             }
           }
@@ -53,77 +52,77 @@ class MiqSmisProfiles
           #
           # Exported file share setting
           #
-          :flags => { :pruneUnless => 'settings' },
+          :flags       => {:pruneUnless => 'settings'},
           :association => {
-            :AssocClass   => 'CIM_ElementSettingData',
-            :ResultClass  => 'SNIA_ExportedFileShareSetting',
-            :Role     => "ManagedElement",
-            :ResultRole   => "SettingData"
+            :AssocClass  => 'CIM_ElementSettingData',
+            :ResultClass => 'SNIA_ExportedFileShareSetting',
+            :Role        => "ManagedElement",
+            :ResultRole  => "SettingData"
           }
         },
         {
           #
           # The filesystem on which the share is based
           #
-          :flags => {},
+          :flags       => {},
           :association => {
-            :AssocClass   => 'SNIA_SharedElement',
-            :ResultClass  => 'SNIA_LocalFileSystem',
-            :Role     => "SameElement",
-            :ResultRole   => "SystemElement"
+            :AssocClass  => 'SNIA_SharedElement',
+            :ResultClass => 'SNIA_LocalFileSystem',
+            :Role        => "SameElement",
+            :ResultRole  => "SystemElement"
           },
-          :next => [
+          :next        => [
             {
               #
               # Filesystem setting
               #
-              :flags => { :pruneUnless => 'settings' },
+              :flags       => {:pruneUnless => 'settings'},
               :association => {
-                :AssocClass   => 'CIM_ElementSettingData',
-                :ResultClass  => 'CIM_FileSystemSetting',
-                :Role     => "ManagedElement",
-                :ResultRole   => "SettingData"
+                :AssocClass  => 'CIM_ElementSettingData',
+                :ResultClass => 'CIM_FileSystemSetting',
+                :Role        => "ManagedElement",
+                :ResultRole  => "SettingData"
               }
             },
             {
               #
               # The storage extent on which the filesystem is based
               #
-              :flags => {},
+              :flags       => {},
               :association => {
-                :AssocClass   => 'CIM_ResidesOnExtent',
-                :ResultClass  => 'CIM_StorageExtent',
-                :Role     => "Dependent",
-                :ResultRole   => "Antecedent"
+                :AssocClass  => 'CIM_ResidesOnExtent',
+                :ResultClass => 'CIM_StorageExtent',
+                :Role        => "Dependent",
+                :ResultRole  => "Antecedent"
               },
-              :next => {
+              :next        => {
                 #
                 # Drill down into the components of composit extents
                 #
-                :flags => { :recurse => true },
+                :flags       => {:recurse => true},
                 :association => {
-                  :AssocClass   => 'CIM_BasedOn',
-                  :Role     => "Dependent",
-                  :ResultRole   => "Antecedent"
+                  :AssocClass => 'CIM_BasedOn',
+                  :Role       => "Dependent",
+                  :ResultRole => "Antecedent"
                 },
-                :next => [
+                :next        => [
                   {
                     #
                     # Find snapshot info for extents
                     #
-                    :flags => { :pruneUnless => 'snapshots' },
+                    :flags       => {:pruneUnless => 'snapshots'},
                     :association => [
                       {
-                        :AssocClass   => 'ONTAP_SnapshotBasedOnFlexVol',
-                        :ResultClass  => 'ONTAP_Snapshot',
-                        :Role     => "Antecedent",
-                        :ResultRole   => "Dependent"
+                        :AssocClass  => 'ONTAP_SnapshotBasedOnFlexVol',
+                        :ResultClass => 'ONTAP_Snapshot',
+                        :Role        => "Antecedent",
+                        :ResultRole  => "Dependent"
                       },
                       {
-                        :AssocClass   => 'ONTAP_SnapshotBasedOnExtent',
-                        :ResultClass  => 'ONTAP_Snapshot',
-                        :Role     => "Antecedent",
-                        :ResultRole   => "Dependent"
+                        :AssocClass  => 'ONTAP_SnapshotBasedOnExtent',
+                        :ResultClass => 'ONTAP_Snapshot',
+                        :Role        => "Antecedent",
+                        :ResultRole  => "Dependent"
                       }
                     ]
                   },
@@ -131,12 +130,12 @@ class MiqSmisProfiles
                     #
                     # Storage setting
                     #
-                    :flags => { :pruneUnless => 'settings' },
+                    :flags       => {:pruneUnless => 'settings'},
                     :association => {
-                      :AssocClass   => 'CIM_ElementSettingData',
-                      :ResultClass  => 'CIM_StorageSetting',
-                      :Role     => "ManagedElement",
-                      :ResultRole   => "SettingData"
+                      :AssocClass  => 'CIM_ElementSettingData',
+                      :ResultClass => 'CIM_StorageSetting',
+                      :Role        => "ManagedElement",
+                      :ResultRole  => "SettingData"
                     }
                   }
                 ]
@@ -152,80 +151,80 @@ class MiqSmisProfiles
     #
     # File share to datastore.
     #
-    :flags => { :reverse => true, :set_level => 1, :pruneUnless => 'datastore' },
+    :flags       => {:reverse => true, :set_level => 1, :pruneUnless => 'datastore'},
     :association => {
-      :AssocClass   => 'MIQ_DatastoreBacking',
-      :ResultClass  => 'MIQ_CimDatastore',
-      :Role     => "Dependent",
-      :ResultRole   => "Antecedent"
+      :AssocClass  => 'MIQ_DatastoreBacking',
+      :ResultClass => 'MIQ_CimDatastore',
+      :Role        => "Dependent",
+      :ResultRole  => "Antecedent"
     },
-    :next => {
+    :next        => {
       #
       # Datastore to Virtual disk.
       #
-      :flags => { :reverse => true, :set_level => 1, :pruneUnless => 'VM' },
+      :flags       => {:reverse => true, :set_level => 1, :pruneUnless => 'VM'},
       :association => {
-        :AssocClass   => 'MIQ_VirtualDiskDatastore',
-        :ResultClass  => 'MIQ_CimVirtualDisk',
-        :Role     => "Dependent",
-        :ResultRole   => "Antecedent"
+        :AssocClass  => 'MIQ_VirtualDiskDatastore',
+        :ResultClass => 'MIQ_CimVirtualDisk',
+        :Role        => "Dependent",
+        :ResultRole  => "Antecedent"
       },
-      :next => {
+      :next        => {
         #
         # Virtual disk to VM.
         #
-        :flags => { :reverse => true, :set_level => 1 },
+        :flags       => {:reverse => true, :set_level => 1},
         :association => {
-          :AssocClass   => 'MIQ_VmVirtualDisk',
-          :ResultClass  => 'MIQ_CimVirtualMachine',
-          :Role     => "Dependent",
-          :ResultRole   => "Antecedent"
+          :AssocClass  => 'MIQ_VmVirtualDisk',
+          :ResultClass => 'MIQ_CimVirtualMachine',
+          :Role        => "Dependent",
+          :ResultRole  => "Antecedent"
         },
-        :next => {
+        :next        => {
           #
           # VM to it's other disks.
           #
-          :flags => { :pruneUnless => 'vDisks', :set_level => 1 },
+          :flags       => {:pruneUnless => 'vDisks', :set_level => 1},
           :association => {
-            :AssocClass   => 'MIQ_VmVirtualDisk',
-            :ResultClass  => 'MIQ_CimVirtualDisk',
-            :Role     => "Antecedent",
-            :ResultRole   => "Dependent"
+            :AssocClass  => 'MIQ_VmVirtualDisk',
+            :ResultClass => 'MIQ_CimVirtualDisk',
+            :Role        => "Antecedent",
+            :ResultRole  => "Dependent"
           },
-          :next => {
+          :next        => {
             #
             # Virtual disk to Datastore.
             #
-            :flags => {},
+            :flags       => {},
             :association => {
-              :AssocClass   => 'MIQ_VirtualDiskDatastore',
-              :ResultClass  => 'MIQ_CimDatastore',
-              :Role     => "Antecedent",
-              :ResultRole   => "Dependent"
+              :AssocClass  => 'MIQ_VirtualDiskDatastore',
+              :ResultClass => 'MIQ_CimDatastore',
+              :Role        => "Antecedent",
+              :ResultRole  => "Dependent"
             },
-            :next => {
+            :next        => {
               #
               # Datastore to file share.
               #
-              :flags => { :pruneUnless => 'bridge' },
+              :flags       => {:pruneUnless => 'bridge'},
               :association => {
-                :AssocClass   => 'MIQ_DatastoreBacking',
-                :ResultClass  => 'CIM_FileShare',
-                :Role     => "Antecedent",
-                :ResultRole   => "Dependent"
+                :AssocClass  => 'MIQ_DatastoreBacking',
+                :ResultClass => 'CIM_FileShare',
+                :Role        => "Antecedent",
+                :ResultRole  => "Dependent"
               },
-              :next => {
+              :next        => {
                 #
                 # File share back up to storage system.
                 #
-                :flags => { :reverse => true, :set_level => 1 },
+                :flags       => {:reverse => true, :set_level => 1},
                 :association => {
-                  :AssocClass   => 'CIM_HostedShare',
-                  :ResultClass  => 'CIM_ComputerSystem',
-                  :Role     => "Dependent",
-                  :ResultRole   => "Antecedent"
+                  :AssocClass  => 'CIM_HostedShare',
+                  :ResultClass => 'CIM_ComputerSystem',
+                  :Role        => "Dependent",
+                  :ResultRole  => "Antecedent"
                 },
-                :next => SelfContainedNAS1
+                :next        => SelfContainedNAS1
               }
             }
           }
@@ -238,34 +237,34 @@ class MiqSmisProfiles
     #
     # File share to datastore.
     #
-    :flags => { :reverse => true, :set_level => 1, :pruneUnless => 'datastore' },
+    :flags       => {:reverse => true, :set_level => 1, :pruneUnless => 'datastore'},
     :association => {
-      :AssocClass   => 'MIQ_DatastoreBacking',
-      :ResultClass  => 'MIQ_CimDatastore',
-      :Role     => "Dependent",
-      :ResultRole   => "Antecedent"
+      :AssocClass  => 'MIQ_DatastoreBacking',
+      :ResultClass => 'MIQ_CimDatastore',
+      :Role        => "Dependent",
+      :ResultRole  => "Antecedent"
     },
-    :next => {
+    :next        => {
       #
       # Datastore to ESX host.
       #
-      :flags => { :reverse => true, :pruneUnless => 'ESX' },
+      :flags       => {:reverse => true, :pruneUnless => 'ESX'},
       :association => {
-        :AssocClass   => 'MIQ_HostDatastore',
-        :ResultClass  => 'MIQ_CimHostSystem',
-        :Role     => "Dependent",
-        :ResultRole   => "Antecedent"
+        :AssocClass  => 'MIQ_HostDatastore',
+        :ResultClass => 'MIQ_CimHostSystem',
+        :Role        => "Dependent",
+        :ResultRole  => "Antecedent"
       },
-      :next => {
+      :next        => {
         #
         # ESX host to all of its VMs.
         #
-        :flags => { :recurse => true, :set_level => 1, :pruneUnless => 'ESX-VMs' },
+        :flags       => {:recurse => true, :set_level => 1, :pruneUnless => 'ESX-VMs'},
         :association => {
-          :AssocClass   => 'MIQ_VmHost',
-          :ResultClass  => 'MIQ_CimVirtualMachine',
-          :Role     => "Dependent",
-          :ResultRole   => "Antecedent"
+          :AssocClass  => 'MIQ_VmHost',
+          :ResultClass => 'MIQ_CimVirtualMachine',
+          :Role        => "Dependent",
+          :ResultRole  => "Antecedent"
         }
       }
     }
@@ -278,21 +277,21 @@ class MiqSmisProfiles
     #
     # System Devices
     #
-    :flags => {},
+    :flags       => {},
     :association => {
-      :AssocClass   => 'CIM_HostedAccessPoint',
-      :Role     => "Antecedent",
-      :ResultRole   => "Dependent"
+      :AssocClass => 'CIM_HostedAccessPoint',
+      :Role       => "Antecedent",
+      :ResultRole => "Dependent"
     },
-    :next => {
+    :next        => {
       #
       #
       #
-      :flags => {},
+      :flags       => {},
       :association => {
-        :AssocClass   => 'CIM_DeviceSAPImplementation',
-        :Role     => "Dependent",
-        :ResultRole   => "Antecedent"
+        :AssocClass => 'CIM_DeviceSAPImplementation',
+        :Role       => "Dependent",
+        :ResultRole => "Antecedent"
       },
     }
   }
@@ -302,22 +301,22 @@ class MiqSmisProfiles
       #
       # System Devices
       #
-      :flags => {},
+      :flags       => {},
       :association => {
-        :AssocClass   => 'CIM_SystemDevice',
-        :Role     => "GroupComponent",
-        :ResultRole   => "PartComponent"
+        :AssocClass => 'CIM_SystemDevice',
+        :Role       => "GroupComponent",
+        :ResultRole => "PartComponent"
       }
     },
     {
       #
       # Hosted filesystems
       #
-      :flags => {},
+      :flags       => {},
       :association => {
-        :AssocClass   => 'CIM_HostedFileSystem',
-        :Role     => "GroupComponent",
-        :ResultRole   => "PartComponent"
+        :AssocClass => 'CIM_HostedFileSystem',
+        :Role       => "GroupComponent",
+        :ResultRole => "PartComponent"
       }
     }
   ]
@@ -330,71 +329,71 @@ class MiqSmisProfiles
       #
       # Network ports
       #
-      :flags => {},
+      :flags       => {},
       :association => {
-        :AssocClass   => 'CIM_SystemDevice',
-        :ResultClass  => 'CIM_LogicalPort',
-        :Role     => "GroupComponent",
-        :ResultRole   => "PartComponent"
+        :AssocClass  => 'CIM_SystemDevice',
+        :ResultClass => 'CIM_LogicalPort',
+        :Role        => "GroupComponent",
+        :ResultRole  => "PartComponent"
       }
     },
     {
       #
       # Logical Disks and Storage Volumes
       #
-      :flags => {},
+      :flags       => {},
       :association => [
         {
-          :AssocClass   => 'CIM_SystemDevice',
-          :ResultClass  => 'CIM_StorageVolume',
-          :Role     => "GroupComponent",
-          :ResultRole   => "PartComponent"
+          :AssocClass  => 'CIM_SystemDevice',
+          :ResultClass => 'CIM_StorageVolume',
+          :Role        => "GroupComponent",
+          :ResultRole  => "PartComponent"
         },
         {
-          :AssocClass   => 'CIM_SystemDevice',
-          :ResultClass  => 'CIM_LogicalDisk',
-          :Role     => "GroupComponent",
-          :ResultRole   => "PartComponent"
+          :AssocClass  => 'CIM_SystemDevice',
+          :ResultClass => 'CIM_LogicalDisk',
+          :Role        => "GroupComponent",
+          :ResultRole  => "PartComponent"
         }
       ],
-      :next => [
+      :next        => [
         {
-          :flags => { :pruneUnless => 'Protocol' },
+          :flags       => {:pruneUnless => 'Protocol'},
           :association => {
-            :AssocClass   => 'CIM_ProtocolControllerForUnit',
-            :ResultClass  => 'CIM_SCSIProtocolController',
-            :Role     => "Dependent",
-            :ResultRole   => "Antecedent"
+            :AssocClass  => 'CIM_ProtocolControllerForUnit',
+            :ResultClass => 'CIM_SCSIProtocolController',
+            :Role        => "Dependent",
+            :ResultRole  => "Antecedent"
           },
-          :next => {
-            :flags => {},
+          :next        => {
+            :flags       => {},
             :association => {
-              :AssocClass   => 'CIM_SAPAvailableForElement',
-              :ResultClass  => 'CIM_ProtocolEndpoint',
-              :Role     => "ManagedElement",
-              :ResultRole   => "AvailableSAP"
+              :AssocClass  => 'CIM_SAPAvailableForElement',
+              :ResultClass => 'CIM_ProtocolEndpoint',
+              :Role        => "ManagedElement",
+              :ResultRole  => "AvailableSAP"
             },
-            :next => {
+            :next        => {
               #
               # The network port supported by the Protocol End Point.
               #
-              :flags => {},
+              :flags       => {},
               :association => {
-                :AssocClass   => 'CIM_DeviceSAPImplementation',
+                :AssocClass => 'CIM_DeviceSAPImplementation',
                 # :ResultClass  => 'CIM_NetworkPort',
-                :Role     => "Dependent",
-                :ResultRole   => "Antecedent"
+                :Role       => "Dependent",
+                :ResultRole => "Antecedent"
               },
-              :next => {
+              :next        => {
                 #
                 # Find the IP Protocol Endpoint for the network port.
                 #
-                :flags => {},
+                :flags       => {},
                 :association => {
-                  :AssocClass   => 'CIM_DeviceSAPImplementation',
+                  :AssocClass => 'CIM_DeviceSAPImplementation',
                   # :ResultClass  => 'CIM_IPProtocolEndpoint',
-                  :Role     => "Antecedent",
-                  :ResultRole   => "Dependent"
+                  :Role       => "Antecedent",
+                  :ResultRole => "Dependent"
                 }
               }
             }
@@ -404,30 +403,30 @@ class MiqSmisProfiles
           #
           # Drill down into the components of composit extents
           #
-          :flags => { :recurse => true },
+          :flags       => {:recurse => true},
           :association => {
-            :AssocClass   => 'CIM_BasedOn',
-            :Role     => "Dependent",
-            :ResultRole   => "Antecedent"
+            :AssocClass => 'CIM_BasedOn',
+            :Role       => "Dependent",
+            :ResultRole => "Antecedent"
           },
-          :next => [
+          :next        => [
             {
               #
               # Find snapshot info for extents
               #
-              :flags => { :pruneUnless => 'snapshots' },
+              :flags       => {:pruneUnless => 'snapshots'},
               :association => [
                 {
-                  :AssocClass   => 'ONTAP_SnapshotBasedOnFlexVol',
-                  :ResultClass  => 'ONTAP_Snapshot',
-                  :Role     => "Antecedent",
-                  :ResultRole   => "Dependent"
+                  :AssocClass  => 'ONTAP_SnapshotBasedOnFlexVol',
+                  :ResultClass => 'ONTAP_Snapshot',
+                  :Role        => "Antecedent",
+                  :ResultRole  => "Dependent"
                 },
                 {
-                  :AssocClass   => 'ONTAP_SnapshotBasedOnExtent',
-                  :ResultClass  => 'ONTAP_Snapshot',
-                  :Role     => "Antecedent",
-                  :ResultRole   => "Dependent"
+                  :AssocClass  => 'ONTAP_SnapshotBasedOnExtent',
+                  :ResultClass => 'ONTAP_Snapshot',
+                  :Role        => "Antecedent",
+                  :ResultRole  => "Dependent"
                 }
               ]
             },
@@ -435,12 +434,12 @@ class MiqSmisProfiles
               #
               # Storage setting
               #
-              :flags => { :pruneUnless => 'settings' },
+              :flags       => {:pruneUnless => 'settings'},
               :association => {
-                :AssocClass   => 'CIM_ElementSettingData',
-                :ResultClass  => 'CIM_StorageSetting',
-                :Role     => "ManagedElement",
-                :ResultRole   => "SettingData"
+                :AssocClass  => 'CIM_ElementSettingData',
+                :ResultClass => 'CIM_StorageSetting',
+                :Role        => "ManagedElement",
+                :ResultRole  => "SettingData"
               }
             }
           ]
@@ -453,12 +452,12 @@ class MiqSmisProfiles
     #
     # Exported file shares
     #
-    :flags => {},
+    :flags       => {},
     :association => {
-      :AssocClass   => 'CIM_HostedShare',
-      :ResultClass  => 'CIM_FileShare',
-      :Role     => "Antecedent",
-      :ResultRole   => "Dependent"
+      :AssocClass  => 'CIM_HostedShare',
+      :ResultClass => 'CIM_FileShare',
+      :Role        => "Antecedent",
+      :ResultRole  => "Dependent"
     }
   }
 
@@ -470,46 +469,46 @@ class MiqSmisProfiles
       #
       # Exported file shares
       #
-      :flags => {},
+      :flags       => {},
       :association => {
-        :AssocClass   => 'CIM_HostedShare',
-        :ResultClass  => 'CIM_FileShare',
-        :Role     => "Antecedent",
-        :ResultRole   => "Dependent"
+        :AssocClass  => 'CIM_HostedShare',
+        :ResultClass => 'CIM_FileShare',
+        :Role        => "Antecedent",
+        :ResultRole  => "Dependent"
       },
-      :next => [
+      :next        => [
         {
           #
           # Protocol End Point for the file share.
           #
-          :flags => { :pruneUnless => 'Protocol' },
+          :flags       => {:pruneUnless => 'Protocol'},
           :association => {
-            :AssocClass   => 'CIM_SAPAvailableForElement',
-            :ResultClass  => 'CIM_ProtocolEndpoint',
-            :Role     => "ManagedElement",
-            :ResultRole   => "AvailableSAP"
+            :AssocClass  => 'CIM_SAPAvailableForElement',
+            :ResultClass => 'CIM_ProtocolEndpoint',
+            :Role        => "ManagedElement",
+            :ResultRole  => "AvailableSAP"
           },
-          :next => {
+          :next        => {
             #
             # The network port supported by the Protocol End Point.
             #
-            :flags => {},
+            :flags       => {},
             :association => {
-              :AssocClass   => 'CIM_DeviceSAPImplementation',
-              :ResultClass  => 'CIM_NetworkPort',
-              :Role     => "Dependent",
-              :ResultRole   => "Antecedent"
+              :AssocClass  => 'CIM_DeviceSAPImplementation',
+              :ResultClass => 'CIM_NetworkPort',
+              :Role        => "Dependent",
+              :ResultRole  => "Antecedent"
             },
-            :next => {
+            :next        => {
               #
               # Find the IP Protocol Endpoint for the network port.
               #
-              :flags => {},
+              :flags       => {},
               :association => {
-                :AssocClass   => 'CIM_DeviceSAPImplementation',
-                :ResultClass  => 'CIM_IPProtocolEndpoint',
-                :Role     => "Antecedent",
-                :ResultRole   => "Dependent"
+                :AssocClass  => 'CIM_DeviceSAPImplementation',
+                :ResultClass => 'CIM_IPProtocolEndpoint',
+                :Role        => "Antecedent",
+                :ResultRole  => "Dependent"
               }
             }
           }
@@ -518,12 +517,12 @@ class MiqSmisProfiles
           #
           # Exported file share setting
           #
-          :flags => { :pruneUnless => 'settings' },
+          :flags       => {:pruneUnless => 'settings'},
           :association => {
-            :AssocClass   => 'CIM_ElementSettingData',
-            :ResultClass  => 'SNIA_ExportedFileShareSetting',
-            :Role     => "ManagedElement",
-            :ResultRole   => "SettingData"
+            :AssocClass  => 'CIM_ElementSettingData',
+            :ResultClass => 'SNIA_ExportedFileShareSetting',
+            :Role        => "ManagedElement",
+            :ResultRole  => "SettingData"
           }
         },
         #
@@ -538,65 +537,65 @@ class MiqSmisProfiles
           #
           # The filesystem on which the share is based
           #
-          :flags => {},
+          :flags       => {},
           :association => {
-            :AssocClass   => 'SNIA_SharedElement',
-            :ResultClass  => 'SNIA_LocalFileSystem',
-            :Role     => "SameElement",
-            :ResultRole   => "SystemElement"
+            :AssocClass  => 'SNIA_SharedElement',
+            :ResultClass => 'SNIA_LocalFileSystem',
+            :Role        => "SameElement",
+            :ResultRole  => "SystemElement"
           },
-          :next => [
+          :next        => [
             {
               #
               # Filesystem setting
               #
-              :flags => { :pruneUnless => 'settings' },
+              :flags       => {:pruneUnless => 'settings'},
               :association => {
-                :AssocClass   => 'CIM_ElementSettingData',
-                :ResultClass  => 'CIM_FileSystemSetting',
-                :Role     => "ManagedElement",
-                :ResultRole   => "SettingData"
+                :AssocClass  => 'CIM_ElementSettingData',
+                :ResultClass => 'CIM_FileSystemSetting',
+                :Role        => "ManagedElement",
+                :ResultRole  => "SettingData"
               }
             },
             {
               #
               # The storage extent on which the filesystem is based
               #
-              :flags => {},
+              :flags       => {},
               :association => {
-                :AssocClass   => 'CIM_ResidesOnExtent',
-                :ResultClass  => 'CIM_StorageExtent',
-                :Role     => "Dependent",
-                :ResultRole   => "Antecedent"
+                :AssocClass  => 'CIM_ResidesOnExtent',
+                :ResultClass => 'CIM_StorageExtent',
+                :Role        => "Dependent",
+                :ResultRole  => "Antecedent"
               },
-              :next => {
+              :next        => {
                 #
                 # Drill down into the components of composit extents
                 #
-                :flags => { :recurse => true },
+                :flags       => {:recurse => true},
                 :association => {
-                  :AssocClass   => 'CIM_BasedOn',
-                  :Role     => "Dependent",
-                  :ResultRole   => "Antecedent"
+                  :AssocClass => 'CIM_BasedOn',
+                  :Role       => "Dependent",
+                  :ResultRole => "Antecedent"
                 },
-                :next => [
+                :next        => [
                   {
                     #
                     # Find snapshot info for extents
                     #
-                    :flags => { :pruneUnless => 'snapshots' },
+                    :flags       => {:pruneUnless => 'snapshots'},
                     :association => [
                       {
-                        :AssocClass   => 'ONTAP_SnapshotBasedOnFlexVol',
-                        :ResultClass  => 'ONTAP_Snapshot',
-                        :Role     => "Antecedent",
-                        :ResultRole   => "Dependent"
+                        :AssocClass  => 'ONTAP_SnapshotBasedOnFlexVol',
+                        :ResultClass => 'ONTAP_Snapshot',
+                        :Role        => "Antecedent",
+                        :ResultRole  => "Dependent"
                       },
                       {
-                        :AssocClass   => 'ONTAP_SnapshotBasedOnExtent',
-                        :ResultClass  => 'ONTAP_Snapshot',
-                        :Role     => "Antecedent",
-                        :ResultRole   => "Dependent"
+                        :AssocClass  => 'ONTAP_SnapshotBasedOnExtent',
+                        :ResultClass => 'ONTAP_Snapshot',
+                        :Role        => "Antecedent",
+                        :ResultRole  => "Dependent"
                       }
                     ]
                   },
@@ -604,12 +603,12 @@ class MiqSmisProfiles
                     #
                     # Storage setting
                     #
-                    :flags => { :pruneUnless => 'settings' },
+                    :flags       => {:pruneUnless => 'settings'},
                     :association => {
-                      :AssocClass   => 'CIM_ElementSettingData',
-                      :ResultClass  => 'CIM_StorageSetting',
-                      :Role     => "ManagedElement",
-                      :ResultRole   => "SettingData"
+                      :AssocClass  => 'CIM_ElementSettingData',
+                      :ResultClass => 'CIM_StorageSetting',
+                      :Role        => "ManagedElement",
+                      :ResultRole  => "SettingData"
                     }
                   }
                 ]
@@ -627,12 +626,12 @@ class MiqSmisProfiles
     #
     # Datastore to file share.
     #
-    :flags => {},
+    :flags       => {},
     :association => {
-      :AssocClass   => 'MIQ_DatastoreBacking',
-      :ResultClass  => 'CIM_FileShare',
-      :Role     => "Antecedent",
-      :ResultRole   => "Dependent"
+      :AssocClass  => 'MIQ_DatastoreBacking',
+      :ResultClass => 'CIM_FileShare',
+      :Role        => "Antecedent",
+      :ResultRole  => "Dependent"
     }
   }
 
@@ -640,12 +639,12 @@ class MiqSmisProfiles
     #
     # File share to datastore.
     #
-    :flags => { :reverse => true, :recurse => true },
+    :flags       => {:reverse => true, :recurse => true},
     :association => {
-      :AssocClass   => 'MIQ_DatastoreBacking',
-      :ResultClass  => 'MIQ_CimDatastore',
-      :Role     => "Dependent",
-      :ResultRole   => "Antecedent"
+      :AssocClass  => 'MIQ_DatastoreBacking',
+      :ResultClass => 'MIQ_CimDatastore',
+      :Role        => "Dependent",
+      :ResultRole  => "Antecedent"
     }
   }
 
@@ -653,23 +652,23 @@ class MiqSmisProfiles
     #
     # ESX Host to datastore.
     #
-    :flags => {},
+    :flags       => {},
     :association => {
-      :AssocClass   => 'MIQ_HostDatastore',
-      :ResultClass  => 'MIQ_CimDatastore',
-      :Role     => "Antecedent",
-      :ResultRole   => "Dependent"
+      :AssocClass  => 'MIQ_HostDatastore',
+      :ResultClass => 'MIQ_CimDatastore',
+      :Role        => "Antecedent",
+      :ResultRole  => "Dependent"
     },
-    :next => {
+    :next        => {
       #
       # Datastore to file share.
       #
-      :flags => { :recurse => true },
+      :flags       => {:recurse => true},
       :association => {
-        :AssocClass   => 'MIQ_DatastoreBacking',
-        :ResultClass  => 'CIM_FileShare',
-        :Role     => "Antecedent",
-        :ResultRole   => "Dependent"
+        :AssocClass  => 'MIQ_DatastoreBacking',
+        :ResultClass => 'CIM_FileShare',
+        :Role        => "Antecedent",
+        :ResultRole  => "Dependent"
       }
     }
   }
@@ -688,14 +687,13 @@ class MiqSmisProfiles
         ep << p
       end
     end
-    return ep
+    ep
   end
 
   $viewProfiles = {
-    'Storage Array'           => StorageArray,
-    'Self Contained NAS'        => SelfContainedNAS,
-    'System'              => System,
-    'Access Points'           => AccessPoints,
+    'Storage Array'      => StorageArray,
+    'Self Contained NAS' => SelfContainedNAS,
+    'System'             => System,
+    'Access Points'      => AccessPoints,
   }
-
 end # class MiqSmisProfiles

@@ -84,7 +84,7 @@ module ManageIQ::Providers
             :name                  => os["fullname"],
             :description           => os["description"],
             :customization_scripts => ids_lookup(indexes[:media], os["media"]) +
-                                      ids_lookup(indexes[:ptables], os["ptables"])
+              ids_lookup(indexes[:ptables], os["ptables"])
           }
         end
       end

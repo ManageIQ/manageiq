@@ -5,7 +5,7 @@ module ActiveRecord
       super
       return if options[:id] == false
 
-      value = ActiveRecord::Base.rails_sequence_start
+      value = ApplicationRecord.rails_sequence_start
       set_pk_sequence!(table_name, value) unless value == 0
     end
   end

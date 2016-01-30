@@ -1,6 +1,6 @@
 module EmsRefresh::VcUpdates
   VIM_SELECTOR_SPEC = {
-    :ems_refresh_host => [
+    :ems_refresh_host      => [
       "MOR",
       "config.adminDisabled",
       "config.consoleReservation.serviceConsoleReserved",
@@ -71,7 +71,7 @@ module EmsRefresh::VcUpdates
       "summary.runtime.inMaintenanceMode",
     ],
 
-    :ems_refresh_vm => [
+    :ems_refresh_vm        => [
       "MOR",
       "availableField[*].key",
       "availableField[*].name",
@@ -138,7 +138,7 @@ module EmsRefresh::VcUpdates
       "summary.storage.committed"
     ],
 
-    :ems_refresh_storage => [
+    :ems_refresh_storage   => [
       "MOR",
       "capability.directoryHierarchySupported",
       "capability.perFileThinProvisioningSupported",
@@ -153,7 +153,7 @@ module EmsRefresh::VcUpdates
       "summary.url",
     ],
 
-    :ems_refresh_cluster => [
+    :ems_refresh_cluster   => [
       "MOR",
       "configuration.dasConfig.admissionControlEnabled",
       "configuration.dasConfig.admissionControlPolicy",
@@ -172,7 +172,7 @@ module EmsRefresh::VcUpdates
       "summary.effectiveMemory",
     ],
 
-    :ems_refresh_host_res => [
+    :ems_refresh_host_res  => [
       "host",
       "host.ManagedObjectReference",
       "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
@@ -180,7 +180,7 @@ module EmsRefresh::VcUpdates
       "resourcePool.ManagedObjectReference",
     ],
 
-    :ems_refresh_rp => [
+    :ems_refresh_rp        => [
       "MOR",
       "name",
       "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
@@ -200,7 +200,7 @@ module EmsRefresh::VcUpdates
       "vm.ManagedObjectReference",
     ],
 
-    :ems_refresh_folder => [
+    :ems_refresh_folder    => [
       "MOR",
       "childEntity",
       "childEntity.ManagedObjectReference",
@@ -208,7 +208,7 @@ module EmsRefresh::VcUpdates
       "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
     ],
 
-    :ems_refresh_dc => [
+    :ems_refresh_dc        => [
       "MOR",
       "hostFolder",
       "hostFolder.ManagedObjectReference",
@@ -278,7 +278,7 @@ module EmsRefresh::VcUpdates
   def vc_update(ems_id, event)
     return unless event.kind_of?(Hash)
     method = "vc_#{event[:op].to_s.underscore}_event"
-    self.send(method, ems_id, event) if self.respond_to?(method)
+    send(method, ems_id, event) if self.respond_to?(method)
   end
 
   def vc_update_event(ems_id, event)
@@ -308,13 +308,13 @@ module EmsRefresh::VcUpdates
   def vc_create_event(ems_id, event)
     # TODO: Implement
     _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-create]")
-    return
+    nil
   end
 
   def vc_delete_event(ems_id, event)
     # TODO: Implement
     _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-delete]")
-    return
+    nil
   end
 
   #

@@ -13,8 +13,11 @@ module ManageiqForeman
       # if locations or organizations are enabled (detected by presence in host records)
       #    but it is not present in hostgroups
       #   fetch details for a hostgroups (to get location and organization information)
-      if (hosts.first.key?("location_id") && !hostgroups.first.key?("locations")) ||
-         (hosts.first.key?("organization_id") && !hostgroups.first.key?("organizations"))
+      host = hosts.first
+      hostgroup = hostgroups.first
+      if (host && hostgroup && (
+          (host.key?("location_id") && !hostgroup.key?("locations")) ||
+          (host.key?("organization_id") && !hostgroup.key?("organizations"))))
         hostgroups = connection.load_details(hostgroups, :hostgroups)
       end
       {

@@ -1,4 +1,4 @@
-class VmdbIndex < ActiveRecord::Base
+class VmdbIndex < ApplicationRecord
   belongs_to :vmdb_table
 
   has_many :vmdb_metrics,          :as => :resource  # Destroy will be handled by purger
@@ -13,6 +13,6 @@ class VmdbIndex < ActiveRecord::Base
   serialize :prior_raw_metrics
 
   def my_metrics
-    self.vmdb_metrics
+    vmdb_metrics
   end
 end

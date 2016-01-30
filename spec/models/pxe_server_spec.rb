@@ -1,31 +1,24 @@
-require "spec_helper"
-
 describe PxeServer do
   before(:each) do
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-    MiqServer.my_server(true)
-
+    EvmSpecHelper.local_miq_server
     @pxe_server = FactoryGirl.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
   end
 
   context "#sync_images_queue" do
     it "should create a queue entry with the correct parameters" do
       msg = @pxe_server.sync_images_queue
-      msg.method_name.should == "sync_images"
-      msg.priority.should    == 100
-      msg.queue_name.should  == "generic"
-      msg.class_name.should  == "PxeServer"
+      expect(msg.method_name).to eq("sync_images")
+      expect(msg.priority).to eq(100)
+      expect(msg.queue_name).to eq("generic")
+      expect(msg.class_name).to eq("PxeServer")
     end
 
     it "should not create a new queue entry when one already exists" do
       @pxe_server.sync_images_queue
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
 
       @pxe_server.sync_images_queue
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq(1)
     end
   end
 
@@ -88,7 +81,7 @@ describe PxeServer do
 
       it "without existing data" do
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }.should match_array @expected
+        expect(@pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }).to match_array @expected
       end
 
       it "with existing data" do
@@ -99,7 +92,7 @@ describe PxeServer do
         ]
 
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }.should match_array @expected
+        expect(@pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel] }).to match_array @expected
       end
     end
 
@@ -120,9 +113,9 @@ PXE
         image = @pxe_server.pxe_images.find_by_name("Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
-          File.exist?(expected_name).should be_true
+          expect(File.exist?(expected_name)).to be_truthy
 
-          File.read(expected_name).should == expected_contents
+          expect(File.read(expected_name)).to eq(expected_contents)
         ensure
           File.delete(expected_name) if File.exist?(expected_name)
         end
@@ -154,17 +147,16 @@ PXE
 
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
-          File.exist?(expected_name).should be_true
-          File.read(expected_name).should == expected_contents
+          expect(File.exist?(expected_name)).to be_truthy
+          expect(File.read(expected_name)).to eq(expected_contents)
 
-          File.exist?(expected_ks_name).should be_true
-          File.read(expected_ks_name).should == ks_contents
+          expect(File.exist?(expected_ks_name)).to be_truthy
+          expect(File.read(expected_ks_name)).to eq(ks_contents)
         ensure
           File.delete(expected_name) if File.exist?(expected_name)
           File.delete(expected_ks_name) if File.exist?(expected_ks_name)
         end
       end
-
     end
   end
 
@@ -221,7 +213,7 @@ PXE
 
       it "without existing images" do
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }.should match_array @expected
+        expect(@pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }).to match_array @expected
       end
 
       it "with existing images" do
@@ -232,18 +224,18 @@ PXE
         ]
 
         @pxe_server.sync_images
-        @pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }.should match_array @expected
+        expect(@pxe_server.pxe_images.collect { |i| [i.path, i.name, i.kernel, i.kernel_options] }).to match_array @expected
       end
     end
 
     context "#create_provisioning_files" do
       it "without kickstart" do
         image = FactoryGirl.create(:pxe_image_ipxe,
-          :pxe_server     => @pxe_server,
-          :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-          :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
-          :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
-        )
+                                   :pxe_server     => @pxe_server,
+                                   :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
+                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                   :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
+                                  )
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/00-19-e3-d7-5b-0e")
         expected_contents = <<-PXE
 #!ipxe
@@ -253,9 +245,9 @@ boot
 PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
-          File.exist?(expected_name).should be_true
+          expect(File.exist?(expected_name)).to be_truthy
 
-          File.read(expected_name).should == expected_contents
+          expect(File.read(expected_name)).to eq(expected_contents)
         ensure
           File.delete(expected_name) if File.exist?(expected_name)
         end
@@ -269,11 +261,11 @@ PXE
         expected_ks_name = "#{expected_name}.ks.cfg"
 
         image = FactoryGirl.create(:pxe_image_ipxe,
-          :pxe_server     => @pxe_server,
-          :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-          :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
-          :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
-        )
+                                   :pxe_server     => @pxe_server,
+                                   :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
+                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                   :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
+                                  )
 
         ks_contents = "FOO"
         kickstart = FactoryGirl.create(:customization_template_kickstart, :script => ks_contents)
@@ -286,11 +278,11 @@ boot
 PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
-          File.exist?(expected_name).should be_true
-          File.read(expected_name).should == expected_contents
+          expect(File.exist?(expected_name)).to be_truthy
+          expect(File.read(expected_name)).to eq(expected_contents)
 
-          File.exist?(expected_ks_name).should be_true
-          File.read(expected_ks_name).should == ks_contents
+          expect(File.exist?(expected_ks_name)).to be_truthy
+          expect(File.read(expected_ks_name)).to eq(ks_contents)
         ensure
           File.delete(expected_name) if File.exist?(expected_name)
           File.delete(expected_ks_name) if File.exist?(expected_ks_name)
@@ -307,15 +299,15 @@ PXE
     end
 
     it "#pxe_images" do
-      @pxe_server.pxe_images.should  match_array([@advertised_image, @discovered_image])
+      expect(@pxe_server.pxe_images).to  match_array([@advertised_image, @discovered_image])
     end
 
     it "#advertised_pxe_images" do
-      @pxe_server.advertised_pxe_images.should == [@advertised_image]
+      expect(@pxe_server.advertised_pxe_images).to eq([@advertised_image])
     end
 
     it "#discovered_pxe_images" do
-      @pxe_server.discovered_pxe_images.should == [@discovered_image]
+      expect(@pxe_server.discovered_pxe_images).to eq([@discovered_image])
     end
   end
 end

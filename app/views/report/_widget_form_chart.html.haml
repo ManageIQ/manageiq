@@ -11,10 +11,8 @@
       = select_tag("repfilter_typ", options_for_select(["<Choose>"] + @reps, @edit[:new][:repfilter]),
         :multiple              => false,
         :class                 => "selectpicker",
-        :disabled              => @edit[:read_only],
-        "data-miq_sparkle_on"  => true,
-        "data-miq_sparkle_off" => true)
+        :disabled              => @edit[:read_only])
       :javascript
         miqInitSelectPicker();
-        miqSelectPickerEvent("repfilter_typ", "#{url}");
+        miqSelectPickerEvent('repfilter_typ', '#{url}', {beforeSend: true, complete: true});
 %hr

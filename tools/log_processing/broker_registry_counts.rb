@@ -4,7 +4,7 @@ require 'miq_logger_processor'
 
 logfile = ARGV[0] || File.join(RAILS_ROOT, "log/vim.log")
 
-counts = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Array.new } }
+counts = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = [] } }
 invalid = {}
 
 t = Time.now
@@ -21,9 +21,9 @@ puts "Object Counts:"
 counts.keys.sort.each do |type|
   object_ids = counts[type]
 
-  incorrect = object_ids.reject { |object_id, modes| modes.length == 3 && modes.uniq.sort == %w{registerBrokerObj release unregisterBrokerObj} }
-  incorrect = incorrect.reject { |object_id, modes| (c = modes.count('registerBrokerObj')) == modes.count('release') && c == modes.count('unregisterBrokerObj') }
-  unreleased, overreleased = incorrect.partition { |object_id, modes| modes.count('registerBrokerObj') > modes.count('unregisterBrokerObj') }
+  incorrect = object_ids.reject { |_object_id, modes| modes.length == 3 && modes.uniq.sort == %w(registerBrokerObj release unregisterBrokerObj) }
+  incorrect = incorrect.reject { |_object_id, modes| (c = modes.count('registerBrokerObj')) == modes.count('release') && c == modes.count('unregisterBrokerObj') }
+  unreleased, overreleased = incorrect.partition { |_object_id, modes| modes.count('registerBrokerObj') > modes.count('unregisterBrokerObj') }
 
   invalid[type] = unreleased.transpose[0].sort unless unreleased.empty?
 
@@ -38,4 +38,3 @@ puts "Unreleased object_ids:"
 invalid.keys.sort.each do |type|
   puts "  #{type}: #{invalid[type].join(', ')}"
 end
-

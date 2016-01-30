@@ -6,6 +6,10 @@ module ContainersCommonMixin
   end
 
   def show
+    # fix breadcrumbs - remove displaying 'topology' when navigating to any container related entity summary page
+    if @breadcrumbs.present? && (@breadcrumbs.last[:name].eql? 'Topology')
+      @breadcrumbs.clear
+    end
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"
@@ -60,6 +64,12 @@ module ContainersCommonMixin
       drop_breadcrumb(:name => "Timelines",
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?refresh=n&display=timeline")
+    elsif @display == "performance"
+      @showtype = "performance"
+      drop_breadcrumb(:name => "#{record.name} Capacity & Utilization",
+                      :url  => "/#{controller_name}/show/#{record.id}" \
+                               "?display=#{@display}&refresh=n")
+      perf_gen_init_options # Intialize options, charts are generated async
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       show_container_display(record, "container_groups", ContainerGroup)
     elsif @display == "containers"

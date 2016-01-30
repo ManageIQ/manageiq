@@ -21,7 +21,7 @@ module Vmdb::Loggers
 
     private
 
-    def add_to_mirror(severity, message = nil, progname = nil, &block)
+    def add_to_mirror(severity, message = nil, progname = nil, &_block)
       return unless mirror_logger && mirror?(severity)
 
       # The following lines of code are copied from Logger#add

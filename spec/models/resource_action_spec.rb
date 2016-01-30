@@ -1,7 +1,6 @@
-require "spec_helper"
-
 describe ResourceAction do
   context "#deliver_to_automate_from_dialog" do
+    let(:user) { FactoryGirl.create(:user_with_group) }
     let(:zone_name) { "default" }
     let(:ra) { FactoryGirl.create(:resource_action) }
     let(:q_args) do
@@ -10,7 +9,9 @@ describe ResourceAction do
         :class_name       => nil,
         :instance_name    => nil,
         :automate_message => nil,
-        :user_id          => nil,
+        :user_id          => user.id,
+        :miq_group_id     => user.current_group.id,
+        :tenant_id        => user.current_tenant.id,
         :attrs            => {},
       }
     end
@@ -28,7 +29,7 @@ describe ResourceAction do
     end
 
     before do
-      MiqServer.stub(:my_zone).and_return(zone_name)
+      allow(MiqServer).to receive(:my_zone).and_return(zone_name)
     end
 
     context 'with no target' do
@@ -36,18 +37,18 @@ describe ResourceAction do
 
       it "validates queue entry" do
         target             = nil
-        MiqQueue.should_receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, target)
+        expect(MiqQueue).to receive(:put).with(q_options).once
+        ra.deliver_to_automate_from_dialog({}, target, user)
       end
     end
 
     context 'with target' do
       it "validates queue entry" do
         target               = FactoryGirl.create(:vm_vmware)
-        q_args[:object_type] = target.class.name
+        q_args[:object_type] = target.class.base_class.name
         q_args[:object_id]   = target.id
-        MiqQueue.should_receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, target)
+        expect(MiqQueue).to receive(:put).with(q_options).once
+        ra.deliver_to_automate_from_dialog({}, target, user)
       end
     end
   end
@@ -61,22 +62,22 @@ describe ResourceAction do
     end
 
     it "#ae_path" do
-      ra.ae_path.should eq("/NAMESPACE/CLASS/INSTANCE")
+      expect(ra.ae_path).to eq("/NAMESPACE/CLASS/INSTANCE")
     end
 
     it "#ae_uri" do
-      ra.ae_uri.should eq(ra.ae_path)
+      expect(ra.ae_uri).to eq(ra.ae_path)
     end
 
     it "uri with message" do
       ra.ae_message = "CREATE"
-      ra.ae_uri.should eq("#{ra.ae_path}#CREATE")
+      expect(ra.ae_uri).to eq("#{ra.ae_path}#CREATE")
     end
 
     it "uri with message and attributes" do
       ra.ae_message = "CREATE"
       ra.ae_attributes = {"FOO1" => "BAR1", "FOO2" => "BAR2"}
-      ra.ae_uri.should eq("#{ra.ae_path}?FOO1=BAR1&FOO2=BAR2#CREATE")
+      expect(ra.ae_uri).to eq("#{ra.ae_path}?FOO1=BAR1&FOO2=BAR2#CREATE")
     end
   end
 end

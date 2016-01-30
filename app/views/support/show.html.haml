@@ -31,7 +31,7 @@
               - @pdf_documents.each do |filename, title|
                 - docfile_path = "/doc/#{filename}.pdf"
                 %br
-                = link_to(image_tag("/images/icons/new/acrobat.png",
+                = link_to(image_tag(image_path("100/acrobat.png"),
                                     :border => "0",
                                     :width  => "20",
                                     :height => "20",

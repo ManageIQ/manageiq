@@ -34,7 +34,13 @@ module ReportHelper
       groupings.each_with_object([]) do |(field, col_options), options|
         model = @edit[:new][:model]
         col_options[:grouping].each do |fun|
-          field_label = @edit[:new][:headers]["#{model}-#{field}"]
+          field_key = if field =~ /\./
+                        f = field.sub('.', '-')
+                        "#{model}.#{f}"
+                      else
+                        "#{model}-#{field}"
+                      end
+          field_label = @edit[:new][:headers][field_key]
           options << ["#{field_label} (#{fun.to_s.titleize})", "#{model}-#{field}:#{fun}"]
         end
       end

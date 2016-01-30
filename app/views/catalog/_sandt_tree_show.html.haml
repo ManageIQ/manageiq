@@ -64,14 +64,14 @@
       %hr
       %h3
         = _('Custom Image')
-      - if @record.picture
-        %table
+      .form-horizontal
+        - if @record.picture
           .form-group
             .col-md-8
               = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
                           :style => "width:100px; height:100px;")
             .col-md-8{:valign => "bottom"}
-              = link_to(image_tag("/images/toolbars/remove.png",
+              = link_to(image_tag(image_path('toolbars/remove.png'),
                                   :class => "rollover small",
                                   :alt   => t = _("Remove this Custom Image")),
                         {:action  => "st_upload_image",
@@ -80,28 +80,25 @@
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
+                        "data-method"          => :post,
                         :confirm               => _("Are you sure you want to remove this Custom Image?"),
                         :title                 => t)
-      - else
-        = _('No custom image has been uploaded')
-        %br
-        %br
-      - if is_browser_ie?
-        = form_tag({:action    => "st_upload_image",
-                    :id        => @record.id},
-                    :multipart => true) do
-          = file_field("upload", "image")
-          = submit_tag(_("Upload"), :id => "upload", :class => "upload")
-          = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
-      - else
-        = form_tag({:action  => "st_upload_image",
-                    :id      => @record.id},
-                   :id        => "uploadForm",
-                   :multipart => true) do
-          = file_field("upload", "image")
-          = _('* Requirements - Type: jpg/png  Size: 100x100')
-        %script{:type => "text/javascript"} miqInitJqueryForm();
-
+        - else
+          = _('No custom image has been uploaded')
+          %br
+          %br
+        .form-group
+          = form_tag({:action    => "st_upload_image",
+                      :id        => @record.id},
+                     {:multipart => true,
+                      :method    => :post}) do
+            .col-md-4
+              = file_field("upload", "image", :class => "filestyle", "data-buttonName" => "btn-default")
+              :javascript
+                $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+            .col-md-6
+              = submit_tag(_("Upload"), :id => "upload", :class => "upload btn btn-default")
+              = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
     - if @record.display && @record.prov_type != "generic_orchestration"
       = miq_tab_content('details') do
         %h3
@@ -148,7 +145,7 @@
                                                     :complete => "miqSparkle(false);",
                                                     :url      => "/catalog/x_show/#{to_cid(r.resource_id)}")}
                   %td.narrow
-                    %img{:src => "/images/icons/new/service_template.png"}
+                    %img{:src => image_path('100/service_template.png')}
                   - keys = %w(resource_name resource_description group_idx provision_index start_action stop_action start_delay stop_delay)
                   - keys.each do |key|
                     %td

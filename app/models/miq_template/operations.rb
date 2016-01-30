@@ -1,5 +1,4 @@
 module MiqTemplate::Operations
-
   def validate_collect_running_processes
     validate_invalid_for_template("VM Process collection")
   end
@@ -39,7 +38,6 @@ module MiqTemplate::Operations
   private
 
   def validate_invalid_for_template(message_prefix)
-    { :available => false, :message => "#{message_prefix} is not available for Images/Templates." }
+    {:available => false, :message => "#{message_prefix} is not available for Images/Templates."}
   end
-
 end

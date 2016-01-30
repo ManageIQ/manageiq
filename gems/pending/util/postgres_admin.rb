@@ -63,21 +63,21 @@ class PostgresAdmin
   end
 
   def self.backup(opts)
-    self.before_backup(opts)
-    self.backup_pg_compress(opts)
+    before_backup(opts)
+    backup_pg_compress(opts)
   end
 
-  def self.before_backup(opts)
-    #TODO: check disk space
+  def self.before_backup(_opts)
+    # TODO: check disk space
   end
 
   def self.restore(opts)
-    self.before_restore
-    self.restore_pg_compress(opts)
+    before_restore
+    restore_pg_compress(opts)
   end
 
   def self.before_restore
-    #TODO: Make sure destination DB is empty and not in use?
+    # TODO: Make sure destination DB is empty and not in use?
   end
 
   def self.backup_compress_with_gzip
@@ -158,11 +158,11 @@ class PostgresAdmin
     #   Restore only the data, not the schema (data definitions).
     # -U root -h localhost -p 5432
 
-    #`psql -d #{opts[:dbname]} -c "DROP DATABASE #{opts[:dbname]}; CREATE DATABASE #{opts[:dbname]} WITH OWNER = root ENCODING = 'UTF8';"`
+    # `psql -d #{opts[:dbname]} -c "DROP DATABASE #{opts[:dbname]}; CREATE DATABASE #{opts[:dbname]} WITH OWNER = root ENCODING = 'UTF8';"`
 
-    #TODO: In order to restore, we need to drop the database if it exists, and recreate it it blank
+    # TODO: In order to restore, we need to drop the database if it exists, and recreate it it blank
     # An alternative is to use the -a option to only restore the data if there is not a migration/schema change
-    self.recreate_db(opts)
+    recreate_db(opts)
 
     runcmd("pg_restore", opts, :verbose => nil, :exit_on_error => nil, nil => opts[:local_file])
     opts[:local_file]
@@ -173,7 +173,7 @@ class PostgresAdmin
     :full     => false,
     :verbose  => false,
     :table    => nil,
-    :dbname => nil,
+    :dbname   => nil,
     :username => nil,
     :reindex  => false
   }
@@ -183,7 +183,7 @@ class PostgresAdmin
     :full     => true,
     :verbose  => false,
     :table    => nil,
-    :dbname => nil,
+    :dbname   => nil,
     :username => nil,
     :reindex  => true
   }
@@ -191,17 +191,17 @@ class PostgresAdmin
   def self.gc(options = {})
     options = (options[:aggressive] ? GC_AGGRESSIVE_DEFAULTS : GC_DEFAULTS).merge(options)
 
-    result = self.vacuum(options)
+    result = vacuum(options)
     $log.info("MIQ(#{name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
 
     if options[:reindex]
-      result = self.reindex(options)
+      result = reindex(options)
       $log.info("MIQ(#{name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
     end
   end
 
   def self.vacuum(opts)
-    #TODO: Add a real exception here
+    # TODO: Add a real exception here
     raise "Vacuum requires database" unless opts[:dbname]
 
     args = {}
@@ -228,12 +228,12 @@ class PostgresAdmin
   end
 
   def self.stop(opts)
-    self.runcmd_with_logging(stop_command(opts[:graceful]), opts)
+    runcmd_with_logging(stop_command(opts[:graceful]), opts)
   end
 
   def self.stop_command(graceful)
     mode = graceful == true ? 'smart' : 'fast'
-    #su - postgres -c '/usr/local/pgsql/bin/pg_ctl stop -W -D /var/lib/pgsql/data -s -m smart'
+    # su - postgres -c '/usr/local/pgsql/bin/pg_ctl stop -W -D /var/lib/pgsql/data -s -m smart'
     # stop postgres as postgres user
     # -W do not wait until operation completes, ie, don't block the process
     #    while waiting for connections to close if using 'smart'
@@ -254,7 +254,7 @@ class PostgresAdmin
   end
 
   def self.runcmd_with_logging(cmd_str, opts, params = {})
-    $log.info("MIQ(#{self.name}.#{__method__}) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
+    $log.info("MIQ(#{name}.#{__method__}) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
     with_pgpass_file(opts) do
       AwesomeSpawn.run!(cmd_str, :params => params).output
     end

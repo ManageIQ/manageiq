@@ -5,7 +5,7 @@ module ReportFormatter
       :bevel  => 'bevel_data',  :glow => 'glow_data',
       :shadow => 'shadow_data', :blur => 'blur_data'
     }
-    def initialize(type = :flat)
+    def initialize(_type = :flat)
       super()
     end
 

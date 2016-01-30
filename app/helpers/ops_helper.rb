@@ -22,5 +22,4 @@ module OpsHelper
   def selected?(tree_node, key)
     tree_node.split('-').first == key
   end
-
 end

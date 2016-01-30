@@ -1,8 +1,6 @@
 #
 # REST API Request Tests - /api/vms
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 
@@ -402,7 +400,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelves a vm" do
@@ -420,8 +418,8 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "Shelve Operation is not available for Vmware VM.",
-                                  :href => :vm_url,
-                                  :task => false)
+                                  :href    => :vm_url,
+                                  :task    => false)
     end
 
     it "shelves multiple vms" do
@@ -458,7 +456,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a powered off vm" do
@@ -469,7 +467,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a suspended vm" do
@@ -480,7 +478,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a paused off vm" do
@@ -491,7 +489,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a shelve_offloaded vm" do
@@ -502,7 +500,7 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "The VM can't be shelved offload, current state has to be shelved",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offloads a shelved vm" do
@@ -513,7 +511,7 @@ describe ApiController do
 
       expect_single_action_result(:success => true,
                                   :message => "shelve-offloading",
-                                  :href => :vm_openstack_url)
+                                  :href    => :vm_openstack_url)
     end
 
     it "shelve_offload for a VMWare vm is not supported" do
@@ -523,8 +521,8 @@ describe ApiController do
 
       expect_single_action_result(:success => false,
                                   :message => "Shelve Offload Operation is not available for Vmware VM.",
-                                  :href => :vm_url,
-                                  :task => false)
+                                  :href    => :vm_url,
+                                  :task    => false)
     end
 
     it "shelve_offloads multiple vms" do
@@ -881,6 +879,214 @@ describe ApiController do
       expect_result_resources_to_include_hrefs("results", :vms_list)
       expect_result_resources_to_match_key_data("results", "message",
                                                 [/adding event .*etype1/i, /adding event .*etype2/i])
+    end
+  end
+
+  context "Vm retire action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :retire)
+
+      run_post(invalid_vm_url, gen_request(:retire))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:retire))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :retire)
+
+      run_post(vm_url, gen_request(:retire))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* retiring/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :retire)
+
+      run_post(vms_url, gen_request(:retire, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* retiring/i, /#{vm2.id}.* retiring/i]
+      )
+    end
+
+    it "in the future" do
+      api_basic_authorize action_identifier(:vms, :retire)
+      date = 2.weeks.from_now.to_date
+      run_post(vm_url, gen_request(:retire, :date => date.strftime("%m/%d/%Y")))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* retiring/i, :href => :vm_url)
+    end
+  end
+
+  context "Vm reset action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :reset)
+
+      run_post(invalid_vm_url, gen_request(:reset))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:reset))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :reset)
+
+      run_post(vm_url, gen_request(:reset))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* resetting/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :reset)
+
+      run_post(vms_url, gen_request(:reset, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* resetting/i, /#{vm2.id}.* resetting/i]
+      )
+    end
+  end
+
+  context "Vm shutdown guest action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :shutdown_guest)
+
+      run_post(invalid_vm_url, gen_request(:shutdown_guest))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:shutdown_guest))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :shutdown_guest)
+
+      run_post(vm_url, gen_request(:shutdown_guest))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* shutting down/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :shutdown_guest)
+
+      run_post(vms_url, gen_request(:shutdown_guest, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* shutting down/i, /#{vm2.id}.* shutting down/i]
+      )
+    end
+  end
+
+  context "Vm refresh action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :refresh)
+
+      run_post(invalid_vm_url, gen_request(:refresh))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:refresh))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :refresh)
+
+      run_post(vm_url, gen_request(:refresh))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* refreshing/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :refresh)
+
+      run_post(vms_url, gen_request(:refresh, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* refreshing/i, /#{vm2.id}.* refreshing/i]
+      )
+    end
+  end
+
+  context "Vm reboot guest action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :reboot_guest)
+
+      run_post(invalid_vm_url, gen_request(:reboot_guest))
+
+      expect_resource_not_found
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:reboot_guest))
+
+      expect_request_forbidden
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :reboot_guest)
+
+      run_post(vm_url, gen_request(:reboot_guest))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* rebooting/i, :href => :vm_url)
+    end
+
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :reboot_guest)
+
+      run_post(vms_url, gen_request(:reboot_guest, [{"href" => vm1_url}, {"href" => vm2_url}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/#{vm1.id}.* rebooting/i, /#{vm2.id}.* rebooting/i]
+      )
     end
   end
 end

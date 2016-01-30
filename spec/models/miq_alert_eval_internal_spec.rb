@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "MiqAlert Evaluation Internal" do
   context "With VM as a target," do
     before(:each) do
@@ -28,8 +26,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to true" do
-        lambda { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_true
+        expect { @result = @alert.evaluate(@vm) }.not_to raise_error
+        expect(@result).to be_truthy
       end
     end
 
@@ -45,12 +43,12 @@ describe "MiqAlert Evaluation Internal" do
           :eval_method => "realtime_performance",
           :mode        => "internal",
           :options     => {
-            :operator         => ">",
-            :perf_column      => "mem_vmmemctl_absolute_average",
-            :value_threshold  => "250",
-            :rt_time_threshold=> 60,
-            :trend_direction  => 'none',
-            :debug_trace      => 'false'}}
+            :operator          => ">",
+            :perf_column       => "mem_vmmemctl_absolute_average",
+            :value_threshold   => "250",
+            :rt_time_threshold => 60,
+            :trend_direction   => 'none',
+            :debug_trace       => 'false'}}
         @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal RT Perf", :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal RT Perf Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
@@ -58,8 +56,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to true" do
-        lambda { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_true
+        expect { @result = @alert.evaluate(@vm) }.not_to raise_error
+        expect(@result).to be_truthy
       end
     end
 
@@ -70,7 +68,7 @@ describe "MiqAlert Evaluation Internal" do
           :eval_method => "changed_vm_value",
           :mode        => "internal",
           :options     => {
-            :operator  => "Changed",
+            :operator => "Changed",
             :hdw_attr => :cpu_affinity}}
         @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Changed VM Value", :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal Changed VM Value Profile", :mode => @vm.class.name)
@@ -79,8 +77,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to false" do
-        lambda { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_false
+        expect { @result = @alert.evaluate(@vm) }.not_to raise_error
+        expect(@result).to be_falsey
       end
     end
 
@@ -91,8 +89,8 @@ describe "MiqAlert Evaluation Internal" do
           :eval_method => "reconfigured_hardware_value",
           :mode        => "internal",
           :options     => {
-            :operator  => "Decreased",
-            :hdw_attr  => "memory_cpu"}}
+            :operator => "Decreased",
+            :hdw_attr => "memory_mb"}}
         @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Reconfigured Hardware Value", :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal Reconfigured Hardware Value Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
@@ -100,8 +98,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to false" do
-        lambda { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_false
+        expect { @result = @alert.evaluate(@vm) }.not_to raise_error
+        expect(@result).to be_falsey
       end
     end
 
@@ -127,8 +125,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to false" do
-        lambda { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_false
+        expect { @result = @alert.evaluate(@vm) }.not_to raise_error
+        expect(@result).to be_falsey
       end
     end
 
@@ -149,8 +147,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to true" do
-        lambda { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_true
+        expect { @result = @alert.evaluate(@vm) }.not_to raise_error
+        expect(@result).to be_truthy
       end
     end
   end
@@ -180,8 +178,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to false" do
-        lambda { @result = @alert.evaluate(@host) }.should_not raise_error
-        @result.should be_false
+        expect { @result = @alert.evaluate(@host) }.not_to raise_error
+        expect(@result).to be_falsey
       end
     end
   end
@@ -201,8 +199,8 @@ describe "MiqAlert Evaluation Internal" do
       end
 
       it "should result to true" do
-        lambda { @result = @alert.evaluate(@server) }.should_not raise_error
-        @result.should be_true
+        expect { @result = @alert.evaluate(@server) }.not_to raise_error
+        expect(@result).to be_truthy
       end
     end
   end

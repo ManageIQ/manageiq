@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeImageIpxe do
   let(:image) { FactoryGirl.create(:pxe_image_ipxe) }
 

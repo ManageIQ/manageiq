@@ -7,7 +7,8 @@ class DynamicDialogFieldValueProcessor
     dialog_values = {:dialog => dialog_field.dialog.try(:automate_values_hash)}
     workspace = dialog_field.resource_action.deliver_to_automate_from_dialog_field(
       dialog_values,
-      dialog_field.dialog.try(:target_resource)
+      dialog_field.dialog.try(:target_resource),
+      User.current_user
     )
 
     dialog_field.normalize_automate_values(workspace.root.attributes)

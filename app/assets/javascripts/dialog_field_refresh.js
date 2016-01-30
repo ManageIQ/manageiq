@@ -7,6 +7,16 @@ var dialogFieldRefresh = {
     });
   },
 
+  initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url) {
+    miqInitSelectPicker();
+    $('#' + fieldName).selectpicker('val', selectedValue);
+    miqSelectPickerEvent(fieldName, url);
+    $('#' + fieldName).on('change', function(){
+      dialogFieldRefresh.triggerAutoRefresh(fieldId, "true");
+      return true;
+    });
+  },
+
   refreshCheckbox: function(fieldName, fieldId) {
     miqSparkleOn();
 
@@ -34,29 +44,38 @@ var dialogFieldRefresh = {
   refreshDropDownList: function(fieldName, fieldId, selectedValue) {
     miqSparkleOn();
 
-    $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}, function(data) {
-      var dropdownOptions = [];
+    $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}).done(function(data) {
+      dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
+      $('#' + fieldName).selectpicker('refresh');
+      $('#' + fieldName).selectpicker('val', selectedValue);
+    });
+  },
 
-      $.each(data.values.refreshed_values, function(index, value) {
-        var option = '<option ';
-        option += 'value="' + value[0] + '" ';
-        if (data.values.checked_value !== null) {
+  addOptionsToDropDownList: function(data, fieldId) {
+    var dropdownOptions = [];
+
+    $.each(data.values.refreshed_values, function(index, value) {
+      var option = '<option ';
+      option += 'value="' + value[0] + '" ';
+      if (data.values.checked_value !== null) {
+        if (value[0] !== null) {
           if (data.values.checked_value.toString() === value[0].toString()) {
             option += 'selected="selected" ';
           }
-        } else {
-          if (index === 0) {
-            option += 'selected="selected" ';
-          }
         }
-        option += '> ' + value[1] + '</option>';
-        dropdownOptions.push(option);
-      });
-
-      $('.dynamic-drop-down-' + fieldId).html(dropdownOptions);
-
-      miqSparkle(false);
+      } else {
+        if (index === 0) {
+          option += 'selected="selected" ';
+        }
+      }
+      option += '> ' + value[1] + '</option>';
+      dropdownOptions.push(option);
     });
+
+    $('.dynamic-drop-down-' + fieldId + '.selectpicker').html(dropdownOptions);
+    $('.dynamic-drop-down-' + fieldId + '.selectpicker').selectpicker('refresh');
+
+    miqSparkle(false);
   },
 
   refreshRadioList: function(fieldName, fieldId, checkedValue, onClickString) {
@@ -75,8 +94,9 @@ var dialogFieldRefresh = {
         }
 
         if (data.values.read_only === true) {
-          radio += 'title="This element is disabled because it is read only" ';
-          radio += 'disabled=true ';
+          radio += 'title="';
+          radio += __("This element is disabled because it is read only");
+          radio += '" disabled=true ';
         } else {
           radio += onClickString;
         }

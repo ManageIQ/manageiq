@@ -4,107 +4,6 @@
 en:
   product:
     name: ManageIQ
-  # Flash messages shown in the UI
-  flash:
-    copy:
-      cancelled: 'Copy %{model} was cancelled by the user'
-      copied: 'Copy selected %{model} was saved'
-    edit:
-      cancelled_for_class: 'Edit of schema for %{model} "%{name}" was cancelled by the user'
-      field_in_display_filter: "%{field} is currently being used in the Display Filter"
-      field_must_be:
-        numeric_greater_than_0: "%{field} must be numeric and greater than zero"
-      filter:
-        search_reset: "The current search details have been reset"
-      manage_desktops_cancelled: 'Manage Desktops was cancelled by the user'
-      manage_desktops_saved: 'Manage Desktops was saved'
-      nothing_changed: "No changes were made to '%{name}', record was not saved"
-      passwords_mismatch: "Password/Verify Password do not match"
-      reset: "All changes have been reset"
-      saved: '%{model} "%{name}" was saved'
-      saved_for_class: 'Schema for %{model} "%{name}" was saved'
-      user_assignment_cancelled: "Assignment was cancelled by the user"
-      user_assignment_initiated: "Assignment changes initiated"
-      user_unassignment_initiated: "User Un-Assignment initiated"
-
-      no_fields_moved:
-        left: "No %{field} were moved to the left"
-        up: "No %{field} were moved up"
-
-    image:
-      type: "Custom Image must be a %{typ} file"
-      uploaded: 'Custom Image file "%{filename}" successfully uploaded'
-
-    host:
-      no_host_selected: "No Hosts were selected to analyze and check compliance"
-      analysis_started: "Analyze and Check compliance for this Host has been started"
-
-    ops:
-      rbac:
-        read_only_role_cannot_delete: "Read only Role can not be deleted"
-        read_only_role_cannot_edit: "This Role is Read Only and can not be edited"
-        selected_roles_deleted: "All selected Roles were deleted (unless Read Only or in use by one or more Groups)"
-        selected_roles_not_deleted: "All selected Roles were either Read Only or in use by one or more Groups, none deleted"
-        selected_group_deleted: "All selected Groups were deleted"
-        selected_user_deleted: "All selected Users were deleted"
-      settings:
-        rhn:
-          missing_information: "Please, fill in the form before saving."
-
-    provision: 
-      cancelled: "Provision %{model} was cancelled by the user"
-
-    policy:
-      cancelled_import: "Import was cancelled by the user"
-
-    report:
-      saved_report_doesnt_exist: "Saved Report no longer exists"
-
-    request:
-      error_during_sysprep_upload: 'Error during Sysprep "%{name}" file upload: '
-      request_resubmitted: "%{typ} Request was re-submitted, you will be notified when your %{title} are ready"
-      task_cancelled: "Request %{task} was cancelled by the user"
-
-    service_dialog:
-      cannot_import_duplicate: "Dialog '%{label}' already exists and was not imported"
-
-    already_taken: "%{field} has already been taken"
-    cant_delete_read_only: "Read Only or %{model} in use by one or more %{in_use_by} can not be deleted"
-    cant_delete_unassigned: "'%{model}' can not be deleted"
-    credentials:
-      error: "Credential validation returned: %{message}"
-    license_invalid: "The CFME license is invalid, please upload a valid license file"
-    no_host_defined: "No Host instances have been defined, press a button to Add or Discover one"
-    priority_order_saved: "Priority Order was saved"
-
-    record:
-      delete_for_1_record_initiated: "The delete for selected %{model} was initiated"
-      delete_for_records_initiated: "The delete for selected %{model} initiated"
-      task_started_for_model: "%{task} for this %{model} has been started"
-
-    service:
-      no_service_selected_to_task: "No Services were selected to %{task}"
-      no_vms_for_record: '"%{name}": does not have any VMs'
-      service_1_task: "This Service has been %{task}"
-      service_task: "Selected Services have been %{task}"
-
-  # Header text
-  cell_header:
-    evm_relationship: 'Edit CFME Server Relationship for %{model} "%{name}"'
-    model: "%{model}"
-    model_for_record: '%{model} for "%{name}"'
-    name: '"%{name}"'
-
-  number:
-    # Used in number_with_delimiter()
-    # These are also the defaults for 'currency', 'percentage', 'precision', and 'human'
-    format:
-      # Sets the separator between the units, for more precision (e.g. 1.0 / 2.0 == 0.5)
-      separator: "."
-      # Delimets thousands (e.g. 1,000,000 is a million) (always in groups of three)
-      delimiter: ","
-      # Number of decimals, behind the separator (the number 1 with a precision of 2 gives: 1.00)
-      precision: 3
 
   activerecord:
     attributes:
@@ -122,19 +21,6 @@ en:
           other:  "%{count} errors prohibited this %{model} from being saved"
         # The variable :count is also available
         body: "There were problems with the following fields:"
-
-  support:
-    select:
-      # default value for :prompt => true in FormOptionsHelper
-      prompt: "Please select"
-
-  model_name:
-    miq_policy_set: Policy Profile
-    miq_event_definition: Event
-    miq_action: Action
-    miq_policy: Policy
-    miq_alert: Alert
-    condition: Condition
 
   dictionary:
     column:
@@ -236,7 +122,7 @@ en:
       active: Active
       admin_disabled: Lockdown Mode
       aggregate_cpu_speed: Total CPU Speed
-      aggregate_logical_cpus: Total Number of Logical CPUs
+      aggregate_cpu_total_cores: Total Number of Logical CPUs
       aggregate_memory: Total Memory
       aggregate_physical_cpus: Total Number of Physical CPUs
       allocated_memory: Allocated Memory
@@ -375,7 +261,7 @@ en:
       last_update_status: Last Update Status Code
       last_update_status_str: Last Update Status
       ldap_group: LDAP Group
-      logical_cpus: Number of CPU Cores
+      cpu_total_cores: Number of CPU Cores
       mac_address: MAC Address
       mac_addresses: MAC Addresses
       macaddress: MAC Address
@@ -429,7 +315,7 @@ en:
       mem_usage_absolute_average: Memory - Usage of Total Allocated (%)
       mem_vmmemctl_absolute_average: Memory - Balloon Average
       mem_vmmemctltarget_absolute_average: Memory - Balloon Target Average
-      memory_cpu: RAM
+      memory_mb: RAM
       memory_size: Memory Usage
       min_cpu_usage_rate_average: CPU - Min Usage Rate for Collected Intervals (%)
       min_cpu_usagemhz_rate_average: CPU - Min Usage for Collected Intervals (MHz)
@@ -485,7 +371,7 @@ en:
       num_cpu: Number of CPUs
       num_disks: Number of Disks
       num_hard_disks: Number of Hard Disks
-      numvcpus: Number of CPUs
+      cpu_sockets: Number of CPUs
       operational_status: Operational Status Code
       operational_status_str: Operational Status
       os_image_name: OS Name
@@ -534,6 +420,7 @@ en:
       v_derived_host_count: State - Number of Hosts  - Hourly Count / Daily Avg
       v_derived_memory_reserved_pct: Memory - Available (%)
       v_derived_vm_count: State - Peak Avg VMs - Hourly Count / Daily Avg
+      v_derived_cpu_total_cores_used: CPU - Usage Rate for Collected Intervals (Number of Cores)
 
       # Right-Sizing Recommendations
       aggressive_mem_recommended_change: Memory - Aggressive Recommendation Savings
@@ -667,6 +554,7 @@ en:
       v_is_a_template: Is a Template
       v_memory_percent_of_used: VM Memory Files Percent of Used
       v_message: Message
+      v_month: Activity Sample - Month (YYYY/MM)
       v_owning_blue_folder: Parent Folder (VMs & Templates)
       v_owning_blue_folder_path: Parent Folder Path (VMs & Templates)
       v_owning_cluster: Parent Cluster
@@ -787,42 +675,6 @@ en:
       write_hit_ios_per_sec:       Write Hit (IOPS)
       write_ios_per_sec:           Write (IOPS)
 
-    compare:
-      Host:         Host Properties
-      Vm:           VM Properties
-      VmOrTemplate: Workload
-
-    discover_types:
-      esx:             ESX
-      hyperv:          Hyper-V
-      ipmi:            IPMI
-      kvm:             KVM
-      msvirtualserver: MS vCenter
-      rhevm:           Red Hat Enterprise Virtualization Manager
-      scvmm:           Microsoft System Center VMM
-      virtualcenter:   VMware vCenter
-      vmwareserver:    VMware Server
-
-    ems_cluster_types:
-      cluster:            Cluster / Deployment Role
-      clusters:           Clusters / Deployment Roles
-      cluster_infra:      Cluster
-      cluster_infras:     Clusters
-      cluster_openstack:  Deployment Role
-      cluster_openstacks: Deployment Roles
-
-    host_os_type:
-      linux_generic:   Linux
-      windows_generic: Windows
-
-    host_types:
-      host:            Host / Node
-      hosts:           Hosts / Nodes
-      host_infra:      Host
-      host_infras:     Hosts
-      host_openstack:  Node
-      host_openstacks: Nodes
-
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
@@ -851,6 +703,7 @@ en:
       EmsFolder:                Folder
       #EmsInfra:                 Infrastructure Provider
       ExtManagementSystem:      Provider
+      ExtManagementSystemPerformance: Performance - Provider
       FileDepotFtp:             FTP
       FileDepotFtpAnonymous:    Anonymous FTP
       FileDepotNfs:             NFS
@@ -864,16 +717,29 @@ en:
       LdapDomain:               LDAP Domain
       LdapRegion:               LDAP Region
       LdapServer:               LDAP Server
-      ManageIQ::Providers::BaseManager:               Provider
+      ManageIQ::Providers::BaseManager:                                     Provider
       #ManageIQ::Providers::BaseManager::VmOrTemplate: VM or Template
       #ManageIQ::Providers::BaseManager::Vm:           VM and Instance
-      ManageIQ::Providers::CloudManager:              Cloud Provider
-      ManageIQ::Providers::CloudManager::Vm:          Instance
-      ManageIQ::Providers::CloudManager::Template:    Image
-      ManageIQ::Providers::ContainerManager:          Containers Provider
-      ManageIQ::Providers::InfraManager:              Infrastructure Provider
-      ManageIQ::Providers::InfraManager::Vm:          Virtual Machine
-      ManageIQ::Providers::InfraManager::Template:    Template
+      ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Foreman Configured System
+      ManageIQ::Providers::CloudManager:                                    Cloud Provider
+      ManageIQ::Providers::CloudManager::Vm:                                Instance
+      ManageIQ::Providers::CloudManager::Template:                          Image
+      ManageIQ::Providers::ContainerManager:                                Containers Provider
+      ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
+      ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
+      ManageIQ::Providers::InfraManager::Template:                          Template
+      ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (Openstack)
+      ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Redhat)
+      ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (Vmware)
+      ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (Openstack)
+      ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
+      ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
+      ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
+      ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
+      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
+      ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain
@@ -884,6 +750,7 @@ en:
       MiqAlertSet:              Alert Profile
       MiqDialog:                Dialog
       MiqEnterprise:            Enterprise
+      MiqEventDefinition:       Event
       MiqGroup:                 EVM Group
       MiqPolicy:                Policy
       MiqPolicySet:             Policy Profile
@@ -912,6 +779,7 @@ en:
       OrchestrationTemplate:    Orchestration Template
       OrchestrationTemplateCfn: CloudFormation Template
       OrchestrationTemplateHot: Heat Template
+      OrchestrationTemplateAzure: Azure Template
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image
@@ -941,28 +809,12 @@ en:
       VmPerformance:            Performance - VM
       Zone:                     Zone
 
-    option:
-      email:          E-Mail
-      name_prefix:    VM Name/Prefix
-      number_of_vms:  Number of VMs
-      source_vm_id:   Source VM
-      storage:        Datastore
-      time_to_live:   Time until Retirement
-      ttl_warning:    Retirement Warning
-      vm_description: VM Description
-
-    rate_detail_group:
-      cpu:     CPU
-      disk_io: Disk I/O
-      fixed:   Fixed
-      memory:  Memory
-      net_io:  Network I/O
-      storage: Storage
-
     table:
       availability_zone:           Availability Zone
       cdroms:                      CD/DVD Drives
       cim_base_storage_extent:     Base Extents
+      cloud_volume:                Cloud Volume
+      cloud_volumes:               Cloud Volumes
       compliance_details:          Details
       compliances:                 Compliance History
       container:                   Container
@@ -1025,6 +877,9 @@ en:
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
       miq_event_definition:        Event
+      manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
+      manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (Openstack)
+      manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (Openstack)
       miq_provision:               Provision
       miq_provision_template:      Provisioned From Template
       miq_provision_vms:           Provisioned VMs
@@ -1088,7 +943,7 @@ en:
       scan:                   analysis
 
     tenants:
-      cpu_allocated: Allocated CPU in Mhz
+      cpu_allocated: Allocated Virtual CPUs
       mem_allocated: Allocated Memory in GB
       storage_allocated: Allocated Storage in GB
       vms_allocated: Allocated Number of Virtual Machines

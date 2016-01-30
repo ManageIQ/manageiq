@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Lan do
   before(:each) do
     @lan      = FactoryGirl.create(:lan)
@@ -8,14 +6,14 @@ describe Lan do
   end
 
   it "#vms_and_templates" do
-    @lan.vms_and_templates.should match_array [@vm, @template]
+    expect(@lan.vms_and_templates).to match_array [@vm, @template]
   end
 
   it "#vms" do
-    @lan.vms.should == [@vm]
+    expect(@lan.vms).to eq([@vm])
   end
 
   it "#miq_templates" do
-    @lan.miq_templates.should == [@template]
+    expect(@lan.miq_templates).to eq([@template])
   end
 end

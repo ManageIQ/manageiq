@@ -11,7 +11,7 @@
                           "ng-model"    => "#{ng_model_depot_name}",
                           "ng-readonly" => "#{ng_readonly}",
                           "checkchange" => "",
-                          :class        => "form-control"}
+                          "auto-focus"  => "reactiveFocus"}
       %span.help-block{"ng-show" => "angularForm.depot_name.$invalid"}
         = _("Required")
 %div{"ng-show" => "#{ng_show}"}
@@ -19,16 +19,16 @@
     %label.col-md-2.control-label{"for" => "textInput-markup"}
       = _("URI")
     .col-md-8
-      %label
-        = uri_prefix_display
-      %input.form-control{"type"        => "text",
-                          "id"          => "textInput-markup",
-                          "ng-required" => "#{ng_reqd_uri}",
-                          "name"        => "uri",
-                          "ng-model"    => "#{ng_model_uri}",
-                          "ng-readonly" => "#{ng_readonly}",
-                          "checkchange" => "",
-                          :class        => "form-control"}
+      .input-group
+        %span.input-group-addon
+          = uri_prefix_display
+        %input.uri-input.form-control{"type"        => "text",
+                                      "id"          => "textInput-markup",
+                                      "ng-required" => "#{ng_reqd_uri}",
+                                      "name"        => "uri",
+                                      "ng-model"    => "#{ng_model_uri}",
+                                      "ng-readonly" => "#{ng_readonly}",
+                                      "checkchange" => ""}
       %span.help-block{"ng-show" => "angularForm.uri.$invalid"}
         = _("Required")
       %input{"type" => "hidden", "name" => "uri_prefix", "ng-value" => "#{ng_model_uri_prefix}"}

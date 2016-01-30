@@ -1,11 +1,11 @@
-class VmdbDatabaseLock < ActiveRecord::Base
+class VmdbDatabaseLock < ApplicationRecord
   self.table_name = 'pg_locks'
   self.primary_key = nil
 
   def blocking_lock
     return unless granted == false
     blocking_lock_relation.where(:granted => true)
-      .where(['pid != ?', pid]).first
+      .find_by(['pid != ?', pid])
   end
 
   private

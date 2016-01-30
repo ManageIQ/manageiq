@@ -11,8 +11,6 @@ require 'appliance_console/logging'
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
 
 module ApplianceConsole
-  MiqPassword.key_root = "#{RAILS_ROOT}/certs"
-
   class DatabaseConfiguration
     attr_accessor :adapter, :host, :username, :database, :password, :port, :region
 
@@ -41,7 +39,7 @@ module ApplianceConsole
     end
 
     def local?
-      host.blank? || host.in?(%w{localhost 127.0.0.1})
+      host.blank? || host.in?(%w(localhost 127.0.0.1))
     end
 
     def password=(value)
@@ -66,6 +64,7 @@ module ApplianceConsole
 
     def post_activation
       ServiceGroup.new.restart_services
+      LinuxAdmin::Service.new("evmserverd").enable.start
     end
 
     def create_or_join_region
@@ -74,18 +73,14 @@ module ApplianceConsole
 
     def create_region
       log_and_feedback(__method__) do
-        AwesomeSpawn.run!(
-          "script/rails runner script/rake",
-          :params => ["evm:db:region", "--", {:region => region}],
-          :chdir  => RAILS_ROOT
-        )
+        ApplianceConsole::Utilities.rake("evm:db:region", ["--", {:region => region}])
       end
     end
 
     def join_region
       require 'tempfile'
       temp = Tempfile.new(["joinregion", ".rb"], RAILS_ROOT.join("tmp").to_s)
-      params = { nil => ['runner', temp.path]}
+      params = {nil => ['runner', temp.path]}
 
       output = nil
 
@@ -195,23 +190,21 @@ FRIENDLY
     end
 
     def validated
-      begin
-        !!validate!
-      rescue => err
-        say_error(__method__, err.message)
-        log_error(__method__, err.message)
-        false
-      end
+      !!validate!
+    rescue => err
+      say_error(__method__, err.message)
+      log_error(__method__, err.message)
+      false
     end
 
     def validate!
-      pool = ModelWithNoBackingTable.establish_connection(settings_hash.delete_if { |n, v| v.blank? })
+      pool = ModelWithNoBackingTable.establish_connection(settings_hash.delete_if { |_n, v| v.blank? })
       begin
         conn = pool.connection
       ensure
         # Disconnect and remove this new connection from the connection pool, to completely clear it out
         conn.disconnect! if conn
-        ActiveRecord::Base.connection_handler.connection_pools.delete(ModelWithNoBackingTable.name)
+        ActiveRecord::Base.connection_handler.remove_connection(ModelWithNoBackingTable)
       end
     end
 
@@ -219,7 +212,7 @@ FRIENDLY
 
     def self.encrypt_decrypt_password(settings)
       new_settings = {}
-      settings.each_key {|section| new_settings[section] = settings[section].dup}
+      settings.each_key { |section| new_settings[section] = settings[section].dup }
       pass = new_settings["production"]["password"]
       new_settings["production"]["password"] = yield(pass) if pass
       new_settings
@@ -240,7 +233,7 @@ FRIENDLY
     end
 
     def initialize_from_hash(hash)
-      hash.each do |k,v|
+      hash.each do |k, v|
         next if v.nil?
         setter = "#{k}="
         if self.respond_to?(setter)

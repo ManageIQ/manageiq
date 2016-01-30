@@ -1,5 +1,3 @@
-require_relative 'spec_helper'
-
 describe ManageiqForeman::Connection do
   before do
     unless connection.api_cached?

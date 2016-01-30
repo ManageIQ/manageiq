@@ -1,4 +1,3 @@
-require "spec_helper"
 include ServiceTemplateHelper
 
 describe "FilterByDialogParameters Automate Method" do
@@ -10,7 +9,7 @@ describe "FilterByDialogParameters Automate Method" do
   end
 
   def post_create(dialog_options = {})
-    @request = build_service_template_request("top", @user.userid, dialog_options)
+    @request = build_service_template_request("top", @user, dialog_options)
     service_template_stubs
     request_stubs
     @request.create_request_tasks
@@ -21,7 +20,7 @@ describe "FilterByDialogParameters Automate Method" do
              "middle"     => {:type    => 'composite', :children => ['vm_service']},
              "vm_service" => {:type    => 'atomic',
                               :request => {:target_name => "fred", :src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :userid => @user.userid}
+                                           :number_of_vms => 1, :requester => @user}
                              }
             }
     build_service_template_tree(model)
@@ -36,7 +35,7 @@ describe "FilterByDialogParameters Automate Method" do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Service/Provisioning&class=ServiceFilter" \
                             "&instance=FilterByDialogParameters&message=include_service&" \
-                            "#{attrs.join('&')}")
+                            "#{attrs.join('&')}", @user)
   end
 
   def root_service_template_task
@@ -49,7 +48,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("top"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      expect(ws.root['include_service']).to be_true
+      expect(ws.root['include_service']).to be_truthy
     end
 
     it "with vm_serice" do
@@ -57,7 +56,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("vm_service"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      expect(ws.root['include_service']).to be_true
+      expect(ws.root['include_service']).to be_truthy
     end
 
     it "with missing dialog_environment" do
@@ -65,7 +64,8 @@ describe "FilterByDialogParameters Automate Method" do
       st = ServiceTemplate.find_by_name('vm_service')
       svc = FactoryGirl.create(:service)
 
-      expect { run_automate_method(st, root_service_template_task, svc) }.to raise_exception
+      expect { run_automate_method(st, root_service_template_task, svc) }
+        .to raise_error(MiqAeException::UnknownMethodRc)
     end
 
     it "with an invalid vm_service" do
@@ -73,7 +73,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("vm_service"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      expect(ws.root['include_service']).to be_false
+      expect(ws.root['include_service']).to be_falsey
     end
   end
 end

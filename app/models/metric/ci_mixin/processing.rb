@@ -3,7 +3,7 @@ module Metric::CiMixin::Processing
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     interval_orig = interval_name
     interval_name = 'hourly' if interval_name == 'historical'
@@ -45,11 +45,11 @@ module Metric::CiMixin::Processing
 
             # Create the hashes for the rows
             rt = (rt_rows[ts] ||= {
-                :capture_interval_name => interval_name,
-                :capture_interval      => counter[:capture_interval],
-                :resource_name         => self.name,
-                :timestamp             => ts
-              })
+              :capture_interval_name => interval_name,
+              :capture_interval      => counter[:capture_interval],
+              :resource_name         => name,
+              :timestamp             => ts
+            })
             rt[col], message = Metric::Helper.normalize_value(value, counter)
             _log.warn("#{log_header} #{log_target} Timestamp: [#{ts}], Column [#{col}]: '#{message}'") if message
           end
@@ -71,7 +71,7 @@ module Metric::CiMixin::Processing
 
         Benchmark.realtime_block(:process_perfs) do
           perf = obj_perfs.fetch_path(interval_name, ts)
-          perf ||= obj_perfs.store_path(interval_name, ts, self.send(meth).build(:resource_name => self.name))
+          perf ||= obj_perfs.store_path(interval_name, ts, send(meth).build(:resource_name => name))
           perf.new_record? ? a += 1 : u += 1
 
           v.reverse_merge!(perf.attributes.symbolize_keys)
@@ -79,7 +79,7 @@ module Metric::CiMixin::Processing
           v.merge!(Metric::Processing.process_derived_columns(self, v, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
         end
 
-        #TODO: Should we change this into a single metrics.push like we do in ems_refresh?
+        # TODO: Should we change this into a single metrics.push like we do in ems_refresh?
         Benchmark.realtime_block(:process_perfs_db) { perf.update_attributes(v) }
 
         if interval_name == 'hourly'
@@ -87,7 +87,7 @@ module Metric::CiMixin::Processing
         end
       end
 
-      self.update_attribute(:last_perf_capture_on, end_time) if self.last_perf_capture_on.nil? || self.last_perf_capture_on.utc.iso8601 < end_time
+      update_attribute(:last_perf_capture_on, end_time) if last_perf_capture_on.nil? || last_perf_capture_on.utc.iso8601 < end_time
       _log.info("#{log_header} Processing #{rt_rows.length} performance rows...Complete - Added #{a} / Updated #{u}")
 
       if interval_name == 'hourly'
@@ -99,10 +99,10 @@ module Metric::CiMixin::Processing
       # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
       MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, "perf_complete"))
 
-      self.perf_rollup_to_parents(interval_orig, start_time, end_time)
+      perf_rollup_to_parents(interval_orig, start_time, end_time)
     end
     _log.info("#{log_header} Processing for #{log_target}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
 
-    return affected_timestamps
+    affected_timestamps
   end
 end

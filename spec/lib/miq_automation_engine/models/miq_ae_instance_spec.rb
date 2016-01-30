@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAeInstance do
   context "legacy tests" do
     before(:each) do
@@ -11,24 +9,24 @@ describe MiqAeInstance do
     it "should create instance" do
       iname1 = "instance1"
       i1 = @c1.ae_instances.build(:name => iname1)
-      i1.should_not be_nil
-      i1.save!.should be_true
+      expect(i1).not_to be_nil
+      expect(i1.save!).to be_truthy
       @c2 = MiqAeClass.find(@c1.id)
-      @c2.should_not be_nil
-      @c2.ae_instances.should_not be_nil
+      expect(@c2).not_to be_nil
+      expect(@c2.ae_instances).not_to be_nil
       expect(@c2.ae_instances.count).to eq(1)
       i1.destroy
     end
 
     it "should set the updated_by field on save" do
       i1 = @c1.ae_instances.create(:name => "instance1")
-      i1.updated_by.should == 'system'
+      expect(i1.updated_by).to eq('system')
     end
 
     it "should not create instances with invalid names" do
       ["insta nce1", "insta:nce1"].each do |iname|
         i1 = @c1.ae_instances.build(:name => iname)
-        i1.should_not be_nil
+        expect(i1).not_to be_nil
         expect { i1.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
@@ -36,7 +34,7 @@ describe MiqAeInstance do
     it "should create instances with valid names" do
       ["insta-nce1", "insta.nce1"].each do |iname|
         i1 = @c1.ae_instances.build(:name => iname)
-        i1.should_not be_nil
+        expect(i1).not_to be_nil
         expect { i1.save! }.to_not raise_error
       end
     end
@@ -50,7 +48,7 @@ describe MiqAeInstance do
       fname_bad = "fieldX"
 
       # Set/Get a value that doesn't yet exist, by field name
-      i1.get_field_value(@fname1).should be_nil
+      expect(i1.get_field_value(@fname1)).to be_nil
       expect { i1.set_field_value(@fname1, value1) }.to_not raise_error
       expect(i1.get_field_value(@fname1)).to eq(value1)
 
@@ -65,7 +63,7 @@ describe MiqAeInstance do
       i1.ae_values.destroy_all
 
       # Set/Get a value that doesn't yet exist, by field
-      i1.get_field_value(@f1).should be_nil
+      expect(i1.get_field_value(@f1)).to be_nil
       expect { i1.set_field_value(@f1, value1) }.to_not raise_error
       expect(i1.get_field_value(@f1)).to eq(value1)
 
@@ -105,12 +103,12 @@ describe MiqAeInstance do
       # Set/Get a value that doesn't yet exist, by field name
       expect(MiqAePassword.decrypt(f1.default_value)).to eq(default_value)
       f1.default_value = nil
-      f1.default_value.should be_nil
+      expect(f1.default_value).to be_nil
       f1.default_value = default_value
       expect(MiqAePassword.decrypt(f1.default_value)).to eq(default_value)
 
       # Set/Get a value that doesn't yet exist, by field name
-      i1.get_field_value(fname1).should be_nil
+      expect(i1.get_field_value(fname1)).to be_nil
       expect { i1.set_field_value(fname1, value1) }.to_not raise_error
       expect(MiqAePassword.decrypt(i1.get_field_value(fname1))).to eq(value1)
 
@@ -136,7 +134,7 @@ describe MiqAeInstance do
       f2.destroy
       i1.reload
 
-      MiqAeValue.where(:field_id => f2_id).should be_empty
+      expect(MiqAeValue.where(:field_id => f2_id)).to be_empty
       expect { i1.set_field_value(fname2, value1) }.to raise_error(MiqAeException::FieldNotFound)
       expect { i1.get_field_value(fname2)         }.to raise_error(MiqAeException::FieldNotFound)
     end
@@ -145,14 +143,14 @@ describe MiqAeInstance do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
-      i1.should_not be_editable
+      expect(i1).not_to be_editable
     end
 
     it "should return editable as true if the parent namespace/class is editable" do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
-      i1.should be_editable
+      expect(i1).to be_editable
     end
   end
 
@@ -176,10 +174,10 @@ describe MiqAeInstance do
     let(:ae_values) { [ae_value] }
 
     before do
-      ae_field1.stub(:id).and_return(42)
-      ae_field2.stub(:id).and_return(84)
+      allow(ae_field1).to receive(:id).and_return(42)
+      allow(ae_field2).to receive(:id).and_return(84)
 
-      ae_value.stub(:to_export_xml) do |options|
+      allow(ae_value).to receive(:to_export_xml) do |options|
         options[:builder].ae_value
       end
     end
@@ -249,6 +247,6 @@ describe MiqAeInstance do
     n1 = FactoryGirl.create(:miq_ae_domain, :name => 'dom1', :priority => 10, :system => true)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
-    i1.domain.name.should eql('dom1')
+    expect(i1.domain.name).to eql('dom1')
   end
 end

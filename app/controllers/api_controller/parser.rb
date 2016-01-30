@@ -18,27 +18,12 @@ class ApiController
           @req[:prefix]    = "#{@req[:prefix]}/#{ver}"     # /api/v#.#
         end
       end
+      @req[:api_prefix]    = "#{@req[:base]}#{@req[:prefix]}"
 
       @req[:collection]    = params[:collection]
       @req[:c_id]          = params[:c_id]
       @req[:subcollection] = params[:subcollection]
       @req[:s_id]          = params[:s_id]
-
-      log_api_request
-    end
-
-    def log_api_request
-      @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
-      api_log_info("\n#{@name} Request URL: #{@req[:url]}")
-      if api_log_debug?
-        msg  = "\n#{@name} Request Details"
-        @req.each { |k, v| msg << "\n  #{k[0..14].ljust(14, ' ')}: #{v}" if v.present? }
-        if params.size > 0
-          msg << "\n\n  Parameters:"
-          @parameter_filter.filter(params).each { |k, v| msg << "\n    #{k[0..12].ljust(12, ' ')}: #{v}" }
-        end
-        api_log_debug(msg)
-      end
     end
 
     def validate_api_request
@@ -133,6 +118,72 @@ class ApiController
       resource["id"].kind_of?(Integer) ? resource["id"] : nil
     end
 
+    def resource_can_have_custom_actions(type, cspec = nil)
+      cspec ||= collection_config[type.to_sym] if collection_config.key?(type.to_sym)
+      cspec && cspec[:options].include?(:custom_actions)
+    end
+
+    def parse_by_attr(resource, type, attr_list)
+      klass = collection_class(type)
+      objs = attr_list.map { |attr| klass.send("find_by_#{attr}", resource[attr]) if resource[attr] }.compact
+      objs.collect(&:id).first
+    end
+
+    def parse_owner(resource)
+      return nil if resource.blank?
+      owner_id = parse_id(resource, :users)
+      owner_id ? owner_id : parse_by_attr(resource, :users, %w(name userid))
+    end
+
+    def parse_group(resource)
+      return nil if resource.blank?
+      group_id = parse_id(resource, :groups)
+      group_id ? group_id : parse_by_attr(resource, :groups, %w(description))
+    end
+
+    def parse_role(resource)
+      return nil if resource.blank?
+      role_id = parse_id(resource, :roles)
+      role_id ? role_id : parse_by_attr(resource, :roles, %w(name))
+    end
+
+    def parse_tenant(resource)
+      parse_id(resource, :tenants) unless resource.blank?
+    end
+
+    def parse_ownership(data)
+      {
+        :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
+        :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
+      }.compact if data.present?
+    end
+
+    # RBAC Aware type specific resource fetches
+
+    def parse_fetch_group(data)
+      if data
+        group_id = parse_group(data)
+        raise BadRequestError, "Missing Group identifier href, id or description" if group_id.nil?
+        resource_search(group_id, :groups, collection_class(:groups))
+      end
+    end
+
+    def parse_fetch_role(data)
+      if data
+        role_id = parse_role(data)
+        raise BadRequestError, "Missing Role identifier href, id or name" if role_id.nil?
+        resource_search(role_id, :roles, collection_class(:roles))
+      end
+    end
+
+    def parse_fetch_tenant(data)
+      if data
+        tenant_id = parse_tenant(data)
+        raise BadRequestError, "Missing Tenant identifier href or id" if tenant_id.nil?
+        resource_search(tenant_id, :tenants, collection_class(:tenants))
+      end
+    end
+
     private
 
     #
@@ -146,8 +197,12 @@ class ApiController
     end
 
     #
-    # For Delete, Patch and Put, we need to make sure we're entitled for them.
+    # For Get, Delete, Patch and Put, we need to make sure we're entitled for them.
     #
+    def validate_get_method
+      validate_method_action(:get, "read")
+    end
+
     def validate_patch_method
       validate_method_action(:post, "edit")
     end
@@ -165,6 +220,7 @@ class ApiController
       cspec = collection_config[cname.to_sym]
       target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
+      return if method_name == :get && aspec.nil?
       action_hash = fetch_action_hash(aspec, method_name, action_name)
       raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
       unless api_user_role_allows?(action_hash[:identifier])
@@ -180,18 +236,29 @@ class ApiController
       end
     end
 
-    def validate_post_api_action(cname, mname, cspec, type, target)
+    def parse_action_name
       # for basic HTTP POST, default action is "create" with data being the POST body
-      aname = @req[:action] = json_body["action"] || "create"
+      @req[:action] = @req[:method] == :put ? "edit" : (json_body["action"] || "create")
+    end
+
+    def validate_post_api_action(cname, mname, cspec, type, target)
+      aname = parse_action_name
 
       aspecnames = "#{target}_actions"
       raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
 
       aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
-      raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
-      raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
-      raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+      if action_hash.blank?
+        unless type == :resource && resource_can_have_custom_actions(cname, cspec)
+          raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified"
+        end
+      end
+
+      if action_hash.present?
+        raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
+        raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+      end
 
       validate_post_api_action_as_subcollection(cname, mname, aname)
     end
@@ -246,7 +313,7 @@ class ApiController
     end
 
     def fetch_action_hash(aspec, method_name, action_name)
-      Array(aspec[method_name]).detect { |h| h[:name] == action_name }
+      Array(aspec[method_name]).detect { |h| h[:name] == action_name } || {}
     end
   end
 end

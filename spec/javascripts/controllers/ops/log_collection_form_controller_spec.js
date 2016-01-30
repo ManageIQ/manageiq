@@ -24,7 +24,8 @@ describe('logCollectionFormController', function() {
 
   $controller = _$controller_('logCollectionFormController',
                               {$scope: $scope,
-                               $attrs: {'logCollectionFormFieldsUrl': '/ops/log_collection_form_fields/'},
+                               $attrs: {'logCollectionFormFieldsUrl': '/ops/log_collection_form_fields/',
+                                        'logProtocolChangedUrl': '/ops/log_protocol_changed/'},
                                miqService: miqService,
                                serverId: 123456
                               });
@@ -41,8 +42,6 @@ describe('logCollectionFormController', function() {
       uri:          'smb://smb_location',
       uri_prefix:   'smb',
       log_userid:   'admin',
-      log_password: 'smartvm',
-      log_verify:   'smartvm',
       log_protocol: 'Samba'
     };
 
@@ -68,15 +67,42 @@ describe('logCollectionFormController', function() {
     });
 
     it('sets the log_password to the value returned from the http request', function () {
-      expect($scope.logCollectionModel.log_password).toEqual('smartvm');
+      expect($scope.logCollectionModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the log_verify to the value returned from the http request', function () {
-      expect($scope.logCollectionModel.log_verify).toEqual('smartvm');
+      expect($scope.logCollectionModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the log_protocol to the value returned from the http request', function () {
       expect($scope.logCollectionModel.log_protocol).toEqual('Samba');
+    });
+
+    describe('when the log protocol is changed to Redhat dropbox', function() {
+      var logProtocolChangedFormResponse = {
+        depot_name: 'Red Hat Dropbox',
+        uri: 'ftp://dropbox.redhat.com',
+        uri_prefix: 'ftp'
+      };
+
+      beforeEach(inject(function() {
+        $scope.logCollectionModel.log_protocol = 'Red Hat Dropbox';
+        $scope.logProtocolChanged();
+        $httpBackend.whenGET('/ops/log_protocol_changed/123456?log_protocol=Red Hat Dropbox').respond(200, logProtocolChangedFormResponse);
+        $httpBackend.flush();
+      }));
+
+      it('sets the depot_name to the value returned from the http request', function () {
+        expect($scope.logCollectionModel.depot_name).toEqual(logProtocolChangedFormResponse.depot_name);
+      });
+
+      it('sets the uri to the value returned from the http request', function () {
+        expect($scope.logCollectionModel.uri).toEqual(logProtocolChangedFormResponse.uri);
+      });
+
+      it('sets the uri_prefix to the value returned from the http request', function () {
+        expect($scope.logCollectionModel.uri_prefix).toEqual(logProtocolChangedFormResponse.uri_prefix);
+      });
     });
   });
 });

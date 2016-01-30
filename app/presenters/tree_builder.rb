@@ -34,7 +34,7 @@ class TreeBuilder
 
   # FIXME: need to move this to a subclass (#root_options)
   def self.root_options(tree_name)
-    #returns title, tooltip, root icon
+    # returns title, tooltip, root icon
     case tree_name
     when :ab_tree                       then [_("Object Types"),                 _("Object Types")]
     when :ae_tree                       then [_("Datastore"),                    _("Datastore")]
@@ -59,11 +59,13 @@ class TreeBuilder
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
       [title, title]
+    when :db_tree                       then [_("All Dashboards"), _("All Dashboards")]
     when :diagnostics_tree, :rbac_tree, :settings_tree     then
       region = MiqRegion.my_region
       ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
     when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
     when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
+    when :export_tree                   then [_("Import / Export"),              _("Import / Export"), _("report")]
     when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
     when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
     when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]
@@ -76,7 +78,18 @@ class TreeBuilder
       [title, title]
     when :pxe_image_types_tree          then [_("All System Image Types"),       _("All System Image Types")]
     when :pxe_servers_tree              then [_("All PXE Servers"),              _("All PXE Servers")]
+    when :reports_tree                  then [_("All Reports"),                  _("All Reports")]
+    when :roles_tree                    then
+      user = User.current_user
+      if user.super_admin_user?
+        title = "All #{ui_lookup(:models => "MiqGroup")}"
+      else
+        title = "My #{ui_lookup(:models => "MiqGroup")}"
+      end
+      [title, title, 'miq_group']
     when :sandt_tree                    then [_("All Catalog Items"),            _("All Catalog Items")]
+    when :savedreports_tree             then [_("All Saved Reports"),            _("All Saved Reports")]
+    when :schedules_tree                then [_("All Schedules"),                _("All Schedules"), "miq_schedule"]
     when :stcat_tree                    then [_("All Catalogs"),                 _("All Catalogs")]
     when :svccat_tree                   then [_("All Services"),                 _("All Services")]
     when :svcs_tree                     then [_("All Services"),                 _("All Services")]
@@ -86,6 +99,7 @@ class TreeBuilder
     when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
     when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
     when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), "miq_database"]
+    when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
     end
   end
 
@@ -129,8 +143,8 @@ class TreeBuilder
     # Save node as open
     open_node(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).each_with_object([]) do |o, acc|
-      acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree(@name)))
+    x_get_tree_objects(object, @tree_state.x_tree(@name), false, parents).map do |o|
+      x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
     end
   end
 
@@ -145,7 +159,7 @@ class TreeBuilder
   end
 
   def self.get_prefix_for_model(model)
-    model = model.to_s unless model.is_a?(String)
+    model = model.to_s unless model.kind_of?(String)
     X_TREE_NODE_PREFIXES_INVERTED[model]
   end
 
@@ -193,12 +207,12 @@ class TreeBuilder
   def add_to_sandbox
     @tree_state.add_tree(
       @options.reverse_merge(
-          :tree       => @name,
-          :type       => type,
-          :klass_name => self.class.name,
-          :leaf       => @options[:leaf],
-          :add_root   => true,
-          :open_nodes => []
+        :tree       => @name,
+        :type       => type,
+        :klass_name => self.class.name,
+        :leaf       => @options[:leaf],
+        :add_root   => true,
+        :open_nodes => []
       )
     )
   end
@@ -206,22 +220,22 @@ class TreeBuilder
   def add_root_node(nodes)
     root = nodes.first
     root[:title], root[:tooltip], icon = root_options
-    root[:icon] = "#{icon || 'folder'}.png"
+    root[:icon] = ActionController::Base.helpers.image_path("100/#{icon || 'folder'}.png")
   end
 
   def set_locals_for_render
     {
-      :tree_id        => "#{@name}box",
-      :tree_name      => @name.to_s,
-      :json_tree      => @tree_nodes,
-      :onclick        => "miqOnClickSelectTreeNode",
-      :id_prefix      => "#{@name}_",
-      :base_id        => "root",
-      :no_base_exp    => true,
-      :exp_tree       => false,
-      :highlighting   => true,
-      :tree_state     => true,
-      :multi_lines    => true
+      :tree_id      => "#{@name}box",
+      :tree_name    => @name.to_s,
+      :json_tree    => @tree_nodes,
+      :onclick      => "miqOnClickSelectTreeNode",
+      :id_prefix    => "#{@name}_",
+      :base_id      => "root",
+      :no_base_exp  => true,
+      :exp_tree     => false,
+      :highlighting => true,
+      :tree_state   => true,
+      :multi_lines  => true
     }
   end
 
@@ -233,14 +247,14 @@ class TreeBuilder
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
   def x_build_dynatree(options)
-    children = x_get_tree_objects(nil, options, nil, [])
+    children = x_get_tree_objects(nil, options, false, [])
 
-    child_nodes = children.each_with_object([]) do |child, acc|
+    child_nodes = children.map do |child|
       # already a node? FIXME: make a class for node
       if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
-        acc << child
+        child
       else
-        acc.concat(x_build_node_dynatree(child, nil, options))
+        x_build_node_dynatree(child, nil, options)
       end
     end
 
@@ -257,59 +271,69 @@ class TreeBuilder
   #   :open_all             # if true open all node (no autoload)
   #   :load_children
   # parents --- an Array of parent object ids, starting from tree root + 1, ending with parent's parent; only available when full_ids and not lazy
-  def x_get_tree_objects(parent, options, count_only = false, parents = [])
-    # FIXME: To limit the use of options and make mandatory arguments explitic,
-    # we need to fix all the callers and functions to pass count_only as an
-    # argument and not part of options.; same for parents
-    count_only = options[:count_only] if options[:count_only]
-    options = options.dup
-    options[:count_only] = count_only
-    options[:parents] = parents
-
+  def x_get_tree_objects(parent, options, count_only, parents)
     children_or_count = case parent
-                        when nil                 then x_get_tree_roots(options)
-                        when AvailabilityZone    then x_get_tree_az_kids(parent, options)
-                        when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, options)
-                        when ConfigurationProfile then x_get_tree_cpf_kids(parent, options)
-                        when CustomButtonSet     then x_get_tree_aset_kids(parent, options)
-                        when Dialog              then x_get_tree_dialog_kids(parent, options)
-                        when DialogGroup         then x_get_tree_dialog_group_kids(parent, options)
-                        when DialogTab           then x_get_tree_dialog_tab_kids(parent, options)
-                        when ExtManagementSystem then x_get_tree_ems_kids(parent, options)
+                        when nil                 then
+                          # options are only required for the following TreeBuilder ancestors:
+                          # * TreeBuilderCatalogsClass         - options[:type]
+                          # * TreeBuilderChargebackAssignments - options[:type]
+                          # * TreeBuilderChargebackRates       - options[:type]
+                          # * TreeBuilderReportReports         - options[:tree]
+                          # * TreeBuilderVandt - the whole options hash is passed to TreeBuilderVmsAndTemplates constructor
+                          # * All the rest 30+ ancestors ignore options hash.
+                          x_get_tree_roots(count_only, options.dup)
+                        when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
+                        when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, count_only)
+                        when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
+                        when CustomButtonSet     then x_get_tree_aset_kids(parent, count_only)
+                        when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
+                        when DialogGroup         then x_get_tree_dialog_group_kids(parent, count_only, options[:type])
+                        when DialogTab           then x_get_tree_dialog_tab_kids(parent, count_only, options[:type])
+                        when ExtManagementSystem then x_get_tree_ems_kids(parent, count_only)
                         when EmsFolder           then if parent.is_datacenter
-                                                        x_get_tree_datacenter_kids(parent, options)
+                                                        x_get_tree_datacenter_kids(parent, count_only, options[:type])
                                                       else
-                                                        x_get_tree_folder_kids(parent, options)
+                                                        x_get_tree_folder_kids(parent, count_only, options[:type])
                                                       end
-                        when EmsCluster          then x_get_tree_cluster_kids(parent, options)
-                        when Hash                then x_get_tree_custom_kids(parent, options)
-                        when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, options)
-                        when LdapRegion          then x_get_tree_lr_kids(parent, options)
-                        when MiqAeClass          then x_get_tree_class_kids(parent, options)
-                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, options)
+                        when EmsCluster          then x_get_tree_cluster_kids(parent, count_only)
+                        when Hash                then
+                          # TreeBuilderAlertProfile - :type
+                          # TreeBuilderArchived - :leaf
+                          # TreeBuilderCondition - :type
+                          # TreeBuilderContainersFilter - :leaf
+                          # TreeBuilderForemanConfiguredSystems - :leaf
+                          # TreeBuilderPolicy - :type
+                          # TreeBuilderReportDashboards - :type
+                          # TreeBuilderVmsFilter - :leaf
+                          x_get_tree_custom_kids(parent, count_only, options)
+                        when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
+                        when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
+                        when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
+                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, count_only)
                         when MiqGroup            then options[:tree] == :db_tree ?
-                                                    x_get_tree_g_kids(parent, options) : nil
-                        when MiqRegion           then x_get_tree_region_kids(parent, options)
-                        when PxeServer           then x_get_tree_pxe_server_kids(parent, options)
-                        when Service             then x_get_tree_service_kids(parent, options)
+                                                    x_get_tree_g_kids(parent, count_only) : nil
+                        when MiqRegion           then x_get_tree_region_kids(parent, count_only)
+                        when MiqReport           then x_get_tree_r_kids(parent, count_only)
+                        when PxeServer           then x_get_tree_pxe_server_kids(parent, count_only)
+                        when Service             then x_get_tree_service_kids(parent, count_only)
                         when ServiceTemplateCatalog
-                                                 then x_get_tree_stc_kids(parent, options)
-                        when ServiceTemplate     then x_get_tree_st_kids(parent, options)
-                        when Tenant              then x_get_tree_tenant_kids(parent, options)
-                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
-                        when Zone                then x_get_tree_zone_kids(parent, options)
+                                                 then x_get_tree_stc_kids(parent, count_only)
+                        when ServiceTemplate     then x_get_tree_st_kids(parent, count_only, options[:type])
+                        when Tenant              then x_get_tree_tenant_kids(parent, count_only)
+                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, count_only)
+                        when Zone                then x_get_tree_zone_kids(parent, count_only)
 
-                        when MiqPolicySet        then x_get_tree_pp_kids(parent, options)
-                        when MiqAction           then x_get_tree_ac_kids(parent, options)
-                        when MiqAlert            then x_get_tree_al_kids(parent, options)
-                        when MiqAlertSet         then x_get_tree_ap_kids(parent, options)
-                        when Condition           then x_get_tree_co_kids(parent, options)
-                        when MiqEventDefinition  then x_get_tree_ev_kids(parent, options)
-                        when MiqPolicy           then x_get_tree_po_kids(parent, options)
+                        when MiqPolicySet        then x_get_tree_pp_kids(parent, count_only)
+                        when MiqAction           then x_get_tree_ac_kids(parent, count_only)
+                        when MiqAlert            then x_get_tree_al_kids(parent, count_only)
+                        when MiqAlertSet         then x_get_tree_ap_kids(parent, count_only)
+                        when Condition           then x_get_tree_co_kids(parent, count_only)
+                        when MiqEventDefinition  then x_get_tree_ev_kids(parent, count_only, parents)
+                        when MiqPolicy           then x_get_tree_po_kids(parent, count_only)
 
                         when MiqSearch           then nil
                         when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
-                        else                          nil end
+                        end
     children_or_count || (count_only ? 0 : [])
   end
 
@@ -319,7 +343,7 @@ class TreeBuilder
 
     options[:is_current] =
         ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
-         (object.kind_of?(Zone)      && MiqServer.my_server(true).my_zone == object.name))
+         (object.kind_of?(Zone) && MiqServer.my_server(true).my_zone == object.name))
 
     # # open nodes to show selected automate entry point
     # x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
@@ -336,16 +360,16 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(object, options, nil, parents).each_with_object([]) do |o, acc|
-        acc.concat(x_build_node(o, node[:key], options))
+      kids = x_get_tree_objects(object, options, false, parents).map do |o|
+        x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
     else
-      if x_get_tree_objects(object, options.merge(:count_only => true), nil, parents) > 0
+      if x_get_tree_objects(object, options, true, parents) > 0
         node[:isLazy] = true  # set child flag if children exist
       end
     end
-    [node]
+    node
   end
 
   def x_build_single_node(object, pid, options)
@@ -358,8 +382,8 @@ class TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
-    options[:count_only] ? 0 : []
+  def x_get_tree_custom_kids(_object, count_only, _options)
+    count_only ? 0 : []
   end
 
   def count_only_or_objects(count_only, objects, sort_by = nil)
@@ -403,17 +427,17 @@ class TreeBuilder
     return objects if objects.empty?
 
     # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
-    check_vm_descendants = false
-    check_vm_descendants = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
+    descendants = false
+    descendants = options.delete(:match_via_descendants) if %w(ConfiguredSystems VmOrTemplate).include?(options[:match_via_descendants])
 
     results = Rbac.filtered(objects, options)
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if check_vm_descendants && User.current_user_has_filters?
+    if descendants && User.current_user.has_filters?
       filtered_objects = objects - results
       results = objects.select do |o|
-        if o.is_a?(EmsFolder) || filtered_objects.include?(o)
-          rbac_has_visible_vm_descendants?(o)
+        if o.kind_of?(EmsFolder) || filtered_objects.include?(o)
+          rbac_has_visible_descendants?(o, descendants)
         else
           true
         end
@@ -423,13 +447,13 @@ class TreeBuilder
     results
   end
 
-  def self.rbac_has_visible_vm_descendants?(o)
-    target_ids = o.descendant_ids(:of_type => "VmOrTemplate").transpose.last
+  def self.rbac_has_visible_descendants?(o, type)
+    target_ids = o.descendant_ids(:of_type => type).transpose.last
     return false if target_ids.blank?
-    results, _attrs = Rbac.search(:targets => target_ids, :class => VmOrTemplate)
+    results, _attrs = Rbac.search(:targets => target_ids, :class => type.constantize)
     results.length > 0
   end
-  private_class_method :rbac_has_visible_vm_descendants?
+  private_class_method :rbac_has_visible_descendants?
 
   # Tree node prefixes for generic explorers
   X_TREE_NODE_PREFIXES = {
@@ -441,6 +465,7 @@ class TreeBuilder
     "al"  => "MiqAlert",
     "ap"  => "MiqAlertSet",
     "az"  => "AvailabilityZone",
+    "azu" => "OrchestrationTemplateAzure",
     "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",

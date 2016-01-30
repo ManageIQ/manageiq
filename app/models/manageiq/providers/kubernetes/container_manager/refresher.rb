@@ -1,11 +1,12 @@
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
+    include ManageIQ::Providers::Kubernetes::ContainerManager::RefresherMixin
 
     def parse_inventory(ems, _targets = nil)
-      all_entities = ems.with_provider_connection(&:all_entities)
-      EmsRefresh.log_inv_debug_trace(all_entities, "inv_hash:")
-      ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser.ems_inv_to_hashes(all_entities)
+      entities = ems.with_provider_connection { |client| fetch_entities(client, KUBERNETES_ENTITIES) }
+      EmsRefresh.log_inv_debug_trace(entities, "inv_hash:")
+      ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser.ems_inv_to_hashes(entities)
     end
   end
 end

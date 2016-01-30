@@ -13,30 +13,30 @@ module ResourceFeeder
       require 'builder'
       xml = Builder::XmlMarkup.new(:indent => 2)
 
-      options[:feed]       ||= {}
-      options[:item]       ||= {}
+      options[:feed] ||= {}
+      options[:item] ||= {}
       options[:url_writer] ||= self
 
       if options[:class] || resources.first
         klass      = options[:class] || resources.first.class
         new_record = klass.new
       else
-        options[:feed] = { :title => "Empty", :link => "http://example.com" }
+        options[:feed] = {:title => "Empty", :link => "http://example.com"}
       end
-      use_content_encoded = options[:item].has_key?(:content_encoded)
+      use_content_encoded = options[:item].key?(:content_encoded)
 
-      options[:feed][:title]    ||= klass.name.pluralize
-      options[:feed][:link]     ||= SimplyHelpful::PolymorphicRoutes.polymorphic_url(new_record, options[:url_writer])
+      options[:feed][:title] ||= klass.name.pluralize
+      options[:feed][:link] ||= SimplyHelpful::PolymorphicRoutes.polymorphic_url(new_record, options[:url_writer])
       options[:feed][:language] ||= "en-us"
-      options[:feed][:ttl]      ||= "40"
+      options[:feed][:ttl] ||= "40"
 
-      options[:item][:title]           ||= [ :title, :subject, :headline, :name ]
-      options[:item][:description]     ||= [ :description, :body, :content ]
-      options[:item][:pub_date]        ||= [ :updated_at, :updated_on, :created_at, :created_on ]
+      options[:item][:title] ||= [:title, :subject, :headline, :name]
+      options[:item][:description] ||= [:description, :body, :content]
+      options[:item][:pub_date] ||= [:updated_at, :updated_on, :created_at, :created_on]
 
-      resource_link = lambda { |r| SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
+      resource_link = ->(r) { SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
 
-      rss_root_attributes = { :version => 2.0 }
+      rss_root_attributes = {:version => 2.0}
       rss_root_attributes.merge!("xmlns:content" => "http://purl.org/rss/1.0/modules/content/") if use_content_encoded
 
       xml.instruct!
@@ -53,11 +53,11 @@ module ResourceFeeder
             xml.item do
               xml.title(call_or_read(options[:item][:title], resource))
               xml.description(call_or_read(options[:item][:description], resource))
-              if use_content_encoded then
+              if use_content_encoded
                 xml.content(:encoded) { xml.cdata!(call_or_read(options[:item][:content_encoded], resource)) }
               end
               pubDate = call_or_read(options[:item][:pub_date], resource)
-              xml.pubDate(pubDate.to_s(:rfc822)) unless pubDate == nil
+              xml.pubDate(pubDate.to_s(:rfc822)) unless pubDate.nil?
               xml.guid(call_or_read(options[:item][:guid] || options[:item][:link] || resource_link, resource))
               xml.link(call_or_read(options[:item][:link] || options[:item][:guid] || resource_link, resource))
             end

@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require "spec_helper"
-
 describe BinaryBlobPart do
   context "#data= and #data" do
     before(:each) do
@@ -17,12 +15,12 @@ describe BinaryBlobPart do
 
     it "without UTF-8 data" do
       @data = "--- Quota - Max CPUs\n...\n"
-      subject.bytes.to_a.should == @data.bytes.to_a
+      expect(subject.bytes.to_a).to eq(@data.bytes.to_a)
     end
 
     it "with UTF-8 data" do
       @data = "--- Quota \xE2\x80\x93 Max CPUs\n...\n"
-      subject.bytes.to_a.should == @data.bytes.to_a
+      expect(subject.bytes.to_a).to eq(@data.bytes.to_a)
     end
   end
 end

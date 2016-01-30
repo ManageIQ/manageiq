@@ -35,7 +35,7 @@ linters:
 
   LineLength:
     enabled: true
-    max: 120
+    max: 160
     severity: refactor
 
   MultilinePipe:
@@ -57,6 +57,7 @@ linters:
       - Metrics/LineLength
       - Style/AlignParameters
       - Style/BlockNesting
+      - Style/ExtraSpacing
       - Style/FileName
       - Style/FinalNewline
       - Style/IfUnlessModifier

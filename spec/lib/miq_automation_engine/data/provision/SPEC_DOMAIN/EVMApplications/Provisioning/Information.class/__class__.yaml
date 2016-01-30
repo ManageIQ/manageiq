@@ -133,26 +133,6 @@ object:
       max_time: 
   - field:
       aetype: relationship
-      name: domains
-      display_name: 
-      datatype: 
-      priority: 7
-      owner: 
-      default_value: 
-      substitute: true
-      message: get_domains
-      visibility: 
-      collect: /domains = domain
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: relationship
       name: networks
       display_name: 
       datatype: 

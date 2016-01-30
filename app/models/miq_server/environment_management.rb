@@ -1,4 +1,6 @@
 require 'miq_apache'
+require 'linux_admin'
+
 module MiqServer::EnvironmentManagement
   extend ActiveSupport::Concern
 
@@ -27,7 +29,7 @@ module MiqServer::EnvironmentManagement
         options.shift # remove the "minimal" from the front of the array
 
         # Special case where Netbeans is handling the UI worker for debugging
-        options.collect { |o| o.downcase == "netbeans" ? %w{schedule reporting noui} : o }.flatten
+        options.collect { |o| o.downcase == "netbeans" ? %w(schedule reporting noui) : o }.flatten
       end
     end
 
@@ -36,21 +38,23 @@ module MiqServer::EnvironmentManagement
       # Find out startup mode
       if self.minimal_env?
         mode = "Minimal"
-        mode << " [#{self.minimal_env_options.join(', ')}]" unless self.minimal_env_options.empty?
+        mode << " [#{minimal_env_options.join(', ')}]" unless minimal_env_options.empty?
       else
         mode = "Normal"
       end
 
-      return mode
+      mode
     end
 
     def get_network_information
-      ipaddr = hostname = mac_address = ''
+      ipaddr = hostname = mac_address = nil
       begin
-        if MiqEnvironment::Command.is_linux? && File.exist?('/bin/miqnet.sh')
-          ipaddr      = `/bin/miqnet.sh -GET IP`.chomp
-          hostname    = `/bin/miqnet.sh -GET HOST`.chomp
-          mac_address = `/bin/miqnet.sh -GET MAC`.chomp
+        if MiqEnvironment::Command.is_appliance?
+          eth0 = LinuxAdmin::NetworkInterface.new("eth0")
+
+          ipaddr      = eth0.address
+          hostname    = LinuxAdmin::Hosts.new.hostname
+          mac_address = eth0.mac_address
         else
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr
@@ -60,7 +64,7 @@ module MiqServer::EnvironmentManagement
       rescue
       end
 
-      return [ipaddr, hostname, mac_address]
+      [ipaddr, hostname, mac_address]
     end
 
     def validate_database
@@ -72,7 +76,7 @@ module MiqServer::EnvironmentManagement
     end
 
     def start_memcached(cfg = VMDB::Config.new('vmdb'))
-      #TODO: Need to periodically check the memcached instance to see if it's up, and bounce it and notify the UiWorkers to re-connect
+      # TODO: Need to periodically check the memcached instance to see if it's up, and bounce it and notify the UiWorkers to re-connect
       return unless cfg.config.fetch_path(:server, :session_store).to_s == 'cache'
       return unless MiqEnvironment::Command.supports_memcached?
       require "#{Rails.root}/lib/miq_memcached" unless Object.const_defined?(:MiqMemcached)
@@ -89,7 +93,6 @@ module MiqServer::EnvironmentManagement
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
     end
-
   end
 
   #
@@ -98,13 +101,13 @@ module MiqServer::EnvironmentManagement
   def queue_restart_apache
     MiqQueue.put_unless_exists(
       :class_name  => 'MiqServer',
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'restart_apache',
       :queue_name  => 'miq_server',
-      :zone        => self.zone.name,
-      :server_guid => self.guid
+      :zone        => zone.name,
+      :server_guid => guid
     ) do |msg|
-      _log.info("Server: [#{self.id}] [#{self.name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
+      _log.info("Server: [#{id}] [#{name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
     end
   end
 
@@ -125,19 +128,22 @@ module MiqServer::EnvironmentManagement
     threshold = disk_usage_threshold
 
     disks.each do |disk|
-      if disk[:used_bytes_percent].to_i > threshold
-        disk_usage_event = case disk[:mount_point].chomp
-        when '/'                     then 'evm_server_system_disk_high_usage'
-        when '/var/www/miq'          then 'evm_server_app_disk_high_usage'
-        when '/var/www/miq/vmdb/log' then 'evm_server_log_disk_high_usage'
-        when /pgsql\/data/           then 'evm_server_db_disk_high_usage'
-        end
+      next unless disk[:used_bytes_percent].to_i > threshold
+      disk_usage_event = case disk[:mount_point].chomp
+                         when '/'                then 'evm_server_system_disk_high_usage'
+                         when '/boot'            then 'evm_server_boot_disk_high_usage'
+                         when '/home'            then 'evm_server_home_disk_high_usage'
+                         when '/var'             then 'evm_server_var_disk_high_usage'
+                         when '/var/log'         then 'evm_server_var_log_disk_high_usage'
+                         when '/var/log/audit'   then 'evm_server_var_log_audit_disk_high_usage'
+                         when '/var/www/miq_tmp' then 'evm_server_miq_tmp_disk_high_usage'
+                         when '/tmp'             then 'evm_server_tmp_disk_high_usage'
+                         when %r{pgsql/data}     then 'evm_server_db_disk_high_usage'
+                         end
 
-        next unless disk_usage_event
-        msg = "Filesystem: #{disk[:filesystem]} (#{disk[:type]}) on #{disk[:mount_point]} is #{disk[:used_bytes_percent]}% full with #{ActionView::Base.new.number_to_human_size(disk[:available_bytes])} free."
-        MiqEvent.raise_evm_event_queue(self, disk_usage_event, :event_details => msg)
-      end
+      next unless disk_usage_event
+      msg = "Filesystem: #{disk[:filesystem]} (#{disk[:type]}) on #{disk[:mount_point]} is #{disk[:used_bytes_percent]}% full with #{ActionView::Base.new.number_to_human_size(disk[:available_bytes])} free."
+      MiqEvent.raise_evm_event_queue(self, disk_usage_event, :event_details => msg)
     end
   end
-
 end

@@ -40,7 +40,7 @@ $evm.log("info", "Listing CURRENT Object Attributes:")
 current.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
 $evm.log("info", "===========================================")
 step        = current['step']
-step        = 'initial' if step.nil?  || step.empty?
+step        = 'initial' if step.nil? || step.empty?
 step_index  = STEPS.index(step)
 $evm.log("info", "STEP=<#{step}> INDEX=<#{step_index}>")
 

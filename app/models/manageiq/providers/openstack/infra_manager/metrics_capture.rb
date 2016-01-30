@@ -42,7 +42,7 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
   COUNTER_INFO   = [
     {
       :openstack_counters    => CPU_METERS,
-      :calculation           => lambda { |stat, _| stat },
+      :calculation           => ->(stat, _) { stat },
       :vim_style_counter_key => "cpu_usage_rate_average"
     },
     {
@@ -70,7 +70,7 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
   COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:openstack_counters] }.flatten.uniq
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average" => {
+    "cpu_usage_rate_average"       => {
       :counter_key           => "cpu_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",
@@ -79,7 +79,7 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
       :unit_key              => "percent",
       :capture_interval_name => "realtime"
     },
-    "mem_usage_absolute_average" => {
+    "mem_usage_absolute_average"   => {
       :counter_key           => "mem_usage_absolute_average",
       :instance              => "",
       :capture_interval      => "20",
@@ -97,7 +97,7 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
       :unit_key              => "megabytes",
       :capture_interval_name => "realtime"
     },
-    "disk_usage_rate_average" => {
+    "disk_usage_rate_average"      => {
       :counter_key           => "disk_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",
@@ -106,7 +106,7 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
       :unit_key              => "blockspersecond",
       :capture_interval_name => "realtime"
     },
-    "net_usage_rate_average" => {
+    "net_usage_rate_average"       => {
       :counter_key           => "net_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",

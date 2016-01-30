@@ -1,6 +1,5 @@
-- content_for :trees do
-  %div{:style => "display: none;"}
-    = render :partial => "planning_options"
+- content_for :left do
+  = render :partial => "planning_options"
 
   #left_cell_bottom{:align => "center"}
     #buttons_on{:style => session[:changed] ? "" : "display: none;"}
@@ -10,6 +9,7 @@
         :alt                  => (t = _("Submit Planning options")),
         "data-miq_sparkle_on" => true,
         :remote               => true,
+        "data-method"         => :post,
         :title                => t)
 
       = link_to(_("Reset"),
@@ -19,6 +19,7 @@
         :alt                   => (t = _("Reset all Planning options")),
         "data-miq_sparkle_off" => true,
         :remote                => true,
+        "data-method"          => :post,
         :title                 => t)
     #buttons_off{:style => session[:changed] ? "display: none;" : ""}
       = button_tag(_("Submit"),
@@ -31,14 +32,8 @@
         "data-miq_sparkle_on"  => true,
         "data-miq_sparkle_off" => true,
         :remote                => true,
+        "data-method"          => :post,
         :title                 => t)
 
-- content_for :accords do
-  -# Create the explorer dhtmlx layout/accordion JS objects
-  = render(:partial => "layouts/dhtmlxlayout_explorer",
-    :locals => {:accords => @accords,
-      :left_cell_bottom  => "left_cell_bottom",
-      :layout_pattern    => "3J"})
-
-#main_div.main_div
+#main_div
   = render :partial => "planning_tabs"

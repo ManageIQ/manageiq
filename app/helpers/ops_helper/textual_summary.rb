@@ -1,5 +1,4 @@
 module OpsHelper::TextualSummary
-
   #
   # Groups
   #
@@ -24,6 +23,10 @@ module OpsHelper::TextualSummary
   def textual_group_vmdb_connection_capacity_data
     %i(vmdb_connection_timestamp vmdb_connection_total_space vmdb_connection_used_space vmdb_connection_free_space
        vmdb_connection_total_index_nodes vmdb_connection_used_index_nodes vmdb_connection_free_index_nodes)
+  end
+
+  def textual_group_tenant_quota_allocations
+    %i(tenant_quota_allocations)
   end
 
   #
@@ -94,35 +97,80 @@ module OpsHelper::TextualSummary
   end
 
   def textual_vmdb_tables_most_rows
-    h = {:label => "Tables with the Most Rows", :headers => ["Name","Rows"], :col_order => ["name","value"]}
-    h[:value] = vmdb_table_top_rows(:rows,TOP_TABLES_BY_ROWS_COUNT)
+    h = {:label => "Tables with the Most Rows", :headers => ["Name", "Rows"], :col_order => ["name", "value"]}
+    h[:value] = vmdb_table_top_rows(:rows, TOP_TABLES_BY_ROWS_COUNT)
     h
   end
 
   def textual_vmdb_tables_largest_size
-    h = {:label => "Largest Tables", :headers => ["Name","Size"], :col_order => ["name","value"]}
-    h[:value] = vmdb_table_top_rows(:size,TOP_TABLES_BY_SIZE_COUNT)
+    h = {:label => "Largest Tables", :headers => ["Name", "Size"], :col_order => ["name", "value"]}
+    h[:value] = vmdb_table_top_rows(:size, TOP_TABLES_BY_SIZE_COUNT)
     h
   end
 
   def textual_vmdb_tables_most_wasted_space
-    h = {:label => "Tables with Most Wasted Space", :headers => ["Name","Wasted"], :col_order => ["name","value"]}
-    h[:value] = vmdb_table_top_rows(:wasted_bytes,TOP_TABLES_BY_WASTED_SPACE_COUNT)
+    h = {:label => "Tables with Most Wasted Space", :headers => ["Name", "Wasted"], :col_order => ["name", "value"]}
+    h[:value] = vmdb_table_top_rows(:wasted_bytes, TOP_TABLES_BY_WASTED_SPACE_COUNT)
     h
   end
 
-  def vmdb_table_top_rows(typ,limit)
+  def vmdb_table_top_rows(typ, limit)
     rows = VmdbDatabase.my_database.top_tables_by(typ, limit)
-    return rows.collect { |row|
+    rows.collect do |row|
       {
-        :title => row.name,
-        :name => row.name,
-        :value => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s), :delimeter => ',') :
+        :title    => row.name,
+        :name     => row.name,
+        :value    => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s), :delimeter => ',') :
                                  number_to_human_size(row.latest_hourly_metric.send(typ.to_s), :precision => 1),
         :explorer => true,
-        :link => "miqDynatreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
+        :link     => "miqDynatreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
       }
-    }
+    end
   end
 
+  def textual_tenant_quota_allocations
+    h = {:label => "Tenant Quota", :headers => ["Name", "Total Quota", "In Use", "Allocated", "Available"], :col_order => ["name", "total", "in_use", "allocated", "available"]}
+    h[:value] = get_tenant_quota_allocations
+    h
+  end
+
+  def convert_to_format(format, text_modifier, value)
+    fmt_value = case format.to_s
+                  when "general_number_precision_0"
+                    value.to_i
+                  when "gigabytes_human"
+                    value.to_f / GIGABYTE
+                  else
+                    value.to_f
+                end
+    return "#{fmt_value} #{text_modifier}"
+  end
+
+  def convert_to_format_with_default_text(format, text_modifier, value, metric)
+    is_zero_value = value.nil? || value == 0
+    can_display_default_text = !TenantQuota.default_text_for(metric).nil?
+
+    if is_zero_value && can_display_default_text
+      return TenantQuota.default_text_for(metric)
+    end
+
+    convert_to_format(format, text_modifier, value)
+  end
+
+  def get_tenant_quota_allocations
+    rows = @record.combined_quotas.values.to_a
+    rows.collect do |row|
+      {
+        :title => row[:description],
+        :name => row[:description],
+        :in_use => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:used], :in_use),
+        :allocated => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:allocated],
+                                                          :allocated),
+        :available => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:available],
+                                                          :available),
+        :total => convert_to_format_with_default_text(row[:format], row[:text_modifier], row[:value], :total),
+        :explorer => true
+      }
+    end
+  end
 end

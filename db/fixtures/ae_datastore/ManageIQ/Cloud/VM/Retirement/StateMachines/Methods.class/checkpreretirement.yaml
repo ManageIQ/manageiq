@@ -9,6 +9,8 @@ object:
     description: 
   fields:
   - openstack_meth1:
-      value: openstack_check_pre_retirement
+      value: check_pre_retirement
   - amazon_meth1:
       value: amazon_check_pre_retirement
+  - azure_meth1:
+      value: check_pre_retirement

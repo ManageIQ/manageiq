@@ -1,48 +1,51 @@
-require "spec_helper"
-
 describe MiqAeDomain do
+  before do
+    EvmSpecHelper.local_guid_miq_server_zone
+    @user = FactoryGirl.create(:user_with_group)
+  end
+
   it "should use the highest priority when not specified" do
-    MiqAeDomain.create(:name => 'TEST1')
-    MiqAeDomain.create(:name => 'TEST2', :priority => 10)
-    d3 = MiqAeDomain.create(:name => 'TEST3')
-    d3.priority.should eql(11)
+    FactoryGirl.create(:miq_ae_domain, :name => 'TEST1')
+    FactoryGirl.create(:miq_ae_domain, :name => 'TEST2', :priority => 10)
+    d3 = FactoryGirl.create(:miq_ae_domain, :name => 'TEST3')
+    expect(d3.priority).to eql(11)
   end
 
   context "reset priority" do
     before do
       initial = {'TEST1' => 11, 'TEST2' => 12, 'TEST3' => 13, 'TEST4' => 14}
-      initial.each { |dom, pri| MiqAeDomain.create(:name => dom, :priority => pri) }
+      initial.each { |dom, pri| FactoryGirl.create(:miq_ae_domain, :name => dom, :priority => pri) }
     end
 
     it "should change priority based on ordered list of ids" do
       after = {'TEST4' => 1, 'TEST3' => 2, 'TEST2' => 3, 'TEST1' => 4}
       ids   = after.collect { |dom, _| MiqAeDomain.find_by_fqname(dom).id }
       MiqAeDomain.reset_priority_by_ordered_ids(ids)
-      after.each { |dom, pri| MiqAeDomain.find_by_fqname(dom).priority.should eql(pri) }
+      after.each { |dom, pri| expect(MiqAeDomain.find_by_fqname(dom).priority).to eql(pri) }
     end
 
     it "after a domain with lowest priority is deleted" do
       MiqAeDomain.destroy(MiqAeDomain.find_by_fqname('TEST1').id)
       after = {'TEST2' => 1, 'TEST3' => 2, 'TEST4' => 3}
-      after.each { |dom, pri| MiqAeDomain.find_by_fqname(dom).priority.should eql(pri) }
+      after.each { |dom, pri| expect(MiqAeDomain.find_by_fqname(dom).priority).to eql(pri) }
     end
 
     it "after a domain with middle priority is deleted" do
       MiqAeDomain.destroy(MiqAeDomain.find_by_fqname('TEST3').id)
       after = {'TEST1' => 1, 'TEST2' => 2, 'TEST4' => 3}
-      after.each { |dom, pri| MiqAeDomain.find_by_fqname(dom).priority.should eql(pri) }
+      after.each { |dom, pri| expect(MiqAeDomain.find_by_fqname(dom).priority).to eql(pri) }
     end
 
     it "after a domain with highest priority is deleted" do
       MiqAeDomain.destroy(MiqAeDomain.find_by_fqname('TEST4').id)
       after = {'TEST1' => 1, 'TEST2' => 2, 'TEST3' => 3}
-      after.each { |dom, pri| MiqAeDomain.find_by_fqname(dom).priority.should eql(pri) }
+      after.each { |dom, pri| expect(MiqAeDomain.find_by_fqname(dom).priority).to eql(pri) }
     end
 
     it "after all domains are deleted" do
       %w(TEST1 TEST2 TEST3 TEST4).each { |name| MiqAeDomain.find_by_fqname(name).destroy }
-      d1 = MiqAeDomain.create(:name => 'TEST1')
-      d1.priority.should eql(1)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => 'TEST1')
+      expect(d1.priority).to eql(1)
     end
   end
 
@@ -50,13 +53,13 @@ describe MiqAeDomain do
     it "should return unlocked_domains? as true if the there are any unlocked domains available" do
       FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
       FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => false)
-      MiqAeDomain.any_unlocked?.should be_true
+      expect(MiqAeDomain.any_unlocked?).to be_truthy
     end
 
     it "should return unlocked_domains? as false if the there are no unlocked domains available" do
       FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
       FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => true)
-      MiqAeDomain.any_unlocked?.should be_false
+      expect(MiqAeDomain.any_unlocked?).to be_falsey
     end
   end
 
@@ -65,14 +68,14 @@ describe MiqAeDomain do
       FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
       FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => false)
       FactoryGirl.create(:miq_ae_namespace, :name => 'd3', :priority => 10, :system => nil)
-      MiqAeDomain.all_unlocked.count.should eq(2)
+      expect(MiqAeDomain.all_unlocked.count).to eq(2)
     end
 
     it "should return empty array when there are no unlocked domains" do
       FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
       FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => true)
       FactoryGirl.create(:miq_ae_namespace, :name => 'd3', :priority => 10, :system => true)
-      MiqAeDomain.all_unlocked.count.should eq(0)
+      expect(MiqAeDomain.all_unlocked.count).to eq(0)
     end
   end
 
@@ -82,15 +85,15 @@ describe MiqAeDomain do
     end
 
     it "missing class should get empty array" do
-      result = MiqAeClass.get_homonymic_across_domains('DOM1/CLASS1')
-      result.should be_empty
+      result = MiqAeClass.get_homonymic_across_domains(@user, 'DOM1/CLASS1')
+      expect(result).to be_empty
     end
 
     it "get same named classes" do
       create_multiple_domains
       expected = %w(/DOM2/A/b/C/cLaSS1 /DOM1/A/B/C/CLASS1 /DOM3/a/B/c/CLASs1)
-      result = MiqAeClass.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1', true)
-      expected.should match_string_array_ignorecase(result.collect(&:fqname))
+      result = MiqAeClass.get_homonymic_across_domains(@user, '/DOM1/A/B/C/CLASS1', true)
+      expect(expected).to match_string_array_ignorecase(result.collect(&:fqname))
     end
   end
 
@@ -100,8 +103,8 @@ describe MiqAeDomain do
     end
 
     it "missing instance should get empty array" do
-      result = MiqAeInstance.get_homonymic_across_domains('DOM1/CLASS1/nothing')
-      result.should be_empty
+      result = MiqAeInstance.get_homonymic_across_domains(@user, 'DOM1/CLASS1/nothing')
+      expect(result).to be_empty
     end
 
     it "get same named instances" do
@@ -112,8 +115,8 @@ describe MiqAeDomain do
         /DOM1/A/B/C/CLASS1/instance1
         /DOM3/a/B/c/CLASs1/instance1
       )
-      result = MiqAeInstance.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1/instance1')
-      expected.should match_string_array_ignorecase(result.collect(&:fqname))
+      result = MiqAeInstance.get_homonymic_across_domains(@user, '/DOM1/A/B/C/CLASS1/instance1')
+      expect(expected).to match_string_array_ignorecase(result.collect(&:fqname))
     end
   end
 
@@ -123,15 +126,15 @@ describe MiqAeDomain do
     end
 
     it "missing method should get empty array" do
-      result = MiqAeMethod.get_homonymic_across_domains('DOM1/CLASS1/nothing')
-      result.should be_empty
+      result = MiqAeMethod.get_homonymic_across_domains(@user, 'DOM1/CLASS1/nothing')
+      expect(result).to be_empty
     end
 
     it "get same named methods" do
       create_multiple_domains_with_methods
       expected = %w(/DOM2/A/b/C/cLaSS1/method1 /DOM1/A/B/C/CLASS1/method1 /DOM3/a/B/c/CLASs1/method1)
-      result = MiqAeMethod.get_homonymic_across_domains('/DOM1/A/B/C/CLASS1/method1', true)
-      expected.should match_string_array_ignorecase(result.collect(&:fqname))
+      result = MiqAeMethod.get_homonymic_across_domains(@user, '/DOM1/A/B/C/CLASS1/method1', true)
+      expect(expected).to match_string_array_ignorecase(result.collect(&:fqname))
     end
   end
 
@@ -180,5 +183,4 @@ describe MiqAeDomain do
     attrs[:enabled] = true unless attrs.key?(:enabled)
     attrs
   end
-
 end

@@ -1,10 +1,6 @@
-require "spec_helper"
-
 describe "Widget Chart Content" do
   let(:widget) { MiqWidget.find_by_description("chart_vendor_and_guest_os") }
   before(:each) do
-    MiqRegion.seed
-
     _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
 
     RssFeed.sync_from_yml_dir
@@ -25,42 +21,46 @@ describe "Widget Chart Content" do
 
   it "#generate_content_for_user" do
     content = widget.generate_one_content_for_user(@group, @user)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(ManageIQ::Providers::Vmware::InfraManager::Vm.count)
-    widget.contents_for_user(@user).should eq(content)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(ManageIQ::Providers::Vmware::InfraManager::Vm.count)
+    expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for group" do
     content = widget.generate_one_content_for_group(@user.current_group, @user.get_timezone)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(ManageIQ::Providers::Vmware::InfraManager::Vm.count)
-    widget.contents_for_user(@user).should eq(content)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(ManageIQ::Providers::Vmware::InfraManager::Vm.count)
+    expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for self_service user" do
     @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
     content = widget.generate_one_content_for_user(@group, @user)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(3)
-    widget.contents_for_user(@user).should eq(content)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(3)
+    expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for limited_self_service user" do
     @role.update_attributes(:settings => {:restrictions => {:vms => :user}})
     content = widget.generate_one_content_for_user(@group, @user)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(2)
-    widget.contents_for_user(@user).should eq(content)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(2)
+    expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for self_service_group" do
     @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
     content = widget.generate_one_content_for_group(@user.current_group, @user.get_timezone)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(3)
-    widget.contents_for_user(@user).should eq(content)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(3)
+    expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for limited_self_service_group" do
     @role.update_attributes(:settings => {:restrictions => {:vms => :user}})
     content = widget.generate_one_content_for_group(@user.current_group, @user.get_timezone)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(3)
-    widget.contents_for_user(@user).should eq(content)
+    expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(3)
+    expect(widget.contents_for_user(@user)).to eq(content)
   end
 
+  it '#generate returns valid data' do
+    content = widget.generate_one_content_for_user(@group, @user)
+    expect(Charting.data_ok? content.contents).to eq(true)
+  end
 end

@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Google_CloudManager < MiqAeServiceManageIQ_Providers_CloudManager
+  end
+end

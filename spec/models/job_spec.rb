@@ -1,15 +1,11 @@
-require "spec_helper"
-
 describe Job do
   context "With a single scan job," do
-
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
+      @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
 
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@miq_server)
+      @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
+      @zone = @miq_server.zone
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone, :name => "Test EMS")
       @host       = FactoryGirl.create(:host)
 
@@ -43,24 +39,24 @@ describe Job do
         end
 
         it "should queue a timeout job if one not already on there" do
-          expect { @job.timeout! }.to change{ MiqQueue.count }.by(1)
+          expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
         end
 
         it "should be timed out after 5 minutes" do
           $log.info("@job: #{@job.inspect}")
-          @job.state.should  == "finished"
-          @job.status.should == "error"
-          @job.message.starts_with?("job timed out after").should be_true
+          expect(@job.state).to eq("finished")
+          expect(@job.status).to eq("error")
+          expect(@job.message.starts_with?("job timed out after")).to be_truthy
         end
       end
 
       it "should not queue a timeout job if one is already on there" do
-        expect { @job.timeout! }.not_to change{ MiqQueue.count }.by(1)
+        expect { @job.timeout! }.not_to change { MiqQueue.count }
       end
 
       it "should queue a timeout job if one is there, but it is failed" do
-        MiqQueue.first.update_attributes(state: MiqQueue::STATE_ERROR)
-        expect { @job.timeout! }.to change{ MiqQueue.count }.by(1)
+        MiqQueue.first.update_attributes(:state => MiqQueue::STATE_ERROR)
+        expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
       end
     end
 
@@ -85,9 +81,9 @@ describe Job do
 
       it "should be timed out after 5 minutes" do
         $log.info("@job: #{@job.inspect}")
-        @job.state.should  == "finished"
-        @job.status.should == "error"
-        @job.message.starts_with?("job timed out after").should be_true
+        expect(@job.state).to eq("finished")
+        expect(@job.status).to eq("error")
+        expect(@job.message.starts_with?("job timed out after")).to be_truthy
       end
     end
 
@@ -108,23 +104,23 @@ describe Job do
       end
 
       it "should create proper AR relationships" do
-        @snapshot.vm_or_template.should  == @vm
-        @vm.snapshots.first.should       == @snapshot
-        @vm.ext_management_system.should == @ems
-        @ems.vms.first.should            == @vm
+        expect(@snapshot.vm_or_template).to eq(@vm)
+        expect(@vm.snapshots.first).to eq(@snapshot)
+        expect(@vm.ext_management_system).to eq(@ems)
+        expect(@ems.vms.first).to eq(@vm)
 
-        @snapshot2.vm_or_template.should  == @vm2
-        @vm2.snapshots.first.should       == @snapshot2
-        @vm2.ext_management_system.should == @ems2
-        @ems2.vms.first.should            == @vm2
+        expect(@snapshot2.vm_or_template).to eq(@vm2)
+        expect(@vm2.snapshots.first).to eq(@snapshot2)
+        expect(@vm2.ext_management_system).to eq(@ems2)
+        expect(@ems2.vms.first).to eq(@vm2)
       end
 
       it "should be able to find Job from Evm Snapshot" do
         job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot.description)
-        Job.find_by_guid(job_guid).should == @job
+        expect(Job.find_by_guid(job_guid)).to eq(@job)
 
         job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot2.description)
-        Job.find_by_guid(job_guid).should == @job2
+        expect(Job.find_by_guid(job_guid)).to eq(@job2)
       end
 
       context "where job is not found and the snapshot timestamp is less than an hour old with default job_not_found_delay" do
@@ -222,7 +218,6 @@ describe Job do
         #   Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
         #   lambda { MiqQueue.first.deliver }.should_not raise_error
         # end
-
       end
     end
   end
@@ -230,17 +225,17 @@ describe Job do
   private
 
   def assert_queue_message
-    MiqQueue.count.should == 1
+    expect(MiqQueue.count).to eq(1)
     q = MiqQueue.first
-    q.instance_id.should == @vm.id
-    q.class_name.should  == @vm.class.name
-    q.method_name.should == "remove_evm_snapshot"
-    q.args.should        == [@snapshot.id]
-    q.role.should        == "ems_operations"
-    q.zone.should        == @zone.name
+    expect(q.instance_id).to eq(@vm.id)
+    expect(q.class_name).to eq(@vm.class.name)
+    expect(q.method_name).to eq("remove_evm_snapshot")
+    expect(q.args).to eq([@snapshot.id])
+    expect(q.role).to eq("ems_operations")
+    expect(q.zone).to eq(@zone.name)
   end
 
   def assert_no_queue_message
-    MiqQueue.count.should == 0
+    expect(MiqQueue.count).to eq(0)
   end
 end

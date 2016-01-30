@@ -4,7 +4,7 @@ unless Object.respond_to?(:blank?)
     # "", "   ", nil, [], and {} are blank
     def blank?
       if respond_to?(:empty?) && respond_to?(:strip)
-        empty? or strip.empty?
+        empty? || strip.empty?
       elsif respond_to?(:empty?)
         empty?
       else

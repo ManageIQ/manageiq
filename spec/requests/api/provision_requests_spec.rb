@@ -5,8 +5,6 @@
 # - Create single provision request    /api/provision_requests    action "create"
 # - Create multiple provision requests /api/provision_requests    action "create"
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 
@@ -25,7 +23,7 @@ describe ApiController do
   end
 
   describe "Provision Requests" do
-    let(:hardware) { FactoryGirl.create(:hardware, :memory_cpu => 1024) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 1024) }
     let(:template) do
       FactoryGirl.create(:template_vmware,
                          :name                  => "template1",
@@ -74,7 +72,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash])
 
       task_id = @result["results"].first["id"]
-      expect(MiqProvisionRequest.exists?(task_id)).to be_true
+      expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
     it "supports single request with create action" do
@@ -88,7 +86,7 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash])
 
       task_id = @result["results"].first["id"]
-      expect(MiqProvisionRequest.exists?(task_id)).to be_true
+      expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
     it "supports multiple requests" do
@@ -102,8 +100,8 @@ describe ApiController do
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
       task_id1, task_id2 = @result["results"].collect { |r| r["id"] }
-      expect(MiqProvisionRequest.exists?(task_id1)).to be_true
-      expect(MiqProvisionRequest.exists?(task_id2)).to be_true
+      expect(MiqProvisionRequest.exists?(task_id1)).to be_truthy
+      expect(MiqProvisionRequest.exists?(task_id2)).to be_truthy
     end
   end
 end

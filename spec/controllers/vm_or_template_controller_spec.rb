@@ -1,9 +1,7 @@
-require "spec_helper"
-
 describe VmOrTemplateController do
-  before(:each) do
-    set_user_privileges
-  end
+  let(:template_vmware) { FactoryGirl.create(:template_vmware, :name => 'template_vmware Name') }
+  let(:vm_vmware)       { FactoryGirl.create(:vm_vmware, :name => "vm_vmware Name") }
+  before { set_user_privileges }
 
   # All of the x_button is a suplement for Rails routes that is written in
   # controller.
@@ -14,103 +12,42 @@ describe VmOrTemplateController do
   # So we need a test for each possible value of 'presses' until all this is
   # converted into proper routes and test is changed to test the new routes.
   describe 'x_button' do
+    before do
+      ApplicationController.handle_exceptions = true
+    end
+
     describe 'corresponding methods are called for allowed actions' do
       ApplicationController::Explorer::X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         actual_action = 'vm_' + action_name
-        actual_method = if method == :s1 || method == :s2
-                          'vm_' + action_name
-                        else
-                          method.to_s
-                        end
+        actual_method = [:s1, :s2].include?(method) ? actual_action : method.to_s
+
         it "calls the appropriate method: '#{actual_method}' for action '#{actual_action}'" do
-          controller.stub(:x_button_response)
-          controller.should_receive(actual_method)
-          get :x_button, :id => FactoryGirl.create(:vm_redhat), :pressed => actual_action
+          expect(controller).to receive(actual_method)
+          get :x_button, :id => nil, :pressed => actual_action
         end
       end
     end
 
     it 'exception is raised for unknown action' do
       get :x_button, :pressed => 'random_dude', :format => :html
-      expect { response }.to render_template('layouts/exception')
+      expect(response).to render_template('layouts/exception')
     end
 
     context "x_button method check" do
-      let(:vm_infra) { FactoryGirl.create(:vm_vmware) }
-      before(:each) do
-        controller.instance_variable_set(:@_orig_action, "x_history")
-      end
+      before { controller.instance_variable_set(:@_orig_action, "x_history") }
 
       it "should set correct VM for right-sizing when on vm list view" do
-        controller.should_receive(:replace_right_cell)
-        post :x_button, :pressed => "vm_right_size", :id => vm_infra.id, :check_10r839 => '1'
-        controller.send(:flash_errors?).should_not be_true
-        assigns(:record).id == vm_infra.id
+        expect(controller).to receive(:replace_right_cell)
+        post :x_button, :pressed => "vm_right_size", :id => vm_vmware.id, :check_10r839 => '1'
+        expect(controller.send(:flash_errors?)).not_to be_truthy
+        assigns(:record).id == vm_vmware.id
       end
 
       it "should set correct VM for right-sizing when from vm summary screen" do
-        controller.should_receive(:replace_right_cell)
-        post :x_button, :pressed => "vm_right_size", :id => vm_infra.id
-        controller.send(:flash_errors?).should_not be_true
-        assigns(:record).id == vm_infra.id
-      end
-    end
-  end
-
-  render_views
-
-  context '#explorer' do
-    before(:each) do
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
-
-      FactoryGirl.create(:vmdb_database)
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
-
-    it 'can render the explorer' do
-      expect(MiqServer.my_server).to be
-      get :explorer
-      expect(response.status).to eq(200)
-      expect(response.body).to_not be_empty
-    end
-
-    it 'shows a template in the templates list' do
-      FactoryGirl.create(:template_vmware, :name => 'dempsey')
-      session[:sb] = {:active_accord => :templates_images_filter}
-      seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
-
-      get :explorer
-      expect(response.body).to match(%r{<cell>dempsey<\\/cell>})
-    end
-
-    it 'show a vm in the vms instances list' do
-      FactoryGirl.create(:vm_vmware, :name => 'makepeace')
-      get :explorer
-      expect(response.body).to match(%r{<cell>makepeace<\\/cell>})
-    end
-  end
-
-  context "#tree_select" do
-    before :each do
-      User.stub(:find_by_userid).and_return(User.current_user)
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
-
-    [
-      ['Vms & Instances', 'vms_instances_filter_tree'],
-      ['Templates & Image', 'templates_images_filter_tree'],
-    ].each do |elements, tree|
-      it "renders list of #{elements} for #{tree} root node" do
-        FactoryGirl.create(:vm_vmware)
-        FactoryGirl.create(:template_vmware)
-
-        session[:settings] = {}
-        seed_session_trees('vm_or_template', tree.to_sym)
-
-        post :tree_select, :id => 'root', :format => :js
-
-        response.should render_template('layouts/gtl/_list')
-        expect(response.status).to eq(200)
+        expect(controller).to receive(:replace_right_cell)
+        post :x_button, :pressed => "vm_right_size", :id => vm_vmware.id
+        expect(controller.send(:flash_errors?)).not_to be_truthy
+        assigns(:record).id == vm_vmware.id
       end
     end
   end
@@ -118,27 +55,76 @@ describe VmOrTemplateController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
-      @vm_or_template = VmOrTemplate.create(:name     => "test_vm_or_template",
-                                            :location => "test_vm_or_template_location",
-                                            :vendor   => "vmware")
       get :explorer
-      request.env['HTTP_REFERER'] = request.fullpath
     end
 
     it 'skips dropping a breadcrumb when a button action is executed' do
-      post :x_button, :id => @vm_or_template.id, :pressed => 'miq_template_ownership'
+      ApplicationController.handle_exceptions = true
+
+      post :x_button, :id => nil, :pressed => 'miq_template_ownership'
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "VMs and Instances", :url => "/vm_or_template/explorer")
+      expect(breadcrumbs).to eq([{:name => "VMs and Instances", :url => "/vm_or_template/explorer"}])
     end
 
     it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
       post :accordion_select, :id => "templates_images_filter"
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs.size).to eq(1)
-      expect(breadcrumbs).to include(:name => "VM Templates and Images", :url => "/vm_or_template/explorer")
+      expect(breadcrumbs).to eq([{:name => "VM Templates and Images", :url => "/vm_or_template/explorer"}])
+    end
+  end
+
+  context 'render_views' do
+    render_views
+
+    context '#explorer' do
+      before do
+        session[:settings] = {:views => {}, :perpage => {:list => 10}}
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it 'can render the explorer' do
+        get :explorer
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+      end
+
+      it 'shows a template in the templates list' do
+        template_vmware
+        session[:sb] = {:active_accord => :templates_images_filter}
+        seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
+
+        get :explorer
+        expect(response.body).to match(%r({"text":\s*"template_vmware Name"}))
+      end
+
+      it 'show a vm in the vms instances list' do
+        vm_vmware
+        get :explorer
+        expect(response.body).to match(%r({"text":\s*"vm_vmware Name"}))
+      end
+    end
+
+    context "#tree_select" do
+      before do
+        template_vmware
+        vm_vmware
+      end
+
+      [
+        ['Vms & Instances', 'vms_instances_filter_tree'],
+        ['Templates & Image', 'templates_images_filter_tree'],
+      ].each do |elements, tree|
+        it "renders list of #{elements} for #{tree} root node" do
+          session[:settings] = {}
+          seed_session_trees('vm_or_template', tree.to_sym)
+
+          post :tree_select, :id => 'root', :format => :js
+
+          expect(response).to render_template('layouts/gtl/_list')
+          expect(response.status).to eq(200)
+        end
+      end
     end
   end
 end

@@ -1,8 +1,12 @@
 class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ::MiqEventCatcher
-  require_dependency 'manageiq/providers/openstack/infra_manager/event_catcher/runner'
+  require_nested :Runner
 
   def self.ems_class
     ManageIQ::Providers::Openstack::InfraManager
+  end
+
+  def self.settings_name
+    :event_catcher_openstack_infra
   end
 
   def self.all_valid_ems_in_zone
@@ -14,17 +18,13 @@ class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ::MiqEventCat
     end
   end
 
-  def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
+  def self.validate_config_settings(config = VMDB::Config.new("vmdb"))
     super
 
     # make sure that new configurations for :topics and :duration are loaded
-    path = [:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :topics]
-    configuration.merge_from_template_if_missing(*path)
-    path = [:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :duration]
-    configuration.merge_from_template_if_missing(*path)
-    path = [:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :capacity]
-    configuration.merge_from_template_if_missing(*path)
-    path = [:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :amqp_port]
-    configuration.merge_from_template_if_missing(*path)
+    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :topics)
+    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :duration)
+    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :capacity)
+    config.merge_from_template_if_missing(:workers, :worker_base, :event_catcher, :event_catcher_openstack_infra, :amqp_port)
   end
 end

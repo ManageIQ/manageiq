@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvisionRequest do
   it ".request_task_class_from" do
     ems = FactoryGirl.create(:ems_vmware)
@@ -21,80 +19,78 @@ describe MiqProvisionRequest do
   end
 
   context "A new provision request," do
-    before            { User.any_instance.stub(:role).and_return("admin") }
+    before            { allow_any_instance_of(User).to receive(:role).and_return("admin") }
     let(:approver)    { FactoryGirl.create(:user_miq_request_approver) }
     let(:user)        { FactoryGirl.create(:user) }
     let(:ems)         { FactoryGirl.create(:ems_vmware) }
     let(:vm)          { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
     let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
 
-    it "should not be created without userid being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request) }.should raise_error(ActiveRecord::RecordInvalid)
+    it "should not be created without requester being specified" do
+      expect { FactoryGirl.create(:miq_provision_request) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with an invalid userid being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => 'barney', :src_vm_id => vm_template.id ) }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :userid => 'barney', :src_vm_id => vm_template.id) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with a valid userid but no vm being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid) }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should be created from either a VM or Template" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id) }.should_not raise_error
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm.id) }.should_not raise_error
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id) }.not_to raise_error
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm.id) }.not_to raise_error
     end
 
     it "should not be created with a valid userid but invalid vm being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => 42) }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => 42) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     context "with a valid userid and source vm," do
       before do
-        @pr = FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
-        @pr.create_request
+        @pr = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
         @request = @pr.miq_request
       end
 
       it "should create an MiqProvisionRequest" do
-        MiqProvisionRequest.count.should == 1
-        MiqProvisionRequest.first.should == @pr
-        @pr.valid?.should be_true
-        @pr.approved?.should be_false
+        expect(MiqProvisionRequest.count).to eq(1)
+        expect(MiqProvisionRequest.first).to eq(@pr)
+        expect(@pr.valid?).to be_truthy
+        expect(@pr.approved?).to be_falsey
       end
 
       it "should create a valid MiqRequest" do
-        @pr.miq_request.should == MiqRequest.first
-        @pr.miq_request.valid?.should be_true
-        @pr.miq_request.approval_state.should == "pending_approval"
-        @pr.miq_request.resource.should == @pr
-        @pr.miq_request.requester_userid.should == user.userid
-        @pr.miq_request.stamped_on.should be_nil
+        expect(@pr.miq_request).to eq(MiqRequest.first)
+        expect(@pr.miq_request.valid?).to be_truthy
+        expect(@pr.miq_request.approval_state).to eq("pending_approval")
+        expect(@pr.miq_request.resource).to eq(@pr)
+        expect(@pr.miq_request.requester_userid).to eq(user.userid)
+        expect(@pr.miq_request.stamped_on).to be_nil
 
-        @pr.miq_request.approved?.should be_false
-        MiqApproval.count.should == 1
-        @pr.miq_request.first_approval.should == MiqApproval.first
+        expect(@pr.miq_request.approved?).to be_falsey
+        expect(MiqApproval.count).to eq(1)
+        expect(@pr.miq_request.first_approval).to eq(MiqApproval.first)
       end
 
       it "should return a workflow class" do
-        @pr.workflow_class.should == ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
+        expect(@pr.workflow_class).to eq(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow)
       end
 
       context "when calling call_automate_event_queue" do
         before do
-          MiqServer.stub(:my_zone).and_return("default")
           @event_name = "request_created"
           @pr.miq_request.call_automate_event_queue(@event_name)
         end
 
         it "should create proper MiqQueue item" do
-          MiqQueue.count.should == 1
+          expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
-          q.class_name.should  == @pr.miq_request.class.name
-          q.instance_id.should == @pr.miq_request.id
-          q.method_name.should == "call_automate_event"
-          q.args.should        == [@event_name]
-          q.zone.should        == "default"
+          expect(q.class_name).to eq(@pr.miq_request.class.name)
+          expect(q.instance_id).to eq(@pr.miq_request.id)
+          expect(q.method_name).to eq("call_automate_event")
+          expect(q.args).to eq([@event_name])
+          expect(q.zone).to eq(ems.zone.name)
         end
       end
 
@@ -102,15 +98,15 @@ describe MiqProvisionRequest do
         before { @request.destroy }
 
         it "should delete MiqProvisionRequest" do
-          MiqProvisionRequest.count.should == 0
+          expect(MiqProvisionRequest.count).to eq(0)
         end
 
         it "should delete MiqApproval" do
-          MiqApproval.count.should == 0
+          expect(MiqApproval.count).to eq(0)
         end
 
         it "should not delete Approver" do
-          lambda { approver.reload }.should_not raise_error
+          expect { approver.reload }.not_to raise_error
         end
       end
 
@@ -120,24 +116,23 @@ describe MiqProvisionRequest do
         it "should return a hash for quota methods" do
           [:vms_by_group, :vms_by_owner, :retired_vms_by_group, :retired_vms_by_owner, :provisions_by_group, :provisions_by_owner,
            :requests_by_group, :requests_by_owner, :active_provisions_by_group, :active_provisions_by_owner, :active_provisions].each do |quota_method|
-            @pr.check_quota(quota_method).should be_kind_of(Hash)
+            expect(@pr.check_quota(quota_method)).to be_kind_of(Hash)
           end
         end
 
         it "should return stats from quota methods" do
-          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024','1024'], :number_of_cpus => [2, '2']}
-          @pr2 = FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id, :options => prov_options)
-          @pr2.create_request
+          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_cpus => [2, '2']}
+          @pr2 = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
 
           #:requests_by_group
           stats = @pr.check_quota(:requests_by_owner)
-          stats.should be_kind_of(Hash)
+          expect(stats).to be_kind_of(Hash)
 
-          stats[:class_name].should == "MiqProvisionRequest"
-          stats[:count].should == 2
-          stats[:memory].should == 2048
-          stats[:cpu].should == 4
-          stats.fetch_path(:active, :class_name).should == "MiqProvision"
+          expect(stats[:class_name]).to eq("MiqProvisionRequest")
+          expect(stats[:count]).to eq(2)
+          expect(stats[:memory]).to eq(2048)
+          expect(stats[:cpu]).to eq(4)
+          expect(stats.fetch_path(:active, :class_name)).to eq("MiqProvision")
         end
       end
 
@@ -145,72 +140,72 @@ describe MiqProvisionRequest do
         before { FactoryGirl.create(:classification_department_with_tags) }
 
         it "should add and delete tags from a request" do
-          @pr.get_tags.length.should == 0
+          expect(@pr.get_tags.length).to eq(0)
 
           t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
-          @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
-          @pr.get_tags[t.name.to_sym].should == t.children.first.name
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
+          expect(@pr.get_tags[t.name.to_sym]).to eq(t.children.first.name)
 
           # Adding the same tag again should not increase the tag count
           @pr.add_tag(t.name, t.children.first.name)
-          @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
-          @pr.get_tags[t.name.to_sym].should == t.children.first.name
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
+          expect(@pr.get_tags[t.name.to_sym]).to eq(t.children.first.name)
 
           # Verify that #get_tag with classification returns the single child tag name
-          @pr.get_tags[t.name.to_sym].should == @pr.get_tag(t.name)
+          expect(@pr.get_tags[t.name.to_sym]).to eq(@pr.get_tag(t.name))
 
           t.children.each { |c| @pr.add_tag(t.name, c.name) }
-          @pr.get_tags[t.name.to_sym].should be_kind_of(Array)
-          @pr.get_tags[t.name.to_sym].length.should == t.children.length
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(Array)
+          expect(@pr.get_tags[t.name.to_sym].length).to eq(t.children.length)
 
           child_names = t.children.collect(&:name)
           # Make sure each child name is yield from the tag method
           @pr.tags { |tag_name, _classification| child_names.delete(tag_name) }
-          child_names.should be_empty
+          expect(child_names).to be_empty
 
           tags = @pr.get_classification(t.name)
-          tags.should be_kind_of(Array)
+          expect(tags).to be_kind_of(Array)
           classification = tags.first
-          classification.should be_kind_of(Hash)
-          classification.keys.should include(:name)
-          classification.keys.should include(:description)
+          expect(classification).to be_kind_of(Hash)
+          expect(classification.keys).to include(:name)
+          expect(classification.keys).to include(:description)
 
           child_names = t.children.collect(&:name)
 
           @pr.clear_tag(t.name, child_names[0])
-          @pr.get_tags[t.name.to_sym].should be_kind_of(Array) # Multiple tags return as an Array
-          @pr.get_tags[t.name.to_sym].length.should == t.children.length - 1
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(Array) # Multiple tags return as an Array
+          expect(@pr.get_tags[t.name.to_sym].length).to eq(t.children.length - 1)
 
           @pr.clear_tag(t.name, child_names[1])
-          @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
-          @pr.get_tags[t.name.to_sym].should == child_names[2]
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
+          expect(@pr.get_tags[t.name.to_sym]).to eq(child_names[2])
 
           @pr.clear_tag(t.name)
-          @pr.get_tags[t.name.to_sym].should be_nil # No tags returns as nil
-          @pr.get_tags.length.should == 0
+          expect(@pr.get_tags[t.name.to_sym]).to be_nil # No tags returns as nil
+          expect(@pr.get_tags.length).to eq(0)
         end
 
         it "should return classifications for tags" do
-          @pr.get_tags.length.should == 0
+          expect(@pr.get_tags.length).to eq(0)
 
           t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
-          @pr.get_tags[t.name.to_sym].should be_kind_of(String)
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String)
 
           classification = @pr.get_classification(t.name)
-          classification.should be_kind_of(Hash)
-          classification.keys.should include(:name)
-          classification.keys.should include(:description)
+          expect(classification).to be_kind_of(Hash)
+          expect(classification.keys).to include(:name)
+          expect(classification.keys).to include(:description)
 
           @pr.add_tag(t.name, t.children[1].name)
-          @pr.get_tags[t.name.to_sym].should be_kind_of(Array)
+          expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(Array)
 
           classification = @pr.get_classification(t.name)
-          classification.should be_kind_of(Array)
+          expect(classification).to be_kind_of(Array)
           first = classification.first
-          first.keys.should include(:name)
-          first.keys.should include(:description)
+          expect(first.keys).to include(:name)
+          expect(first.keys).to include(:description)
         end
       end
     end

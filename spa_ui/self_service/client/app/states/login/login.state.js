@@ -26,10 +26,11 @@
   }
 
   /** @ngInject */
-  function StateController($state, API_LOGIN, API_PASSWORD, AuthenticationApi) {
+  function StateController($state, Text, API_LOGIN, API_PASSWORD, AuthenticationApi, CollectionsApi, Session) {
     var vm = this;
 
     vm.title = 'Login';
+    vm.text = Text.login;
 
     vm.credentials = {
       login: API_LOGIN,
@@ -39,11 +40,14 @@
     vm.onSubmit = onSubmit;
 
     function onSubmit() {
-      AuthenticationApi.login(vm.credentials.login, vm.credentials.password).then(handleSuccess);
+      // clearing a flag that *could* have been set before redirect to /login
+      Session.timeout_notified = false;
 
-      function handleSuccess() {
-        $state.go('dashboard');
-      }
+      return AuthenticationApi.login(vm.credentials.login, vm.credentials.password)
+        .then(Session.loadUser)
+        .then(function() {
+          $state.go('dashboard');
+        });
     }
   }
 })();

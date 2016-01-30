@@ -27,9 +27,8 @@ require 'util/miq-exception'
 require 'metadata/util/event_log_filter'
 
 class Win32EventLog
-
   # Standard file log names
-  SYSTEM_LOGS = %w{Application System Security}
+  SYSTEM_LOGS = %w(Application System Security)
   BUFFER_READ_SIZE = 10485760  # 10 MB buffer
 
   # Data definitions.  (http://msdn.microsoft.com/en-gb/library/bb309024.aspx)
@@ -43,12 +42,12 @@ class Win32EventLog
     'L',  :current_record_number, # The number of the next record that will be added to the event log.
     'L',  :oldest_record_number,  # The number of the oldest record in the event log. For an empty file, the oldest record number is set to 0.
     'L',  :max_size,              # The maximum size, in bytes, of the event log. The maximum size is defined when the event log is created.
-                                  # The event-logging service does not typically update this value, it relies on the registry configuration.
-                                  # The reader of the event log can use normal file APIs to determine the size of the file.
+    # The event-logging service does not typically update this value, it relies on the registry configuration.
+    # The reader of the event log can use normal file APIs to determine the size of the file.
     'L',  :flags,                 # See ELF_ below.
     'L',  :retention,             # The retention value of the file when it is created.
-                                  # The event-logging service does not typically update this value, it relies on the registry configuration.
-                                  # For more information about registry configuration values, see Eventlog Key.
+    # The event-logging service does not typically update this value, it relies on the registry configuration.
+    # For more information about registry configuration values, see Eventlog Key.
     'L',  :end_header_size        # The ending size of the header structure. The size is always 0x30.
   ])
 
@@ -57,15 +56,15 @@ class Win32EventLog
   ELF_WRAPPED      = 0x00000002   # Indicates the log is wrapped.
   ELF_LOGFULL      = 0x00000004   # Set if log full (extended implications in EventLogFormat.txt).
   ELF_LOGFILE_ARCHIVE_SET = 0x00000008   # Indicates that the archive attribute has been set for the file.
-                                  # Normal file APIs can also be used to determine the value of this flag.
+  # Normal file APIs can also be used to determine the value of this flag.
 
   # Data definitions.  (http://msdn.microsoft.com/en-gb/library/bb309022(VS.85).aspx )
   EVENTLOGEOF = BinaryStruct.new([
-    'L',   :record_size_beginning,# The beginning size of the ELF_EOF_RECORD. The beginning size is always 0x28.
+    'L',   :record_size_beginning, # The beginning size of the ELF_EOF_RECORD. The beginning size is always 0x28.
     'a16', :magic,                # Always \001\001\001\001\002\002\002\002\003\003\003\003\004\004\004\004
     'L',   :begin_record,         # The offset to the oldest record. If the event log is empty, this is set to the start of this structure.
     'L',   :end_record,           # The offset to the start of this structure.
-    'L',   :current_record_number,# The record number of the next event that will be written to the event log.
+    'L',   :current_record_number, # The record number of the next event that will be written to the event log.
     'L',   :oldest_record_number, # The record number of the oldest record in the event log. The record number will be 0 if the event log is empty.
     'L',   :record_size_end       # The ending size of the ELF_EOF_RECORD. The ending size is always 0x28.
   ])
@@ -73,8 +72,8 @@ class Win32EventLog
   # Data definitions.  (http://msdn.microsoft.com/en-gb/library/aa363646(VS.85).aspx)
   EVENTRECORD = BinaryStruct.new([
     'L',  :record_length,         # The size of this event record, in bytes. Note that this value is stored at both ends
-                                  # of the entry to ease moving forward or backward through the log. The length includes
-                                  # any pad bytes inserted at the end of the record for DWORD alignment.
+    # of the entry to ease moving forward or backward through the log. The length includes
+    # any pad bytes inserted at the end of the record for DWORD alignment.
     'a4', :magic,                 # A DWORD value that is always set to ELF_LOG_SIGNATURE (the value is 0x654c664c), which is ASCII for eLfL.
     'L',  :record_num,            # The number of the record.
     'L',  :generated,             # The time at which this entry was submitted. This time is measured in the number of seconds elapsed since 00:00:00 January 1, 1970, Universal Coordinated Time.
@@ -90,12 +89,12 @@ class Win32EventLog
     'L',  :user_sid_offset,       # Offset from beginning of record.
     'L',  :data_length,           # Length of parameter data (0 if none).
     'L',  :data_offset,           # The offset of the event-specific information within this event log record, in bytes.
-                                  # This information could be something specific (a disk driver might log the number of retries, for example),
-                                  # followed by binary information specific to the event being logged and to the source that generated the entry.
+    # This information could be something specific (a disk driver might log the number of retries, for example),
+    # followed by binary information specific to the event being logged and to the source that generated the entry.
   ])
 
   EVENTRECORDLENGTH = BinaryStruct.new([
-  'L',  :record_length,         # The size of this event record, in bytes. Note that this value is stored at both ends
+    'L',  :record_length,         # The size of this event record, in bytes. Note that this value is stored at both ends
   ])
 
   # Event types.
@@ -126,15 +125,15 @@ class Win32EventLog
   ERROR_NO_MORE_ITEMS    = 259
 
   # Lookup object for translating the common %? sequences in the messages
-  FORMAT_TR = Hash.new { |h, k| k }.merge(
-    '% ' => " ",
-    '%b' => " ",
-    '%.' => ".",
-    '%!' => "!",
-    '%n' => "\r\n",
-    '%r' => "\r",
-    '%t' => "\t",
-    '%0' => "",
+  FORMAT_TR = Hash.new { |_h, k| k }.merge(
+    '% '  => " ",
+    '%b'  => " ",
+    '%.'  => ".",
+    '%!'  => "!",
+    '%n'  => "\r\n",
+    '%r'  => "\r",
+    '%t'  => "\t",
+    '%0'  => "",
     '!s!' => ""
   )
 
@@ -179,7 +178,7 @@ class Win32EventLog
       readLog(o[:name], o[:filter])
       @readTimes[o[:name]] = Time.now - start
     end
-    return @xmlDoc
+    @xmlDoc
   end
 
   def readLog(log, filter = nil)
@@ -189,7 +188,6 @@ class Win32EventLog
     # Get message source files.  (This also caches the event log registry entries.)
     sources = getEventSourceMessageFiles(log)
     @f = @buf = nil
-
 
     # Get event log file and validate it is a format we support
     event_file = mkLogPath(log)
@@ -206,11 +204,11 @@ class Win32EventLog
       @f = f
       @offset = BUFFER_READ_SIZE * -1
 
-      hdr = ELF_LOGFILE_HEADER.decode(read_buffer(0,ELF_LOGFILE_HEADER.size))
+      hdr = ELF_LOGFILE_HEADER.decode(read_buffer(0, ELF_LOGFILE_HEADER.size))
       hdr[:wrapped] = !(hdr[:flags] & ELF_WRAPPED).zero?
       @file_size = @fs == File ? File.size(filename) : @fs.fileSize(filename)
 
-      $log.info "#{self.class}: Opened file for [#{log}] in [#{Time.now-st}] seconds.  Data Size:[#{@file_size}]  Wrapped:[#{hdr[:wrapped]}]" if $log
+      $log.info "#{self.class}: Opened file for [#{log}] in [#{Time.now - st}] seconds.  Data Size:[#{@file_size}]  Wrapped:[#{hdr[:wrapped]}]" if $log
 
       parse_time = Time.now
       recs_found = 0
@@ -237,9 +235,9 @@ class Win32EventLog
         # Get the rest of the record components
         getComputerName(rec)
         # There are not presently being used, so there is no need to collect them
-        #rec[:written] = Time.at(rec[:written]).utc.iso8601
-        #getSID(buf, pos, rec)
-        #getData(buf, pos, rec)
+        # rec[:written] = Time.at(rec[:written]).utc.iso8601
+        # getSID(buf, pos, rec)
+        # getData(buf, pos, rec)
 
         # Add the node to the XML
         recs_found += 1 if addNodeRec(recordsNode, rec)
@@ -254,7 +252,7 @@ class Win32EventLog
       # Store based on log.
       recordsNode.add_attribute(:num_records, recs_found)
 
-      $log.info "#{self.class}: Parsed [#{recs_processed}] [#{log}] records in [#{Time.now-parse_time}] seconds.  Collected [#{recs_found}] records.  Total time [#{Time.now-st}] seconds." if $log
+      $log.info "#{self.class}: Parsed [#{recs_processed}] [#{log}] records in [#{Time.now - parse_time}] seconds.  Collected [#{recs_found}] records.  Total time [#{Time.now - st}] seconds." if $log
     end
     @f = nil
   end
@@ -268,31 +266,31 @@ class Win32EventLog
     else
       logPath = Win32::SystemPath.registryPath(@fs, @systemRoot) + "/"
       logPath = case log
-      when 'Application'  then logPath + "appevent.evt"
-      when 'Security'     then logPath + "secevent.evt"
-      when 'System'       then logPath + "sysevent.evt"
-      else
-        raise "#{self.class}::mkLogPath: '#{log}' is not a path to an event log file." unless log.class.to_s == "String"
-        raise "#{self.class}::mkLogPath: File not found: '#{log}'" if !isFile?(log)
-        @customFileName = log
-      end
+                when 'Application'  then logPath + "appevent.evt"
+                when 'Security'     then logPath + "secevent.evt"
+                when 'System'       then logPath + "sysevent.evt"
+                else
+                  raise "#{self.class}::mkLogPath: '#{log}' is not a path to an event log file." unless log.class.to_s == "String"
+                  raise "#{self.class}::mkLogPath: File not found: '#{log}'" unless isFile?(log)
+                  @customFileName = log
+                end
     end
-    return logPath
+    logPath
   end
 
   # These functions hide the differences for equivalent calls in the file instance.
   def isFile?(fn)
     meth = @fs.respond_to?(:fileExists?) ? :fileExists? : :exists?
-    return @fs.send(meth, fn)
+    @fs.send(meth, fn)
   end
 
   def getFileObj(fn)
     # Determine what file open method to use
     meth = @fs.respond_to?(:fileOpen) ? :fileOpen : :open
-    fn = fn.gsub('\\','/')
+    fn = fn.tr('\\', '/')
     f = @fs.send(meth, fn, "rb")
 
-    #If we are passed a block, run it and close the file handle
+    # If we are passed a block, run it and close the file handle
     return f unless block_given?
     begin
       yield(f, fn)
@@ -303,7 +301,7 @@ class Win32EventLog
 
   def mkXmlDoc(log, event_file)
     @xmlDoc ||= XmlHash.createDoc("<event_log/>")
-    return @xmlDoc.root.add_element(:log, {:name => log, :path => event_file})
+    @xmlDoc.root.add_element(:log, {:name => log, :path => event_file})
   end
 
   # This function finds the first event record in the buffer.
@@ -315,7 +313,7 @@ class Win32EventLog
     pos = findCursorRecord(0) if pos.nil?
     raise "Win32 Eventlog cursor record not found." if pos.nil?
 
-    return EVENTLOGEOF.decode(read_buffer(pos-4, EVENTLOGEOF.size))
+    EVENTLOGEOF.decode(read_buffer(pos - 4, EVENTLOGEOF.size))
   end
 
   # The last 4 bytes of a record hold the record length for that record.
@@ -329,42 +327,42 @@ class Win32EventLog
 
     # Check for wrapped messages
     if curr_pos == ELF_LOGFILE_HEADER.size
-      curr_pos = findEndBuffer()
+      curr_pos = findEndBuffer
     end
 
-    offset = curr_pos-4
+    offset = curr_pos - 4
     prev_rec_length = read_buffer(offset, 4, -1)
     rec_len = EVENTRECORDLENGTH.decode(prev_rec_length)[:record_length]
-    new_pos = (curr_pos-rec_len)
+    new_pos = (curr_pos - rec_len)
 
     # Check for wrapped messages
     if new_pos < ELF_LOGFILE_HEADER.size
       copy_from_end = ELF_LOGFILE_HEADER.size - new_pos
       new_pos = @file_size - copy_from_end
     end
-    return new_pos
+    new_pos
   end
 
   # If the record header cannot fit at the end of the file when the log file wraps
   # the end of the file is padded with 0x27 markers after the record length.  So
   # walk backwards until a non-0x27 marker is found.
-  def findEndBuffer()
+  def findEndBuffer
     offset = @file_size - 4
-    while EVENTRECORDLENGTH.decode(read_buffer(offset, 4,-1))[:record_length] == 0x27
+    while EVENTRECORDLENGTH.decode(read_buffer(offset, 4, -1))[:record_length] == 0x27
       offset -= 4
     end
-    return offset + 4
+    offset + 4
   end
 
   def findCursorRecord(search_offset)
     pos = nil
-    while pos==nil
+    while pos.nil?
       pos = read_buffer(search_offset, BUFFER_READ_SIZE).index(MAGIC_CSR)
       search_offset += BUFFER_READ_SIZE if pos.nil?
       break if search_offset >= @file_size
     end
     pos += search_offset unless pos.nil?
-    return pos
+    pos
   end
 
   def each_record(hdr, log)
@@ -399,7 +397,7 @@ class Win32EventLog
         csr = EVENTLOGEOF.decode(read_buffer(pos, EVENTLOGEOF.size))
         break if csr[:magic] == MAGIC_CSR
         # Check if the Cursor record appears anywhere in the buffer data for this mis-aligned record.
-        break unless read_buffer(pos, last_pos-pos).index(MAGIC_CSR).nil?
+        break unless read_buffer(pos, last_pos - pos).index(MAGIC_CSR).nil?
         # When the log is wrapped if we find a mis-aligned record it is on the cursor record missing, likely due
         # to the log actively being updated when we read it.
         break if hdr[:wrapped] == true
@@ -424,9 +422,9 @@ class Win32EventLog
     end
   end
 
-  def read_buffer(offset, length, direction=1)
-    #puts "[#{@offset}] -- [#{@offset+BUFFER_READ_SIZE}], O:[#{offset}] L:[#{length}]"
-    if (offset < @offset) || (offset+length > @offset+BUFFER_READ_SIZE)
+  def read_buffer(offset, length, direction = 1)
+    # puts "[#{@offset}] -- [#{@offset+BUFFER_READ_SIZE}], O:[#{offset}] L:[#{length}]"
+    if (offset < @offset) || (offset + length > @offset + BUFFER_READ_SIZE)
       read_offset = offset
       if direction < 0
         # When adjusting the read offset backwards account for the length of the data
@@ -435,13 +433,13 @@ class Win32EventLog
         read_offset = offset - BUFFER_READ_SIZE + length + 4096
         read_offset = 0 if read_offset < 0
       end
-      #puts "***Loading from offset [#{read_offset}]"
+      # puts "***Loading from offset [#{read_offset}]"
       @f.seek(read_offset)
       @buf = @f.read(BUFFER_READ_SIZE)
       @offset = read_offset
     end
 
-    return @buf[offset-@offset, length]
+    @buf[offset - @offset, length]
   end
 
   def getSourceName(rec)
@@ -485,7 +483,7 @@ class Win32EventLog
       sid << subAuth.to_s << "-"
     }
     sid.chop!
-    return sid
+    sid
   end
 
   def getStrings(rec)
@@ -518,7 +516,7 @@ class Win32EventLog
   # The standard conversion doesn't terminate a string at \000\000 so use this.
   def weirdFixString(str)
     idx = str.index("\000\000")
-    return idx.nil? ? str : str[0..idx]
+    idx.nil? ? str : str[0..idx]
   end
 
   def addNodeRec(node, rec)
@@ -528,26 +526,26 @@ class Win32EventLog
     #   verify that this record is unique
     md5 = NODE_REC_KEYS.collect { |k| node_rec[k] = rec[k] }.join(' ')
     md5 = Digest::MD5.hexdigest(md5)
-    return false if @dup_check.has_key?(md5)
+    return false if @dup_check.key?(md5)
     @dup_check[md5] = nil
 
     node_rec[:uid] = md5
 
     node.add_element(:record, node_rec)
-    return true
+    true
   end
 
   # Given a record, turn it's event id into a log message.
   def getMessage(log, rec, sources)
     src = rec[:source].downcase
-    unless sources[:message].has_key?(src)
+    unless sources[:message].key?(src)
       # TODO: Use the Windows message from els.dll
       rec[:message] = "#{self.class}::getMessage: The source '#{rec[:source]}' is not listed under HKLM\\System\\CurrentControlSet\\Services\\EventLog\\#{log}"
       return
     end
 
     msgfiles = sources[:message][src].split(";")
-    paramfiles = sources[:param][src].split(";") if sources[:param].has_key?(src)
+    paramfiles = sources[:param][src].split(";") if sources[:param].key?(src)
 
     msg = errMsg = nil
     id = rec[:event_id]
@@ -585,23 +583,23 @@ class Win32EventLog
       return str.dup unless str.nil?
     end
 
-    return ""
+    ""
   end
 
   # Search for id in messagetables.
   def getString(id, msgtbls)
     return msgtbls unless msgtbls.kind_of?(Hash)
-    return msgtbls[id]
+    msgtbls[id]
   end
 
   def getMessageTables(fn)
     # Check cache for this file's messagetables.
-    return @msgtbl_cache[fn] if @msgtbl_cache.has_key?(fn)
+    return @msgtbl_cache[fn] if @msgtbl_cache.key?(fn)
 
     # Get file & read messagetable resources.
     peh = nil
     begin
-      getFileObj(fn) do |f, fn2|
+      getFileObj(fn) do |f, _fn2|
         begin
           peh = PEheader.new(f)
           # Stick this table in the cache.
@@ -614,7 +612,7 @@ class Win32EventLog
       @msgtbl_cache[fn] = "#{self.class}::getMessageTables: File not found: #{fn}"
     end
 
-    return @msgtbl_cache[fn]
+    @msgtbl_cache[fn]
   end
 
   def fmtSub(msg)
@@ -647,7 +645,7 @@ class Win32EventLog
   # Given a log name, get event sources & message files in a hash.
   def getEventSourceMessageFiles(log)
     return getSourcesFromMiqFS(log) if Object.const_defined?(:MiqFS) && @fs.kind_of?(MiqFS)
-    return getSourcesFromWin32(log)
+    getSourcesFromWin32(log)
   end
 
   def getSourcesFromMiqFS(log)
@@ -657,7 +655,7 @@ class Win32EventLog
     # Load registry section where we find the NT event log message source files.
     if @reg_source_xml.nil?
       reg = RemoteRegistry.new(@fs, true)
-      @reg_source_xml = reg.loadHive("system", [{:key=>'CurrentControlSet/Services/Eventlog',:value=>['CategoryMessageFile','EventMessageFile','ParameterMessageFile','File']}])
+      @reg_source_xml = reg.loadHive("system", [{:key => 'CurrentControlSet/Services/Eventlog', :value => ['CategoryMessageFile', 'EventMessageFile', 'ParameterMessageFile', 'File']}])
     end
 
     appKey = XmlFind.findElement("CurrentControlSet/Services/Eventlog/#{log}", @reg_source_xml)
@@ -665,8 +663,8 @@ class Win32EventLog
       keyName = src.attributes[:keyname].downcase
 
       [['EventMessageFile', :message],
-        ['ParameterMessageFile', :param],
-        ['CategoryMessageFile', :category]].each do |msg_file, type|
+       ['ParameterMessageFile', :param],
+       ['CategoryMessageFile', :category]].each do |msg_file, type|
         src.each_element_with_attribute(:name, msg_file) do |e|
           fn = e.text.to_s
           fn.gsub!(/%SystemRoot%/i, @systemRoot)
@@ -674,21 +672,21 @@ class Win32EventLog
         end
       end
     end
-    return sources
+    sources
   end
 
   def getSourcesFromWin32(log)
     require 'win32/registry'
     sources = {:message => {}, :param => {}, :category => {}}
-    types = {'EventMessageFile'=>sources[:message], 'ParameterMessageFile'=>sources[:param], 'CategoryMessageFile'=> sources[:category]}
+    types = {'EventMessageFile' => sources[:message], 'ParameterMessageFile' => sources[:param], 'CategoryMessageFile' => sources[:category]}
     src = "system\\currentcontrolset\\services\\eventlog\\#{log}"
 
     Win32::Registry::HKEY_LOCAL_MACHINE.open(src) do |reg|
-      reg.each_key do |subKey, wtime|
+      reg.each_key do |subKey, _wtime|
         subpath = "#{src}\\#{subKey}"
         subKey.downcase!
         Win32::Registry::HKEY_LOCAL_MACHINE.open(subpath) do |reg|
-          reg.each_value do |name, type, data|
+          reg.each_value do |name, _type, data|
             case name
             when 'EventMessageFile', 'ParameterMessageFile', 'CategoryMessageFile' then
               fn = data.to_s
@@ -699,7 +697,7 @@ class Win32EventLog
         end
       end
     end
-    return sources
+    sources
   end
 
   def getEvtMsgFile(hKey)
@@ -715,7 +713,7 @@ class Win32EventLog
     len = [len].pack('L')
 
     res = @@RegQueryValueEx.call(hKey, "EventMessageFile", 0, type, buf, len)
-    if res != ERROR_SUCCESS then
+    if res != ERROR_SUCCESS
       buf = ""
       len = [0].pack('L')
     end
@@ -726,7 +724,7 @@ class Win32EventLog
     buf = buf[0...(len.unpack('L')[0] - 1)]
     buf = buf.split("\\").join("/")
     buf.gsub!(/%SystemRoot%/i, @systemRoot)
-    return buf
+    buf
   end
 end
 
@@ -736,7 +734,7 @@ if __FILE__ == $0
   start = Time.now
   log = Win32EventLog.new
 
-  filter = {:level=> :warn}
+  filter = {:level => :warn}
   log.readLog("Application", filter)
   log.readLog("Security", filter)
   log.readLog("System", filter)

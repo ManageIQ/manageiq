@@ -1,16 +1,16 @@
 class ProviderForemanController < ApplicationController
-  before_filter :check_privileges
-  before_filter :get_session_data
+  before_action :check_privileges
+  before_action :get_session_data
 
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.model
     ManageIQ::Providers::Foreman::Provider
   end
 
   def self.table_name
-    @table_name ||= "foreman_provider"
+    @table_name ||= "provider_foreman"
   end
 
   def index
@@ -18,7 +18,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def show_list
-    redirect_to :action => 'explorer'
+    redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
   end
 
   def new
@@ -36,8 +36,8 @@ class ProviderForemanController < ApplicationController
       save_provider_foreman
     else
       assert_privileges("provider_foreman_edit_provider")
-      @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager,
-                                              from_cid(params[:miq_grid_checks] || params[:id]))
+      @provider_foreman = find_record(ManageIQ::Providers::Foreman::ConfigurationManager,
+                                      from_cid(params[:miq_grid_checks] || params[:id] || find_checked_items[0]))
       render_form
     end
   end
@@ -109,7 +109,7 @@ class ProviderForemanController < ApplicationController
                                                                      :url        => params[:url],
                                                                      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
                                                                      :verify_ssl => params[:verify_ssl].eql?("on"))
-        else
+    else
       config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find(params[:id])
       @provider_foreman = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
       @provider_foreman.update_attributes(:name       => params[:name],
@@ -117,16 +117,20 @@ class ProviderForemanController < ApplicationController
                                           :verify_ssl => params[:verify_ssl].eql?("on"))
 
     end
-    update_authentication_provider_foreman
+    update_authentication_provider_foreman(:save)
   end
 
-  def update_authentication_provider_foreman
+  def update_authentication_provider_foreman(mode = :validate)
+    @provider_foreman.update_authentication(build_credentials, :save => mode == :save)
+  end
+
+  def build_credentials
     creds = {}
-    creds[:default] = {:userid   => params[:log_userid],
-                       :password => params[:log_password]
-    }
-    save = params[:id] == "new" ? false : true
-    @provider_foreman.update_authentication(creds, :save => save)
+    if params[:log_userid]
+      default_password = params[:log_password] ? params[:log_password] : @provider_foreman.authentication_password
+      creds[:default] = {:userid => params[:log_userid], :password => default_password}
+    end
+    creds
   end
 
   def save_provider_foreman
@@ -163,7 +167,7 @@ class ProviderForemanController < ApplicationController
 
   def provider_foreman_form_fields
     assert_privileges("provider_foreman_edit_provider")
-    config_mgr_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+    config_mgr_foreman = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
     provider_foreman = ManageIQ::Providers::Foreman::Provider.find(config_mgr_foreman.provider_id)
     authentications_foreman = Authentication.where(:resource_id => provider_foreman[:id], :resource_type => "Provider")
 
@@ -171,17 +175,19 @@ class ProviderForemanController < ApplicationController
       :name         => provider_foreman.name,
       :url          => provider_foreman.url,
       :verify_ssl   => provider_foreman.verify_ssl,
-      :log_userid   => authentications_foreman[0].userid,
-      :log_password => authentications_foreman[0].password,
-      :log_verify   => authentications_foreman[0].password
+      :log_userid   => authentications_foreman[0].userid
     }
   end
 
   def authentication_validate
-    @provider_foreman = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                                   :url        => params[:url],
-                                                                   :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                   :verify_ssl => params[:verify_ssl].eql?("on"))
+    if params[:log_password]
+      @provider_foreman = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                                     :url        => params[:url],
+                                                                     :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                     :verify_ssl => params[:verify_ssl].eql?("on"))
+    else
+      @provider_foreman = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
+    end
     update_authentication_provider_foreman
 
     begin
@@ -204,7 +210,7 @@ class ProviderForemanController < ApplicationController
     @lastaction = "show"
     @showtype = "config"
     @record =
-      identify_record(id || params[:id], configuration_profile_record? ? ConfigurationProfile : ConfiguredSystem)
+      find_record(configuration_profile_record? ? ConfigurationProfile : ConfiguredSystem, id || params[:id])
     return if record_no_longer_exists?(@record)
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
@@ -219,6 +225,7 @@ class ProviderForemanController < ApplicationController
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     load_or_clear_adv_search
+    apply_node_search_text if x_active_tree == :foreman_providers_tree
 
     unless action_name == "reload"
       if active_tab_configured_systems?
@@ -238,8 +245,8 @@ class ProviderForemanController < ApplicationController
     @sb[:foreman_search_text] ||= {}
     @sb[:foreman_search_text]["#{x_active_accord}_search_text"] = @search_text
 
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{x_active_accord}_tree"
 
     @search_text = @sb[:foreman_search_text]["#{x_active_accord}_search_text"]
 
@@ -323,9 +330,9 @@ class ProviderForemanController < ApplicationController
   def foreman_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager)
-    when "e"    then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile)
-    when "cp"   then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem)
+    when "root" then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+    when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     end
     rec
   end
@@ -333,8 +340,8 @@ class ProviderForemanController < ApplicationController
   def cs_filter_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then  rec = identify_record(params[:id], ConfiguredSystem)
-    when "ms"   then  rec = identify_record(from_cid(params[:id]), ConfiguredSystem)
+    when "root" then  rec = find_record(ConfiguredSystem, params[:id])
+    when "ms"   then  rec = find_record(ConfiguredSystem, from_cid(params[:id]))
     end
     rec
   end
@@ -346,7 +353,7 @@ class ProviderForemanController < ApplicationController
 
     if @record.nil?
       add_flash(_("Error: Record no longer exists in the database"), :error)
-      if request.xml_http_request?  && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
+      if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
         @delete_node = params[:id]                  # Set node to be removed from the tree
       end
       return
@@ -418,20 +425,20 @@ class ProviderForemanController < ApplicationController
     if role_allows(:feature => "providers_accord", :any => true)
       self.x_active_tree   = 'foreman_providers_tree'
       self.x_active_accord = 'foreman_providers'
-      default_active_tree   ||= x_active_tree
+      default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
       build_foreman_tree(:providers, :foreman_providers_tree)
       @trees.push("foreman_providers_tree")
-      @accords.push(:name => "foreman_providers", :title => "Providers", :container => "foreman_providers_tree_div")
+      @accords.push(:name => "foreman_providers", :title => "Providers", :container => "foreman_providers_accord")
     end
     if role_allows(:feature => "configured_systems_filter_accord", :any => true)
       self.x_active_tree   = 'cs_filter_tree'
       self.x_active_accord = 'cs_filter'
-      default_active_tree   ||= x_active_tree
+      default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
       build_foreman_tree(:filter, :cs_filter_tree)
       @trees.push("cs_filter_tree")
-      @accords.push(:name => "cs_filter", :title => "Configured Systems", :container => "cs_filter_tree_div")
+      @accords.push(:name => "cs_filter", :title => "Configured Systems", :container => "cs_filter_accord")
     end
     self.x_active_tree = default_active_tree
     self.x_active_accord = default_active_accord.to_s
@@ -455,10 +462,10 @@ class ProviderForemanController < ApplicationController
   def set_active_elements
     # Set active tree and accord to first allowed feature
     if role_allows(:feature => "providers_accord")
-      self.x_active_tree   ||= 'foreman_providers_tree'
+      self.x_active_tree ||= 'foreman_providers_tree'
       self.x_active_accord ||= 'foreman_providers'
     elsif role_allows(:feature => "configured_systems_filter_accord")
-      self.x_active_tree   ||= 'cs_filter_tree'
+      self.x_active_tree ||= 'cs_filter_tree'
       self.x_active_accord ||= 'cs_filter'
     end
     get_node_info(x_node)
@@ -497,13 +504,13 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_node(id, model)
-    @record = provider = identify_record(id, ExtManagementSystem)
+    @record = provider = find_record(ExtManagementSystem, id)
     if provider.nil?
       self.x_node = "root"
       get_node_info("root")
       return
     else
-      options = {:model => "ConfigurationProfile"}
+      options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
       @no_checkboxes = true
       process_show_list(options)
@@ -518,7 +525,7 @@ class ProviderForemanController < ApplicationController
 
   def configuration_profile_node(id, model)
     if model
-      @record = @configuration_profile_record = identify_record(id, ConfigurationProfile)
+      @record = @configuration_profile_record = find_record(ConfigurationProfile, id)
     else
       @record = @configuration_profile_record = ConfigurationProfile.new
     end
@@ -527,7 +534,7 @@ class ProviderForemanController < ApplicationController
       get_node_info("root")
       return
     else
-      options = {:model => "ConfiguredSystem"}
+      options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
       options[:where_clause] =
         ["configuration_manager_id IN (?) AND \
@@ -549,7 +556,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def configured_system_node(id, model)
-    @record = @configured_system_record = identify_record(id, ConfiguredSystem)
+    @record = @configured_system_record = find_record(ConfiguredSystem, id)
     if @record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -572,7 +579,7 @@ class ProviderForemanController < ApplicationController
   def default_node
     return unless x_node == "root"
     if self.x_active_tree == :foreman_providers_tree
-      options = {:model => "ManageIQ::Providers::Foreman::ConfigurationManager"}
+      options = {:model => "ManageIQ::Providers::Foreman::ConfigurationManager", :match_via_descendants => ConfiguredSystem}
       process_show_list(options)
       @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => "foreman")
     elsif self.x_active_tree == :cs_filter_tree
@@ -584,8 +591,8 @@ class ProviderForemanController < ApplicationController
 
   def rendering_objects
     presenter = ExplorerPresenter.new(
-        :active_tree => x_active_tree,
-        :delete_node => @delete_node,
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node,
     )
     r = proc { |opts| render_to_string(opts) }
     return presenter, r
@@ -594,7 +601,7 @@ class ProviderForemanController < ApplicationController
   def render_form
     presenter, r = rendering_objects
     @in_a_form = true
-    presenter[:update_partials][:main_div] = r[:partial => 'form', :locals => {:controller => 'provider_foreman'}]
+    presenter.update(:main_div, r[:partial => 'form', :locals => {:controller => 'provider_foreman'}])
     update_title(presenter)
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
@@ -620,16 +627,16 @@ class ProviderForemanController < ApplicationController
     presenter, r = rendering_objects
     replace_explorer_trees(replace_trees, presenter, r)
 
-    presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+    presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
     render :js => presenter.to_html
   end
 
   def update_title(presenter)
-    if params[:action] == "new"
+    if action_name == "new"
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "foreman")
-    elsif params[:pressed] == "provider_foreman_edit_provider"
+    elsif action_name == "edit"
       @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
     end
     presenter[:right_cell_text] = @right_cell_text
@@ -645,8 +652,8 @@ class ProviderForemanController < ApplicationController
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
-        :active_tree => x_active_tree,
-        :delete_node => @delete_node,      # Remove a new node from the tree
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node,      # Remove a new node from the tree
     )
     r = proc { |opts| render_to_string(opts) }
 
@@ -669,18 +676,46 @@ class ProviderForemanController < ApplicationController
     type && ["ConfiguredSystem"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
-  def configuration_profile_record?
-    type, _id = x_node.split("_").last.split("-")
+  def configuration_profile_record?(node = x_node)
+    type, _id = node.split("_").last.split("-")
     type && ["ConfigurationProfile"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
+  def provider_record?(node = x_node)
+    type, _id = node.split("_").last.split("-")
+    type && ["ExtManagementSystem"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
+  def search_text_type(node)
+    return "provider" if provider_record?(node)
+    return "configuration_profile" if configuration_profile_record?(node)
+    node
+  end
+
+  def apply_node_search_text
+    setup_search_text_for_node
+    previous_nodetype = search_text_type(@sb[:foreman_search_text][:previous_node])
+    current_nodetype = search_text_type(@sb[:foreman_search_text][:current_node])
+
+    @sb[:foreman_search_text]["#{previous_nodetype}_search_text"] = @search_text
+    @search_text = @sb[:foreman_search_text]["#{current_nodetype}_search_text"]
+    @sb[:foreman_search_text]["#{x_active_accord}_search_text"] = @search_text
+  end
+
+  def setup_search_text_for_node
+    @sb[:foreman_search_text] ||= {}
+    @sb[:foreman_search_text][:current_node] ||= x_node
+    @sb[:foreman_search_text][:previous_node] = @sb[:foreman_search_text][:current_node]
+    @sb[:foreman_search_text][:current_node] = x_node
   end
 
   def update_partials(record_showing, presenter, r)
     if record_showing
       get_tagdata(@record)
-      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter.hide(:form_buttons_div)
       path_dir = "provider_foreman"
-      presenter[:update_partials][:main_div] =
-          r[:partial => "#{path_dir}/main", :locals => {:controller => 'provider_foreman'}]
+      presenter.update(:main_div, r[:partial => "#{path_dir}/main",
+                                    :locals => {:controller => 'provider_foreman'}])
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_add_provider"
@@ -689,23 +724,22 @@ class ProviderForemanController < ApplicationController
         @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
       end
       partial = 'form'
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif valid_configuration_profile_record?(@configuration_profile_record)
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
-                                                 :locals  => {:controller => 'provider_foreman'}]
+      presenter.hide(:form_buttons_div)
+      presenter.update(:main_div, r[:partial => "configuration_profile",
+                                    :locals  => {:controller => 'provider_foreman'}])
     else
-      presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
   end
 
   def replace_search_box(presenter, r)
     # Replace the searchbox
-    presenter[:replace_partials][:adv_searchbox_div] =
+    presenter.replace(:adv_searchbox_div,
         r[:partial => 'layouts/x_adv_searchbox',
-          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
+          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}])
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
 
@@ -714,31 +748,28 @@ class ProviderForemanController < ApplicationController
     if @pages || @in_a_form
       if @pages && !@in_a_form
         @ajax_paging_buttons = true
-        if @sb[:action] && @record  # Came in from an action link
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols',
-                                                       :locals  => {:action_url    => @sb[:action],
-                                                                    :action_method => @sb[:action],
-                                                                    :action_id     => @record.id
-                                                       }]
+        if @sb[:action] && @record # Came in from an action link
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols',
+                                          :locals  => {:action_url    => @sb[:action],
+                                                       :action_method => @sb[:action],
+                                                       :action_id     => @record.id}])
         else
-          presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
         end
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
       elsif @in_a_form
-        presenter[:set_visible_elements][:pc_div_1] = false
-        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
       end
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter.show(:paging_div)
     else
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter.hide(:paging_div)
     end
   end
 
   def replace_explorer_trees(replace_trees, presenter, r)
     build_foreman_tree(:providers, :foreman_providers_tree) if replace_trees
     replace_trees.each do |t|
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[:partial => "provider_foreman/#{t}_tree"]
+      presenter.replace("#{t}_tree_div", r[:partial => "provider_foreman/#{t}_tree"])
     end
   end
 
@@ -750,39 +781,28 @@ class ProviderForemanController < ApplicationController
 
     if !@in_a_form && !@sb[:action]
       center_tb ||= center_toolbar_filename
-      custom_btn_tb = center_tb
-      custom_btn_tb ||= "custom_buttons_tb"
-      c_buttons,  c_xml  = build_toolbar_buttons_and_xml(center_tb)
+      c_tb = build_toolbar(center_tb)
 
       if record_showing
-        cb_buttons, cb_xml = build_toolbar_buttons_and_xml(custom_btn_tb)
-        v_buttons,  v_xml  = build_toolbar_buttons_and_xml("x_summary_view_tb")
+        v_tb  = build_toolbar("x_summary_view_tb")
       else
-        v_buttons,  v_xml  = build_toolbar_buttons_and_xml("x_gtl_view_tb")
+        v_tb  = build_toolbar("x_gtl_view_tb")
       end
     end
 
-    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
+    h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
-    # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
-    presenter[:set_visible_elements][:custom_buttons_div]  = cb_buttons && cb_xml
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
-    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
-
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox
+    presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
   end
 
@@ -814,10 +834,10 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_tagging_partials(presenter, r)
-    presenter[:update_partials][:main_div] = r[:partial => 'layouts/tagging',
-                                               :locals  => locals_for_tagging]
-    presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons',
-                                                       :locals  => locals_for_tagging]
+    presenter.update(:main_div, r[:partial => 'layouts/tagging',
+                                  :locals  => locals_for_tagging])
+    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
+                                          :locals  => locals_for_tagging])
   end
 
   def clear_flash_msg
@@ -858,9 +878,10 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def list_row_image(image_path, image, model_image, item)
-    if item.name == _("Unassigned Profiles Group")
-      image_path ? "#{image_path}folder.png" : "folder"
+  def list_row_image(_image, item = nil)
+    # Unassigned Profiles Group
+    if item.kind_of?(ConfigurationProfile) && empty_configuration_profile_record?(item)
+      'folder'
     else
       super
     end
@@ -910,13 +931,27 @@ class ProviderForemanController < ApplicationController
   def add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)
     @view.table.data.push(unassigned_profile_row)
     @targets_hash[unassigned_profile_row['id']] = unassigned_configuration_profile
-    @grid_xml = view_to_xml(@view, 0, -1, :association => nil)
+    @grid_hash = view_to_hash(@view)
   end
 
   def process_show_list(options = {})
     options[:dbname] = :cm_providers if x_active_accord == :foreman_providers
     options[:dbname] = :cm_configured_systems if x_active_accord == :cs_filter
     super
+  end
+
+  def find_record(model, id)
+    raise "Invalid input" unless is_integer?(from_cid(id))
+    begin
+      record = model.where(:id => from_cid(id)).first
+    rescue ActiveRecord::RecordNotFound, StandardError => ex
+      if @explorer
+        self.x_node = "root"
+        add_flash(ex.message, :error, true)
+        session[:flash_msgs] = @flash_array.dup
+      end
+    end
+    record
   end
 
   def set_root_node

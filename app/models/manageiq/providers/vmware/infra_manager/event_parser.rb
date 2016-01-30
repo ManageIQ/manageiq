@@ -35,10 +35,10 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
         # Handle case where event name is overloaded
         sub_event_name = event.fetch_path('info', 'descriptionId').split('.').first
         sub_event_name = case sub_event_name
-        when 'VirtualMachine' then 'VM'
-        when 'ClusterComputeResource' then 'Cluster'
-        else sub_event_name
-        end
+                         when 'VirtualMachine' then 'VM'
+                         when 'ClusterComputeResource' then 'Cluster'
+                         else sub_event_name
+                         end
         sub_event_type.gsub!(/_/, "#{sub_event_name}_")
       when 'MarkAsTemplate', 'MarkAsVirtualMachine'
         # Handle case where, due to timing issues, the data may not be as expected
@@ -61,21 +61,21 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
     # Build the event hash
     result = {
       :event_type => event_type,
-      :chain_id => chain_id,
-      :is_task => is_task,
-      :source => 'VC',
+      :chain_id   => chain_id,
+      :is_task    => is_task,
+      :source     => 'VC',
 
-      :message => event['fullFormattedMessage'],
-      :timestamp => event['createdTime'],
-      :full_data => event
+      :message    => event['fullFormattedMessage'],
+      :timestamp  => event['createdTime'],
+      :full_data  => event
     }
     result[:ems_id] = ems_id unless ems_id.nil?
     result[:username] = event['userName'] unless event['userName'].blank?
 
     # Get the vm information
-    vm_key = 'vm' if event.has_key?('vm')
-    vm_key = 'sourceVm' if event.has_key?('sourceVm')
-    vm_key = 'srcTemplate' if event.has_key?('srcTemplate')
+    vm_key = 'vm' if event.key?('vm')
+    vm_key = 'sourceVm' if event.key?('sourceVm')
+    vm_key = 'srcTemplate' if event.key?('srcTemplate')
     unless vm_key.nil?
       vm_data = event[vm_key]
       vm_ems_ref = vm_data['vm']
@@ -100,7 +100,7 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
       end
 
       has_dest = true
-    elsif event.has_key?('destName')
+    elsif event.key?('destName')
       result[:dest_vm_name] = event['destName']
       has_dest = true
     end
@@ -122,6 +122,6 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
       end
     end
 
-    return result
+    result
   end
 end

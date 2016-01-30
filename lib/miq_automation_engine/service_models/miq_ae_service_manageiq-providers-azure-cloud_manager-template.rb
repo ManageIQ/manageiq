@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Azure_CloudManager_Template < MiqAeServiceManageIQ_Providers_CloudManager_Template
+  end
+end

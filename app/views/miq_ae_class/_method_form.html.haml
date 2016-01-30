@@ -55,13 +55,15 @@
     %thead
       %tr
         %th
-          = link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png",
-            :class => "rollover small",
-            :id    => "exp_collapse_img",
-            :style => "z-index:50",
-            :alt   => (t = (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters"))),
-            :title => t),
-            {:action => 'expand_toggle', :id => "exp_collapse"}, :remote  => true)
+          - icon = @sb[:squash_state] ? "down" : "up"
+          - url2 = url_for(:action => 'expand_toggle', :id => "exp_collapse")
+          %button.btn.btn-default{:title => (@sb[:squash_state] ? _("Show Input Parameters") : _("Hide Input Parameters")),
+                  "data-miq_sparkle_on" => true,
+                  :remote               => true,
+                  "data-method"         => :post,
+                  :id                   => 'exp_collapse_img',
+                  'data-click_url'      => {:url => url2}.to_json}
+            %i{:class => "fa fa-angle-#{icon} fa-lg"}
 
   #inputs_div{:style => @sb[:squash_state] ? "display: none;" : ""}
     %table.table.table-striped.table-bordered.table-hover
@@ -76,10 +78,11 @@
           - unless @edit[:fields_to_delete].include?(flds["id"])
             %tr
               %td
-                = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => _("Click to delete this input field from method")),
+                = link_to(image_tag(image_path("16/notequal-red.png"), :alt => _("Click to delete this input field from method")),
                   {:action => "field_method_delete", :id => flds["id"].to_s, :arr_id => i},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
+                  'data-method'          => :post,
                   :remote                => true,
                   :confirm               => _('Are you sure you want to delete input field from method?'),
                   :title                 => _("Click to delete this input field from method"))
@@ -104,7 +107,7 @@
           %tr{:title => _("Click to add a new parameter"),
             :onclick => remote_function(:url => {:action => 'field_method_select', :add => 'new', :item => "field"})}
             %td
-              = image_tag("/images/icons/16/equal-green.png")
+              = image_tag(image_path("16/equal-green.png"))
             %td
               = h("<#{_('New Parameter')}>")
             %td
@@ -114,10 +117,11 @@
         - else
           %tr
             %td
-              = link_to(image_tag("/images/icons/16/na.png", :alt => "Add this entry"),
+              = link_to(image_tag(image_path("16/na.png"), :alt => "Add this entry"),
               {:action => "field_method_accept", :button => "accept"},
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
+              'data-method'          => :post,
               :remote                => true,
               :title                 => _("Add this entry"))
             %td

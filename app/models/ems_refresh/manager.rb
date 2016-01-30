@@ -15,11 +15,7 @@ module EmsRefresh
     end
 
     def refresher
-      if defined?(self.class::Refresher) && self.class::Refresher != ManageIQ::Providers::BaseManager::Refresher
-        self.class::Refresher
-      else
-        ::EmsRefresh::Refreshers.const_get("#{emstype.to_s.camelize}Refresher")
-      end
+      self.class::Refresher
     end
   end
 end

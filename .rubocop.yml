@@ -23,11 +23,13 @@ CyclomaticComplexity:
 GlobalVars:
   AllowedVariables:
   # Loggers
+  - $audit_log
   - $api_log
   - $aws_log
   - $fog_log
   - $log
   - $miq_ae_logger
+  - $policy_log
   - $rails_log
   - $rhevm_log
   - $kube_log
@@ -57,25 +59,49 @@ SingleLineMethods:
   AllowIfMethodIsEmpty: false
 SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
+TrivialAccessors:
+  AllowPredicates: true
 #
 # Enabled/Disabled
 #
 AllCops:
   RunRailsCops: true
+  Exclude:
+    - config/toolbar_strings.rb
 ClassAndModuleChildren:
   Enabled: false
+DefEndAlignment:
+  AutoCorrect: true
 Documentation:
   Enabled: false
 Encoding:
+  Enabled: false
+EndAlignment:
+  AutoCorrect: true
+ExtraSpacing:
+  AutoCorrect: false # https://github.com/bbatsov/rubocop/issues/2280
+FindEach:
   Enabled: false
 GuardClause:
   Enabled: false
 IfUnlessModifier:
   Enabled: false
+NumericLiterals:
+  AutoCorrect: false
+ParallelAssignment:
+  Enabled: false
+PerlBackrefs:
+  Enabled: false
+ReadWriteAttribute:
+  AutoCorrect: false
+RescueModifier:
+  AutoCorrect: false
 SingleLineBlockParams:
   Enabled: false
 SingleSpaceBeforeFirstArg:
   Enabled: false
+SpecialGlobalVars:
+  AutoCorrect: false
 StringLiterals:
   Enabled: false
 StringLiteralsInInterpolation:
@@ -84,6 +110,8 @@ TrailingComma:
   Enabled: false
 WhileUntilModifier:
   Enabled: false
+WordArray:
+  AutoCorrect: false
 
 ClassAndModuleCamelCase:
   Exclude:
@@ -91,3 +119,4 @@ ClassAndModuleCamelCase:
 FileName:
   Exclude:
     - lib/miq_automation_engine/service_models/*.rb
+    - config/toolbar_strings.rb

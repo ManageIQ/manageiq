@@ -1,8 +1,6 @@
-require "spec_helper"
 require_migration
 
 describe ChangeOptionsInMiqAlert do
-
   migration_context :up do
     let(:miq_alert_stub) { migration_stub(:MiqAlert) }
 
@@ -13,7 +11,7 @@ describe ChangeOptionsInMiqAlert do
       migrate
 
       alert.reload
-      alert.options.should == {:notifications => {:email => {:to => ''}}}
+      expect(alert.options).to eq(:notifications => {:email => {:to => ''}})
     end
 
     it 'non-default miq_alert email is ignored' do
@@ -23,9 +21,7 @@ describe ChangeOptionsInMiqAlert do
       migrate
 
       alert.reload
-      alert.options.should == options
+      expect(alert.options).to eq(options)
     end
   end
-
 end
-

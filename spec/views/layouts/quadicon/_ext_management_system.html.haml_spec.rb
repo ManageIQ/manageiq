@@ -1,12 +1,9 @@
-require "spec_helper"
-include ApplicationHelper
-
 describe "rendering quadicons of ext_management_system" do
   before(:each) do
     @settings = {:quadicons => {:ems => true}}
     @item = FactoryGirl.build(:ems_infra)
-    @item.stub(:hosts).and_return(%w(foo bar))
-    @item.stub(:image_name).and_return("foo")
+    allow(@item).to receive(:hosts).and_return(%w(foo bar))
+    allow(@item).to receive(:image_name).and_return("foo")
     @layout = "ems_infra"
   end
 
@@ -25,5 +22,4 @@ describe "rendering quadicons of ext_management_system" do
                         :item => @item}
     expect(rendered).to match(/Hostname/)
   end
-
 end

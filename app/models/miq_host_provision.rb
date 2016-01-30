@@ -15,8 +15,8 @@ class MiqHostProvision < MiqRequestTask
 
   include ReportableMixin
 
-  validates_inclusion_of :request_type, :in => %w{ host_pxe_install },                           :message => "should be 'host_pxe_install'"
-  validates_inclusion_of :state,        :in => %w{ pending queued active provisioned finished }, :message => "should be pending, queued, active, provisioned or finished"
+  validates_inclusion_of :request_type, :in => %w( host_pxe_install ),                           :message => "should be 'host_pxe_install'"
+  validates_inclusion_of :state,        :in => %w( pending queued active provisioned finished ), :message => "should be pending, queued, active, provisioned or finished"
 
   virtual_column :provision_type, :type => :string
 
@@ -38,7 +38,5 @@ class MiqHostProvision < MiqRequestTask
     signal :create_destination
   end
 
-  def host_name
-    self.host.name
-  end
+  delegate :name, :to => :host, :prefix => true
 end

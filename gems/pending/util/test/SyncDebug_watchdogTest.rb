@@ -4,21 +4,19 @@ require_relative '../SyncDebug'
 $stdout.sync = true
 
 $my_puts_mutex = Mutex.new
-def my_puts(str="")
+def my_puts(str = "")
   $my_puts_mutex.synchronize { puts str }
 end
 
 def lock_timeout_test(lock, mode, sleep_secs)
-  begin
-    my_puts "**** #{Thread.current.object_id}: Acquiring lock..."
-    lock.synchronize(mode) do
-      my_puts "**** #{Thread.current.object_id}: sleeping for #{sleep_secs} seconds."
-      sleep sleep_secs
-    end
-    my_puts "**** #{Thread.current.object_id}: Released lock."
-  rescue => t1err
-    my_puts "**** (from rescue) #{Thread.current.object_id}: #{t1err}"
+  my_puts "**** #{Thread.current.object_id}: Acquiring lock..."
+  lock.synchronize(mode) do
+    my_puts "**** #{Thread.current.object_id}: sleeping for #{sleep_secs} seconds."
+    sleep sleep_secs
   end
+  my_puts "**** #{Thread.current.object_id}: Released lock."
+rescue => t1err
+  my_puts "**** (from rescue) #{Thread.current.object_id}: #{t1err}"
 end
 
 def dead_locker_test(lock, mode)
@@ -32,7 +30,7 @@ begin
 
   sync_dbg = Sync.new
   sync_dbg.extend(SyncDebug_m)
-  
+
   sync_dbg.max_locked_time      = 30
   sync_dbg.watchdog_poll_period = 15
   sync_dbg.lock_name            = "test_lock"
@@ -105,7 +103,7 @@ begin
   my_puts "TEST 1: mode = EX, no timeout."
   my_puts
   my_puts "Creating test_thread..."
-  test_thread = Thread.new(sync_dbg, :EX, sync_dbg.max_locked_time/2) { |l, m, ss| lock_timeout_test(l, m, ss) }
+  test_thread = Thread.new(sync_dbg, :EX, sync_dbg.max_locked_time / 2) { |l, m, ss| lock_timeout_test(l, m, ss) }
   my_puts "Waiting for test_thread..."
   test_thread.join
   my_puts "Done."
@@ -116,7 +114,7 @@ begin
   my_puts "TEST 2: mode = SH, no timeout."
   my_puts
   my_puts "Creating test_thread..."
-  test_thread = Thread.new(sync_dbg, :SH, sync_dbg.max_locked_time/2) { |l, m, ss| lock_timeout_test(l, m, ss) }
+  test_thread = Thread.new(sync_dbg, :SH, sync_dbg.max_locked_time / 2) { |l, m, ss| lock_timeout_test(l, m, ss) }
   my_puts "Waiting for test_thread..."
   test_thread.join
   my_puts "Done."

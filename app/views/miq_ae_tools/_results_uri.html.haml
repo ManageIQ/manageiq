@@ -1,21 +1,24 @@
 #results_uri_div
   - if @results
     %br
-    %fieldset
-      %h3= _('Object Info')
-      %table.style1
-        %tr
-          %td.key= _('URI')
-          %td.wide
-            = @resolve[:uri]
-        - if !@resolve[:button_attr_name].blank? && !@resolve[:button_class].blank?
-          %tr
-            %td.key= _('Object Attribute Name')
-            %td.wide
-              = @resolve[:button_attr_name]
-          %tr
-            %td.key= _('Object Attribute Type')
-            %td.wide
-              = ui_lookup(:model => @resolve[:button_class])
+    %h3
+      = _('Object Info')
+    .form-horizontal.static
+      .form-group
+        %label.control-label.col-md-2
+          = _('URI')
+        .col-md-8
+          = @resolve[:uri]
+      - if !@resolve[:button_attr_name].blank? && !@resolve[:button_class].blank?
+        .form-group
+          %label.control-label.col-md-2
+            = _('Object Attribute Name')
+          .col-md-8
+            = @resolve[:button_attr_name]
+        .form-group
+          %label.control-label.col-md-2
+            = _('Object Attribute Type')
+          .col-md-8
+            = ui_lookup(:model => @resolve[:button_class])
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Enter Automation Simulation options on the left and press Submit.")}

@@ -1,21 +1,19 @@
-require "spec_helper"
-
 describe MiqWidget do
   context ".import_from_hash" do
     before do
       @user       = FactoryGirl.create(:user_admin)
-      @old_report = FactoryGirl.create(:miq_report, 
+      @old_report = FactoryGirl.create(:miq_report,
                                        :name      => "Test Report",
                                        :rpt_type  => "Custom",
                                        :tz        => "Eastern Time (US & Canada)",
                                        :col_order => ["name", "boot_time", "disks_aligned"],
                                        :cols      => ["name", "boot_time", "disks_aligned"]
-      )
-      @old_widget = FactoryGirl.create(:miq_widget, 
-                                       :title      => "Test Widget", 
-                                       :visibility => { :roles => ["_ALL_"] },
+                                      )
+      @old_widget = FactoryGirl.create(:miq_widget,
+                                       :title      => "Test Widget",
+                                       :visibility => {:roles => ["_ALL_"]},
                                        :resource   => @old_report
-      )
+                                      )
 
       widget_string = MiqWidget.export_to_yaml([@old_widget.id], MiqWidget)
       @new_widget = YAML.load(widget_string).first["MiqWidget"]
@@ -29,27 +27,27 @@ describe MiqWidget do
     subject { MiqWidget.import_from_hash(@new_widget, @options) }
 
     context "new widget" do
-      before { @old_widget.destroy } 
+      before { @old_widget.destroy }
 
       context "with new report" do
         before { @old_report.destroy }
 
         it "init status" do
-          MiqWidget.count.should == 0
-          MiqReport.count.should == 0
+          expect(MiqWidget.count).to eq(0)
+          expect(MiqReport.count).to eq(0)
         end
 
         it "preview" do
           subject
-          MiqWidget.count.should == 0
-          MiqReport.count.should == 0
+          expect(MiqWidget.count).to eq(0)
+          expect(MiqReport.count).to eq(0)
         end
 
         it "import" do
           @options[:save] = true
           subject
-          MiqWidget.count.should == 1
-          MiqReport.count.should == 1
+          expect(MiqWidget.count).to eq(1)
+          expect(MiqReport.count).to eq(1)
         end
       end
 
@@ -57,8 +55,8 @@ describe MiqWidget do
         before { @old_report.update_attributes(:tz => "UTC") }
 
         it "init status" do
-          MiqWidget.count.should == 0
-          MiqReport.count.should == 1
+          expect(MiqWidget.count).to eq(0)
+          expect(MiqReport.count).to eq(1)
         end
 
         context "overwrite" do
@@ -66,10 +64,10 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 0
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "UTC"
-            rep_status[:status].should == :update
+            expect(MiqWidget.count).to eq(0)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("UTC")
+            expect(rep_status[:status]).to eq(:update)
           end
 
           it "import" do
@@ -77,10 +75,10 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "Eastern Time (US & Canada)"
-            rep_status[:status].should == :update
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("Eastern Time (US & Canada)")
+            expect(rep_status[:status]).to eq(:update)
           end
         end
 
@@ -91,10 +89,10 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 0
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "UTC"
-            rep_status[:status].should == :keep
+            expect(MiqWidget.count).to eq(0)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("UTC")
+            expect(rep_status[:status]).to eq(:keep)
           end
 
           it "import" do
@@ -102,10 +100,10 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "UTC"
-            rep_status[:status].should == :keep
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("UTC")
+            expect(rep_status[:status]).to eq(:keep)
           end
         end
       end
@@ -113,7 +111,7 @@ describe MiqWidget do
 
     context "existing widget" do
       before do
-        @old_widget.update_attributes(:visibility => { :roles => ["EvmRole-support"] })
+        @old_widget.update_attributes(:visibility => {:roles => ["EvmRole-support"]})
         @old_report.update_attributes(:tz => "UTC")
       end
 
@@ -121,8 +119,8 @@ describe MiqWidget do
         before { @old_report.destroy }
 
         it "init status" do
-          MiqWidget.count.should == 1
-          MiqReport.count.should == 0
+          expect(MiqWidget.count).to eq(1)
+          expect(MiqReport.count).to eq(0)
         end
 
         context "overwrite" do
@@ -130,11 +128,11 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
-            status[:status].should == :update
-            MiqReport.count.should == 0
-            rep_status[:status].should == :add
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["EvmRole-support"]})
+            expect(status[:status]).to eq(:update)
+            expect(MiqReport.count).to eq(0)
+            expect(rep_status[:status]).to eq(:add)
           end
 
           it "import" do
@@ -142,11 +140,11 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["_ALL_"] }
-            status[:status].should == :update
-            MiqReport.count.should == 1
-            rep_status[:status].should == :add
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["_ALL_"]})
+            expect(status[:status]).to eq(:update)
+            expect(MiqReport.count).to eq(1)
+            expect(rep_status[:status]).to eq(:add)
           end
         end
 
@@ -157,11 +155,11 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
-            status[:status].should == :keep
-            MiqReport.count.should == 0
-            rep_status[:status].should == :add
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["EvmRole-support"]})
+            expect(status[:status]).to eq(:keep)
+            expect(MiqReport.count).to eq(0)
+            expect(rep_status[:status]).to eq(:add)
           end
 
           it "import" do
@@ -169,19 +167,19 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
-            status[:status].should == :keep
-            MiqReport.count.should == 1
-            rep_status[:status].should == :add
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["EvmRole-support"]})
+            expect(status[:status]).to eq(:keep)
+            expect(MiqReport.count).to eq(1)
+            expect(rep_status[:status]).to eq(:add)
           end
         end
       end
 
       context "with existing report" do
         it "init status" do
-          MiqWidget.count.should == 1
-          MiqReport.count.should == 1
+          expect(MiqWidget.count).to eq(1)
+          expect(MiqReport.count).to eq(1)
         end
 
         context "overwrite" do
@@ -189,12 +187,12 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
-            status[:status].should == :update
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "UTC"
-            rep_status[:status].should == :update
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["EvmRole-support"]})
+            expect(status[:status]).to eq(:update)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("UTC")
+            expect(rep_status[:status]).to eq(:update)
           end
 
           it "import" do
@@ -202,12 +200,12 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["_ALL_"] }
-            status[:status].should == :update
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "Eastern Time (US & Canada)"
-            rep_status[:status].should == :update
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["_ALL_"]})
+            expect(status[:status]).to eq(:update)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("Eastern Time (US & Canada)")
+            expect(rep_status[:status]).to eq(:update)
           end
         end
 
@@ -217,12 +215,12 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
-            status[:status].should == :keep
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "UTC"
-            rep_status[:status].should == :keep
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["EvmRole-support"]})
+            expect(status[:status]).to eq(:keep)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("UTC")
+            expect(rep_status[:status]).to eq(:keep)
           end
 
           it "import" do
@@ -230,12 +228,12 @@ describe MiqWidget do
             w, status = subject
             rep_status = status[:children]
 
-            MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
-            status[:status].should == :keep
-            MiqReport.count.should == 1
-            MiqReport.first.tz.should == "UTC"
-            rep_status[:status].should == :keep
+            expect(MiqWidget.count).to eq(1)
+            expect(MiqWidget.first.visibility).to eq({:roles => ["EvmRole-support"]})
+            expect(status[:status]).to eq(:keep)
+            expect(MiqReport.count).to eq(1)
+            expect(MiqReport.first.tz).to eq("UTC")
+            expect(rep_status[:status]).to eq(:keep)
           end
         end
       end
@@ -256,7 +254,7 @@ describe MiqWidget do
                 - RssFeed:
                     name: host_alert_event
                     link: /alert/rss?feed=host_alert_event"
-           ).first["MiqWidget"]
+                                 ).first["MiqWidget"]
         end
 
         context "with new rss feed" do
@@ -292,7 +290,7 @@ describe MiqWidget do
                   :url: https://nvd.nist.gov/download/nvd-rss-analyzed.xml
                 resource_id:
                 resource_type:"
-           ).first["MiqWidget"]
+                                 ).first["MiqWidget"]
         end
 
         context "with new rss feed" do

@@ -1,7 +1,7 @@
 class ChangeOptionsInMiqAlert < ActiveRecord::Migration
   class MiqAlert < ActiveRecord::Base
     serialize :options
-    self.inheritance_column = :_type_disabled #disable STI
+    self.inheritance_column = :_type_disabled # disable STI
   end
 
   def up

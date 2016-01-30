@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldCheckBox do
   describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
@@ -11,7 +9,7 @@ describe DialogFieldCheckBox do
         let(:value) { "" }
 
         before do
-          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
         end
 
         it "returns the values from the value processor" do
@@ -45,7 +43,7 @@ describe DialogFieldCheckBox do
       let(:value) { "t" }
 
       it "returns true" do
-        expect(dialog_field.checked?).to be_true
+        expect(dialog_field.checked?).to be_truthy
       end
     end
 
@@ -53,7 +51,7 @@ describe DialogFieldCheckBox do
       let(:value) { "1" }
 
       it "returns false" do
-        expect(dialog_field.checked?).to be_false
+        expect(dialog_field.checked?).to be_falsey
       end
     end
   end
@@ -62,7 +60,7 @@ describe DialogFieldCheckBox do
     let(:dialog_field) { described_class.new }
 
     it "returns false" do
-      expect(dialog_field.initial_values).to be_false
+      expect(dialog_field.initial_values).to be_falsey
     end
   end
 
@@ -90,11 +88,11 @@ describe DialogFieldCheckBox do
       end
 
       it "sets the required" do
-        expect(dialog_field.required).to be_true
+        expect(dialog_field.required).to be_truthy
       end
 
       it "sets the read_only" do
-        expect(dialog_field.read_only).to be_true
+        expect(dialog_field.read_only).to be_truthy
       end
     end
 
@@ -124,19 +122,19 @@ describe DialogFieldCheckBox do
     end
   end
 
-  describe "#validate" do
+  describe "#validate_field_data" do
     let(:dialog_field_check_box) do
       described_class.new(:label    => 'dialog_field_check_box',
                           :name     => 'dialog_field_check_box',
                           :required => required,
                           :value    => value)
     end
-    let(:dialog_tab)   { active_record_instance_double('DialogTab',   :label => 'tab') }
-    let(:dialog_group) { active_record_instance_double('DialogGroup', :label => 'group') }
+    let(:dialog_tab)   { double('DialogTab',   :label => 'tab') }
+    let(:dialog_group) { double('DialogGroup', :label => 'group') }
 
-    shared_examples_for "DialogFieldCheckBox#validate that returns nil" do
+    shared_examples_for "DialogFieldCheckBox#validate_field_data that returns nil" do
       it "returns nil" do
-        dialog_field_check_box.validate(dialog_tab, dialog_group).should be_nil
+        expect(dialog_field_check_box.validate_field_data(dialog_tab, dialog_group)).to be_nil
       end
     end
 
@@ -146,14 +144,14 @@ describe DialogFieldCheckBox do
       context "with a true value" do
         let(:value) { "t" }
 
-        it_behaves_like "DialogFieldCheckBox#validate that returns nil"
+        it_behaves_like "DialogFieldCheckBox#validate_field_data that returns nil"
       end
 
       context "with a false value" do
         let(:value) { "f" }
 
         it "returns error message" do
-          dialog_field_check_box.validate(dialog_tab, dialog_group).should eq(
+          expect(dialog_field_check_box.validate_field_data(dialog_tab, dialog_group)).to eq(
             "tab/group/dialog_field_check_box is required"
           )
         end
@@ -166,13 +164,13 @@ describe DialogFieldCheckBox do
       context "with a true value" do
         let(:value) { "t" }
 
-        it_behaves_like "DialogFieldCheckBox#validate that returns nil"
+        it_behaves_like "DialogFieldCheckBox#validate_field_data that returns nil"
       end
 
       context "with a false value" do
         let(:value) { "f" }
 
-        it_behaves_like "DialogFieldCheckBox#validate that returns nil"
+        it_behaves_like "DialogFieldCheckBox#validate_field_data that returns nil"
       end
     end
   end
@@ -181,7 +179,7 @@ describe DialogFieldCheckBox do
     let(:dialog_field) { described_class.new }
 
     before do
-      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("f")
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("f")
     end
 
     it "returns the checked value in a hash" do
@@ -191,6 +189,18 @@ describe DialogFieldCheckBox do
     it "assigns the processed value to value" do
       dialog_field.refresh_json_value
       expect(dialog_field.value).to eq("f")
+    end
+  end
+
+  describe "#trigger_automate_value_updates" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("f")
+    end
+
+    it "returns the checked value in a hash" do
+      expect(dialog_field.trigger_automate_value_updates).to eq("f")
     end
   end
 end

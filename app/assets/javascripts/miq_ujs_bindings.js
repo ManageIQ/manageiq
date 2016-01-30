@@ -6,6 +6,29 @@ $(document).ready(function () {
     return miqCheckForChanges();
   });
 
+  $(document).on('click', 'button[data-click_url]', function () {
+    var el = $(this);
+    var parms = $.parseJSON(el.attr('data-click_url'));
+    var url = parms.url;
+    var options = {};
+    if (el.attr('data-miq_sparkle_on')) {
+      options.beforeSend = true;
+    }
+    if (el.attr('data-miq_sparkle_off')) {
+      options.complete = true;
+    }
+    submit = el.attr('data-submit');
+    if (typeof submit != "undefined")
+      miqJqueryRequest(url, {data: miqSerializeForm(submit)});
+    else
+      miqJqueryRequest(url, options);
+  });
+
+  // bind button click to call JS function to send up grid data
+  $(document).on('click', 'button[data-grid_submit]', function () {
+    return miqMenuChangeRow($(this).attr('data-grid_submit'), $(this));
+  });
+
   // Bind call to check/display text area max length on keyup
   $(document).on('keyup', 'textarea[data-miq_check_max_length]', function () {
     miqCheckMaxLength(this);
@@ -13,8 +36,21 @@ $(document).ready(function () {
 
   // Bind the MIQ spinning Q to configured links
   $(document).on('ajax:beforeSend', 'a[data-miq_sparkle_on]', function () {
-    miqSparkleOn(); // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
+    // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
+    miqSparkleOn();
   });
+  $(document).on('ajax:complete', 'a[data-miq_sparkle_off]', function () {
+    miqSparkle(false);
+  });
+
+  // Handle data-submit - triggered by handleRemote from jquery-ujs
+  $(document).on('ajax:before', 'a[data-submit]', function () {
+    var form_id = $(this).data('submit');
+    // because handleRemote will send the element's data-params as the POST body
+    $(this).data('params', miqSerializeForm(form_id));
+  });
+
+  // Handle 401 responses with javascript content on the login screen
   $(document).on('ajax:error', 'a[data-miq_login_error]', function (xhr, status, error) {
     var js_mimetypes = [ "text/javascript", "application/javascript" ];
     if (status.status == 401 &&
@@ -22,9 +58,6 @@ $(document).ready(function () {
         status.responseText.length > 0) {
       $.globalEval(status.responseText);
     }
-  });
-  $(document).on('ajax:complete', 'a[data-miq_sparkle_off]', function () {
-    miqSparkle(false);
   });
 
   // Bind in the observe support. If interval is configured, use the observe_field function

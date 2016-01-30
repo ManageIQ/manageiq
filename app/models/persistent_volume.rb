@@ -1,0 +1,2 @@
+class PersistentVolume < ContainerVolume
+end

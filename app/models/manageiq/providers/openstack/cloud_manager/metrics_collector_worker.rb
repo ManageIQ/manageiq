@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker < ::MiqEmsMetricsCollectorWorker
-  require_dependency 'manageiq/providers/openstack/cloud_manager/metrics_collector_worker/runner'
+  require_nested :Runner
 
   self.default_queue_name = "openstack"
 

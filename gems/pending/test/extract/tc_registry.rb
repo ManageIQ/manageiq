@@ -26,10 +26,8 @@ module Extract
     end
 
     def teardown
-      begin
-        @vm.unmount if @vm
-      rescue IOError
-      end
+      @vm.unmount if @vm
+    rescue IOError
     end
 
     def test_scan_vm_metadata
@@ -53,14 +51,14 @@ module Extract
 
       @rootDriveLetter = @systemFs.pwd
 
-      #walkSystem32Path()
-      validateRegistryFiles() if @systemFs.guestOS == "Windows"
-      validateMetadata()
+      # walkSystem32Path()
+      validateRegistryFiles if @systemFs.guestOS == "Windows"
+      validateMetadata
 
       @vm.unmount if @vm
     end
 
-    def validateMetadata()
+    def validateMetadata
       @systemFs.chdir(@rootDriveLetter)
 
       # Get handle to the Extract object
@@ -68,7 +66,7 @@ module Extract
 
       # Call extract on each category
       # "ntevents"
-      %w{vmconfig accounts software services system}.each do |c|
+      %w(vmconfig accounts software services system).each do |c|
         xml = vm.extract(c)
         refute_nil(xml, "Category [#{c}] returned a nil instead of XML data.")
 
@@ -85,7 +83,7 @@ module Extract
       assert_instance_of(Fixnum, eval(xml.root.attributes['created_on']))
 
       # Use the as an exit point to generate the reference xml for testing
-      #createReferenceXml(xml, category)
+      # createReferenceXml(xml, category)
 
       compareVmXml(xml, category)
     end
@@ -113,7 +111,7 @@ module Extract
         # If we find any changes write the diff xml out so it can be evaluated.
         xmlDiffPath = File.join(File.dirname(@vm.vmConfigFile), "test_data", category + "_diff.xml")
         unless stats[:adds].zero? && stats[:deletes].zero? && stats[:updates].zero?
-          File.open(xmlDiffPath, "w") {|f| delta.write(f,0)}
+          File.open(xmlDiffPath, "w") { |f| delta.write(f, 0) }
         end
 
         # Test the results.
@@ -125,11 +123,11 @@ module Extract
     end
 
     def generateMD5(xml)
-      md5Sig = Digest::MD5.new()
+      md5Sig = Digest::MD5.new
       xmlFormatted = ""
       xml.write(xmlFormatted, 0)
       md5Sig << xmlFormatted
-      return md5Sig.hexdigest
+      md5Sig.hexdigest
     end
 
     def loadReferenceXml(category)
@@ -140,10 +138,10 @@ module Extract
 
     def createReferenceXml(xml, category)
       refXmlPath = File.join(File.dirname(@vm.vmConfigFile), "test_data", category + ".xml")
-      File.open(refXmlPath,"w") {|f| xml.write(f,0)}
+      File.open(refXmlPath, "w") { |f| xml.write(f, 0) }
     end
 
-    def walkSystem32Tree()
+    def walkSystem32Tree
       fs = @systemFs
       currPath = fs.pwd
       [nil, "Windows", "System32", "config"].each do |p|
@@ -151,18 +149,18 @@ module Extract
         fs.chdir(currPath)
         fs.dirEntries(fs.pwd).each do |name|
           item = fs.fileDirectory?(name) ? "<DIR> #{name}" : name
-          #$log.debug item
+          # $log.debug item
         end
       end
     end
 
-    def validateRegistryFiles()
+    def validateRegistryFiles
       fs = @systemFs
       filesFound = []
       currPath = File.join(@rootDriveLetter, "Windows", "System32", "config")
       fs.chdir(currPath)
       fs.dirEntries(fs.pwd).each { |name| filesFound << name.downcase unless fs.fileDirectory?(name) }
-      %w{sam security default system software}.each do |hive|
+      %w(sam security default system software).each do |hive|
         # Assert that we can list each one of the registry hive files
         assert(filesFound.include?(hive))
 

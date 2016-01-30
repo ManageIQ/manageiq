@@ -1,11 +1,9 @@
-require "spec_helper"
 require "routing/shared_examples"
 
 describe "routes for HostController" do
   let(:controller_name) { "host" }
 
   it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like "A controller that has download_data routes"
@@ -23,7 +21,6 @@ describe "routes for HostController" do
     it "routes with POST" do
       expect(post("/host/advanced_settings")).to route_to("host#advanced_settings")
     end
-
   end
 
   describe "#button" do
@@ -106,7 +103,6 @@ describe "routes for HostController" do
     it "routes with POST" do
       expect(post("/host/filesystems")).to route_to("host#filesystems")
     end
-
   end
 
   describe "#firewall_rules" do
@@ -256,12 +252,6 @@ describe "routes for HostController" do
   describe "#timeline_data" do
     it "routes with GET" do
       expect(get("/host/timeline_data")).to route_to("host#timeline_data")
-    end
-  end
-
-  describe "#toggle_policy_profile" do
-    it "routes with POST" do
-      expect(post("/host/toggle_policy_profile")).to route_to("host#toggle_policy_profile")
     end
   end
 

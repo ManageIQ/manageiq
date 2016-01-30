@@ -1,4 +1,6 @@
 class MiqNetappRefreshWorker < MiqQueueWorkerBase
+  require_nested :Runner
+
   include PerStorageManagerTypeWorkerMixin
 
   self.required_roles     = ["storage_inventory"]

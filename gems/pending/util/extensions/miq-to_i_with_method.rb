@@ -10,7 +10,7 @@ class String
   end
 
   def to_x_with_method
-    n = self.gsub(',', '')
+    n = delete(',')
     return n unless n =~ NUMBER_WITH_METHOD_REGEX && $2 != "percent"
     n = $1.include?('.') ? $1.to_f : $1.to_i
     n.send($2)
@@ -24,17 +24,17 @@ end
 
 class Numeric
   def to_i_with_method
-    self.to_i # Can't alias because method is defined in subclasses
+    to_i # Can't alias because method is defined in subclasses
   end
 
   def to_f_with_method
-    self.to_f # Can't alias because method is defined in subclasses
+    to_f # Can't alias because method is defined in subclasses
   end
 end
 
 class NilClass
-  alias to_i_with_method to_i
-  alias to_f_with_method to_f
+  alias_method :to_i_with_method, :to_i
+  alias_method :to_f_with_method, :to_f
 end
 
 class Object

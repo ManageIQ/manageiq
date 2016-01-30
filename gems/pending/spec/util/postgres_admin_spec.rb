@@ -1,4 +1,3 @@
-require "spec_helper"
 require "util/postgres_admin"
 
 describe PostgresAdmin do

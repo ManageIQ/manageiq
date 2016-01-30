@@ -49,32 +49,32 @@ module MiqServer::RhnMirror
   end
 
   def apache_mirror_conf
-    [ "## CFME SSL Virtual Host Context RHN Mirror",
-      "",
-      { :directive => "VirtualHost",
-        :attribute => "*:443",
-        :configurations => [
-          "DocumentRoot \"/repo/mirror\"",
-          "ServerName #{MiqServer.my_server.guid}",
-          "ErrorLog /var/www/miq/vmdb/log/apache/ssl_mirror_error.log",
-          "TransferLog /var/www/miq/vmdb/log/apache/ssl_mirror_access_error.log",
-          "LogLevel warn",
-          "SSLEngine on",
-          "SSLProtocol all -SSLv2",
-          "SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:!LOW",
-          "SSLCertificateFile /var/www/miq/vmdb/certs/server.cer",
-          "SSLCertificateKeyFile /var/www/miq/vmdb/certs/server.cer.key",
-          "CustomLog /var/www/miq/vmdb/log/apache/ssl_mirror_request.log \"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\\"%r\\\" %b\"",
-          { :directive => "Directory",
-            :attribute => "\"#{local_mirror_directory}\"",
-            :configurations => [
-              "Options +Indexes",
-              "Order allow,deny",
-              "Allow from all",
-            ]
-          }
-        ]
-      }
+    ["## CFME SSL Virtual Host Context RHN Mirror",
+     "",
+     {:directive      => "VirtualHost",
+      :attribute      => "*:443",
+      :configurations => [
+        "DocumentRoot \"/repo/mirror\"",
+        "ServerName #{MiqServer.my_server.guid}",
+        "ErrorLog /var/www/miq/vmdb/log/apache/ssl_mirror_error.log",
+        "TransferLog /var/www/miq/vmdb/log/apache/ssl_mirror_access_error.log",
+        "LogLevel warn",
+        "SSLEngine on",
+        "SSLProtocol all -SSLv2",
+        "SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:!LOW",
+        "SSLCertificateFile /var/www/miq/vmdb/certs/server.cer",
+        "SSLCertificateKeyFile /var/www/miq/vmdb/certs/server.cer.key",
+        "CustomLog /var/www/miq/vmdb/log/apache/ssl_mirror_request.log \"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\\"%r\\\" %b\"",
+        {:directive      => "Directory",
+         :attribute      => "\"#{local_mirror_directory}\"",
+         :configurations => [
+           "Options +Indexes",
+           "Order allow,deny",
+           "Allow from all",
+         ]
+        }
+      ]
+     }
     ]
   end
 
@@ -102,14 +102,14 @@ module MiqServer::RhnMirror
   end
 
   def yum_repo_content(server_guid)
-    { "name"            => "CFME Server #{server_guid}",
-      "baseurl"         => "https://#{server_guid}",
-      "enabled"         => 1,
-      "cost"            => 100,
-      "gpgcheck"        => 1,
-      "gpgkey"          => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
-      "metadata_expire" => 10,
-      "sslverify"       => 0,
+    {"name"            => "CFME Server #{server_guid}",
+     "baseurl"         => "https://#{server_guid}",
+     "enabled"         => 1,
+     "cost"            => 100,
+     "gpgcheck"        => 1,
+     "gpgkey"          => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
+     "metadata_expire" => 10,
+     "sslverify"       => 0,
     }
   end
 
@@ -162,8 +162,8 @@ module MiqServer::RhnMirror
   def parse_rpm_file_name(file)
     partitions    = File.basename(file).partition(/[-.][0-9]+/)
     pkg_name      = partitions.shift
-    version_array = partitions.join("").gsub("-", ".").split(".").delete_blanks.take_while { |i| i.match(/^\d/) }
-    version       = version_array.collect { |i| i.split(/[A-Za-z]/)}.flatten.delete_blanks.join(".")
+    version_array = partitions.join("").tr("-", ".").split(".").delete_blanks.take_while { |i| i.match(/^\d/) }
+    version       = version_array.collect { |i| i.split(/[A-Za-z]/) }.flatten.delete_blanks.join(".")
     [pkg_name, version]
   end
 end

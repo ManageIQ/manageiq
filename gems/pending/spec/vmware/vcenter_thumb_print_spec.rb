@@ -10,24 +10,24 @@ describe VcenterThumbPrint do
   end
 
   it ".new" do
-    @tp.host.should == VCHOST
-    @tp.should be_kind_of(VcenterThumbPrint)
-    @tp.should_not be_kind_of(ESXThumbPrint)
-    @tp.should be_kind_of(ThumbPrint)
+    expect(@tp.host).to eq(VCHOST)
+    expect(@tp).to be_kind_of(VcenterThumbPrint)
+    expect(@tp).not_to be_kind_of(ESXThumbPrint)
+    expect(@tp).to be_kind_of(ThumbPrint)
   end
 
   it ".new_http_object" do
     http = @tp.http
-    http.should be_kind_of(Net::HTTP)
-    @tp.http.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+    expect(http).to be_kind_of(Net::HTTP)
+    expect(@tp.http.verify_mode).to eq(OpenSSL::SSL::VERIFY_NONE)
   end
 
   it ".new_uri" do
     uri = @tp.uri
-    uri.should be_kind_of(URI::HTTPS)
-    uri.host.should be_kind_of(String)
-    uri.host.should == VCHOST
-    uri.port.should be_kind_of(Integer)
-    uri.port.should == 443
+    expect(uri).to be_kind_of(URI::HTTPS)
+    expect(uri.host).to be_kind_of(String)
+    expect(uri.host).to eq(VCHOST)
+    expect(uri.port).to be_kind_of(Integer)
+    expect(uri.port).to eq(443)
   end
 end

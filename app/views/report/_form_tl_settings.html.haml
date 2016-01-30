@@ -14,12 +14,10 @@
                 = select_tag('chosen_tl',
                   options_for_select([NOTHING_STRING] + @tl_fields, @tl_field),
                   :multiple              => false,
-                  :class                 => "selectpicker",
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true)
+                  :class                 => "selectpicker")
                 :javascript
                   miqInitSelectPicker();
-                  miqSelectPickerEvent("chosen_tl", "#{url}");
+                  miqSelectPickerEvent('chosen_tl', '#{url}', {beforeSend: true, complete: true});
             - if @tl_field != NOTHING_STRING
               .form-group
                 %label.control-label.col-md-2
@@ -28,12 +26,10 @@
                   = select_tag('chosen_unit1',
                     options_for_select(@units1, @edit[:unit1]),
                     :multiple              => false,
-                    :class                 => "selectpicker",
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true)
+                    :class                 => "selectpicker")
                   :javascript
                     miqInitSelectPicker();
-                    miqSelectPickerEvent("chosen_until1", "#{url}");
+                    miqSelectPickerEvent('chosen_unit1', '#{url}', {beforeSend: true, complete: true});
               - if @edit[:unit1] != BAND_UNITS.last
                 .form-group
                   %label.control-label.col-md-2
@@ -42,12 +38,10 @@
                     = select_tag('chosen_unit2',
                       options_for_select([NOTHING_STRING] + @units2, @edit[:unit2]),
                       :multiple              => false,
-                      :class                 => "selectpicker",
-                      "data-miq_sparkle_on"  => true,
-                      "data-miq_sparkle_off" => true)
+                      :class                 => "selectpicker")
                     :javascript
                       miqInitSelectPicker();
-                      miqSelectPickerEvent("chosen_unit2", "#{url}");
+                      miqSelectPickerEvent('chosen_unit2', '#{url}', {beforeSend: true, complete: true});
                 - if @edit[:new][:tl_bands].length > 1 && @edit[:unit2] != BAND_UNITS.last
                   .form-group
                     %label.control-label.col-md-2
@@ -56,12 +50,10 @@
                       = select_tag('chosen_unit3',
                         options_for_select([NOTHING_STRING] + @units3, @edit[:unit3]),
                         :multiple              => false,
-                        :class                 => "selectpicker",
-                        "data-miq_sparkle_on"  => true,
-                        "data-miq_sparkle_off" => true)
+                        :class                 => "selectpicker")
                       :javascript
                         miqInitSelectPicker();
-                        miqSelectPickerEvent("chosen_unit3", "#{url}");
+                        miqSelectPickerEvent('chosen_unit3', '#{url}', {beforeSend: true, complete: true});
       .col-md-12.col-lg-6
         - if @tl_field != NOTHING_STRING
           %fieldset
@@ -73,12 +65,10 @@
                   = select_tag('chosen_position',
                     options_for_select([_("First"), _("Last")], @edit[:new][:tl_position]),
                     :multiple              => false,
-                    :class                 => "selectpicker",
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true)
+                    :class                 => "selectpicker")
                   :javascript
                     miqInitSelectPicker();
-                    miqSelectPickerEvent("chosen_position", "#{url}");
+                    miqSelectPickerEvent('chosen_position', '#{url}', {beforeSend: true, complete: true});
               .form-group
                 %label.control-label.col-md-2
                   = _('Show events from last')
@@ -87,19 +77,15 @@
                     = select_tag('chosen_last_time',
                       options_for_select(@tl_last_time_choices, @edit[:new][:tl_last_time]),
                       :multiple              => false,
-                      :class                 => "selectpicker",
-                      "data-miq_sparkle_on"  => true,
-                      "data-miq_sparkle_off" => true)
+                      :class                 => "selectpicker")
                     :javascript
                       miqInitSelectPicker();
-                      miqSelectPickerEvent("chosen_last_time", "#{url}");
+                      miqSelectPickerEvent('chosen_last_time', '#{url}', {beforeSend: true, complete: true});
                 .col-md-8
                   = select_tag('chosen_last_unit',
                     options_for_select([SHOWALL_STRING] + @edit[:tl_last_units], @edit[:new][:tl_last_unit]),
                     :multiple              => false,
-                    :class                 => "selectpicker",
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true)
+                    :class                 => "selectpicker")
                   :javascript
                     miqInitSelectPicker();
-                    miqSelectPickerEvent("chosen_last_unit", "#{url}");
+                    miqSelectPickerEvent('chosen_last_unit', '#{url}', {beforeSend: true, complete: true});

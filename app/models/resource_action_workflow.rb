@@ -5,7 +5,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     ResourceActionWorkflow
   end
 
-  def initialize(values, requester, resource_action, options={})
+  def initialize(values, requester, resource_action, options = {})
     @settings        = {}
     @requester       = requester
     @target          = options[:target]
@@ -22,22 +22,20 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     dialog
   end
 
-  def submit_request(requester_id, auto_approve=false)
+  def submit_request
     result = {}
 
-    result[:errors] = @dialog.validate
+    result[:errors] = @dialog.validate_field_data
     return result unless result[:errors].blank?
 
     values = create_values_hash
     values[:src_id] = @target.id
 
     if create_request?(values)
-      event_message = "Request by [#{requester_id}] for #{@target.class.name}:#{@target.id}"
-      result[:request] = create_request(values, requester_id, @target.class.name,
-                                        'resource_action_request_created', event_message, auto_approve)
+      create_request(values)
     else
       ra = load_resource_action(values)
-      ra.deliver_to_automate_from_dialog(values, @target)
+      ra.deliver_to_automate_from_dialog(values, @target, @requester)
     end
     result
   end
@@ -47,14 +45,14 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def has_request_class?
-    !self.request_class.nil? rescue false
+    !request_class.nil? rescue false
   end
 
   def request_type
     @target.request_type
   end
 
-  def load_resource_action(values=nil)
+  def load_resource_action(values = nil)
     if values.nil?
       ResourceAction.find_by_id(@settings[:resource_action_id])
     else
@@ -110,7 +108,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @dialog.field(name)
   end
 
-  def validate(values=nil)
+  def validate(_values = nil)
     @dialog.try(:validate)
   end
 

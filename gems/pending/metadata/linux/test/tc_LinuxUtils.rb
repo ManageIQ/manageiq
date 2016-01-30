@@ -3,12 +3,11 @@ require 'minitest/unit'
 require 'metadata/linux/LinuxUtils'
 
 class TestLinuxUtils < MiniTest::Unit::TestCase
-
-#  puts "  OCTAL_TO_PERMISSIONS = {"
-#  (0..07777).each do |o|
-#    puts "    '%04o' => '%s'," % [o, MiqLinux::Utils.octal_to_permissions(o)]
-#  end
-#  puts "  }"
+  #  puts "  OCTAL_TO_PERMISSIONS = {"
+  #  (0..07777).each do |o|
+  #    puts "    '%04o' => '%s'," % [o, MiqLinux::Utils.octal_to_permissions(o)]
+  #  end
+  #  puts "  }"
 
   OCTAL_TO_PERMISSIONS = {
     '0000' => '---------',

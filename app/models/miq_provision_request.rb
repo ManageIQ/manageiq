@@ -9,7 +9,7 @@ class MiqProvisionRequest < MiqRequest
   include ReportableMixin
 
   TASK_DESCRIPTION  = 'VM Provisioning'
-  SOURCE_CLASS_NAME = 'VmOrTemplate'
+  SOURCE_CLASS_NAME = 'Vm'
   ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_state,
@@ -130,5 +130,13 @@ class MiqProvisionRequest < MiqRequest
     } if source.orphaned?
 
     {:valid => true, :message => nil}
+  end
+
+  def event_name(mode)
+    "vm_provision_request_#{mode}"
+  end
+
+  def my_records
+    "#{SOURCE_CLASS_NAME}:#{source_id.inspect}"
   end
 end

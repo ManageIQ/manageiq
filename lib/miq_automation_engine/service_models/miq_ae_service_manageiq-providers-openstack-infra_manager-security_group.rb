@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Openstack_InfraManager_SecurityGroup < MiqAeServiceSecurityGroup
+  end
+end

@@ -1,7 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceMiqGroup < MiqAeServiceModelBase
-    expose :users, :association => true
-    expose :vms,   :association => true
+    expose :users,  :association => true
+    expose :vms,    :association => true
+    expose :tenant, :association => true
 
     def custom_keys
       object_send(:miq_custom_keys)

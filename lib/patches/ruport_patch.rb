@@ -5,7 +5,7 @@
 require 'ruport'
 module Ruport::Data
   class Table
-    def sort_rows_by(col_names=nil, options={}, &block)
+    def sort_rows_by(col_names = nil, options = {}, &block)
       # stabilizer is needed because of
       # http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/170565
       stabilizer = 0
@@ -17,12 +17,12 @@ module Ruport::Data
         if col_names
           sortable.sort_by do |r|
             stabilizer += 1
-            [Array(col_names).map {|col|
+            [Array(col_names).map do|col|
               val = r[col]
-              val = val.downcase if val.is_a?(String)
-              val = val.to_s     if val.is_a?(FalseClass) || val.is_a?(TrueClass)
+              val = val.downcase if val.kind_of?(String)
+              val = val.to_s     if val.kind_of?(FalseClass) || val.kind_of?(TrueClass)
               val
-            }, stabilizer]
+            end, stabilizer]
           end
         else
           sortable.sort_by(&block)
@@ -31,11 +31,11 @@ module Ruport::Data
       data_array += nil_rows
       data_array.reverse! if options[:order] == :descending
 
-      table = self.class.new( :data => data_array,
-                              :column_names => @column_names,
-                              :record_class => record_class )
+      table = self.class.new(:data         => data_array,
+                             :column_names => @column_names,
+                             :record_class => record_class)
 
-      return table
+      table
     end
   end
 end

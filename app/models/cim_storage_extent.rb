@@ -174,7 +174,7 @@ class CimStorageExtent < MiqCimInstance
   end
 
   def zone_name
-    self.zone.nil? ? '' : self.zone.name
+    zone.nil? ? '' : zone.name
   end
 
   def description

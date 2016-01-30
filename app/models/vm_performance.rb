@@ -6,4 +6,3 @@ class VmPerformance < MetricRollup
   belongs_to :storage,     :foreign_key => :parent_storage_id
   belongs_to :vm,          :foreign_key => :resource_id, :class_name => 'VmOrTemplate'
 end
-

@@ -4,7 +4,7 @@ module ActiveRecord
       include ActsAsMiqSetMember
     end
 
-    def self.acts_as_miq_set(model_class=nil)
+    def self.acts_as_miq_set(model_class = nil)
       include ActsAsMiqSet
 
       self.model_class = model_class unless model_class.nil?
@@ -24,17 +24,17 @@ module ActsAsMiqSetMember
 
   module ClassMethods
     def miq_set_class
-      @miq_set_class ||= "#{self.name}Set".constantize
+      @miq_set_class ||= "#{name}Set".constantize
     end
 
     def sets
-      self.miq_set_class.all
+      miq_set_class.all
     end
   end # module SingletonMethods
 
   def make_memberof(set)
     raise "object of type #{self.class} may not be a member of a set of type #{set.class}" unless self.kind_of?(set.class.model_class)
-    self.with_relationship_type("membership") { self.parent = set }
+    with_relationship_type("membership") { self.parent = set }
   end
 end # module ActsAsMiqSetMember
 
@@ -67,7 +67,7 @@ module ActsAsMiqSet
     alias_with_relationship_type :remove_member,      :remove_child
     alias_with_relationship_type :remove_all_members, :remove_all_children
 
-    alias_method self.model_table_name.to_sym, :children
+    alias_method model_table_name.to_sym, :children
   end
 
   module ClassMethods
@@ -79,7 +79,7 @@ module ActsAsMiqSet
     #
 
     def model_class
-      @model_class ||= self.name[0..-4].constantize
+      @model_class ||= name[0..-4].constantize
     end
 
     def model_class=(val)
@@ -87,12 +87,12 @@ module ActsAsMiqSet
     end
 
     def model_table_name
-      @model_table_name ||= self.model_class.table_name
+      @model_table_name ||= model_class.table_name
     end
   end
 
   def add_member(member)
     raise "object of type #{member.class} may not be a member of a set of type #{self.class}" unless member.kind_of?(self.class.model_class)
-    self.with_relationship_type("membership") { self.add_child(member) }
+    with_relationship_type("membership") { add_child(member) }
   end
 end # module ActsAsMiqSet

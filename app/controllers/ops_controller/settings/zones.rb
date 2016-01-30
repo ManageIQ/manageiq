@@ -6,14 +6,14 @@ module OpsController::Settings::Zones
     when "cancel"
       @edit = nil
       @zone = Zone.find_by_id(session[:edit][:zone_id]) if session[:edit] && session[:edit][:zone_id]
-      add_flash((@zone && @zone.id) ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:table=>"miq_zone"), :name=>@zone.name} :
-          _("Add of new %s was cancelled by the user") % ui_lookup(:table=>"miq_zone"))
+      add_flash((@zone && @zone.id) ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:table => "miq_zone"), :name => @zone.name} :
+          _("Add of new %s was cancelled by the user") % ui_lookup(:table => "miq_zone"))
       get_node_info(x_node)
       replace_right_cell(@nodetype)
     when "save", "add"
       assert_privileges("zone_#{params[:id] ? "edit" : "new"}")
       id = params[:id] ? params[:id] : "new"
-      return unless load_edit("zone_edit__#{id}","replace_cell__explorer")
+      return unless load_edit("zone_edit__#{id}", "replace_cell__explorer")
       @zone = @edit[:zone_id] ? Zone.find_by_id(@edit[:zone_id]) : Zone.new
       if @edit[:new][:name] == ""
         add_flash(_("%s is required") % "Zone name", :error)
@@ -27,7 +27,7 @@ module OpsController::Settings::Zones
         end
         return
       end
-      #zone = @zone.id.blank? ? Zone.new : Zone.find(@zone.id)  # Get new or existing record
+      # zone = @zone.id.blank? ? Zone.new : Zone.find(@zone.id)  # Get new or existing record
       zone_set_record_vars(@zone)
       if valid_record?(@zone) && @zone.save
         AuditEvent.success(build_created_audit(@zone, @edit))
@@ -38,11 +38,11 @@ module OpsController::Settings::Zones
         self.x_node = params[:button] == "save" ?
               "z-#{@zone.id}" : "xx-z"
         get_node_info(x_node)
-        replace_right_cell("root",[:settings,:diagnostics,:analytics])
+        replace_right_cell("root", [:settings, :diagnostics, :analytics])
       else
         @in_a_form = true
         @edit[:errors].each { |msg| add_flash(msg, :error) }
-        @zone.errors.each do |field,msg|
+        @zone.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         replace_right_cell("ze")
@@ -61,31 +61,31 @@ module OpsController::Settings::Zones
     assert_privileges("zone_delete")
     zone = Zone.find(params[:id])
     zonename = zone.name
-    audit = {:event=>"zone_record_delete", :message=>"[#{zone.name}] Record deleted", :target_id=>zone.id, :target_class=>"Zone", :userid => session[:userid]}
+    audit = {:event => "zone_record_delete", :message => "[#{zone.name}] Record deleted", :target_id => zone.id, :target_class => "Zone", :userid => session[:userid]}
     begin
       zone.destroy
-    rescue StandardError=>bang
+    rescue StandardError => bang
       add_flash("#{bang}", :error)
-      zone.errors.each { |field,msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
+      zone.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       self.x_node = "z-#{zone.id}"
       get_node_info(x_node)
     else
-      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"Zone"), :name=>zonename})
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "Zone"), :name => zonename})
       @sb[:active_tab] = "settings_list"
       self.x_node = "xx-z"
       get_node_info(x_node)
-      replace_right_cell(x_node,[:settings,:diagnostics,:analytics])
+      replace_right_cell(x_node, [:settings, :diagnostics, :analytics])
     end
   end
 
-    # AJAX driven routine to check for changes in ANY field on the user form
+  # AJAX driven routine to check for changes in ANY field on the user form
   def zone_field_changed
-    return unless load_edit("zone_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("zone_edit__#{params[:id]}", "replace_cell__explorer")
     zone_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace(@refresh_div, :partial=>@refresh_partial,
-                    :locals=>{:type=>"zones", :action_url=>'zone_field_changed'}) if @refresh_div
+      page.replace(@refresh_div, :partial => @refresh_partial,
+                                 :locals  => {:type => "zones", :action_url => 'zone_field_changed'}) if @refresh_div
 
       # checking to see if password/verify pwd fields either both have value or are both blank
       password_fields_changed = !(@edit[:new][:password].blank? ^ @edit[:new][:verify].blank?)
@@ -105,22 +105,22 @@ module OpsController::Settings::Zones
   def zone_set_record_vars(zone, mode = nil)
     zone.name = @edit[:new][:name]
     zone.description = @edit[:new][:description]
-    zone.settings ||= Hash.new
+    zone.settings ||= {}
     zone.settings[:proxy_server_ip] = @edit[:new][:proxy_server_ip]
     zone.settings[:concurrent_vm_scans] = @edit[:new][:concurrent_vm_scans]
     if @edit[:new][:ntp][:server]
-      temp = Array.new
-      @edit[:new][:ntp][:server].each{|svr| temp.push(svr) unless svr.blank?}
-      zone.settings[:ntp] ||= Hash.new
+      temp = []
+      @edit[:new][:ntp][:server].each { |svr| temp.push(svr) unless svr.blank? }
+      zone.settings[:ntp] ||= {}
       zone.settings[:ntp][:server] = temp
     end
-    zone.update_authentication({:windows_domain => {:userid=>@edit[:new][:userid], :password=>@edit[:new][:password]}}, {:save => (mode != :validate) })
+    zone.update_authentication({:windows_domain => {:userid => @edit[:new][:userid], :password => @edit[:new][:password]}}, :save => (mode != :validate))
   end
 
   # Validate the zone record fields
   def valid_record?(zone)
     valid = true
-    @edit[:errors] = Array.new
+    @edit[:errors] = []
     if !zone.authentication_password.blank? && zone.authentication_userid.blank?
       @edit[:errors].push("Username must be entered if Password is entered")
       valid = false
@@ -129,7 +129,7 @@ module OpsController::Settings::Zones
       @edit[:errors].push("Password and Verify Password fields do not match")
       valid = false
     end
-    return valid
+    valid
   end
 
   # Get variables from zone edit form
@@ -158,10 +158,10 @@ module OpsController::Settings::Zones
 
   # Set form variables for user add/edit
   def zone_set_form_vars
-    @edit = Hash.new
+    @edit = {}
     @edit[:zone_id] = @zone.id
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit[:new] = {}
+    @edit[:current] = {}
     @edit[:key] = "zone_edit__#{@zone.id || "new"}"
 
     @edit[:new][:name] = @zone.name
@@ -174,8 +174,8 @@ module OpsController::Settings::Zones
     @edit[:new][:verify] = @zone.authentication_password(:windows_domain)
     @edit[:new][:ntp] = @zone.settings[:ntp] if !@zone.settings.nil? && !@zone.settings[:ntp].nil?
 
-    @edit[:new][:ntp] ||= Hash.new
-    @edit[:new][:ntp][:server] ||= Array.new
+    @edit[:new][:ntp] ||= {}
+    @edit[:new][:ntp][:server] ||= []
 
     session[:verify_ems_status] = nil
     set_verify_status
@@ -183,5 +183,4 @@ module OpsController::Settings::Zones
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
-
 end

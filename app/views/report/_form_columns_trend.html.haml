@@ -7,12 +7,10 @@
     = select_tag('chosen_trend_col',
       options_for_select(opts, @edit[:new][:perf_trend_db] ? @edit[:new][:perf_trend_db] + "-" + @edit[:new][:perf_trend_col] : ""),
       :multiple              => false,
-      :class                 => "selectpicker",
-      "data-miq_sparkle_on"  => true,
-      "data-miq_sparkle_off" => true)
+      :class                 => "selectpicker")
     :javascript
       miqInitSelectPicker();
-      miqSelectPickerEvent("chosen_trend_col", "#{url}")
+      miqSelectPickerEvent('chosen_trend_col', '#{url}', {beforeSend: true, complete: true});
 - if @edit[:new][:perf_trend_col]
   .form-group
     %label.control-label.col-md-2
@@ -25,12 +23,10 @@
           = select_tag('chosen_limit_col',
             options_for_select(["<#{_('None')}>"] + @edit[:limit_cols].sort,  @edit[:new][:perf_limit_col]),
             :multiple              => false,
-            :class                 => "selectpicker form-control",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+            :class                 => "selectpicker form-control")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("chosen_limit_col", "#{url}")
+            miqSelectPickerEvent('chosen_limit_col', '#{url}', {beforeSend: true, complete: true});
     - unless @edit[:new][:perf_limit_col]
       .col-md-4
         .input-group
@@ -57,9 +53,7 @@
         = select_tag("percent#{index}",
           options_for_select(opt, @edit[:new]["perf_target_pct#{index}".to_sym]),
           :multiple              => false,
-          :class                 => "selectpicker",
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true)
+          :class                 => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("percent#{index}", "#{url}")
+          miqSelectPickerEvent("percent#{index}", '#{url}', {beforeSend: true, complete: true});

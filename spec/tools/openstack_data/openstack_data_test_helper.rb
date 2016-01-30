@@ -47,7 +47,7 @@ class OpenstackMeterListData < OpenstackPerfTestData
 end
 
 class OpenstackMetricStatsData < OpenstackPerfTestData
-  def get_statistics(meter_name, type="standard")
+  def get_statistics(meter_name, type = "standard")
     data = load_data(data_dir, type)
     data[meter_name]
   end

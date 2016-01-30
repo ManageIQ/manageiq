@@ -9,7 +9,7 @@ module MiqLinux
         parts = line.split(' ')
         next unless parts.length >= 9
 
-        perms, ftype = self.permissions_to_octal(parts[0])
+        perms, ftype = permissions_to_octal(parts[0])
 
         ret << {
           :ftype       => ftype,
@@ -23,7 +23,7 @@ module MiqLinux
         }
       end
 
-      return ret
+      ret
     end
 
     def self.permissions_to_octal(perms)
@@ -33,7 +33,7 @@ module MiqLinux
         ftype = perms[0, 1]
         perms = perms[1..-1]
       elsif perms.length == 11
-        # TODO when se-linux is present, the format is like this '-rw-rw-r--.', . means an SELinux ACL. (+ means a
+        # TODO: when se-linux is present, the format is like this '-rw-rw-r--.', . means an SELinux ACL. (+ means a
         # general ACL.). I need to figure out where to store this fact, ignoring it for now
         ftype = perms[0, 1]
         perms = perms[1..-2]
@@ -43,19 +43,19 @@ module MiqLinux
 
       unless ftype.nil?
         ftype = case ftype
-        when 'd' then 'dir'
-        when 'l' then 'link'
-        else          'file'
-        end
+                when 'd' then 'dir'
+                when 'l' then 'link'
+                else          'file'
+                end
       end
 
       octal = [0, 0, 0, 0]
       perms.split(//).each_with_index do |c, i|
-        #puts [c, i, i % 3, 2 - (i % 3), 2 ** (2 - (i % 3)), i / 3, 2 - (i / 3), 2 ** (2 - (i / 3))].inspect
-        octal[i / 3 + 1] += 2 ** (2 - (i % 3)) unless %w{- S T}.include?(c)
-        #puts octal.inspect
-        octal[0] += 2 ** (2 - (i / 3)) if %w{s t S T}.include?(c)
-        #puts octal.inspect
+        # puts [c, i, i % 3, 2 - (i % 3), 2 ** (2 - (i % 3)), i / 3, 2 - (i / 3), 2 ** (2 - (i / 3))].inspect
+        octal[i / 3 + 1] += 2**(2 - (i % 3)) unless %w(- S T).include?(c)
+        # puts octal.inspect
+        octal[0] += 2**(2 - (i / 3)) if %w(s t S T).include?(c)
+        # puts octal.inspect
       end
       octal = octal.join
 
@@ -75,15 +75,15 @@ module MiqLinux
 
       perms << (octal & 00400 != 0 ? 'r' : '-')
       perms << (octal & 00200 != 0 ? 'w' : '-')
-      perms << (octal & 04000 != 0 ? (octal & 00100 != 0 ? 's' : 'S' ) : octal & 00100 != 0 ? 'x' : '-')
+      perms << (octal & 04000 != 0 ? (octal & 00100 != 0 ? 's' : 'S') : octal & 00100 != 0 ? 'x' : '-')
       perms << (octal & 00040 != 0 ? 'r' : '-')
       perms << (octal & 00020 != 0 ? 'w' : '-')
-      perms << (octal & 02000 != 0 ? (octal & 00010 != 0 ? 's' : 'S' ) : octal & 00010 != 0 ? 'x' : '-')
+      perms << (octal & 02000 != 0 ? (octal & 00010 != 0 ? 's' : 'S') : octal & 00010 != 0 ? 'x' : '-')
       perms << (octal & 00004 != 0 ? 'r' : '-')
       perms << (octal & 00002 != 0 ? 'w' : '-')
-      perms << (octal & 01000 != 0 ? (octal & 00001 != 0 ? 't' : 'T' ) : octal & 00001 != 0 ? 'x' : '-')
+      perms << (octal & 01000 != 0 ? (octal & 00001 != 0 ? 't' : 'T') : octal & 00001 != 0 ? 'x' : '-')
 
-      return perms
+      perms
     end
 
     def self.parse_chkconfig_list(lines)
@@ -101,19 +101,19 @@ module MiqLinux
         parts[1..-1].each do |part|
           level, state = part.split(':')
           case state
-          when 'on'  then enable_level  << level
+          when 'on'  then enable_level << level
           when 'off' then disable_level << level
           end
         end
 
         nh = {:name => parts[0]}
-        nh[:enable_run_level]  = enable_level.empty?  ? nil : enable_level.sort
+        nh[:enable_run_level]  = enable_level.empty? ? nil : enable_level.sort
         nh[:disable_run_level] = disable_level.empty? ? nil : disable_level.sort
 
         ret << nh
       end
 
-      return ret
+      ret
     end
 
     def self.parse_systemctl_list(lines)
@@ -124,7 +124,7 @@ module MiqLinux
         parts = line.split(' ')
         next unless /^.*?\.service$/ =~ parts[0]
 
-        name, _ = parts[0].split('.')
+        name, = parts[0].split('.')
 
         # TODO(lsmola) investigate adding systemd targets, which are used instead of runlevels. Drawback, it's not
         # returned by any command, so we would have to parse the dir structure of /etc/systemd/system/
@@ -149,7 +149,7 @@ module MiqLinux
       end.map do |section|
         {
           # OpenStack service section name
-          'name'     => section.first.gsub('=', '').strip,
+          'name'     => section.first.delete('=').strip,
           # get array of services
           'services' => section[1..-1].map do |service_line|
             # split service line by :, ( and ) and strip white space from results

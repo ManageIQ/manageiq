@@ -1,9 +1,7 @@
-require "spec_helper"
-
 describe MetricRollup do
   context "test" do
     it "should not raise an error when a polymorphic reflection is included and references are specified in a query" do
-      pending "until ActiveRecord is fixed"
+      skip "until ActiveRecord is fixed"
       # TODO: A fix in ActiveRecord will make this test pass
       expect do
         MetricRollup.where(:id => 1)

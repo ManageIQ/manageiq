@@ -1,5 +1,7 @@
 module ReportFormatter
   class JqplotFormatter < Ruport::Formatter
+    include MiqReport::Formatting
+
     include ActionView::Helpers::UrlHelper
     include ChartCommon
     renders :jqplot, :for => ReportRenderer
@@ -70,10 +72,10 @@ module ReportFormatter
       return if Array(mri.chart[:axis_category_text]).empty?
 
       mri.chart[:data] = mri.chart[:data]
-        .zip(mri.chart[:axis_category_text])
-          .collect do |series, labels|
-            (labels || mri.chart[:axis_category_text][0]).zip(series)
-          end
+                         .zip(mri.chart[:axis_category_text])
+                         .collect do |series, labels|
+        (labels || mri.chart[:axis_category_text][0]).zip(series)
+      end
 
       mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
@@ -126,6 +128,19 @@ module ReportFormatter
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       series_names = super
       dim2_formating(series_names)
+      numeric_axis_formatter
+    end
+
+    def numeric_axis_formatter
+      if mri.graph[:type] =~ /(Bar|Column)/
+        custom_format   = Array(mri[:col_formats])[Array(mri[:col_order]).index(raw_column_name)]
+        format, options = javascript_format(mri.graph[:column].split(':')[0], custom_format)
+        return unless format
+
+        axis_formatter = "ManageIQ.charts.formatters.#{format}.jqplot(#{options.to_json})"
+        axis = mri.graph[:type] =~ /Column/ ? :yaxis : :xaxis
+        mri.chart.store_path(:options, :axes, axis, :tickOptions, :formatter, axis_formatter)
+      end
     end
 
     def dim2_formating(ticks)
@@ -134,13 +149,13 @@ module ReportFormatter
 
       if mri.graph[:type] =~ /Column/
         mri.chart[:options].update(
-          :axes           => {
+          :axes        => {
             :xaxis => {
               :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
               :ticks    => ticks,
             },
           },
-          :highlighter    => {
+          :highlighter => {
             :show                 => true,
             :tooltipAxes          => 'y',
             :tooltipContentEditor => 'jqplot_xaxis_tick_highlight',
@@ -149,13 +164,13 @@ module ReportFormatter
         )
       elsif mri.graph[:type] =~ /Bar/
         mri.chart[:options].update(
-          :axes           => {
+          :axes        => {
             :yaxis => {
               :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
               :ticks    => ticks,
             },
           },
-          :highlighter    => {
+          :highlighter => {
             :show                 => true,
             :tooltipAxes          => 'x',
             :tooltipContentEditor => 'jqplot_yaxis_tick_highlight',
@@ -169,12 +184,14 @@ module ReportFormatter
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
       simple_numeric_styling
+      numeric_axis_formatter
     end
 
     def build_numeric_chart_simple
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
       simple_numeric_styling
+      numeric_axis_formatter
     end
 
     def pie_highligher(values = false)

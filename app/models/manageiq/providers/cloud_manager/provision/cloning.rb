@@ -1,6 +1,6 @@
 module ManageIQ::Providers::CloudManager::Provision::Cloning
   def find_destination_in_vmdb(ems_ref)
-    vm_model_class.where(:ems_id => source.ext_management_system.id, :ems_ref => ems_ref).first
+    vm_model_class.find_by(:ems_id => source.ext_management_system.id, :ems_ref => ems_ref)
   end
 
   def vm_model_class

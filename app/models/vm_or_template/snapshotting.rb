@@ -16,15 +16,15 @@ module VmOrTemplate::Snapshotting
   end
 
   def v_total_snapshots
-    self.snapshots.size
+    snapshots.size
   end
 
   def newest_snapshot
-    self.snapshots.sort { |a,b| a.create_time <=> b.create_time }.last
+    snapshots.sort { |a, b| a.create_time <=> b.create_time }.last
   end
 
   def oldest_snapshot
-    self.snapshots.sort { |a,b| a.create_time <=> b.create_time }.first
+    snapshots.sort { |a, b| a.create_time <=> b.create_time }.first
   end
 
   def v_snapshot_oldest_name
@@ -76,7 +76,6 @@ module VmOrTemplate::Snapshotting
   end
 
   def snapshot_storage
-    return self.snapshots.inject(0) { |t, s| t + s.total_size.to_i }
+    snapshots.inject(0) { |t, s| t + s.total_size.to_i }
   end
-
 end

@@ -6,15 +6,17 @@ if (typeof(ManageIQ) === 'undefined') {
     browser: null, // browser name
     controller: null, // stored controller, used to build URL
     changes: null, // indicate if there are unsaved changes
+    clickUrl: null,
     dynatreeReplacement: null, //
     editor: null, // instance of CodeMirror editor
     sizeTimer: null, // timer for routines to get size of the window
     timelineFilter: null, //
-    toolbars: null, // toolbars TODO: about to be removed
+    toolbars: null, // toolbars
     oneTransition: {
       IEButtonPressed: null, // pressed save/reset button identificator
       oneTrans: null, // used to generate Ajax request only once for a drawn screen
     },
+    noCollapseEvent: false, // enable/disable events fired after collapsing an accordion
     expEditor: {
       prefillCount: 0, //
       first: {
@@ -29,21 +31,16 @@ if (typeof(ManageIQ) === 'undefined') {
     calendar: { // TODO about to be removed
       calDateFrom: null, // to limit calendar starting
       calDateTo: null, // to limit calendar ending
+      calSkipDays: null,  // to disable specific days of week
     },
     charts: {
       chartData: null, // data for charts
       charts: {}, // object with registered charts used in jqplot_register_chart
+      formatters: {}, // functions corresponding to MiqReport::Formatting
     },
-    grids: {
-      grids: null, // stored grids on the screen
-      gridColumnWidths: null, // store grid column widths
-      xml: null,
-    },
-    layout: { // abstraction over dhxLayout(B)
-      sidebar:   null,
-      toolbar:   null,
-      content:   null,
-      paginator: null
+    grids: {}, // stored grids on the screen
+    i18n: {
+      mark_translated_strings: false
     },
     mouse: {
       x: null, // mouse X coordinate for popup menu
@@ -64,13 +61,10 @@ if (typeof(ManageIQ) === 'undefined') {
       slickRows: null,
       slickDataView: null,
     },
-    spinner: {
-      spinner: null, // spinner instance
-      searchSpinner: null, // search spinner instance
-    },
     widget: {
       dashboardUrl: null, // set dashboard widget drag drop url
       menuXml: null,
     },
+    gridChecks: [], // list of checked checkboxes in current list grid
   }
 };

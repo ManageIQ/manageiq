@@ -1,7 +1,6 @@
-require 'spec_helper'
-
 describe "check_unregistered_from_provider Method Validation" do
   before(:each) do
+    @user = FactoryGirl.create(:user_with_group)
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host = FactoryGirl.create(:host)
@@ -12,18 +11,18 @@ describe "check_unregistered_from_provider Method Validation" do
     @ins  = "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
   end
 
-  let(:ws) { MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}") }
+  let(:ws) { MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}", @user) }
 
   it "returns 'ok' if the vm is not connected to a ems" do
-    ws.root['vm']['registered'].should  eql(false)
-    ws.root['ae_result'].should         eql("ok")
+    expect(ws.root['vm']['registered']).to  eql(false)
+    expect(ws.root['ae_result']).to         eql("ok")
   end
 
   it "returns 'retry' if the vm is still connected to ems" do
     @vm.update_attributes(:host => @host, :ems_id => @ems.id,
                           :registered => true)
-    Vm.any_instance.stub(:refresh_ems)
-    ws.root['ae_result'].should         eql("retry")
-    ws.root['vm']['registered'].should  == true
+    allow_any_instance_of(Vm).to receive(:refresh_ems)
+    expect(ws.root['ae_result']).to eql("retry")
+    expect(ws.root['vm']['registered']).to eq(true)
   end
 end

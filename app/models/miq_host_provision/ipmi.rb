@@ -1,5 +1,5 @@
 module MiqHostProvision::Ipmi
-  def ipmi_reboot(address, userid, password)
+  def ipmi_reboot(_address, _userid, _password)
     require 'miq-ipmi'
 
     # Force the host to restart (or just turn on if already off)
@@ -11,5 +11,4 @@ module MiqHostProvision::Ipmi
     _log.info("Invoking [power_reset]")
     ipmi.power_reset
   end
-
 end

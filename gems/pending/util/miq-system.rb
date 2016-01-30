@@ -6,7 +6,6 @@ if Sys::Platform::OS == :windows
 end
 
 class MiqSystem
-
   @@cpu_usage_vmstat_output_mtime = nil
   @@cpu_usage_computed_value      = nil
 
@@ -43,79 +42,24 @@ class MiqSystem
       end
     end
 
-    return nil
+    nil
   end
 
   def self.num_cpus
-    if Sys::Platform::IMPL == :linux
-      @num_cpus ||= begin
-        filename = "/proc/cpuinfo"
-        count = 0
-        MiqSystem.readfile_async(filename).to_s.split("\n").each do |line|
-          next if line.strip.empty?
-          count += 1 if (line.split(":").first.strip == 'processor')
-        end
-        count
-      end
-    else
-      return nil
-    end
+    return unless Sys::Platform::IMPL == :linux
+    require 'linux_admin'
+    @num_cpus ||= LinuxAdmin::Hardware.new.total_cores
   end
 
-  ##############################################################################################################################
-  # FREE(1)                                                    Linux User’s Manual                                                   FREE(1)
-  #
-  # NAME
-  #        free - Display amount of free and used memory in the system
-  #
-  # SYNOPSIS
-  #        free [-b | -k | -m | -g] [-o] [-s delay ] [-t] [-V]
-  #
-  # DESCRIPTION
-  #        free  displays  the total amount of free and used physical and swap memory in the system, as well as the buffers used by the ker‐
-  #        nel.  The shared memory column should be ignored; it is obsolete.
-  #
-  #    Options
-  #        The -b switch displays the amount of memory in bytes; the -k switch (set by default) displays it in kilobytes; the -m switch dis‐
-  #        plays it in megabytes; the -g switch displays it in gigabytes.
-  #
-  #        The -t switch displays a line containing the totals.
-  #
-  #        The  -o switch disables the display of a "buffer adjusted" line.  If the -o option is not specified, free subtracts buffer memory
-  #        from the used memory and adds it to the free memory reported.
-  #
-  #        The -s switch activates continuous polling delay seconds apart. You may actually specify any floating  point  number  for  delay,
-  #        usleep(3) is used for microsecond resolution delay times.
-  #
-  #        The -V displays version information.
-  #
-  # FILES
-  #        /proc/meminfo
-  #               memory information
-  #
-  # SEE ALSO
-  #        ps(1), slabtop(1), vmstat(8), top(1)
-  #
-  # SAMPLE RUN on Ubuntu
-  #
-  # $ free -b -t
-  #              total       used       free     shared    buffers     cached
-  # Mem:    3190689792  865304576 2325385216          0   74690560  110784512
-  # -/+ buffers/cache:  679829504 2510860288
-  # Swap:   2344120320          0 2344120320
-  # Total:  5534810112  865304576 4669505536
-  #
-  ##############################################################################################################################
-
   def self.memory
-    result = Hash.new
+    result = {}
     case Sys::Platform::IMPL
     when :mswin, :mingw
       # raise "MiqSystem.memory: Windows Not Supported"
     when :linux
       filename = "/proc/meminfo"
       data = nil
-      File.open(filename,'r') { |f| data = f.read_nonblock(10000) }
+      File.open(filename, 'r') { |f| data = f.read_nonblock(10000) }
 
       data.to_s.each_line do |line|
         key, value = line.split(":")
@@ -132,15 +76,15 @@ class MiqSystem
       # raise "MiqSystem.memory: Mac OSX Not Supported"
     end
 
-    return result
+    result
   end
 
   def self.total_memory
-    @total_memory ||= self.memory[:MemTotal]
+    @total_memory ||= memory[:MemTotal]
   end
 
   def self.status
-    result = Hash.new
+    result = {}
 
     case Sys::Platform::IMPL
     when :mswin, :mingw
@@ -156,132 +100,10 @@ class MiqSystem
       # raise "MiqSystem.status: Mac OSX Not Supported"
     end
 
-    return result
+    result
   end
 
-  ##############################################################################################################################
-  # DF(1)                                                         User Commands                                                        DF(1)
-  #
-  # NAME
-  #        df - report file system disk space usage
-  #
-  # SYNOPSIS
-  #        df [OPTION]... [FILE]...
-  #
-  # DESCRIPTION
-  #        This  manual  page documents the GNU version of df.  df displays the amount of disk space available on the file system containing
-  #        each file name argument.  If no file name is given, the space available on all currently mounted file  systems  is  shown.   Disk
-  #        space is shown in 1K blocks by default, unless the environment variable POSIXLY_CORRECT is set, in which case 512-byte blocks are
-  #        used.
-  #
-  #        If an argument is the absolute file name of a disk device node containing a mounted file system, df shows the space available  on
-  #        that  file system rather than on the file system containing the device node (which is always the root file system).  This version
-  #        of df cannot show the space available on unmounted file systems, because on most kinds of systems doing  so  requires  very  non‐
-  #        portable intimate knowledge of file system structures.
-  #
-  # OPTIONS
-  #        Show information about the file system on which each FILE resides, or all file systems by default.
-  #
-  #        Mandatory arguments to long options are mandatory for short options too.
-  #
-  #        -a, --all
-  #               include dummy file systems
-  #
-  #        -B, --block-size=SIZE
-  #               use SIZE-byte blocks
-  #
-  #        -h, --human-readable
-  #               print sizes in human readable format (e.g., 1K 234M 2G)
-  #
-  #        -H, --si
-  #               likewise, but use powers of 1000 not 1024
-  #
-  #        -i, --inodes
-  #               list inode information instead of block usage
-  #
-  #        -k     like --block-size=1K
-  #
-  #        -l, --local
-  #               limit listing to local file systems
-  #
-  #        --no-sync
-  #               do not invoke sync before getting usage info (default)
-  #
-  #        -P, --portability
-  #               use the POSIX output format
-  #
-  #        --sync invoke sync before getting usage info
-  #
-  #        -t, --type=TYPE
-  #               limit listing to file systems of type TYPE
-  #
-  #        -T, --print-type
-  #               print file system type
-  #
-  #        -x, --exclude-type=TYPE
-  #               limit listing to file systems not of type TYPE
-  #
-  #        -v     (ignored)
-  #
-  #        --help display this help and exit
-  #
-  #        --version
-  #               output version information and exit
-  #
-  #        SIZE may be (or may be an integer optionally followed by) one of following: kB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on
-  #        for G, T, P, E, Z, Y.
-  #
-  # AUTHOR
-  #        Written by Torbjorn Granlund, David MacKenzie, and Paul Eggert.
-  #
-  # REPORTING BUGS
-  #        Report bugs to <bug-coreutils@gnu.org>.
-  #
-  # COPYRIGHT
-  #        Copyright © 2008 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-  #        This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
-  #
-  # SEE ALSO
-  #        The full documentation for df is maintained as a Texinfo manual.  If the info and df programs  are  properly  installed  at  your
-  #        site, the command
-  #
-  #               info coreutils ’df invocation’
-  #
-  #        should give you access to the complete manual.
-  #
-  # GNU coreutils 6.10                                             April 2008                                                          DF(1)
-  #
-  #
-  # SAMPLE RUN on Ubuntu
-  #
-  # $ df -T
-  #
-  # Filesystem    Type   1K-blocks      Used Available Use% Mounted on
-  # /dev/sda1     ext3     2924572   1748796   1028384  63% /
-  # varrun       tmpfs     1557952       176   1557776   1% /var/run
-  # varlock      tmpfs     1557952         0   1557952   0% /var/lock
-  # udev         tmpfs     1557952        76   1557876   1% /dev
-  # devshm       tmpfs     1557952         0   1557952   0% /dev/shm
-  # /dev/sdd1     ext3     2079888    485176   1489892  25% /var/www/miq
-  # /dev/sdb1     ext3     2079888     37192   1937876   2% /var/www/miq/vmdb/log
-  # /dev/sdc1     ext3     5195812    164884   4769072   4% /var/lib/data
-  #
-  #
-  # $ df -T -i
-  #
-  # Filesystem    Type    Inodes   IUsed   IFree IUse% Mounted on
-  # /dev/sda1     ext3    184736   93765   90971   51% /
-  # varrun       tmpfs    221937      43  221894    1% /var/run
-  # varlock      tmpfs    221937       4  221933    1% /var/lock
-  # udev         tmpfs    221937    2853  219084    2% /dev
-  # devshm       tmpfs    221937       1  221936    1% /dev/shm
-  # /dev/sdd1     ext3    131072   19781  111291   16% /var/www/miq
-  # /dev/sdb1     ext3    131072      41  131031    1% /var/www/miq/vmdb/log
-  # /dev/sdc1     ext3    327680    1034  326646    1% /var/lib/data
-  #
-  #
-  ##############################################################################################################################
-  def self.disk_usage(file=nil)
+  def self.disk_usage(file = nil)
     file = normalize_df_file_argument(file)
 
     case Sys::Platform::IMPL
@@ -353,130 +175,6 @@ class MiqSystem
     file
   end
 
-  ##############################################################################################################################
-  # DU(1)                                                         User Commands                                                        DU(1)
-  #
-  # NAME
-  #        du - estimate file space usage
-  #
-  # SYNOPSIS
-  #        du [OPTION]... [FILE]...
-  #        du [OPTION]... --files0-from=F
-  #
-  # DESCRIPTION
-  #        Summarize disk usage of each FILE, recursively for directories.
-  #
-  #        Mandatory arguments to long options are mandatory for short options too.
-  #
-  #        -a, --all
-  #               write counts for all files, not just directories
-  #
-  #        --apparent-size
-  #               print apparent sizes, rather than disk usage; although the apparent size is usually smaller, it may be larger due to holes
-  #               in (‘sparse’) files, internal fragmentation, indirect blocks, and the like
-  #
-  #        -B, --block-size=SIZE
-  #               use SIZE-byte blocks
-  #
-  #        -b, --bytes
-  #               equivalent to ‘--apparent-size --block-size=1’
-  #
-  #        -c, --total
-  #               produce a grand total
-  #
-  #        -D, --dereference-args
-  #               dereference only symlinks that are listed on the command line
-  #
-  #        --files0-from=F
-  #               summarize disk usage of the NUL-terminated file names specified in file F
-  #
-  #        -H     like --si, but also evokes a warning; will soon change to be equivalent to --dereference-args (-D)
-  #
-  #        -h, --human-readable
-  #               print sizes in human readable format (e.g., 1K 234M 2G)
-  #
-  #        --si   like -h, but use powers of 1000 not 1024
-  #
-  #        -k     like --block-size=1K
-  #
-  #        -l, --count-links
-  #               count sizes many times if hard linked
-  #
-  #        -m     like --block-size=1M
-  #
-  #        -L, --dereference
-  #               dereference all symbolic links
-  #
-  #        -P, --no-dereference
-  #               don’t follow any symbolic links (this is the default)
-  #
-  #        -0, --null
-  #               end each output line with 0 byte rather than newline
-  #
-  #        -S, --separate-dirs
-  #               do not include size of subdirectories
-  #
-  #        -s, --summarize
-  #               display only a total for each argument
-  #
-  #        -x, --one-file-system
-  #               skip directories on different file systems
-  #
-  #        -X FILE, --exclude-from=FILE
-  #               Exclude files that match any pattern in FILE.
-  #
-  #        --exclude=PATTERN
-  #               Exclude files that match PATTERN.
-  #
-  #        --max-depth=N
-  #               print the total for a directory (or file, with --all) only if it is N or fewer levels below  the  command  line  argument;
-  #               --max-depth=0 is the same as --summarize
-  #
-  #        --time show time of the last modification of any file in the directory, or any of its subdirectories
-  #
-  #        --time=WORD
-  #               show time as WORD instead of modification time: atime, access, use, ctime or status
-  #
-  #        --time-style=STYLE
-  #               show times using style STYLE: full-iso, long-iso, iso, +FORMAT FORMAT is interpreted like ‘date’
-  #
-  #        --help display this help and exit
-  #
-  #        --version
-  #               output version information and exit
-  #
-  # SIZE may be (or may be an integer optionally followed by) one of following: kB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on
-  # for G, T, P, E, Z, Y.
-  #
-  #   PATTERNS
-  #          PATTERN is a shell pattern (not a regular expression).  The pattern ?  matches any one character, whereas *  matches  any  string
-  #          (composed  of  zero,  one  or multiple characters).  For example, *.o will match any files whose names end in .o.  Therefore, the
-  #          command
-  #
-  #                 du --exclude=’*.o’
-  #
-  #          will skip all files and subdirectories ending in .o (including the file .o itself).
-  #
-  #   AUTHOR
-  #          Written by Torbjorn Granlund, David MacKenzie, Paul Eggert, and Jim Meyering.
-  #
-  #   REPORTING BUGS
-  #          Report bugs to <bug-coreutils@gnu.org>.
-  #
-  #   COPYRIGHT
-  #          Copyright © 2008 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-  #          This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
-  #
-  #   SEE ALSO
-  #          The full documentation for du is maintained as a Texinfo manual.  If the info and du programs  are  properly  installed  at  your
-  #          site, the command
-  #
-  #                 info coreutils ’du invocation’
-  #
-  #          should give you access to the complete manual.
-  #
-  #   GNU coreutils 6.10                                             April 2008                                                          DU(1)
-  ##############################################################################################################################
   def self.arch
     arch = Sys::Platform::ARCH
     case Sys::Platform::OS
@@ -488,7 +186,6 @@ class MiqSystem
     end
     arch
   end
-
 
   def self.tail(filename, last)
     return nil unless File.file?(filename)
@@ -509,7 +206,7 @@ class MiqSystem
 
   def self.readfile_async(filename, maxlen = 10000)
     data = nil
-    File.open(filename,'r') do |f|
+    File.open(filename, 'r') do |f|
       begin
         data = f.read_nonblock(maxlen)
       rescue *retryable_io_errors
@@ -520,7 +217,7 @@ class MiqSystem
       end
     end if File.exist?(filename)
 
-    return data
+    data
   end
 
   def self.open_browser(url)
@@ -534,15 +231,15 @@ class MiqSystem
 end
 
 if __FILE__ == $0
-  def number_to_human_size(size, precision=1)
+  def number_to_human_size(size, precision = 1)
     size = Kernel.Float(size)
     case
-      when size == (1024 ** 0); "1 Byte"
-      when size <  (1024 ** 1); "%d Bytes" % size
-      when size <  (1024 ** 2); "%.#{precision}f KB"  % (size / (1024.0 ** 1) )
-      when size <  (1024 ** 3); "%.#{precision}f MB"  % (size / (1024.0 ** 2) )
-      when size <  (1024 ** 4); "%.#{precision}f GB"  % (size / (1024.0 ** 3) )
-      else                      "%.#{precision}f TB"  % (size / (1024.0 ** 4) )
+    when size == (1024**0) then "1 Byte"
+    when size < (1024**1) then "%d Bytes" % size
+    when size < (1024**2) then "%.#{precision}f KB" % (size / (1024.0**1))
+    when size < (1024**3) then "%.#{precision}f MB" % (size / (1024.0**2))
+    when size < (1024**4) then "%.#{precision}f GB" % (size / (1024.0**3))
+    else                      "%.#{precision}f TB" % (size / (1024.0**4))
     end.sub(".%0#{precision}d" % 0, '')    # .sub('.0', '')
   end
 
@@ -552,36 +249,34 @@ if __FILE__ == $0
   result = MiqSystem.disk_usage
   format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
   header = format(format_string,
-      "Filesystem",
-      "Type",
-      "Total",
-      "Used",
-      "Available",
-      "%Used",
-      "iTotal",
-      "iUsed",
-      "iFree",
-      "%iUsed",
-      "Mounted on")
+                  "Filesystem",
+                  "Type",
+                  "Total",
+                  "Used",
+                  "Available",
+                  "%Used",
+                  "iTotal",
+                  "iUsed",
+                  "iFree",
+                  "%iUsed",
+                  "Mounted on")
   puts header
 
   result.each { |disk|
     formatted = format(format_string,
-      disk[:filesystem],
-      disk[:type],
-      number_to_human_size(disk[:total_bytes]),
-      number_to_human_size(disk[:used_bytes]),
-      number_to_human_size(disk[:available_bytes]),
-      "#{disk[:used_bytes_percent]}%",
-      disk[:total_inodes],
-      disk[:used_inodes],
-      disk[:available_inodes],
-      "#{disk[:used_inodes_percent]}%",
-      disk[:mount_point]
-    )
+                       disk[:filesystem],
+                       disk[:type],
+                       number_to_human_size(disk[:total_bytes]),
+                       number_to_human_size(disk[:used_bytes]),
+                       number_to_human_size(disk[:available_bytes]),
+                       "#{disk[:used_bytes_percent]}%",
+                       disk[:total_inodes],
+                       disk[:used_inodes],
+                       disk[:available_inodes],
+                       "#{disk[:used_inodes_percent]}%",
+                       disk[:mount_point]
+                      )
     puts formatted
   }
-
-
 
 end

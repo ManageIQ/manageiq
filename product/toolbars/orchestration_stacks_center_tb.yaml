@@ -7,19 +7,19 @@
 - :name: orchestration_stack_vmdb
   :items:
   - :buttonSelect: orchestration_stack_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
 #    - :button: orchestration_stack_edit
-#      :image: edit
+#      :icon: pficon pficon-edit fa-lg
 #      :text: 'Edit Selected #{ui_lookup(:table=>"orchestration_stack")}'
 #      :title: 'Select a single #{ui_lookup(:table=>"orchestration_stack")} to edit'
 #      :url_parms: 'main_div'
 #      :enabled: 'false'
 #      :onwhen: '1'
     - :button: orchestration_stack_delete
-      :image: remove
+      :icon: pficon pficon-delete fa-lg
       :text: 'Remove #{ui_lookup(:tables=>"orchestration_stack")} from the VMDB'
       :title: 'Remove selected #{ui_lookup(:tables=>"orchestration_stack")} from the VMDB'
       :url_parms: 'main_div'
@@ -29,14 +29,14 @@
 - :name: orchestration_stack_policy
   :items:
   - :buttonSelect: orchestration_stack_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: orchestration_stack_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit Tags for the selected #{ui_lookup(:tables=>"orchestration_stack")}'
       :url_parms: 'main_div'
@@ -45,21 +45,21 @@
 - :name: orchestration_stack_lifecycle
   :items:
   - :buttonSelect: orchestration_stack_lifecycle_choice
-    :image: lifecycle
+    :icon: fa fa-recycle fa-lg
     :title: Lifecycle
     :text: Lifecycle
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: orchestration_stack_retire
-      :image: retire
+      :icon: fa fa-clock-o fa-lg
       :text: "Set Retirement Dates"
       :title: 'Set Retirement Dates for the selected #{ui_lookup(:tables=>"orchestration_stack")}'
       :enabled: 'false'
       :onwhen: '1+'
       :url_parms: 'main_div'
     - :button: orchestration_stack_retire_now
-      :image: retire_now
+      :icon: fa fa-clock-o fa-lg
       :text: 'Retire selected #{ui_lookup(:tables => "orchestration_stack")}'
       :title: 'Retire selected #{ui_lookup(:tables => "orchestration_stack")}'
       :confirm: 'Retire the selected #{ui_lookup(:tables => "orchestration_stack")}?'

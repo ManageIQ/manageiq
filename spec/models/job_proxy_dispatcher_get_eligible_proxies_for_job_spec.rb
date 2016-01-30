@@ -1,17 +1,11 @@
-require "spec_helper"
-
 describe "JobProxyDispatcherGetEligibleProxiesForJob" do
   require File.expand_path(File.join(File.dirname(__FILE__), 'job_proxy_dispatcher/job_proxy_dispatcher_helper'))
   include JobProxyDispatcherHelper
   context "with two servers on same zone, vix disk enabled for all, " do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid => @guid)
-      @zone = FactoryGirl.create(:zone)
-      @server1 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-      MiqServer.my_server(true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => MiqUUID.new_guid, :status => "started")
-      MiqServer.any_instance.stub(:is_vix_disk? => true)
+      @server1 = EvmSpecHelper.local_miq_server
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
+      allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
 
       # Support old style class methods or new instance style
       @jpd = JobProxyDispatcher.respond_to?(:get_eligible_proxies_for_job) ? JobProxyDispatcher : JobProxyDispatcher.new
@@ -19,7 +13,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
       before(:each) do
-        @hosts, @proxies, @storages, @vms = self.build_hosts_proxies_storages_vms
+        @hosts, @proxies, @storages, @vms = build_hosts_proxies_storages_vms
         @vm = @vms.first
       end
 
@@ -36,7 +30,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
           end
 
           it "should return an empty array" do
-            @jpd.get_eligible_proxies_for_job(@job).should be_empty
+            expect(@jpd.get_eligible_proxies_for_job(@job)).to be_empty
           end
         end
 
@@ -48,17 +42,17 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
           end
 
           it "should return an empty array" do
-            @jpd.get_eligible_proxies_for_job(@job).should be_empty
+            expect(@jpd.get_eligible_proxies_for_job(@job)).to be_empty
           end
         end
 
         context "with no proxies for job, " do
           before(:each) do
-            ManageIQ::Providers::Vmware::InfraManager::Vm.any_instance.stub(:proxies4job => {:proxies => [], :message => "blah"} )
+            allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive_messages(:proxies4job => {:proxies => [], :message => "blah"})
           end
 
           it "should return an empty array" do
-            @jpd.get_eligible_proxies_for_job(@job).should be_empty
+            expect(@jpd.get_eligible_proxies_for_job(@job)).to be_empty
           end
         end
       end

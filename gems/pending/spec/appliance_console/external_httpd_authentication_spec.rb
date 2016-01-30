@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "active_support/all"
 require "appliance_console/external_httpd_authentication"
 require "appliance_console/prompts"
@@ -51,7 +49,7 @@ describe ApplianceConsole::ExternalHttpdAuthentication do
         expect(subject).to receive(:just_ask).with(/realm/i, "SERVER.COM").and_return("realm.server.com")
         expect(subject).to receive(:just_ask).with(/principal/i, "admin").and_return("admin")
         expect(subject).to receive(:just_ask).with(/password/i, nil).and_return("password")
-        expect(subject.ask_for_parameters).to be_true
+        expect(subject.ask_for_parameters).to be_truthy
         expect(subject.send(:realm)).to eq("REALM.SERVER.COM")
         # expect(subject.ipaserver).to eq("ipa.server.com")
       end

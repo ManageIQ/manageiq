@@ -35,11 +35,11 @@ class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Prov
       Benchmark.realtime_block(:rhevm_connect) { perf_init_rhevm }
       counters, = Benchmark.realtime_block(:collect_data) do
         case target
-        when Host; OvirtMetrics.host_realtime(target.uid_ems, start_time, end_time)
-        when Vm;   OvirtMetrics.vm_realtime(target.uid_ems, start_time, end_time)
+        when Host then OvirtMetrics.host_realtime(target.uid_ems, start_time, end_time)
+        when Vm then   OvirtMetrics.vm_realtime(target.uid_ems, start_time, end_time)
         end
       end
-      return *counters
+      return counters
     rescue Exception => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")

@@ -1,4 +1,4 @@
-class PolicyEvent < ActiveRecord::Base
+class PolicyEvent < ApplicationRecord
   module Purging
     extend ActiveSupport::Concern
     include PurgingMixin
@@ -22,7 +22,7 @@ class PolicyEvent < ActiveRecord::Base
       end
       alias_method :purge_timer, :purge_queue
 
-      def purge_conditions(older_than)
+      def purge_scope(older_than)
         where(arel_table[:timestamp].lt(older_than))
       end
 

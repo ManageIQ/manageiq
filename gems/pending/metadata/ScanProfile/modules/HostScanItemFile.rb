@@ -1,13 +1,13 @@
 require 'metadata/linux/LinuxUtils'
 
 module HostScanItemFile
-  def parse_data(ssu, data, &blk)
+  def parse_data(ssu, data, &_blk)
     if data.nil?
-      d = self.scan_definition
+      d = scan_definition
 
       st = Time.now
       $log.info "Scanning [Profile-Files] information."
-      yield({:msg=>'Scanning Profile-File'}) if block_given?
+      yield({:msg => 'Scanning Profile-File'}) if block_given?
 
       fs_files = d["stats"].collect { |s| s["target"] }.uniq
 
@@ -45,7 +45,7 @@ module HostScanItemFile
 
       d[:data] = files
 
-      $log.info "Scanning [Profile-Files] information ran for [#{Time.now-st}] seconds."
+      $log.info "Scanning [Profile-Files] information ran for [#{Time.now - st}] seconds."
     end
   end
 end

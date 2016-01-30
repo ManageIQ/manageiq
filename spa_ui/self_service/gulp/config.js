@@ -59,7 +59,7 @@ module.exports = (function() {
   var serverApp = server + 'app.js';
 
   function getClientJsFiles(ordered, excludeSpecs) {
-    var files = [client + 'app/**/*.js'];
+    var files = [client + 'app/**/*.js', client + 'skin/**/*.js'];
 
     if (ordered) {
       files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', files)
@@ -116,7 +116,7 @@ module.exports = (function() {
   // task jscs: Runs JsCs on client code
   config.jscs = {
     src: getClientJsFiles(),
-    rcfile: './.jscsrc'
+    rcFile: './.jscsrc'
   };
 
   // task plato: Analyze client code with Plato
@@ -173,8 +173,30 @@ module.exports = (function() {
     }
   };
 
+  config.skinImages = {
+    src: [
+      client + 'skin/images/**/*.*'
+    ],
+    build: build + 'images',
+    minify: true,
+    options: {
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
+    }
+  };
+
+
   config.devImages = {
     src: imageFiles,
+    build: temp + 'images',
+    minify: false
+  };
+
+  config.devSkinImages = {
+    src: [
+      client + 'skin/images/**/*.*'
+    ],
     build: temp + 'images',
     minify: false
   };
@@ -273,7 +295,10 @@ module.exports = (function() {
   config.inject = {
     index: client + indexFile,
     build: client,
-    css: temp + 'styles/' + cssFile
+    css: [
+      temp + 'styles/' + cssFile,
+      client + '/skin/**/*.css'
+    ]
   };
 
   config.optimize = {
@@ -286,7 +311,8 @@ module.exports = (function() {
     ngAnnotateOptions: {
       add: true,
       single_quotes: true
-    }
+    },
+    devHost: 'http://localhost:3000'
   };
 
   config.build = {
@@ -313,7 +339,7 @@ module.exports = (function() {
   };
 
   config.test = {
-    confFile: __dirname + '/karma.conf.js',
+    confFile: __dirname + '/../karma.conf.js',
     serverEnv: 'dev',
     serverPort: 8888,
     serverApp: serverApp,
@@ -339,6 +365,7 @@ module.exports = (function() {
     browserSyncOptions: {
       proxy: 'localhost:' + (process.env.PORT || '8001'),
       port: 3001,
+      startPath: '/self_service/',
       files: [],
       ghostMode: {
         clicks: true,
@@ -353,6 +380,30 @@ module.exports = (function() {
       notify: true,
       reloadDelay: 0
     }
+  };
+
+  var poDir = 'client/gettext/po/';
+
+  config.gettextExtract = {
+    inputs: ['client/**/*.js', 'client/**/*.html'],
+    potFile: 'manageiq-ssui.pot',
+    extractorOptions: {
+      markerNames: ['__', 'N_'],
+    },
+    outputDir: poDir,
+  };
+
+  config.gettextCompile = {
+    inputs: poDir + '**/*.po',
+    compilerOptions: {
+      format: 'json',
+    },
+    outputDir: 'client/gettext/json/',
+  };
+
+  config.gettextCopy = {
+    inputs: 'client/gettext/json/*.json',
+    outputDir: build + 'gettext/json/',
   };
 
   // task bump: Revs the package and bower files

@@ -3,7 +3,7 @@ require "util/postgres_admin"
 
 module ApplianceConsole
   class ServiceGroup
-    SERVICES  = %w{evminit memcached miqtop evmserverd}.freeze
+    SERVICES  = %w(evminit memcached miqtop evmserverd).freeze
 
     def initialize(hash = {})
       @postgresql = hash[:internal_postgresql]
@@ -56,7 +56,7 @@ module ApplianceConsole
       LinuxAdmin::Service.new(service).send(action)
     end
 
-    #TODO: Fix LinuxAdmin::Service to detach.
+    # TODO: Fix LinuxAdmin::Service to detach.
     def run_detached_service(service, action)
       Process.detach(Kernel.spawn("/sbin/service #{service} #{action}", [:out, :err] => ["/dev/null", "w"]))
     end

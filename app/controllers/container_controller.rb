@@ -1,14 +1,17 @@
 class ContainerController < ApplicationController
   include ContainersCommonMixin
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   CONTAINER_X_BUTTON_ALLOWED_ACTIONS = {
-    'container_delete' => :container_delete,
-    'container_edit'   => :container_edit
+    'container_delete'   => :container_delete,
+    'container_edit'     => :container_edit,
+    'container_tag'      => :container_tag,
+    'container_timeline' => :show_timeline,
+    'container_perf'     => :show
   }
 
   def button
@@ -22,13 +25,18 @@ class ContainerController < ApplicationController
       CONTAINER_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
     send_action = CONTAINER_X_BUTTON_ALLOWED_ACTIONS[action]
-    send(send_action)
+    if [:container_tag].include?(send_action)
+      send(send_action, 'Container')
+    else
+      send(send_action)
+    end
     send_action
   end
-  hide_action :whitelisted_action
+  private :whitelisted_action
 
   def x_button
     @explorer = true
+
     model, action = pressed2model_action(params[:pressed])
     @sb[:action] = action
 
@@ -47,20 +55,46 @@ class ContainerController < ApplicationController
 
   # Container show selected, redirect to proper controller
   def show
-    record = Container.find_by_id(from_cid(params[:id]))
-    unless @explorer
-      tree_node_id = TreeBuilder.build_node_id(record)
-      redirect_to :controller => "container",
-                  :action     => "explorer",
-                  :id         => tree_node_id
-      return
+    return if perfmenu_click?
+    @sb[:action] = params[:display]
+    @display = params[:display] || "main" unless control_selected?
+
+    identify_container(params[:id])
+    if @display == "performance"
+      @showtype = "performance"
+      perf_gen_init_options
+      @refresh_partial = "layouts/performance"
     end
-    redirect_to :action => 'show', :controller => record.class.base_model.to_s.underscore, :id => record.id
+
+    node_type = TreeBuilder.get_prefix_for_model(@record.class.base_model)
+    redirect_to :action     => 'explorer',
+                :controller => @record.class.base_model.to_s.underscore,
+                :id         => "#{node_type}-#{@record.id}" unless @display == "performance"
+  end
+
+  def show_timeline
+    @showtype = "timeline"
+    session[:tl_record_id] = params[:id]
+    @record = Container.find_by_id(from_cid(params[:id]))
+    @timeline = @timeline_filter = true
+    @lastaction = "show_timeline"
+    tl_build_timeline                       # Create the timeline report
+    @refresh_partial = "layouts/tl_show"
+    if params[:refresh]
+      @sb[:action] = "timeline"
+      replace_right_cell
+    end
+  end
+
+  def show_list
+    redirect_to :controller => "container",
+                :action     => "explorer"
   end
 
   def explorer
     @explorer   = true
     @lastaction = "explorer"
+    @timeline = @timeline_filter = true    # need to set these to load timelines on container show screen
 
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
@@ -69,24 +103,24 @@ class ContainerController < ApplicationController
     end
 
     # Build the Explorer screen from scratch
-    @built_trees   = []
+    @trees   = []
     @accords = []
     if role_allows(:feature => "container_accord", :any => true)
-      self.x_active_tree   ||= 'containers_tree'
+      self.x_active_tree ||= 'containers_tree'
       self.x_active_accord ||= 'containers'
-      @built_trees.push(build_containers_tree)
+      @trees.push(build_containers_tree)
       @accords.push(:name      => "containers",
                     :title     => "Relationships",
-                    :container => "containers_tree_div")
+                    :container => "containers_accord")
     end
 
     if role_allows(:feature => "container_filter_accord", :any => true)
-      self.x_active_tree   ||= 'containers_filter_tree'
+      self.x_active_tree ||= 'containers_filter_tree'
       self.x_active_accord ||= 'containers_filter'
-      @built_trees.push(build_containers_filter_tree)
+      @trees.push(build_containers_filter_tree)
       @accords.push(:name      => "containers_filter",
                     :title     => "All Containers",
-                    :container => "containers_filter_tree_div")
+                    :container => "containers_filter_accord")
     end
 
     if params[:id]  # If a tree node id came in, show in one of the trees
@@ -98,10 +132,8 @@ class ContainerController < ApplicationController
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
-
     get_node_info(x_node)
     @in_a_form = false
-
     render :layout => "application"
   end
 
@@ -116,7 +148,7 @@ class ContainerController < ApplicationController
     respond_to do |format|
       format.js do                  # AJAX, select the node
         @explorer = true
-        params[:id] = x_build_node_id(@record,nil, x_tree(:containers_tree))  # Get the tree node id
+        params[:id] = x_build_node_id(@record, x_tree(:containers_tree))  # Get the tree node id
         tree_select
       end
       format.html do                # HTML, redirect to explorer
@@ -131,6 +163,7 @@ class ContainerController < ApplicationController
   # Tree node selected in explorer
   def tree_select
     @explorer = true
+
     @lastaction = "explorer"
     self.x_node = params[:id]
     @nodetype, id = params[:id].split("_").last.split("-")
@@ -141,8 +174,8 @@ class ContainerController < ApplicationController
       session[:edit] = @edit              # Set because next method will restore @edit from session
       listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
       if @edit[:adv_search_applied] &&
-        MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
-        %w(reload tree_select).include?(params[:action])
+         MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
+         %w(reload tree_select).include?(params[:action])
         self.x_node = params[:id]
         quick_search_show
         return
@@ -156,8 +189,8 @@ class ContainerController < ApplicationController
   def accordion_select
     @layout     = "explorer"
     @lastaction = "explorer"
-    self.x_active_accord = params[:id]
-    self.x_active_tree   = "#{params[:id]}_tree"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{self.x_active_accord}_tree"
     replace_right_cell
   end
 
@@ -198,9 +231,13 @@ class ContainerController < ApplicationController
     case action
     when "container_edit"
       partial = "container_form"
-      header = _("Editing %{model} \"%{name}\"") % {:name => @record.name,
+      header = _("Editing %{model} \"%{name}\"") % {:name  => @record.name,
                                                     :model => ui_lookup(:model => "Container")}
       action = "container_edit"
+    when "tag"
+      partial = "layouts/tagging"
+      header = _("Edit Tags for %s") % ui_lookup(:model => "Container")
+      action = "container_tag"
     else
       action = nil
     end
@@ -214,82 +251,82 @@ class ContainerController < ApplicationController
     partial, action_url, @right_cell_text = set_right_cell_vars(action) if action
     get_node_info(x_node) if !@in_a_form && !params[:display]
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
-    type, _ = x_node.split("_").last.split("-")
+    type, = x_node.split("_").last.split("-")
     trees = {}
     if replace_trees
       trees[:containers] = build_containers_tree if replace_trees.include?(:containers)
     end
     record_showing = type && ["Container"].include?(TreeBuilder.get_model_for_prefix(type))
     if !@in_a_form && !@sb[:action]
-      v_buttons, v_xml = build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      v_tb = build_toolbar("x_gtl_view_tb") unless record_showing
+      c_tb = build_toolbar(center_toolbar_filename)
     end
-    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
+    h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
+      :active_tree     => x_active_tree,
+      :right_cell_text => @right_cell_text
     )
     r = proc { |opts| render_to_string(opts) }
 
-    # Build hash of trees to replace and optional new node to be selected
-    replace_trees.each do |t|
-      tree = trees[t]
-      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
-        :partial => 'shared/tree',
-        :locals  => {:tree => tree,
-                     :name => tree.name.to_s
-        }
-      ]
-    end
-    presenter[:right_cell_text] = @right_cell_text
+    replace_trees_by_presenter(presenter, trees)
 
-    if action == "container_edit"
-      presenter[:update_partials][:main_div] = r[:partial => partial]
+    if action == "container_edit" || action == "tag"
+      presenter.update(:main_div, r[:partial => partial])
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
-      partial = "layouts/x_gtl"
+      if params[:display] == "timeline"
+        partial = "layouts/tl_show"
+      elsif params[:display] == "performance"
+        partial = "layouts/performance"
+      else
+        partial = "layouts/x_gtl"
+      end
       presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-      presenter[:parent_class] = request[:controller] # Set parent class for URL also
-      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+      presenter[:parent_class] = params[:controller] # Set parent class for URL also
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif record_showing
-      presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:show_hide_layout][:paginator] = 'hide'
+      presenter.update(:main_div, r[:partial => "container/container_show", :locals => {:controller => "container"}])
+      presenter.hide(:pc_div_1, :paging_div)
     else
-      presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
-      presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
-      presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:show_hide_layout][:paginator] = 'show'
+      presenter.update(:main_div, r[:partial => "layouts/x_gtl"])
+      presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
+      presenter.hide(:form_buttons_div).show(:pc_div_1, :paging_div)
     end
 
-    presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
+    if %w(tag).include?(action)
+      presenter.show(:form_buttons_div).hide(:pc_div_1, :toolbar).show(:paging_div)
+      locals = {:action_url => action_url}
+      locals[:multi_record] = true # need save/cancel buttons on edit screen even tho @record.id is not there
+      locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+      presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+    end
 
-    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
+    presenter[:ajax_action] = {
+      :controller => request.parameters["controller"],
+      :action     => @ajax_action,
+      :record_id  => @record.id
+    } if ['performance', 'timeline'].include?(@sb[:action])
+
+    presenter.replace(:adv_searchbox_div, r[:partial => 'layouts/x_adv_searchbox'])
+
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
-    # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
-    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
-
-    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
     presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
@@ -304,16 +341,15 @@ class ContainerController < ApplicationController
     TreeBuilderContainersFilter.new("containers_filter_tree", "containers_filter", @sb)
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    x_get_child_nodes_dynatree(x_active_tree, id)
-  end
-
   def show_record(id = nil)
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"
     identify_container(id)
     return if record_no_longer_exists?(@record)
+  end
+
+  def tagging_explorer_controller?
+    @explorer
   end
 end

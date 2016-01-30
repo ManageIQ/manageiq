@@ -32,7 +32,7 @@ class MiqAeYamlImportZipfs < MiqAeYamlImport
     File.dirname(dom_entry) unless dom_entry.nil?
   end
 
-  def read_domain_yaml(domain_folder, domain_name)
+  def read_domain_yaml(_domain_folder, domain_name)
     load_file(domain_entry(domain_name))
   end
 

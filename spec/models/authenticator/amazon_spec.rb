@@ -1,5 +1,4 @@
-require "spec_helper"
-require "aws-sdk"
+require "aws-sdk-v1"
 
 describe Authenticator::Amazon do
   subject { Authenticator::Amazon.new(config) }
@@ -18,7 +17,7 @@ describe Authenticator::Amazon do
       _connect *connect_args
     end
 
-    def _connect(username, password, service = nil)
+    def _connect(username, password, _service = nil)
       if @user_data[username] && @user_data[username][:password] == password
         @user = username
       else
@@ -124,10 +123,14 @@ describe Authenticator::Amazon do
   end
 
   before(:each) do
-    allow_any_instance_of(described_class).to receive(:aws_connect) { |*args| FakeAmazon.new(user_data, *args) }
+    allow_any_instance_of(described_class).to receive(:aws_connect) { |_instance, *args| FakeAmazon.new(user_data, *args) }
   end
 
-  its(:uses_stored_password?) { should be_false }
+  describe '#uses_stored_password?' do
+    it "is false" do
+      expect(subject.uses_stored_password?).to be_falsey
+    end
+  end
 
   describe '#lookup_by_identity' do
     it "finds existing users" do
@@ -145,7 +148,7 @@ describe Authenticator::Amazon do
     context "with valid details" do
       it "succeeds" do
         result, errors = described_class.validate_connection(:authentication => config)
-        expect(result).to be
+        expect(result).to be_truthy
         expect(errors).to eq({})
       end
     end
@@ -452,7 +455,7 @@ describe Authenticator::Amazon do
             task_id = authenticate
             task = MiqTask.find(task_id)
             expect(task.status).to eq('Error')
-            expect(MiqTask.status_error?(task.status)).to be_true
+            expect(MiqTask.status_error?(task.status)).to be_truthy
           end
         end
       end

@@ -1,19 +1,27 @@
 class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
-  require_dependency 'manageiq/providers/openstack/infra_manager/auth_key_pair'
-  require_dependency 'manageiq/providers/openstack/infra_manager/ems_cluster'
-  require_dependency 'manageiq/providers/openstack/infra_manager/event_catcher'
-  require_dependency 'manageiq/providers/openstack/infra_manager/event_parser'
-  require_dependency 'manageiq/providers/openstack/infra_manager/host'
-  require_dependency 'manageiq/providers/openstack/infra_manager/host_service_group'
-  require_dependency 'manageiq/providers/openstack/infra_manager/metrics_capture'
-  require_dependency 'manageiq/providers/openstack/infra_manager/metrics_collector_worker'
-  require_dependency 'manageiq/providers/openstack/infra_manager/orchestration_stack'
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresher'
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresh_parser'
-  require_dependency 'manageiq/providers/openstack/infra_manager/refresh_worker'
+  require_nested :AuthKeyPair
+  require_nested :CloudNetwork
+  require_nested :CloudSubnet
+  require_nested :EmsCluster
+  require_nested :EventCatcher
+  require_nested :EventParser
+  require_nested :FloatingIp
+  require_nested :Host
+  require_nested :HostServiceGroup
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
+  require_nested :NetworkPort
+  require_nested :NetworkRouter
+  require_nested :OrchestrationStack
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :SecurityGroup
+  require_nested :Template
 
   include ManageIQ::Providers::Openstack::ManagerMixin
   include HasManyOrchestrationStackMixin
+  include HasManyCloudNetworksMixin
 
   before_save :ensure_parent_provider
   before_destroy :destroy_parent_provider
@@ -32,11 +40,11 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     # to possible many EmsOpenstacks deployed through EmsOpenstackInfra
 
     # Name of the provider needs to be unique, get provider if there is one like that
-    self.provider = ManageIQ::Providers::Openstack::Provider.find_by_name(name) unless self.provider
+    self.provider = ManageIQ::Providers::Openstack::Provider.find_by_name(name) unless provider
 
     attributes = {:name => name, :zone => zone}
-    if self.provider
-      self.provider.update_attributes!(attributes)
+    if provider
+      provider.update_attributes!(attributes)
     else
       self.provider = ManageIQ::Providers::Openstack::Provider.create!(attributes)
     end
@@ -55,6 +63,14 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   end
 
   def supports_port?
+    true
+  end
+
+  def supports_api_version?
+    true
+  end
+
+  def supports_security_protocol?
     true
   end
 

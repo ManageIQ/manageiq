@@ -18,8 +18,8 @@
         desktop: 1024
       },
       items: {
-        primary: [],
-        secondary: []
+        primary: {},
+        secondary: {}
       },
       state: {
         isCollapsed: false,
@@ -48,7 +48,6 @@
       return service;
 
       // Private
-
       function init() {
         win = angular.element($window);
         // Throttle firing of resize checks to reduce application digests

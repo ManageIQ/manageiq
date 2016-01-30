@@ -26,7 +26,7 @@ module FixAuth
         hash.each_pair do |n, v|
           if password_field?(n)
             puts "      #{names.join(".")}.#{n}: #{highlight_password(v, options)}"
-          elsif v.is_a?(Hash)
+          elsif v.kind_of?(Hash)
             traverse_column(names + [n], v, options)
           end
         end

@@ -5,13 +5,13 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'RemoteConsole'
 
   def add_miq_alarm
-    raise "VM has no EMS, unable to add alarm" unless self.ext_management_system
-    self.ext_management_system.vm_add_miq_alarm(self)
+    raise "VM has no EMS, unable to add alarm" unless ext_management_system
+    ext_management_system.vm_add_miq_alarm(self)
   end
-  alias addMiqAlarm add_miq_alarm
+  alias_method :addMiqAlarm, :add_miq_alarm
 
   def scan_on_registered_host_only?
-    self.state == "on"
+    state == "on"
   end
 
   # Show certain non-generic charts
@@ -31,10 +31,6 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     validate_supported
   end
 
-  def validate_smartstate_analysis
-    validate_supported
-  end
-
   #
   # Show Reconfigure VM task
   def reconfigurable?
@@ -42,7 +38,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def max_total_vcpus
-    [host.hardware.logical_cpus, max_total_vcpus_by_version].min
+    [host.hardware.cpu_total_cores, max_total_vcpus_by_version].min
   end
 
   def max_total_vcpus_by_version
@@ -54,7 +50,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     end
   end
 
-  def max_cores_per_socket(total_vcpus = nil)
+  def max_cpu_cores_per_socket(_total_vcpus = nil)
     case hardware.virtual_hw_version
     when "04"       then 1
     when "07"       then [1, 2, 4, 8].include?(max_total_vcpus) ? max_total_vcpus : 1
@@ -66,7 +62,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     max_total_vcpus
   end
 
-  def max_memory_cpu
+  def max_memory_mb
     case hardware.virtual_hw_version
     when "04"             then   64.gigabyte / 1.megabyte
     when "07"             then  255.gigabyte / 1.megabyte

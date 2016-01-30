@@ -1,44 +1,25 @@
 ManageIQ.angularApplication.service('miqDBBackupService', function() {
 
-  this.logProtocolNotSelected = function(model) {
-    if(model.log_protocol == '')
-      return true;
-    else
-      return false;
-    };
+  this.knownProtocolsList = ["Anonymous FTP", "FTP", "NFS", "Samba"];
 
-  this.logProtocolSelected = function(model) {
-    if(model.log_protocol != '')
-      return true;
-    else
-      return false;
+  this.logProtocolNotSelected = function(model) {
+    return model.log_protocol == '' || model.log_protocol == undefined;
   };
 
-  this.logProtocolChanged = function(model, scope) {
+  this.logProtocolSelected = function(model) {
+    return model.log_protocol != '' && model.log_protocol != undefined;
+  };
+
+  this.logProtocolChanged = function(model) {
+    this.resetAll(model);
     if(model.log_protocol == 'Network File System' || model.log_protocol == 'NFS') {
-      this.resetAll(model);
       model.uri_prefix = 'nfs';
     }
     else if(model.log_protocol == 'Samba') {
-      this.resetAll(model);
       model.uri_prefix = 'smb';
     }
-    else if(model.log_protocol == 'Anonymous FTP') {
-      this.resetAll(model);
+    else if(model.log_protocol == 'Anonymous FTP' || model.log_protocol == 'FTP') {
       model.uri_prefix = 'ftp';
-    }
-    else if (model.log_protocol == 'FTP') {
-      this.resetAll(model);
-      model.uri_prefix = 'ftp';
-    }
-    else if (model.log_protocol == 'Red Hat Dropbox') {
-      this.resetAll(model);
-      model.uri_prefix = 'ftp';
-      model.depot_name = model.rh_dropbox_depot_name;
-      model.uri = model.rh_dropbox_uri;
-    }
-    else {
-      this.resetAll(model);
     }
   };
 
@@ -83,5 +64,4 @@ ManageIQ.angularApplication.service('miqDBBackupService', function() {
     model.depot_name = null;
     model.uri = null;
   }
-
 });

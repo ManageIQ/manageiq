@@ -1,5 +1,4 @@
 module MiqAeServiceMiqRequestMixin
-
   def options
     object_send(:options)
   end
@@ -31,7 +30,7 @@ module MiqAeServiceMiqRequestMixin
     object_send(:get_tags)
   end
 
-  def clear_tag(category=nil, tag_name=nil)
+  def clear_tag(category = nil, tag_name = nil)
     object_send(:clear_tag, category, tag_name)
   end
 
@@ -46,5 +45,4 @@ module MiqAeServiceMiqRequestMixin
   def get_classifications
     object_send(:get_classifications)
   end
-
 end

@@ -14,7 +14,6 @@
 
 	@depends: jquery.js
 	@depends: jquery.ui.core.js
-	@depends: jquery.cookie.js
 *************************************************************************/
 
 /* jsHint options*/
@@ -819,6 +818,8 @@ DynaTreeNode.prototype = {
 			return; // Callback returned false
 		}
 		if( flag ) {
+                       //this is added so expanded table cells will be rendered when moving screens
+                       check_for_ellipsis();
 			// Activate
 			if( this.tree.activeNode ) {
 				if( this.tree.activeNode === this ){
@@ -2198,9 +2199,6 @@ DynaTree.prototype = {
 
 		this.persistence = new DynaTreeStatus(opts.cookieId, opts.cookie);
 		if( opts.persist ) {
-			if( !$.cookie ){
-				_log("warn", "Please include jquery.cookie.js to use persistence.");
-			}
 			this.persistence.read();
 		}
 		this.logDebug("DynaTree.persistence: %o", this.persistence.toDict());
@@ -3187,7 +3185,8 @@ $.ui.dynatree.prototype.options = {
 	ajaxDefaults: { // Used by initAjax option
 		cache: false, // false: Append random '_' argument to the request url to prevent caching.
 		timeout: 0, // >0: Make sure we get an ajax error for invalid URLs
-		dataType: "json" // Expect json format and pass json object to callbacks.
+		dataType: "json", // Expect json format and pass json object to callbacks.
+		type: "POST"
 	},
 	strings: {
 		loading: "Loading&#8230;",

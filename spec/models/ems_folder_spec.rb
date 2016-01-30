@@ -1,11 +1,9 @@
-require "spec_helper"
-
 describe EmsFolder do
   context "#hidden?" do
     it "when not VMware" do
-      folder = FactoryGirl.build(:ems_folder, :name => "vm",
-        :ext_management_system => FactoryGirl.build(:ems_openstack)
-      )
+      folder = FactoryGirl.build(:ems_folder, :name                  => "vm",
+                                              :ext_management_system => FactoryGirl.build(:ems_openstack)
+                                )
       expect(folder).to_not be_hidden
     end
 
@@ -74,7 +72,7 @@ describe EmsFolder do
         @sib2.id => "root/dc/sib2",
         @leaf.id => "root/dc/sib2/leaf"
       }
-      @root.child_folder_paths.should == expected
+      expect(@root.child_folder_paths).to eq(expected)
     end
   end
 end

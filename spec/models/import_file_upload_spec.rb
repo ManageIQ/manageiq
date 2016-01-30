@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ImportFileUpload do
   let(:import_file_upload) { described_class.new }
 
@@ -8,19 +6,19 @@ describe ImportFileUpload do
 
     before do
       import_file_upload.create_binary_blob(:binary => "---\n- :file: contents\n")
-      MiqPolicy.stub(:import_from_array).with([{:file => "contents"}], :preview => true).and_return(policy_array)
+      allow(MiqPolicy).to receive(:import_from_array).with([{:file => "contents"}], :preview => true).and_return(policy_array)
     end
 
     it "returns the imported policy array" do
-      import_file_upload.policy_import_data.should == "policy array"
+      expect(import_file_upload.policy_import_data).to eq("policy array")
     end
   end
 
   describe "#service_dialog_json" do
     before do
       import_file_upload.create_binary_blob(:binary => "---\n- label: Dialog2\n- label: dialog\n  not_label: test\n")
-      Dialog.stub(:exists?).with(:label => "dialog").and_return(exists?)
-      Dialog.stub(:exists?).with(:label => "Dialog2").and_return(exists?)
+      allow(Dialog).to receive(:exists?).with(:label => "dialog").and_return(exists?)
+      allow(Dialog).to receive(:exists?).with(:label => "Dialog2").and_return(exists?)
     end
 
     context "when a given dialog exists" do
@@ -28,18 +26,18 @@ describe ImportFileUpload do
 
       it "returns json with a checkmark status icon" do
         expected_json = [{
-            :id          => 0,
-            :name        => "dialog",
-            :status_icon => "checkmark",
-            :status      => "This object already exists in the database with the same name"
-          }, {
-            :id          => 1,
-            :name        => "Dialog2",
-            :status_icon => "checkmark",
-            :status      => "This object already exists in the database with the same name"
+          :id          => 0,
+          :name        => "dialog",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
+          :status      => "This object already exists in the database with the same name"
+        }, {
+          :id          => 1,
+          :name        => "Dialog2",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
+          :status      => "This object already exists in the database with the same name"
         }].to_json
 
-        import_file_upload.service_dialog_json.should == expected_json
+        expect(import_file_upload.service_dialog_json).to eq(expected_json)
       end
     end
 
@@ -48,18 +46,18 @@ describe ImportFileUpload do
 
       it "returns json with an equal-green status icon" do
         expected_json = [{
-            :id          => 0,
-            :name        => "dialog",
-            :status_icon => "equal-green",
-            :status      => "New object"
-          }, {
-            :id          => 1,
-            :name        => "Dialog2",
-            :status_icon => "equal-green",
-            :status      => "New object"
+          :id          => 0,
+          :name        => "dialog",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
+          :status      => "New object"
+        }, {
+          :id          => 1,
+          :name        => "Dialog2",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
+          :status      => "New object"
         }].to_json
 
-        import_file_upload.service_dialog_json.should == expected_json
+        expect(import_file_upload.service_dialog_json).to eq(expected_json)
       end
     end
   end
@@ -76,8 +74,8 @@ describe ImportFileUpload do
     not_name: test
         BINARY
       )
-      MiqWidget.stub(:exists?).with(:title => "widget").and_return(exists?)
-      MiqWidget.stub(:exists?).with(:title => "Widget1").and_return(exists?)
+      allow(MiqWidget).to receive(:exists?).with(:title => "widget").and_return(exists?)
+      allow(MiqWidget).to receive(:exists?).with(:title => "Widget1").and_return(exists?)
     end
 
     context "when a given widget exists" do
@@ -87,12 +85,12 @@ describe ImportFileUpload do
         expected_json = [{
           :id          => 0,
           :name        => "widget",
-          :status_icon => "checkmark",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
         }, {
           :id          => 1,
           :name        => "Widget1",
-          :status_icon => "checkmark",
+          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
         }].to_json
 
@@ -107,12 +105,12 @@ describe ImportFileUpload do
         expected_json = [{
           :id          => 0,
           :name        => "widget",
-          :status_icon => "equal-green",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
         }, {
           :id          => 1,
           :name        => "Widget1",
-          :status_icon => "equal-green",
+          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
         }].to_json
 
@@ -127,15 +125,15 @@ describe ImportFileUpload do
     end
 
     it "stores the binary blob binary data" do
-      import_file_upload.binary_blob.binary.should == "123"
+      expect(import_file_upload.binary_blob.binary).to eq("123")
     end
 
     it "stores the binary blob name" do
-      import_file_upload.binary_blob.name.should == "the name"
+      expect(import_file_upload.binary_blob.name).to eq("the name")
     end
 
     it "stores the binary blob data type" do
-      import_file_upload.binary_blob.data_type.should == "yml"
+      expect(import_file_upload.binary_blob.data_type).to eq("yml")
     end
   end
 
@@ -145,7 +143,7 @@ describe ImportFileUpload do
     end
 
     it "returns the binary_blob binary data" do
-      import_file_upload.uploaded_content.should == "binary data"
+      expect(import_file_upload.uploaded_content).to eq("binary data")
     end
   end
 
@@ -155,7 +153,7 @@ describe ImportFileUpload do
     end
 
     it "returns the binary_blob data parsed as yaml" do
-      import_file_upload.uploaded_yaml_content.should == [{:file => "contents"}]
+      expect(import_file_upload.uploaded_yaml_content).to eq([{:file => "contents"}])
     end
   end
 end

@@ -7,14 +7,14 @@
 - :name: timeline_downloading
   :items:
   - :button: timeline_txt
-    :image: txt
+    :icon: fa fa-file-text-o fa-lg
     :title: "Download this Timeline data in text format"
     :url: '/render_txt'
   - :button: timeline_csv
-    :image: csv
+    :icon: fa fa-file-text-o fa-lg
     :title: "Download this Timeline data in CSV format"
     :url: '/render_csv'
   - :button: timeline_pdf
-    :image: pdf
+    :icon: fa fa-file-pdf-o fa-lg
     :title: "Download this Timeline data in PDF format"
     :url: '/render_pdf'

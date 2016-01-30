@@ -6,16 +6,14 @@ module XmlHash
   class Element < Hash
     include Enumerable
 
-    def initialize(name, attrs={}, parent=nil)
+    def initialize(name, attrs = {}, parent = nil)
       super()
-      self.merge!({
-          :name => name.nil? ? nil : name.to_sym,
-          :parent => parent,
-          :child => [],
-          :attributes => Attributes.new(attrs),
-          :text => nil,
-          :cdata => nil
-        })
+      self.merge!(:name       => name.nil? ? nil : name.to_sym,
+                  :parent     => parent,
+                  :child      => [],
+                  :attributes => Attributes.new(attrs),
+                  :text       => nil,
+                  :cdata      => nil)
     end
 
     def parent
@@ -23,7 +21,7 @@ module XmlHash
     end
 
     def parent=(obj)
-      self[:parent]=obj
+      self[:parent] = obj
     end
 
     def root
@@ -31,7 +29,7 @@ module XmlHash
       while root.parent && root.parent.kind_of?(XmlHash::Element)
         root = root.parent
       end
-      return root
+      root
     end
 
     def document
@@ -39,10 +37,10 @@ module XmlHash
       while root.parent
         root = root.parent
       end
-      return root
+      root
     end
 
-    alias :doc :document
+    alias_method :doc, :document
 
     def name
       self[:name]
@@ -61,7 +59,7 @@ module XmlHash
     end
 
     def text=(value)
-      self[:text]=value
+      self[:text] = value
     end
 
     def add_text(value)
@@ -72,35 +70,35 @@ module XmlHash
       self[:child]
     end
 
-    def add_element(name, attrs={})
+    def add_element(name, attrs = {})
       new_node = XmlHash::Element.new(name, attrs, self)
       self[:child] << new_node
-      return new_node
+      new_node
     end
 
     def add_attributes(attrs)
-      attrs.each_pair {|k,v| self[:attributes][k.to_sym] = v}
+      attrs.each_pair { |k, v| self[:attributes][k.to_sym] = v }
     end
 
     def add_attribute(key, value)
-      add_attributes(key=>value)
+      add_attributes(key => value)
     end
 
-    def write(io=STDOUT, indent=0, transitive=false, ie_hack=false)
+    def write(io = STDOUT, indent = 0, _transitive = false, _ie_hack = false)
       if io.respond_to?(:write)
         io.write to_string(indent)
       else
         io << to_string(indent)
       end
       indent += 2
-      self[:child].each {|n| n.write(io, indent)}
+      self[:child].each { |n| n.write(io, indent) }
     end
 
-    def to_s()
-      to_string()
+    def to_s
+      to_string
     end
 
-    def to_string(indent=nil)
+    def to_string(indent = nil)
       text = self[:cdata].nil? ? self[:text] : "<![CDATA[#{self[:cdata]}]]>"
       if indent
         "#{self[:name].to_s.rjust(indent + self[:name].to_s.length)} #{self[:attributes].inspect} #{text}\n"
@@ -110,31 +108,31 @@ module XmlHash
     end
 
     def each
-      self[:child].each {|n| yield(n)}
+      self[:child].each { |n| yield(n) }
     end
 
-    def each_element (name=nil, &block)
+    def each_element(name = nil, &_block)
       name = name.to_sym if name
-      self.each {|e| yield e if  name.nil? || e.name == name}
+      each { |e| yield e if  name.nil? || e.name == name }
     end
 
     def each_recursive(&block) # :yields: node
-      self.each_element {|node| block.call(node); node.each_recursive(&block)}
+      each_element { |node| block.call(node); node.each_recursive(&block) }
     end
 
-    def each_element_with_attribute(key, value=nil, max=0, name=nil, &block ) # :yields: Element
-      #Note: optional "name" parameter is not implemented here.
+    def each_element_with_attribute(key, value = nil, max = 0, _name = nil, &_block) # :yields: Element
+      # Note: optional "name" parameter is not implemented here.
       eCount = 0
-      self.each do |e|
-        if e.attributes.has_key?(key) && (value==nil || e.attributes[key]==value)
+      each do |e|
+        if e.attributes.key?(key) && (value.nil? || e.attributes[key] == value)
           yield e
-          eCount+=1
+          eCount += 1
         end
-        break if max>0 && eCount >= max
+        break if max > 0 && eCount >= max
       end
     end
 
-    def to_xml(xml=nil)
+    def to_xml(xml = nil)
       if xml.nil?
         return REXML::Document.new(nil) if self[:name].nil?
         xml = REXML::Document.new("<#{self[:name]}/>")
@@ -144,33 +142,33 @@ module XmlHash
       end
 
       # Convert attributes hash to string keys and set text
-      xml.add_attributes(self[:attributes].inject({}) {|h, (k,v)| h[k.to_s]=v; h}) unless self[:attributes].empty?
+      xml.add_attributes(self[:attributes].inject({}) { |h, (k, v)| h[k.to_s] = v; h }) unless self[:attributes].empty?
       xml.text = self[:text] unless self[:text].nil?
       xml.add_cdata(self[:cdata][0]) unless self[:cdata].nil?
 
       # Add child elements
-      self[:child].each {|n| n.to_xml(xml)}
-      return xml.document
+      self[:child].each { |n| n.to_xml(xml) }
+      xml.document
     end
 
     def ==(obj)
-      self.object_id == obj.object_id
+      object_id == obj.object_id
     end
 
-    def to_h(options={}, type=:simple)
-      return self.send("to_h_#{type}", options, nil)
+    def to_h(options = {}, type = :simple)
+      send("to_h_#{type}", options, nil)
     end
 
-    def to_h_simple(options, hash=nil)
+    def to_h_simple(options, hash = nil)
       hash = {} if hash.nil?
 
-      self.each do |c|
-        e = (hash[options[:symbols]==false ? c.name.to_s : c.name] ||= []) << (options[:symbols]==false ? XmlHelpers.stringify_keys(c.attributes) : c.attributes)
-        e.last[options[:symbols]==false ? 'content' : :content] = c.text if c.text
+      each do |c|
+        e = (hash[options[:symbols] == false ? c.name.to_s : c.name] ||= []) << (options[:symbols] == false ? XmlHelpers.stringify_keys(c.attributes) : c.attributes)
+        e.last[options[:symbols] == false ? 'content' : :content] = c.text if c.text
         c.to_h_simple(options, e.last)
       end
 
-      return hash
+      hash
     end
 
     def elements
@@ -179,11 +177,11 @@ module XmlHash
     end
 
     def has_elements?
-      !self.children.empty?
+      !children.empty?
     end
 
     def get_path
-      p = self.parent
+      p = parent
       head = nil
       while p && p.name && p.kind_of?(XmlHash::Element)
         # Create a "shallow copy" of the current element (does not copy child elements)
@@ -202,13 +200,13 @@ module XmlHash
     end
 
     def shallow_copy(include_text = false)
-      newEle = XmlHash::Element.new(self.name)
-      newEle.add_attributes(self.attributes)
-      newEle.text = self.text if include_text
-      return newEle
+      newEle = XmlHash::Element.new(name)
+      newEle.add_attributes(attributes)
+      newEle.text = text if include_text
+      newEle
     end
 
-    def << (rhs)
+    def <<(rhs)
       if rhs.parent.nil? || rhs.class == XmlHash::Document
         self.child = rhs
       else
@@ -217,7 +215,7 @@ module XmlHash
       end
     end
 
-    alias :add <<
+    alias_method :add, :<<
 
     def child=(object)
       if object.kind_of?(Hash)
@@ -230,8 +228,8 @@ module XmlHash
     end
 
     def remove!
-      if self.parent
-        self.parent.children.delete(self) if self.parent
+      if parent
+        parent.children.delete(self) if parent
         self.parent = nil
       end
     end
@@ -239,12 +237,12 @@ module XmlHash
     def delete(element)
       element.remove!
     end
-    alias delete_element delete
+    alias_method :delete_element, :delete
 
     def add_elements_from_xml(xml)
       xml.each_element do |e|
-        xmh = self.add_element(e.name)
-        e.attributes.each_pair {|k,v| xmh.add_attribute(k, v.to_s)}
+        xmh = add_element(e.name)
+        e.attributes.each_pair { |k, v| xmh.add_attribute(k, v.to_s) }
         if e.cdatas.empty?
           xmh.text = e.text if e.text && !e.text.strip.length.zero?
         else
@@ -259,14 +257,14 @@ module XmlHash
         case v
         when Array
           v.each do |h|
-            e = self.add_element(k)
+            e = add_element(k)
             e.from_hash(h, options)
           end
         else
           if k.to_sym == options[:ContentKey]
             self.text = v
           else
-            self.add_attribute(k,v)
+            add_attribute(k, v)
           end
         end
       end
@@ -277,31 +275,31 @@ module XmlHash
     end
 
     def cdata=(data)
-      self[:cdata]=[*data]
+      self[:cdata] = [*data]
     end
 
     def add_cdata(data)
-      self.cdata=data
+      self.cdata = data
     end
 
     def key_type
       Symbol
     end
 
-    def find_first(xpath, ns=nil)
+    def find_first(_xpath, _ns = nil)
       raise "Method [find_first] not supported in Class #{self.class}"
     end
 
-    def find_each(name, &blk)
+    def find_each(_name, &_blk)
       raise "Method [find_each] not supported in Class #{self.class}"
     end
 
-    def find_match(name, &blk)
+    def find_match(_name, &_blk)
       raise "Method [find_match] not supported in Class #{self.class}"
     end
 
-    def self.newNode(data=nil)
-      self.new(data)
+    def self.newNode(data = nil)
+      new(data)
     end
   end
 
@@ -313,14 +311,12 @@ module XmlHash
     include MiqXmlDiff
     include MiqXmlPatch
 
-    def initialize(name="xml", attrs={}, parent=nil)
+    def initialize(name = "xml", _attrs = {}, _parent = nil)
       super()
-      self.merge!({
-          :name => name.to_sym,
-          :child => [],
-          :encoding => "UTF-8",
-          :version => 1.0
-        })
+      self.merge!(:name     => name.to_sym,
+                  :child    => [],
+                  :encoding => "UTF-8",
+                  :version  => 1.0)
     end
 
     def elements
@@ -333,7 +329,7 @@ module XmlHash
     end
 
     def parent=(obj)
-      self[:parent]=obj
+      self[:parent] = obj
     end
 
     def root
@@ -351,7 +347,7 @@ module XmlHash
       self
     end
 
-    alias :doc :document
+    alias_method :doc, :document
 
     def name
       self[:name]
@@ -363,12 +359,12 @@ module XmlHash
 
     def add_element(*args)
       self.root = XmlHash::Element.new(*args)
-      self.root.parent = self
-      self.root
+      root.parent = self
+      root
     end
 
-    def each_element (name=nil, &block)
-      self[:child].each {|e| yield e if  name.nil? || e.name == name}
+    def each_element(name = nil, &_block)
+      self[:child].each { |e| yield e if  name.nil? || e.name == name }
     end
 
     def to_h(*args)
@@ -377,34 +373,34 @@ module XmlHash
     end
 
     def write(*args)
-      self.root.write(*args)
+      root.write(*args)
     end
 
     def to_xml(*args)
-      return REXML::Document.new(nil) if self.root.nil?
-      self.root.to_xml(*args)
+      return REXML::Document.new(nil) if root.nil?
+      root.to_xml(*args)
     end
 
     def extendXmlDiff; end
 
     def miqEncode
-      MIQEncode.encode(self.to_xml.to_s)
+      MIQEncode.encode(to_xml.to_s)
     end
 
-    def deep_clone()
-      self.to_xml.write(buf='', 0)
+    def deep_clone
+      to_xml.write(buf = '', 0)
       self.class.load(buf)
     end
 
-    def find_first(xpath, ns=nil)
+    def find_first(_xpath, _ns = nil)
       raise "Method [find_first] not supported in Class #{self.class}"
     end
 
-    def find_each(name, &blk)
+    def find_each(_name, &_blk)
       raise "Method [find_each] not supported in Class #{self.class}"
     end
 
-    def find_match(name, &blk)
+    def find_match(_name, &_blk)
       raise "Method [find_match] not supported in Class #{self.class}"
     end
 
@@ -423,10 +419,10 @@ module XmlHash
         xml = REXML::Document.createDoc(xml_data)
       end
 
-      xmh_doc = XmlHash::Document.new()
+      xmh_doc = XmlHash::Document.new
       return xmh_doc if xml.root.nil?
       xmh = XmlHash::Element.new(xml.root.name)
-      xml.root.attributes.each_pair {|k,v| xmh.add_attribute(k, v.to_s)}
+      xml.root.attributes.each_pair { |k, v| xmh.add_attribute(k, v.to_s) }
       xmh.add_elements_from_xml(xml.root)
       xmh_doc.root = xmh
       xmh_doc
@@ -434,50 +430,48 @@ module XmlHash
 
     def self.createDoc(*args)
       xml = REXML::Document.createDoc(*args)
-      return self.load(xml)
+      load(xml)
     end
 
     def self.load(*args)
-      self.from_xml(*args)
+      from_xml(*args)
     end
 
-		def self.loadFile(filename)
-			begin
-				f = nil
-				f = File.open(filename,"r")
-				load(f);
-			ensure
-				f.close if f
-			end
-		end
+    def self.loadFile(filename)
+      f = nil
+      f = File.open(filename, "r")
+      load(f)
+    ensure
+      f.close if f
+    end
 
     def self.from_hash(ref, options = {})
-      options = {:rootname => :opt, :root_attrs => {}, :ContentKey=>:content}.merge(options)
+      options = {:rootname => :opt, :root_attrs => {}, :ContentKey => :content}.merge(options)
       xmh = XmlHash::Document.new(options[:rootname])
       xmh.add_element(options[:rootname], options[:root_attrs])
       xmh.root.from_hash(ref, options)
-      return xmh
+      xmh
     end
 
     def self.newDoc(*args)
-      self.new(*args)
+      new(*args)
     end
 
-    def self.newNode(data=nil)
+    def self.newNode(data = nil)
       XmlHash::Element.new(data)
     end
   end
 
   # Create an Elements class to support Element[#] were # is 1 based.  (Stupid REXML)
   class Elements
-    def initialize parent
+    def initialize(parent)
       @element = parent
     end
 
-    def []( index, name=nil)
+    def [](index, _name = nil)
       if index.kind_of? Integer
         raise "index (#{index}) must be >= 1" if index < 1
-        return @element.children[index-1]
+        return @element.children[index - 1]
       else
         p = nil
         @element.children.each do |e|
@@ -490,23 +484,23 @@ module XmlHash
       end
     end
 
-    def << (rhs)
+    def <<(rhs)
       @element << rhs
     end
 
     def each
       return if @element.nil?
-      @element.each {|n| yield(n)}
+      @element.each { |n| yield(n) }
     end
   end
 
   class Attributes < Hash
-    def initialize(attrs=nil)
+    def initialize(attrs = nil)
       super(nil)
-      attrs.each_pair {|k,v| self[k.to_sym] = v} unless attrs.nil?
+      attrs.each_pair { |k, v| self[k.to_sym] = v } unless attrs.nil?
     end
 
-    alias :each_attrib :each
+    alias_method :each_attrib, :each
 
     def to_h
       self
@@ -523,14 +517,14 @@ module XmlHash
 
   class XmhHelpers
     def self.findRegElementInt(paths, ele)
-      if paths.length > 0 then
+      if paths.length > 0
         searchStr = paths[0].downcase
         paths = paths[1..paths.length]
-        #puts "Search String: #{searchStr}"
+        # puts "Search String: #{searchStr}"
         ele.each_element do |e|
-          #puts "Current String: [#{e.name.to_s.downcase}] [#{e.attributes[:keyname].to_s.downcase}] [#{e.attributes[:name].to_s.downcase}]"
-          if e.name.to_s.downcase == searchStr || (e.attributes[:keyname] != nil && e.attributes[:keyname].downcase == searchStr) || (e.attributes[:name] != nil && e.attributes[:name].downcase == searchStr) then
-            #puts "String Found: [#{e.name}] [#{e.attributes[:name]}]"
+          # puts "Current String: [#{e.name.to_s.downcase}] [#{e.attributes[:keyname].to_s.downcase}] [#{e.attributes[:name].to_s.downcase}]"
+          if e.name.to_s.downcase == searchStr || (!e.attributes[:keyname].nil? && e.attributes[:keyname].downcase == searchStr) || (!e.attributes[:name].nil? && e.attributes[:name].downcase == searchStr)
+            # puts "String Found: [#{e.name}] [#{e.attributes[:name]}]"
             return findRegElementInt(paths, e)
           end # if
         end # do
@@ -541,22 +535,22 @@ module XmlHash
     end
 
     def self.findElementInt(paths, ele)
-      if paths.length > 0 then
+      if paths.length > 0
         found = false
         searchStr = paths[0]
         paths = paths[1..paths.length]
-        #puts "Search String: #{searchStr}"
+        # puts "Search String: #{searchStr}"
         ele.each_element do |e|
-          #puts "Current String: [#{e.name.to_s.downcase}] - [#{e.attributes[:keyname]}] - [#{e.attributes[:name]}]"
-          if e.name.to_s.downcase == searchStr.downcase || (e.attributes[:keyname] != nil && e.attributes[:keyname].downcase == searchStr.downcase) || (e.attributes[:name] != nil && e.attributes[:name].downcase == searchStr.downcase) then
-            #puts "String Found: [#{e.name}]"
+          # puts "Current String: [#{e.name.to_s.downcase}] - [#{e.attributes[:keyname]}] - [#{e.attributes[:name]}]"
+          if e.name.to_s.downcase == searchStr.downcase || (!e.attributes[:keyname].nil? && e.attributes[:keyname].downcase == searchStr.downcase) || (!e.attributes[:name].nil? && e.attributes[:name].downcase == searchStr.downcase)
+            # puts "String Found: [#{e.name}]"
             return findElementInt(paths, e)
           end # if
         end # do
       else
         return ele
       end
-      return nil
+      nil
     end
   end
 
@@ -581,7 +575,7 @@ module XmlHash
     self::Document.new(*args)
   end
 
-  def self.newNode(data=nil)
+  def self.newNode(data = nil)
     self::Document.newNode(data)
   end
 end

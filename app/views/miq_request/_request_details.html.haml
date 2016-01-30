@@ -4,49 +4,49 @@
 %fieldset
   %h3
     = _("Request Details")
-  %table.style1
-    %tbody
-      %tr
-        %td.key
+  .form-horizontal
+    - if @miq_request.requester
+      .form-group
+        %label.control-label.col-md-2
           = _("Requested by")
-        %td
-          - if @miq_request.requester
-            = h(@miq_request.requester + (@user.nil? ? nil : " (#{@user.name})"))
-      %tr
-        %td.key
-          = _("Last Update")
-        %td
-          = h(format_timezone(@miq_request.updated_on))
-      %tr
-        %td.key
-          = _("Status")
-        %td
-          = h(@miq_request.state.titleize)
-      %tr
-        %td.key
+        .col-md-8
+          = h(@miq_request.requester + (@user.nil? ? nil : " (#{@user.name})"))
+    .form-group
+      %label.control-label.col-md-2
+        = _("Last Update")
+      .col-md-8
+        = h(format_timezone(@miq_request.updated_on))
+    .form-group
+      %label.control-label.col-md-2
+        = _("Status")
+      .col-md-8
+        = h(@miq_request.state.titleize)
+    - if @miq_request.stamped_by
+      .form-group
+        %label.control-label.col-md-2
           = _("Approved/Denied by")
-        %td
-          - if @miq_request.stamped_by
-            = h(@miq_request.stamped_by + (@user.nil? ? nil : " (#{@user.name})"))
-      %tr
-        %td.key
-          = _("Date Approved/Denied")
-        %td
-          = h(format_timezone(@miq_request.stamped_on))
-      %tr
-        %td.key= _("Reason")
-        - if @edit && @edit[:stamp_typ]
-          %td.wide
-            = text_field_tag("reason", @edit[:reason],
-              :maxlength         => MAX_NAME_LEN,
-              "data-miq_focus"   => true,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        - else
-          %td
-            = h(@miq_request.reason)
-      %tr
-        %td.key
-          = _("Last Message")
-        %td
-          = h(@miq_request.message)
-
+        .col-md-8
+          = h(@miq_request.stamped_by + (@user.nil? ? nil : " (#{@user.name})"))
+    .form-group
+      %label.control-label.col-md-2
+        = _("Date Approved/Denied")
+      .col-md-8
+        = h(format_timezone(@miq_request.stamped_on))
+    .form-group
+      %label.control-label.col-md-2
+        = _("Reason")
+      - if @edit && @edit[:stamp_typ]
+        .col-md-8
+          = text_field_tag("reason", @edit[:reason],
+            :maxlength         => MAX_NAME_LEN,
+            :class             => "form-control",
+            "data-miq_focus"   => true,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      - else
+        .col-md-8
+          = h(@miq_request.reason)
+    .form-group
+      %label.control-label.col-md-2
+        = _("Last Message")
+      .col-md-8
+        = h(@miq_request.message)

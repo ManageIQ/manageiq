@@ -23,25 +23,25 @@ module MiqAeEngine
     end
 
     def self.build(parts)
-      self.new(parts)
+      new(parts)
     end
 
     def self.parse(path, options = {})
-      self.new(*self.split(path, options))
+      new(*split(path, options))
     end
 
     def self.join(ns, klass, instance, attribute_name = nil)
       return [nil, ns, klass, instance].join("/") if attribute_name.nil?
-      return [nil, ns, klass, instance, attribute_name].join("/")
+      [nil, ns, klass, instance, attribute_name].join("/")
     end
 
     def self.split(path, options = {})
-      options[:has_instance_name] = true unless options.has_key?(:has_instance_name)
+      options[:has_instance_name] = true unless options.key?(:has_instance_name)
       parts = path.split('/')
-      parts << nil if path[-1,1] == '/' && options[:has_instance_name]  # Nil instance if trailing /
-      parts.shift  if path[0,1]  == '/'                                 # Remove the leading blank piece
+      parts << nil if path[-1, 1] == '/' && options[:has_instance_name]  # Nil instance if trailing /
+      parts.shift  if path[0, 1] == '/'                                 # Remove the leading blank piece
       attribute_name = options[:has_attribute_name] ? parts.pop : nil
-      instance       = options[:has_instance_name]  ? parts.pop : nil
+      instance       = options[:has_instance_name] ? parts.pop : nil
       klass          = parts.pop
       ns             = parts.join('/')
       [ns, klass, instance, attribute_name].each { |k| k.downcase! unless k.nil? } if options[:downcase]
@@ -50,7 +50,7 @@ module MiqAeEngine
 
     def self.has_wildcard?(path)
       return false if path.nil?
-      return path.last == "*"
+      path.last == "*"
     end
 
     def self.get_domain_ns_klass_inst(fqname, options = {})

@@ -1,3 +1,4 @@
+require 'openstack/openstack_handle/handled_list'
 require 'openstack/openstack_handle/handle'
 require 'fog'
 require 'openstack/openstack_handle/compute_delegate'

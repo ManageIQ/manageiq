@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqProvisionRequestTemplate do
   let(:user)             { FactoryGirl.create(:user) }
   let(:template)         do
@@ -8,7 +6,7 @@ describe MiqProvisionRequestTemplate do
   end
   let(:parent_svc)       { FactoryGirl.create(:service, :guid => MiqUUID.new_guid) }
   let(:service_resource) { FactoryGirl.create(:service_resource) }
-  let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :userid => user.userid) }
+  let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
     FactoryGirl.create(:service_template_provision_task,
                        :status       => 'Ok',
@@ -19,9 +17,9 @@ describe MiqProvisionRequestTemplate do
   end
   let(:provision_request_template) do
     FactoryGirl.create(:miq_provision_request_template,
-                       :userid    => user.userid,
-                       :src_vm_id => template.id,
-                       :options   => {
+                       :requester    => user,
+                       :src_vm_id    => template.id,
+                       :options      => {
                          :src_vm_id           => template.id,
                          :service_resource_id => service_resource.id
                        })
@@ -29,8 +27,9 @@ describe MiqProvisionRequestTemplate do
 
   describe '#create_tasks_for_service' do
     before do
-      ManageIQ::Providers::Vmware::InfraManager::Provision.any_instance.stub(:get_hostname).and_return('hostname')
-      MiqAeEngine.stub(:resolve_automation_object).and_return(double(:root => 'miq'))
+      MiqRegion.seed
+      allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Provision).to receive(:get_hostname).and_return('hostname')
+      allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'miq'))
     end
 
     it 'should only call get_next_vm_name once' do

@@ -76,7 +76,7 @@ rescue => err
 end
 
 log :info, "Running EMS Inventory tests... Complete, Elapsed time: [#{Time.now.to_i - t0.to_i} seconds]"
-log :info, "EMS Inventory summary: " + vc_data.collect {|k,v| k.to_s << "=>" << v.length.to_s}.inspect
+log :info, "EMS Inventory summary: " + vc_data.collect { |k, v| k.to_s << "=>" << v.length.to_s }.inspect
 log :info, "Process stats: #{MiqProcess.processInfo.inspect}"
 
 log :info, "Writing inventory to #{inv_yml}..."

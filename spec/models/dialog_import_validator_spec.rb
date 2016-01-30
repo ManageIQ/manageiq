@@ -1,11 +1,9 @@
-require "spec_helper"
-
 describe DialogImportValidator do
   let(:dialog_import_validator) { described_class.new }
 
   describe "#determine_validity" do
     let(:import_file_upload) do
-      active_record_instance_double("ImportFileUpload", :uploaded_content => uploaded_content)
+      double("ImportFileUpload", :uploaded_content => uploaded_content)
     end
 
     context "when the yaml is completely valid" do
@@ -22,9 +20,9 @@ describe DialogImportValidator do
       let(:uploaded_content) { "-\nbad yaml" }
 
       it "raises a DialogImportValidator::ImportNonYamlError" do
-        expect {
+        expect do
           dialog_import_validator.determine_validity(import_file_upload)
-        }.to raise_error(DialogImportValidator::ImportNonYamlError)
+        end.to raise_error(DialogImportValidator::ImportNonYamlError)
       end
     end
 
@@ -45,9 +43,9 @@ describe DialogImportValidator do
         let(:field_type) { "test" }
 
         it "raises a DialogImportValidator::InvalidDialogFieldTypeError" do
-          expect {
+          expect do
             dialog_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError)
+          end.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError)
         end
       end
 
@@ -63,9 +61,9 @@ describe DialogImportValidator do
     context "when the yaml does not represent dialogs" do
       shared_examples_for "DialogImportValidator#determine_validity parsing non dialog yaml content" do
         it "raises a ParsedNonDialogYamlError" do
-          expect {
+          expect do
             dialog_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(DialogImportValidator::ParsedNonDialogYamlError)
+          end.to raise_error(DialogImportValidator::ParsedNonDialogYamlError)
         end
       end
 

@@ -9,7 +9,7 @@ module Manageiq
   class BlackBox
     GLOBAL_CONFIG_FILE = "/miq.yml"
 
-    def initialize(vmName, ost=nil)
+    def initialize(vmName, ost = nil)
       @config_name = vmName
       @write_data_externally = true    # For now we are always writing externally
 
@@ -34,7 +34,7 @@ module Manageiq
 
       loadGlobalSettings
 
-      @xmlData = loadXmlConfig()
+      @xmlData = loadXmlConfig
     end
 
     def self.vmId(vmName)
@@ -60,11 +60,9 @@ module Manageiq
     private
 
     def loadGlobalSettings
-      begin
-        @cfg = {:smart=>false}
-        @cfg.merge!(YAML.load(readData(GLOBAL_CONFIG_FILE)))
-      rescue
-      end
+      @cfg = {:smart => false}
+      @cfg.merge!(YAML.load(readData(GLOBAL_CONFIG_FILE)))
+    rescue
     end
 
     def saveGlobalValue(key, value)
@@ -78,10 +76,10 @@ module Manageiq
       writeData(GLOBAL_CONFIG_FILE, x)
     end
 
-    def deleteLocalDataDir(options={})
+    def deleteLocalDataDir(options = {})
       if @write_data_externally || options[:forceDelete]
         if File.exist?(@localDataDir)
-          Dir.foreach(@localDataDir) {|f| File.delete(File.join(@localDataDir,f)) unless f[0..0] === "."}
+          Dir.foreach(@localDataDir) { |f| File.delete(File.join(@localDataDir, f)) unless f[0..0] === "." }
           Dir.delete(@localDataDir)
         end
       end
@@ -89,7 +87,7 @@ module Manageiq
 
     def writeData(filename, data)
       Dir.mkdir(@localDataDir, 0755) unless File.exist?(@localDataDir)
-      filename2 = filename.gsub("/", "_")
+      filename2 = filename.tr("/", "_")
       fullpath = File.join(@localDataDir, filename2)
       f = File.open(fullpath, "w")
       f.write(data.to_s)
@@ -97,10 +95,9 @@ module Manageiq
     end
 
     def readData(filename)
-      filename2 = filename.gsub("/", "_")
+      filename2 = filename.tr("/", "_")
       fullpath = File.join(@localDataDir, filename2)
       File.read(fullpath)
     end
-
   end
 end

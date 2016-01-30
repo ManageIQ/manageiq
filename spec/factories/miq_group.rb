@@ -1,11 +1,27 @@
 FactoryGirl.define do
+  sequence(:miq_group_description) { |n| "Test Group #{seq_padded_for_sorting(n)}" }
+
   factory :miq_group do
+    transient do
+      features nil
+      role nil
+    end
+
     guid { MiqUUID.new_guid }
+    sequence(:sequence)  # don't want to spend time looking these up
+    description { |g| g.role ? "EvmGroup-#{g.role}" : generate(:miq_group_description) }
 
-    sequence(:description) { |n| "Test Group #{seq_padded_for_sorting(n)}" }
-  end
+    after :build do |g, e|
+      if e.role
+        g.miq_user_role = MiqUserRole.find_by_name("EvmRole-#{e.role}") ||
+                          FactoryGirl.create(:miq_user_role, :features => e.features, :role => e.role)
+      elsif e.features.present?
+        g.miq_user_role = FactoryGirl.create(:miq_user_role, :features => e.features)
+      end
+    end
 
-  factory :miq_group_miq_request_approver, :parent => :miq_group do
-    miq_user_role { FactoryGirl.create(:miq_user_role_miq_request_approver) }
+    factory :system_group do
+      group_type "system" # dont want to reference class from factory MiqGroup::SYSTEM_GROUP
+    end
   end
 end

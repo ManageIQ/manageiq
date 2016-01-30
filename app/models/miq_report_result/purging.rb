@@ -1,5 +1,6 @@
 module MiqReportResult::Purging
   extend ActiveSupport::Concern
+  include PurgingMixin
 
   module ClassMethods
     def purge_mode_and_value
@@ -19,24 +20,24 @@ module MiqReportResult::Purging
 
     def purge_queue(mode, value)
       MiqQueue.put_or_update(
-        :class_name  => self.name,
+        :class_name  => name,
         :method_name => "purge",
         :role        => "reporting",
         :queue_name  => "reporting"
-      ) { |msg, item| item.merge(:args => [mode, value]) }
+      ) { |_msg, item| item.merge(:args => [mode, value]) }
     end
 
     def purge_count(mode, value)
-      self.send("purge_count_by_#{mode}", value)
+      send("purge_count_by_#{mode}", value)
     end
 
     def purge(mode, value, window = nil, &block)
-      self.send("purge_by_#{mode}", value, window, &block)
+      send("purge_by_#{mode}", value, window, &block)
     end
 
     def purge_associated_records(ids)
       MiqReportResultDetail.delete_all(:miq_report_result_id => ids)
-      BinaryBlob.destroy_all(:resource_type => self.name, :resource_id => ids)
+      BinaryBlob.destroy_all(:resource_type => name, :resource_id => ids)
     end
 
     private
@@ -44,6 +45,10 @@ module MiqReportResult::Purging
     #
     # By Remaining
     #
+
+    def purge_remaining_conditions(report_id, id)
+      where(:miq_report_id => report_id).where(arel_table[:id].lt(id))
+    end
 
     def purge_count_by_remaining(remaining)
       purge_counts_for_remaining(remaining).values.sum
@@ -55,66 +60,36 @@ module MiqReportResult::Purging
       window ||= purge_window_size
       total = 0
       purge_ids_for_remaining(remaining).each do |report_id, id|
-        conditions = [{:miq_report_id => report_id}, self.arel_table[:id].lt(id)]
-        total += purge_in_batches(conditions, window, total, &block)
+        scope = purge_remaining_conditions(report_id, id)
+        total += purge_in_batches(scope, window, total, &block)
       end
 
       _log.info("Purging report results older than last #{remaining} results...Complete - Deleted #{total} records")
+      total
     end
 
     def purge_counts_for_remaining(remaining)
       purge_ids_for_remaining(remaining).each_with_object({}) do |(report_id, id), h|
-        h[report_id] = self.where(:miq_report_id => report_id).where(self.arel_table[:id].lt(id)).count
+        h[report_id] = purge_remaining_conditions(report_id, id).count
       end
     end
 
+    # @param remaining [Numeric] the number of reports to keep per report_id
+    # for each report_id, keep a fixed number of reports
+    # @return [Hash<Numeric,Array<Numeric>>] hash with report_ids and the report_result_ids to be deleted
     def purge_ids_for_remaining(remaining)
-      # TODO: This can probably be done in a single query using group-bys or subqueries
-      self.select("DISTINCT miq_report_id").collect(&:miq_report_id).compact.sort.each_with_object({}) do |report_id, h|
-        results      = self.select(:id).where(:miq_report_id => report_id).order("id DESC").limit(remaining + 1)
-        h[report_id] = results[-2].id if results.length == remaining + 1
+      # TODO: in sql, use PARTITION BY and ROW_NUMBER()
+      distinct.pluck(:miq_report_id).compact.sort.each_with_object({}) do |report_id, h|
+        results      = where(:miq_report_id => report_id).order("id DESC").limit(remaining + 1).pluck(:id)
+        h[report_id] = results[-2] if results.length == remaining + 1
       end
     end
 
     #
     # By Date
     #
-
-    def purge_count_by_date(older_than)
-      conditions = self.arel_table[:created_on].lt(older_than)
-      self.where(conditions).count
-    end
-
-    def purge_by_date(older_than, window = nil, &block)
-      _log.info("Purging report results older than [#{older_than}]...")
-
-      window ||= purge_window_size
-      conditions = self.arel_table[:created_on].lt(older_than)
-      total = purge_in_batches(conditions, window, &block)
-
-      _log.info("Purging report results older than [#{older_than}]...Complete - Deleted #{total} records")
-    end
-
-    #
-    # Common methods
-    #
-
-    def purge_in_batches(conditions, window, total = 0)
-      query = self.select(:id).limit(window)
-      [conditions].flatten.each { |c| query = query.where(c) }
-
-      until (batch = query.dup.to_a).empty?
-        ids = batch.collect(&:id)
-
-        _log.info("Purging #{ids.length} report results.")
-        count  = self.delete_all(:id => ids)
-        total += count
-
-        purge_associated_records(ids) if self.respond_to?(:purge_associated_records)
-
-        yield(count, total) if block_given?
-      end
-      total
+    def purge_scope(older_than)
+      where(arel_table[:created_on].lt(older_than))
     end
   end
 end

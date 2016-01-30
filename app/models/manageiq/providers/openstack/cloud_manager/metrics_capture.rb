@@ -1,5 +1,6 @@
 class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::Providers::Openstack::BaseMetricsCapture
   CPU_METERS     = ["cpu_util"]
+  MEMORY_METERS  = ["memory.usage"]
   DISK_METERS    = ["disk.read.bytes", "disk.write.bytes"]
   NETWORK_METERS = ["network.incoming.bytes", "network.outgoing.bytes"]
 
@@ -8,8 +9,8 @@ class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::P
   # diffed against the previous value in order to grab a discrete value.
   DIFF_METERS    = DISK_METERS + NETWORK_METERS
   def self.diff_meter?(meters)
-    meters = [meters] unless meters.is_a? Array
-    meters.all? {|m| DIFF_METERS.include? m}
+    meters = [meters] unless meters.kind_of? Array
+    meters.all? { |m| DIFF_METERS.include? m }
   end
 
   def self.counter_sum_per_second_calculation(stats, intervals)
@@ -23,8 +24,14 @@ class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::P
   COUNTER_INFO   = [
     {
       :openstack_counters    => CPU_METERS,
-      :calculation           => lambda { |stat, _| stat },
+      :calculation           => ->(stat, _) { stat },
       :vim_style_counter_key => "cpu_usage_rate_average"
+    },
+
+    {
+      :openstack_counters    => MEMORY_METERS,
+      :calculation           => ->(stat, _) { stat },
+      :vim_style_counter_key => "derived_memory_used"
     },
 
     {
@@ -43,13 +50,23 @@ class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::P
   COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:openstack_counters] }.flatten.uniq
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average" => {
+    "cpu_usage_rate_average"  => {
       :counter_key           => "cpu_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
+      :capture_interval_name => "realtime"
+    },
+
+    "derived_memory_used"   => {
+      :counter_key           => "derived_memory_used",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "megabytes",
       :capture_interval_name => "realtime"
     },
 
@@ -63,7 +80,7 @@ class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::P
       :capture_interval_name => "realtime"
     },
 
-    "net_usage_rate_average" => {
+    "net_usage_rate_average"  => {
       :counter_key           => "net_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",

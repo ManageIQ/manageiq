@@ -156,7 +156,6 @@ module Dba
            SQL
   end
 
-
   # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
   # and referenced here: http://wiki.postgresql.org/wiki/Show_database_bloat
   # check_postgres is Copyright (C) 2007-2012, Greg Sabino Mullane
@@ -325,7 +324,7 @@ module Dba
       s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
     end
 
-    return stats
+    stats
   end
 
   def self.table_statistics
@@ -366,7 +365,7 @@ module Dba
   end
 
   def self.text_table_indexes(table_name)
-    return select(<<-SQL, "Text table Indexes")
+    select(<<-SQL, "Text table Indexes")
                     SELECT relname
                       FROM pg_class,
                             ( SELECT reltoastrelid FROM pg_class

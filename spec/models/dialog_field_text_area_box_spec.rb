@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldTextAreaBox do
   let(:dialog_field) { described_class.new }
 
@@ -22,7 +20,7 @@ describe DialogFieldTextAreaBox do
       end
 
       it "does not set the protected" do
-        expect(dialog_field.protected?).to be_false
+        expect(dialog_field.protected?).to be_falsey
       end
 
       it "does not set the validator type" do
@@ -34,11 +32,11 @@ describe DialogFieldTextAreaBox do
       end
 
       it "sets the required" do
-        expect(dialog_field.required).to be_true
+        expect(dialog_field.required).to be_truthy
       end
 
       it "sets the read_only" do
-        expect(dialog_field.read_only).to be_true
+        expect(dialog_field.read_only).to be_truthy
       end
     end
 

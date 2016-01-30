@@ -2,11 +2,10 @@ require 'minitest/unit'
 require 'util/miq-xml'
 
 class XmlEncoding < Minitest::Test
-
   def test_attribute_encoding
     xml = REXML::Document.new("<test/>")
     attr_string = "string \xC2\xAE"
-    xml.root.add_element("element_1", {'attr1' => attr_string})
+    xml.root.add_element("element_1", 'attr1' => attr_string)
     assert(attr_string, xml.root.elements[1].attributes['attr1'])
   end
 
@@ -23,9 +22,8 @@ class XmlEncoding < Minitest::Test
     xml = MiqXml.load(doc_text)
     assert(attr_string, xml.root.elements[1].attributes['attr1'])
 
-    assert("\xC3\xAF\xC2\xBB\xC2\xBF", xml.to_s[0,3])
-    xml.write(xml_str='', 1)
-    assert("\xC3\xAF\xC2\xBB\xC2\xBF", xml_str[0,3])
+    assert("\xC3\xAF\xC2\xBB\xC2\xBF", xml.to_s[0, 3])
+    xml.write(xml_str = '', 1)
+    assert("\xC3\xAF\xC2\xBB\xC2\xBF", xml_str[0, 3])
   end
-
 end

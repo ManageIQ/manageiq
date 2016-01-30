@@ -18,7 +18,8 @@ describe('emsCommonFormController', function() {
       zone: 'default',
       emstype_vm: false,
       openstack_infra_providers_exist: false,
-      api_port: '5000'
+      api_port: '5000',
+      api_version: 'v2'
     };
     $httpBackend = _$httpBackend_;
     $httpBackend.whenGET('/ems_cloud/ems_cloud_form_fields/new').respond(emsCommonFormResponse);
@@ -65,6 +66,10 @@ describe('emsCommonFormController', function() {
     it('sets the api_port to 5000', function() {
       expect($scope.emsCommonModel.api_port).toEqual(5000);
     });
+
+    it('sets the api_version to v2', function() {
+      expect($scope.emsCommonModel.api_version).toEqual('v2');
+    });
   });
 
   describe('when the emsCommonFormId is an Amazon Id', function() {
@@ -77,9 +82,7 @@ describe('emsCommonFormController', function() {
       provider_id: 111,
       openstack_infra_providers_exist: false,
       provider_region: "ap-southeast-2",
-      default_userid: "default_user",
-      default_password: "default_password",
-      default_verify: "default_verify"
+      default_userid: "default_user"
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -125,11 +128,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_password', function() {
-      expect($scope.emsCommonModel.default_password).toEqual("default_password");
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the default_verify', function() {
-      expect($scope.emsCommonModel.default_verify).toEqual("default_verify");
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 
@@ -143,9 +146,7 @@ describe('emsCommonFormController', function() {
       emstype_vm: false,
       provider_id: 111,
       openstack_infra_providers_exist: false,
-      default_userid: "default_user",
-      default_password: "default_password",
-      default_verify: "default_verify"
+      default_userid: "default_user"
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -191,11 +192,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_password', function() {
-      expect($scope.emsCommonModel.default_password).toEqual("default_password");
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the default_verify', function() {
-      expect($scope.emsCommonModel.default_verify).toEqual("default_verify");
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 
@@ -209,9 +210,7 @@ describe('emsCommonFormController', function() {
       emstype_vm: false,
       provider_id: 111,
       openstack_infra_providers_exist: false,
-      default_userid: "default_user",
-      default_password: "default_password",
-      default_verify: "default_verify"
+      default_userid: "default_user"
     };
 
     beforeEach(inject(function(_$controller_) {
@@ -257,11 +256,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_password', function() {
-      expect($scope.emsCommonModel.default_password).toEqual("default_password");
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the default_verify', function() {
-      expect($scope.emsCommonModel.default_verify).toEqual("default_verify");
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
   });
 
@@ -270,7 +269,7 @@ describe('emsCommonFormController', function() {
       $httpBackend.flush();
       $scope.angularForm = {
         $setPristine: function (value){},
-        $setUntouched: function (value){},
+        $setUntouched: function (value){}
       };
       $scope.resetClicked();
     });
@@ -335,15 +334,6 @@ describe('emsCommonFormController', function() {
 
     it('delegates to miqService.restAjaxButton', function() {
       expect(miqService.restAjaxButton).toHaveBeenCalledWith('/ems_cloud?button=cancel', $.Event.target);
-    });
-  });
-
-  describe('saveable should exist in the scope', function() {
-    beforeEach(function() {
-      $httpBackend.flush();
-    });
-    it('returns true', function() {
-      expect($scope.saveable).toBeDefined();
     });
   });
 

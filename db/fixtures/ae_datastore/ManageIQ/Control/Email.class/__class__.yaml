@@ -38,7 +38,7 @@ object:
       datatype: string
       priority: 2
       owner: 
-      default_value: evmadmin@company.com
+      default_value: evmadmin@example.com
       substitute: true
       message: create
       visibility: 
@@ -58,7 +58,7 @@ object:
       datatype: string
       priority: 3
       owner: 
-      default_value: evmadmin@company.com
+      default_value: evmadmin@example.com
       substitute: true
       message: create
       visibility: 

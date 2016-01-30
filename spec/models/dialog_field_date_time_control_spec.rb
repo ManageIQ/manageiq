@@ -1,52 +1,48 @@
-require "spec_helper"
-
 describe DialogFieldDateTimeControl do
   context "legacy tests" do
     let!(:user) do
-      user = FactoryGirl.create(:user)
-      User.stub(:current_user).and_return(user)
-      user
+      User.current_user = FactoryGirl.create(:user)
     end
 
     context "with UTC timezone" do
       before(:each) do
-        user.stub(:get_timezone).and_return("UTC")
+        allow(user).to receive(:get_timezone).and_return("UTC")
       end
 
       it "#automate_output_value with UTC timezone" do
         subject.value = "07/20/2013 16:26"
-        subject.automate_output_value.should == "2013-07-20T16:26:00Z"
+        expect(subject.automate_output_value).to eq("2013-07-20T16:26:00Z")
       end
 
       it "#automate_output_value in ISO format" do
         subject.value = "2013-07-20T16:26:00-05:00"
-        subject.automate_output_value.should == "2013-07-20T21:26:00Z"
+        expect(subject.automate_output_value).to eq("2013-07-20T21:26:00Z")
       end
 
       it "#automate_output_value in ISO format and UTC timezone" do
         subject.value = "2013-07-20T21:26:00Z"
-        subject.automate_output_value.should == "2013-07-20T21:26:00Z"
+        expect(subject.automate_output_value).to eq("2013-07-20T21:26:00Z")
       end
     end
 
     context "with HST timezone" do
       before(:each) do
-        user.stub(:get_timezone).and_return("HST")
+        allow(user).to receive(:get_timezone).and_return("HST")
       end
 
       it "#automate_output_value" do
         subject.value = "07/20/2013 16:26"
-        subject.automate_output_value.should == "2013-07-21T02:26:00Z"
+        expect(subject.automate_output_value).to eq("2013-07-21T02:26:00Z")
       end
 
       it "#automate_output_value in ISO format" do
         subject.value = "2013-07-20T16:26:00-10:00"
-        subject.automate_output_value.should == "2013-07-21T02:26:00Z"
+        expect(subject.automate_output_value).to eq("2013-07-21T02:26:00Z")
       end
 
       it "#automate_output_value in ISO format and UTC timezone" do
         subject.value = "2013-07-20T21:26:00Z"
-        subject.automate_output_value.should == "2013-07-20T21:26:00Z"
+        expect(subject.automate_output_value).to eq("2013-07-20T21:26:00Z")
       end
     end
   end
@@ -81,7 +77,7 @@ describe DialogFieldDateTimeControl do
         let(:dynamic) { true }
 
         before do
-          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("2015-01-02")
         end
 
         it "returns the values from the value processor" do
@@ -93,7 +89,7 @@ describe DialogFieldDateTimeControl do
         let(:dynamic) { false }
 
         before do
-          described_class.stub(:server_timezone).and_return("UTC")
+          allow(described_class).to receive(:server_timezone).and_return("UTC")
         end
 
         it "returns tomorrow's date" do
@@ -109,8 +105,8 @@ describe DialogFieldDateTimeControl do
     let(:dialog_field) { described_class.new }
 
     before do
-      described_class.stub(:server_timezone).and_return("UTC")
-      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-02-03T18:50:00Z")
+      allow(described_class).to receive(:server_timezone).and_return("UTC")
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("2015-02-03T18:50:00Z")
     end
 
     it "returns the default value in a hash" do

@@ -1,13 +1,13 @@
 class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::Providers::CloudManager::ProvisionWorkflow
   def allowed_instance_types(_options = {})
     source = load_ar_obj(get_source_vm)
-    ems = source.try(:ext_management_system)
     architecture = source.try(:hardware).try(:bitness)
     virtualization_type = source.try(:hardware).try(:virtualization_type)
     root_device_type = source.try(:hardware).try(:root_device_type)
 
-    return {} if ems.nil?
-    available = ems.flavors
+    available = get_targets_for_ems(source, :cloud_filter, Flavor, 'flavors')
+    return {} if available.empty?
+
     methods = ["supports_#{architecture}_bit?".to_sym, "supports_#{virtualization_type}?".to_sym]
     methods << :supports_instance_store? if root_device_type == 'instance_store'
 
@@ -21,10 +21,12 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
     return {} if src[:ems].nil?
 
     security_groups = if src[:cloud_network]
-                        load_ar_obj(src[:cloud_network]).security_groups
+                        source = load_ar_obj(src[:cloud_network])
+                        get_targets_for_source(source, :cloud_filter, SecurityGroup, 'security_groups')
                       else
-                        load_ar_obj(src[:ems]).security_groups.non_cloud_network
-    end
+                        source = load_ar_obj(src[:ems])
+                        get_targets_for_ems(source, :cloud_filter, SecurityGroup, 'security_groups.non_cloud_network')
+                      end
 
     security_groups.each_with_object({}) { |sg, hash| hash[sg.id] = display_name_for_name_description(sg) }
   end
@@ -40,7 +42,9 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
   end
 
   def allowed_availability_zones(_options = {})
-    allowed_ci(:availability_zones, [:cloud_network, :cloud_subnet, :security_group])
+    source = load_ar_obj(get_source_vm)
+    targets = get_targets_for_ems(source, :cloud_filter, AvailabilityZone, 'availability_zones.available')
+    allowed_ci(:availability_zones, [:cloud_network, :cloud_subnet, :security_group], targets.map(&:id))
   end
 
   def validate_cloud_subnet(field, values, dlg, fld, value)
@@ -56,8 +60,8 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
     super(message, {'platform' => 'amazon'})
   end
 
-  def self.allowed_templates_vendor
-    'amazon'
+  def self.provider_model
+    ManageIQ::Providers::Amazon::CloudManager
   end
 
   def security_group_to_availability_zones(src)

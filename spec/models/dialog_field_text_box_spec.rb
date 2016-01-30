@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe DialogFieldTextBox do
   context "dialog field text box without options hash" do
     before do
@@ -7,12 +5,12 @@ describe DialogFieldTextBox do
     end
 
     it "#protected?" do
-      @df.should_not be_protected
+      expect(@df).not_to be_protected
     end
 
     it "#protected=" do
       @df.protected = true
-      @df.should be_protected
+      expect(@df).to be_protected
     end
 
     describe "#initialize_with_values" do
@@ -20,7 +18,7 @@ describe DialogFieldTextBox do
         password = "test"
         @df.protected = true
         @df.initialize_with_values(@df.automate_key_name => MiqPassword.encrypt(password))
-        @df.value.should == password
+        expect(@df.value).to eq(password)
       end
     end
   end
@@ -36,11 +34,11 @@ describe DialogFieldTextBox do
     end
 
     it "#protected?" do
-      @df.should_not be_protected
+      expect(@df).not_to be_protected
     end
 
     it "#automate_key_name" do
-      @df.automate_key_name.should == "dialog_test field"
+      expect(@df.automate_key_name).to eq("dialog_test field")
     end
   end
 
@@ -55,7 +53,7 @@ describe DialogFieldTextBox do
     end
 
     it "#protected?" do
-      @df.should be_protected
+      expect(@df).to be_protected
     end
 
     it "#automate_output_value" do
@@ -68,49 +66,72 @@ describe DialogFieldTextBox do
       @df.value = "test string"
 
       @df.options[:protected] = false
-      @df.should_not be_protected
-      @df.automate_output_value.should == "test string"
+      expect(@df).not_to be_protected
+      expect(@df.automate_output_value).to eq("test string")
     end
 
     it "#automate_key_name" do
-      @df.automate_key_name.should == "password::dialog_test field"
+      expect(@df.automate_key_name).to eq("password::dialog_test field")
     end
-
   end
 
   context "validation" do
     let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
-    context "#validate" do
-      let(:dt) { active_record_instance_double('DialogTab', :label => 'tab') }
-      let(:dg) { active_record_instance_double('DialogGroup', :label => 'group') }
+    describe "#validate_field_data" do
+      let(:dt) { double('DialogTab', :label => 'tab') }
+      let(:dg) { double('DialogGroup', :label => 'group') }
 
-      before do
-        df.validator_type = 'regex'
-        df.validator_rule = '[aA]bc'
-        df.required = true
+      context "when validation rule is present" do
+        before do
+          df.validator_type = 'regex'
+          df.validator_rule = '[aA]bc'
+          df.required = true
+        end
+
+        it "returns nil when no error is detected" do
+          df.value = 'Abc'
+          expect(df.validate_field_data(dt, dg)).to be_nil
+        end
+
+        it "returns an error when the value doesn't match the regex rule" do
+          df.value = '123'
+          expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
+        end
+
+        it "returns an error when no value is set" do
+          df.value = nil
+          expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
       end
 
-      it "should return nil when no error is detected" do
-        df.value = 'Abc'
-        df.validate(dt, dg).should be_nil
-      end
+      context "when validation rule is not present" do
+        it "accepts any value" do
+          ['abc', '123', nil].each do |value|
+            df.value = value
+            expect(df.validate_field_data(dt, dg)).to be_nil
+          end
+        end
 
-      it "should return an error when the value doesn't match the regex rule" do
-        df.value = '123'
-        df.validate(dt, dg).should == 'tab/group/test field is invalid'
-      end
+        it "returns an error when a required value is nil" do
+          df.value = nil
+          df.required = true
+          expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
 
-      it "should return an error when a required value is not provided" do
-        df.value = ''
-        df.validator_rule = ''
-        df.validate(dt, dg).should == 'tab/group/test field is required'
-      end
+        context "when data type is integer" do
+          before { df.data_type = 'integer' }
 
-      it "should return an error when a required value is nil" do
-        df.value = nil
-        df.validator_rule = nil
-        df.validate(dt, dg).should == 'tab/group/test field is required'
+          it "returns nil when the value is a number" do
+            df.value = '123'
+            expect(df.validate_field_data(dt, dg)).to be_nil
+          end
+
+          it "returns an error when the value is not a number" do
+            df.value = 'a12'
+            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
+          end
+        end
       end
     end
   end
@@ -133,7 +154,7 @@ describe DialogFieldTextBox do
         let(:value) { "" }
 
         before do
-          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
         end
 
         it "returns the values from the value processor" do
@@ -180,15 +201,15 @@ describe DialogFieldTextBox do
       end
 
       it "sets the protected" do
-        expect(dialog_field.protected?).to be_true
+        expect(dialog_field.protected?).to be_truthy
       end
 
       it "sets the required" do
-        expect(dialog_field.required).to be_true
+        expect(dialog_field.required).to be_truthy
       end
 
       it "sets the read_only" do
-        expect(dialog_field.read_only).to be_true
+        expect(dialog_field.read_only).to be_truthy
       end
 
       it "sets the validator type" do
@@ -258,7 +279,7 @@ describe DialogFieldTextBox do
     let(:dialog_field) { described_class.new(:value => "test") }
 
     before do
-      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
     end
 
     it "returns the values from the value processor" do
@@ -268,6 +289,20 @@ describe DialogFieldTextBox do
     it "assigns the processed value to value" do
       dialog_field.refresh_json_value
       expect(dialog_field.value).to eq("processor")
+    end
+  end
+
+  describe "#trigger_automate_value_updates" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+        "processed values"
+      )
+    end
+
+    it "returns the values from automate" do
+      expect(dialog_field.trigger_automate_value_updates).to eq("processed values")
     end
   end
 end

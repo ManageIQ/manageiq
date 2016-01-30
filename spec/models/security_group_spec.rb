@@ -1,7 +1,4 @@
-require "spec_helper"
-
 describe SecurityGroup do
-
   before do
     provider = FactoryGirl.create(:ems_amazon)
     cn       = FactoryGirl.create(:cloud_network)
@@ -10,6 +7,6 @@ describe SecurityGroup do
   end
 
   it ".non_cloud_network" do
-    SecurityGroup.non_cloud_network.should == [@sg2]
+    expect(SecurityGroup.non_cloud_network).to eq([@sg2])
   end
 end

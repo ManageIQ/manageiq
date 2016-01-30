@@ -9,6 +9,7 @@ module Handsoap
       @reason = reason
       @details = details
     end
+
     def to_s
       "Handsoap::Fault { :code => '#{@code}', :reason => '#{@reason}' }"
     end
@@ -42,9 +43,9 @@ class FakeMiqVimHandleBase
   def disconnect
     # Do nothing
   end
-  alias release disconnect
+  alias_method :release, :disconnect
 
-  def method_missing(m, *args)
+  def method_missing(m, *_args)
     _dup_data(_load_data(m))
   end
 end
@@ -90,7 +91,7 @@ class FakeMiqVimHost < FakeMiqVimHandleBase
     @mor = mor
   end
 
-  def storageDevice(*args)
+  def storageDevice(*_args)
     _dup_data(_load_data(:storageDevice)[@mor])
   end
 end

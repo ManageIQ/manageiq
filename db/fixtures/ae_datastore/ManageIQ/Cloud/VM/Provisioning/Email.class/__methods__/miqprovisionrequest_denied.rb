@@ -8,7 +8,7 @@
 # Model Notes:
 # 1. to_email_address - used to specify an email address in the case where the
 #    requester does not have a valid email address.To specify more than one email
-#    address separate email address with commas. (I.e. admin@company.com,user@company.com)
+#    address separate email address with commas. (I.e. admin@example.com,user@example.com)
 # 2. from_email_address - used to specify an email address in the event the
 #    requester replies to the email
 # 3. signature - used to stamp the email with a custom signature
@@ -89,7 +89,7 @@ def emailapprover(miq_request, appliance, msg, provisionRequestApproval)
 
   # Override to email address below or get to_email_address from from model
   to = nil
-  to  ||= $evm.object['to_email_address']
+  to ||= $evm.object['to_email_address']
 
   # Override from_email_address below or get from_email_address from model
   from = nil
@@ -127,7 +127,7 @@ $evm.log('info', "Detected Request:<#{miq_request.id}> with Approval State:<#{mi
 
 # Override the default appliance IP Address below
 appliance = nil
-# appliance ||= 'evmserver.company.com'
+# appliance ||= 'evmserver.example.com'
 appliance ||= $evm.root['miq_server'].ipaddress
 
 # Get incoming message or set it to default if nil
@@ -145,4 +145,3 @@ emailrequester(miq_request, appliance, msg, provisionRequestApproval)
 
 # Email Approver
 emailapprover(miq_request, appliance, msg, provisionRequestApproval)
-

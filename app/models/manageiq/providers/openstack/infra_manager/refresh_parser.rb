@@ -1,11 +1,12 @@
 module ManageIQ
   module Providers
-    class Openstack::InfraManager::RefreshParser < EmsRefresh::Parsers::Infra
+    class Openstack::InfraManager::RefreshParser < ManageIQ::Providers::InfraManager::RefreshParser
       include Vmdb::Logging
 
       include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
+      include ManageIQ::Providers::Openstack::RefreshParserCommon::Networks
       include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -25,23 +26,56 @@ module ManageIQ
         @os_handle                  = ems.openstack_handle
         @compute_service            = @connection # for consistency
         @baremetal_service          = @os_handle.detect_baremetal_service
+        @identity_service           = @os_handle.identity_service
+        @network_service            = @os_handle.detect_network_service
         @orchestration_service      = @os_handle.detect_orchestration_service
         @image_service              = @os_handle.detect_image_service
         @storage_service            = @os_handle.detect_storage_service
+
+        validate_required_services
+      end
+
+      def validate_required_services
+        unless @identity_service
+          raise MiqException::MiqOpenstackKeystoneServiceMissing, "Required service Keystone is missing in the catalog."
+        end
+
+        unless @compute_service
+          raise MiqException::MiqOpenstackNovaServiceMissing, "Required service Nova is missing in the catalog."
+        end
+
+        unless @image_service
+          raise MiqException::MiqOpenstackGlanceServiceMissing, "Required service Glance is missing in the catalog."
+        end
+
+        unless @baremetal_service
+          raise MiqException::MiqOpenstackIronicServiceMissing, "Required service Ironic is missing in the catalog."
+        end
       end
 
       def ems_inv_to_hashes
         log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data" \
                      " for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
         $fog_log.info("#{log_header}...")
+        # get_flavors # Not needed in infra
+        # get_availability_zones # Not needed in infra
+        # get_tenants # TODO(lsmola) should be needed, add it
+        # get_quotas # Not needed in infra
+        # get_key_pairs # Not needed in infra
+        get_images
+        get_security_groups
 
         get_object_store
         # get_object_store needs to run before load hosts
         load_hosts
+
         load_orchestration_stacks
         # Cluster processing needs to run after host and stacks processing
         get_clusters
-        get_images
+        get_all_networks
+        get_network_routers # We don't have any in Infra yet
+        get_floating_ips # We don't have any in Infra yet
+        get_network_ports
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -68,11 +102,11 @@ module ManageIQ
       end
 
       def servers
-        @servers ||= @connection.servers_for_accessible_tenants
+        @servers ||= @connection.handled_list(:servers)
       end
 
       def hosts
-        @hosts ||= @baremetal_service.nodes.all
+        @hosts ||= @baremetal_service.handled_list(:nodes)
       end
 
       def clouds
@@ -99,15 +133,19 @@ module ManageIQ
           compute_hosts.each do |compute_host|
             # We need to take correct zone id from correct provider, since the zone name can be the same
             # across providers
-            availability_zone_id = cloud_ems.availability_zones.where(:name => compute_host.zone).first.try(:id)
+            availability_zone_id = cloud_ems.availability_zones.find_by(:name => compute_host.zone).try(:id)
             hosts_attributes << {:host_name => compute_host.host_name, :availability_zone_id => availability_zone_id}
           end
         end
         hosts_attributes
       end
 
-      def hosts_ports
-        @hosts_ports ||= @baremetal_service.ports.all
+      def get_all_networks
+        # Get networks from neutron
+        get_networks
+
+        # Get other networks from the heat parameters definition
+        # TODO(lsmola) all the other virtual netwroks should be hopefully exposed in neutron
       end
 
       def load_hosts
@@ -116,17 +154,12 @@ module ManageIQ
         indexed_servers = {}
         servers.each { |s| indexed_servers[s.id] = s }
 
-        # Hosts ports contains MAC addresses of host interfaces. There can
-        # be multiple interfaces for each host
-        indexed_hosts_ports = {}
-        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) <<  p }
-
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
         all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
-          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources, cloud_ems_hosts_attributes)
+          parse_host(host, indexed_servers, indexed_resources, cloud_ems_hosts_attributes)
         end
       end
 
@@ -138,7 +171,7 @@ module ManageIQ
         JSON.parse(extra_attrs).each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
       end
 
-      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
+      def parse_host(host, indexed_servers, indexed_resources, cloud_hosts_attributes)
         uid                 = host.uuid
         host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
         hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
@@ -173,6 +206,8 @@ module ManageIQ
           :hardware             => process_host_hardware(host, extra_attributes),
           :hypervisor_hostname  => hypervisor_hostname,
           :service_tag          => extra_attributes.fetch_path('system', 'product', 'serial'),
+          # TODO(lsmola) need to add column for connection to SecurityGroup
+          # :security_group_id  => security_group_id
           # Attributes taken from the Cloud provider
           :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
@@ -181,27 +216,28 @@ module ManageIQ
       end
 
       def process_host_hardware(host, extra_attributes)
-        numvcpus         = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
-        logical_cpus     = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
-        cores_per_socket = numvcpus > 0 ? logical_cpus / numvcpus : 0
+        cpu_sockets          = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
+        cpu_total_cores      = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
+        cpu_cores_per_socket = cpu_sockets > 0 ? cpu_total_cores / cpu_sockets : 0
         # Get Cpu speed in Mhz
         cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
+
         {
-          :memory_cpu         => host.properties['memory_mb'],
-          :disk_capacity      => host.properties['local_gb'],
-          :logical_cpus       => logical_cpus,
-          :numvcpus           => numvcpus,
-          :cores_per_socket   => cores_per_socket,
-          :cpu_speed          => cpu_speed,
-          :cpu_type           => extra_attributes.fetch_path('cpu', 'physical_0', 'version'),
-          :manufacturer       => extra_attributes.fetch_path('system', 'product', 'vendor'),
-          :model              => extra_attributes.fetch_path('system', 'product', 'name'),
-          :number_of_nics     => extra_attributes.fetch_path('network').try(:keys).try(:count).to_i,
-          :bios               => extra_attributes.fetch_path('firmware', 'bios', 'version'),
+          :memory_mb            => host.properties['memory_mb'],
+          :disk_capacity        => host.properties['local_gb'],
+          :cpu_total_cores      => cpu_total_cores,
+          :cpu_sockets          => cpu_sockets,
+          :cpu_cores_per_socket => cpu_cores_per_socket,
+          :cpu_speed            => cpu_speed,
+          :cpu_type             => extra_attributes.fetch_path('cpu', 'physical_0', 'version'),
+          :manufacturer         => extra_attributes.fetch_path('system', 'product', 'vendor'),
+          :model                => extra_attributes.fetch_path('system', 'product', 'name'),
+          :number_of_nics       => extra_attributes.fetch_path('network').try(:keys).try(:count).to_i,
+          :bios                 => extra_attributes.fetch_path('firmware', 'bios', 'version'),
           # Can't get these 2 from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
-          :guest_os_full_name => nil,
-          :guest_os           => nil,
-          :disks              => process_host_hardware_disks(extra_attributes),
+          :guest_os_full_name   => nil,
+          :guest_os             => nil,
+          :disks                => process_host_hardware_disks(extra_attributes),
         }
       end
 
@@ -301,7 +337,8 @@ module ManageIQ
       def get_clusters_and_host_mapping
         clusters = []
         cluster_host_mapping = {}
-        @data_index.fetch_path(:orchestration_stacks).each_value do |stack|
+        orchestration_stacks = @data_index.fetch_path(:orchestration_stacks)
+        orchestration_stacks.each_value do |stack|
           uid = stack.fetch_path(:parent, :ems_ref)
           next unless uid
 
@@ -310,7 +347,7 @@ module ManageIQ
 
           cluster_host_mapping[nova_server[:physical_resource]] = uid
           clusters << {:name => stack[:parent][:name], :uid => uid}
-        end
+        end if orchestration_stacks
         return clusters.uniq, cluster_host_mapping
       end
 
@@ -319,10 +356,10 @@ module ManageIQ
         uid = cluster[:uid]
 
         new_result = {
-            :ems_ref => uid,
-            :uid_ems => uid,
-            :name    => name,
-            :type    => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster'
+          :ems_ref => uid,
+          :uid_ems => uid,
+          :name    => name,
+          :type    => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster'
         }
         return uid, new_result
       end
@@ -335,6 +372,54 @@ module ManageIQ
 
       def get_object_content(obj)
         obj.body
+      end
+
+      def self.security_group_type
+        'ManageIQ::Providers::Openstack::InfraManager::SecurityGroup'
+      end
+
+      def self.network_router_type
+        "ManageIQ::Providers::Openstack::InfraManager::NetworkRouter"
+      end
+
+      def self.cloud_network_type
+        "ManageIQ::Providers::Openstack::InfraManager::CloudNetwork"
+      end
+
+      def self.cloud_subnet_type
+        "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
+      end
+
+      def self.floating_ip_type
+        "ManageIQ::Providers::Openstack::InfraManager::FloatingIp"
+      end
+
+      def self.network_port_type
+        "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
+      end
+
+      def self.miq_template_type
+        "ManageIQ::Providers::Openstack::InfraManager::Template"
+      end
+
+      #
+      # Helper methods
+      #
+
+      def find_device_connected_to_network_port(device_id)
+        @data.fetch_path(:hosts).detect { |x| x[:ems_ref_obj] == device_id }
+      end
+
+      def process_collection(collection, key)
+        @data[key] ||= []
+        return if collection.nil?
+
+        collection.each do |item|
+          uid, new_result = yield(item)
+
+          @data[key] << new_result
+          @data_index.store_path(key, uid, new_result)
+        end
       end
     end
   end

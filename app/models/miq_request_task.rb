@@ -1,4 +1,4 @@
-class MiqRequestTask < ActiveRecord::Base
+class MiqRequestTask < ApplicationRecord
   include_concern 'Dumping'
   include_concern 'PostInstallCallback'
   include_concern 'StateMachine'
@@ -8,6 +8,7 @@ class MiqRequestTask < ActiveRecord::Base
   belongs_to :destination,       :polymorphic => true
   has_many   :miq_request_tasks, :dependent   => :destroy
   belongs_to :miq_request_task
+  belongs_to :tenant
 
   serialize   :phase_context, Hash
   serialize   :options,       Hash
@@ -17,9 +18,10 @@ class MiqRequestTask < ActiveRecord::Base
 
   delegate :request_class, :task_description, :to => :class
 
-  validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
+  validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
 
   include MiqRequestMixin
+  include TenancyMixin
 
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
@@ -87,9 +89,9 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def self.request_class
-    if self.is_or_subclass_of?(MiqProvision)
+    if self <= MiqProvision
       MiqProvisionRequest
-    elsif self.is_or_subclass_of?(MiqHostProvision)
+    elsif self <= MiqHostProvision
       MiqHostProvisionRequest
     else
       name.underscore.gsub(/_task$/, "_request").camelize.constantize
@@ -116,12 +118,15 @@ class MiqRequestTask < ActiveRecord::Base
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if self.class::AUTOMATE_DRIVES
-      args = {}
-      args[:object_type]   = self.class.name
-      args[:object_id]     = id
-      args[:attrs]         = {"request" => req_type}
-      args[:instance_name] = "AUTOMATION"
-      args[:user_id]       = get_user.id
+      args = {
+        :object_type   => self.class.name,
+        :object_id     => id,
+        :attrs         => {"request" => req_type},
+        :instance_name => "AUTOMATION",
+        :user_id       => get_user.id,
+        :miq_group_id  => get_user.current_group.id,
+        :tenant_id     => get_user.current_tenant.id,
+      }
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(

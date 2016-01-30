@@ -1,5 +1,4 @@
 module AutomationSpecHelper
-
   # Find fields in automation XML file
   def sanitize_miq_ae_fields(fields)
     unless fields.nil?
@@ -20,19 +19,21 @@ module AutomationSpecHelper
     fields
   end
 
-  def assert_method_executed(uri, value)
-    ws = MiqAeEngine.instantiate(uri)
-    ws.should_not be_nil
+  def assert_method_executed(uri, value, user)
+    ws = MiqAeEngine.instantiate(uri, user)
+    expect(ws).not_to be_nil
     roots = ws.roots
-    roots.should have(1).item
-    roots.first.attributes['method_executed'].should == value
+    expect(roots.size).to eq(1)
+    expect(roots.first.attributes['method_executed']).to eq(value)
   end
 
   def create_ae_model(attrs = {})
     attrs = default_ae_model_attributes(attrs)
     instance_name = attrs.delete(:instance_name)
-    ae_fields = {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
-    ae_instances = {instance_name => {'field1' => {:value => 'hello world'}}}
+    ae_fields = attrs.delete(:ae_fields)
+    ae_instances = attrs.delete(:ae_instances)
+    ae_fields ||= {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
+    ae_instances ||= {instance_name => {'field1' => {:value => 'hello world'}}}
 
     FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
                        attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
@@ -48,20 +49,39 @@ module AutomationSpecHelper
                        attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
   end
 
+  def create_ae_model_with_method(attrs = {})
+    attrs = default_ae_model_attributes(attrs)
+    method_script = attrs.delete(:method_script)
+    method_params = attrs.delete(:method_params) || {}
+    instance_name = attrs.delete(:instance_name)
+    method_name = attrs.delete(:method_name)
+    ae_fields = {'execute' => {:aetype => 'method', :datatype => 'string'}}
+    ae_instances = {instance_name => {'execute' => {:value => method_name}}}
+    ae_methods = {method_name => {:scope => 'instance', :location => 'inline',
+                                  :data => method_script,
+                                  :language => 'ruby', 'params' => method_params}}
+
+    FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
+                       attrs.merge('ae_fields'    => ae_fields,
+                                   'ae_instances' => ae_instances,
+                                   'ae_methods'   => ae_methods))
+  end
+
   def default_ae_model_attributes(attrs = {})
     attrs.reverse_merge!(
       :ae_class      => 'CLASS1',
       :ae_namespace  => 'A/B/C',
-      :priority      => 10,
       :enabled       => true,
       :instance_name => 'instance1')
   end
 
-  def send_ae_request_via_queue(args)
-    MiqQueue.put(:role        => 'automate',
-                 :class_name  => 'MiqAeEngine',
-                 :method_name => 'deliver',
-                 :args        => [args])
+  def send_ae_request_via_queue(args, timeout = nil)
+    queue_args = {:role        => 'automate',
+                  :class_name  => 'MiqAeEngine',
+                  :method_name => 'deliver',
+                  :args        => [args]}
+    queue_args.merge!(:msg_timeout => timeout) if timeout
+    MiqQueue.put(queue_args)
   end
 
   def deliver_ae_request_from_queue

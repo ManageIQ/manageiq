@@ -1,0 +1,66 @@
+{
+  "data": {
+    "status": {
+      "services": {
+        "errorCount": 0,
+        "count": 9,
+        "warningCount": 0
+      },
+      "containers": {
+        "count": 11,
+        "errorCount": 0,
+        "warningCount": 0
+      },
+      "projects": {
+        "count": 11,
+        "errorCount": 0,
+        "warningCount": 0
+      },
+      "pods": {
+        "warningCount": 0,
+        "errorCount": 0,
+        "count": 11
+      },
+      "routes": {
+        "count": 2,
+        "errorCount": 0,
+        "warningCount": 0
+      },
+      "images": {
+        "errorCount": 0,
+        "count": 8,
+        "warningCount": 0
+      },
+      "nodes": {
+        "errorCount": 0,
+        "count": 9,
+        "warningCount": 0
+      },
+      "registries": {
+        "count": 3,
+        "errorCount": 0,
+        "warningCount": 0
+      }
+    },
+    "heatmaps": {
+      "nodeCpuUsage": null,
+      "nodeMemoryUsage": null
+    },
+    "providers": [
+      {
+        "count": 2,
+        "providerType": "openShift"
+      },
+      {
+        "count": 1,
+        "providerType": "kubernetes"
+      }
+    ],
+    "ems_utilization": {
+      "cpu": null,
+      "mem": null
+    },
+    "daily_network_metrics" : null,
+    "hourly_network_metrics" : null
+  }
+}

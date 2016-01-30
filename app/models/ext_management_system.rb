@@ -1,4 +1,4 @@
-class ExtManagementSystem < ActiveRecord::Base
+class ExtManagementSystem < ApplicationRecord
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end
@@ -19,50 +19,61 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def self.supported_types_and_descriptions_hash
     supported_subclasses.each_with_object({}) do |klass, hash|
-      hash[klass.ems_type] = klass.description
+      if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type)
+        hash[klass.ems_type] = klass.description
+      end
     end
   end
 
   belongs_to :provider
   belongs_to :tenant
 
-  has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
-  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"
-  has_many :miq_templates,     :foreign_key => :ems_id
-  has_many :vms,               :foreign_key => :ems_id
+  has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id"
+  has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
+           :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
+  has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
+  has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
+
+  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
+                                                      :inverse_of => :ext_management_system
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
-  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy
-  has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
-  has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy
-  has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy
+  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy
+  has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy
+  has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   belongs_to :zone
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
-  validates :hostname,
-            :presence   => true,
-            :uniqueness => {:scope => [:tenant_id], :case_sensitive => false},
-            :if         => :hostname_required?
+  validates :hostname, :presence => true, :if => :hostname_required?
+  validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
-  # TODO: Remove all callers of address
-  alias_attribute :address, :hostname
+  def hostname_uniqueness_valid?
+    return unless hostname_required?
+    return unless hostname.present? # Presence is checked elsewhere
+
+    existing_hostnames = Endpoint.where.not(:resource_id => id).pluck(:hostname).compact.map(&:downcase)
+
+    errors.add(:hostname, "has already been taken") if existing_hostnames.include?(hostname.downcase)
+  end
 
   include NewWithTypeStiMixin
   include UuidMixin
   include WebServiceAttributeMixin
   include EmsRefresh::Manager
+  include TenancyMixin
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
 
@@ -91,6 +102,20 @@ class ExtManagementSystem < ActiveRecord::Base
   include Metric::CiMixin
   include AsyncDeleteMixin
 
+  delegate :ipaddress,
+           :ipaddress=,
+           :hostname,
+           :hostname=,
+           :port,
+           :port=,
+           :to => :default_endpoint
+
+  alias_method :address, :hostname # TODO: Remove all callers of address
+
+  virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
+  virtual_column :hostname,                :type => :string,  :uses => :endpoints
+  virtual_column :port,                    :type => :integer, :uses => :endpoints
+
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
   virtual_column :last_refresh_status,     :type => :string
@@ -100,43 +125,62 @@ class ExtManagementSystem < ActiveRecord::Base
   virtual_column :total_hosts,             :type => :integer
   virtual_column :total_storages,          :type => :integer
   virtual_column :total_clusters,          :type => :integer
-  virtual_column :zone_name,               :type => :string,  :uses => :zone
+  virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
   virtual_column :total_vms_off,           :type => :integer
   virtual_column :total_vms_unknown,       :type => :integer
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
 
-  alias clusters ems_clusters # Used by web-services to return clusters as the property name
+  alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
+  alias_attribute :to_s, :name
 
-  EMS_DISCOVERY_TYPES = {
+  EMS_INFRA_DISCOVERY_TYPES = {
     'vmware'    => 'virtualcenter',
     'microsoft' => 'scvmm',
     'redhat'    => 'rhevm',
   }
 
+  EMS_CLOUD_DISCOVERY_TYPES = {
+    'azure'  => 'azure',
+    'amazon' => 'ec2',
+  }
+
+  def self.with_ipaddress(ipaddress)
+    joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
+  end
+
+  def self.with_hostname(hostname)
+    joins(:endpoints).where(:endpoints => {:hostname => hostname})
+  end
+
+  def self.with_port(port)
+    joins(:endpoints).where(:endpoints => {:port => port})
+  end
+
   def self.create_discovered_ems(ost)
-    # add an ems entry
-    if ExtManagementSystem.find_by_ipaddress(ost.ipaddr).nil?
-      hostname = Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
+    ip = ost.ipaddr
+    unless with_ipaddress(ip).exist?
+      hostname = Socket.getaddrinfo(ip, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
-        [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
-      elsif ost.hypervisor.include?(:rhevm)
-        [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
-      else
-        [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
-      end
+                              [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
+                            elsif ost.hypervisor.include?(:rhevm)
+                              [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
+                            else
+                              [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
+                            end
 
       ems = ems_klass.create(
-        :ipaddress => ost.ipaddr,
-        :name      => "#{ems_name} (#{ost.ipaddr})",
+        :ipaddress => ip,
+        :name      => "#{ems_name} (#{ip})",
         :hostname  => hostname,
         :zone_id   => MiqServer.my_server.zone.id
       )
 
       _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
-      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem", :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
+      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem",
+                         :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
     end
   end
 
@@ -149,11 +193,21 @@ class ExtManagementSystem < ActiveRecord::Base
     ExtManagementSystem.leaf_subclasses.detect { |k| k.ems_type == emstype }
   end
 
-  def self.short_name
-    if parent == ManageIQ::Providers
-      "Ems#{name.demodulize.sub(/Manager$/, '')}"
+  def self.short_token
+    if self == ManageIQ::Providers::BaseManager
+      nil
+    elsif parent == ManageIQ::Providers
+      # "Infra"
+      name.demodulize.sub(/Manager$/, '')
     elsif parent != Object
-      "Ems#{parent.name.demodulize}"
+      # "Vmware"
+      parent.name.demodulize
+    end
+  end
+
+  def self.short_name
+    if (t = short_token)
+      "Ems#{t}"
     else
       name
     end
@@ -168,21 +222,11 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.provision_class(_via)
-    if const_defined?(:Provision, false)
-      self::Provision
-    else
-      suffix = short_name.sub(/^Ems/, '')
-      "MiqProvision#{suffix}".constantize
-    end
+    self::Provision
   end
 
   def self.provision_workflow_class
-    if const_defined?(:ProvisionWorkflow, false)
-      self::ProvisionWorkflow
-    else
-      suffix = short_name.sub(/^Ems/, '')
-      "MiqProvision#{suffix}Workflow".constantize
-    end
+    self::ProvisionWorkflow
   end
 
   def self.default_blacklisted_event_names
@@ -191,6 +235,14 @@ class ExtManagementSystem < ActiveRecord::Base
 
   # UI methods for determining availability of fields
   def supports_port?
+    false
+  end
+
+  def supports_api_version?
+    false
+  end
+
+  def supports_security_protocol?
     false
   end
 
@@ -207,41 +259,38 @@ class ExtManagementSystem < ActiveRecord::Base
     emstype.downcase
   end
 
+  def default_endpoint
+    default = endpoints.detect { |e| e.role == "default" }
+    default || endpoints.build(:role => "default")
+  end
+
   def authentication_check_role
     'ems_operations'
-  end
-
-  def to_s
-    self.name
-  end
-
-  def hostname_required?
-    self.class.hostname_required?
   end
 
   def self.hostname_required?
     true
   end
+  delegate :hostname_required?, :to => :class
 
   def my_zone
-    zone = self.zone
-    zone.nil? || zone.name.blank? ? MiqServer.my_zone : zone.name
+    zone.try(:name).presence || MiqServer.my_zone
   end
-  alias zone_name my_zone
+  alias_method :zone_name, :my_zone
 
   def emstype_description
-    self.class.description || self.emstype.titleize
+    self.class.description || emstype.titleize
   end
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
 
   def self.refresh_all_ems_timer
-    ems_ids = self.where(:zone_id => MiqServer.my_server.zone.id).pluck(:id)
-    self.refresh_ems(ems_ids, true) unless ems_ids.empty?
+    ems_ids = where(:zone_id => MiqServer.my_server.zone.id).pluck(:id)
+    refresh_ems(ems_ids, true) unless ems_ids.empty?
   end
 
   def self.refresh_ems(ems_ids, reload = false)
@@ -267,51 +316,55 @@ class ExtManagementSystem < ActiveRecord::Base
     EmsRefresh.queue_refresh(self)
   end
 
-  def self.ems_discovery_types
-    EMS_DISCOVERY_TYPES.values
+  def self.ems_infra_discovery_types
+    EMS_INFRA_DISCOVERY_TYPES.values
+  end
+
+  def self.ems_cloud_discovery_types
+    EMS_CLOUD_DISCOVERY_TYPES
   end
 
   def disconnect_inv
-    self.hosts.each { |h| h.disconnect_ems(self) }
-    self.vms.each   { |v| v.disconnect_ems(self) }
+    hosts.each { |h| h.disconnect_ems(self) }
+    vms.each   { |v| v.disconnect_ems(self) }
 
-    self.ems_folders.destroy_all
-    self.ems_clusters.destroy_all
-    self.resource_pools.destroy_all
+    ems_folders.destroy_all
+    ems_clusters.destroy_all
+    resource_pools.destroy_all
   end
 
   def enforce_policy(target, event)
-    inputs = { :ext_management_system => self }
+    inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)
     inputs[:host] = target if target.kind_of?(Host)
     MiqEvent.raise_evm_event(target, event, inputs)
   end
 
   def non_clustered_hosts
-    self.hosts.select { |h| h.ems_cluster.nil? }
+    hosts.where(:ems_cluster_id => nil)
   end
 
   def clustered_hosts
-    self.hosts.select { |h| !h.ems_cluster.nil? }
+    hosts.where.not(:ems_cluster_id => nil)
   end
 
   def clear_association_cache_with_storages
     @storages = nil
-    self.clear_association_cache_without_storages
+    clear_association_cache_without_storages
   end
   alias_method_chain :clear_association_cache, :storages
 
-  alias storages               all_storages
-  alias datastores             all_storages  # Used by web-services to return datastores as the property name
+  alias_method :storages,               :all_storages
+  alias_method :datastores,             :all_storages # Used by web-services to return datastores as the property name
 
-  alias all_hosts              hosts
-  alias all_host_ids           host_ids
-  alias all_vms_and_templates  vms_and_templates
-  alias all_vm_or_template_ids vm_or_template_ids
-  alias all_vms                vms
-  alias all_vm_ids             vm_ids
-  alias all_miq_templates      miq_templates
-  alias all_miq_template_ids   miq_template_ids
+  alias_method :all_hosts,              :hosts
+  alias_method :all_host_ids,           :host_ids
+  alias_method :all_vms_and_templates,  :vms_and_templates
+  alias_method :all_vm_or_template_ids, :vm_or_template_ids
+  alias_method :all_vms,                :vms
+  alias_method :all_vm_ids,             :vm_ids
+  alias_method :all_miq_templates,      :miq_templates
+  alias_method :all_miq_template_ids,   :miq_template_ids
 
   #
   # Relationship methods
@@ -319,36 +372,36 @@ class ExtManagementSystem < ActiveRecord::Base
 
   # Folder relationship methods
   def ems_folder_root
-    self.folders.first
+    folders.first
   end
 
   def folders
-    self.children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
+    children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
   end
 
-  alias add_folder    set_child
-  alias remove_folder remove_child
+  alias_method :add_folder,    :set_child
+  alias_method :remove_folder, :remove_child
 
   def remove_all_folders
-    self.remove_all_children(:of_type => 'EmsFolder')
+    remove_all_children(:of_type => 'EmsFolder')
   end
 
   def get_folder_paths(folder = nil)
     exclude_root_folder = folder.nil?
-    folder ||= self.ems_folder_root
+    folder ||= ems_folder_root
     return [] if folder.nil?
     folder.child_folder_paths(
-      :exclude_root_folder => exclude_root_folder,
-      :exclude_datacenters => true,
+      :exclude_root_folder         => exclude_root_folder,
+      :exclude_datacenters         => true,
       :exclude_non_display_folders => true
     )
   end
 
   def resource_pools_non_default
-    if association_cache.include?(:resource_pools)
-      self.resource_pools.select { |r| !r.is_default }
+    if @association_cache.include?(:resource_pools)
+      resource_pools.select { |r| !r.is_default }
     else
-      self.resource_pools.where("is_default != ?", true).to_a
+      resource_pools.where("is_default != ?", true).to_a
     end
   end
 
@@ -357,40 +410,45 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def total_vms_and_templates
-    self.vms_and_templates.size
+    vms_and_templates.size
   end
 
   def total_vms
-    self.vms.size
+    vms.size
   end
 
   def total_miq_templates
-    self.miq_templates.size
+    miq_templates.size
   end
 
   def total_hosts
-    self.hosts.size
+    hosts.size
   end
 
   def total_clusters
-    self.ems_clusters.size
+    ems_clusters.size
   end
 
   def total_storages
-    HostsStorages.count(:conditions => {:host_id => self.host_ids}, :select => "DISTINCT storage_id")
+    HostsStorage.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
   end
 
   def vm_count_by_state(state)
-    self.vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
+    vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
   end
+
   def total_vms_on;        vm_count_by_state("on");        end
+
   def total_vms_off;       vm_count_by_state("off");       end
+
   def total_vms_unknown;   vm_count_by_state("unknown");   end
+
   def total_vms_never;     vm_count_by_state("never");     end
+
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
   def get_reserve(field)
-    (self.hosts + self.ems_clusters).inject(0) {|v,obj| v + (obj.send(field) || 0)}
+    (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
   end
 
   def cpu_reserve
@@ -401,9 +459,9 @@ class ExtManagementSystem < ActiveRecord::Base
     get_reserve(:memory_reserve)
   end
 
-  def vm_log_user_event(vm, user_event)
+  def vm_log_user_event(_vm, user_event)
     $log.info(user_event)
-    $log.warn "User event logging is not available on [#{self.class.name}] Name:[#{self.name}]"
+    $log.warn "User event logging is not available on [#{self.class.name}] Name:[#{name}]"
   end
 
   #
@@ -418,11 +476,11 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def perf_capture_enabled
     return @perf_capture_enabled unless @perf_capture_enabled.nil?
-    return @perf_capture_enabled = true if self.ems_clusters.any?(&:perf_capture_enabled?)
-    return @perf_capture_enabled = true if self.hosts.any?(&:perf_capture_enabled?)
-    return @perf_capture_enabled = false
+    return @perf_capture_enabled = true if ems_clusters.any?(&:perf_capture_enabled?)
+    return @perf_capture_enabled = true if hosts.any?(&:perf_capture_enabled?)
+    @perf_capture_enabled = false
   end
-  alias perf_capture_enabled? perf_capture_enabled
+  alias_method :perf_capture_enabled?, :perf_capture_enabled
 
   ###################################
   # Event Monitor
@@ -435,10 +493,7 @@ class ExtManagementSystem < ActiveRecord::Base
   def self.event_monitor_class
     nil
   end
-
-  def event_monitor_class
-    self.class.event_monitor_class
-  end
+  delegate :event_monitor_class, :to => :class
 
   def event_monitor
     return if event_monitor_class.nil?
@@ -452,7 +507,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def stop_event_monitor
     return if event_monitor_class.nil?
-    _log.info "EMS [#{self.name}] id [#{self.id}]: Stopping event monitor."
+    _log.info "EMS [#{name}] id [#{id}]: Stopping event monitor."
     event_monitor_class.stop_worker_for_ems(self)
   end
 
@@ -460,24 +515,24 @@ class ExtManagementSystem < ActiveRecord::Base
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :method_name => "stop_event_monitor",
-      :instance_id => self.id,
+      :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => self.my_zone,
+      :zone        => my_zone,
       :role        => "event"
     )
   end
 
   def stop_event_monitor_queue_on_change
-    if !self.event_monitor_class.nil? && !self.new_record? && self.changed.include_any?("hostname", "ipaddress")
-      _log.info("EMS: [#{self.name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
-      self.stop_event_monitor_queue
+    if event_monitor_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
+      _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
+      stop_event_monitor_queue
     end
   end
 
   def stop_event_monitor_queue_on_credential_change
-    if !self.event_monitor_class.nil? && !self.new_record? && self.credentials_changed?
-      _log.info("EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
-      self.stop_event_monitor_queue
+    if event_monitor_class && !self.new_record? && self.credentials_changed?
+      _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
+      stop_event_monitor_queue
     end
   end
 
@@ -490,5 +545,10 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def self.blacklisted_events
     BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
+  end
+
+  # @return [Boolean] true if a datastore exists for this type of ems
+  def self.datastore?
+    IsoDatastore.where(:ems_id => all).exists?
   end
 end

@@ -11,6 +11,5 @@ module MiqAeMethodService
         end
       end
     end
-
   end
 end

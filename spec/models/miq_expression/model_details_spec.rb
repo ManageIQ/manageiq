@@ -1,8 +1,9 @@
-require "spec_helper"
-
 describe MiqExpression do
   describe ".model_details" do
     before do
+      # tags contain the root tenant's name
+      Tenant.seed
+
       cat = FactoryGirl.create(:classification,
                                :description  => "Auto Approve - Max CPU",
                                :name         => "prov_max_cpu",
@@ -22,14 +23,14 @@ describe MiqExpression do
 
     context "with :typ=>tag" do
       it "VmInfra" do
-        result = described_class.model_details("ManageIQ::Providers::InfraManager::Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("Virtual Machine.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager::Vm", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("Virtual Machine.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "VmCloud" do
-        result = described_class.model_details("ManageIQ::Providers::CloudManager::Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("Instance.My Company Tags : Auto Approve - Max CPU")
-        result.map(&:first).should_not include("Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager::Vm", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("Instance.My Company Tags : Auto Approve - Max CPU")
+        expect(result.map(&:first)).not_to include("Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "VmOrTemplate" do
@@ -38,33 +39,33 @@ describe MiqExpression do
                                                :include_model   => true,
                                                :include_my_tags => true,
                                                :userid          => "admin"
-        )
-        result.map(&:first).should include("VM or Template.My Company Tags : Auto Approve - Max CPU")
+                                              )
+        expect(result.map(&:first)).to include("VM or Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateInfra" do
-        result = described_class.model_details("ManageIQ::Providers::InfraManager::Template", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("Template.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager::Template", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateCloud" do
-        result = described_class.model_details("ManageIQ::Providers::CloudManager::Template", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("Image.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager::Template", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("Image.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "MiqTemplate" do
-        result = described_class.model_details("MiqTemplate", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("VM Template and Image.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("MiqTemplate", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("VM Template and Image.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsInfra" do
-        result = described_class.model_details("ManageIQ::Providers::InfraManager", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("Infrastructure Provider.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("Infrastructure Provider.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsCloud" do
-        result = described_class.model_details("ManageIQ::Providers::CloudManager", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
-        result.map(&:first).should include("Cloud Provider.My Company Tags : Auto Approve - Max CPU")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager", :typ => "tag", :include_model => true, :include_my_tags => true, :userid => "admin")
+        expect(result.map(&:first)).to include("Cloud Provider.My Company Tags : Auto Approve - Max CPU")
       end
     end
 
@@ -74,12 +75,12 @@ describe MiqExpression do
                                                :typ           => "all",
                                                :include_model => false,
                                                :include_tags  => true)
-        result.map(&:first).should include("My Company Tags : Auto Approve - Max CPU")
+        expect(result.map(&:first)).to include("My Company Tags : Auto Approve - Max CPU")
       end
 
       it "Service" do
         result = described_class.model_details("Service", :typ => "all", :include_model => false, :include_tags => true)
-        result.map(&:first).should include("My Company Tags : Auto Approve - Max CPU")
+        expect(result.map(&:first)).to include("My Company Tags : Auto Approve - Max CPU")
       end
     end
   end
@@ -132,7 +133,7 @@ describe MiqExpression do
       end
 
       it "one_to_many relation" do
-        @ref = OrchestrationStack.reflect_on_association(:vms)
+        @ref = OrchestrationStack.reflections_with_virtual[:vms]
         expect(subject).to eq(@ref.klass.model_name.plural)
       end
     end

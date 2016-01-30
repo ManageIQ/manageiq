@@ -1,7 +1,6 @@
 require 'binary_struct'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -20,7 +19,6 @@ module Ext4
   # // Class.
 
   class GroupDescriptorEntry
-
     attr_accessor :blockAllocBmp, :inodeAllocBmp
 
     def initialize(buf)
@@ -34,19 +32,19 @@ module Ext4
     # // Class helpers & accessors.
 
     def blockBmp
-      return @gde['blk_bmp']
+      @gde['blk_bmp']
     end
 
     def inodeBmp
-      return @gde['inode_bmp']
+      @gde['inode_bmp']
     end
 
     def inodeTable
-      return @gde['inode_table']
+      @gde['inode_table']
     end
 
     def numDirs
-      return @gde['num_dirs']
+      @gde['num_dirs']
     end
 
     # ////////////////////////////////////////////////////////////////////////////
@@ -54,15 +52,14 @@ module Ext4
 
     # Dump object.
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       out += "Block bitmap      : 0x#{'%08x' % @gde['blk_bmp']}\n"
       out += "Inode bitmap      : 0x#{'%08x' % @gde['inode_bmp']}\n"
       out += "Inode table       : 0x#{'%08x' % @gde['inode_table']}\n"
       out += "Unallocated blocks: 0x#{'%04x' % @gde['unalloc_blks']}\n"
       out += "Unallocated inodes: 0x#{'%04x' % @gde['unalloc_inodes']}\n"
       out += "Num directories   : 0x#{'%04x' % @gde['num_dirs']}\n"
-      return out
+      out
     end
-
   end
 end

@@ -3,8 +3,8 @@ module MiqAeEngine
     def self.hash2query(hash)
       return nil if hash.blank?
 
-      query = Array.new
-      hash.keys.sort { |a,b| a.to_s <=> b.to_s }.each do |k|
+      query = []
+      hash.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |k|
         v = hash[k]
         next if v.nil?
         value = v.kind_of?(ActiveRecord::Base) ? v.id : v
@@ -14,14 +14,14 @@ module MiqAeEngine
     end
 
     def self.query2hash(query)
-      hash = Hash.new
+      hash = {}
       unless query.nil?
-        query.split('&').each {|a|
+        query.split('&').each do|a|
           k, v = a.split('=')
           hash[URI.unescape(k)] = URI.unescape(v.to_s)
-        }
+        end
       end
-      return hash
+      hash
     end
 
     def self.split(uri, default_scheme = 'miqaews')
@@ -38,7 +38,7 @@ module MiqAeEngine
       ['miqae', 'miqaedb', 'miqaews', 'miqaemethod', 'method', 'miqpeca'].include?(scheme.downcase)
     end
 
-    def self.replace(uri, options={})
+    def self.replace(uri, options = {})
       original = {}
       original[:scheme], original[:userinfo], original[:host], original[:port], original[:registry], original[:path], original[:opaque], original[:query], original[:fragment] = URI.split(uri)
       original.merge!(options)
@@ -51,7 +51,7 @@ module MiqAeEngine
     end
 
     def self.path(uri, default_scheme = 'miqaews')
-      _, _, _, _, _, path, _, _, _ = split(uri, default_scheme)
+      _, _, _, _, _, path, = split(uri, default_scheme)
       path
     end
   end

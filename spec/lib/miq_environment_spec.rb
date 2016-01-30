@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqEnvironment do
   context "with linux platform" do
     before(:each) do
@@ -14,34 +12,34 @@ describe MiqEnvironment do
     context "Command" do
       context ".supports_memcached?" do
         it "should run once and cache the result" do
-          MiqEnvironment::Command.should_receive(:is_linux?).once.and_return(false)
+          expect(MiqEnvironment::Command).to receive(:is_linux?).once.and_return(false)
           assert_same_result_every_time(:supports_memcached?, false)
         end
       end
 
       context ".supports_apache?" do
         it "should run once and cache the result" do
-          MiqEnvironment::Command.should_receive(:is_appliance?).once.and_return(false)
+          expect(MiqEnvironment::Command).to receive(:is_appliance?).once.and_return(false)
           assert_same_result_every_time(:supports_apache?, false)
         end
       end
 
       context ".supports_nohup_and_backgrounding?" do
         it "should run once and cache the result" do
-          MiqEnvironment::Command.should_receive(:is_appliance?).once.and_return(false)
+          expect(MiqEnvironment::Command).to receive(:is_appliance?).once.and_return(false)
           assert_same_result_every_time(:supports_nohup_and_backgrounding?, false)
         end
       end
 
       context ".is_production?" do
         it "should return false if Rails undefined" do
-          Object.stub(:defined?).with(:Rails).and_return(false)
-          expect(MiqEnvironment::Command.is_production?).to be_false
+          allow(Object).to receive(:defined?).with(:Rails).and_return(false)
+          expect(MiqEnvironment::Command.is_production?).to be_falsey
         end
 
         it "will return true if linux and /var/www/miq/vmdb exists and cache the result" do
-          MiqEnvironment::Command.should_receive(:is_linux?).once.and_return(true)
-          File.should_receive(:exist?).once.and_return(true)
+          expect(MiqEnvironment::Command).to receive(:is_linux?).once.and_return(true)
+          expect(File).to receive(:exist?).once.and_return(true)
           assert_same_result_every_time(:is_appliance?, true)
         end
       end

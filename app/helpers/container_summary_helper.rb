@@ -1,7 +1,6 @@
 module ContainerSummaryHelper
   def textual_ems
-    textual_link(@record.ext_management_system, :as         => ManageIQ::Providers::ContainerManager,
-                                                :controller => 'ems_container')
+    textual_link(@record.ext_management_system)
   end
 
   def textual_container_project
@@ -72,6 +71,27 @@ module ContainerSummaryHelper
     textual_link(@record.container_images)
   end
 
+  def textual_name
+    @record.name
+  end
+
+  def textual_resource_version
+    @record.resource_version
+  end
+
+  def textual_creation_timestamp
+    format_timezone(@record.creation_timestamp)
+  end
+
+  def textual_guest_applications
+    textual_link(@record.guest_applications, :feature => "container_image_show",
+                                             :label   => "Packages",
+                                             :link    => url_for(:controller => controller.controller_name,
+                                                                 :action     => 'guest_applications',
+                                                                 :id         => @record,
+                                                                 :db         => controller.controller_name))
+  end
+
   def textual_container_image_registry
     object = @record.container_image_registry
 
@@ -79,7 +99,7 @@ module ContainerSummaryHelper
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
         :image => "container_image_registry_unknown",
-        :value => "Unknown image source"
+        :value => @record.display_registry
       }
     else
       textual_link(@record.container_image_registry)

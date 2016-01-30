@@ -11,7 +11,7 @@ module ApplianceConsole
     end
 
     def activate
-      ask_questions if self.host.nil?
+      ask_questions if host.nil?
       super
     end
 
@@ -27,7 +27,7 @@ module ApplianceConsole
       ask_with_menu("Database Region",
                     'Create new region'    => :create,
                     'Join existing region' => :join
-      )
+                   )
     end
   end
 end

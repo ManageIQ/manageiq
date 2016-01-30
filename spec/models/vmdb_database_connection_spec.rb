@@ -1,4 +1,3 @@
-require "spec_helper"
 require "active_support/concurrency/latch"
 
 describe VmdbDatabaseConnection do
@@ -36,7 +35,7 @@ describe VmdbDatabaseConnection do
 
     connections = VmdbDatabaseConnection.all
     no_locks = connections.detect { |conn| conn.vmdb_database_locks.empty? }
-    expect(no_locks).to be
+    expect(no_locks).to be_truthy
     expect(no_locks.wait_resource).to be_nil
 
     continue.release
@@ -81,7 +80,7 @@ describe VmdbDatabaseConnection do
     end
 
     blocked_by = connections.detect { |conn| conn.spid == blocked_conn.blocked_by }
-    expect(blocked_by).to be
+    expect(blocked_by).to be_truthy
     expect(blocked_conn.spid).not_to eq(blocked_by.spid)
 
     continue_latch.release
@@ -96,7 +95,7 @@ describe VmdbDatabaseConnection do
 
   it 'wait_time_ms defaults to 0 on nil query_start' do
     conn = VmdbDatabaseConnection.first
-    conn.stub(:query_start => nil)
+    allow(conn).to receive_messages(:query_start => nil)
     expect(conn.wait_time_ms).to eq 0
   end
 

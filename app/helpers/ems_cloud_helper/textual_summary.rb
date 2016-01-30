@@ -8,7 +8,8 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems_infra availability_zones cloud_tenants flavors security_groups instances images orchestration_stacks)
+    %i(ems_infra availability_zones cloud_tenants flavors security_groups
+       instances images orchestration_stacks cloud_volumes)
   end
 
   def textual_group_status
@@ -24,7 +25,7 @@ module EmsCloudHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    {:label => "Region", :value => @ems.description }
+    {:label => "Region", :value => @ems.description}
   end
 
   def textual_hostname
@@ -49,7 +50,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables=>"vm_cloud")
+    label = ui_lookup(:tables => "vm_cloud")
     num   = @ems.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
@@ -60,7 +61,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_images
-    label = ui_lookup(:tables=>"template_cloud")
+    label = ui_lookup(:tables => "template_cloud")
     num = @ems.number_of(:miq_templates)
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
@@ -71,7 +72,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_ems_infra
-    textual_link(@record.try(:provider).try(:infra_ems), :as => EmsInfra)
+    textual_link(@record.try(:provider).try(:infra_ems))
   end
 
   def textual_availability_zones
@@ -80,6 +81,10 @@ module EmsCloudHelper::TextualSummary
 
   def textual_cloud_tenants
     @record.cloud_tenants
+  end
+
+  def textual_cloud_volumes
+    @record.cloud_volumes
   end
 
   def textual_orchestration_stacks
@@ -95,18 +100,19 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_authentications
-    authentications = @ems.authentication_userid_passwords
+    authentications = @ems.authentication_for_summary
     return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
-        case auth.authtype
-        when "default"; "Default"
-        when "metrics"; "C & U Database"
+        case auth[:authtype]
+        when "default" then "Default"
+        when "metrics" then "C & U Database"
+        when "amqp"    then "AMQP"
         else;           "<Unknown>"
         end
 
-      {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
+      {:label => "#{label} Credentials", :value => auth[:status] || "None", :title => auth[:status_details]}
     end
   end
 

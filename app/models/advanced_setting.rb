@@ -1,4 +1,4 @@
-class AdvancedSetting < ActiveRecord::Base
+class AdvancedSetting < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   include ReportableMixin
@@ -22,6 +22,6 @@ class AdvancedSetting < ActiveRecord::Base
 
       el.each_element { |e| result << e.attributes.to_h }
     end
-    return result
+    result
   end
 end

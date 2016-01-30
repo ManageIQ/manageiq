@@ -1,6 +1,5 @@
 class ManageIQ::Providers::Redhat::InfraManager
   class Refresher < ManageIQ::Providers::BaseManager::Refresher
-    include ::EmsRefresh::Refreshers::RefresherRelatsMixin
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
     def parse_inventory(ems, _targets)

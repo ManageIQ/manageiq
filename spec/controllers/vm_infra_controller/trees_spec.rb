@@ -1,10 +1,7 @@
-require "spec_helper"
-
 describe VmInfraController do
   render_views
   before :each do
     set_user_privileges
-    FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
   end
 
@@ -17,7 +14,7 @@ describe VmInfraController do
 
       post :tree_select, :id => 'xx-arch', :format => :js
 
-      response.should render_template('layouts/gtl/_list')
+      expect(response).to render_template('layouts/gtl/_list')
       expect(response.status).to eq(200)
     end
   end
@@ -37,7 +34,7 @@ describe VmInfraController do
 
         post :tree_select, :id => 'root', :format => :js
 
-        response.should render_template('layouts/gtl/_list')
+        expect(response).to render_template('layouts/gtl/_list')
         expect(response.status).to eq(200)
       end
     end
@@ -50,8 +47,8 @@ describe VmInfraController do
 
       post :tree_select, :id => "v-#{vm.compressed_id}", :format => :js
 
-      response.should render_template('vm_common/_main')
-      response.should render_template('shared/summary/_textual_tags')
+      expect(response).to render_template('vm_common/_main')
+      expect(response).to render_template('shared/summary/_textual_tags')
       expect(response.status).to eq(200)
     end
 
@@ -63,8 +60,8 @@ describe VmInfraController do
 
       post :tree_select, :id => "t-#{template.compressed_id}", :format => :js
 
-      response.should render_template('vm_common/_main')
-      response.should render_template('shared/summary/_textual_tags')
+      expect(response).to render_template('vm_common/_main')
+      expect(response).to render_template('shared/summary/_textual_tags')
       expect(response.status).to eq(200)
     end
   end

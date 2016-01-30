@@ -1,4 +1,4 @@
-class ContainerGroup < ActiveRecord::Base
+class ContainerGroup < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
   include NewWithTypeStiMixin
@@ -17,8 +17,19 @@ class ContainerGroup < ActiveRecord::Base
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
   belongs_to :container_project
+  belongs_to :container_build_pod
+  has_many :container_volumes, :foreign_key => :parent_id, :dependent => :destroy
+
+  # Metrics destroy is handled by purger
+  has_many :metrics, :as => :resource
+  has_many :metric_rollups, :as => :resource
+  has_many :vim_performance_states, :as => :resource
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
+  virtual_column :running_containers_summary, :type => :string
+
+  # Needed for metrics
+  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
@@ -28,10 +39,20 @@ class ContainerGroup < ActiveRecord::Base
     ready_condition.try(:status) || 'None'
   end
 
+  def container_states_summary
+    containers.group(:state).count.symbolize_keys
+  end
+
+  def running_containers_summary
+    summary = container_states_summary
+    "#{summary[:running] || 0}/#{summary.values.sum}"
+  end
+
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
 
   include EventMixin
+  include Metric::CiMixin
 
   acts_as_miq_taggable
 
@@ -44,6 +65,14 @@ class ContainerGroup < ActiveRecord::Base
     when :policy_events
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
+    end
+  end
+
+  PERF_ROLLUP_CHILDREN = nil
+
+  def perf_rollup_parents(interval_name = nil)
+    unless interval_name == 'realtime'
+      ([container_project, container_replicator] + container_services).compact
     end
   end
 end

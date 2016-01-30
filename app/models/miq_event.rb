@@ -16,7 +16,7 @@ class MiqEvent < EventStream
 
   SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage, EmsCluster, ResourcePool, MiqServer]
 
-  def self.raise_evm_event(target, raw_event, inputs={})
+  def self.raise_evm_event(target, raw_event, inputs = {}, options = {})
     # Target may have been deleted if it's a worker
     # Target, in that case will be the worker's server.
     # The generic raw_event remains, but client can pass the :type of the worker spawning the event:
@@ -24,101 +24,90 @@ class MiqEvent < EventStream
     # Policy, automate, and alerting could then consume this type field along with the details
     if target.kind_of?(Array)
       klass, id = target
-      klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
-      raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
+      target = klass.to_s.constantize.find_by(:id => id)
+    end
+    raise "Unable to find object for target: [#{target}]" unless target
+
+    event = normalize_event(raw_event.to_s)
+    if event == 'unknown' && target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
+      _log.warn("Event #{raw_event} for class [#{target.class.name}] id [#{target.id}] was not raised: #{raw_event} is not defined in MiqEventDefinition")
+      return
     end
 
-    inputs[:type] ||= target.class.name
+    event_obj = build_evm_event(event, target)
+    inputs.merge!('MiqEvent::miq_event' => event_obj.id, :miq_event_id => event_obj.id)
+    inputs.merge!('EventStream::event_stream' => event_obj.id, :event_stream_id => event_obj.id)
 
-    # TODO: Need to be able to pick an event without an expression in the UI
-    event = normalize_event(raw_event.to_s)
+    MiqAeEvent.raise_evm_event(raw_event, target, inputs, options)
+    event_obj
+  end
 
-    # Determine what actions to perform for this event
-    actions = event_to_actions(target, raw_event, event)
+  def process_evm_event(inputs = {})
+    _log.info("target = [#{target.inspect}]")
+    return if target.nil?
+
+    return unless target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
+    raise "Unable to find object with class: [#{target_class}], Id: [#{target_id}]" unless target
 
     results = {}
+    inputs[:type] ||= target.class.name
 
-    if actions[:enforce_policy]
-      _log.info("Event Raised [#{event}]")
-      results[:policy] = MiqPolicy.enforce_policy(target, event, inputs)
+    _log.info("Event Raised [#{event_type}]")
+    begin
+      results[:policy] = MiqPolicy.enforce_policy(target, event_type, inputs)
+      update_with_policy_result(results)
+      update_attributes(:message => 'Policy resolved successfully!')
+    rescue MiqException::PolicyPreventAction => err
+      update_attributes(:full_data => {:policy => {:prevented => true}}, :message => err.message)
     end
 
-    if actions[:raise_to_automate]
-      _log.info("Event [#{raw_event}] raised to automation")
-      results[:automate] = MiqAeEvent.raise_evm_event(raw_event, target, inputs)
-    end
+    _log.info("Alert for Event [#{event_type}]")
+    results[:alert] = MiqAlert.evaluate_alerts(target, event_type, inputs)
 
-    if actions[:evaluate_alert]
-      _log.info("Alert for Event [#{raw_event}]")
-      results[:alert] = MiqAlert.evaluate_alerts(target, event, inputs)
-    end
-
-    if actions[:raise_children_events]
-      results[:children_events] = raise_event_for_children(target, raw_event, inputs)
-    end
+    results[:children_events] = self.class.raise_event_for_children(target, event_type, inputs)
 
     results
   end
 
-  def self.event_to_actions(target, raw_event, event)
-    # Old logic:
-    #
-    # For Host, VmOrTemplate, Storage, EmsCluster, ResourcePool targets:
-    #   if it's a known event, we enforce policy and evaluate alerts
-    #   if not known but alertable???, we only evaluate alerts
-    #   For any of these targets, we then raise an event for the children of the target
-    # For any other targets, we raise an raise an event to automate
-
-    # New logic:
-    #   Known events:
-    #     send to policy (policy can then raise to automate)
-    #     evaluate alerts
-    #     raise for children
-    #   Unknown events:
-    #     Alert for ones we care about
-    #     raise for children
-    #   Not Host, VmOrTemplate, Storage, EmsCluster, ResourcePool events:
-    #     Alert if event is alertable
-    #     raise to automate (since policy doesn't support these types)
-
-    # TODO: Need to add to automate_expressions in MiqAlert line 345 for alertable events
-    actions = Hash.new(false)
-    if target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
-      actions[:raise_children_events] = true
-      if event != "unknown"
-        actions[:enforce_policy] = true
-        actions[:evaluate_alert] = true
-      elsif MiqAlert.event_alertable?(raw_event)
-        actions[:evaluate_alert] = true
-      else
-        _log.debug("Event [#{raw_event}] does not participate in policy enforcement")
-      end
-    else
-      actions[:raise_to_automate] = true
-      actions[:evaluate_alert] = true if MiqAlert.event_alertable?(raw_event)
-    end
-    actions
+  def self.build_evm_event(event, target)
+    MiqEvent.create(:event_type => event, :target => target, :source => 'POLICY')
   end
 
-  def self.raise_evm_event_queue_in_region(target, raw_event, inputs={})
+  def update_with_policy_result(result = {})
+    update_attributes(
+      :full_data => {
+        :policy => {
+          :actions => {
+            :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+          }
+        }
+      }
+    ) if result.fetch_path(:policy, :actions, :assign_scan_profile)
+  end
+
+  def self.normalize_event(event)
+    return event if MiqEventDefinition.find_by_name(event)
+    "unknown"
+  end
+
+  def self.raise_evm_event_queue_in_region(target, raw_event, inputs = {})
     MiqQueue.put(
       :zone        => nil,
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'raise_evm_event',
       :args        => [[target.class.name, target.id], raw_event, inputs]
     )
   end
 
-  def self.raise_evm_event_queue(target, raw_event, inputs={})
+  def self.raise_evm_event_queue(target, raw_event, inputs = {})
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'raise_evm_event',
       :args        => [[target.class.name, target.id], raw_event, inputs]
     )
   end
 
-  def self.raise_evm_alert_event_queue(target, raw_event, inputs={})
+  def self.raise_evm_alert_event_queue(target, raw_event, inputs = {})
     MiqQueue.put_unless_exists(
       :class_name  => "MiqAlert",
       :method_name => 'evaluate_alerts',
@@ -126,19 +115,23 @@ class MiqEvent < EventStream
     ) if MiqAlert.alarm_has_alerts?(raw_event)
   end
 
-  def self.raise_evm_job_event(target, options = {}, inputs={})
+  def self.raise_evm_job_event(target, options = {}, inputs = {}, q_options = {})
     # Eg. options = {:type => "scan", ":prefix => "request, :suffix => "abort"}
     options.reverse_merge!(
       :type   => "scan",
       :prefix => nil,
       :suffix => nil
     )
-    base_event = [target.class.base_model.name.downcase, options[:type]].join("_")
+
+    target_model = target.class.base_model.name.downcase
+    target_model = "vm" if target_model.match("template")
+
+    base_event = [target_model, options[:type]].join("_")
     evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")
-    self.raise_evm_event(target, evm_event, inputs)
+    raise_evm_event(target, evm_event, inputs, q_options)
   end
 
-  def self.raise_event_for_children(target, raw_event, inputs={})
+  def self.raise_event_for_children(target, raw_event, inputs = {})
     child_assocs = CHILD_EVENTS.fetch_path(raw_event.to_sym, target.class.base_class.name.to_sym)
     return if child_assocs.blank?
 
@@ -148,14 +141,9 @@ class MiqEvent < EventStream
       children = target.send(assoc)
       children.each do |child|
         _log.info("Raising Event [#{child_event}] for Child [(#{child.class}) #{child.name}] of Parent [(#{target.class}) #{target.name}]")
-        self.raise_evm_event_queue(child, child_event, inputs)
+        raise_evm_event_queue(child, child_event, inputs)
       end
     end
-  end
-
-  def self.normalize_event(event)
-    return event if MiqEventDefinition.find_by_name(event)
-    return "unknown"
   end
 
   def self.event_name_for_target(target, event_suffix)

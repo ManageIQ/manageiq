@@ -1,5 +1,3 @@
-require_relative 'spec_helper'
-
 describe ManageiqForeman::PagedResponse do
   describe "#initializer" do
     context "with index hash" do

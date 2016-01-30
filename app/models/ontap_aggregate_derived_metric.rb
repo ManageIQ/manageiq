@@ -1,4 +1,4 @@
-class OntapAggregateDerivedMetric < ActiveRecord::Base
+class OntapAggregateDerivedMetric < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance

@@ -1,74 +1,53 @@
-require "spec_helper"
-
 describe MiqWorker do
-  context ".corresponding_runner" do
-
+  context "::Runner" do
     def all_workers
       MiqWorker.descendants.select { |c| c.subclasses.empty? }
     end
 
     it "finds the correct corresponding runner for workers" do
-      namespaced, legacy = all_workers.partition { |c| c.name =~ /::/ }
-
-      namespaced.each do |worker|
-        # namespaced workers are spelled:
-        # ManageIQ::Providers::ProviderName::ManagerType::WorkerType
-        # namespaced runners are spelled:
-        # ManageIQ::Providers::ProviderName::ManagerType::WorkerType::Runner
-        worker.corresponding_runner.should end_with("Runner")
-      end
-
-      legacy.each do |worker|
-        # Legacy workers look like:
-        # MiqWorkerName
-        # Legacy runners look like:
-        # WorkerName
-        #
-        # Strip the "Miq" to get the runner name
-        runner_name = worker.name.slice(3..-1)
-        worker.corresponding_runner.should eq runner_name
+      all_workers.each do |worker|
+        # If this isn't true, we're probably accidentally inheriting the
+        # runner from a superclass
+        expect(worker::Runner.name).to eq("#{worker.name}::Runner")
       end
     end
   end
 
   context ".sync_workers" do
     it "stops extra workers, returning deleted pids" do
-      described_class.any_instance.should_receive(:stop)
+      expect_any_instance_of(described_class).to receive(:stop)
       worker = FactoryGirl.create(:miq_worker, :status => "started")
       worker.class.workers = 0
-      worker.class.sync_workers.should == {:adds => [], :deletes => [worker.pid]}
+      expect(worker.class.sync_workers).to eq({:adds => [], :deletes => [worker.pid]})
     end
   end
 
   context ".has_required_role?" do
     def check_has_required_role(worker_role_names, expected_result)
-      described_class.stub(:required_roles).and_return(worker_role_names)
-      described_class.has_required_role?.should == expected_result
+      allow(described_class).to receive(:required_roles).and_return(worker_role_names)
+      expect(described_class.has_required_role?).to eq(expected_result)
     end
 
     before(:each) do
-      @server_active_role_names = ["foo", "bar"]
-      @server = FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone))
-      MiqServer.stub(:my_server).and_return(@server)
-      @server.stub(:active_role_names).and_return(@server_active_role_names)
+      active_roles = %w(foo bar).map { |rn| FactoryGirl.create(:server_role, :name => rn) }
+      @server = EvmSpecHelper.local_miq_server(:active_roles => active_roles)
     end
 
     context "clean_active_messages" do
       before do
-        MiqWorker.any_instance.stub(:set_command_line)
         @worker = FactoryGirl.create(:miq_worker, :miq_server => @server)
         @message = FactoryGirl.create(:miq_queue, :handler => @worker, :state => 'dequeue')
       end
 
       it "normal" do
-        @worker.active_messages.length.should == 1
+        expect(@worker.active_messages.length).to eq(1)
         @worker.clean_active_messages
-        @worker.reload.active_messages.length.should == 0
+        expect(@worker.reload.active_messages.length).to eq(0)
       end
 
       it "invokes a message callback" do
-        @message.update_attribute(:miq_callback, {:class_name => 'Kernel', :method_name => 'rand'})
-        Kernel.should_receive(:rand)
+        @message.update_attribute(:miq_callback, :class_name => 'Kernel', :method_name => 'rand')
+        expect(Kernel).to receive(:rand)
         @worker.clean_active_messages
       end
     end
@@ -110,7 +89,7 @@ describe MiqWorker do
   context ".workers_configured_count" do
     before(:each) do
       @configured_count = 2
-      described_class.stub(:worker_settings).and_return({:count => @configured_count})
+      allow(described_class).to receive(:worker_settings).and_return(:count => @configured_count)
       @maximum_workers_count = described_class.maximum_workers_count
     end
 
@@ -119,32 +98,32 @@ describe MiqWorker do
     end
 
     it "when maximum_workers_count is nil" do
-      described_class.workers_configured_count.should == @configured_count
+      expect(described_class.workers_configured_count).to eq(@configured_count)
     end
 
     it "when maximum_workers_count is less than configured_count" do
       described_class.maximum_workers_count = 1
-      described_class.workers_configured_count.should == 1
+      expect(described_class.workers_configured_count).to eq(1)
     end
 
     it "when maximum_workers_count is equal to the configured_count" do
       described_class.maximum_workers_count = 2
-      described_class.workers_configured_count.should == @configured_count
+      expect(described_class.workers_configured_count).to eq(@configured_count)
     end
 
     it "when maximum_workers_count is greater than configured_count" do
       described_class.maximum_workers_count = 2
-      described_class.workers_configured_count.should == @configured_count
+      expect(described_class.workers_configured_count).to eq(@configured_count)
     end
   end
 
   context "with two servers" do
     before(:each) do
-      described_class.stub(:nice_increment).and_return("+10")
+      allow(described_class).to receive(:nice_increment).and_return("+10")
 
       @zone = FactoryGirl.create(:zone)
       @server = FactoryGirl.create(:miq_server, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@server)
+      allow(MiqServer).to receive(:my_server).and_return(@server)
       @worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => @server)
 
       @server2 = FactoryGirl.create(:miq_server, :zone => @zone)
@@ -152,17 +131,17 @@ describe MiqWorker do
     end
 
     it ".server_scope" do
-      described_class.server_scope.should == [@worker]
+      expect(described_class.server_scope).to eq([@worker])
     end
 
     it ".server_scope with a different server" do
-      described_class.server_scope(@server2.id).should == [@worker2]
+      expect(described_class.server_scope(@server2.id)).to eq([@worker2])
     end
 
     it ".server_scope after already scoping on a different server" do
       described_class.where(:miq_server_id => @server2.id).scoping do
-        described_class.server_scope.should == [@worker2]
-        described_class.server_scope(@server.id).should == [@worker2]
+        expect(described_class.server_scope).to eq([@worker2])
+        expect(described_class.server_scope(@server.id)).to eq([@worker2])
       end
     end
 
@@ -171,9 +150,9 @@ describe MiqWorker do
         @config1 = {
           :workers => {
             :worker_base => {
-              :defaults => {:count => 1},
+              :defaults          => {:count => 1},
               :queue_worker_base => {
-                :defaults => {:count => 3},
+                :defaults           => {:count => 3},
                 :ems_refresh_worker => {:count => 5}
               }
             }
@@ -183,66 +162,138 @@ describe MiqWorker do
         @config2 = {
           :workers => {
             :worker_base => {
-              :defaults => {:count => 2},
+              :defaults          => {:count => 2},
               :queue_worker_base => {
-                :defaults => {:count => 4},
+                :defaults           => {:count => 4},
                 :ems_refresh_worker => {:count => 6}
               }
             }
           }
         }
-        @server.stub(:get_config).with("vmdb").and_return(@config1)
-        @server2.stub(:get_config).with("vmdb").and_return(@config2)
+        allow(@server).to receive(:get_config).with("vmdb").and_return(@config1)
+        allow(@server2).to receive(:get_config).with("vmdb").and_return(@config2)
       end
 
       context "#worker_settings" do
         it "uses the worker's server" do
-          @worker.worker_settings[:count].should  == 5
-          @worker2.worker_settings[:count].should == 6
+          expect(@worker.worker_settings[:count]).to eq(5)
+          expect(@worker2.worker_settings[:count]).to eq(6)
         end
 
         it "uses passed in config" do
-          @worker.worker_settings(:config => @config2)[:count].should   == 6
-          @worker2.worker_settings(:config => @config1)[:count].should  == 5
+          expect(@worker.worker_settings(:config => @config2)[:count]).to eq(6)
+          expect(@worker2.worker_settings(:config => @config1)[:count]).to eq(5)
         end
 
         it "uses closest parent's defaults" do
           @config1[:workers][:worker_base][:queue_worker_base][:ems_refresh_worker].delete(:count)
-          @worker.worker_settings[:count].should  == 3
+          expect(@worker.worker_settings[:count]).to eq(3)
         end
       end
 
       context ".worker_settings" do
         it "uses MiqServer.my_server" do
-          MiqEmsRefreshWorker.worker_settings[:count].should == 5
+          expect(MiqEmsRefreshWorker.worker_settings[:count]).to eq(5)
         end
 
         it "uses passed in config" do
-          MiqEmsRefreshWorker.worker_settings(:config => @config2)[:count].should == 6
+          expect(MiqEmsRefreshWorker.worker_settings(:config => @config2)[:count]).to eq(6)
         end
       end
     end
   end
 
+  describe ".config_settings_path" do
+    let(:capu_worker) do
+      ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
+    end
+
+    it "include parent entries" do
+      expect(capu_worker.config_settings_path).to eq(
+        %i(workers worker_base queue_worker_base ems_metrics_collector_worker ems_metrics_collector_worker_amazon)
+      )
+    end
+
+    it "works for high level entries" do
+      expect(MiqEmsMetricsCollectorWorker.config_settings_path).to eq(
+        %i(workers worker_base queue_worker_base ems_metrics_collector_worker)
+      )
+    end
+  end
+
+  describe ".worker_settings" do
+    let(:capu_worker) do
+      ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
+    end
+    let(:config) { @server.get_config }
+
+    before do
+      @server = EvmSpecHelper.local_miq_server
+    end
+
+    it "merges parent values" do
+      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], "250.megabytes")
+      config.save
+      expect(capu_worker.worker_settings[:memory_threshold]).to eq(250.megabytes)
+    end
+
+    it "reads child value" do
+      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], "250.megabytes")
+      config.set_worker_setting!(capu_worker, :memory_threshold, "200.megabytes")
+      config.save
+      expect(capu_worker.worker_settings[:memory_threshold]).to eq(200.megabytes)
+    end
+  end
+
   context "instance" do
     before(:each) do
-      described_class.stub(:nice_increment).and_return("+10")
+      allow(described_class).to receive(:nice_increment).and_return("+10")
       @worker = FactoryGirl.create(:miq_worker)
+    end
+
+    it "#worker_options" do
+      expect(@worker.worker_options).to eq(:guid => @worker.guid)
     end
 
     it "is_current? false when starting" do
       @worker.update_attribute(:status, described_class::STATUS_STARTING)
-      @worker.is_current?.should_not be_true
+      expect(@worker.is_current?).not_to be_truthy
     end
 
     it "is_current? true when started" do
       @worker.update_attribute(:status, described_class::STATUS_STARTED)
-      @worker.is_current?.should be_true
+      expect(@worker.is_current?).to be_truthy
     end
 
     it "is_current? true when working" do
       @worker.update_attribute(:status, described_class::STATUS_WORKING)
-      @worker.is_current?.should be_true
+      expect(@worker.is_current?).to be_truthy
+    end
+
+    it ".status_update" do
+      @worker.update_attribute(:pid, 123)
+
+      require 'miq-process'
+      allow(MiqProcess).to receive(:processInfo).with(123).and_return(
+        :pid                   => 123,
+        :memory_usage          => 246_824_960,
+        :memory_size           => 2_792_611_840,
+        :percent_memory        => "1.4",
+        :percent_cpu           => "1.0",
+        :cpu_time              => 660,
+        :priority              => "31",
+        :name                  => "ruby",
+        :proportional_set_size => 198_721_987
+      )
+
+      described_class.status_update
+      @worker.reload
+      expect(@worker.os_priority).to eq 31
+      expect(@worker.memory_usage).to eq 246_824_960
+      expect(@worker.percent_memory).to eq 1.4
+      expect(@worker.percent_cpu).to eq 1.0
+      expect(@worker.memory_size).to eq 2_792_611_840
+      expect(@worker.proportional_set_size).to eq 198_721_987
     end
   end
 end

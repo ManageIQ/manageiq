@@ -75,11 +75,11 @@ module VmCloudHelper::TextualSummary
     reg = @record.miq_region
     url = reg.remote_ui_url
     h[:value] = if url
-      # TODO: Why is this link different than the others?
-      link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
-    else
-      reg.description
-    end
+                  # TODO: Why is this link different than the others?
+                  link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
+                else
+                  reg.description
+                end
     h
   end
 
@@ -169,7 +169,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_cluster
@@ -205,7 +205,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_storage
     storages = @record.storages
-    label = ui_lookup(:tables=>"storages")
+    label = ui_lookup(:tables => "storages")
     h = {:label => label, :image => "storage"}
     if storages.empty?
       h[:value] = "None"
@@ -239,7 +239,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_parent_vm
     h = {:label => "Parent VM", :image => "vm"}
-    parent_vm = @record.with_relationship_type("genealogy") { |r| r.parent }
+    parent_vm = @record.with_relationship_type("genealogy", &:parent)
     if parent_vm.nil?
       h[:value] = "None"
     else
@@ -247,7 +247,7 @@ module VmCloudHelper::TextualSummary
       h[:title] = "Show this VM's parent"
       h[:explorer] = true
       url, action = set_controller_action
-      h[:link]  = url_for(:controller => url, :action => action , :id => parent_vm)
+      h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
     end
     h
   end
@@ -485,12 +485,12 @@ module VmCloudHelper::TextualSummary
     value = @record.uncommitted_storage
     h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
     h[:value] = if value.nil?
-      "N/A"
-    else
-      v = number_to_human_size(value.abs, :precision => 2)
-      v = "(#{v}) * Overallocated" if value < 0
-      v
-    end
+                  "N/A"
+                else
+                  v = number_to_human_size(value.abs, :precision => 2)
+                  v = "(#{v}) * Overallocated" if value < 0
+                  v
+                end
     h
   end
 
@@ -608,22 +608,6 @@ module VmCloudHelper::TextualSummary
     attrs = @record.ems_custom_attributes
     return nil if attrs.blank?
     attrs.collect { |a| {:label => a.name, :value => a.value} }
-  end
-
-  def textual_compliance_status
-    h = {:label => "Status"}
-    if @record.number_of(:compliances) == 0
-      h[:value] = "Never Verified"
-    else
-      compliant = @record.last_compliance_status
-      date      = @record.last_compliance_timestamp
-      h[:image] = compliant ? "check" : "x"
-      h[:value] = "#{"Non-" unless compliant}Compliant as of #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago"
-      h[:title] = "Show Details of Compliance Check on #{format_timezone(date)}"
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history', :count => 1)
-    end
-    h
   end
 
   def textual_compliance_history

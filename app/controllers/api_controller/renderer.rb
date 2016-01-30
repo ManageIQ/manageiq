@@ -88,7 +88,8 @@ class ApiController
         expand_subcollections(json, type, resource)
       end
 
-      expand_actions(json, type, opts)
+      expand_actions(resource, json, type, opts)
+      expand_resource_custom_actions(resource, json, type)
       json
     end
 
@@ -98,7 +99,7 @@ class ApiController
 
       rclass = resource.class
       if collection_class(type) != rclass
-        matched_type, _ = collection_config.detect do |_collection, spec|
+        matched_type, = collection_config.detect do |_collection, spec|
           spec[:klass] && spec[:klass].constantize == rclass
         end
       end
@@ -167,7 +168,7 @@ class ApiController
     private
 
     def resource_search(id, type, klass)
-      res = Rbac.filtered([klass.find(id)], :userid => @auth_user).first
+      res = Rbac.filtered([klass.find(id)], :user => @auth_user_obj, :class => klass).first
       raise Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
       res
     end
@@ -181,14 +182,15 @@ class ApiController
         else
           klass.all
         end
-      filter_options = filter_param(klass)
-      res = res.where(filter_options)             if filter_options.present? && res.respond_to?(:where)
+      sql_filter, ruby_filters = filter_param(klass)
+      res = res.where(sql_filter)                                     if sql_filter.present? && res.respond_to?(:where)
+      ruby_filters.each { |ruby_filter| res = ruby_filter.call(res) } if ruby_filters.present?
 
-      sort_options = sort_params(klass)           if res.respond_to?(:reorder)
-      res = res.reorder(sort_options)             if sort_options.present?
+      sort_options = sort_params(klass)                               if res.respond_to?(:reorder)
+      res = res.reorder(sort_options)                                 if sort_options.present?
 
       options = {
-        :userid         => @auth_user,
+        :user => @auth_user_obj,
       }
       options[:order] = sort_options              if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
@@ -246,7 +248,7 @@ class ApiController
       value = object_hash[base].public_send(attr)
       result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
       # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
-      base.split(".").reverse.each { |level| result = {level => result} }
+      base.split(".").reverse_each { |level| result = {level => result} }
       [value, result]
     end
 
@@ -301,8 +303,10 @@ class ApiController
     def attr_physical?(object, attr)
       return true if ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
-      return true unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
-      object.class.columns_hash.key?(primary)
+      object &&
+        object.respond_to?(:attributes) &&
+        object.respond_to?(primary) &&
+        object.class.columns_hash.key?(primary)
     end
 
     def attr_split(attr)
@@ -312,8 +316,8 @@ class ApiController
     #
     # Let's expand actions
     #
-    def expand_actions(json, type, opts)
-      return unless render_attr("actions")
+    def expand_actions(resource, json, type, opts)
+      return unless render_actions(resource)
 
       href   = json.attributes!["href"]
       aspecs = get_aspecs(type, opts[:resource_actions], :resource, opts[:is_subcollection], href)
@@ -326,6 +330,22 @@ class ApiController
           aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
         end
       end
+    end
+
+    def expand_resource_custom_actions(resource, json, type)
+      return unless render_actions(resource) && resource_can_have_custom_actions(type)
+
+      href = json.attributes!["href"]
+      json.actions do |js|
+        resource_custom_action_names(resource).each do |action|
+          add_child js, "name" => action, "method" => :post, "href" => href
+        end
+      end
+    end
+
+    def resource_custom_action_names(resource)
+      return [] unless resource.respond_to?(:custom_action_buttons)
+      Array(resource.custom_action_buttons).collect(&:name).collect(&:downcase)
     end
 
     def render_resource_attr(resource, attr)
@@ -386,12 +406,11 @@ class ApiController
       target = is_subcollection ? :subcollection_actions : :collection_actions
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
-        if cspec[:methods].include?(method)
-          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
-          typed_action_definitions.each.collect do |action|
-            if !action[:disabled] && api_user_role_allows?(action[:identifier])
-              {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
-            end
+        next unless render_actions_for_method(cspec[:methods], method)
+        typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+        typed_action_definitions.each.collect do |action|
+          if !action[:disabled] && api_user_role_allows?(action[:identifier])
+            {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
           end
         end
       end.flatten.compact
@@ -401,15 +420,18 @@ class ApiController
       target = is_subcollection ? :subresource_actions : :resource_actions
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
-        if cspec[:methods].include?(method)
-          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
-          typed_action_definitions.each.collect do |action|
-            if !action[:disabled] && api_user_role_allows?(action[:identifier])
-              {"name" => action[:name], "method" => method, "href" => href}
-            end
+        next unless render_actions_for_method(cspec[:methods], method)
+        typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+        typed_action_definitions.each.collect do |action|
+          if !action[:disabled] && api_user_role_allows?(action[:identifier])
+            {"name" => action[:name], "method" => method, "href" => href}
           end
         end
       end.flatten.compact
+    end
+
+    def render_actions_for_method(methods, method)
+      method != :get && methods.include?(method)
     end
 
     def fetch_typed_subcollection_actions(method, is_subcollection)
@@ -422,6 +444,10 @@ class ApiController
     def api_user_role_allows?(action_identifier)
       return true unless action_identifier
       @auth_user_obj.role_allows?(:identifier => action_identifier)
+    end
+
+    def render_actions(resource)
+      render_attr("actions") || physical_attribute_selection(resource).blank?
     end
   end
 end

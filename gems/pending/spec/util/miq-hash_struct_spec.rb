@@ -1,95 +1,94 @@
-require "spec_helper"
 require 'util/miq-hash_struct'
 
 describe MiqHashStruct do
   it ".new" do
-    m = MiqHashStruct.new()
-    m._key_type.should == Symbol
+    m = MiqHashStruct.new
+    expect(m._key_type).to eq(Symbol)
 
-    m.test1.should be_nil
-    m.test2.should be_nil
+    expect(m.test1).to be_nil
+    expect(m.test2).to be_nil
 
     m.test2 = "ok2"
-    m.test1.should be_nil
-    m.test2.should == "ok2"
+    expect(m.test1).to be_nil
+    expect(m.test2).to eq("ok2")
 
     [Symbol, String, Symbol].each do |typ|
       m._key_type = typ
-      m.test1.should be_nil
-      m.test2.should == "ok2"
+      expect(m.test1).to be_nil
+      expect(m.test2).to eq("ok2")
     end
   end
 
   it ".new with Hash with String keys" do
-    m = MiqHashStruct.new({"test1" => "ok"})
-    m._key_type.should == String
+    m = MiqHashStruct.new("test1" => "ok")
+    expect(m._key_type).to eq(String)
 
-    m.test1.should == "ok"
-    m.test2.should be_nil
+    expect(m.test1).to eq("ok")
+    expect(m.test2).to be_nil
 
     m.test2 = "ok2"
-    m.test1.should == "ok"
-    m.test2.should == "ok2"
+    expect(m.test1).to eq("ok")
+    expect(m.test2).to eq("ok2")
 
     [String, Symbol, String].each do |typ|
       m._key_type = typ
-      m.test1.should == "ok"
-      m.test2.should == "ok2"
-      m.test3.should be_nil
+      expect(m.test1).to eq("ok")
+      expect(m.test2).to eq("ok2")
+      expect(m.test3).to be_nil
     end
   end
 
   it ".new with Hash with Symbol keys" do
-    m = MiqHashStruct.new({:test1 => "ok"})
-    m._key_type.should == Symbol
+    m = MiqHashStruct.new(:test1 => "ok")
+    expect(m._key_type).to eq(Symbol)
 
-    m.test1.should == "ok"
-    m.test2.should be_nil
+    expect(m.test1).to eq("ok")
+    expect(m.test2).to be_nil
 
     m.test2 = "ok2"
-    m.test1.should == "ok"
-    m.test2.should == "ok2"
+    expect(m.test1).to eq("ok")
+    expect(m.test2).to eq("ok2")
 
     [Symbol, String, Symbol].each do |typ|
       m._key_type = typ
-      m.test1.should == "ok"
-      m.test2.should == "ok2"
-      m.test3.should be_nil
+      expect(m.test1).to eq("ok")
+      expect(m.test2).to eq("ok2")
+      expect(m.test3).to be_nil
     end
   end
 
   it ".new with invalid argument (non-Hash)" do
-    lambda { MiqHashStruct.new(["test1"]) }.should raise_error(ArgumentError)
+    expect { MiqHashStruct.new(["test1"]) }.to raise_error(ArgumentError)
   end
 
   it ".new with invalid argument (non-String/Symbol keys)" do
-    lambda { MiqHashStruct.new({["test1"] => "ok"}) }.should raise_error(ArgumentError)
+    expect { MiqHashStruct.new(["test1"] => "ok") }.to raise_error(ArgumentError)
   end
 
   it '#send with String keys' do
-    m = MiqHashStruct.new({"test1" => "ok"})
-    m.send('test1').should == "ok"
-    m.send(:test1).should  == "ok"
-    m.send('test2').should be_nil
-    m.send(:test2).should  be_nil
+    m = MiqHashStruct.new("test1" => "ok")
+    expect(m.send('test1')).to eq("ok")
+    expect(m.send(:test1)).to eq("ok")
+    expect(m.send('test2')).to be_nil
+    expect(m.send(:test2)).to  be_nil
   end
 
   it '#send with Symbol keys' do
-    m = MiqHashStruct.new({:test1 => "ok"})
-    m.send('test1').should == "ok"
-    m.send(:test1).should  == "ok"
-    m.send('test2').should be_nil
-    m.send(:test2).should  be_nil
+    m = MiqHashStruct.new(:test1 => "ok")
+    expect(m.send('test1')).to eq("ok")
+    expect(m.send(:test1)).to eq("ok")
+    expect(m.send('test2')).to be_nil
+    expect(m.send(:test2)).to  be_nil
   end
 
   it '#id when Hash has a key of :id' do
-    m = MiqHashStruct.new({:id => "test_id"})
-    m.id.should == "test_id"
+    m = MiqHashStruct.new(:id => "test_id")
+    expect(m.id).to eq("test_id")
   end
 
   it '#id when Hash does not have a key of :id' do
-    m = MiqHashStruct.new({:no_id => "test_id"})
-    m.id.should be_nil
+    m = MiqHashStruct.new(:no_id => "test_id")
+    expect(m.id).to be_nil
   end
 
   context "#==" do
@@ -97,16 +96,16 @@ describe MiqHashStruct do
 
     it "with a matching miq-hash_struct" do
       matching = MiqHashStruct.new(:number => 1, :string => "test")
-      test_struct.should == matching
+      expect(test_struct).to eq(matching)
     end
 
     it "with a non-matching miq-hash_struct" do
       non_matching = MiqHashStruct.new(:number => 2, :string => "test")
-      test_struct.should_not == non_matching
+      expect(test_struct).not_to eq(non_matching)
     end
 
     it "with a different object class" do
-      test_struct.should_not == "string"
+      expect(test_struct).not_to eq("string")
     end
   end
 
@@ -120,6 +119,26 @@ describe MiqHashStruct do
     it "storing data" do
       hs.try(:abc=, 123)
       expect(hs.to_hash[:abc]).to eq(123)
+    end
+  end
+
+  context '#respond_to?' do
+    let(:hs) { MiqHashStruct.new(:foo => 1) }
+
+    it "getter with existing key" do
+      expect(hs.respond_to?(:foo)).to eq(true)
+    end
+
+    it "setter with existing key" do
+      expect(hs.respond_to?(:foo=)).to eq(true)
+    end
+
+    it "getter with unknown key" do
+      expect(hs.respond_to?(:bar)).to eq(false)
+    end
+
+    it "setter with unknown key" do
+      expect(hs.respond_to?(:bar=)).to eq(true)
     end
   end
 

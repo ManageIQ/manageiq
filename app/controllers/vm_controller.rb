@@ -1,8 +1,8 @@
 class VmController < ApplicationController
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
   include VmCommon        # common methods for vm controllers
 
   def index
@@ -11,7 +11,7 @@ class VmController < ApplicationController
   end
 
   def show_list
-    process_show_list({:association=>session[:vm_type]})
+    process_show_list(:association => session[:vm_type])
   end
 
   private ####
@@ -43,6 +43,4 @@ class VmController < ApplicationController
     session[:polArr]          = @polArr unless @polArr.nil?
     session[:policy_options]  = @policy_options unless @policy_options.nil?
   end
-
 end
-

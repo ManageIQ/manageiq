@@ -10,11 +10,12 @@ module EvmAutomate
   end
 
   def self.simulate(domain, namespace, class_name, instance_name)
-    automate_attrs = {}
-    uri = MiqAeEngine.create_automation_object(instance_name,
-                                               automate_attrs,
-                                               :fqclass => "#{domain}/#{namespace}/#{class_name}")
-    MiqAeEngine.resolve_automation_object(uri)
+    user = User.super_admin
+    raise "Need a admin user to run simulation" unless user
+    MiqAeEngine.resolve_automation_object(instance_name,
+                                          user,
+                                          {},
+                                          :fqclass => "#{domain}/#{namespace}/#{class_name}")
   end
 
   def self.write_method_data(class_fqpath, method_name, content)

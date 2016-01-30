@@ -11,7 +11,7 @@ module MiqPowerShell
   @@default_port = 9121
 
   def self.is_available?
-    self.exepath
+    exepath
     return true
   rescue
     return false
@@ -19,31 +19,31 @@ module MiqPowerShell
 
   def self.exepath
     path = nil
-    Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\\Microsoft\\PowerShell\\1\\ShellIds\\Microsoft.PowerShell') {|reg| path = reg['Path']}
+    Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\\Microsoft\\PowerShell\\1\\ShellIds\\Microsoft.PowerShell') { |reg| path = reg['Path'] }
     path_64 = path.downcase.gsub('syswow64', 'sysnative')
     return path_64 if File.exist?(path_64)
-    return path
+    path
   end
 
   def self.execute(ps_command)
-    self.validate_version()
-    ps_exec = self.exepath()
+    validate_version
+    ps_exec = exepath
     command = "start /wait cmd /c #{ps_exec} #{ps_command}"
     $log.debug "PowerShell: Running command: [#{command}]" if $log
     ret = MiqUtil.runcmd(command).chomp
     $log.debug "PowerShell: Return from command: [#{ret}]" if $log
-    return ret
+    ret
   end
 
   def self.execute_async(ps_command)
-    self.validate_version()
+    validate_version
     require 'miq-wmi'
     command = "powershell.exe #{ps_command}"
     $log.debug "PowerShell: Running command: [#{command}]" if $log
-    wmi = WMIHelper.connectServer()
-    pid = wmi.runProcess(command, true, {:ShowWindow=>2})
+    wmi = WMIHelper.connectServer
+    pid = wmi.runProcess(command, true, :ShowWindow => 2)
     $log.debug "PowerShell: Process started with pid: [#{pid}]" if $log
-    return pid
+    pid
   end
 
   def self.kill_process(pid)
@@ -51,11 +51,11 @@ module MiqPowerShell
     $log.debug "PowerShell: kill_process: [#{command}]" if $log
     ret = MiqUtil.runcmd(command).chomp
     $log.debug "PowerShell: Return from command: [#{ret}]" if $log
-    return ret
+    ret
   end
 
-  def self.validate_version()
-    ps = self.version
+  def self.validate_version
+    ps = version
     $log.debug "Powershell version [#{ps[:RuntimeVersion]}] detected." if $log
     raise "PowerShell Version:[#{ps[:PowerShellVersion]}] (Runtime Version:[#{ps[:RuntimeVersion]}]) is not supported.  Upgrade to v2.0 or greater." if ps[:PowerShellVersion] < 1.1
   end
@@ -63,15 +63,15 @@ module MiqPowerShell
   def self.version
     ps = {}
     Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\\Microsoft\\PowerShell\\1\\PowerShellEngine') do |reg|
-      reg.each {|subkey, type, data| ps[subkey.to_sym] = data}
+      reg.each { |subkey, _type, data| ps[subkey.to_sym] = data }
     end
     ps[:PowerShellVersion] = ps[:PowerShellVersion].to_f unless ps[:PowerShellVersion].nil?
-    return ps
+    ps
   end
 
   def self.verify_return_object(xml)
     return unless is_error_object?(xml)
-    err_msg = "#{self.name} "
+    err_msg = "#{name} "
     node = xml.find_first("//*/Property[@Name=\"FullyQualifiedErrorId\"]")
     err_msg << "(#{node.text}): " unless node.nil?
     node = xml.find_first("//*/Property[@Name=\"ErrorRecord\"]")
@@ -91,25 +91,25 @@ module MiqPowerShell
     end
 
     return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
-    return false
+    false
   end
 
   def self.run_script(script)
     encoded_command = MIQEncode.encode(script.AsciiToUtf8.Utf8ToUnicode, false)
     ps_command = "-EncodedCommand #{encoded_command}"
-    self.execute(ps_command)
+    execute(ps_command)
   end
 
-  def self.pipe_to_xml(filename=nil)
-    self.pipe_to_clixml_local + self.clear_local_ps_varialbes + <<-PS_SCRIPT
+  def self.pipe_to_xml(_filename = nil)
+    pipe_to_clixml_local + clear_local_ps_varialbes + <<-PS_SCRIPT
       $miq_clixml_export_data = Get-Content $miq_clixml_export_filename
       Remove-Item $miq_clixml_export_filename
       $miq_clixml_export_data
     PS_SCRIPT
   end
 
-  def self.pipe_to_xml_path(filename=nil)
-    self.pipe_to_clixml_local + self.clear_local_ps_varialbes + <<-PS_SCRIPT
+  def self.pipe_to_xml_path(_filename = nil)
+    pipe_to_clixml_local + clear_local_ps_varialbes + <<-PS_SCRIPT
       $miq_clixml_export_filename
     PS_SCRIPT
   end
@@ -126,7 +126,7 @@ module MiqPowerShell
   end
 
   def self.pipe_to_clixml_local
-    data_file_path = self.get_xml_temp_file.gsub('/', '\\')
+    data_file_path = get_xml_temp_file.tr('/', '\\')
 
     <<-PS_SCRIPT
  | export-clixml -Encoding UTF8 -Path ($miq_clixml_export_filename = '#{data_file_path}')
@@ -182,17 +182,16 @@ module MiqPowerShell
 
   def self.log_messages(log_msgs)
     log_msgs.each do |lh|
-      log_level = case lh[:level].to_s[0,1].to_s.downcase
-      when 'd' then :debug
-      when 'w' then :warn
-      when 'e' then :error
-      when 'f' then :fatal
-      else :info
-      end
+      log_level = case lh[:level].to_s[0, 1].to_s.downcase
+                  when 'd' then :debug
+                  when 'w' then :warn
+                  when 'e' then :error
+                  when 'f' then :fatal
+                  else :info
+                  end
       $log.send(log_level, "Powershell[#{lh[:date]}] #{lh[:msg]}")
     end
   end
-
 
   class Convert
     def initialize(xml)
@@ -204,7 +203,7 @@ module MiqPowerShell
       end
     end
 
-    def to_h(options={})
+    def to_h(_options = {})
       process_root(@xml.root)
     end
 
@@ -214,14 +213,14 @@ module MiqPowerShell
 
     def process_root(node)
       lst = []
-      node.each_element {|e| add_to_array(e, lst)}
-      return lst
+      node.each_element { |e| add_to_array(e, lst) }
+      lst
     end
 
     def process_array(node)
       lst = []
-      node.each_element {|e| add_to_array(e, lst)}
-      return lst
+      node.each_element { |e| add_to_array(e, lst) }
+      lst
     end
 
     def process_hash(node)
@@ -232,7 +231,7 @@ module MiqPowerShell
         index2 = MiqXml.nokogiri? ? 1 : 2
 
         name = convert_type(e.elements[index1])
-        name = name.to_sym if name.is_a?(String)
+        name = name.to_sym if name.kind_of?(String)
         data = e.elements[index2]
 
         case data.name
@@ -241,7 +240,7 @@ module MiqPowerShell
         else hsh[name] = convert_type(data)
         end
       end
-      return hsh
+      hsh
     end
 
     def process_named_elements(node)
@@ -263,7 +262,7 @@ module MiqPowerShell
         else hsh[name] = convert_type(e)
         end
       end
-      return hsh
+      hsh
     end
 
     def process_obj(node)
@@ -283,7 +282,7 @@ module MiqPowerShell
 
       # Store refId
       @refIds[refId] = obj unless refId.nil?
-      return obj
+      obj
     end
 
     def add_to_array(node, lst)

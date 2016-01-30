@@ -20,7 +20,7 @@ class NamespaceEmsAmazon < ActiveRecord::Migration
     VmAmazon                                   ManageIQ::Providers::Amazon::CloudManager::Vm
 
     ServiceOrchestration::OptionConverterAmazon
-                                          ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter
+    ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter
   )]
 
   STI_TABLES = %w(

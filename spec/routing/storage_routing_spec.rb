@@ -1,11 +1,9 @@
-require "spec_helper"
 require "routing/shared_examples"
 
 describe "routes for StorageController" do
   let(:controller_name) { "storage" }
 
   it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like "A controller that has download_data routes"
@@ -57,8 +55,8 @@ describe "routes for StorageController" do
   describe "#listnav_search_selected" do
     it "routes with POST" do
       expect(post("/#{controller_name}/listnav_search_selected")).to route_to(
-                                                                       "#{controller_name}#listnav_search_selected"
-                                                                     )
+        "#{controller_name}#listnav_search_selected"
+      )
     end
   end
 

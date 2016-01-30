@@ -44,8 +44,4 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
     @raw_values
   end
-
-  def values_from_automate
-    DynamicDialogFieldValueProcessor.values_from_automate(self)
-  end
 end

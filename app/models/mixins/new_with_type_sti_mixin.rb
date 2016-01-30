@@ -5,9 +5,9 @@ module NewWithTypeStiMixin
 
   module ClassMethods
     def new(*args, &block)
-      if (h = args.first).is_a?(Hash) && (type = h[inheritance_column.to_sym] || h[inheritance_column.to_s])
+      if (h = args.first).kind_of?(Hash) && (type = h[inheritance_column.to_sym] || h[inheritance_column.to_s])
         klass = type.constantize
-        raise "#{klass.name} is not a subclass of #{self.name}" unless klass <= self
+        raise "#{klass.name} is not a subclass of #{name}" unless klass <= self
         args.unshift(args.shift.except(inheritance_column.to_sym, inheritance_column.to_s))
         klass.new(*args, &block)
       else

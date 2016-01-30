@@ -191,7 +191,7 @@ module Authenticator
     end
 
     def authorize_queue?
-      !MiqEnvironment::Process.is_ui_worker_via_command_line?
+      !defined?(Rails::Server)
     end
 
     def authorize_queue(username, _request, *args)
@@ -249,7 +249,7 @@ module Authenticator
       internal_groups.select { |g| external_group_names.include?(g.description.downcase) }
     end
 
-    def autocreate_user(username)
+    def autocreate_user(_username)
       nil
     end
 

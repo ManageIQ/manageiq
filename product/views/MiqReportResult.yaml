@@ -34,9 +34,9 @@ cols:
 include:
 
 # Order of columns (from all tables)
-col_order: 
-- created_on
+col_order:
 - last_run_on
+- created_on
 - report_source
 - userid
 - miq_group_description
@@ -44,8 +44,8 @@ col_order:
 
 # Column titles, in order
 headers:
-- Queued At
 - Run At
+- Queued At
 - Source
 - Username
 - Group
@@ -59,7 +59,7 @@ order: Descending
 
 # Columns to sort the report on, in order
 sortby:
-- created_on
+- last_run_on
 
 # Group rows (y=yes,n=no,c=count)
 group: n

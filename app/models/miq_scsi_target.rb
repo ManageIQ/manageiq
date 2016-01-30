@@ -1,4 +1,4 @@
-class MiqScsiTarget < ActiveRecord::Base
+class MiqScsiTarget < ApplicationRecord
   serialize :address
 
   belongs_to :guest_device

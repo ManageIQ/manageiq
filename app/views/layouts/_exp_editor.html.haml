@@ -11,36 +11,38 @@
     %ul#searchtoolbar
       - if @edit[@expkey][:exp_idx] > 0
         %li
-          = link_to(image_tag('/images/toolbars/undo.png',
+          = link_to(image_tag(image_path('toolbars/undo.png'),
                               :alt => 'Undo the last change'),
                     {:action  => 'exp_button',
                      :pressed => 'undo'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => _('Undo the last change'))
       - else
         %li.dimmed
-          = image_tag("/images/toolbars/undo.png")
+          = image_tag(image_path('toolbars/undo.png'))
 
       - if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1
         %li
-          = link_to(image_tag('/images/toolbars/redo.png',
+          = link_to(image_tag(image_path('toolbars/redo.png'),
                               :alt => 'Re-apply the previous change'),
                     {:action  => 'exp_button',
                      :pressed => 'redo'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :title                 => _('Re-apply the previous change'))
       - else
         %li.dimmed
-          = image_tag("/images/toolbars/redo.png")
+          = image_tag(image_path('toolbars/redo.png'))
 
       %span#exp_buttons_off
         - %w(and or not discard).each do |image|
           %li.dimmed
-            = image_tag("/images/toolbars/#{image}.png")
+            = image_tag(image_path("toolbars/#{image}.png"))
 
       %span#exp_buttons_not{:style => "display: none"}
         - [[_("AND with a new expression element"), 'and',     'and'],
@@ -49,16 +51,17 @@
            [_("Remove this expression element"),    'discard', 'remove']].each do |title, image, pressed|
           - if title.empty?
             %li.dimmed
-              = link_to(image_tag("/images/toolbars/#{image}.png"))
+              = link_to(image_tag(image_path("toolbars/#{image}.png")))
           - else
             %li
-              = link_to(image_tag("/images/toolbars/#{image}.png",
+              = link_to(image_tag(image_path("toolbars/#{image}.png"),
                                   :alt => title),
                         {:action  => "exp_button",
                          :pressed => pressed},
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
+                        "data-method"          => :post,
                         :title                 => title)
 
       %span#exp_buttons_on{:style => "display: none"}
@@ -67,13 +70,11 @@
            [_("Wrap this expression element with a NOT"), 'not',     'not'],
            [_("Remove this expression element"),          'discard', 'remove']].each do |title, image, pressed|
           %li
-            = link_to(image_tag("/images/toolbars/#{image}.png",
-                                :alt => title),
-                      {:action  => 'exp_button',
-                       :pressed => pressed},
+            = link_to(image_tag(image_path("toolbars/#{image}.png"), :alt => title), {:action => 'exp_button', :pressed => pressed},
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
+                      "data-method"          => :post,
                       :title                 => title)
 
     %div{:style => "padding: 10px"}
@@ -86,6 +87,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :id                    => "exp_#{token.last}")
         - elsif [token].flatten.first == "???"
           = link_to(token.first,
@@ -95,6 +97,7 @@
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
+                    "data-method"          => :post,
                     :id                    => "exp_#{token.last}")
         - else
           %font{:color => "red"}

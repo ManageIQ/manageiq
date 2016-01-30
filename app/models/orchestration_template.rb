@@ -1,5 +1,7 @@
 require 'digest/md5'
-class OrchestrationTemplate < ActiveRecord::Base
+class OrchestrationTemplate < ApplicationRecord
+  TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
+
   include NewWithTypeStiMixin
   include ReportableMixin
 
@@ -14,12 +16,23 @@ class OrchestrationTemplate < ActiveRecord::Base
             :unless     => :draft?
   validates_presence_of :name
 
+  before_destroy :check_not_in_use
+
+  # Try to create the template if the name is not found in table
+  def self.seed
+    Dir.glob(TEMPLATE_DIR.join('*.yml')).each do |file|
+      hash = YAML.load_file(file)
+      next if hash[:type].constantize.find_by(:name => hash[:name])
+      find_or_create_by_contents(hash)
+    end
+  end
+
   def self.available
     where(:draft => false)
   end
 
   def self.find_with_content(template_content)
-    available.where(:md5 => calc_md5(with_universal_newline(template_content))).first
+    available.find_by(:md5 => calc_md5(with_universal_newline(template_content)))
   end
 
   # Find only by template content. Here we only compare md5 considering the table is expected
@@ -29,14 +42,14 @@ class OrchestrationTemplate < ActiveRecord::Base
     hashes = [hashes] unless hashes.kind_of?(Array)
     md5s = []
     hashes = hashes.reject do |hash|
-               if hash[:draft]
-                 create!(hash.except(:md5)) # always create a new template if it is a draft
-                 true
-               else
-                 md5s << calc_md5(with_universal_newline(hash[:content]))
-                 false
-               end
-             end
+      if hash[:draft]
+        create!(hash.except(:md5)) # always create a new template if it is a draft
+        true
+      else
+        md5s << calc_md5(with_universal_newline(hash[:content]))
+        false
+      end
+    end
 
     existing_templates = available.where(:md5 => md5s).index_by(&:md5)
 
@@ -80,9 +93,7 @@ class OrchestrationTemplate < ActiveRecord::Base
     ExtManagementSystem.where(:type => eligible_manager_types.collect(&:name))
   end
 
-  def eligible_managers
-    self.class.eligible_managers
-  end
+  delegate :eligible_managers, :to => :class
 
   # return the validation error message; otherwise nil
   def validate_content(manager = nil)
@@ -124,5 +135,11 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   def with_universal_newline(text)
     self.class.with_universal_newline(text)
+  end
+
+  def check_not_in_use
+    return true unless in_use?
+    errors[:base] << "Cannot delete the template while it is used by some orchestration stacks"
+    false
   end
 end

@@ -3,7 +3,7 @@ module MiqAeCopyMixin
 
   module ClassMethods
     def split(fqname, has_instance_name)
-      ns, ae_class, ae_instance, _  = MiqAeEngine::MiqAePath.split(fqname, :has_instance_name => has_instance_name)
+      ns, ae_class, ae_instance, = MiqAeEngine::MiqAePath.split(fqname, :has_instance_name => has_instance_name)
       parts = ns.split('/')
       domain = parts.shift
       partial_ns = parts.join('/')

@@ -14,15 +14,15 @@ class Module
   def with_constants(constants, &block)
     saved_constants = {}
     constants.each do |constant, val|
-      saved_constants[ constant ] = const_get( constant )
-      Kernel::silence_warnings { const_set( constant, val ) }
+      saved_constants[constant] = const_get(constant)
+      Kernel.silence_warnings { const_set(constant, val) }
     end
 
     begin
       block.call
     ensure
-      constants.each do |constant, val|
-        Kernel::silence_warnings { const_set( constant, saved_constants[ constant ] ) }
+      constants.each do |constant, _val|
+        Kernel.silence_warnings { const_set(constant, saved_constants[constant]) }
       end
     end
   end

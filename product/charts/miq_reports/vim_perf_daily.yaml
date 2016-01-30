@@ -33,7 +33,9 @@ cols:
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
 - derived_memory_used
+- derived_memory_available
 - max_derived_memory_available
 - max_derived_memory_reserved
 - min_derived_memory_used
@@ -75,7 +77,6 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-include:
   resource:
     columns:
     - cpu_usagemhz_rate_average_high_over_time_period
@@ -99,7 +100,9 @@ col_order:
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
 - derived_memory_used
+- derived_memory_available
 - max_derived_memory_available
 - max_derived_memory_reserved
 - min_derived_memory_used
@@ -161,7 +164,9 @@ headers:
 - ! '% Ready'
 - ! '% Idle'
 - ! '% Used'
+- Number of Cores
 - Avg Used
+- Avg Available
 - Max Available
 - Max Reserved
 - Min Used

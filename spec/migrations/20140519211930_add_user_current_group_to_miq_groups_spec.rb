@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe AddUserCurrentGroupToMiqGroups do
@@ -58,6 +57,5 @@ describe AddUserCurrentGroupToMiqGroups do
       expect(user.miq_groups).to match_array [group1, group2]
       expect(user.current_group).to eql group2
     end
-
   end
 end

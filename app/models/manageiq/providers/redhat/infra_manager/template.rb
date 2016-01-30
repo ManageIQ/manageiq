@@ -6,7 +6,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Template < ManageIQ::Providers:
   end
 
   def provider_object(connection = nil)
-    connection ||= self.ext_management_system.connect
-    connection.get_resource_by_ems_ref(self.ems_ref)
+    connection ||= ext_management_system.connect
+    connection.get_resource_by_ems_ref(ems_ref)
   end
 end

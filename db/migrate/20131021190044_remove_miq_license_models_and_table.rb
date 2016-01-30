@@ -11,5 +11,4 @@ class RemoveMiqLicenseModelsAndTable < ActiveRecord::Migration
       t.datetime "updated_on"
     end
   end
-
 end

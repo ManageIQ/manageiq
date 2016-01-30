@@ -1,16 +1,26 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
+    = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render(:partial => "layouts/quadicon",
         :locals         => {:mode => :icon,
           :item                   => @record,
           :size                   => 72,
           :typ                    => :listnav})
 
-    = patternfly_accordion_panel(_("Properties"), false, "ems_container_prop") do
+    = miq_accordion_panel(_("Properties"), false, "ems_container_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+
+        - if @record.has_perf_data?
+          %li
+            = link_to(_('Capacity & Utilization'),
+              {:action => 'show', :id => @record, :display => 'performance'},
+              :title => _("Show Capacity & Utilization"))
+        - else
+          %li.disabled
+            = link_to(_('Capacity & Utilization'), "#")
+
         - if @record.has_events? || @record.has_events?(:policy_events)
           %li
             = link_to(_('Timelines'),
@@ -20,98 +30,8 @@
           %li.disabled
             = link_to(_('Timelines'), "#")
 
-    = patternfly_accordion_panel(_("Relationships"), false, "ems_container_rel") do
+    = miq_accordion_panel(_("Relationships"), false, "ems_container_rel") do
       %ul.nav.nav-pills.nav-stacked
-
-        - if role_allows(:feature => "container_node_show_list")
-          - num_nodes = @record.number_of(:container_nodes)
-          - if num_nodes == 0
-            %li.disabled
-              = link_to(_('Container Nodes (0)'), "#")
-          - else
-            %li
-              = link_to(_("Container Nodes (%s)") % num_nodes,
-                  {:action  => 'show', :id => @record, :display => 'container_nodes'},
-                  :title => _("Show Container Nodes"))
-
-        - if role_allows(:feature => "container_service_show_list")
-          - num_services = @record.number_of(:container_services)
-          - if num_services == 0
-            %li.disabled
-              = link_to(_('Container Services (0)'), "#")
-          - else
-            %li
-              = link_to(_("Container Services (%s)") % num_services,
-                  {:action  => 'show', :id => @record, :display => 'container_services'},
-                  :title => _("Show Container Services"))
-
-        - if role_allows(:feature => "container_group_show_list")
-          - num_groups = @record.number_of(:container_groups)
-          - if num_groups == 0
-            %li.disabled
-              = link_to(_('Pods (0)'), "#")
-          - else
-            %li
-              = link_to(_("Pods (%s)") % num_groups,
-                  {:action  => 'show', :id => @record, :display => 'container_groups'},
-                  :title => _("Show Pods"))
-        - if role_allows(:feature => "container_route_show_list") && @record.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
-          - num_groups = @record.number_of(:container_routes)
-          - if num_groups == 0
-            %li.disabled
-              = link_to(_('Container Routes (0)'), "#")
-          - else
-            %li
-              = link_to(_("Container Routes (%s)") % num_groups,
-                  {:action  => 'show', :id => @record, :display => 'container_routes'},
-                  :title => _("Show Container Routes"))
-        - if role_allows(:feature => "container_project_show_list")
-          - num_groups = @record.number_of(:container_projects)
-          - if num_groups == 0
-            %li.disabled
-              = link_to(_('Container Projects (0)'), "#")
-          - else
-            %li
-              = link_to(_("Container Projects (%s)") % num_groups,
-                  {:action  => 'show', :id => @record, :display => 'container_projects'},
-                  :title => _("Show Container Projects"))
-        - if role_allows(:feature => "container_replicator_show_list")
-          - num_replicators = @record.number_of(:container_replicators)
-          - if num_replicators == 0
-            %li.disabled
-              = link_to(_('Replicators (0)'), "#")
-          - else
-            %li
-              = link_to(_("Replicators (%s)") % num_replicators,
-                  {:action  => 'show', :id => @record, :display => 'container_replicators'},
-                  :title => _("Show Replicators"))
-        - if role_allows(:feature => "containers")
-          - num_containers = @record.number_of(:containers)
-          - if num_containers == 0
-            %li.disabled
-              = link_to(_('Containers (0)'), "#")
-          - else
-            %li
-              = link_to(_("Containers (%s)") % num_containers,
-                  {:action  => 'show', :id => @record,
-                  :display => 'containers'}, :title => _("Show Containers"))
-        - if role_allows(:feature => "container_image_registry_show_list")
-          - num_registries = @record.number_of(:container_image_registries)
-          - if num_registries == 0
-            %li.disabled
-              = link_to(_('Image Registries (0)'), "#")
-          - else
-            %li
-              = link_to(_("Image Registries (%s)") % num_registries,
-                  {:action  => 'show', :id => @record, :display => 'container_image_registries'},
-                  :title => _("Show Image Registries"))
-        - if role_allows(:feature => "container_image_show_list")
-          - num_images = @record.number_of(:container_images)
-          - if num_images == 0
-            %li.disabled
-              = link_to(_('Images (0)'), "#")
-          - else
-            %li
-              = link_to(_("Images (%s)") % num_images,
-                  {:action  => 'show', :id => @record, :display => 'container_images'},
-                  :title => _("Show Images"))
+        - %w(container_project container_route container_service container_replicator container_group ,
+             container container_node container_image_registry container_image).each do |ent|
+          = multiple_relationship_link(@record, ent)

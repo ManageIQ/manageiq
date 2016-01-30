@@ -1,28 +1,32 @@
-require "spec_helper"
-require 'appliance_console/env'
 require "appliance_console/cli"
 
 describe ApplianceConsole::Cli do
   subject { described_class.new }
 
   it "should set hostname if defined" do
-    ApplianceConsole::Env.should_receive(:[]=).with(:host, 'host1')
+    interface = double
+    expect(LinuxAdmin::NetworkInterface).to receive(:new).and_return(interface)
+    expect(interface).to receive(:address).and_return("192.168.1.10")
+    expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname=).with('host1')
+    expect_any_instance_of(LinuxAdmin::Hosts).to receive(:save).and_return(true)
+    expect_any_instance_of(LinuxAdmin::Service.new("test").class).to receive(:restart).and_return(true)
 
     subject.parse(%w(--host host1)).run
   end
 
   it "should not set hostname if none specified" do
-    ApplianceConsole::Env.should_not_receive(:[]=).with(:host, anything)
+    expect_any_instance_of(LinuxAdmin::Hosts).to_not receive(:hostname=)
 
-    subject.parse([]).run
+    allow(subject).to receive(:create_key) # just give it something to do
+    subject.parse(%w(--key)).run
   end
 
   it "should set database host to localhost if running locally" do
     subject.parse(%w(--internal -r 1 --dbdisk x))
     expect_v2_key
-    subject.should_receive(:disk_from_string).with('x').and_return('/dev/x')
-    subject.should_receive(:say)
-    ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
+    expect(subject).to receive(:disk_from_string).with('x').and_return('/dev/x')
+    expect(subject).to receive(:say)
+    expect(ApplianceConsole::InternalDatabaseConfiguration).to receive(:new)
       .with(:region      => 1,
             :database    => 'vmdb_production',
             :username    => 'root',
@@ -36,9 +40,9 @@ describe ApplianceConsole::Cli do
   it "should pass username and password when configuring database locally" do
     subject.parse(%w(--internal --username user --password pass -r 1 --dbdisk x))
     expect_v2_key
-    subject.should_receive(:disk_from_string).and_return('x')
-    subject.should_receive(:say)
-    ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
+    expect(subject).to receive(:disk_from_string).and_return('x')
+    expect(subject).to receive(:say)
+    expect(ApplianceConsole::InternalDatabaseConfiguration).to receive(:new)
       .with(:region      => 1,
             :database    => 'vmdb_production',
             :username    => 'user',
@@ -53,8 +57,8 @@ describe ApplianceConsole::Cli do
   it "should handle remote databases (and setup region)" do
     subject.parse(%w(--hostname host --dbname db --username user --password pass -r 1))
     expect_v2_key
-    subject.should_receive(:say)
-    ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
+    expect(subject).to receive(:say)
+    expect(ApplianceConsole::ExternalDatabaseConfiguration).to receive(:new)
       .with(:host        => 'host',
             :database    => 'db',
             :region      => 1,
@@ -69,8 +73,8 @@ describe ApplianceConsole::Cli do
   it "should handle remote databases (not setting up region)" do
     subject.parse(%w(--hostname host --dbname db --username user --password pass))
     expect_v2_key
-    subject.should_receive(:say)
-    ApplianceConsole::ExternalDatabaseConfiguration.should_receive(:new)
+    expect(subject).to receive(:say)
+    expect(ApplianceConsole::ExternalDatabaseConfiguration).to receive(:new)
       .with(:host        => 'host',
             :database    => 'db',
             :username    => 'user',
@@ -83,48 +87,53 @@ describe ApplianceConsole::Cli do
 
   context "#ipa" do
     it "should handle uninstalling ipa" do
-      subject.should_receive(:say)
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
+      expect(subject).to receive(:say)
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:new)
         .and_return(double(:ipa_client_configured? => true, :deactivate => nil))
       subject.parse(%w(--uninstall-ipa)).run
     end
 
     it "should skip uninstalling ipa if not installed" do
-      subject.should_receive(:say)
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
+      expect(subject).to receive(:say)
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:new)
         .and_return(double(:ipa_client_configured? => false))
       subject.parse(%w(--uninstall-ipa)).run
     end
 
     it "should install ipa" do
-      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-          .with('client.domain.com',
-                :ipaserver => 'ipa.domain.com',
-                :principal => 'admin',
-                :domain    => 'domain.com',
-                :realm     => 'DOMAIN.COM',
-                :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:ipa_client_configured?).and_return(false)
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:new)
+        .with('client.domain.com',
+              :ipaserver => 'ipa.domain.com',
+              :principal => 'admin',
+              :domain    => 'domain.com',
+              :realm     => 'DOMAIN.COM',
+              :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm DOMAIN.COM --ipadomain domain.com)).run
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
-      ApplianceConsole::Env.should_receive(:[]=).with(:host, "client.domain.com")
-      ApplianceConsole::Env.should_not_receive(:[]).with(:host)
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-          .with('client.domain.com',
-                :ipaserver => 'ipa.domain.com',
-                :principal => 'admin',
-                :domain    => nil,
-                :realm     => nil,
-                :password  => 'pass').and_return(double(:activate => false))
+      interface = double
+      expect(LinuxAdmin::NetworkInterface).to receive(:new).and_return(interface)
+      expect(interface).to receive(:address).and_return("192.168.1.10")
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname=).with("client.domain.com")
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:save).and_return(true)
+      expect_any_instance_of(LinuxAdmin::Service.new("test").class).to receive(:restart).and_return(true)
+      expect_any_instance_of(LinuxAdmin::Hosts).to_not receive(:hostname)
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:ipa_client_configured?).and_return(false)
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:new)
+        .with('client.domain.com',
+              :ipaserver => 'ipa.domain.com',
+              :principal => 'admin',
+              :domain    => nil,
+              :realm     => nil,
+              :password  => 'pass').and_return(double(:activate => false))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run
     end
 
     it "should complain if installing ipa-client when ipa is already installed" do
-      ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(true)
+      expect(ApplianceConsole::ExternalHttpdAuthentication).to receive(:ipa_client_configured?).and_return(true)
       expect do
         subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass)).run
       end.to raise_error(/uninstall/)
@@ -133,11 +142,11 @@ describe ApplianceConsole::Cli do
 
   context "#install_certs" do
     it "should basic install completed (default ca_name, non verbose)" do
-      subject.should_receive(:say).with(/creating/)
-      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
-      subject.should_receive(:say).with(/certificate result/)
-      subject.should_not_receive(:say).with(/rerun/)
-      ApplianceConsole::CertificateAuthority.should_receive(:new)
+      expect(subject).to receive(:say).with(/creating/)
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
+      expect(subject).to receive(:say).with(/certificate result/)
+      expect(subject).not_to receive(:say).with(/rerun/)
+      expect(ApplianceConsole::CertificateAuthority).to receive(:new)
         .with(
           :hostname => "client.domain.com",
           :realm    => nil,
@@ -152,11 +161,11 @@ describe ApplianceConsole::Cli do
     end
 
     it "should basic install waiting (manual ca_name, verbose)" do
-      subject.should_receive(:say).with(/creating/)
-      ApplianceConsole::Env.should_receive(:[]).with("host").and_return('client.domain.com')
-      subject.should_receive(:say).with(/certificate result/)
-      subject.should_receive(:say).with(/rerun/)
-      ApplianceConsole::CertificateAuthority.should_receive(:new)
+      expect(subject).to receive(:say).with(/creating/)
+      expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
+      expect(subject).to receive(:say).with(/certificate result/)
+      expect(subject).to receive(:say).with(/rerun/)
+      expect(ApplianceConsole::CertificateAuthority).to receive(:new)
         .with(
           :hostname => "client.domain.com",
           :realm    => "realm.domain.com",
@@ -173,39 +182,39 @@ describe ApplianceConsole::Cli do
 
   context "#config_tmp_disk" do
     it "configures disk" do
-      subject.should_receive(:disk_from_string).with('x').and_return('/dev/x')
-      subject.should_receive(:say)
-      ApplianceConsole::TempStorageConfiguration.should_receive(:new)
+      expect(subject).to receive(:disk_from_string).with('x').and_return('/dev/x')
+      expect(subject).to receive(:say)
+      expect(ApplianceConsole::TempStorageConfiguration).to receive(:new)
         .with(:disk      => '/dev/x')
-      .and_return(double(:activate => true))
+        .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk x)).run
     end
 
     it "configures disk with auto" do
-      subject.should_receive(:disk_from_string).with('auto').and_return('/dev/x')
-      subject.should_receive(:say)
-      ApplianceConsole::TempStorageConfiguration.should_receive(:new)
+      expect(subject).to receive(:disk_from_string).with('auto').and_return('/dev/x')
+      expect(subject).to receive(:say)
+      expect(ApplianceConsole::TempStorageConfiguration).to receive(:new)
         .with(:disk      => '/dev/x')
-      .and_return(double(:activate => true))
+        .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk auto)).run
     end
 
     it "suggests disk with unknown disk" do
-      subject.should_receive(:disk_from_string).with('abc').and_return(nil)
-      subject.should_receive(:disk).and_return(double(:path => 'dev-good'))
-      subject.should_receive(:say).with(/abc/)
-      subject.should_receive(:say).with(/dev-good/)
+      expect(subject).to receive(:disk_from_string).with('abc').and_return(nil)
+      expect(subject).to receive(:disk).and_return(double(:path => 'dev-good'))
+      expect(subject).to receive(:say).with(/abc/)
+      expect(subject).to receive(:say).with(/dev-good/)
       expect(ApplianceConsole::TempStorageConfiguration).not_to receive(:new)
 
       subject.parse(%w(--tmpdisk abc)).run
     end
 
     it "complains when no disks available" do
-      subject.should_receive(:disk_from_string).with('abc').and_return(nil)
-      subject.should_receive(:disk).and_return(nil)
-      subject.should_receive(:say).with(/no disk/)
+      expect(subject).to receive(:disk_from_string).with('abc').and_return(nil)
+      expect(subject).to receive(:disk).and_return(nil)
+      expect(subject).to receive(:say).with(/no disk/)
       expect(ApplianceConsole::TempStorageConfiguration).not_to receive(:new)
 
       subject.parse(%w(--tmpdisk abc)).run
@@ -268,7 +277,7 @@ describe ApplianceConsole::Cli do
             it "fetches a key" do
               subject.parse(%w(--internal --region 1 --fetch-key remotesystem.com  --sshpassword pass))
               expect_v2_key(false)
-              subject.should_receive(:say).with(/fetch/)
+              expect(subject).to receive(:say).with(/fetch/)
               expect(key_configuration.action).to eq(:fetch)
               expect(key_configuration.force).to eq(true)
               expect(key_configuration.host).to eq("remotesystem.com")
@@ -358,7 +367,7 @@ describe ApplianceConsole::Cli do
 
   context "#disk_from_string" do
     before do
-      LinuxAdmin::Disk.stub(:local => [
+      allow(LinuxAdmin::Disk).to receive_messages(:local => [
         double(:path => "/dev/a", :partitions => %w(currently used)),
         double(:path => "/dev/b", :partitions => %w())
       ])

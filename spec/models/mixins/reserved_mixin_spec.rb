@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ReservedMixin do
   before(:each) do
     class TestClass < ActiveRecord::Base
@@ -16,17 +14,17 @@ describe ReservedMixin do
   context ".attr_via_reserved" do
     it "normal case" do
       t = TestClass.new
-      t.should respond_to(:some_field)
-      t.should respond_to(:some_field?)
-      t.should respond_to(:some_field=)
+      expect(t).to respond_to(:some_field)
+      expect(t).to respond_to(:some_field?)
+      expect(t).to respond_to(:some_field=)
 
       t.some_field = "test"
-      t.some_field.should  == "test"
-      t.some_field?.should be_true
+      expect(t.some_field).to eq("test")
+      expect(t.some_field?).to be_truthy
 
       t.some_field = nil
-      t.some_field.should  be_nil
-      t.some_field?.should be_false
+      expect(t.some_field).to  be_nil
+      expect(t.some_field?).to be_falsey
     end
 
     it "with multiple fields" do
@@ -35,12 +33,12 @@ describe ReservedMixin do
       end
 
       t = TestClass.new
-      t.should respond_to(:another_field)
-      t.should respond_to(:another_field?)
-      t.should respond_to(:another_field=)
-      t.should respond_to(:a_third_field)
-      t.should respond_to(:a_third_field?)
-      t.should respond_to(:a_third_field=)
+      expect(t).to respond_to(:another_field)
+      expect(t).to respond_to(:another_field?)
+      expect(t).to respond_to(:another_field=)
+      expect(t).to respond_to(:a_third_field)
+      expect(t).to respond_to(:a_third_field?)
+      expect(t).to respond_to(:a_third_field=)
     end
   end
 
@@ -50,14 +48,14 @@ describe ReservedMixin do
     end
 
     it "without existing reserved data" do
-      @t.reserved.should be_nil
+      expect(@t.reserved).to be_nil
     end
 
     it "with existing reserved data" do
       FactoryGirl.create(:reserve, :resource => @t, :reserved => {:some_field => "test"})
       @t.reload
 
-      @t.reserved.should == {:some_field => "test"}
+      expect(@t.reserved).to eq({:some_field => "test"})
     end
   end
 
@@ -71,8 +69,8 @@ describe ReservedMixin do
         @t.reserved = {:some_field => "test"}
         @t.save!
 
-        Reserve.count.should == 1
-        Reserve.first.should have_attributes(
+        expect(Reserve.count).to eq(1)
+        expect(Reserve.first).to have_attributes(
           :resource_type => @t.class.name,
           :resource_id   => @t.id,
           :reserved      => {:some_field => "test"}
@@ -86,8 +84,8 @@ describe ReservedMixin do
         @t.reserved = {:some_field => "test2"}
         @t.save!
 
-        Reserve.count.should == 1
-        Reserve.first.should have_attributes(
+        expect(Reserve.count).to eq(1)
+        expect(Reserve.first).to have_attributes(
           :resource_type => @t.class.name,
           :resource_id   => @t.id,
           :reserved      => {:some_field => "test2"}
@@ -100,7 +98,7 @@ describe ReservedMixin do
         @t.reserved = {}
         @t.save!
 
-        Reserve.count.should == 0
+        expect(Reserve.count).to eq(0)
       end
 
       it "with existing reserved data" do
@@ -110,7 +108,7 @@ describe ReservedMixin do
         @t.reserved = {}
         @t.save!
 
-        Reserve.count.should == 0
+        expect(Reserve.count).to eq(0)
       end
     end
 
@@ -119,7 +117,7 @@ describe ReservedMixin do
         @t.reserved = nil
         @t.save!
 
-        Reserve.count.should == 0
+        expect(Reserve.count).to eq(0)
       end
 
       it "with existing reserved data" do
@@ -129,7 +127,7 @@ describe ReservedMixin do
         @t.reserved = nil
         @t.save!
 
-        Reserve.count.should == 0
+        expect(Reserve.count).to eq(0)
       end
     end
   end
@@ -140,16 +138,16 @@ describe ReservedMixin do
     end
 
     it "without existing reserved data" do
-      @t.reserved_hash_get(:some_field).should    be_nil
-      @t.reserved_hash_get(:another_field).should be_nil
+      expect(@t.reserved_hash_get(:some_field)).to    be_nil
+      expect(@t.reserved_hash_get(:another_field)).to be_nil
     end
 
     it "with existing reserved data" do
       FactoryGirl.create(:reserve, :resource => @t, :reserved => {:some_field => "test"})
       @t.reload
 
-      @t.reserved_hash_get(:some_field).should    == "test"
-      @t.reserved_hash_get(:another_field).should be_nil
+      expect(@t.reserved_hash_get(:some_field)).to eq("test")
+      expect(@t.reserved_hash_get(:another_field)).to be_nil
     end
   end
 
@@ -163,8 +161,8 @@ describe ReservedMixin do
         @t.reserved_hash_set(:some_field, "test")
         @t.save!
 
-        Reserve.count.should == 1
-        Reserve.first.should have_attributes(
+        expect(Reserve.count).to eq(1)
+        expect(Reserve.first).to have_attributes(
           :resource_type => @t.class.name,
           :resource_id   => @t.id,
           :reserved      => {:some_field => "test"}
@@ -181,8 +179,8 @@ describe ReservedMixin do
           @t.reserved_hash_set(:some_field, "test2")
           @t.save!
 
-          Reserve.count.should == 1
-          Reserve.first.should have_attributes(
+          expect(Reserve.count).to eq(1)
+          expect(Reserve.first).to have_attributes(
             :resource_type => @t.class.name,
             :resource_id   => @t.id,
             :reserved      => {:some_field => "test2"}
@@ -193,8 +191,8 @@ describe ReservedMixin do
           @t.reserved_hash_set(:another_field, "test2")
           @t.save!
 
-          Reserve.count.should == 1
-          Reserve.first.should have_attributes(
+          expect(Reserve.count).to eq(1)
+          expect(Reserve.first).to have_attributes(
             :resource_type => @t.class.name,
             :resource_id   => @t.id,
             :reserved      => {:some_field => "test", :another_field => "test2"}
@@ -208,7 +206,7 @@ describe ReservedMixin do
         @t.reserved_hash_set(:some_field, nil)
         @t.save!
 
-        Reserve.count.should == 0
+        expect(Reserve.count).to eq(0)
       end
 
       context "with existing reserved data" do
@@ -219,7 +217,7 @@ describe ReservedMixin do
           @t.reserved_hash_set(:some_field, nil)
           @t.save!
 
-          Reserve.count.should == 0
+          expect(Reserve.count).to eq(0)
         end
 
         it "of multiple attributes" do
@@ -229,8 +227,8 @@ describe ReservedMixin do
           @t.reserved_hash_set(:some_field, nil)
           @t.save!
 
-          Reserve.count.should == 1
-          Reserve.first.should have_attributes(
+          expect(Reserve.count).to eq(1)
+          expect(Reserve.first).to have_attributes(
             :resource_type => @t.class.name,
             :resource_id   => @t.id,
             :reserved      => {:another_field => "test2"}
@@ -252,8 +250,8 @@ describe ReservedMixin do
 
         @t.reserved_hash_migrate(:name)
 
-        Reserve.count.should == 0
-        @t.name.should       == "test"
+        expect(Reserve.count).to eq(0)
+        expect(@t.name).to eq("test")
       end
 
       it "with multiple keys" do
@@ -262,9 +260,9 @@ describe ReservedMixin do
 
         @t.reserved_hash_migrate(:name, :description)
 
-        Reserve.count.should  == 0
-        @t.name.should        == "test"
-        @t.description.should == "test2"
+        expect(Reserve.count).to eq(0)
+        expect(@t.name).to eq("test")
+        expect(@t.description).to eq("test2")
       end
     end
 
@@ -275,8 +273,8 @@ describe ReservedMixin do
 
         @t.reserved_hash_migrate(:some_field => :name)
 
-        Reserve.count.should == 0
-        @t.name.should       == "test"
+        expect(Reserve.count).to eq(0)
+        expect(@t.name).to eq("test")
       end
 
       it "with multiple keys" do
@@ -285,9 +283,9 @@ describe ReservedMixin do
 
         @t.reserved_hash_migrate(:some_field => :name, :another_field => :description)
 
-        Reserve.count.should  == 0
-        @t.name.should        == "test"
-        @t.description.should == "test2"
+        expect(Reserve.count).to eq(0)
+        expect(@t.name).to eq("test")
+        expect(@t.description).to eq("test2")
       end
     end
   end
@@ -301,7 +299,7 @@ describe ReservedMixin do
 
       it "without existing reserved data" do
         @t.update_attribute(:some_field, "test")
-        @t.updated_on.should_not == @last_update
+        expect(@t.updated_on).not_to eq(@last_update)
       end
 
       context "with existing reserved data" do
@@ -312,7 +310,7 @@ describe ReservedMixin do
 
         it "and data changing" do
           @t.update_attribute(:some_field, "test2")
-          @t.updated_on.should_not == @last_update
+          expect(@t.updated_on).not_to eq(@last_update)
         end
       end
     end

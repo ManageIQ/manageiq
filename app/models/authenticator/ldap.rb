@@ -37,7 +37,7 @@ module Authenticator
     def autocreate_user(username)
       # when default group for ldap users is enabled, create the user
       return unless config[:default_group_for_users]
-      default_group = MiqGroup.where(:description => config[:default_group_for_users]).first
+      default_group = MiqGroup.find_by(:description => config[:default_group_for_users])
       return unless default_group
       create_user_from_ldap(username) { [default_group] }
     end
@@ -86,8 +86,7 @@ module Authenticator
       authentication = config.dup
       authentication[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
-      if authentication.key?(:user_proxies)       && !authentication[:user_proxies].blank?  &&
-         authentication.key?(:get_direct_groups)  && authentication[:get_direct_groups] == false
+      if authentication.key?(:user_proxies) && !authentication[:user_proxies].blank? && authentication.key?(:get_direct_groups) && authentication[:get_direct_groups] == false
         _log.info("Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
         groups = []
       else
@@ -111,7 +110,7 @@ module Authenticator
       groups.uniq
     end
 
-    def update_user_attributes(user, username, lobj)
+    def update_user_attributes(user, _username, lobj)
       user.userid     = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || ldap.get_attr(lobj, :dn))
       user.name       = ldap.get_attr(lobj, :displayname)
       user.first_name = ldap.get_attr(lobj, :givenname)
@@ -123,10 +122,10 @@ module Authenticator
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]
     def user_proxy_membership(auth, sid)
       authentication    = config
-      auth[:bind_dn]  ||= authentication[:bind_dn]
+      auth[:bind_dn] ||= authentication[:bind_dn]
       auth[:bind_pwd] ||= authentication[:bind_pwd]
       auth[:ldapport] ||= authentication[:ldapport]
-      auth[:mode]     ||= authentication[:mode]
+      auth[:mode] ||= authentication[:mode]
       auth[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
       REQUIRED_LDAP_USER_PROXY_KEYS.each { |key| raise "Required key not specified: [#{key}]" unless auth.key?(key) }

@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker < ManageIQ::Providers::BaseManager::MetricsCollectorWorker
-  require_dependency 'manageiq/providers/redhat/infra_manager/metrics_collector_worker/runner'
+  require_nested :Runner
   self.default_queue_name = "redhat"
 
   def friendly_name

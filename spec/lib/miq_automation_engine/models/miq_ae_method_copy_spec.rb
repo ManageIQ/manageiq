@@ -1,7 +1,4 @@
-require "spec_helper"
-
 describe MiqAeMethodCopy do
-
   before do
     @src_domain     = 'SPEC_DOMAIN'
     @dest_domain    = 'FRED'
@@ -73,7 +70,6 @@ describe MiqAeMethodCopy do
       meth2  = MiqAeMethod.find_by_class_id_and_name(class2.id, @src_method)
       validate_method(@meth1, meth2, MiqAeMethodCompare::CONGRUENT_METHOD)
     end
-
   end
 
   context 'copy onto itself' do
@@ -84,7 +80,6 @@ describe MiqAeMethodCopy do
     it 'copy with the same name' do
       expect { MiqAeMethodCopy.new(@src_fqname).as(@src_method, nil, true) }.to raise_error(RuntimeError)
     end
-
   end
 
   context 'copy multiple' do
@@ -93,20 +88,19 @@ describe MiqAeMethodCopy do
       fqname = 'test1'
       ids    = [1, 2, 3]
       miq_ae_method_copy = double(MiqAeMethodCopy)
-      miq_ae_method = mock_model(MiqAeMethod)
-      miq_ae_method_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_method }
+      miq_ae_method = double(MiqAeMethod, id: 1)
+      expect(miq_ae_method_copy).to receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_method }
       new_ids = [miq_ae_method.id] * ids.length
-      miq_ae_method.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
-      MiqAeMethod.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_method }
-      MiqAeMethodCopy.should_receive(:new).with(fqname).exactly(ids.length).times { miq_ae_method_copy }
-      MiqAeMethodCopy.copy_multiple(ids, domain).should match_array(new_ids)
+      expect(miq_ae_method).to receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      expect(MiqAeMethod).to receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_method }
+      expect(MiqAeMethodCopy).to receive(:new).with(fqname).exactly(ids.length).times { miq_ae_method_copy }
+      expect(MiqAeMethodCopy.copy_multiple(ids, domain)).to match_array(new_ids)
     end
   end
 
   def validate_method(meth1, meth2, status)
     obj = MiqAeMethodCompare.new(meth1, meth2)
     obj.compare
-    obj.status.should eq(status)
+    expect(obj.status).to eq(status)
   end
-
 end

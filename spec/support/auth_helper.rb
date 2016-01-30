@@ -4,10 +4,10 @@ module AuthHelper
   end
 
   def login_as(user)
-    User.stub(:current_user => user)
-    User.stub(:current_userid => user.userid)
-    session[:userid]   = user.userid
-    session[:group]    = user.current_group.try(:id)
+    User.current_user = user
+    session[:userid]  = user.userid
+    session[:group]   = user.current_group_id
+    user
   end
 end
 

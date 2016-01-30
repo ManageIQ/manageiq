@@ -1,7 +1,7 @@
 'use strict';
 
 var fork = require('child_process').fork;
-var karma = require('karma').server;
+var Server = require('karma').Server;
 var log = require('../utils/log');
 
 module.exports = function(gulp, options) {
@@ -38,11 +38,11 @@ module.exports = function(gulp, options) {
       }
     }
 
-    karma.start({
+    new Server({
       configFile: config.confFile,
       exclude: excludeFiles,
       singleRun: !!singleRun
-    }, karmaCompleted);
+    }, karmaCompleted).start();
 
     function karmaCompleted(karmaResult) {
       if (options.verbose) {

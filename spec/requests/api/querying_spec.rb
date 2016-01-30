@@ -6,9 +6,8 @@
 #   - Selecting Attributes  - attributes=:attr1,:attr2,...
 #   - Querying by Tag       - by_tag=:tag_path  (i.e. /department/finance)
 #   - Expanding Results     - expand=resources,:subcollection
+#   - Resource actions
 #
-require 'spec_helper'
-
 describe ApiController do
   include Rack::Test::Methods
 
@@ -23,6 +22,8 @@ describe ApiController do
   def create_vms_by_name(names)
     names.each.collect { |name| FactoryGirl.create(:vm_vmware, :name => name) }
   end
+
+  let(:vm1) { FactoryGirl.create(:vm_vmware, :name => "vm1") }
 
   describe "Querying vms" do
     before { api_basic_authorize }
@@ -91,6 +92,15 @@ describe ApiController do
       expect_query_result(:vms, 3, 3)
       expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "bb"}, {"name" => "aa"}])
     end
+
+    it "supports case insensitive ordering" do
+      create_vms_by_name %w(B c a)
+
+      run_get vms_url, :sort_by => "name", :sort_order => "asc", :sort_options => "ignore_case", :expand => "resources"
+
+      expect_query_result(:vms, 3, 3)
+      expect_result_resources_to_match_hash([{"name" => "a"}, {"name" => "B"}, {"name" => "c"}])
+    end
   end
 
   describe "Filtering vms" do
@@ -132,6 +142,26 @@ describe ApiController do
       expect_query_result(:vms, 2, 3)
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
                                              {"name" => vm3.name, "guid" => vm3.guid}])
+    end
+
+    it "supports NULL/nil equality test via =" do
+      vm1, vm2 = create_vms_by_name(%w(aa bb))
+      vm2.update_attributes!(:retired => true)
+
+      run_get vms_url, :expand => "resources", :filter => ["retired=NULL"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
+    it "supports NULL/nil inequality test via !=" do
+      _vm1, vm2 = create_vms_by_name(%w(aa bb))
+      vm2.update_attributes!(:retired => true)
+
+      run_get vms_url, :expand => "resources", :filter => ["retired!=nil"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
     end
 
     it "supports numerical less than comparison via <" do
@@ -222,13 +252,11 @@ describe ApiController do
 
     it "skips requests of invalid attributes" do
       api_basic_authorize
-      vm = create_vms_by_name(%w(aa)).first
 
-      run_get vms_url, :expand => "resources", :attributes => "bogus"
+      run_get vms_url(vm1.id), :attributes => "bogus"
 
-      expect_query_result(:vms, 1, 1)
-      expect_result_resources_to_have_only_keys("resources", %w(id href))
-      expect_result_resources_to_match_hash([{"id" => vm.id, "href" => vms_url(vm.id)}])
+      expect_request_success
+      expect_result_to_have_keys(%w(id href name vendor))
     end
   end
 
@@ -278,6 +306,85 @@ describe ApiController do
 
       expect_query_result(:vms, 1, 1)
       expect_result_resources_to_include_keys("resources", %w(id href guid name vendor software))
+    end
+  end
+
+  describe "Querying resources" do
+    it "does not return actions if not entitled" do
+      api_basic_authorize
+
+      run_get vms_url(vm1.id)
+
+      expect_request_success
+      expect(@result).to_not have_key("actions")
+    end
+
+    it "returns actions if authorized" do
+      api_basic_authorize action_identifier(:vms, :edit)
+
+      run_get vms_url(vm1.id)
+
+      expect_request_success
+      expect_result_to_have_keys(%w(id href name vendor actions))
+    end
+
+    it "returns correct actions if authorized as such" do
+      api_basic_authorize action_identifier(:vms, :suspend)
+
+      run_get vms_url(vm1.id)
+
+      expect_request_success
+      expect_result_to_have_keys(%w(id href name vendor actions))
+      actions = @result["actions"]
+      expect(actions.size).to eq(1)
+      expect(actions.first["name"]).to eq("suspend")
+    end
+
+    it "returns multiple actions if authorized as such" do
+      api_basic_authorize
+      update_user_role(@role, action_identifier(:vms, :start), action_identifier(:vms, :stop))
+
+      run_get vms_url(vm1.id)
+
+      expect_request_success
+      expect_result_to_have_keys(%w(id href name vendor actions))
+      expect(@result["actions"].collect { |a| a["name"] }).to match_array(%w(start stop))
+    end
+
+    it "returns actions if asked for with physical attributes" do
+      api_basic_authorize action_identifier(:vms, :start)
+
+      run_get vms_url(vm1.id), :attributes => "name,vendor,actions"
+
+      expect_request_success
+      expect_result_to_have_only_keys(%w(id href name vendor actions))
+    end
+
+    it "does not return actions if asking for a physical attribute" do
+      api_basic_authorize action_identifier(:vms, :start)
+
+      run_get vms_url(vm1.id), :attributes => "name"
+
+      expect_request_success
+      expect_result_to_have_only_keys(%w(id href name))
+    end
+
+    it "does return actions if asking for virtual attributes" do
+      api_basic_authorize action_identifier(:vms, :start)
+
+      run_get vms_url(vm1.id), :attributes => "disconnected"
+
+      expect_request_success
+      expect_result_to_have_keys(%w(id href name vendor disconnected actions))
+    end
+
+    it "does not return actions if asking for physical and virtual attributes" do
+      api_basic_authorize action_identifier(:vms, :start)
+
+      run_get vms_url(vm1.id), :attributes => "name,disconnected"
+
+      expect_request_success
+      expect_result_to_have_only_keys(%w(id href name disconnected))
     end
   end
 end

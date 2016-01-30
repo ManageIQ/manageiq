@@ -1,5 +1,4 @@
 require "routing/shared_examples/advanced_search_examples"
-require "routing/shared_examples/column_width_examples"
 require "routing/shared_examples/compare_examples"
 require "routing/shared_examples/crud_examples"
 require "routing/shared_examples/dialog_runner_examples"

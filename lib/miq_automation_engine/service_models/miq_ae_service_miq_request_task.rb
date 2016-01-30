@@ -9,6 +9,7 @@ module MiqAeMethodService
     expose :miq_request_tasks, :association => true
     expose :source,            :association => true
     expose :destination,       :association => true
+    expose :tenant,            :association => true
     undef :phase_context
 
     def message=(msg)

@@ -7,31 +7,31 @@
 - :name: miq_schedule_vmdb
   :items:
   - :buttonSelect: miq_schedule_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: timeprofile_new
-      :image: new
+      :icon: pficon pficon-add-circle-o fa-lg
       :text: "Add a new Time Profile"
       :title: "Add a new Time Profile"
       :url: "/timeprofile_new"
     - :button: tp_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: Edit selected Time Profile
       :title: Select a single Time Profile to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: tp_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :title: "Select a single Time Profile to copy"
       :text: "Copy selected Time Profile"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: tp_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: Delete selected Time Profiles
       :title: Delete selected Time Profiles
       :url_parms: 'main_div'

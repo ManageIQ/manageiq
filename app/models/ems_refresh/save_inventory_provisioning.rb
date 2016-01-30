@@ -21,7 +21,7 @@ module EmsRefresh
 
     def save_customization_scripts_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:customization_scripts, manager, hashes, delete_missing_records, [:type, :manager_ref])
+      save_inventory_assoc(manager.customization_scripts, hashes, delete_missing_records, [:type, :manager_ref])
     end
 
     def save_operating_system_flavors_inventory(manager, hashes, target)
@@ -31,25 +31,25 @@ module EmsRefresh
           hash[:customization_script_ids] = hash[:customization_scripts].map { |cp| cp[:id] }
         end
       end
-      save_inventory_assoc(:operating_system_flavors, manager, hashes, delete_missing_records, [:manager_ref], nil,
+      save_inventory_assoc(manager.operating_system_flavors, hashes, delete_missing_records, [:manager_ref], nil,
                            [:customization_scripts])
     end
 
     def save_configuration_locations_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:configuration_locations, manager, hashes, delete_missing_records, [:manager_ref])
+      save_inventory_assoc(manager.configuration_locations, hashes, delete_missing_records, [:manager_ref])
       link_children_references(manager.configuration_locations)
     end
 
     def save_configuration_organizations_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:configuration_organizations, manager, hashes, delete_missing_records, [:manager_ref])
+      save_inventory_assoc(manager.configuration_organizations, hashes, delete_missing_records, [:manager_ref])
       link_children_references(manager.configuration_organizations)
     end
 
     def save_configuration_tags_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:configuration_tags, manager, hashes, delete_missing_records, [:type, :manager_ref])
+      save_inventory_assoc(manager.configuration_tags, hashes, delete_missing_records, [:type, :manager_ref])
     end
   end
 end

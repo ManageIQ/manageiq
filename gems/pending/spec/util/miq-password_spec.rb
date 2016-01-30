@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require "spec_helper"
 require 'util/miq-password'
+require 'tempfile'
 
 describe MiqPassword do
   before do
@@ -75,7 +75,7 @@ describe MiqPassword do
     context "with #{pass.inspect}" do
       before do
         MiqPassword.add_legacy_key("v0_key", :v0)
-        MiqPassword.add_legacy_key("v1_key")
+        MiqPassword.add_legacy_key("v1_key", :v1)
       end
 
       it(".encrypt")        { expect(MiqPassword.encrypt(pass)).to             be_encrypted(pass) }
@@ -88,9 +88,9 @@ describe MiqPassword do
       it("#decrypt v1 erb") { expect(MiqPassword.new.decrypt(erberize(enc_v1))).to be_decrypted(pass) }
       it("#decrypt erb")    { expect(MiqPassword.new.decrypt(erberize(enc_v0))).to be_decrypted(pass) }
 
-      it(".encrypt(.decrypt)") { MiqPassword.decrypt(MiqPassword.encrypt(pass)).should         be_decrypted(pass) }
-      it(".encStr/.decrypt")   { MiqPassword.decrypt(MiqPassword.new(pass).encStr).should      be_decrypted(pass) }
-      it("#encrypt(#decrypt)") { MiqPassword.new.decrypt(MiqPassword.new.encrypt(pass)).should be_decrypted(pass) }
+      it(".encrypt(.decrypt)") { expect(MiqPassword.decrypt(MiqPassword.encrypt(pass))).to         be_decrypted(pass) }
+      it(".encStr/.decrypt")   { expect(MiqPassword.decrypt(MiqPassword.new(pass).encStr)).to      be_decrypted(pass) }
+      it("#encrypt(#decrypt)") { expect(MiqPassword.new.decrypt(MiqPassword.new.encrypt(pass))).to be_decrypted(pass) }
 
       it("#try_encrypt (non-encrypted)") { expect(MiqPassword.try_encrypt(pass)).to   be_encrypted(pass) }
       it("#try_encrypt erb")             { expect(MiqPassword.try_encrypt(erberize(enc_v0))).to eq(erberize(enc_v0)) }
@@ -127,14 +127,14 @@ describe MiqPassword do
       "abcdefghijklmnopqrstuvwxyz123456", # 32 character password will not end in a "=" after Base64 encoding
     ].each do |pass|
       it "with #{pass.inspect}" do
-        MiqPassword.encrypted?(pass).should                      be_false
-        MiqPassword.encrypted?(MiqPassword.encrypt(pass)).should be_true
+        expect(MiqPassword.encrypted?(pass)).to                      be_falsey
+        expect(MiqPassword.encrypted?(MiqPassword.encrypt(pass))).to be_truthy
       end
     end
 
     it "should handle blanks" do
-      expect(MiqPassword.encrypted?(nil)).to be_false
-      expect(MiqPassword.encrypted?("")).to  be_false
+      expect(MiqPassword.encrypted?(nil)).to be_falsey
+      expect(MiqPassword.encrypted?("")).to  be_falsey
     end
   end
 
@@ -169,7 +169,7 @@ describe MiqPassword do
     end
 
     it "should fail on recrypt bad password" do
-      expect { MiqPassword.new.recrypt("v2:{55555}") }.to raise_error
+      expect { MiqPassword.new.recrypt("v2:{55555}") }.to raise_error(MiqPassword::MiqPasswordError)
     end
 
     it "should decrypt passwords with newlines" do
@@ -181,7 +181,9 @@ describe MiqPassword do
 
   context "with missing v1_key" do
     it "should report decent error when decryption with missing an encryption key" do
-      expect { described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}") }.to raise_error("no encryption key v1_key")
+      expect do
+        described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}")
+      end.to raise_error(MiqPassword::MiqPasswordError, /can not decrypt.*v1_key/)
     end
   end
 
@@ -191,7 +193,7 @@ describe MiqPassword do
     end
 
     it "with an encrypted string" do
-      MiqPassword.add_legacy_key("v1_key")
+      MiqPassword.add_legacy_key("v1_key", :v1)
       expect(MiqPassword.md5crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq("$1$miq$Ho9GNOzRsxMpJSsgwG/y01")
     end
   end
@@ -203,14 +205,14 @@ describe MiqPassword do
     end
 
     it "with an encrypted string" do
-      MiqPassword.add_legacy_key("v1_key")
+      MiqPassword.add_legacy_key("v1_key", :v1)
       expect(MiqPassword.sysprep_crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq(
         "cABhAHMAcwB3AG8AcgBkAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
     end
   end
 
   it ".sanitize_string" do
-    MiqPassword.sanitize_string!("some :password: v1:{XAWlcAlViNwB} and another :password: v2:{egr+hObB}").should eq(
+    expect(MiqPassword.sanitize_string!("some :password: v1:{XAWlcAlViNwB} and another :password: v2:{egr+hObB}")).to eq(
       "some :password: ******** and another :password: ********")
   end
 
@@ -235,7 +237,7 @@ describe MiqPassword do
 
     it "clears all_keys" do
       v0 = MiqPassword.add_legacy_key("v0_key", :v0)
-      v1 = MiqPassword.add_legacy_key("v1_key")
+      v1 = MiqPassword.add_legacy_key("v1_key", :v1)
       v2 = MiqPassword.v2_key
 
       expect(MiqPassword.all_keys).to match_array([v2, v1, v0])
@@ -243,20 +245,22 @@ describe MiqPassword do
       MiqPassword.key_root = nil
 
       expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
-      expect(MiqPassword.all_keys).to eq([nil])
+      expect(MiqPassword.all_keys).to be_empty
     end
   end
 
   describe ".clear_keys" do
-    it "clears legacy_keys" do
+    it "removes legacy keys from all_keys" do
       v0 = MiqPassword.add_legacy_key("v0_key", :v0)
-      v1 = MiqPassword.add_legacy_key("v1_key")
+      v1 = MiqPassword.add_legacy_key("v1_key", :v1)
+      v2 = MiqPassword.v2_key
 
-      expect(MiqPassword.legacy_keys).to match_array([v0, v1])
+      expect(MiqPassword.all_keys).to match_array([v2, v1, v0])
 
       MiqPassword.clear_keys
 
-      expect(MiqPassword.legacy_keys).to be_empty
+      v2 = MiqPassword.v2_key
+      expect(MiqPassword.all_keys).to match_array([v2])
     end
   end
 
@@ -269,6 +273,92 @@ describe MiqPassword do
 
     it "when present" do
       expect(MiqPassword.v2_key.to_s).to eq "5ysYUd3Qrjj7DDplmEJHmnrFBEPS887JwOQv0jFYq2g="
+    end
+  end
+
+  describe ".add_legacy_key" do
+    let(:v0_key)  { CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555") }
+    let(:v1_key)  { MiqPassword.generate_symmetric }
+
+    it "ignores bad key filename" do
+      expect(MiqPassword.all_keys.size).to eq(1)
+      MiqPassword.add_legacy_key("some_bogus_name")
+      expect(MiqPassword.all_keys.size).to eq(1)
+    end
+
+    it "supports raw key" do
+      expect(MiqPassword.all_keys.size).to eq(1)
+      MiqPassword.add_legacy_key(v1_key, :v1)
+      expect(MiqPassword.all_keys.size).to eq(2)
+    end
+
+    it "supports absolute path" do
+      with_key do |dir, filename|
+        MiqPassword.add_legacy_key("#{dir}/#{filename}")
+      end
+      expect(MiqPassword.all_keys.size).to eq(2)
+    end
+
+    it "supports relative path" do
+      with_key do |dir, filename|
+        Dir.chdir dir do
+          expect(MiqPassword.all_keys.size).to eq(1)
+          MiqPassword.add_legacy_key(filename)
+          expect(MiqPassword.all_keys.size).to eq(2)
+        end
+      end
+    end
+
+    it "supports root_key path (also warns if v2 key not found)" do
+      with_key do |dir, filename|
+        MiqPassword.key_root = dir
+        # NOTE: no v2_key in this key_root
+        expect(Kernel).to receive(:warn).with(/doesn't exist/)
+        expect(MiqPassword.all_keys.size).to eq(0)
+        MiqPassword.add_legacy_key(filename)
+        expect(MiqPassword.all_keys.size).to eq(1)
+      end
+    end
+  end
+
+  describe "#recrypt" do
+    context "#with ambigious keys" do
+      let(:old_key) { EzCrypto::Key.decode("JZjTdiuOzWlTHUkBZSGj9BmWEoswxvImWuwD/xN87s0=", :algorithm => "aes-256-cbc") }
+      let(:v2_key)  { EzCrypto::Key.decode("5ysYUd3Qrjj7DDplmEJHmnrFBEPS887JwOQv0jFYq2g=", :algorithm => "aes-256-cbc") }
+      let(:v1_key)  { MiqPassword.generate_symmetric }
+
+      before do
+        MiqPassword.v2_key = v2_key
+        MiqPassword.add_legacy_key(v1_key, :v1)
+        MiqPassword.add_legacy_key(old_key)
+      end
+
+      it "recrypts legacy v2 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password", "v2", old_key))).to be_encrypted("password")
+      end
+
+      it "recrypts legacy v1 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password", "v1"))).to be_encrypted("password")
+      end
+
+      it "recrypts regular v2 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password"))).to be_encrypted("password")
+      end
+    end
+
+    context "#with no legacy v2 key" do
+      it "recrypts regular v2 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password"))).to be_encrypted("password")
+      end
+    end
+  end
+
+  private
+
+  def with_key
+    Dir.mktmpdir('test-key-root') do |d|
+      MiqPassword.generate_symmetric.store("#{d}/my-key")
+      yield d, "my-key"
     end
   end
 

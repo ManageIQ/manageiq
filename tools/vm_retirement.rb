@@ -49,7 +49,6 @@ def reset_invalid(valid_warnings, reset_warning)
   end
 end
 
-
 def parse_command_line_option(arg)
   if arg.include?('=')
     opt, value = arg.split('=')
@@ -85,13 +84,13 @@ def parse_command_line
     raise "Invalid Command Line: #{original.inspect}"  if $ARGV.length > 0
   end
 
-#  puts "Command Line Parsed: #{cmdline_parms.inspect}"
+  #  puts "Command Line Parsed: #{cmdline_parms.inspect}"
   cmdline_parms
 end
 
 DEFAULTS = {
   :verb            => "list",
-  :valid_warnings  => [2,7],
+  :valid_warnings  => [2, 7],
   :default_warning => 7,
 }
 

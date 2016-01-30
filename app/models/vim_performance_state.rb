@@ -1,13 +1,14 @@
-class VimPerformanceState < ActiveRecord::Base
+class VimPerformanceState < ApplicationRecord
   serialize :state_data
 
   belongs_to :resource, :polymorphic => true
 
-  ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages]
+  ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages, :container_nodes, :container_groups]
 
   # Define accessors for state_data information
   [
     :assoc_ids,
+    :host_sockets,
     :parent_host_id,
     :parent_storage_id,
     :parent_ems_id,
@@ -33,8 +34,11 @@ class VimPerformanceState < ActiveRecord::Base
   # => reserve_cpu
   # => vm_count_on      (derive from assoc_ids)
   # => vm_count_off     (derive from assoc_ids)
+  # => vm_count_total   (derive from assoc_ids)
   # => host_count_on    (derive from assoc_ids)
   # => host_count_off   (derive from assoc_ids)
+  # => host_count_total (derive from assoc_ids)
+  # => host_sockets     (derive from assoc_ids)
 
   def self.capture(obj)
     ts = Time.now.utc
@@ -43,66 +47,86 @@ class VimPerformanceState < ActiveRecord::Base
     return state unless state.nil?
 
     state = obj.vim_performance_states.build
-    state.state_data ||= Hash.new
+    state.state_data ||= {}
     state.timestamp = ts
     state.capture_interval = 3600
-    state.assoc_ids = self.capture_assoc_ids(obj)
-    state.parent_host_id = self.capture_parent_host(obj)
-    state.parent_storage_id = self.capture_parent_storage(obj)
-    state.parent_ems_id = self.capture_parent_ems(obj)
-    state.parent_ems_cluster_id = self.capture_parent_cluster(obj)
-    state.numvcpus = self.capture_numvcpus(obj)
-    state.total_cpu = self.capture_total(obj, :cpu_speed)
-    state.total_mem = self.capture_total(obj, :memory)
-    state.reserve_cpu = self.capture_reserve(obj, :cpu_reserve)
-    state.reserve_mem = self.capture_reserve(obj, :memory_reserve)
-    state.vm_used_disk_storage = self.capture_vm_disk_storage(obj, :used_disk)
-    state.vm_allocated_disk_storage = self.capture_vm_disk_storage(obj, :allocated_disk)
-    state.tag_names = self.capture_tag_names(obj)
+    state.assoc_ids = capture_assoc_ids(obj)
+    state.parent_host_id = capture_parent_host(obj)
+    state.parent_storage_id = capture_parent_storage(obj)
+    state.parent_ems_id = capture_parent_ems(obj)
+    state.parent_ems_cluster_id = capture_parent_cluster(obj)
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+    state.numvcpus = capture_cpu_total_cores(obj)
+    state.total_cpu = capture_total(obj, :cpu_speed)
+    state.total_mem = capture_total(obj, :memory)
+    state.reserve_cpu = capture_reserve(obj, :cpu_reserve)
+    state.reserve_mem = capture_reserve(obj, :memory_reserve)
+    state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
+    state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
+    state.tag_names = capture_tag_names(obj)
+    state.host_sockets = capture_host_sockets(obj)
     state.save
 
-    return state
+    state
   end
 
   def vm_count_on
-    return get_assoc(:vms, :on).length
+    get_assoc(:vms, :on).length
   end
 
   def vm_count_off
-    return get_assoc(:vms, :off).length
+    get_assoc(:vms, :off).length
+  end
+
+  def vm_count_total
+    get_assoc(:vms).length
   end
 
   def host_count_on
-    return get_assoc(:hosts, :on).length
+    get_assoc(:hosts, :on).length
   end
 
   def host_count_off
-    return get_assoc(:hosts, :off).length
+    get_assoc(:hosts, :off).length
+  end
+
+  def host_count_total
+    get_assoc(:hosts).length
   end
 
   def storages
     ids = get_assoc(:storages, :on)
-    return ids.empty? ? [] : Storage.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : Storage.where(:id => ids).order(:id).to_a
   end
 
   def ext_management_systems
     ids = get_assoc(:ext_management_systems, :on)
-    return ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id).to_a
   end
 
   def ems_clusters
     ids = get_assoc(:ems_clusters, :on)
-    return ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id).to_a
   end
 
   def hosts
     ids = get_assoc(:hosts)
-    return ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
   end
 
   def vms
     ids = get_assoc(:vms)
-    return ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
+  end
+
+  def container_nodes
+    ids = get_assoc(:container_nodes)
+    ids.empty? ? [] : ContainerNode.where(:id => ids).order(:id).to_a
+  end
+
+  def container_groups
+    ids = get_assoc(:container_groups)
+    ids.empty? ? [] : ContainerGroup.where(:id => ids).order(:id).to_a
   end
 
   def get_assoc(relat, mode = nil)
@@ -110,13 +134,21 @@ class VimPerformanceState < ActiveRecord::Base
     return [] if assoc.nil?
 
     ids = mode.nil? ? (assoc[:on] || []) + (assoc[:off] || []) : assoc[mode.to_sym]
-    return ids.nil? ? [] : ids.uniq.sort
+    ids.nil? ? [] : ids.uniq.sort
   end
 
   def self.capture_total(obj, field)
     return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
-    return nil unless obj.respond_to?(:hardware) && obj.hardware
-    return field == :memory ? obj.hardware.memory_cpu : obj.hardware.aggregate_cpu_speed
+
+    if obj.respond_to?(:hardware)
+      hardware = obj.hardware
+    elsif obj.respond_to?(:container_node)
+      hardware = obj.container_node.hardware
+    else
+      return nil
+    end
+
+    field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
 
   def self.capture_assoc_ids(obj)
@@ -144,33 +176,27 @@ class VimPerformanceState < ActiveRecord::Base
       r_off.uniq!
       r_off.sort!
     end
-    return result.blank? ? nil : result
+    result.presence
   end
 
   def self.capture_parent_cluster(obj)
-    return unless obj.is_a?(Host) || obj.is_a?(VmOrTemplate)
-    c = obj.parent_cluster
-    return c ? c.id : nil
+    obj.parent_cluster.try(:id) if (obj.kind_of?(Host) || obj.kind_of?(VmOrTemplate))
   end
 
   def self.capture_parent_host(obj)
-    return unless obj.is_a?(VmOrTemplate)
-    return obj.host_id
+    obj.host_id if obj.kind_of?(VmOrTemplate)
   end
 
   def self.capture_parent_storage(obj)
-    return unless obj.is_a?(VmOrTemplate)
-    return obj.storage_id
+    obj.storage_id if obj.kind_of?(VmOrTemplate)
   end
 
   def self.capture_parent_ems(obj)
-    return unless obj.respond_to?(:ems_id)
-    return obj.ems_id
+    obj.try(:ems_id)
   end
 
   def self.capture_reserve(obj, field)
-    return unless obj.respond_to?(field)
-    return obj.send(field)
+    obj.try(field)
   end
 
   def self.capture_tag_names(obj)
@@ -178,17 +204,28 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def self.capture_vm_disk_storage(obj, field)
-    return unless obj.is_a?(VmOrTemplate)
-    return obj.send("#{field}_storage")
+    obj.send("#{field}_storage") if obj.kind_of?(VmOrTemplate)
   end
 
-  def self.capture_numvcpus(obj)
-    return nil unless obj.kind_of?(VmOrTemplate) && obj.respond_to?(:hardware) && obj.hardware
-    # FIXME: this is a z-stream patch
-    # this method name should really be changed to #capture_logical_cpus to
-    # match the actual column being read, however, there are several reports
-    # depending on the name :numvcpus
-    # A larger patch should be done outside of a z-stream release
-    return obj.hardware.logical_cpus
+  def self.capture_cpu_total_cores(obj)
+    if obj.respond_to?(:hardware)
+      hardware = obj.hardware
+    elsif obj.respond_to?(:container_node)
+      hardware = obj.container_node.hardware
+    else
+      return nil
+    end
+
+    hardware.try(:cpu_total_cores)
+  end
+
+  def self.capture_host_sockets(obj)
+    if obj.kind_of?(Host)
+      obj.hardware.try(:cpu_sockets)
+    else
+      if obj.respond_to?(:hosts)
+        obj.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
+      end
+    end
   end
 end

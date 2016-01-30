@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiqAeMethodService::MiqAeServiceEmsEvent do
   before(:each) do
     @ems           = FactoryGirl.create(:ems_vmware_with_authentication,
@@ -15,14 +13,14 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
 
   context "#refresh" do
     it "when queued" do
-      EmsRefresh.should_receive(:queue_refresh).once.with([@ems])
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems])
       @service_event.refresh("src_vm")
     end
 
     it "when with multiple targets" do
       @vm.update_attributes(:ext_management_system => @ems)
-      EmsRefresh.should_receive(:queue_refresh).once do |args|
-        args.should match_array([@ems, @vm])
+      expect(EmsRefresh).to receive(:queue_refresh).once do |args|
+        expect(args).to match_array([@ems, @vm])
       end
 
       @service_event.refresh("src_vm", "dest_vm")
@@ -32,27 +30,27 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @ems_event.update_attributes(:ext_management_system => nil)
       @service_event.reload
 
-      EmsRefresh.should_not_receive(:queue_refresh)
+      expect(EmsRefresh).not_to receive(:queue_refresh)
       @service_event.refresh("dest_vm")
     end
 
     it "when target is empty string" do
-      EmsRefresh.should_not_receive(:queue_refresh)
+      expect(EmsRefresh).not_to receive(:queue_refresh)
       @service_event.refresh("")
     end
 
     it "when target is empty" do
-      EmsRefresh.should_not_receive(:queue_refresh)
+      expect(EmsRefresh).not_to receive(:queue_refresh)
       @service_event.refresh
     end
 
     it "when target is nil" do
-      EmsRefresh.should_not_receive(:queue_refresh)
+      expect(EmsRefresh).not_to receive(:queue_refresh)
       @service_event.refresh(nil)
     end
 
     it "when target is an array" do
-      EmsRefresh.should_receive(:queue_refresh).once.with([@ems])
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems])
       @service_event.refresh(%w(src_vm dest_vm))
     end
   end
@@ -65,17 +63,17 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
     end
 
     it "when event raised" do
-      MiqEvent.should_receive(:raise_evm_event).with(@vm, @event, anything)
+      expect(MiqEvent).to receive(:raise_evm_event).with(@vm, @event, anything)
       @service_event.policy("src_vm", @event, "host")
     end
 
     it "when target is nil" do
-      MiqEvent.should_not_receive(:raise_evm_event)
+      expect(MiqEvent).not_to receive(:raise_evm_event)
       @service_event.policy(nil, @event, "host")
     end
 
     it "when target is blank" do
-      MiqEvent.should_not_receive(:raise_evm_event)
+      expect(MiqEvent).not_to receive(:raise_evm_event)
       @service_event.policy("", @event, "host")
     end
 
@@ -83,12 +81,12 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @ems_event.update_attributes(:ext_management_system => nil)
       @service_event.reload
 
-      MiqEvent.should_not_receive(:raise_evm_event)
+      expect(MiqEvent).not_to receive(:raise_evm_event)
       @service_event.policy("src_vm", @event, "host")
     end
 
     it "when policy event is nil and ems event has event_type = nil" do
-      MiqEvent.should_not_receive(:raise_evm_event)
+      expect(MiqEvent).not_to receive(:raise_evm_event)
       @service_event.policy("src_vm", nil, "host")
     end
 
@@ -96,7 +94,7 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @ems_event.update_attributes(:event_type => "someEventType")
       @service_event.reload
 
-      MiqEvent.should_receive(:raise_evm_event).with(@vm, "someEventType", anything)
+      expect(MiqEvent).to receive(:raise_evm_event).with(@vm, "someEventType", anything)
       @service_event.policy("src_vm", nil, "host")
     end
 
@@ -104,23 +102,23 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @ems_event.update_attributes(:vm_or_template => nil)
       @service_event.reload
 
-      MiqEvent.should_not_receive(:raise_evm_event)
+      expect(MiqEvent).not_to receive(:raise_evm_event)
       @service_event.policy("src_vm", @event, "host")
     end
 
     it "when policy source object is nil" do
       @vm.update_attributes(:host => nil)
 
-      MiqEvent.should_not_receive(:raise_evm_event)
+      expect(MiqEvent).not_to receive(:raise_evm_event)
       @service_event.policy("src_vm", @event, "host")
     end
 
     it "when uses default policy source" do
-      MiqEvent.should_receive(:raise_evm_event) do |vm, event, inputs|
-        vm.should eq(@vm)
-        event.should eq(@event)
-        inputs.should have_key(:ext_management_systems)
-        inputs[:ext_management_systems].should eq(@ems)
+      expect(MiqEvent).to receive(:raise_evm_event) do |vm, event, inputs|
+        expect(vm).to eq(@vm)
+        expect(event).to eq(@event)
+        expect(inputs).to have_key(:ext_management_systems)
+        expect(inputs[:ext_management_systems]).to eq(@ems)
       end
       @service_event.policy("src_vm", @event, nil)
     end
@@ -128,12 +126,12 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
 
   context "#scan" do
     it "when target is found" do
-      VmOrTemplate.any_instance.should_receive(:scan)
+      expect_any_instance_of(VmOrTemplate).to receive(:scan)
       @service_event.scan("src_vm")
     end
 
     it "when target is not found" do
-      EmsEvent.any_instance.should_receive(:refresh).with("dest_vm", "dest_host")
+      expect_any_instance_of(EmsEvent).to receive(:refresh).with("dest_vm", "dest_host")
       @service_event.scan("dest_vm", "dest_host")
     end
   end
@@ -153,7 +151,7 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @ems_event.update_attributes(:vm_or_template => nil)
       @service_event.reload
 
-      EmsEvent.any_instance.should_receive(:refresh).with("src_vm")
+      expect_any_instance_of(EmsEvent).to receive(:refresh).with("src_vm")
       @service_event.src_vm_as_template(false)
     end
   end
@@ -168,14 +166,14 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @ems_event.update_attributes(:vm_or_template => nil)
       @service_event.reload
 
-      EmsEvent.any_instance.should_receive(:refresh).with("src_vm")
+      expect_any_instance_of(EmsEvent).to receive(:refresh).with("src_vm")
       @service_event.change_event_target_state("src_vm", "suspended")
     end
   end
 
   %w(disconnect_storage refresh_on_reconfig).each do |method|
     it "#src_vm_#{method}" do
-      VmOrTemplate.any_instance.should_receive(method.to_sym).once
+      expect_any_instance_of(VmOrTemplate).to receive(method.to_sym).once
       @service_event.send("src_vm_#{method}")
     end
   end

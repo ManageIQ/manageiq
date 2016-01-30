@@ -14,9 +14,10 @@
                 {:action => "sort_host_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
+                "data-method"          => :post,
                 :remote                => true)
               - if options[:host_columns][i] == options[:host_sortcol]
-                %img{:src => "/images/icons/16/sort_#{@edit[:host_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+                %img{:src => image_path("16/sort_#{@edit[:host_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
             - else
               = h(options[:host_headers][h])
     %tbody

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Hardware do
   before(:each) do
     @vm_hw = FactoryGirl.create(:hardware)
@@ -13,26 +11,26 @@ describe Hardware do
   end
 
   it "#vm_or_template" do
-    @vm_hw.vm_or_template.should       == @vm
-    @template_hw.vm_or_template.should == @template
-    @host_hw.vm_or_template.should     be_nil
+    expect(@vm_hw.vm_or_template).to eq(@vm)
+    expect(@template_hw.vm_or_template).to eq(@template)
+    expect(@host_hw.vm_or_template).to     be_nil
   end
 
   it "#vm" do
-    @vm_hw.vm.should       == @vm
-    @template_hw.vm.should be_nil
-    @host_hw.vm.should     be_nil
+    expect(@vm_hw.vm).to eq(@vm)
+    expect(@template_hw.vm).to be_nil
+    expect(@host_hw.vm).to     be_nil
   end
 
   it "#miq_template" do
-    @vm_hw.miq_template.should       be_nil
-    @template_hw.miq_template.should == @template
-    @host_hw.miq_template.should     be_nil
+    expect(@vm_hw.miq_template).to       be_nil
+    expect(@template_hw.miq_template).to eq(@template)
+    expect(@host_hw.miq_template).to     be_nil
   end
 
   it "#host" do
-    @vm_hw.host.should       be_nil
-    @template_hw.host.should be_nil
-    @host_hw.host.should     == @host
+    expect(@vm_hw.host).to       be_nil
+    expect(@template_hw.host).to be_nil
+    expect(@host_hw.host).to eq(@host)
   end
 end

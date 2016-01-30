@@ -59,6 +59,8 @@ ems:
   ems_redhat:
     :service:
       :read_timeout: 1.hour
+  ems_kubernetes:
+    :miq_namespace: management-infra
 ems_events:
   history:
     :keep_ems_events: 6.months
@@ -78,6 +80,12 @@ ems_refresh:
   kubernetes:
     :refresh_interval: 15.minutes
   openshift:
+    :refresh_interval: 15.minutes
+  atomic:
+    :refresh_interval: 15.minutes
+  openshift_enterprise:
+    :refresh_interval: 15.minutes
+  atomic_enterprise:
     :refresh_interval: 15.minutes
   raise_vm_snapshot_complete_if_created_within: 15.minutes
   refresh_interval: 24.hours
@@ -126,7 +134,6 @@ log:
   level_scvmm_in_evm: error
   level_vim: warn
   level_vim_in_evm: error
-  path:
 log_depot:
   password:
   uri:
@@ -230,6 +237,9 @@ smtp:
 snapshots:
   :create_free_percent: 100
   :remove_free_percent: 100
+ssl:
+  :ssl_ca_file:
+  :ssl_ca_path:
 storage:
   inventory:
     :full_refresh_schedule: "38 * * * *"
@@ -294,7 +304,9 @@ workers:
           :nova: "notifications.*"
           :cinder: "notifications.*"
           :glance: "notifications.*"
+          :neutron: "notifications.*"
           :quantum: "notifications.*"
+          :heat: "notifications.*"
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
@@ -315,6 +327,12 @@ workers:
       :event_catcher_kubernetes:
         :poll: 1.seconds
       :event_catcher_openshift:
+        :poll: 1.seconds
+      :event_catcher_atomic:
+        :poll: 1.seconds
+      :event_catcher_openshift_enterprise:
+        :poll: 1.seconds
+      :event_catcher_atomic_enterprise:
         :poll: 1.seconds
     :queue_worker_base:
       :defaults:
@@ -338,6 +356,18 @@ workers:
           :poll_method: :escalate
         :ems_metrics_collector_worker_openstack_infra:
           :poll_method: :escalate
+        :ems_metrics_collector_worker_kubernetes:
+          :poll_method: :escalate
+          :metrics_port: 5000
+          :metrics_path: '/hawkular/metrics'
+        :ems_metrics_collector_worker_openshift:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_atomic:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_openshift_enterprise:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_atomic_enterprise:
+          :poll_method: :escalate
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 400.megabytes
@@ -355,8 +385,12 @@ workers:
         :ems_refresh_worker_azure: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
+        :ems_refresh_worker_google: {}
         :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_openshift: {}
+        :ems_refresh_worker_atomic: {}
+        :ems_refresh_worker_openshift_enterprise: {}
+        :ems_refresh_worker_atomic_enterprise: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_openstack: {}
@@ -366,8 +400,6 @@ workers:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7
       :generic_worker:
-        :count: 2
-      :automate_worker:
         :count: 2
       :netapp_refresh_worker:
         :memory_threshold: 2.gigabytes
@@ -459,10 +491,9 @@ workers:
         - miq_alerts
         - miq_databases
         - miq_enterprises
-        - miq_events
+        - miq_event_definitions
         - miq_globals
         - miq_groups
-        - miq_license_contents
         - miq_policies
         - miq_policy_contents
         - miq_product_features
@@ -482,10 +513,10 @@ workers:
         - miq_widget_contents
         - miq_workers
         - rss_feeds
+        - scan_items
         - schema_migrations
         - server_roles
         - sessions
-        - vim_performances
         - vim_performance_states
         - vim_performance_tag_values
         - vmdb_database_metrics
@@ -527,7 +558,6 @@ workers:
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 06:00
       :vm_retired_interval: 10.minutes
-      :vm_scan_interval: 10.minutes
     :smis_refresh_worker:
       :connection_pool_size: 5
       :memory_threshold: 1.gigabytes

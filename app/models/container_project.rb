@@ -1,4 +1,4 @@
-class ContainerProject < ActiveRecord::Base
+class ContainerProject < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -7,6 +7,18 @@ class ContainerProject < ActiveRecord::Base
   has_many :container_replicators
   has_many :container_services
   has_many :container_definitions, :through => :container_groups
+  has_many :container_nodes, -> { distinct }, :through => :container_groups
+  has_many :container_quotas
+  has_many :container_quota_items, :through => :container_quotas
+  has_many :container_limits
+  has_many :container_limit_items, :through => :container_limits
+  has_many :container_builds
+
+  # Needed for metrics
+  has_many :metrics,                :as => :resource
+  has_many :metric_rollups,         :as => :resource
+  has_many :vim_performance_states, :as => :resource
+  delegate :my_zone,                :to => :ext_management_system
 
   has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
@@ -37,6 +49,9 @@ class ContainerProject < ActiveRecord::Base
   end
 
   include EventMixin
+  include Metric::CiMixin
+
+  PERF_ROLLUP_CHILDREN = :container_groups
 
   acts_as_miq_taggable
 
@@ -49,5 +64,9 @@ class ContainerProject < ActiveRecord::Base
       # TODO: implement policy events and its relationship
       ["ems_id = ?", ems_id]
     end
+  end
+
+  def perf_rollup_parents(interval_name = nil)
+    []
   end
 end

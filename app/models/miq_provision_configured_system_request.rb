@@ -37,6 +37,10 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
     "configured_system"
   end
 
+  def event_name(mode)
+    "configured_system_provision_request_#{mode}"
+  end
+
   private
 
   def default_description

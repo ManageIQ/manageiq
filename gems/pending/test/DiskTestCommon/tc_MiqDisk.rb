@@ -123,18 +123,18 @@ module DiskTestCommon
         for ofst in [1, 4, 11]
           i = 250
           while i < 254
-           d.seek(i*SIZE_BLOCK + 4*ofst)
-           buf = d.read(SIZE_BLOCK)
-           16384.times { |x|
-             tmp = buf[4*x, 1].unpack('C')[0]
-             if x < (16384 - ofst)
-               assert_equal(i, tmp)
-             else
-               assert_equal(i+1, tmp)
-             end
-           }
-          i += 1
-         end
+            d.seek(i * SIZE_BLOCK + 4 * ofst)
+            buf = d.read(SIZE_BLOCK)
+            16384.times do |x|
+              tmp = buf[4 * x, 1].unpack('C')[0]
+              if x < (16384 - ofst)
+                assert_equal(i, tmp)
+              else
+                assert_equal(i + 1, tmp)
+              end
+            end
+            i += 1
+          end
         end
 
         d.close
@@ -159,11 +159,11 @@ module DiskTestCommon
       # Test the first four and the last four bytes in each disk
       for i in [1, 2, 3, 4]
         # Read first four bytes from a disk
-        d.seek((i-1)*dsize)
+        d.seek((i - 1) * dsize)
         buf = d.read(4)
         assert_equal(i, buf.unpack('L')[0])
         # Read last four bytes from a disk
-        d.seek(i*dsize - 4)
+        d.seek(i * dsize - 4)
         buf = d.read(4)
         assert_equal(i, buf.unpack('L')[0])
       end
@@ -171,16 +171,16 @@ module DiskTestCommon
       # Test offset reading of one block at the border between adjacent disks.
       for ofst in [1, 2, 3, 4]
         for i in [1, 2, 3]
-          d.seek(i*dsize - SIZE_BLOCK + 4*ofst)
+          d.seek(i * dsize - SIZE_BLOCK + 4 * ofst)
           buf = d.read(SIZE_BLOCK)
-          16384.times { |x|
-            tmp = buf[4*x, 4].unpack('L')[0]
+          16384.times do |x|
+            tmp = buf[4 * x, 4].unpack('L')[0]
             if x < (16384 - ofst)
               assert_equal(i, tmp)
             else
-              assert_equal(i+1, tmp)
+              assert_equal(i + 1, tmp)
             end
-          }
+          end
         end
       end
       d.close
@@ -200,16 +200,16 @@ module DiskTestCommon
       for ofst in [1, 2, 7]
         i = 250
         while i < 255
-          d.seek(i*512 + 4*ofst)
+          d.seek(i * 512 + 4 * ofst)
           buf = d.read(512)
-          128.times { |x|
-            tmp = buf[4*x, 4].unpack('L')[0]
+          128.times do |x|
+            tmp = buf[4 * x, 4].unpack('L')[0]
             if x < (128 - ofst)
-              assert_equal(2*i, tmp)
+              assert_equal(2 * i, tmp)
             else
-              assert_equal(2*(i+1), tmp)
+              assert_equal(2 * (i + 1), tmp)
             end
-          }
+          end
           i += 1
         end
       end
@@ -230,16 +230,16 @@ module DiskTestCommon
       for ofst in [1, 4, 5, 7]
         i = 250
         while i < 255
-          d.seek(i*SIZE_BLOCK + 4*ofst)
+          d.seek(i * SIZE_BLOCK + 4 * ofst)
           buf = d.read(SIZE_BLOCK)
-          16384.times { |x|
-            tmp = buf[4*x, 4].unpack('L')[0]
+          16384.times do |x|
+            tmp = buf[4 * x, 4].unpack('L')[0]
             if x < (16384 - ofst)
               assert_equal(i, tmp)
             else
-              assert_equal(i+1, tmp)
+              assert_equal(i + 1, tmp)
             end
-          }
+          end
           i += 1
         end
       end
@@ -279,46 +279,46 @@ module DiskTestCommon
       end
 
       d1.seek(0)
-      buf = d1.read(63472*1024)
-      16248832.times { |x|
-        tmp = buf[4*x, 4].unpack('L')[0]
+      buf = d1.read(63472 * 1024)
+      16248832.times do |x|
+        tmp = buf[4 * x, 4].unpack('L')[0]
         assert_equal(1, tmp)
-      }
+      end
 
       d2.seek(0)
-      buf = d1.read(32768*1024)
-      8388608.times { |x|
-        tmp = buf[4*x, 4].unpack('L')[0]
+      buf = d1.read(32768 * 1024)
+      8388608.times do |x|
+        tmp = buf[4 * x, 4].unpack('L')[0]
         assert_equal(2, tmp)
-      }
+      end
 
       d3.seek(0)
-      buf = d1.read(32768*1024)
-      8388608.times { |x|
-        tmp = buf[4*x, 4].unpack('L')[0]
+      buf = d1.read(32768 * 1024)
+      8388608.times do |x|
+        tmp = buf[4 * x, 4].unpack('L')[0]
         assert_equal(3, tmp)
-      }
+      end
 
       d5.seek(0)
-      buf = d5.read(32752*1024)
-      8384512.times { |x|
-        tmp = buf[4*x, 4].unpack('L')[0]
+      buf = d5.read(32752 * 1024)
+      8384512.times do |x|
+        tmp = buf[4 * x, 4].unpack('L')[0]
         assert_equal(10, tmp)
-      }
+      end
 
       d6.seek(0)
-      buf = d6.read(63472*1024)
-      16248832.times { |x|
-        tmp = buf[4*x, 4].unpack('L')[0]
+      buf = d6.read(63472 * 1024)
+      16248832.times do |x|
+        tmp = buf[4 * x, 4].unpack('L')[0]
         assert_equal(6, tmp)
-      }
+      end
 
       d7.seek(0)
-      buf = d7.read(29680*1024)
-      7598080.times { |x|
-        tmp = buf[4*x, 4].unpack('L')[0]
+      buf = d7.read(29680 * 1024)
+      7598080.times do |x|
+        tmp = buf[4 * x, 4].unpack('L')[0]
         assert_equal(7, tmp)
-      }
+      end
 
       d.close
     end
@@ -338,10 +338,10 @@ module DiskTestCommon
       @tmp2 = 0
       while i < 4096
         # Read first four bytes in a block
-        d.seek(i*SIZE_BLOCK)
+        d.seek(i * SIZE_BLOCK)
         buf = d.read(4)
         tmp = buf.unpack('L')[0]
-        if (i % 2 == 1)
+        if i.odd?
           @tmp1 += 1
           assert_equal(i, buf.unpack('L')[0])
         else

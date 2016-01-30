@@ -1,4 +1,4 @@
-class OntapDiskDerivedMetric < ActiveRecord::Base
+class OntapDiskDerivedMetric < ApplicationRecord
   include ReportableMixin
 
   belongs_to    :miq_cim_instance
@@ -7,7 +7,7 @@ class OntapDiskDerivedMetric < ActiveRecord::Base
   serialize   :base_counters
 
   def self.additional_counters
-    [ "base_for_disk_busy" ]
+    ["base_for_disk_busy"]
   end
 
   include OntapDerivedMetricMixin

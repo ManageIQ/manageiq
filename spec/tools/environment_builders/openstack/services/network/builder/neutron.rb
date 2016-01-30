@@ -43,7 +43,8 @@ module Openstack
             return if @data.subnets(network.name).blank?
 
             @data.subnets(network.name).each do |subnet|
-              @subnets << find_or_create(@service.subnets, subnet.merge(:network_id => network.id))
+              @subnets << find_or_create(@service.subnets, subnet.merge(:network_id => network.id,
+                                                                        :tenant_id  => @project.id))
             end
           end
 

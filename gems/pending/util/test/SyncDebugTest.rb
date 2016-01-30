@@ -49,7 +49,6 @@ sd.lock(:EX)
 puts "    Running protected code 3 (lock/unlock)..."
 sd.unlock
 
-
 puts
 
 have_lock = sd.sync_try_lock(:EX)

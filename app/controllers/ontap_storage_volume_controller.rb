@@ -1,5 +1,4 @@
 class OntapStorageVolumeController < CimInstanceController
-
   def index
     process_index
   end
@@ -20,5 +19,4 @@ class OntapStorageVolumeController < CimInstanceController
   def show_list
     process_show_list
   end
-
 end

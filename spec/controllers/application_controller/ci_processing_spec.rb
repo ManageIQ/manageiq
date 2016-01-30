@@ -1,27 +1,21 @@
-require "spec_helper"
 include UiConstants
 
 describe ApplicationController do
   before do
-    EvmSpecHelper.create_guid_miq_server_zone
-    EvmSpecHelper.seed_specific_product_features("everything")
-    feature = MiqProductFeature.find_all_by_identifier(["everything"])
-    test_user_role  = FactoryGirl.create(:miq_user_role,
-                                         :name                 => "test_user_role",
-                                         :miq_product_features => feature)
-    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-    login_as FactoryGirl.create(:user, :userid => 'test_user', :miq_groups => [test_user_group])
-    controller.stub(:role_allows).and_return(true)
+    EvmSpecHelper.local_miq_server
+    login_as FactoryGirl.create(:user, :features => "everything")
+    allow(controller).to receive(:role_allows).and_return(true)
   end
 
   context "Verify proper methods are called for snapshot" do
     it "Delete All" do
-      controller.should_receive(:vm_button_operation).with('remove_all_snapshots', 'delete all snapshots', 'vm_common/config')
+      expect(controller).to receive(:vm_button_operation)
+        .with('remove_all_snapshots', 'delete all snapshots', 'vm_common/config')
       controller.send(:vm_snapshot_delete_all)
     end
 
     it "Delete Selected" do
-      controller.should_receive(:vm_button_operation).with('remove_snapshot', 'delete snapshot', 'vm_common/config')
+      expect(controller).to receive(:vm_button_operation).with('remove_snapshot', 'delete snapshot', 'vm_common/config')
       controller.send(:vm_snapshot_delete)
     end
   end
@@ -30,20 +24,20 @@ describe ApplicationController do
   # either by being private or through the hide_action mechanism
   it 'should not allow call of hidden/private actions' do
     # dashboard/process_elements
-    expect {
+    expect do
       post :process_elements
-    }.to raise_error ActionController::UrlGenerationError
+    end.to raise_error ActionController::UrlGenerationError
   end
 
   it "should set correct discovery title" do
     res = controller.send(:set_discover_title, "hosts", "host")
-    res.should == "Hosts / Nodes"
+    expect(res).to eq("Hosts / Nodes")
 
-    res = controller.send(:set_discover_title,"ems", "ems_infra")
-    res.should == "Infrastructure Providers"
+    res = controller.send(:set_discover_title, "ems", "ems_infra")
+    expect(res).to eq("Infrastructure Providers")
 
-    res = controller.send(:set_discover_title,"ems", "ems_cloud")
-    res.should == "Amazon Cloud Providers"
+    res = controller.send(:set_discover_title, "ems", "ems_cloud")
+    expect(res).to eq("Cloud Providers")
   end
 
   it "Certain actions should not be allowed for a MiqTemplate record" do
@@ -51,66 +45,65 @@ describe ApplicationController do
     controller.instance_variable_set(:@_params, :id => template.id)
     actions = [:vm_right_size, :vm_reconfigure]
     actions.each do |action|
-      controller.should_receive(:render)
+      expect(controller).to receive(:render)
       controller.send(action)
-      controller.send(:flash_errors?).should be_true
-      assigns(:flash_array).first[:message].should include("does not apply")
+      expect(controller.send(:flash_errors?)).to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("does not apply")
     end
   end
 
   it "Certain actions should be allowed only for a VM record" do
-    admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => MiqProductFeature.find_all_by_identifier(["everything"]))
-    admin_group = FactoryGirl.create(:miq_group, :miq_user_role => admin_role)
-    login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [admin_group])
+    feature = MiqProductFeature.find_all_by_identifier(["everything"])
+    login_as FactoryGirl.create(:user, :features => feature)
     vm = FactoryGirl.create(:vm_vmware)
     controller.instance_variable_set(:@_params, :id => vm.id)
     actions = [:vm_right_size, :vm_reconfigure]
     actions.each do |action|
-      controller.should_receive(:render)
+      expect(controller).to receive(:render)
       controller.send(action)
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
 
   context "Verify memory format for reconfiguring VMs" do
-    it "set_memory_cpu should set old values to default when both vms have differnt memory/cpu values" do
-      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1))
-      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 512, :logical_cpus => 2))
-      edit = Hash.new
-      edit[:new] = Hash.new
+    it "set_memory_mb should set old values to default when both vms have differnt memory/cpu values" do
+      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1))
+      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 512, :cpu_total_cores => 2))
+      edit = {}
+      edit[:new] = {}
       controller.instance_variable_set(:@reconfigureitems, [vm1, vm2])
       controller.instance_variable_set(:@edit, edit)
-      controller.send(:set_memory_cpu)
+      controller.send(:set_memory_mb)
       edit_new = assigns(:edit)[:new]
-      edit_new[:old_memory].should == ""
-      edit_new[:old_mem_typ].should == "MB"
-      edit_new[:old_cpu_count] == 1
+      expect(edit_new[:old_memory]).to eq("")
+      expect(edit_new[:old_mem_typ]).to eq("MB")
+      edit_new[:old_socket_count] == 1
     end
 
-    it "set_memory_cpu should use vms value to set old values when both vms have same memory/cpu values" do
-      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 2048, :logical_cpus => 2))
-      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 2048, :logical_cpus => 2))
-      edit = Hash.new
-      edit[:new] = Hash.new
+    it "set_memory_mb should use vms value to set old values when both vms have same memory/cpu values" do
+      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :cpu_total_cores => 2))
+      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :cpu_total_cores => 2))
+      edit = {}
+      edit[:new] = {}
       controller.instance_variable_set(:@reconfigureitems, [vm1, vm2])
       controller.instance_variable_set(:@edit, edit)
-      controller.send(:set_memory_cpu)
+      controller.send(:set_memory_mb)
       edit_new = assigns(:edit)[:new]
-      edit_new[:old_memory].should == "2"
-      edit_new[:old_mem_typ].should == "GB"
-      edit_new[:old_cpu_count] == 2
+      expect(edit_new[:old_memory]).to eq("2")
+      expect(edit_new[:old_mem_typ]).to eq("GB")
+      edit_new[:old_socket_count] == 2
     end
 
     it "check reconfigure_calculations returns memory in string format" do
       memory, format = controller.send(:reconfigure_calculations, 1024)
-      memory.should be_a_kind_of(String)
+      expect(memory).to be_a_kind_of(String)
     end
 
     it "VM reconfigure memory validation should not show value must be integer error" do
       vm = FactoryGirl.create(:vm_vmware)
-      edit = Hash.new
+      edit = {}
       edit[:key] = "reconfigure__new"
-      edit[:new] = Hash.new
+      edit[:new] = {}
       edit[:new][:memory] = "4"
       edit[:new][:mem_typ] = "MB"
       edit[:new][:cb_memory] = true
@@ -119,10 +112,10 @@ describe ApplicationController do
       session[:edit] = edit
       controller.instance_variable_set(:@_params, :button => "submit")
       controller.instance_variable_set(:@breadcrumbs, ["test", :url => "test/show"])
-      controller.should_receive(:render)
-      VmReconfigureRequest.stub(:create_request)
+      expect(controller).to receive(:render)
+      allow(VmReconfigureRequest).to receive(:create_request)
       controller.send(:reconfigure_update)
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
 
@@ -132,11 +125,11 @@ describe ApplicationController do
       controller.instance_variable_set(:@_params, :id => vm.id)
       record = controller.send(:get_record, "vm")
       action = :vm_reconfigure
-      controller.should_receive(:render)
+      expect(controller).to receive(:render)
       controller.send(action)
       unless record.reconfigurable?
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include("does not apply")
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include("does not apply")
       end
     end
     it "Reconfigure VM action should not be allowed for a VM marked as reconfigurable" do
@@ -144,11 +137,11 @@ describe ApplicationController do
       controller.instance_variable_set(:@_params, :id => vm.id)
       record = controller.send(:get_record, "vm")
       action = :vm_reconfigure
-      controller.should_receive(:render)
+      expect(controller).to receive(:render)
       controller.send(action)
       unless record.reconfigurable?
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include("does not apply")
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include("does not apply")
       end
     end
   end
@@ -156,50 +149,48 @@ describe ApplicationController do
   context "Verify cores-per_socket for reconfiguring VMs" do
     it "VM reconfigure for VMWare total CPU should not exceed the max_total CPU value" do
       vm = FactoryGirl.create(:vm_vmware)
-      edit = Hash.new
+      edit = {}
       edit[:key] = "reconfigure__new"
       edit[:new] = Hash.new
-      edit[:new][:new_cpu_count] = "4"
+      edit[:new][:new_socket_count] = "4"
       edit[:new][:new_cores_per_socket_count] = "4"
       edit[:new][:cb_cpu] = true
-      edit[:new][:cb_cores_per_socket] = true
       edit[:errors] = []
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
       controller.instance_variable_set(:@_params, :button => "submit")
       controller.instance_variable_set(:@breadcrumbs, ["test", {:url => "test/show"}])
-      controller.should_receive(:render)
-      VmReconfigureRequest.stub(:create_request)
+      expect(controller).to receive(:render)
+      allow(VmReconfigureRequest).to receive(:create_request)
       controller.send(:reconfigure_update)
-      controller.send(:flash_errors?).should be_true
+      expect(controller.send(:flash_errors?)).to be_truthy
     end
 
     it "VM reconfigure for RHEV total CPU should not exceed the max_total CPU value" do
       vm = FactoryGirl.create(:vm_vmware)
-      edit = Hash.new
+      edit = {}
       edit[:key] = "reconfigure__new"
       edit[:new] = Hash.new
-      edit[:new][:new_cpu_count] = "15"
+      edit[:new][:new_socket_count] = "15"
       edit[:new][:new_cores_per_socket_count] = "15"
       edit[:new][:cb_cpu] = true
-      edit[:new][:cb_cores_per_socket] = true
       edit[:errors] = []
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
       controller.instance_variable_set(:@_params, :button => "submit")
       controller.instance_variable_set(:@breadcrumbs, ["test", :url => "test/show"])
-      controller.should_receive(:render)
-      VmReconfigureRequest.stub(:create_request)
+      expect(controller).to receive(:render)
+      allow(VmReconfigureRequest).to receive(:create_request)
       controller.send(:reconfigure_update)
-      controller.send(:flash_errors?).should be_true
+      expect(controller.send(:flash_errors?)).to be_truthy
     end
 
     it "does not display the drop list if max_cores_per-socket is one" do
-      vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => '04'))
-      edit = Hash.new
-      edit[:new] = Hash.new
+      vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => '04'))
+      edit = {}
+      edit[:new] = {}
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
     end
@@ -219,53 +210,65 @@ describe ApplicationController do
                                        "discover_type_virtualcenter" => "1",
                                        "start"                       => "45"
                                       )
-      controller.stub(:drop_breadcrumb)
-      controller.should_receive(:render)
+      allow(controller).to receive(:drop_breadcrumb)
+      expect(controller).to receive(:render)
       controller.send(:discover)
       to = assigns(:to)
-      to[:first].should == from_first
-      to[:second].should == from_second
-      to[:third].should == from_third
-      controller.send(:flash_errors?).should be_true
+      expect(to[:first]).to eq(from_first)
+      expect(to[:second]).to eq(from_second)
+      expect(to[:third]).to eq(from_third)
+      expect(controller.send(:flash_errors?)).to be_truthy
+    end
+
+    it "displays options to select Azure or Amazon cloud" do
+      session[:type] = "ems"
+      controller.instance_variable_set( :@_params,
+                                        :controller             => "ems_cloud"
+                                      )
+      allow(controller).to receive(:drop_breadcrumb)
+      controller.send(:discover)
+      expect(response.status).to eq(200)
+      expect(controller.instance_variable_get(:@discover_type)).to eq([["Azure", "azure"], ["Amazon", "amazon"]])
     end
   end
 
   context "#process_elements" do
     it "shows passed in display name in flash message" do
       pxe = FactoryGirl.create(:pxe_server)
-      MiqServer.stub(:my_zone).and_return("default")
+      allow(MiqServer).to receive(:my_zone).and_return("default")
       controller.send(:process_elements, [pxe.id], PxeServer, 'synchronize_advertised_images_queue', 'Refresh Relationships')
-      assigns(:flash_array).first[:message].should include("Refresh Relationships successfully initiated")
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Relationships successfully initiated")
     end
 
     it "shows task name in flash message when display name is not passed in" do
       pxe = FactoryGirl.create(:pxe_server)
-      MiqServer.stub(:my_zone).and_return("default")
+      allow(MiqServer).to receive(:my_zone).and_return("default")
       controller.send(:process_elements, [pxe.id], PxeServer, 'synchronize_advertised_images_queue')
-      assigns(:flash_array).first[:message].should include("synchronize_advertised_images_queue successfully initiated")
+      expect(assigns(:flash_array).first[:message])
+        .to include("synchronize_advertised_images_queue successfully initiated")
     end
   end
 
   context "#identify_record" do
     it "Verify flash error message when passed in ID no longer exists in database" do
       record = controller.send(:identify_record, "1", ExtManagementSystem)
-      record.should == nil
-      assigns(:bang).message.should include("Selected Provider no longer exists")
+      expect(record).to be_nil
+      expect(assigns(:bang).message).to include("Selected Provider no longer exists")
     end
 
     it "Verify @record is set for passed in ID" do
       ems = FactoryGirl.create(:ext_management_system)
       record = controller.send(:identify_record, ems.id, ExtManagementSystem)
-      record.should be_a_kind_of(ExtManagementSystem)
+      expect(record).to be_a_kind_of(ExtManagementSystem)
     end
   end
 
   context "#get_record" do
     it "use passed in db to set class for identify_record call" do
       host = FactoryGirl.create(:host)
-      controller.instance_variable_set(:@_params, {:id => host.id})
+      controller.instance_variable_set(:@_params, :id => host.id)
       record = controller.send(:get_record, "host")
-      record.should be_a_kind_of(Host)
+      expect(record).to be_a_kind_of(Host)
     end
   end
 end
@@ -274,7 +277,6 @@ describe HostController do
   context "#show_association" do
     before(:each) do
       set_user_privileges
-      FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
@@ -282,7 +284,7 @@ describe HostController do
 
     it "renders show_item" do
       controller.instance_variable_set(:@breadcrumbs, [])
-      controller.stub(:get_view)
+      allow(controller).to receive(:get_view)
       get :guest_applications, :id => @host.id, :show => @guest_application.id
       expect(response.status).to eq(200)
       expect(response).to render_template('host/show')
@@ -295,7 +297,7 @@ describe HostController do
 
     it "renders show_details" do
       controller.instance_variable_set(:@breadcrumbs, [])
-      controller.stub(:get_view)
+      allow(controller).to receive(:get_view)
       get :guest_applications, :id => @host.id
       expect(response.status).to eq(200)
       expect(response).to render_template('host/show')
@@ -313,11 +315,31 @@ describe HostController do
       vm1 = FactoryGirl.create(:vm_vmware)
       vm2 = FactoryGirl.create(:vm_vmware)
       vm3 = FactoryGirl.create(:vm_vmware)
-      vms=[vm1.id, vm2.id, vm3.id]
+      vms = [vm1.id, vm2.id, vm3.id]
       controller.send(:process_objects, vms, 'refresh_ems')
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include "Refresh Ems initiated for #{vms.length} VMs"
     end
   end
-end
 
+  context "#vm_button_operation" do
+    it "when the vm_or_template supports scan,  returns true" do
+      vm1 =  FactoryGirl.create(:vm_microsoft)
+      vm2 =  FactoryGirl.create(:vm_vmware)
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm1.id}, #{vm2.id}")
+      controller.send(:vm_button_operation, 'scan', "Smartstate Analysis")
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages.first[:message]).to include "Smartstate Analysis does not apply to at least one of the selected Virtual Machines"
+    end
+
+    it "when the vm_or_template supports scan,  returns true" do
+      vm = FactoryGirl.create(:vm_vmware,
+                              :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                              :storage               => FactoryGirl.create(:storage)
+                             )
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}")
+      expect(controller).to receive(:process_objects)
+      controller.send(:vm_button_operation, 'scan', "Smartstate Analysis")
+    end
+  end
+end

@@ -3,7 +3,8 @@ require 'util/miq-exception'
 
 module OpenstackHandle
   class Handle
-    attr_accessor :username, :password, :address, :port, :connection_options
+    attr_accessor :username, :password, :address, :port, :api_version, :security_protocol, :connection_options
+    attr_reader :project_name
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
@@ -26,23 +27,23 @@ module OpenstackHandle
       "Planning"      => :planning
     }
 
-    # Tries both non-SSL and SSL connections to Openstack
-    def self.try_connection
-      # attempt to connect with SSL
-      yield "https", {:ssl_verify_peer => false}
-    rescue Excon::Errors::SocketError => err
-      # TODO recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
-      # and do proper exceptions like Excon::Errors::SocketError::UnknownProtocolSSL,
-      # Excon::Errors::SocketError::BadCertificate, etc. all of them inheriting from Excon::Errors::SocketError
-      raise unless (err.message.include?("end of file reached (EOFError)") ||
-                    err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)"))
-      # attempt the same connection without SSL
-      yield "http", {}
+    def self.try_connection(security_protocol, ssl_options = {})
+      if security_protocol.blank? || security_protocol == 'ssl'
+        # For backwards compatibility take blank security_protocol as SSL
+        yield "https", {:ssl_verify_peer => false}
+      elsif security_protocol == 'ssl-with-validation'
+        excon_options = {:ssl_verify_peer => true}.merge(ssl_options)
+        yield "https", excon_options
+      else
+        yield "http", {}
+      end
     end
 
-    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
-      try_connection do |scheme, connection_options|
-        auth_url = auth_url(address, port, scheme)
+    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil,
+                                 security_protocol = nil)
+      ssl_options = opts.delete(:ssl_options)
+      try_connection(security_protocol, ssl_options) do |scheme, connection_options|
+        auth_url = auth_url(address, port, scheme, api_version)
         opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
         raw_connect(username, password, auth_url, service, opts)
       end
@@ -50,10 +51,11 @@ module OpenstackHandle
 
     def self.raw_connect(username, password, auth_url, service = "Compute", extra_opts = nil)
       opts = {
-        :provider           => 'OpenStack',
-        :openstack_auth_url => auth_url,
-        :openstack_username => username,
-        :openstack_api_key  => password,
+        :provider                => 'OpenStack',
+        :openstack_auth_url      => auth_url,
+        :openstack_username      => username,
+        :openstack_api_key       => password,
+        :openstack_endpoint_type => 'publicURL',
       }
       opts.merge!(extra_opts) if extra_opts
 
@@ -75,33 +77,57 @@ module OpenstackHandle
       raise
     end
 
-    def self.auth_url(address, port = 5000, scheme = "http")
-      url(address, port, scheme)
+    def self.path_for_api_version(api_version)
+      case api_version
+      when 'v2'
+        '/v2.0/tokens'
+      when 'v3'
+        '/v3/auth/tokens'
+      end
     end
 
-    def self.url(address, port = 5000, scheme = "http", path = "/v2.0/tokens")
+    def self.auth_url(address, port = 5000, scheme = "http", api_version = 'v2')
+      url(address, port, scheme, path_for_api_version(api_version))
+    end
+
+    def self.url(address, port = 5000, scheme = "http", path = "")
       port = port.to_i
       uri = URI::Generic.build(:scheme => scheme, :port => port, :path => path)
       uri.hostname = address
       uri.to_s
     end
 
-    def self.connection_options=(hash)
-      @connection_options = hash
+    class << self
+      attr_writer :connection_options
     end
 
-    def self.connection_options
-      @connection_options
+    class << self
+      attr_reader :connection_options
     end
 
-    def initialize(username, password, address, port = nil)
-      @username = username
-      @password = password
-      @address  = address
-      @port     = port || 5000
+    def initialize(username, password, address, port = nil, api_version = nil, security_protocol = nil,
+                   extra_options = {})
+      @username          = username
+      @password          = password
+      @address           = address
+      @port              = port || 5000
+      @api_version       = api_version || 'v2'
+      @security_protocol = security_protocol || 'ssl'
+      @extra_options     = extra_options
 
       @connection_cache   = {}
       @connection_options = self.class.connection_options
+    end
+
+    def ssl_options
+      @ssl_options ||= {}
+      return @ssl_options unless @ssl_options.blank?
+
+      @ssl_options[:ssl_ca_file]    = @extra_options[:ssl_ca_file] unless @extra_options[:ssl_ca_file].blank?
+      @ssl_options[:ssl_ca_path]    = @extra_options[:ssl_ca_path] unless @extra_options[:ssl_ca_path].blank?
+      # ssl_cert_store is dependent on the presence of ssl_ca_file
+      @ssl_options[:ssl_cert_store] = @extra_options[:ssl_cert_store] unless @extra_options[:ssl_ca_file].blank?
+      @ssl_options
     end
 
     def browser_url
@@ -109,20 +135,34 @@ module OpenstackHandle
     end
 
     def connect(options = {})
-      opts    = options.dup
-      service = (opts.delete(:service) || "Compute").to_s.camelize
-      tenant  = opts.delete(:tenant_name)
+      opts     = options.dup
+      service  = (opts.delete(:service) || "Compute").to_s.camelize
+      tenant   = opts.delete(:tenant_name)
+      # TODO(lsmola) figure out from where to take the project name and domain name
+      domain   = opts.delete(:domain_name) || 'admin_domain'
+
+      # Do not send auth_type to fog, it throws warning
+      opts.delete(:auth_type)
+
       unless tenant
         tenant = "any_tenant" if service == "Identity"
         tenant ||= default_tenant_name
       end
-      opts[:openstack_tenant] = tenant unless service == "Identity"
+
+      unless service == "Identity"
+        opts[:openstack_tenant] = tenant
+        # For identity ,there is only domain scope, with project_name nil
+        opts[:openstack_project_name] = @project_name = tenant
+      end
+      opts[:openstack_domain_name]  = domain
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
         opts[:connection_options] = connection_options if connection_options
+        opts[:ssl_options]        = ssl_options
 
-        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts)
+        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version,
+                                                     security_protocol)
         service_wrapper_name = "#{service}Delegate"
         # Allow openstack to define new services without explicitly requiring a
         # service wrapper.
@@ -205,24 +245,7 @@ module OpenstackHandle
     end
 
     def detect_service(service, tenant_name = nil)
-      svc = connect(:service => service, :tenant_name => tenant_name)
-
-      #
-      # For non-admin users, if the Swift ACLs aren't set to permit
-      # read access for the user, we'll be able to connect to the
-      # service but it will fail on first access.
-      #
-      # We check for that situation here, and treat it as though the
-      # service isn't available when encountered.
-      #
-      if service == "Storage"
-        begin
-          svc.directories.length
-        rescue Excon::Errors::Forbidden
-          return nil
-        end
-      end
-      svc
+      connect(:service => service, :tenant_name => tenant_name)
     rescue MiqException::ServiceNotAvailable
       unless (fbs = SERVICE_FALL_BACK[service])
         return nil
@@ -280,21 +303,39 @@ module OpenstackHandle
 
     def accessor_for_accessible_tenants(service, accessor, uniq_id, array_accessor = true)
       ra = []
-      service_for_each_accessible_tenant(service) do |svc|
+      service_for_each_accessible_tenant(service) do |svc, project|
         not_found_error = Fog.const_get(service)::OpenStack::NotFound
 
         rv = begin
-          array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          if accessor.kind_of?(Proc)
+            accessor.call(svc)
+          else
+            array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          end
+
         rescue not_found_error => e
           $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
                         "Skipping inventory item #{service} #{accessor}\n#{e}")
           nil
         end
 
+        if !rv.blank? && array_accessor && rv.last.kind_of?(Fog::Model)
+          # If possible, store which project(tenant) was used for obtaining of the Fog::Model
+          rv.map { |x| x.project = project }
+        end
+
         if rv
           array_accessor ? ra.concat(rv) : ra << rv
         end
       end
+
+      if uniq_id.blank? && array_accessor && !ra.blank?
+        # Take uniq ID from Fog::Model definition
+        last_object = ra.last
+        # TODO(lsmola) change to last_object.identity_name once the new fog-core is released
+        uniq_id = last_object.class.instance_variable_get("@identity") if last_object.kind_of?(Fog::Model)
+      end
+
       return ra unless uniq_id
       ra.uniq { |i| i.kind_of?(Hash) ? i[uniq_id] : i.send(uniq_id) }
     end

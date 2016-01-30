@@ -6,7 +6,7 @@
       %tr
         %th.narrow
         %th= _("Name")
-        %th= _("Display Name")
+        %th= _("Description")
     %tbody
       - if entry != nil && entry == "new"
         = render :partial => "classification_entry", :locals => {:entry => "new", :edit => true}

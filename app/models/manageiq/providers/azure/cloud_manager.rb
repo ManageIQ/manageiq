@@ -1,12 +1,17 @@
 class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManager
-  require_dependency 'manageiq/providers/azure/cloud_manager/availability_zone'
-  require_dependency 'manageiq/providers/azure/cloud_manager/flavor'
-  require_dependency 'manageiq/providers/azure/cloud_manager/refresh_parser'
-  require_dependency 'manageiq/providers/azure/cloud_manager/refresh_worker'
-  require_dependency 'manageiq/providers/azure/cloud_manager/refresher'
-  require_dependency 'manageiq/providers/azure/cloud_manager/vm'
+  require_nested :AvailabilityZone
+  require_nested :Flavor
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :Refresher
+  require_nested :Vm
+  require_nested :Template
+  require_nested :OrchestrationStack
+  require_nested :OrchestrationServiceOptionConverter
 
   alias_attribute :azure_tenant_id, :uid_ems
+
+  has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
 
   def self.ems_type
     @ems_type ||= "azure".freeze
@@ -18,6 +23,10 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   def self.hostname_required?
     false
+  end
+
+  def description
+    ManageIQ::Providers::Azure::Regions.find_by_name(provider_region)[:description]
   end
 
   def self.raw_connect(clientid, clientkey, azuretenantid)
@@ -38,12 +47,115 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   def verify_credentials(_auth_type = nil, options = {})
     connect(options)
-    rescue RestClient::Unauthorized
-      raise MiqException::MiqHostError, "Incorrect credentials - check your Azure Client ID and Client Key"
-    rescue StandardError => err
-      _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
+  rescue Azure::Armrest::UnauthorizedException
+    raise MiqException::MiqHostError, "Incorrect credentials - check your Azure Client ID and Client Key"
+  rescue StandardError => err
+    _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
+    raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
 
     true
+  end
+
+  # Operations
+
+  def vm_start(vm, _options = {})
+    vm.start
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_stop(vm, _options = {})
+    vm.stop
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_destroy(vm, _options = {})
+    vm.vm_destroy
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_restart(vm, _options = {})
+    # TODO switch to vm.restart
+    vm.raw_restart
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  # Discovery
+
+  # Create EmsAzure instances for all regions with instances
+  # or images for the given authentication.  Created EmsAzure instances
+  # will automatically have EmsRefreshes queued up.  If this is a greenfield
+  # discovery, we will at least add an EmsAzure for eastus
+  def self.discover(clientid, clientkey, azure_tenant_id)
+    new_emses = []
+
+    all_emses = includes(:authentications)
+    all_ems_names = all_emses.index_by(&:name)
+
+    known_emses = all_emses.select { |e| e.authentication_userid == clientid }
+    known_ems_regions = known_emses.index_by(&:provider_region)
+
+    config     = raw_connect(clientid, clientkey, azure_tenant_id)
+    azure_vmm  = ::Azure::Armrest::VirtualMachineService.new(config)
+
+    azure_vmm.locations.each do |region|
+      region = region.delete(' ').downcase
+      next if known_ems_regions.include?(region)
+      next if vms_in_region(azure_vmm, region).count == 0 # instances
+      # TODO: Check if images are == 0 and if so then skip
+      new_emses << create_discovered_region(region, clientid, clientkey, azure_tenant_id, all_ems_names)
+    end
+
+    # at least create the Azure-eastus region.
+    if new_emses.blank? && known_emses.blank?
+      new_emses << create_discovered_region("Azure-eastus", clientid, clientkey, azure_tenant_id, all_ems_names)
+    end
+
+    EmsRefresh.queue_refresh(new_emses) unless new_emses.blank?
+
+    new_emses
+  end
+
+  def self.discover_queue(clientid, clientkey, azure_tenant_id)
+    MiqQueue.put(
+      :class_name  => name,
+      :method_name => "discover_from_queue",
+      :args        => [clientid, MiqPassword.encrypt(clientkey), azure_tenant_id]
+    )
+  end
+
+  def self.vms_in_region(azure_vmm, region)
+    azure_vmm.list_all.select { |vm| vm['location'] == region }
+  end
+
+  def self.discover_from_queue(clientid, clientkey, azure_tenant_id)
+    discover(clientid, MiqPassword.decrypt(clientkey), azure_tenant_id)
+  end
+
+  def self.create_discovered_region(region_name, clientid, clientkey, azure_tenant_id, all_ems_names)
+    name = "Azure-#{region_name}"
+    name = "Azure-#{region_name} #{clientid}" if all_ems_names.key?(name)
+
+    while all_ems_names.key?(name)
+      name_counter = name_counter.to_i + 1 if defined?(name_counter)
+      name = "Azure-#{region_name} #{name_counter}"
+    end
+
+    new_ems = self.create!(
+      :name            => name,
+      :provider_region => region_name,
+      :zone            => Zone.default_zone,
+      :uid_ems         => azure_tenant_id
+    )
+    new_ems.update_authentication(
+      :default => {
+        :userid   => clientid,
+        :password => clientkey
+      }
+    )
+    new_ems
   end
 end

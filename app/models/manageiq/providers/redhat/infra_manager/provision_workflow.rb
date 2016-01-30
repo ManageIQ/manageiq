@@ -5,8 +5,8 @@ class ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow < MiqProvisio
     'miq_provision_dialogs'
   end
 
-  def self.allowed_templates_vendor
-    'redhat'
+  def self.provider_model
+    ManageIQ::Providers::Redhat::InfraManager
   end
 
   def supports_pxe?

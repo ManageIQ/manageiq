@@ -6,12 +6,12 @@ module MiqAeMethodService
     def register_host(host)
       ar_method do
         MiqQueue.put(
-          :class_name   => @object.class.name,
-          :instance_id  => @object.id,
-          :method_name  => "register_host",
-          :zone         => @object.my_zone,
-          :role         => "ems_operations",
-          :args         => [host.id]
+          :class_name  => @object.class.name,
+          :instance_id => @object.id,
+          :method_name => "register_host",
+          :zone        => @object.my_zone,
+          :role        => "ems_operations",
+          :args        => [host.id]
         )
         true
       end
@@ -23,6 +23,5 @@ module MiqAeMethodService
     def folder_path(*options)
       object_send(:folder_path, *options)
     end
-
   end
 end

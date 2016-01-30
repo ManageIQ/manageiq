@@ -5,7 +5,6 @@ EMS_PASSWORD = ""
 require_relative '../../bundler_setup'
 require 'openstack/openstack_handle'
 
-
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 

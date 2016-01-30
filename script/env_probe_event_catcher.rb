@@ -62,7 +62,7 @@ puts
 log :info, "Total Events Caught: #{$event_cnt}, Process stats: #{MiqProcess.processInfo.inspect}"
 
 iterations = 5
-while 1 do
+loop do
   sleep 60
 
   log :info, "Total Events Caught: #{$event_cnt}, Process stats: #{MiqProcess.processInfo.inspect}"

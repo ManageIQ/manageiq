@@ -1,11 +1,9 @@
-require "spec_helper"
-
 describe VmdbTableEvm do
   it "#seed" do
     db = VmdbDatabase.seed_self
     evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => 'foo')
-    evm_table.should_receive(:seed_texts).once
-    evm_table.should_receive(:seed_indexes).once
+    expect(evm_table).to receive(:seed_texts).once
+    expect(evm_table).to receive(:seed_indexes).once
     evm_table.seed
   end
 
@@ -17,31 +15,67 @@ describe VmdbTableEvm do
 
     it "adds new tables" do
       table_names = ['flintstones']
-      described_class.connection.stub(:text_tables).and_return(table_names)
+      allow(described_class.connection).to receive(:text_tables).and_return(table_names)
       @evm_table.seed_texts
-      @evm_table.text_tables.collect(&:name).should == table_names
-      @evm_table.text_tables.each { |t| t.vmdb_database.should == @db }
+      expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
+      @evm_table.text_tables.each { |t| expect(t.vmdb_database).to eq(@db) }
     end
 
     it "removes deleted tables" do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
       @evm_table.reload
-      @evm_table.text_tables.collect(&:name).should == table_names
+      expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
 
-      described_class.connection.stub(:text_tables).and_return([])
+      allow(described_class.connection).to receive(:text_tables).and_return([])
       @evm_table.seed_texts
       @evm_table.reload
-      @evm_table.text_tables.collect(&:name).should == []
+      expect(@evm_table.text_tables.collect(&:name)).to eq([])
     end
 
     it "finds existing tables" do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
-      described_class.connection.stub(:text_tables).and_return(table_names)
+      allow(described_class.connection).to receive(:text_tables).and_return(table_names)
       @evm_table.seed_texts
       @evm_table.reload
-      @evm_table.text_tables.collect(&:name).should == table_names
+      expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
+    end
+  end
+
+  context "#capture_metrics" do
+    let(:table) { FactoryGirl.create(:vmdb_table_evm, :name => "accounts") }
+
+    it "creates a vmdb_metrics record" do
+      # The first capture just gets the raw data
+      table.capture_metrics
+      expect(table.vmdb_metrics).to be_empty
+      expect(table.prior_raw_metrics).to_not be_nil
+
+      # The next capture starts creating the metrics rows
+      table.capture_metrics
+      expect(table.vmdb_metrics.count).to eq(1)
+
+      metric = table.vmdb_metrics.first
+
+      # Verify the column contents
+      columns = %w(
+        size rows pages percent_bloat wasted_bytes otta table_scans
+        sequential_rows_read index_scans index_rows_fetched rows_inserted
+        rows_updated rows_deleted rows_hot_updated rows_live rows_dead timestamp
+      )
+      columns.each do |column|
+        expect(metric.send(column)).to_not be_nil
+      end
+    end
+
+    it "captures index metrics" do
+      index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey")
+      table.vmdb_database = VmdbDatabase.seed_self
+      table.vmdb_indexes << index
+
+      expect(index).to receive(:capture_metrics)
+      table.capture_metrics
     end
   end
 
@@ -95,15 +129,15 @@ describe VmdbTableEvm do
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 11.hours, :rows => 380, :size => 3800, :wasted_bytes => 42, :percent_bloat => 38.8)
 
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 10.hours, :rows => 400, :size => 4000, :wasted_bytes => 44, :percent_bloat => 40.9)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  9.hours, :rows => 410, :size => 4100, :wasted_bytes => 60, :percent_bloat => 41.1)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  8.hours, :rows => 420, :size => 4200, :wasted_bytes => 62, :percent_bloat => 42.0)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  7.hours, :rows => 420, :size => 4200, :wasted_bytes => 64, :percent_bloat => 42.0)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  6.hours, :rows => 430, :size => 4300, :wasted_bytes => 70, :percent_bloat => 43.4)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  5.hours, :rows => 440, :size => 4400, :wasted_bytes => 72, :percent_bloat => 44.7)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  4.hours, :rows => 460, :size => 4600, :wasted_bytes => 74, :percent_bloat => 46.3)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  3.hours, :rows => 470, :size => 4700, :wasted_bytes => 76, :percent_bloat => 47.0)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  2.hours, :rows => 480, :size => 4800, :wasted_bytes => 80, :percent_bloat => 48.5)
-      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts -  1.hour,  :rows => 490, :size => 4900, :wasted_bytes => 84, :percent_bloat => 49.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 9.hours, :rows => 410, :size => 4100, :wasted_bytes => 60, :percent_bloat => 41.1)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 8.hours, :rows => 420, :size => 4200, :wasted_bytes => 62, :percent_bloat => 42.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 7.hours, :rows => 420, :size => 4200, :wasted_bytes => 64, :percent_bloat => 42.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 6.hours, :rows => 430, :size => 4300, :wasted_bytes => 70, :percent_bloat => 43.4)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 5.hours, :rows => 440, :size => 4400, :wasted_bytes => 72, :percent_bloat => 44.7)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 4.hours, :rows => 460, :size => 4600, :wasted_bytes => 74, :percent_bloat => 46.3)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 3.hours, :rows => 470, :size => 4700, :wasted_bytes => 76, :percent_bloat => 47.0)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 2.hours, :rows => 480, :size => 4800, :wasted_bytes => 80, :percent_bloat => 48.5)
+      FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts - 1.hour,  :rows => 490, :size => 4900, :wasted_bytes => 84, :percent_bloat => 49.0)
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts,            :rows => 500, :size => 5000, :wasted_bytes => 90, :percent_bloat => 50.7)
     end
 
@@ -115,20 +149,18 @@ describe VmdbTableEvm do
       rollup_record = @evm_table.vmdb_metrics.where(:capture_interval_name => 'daily').first
       # rollup_record = Metrics::Finders.find_all_by_range(@evm_table, Time.gm(2012, 8, 14, 00, 00, 01), Time.gm(2012, 8, 14, 23, 59, 59), interval_name)
 
-      rollup_record.should_not be_nil
-      rollup_record.rows.should           == 227
-      rollup_record.size.should           == 2270
-      rollup_record.wasted_bytes.should   be_within(0.01).of(33.83)
-      rollup_record.percent_bloat.should  be_within(0.01).of(22.54)
+      expect(rollup_record).not_to be_nil
+      expect(rollup_record.rows).to eq(227)
+      expect(rollup_record.size).to eq(2270)
+      expect(rollup_record.wasted_bytes).to   be_within(0.01).of(33.83)
+      expect(rollup_record.percent_bloat).to  be_within(0.01).of(22.54)
     end
 
     it "verifies daily metric rollup execution" do
       ts  = Time.now.utc
       day = ts.beginning_of_day
-      described_class.any_instance.should_receive(:rollup_metrics).with('daily', day)
+      expect_any_instance_of(described_class).to receive(:rollup_metrics).with('daily', day)
       VmdbDatabase.my_database.rollup_metrics(ts)
     end
-
   end
-
 end

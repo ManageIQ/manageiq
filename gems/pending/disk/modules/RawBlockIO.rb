@@ -2,7 +2,6 @@ require 'linux_block_device'
 require 'memory_buffer'
 
 class RawBlockIO
-
   MIN_SECTORS_TO_CACHE = 64
 
   def initialize(filename, mode = "r")
@@ -35,13 +34,13 @@ class RawBlockIO
     len = @endByteAddr - @seekPos if (@seekPos + len) > @endByteAddr
 
     startSector, startOffset = @seekPos.divmod(@blockSize)
-    endSector = (@seekPos+len-1)/@blockSize
+    endSector = (@seekPos + len - 1) / @blockSize
     numSector = endSector - startSector + 1
 
     rBuf = breadCached(startSector, numSector)
     @seekPos += len
 
-    return rBuf[startOffset, len]
+    rBuf[startOffset, len]
   end
 
   def write(buf, len)
@@ -49,7 +48,7 @@ class RawBlockIO
     len = @endByteAddr - @seekPos if (@seekPos + len) > @endByteAddr
 
     startSector, startOffset = @seekPos.divmod(@blockSize)
-    endSector = (@seekPos+len-1)/@blockSize
+    endSector = (@seekPos + len - 1) / @blockSize
     numSector = endSector - startSector + 1
 
     rBuf = bread(startSector, numSector)
@@ -58,25 +57,22 @@ class RawBlockIO
     bwrite(startSector, numSector, rBuf)
     @seekPos += len
 
-    return len
+    len
   end
 
-  def seek(amt, whence=IO::SEEK_SET)
+  def seek(amt, whence = IO::SEEK_SET)
     case whence
-      when IO::SEEK_CUR
-        @seekPos += amt
-      when IO::SEEK_END
-        @seekPos = @endByteAddr + amt
-      when IO::SEEK_SET
-        @seekPos = amt + @startByteAddr
-      else
+    when IO::SEEK_CUR
+      @seekPos += amt
+    when IO::SEEK_END
+      @seekPos = @endByteAddr + amt
+    when IO::SEEK_SET
+      @seekPos = amt + @startByteAddr
     end
-    return @seekPos
+    @seekPos
   end
 
-  def size
-    @size
-  end
+  attr_reader :size
 
   def close
     @rawDisk_file.close
@@ -110,12 +106,11 @@ class RawBlockIO
       @cacheRange   = Range.new(startSector, endSector)
     end
 
-    sectorOffset = startSector  - @cacheRange.first
+    sectorOffset = startSector - @cacheRange.first
     bufferOffset = sectorOffset * @blockSize
-    length       = numSectors   * @blockSize
+    length       = numSectors * @blockSize
     # $log.debug "RawBlockIO.breadCached: bufferOffset = #{bufferOffset}, length = #{length}"
 
-    return @cache[bufferOffset, length]
+    @cache[bufferOffset, length]
   end
-
 end

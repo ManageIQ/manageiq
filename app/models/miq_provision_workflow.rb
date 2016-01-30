@@ -17,7 +17,10 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.class_for_source(source_or_id)
-    source = VmOrTemplate.find_by_id(source_or_id)
+    source = case source_or_id
+             when ActiveRecord::Base then source_or_id
+             else VmOrTemplate.find_by_id(source_or_id)
+             end
     return nil if source.nil?
     source.class.manager_class.provision_workflow_class
   end
@@ -54,7 +57,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     supports_pxe? || supports_iso? || supports_cloud_init?
   end
 
-  def continue_request(values, _requester_id)
+  def continue_request(values)
     return false unless validate(values)
 
     exit_pre_dialog if @running_pre_dialog
@@ -65,11 +68,5 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     set_default_values
 
     true
-  end
-
-  def update_request(request, values, requester_id, target_class, event_name, event_message)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-    request.src_vm_id = request.get_option(:src_vm_id)
-    super
   end
 end

@@ -1,9 +1,4 @@
-class VmdbDatabaseConnection < ActiveRecord::Base
-  class << self
-    attr_accessor :aar_columns
-  end
-  self.aar_columns = []
-
+class VmdbDatabaseConnection < ApplicationRecord
   self.table_name = 'pg_stat_activity'
   self.primary_key = nil
 
@@ -77,7 +72,7 @@ class VmdbDatabaseConnection < ActiveRecord::Base
   end
 
   def blocked_by
-    lock_info = vmdb_database_locks.where(:granted => false).first
+    lock_info = vmdb_database_locks.find_by(:granted => false)
     lock_info && lock_info.blocking_lock.pid
   end
 
@@ -100,7 +95,7 @@ class VmdbDatabaseConnection < ActiveRecord::Base
   end
 
   def vmdb_database
-    VmdbDatabase.find_by_id(self.vmdb_database_id)
+    VmdbDatabase.find_by_id(vmdb_database_id)
   end
 
   def vmdb_database=(db)
@@ -109,13 +104,13 @@ class VmdbDatabaseConnection < ActiveRecord::Base
 
   def miq_worker
     return @miq_worker if defined?(@miq_worker)
-    @miq_worker = MiqWorker.find_current_in_my_region.where(:sql_spid => self.spid).first
+    @miq_worker = MiqWorker.find_current_in_my_region.find_by(:sql_spid => spid)
   end
 
   def miq_server
     return @miq_server if defined?(@miq_server)
     w = miq_worker
-    @miq_server = w ? w.miq_server : MiqServer.find_started_in_my_region.where(:sql_spid => self.spid).first
+    @miq_server = w ? w.miq_server : MiqServer.find_started_in_my_region.find_by(:sql_spid => spid)
   end
 
   def zone

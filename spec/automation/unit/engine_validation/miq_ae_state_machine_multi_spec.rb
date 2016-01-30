@@ -1,4 +1,3 @@
-require "spec_helper"
 require "timecop"
 include AutomationSpecHelper
 
@@ -19,6 +18,7 @@ describe "MultipleStateMachineSteps" do
     @state_class3        = 'SM3'
     @state_instance      = 'MY_STATE_INSTANCE'
     @fqname              = '/SPEC_DOMAIN/NS1/SM1/MY_STATE_INSTANCE'
+    @user                = FactoryGirl.create(:user_with_group)
     @method_params       = {'ae_result'     => {:datatype => 'string', 'default_value' => 'ok'},
                             'ae_next_state' => {:datatype => 'string'},
                             'raise'         => {:datatype => 'string'}
@@ -26,8 +26,11 @@ describe "MultipleStateMachineSteps" do
     @automate_args   = {:namespace        => "#{@domain}/#{@namespace}",
                         :class_name       => @state_class1,
                         :instance_name    => @state_instance,
+                        :user_id          => @user.id,
+                        :miq_group_id     => @user.current_group_id,
+                        :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
-    MiqServer.stub(:my_zone).and_return('default')
+    allow(MiqServer).to receive(:my_zone).and_return('default')
     clear_domain
     setup_model
   end
@@ -258,16 +261,16 @@ describe "MultipleStateMachineSteps" do
     expect(ws.root.attributes['step_on_entry']).to match_array(all_states + %w(SM1_2 SM2_2 SM3_1))
     (@max_retries).times do
       status, _message, ws = deliver_ae_request_from_queue
-      status.should_not eq(MiqQueue::STATUS_ERROR)
-      ws.should_not be_nil
+      expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+      expect(ws).not_to be_nil
       expect(ws.root.attributes['step_on_entry']).to match_array(%w(SM1_2 SM2_2 SM3_1))
     end
 
     status, _message, ws = deliver_ae_request_from_queue
-    status.should_not eq(MiqQueue::STATUS_ERROR)
-    ws.should_not be_nil
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(SM1_2))
 
-    deliver_ae_request_from_queue.should be_nil
+    expect(deliver_ae_request_from_queue).to be_nil
   end
 end

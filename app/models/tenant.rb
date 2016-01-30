@@ -1,27 +1,38 @@
 require 'ancestry'
 
-class Tenant < ActiveRecord::Base
+class Tenant < ApplicationRecord
   HARDCODED_LOGO = "custom_logo.png"
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
   include ReportableMixin
+  include ActiveVmAggregationMixin
+  acts_as_miq_taggable
 
   default_value_for :name,        "My Company"
   default_value_for :description, "Tenant for My Company"
   default_value_for :divisible,   true
+  default_value_for :use_config_for_attributes, false
+
   has_ancestry
 
   has_many :providers
   has_many :ext_management_systems
   has_many :vm_or_templates
-  has_many :service_catalog_templates
+  has_many :vms
+  has_many :miq_templates
+  has_many :service_template_catalogs
   has_many :service_templates
 
   has_many :tenant_quotas
   has_many :miq_groups
   has_many :users, :through => :miq_groups
   has_many :ae_domains, :dependent => :destroy, :class_name => 'MiqAeDomain'
+  has_many :miq_requests, :dependent => :destroy
+  has_many :miq_request_tasks, :dependent => :destroy
+  has_many :services, :dependent => :destroy
+
+  belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy, :inverse_of => :tenant
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
@@ -38,7 +49,8 @@ class Tenant < ActiveRecord::Base
   validate  :validate_only_one_root
   validates :description, :presence => true
   validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
+  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
+  validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
@@ -51,6 +63,8 @@ class Tenant < ActiveRecord::Base
   virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
+  after_create :create_tenant_group
+  before_destroy :ensure_can_be_destroyed
 
   def all_subtenants
     self.class.descendants_of(self).where(:divisible => true)
@@ -58,6 +72,10 @@ class Tenant < ActiveRecord::Base
 
   def all_subprojects
     self.class.descendants_of(self).where(:divisible => false)
+  end
+
+  def accessible_tenant_ids(strategy = nil)
+    (strategy ? send(strategy) : []).append(id)
   end
 
   def name
@@ -129,6 +147,35 @@ class Tenant < ActiveRecord::Base
     get_quotas
   end
 
+  def used_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash.merge(:value => q.used)
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  # Amount of quotas allocated to the immediate child tenants
+  def allocated_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash.merge(:value => q.allocated)
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  # Amount of quotas available to be allocated to child tenants
+  def available_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash.merge(:value => q.available)
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  def combined_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = q.quota_hash
+      h[q.name.to_sym][:allocated]   = q.allocated
+      h[q.name.to_sym][:available]   = q.available
+      h[q.name.to_sym][:used]        = q.used
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
   # @return [Boolean] Is this a default tenant?
   def default?
     root?
@@ -155,6 +202,22 @@ class Tenant < ActiveRecord::Base
     !!login_logo_file_name
   end
 
+  def visible_domains
+    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
+  end
+
+  def enabled_domains
+    visible_domains.where(:enabled => true)
+  end
+
+  def editable_domains
+    ae_domains.where(:system => false).order('priority DESC')
+  end
+
+  def any_editable_domains?
+    ae_domains.where(:system => false).count > 0
+  end
+
   # The default tenant is the tenant to be used when
   # the url does not map to a known domain or subdomain
   #
@@ -172,9 +235,33 @@ class Tenant < ActiveRecord::Base
     roots.first
   end
 
+  # NOTE: returns the root tenant
   def self.seed
-    MiqRegion.my_region.lock do
-      Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
+    root_tenant || create!(:use_config_for_attributes => true) do |_|
+      _log.info("Creating root tenant")
+    end
+  end
+
+  # tenant
+  #   tenant2
+  #     project4 (!divisible)
+  #   tenant3
+  # @return [Array(Array<Array(String, Numeric)>, Array<Array(String, Numeric)>) ] tenants and projects
+  #   e.g.:
+  #   [
+  #     [["tenant", 1], ["tenant/tenant2", 2]], ["tenant/tenant3", 3]]
+  #     [["tenant/tenant2/project4", 4]]
+  #   ]
+  def self.tenant_and_project_names
+    tenants_and_projects = Tenant.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
+                           .to_a.sort_by { |t| [t.ancestry || "", t.name] }
+    tenants_by_id = tenants_and_projects.index_by(&:id)
+
+    tenants_and_projects.partition(&:divisible?).map do |tenants|
+      tenants.map do |t|
+        all_names = (t.ancestor_ids + [t.id]).map { |tid| tenants_by_id[tid] }.map(&:name)
+        [all_names.join("."), t.id]
+      end.sort_by(&:first)
     end
   end
 
@@ -206,9 +293,24 @@ class Tenant < ActiveRecord::Base
 
   # validates that there is only one tree
   def validate_only_one_root
-    if !(parent_id || parent)
+    unless parent_id || parent
       root = self.class.root_tenant
       errors.add(:parent, "required") if root && root != self
+    end
+  end
+
+  def create_tenant_group
+    update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
+    self
+  end
+
+  def ensure_can_be_destroyed
+    raise "A tenant with groups associated cannot be deleted." if miq_groups.non_tenant_groups.exists?
+  end
+
+  def validate_default_tenant
+    if default_miq_group.tenant_id != id || !default_miq_group.tenant_group?
+      errors.add(:default_miq_group, "default group must be a default group for this tenant")
     end
   end
 end

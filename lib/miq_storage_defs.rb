@@ -1,7 +1,7 @@
 require 'yaml'
 
 module MiqStorageDefs
-    extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
 
   STORAGE_UPDATE_OK           = 0
   STORAGE_UPDATE_NO_AGENT         = 1
@@ -20,16 +20,16 @@ module MiqStorageDefs
 
   module ClassMethods
     def cim_classes_based_on(cim_class_name)
-      return CIM_CLASSES_BASED_ON[cim_class_name] || cim_class_name
+      CIM_CLASSES_BASED_ON[cim_class_name] || cim_class_name
     end
   end
 
   def self.classes_based_on
-    cbo = Hash.new
+    cbo = {}
     hier_arrays = CIM_CLASS_HIER.values.collect(&:dup)
 
     more = true
-    while more do
+    while more
       more = false
       hier_arrays.each do |ha|
         next if ha.empty?
@@ -40,8 +40,8 @@ module MiqStorageDefs
         more = true
       end
     end
-    return cbo
+    cbo
   end
 
-  CIM_CLASSES_BASED_ON = self.classes_based_on
+  CIM_CLASSES_BASED_ON = classes_based_on
 end

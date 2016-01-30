@@ -14,13 +14,14 @@
                   {:action => "sort_vm_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
+                  "data-method"          => :post,
                   :remote                => true)
                 - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
-                  %img{:src => "/images/icons/16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+                  %img{:src => image_path("16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
       %tbody
         - unless [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0].nil? ? "selected" : ""
-          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VM__NONE__&id=#{@id}');"}
+          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VM__NONE__&id=#{id}');"}
             %td
               = "<#{_('None')}>"
             %td
@@ -30,6 +31,9 @@
             %td
             %td
             %td
+            - if @edit[:vm_headers].key? 'cloud_tenant'
+              %td
+
         - @vms.each do |row|
           - @id = row.id
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0] == @id ? "selected" : ""
@@ -42,7 +46,7 @@
             %td
               = h(row.platform)
             %td
-              = h(row.num_cpu)
+              = h(row.logical_cpus)
             %td
               = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
             %td
@@ -52,6 +56,9 @@
                 = h(row.ext_management_system.name)
             %td
               = h(row.v_total_snapshots)
+            - if @edit[:vm_headers].key? 'cloud_tenant'
+              %td
+                = h(row.cloud_tenant)
   - elsif @vm
     -# grid with only one record for Redhat provisioning
     %table.table.table-striped.table-bordered.table-selectable
@@ -70,7 +77,7 @@
           %td
             = h(@vm.platform)
           %td
-            = h(@vm.num_cpu)
+            = h(@vm.logical_cpus)
           %td
             = h(number_to_human_size(@vm.mem_cpu.to_i * 1024 * 1024))
           %td
@@ -80,3 +87,6 @@
               = h(@vm.ext_management_system.name)
           %td
             = h(@vm.v_total_snapshots)
+          - if @edit[:vm_headers].key? 'cloud_tenant'
+            %td
+              = h(@vm.cloud_tenant)

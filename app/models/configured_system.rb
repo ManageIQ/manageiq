@@ -1,4 +1,4 @@
-class ConfiguredSystem < ActiveRecord::Base
+class ConfiguredSystem < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 
@@ -69,5 +69,4 @@ class ConfiguredSystem < ActiveRecord::Base
     hosts = includes(:configuration_location, :configuration_organization).where(:id => ids)
     hosts.collect(&:available_configuration_profiles).inject(:&).presence
   end
-
 end

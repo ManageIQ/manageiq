@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Psych::Visitors::ToRuby do
   let(:missing_model) { Rails.root.join("app/models/zzz_model.rb") }
 

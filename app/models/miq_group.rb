@@ -1,5 +1,7 @@
-class MiqGroup < ActiveRecord::Base
-  default_scope { where(self.conditions_for_my_region_default_scope) }
+class MiqGroup < ApplicationRecord
+  USER_GROUP   = "user"
+  SYSTEM_GROUP = "system"
+  TENANT_GROUP = "tenant"
 
   belongs_to :tenant
   belongs_to :miq_user_role
@@ -16,16 +18,17 @@ class MiqGroup < ActiveRecord::Base
   virtual_column :read_only,          :type => :boolean
   virtual_column :user_count,         :type => :integer
 
-  validates_presence_of   :description, :guid
-  validates_uniqueness_of :description, :guid
+  delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  before_destroy do |g|
-    raise "Still has users assigned." unless g.users.empty?
-    raise "A read only group cannot be deleted." if g.read_only
-  end
+  validates :description, :guid, :presence => true, :uniqueness => true
+  validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
+  before_destroy :ensure_can_be_destroyed
 
   serialize :filters
   serialize :settings
+
+  default_value_for :group_type, USER_GROUP
+  default_value_for(:sequence) { next_sequence }
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -33,18 +36,21 @@ class MiqGroup < ActiveRecord::Base
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
+  include TenancyMixin
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
+  alias_method :current_tenant, :tenant
+
   def name
-    self.description
+    description
   end
 
   def all_users
     User.all_users_of_group(self)
   end
 
-  def self.allows?(group, options={})
+  def self.allows?(_group, _options = {})
     # group: Id || Instance
     # :identifier => Feature Identifier
     # :object => Vm, Host, etc.
@@ -57,54 +63,55 @@ class MiqGroup < ActiveRecord::Base
     #
     # self.filters = MiqUserScope.hash_to_scope(self.filters) unless self.filters.kind_of?(MiqUserScope)
 
-    return true # Remove once this is implemented
+    true # Remove once this is implemented
   end
 
-  def self.add(attrs)
-    group = self.new(attrs)
-    if group.resource.nil?
-      groups = self.where(:resource_id => nil, :resource_type => nil).order("sequence DESC")
-    else
-      groups = group.resource.miq_groups.order("sequence DESC")
-    end
-    group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
-    group.save!
-
-    return group
+  def self.next_sequence
+    maximum(:sequence).to_i + 1
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
-      root_tenant = Tenant.root_tenant
-      if self.count == 0 && File.exist?(role_map_file)
-        filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
-        ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
+    role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
+    root_tenant = Tenant.root_tenant
+    if File.exist?(role_map_file)
+      filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
+      ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
 
-        role_map = YAML.load_file(role_map_file)
-        order = role_map.collect(&:keys).flatten
-        groups_to_roles = role_map.inject({}) {|h, g| h[g.keys.first] = g[g.keys.first]; h}
-        seq = 1
-        order.each do |g|
-          group = self.find_by_description(g) || self.new(:description => g)
-          user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
-          if user_role.nil?
-            _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
-            next
-          end
-          group.miq_user_role = user_role
-          group.sequence      = seq
-          group.filters       = ldap_to_filters[g]
-          group.group_type    = "system"
-          group.tenant        = root_tenant
+      role_map = YAML.load_file(role_map_file)
+      order = role_map.collect(&:keys).flatten
+      groups_to_roles = role_map.each_with_object({}) { |g, h| h[g.keys.first] = g[g.keys.first] }
+      seq = 1
+      order.each do |g|
+        group = find_by_description(g) || new(:description => g)
+        user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
+        if user_role.nil?
+          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[g]}' for group '#{g}'")
+          next
+        end
+        group.miq_user_role = user_role
+        group.sequence      = seq
+        group.filters       = ldap_to_filters[g]
+        group.group_type    = SYSTEM_GROUP
+        group.tenant        = root_tenant
 
-          mode = group.new_record? ? "Created" : "Added"
+        if group.changed?
+          mode = group.new_record? ? "Created" : "Updated"
           group.save!
           _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-
-          seq += 1
         end
+
+        seq += 1
       end
+    end
+
+    # find any default tenant groups that do not have a role
+    tenant_role = MiqUserRole.default_tenant_role
+    if tenant_role
+      tenant_groups.where(:miq_user_role_id => nil).each do |group|
+        group.update_attributes(:miq_user_role => tenant_role)
+      end
+    else
+      _log.warn("Unable to find default tenant role for tenant access")
     end
   end
 
@@ -122,18 +129,40 @@ class MiqGroup < ActiveRecord::Base
     ldap.get_memberships(user_obj, auth[:group_memberships_max_depth])
   end
 
-  def get_user_scope(options={})
-    scope = self.filters.kind_of?(MiqUserScope) ? self.filters : MiqUserScope.hash_to_scope(self.filters)
+  def self.get_httpd_groups_by_user(user)
+    require "dbus"
+
+    username = user.kind_of?(self) ? user.userid : user
+
+    sysbus = DBus.system_bus
+    ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
+    ifp_object    = ifp_service.object "/org/freedesktop/sssd/infopipe"
+    ifp_object.introspect
+    ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
+    begin
+      user_groups = ifp_interface.GetUserGroups(user)
+    rescue => err
+      raise "Unable to get groups for user #{username} - #{err}"
+    end
+    user_groups.first
+  end
+
+  def get_user_scope(options = {})
+    scope = filters.kind_of?(MiqUserScope) ? filters : MiqUserScope.hash_to_scope(filters)
 
     scope.get_filters(options)
   end
 
   def get_filters(type = nil)
-    f = self.filters
-    return f if type.nil?
+    if type
+      (filters.respond_to?(:key?) && filters[type.to_s]) || []
+    else
+      filters || {"managed" => [], "belongsto" => []}
+    end
+  end
 
-    type = type.to_s
-    return (f.respond_to?(:key) && f.key?(type)) ? f[type] : []
+  def has_filters?
+    get_managed_filters.present? || get_belongsto_filters.present?
   end
 
   def get_managed_filters
@@ -158,27 +187,35 @@ class MiqGroup < ActiveRecord::Base
   end
 
   def miq_user_role_name
-    self.miq_user_role.nil? ? nil : self.miq_user_role.name
+    miq_user_role.nil? ? nil : miq_user_role.name
   end
 
-  def self_service_group?
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.self_service_role?
+  def system_group?
+    group_type == SYSTEM_GROUP
   end
-  alias self_service? self_service_group?
 
-  def limited_self_service_group?
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.limited_self_service_role?
+  # @return true if this is a default tenant group
+  def tenant_group?
+    group_type == TENANT_GROUP
   end
-  alias limited_self_service? limited_self_service_group?
+
+  # Asks about the tenant's default_miq_group
+  #
+  # NOTE: this is the old definition for `tenant_group?`
+  #
+  # @return true if this is assigned to the tenant as the default tenant
+  # @return false if the tenant is being deleted or pointing to a different group
+  def referenced_by_tenant?
+    tenant.try(:default_miq_group_id) == id
+  end
 
   def read_only
-    self.group_type == "system"
+    system_group? || tenant_group?
   end
+  alias_method :read_only?, :read_only
 
   def user_count
-    self.users.count
+    users.count
   end
 
   def description=(val)
@@ -193,7 +230,48 @@ class MiqGroup < ActiveRecord::Base
     end
   end
 
+  def self.create_tenant_group(tenant)
+    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
+
+    create_with(
+      :description         => "Tenant #{tenant_full_name} access",
+      :group_type          => TENANT_GROUP,
+      :default_tenant_role => MiqUserRole.default_tenant_role
+    ).find_or_create_by!(:tenant_id => tenant.id)
+  end
+
   def self.sort_by_desc
     all.sort_by { |g| g.description.downcase }
+  end
+
+  def self.tenant_groups
+    where(:group_type => TENANT_GROUP)
+  end
+
+  def self.non_tenant_groups
+    where.not(:group_type => TENANT_GROUP)
+  end
+
+  def self.valid_filters?(filters_hash)
+    return true  unless filters_hash                  # nil ok
+    return false unless filters_hash.kind_of?(Hash)   # must be Hash
+    return true  if filters_hash.blank?               # {} ok
+    filters_hash["managed"].present? || filters_hash["belongsto"].present?
+  end
+
+  private
+
+  # if this tenant is changing, make sure this is not a default group
+  # NOTE: old tenant is Tenant.find(tenant_id_was)
+  def validate_default_tenant
+    if tenant_id_was && tenant_group?
+      errors.add(:tenant_id, "cant change the tenant of a default group")
+    end
+  end
+
+  def ensure_can_be_destroyed
+    raise "Still has users assigned." unless users.empty?
+    raise "A tenant default group can not be deleted" if tenant_group? && referenced_by_tenant?
+    raise "A read only group cannot be deleted." if system_group?
   end
 end

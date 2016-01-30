@@ -1,10 +1,10 @@
 class EmsCloudController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.model
     ManageIQ::Providers::CloudManager
@@ -75,8 +75,8 @@ class EmsCloudController < ApplicationController
     set_ems_record_vars(verify_ems, :validate)
     @in_a_form = true
 
-    save = params[:id] == "new" ? false : true
-    result, details = verify_ems.authentication_check(params[:cred_type], :save => save)
+    result, details = verify_ems.authentication_check(params[:cred_type], :save => !params[:id].nil?)
+
     if result
       add_flash(_("Credential validation was successful"))
     else
@@ -147,24 +147,7 @@ class EmsCloudController < ApplicationController
       zone = @ems.my_zone
     end
 
-    metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
-    metrics_password = @ems.has_authentication_type?(:metrics) ? @ems.authentication_password(:metrics).to_s : ""
-    metrics_verify = @ems.has_authentication_type?(:metrics) ? @ems.authentication_password(:metrics).to_s : ""
-
     amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
-    amqp_password = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
-    amqp_verify = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
-
-    ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
-    ssh_keypair_password = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
-
-    bearer_token = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
-    bearer_verify = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
-
-    if @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-      host_default_vnc_port_start = @ems.host_default_vnc_port_start.to_s
-      host_default_vnc_port_end = @ems.host_default_vnc_port_end.to_s
-    end
 
     if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
       azure_tenant_id = @ems.azure_tenant_id
@@ -178,26 +161,15 @@ class EmsCloudController < ApplicationController
                      :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
                      :hostname                        => @ems.hostname,
                      :api_port                        => @ems.port,
+                     :api_version                     => @ems.api_version ? @ems.api_version : "v2",
+                     :security_protocol               => @ems.security_protocol ? @ems.security_protocol : 'ssl',
                      :provider_region                 => @ems.provider_region,
                      :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
                      :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
-                     :default_password                => @ems.authentication_password ? @ems.authentication_password : "",
-                     :default_verify                  => @ems.authentication_password ? @ems.authentication_password : "",
-                     :metrics_userid                  => metrics_userid,
-                     :metrics_password                => metrics_password,
-                     :metrics_verify                  => metrics_verify,
                      :amqp_userid                     => amqp_userid,
-                     :amqp_password                   => amqp_password,
-                     :amqp_verify                     => amqp_verify,
-                     :ssh_keypair_userid              => ssh_keypair_userid,
-                     :ssh_keypair_password            => ssh_keypair_password,
-                     :bearer_token                    => bearer_token,
-                     :bearer_verify                   => bearer_verify,
                      :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
                      :client_id                       => client_id ? client_id : "",
                      :client_key                      => client_key ? client_key : "",
-                     :host_default_vnc_port_start     => host_default_vnc_port_start,
-                     :host_default_vnc_port_end       => host_default_vnc_port_end,
                      :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
                     }
   end
@@ -234,16 +206,24 @@ class EmsCloudController < ApplicationController
   end
 
   def set_ems_record_vars(ems, mode = nil)
-    ems.name            = params[:name]
+    ems.name            = params[:name].strip if params[:name]
     ems.provider_region = params[:provider_region]
-    ems.hostname        = params[:hostname]
-    ems.port            = params[:api_port]
+    ems.hostname        = params[:hostname].strip if params[:hostname]
+    ems.port            = params[:api_port].strip if params[:api_port]
+    ems.api_version     = params[:api_version].strip if params[:api_version]
     ems.provider_id     = params[:provider_id]
     ems.zone            = Zone.find_by_name(params[:zone])
+
+    if ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
+      ems.project = params[:project]
+    end
 
     if ems.kind_of?(ManageIQ::Providers::Microsoft::InfraManager)
       ems.security_protocol = params[:security_protocol]
       ems.realm = params[:realm]
+    elsif ems.supports_security_protocol?
+      # TODO the behavior should be probably rewritten to support methods
+      ems.security_protocol = params[:security_protocol].strip if params[:security_protocol]
     end
 
     if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
@@ -253,47 +233,61 @@ class EmsCloudController < ApplicationController
 
     ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
 
-    creds = {}
-    creds[:default] = {:userid   => params[:default_userid],
-                       :password => params[:default_password]} unless params[:default_userid].blank?
-    if ems.supports_authentication?(:metrics) && !params[:metrics_userid].blank?
-      creds[:metrics] = {:userid => params[:metrics_userid], :password => params[:metrics_password]}
-    end
-    if ems.supports_authentication?(:amqp) && !params[:amqp_userid].blank?
-      creds[:amqp] = {:userid => params[:amqp_userid], :password => params[:amqp_password]}
-    end
-    if ems.supports_authentication?(:ssh_keypair) && !params[:ssh_keypair_userid].blank?
-      creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => params[:ssh_keypair_password]}
-    end
-    if ems.supports_authentication?(:bearer) && !params[:bearer_token].blank?
-      creds[:bearer] = {:auth_key => params[:bearer_token], :userid => "_"} # Must have userid
-    end
+    ems.update_authentication(build_credentials(ems), :save => (mode != :validate))
+  end
 
-    ems.update_authentication(creds, :save => (mode != :validate))
+  def build_credentials(ems)
+    creds = {}
+    if params[:default_userid]
+      default_password = params[:default_password] ? params[:default_password] : ems.authentication_password
+      creds[:default] = {:userid => params[:default_userid], :password => default_password}
+    end
+    if ems.supports_authentication?(:amqp) && params[:amqp_userid]
+      amqp_password = params[:amqp_password] ? params[:amqp_password] : ems.authentication_password(:amqp)
+      creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password}
+    end
+    if ems.supports_authentication?(:auth_key) && params[:service_account]
+      creds[:default] = {:auth_key => params[:service_account], :userid => "_"}
+    end
+    if ems.supports_authentication?(:oauth) && !session[:oauth_response].blank?
+      auth = session[:oauth_response]
+      credentials = auth["credentials"]
+      creds[:oauth] = {:refresh_token => credentials["refresh_token"],
+                       :access_token  => credentials["access_token"],
+                       :expires       => credentials["expires"],
+                       :userid        => auth["info"]["name"]}
+      session[:oauth_response] = nil
+    end
+    creds
   end
 
   def construct_edit_for_audit(ems)
     @edit ||= {}
-    ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil;
-    @edit[:current] = {:name            => ems.name,
-                       :provider_region => ems.provider_region,
-                       :hostname        => ems.hostname,
-                       :azure_tenant_id => azure_tenant_id,
-                       :port            => ems.port,
-                       :provider_id     => ems.provider_id,
-                       :zone            => ems.zone
+    ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil
+    @edit[:current] = {:name              => ems.name,
+                       :provider_region   => ems.provider_region,
+                       :hostname          => ems.hostname,
+                       :azure_tenant_id   => azure_tenant_id,
+                       :port              => ems.port,
+                       :api_version       => ems.api_version,
+                       :security_protocol => ems.security_protocol,
+                       :provider_id       => ems.provider_id,
+                       :zone              => ems.zone
     }
-    @edit[:new] = {:name            => params[:name],
-                   :provider_region => params[:provider_region],
-                   :hostname        => params[:hostname],
-                   :azure_tenant_id => params[:azure_tenant_id],
-                   :port            => params[:port],
-                   :provider_id     => params[:provider_id],
-                   :zone            => params[:zone]
+    @edit[:new] = {:name              => params[:name],
+                   :provider_region   => params[:provider_region],
+                   :hostname          => params[:hostname],
+                   :azure_tenant_id   => params[:azure_tenant_id],
+                   :port              => params[:port],
+                   :api_version       => params[:api_version],
+                   :security_protocol => params[:security_protocol],
+                   :provider_id       => params[:provider_id],
+                   :zone              => params[:zone]
     }
   end
 
   def restful?
     true
   end
+  public :restful?
 end

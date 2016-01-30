@@ -13,7 +13,7 @@
 # started, the parent (timed) thread yields control to the code block - the
 # section of code subject to the timeout.
 #
-# A timeout occurs when the timing thread wakes up before we return from the 
+# A timeout occurs when the timing thread wakes up before we return from the
 # yield to the code block. Here, the timing thread raises an exception in the
 # timed thread, terminating the execution of the code block.
 #
@@ -35,7 +35,7 @@
 #
 module Timeout
   def timeout(sec, klass = nil)   #:yield: +sec+
-    return yield(sec) if sec == nil or sec.zero?
+    return yield(sec) if sec.nil? or sec.zero?
     exception = klass || Class.new(ExitException)
     state_lock = Mutex.new
     state = :sleeping
@@ -81,15 +81,15 @@ module Timeout
         end
       end
     rescue exception => e
-      rej = /\A#{Regexp.quote(__FILE__)}:#{__LINE__-4}\z/o
-      (bt = e.backtrace).reject! {|m| rej =~ m}
+      rej = /\A#{Regexp.quote(__FILE__)}:#{__LINE__ - 4}\z/o
+      (bt = e.backtrace).reject! { |m| rej =~ m }
       level = -caller(CALLER_OFFSET).size
       while THIS_FILE =~ bt[level]
         bt.delete_at(level)
         level += 1
       end
       raise if klass            # if exception class is specified, it
-                                # would be expected outside.
+      # would be expected outside.
       raise Error, e.message, e.backtrace
     end
   end

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Provider do
   let(:provider) { described_class.new }
 

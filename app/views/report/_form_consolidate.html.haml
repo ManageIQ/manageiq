@@ -10,11 +10,10 @@
         = select_tag('chosen_pivot1',
           options_for_select([NOTHING_STRING] + @pivots1, @pivotby1),
           :multiple             => false,
-          :class                => "selectpicker",
-          "data-miq_sparkle_on" => true)
+          :class                => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("chosen_pivot1", "#{url}");
+          miqSelectPickerEvent('chosen_pivot1', '#{url}', {beforeSend: true, complete: true});
     - if @pivotby1 != NOTHING_STRING
       .form-group
         %label.control-label.col-md-2
@@ -23,11 +22,10 @@
           = select_tag('chosen_pivot2',
             options_for_select([NOTHING_STRING] + @pivots2, @pivotby2),
             :multiple             => false,
-            :class                => "selectpicker",
-            "data-miq_sparkle_on" => true)
+            :class                => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent("chosen_pivot2", "#{url}");
+            miqSelectPickerEvent('chosen_pivot2', '#{url}', {beforeSend: true});
       - if @pivotby2 != NOTHING_STRING
         .form-group
           %label.control-label.col-md-2
@@ -36,11 +34,10 @@
             = select_tag('chosen_pivot3',
               options_for_select([NOTHING_STRING] + @pivots3, @pivotby3),
               :multiple             => false,
-              :class                => "selectpicker",
-              "data-miq_sparkle_on" => true)
+              :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent("chosen_pivot3", "#{url}");
+              miqSelectPickerEvent('chosen_pivot3', '#{url}', {beforeSend: true});
   %br
   %strong
     = _('Note:')

@@ -1,8 +1,8 @@
 require_relative "../bundler_setup"
 
-require 'coveralls'
-Coveralls.wear_merged! do
-  add_filter("/test/")
+if ENV["TRAVIS"]
+  require 'coveralls'
+  Coveralls.wear_merged! { add_filter("/test/") }
 end
 
 require 'minitest/autorun'

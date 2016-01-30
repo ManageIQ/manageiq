@@ -1,11 +1,11 @@
 class VimDummy
   EncodedRegistry = self
 
-  def initialize(*args)
+  def initialize(*_args)
   end
 
-  def self.const_missing(sym)
-    return VimDummy
+  def self.const_missing(_sym)
+    VimDummy
   end
 end
 
@@ -14,12 +14,12 @@ SOAP    = VimDummy
 VimWs25 = VimDummy
 
 module Registry
-  @registry = Hash.new
+  @registry = {}
 
   def self.register(args)
     argId = args[:schema_name] || args[:schema_type]
     if (sea = args[:schema_element])
-      argHash  = Hash.new
+      argHash  = {}
       sea.each do |se|
         se[1] = se[1][0] if se[1].kind_of?(Array)
         se[1]['VimWs25::'] = '' if se[1] && se[1]['VimWs25::']
@@ -37,7 +37,7 @@ module Registry
     end
   end
 
-  def self.set(*args)
+  def self.set(*_args)
   end
 
   def self.registry

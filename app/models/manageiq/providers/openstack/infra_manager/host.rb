@@ -6,6 +6,14 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   has_many :host_service_group_openstacks, :foreign_key => :host_id, :dependent => :destroy,
     :class_name => 'ManageIQ::Providers::Openstack::InfraManager::HostServiceGroup'
 
+  has_many :network_ports, :as => :device
+  has_many :cloud_networks, :through => :network_ports
+  alias_method :private_networks, :cloud_networks
+  has_many :cloud_subnets, :through => :network_ports
+  has_many :network_routers, :through => :cloud_networks
+  has_many :public_networks, :through => :cloud_networks
+  has_many :floating_ips
+
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
   # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
   # cloud tenant with rails relations
@@ -18,8 +26,8 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def ssh_users_and_passwords
-    user_auth_key, auth_key = self.auth_user_keypair
-    user_password, password = self.auth_user_pwd
+    user_auth_key, auth_key = auth_user_keypair
+    user_password, password = auth_user_pwd
     su_user, su_password = nil, nil
 
     # TODO(lsmola) make sudo user work with password. We will not probably support su, as root will not have password
@@ -36,7 +44,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   def get_parent_keypair(type = nil)
     # Get private key defined on Provider level, in the case all hosts has the same user
-    self.ext_management_system.try(:authentication_type, type)
+    ext_management_system.try(:authentication_type, type)
   end
 
   def authentication_best_fit(requested_type = nil)
@@ -79,7 +87,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
       # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
       auth = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
-        :name          => "#{self.class.name} #{self.name}",
+        :name          => "#{self.class.name} #{name}",
         :authtype      => :ssh_keypair,
         :resource_id   => id,
         :resource_type => 'Host')
@@ -152,8 +160,19 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     end
   end
 
+  def add_unique_names(file, hashes)
+    hashes.each do |x|
+      # Adding unique ID for all custom attributes of a host, otherwise drift filters out the non unique ones
+      section = x[:section] || ""
+      name    = x[:name]    || ""
+      x[:unique_name] = "#{file.name}:#{section}:#{name}"
+    end
+    hashes
+  end
+
   def save_custom_attributes(file)
     hashes = OpenstackConfigurationParser.parse(file.contents)
+    hashes = add_unique_names(file, hashes)
     EmsRefresh.save_custom_attributes_inventory(file, hashes, :scan) if hashes
   end
 end

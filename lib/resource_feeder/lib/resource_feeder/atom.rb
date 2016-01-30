@@ -13,27 +13,27 @@ module ResourceFeeder
       require 'builder'
       xml = Builder::XmlMarkup.new(:indent => 2)
 
-      options[:feed]       ||= {}
-      options[:item]       ||= {}
+      options[:feed] ||= {}
+      options[:item] ||= {}
       options[:url_writer] ||= self
 
       if options[:class] || resources.first
         klass      = options[:class] || resources.first.class
         new_record = klass.new
       else
-        options[:feed] = { :title => "Empty", :link => "http://example.com" }
+        options[:feed] = {:title => "Empty", :link => "http://example.com"}
       end
 
       options[:feed][:title] ||= klass.name.pluralize
-      options[:feed][:id]    ||= "tag:#{request.host_with_port}:#{klass.name.pluralize}"
-      options[:feed][:link]  ||= SimplyHelpful::PolymorphicRoutes.polymorphic_url(new_record, options[:url_writer])
+      options[:feed][:id] ||= "tag:#{request.host_with_port}:#{klass.name.pluralize}"
+      options[:feed][:link] ||= SimplyHelpful::PolymorphicRoutes.polymorphic_url(new_record, options[:url_writer])
 
-      options[:item][:title]       ||= [ :title, :subject, :headline, :name ]
-      options[:item][:description] ||= [ :description, :body, :content ]
-      options[:item][:pub_date]    ||= [ :updated_at, :updated_on, :created_at, :created_on ]
-      options[:item][:author]      ||= [ :author, :creator ]
+      options[:item][:title] ||= [:title, :subject, :headline, :name]
+      options[:item][:description] ||= [:description, :body, :content]
+      options[:item][:pub_date] ||= [:updated_at, :updated_on, :created_at, :created_on]
+      options[:item][:author] ||= [:author, :creator]
 
-      resource_link = lambda { |r| SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
+      resource_link = ->(r) { SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
 
       xml.instruct!
       xml.feed "xml:lang" => "en-US", "xmlns" => 'http://www.w3.org/2005/Atom' do
@@ -56,7 +56,7 @@ module ResourceFeeder
 
             if author = call_or_read(options[:item][:author], resource)
               xml.author do
-                xml.name()
+                xml.name
               end
             end
           end

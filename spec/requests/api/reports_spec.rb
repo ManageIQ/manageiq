@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe "reports API" do
   include Rack::Test::Methods
 
@@ -125,12 +123,12 @@ RSpec.describe "reports API" do
     it "can run a report" do
       report = FactoryGirl.create(:miq_report)
 
-      expect {
+      expect do
         api_basic_authorize action_identifier(:reports, :run)
         run_post "#{reports_url(report.id)}", :action => "run"
-      }.to change(MiqReportResult, :count).by(1)
+      end.to change(MiqReportResult, :count).by(1)
       expect_single_action_result(
-        :href => reports_url(report.id),
+        :href    => reports_url(report.id),
         :success => true,
         :message => "running report #{report.id}"
       )
@@ -212,10 +210,10 @@ RSpec.describe "reports API" do
     it "cannot run a report" do
       report = FactoryGirl.create(:miq_report)
 
-      expect {
+      expect do
         api_basic_authorize
         run_post "#{reports_url(report.id)}", :action => "run"
-      }.not_to change(MiqReportResult, :count)
+      end.not_to change(MiqReportResult, :count)
       expect_request_forbidden
     end
 

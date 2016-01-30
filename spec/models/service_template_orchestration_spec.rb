@@ -1,11 +1,9 @@
-require "spec_helper"
-
 describe ServiceTemplateOrchestration do
   let(:service_template) { FactoryGirl.create(:service_template_orchestration) }
 
   context '#create_subtasks' do
     it 'does not need subtasks' do
-      service_template.create_subtasks(nil, nil).size.should == 0
+      expect(service_template.create_subtasks(nil, nil).size).to eq(0)
     end
   end
 
@@ -14,27 +12,27 @@ describe ServiceTemplateOrchestration do
     let(:second_orch_template) { FactoryGirl.create(:orchestration_template) }
 
     it "initially reads a nil orchestration template" do
-      service_template.orchestration_template.should be_nil
+      expect(service_template.orchestration_template).to be_nil
     end
 
     it "adds an orchestration template" do
       service_template.orchestration_template = first_orch_template
-      service_template.orchestration_template.should == first_orch_template
+      expect(service_template.orchestration_template).to eq(first_orch_template)
     end
 
     it "replaces the existing orchestration template" do
       service_template.orchestration_template = first_orch_template
       service_template.orchestration_template = second_orch_template
 
-      service_template.orchestration_template.should == second_orch_template
-      service_template.orchestration_template.should_not == first_orch_template
+      expect(service_template.orchestration_template).to eq(second_orch_template)
+      expect(service_template.orchestration_template).not_to eq(first_orch_template)
     end
 
     it "clears the existing orchestration template" do
       service_template.orchestration_template = first_orch_template
       service_template.orchestration_template = nil
 
-      service_template.orchestration_template.should be_nil
+      expect(service_template.orchestration_template).to be_nil
     end
 
     it "clears invalid orchestration template" do
@@ -43,7 +41,7 @@ describe ServiceTemplateOrchestration do
 
       service_template.save!
       service_template.reload
-      service_template.orchestration_template.should be_nil
+      expect(service_template.orchestration_template).to be_nil
     end
   end
 
@@ -52,27 +50,27 @@ describe ServiceTemplateOrchestration do
     let(:ems_openstack) { FactoryGirl.create(:ems_openstack) }
 
     it "initially reads a nil orchestration manager" do
-      service_template.orchestration_manager.should be_nil
+      expect(service_template.orchestration_manager).to be_nil
     end
 
     it "adds an orchestration manager" do
       service_template.orchestration_manager = ems_openstack
-      service_template.orchestration_manager.should == ems_openstack
+      expect(service_template.orchestration_manager).to eq(ems_openstack)
     end
 
     it "replaces the existing orchestration manager" do
       service_template.orchestration_manager = ems_openstack
       service_template.orchestration_manager = ems_amazon
 
-      service_template.orchestration_manager.should == ems_amazon
-      service_template.orchestration_manager.should_not == ems_openstack
+      expect(service_template.orchestration_manager).to eq(ems_amazon)
+      expect(service_template.orchestration_manager).not_to eq(ems_openstack)
     end
 
     it "clears the existing orchestration manager" do
       service_template.orchestration_manager = ems_openstack
       service_template.orchestration_manager = nil
 
-      service_template.orchestration_manager.should be_nil
+      expect(service_template.orchestration_manager).to be_nil
     end
 
     it "clears invalid orchestration manager" do
@@ -81,7 +79,7 @@ describe ServiceTemplateOrchestration do
 
       service_template.save!
       service_template.reload
-      service_template.orchestration_manager.should be_nil
+      expect(service_template.orchestration_manager).to be_nil
     end
   end
 end

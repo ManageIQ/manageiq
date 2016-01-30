@@ -1,16 +1,13 @@
-require "spec_helper"
-
 describe ServiceTemplateCatalog do
   let(:root_tenant) do
-    EvmSpecHelper.create_root_tenant
+    Tenant.seed
   end
 
   describe "#name" do
     it "is unique per tenant" do
       FactoryGirl.create(:service_template_catalog, :name => "common", :tenant => root_tenant)
-      expect do
-        FactoryGirl.create(:service_template_catalog, :name => "common", :tenant => root_tenant)
-      end.to raise_error
+      expect { FactoryGirl.create(:service_template_catalog, :name => "common", :tenant => root_tenant) }
+        .to raise_error(ActiveRecord::RecordInvalid, /Name has already been taken/)
     end
 
     it "can be the same across tenants" do

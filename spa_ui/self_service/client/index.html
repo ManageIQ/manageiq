@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html ng-app="app" class="layout-pf-alt layout-pf-alt-fixed layout-pf-alt-fixed-with-footer layout-pf-alt-fixed-inner-scroll transitions">
+<html ng-app="app" class="layout-pf-alt layout-pf-alt-fixed layout-pf-alt-fixed-inner-scroll transitions">
 <head lang="en">
-  <title ng-bind="title">ManageIQ Self Service</title>
+  <title ng-bind="title">Self Service</title>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
   <link rel="shortcut icon" href="/favicon.ico"/>
   <link rel="icon" href="/favicon.ico"/>
-  <base href="/">
+  <base href="/self_service/">
   <style>
     [ng-cloak] {
       display: none;
@@ -23,9 +23,11 @@
   </style>
   <!-- build:css styles/lib.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
+  <link rel="stylesheet" href="/bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
+  <link rel="stylesheet" href="/bower_components/ngprogress/ngProgress.css" />
   <link rel="stylesheet" href="/bower_components/patternfly/dist/css/patternfly.css" />
   <link rel="stylesheet" href="/bower_components/patternfly/dist/css/patternfly-additions.css" />
+  <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -35,12 +37,10 @@
   <!-- endinject -->
   <!-- endbuild -->
 </head>
-<body>
+<body ng-controller="AppController">
   <div class="ng-cloak splash">
     <div class="splash__overlay">
-      <div class="splash__message">
-        ManageIQ Self Service
-      </div>
+      <div class="splash__message"></div>
     </div>
   </div>
 
@@ -49,22 +49,26 @@
   <!-- build:js js/lib.js -->
   <!-- bower:js -->
   <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/angular/angular.js"></script>
+  <script src="/bower_components/angular-animate/angular-animate.js"></script>
+  <script src="/bower_components/angular-base64/angular-base64.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/bower_components/angular-gettext/dist/angular-gettext.js"></script>
+  <script src="/bower_components/angular-messages/angular-messages.js"></script>
+  <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
+  <script src="/bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.js"></script>
+  <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="/bower_components/lodash/lodash.js"></script>
   <script src="/bower_components/moment/moment.js"></script>
-  <script src="/bower_components/toastr/toastr.js"></script>
-  <script src="/bower_components/angular/angular.js"></script>
-  <script src="/bower_components/angular-resource/angular-resource.js"></script>
-  <script src="/bower_components/angular-animate/angular-animate.js"></script>
-  <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="/bower_components/angular-messages/angular-messages.js"></script>
-  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
+  <script src="/bower_components/ngprogress/build/ngprogress.js"></script>
+  <script src="/bower_components/ngstorage/ngStorage.js"></script>
+  <script src="/bower_components/patternfly/components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="/bower_components/patternfly/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+  <script src="/bower_components/patternfly/components/bootstrap-select/dist/js/bootstrap-select.js"></script>
   <script src="/bower_components/patternfly/dist/js/patternfly.js"></script>
-  <script src="/bower_components/patternfly/components/c3/c3.js"></script>
-  <script src="/bower_components/patternfly/components/d3/d3.js"></script>
-  <script src="/bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="/bower_components/angular-base64/angular-base64.js"></script>
+  <script src="/bower_components/toastr/toastr.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -84,6 +88,7 @@
   <script src="/client/app/core/core.module.js"></script>
   <script src="/client/app/resources/resources.module.js"></script>
   <script src="/client/app/services/services.module.js"></script>
+  <script src="/client/app/skin/skin.module.js"></script>
   <script src="/client/app/states/states.module.js"></script>
   <script src="/client/app/blocks/bind-attrs/bind-attrs.directive.js"></script>
   <script src="/client/app/blocks/directive-options/directive-options.factory.js"></script>
@@ -94,21 +99,36 @@
   <script src="/client/app/blocks/pub-sub/pub-sub.factory.js"></script>
   <script src="/client/app/blocks/recursion/recursion-helper.factory.js"></script>
   <script src="/client/app/blocks/router/router-helper.provider.js"></script>
+  <script src="/client/app/components/autofocus/autofocus.directive.js"></script>
+  <script src="/client/app/components/confirmation/confirmation.directive.js"></script>
+  <script src="/client/app/components/custom-button/custom-button.directive.js"></script>
+  <script src="/client/app/components/dialog-content/dialog-content.directive.js"></script>
+  <script src="/client/app/components/edit-service-modal/edit-service-modal-service.factory.js"></script>
+  <script src="/client/app/components/footer/footer-content.directive.js"></script>
   <script src="/client/app/components/main-content/main-content.directive.js"></script>
   <script src="/client/app/components/navigation/header-nav.directive.js"></script>
   <script src="/client/app/components/navigation/sidebar-nav.directive.js"></script>
+  <script src="/client/app/components/retire-service-modal/retire-service-modal-service.factory.js"></script>
   <script src="/client/app/components/ss-card/ss-card.directive.js"></script>
   <script src="/client/app/components/toasts/toasts.factory.js"></script>
   <script src="/client/app/config/api.config.js"></script>
   <script src="/client/app/config/authorization.config.js"></script>
+  <script src="/client/app/config/gettext.config.js"></script>
   <script src="/client/app/config/layouts.config.js"></script>
   <script src="/client/app/config/navigation.config.js"></script>
   <script src="/client/app/core/config.js"></script>
   <script src="/client/app/core/constants.js"></script>
+  <script src="/client/app/filters/format-bytes.filter.js"></script>
   <script src="/client/app/resources/authentication-api.factory.js"></script>
   <script src="/client/app/resources/collections-api.factory.js"></script>
+  <script src="/client/app/services/dialog-field-refresh.service.js"></script>
+  <script src="/client/app/services/marketplace-state.service.js"></script>
   <script src="/client/app/services/messages.service.js"></script>
+  <script src="/client/app/services/navcounts.service.js"></script>
   <script src="/client/app/services/navigation.provider.js"></script>
+  <script src="/client/app/services/polling.service.js"></script>
+  <script src="/client/app/services/requests-state.service.js"></script>
+  <script src="/client/app/services/services-state.service.js"></script>
   <script src="/client/app/services/session.service.js"></script>
   <script src="/client/app/states/404/404.state.js"></script>
   <script src="/client/app/states/about-me/about-me.state.js"></script>

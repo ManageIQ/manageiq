@@ -1,5 +1,5 @@
 def print_rels(subtree, indent = '')
-  subtree = subtree.sort_by { |rel, children| rel.resource_pair }
+  subtree = subtree.sort_by { |rel, _children| rel.resource_pair }
   subtree.each do |rel, children|
     puts "#{indent}- #{rel.resource_type} #{rel.resource_id} (#{rel.id})"
     print_rels(children, "  #{indent}")

@@ -3,8 +3,8 @@ module RhevmDiskProbe
   QCOW_MOD = "QcowDisk"
   RAW_MOD  = 'RawDisk'
 
-  def RhevmDiskProbe.probe(ostruct)
-    return nil if !ostruct.fileName
+  def self.probe(ostruct)
+    return nil unless ostruct.fileName
 
     ext = File.extname(ostruct.fileName).downcase
     return nil unless ext.length.zero?
@@ -35,10 +35,10 @@ module RhevmDiskProbe
       return RAW_MOD  if desc[:format].to_s.include?('RAW')
       return QCOW_MOD if desc[:format].to_s.include?('COW')
     end
-    return nil
+    nil
   end
 
-  def RhevmDiskProbe.parseDescriptor(descriptor)
+  def self.parseDescriptor(descriptor)
     desc = {}
     descriptor.each_line do |line|
       line.strip!
@@ -47,7 +47,6 @@ module RhevmDiskProbe
       key, *value = line.split('=')
       desc[key.downcase.to_sym] = value = value.join('=')
     end
-    return desc
+    desc
   end
-
 end # module RhevmDiskProbe

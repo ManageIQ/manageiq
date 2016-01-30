@@ -9,8 +9,8 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
   }
 
   def kill_workers_due_to_resources_exhausted?
-    options = self.worker_monitor_settings[:kill_algorithm].merge(:type => :kill)
-    self.invoke_algorithm(options)
+    options = worker_monitor_settings[:kill_algorithm].merge(:type => :kill)
+    invoke_algorithm(options)
   end
 
   def enough_resource_to_start_worker?(worker_class)
@@ -44,7 +44,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       _log.warn("System memory usage has exceeded #{value}% of swap: Total: [#{sys[:SwapTotal]}], Used: [#{used}]")
       return true
     end
-    return false
+    false
   end
 
   def start_algorithm_used_swap_percent_lt_value(options)
@@ -64,11 +64,11 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       _log.error("Not allowing worker [#{options[:worker_name]}] to start since system memory usage has exceeded #{value}% of swap: Total: [#{sys[:SwapTotal]}], Used: [#{used}]")
       return false
     end
-    return true
+    true
   end
 
   def start_algorithm_used_swap_percent_lt_value_and_free_memory_gt_half_worker_memory_threshold(options)
-    return false unless self.start_algorithm_used_swap_percent_lt_value(options)
+    return false unless start_algorithm_used_swap_percent_lt_value(options)
 
     # TODO: this is completely inconsistent, currently, this method assumes a config like:
     # :start_algorithm:
@@ -98,21 +98,21 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       return false
     end
 
-    value = value / 2  # The start limit is half the max
+    value /= 2  # The start limit is half the max
     sys = MiqSystem.memory
     result = (sys[:MemFree].nil? || sys[:MemFree] > value)
     _log.error("Not allowing worker [#{options[:worker_name]}] to start since free memory [#{sys[:MemFree]}] is less than half the worker threshold [#{value}]") unless result
-    return result
+    result
   end
 
   def invoke_algorithm(options)
     _log.debug("Invoke algorithm started with options: [#{options.inspect}]")
     name = options[:name]
     type = options[:type]
-    full_algorithm_name = self.build_algorithm_name(name, type)
+    full_algorithm_name = build_algorithm_name(name, type)
 
     _log.debug("Executing [#{type}] algorithm: [#{name}]")
-    res = self.send(full_algorithm_name, options)
+    res = send(full_algorithm_name, options)
     _log.debug("Executing [#{type}] algorithm: [#{name}] completed with result: [#{res}]")
     res
   end

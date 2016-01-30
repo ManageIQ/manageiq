@@ -7,9 +7,9 @@ module MiqPolicyController::PolicyProfiles
       @edit = nil
       @profile = MiqPolicySet.find_by_id(session[:edit][:profile_id]) if session[:edit] && session[:edit][:profile_id]
       if !@profile || (@profile && @profile.id.blank?)
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqPolicySet"))
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqPolicySet"))
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqPolicySet"), :name=>@profile.description})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -26,24 +26,24 @@ module MiqPolicyController::PolicyProfiles
 
     # Load @edit/vars for other buttons
     id = params[:id] ? params[:id] : "new"
-    return unless load_edit("profile_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("profile_edit__#{id}", "replace_cell__explorer")
     @profile = @edit[:profile_id] ? MiqPolicySet.find_by_id(@edit[:profile_id]) : MiqPolicySet.new
 
     case params[:button]
     when "save", "add"
       assert_privileges("profile_#{@profile.id ? "edit" : "new"}")
-      add_flash(_("%{model} must contain at least one %{field}") % {:model=>ui_lookup(:model=>"MiqPolicySet"), :field=>ui_lookup(:model=>"MiqPolicy")}, :error) if @edit[:new][:policies].length == 0 # At least one member is required
+      add_flash(_("%{model} must contain at least one %{field}") % {:model => ui_lookup(:model => "MiqPolicySet"), :field => ui_lookup(:model => "MiqPolicy")}, :error) if @edit[:new][:policies].length == 0 # At least one member is required
       profile = @profile.id.blank? ? MiqPolicySet.new : MiqPolicySet.find(@profile.id)  # Get new or existing record
       profile.description = @edit[:new][:description]
       profile.notes = @edit[:new][:notes]
       if profile.valid? && !@flash_array && profile.save
         policies = profile.members                            # Get the sets members
-        current = Array.new
-        policies.each {|p| current.push(p.id)}                # Build an array of the current policy ids
+        current = []
+        policies.each { |p| current.push(p.id) }                # Build an array of the current policy ids
         mems = @edit[:new][:policies].invert                  # Get the ids from the member list box
         begin
-          policies.each {|c| profile.remove_member(MiqPolicy.find(c)) if !mems.include?(c.id) } # Remove any policies no longer in the members list box
-          mems.each_key {|m| profile.add_member(MiqPolicy.find(m)) if !current.include?(m) }    # Add any policies not in the set
+          policies.each { |c| profile.remove_member(MiqPolicy.find(c)) unless mems.include?(c.id) } # Remove any policies no longer in the members list box
+          mems.each_key { |m| profile.add_member(MiqPolicy.find(m)) unless current.include?(m) }    # Add any policies not in the set
         rescue StandardError => bang
           add_flash(_("Error during '%s': ") % "Policy Profile #{params[:button]}" << bang.message, :error)
         end
@@ -57,7 +57,7 @@ module MiqPolicyController::PolicyProfiles
         @new_profile_node = "pp-#{to_cid(profile.id)}"
         replace_right_cell("pp", [:policy_profile])
       else
-        profile.errors.each do |field,msg|
+        profile.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         replace_right_cell("pp")
@@ -71,23 +71,23 @@ module MiqPolicyController::PolicyProfiles
 
   def profile_delete
     assert_privileges("profile_delete")
-    profiles = Array.new
+    profiles = []
     # showing 1 policy set, delete it
-    if params[:id] == nil || MiqPolicySet.find_by_id(params[:id]).nil?
-      add_flash(_("%s no longer exists") % ui_lookup(:model=>"MiqPolicySet"),
-                  :error)
+    if params[:id].nil? || MiqPolicySet.find_by_id(params[:id]).nil?
+      add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqPolicySet"),
+                :error)
     else
       profiles.push(params[:id])
     end
     process_profiles(profiles, "destroy") unless profiles.empty?
-    add_flash(_("The selected %s was deleted") % ui_lookup(:models=>"MiqPolicySet")) if @flash_array == nil
+    add_flash(_("The selected %s was deleted") % ui_lookup(:models => "MiqPolicySet")) if @flash_array.nil?
     self.x_node = @new_profile_node = 'root'
     get_node_info('root')
     replace_right_cell('root', [:policy_profile])
   end
 
   def profile_field_changed
-    return unless load_edit("profile_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("profile_edit__#{params[:id]}", "replace_cell__explorer")
     @profile = @edit[:profile_id] ? MiqPolicySet.find_by_id(@edit[:profile_id]) : MiqPolicySet.new
 
     @edit[:new][:description] = params[:description].blank? ? nil : params[:description] if params[:description]
@@ -103,9 +103,9 @@ module MiqPolicyController::PolicyProfiles
   end
 
   def profile_build_edit_screen
-    @edit = Hash.new
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit = {}
+    @edit[:new] = {}
+    @edit[:current] = {}
 
     @profile = params[:id] ? MiqPolicySet.find(params[:id]) : MiqPolicySet.new            # Get existing or new record
     @edit[:key] = "profile_edit__#{@profile.id || "new"}"
@@ -115,13 +115,13 @@ module MiqPolicyController::PolicyProfiles
     @edit[:new][:description] = @profile.description
     @edit[:new][:notes] = @profile.notes
 
-    @edit[:new][:policies] = Hash.new
+    @edit[:new][:policies] = {}
     policies = @profile.members     # Get the member sets
-    policies.each{|p| @edit[:new][:policies][ui_lookup(:model=>p.towhat) + " #{p.mode.capitalize}: " + p.description] = p.id} # Build a hash for the members list box
+    policies.each { |p| @edit[:new][:policies][ui_lookup(:model => p.towhat) + " #{p.mode.capitalize}: " + p.description] = p.id } # Build a hash for the members list box
 
-    @edit[:choices] = Hash.new
+    @edit[:choices] = {}
     MiqPolicy.all.each do |p|
-      @edit[:choices][ui_lookup(:model=>p.towhat) + " #{p.mode.capitalize}: " + p.description] = p.id         # Build a hash for the policies to choose from
+      @edit[:choices][ui_lookup(:model => p.towhat) + " #{p.mode.capitalize}: " + p.description] = p.id         # Build a hash for the policies to choose from
     end
 
     @edit[:new][:policies].each_key do |key|
@@ -139,8 +139,8 @@ module MiqPolicyController::PolicyProfiles
   def profile_get_all
     @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
     set_search_text
-    @profiles = apply_search_filter(@search_text, @profiles) if !@search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqPolicySet")
+    @profiles = apply_search_filter(@search_text, @profiles) unless @search_text.blank?
+    @right_cell_text = _("All %s") % ui_lookup(:models => "MiqPolicySet")
     @right_cell_div = "profile_list"
   end
 
@@ -148,7 +148,7 @@ module MiqPolicyController::PolicyProfiles
   def profile_get_info(profile)
     @record = @profile = profile
     @profile_policies = @profile.miq_policies.sort_by { |p| [p.towhat, p.mode, p.description.downcase] }
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqPolicySet"), :name=>@profile.description}
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
     @right_cell_div = "profile_details"
   end
 end

@@ -2,7 +2,7 @@ class OrchestrationTemplateDialogService
   def create_dialog(dialog_label, template)
     Dialog.new(:label => dialog_label, :buttons => "submit,cancel").tap do |dialog|
       tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
-      add_stack_group(tab, 0)
+      add_stack_group(tab, 0, template)
 
       template.parameter_groups.each_with_index do |parameter_group, index|
         add_parameter_group(parameter_group, tab, index + 1)
@@ -13,7 +13,7 @@ class OrchestrationTemplateDialogService
 
   private
 
-  def add_stack_group(tab, position)
+  def add_stack_group(tab, position, template)
     tab.dialog_groups.build(
       :display  => "edit",
       :label    => "Options",
@@ -21,12 +21,29 @@ class OrchestrationTemplateDialogService
     ).tap do |dialog_group|
       add_tenant_name_field(dialog_group, 0)
       add_stack_name_field(dialog_group, 1)
-      add_on_failure_field(dialog_group, 2)
-      add_timeout_field(dialog_group, 3)
+
+      if template.kind_of?(OrchestrationTemplateAzure)
+        add_azure_stack_options(dialog_group, 2)
+      else
+        add_aws_openstack_stack_options(dialog_group, 2)
+      end
     end
   end
 
+  def add_aws_openstack_stack_options(dialog_group, position)
+    add_on_failure_field(dialog_group, position)
+    add_timeout_field(dialog_group, position + 1)
+  end
+
+  def add_azure_stack_options(dialog_group, position)
+    add_resource_group_list(dialog_group, position)
+    add_new_resource_group_field(dialog_group, position + 1)
+    add_mode_field(dialog_group, position + 2)
+  end
+
   def add_parameter_group(parameter_group, tab, position)
+    return if parameter_group.parameters.blank?
+
     tab.dialog_groups.build(
       :display  => "edit",
       :label    => parameter_group.label,
@@ -63,7 +80,7 @@ class OrchestrationTemplateDialogService
       :required       => true,
       :options        => {:protected => false},
       :validator_type => 'regex',
-      :validator_rule => '^[A-Za-z][A-Za-z0-9|-]*$',
+      :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$',
       :label          => "Stack Name",
       :position       => position,
       :dialog_group   => group
@@ -98,9 +115,58 @@ class OrchestrationTemplateDialogService
       :display        => "edit",
       :required       => false,
       :options        => {:protected => false},
-      :validator_type => 'regex',
-      :validator_rule => '^[1-9][0-9]*$',
       :label          => "Timeout(minutes, optional)",
+      :position       => position,
+      :dialog_group   => group
+    )
+  end
+
+  def add_mode_field(group, position)
+    group.dialog_fields.build(
+      :type          => "DialogFieldDropDownList",
+      :name          => "deploy_mode",
+      :description   => "Select deployment mode",
+      :data_type     => "string",
+      :display       => "edit",
+      :required      => true,
+      :values        => [%w(Incremental Incremental), %w(Complete Complete)],
+      :default_value => "Incremental",
+      :options       => {:sort_by => :description, :sort_order => :ascending},
+      :label         => "Mode",
+      :position      => position,
+      :dialog_group  => group
+    )
+  end
+
+  def add_resource_group_list(group, position)
+    group.dialog_fields.build(
+      :type         => "DialogFieldDropDownList",
+      :name         => "resource_group",
+      :description  => "Select an existing resource group for deployment",
+      :data_type    => "string",
+      :display      => "edit",
+      :dynamic      => true,
+      :required     => false,
+      :label        => "Existing Resource Group",
+      :position     => position,
+      :dialog_group => group
+    ).tap do |dialog_field|
+      dialog_field.resource_action.fqname = "/Cloud/Orchestration/Operations/Methods/Available_Resource_Groups"
+    end
+  end
+
+  def add_new_resource_group_field(group, position)
+    group.dialog_fields.build(
+      :type           => "DialogFieldTextBox",
+      :name           => "new_resource_group",
+      :description    => "Create a new resource group upon deployment",
+      :data_type      => "string",
+      :display        => "edit",
+      :required       => false,
+      :options        => {:protected => false},
+      :validator_type => 'regex',
+      :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$',
+      :label          => "(or) New Resource Group",
       :position       => position,
       :dialog_group   => group
     )
@@ -120,17 +186,18 @@ class OrchestrationTemplateDialogService
   def create_parameter_dropdown_list(parameter, group, position, dropdown)
     dropdown_list = dropdown.allowed_values.collect { |v| [v, v] }
     group.dialog_fields.build(
-      :type          => "DialogFieldDropDownList",
-      :name          => "param_#{parameter.name}",
-      :data_type     => "string",
-      :display       => "edit",
-      :required      => true,
-      :values        => dropdown_list,
-      :default_value => parameter.default_value || dropdown_list.first,
-      :label         => parameter.label,
-      :description   => parameter.description,
-      :position      => position,
-      :dialog_group  => group
+      :type           => "DialogFieldDropDownList",
+      :name           => "param_#{parameter.name}",
+      :data_type      => "string",
+      :display        => "edit",
+      :required       => true,
+      :values         => dropdown_list,
+      :default_value  => parameter.default_value || dropdown_list.first,
+      :label          => parameter.label,
+      :description    => parameter.description,
+      :reconfigurable => true,
+      :position       => position,
+      :dialog_group   => group
     )
   end
 
@@ -151,6 +218,7 @@ class OrchestrationTemplateDialogService
       :validator_rule => pattern.try(:pattern),
       :label          => parameter.label,
       :description    => parameter.description,
+      :reconfigurable => true,
       :position       => position,
       :dialog_group   => group
     )

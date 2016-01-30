@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceOrchestration::OptionConverter do
   let(:dialog_options) do
     {
@@ -18,7 +16,7 @@ describe ServiceOrchestration::OptionConverter do
 
   it '#stack_create_options' do
     converter = klass.get_converter(dialog_options, ManageIQ::Providers::Amazon::CloudManager)
-    converter.stack_create_options.should have_attributes(
+    expect(converter.stack_create_options).to have_attributes(
       :timeout          => 100,
       :disable_rollback => false,
       :parameters       => {'para1' => 'stack_param1', 'para2' => 'admin'}
@@ -26,8 +24,8 @@ describe ServiceOrchestration::OptionConverter do
   end
 
   it 'parses other dialog options correctly' do
-    klass.get_stack_name(dialog_options).should == 'test_stack_name'
-    klass.get_manager(dialog_options).should be_kind_of(ManageIQ::Providers::Amazon::CloudManager)
-    klass.get_template(dialog_options).should be_kind_of(OrchestrationTemplate)
+    expect(klass.get_stack_name(dialog_options)).to eq('test_stack_name')
+    expect(klass.get_manager(dialog_options)).to be_kind_of(ManageIQ::Providers::Amazon::CloudManager)
+    expect(klass.get_template(dialog_options)).to be_kind_of(OrchestrationTemplate)
   end
 end

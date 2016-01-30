@@ -23,7 +23,7 @@ class TreeBuilderAlertProfile < TreeBuilder
   end
 
   # level 1 - * alert profiles
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(count_only, _options)
     objects = alert_profile_kinds.map do |db|
       # Set alert profile folder nodes to open so we pre-load all children
       open_node("xx-#{db}")
@@ -33,27 +33,27 @@ class TreeBuilderAlertProfile < TreeBuilder
       {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
     end
 
-    count_only_or_objects(options[:count_only], objects)
+    count_only_or_objects(count_only, objects)
   end
 
   # level 2 - alert profiles
-  def x_get_tree_custom_kids(parent, options)
+  def x_get_tree_custom_kids(parent, count_only, options)
     assert_type(options[:type], :alert_profile)
 
     objects = MiqAlertSet.where(:mode => parent[:id].split('-'))
 
-    count_only_or_objects(options[:count_only], objects, :description)
+    count_only_or_objects(count_only, objects, :description)
   end
 
   # level 3 - alerts
-  def x_get_tree_ap_kids(parent, options)
-    count_only_or_objects(options[:count_only],
+  def x_get_tree_ap_kids(parent, count_only)
+    count_only_or_objects(count_only,
                           parent.miq_alerts,
                           :description)
   end
 
   # level 4 - nothing
-  def x_get_tree_al_kids(_parent, options)
-    count_only_or_objects(options[:count_only], [])
+  def x_get_tree_al_kids(_parent, count_only)
+    count_only_or_objects(count_only, [])
   end
 end

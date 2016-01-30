@@ -48,88 +48,45 @@ class OntapFlexVolExtent < CimStorageExtent
     ontap_concrete_extent
   end
 
-  def base_storage_extents
-    ontap_logical_disk.base_storage_extents
-  end
+  delegate :base_storage_extents, :to => :ontap_logical_disk
 
-  def base_storage_extents_size
-    ontap_logical_disk.base_storage_extents_size
-  end
+  delegate :base_storage_extents_size, :to => :ontap_logical_disk
 
-  def file_system
-    ontap_logical_disk.file_system
-  end
+  delegate :file_system, :to => :ontap_logical_disk
 
-  def file_shares
-    ontap_logical_disk.file_shares
-  end
+  delegate :file_shares, :to => :ontap_logical_disk
 
-  def file_shares_size
-    ontap_logical_disk.file_shares_size
-  end
+  delegate :file_shares_size, :to => :ontap_logical_disk
 
-  def cim_datastores
-    ontap_logical_disk.cim_datastores
-  end
+  delegate :cim_datastores, :to => :ontap_logical_disk
 
-  def cim_datastores_size
-    ontap_logical_disk.cim_datastores_size
-  end
+  delegate :cim_datastores_size, :to => :ontap_logical_disk
 
-  def storages
-    ontap_logical_disk.storages
-  end
+  delegate :storages, :to => :ontap_logical_disk
 
-  def storages_size
-    ontap_logical_disk.storages_size
-  end
+  delegate :storages_size, :to => :ontap_logical_disk
 
-  def cim_virtual_disks
-    ontap_logical_disk.cim_virtual_disks
-  end
+  delegate :cim_virtual_disks, :to => :ontap_logical_disk
 
-  def cim_virtual_disks_size
-    ontap_logical_disk.cim_virtual_disks_size
-  end
+  delegate :cim_virtual_disks_size, :to => :ontap_logical_disk
 
-  def virtual_disks
-    ontap_logical_disk.virtual_disks
-  end
+  delegate :virtual_disks, :to => :ontap_logical_disk
 
-  def virtual_disks_size
-    ontap_logical_disk.virtual_disks_size
-  end
+  delegate :virtual_disks_size, :to => :ontap_logical_disk
 
-  def cim_vms
-    ontap_logical_disk.cim_vms
-  end
+  delegate :cim_vms, :to => :ontap_logical_disk
 
-  def cim_vms_size
-    ontap_logical_disk.cim_vms_size
-  end
+  delegate :cim_vms_size, :to => :ontap_logical_disk
 
-  def vms
-    ontap_logical_disk.vms
-  end
+  delegate :vms, :to => :ontap_logical_disk
 
-  def vms_size
-    ontap_logical_disk.vms_size
-  end
+  delegate :vms_size, :to => :ontap_logical_disk
 
-  def cim_hosts
-    ontap_logical_disk.cim_hosts
-  end
+  delegate :cim_hosts, :to => :ontap_logical_disk
 
-  def cim_hosts_size
-    ontap_logical_disk.cim_hosts_size
-  end
+  delegate :cim_hosts_size, :to => :ontap_logical_disk
 
-  def hosts
-    ontap_logical_disk.hosts
-  end
+  delegate :hosts, :to => :ontap_logical_disk
 
-  def hosts_size
-    ontap_logical_disk.hosts_size
-  end
-
+  delegate :hosts_size, :to => :ontap_logical_disk
 end

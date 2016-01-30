@@ -1,11 +1,9 @@
-require "spec_helper"
 require "routing/shared_examples"
 
 describe OntapStorageSystemController do
   let(:controller_name) { "ontap_storage_system" }
 
   it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has show list routes"
   it_behaves_like "A controller that has download_data routes"
@@ -50,7 +48,7 @@ describe OntapStorageSystemController do
   describe "#sections_field_changed" do
     it "routes with POST" do
       expect(post("/#{controller_name}/sections_field_changed")).to route_to(
-                                                                        "#{controller_name}#sections_field_changed")
+        "#{controller_name}#sections_field_changed")
     end
   end
 

@@ -23,15 +23,15 @@ class ZiyaCharting < Charting
       require 'builder'
       Ziya.initialize(
         :logger     => Rails.logger,
-        :themes_dir => File.join(Rails.root, %w{public charts themes})
+        :themes_dir => File.join(Rails.root, %w(public charts themes))
       )
     end
     @initialized = true
   end
 
-  ZTHEMES = %w{Commando Pastel Primary} + extra_themes
-  CHARTS  = %w{Area AreaThreed Bar CandleStick Column ColumnThreed Line ParallelThreedColumn
-  Pie PieThreed StackedArea StackedBar StackedColumn StackedThreedArea StackedThreedColumn}
+  ZTHEMES = %w(Commando Pastel Primary) + extra_themes
+  CHARTS  = %w(Area AreaThreed Bar CandleStick Column ColumnThreed Line ParallelThreedColumn
+               Pie PieThreed StackedArea StackedBar StackedColumn StackedThreedArea StackedThreedColumn)
 
   def js_load_statement(_delayed = false)
     # FIXME: only for IE
@@ -93,6 +93,11 @@ class ZiyaCharting < Charting
 
   def chart_names_for_select
     CHART_NAMES
+  end
+
+  def serialized(data)
+    # already xml
+    data
   end
 
   CHART_NAMES = [

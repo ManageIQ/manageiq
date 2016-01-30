@@ -1,5 +1,4 @@
 # encoding: US-ASCII
-require "spec_helper"
 require 'db/MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB do
@@ -30,8 +29,7 @@ describe MiqSqlite3DB do
   end
 
   def get_varint(buf)
-    value, _ = MiqSqlite3DB.variableInteger(buf)
+    value, = MiqSqlite3DB.variableInteger(buf)
     value
   end
-
 end

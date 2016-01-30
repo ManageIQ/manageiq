@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeImagePxelinux do
   let(:image) { FactoryGirl.create(:pxe_image_pxelinux) }
 

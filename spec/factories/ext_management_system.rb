@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:hostname)  { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
     guid                 { MiqUUID.new_guid }
+    zone                 { Zone.first || FactoryGirl.create(:zone) }
   end
 
   # Intermediate classes
@@ -65,14 +66,13 @@ FactoryGirl.define do
   factory :ems_openstack_infra_with_authentication, :parent => :ems_openstack_infra do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "qpid_user", :password => "qpid_password", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
     end
   end
 
   # Leaf classes for ems_cloud
 
   factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
-    zone {  Zone.first || FactoryGirl.create(:zone) }
     provider_region "us-east-1"
   end
 
@@ -89,14 +89,18 @@ FactoryGirl.define do
   end
 
   factory :ems_openstack, :aliases => ["manageiq/providers/openstack/cloud_manager"], :class => "ManageIQ::Providers::Openstack::CloudManager", :parent => :ems_cloud do
-    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "qpid_user", :password => "qpid_password", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
     end
+  end
+
+  factory :ems_google, :aliases => ["manageiq/providers/google/cloud_manager"],
+    :class => "ManageIQ::Providers::Google::CloudManager", :parent => :ems_cloud do
+    provider_region "us-central1"
   end
 
   # Leaf classes for ems_container
@@ -104,12 +108,31 @@ FactoryGirl.define do
   factory :ems_kubernetes, :aliases => ["manageiq/providers/kubernetes/container_manager"], :class => "ManageIQ::Providers::Kubernetes::ContainerManager", :parent => :ems_container do
   end
 
+  factory :ems_kubernetes_with_authentication_err, :parent => :ems_kubernetes do
+    after :create do |x|
+      x.authentications << FactoryGirl.create(:authentication_status_error)
+    end
+  end
+
+
   factory :ems_openshift, :aliases => ["manageiq/providers/openshift/container_manager"], :class => "ManageIQ::Providers::Openshift::ContainerManager", :parent => :ems_container do
+  end
+
+  factory :ems_atomic, :aliases => ["manageiq/providers/atomic/container_manager"], :class => "ManageIQ::Providers::Atomic::ContainerManager", :parent => :ems_container do
+  end
+
+  factory :ems_openshift_enterprise, :aliases => ["manageiq/providers/openshift_enterprise/container_manager"], :class => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager", :parent => :ems_container do
+  end
+
+  factory :ems_atomic_enterprise, :aliases => ["manageiq/providers/atomic_enterprise/container_manager"], :class => "ManageIQ::Providers::AtomicEnterprise::ContainerManager", :parent => :ems_container do
   end
 
   # Leaf classes for configuration_manager
 
-  factory :configuration_manager_foreman, :aliases => ["manageiq/providers/foreman/configuration_manager"], :class => "ManageIQ::Providers::Foreman::ConfigurationManager", :parent => :configuration_manager do
+  factory :configuration_manager_foreman, :aliases => ["manageiq/providers/foreman/configuration_manager"], :class => "ManageIQ::Providers::Foreman::ConfigurationManager", :parent => :configuration_manager
+  factory :configuration_manager_ansible_tower, :aliases => ["manageiq/providers/ansible_tower/configuration_manager"], :class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager", :parent => :configuration_manager
+  trait(:provider) do
+    after(:create) { |x| x.create_provider }
   end
 
   factory :configuration_manager_foreman_with_authentication, :parent => :configuration_manager_foreman do
@@ -130,10 +153,10 @@ FactoryGirl.define do
   end
 
   factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "ManageIQ::Providers::Azure::CloudManager", :parent => :ems_cloud do
-    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_azure_with_authentication, :parent => :ems_azure do
+    azure_tenant_id "ABCDEFGHIJABCDEFGHIJ0123456789AB"
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end

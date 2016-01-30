@@ -26,11 +26,11 @@ $vim_log = VMDBLogger.new("./ems_refresh_test.log") unless USE_BROKER
 
 begin
   loop do
-    vc_data = Hash.new { |h, k| h[k] = Hash.new }
+    vc_data = Hash.new { |h, k| h[k] = {} }
 
     begin
 
-      if USE_BROKER 
+      if USE_BROKER
         puts "Connecting with broker."
         broker = MiqVimBroker.new(:client)
         vim = broker.getMiqVim(SERVER, USERNAME, PASSWORD)
@@ -77,6 +77,6 @@ begin
 
 rescue => err
   puts err
-	puts err.class.to_s
+  puts err.class.to_s
   puts err.backtrace.join("\n")
 end

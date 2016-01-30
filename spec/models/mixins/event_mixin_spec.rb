@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe EventMixin do
   context "Included in a test class with events" do
     before do
@@ -24,22 +22,22 @@ describe EventMixin do
     end
 
     it "#first_event" do
-      TestClass.new.first_event.should be_same_time_as @ts_1
+      expect(TestClass.new.first_event).to be_same_time_as @ts_1
     end
 
     it "#last_event" do
-      TestClass.new.last_event.should  be_same_time_as @ts_3
+      expect(TestClass.new.last_event).to  be_same_time_as @ts_3
     end
 
     it "#first_and_last_event" do
       events = TestClass.new.first_and_last_event
-      events.length.should == 2
-      events[0].should     be_same_time_as @ts_1
-      events[1].should     be_same_time_as @ts_3
+      expect(events.length).to eq(2)
+      expect(events[0]).to     be_same_time_as @ts_1
+      expect(events[1]).to     be_same_time_as @ts_3
     end
 
     it "#has_events?" do
-      TestClass.new.should have_events
+      expect(TestClass.new).to have_events
     end
   end
 
@@ -59,20 +57,19 @@ describe EventMixin do
     end
 
     it "#first_event" do
-      TestClass.new.first_event.should be_nil
+      expect(TestClass.new.first_event).to be_nil
     end
 
     it "#last_event" do
-      TestClass.new.last_event.should  be_nil
+      expect(TestClass.new.last_event).to  be_nil
     end
 
     it "#first_and_last_event" do
-      TestClass.new.first_and_last_event.should be_empty
+      expect(TestClass.new.first_and_last_event).to be_empty
     end
 
     it "#has_events?" do
-      TestClass.new.should_not have_events
+      expect(TestClass.new).not_to have_events
     end
   end
-
 end

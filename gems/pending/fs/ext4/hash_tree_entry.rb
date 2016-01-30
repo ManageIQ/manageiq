@@ -1,7 +1,6 @@
 require 'binary_struct'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -17,11 +16,10 @@ module Ext4
     'L',  'next_node',  # Block address of next node.
   ])
   SIZEOF_HASH_TREE_ENTRY_NEXT = HASH_TREE_ENTRY_NEXT.size
-  
+
   SIZEOF_HASH_TREE_ENTRY = SIZEOF_HASH_TREE_ENTRY_NEXT
 
   class HashTreeEntry
-
     attr_reader :first, :max_descriptors, :cur_descriptors, :node, :min_hash
 
     def initialize(buf, first = false)
@@ -42,7 +40,7 @@ module Ext4
     end
 
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       if @first
         out += "First Node?     : true\n"
         out += "Max Descriptors : #{@max_descriptors}\n"
@@ -56,6 +54,5 @@ module Ext4
 
       out
     end
-
   end
 end

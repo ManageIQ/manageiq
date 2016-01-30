@@ -9,7 +9,7 @@ module ContainerImageRegistryHelper
     end
 
     def textual_group_relationships
-      %i(container_images containers ems)
+      %i(ems container_images containers)
     end
 
     def textual_group_smart_management

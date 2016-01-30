@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe MiqAePassword do
   let(:plaintext) { "Pl$1nTeXt" }
 
@@ -21,7 +19,7 @@ describe MiqAePassword do
     end
 
     it "throws understandable error" do
-      expect { described_class.decrypt("v1:{something}") }.to raise_error("no encryption key v1_key")
+      expect { described_class.decrypt("v1:{something}") }.to raise_error(MiqAePassword::MiqPasswordError)
     end
   end
 
@@ -43,7 +41,7 @@ describe MiqAePassword do
 
   describe ".key_root" do
     it "has key_root set" do
-      expect(MiqAePassword.key_root).to be
+      expect(MiqAePassword.key_root).to be_truthy
     end
   end
 end

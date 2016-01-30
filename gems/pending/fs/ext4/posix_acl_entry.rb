@@ -1,5 +1,4 @@
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -10,7 +9,6 @@ module Ext4
   ]
 
   class PosixAclEntry
-
     module EntryType
       ET_U_INODE      = 0x01  # User, specified in inode.
       ET_U_ATTRIB     = 0x02  # User, specified in attribute.
@@ -27,6 +25,5 @@ module Ext4
       EP_READ     = 0x04  # Read permission.
     end
     include EntryPermissions
-
   end
 end

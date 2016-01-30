@@ -1,7 +1,6 @@
 require 'cim_profile_defs'
 
 class MiqCimHostSystem < MiqCimInstance
-
   virtual_has_many  :datastore_backing,     :class_name => 'MiqCimInstance'
   virtual_has_many  :storage_systems,     :class_name => 'CimComputerSystem'
   virtual_has_many  :file_shares,       :class_name => 'SniaFileShare'
@@ -31,8 +30,8 @@ class MiqCimHostSystem < MiqCimInstance
   HostToBseShortcut     = CimAssociations.MIQ_CimHostSystem_TO_CIM_StorageExtent_SC
 
   SHORTCUT_DEFS = {
-    :local_file_systems_long  => HostToLfsShortcut,
-    :base_storage_extents_long  => HostToBseShortcut
+    :local_file_systems_long   => HostToLfsShortcut,
+    :base_storage_extents_long => HostToBseShortcut
   }
 
   #########################
@@ -189,5 +188,4 @@ class MiqCimHostSystem < MiqCimInstance
   def base_storage_extents_size
     getAssociationSize(HostToBseShortcut)
   end
-
 end

@@ -10,7 +10,7 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems container_services container_replicators container_groups containers lives_on)
+    %i(ems container_routes container_services container_replicators container_groups containers lives_on)
   end
 
   def textual_group_conditions
@@ -36,27 +36,15 @@ module ContainerNodeHelper::TextualSummary
   # Items
   #
 
-  def textual_name
-    @record.name
-  end
-
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
-  def textual_resource_version
-    @record.resource_version
-  end
-
   def textual_num_cpu_cores
     {:label => "Number of CPU Cores",
-     :value => @record.hardware.nil? ? "N/A" : @record.hardware.logical_cpus}
+     :value => @record.hardware.nil? ? "N/A" : @record.hardware.cpu_total_cores}
   end
 
   def textual_memory
-    if @record.try(:hardware).try(:memory_cpu)
+    if @record.try(:hardware).try(:memory_mb)
       memory = number_to_human_size(
-        @record.hardware.memory_cpu * 1.megabyte, :precision => 0)
+        @record.hardware.memory_mb * 1.megabyte, :precision => 0)
     else
       memory = "N/A"
     end
@@ -80,7 +68,7 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_identity_infra
     {:label => "Infrastructure Machine ID", :value =>
-      @record.identity_infra.nil?  ? "N/A" : @record.identity_infra}
+      @record.identity_infra.nil? ? "N/A" : @record.identity_infra}
   end
 
   def textual_lives_on

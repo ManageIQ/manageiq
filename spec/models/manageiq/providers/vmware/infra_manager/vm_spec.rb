@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Vmware::InfraManager::Vm do
   context "#is_available?" do
     let(:ems)  { FactoryGirl.create(:ems_vmware) }
@@ -61,12 +59,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
     let(:vm) { vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07")) }
 
     it "#reconfigurable?" do
-      expect(vm.reconfigurable?).to be_true
+      expect(vm.reconfigurable?).to be_truthy
     end
 
     context "#max_total_vcpus" do
       before do
-        @host = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :logical_cpus => 160))
+        @host = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 160))
         vm.host = @host
       end
       subject { vm.max_total_vcpus }
@@ -93,13 +91,28 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
       end
 
       it "small host logical cpus" do
-        @host.hardware.update_attributes(:logical_cpus => 4)
+        @host.hardware.update_attributes(:cpu_total_cores => 4)
         expect(subject).to eq(4)
       end
 
       it "big host logical cpus" do
         expect(subject).to eq(8)
       end
+    end
+  end
+
+  context "vim" do
+    let(:ems) { FactoryGirl.create(:ems_vmware) }
+    let(:provider_object) do
+      double("vm_vmware_provider_object", :destroy => nil).as_null_object
+    end
+    let(:vm)  { FactoryGirl.create(:vm_vmware, :ext_management_system => ems) }
+
+    it "#invoke_vim_ws" do
+      expect(vm).to receive(:with_provider_object).and_yield(provider_object)
+      expect(provider_object).to receive(:send).and_return("nada")
+
+      expect(ems.invoke_vim_ws(:do_nothing, vm)).to eq("nada")
     end
   end
 end

@@ -5,10 +5,9 @@ begin
 rescue LoadError
 end
 
-begin
+if ENV["TRAVIS"]
   require 'coveralls'
   Coveralls.wear!
-rescue LoadError
 end
 
 require 'vcr'

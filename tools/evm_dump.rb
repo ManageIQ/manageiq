@@ -47,7 +47,7 @@ MODELS += ARGV.collect { |model| Object.const_get(model) }
 
 MODELS.each do |klass|
   log :info, "Getting #{klass} objects"
-  items = klass.find(:all)
+  items = klass.all.to_a
   if items.length > 0
     fname = yml_fname(klass)
     yml_fnames << fname

@@ -31,12 +31,7 @@ class ApiController
 
     def service_templates_order_resource(_object, _type, id = nil, data = nil)
       klass = collection_class(:service_templates)
-      st    = klass.find(id)
-
-      requester_id     = @auth_user
-      options          = {}
-      options[:dialog] = {}
-
+      options = {:dialog => {}, :src_id => id}
       unless data.nil?
         data.each do |key, value|
           dkey = "dialog_#{key}"
@@ -44,21 +39,17 @@ class ApiController
         end
       end
 
-      request_type  = st.request_type.to_s
-      request       = st.request_class.create!(:options      => options,
-                                               :userid       => requester_id,
-                                               :request_type => request_type,
-                                               :source_id    => st.id)
-      request.set_description
-      request.create_request
+      klass.new.request_class.make_request(nil, options, @auth_user_obj)
+    end
 
-      event_name    = "#{st.name.underscore}_created"
-      event_message = "Request by [#{requester_id}] for #{st.class.name}:#{st.id}"
-      AuditEvent.success(:event  => event_name,   :target_class => klass,
-                         :userid => requester_id, :message      => event_message)
+    def service_templates_refresh_dialog_fields_resource(object, type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for Refreshing dialog fields of a #{type} resource" unless id
 
-      request.call_automate_event_queue("request_created")
-      request
+      service_template_subcollection_action(type, id) do |st|
+        api_log_info("Refreshing dialog fields for #{service_template_ident(st)}")
+
+        refresh_dialog_fields_service_template(object, st, data)
+      end
     end
 
     private
@@ -108,6 +99,39 @@ class ApiController
       end
     rescue => err
       action_result(false, err)
+    end
+
+    def refresh_dialog_fields_service_template(_object, st, data = {})
+      dialog_fields = Hash(data["dialog_fields"])
+      refresh_fields = data["fields"]
+      return action_result(false, "Must specify fields to refresh") if refresh_fields.blank?
+
+      dialog = define_service_template_dialog(st, dialog_fields)
+      return action_result(false, "Service Template has no provision dialog defined") unless dialog
+
+      refresh_dialog_fields_action(st, dialog, refresh_fields)
+    rescue => err
+      action_result(false, err)
+    end
+
+    def define_service_template_dialog(st, dialog_fields)
+      resource_action = st.resource_actions.find_by_action("Provision")
+      workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => st)
+      dialog_fields.each { |key, value| workflow.set_value(key, value) }
+      workflow.dialog
+    end
+
+    def refresh_dialog_fields_action(st, dialog, refresh_fields)
+      result = {}
+      refresh_fields.each do |field|
+        dynamic_field = dialog.field(field)
+        return action_result(false, "Unknown dialog field #{field} specified") unless dynamic_field
+        unless dynamic_field.respond_to?(:update_and_serialize_values)
+          return action_result(false, "Dialog field #{field} specified cannot be refreshed")
+        end
+        result[field] = dynamic_field.update_and_serialize_values
+      end
+      action_result(true, "Refreshing dialog fields for #{service_template_ident(st)}", :result => result)
     end
   end
 end

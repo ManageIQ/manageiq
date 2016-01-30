@@ -1,14 +1,12 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
-
 class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraManager
-  require_dependency 'manageiq/providers/microsoft/infra_manager/host'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/provision'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/provision_workflow'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/refresher'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/refresh_parser'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/refresh_worker'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/template'
-  require_dependency 'manageiq/providers/microsoft/infra_manager/vm'
+  require_nested :Host
+  require_nested :Provision
+  require_nested :ProvisionWorkflow
+  require_nested :Refresher
+  require_nested :RefreshParser
+  require_nested :RefreshWorker
+  require_nested :Template
+  require_nested :Vm
 
   include_concern "Powershell"
 
@@ -102,6 +100,35 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     execute_power_operation("Resume", vm.uid_ems)
   end
 
+  def vm_destroy(vm, _options = {})
+    if vm.power_state == "on"
+      vm_stop(vm)
+    end
+    execute_power_operation("Remove", vm.uid_ems)
+  end
+
+  def vm_create_evm_snapshot(vm, _options)
+    log_prefix = "vm_create_evm_snapshot: vm=[#{vm.name}]"
+
+    host_handle = vm.host.host_handle
+    host_handle.vm_create_evm_checkpoint(vm.name)
+  rescue => err
+    $scvmm_log.error "#{log_prefix}, error: #{err}"
+    $scvmm_log.debug { err.backtrace.join("\n") }
+    raise
+  end
+
+  def vm_delete_evm_snapshot(vm, _options)
+    log_prefix = "vm_delete_evm_snapshot: vm=[#{vm.name}]"
+
+    host_handle = vm.host.host_handle
+    host_handle.vm_remove_evm_checkpoint(vm.name)
+  rescue => err
+    $scvmm_log.error "#{log_prefix}, error: #{err}"
+    $scvmm_log.debug { err.backtrace.join("\n") }
+    raise
+  end
+
   private
 
   def execute_power_operation(cmdlet, vm_uid_ems, *parameters)
@@ -128,7 +155,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
         :realm           => realm,
         :basic_auth_only => false,
         :disable_sspi    => false
-    )
+      )
     end
 
     connect_params

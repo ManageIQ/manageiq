@@ -1,14 +1,12 @@
-require "spec_helper"
-
 describe ApplicationController  do
   describe "#get_tagdata" do
-    let(:record) { active_record_instance_double("Host") }
+    let(:record) { double("Host") }
     let(:user) { FactoryGirl.create(:user, :userid => "testuser") }
 
     before do
       login_as user
-      record.stub(:tagged_with).with(:cat => user.userid).and_return("my tags")
-      Classification.stub(:find_assigned_entries).with(record).and_return(classifications)
+      allow(record).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
+      allow(Classification).to receive(:find_assigned_entries).with(record).and_return(classifications)
     end
 
     context "when classifications exist" do
@@ -19,8 +17,8 @@ describe ApplicationController  do
 
       it "populates the assigned filters in the session" do
         controller.send(:get_tagdata, record)
-        session[:assigned_filters]['Department'].should == ["Automotive", "Financial Services"]
-        session[:mytags].should == "my tags"
+        expect(session[:assigned_filters]['Department']).to eq(["Automotive", "Financial Services"])
+        expect(session[:mytags]).to eq("my tags")
       end
     end
 
@@ -29,8 +27,8 @@ describe ApplicationController  do
 
       it "sets the assigned filters to an empty hash in the session" do
         controller.send(:get_tagdata, record)
-        session[:assigned_filters].should == {}
-        session[:mytags].should == "my tags"
+        expect(session[:assigned_filters]).to eq({})
+        expect(session[:mytags]).to eq("my tags")
       end
     end
   end
@@ -71,7 +69,7 @@ describe ApplicationController  do
       clergy_bishop2 = add_entry(clergy2, :name => "bishop", :description => "Bishop")
       update_record_region(clergy_bishop2)
 
-      Classification.stub(:my_region_number).and_return(convert_to_region_id(clergy_bishop2.id))
+      allow(Classification).to receive(:my_region_number).and_return(convert_to_region_id(clergy_bishop2.id))
       @st = FactoryGirl.create(:service_template, :name => 'foo')
     end
 
@@ -83,7 +81,8 @@ describe ApplicationController  do
       session[:assigned_filters] = {:Test => %w("Entry1 Entry2)}
 
       controller.send(:tag_edit_build_screen)
-      convert_to_region_id(assigns(:categories)['Clergy']).should eq(convert_to_region_id(assigns(:entries)['Bishop']))
+      expect(convert_to_region_id(assigns(:categories)['Clergy']))
+        .to eq(convert_to_region_id(assigns(:entries)['Bishop']))
     end
   end
 end

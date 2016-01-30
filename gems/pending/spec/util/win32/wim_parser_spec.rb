@@ -1,6 +1,5 @@
 # encoding: US-ASCII
 
-require "spec_helper"
 require 'util/win32/wim_parser'
 require 'time'
 
@@ -13,7 +12,7 @@ describe WimParser do
 
   context "#header" do
     it "with a WIM file" do
-      @wim_parser.header.should == {
+      expect(@wim_parser.header).to eq({
         "image_tag"                   => "MSWIM\0\0\0",
         "size"                        => 208,
         "version"                     => 68864,
@@ -41,19 +40,19 @@ describe WimParser do
         "integrity_offset"            => 0,
         "integrity_original_size"     => 0,
         "unused"                      => ("\0" * 60),
-      }
+      })
     end
 
     it "with a non-WIM file" do
       w = WimParser.new(__FILE__)
-      lambda { w.header }.should raise_error
+      expect { w.header }.to raise_error(RuntimeError, /is not a WIM file/)
     end
   end
 
   it "#xml_data" do
-    @wim_parser.xml_data.should == {
+    expect(@wim_parser.xml_data).to eq({
       "total_bytes" => 2404,
-      "images" => [
+      "images"      => [
         {
           "index"                  => 1,
           "name"                   => "Nothing",
@@ -77,6 +76,6 @@ describe WimParser do
           "last_modification_time" => Time.parse("2012-09-01 04:08:59 UTC"),
         },
       ]
-    }
+    })
   end
 end

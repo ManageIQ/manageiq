@@ -1,4 +1,3 @@
-require "spec_helper"
 require "routing/shared_examples"
 
 describe "routing for OpsController" do
@@ -11,6 +10,7 @@ describe "routing for OpsController" do
     fetch_log
     fetch_production_log
     log_collection_form_fields
+    log_protocol_changed
     schedule_form_fields
     show_product_update
   ).each do |task|

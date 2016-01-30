@@ -58,11 +58,11 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the logPassword to the log_password returned from the http request', function() {
-      expect($scope.scheduleModel.log_password).toEqual('logPassword');
+      expect($scope.scheduleModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the logVerify to the log_verify returned from the http request', function() {
-      expect($scope.scheduleModel.log_verify).toEqual('logVerify');
+      expect($scope.scheduleModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
     });
 
     it('sets the scheduleName to the name returned from the http request', function() {
@@ -86,7 +86,7 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the scheduleDate', function() {
-      expect($scope.scheduleModel.start_date).toEqual(new Date(Date.UTC(2015, 0, 1)));
+      expect($scope.scheduleModel.start_date).toEqual(moment('01/01/2015').format('MM/DD/YYYY'));
     });
 
     it('sets the scheduleStartHour', function() {
@@ -145,7 +145,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the scheduleDate to today', function() {
-        expect($scope.scheduleModel.start_date).toEqual(new Date("01/03/2014"));
+        expect($scope.scheduleModel.start_date).toEqual(moment("01/02/2014").format('MM/DD/YYYY'));
       });
 
       it('sets the scheduleTimerType to once', function() {
@@ -182,8 +182,6 @@ describe('scheduleFormController', function() {
         filter_value: 'filterValue',
         protocol: 'protocol',
         log_userid: 'logUserId',
-        log_password: 'logPassword',
-        log_verify: 'logVerify',
         schedule_name: 'scheduleName',
         schedule_description: 'scheduleDescription',
         schedule_enabled: true,
@@ -713,12 +711,6 @@ describe('scheduleFormController', function() {
       it('returns true', function() {
         expect($scope.timerNotOnce()).toBe(true);
       });
-    });
-  });
-
-  describe('saveable should exist in the scope', function() {
-    it('returns true', function() {
-      expect($scope.saveable).toBeDefined();
     });
   });
 

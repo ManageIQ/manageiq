@@ -11,7 +11,7 @@ Vmdb::Application.configure do
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
   # TODO: enable static asset server for now so rails serves the images/css, etc.
-  config.serve_static_files = true
+  config.serve_static_files = false
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
@@ -35,6 +35,7 @@ Vmdb::Application.configure do
 
   # See everything in the log (default is :info)
   # config.log_level = :debug
+  config.log_level = :info
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new

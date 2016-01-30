@@ -1,16 +1,14 @@
-require "spec_helper"
-
 describe MiqReplicationWorker do
   context "#check_status" do
     def should_handle_check_status(rr_pending_count, rr_pending_last_id, expected_status)
-      RrPendingChange.stub(:count).and_return(rr_pending_count)
-      RrPendingChange.stub(:last_id).and_return(rr_pending_last_id)
+      allow(RrPendingChange).to receive(:count).and_return(rr_pending_count)
+      allow(RrPendingChange).to receive(:last_id).and_return(rr_pending_last_id)
 
-      MiqReplicationWorker.check_status.should == expected_status
+      expect(MiqReplicationWorker.check_status).to eq(expected_status)
 
       db = MiqDatabase.first
-      db.last_replication_count.should == rr_pending_count
-      db.last_replication_id.should    == rr_pending_last_id
+      expect(db.last_replication_count).to eq(rr_pending_count)
+      expect(db.last_replication_id).to eq(rr_pending_last_id)
     end
 
     before(:each) do

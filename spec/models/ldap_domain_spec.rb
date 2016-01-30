@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe LdapDomain do
   before(:each) do
     @zone        = FactoryGirl.create(:zone)
@@ -12,17 +10,17 @@ describe LdapDomain do
   end
 
   it "should create proper AR relationships" do
-    @ldap_server.ldap_domain.should == @ldap_domain
-    @ldap_user.ldap_domain.should   == @ldap_domain
-    @ldap_group.ldap_domain.should  == @ldap_domain
+    expect(@ldap_server.ldap_domain).to eq(@ldap_domain)
+    expect(@ldap_user.ldap_domain).to eq(@ldap_domain)
+    expect(@ldap_group.ldap_domain).to eq(@ldap_domain)
 
-    @ldap_domain.ldap_region.should == @ldap_region
-    @ldap_region.zone.should        == @zone
+    expect(@ldap_domain.ldap_region).to eq(@ldap_region)
+    expect(@ldap_region.zone).to eq(@zone)
 
-    @zone.ldap_regions.count.should  == 1
-    @ldap_region.ldap_domains.count.should == 1
-    @ldap_domain.ldap_servers.count.should == 1
-    @ldap_domain.ldap_users.count.should   == 1
-    @ldap_domain.ldap_groups.count.should  == 1
+    expect(@zone.ldap_regions.count).to eq(1)
+    expect(@ldap_region.ldap_domains.count).to eq(1)
+    expect(@ldap_domain.ldap_servers.count).to eq(1)
+    expect(@ldap_domain.ldap_users.count).to eq(1)
+    expect(@ldap_domain.ldap_groups.count).to eq(1)
   end
 end

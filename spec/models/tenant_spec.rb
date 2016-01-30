@@ -1,6 +1,6 @@
-require "spec_helper"
-
 describe Tenant do
+  include_examples ".seed called multiple times"
+
   let(:config) { {} }
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
@@ -10,7 +10,7 @@ describe Tenant do
   end
 
   let(:root_tenant) do
-    EvmSpecHelper.create_root_tenant
+    Tenant.seed
   end
 
   before do
@@ -19,13 +19,14 @@ describe Tenant do
 
   describe "#default_tenant" do
     it "has a default tenant" do
-      expect(default_tenant).to be
+      expect(default_tenant).to be_truthy
     end
   end
 
   describe "#root_tenant" do
     it "has a root tenant" do
-      expect(root_tenant).to be
+      Tenant.seed
+      expect(Tenant.root_tenant).to be_truthy
     end
 
     it "can update the root_tenant" do
@@ -46,7 +47,8 @@ describe Tenant do
 
   describe "#root?" do
     it "detects root" do
-      expect(root_tenant).to be_root
+      Tenant.seed
+      expect(Tenant.root_tenant).to be_root
     end
 
     it "detects non root" do
@@ -57,30 +59,30 @@ describe Tenant do
   describe "#tenant?" do
     it "detects tenant" do
       t = Tenant.new(:divisible => true)
-      expect(t.tenant?).to be_true
+      expect(t.tenant?).to be_truthy
     end
 
     it "detects non tenant" do
       t = Tenant.new(:divisible => false)
-      expect(t.tenant?).not_to be_true
+      expect(t.tenant?).not_to be_truthy
     end
   end
 
   describe "#project?" do
     it "detects project" do
       t = Tenant.new(:divisible => false)
-      expect(t.project?).to be_true
+      expect(t.project?).to be_truthy
     end
 
     it "detects non project" do
       t = Tenant.new(:divisible => true)
-      expect(t.project?).not_to be_true
+      expect(t.project?).not_to be_truthy
     end
   end
 
   describe "#display_type" do
-    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
-    let(:project) { FactoryGirl.build(:tenant, :parent => default_tenant, :divisible => false) }
+    let(:tenant)  { FactoryGirl.build(:tenant) }
+    let(:project) { FactoryGirl.build(:tenant, :divisible => false) }
 
     it "detects Tenant" do
       expect(tenant.display_type).to eql  'Tenant'
@@ -151,9 +153,8 @@ describe Tenant do
 
     it "is unique per parent tenant" do
       FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
-      expect do
-        FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
-      end.to raise_error
+      expect { FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant) }
+        .to raise_error(ActiveRecord::RecordInvalid, /Name should be unique per parent/)
     end
 
     it "can be the same for different parents" do
@@ -304,11 +305,11 @@ describe Tenant do
 
     it "has a default login image" do
       tenant.save!
-      expect(tenant.login_logo.url).to match(/login-screen-logo.png/)
+      expect(tenant.login_logo.url).to match(/login-screen-logo.*\.png/)
     end
 
     it "has a default login image for root_tenant" do
-      expect(root_tenant.login_logo.url).to match(/login-screen-logo.png/)
+      expect(root_tenant.login_logo.url).to match(/login-screen-logo.*\.png/)
     end
 
     it "has custom login logo" do
@@ -354,9 +355,32 @@ describe Tenant do
       described_class.destroy_all
       root_tenant # create a root tenant
 
-      expect {
-        described_class.create!
-      }.to raise_error
+      expect { described_class.create! }.to raise_error(ActiveRecord::RecordInvalid, /Parent required/)
+    end
+  end
+
+  context "#validate_default_tenant" do
+    it "fails assigning a group with the wrong tenant" do
+      tenant1 = FactoryGirl.create(:tenant)
+      tenant2 = FactoryGirl.create(:tenant)
+      g = FactoryGirl.create(:miq_group, :tenant => tenant1)
+      expect { tenant2.update_attributes!(:default_miq_group => g) }
+        .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
+    end
+
+    # we may want to change this in the future
+    it "prevents changing default_miq_group" do
+      g = FactoryGirl.create(:miq_group, :tenant => tenant)
+      expect { tenant.update_attributes!(:default_miq_group => g) }
+        .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
+    end
+  end
+
+  context "#ensure_can_be_destroyed" do
+    it "wouldn't delete tenant with groups associated" do
+      tenant = FactoryGirl.create(:tenant)
+      FactoryGirl.create(:miq_group, :tenant => tenant)
+      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant with groups.*cannot be deleted/)
     end
   end
 
@@ -388,19 +412,19 @@ describe Tenant do
       FactoryGirl.create(:miq_group,
                          :miq_user_role => admin_with_brand,
                          :tenant        => tenant1
-                         )
+                        )
     end
     let(:tenant1_users) do
       FactoryGirl.create(:miq_group,
                          :tenant        => tenant1,
                          :miq_user_role => self_service_role)
     end
-    let(:admin) { FactoryGirl.create(:user, :userid => 'admin', :miq_groups => [tenant1_users, tenant1_admins]) }
-    let(:user1) { FactoryGirl.create(:user, :userid => 'user',  :miq_groups => [tenant1_users]) }
-    let(:user2) { FactoryGirl.create(:user, :userid => 'user2') }
+    let(:admin) { FactoryGirl.create(:user, :miq_groups => [tenant1_users, tenant1_admins]) }
+    let(:user1) { FactoryGirl.create(:user, :miq_groups => [tenant1_users]) }
+    let(:user2) { FactoryGirl.create(:user) }
 
     it "has users" do
-      admin ; user1 ; user2
+      admin; user1; user2
       expect(tenant1.users).to include(admin)
       expect(tenant1.users).to include(user1)
       expect(tenant1.users).not_to include(user2)
@@ -410,8 +434,47 @@ describe Tenant do
   context "#miq_ae_domains" do
     let(:t1) { FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant) }
     let(:t2) { FactoryGirl.create(:tenant, :name => "T2", :parent => root_tenant) }
-    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1) }
-    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2) }
+    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1, :name => 'DOM1', :priority => 20) }
+    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2, :name => 'DOM2', :priority => 40) }
+    let(:t1_1) { FactoryGirl.create(:tenant, :name => 'T1_1', :domain => 'a.a.com', :parent => t1) }
+    let(:t2_2) { FactoryGirl.create(:tenant, :name => 'T2_1', :domain => 'b.b.com', :parent => t2) }
+
+    context "visibility" do
+      before do
+        dom1
+        dom2
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
+                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM10', :priority => 10,
+                           :tenant_id => root_tenant.id, :enabled => false)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM3', :priority => 3,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM5', :priority => 7,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM4', :priority => 5,
+                           :tenant_id => t2_2.id)
+      end
+
+      it "#visibile_domains sub_tenant" do
+        t1_1
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
+      end
+
+      it "#enabled_domains sub_tenant" do
+        t1_1
+        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15))
+      end
+
+      it "#editable domains sub_tenant" do
+        t1_1
+        expect(t1_1.editable_domains.collect(&:name)).to eq(%w(DOM5 DOM3))
+      end
+
+      it "#visible_domains tenant" do
+        t2
+        expect(t2.visible_domains.collect(&:name)).to eq(%w(DOM2 DOM15 DOM10))
+      end
+    end
 
     it "tenant domains" do
       dom1
@@ -430,10 +493,29 @@ describe Tenant do
       dom1
       expect(dom1.tenant.name).to eq(t1.name)
     end
+
+    it "no editable domains available for current tenant" do
+      t1_1
+      FactoryGirl.create(:miq_ae_domain,
+                         :name      => 'non_editable',
+                         :priority  => 3,
+                         :tenant_id => t1_1.id,
+                         :system    => true)
+      expect(t1_1.any_editable_domains?).to eq(false)
+    end
+
+    it "editable domains available for current_tenant" do
+      t1_1
+      FactoryGirl.create(:miq_ae_domain,
+                         :name      => 'editable',
+                         :priority  => 3,
+                         :tenant_id => t1_1.id)
+      expect(t1_1.any_editable_domains?).to eq(true)
+    end
   end
 
   describe ".set_quotas" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
 
     it "can set quotas" do
       tenant.set_quotas(:vms_allocated => {:value => 20})
@@ -449,8 +531,8 @@ describe Tenant do
 
       tq_cpu = tq[0]
       expect(tq_cpu.name).to eql "cpu_allocated"
-      expect(tq_cpu.unit).to eql "mhz"
-      expect(tq_cpu.format).to eql "mhz"
+      expect(tq_cpu.unit).to eql "fixnum"
+      expect(tq_cpu.format).to eql "general_number_precision_0"
       expect(tq_cpu.value).to eql 1024.0
 
       tq_mem = tq[1]
@@ -488,7 +570,7 @@ describe Tenant do
 
       tq = default_tenant.tenant_quotas
       expect(tq.length).to eql 2
-      expect(tq.map(&:name).sort).to eql %w{mem_allocated vms_allocated}
+      expect(tq.map(&:name).sort).to eql %w(mem_allocated vms_allocated)
     end
 
     it "deletes existing quotas when nil value is passed" do
@@ -505,7 +587,7 @@ describe Tenant do
   end
 
   describe ".get_quotas" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
 
     it "can get quotas" do
       expect(tenant.get_quotas).not_to be_empty
@@ -515,32 +597,263 @@ describe Tenant do
       default_tenant.set_quotas(:vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
       expected = {
-          :vms_allocated => {
-              :unit          => "fixnum",
-              :value         => 20.0,
-              :format        => "general_number_precision_0",
-              :text_modifier => "Count",
-              :description   => "Allocated Number of Virtual Machines"
-          },
-          :mem_allocated => {
-              :unit          => "bytes",
-              :value         => 4096.0,
-              :format        => "gigabytes_human",
-              :text_modifier => "GB",
-              :description   => "Allocated Memory in GB"
-          },
-          :storage_allocated => {
-              :unit          => :bytes,
-              :value         => nil,
-              :format        => :gigabytes_human,
-              :text_modifier => "GB",
-              :description   => "Allocated Storage in GB"
-          }
+        :vms_allocated     => {
+          :unit          => "fixnum",
+          :value         => 20.0,
+          :warn_value    => nil,
+          :format        => "general_number_precision_0",
+          :text_modifier => "Count",
+          :description   => "Allocated Number of Virtual Machines"
+        },
+        :mem_allocated     => {
+          :unit          => "bytes",
+          :value         => 4096.0,
+          :warn_value    => nil,
+          :format        => "gigabytes_human",
+          :text_modifier => "GB",
+          :description   => "Allocated Memory in GB"
+        },
+        :storage_allocated => {
+          :unit          => :bytes,
+          :value         => nil,
+          :warn_value    => nil,
+          :format        => :gigabytes_human,
+          :text_modifier => "GB",
+          :description   => "Allocated Storage in GB"
+        }
       }
 
       expect(default_tenant.get_quotas[:vms_allocated]).to     eql expected[:vms_allocated]
       expect(default_tenant.get_quotas[:mem_allocated]).to     eql expected[:mem_allocated]
       expect(default_tenant.get_quotas[:storage_allocated]).to eql expected[:storage_allocated]
+    end
+  end
+
+  describe ".used_quotas" do
+    let(:tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
+    let(:ems) { FactoryGirl.create(:ems_vmware, :name => 'ems', :tenant => tenant) }
+
+    let(:vm1) do
+      FactoryGirl.create(
+        :vm_vmware,
+        :tenant_id             => tenant.id,
+        :host_id               => 1,
+        :ext_management_system => ems,
+        :hardware              => FactoryGirl.create(
+          :hardware,
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+        )
+      )
+    end
+
+    let(:vm2) do
+      FactoryGirl.create(
+        :vm_vmware,
+        :tenant_id             => tenant.id,
+        :host_id               => 1,
+        :ext_management_system => ems,
+        :hardware              => FactoryGirl.create(
+          :hardware,
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+        )
+      )
+    end
+
+    let(:template) do
+      FactoryGirl.create(
+        :miq_template,
+        :name                  => "test",
+        :location              => "test.vmx",
+        :vendor                => "vmware",
+        :tenant_id             => tenant.id,
+        :host_id               => 1,
+        :ext_management_system => ems,
+        :hardware              => FactoryGirl.create(
+          :hardware,
+          :memory_mb       => 1024,
+          :cpu_total_cores => 1,
+          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+        )
+      )
+    end
+
+    before do
+      tenant.set_quotas(
+        :vms_allocated       => {:value => 20},
+        :mem_allocated       => {:value => 4096},
+        :cpu_allocated       => {:value => 4},
+        :storage_allocated   => {:value => 123_456_789},
+        :templates_allocated => {:value => 10}
+      )
+    end
+
+    it "can get the used quota values" do
+      vm1
+      template
+
+      used = tenant.used_quotas
+      expect(used[:vms_allocated][:value]).to       eql 1
+      expect(used[:mem_allocated][:value]).to       eql 1_073_741_824
+      expect(used[:cpu_allocated][:value]).to       eql 1
+      expect(used[:storage_allocated][:value]).to   eql 12_345_678
+      expect(used[:templates_allocated][:value]).to eql 1
+    end
+
+    it "ignores retired vms" do
+      vm1
+      vm2.update_attribute(:retired, true)
+
+      used = tenant.used_quotas
+      expect(used[:vms_allocated][:value]).to       eql 1
+      expect(used[:mem_allocated][:value]).to       eql 1_073_741_824
+      expect(used[:cpu_allocated][:value]).to       eql 1
+      expect(used[:storage_allocated][:value]).to   eql 12_345_678
+      expect(used[:templates_allocated][:value]).to eql 0
+    end
+  end
+
+  context "quota allocation" do
+    let(:parent_tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
+    let(:child_tenant1) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+    let(:child_tenant2) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+
+    before do
+      parent_tenant.set_quotas(
+        :vms_allocated       => {:value => 20},
+        :mem_allocated       => {:value => 4096},
+        :cpu_allocated       => {:value => 10},
+        :storage_allocated   => {:value => 200_000_000},
+        :templates_allocated => {:value => 10}
+      )
+
+      child_tenant1.set_quotas(
+        :vms_allocated       => {:value => 5},
+        :mem_allocated       => {:value => 1024},
+        :cpu_allocated       => {:value => 4},
+        :storage_allocated   => {:value => 100_000_000},
+        :templates_allocated => {:value => 1}
+      )
+
+      child_tenant2.set_quotas(
+        :vms_allocated       => {:value => 1},
+        :mem_allocated       => {:value => 512},
+        :cpu_allocated       => {:value => 2},
+        :storage_allocated   => {:value => 50_000_000},
+        :templates_allocated => {:value => 4}
+      )
+
+      allow_any_instance_of(TenantQuota).to receive_messages(:used => 2)
+    end
+
+    it "calculates quotas allocated to child tenants" do
+      parent_tenant
+      child_tenant1
+      child_tenant2
+
+      allocated = parent_tenant.allocated_quotas
+      expect(allocated[:vms_allocated][:value]).to       eql 6.0
+      expect(allocated[:mem_allocated][:value]).to       eql 1536.0
+      expect(allocated[:cpu_allocated][:value]).to       eql 6.0
+      expect(allocated[:storage_allocated][:value]).to   eql 150_000_000.0
+      expect(allocated[:templates_allocated][:value]).to eql 5.0
+    end
+
+    it "calculates quotas available to be allocated to child tenants" do
+      parent_tenant
+      child_tenant1
+      child_tenant2
+      available = parent_tenant.available_quotas
+      expect(available[:vms_allocated][:value]).to       eql 12.0
+      expect(available[:mem_allocated][:value]).to       eql 2558.0
+      expect(available[:cpu_allocated][:value]).to       eql 2.0
+      expect(available[:storage_allocated][:value]).to   eql 49_999_998.0
+      expect(available[:templates_allocated][:value]).to eql 3.0
+    end
+
+    it "gets combined quotas (set, used, allocated and available)" do
+      parent_tenant
+      child_tenant1
+      child_tenant2
+
+      combined = parent_tenant.combined_quotas
+
+      expect(combined[:vms_allocated][:value]).to             eql 20.0
+      expect(combined[:mem_allocated][:value]).to             eql 4096.0
+      expect(combined[:cpu_allocated][:value]).to             eql 10.0
+      expect(combined[:storage_allocated][:value]).to         eql 200_000_000.0
+      expect(combined[:templates_allocated][:value]).to       eql 10.0
+
+      expect(combined[:vms_allocated][:allocated]).to         eql 6.0
+      expect(combined[:mem_allocated][:allocated]).to         eql 1536.0
+      expect(combined[:cpu_allocated][:allocated]).to         eql 6.0
+      expect(combined[:storage_allocated][:allocated]).to     eql 150_000_000.0
+      expect(combined[:templates_allocated][:allocated]).to   eql 5.0
+
+      expect(combined[:vms_allocated][:available]).to         eql 12.0
+      expect(combined[:mem_allocated][:available]).to         eql 2558.0
+      expect(combined[:cpu_allocated][:available]).to         eql 2.0
+      expect(combined[:storage_allocated][:available]).to     eql 49_999_998.0
+      expect(combined[:templates_allocated][:available]).to   eql 3.0
+
+      expect(combined[:vms_allocated][:used]).to              eql 2
+      expect(combined[:mem_allocated][:used]).to              eql 2
+      expect(combined[:cpu_allocated][:used]).to              eql 2
+      expect(combined[:storage_allocated][:used]).to          eql 2
+      expect(combined[:templates_allocated][:used]).to        eql 2
+    end
+  end
+
+  describe ".tenant_and_project_names" do
+    let(:config) { {:server => {:company => "root"}} }
+
+    # root
+    #   ten1
+    #     ten2
+    it "builds names with dots" do
+      ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
+      ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => ten1)
+
+      tenants, projects = Tenant.tenant_and_project_names
+      expect(tenants).to eq([["root", root_tenant.id], ["root.ten1", ten1.id], ["root.ten1.ten2", ten2.id]])
+      expect(projects).to be_empty
+    end
+
+    # root
+    #   proj1
+    #   proj2
+    it "separates projects" do
+      proj2 = FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => root_tenant)
+      proj1 = FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => root_tenant)
+
+      tenants, projects = Tenant.tenant_and_project_names
+      expect(tenants).to eq([["root", root_tenant.id]])
+      expect(projects).to eq([["root.proj1", proj1.id], ["root.proj2", proj2.id]])
+    end
+
+    # root
+    #   proj3
+    #   ten1
+    #     proj1
+    #   ten2
+    #     proj2
+    #   ten3
+    it "separates tenants from projects" do
+      FactoryGirl.create(:tenant, :name => "ten3", :parent => root_tenant)
+      ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
+      ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => root_tenant)
+      FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => ten2)
+      FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => ten1)
+      FactoryGirl.create(:tenant, :name => "proj3", :divisible => false, :parent => root_tenant)
+
+      tenants, projects = Tenant.tenant_and_project_names
+      expect(tenants.map(&:first)).to eq(%w(root root.ten1 root.ten2 root.ten3))
+      expect(tenants.first.last).to eq(root_tenant.id)
+
+      expect(projects.map(&:first)).to eq(%w(root.proj3 root.ten1.proj1 root.ten2.proj2))
     end
   end
 end

@@ -1,4 +1,7 @@
 ManageIQ.angularApplication.service('miqService', function() {
+
+  this.storedPasswordPlaceholder = "●●●●●●●●";
+
   this.showButtons = function() {
     miqButtons('show');
   };
@@ -35,7 +38,7 @@ ManageIQ.angularApplication.service('miqService', function() {
   this.miqFlash = function(type, msg) {
     $('#flash_msg_div').text("");
     $("#flash_msg_div").show();
-    var outerMost = $("<div id='flash_text_div' onclick=$('#flash_msg_div').text(''); title='Click to remove messages'>");
+    var outerMost = $("<div id='flash_text_div' onclick=$('#flash_msg_div').text(''); title='" + __("Click to remove messages") + "'>");
     var txt = $('<strong>' + msg + '</strong>');
 
     if(type == "error") {
@@ -74,9 +77,25 @@ ManageIQ.angularApplication.service('miqService', function() {
     return form.$valid && form.$dirty;
   };
 
-  this.validateClicked = function (url) {
+  this.validateWithAjax = function (url) {
     miqSparkleOn();
     miqAjaxButton(url, true);
+  };
+
+  this.validateWithREST = function($event, credType, url, formSubmit) {
+    angular.element('#button_name').val('validate');
+    angular.element('#cred_type').val(credType);
+    if(formSubmit) {
+      miqSparkleOn();
+      miqRESTAjaxButton(url, $event.target);
+    }
+    else {
+      $event.preventDefault();
+    }
+  };
+
+  this.disabledClick = function($event) {
+    $event.preventDefault();
   };
 
   this.serializeModel = function(model) {

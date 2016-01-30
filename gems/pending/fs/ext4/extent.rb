@@ -1,7 +1,6 @@
 require 'binary_struct'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -14,7 +13,6 @@ module Ext4
   SIZEOF_EXTENT = EXTENT.size
 
   class Extent
-
     attr_reader :block, :length, :start
 
     def initialize(buf)
@@ -27,7 +25,7 @@ module Ext4
     end
 
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       out += "Block        : #{@block}\n"
       out += "Length       : #{@length}\n"
       out += "Start        : #{@start}\n"

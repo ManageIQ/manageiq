@@ -21,23 +21,11 @@ module ContainerReplicatorHelper::TextualSummary
   # Items
   #
 
-  def textual_name
-    @record.name
-  end
-
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
-  def textual_resource_version
-    @record.resource_version
-  end
-
   def textual_replicas
-    {:label => "Number of replicas", :value => @record.replicas}
+    {:label => "Requested pods", :value => @record.replicas}
   end
 
   def textual_current_replicas
-    {:label => "Number of current replicas", :value => @record.current_replicas}
+    {:label => "Current pods", :value => @record.current_replicas}
   end
 end

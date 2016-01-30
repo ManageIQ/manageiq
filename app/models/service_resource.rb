@@ -1,4 +1,4 @@
-class ServiceResource < ActiveRecord::Base
+class ServiceResource < ApplicationRecord
   belongs_to :service_template
   belongs_to :service
   belongs_to :resource, :polymorphic => true
@@ -23,8 +23,8 @@ class ServiceResource < ActiveRecord::Base
   private
 
   def virtual_column_resource_value(key)
-    return "" if self.resource.nil?
-    return "" unless self.resource.respond_to?(key)
-    return self.resource.send(key)
+    return "" if resource.nil?
+    return "" unless resource.respond_to?(key)
+    resource.send(key)
   end
 end

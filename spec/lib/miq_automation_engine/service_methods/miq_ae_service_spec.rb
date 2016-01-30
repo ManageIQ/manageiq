@@ -1,11 +1,21 @@
-require "spec_helper"
-
 module MiqAeServiceSpec
   describe MiqAeMethodService::MiqAeService do
     before(:each) do
-      @domain = 'TEST_DOMAIN'
-      identifiers = {:domain => @domain, :namespace => 'EVM',
-                          :class  => 'AUTOMATE', :instance => 'test1', :method => 'test'}
+      MiqAeDatastore.reset
+      @domain = 'Bedrock'
+      Tenant.seed
+      @root_tenant = Tenant.root_tenant
+      @tenant = FactoryGirl.build(:tenant, :parent => @root_tenant)
+      @owner = FactoryGirl.create(:user_with_group, :name => "fred", :tenant => @tenant)
+      create_method(@domain, @tenant)
+      @ae_method     = ::MiqAeMethod.first
+      @ae_result_key = 'foo'
+    end
+
+    def create_method(domain, tenant)
+      identifiers = {:tenant => tenant,     :domain => domain, :namespace => 'EVM',
+                     :class  => 'AUTOMATE', :instance => 'test1',
+                     :method => 'test'}
       fields      = [{:name => 'method1', :type => 'method',
                                :priority => 1, :value => 'test'},
                      {:name => 'var1', :type => 'attribute',
@@ -14,12 +24,17 @@ module MiqAeServiceSpec
                                :priority => 3}
                     ]
       MiqAutomateHelper.create_dummy_method(identifiers, fields)
-      @ae_method     = ::MiqAeMethod.first
-      @ae_result_key = 'foo'
+    end
+
+    def create_inaccessible_domain
+      @other_tenant = FactoryGirl.build(:tenant, :parent => @root_tenant)
+      @other_owner = FactoryGirl.create(:user_with_group, :name => "barney", :tenant => @other_tenant)
+      @other_domain = 'Mexirock'
+      create_method(@other_domain, @other_tenant)
     end
 
     def invoke_ae
-      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1")
+      MiqAeEngine.instantiate("/EVM/AUTOMATE/test1", @owner)
     end
 
     def assert_readonly_instance(automate_method_script)
@@ -28,7 +43,7 @@ module MiqAeServiceSpec
       @ae_method.update_attributes(:data => automate_method_script)
       result = invoke_ae.root(@ae_result_key)
       dom_obj.update_attributes!(:system => false)
-      result.should be_false
+      expect(result).to be_falsey
     end
 
     context "$evm.instance_exists?" do
@@ -36,14 +51,14 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('/bogus/evenworse/fred')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
       end
 
       it "existing instance " do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/test1')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
       end
     end
 
@@ -52,7 +67,7 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_create('#{@domain}/EVM/AUTOMATE/test1', 'method1' => 'testattributevalue', 'var1' => 'variablevalue1')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
       end
 
       it "readonly domain" do
@@ -64,20 +79,20 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_create('#{@domain}/EVM/AUTOMATE/testadd', 'method1' => 'testattributevalue', 'var1' => 'variablevalue1' )"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
-        #Now the instance should exist
+        # Now the instance should exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
-        #Make sure we can get instance values
+        # Make sure we can get instance values
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result_hash = invoke_ae.root(@ae_result_key)
-        result_hash.should be_kind_of(Hash)
-        result_hash.length.should == 3
+        expect(result_hash).to be_kind_of(Hash)
+        expect(result_hash.length).to eq(3)
       end
     end
 
@@ -87,7 +102,7 @@ module MiqAeServiceSpec
           method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/testadd')"
           @ae_method.update_attributes(:data => method)
           result_hash = invoke_ae.root(@ae_result_key)
-          result_hash.should == {}
+          expect(result_hash).to eq({})
         end
 
         context "instance found" do
@@ -95,25 +110,25 @@ module MiqAeServiceSpec
             method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/te*')"
             @ae_method.update_attributes(:data => method)
             result_hash = invoke_ae.root(@ae_result_key)
-            result_hash.should be_kind_of(Hash)
-            result_hash.length.should == 1
+            expect(result_hash).to be_kind_of(Hash)
+            expect(result_hash.length).to eq(1)
             key = 'test1'
-            result_hash.keys.should == [key]
-            result_hash[key].should be_kind_of(Hash)
-            result_hash[key].length.should == 3
+            expect(result_hash.keys).to eq([key])
+            expect(result_hash[key]).to be_kind_of(Hash)
+            expect(result_hash[key].length).to eq(3)
           end
 
           it "with path option specified" do
             method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/te*', :path => true)"
             @ae_method.update_attributes(:data => method)
             result_hash = invoke_ae.root(@ae_result_key)
-            result_hash.should be_kind_of(Hash)
-            result_hash.length.should == 1
+            expect(result_hash).to be_kind_of(Hash)
+            expect(result_hash.length).to eq(1)
             key = "/#{@domain}/EVM/AUTOMATE/test1"
-            [key].should match_string_array_ignorecase(result_hash.keys)
+            expect([key]).to match_string_array_ignorecase(result_hash.keys)
             key = result_hash.keys.first
-            result_hash[key].should be_kind_of(Hash)
-            result_hash[key].length.should == 3
+            expect(result_hash[key]).to be_kind_of(Hash)
+            expect(result_hash[key].length).to eq(3)
           end
         end
       end
@@ -131,12 +146,12 @@ module MiqAeServiceSpec
           method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/te?t1*')"
           @ae_method.update_attributes(:data => method)
           result_hash = invoke_ae.root(@ae_result_key)
-          result_hash.should be_kind_of(Hash)
-          result_hash.length.should == 3
+          expect(result_hash).to be_kind_of(Hash)
+          expect(result_hash.length).to eq(3)
           ['test1', 'test12', 'teXt12'].each do |iname|
-            result_hash.keys.should include iname
-            result_hash[iname].should be_kind_of(Hash)
-            result_hash[iname].length.should == 3
+            expect(result_hash.keys).to include iname
+            expect(result_hash[iname]).to be_kind_of(Hash)
+            expect(result_hash[iname].length).to eq(3)
           end
         end
 
@@ -144,12 +159,12 @@ module MiqAeServiceSpec
           method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/test*')"
           @ae_method.update_attributes(:data => method)
           result_hash = invoke_ae.root(@ae_result_key)
-          result_hash.should be_kind_of(Hash)
-          result_hash.length.should == 3
+          expect(result_hash).to be_kind_of(Hash)
+          expect(result_hash.length).to eq(3)
           ['test1', 'test12', 'test21'].each do |iname|
-            result_hash.keys.should include iname
-            result_hash[iname].should be_kind_of(Hash)
-            result_hash[iname].length.should == 3
+            expect(result_hash.keys).to include iname
+            expect(result_hash[iname]).to be_kind_of(Hash)
+            expect(result_hash[iname].length).to eq(3)
           end
         end
 
@@ -157,12 +172,12 @@ module MiqAeServiceSpec
           method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/test1*')"
           @ae_method.update_attributes(:data => method)
           result_hash = invoke_ae.root(@ae_result_key)
-          result_hash.should be_kind_of(Hash)
-          result_hash.length.should == 2
+          expect(result_hash).to be_kind_of(Hash)
+          expect(result_hash.length).to eq(2)
           ['test1', 'test12'].each do |iname|
-            result_hash.keys.should include iname
-            result_hash[iname].should be_kind_of(Hash)
-            result_hash[iname].length.should == 3
+            expect(result_hash.keys).to include iname
+            expect(result_hash[iname]).to be_kind_of(Hash)
+            expect(result_hash[iname].length).to eq(3)
           end
         end
 
@@ -170,16 +185,15 @@ module MiqAeServiceSpec
           method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_find('#{@domain}/EVM/AUTOMATE/test1?')"
           @ae_method.update_attributes(:data => method)
           result_hash = invoke_ae.root(@ae_result_key)
-          result_hash.should be_kind_of(Hash)
-          result_hash.length.should == 1
+          expect(result_hash).to be_kind_of(Hash)
+          expect(result_hash.length).to eq(1)
           ['test12'].each do |iname|
-            result_hash.keys.should include iname
-            result_hash[iname].should be_kind_of(Hash)
-            result_hash[iname].length.should == 3
+            expect(result_hash.keys).to include iname
+            expect(result_hash[iname]).to be_kind_of(Hash)
+            expect(result_hash[iname].length).to eq(3)
           end
         end
       end
-
     end
 
     context "$evm.instance_get" do
@@ -187,15 +201,15 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result_hash = invoke_ae.root(@ae_result_key)
-        result_hash.should be_nil
+        expect(result_hash).to be_nil
       end
 
       it "instance exists" do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get('#{@domain}/EVM/AUTOMATE/test1')"
         @ae_method.update_attributes(:data => method)
         result_hash = invoke_ae.root(@ae_result_key)
-        result_hash.should be_kind_of(Hash)
-        result_hash.length.should == 3
+        expect(result_hash).to be_kind_of(Hash)
+        expect(result_hash.length).to eq(3)
       end
     end
 
@@ -204,14 +218,14 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get_display_name('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == nil
+        expect(result).to be_nil
       end
 
       it "instance does exist" do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get_display_name('#{@domain}/EVM/AUTOMATE/test1')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should be_nil
+        expect(result).to be_nil
       end
     end
 
@@ -220,7 +234,7 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_set_display_name('#{@domain}/EVM/AUTOMATE/testadd', 'foo')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
       end
 
       it "instance does exist" do
@@ -228,12 +242,12 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_set_display_name('#{@domain}/EVM/AUTOMATE/test1', #{display_name.inspect})"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_get_display_name('#{@domain}/EVM/AUTOMATE/test1')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == display_name
+        expect(result).to eq(display_name)
       end
     end
 
@@ -242,7 +256,7 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_update('#{@domain}/EVM/AUTOMATE/testadd', 'method1' => 'testattributevalue', 'var1' => 'variablevalue1')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
       end
 
       it "readonly domain" do
@@ -254,12 +268,12 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_create('#{@domain}/EVM/AUTOMATE/testadd', { 'method1' => 'testattributevalue', 'var1' => 'variablevalue1'})"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_update('#{@domain}/EVM/AUTOMATE/testadd', { 'method1' => 'testattributevaluechanged', 'var1' => 'variablevalue1changed'})"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
       end
     end
 
@@ -268,7 +282,31 @@ module MiqAeServiceSpec
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_delete('#{@domain}/bogus/evenworse/fred')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
+      end
+
+      it "cannot delete instances from other tenants" do
+        create_inaccessible_domain
+        method = "$evm.root['#{@ae_result_key}'] = $evm.instance_delete('#{@other_domain}/EVM/AUTOMATE/test1')"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        expect(result).to be_falsey
+      end
+
+      it "check if an instance exists in the other tenant" do
+        create_inaccessible_domain
+        method = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@other_domain}/EVM/AUTOMATE/test1')"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        expect(result).to be_falsey
+      end
+
+      it "cannot add instances into other tenants" do
+        create_inaccessible_domain
+        method = "$evm.root['#{@ae_result_key}'] = $evm.instance_update('#{@other_domain}/EVM/AUTOMATE/testadd', { 'method1' => 'testattributevaluechanged', 'var1' => 'variablevalue1changed'})"
+        @ae_method.update_attributes(:data => method)
+        result = invoke_ae.root(@ae_result_key)
+        expect(result).to be_falsey
       end
 
       it "readonly domain " do
@@ -277,35 +315,34 @@ module MiqAeServiceSpec
       end
 
       it "make sure instance does not exist, create new instance, make sure it exists, delete it, then check if it exists" do
-        #Now the instance should not exist
+        # Now the instance should not exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
 
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_create('#{@domain}/EVM/AUTOMATE/testadd', { 'method1' => 'testattributevalue' , 'var1' => 'variablevalue1'})"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
-        #Now the instance should exist
+        # Now the instance should exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_delete('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == true
+        expect(result).to eq(true)
 
-        #Now the instance should not exist
+        # Now the instance should not exist
         method   = "$evm.root['#{@ae_result_key}'] = $evm.instance_exists?('#{@domain}/EVM/AUTOMATE/testadd')"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
-        result.should == false
+        expect(result).to eq(false)
       end
     end
-
   end
 end

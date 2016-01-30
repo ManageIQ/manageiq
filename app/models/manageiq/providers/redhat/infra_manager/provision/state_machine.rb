@@ -40,10 +40,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
-      configure_cloud_init
-
-      signal :poll_destination_powered_off_in_provider
+      configure_destination
     end
+  end
+
+  def configure_destination
+    configure_cloud_init
+    signal :poll_destination_powered_off_in_provider
   end
 
   def poll_destination_powered_on_in_provider
@@ -54,7 +57,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       signal :poll_destination_powered_off_in_provider
     else
       phase_context[:power_on_wait_count] ||= 0
-      phase_context[:power_on_wait_count]  += 1
+      phase_context[:power_on_wait_count] += 1
       requeue_phase
     end
   end
@@ -67,6 +70,17 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
     else
       requeue_phase
     end
+  end
+
+  def autostart_destination
+    if get_option(:vm_auto_start)
+      message = "Starting"
+      _log.info("#{message} #{for_destination}")
+      update_and_notify_parent(:message => message)
+      get_provider_destination.start { |action| action.use_cloud_init(true) if phase_context[:boot_with_cloud_init] }
+    end
+
+    signal :post_create_destination
   end
 
   private

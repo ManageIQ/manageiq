@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ResourceActionSerializer do
   let(:resource_action_serializer) { described_class.new }
 
@@ -30,7 +28,7 @@ describe ResourceActionSerializer do
     end
 
     it "serializes the resource_action" do
-      resource_action_serializer.serialize(resource_action).should == expected_serialized_values
+      expect(resource_action_serializer.serialize(resource_action)).to eq(expected_serialized_values)
     end
   end
 end

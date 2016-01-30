@@ -1,7 +1,5 @@
-require "spec_helper"
 include MiqAeYamlImportExportMixin
 describe MiqAeClassCompareFields do
-
   before do
     @domain = 'SPEC_DOMAIN'
     @namespace   = 'NS1'
@@ -32,7 +30,6 @@ describe MiqAeClassCompareFields do
       class2 = MiqAeClassYaml.new(@class1_file)
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
     end
-
   end
 
   context "same fields mixed case" do
@@ -186,7 +183,7 @@ describe MiqAeClassCompareFields do
   def class_check_status(class1, class2, status)
     diff_obj = MiqAeClassCompareFields.new(class1, class2)
     diff_obj.compare
-    diff_obj.status.should equal(status)
+    expect(diff_obj.status).to equal(status)
   end
 
   def prep_class_file_names(class1 = nil, class2 = nil)

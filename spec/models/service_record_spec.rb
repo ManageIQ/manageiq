@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ServiceResource do
   context "default values" do
     before(:each) do
@@ -7,15 +5,15 @@ describe ServiceResource do
     end
 
     it "should default group_idx to 0" do
-      @resource.group_idx.should == 0
+      expect(@resource.group_idx).to eq(0)
     end
 
     it "should default scaling_min to 1" do
-      @resource.scaling_min.should == 1
+      expect(@resource.scaling_min).to eq(1)
     end
 
     it "should default scaling_max to -1" do
-      @resource.scaling_max.should == -1
+      expect(@resource.scaling_max).to eq(-1)
     end
   end
 end

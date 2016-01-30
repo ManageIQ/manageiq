@@ -1,13 +1,31 @@
-/* needed for scrollable rows */
-body, html {
-  height: 100%;
-  overflow: hidden;
-}
-#main_taskbar {
-  height: 34px;
-  padding-top: 2px;
-  border-bottom: 1px solid #c7c7c7;
+.toolbar-pf#paging_div {
+  border-top: 1px solid #c7c7c7;
+  height: 44px;
   background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+}
+
+.toolbar-pf#paging_div ul.pagination {
+  margin: 0;
+}
+
+/* overrides toolbar form group styling for pf-search */
+
+.toolbar-pf .form-group.search-button {
+  padding-left: 0;
+}
+
+.toolbar-pf .form-group.has-clear {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.toolbar-pf .form-group.text {
+  line-height: 26px;
+}
+
+
+#main-content {
+  overflow: auto;
 }
 
 /* This media query makes the entire main row scrollable once the columns have collapsed */
@@ -15,29 +33,18 @@ body, html {
 @media (max-width: $screen-sm) {
   body {
     padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-    padding-bottom: 30px !important;
   }
   .scrollable-sm {
-    height: 100%;
+    height: 100% !important; //overrides the height calculations used to create the scrollable area
     overflow: auto;
-  }
-
-  #main_content {
-    overflow: auto;
-    height: 100%;
-  }
-  #main_footer {
-    background: #f9f9f9;
-    height: 50px;
   }
 }
 
-/* This media query makes the left column and the main area independently scrollable and sets the footer at the bottom of the column */
+/* This media query makes the left column and the main area independently scrollable and sets the paging_div at the bottom of the column */
 
 @media (min-width: $screen-sm) {
   body {
     padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-    padding-bottom: 30px !important;
   }
 
   .login-pf body {
@@ -48,39 +55,33 @@ body, html {
     height: 100%;
     overflow: auto;
   }
-  #main_footer {
-    position: absolute;
+
+  /* compensates for left-padding of first rendered form-group */
+  .toolbar-pf > .col-md-12 {
+    padding-left: 0 !important;
+  }
+
+  #paging_div {
     bottom: 0;
-    height: 50px;
-    width: 100%;
-    margin-bottom: 10px;
-    border-top: 1px solid #c7c7c7;
-    background: #f9f9f9;
   }
   .max-height {
     height: 100%;
   }
 }
 
-.navbar.navbar-default.navbar-fixed-bottom {
-  min-height: 30px;
-  background: #333;
-  color: #FFF;
-  text-align: center;
-}
-
 /* Overrides patternfly style for disabled accordion items */
-
-.nav-stacked > li.disabled > a {
-  color: #ccc;
-}
 
 .nav-stacked > li.disabled:hover > a {
   background: transparent;
   border: transparent;
   margin-top: 1px;
   margin-bottom: 1px;
-  color: #ccc;
+}
+
+/* styling for  report menu editor accordion */
+
+.panel-heading.active {
+  background: #ddd !important
 }
 
 /* Style changes applied when customer logo is active */
@@ -156,25 +157,17 @@ li.brand-white-label.whitelabeled {
     margin-top: 20px;
 }
 
-/* overrides dhtmlx layout conflicts with patternfly accordion */
-#custom_left_cell_div .panel-group .panel-default {
-  border-right: 0;
-}
-
-/* prevents Bootstrap row class horizontal scrolling within dhtmlx layout  */
-.dhtmlxLayoutSinglePoly .row {
-  margin-right: 0;
-}
-
-#custom_left_cell_div h4.panel-title {
-  font-size: 12px !important
-}
-
 /* Table customizations */
 
 table.table td {
   word-break: break-all
- }
+}
+
+//Enable normal word wrapping in List View
+
+#gtl_div table.table td {
+  word-break: normal !important;
+}
 
 table.table tbody td img {
   height: 20px;
@@ -185,6 +178,18 @@ table.table tbody td img {
   font-family: inherit !important;
   vertical-align: top;
 }
+
+/* Report widget table customizations */
+
+.panel-body {
+  border: 0px;
+  margin: 0 -2px -1px -1px; /* makes outside table cell border invisible */
+}
+.panel .table {
+  border: 0;
+  margin-bottom: 0;
+}
+
 
 /* override font-weight for dropdowns withing table headers */
 
@@ -233,15 +238,21 @@ table.table.table-selectable tbody tr.selected td {
   margin-bottom: 5px;
 }
 
+/* resize png files displayed in form-groups */
+
+.form-horizontal.static .form-group img{
+  height: 20px;
+  width: 20px;
+}
+
+.form-horizontal.static .form-group .control-labelimage img{
+  height: 80px;
+  width: 80px;
+}
+
 /* Ensure .form-control-static doesn't change height when it's empty - Bootstrap fix #15699 */
 .form-control-static {
   min-height: ($line-height-computed + $font-size-small - 20);
-}
-
-/* image styling for inside form */
-.form-control-static img {
-  width: 20px;
-  height: 20px;
 }
 
 /* prevents empty dd from collapsing */
@@ -264,6 +275,7 @@ table.table.table-selectable tbody tr.selected td {
       @include text-overflow();
     }
     dd {
+      word-break: break-all;
       margin-left: 110px;
     }
   }
@@ -292,4 +304,80 @@ table.table.table-selectable tbody tr.selected td {
 
 iframe, .iframe {
   width: 100%; height: 100%;
+}
+
+/* resizer styling */
+
+.resizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  z-index: 600
+}
+.resizer-box {
+  position: absolute;
+  bottom: 40px;
+  left: -18px;
+  width: 38px
+}
+
+.resizer .btn {
+  border-color: #d0d0d0
+}
+
+/* eliminates horizontal scrollbar in some browsers */
+.bootstrap-select .dropdown-menu {
+  overflow-y: visible !important
+}
+
+/* toolbar styling */
+
+.toolbar-pf-actions .btn-group.dropdown > button > img {
+  padding-right: 3px;
+}
+
+/* Adds padding between buttons when they wrap */
+
+.toolbar-pf .toolbar-pf-actions .form-group {
+  margin-bottom: 10px !important
+}
+
+/* sets width to auto for bootstrap-select */
+.selectWidth {
+  width: auto !important;
+}
+
+/* compensates for scrollbars in browsers that cover options in very narrow dropdowns */
+
+.selectWidth .dropdown-menu ul li{
+  padding-right: 10px;
+}
+
+/* adds scrollbar to group switcher  */
+
+.scrollable-menu {
+  height: auto;
+  max-height: 400px;
+  overflow-x: hidden;
+}
+
+/* make it possible to drop a dashboard widget into a previously empty column */
+
+.db_widgets_target {
+  padding-top: 20px;  // same as .panel's margin-bottom
+  min-height: 78px; // .panel.height + (2 * 20px)
+}
+
+/* Sets font icon styling for view buttons on Default Views screen */
+
+#tab_div ul.list-inline a{
+  font-size: 16px;
+  color: #222222 !important
+}
+
+#tab_div ul.list-inline li.active {
+  font-size: 16px;
+  color: $link-color !important
 }

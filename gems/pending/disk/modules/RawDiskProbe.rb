@@ -1,7 +1,7 @@
 module RawDiskProbe
-	def RawDiskProbe.probe(ostruct)
-	    return nil if !ostruct.fileName
-		return("RawDisk") if ostruct.rawDisk || File.extname(ostruct.fileName).downcase == ".img"
-		return(nil)
-	end
+  def self.probe(ostruct)
+    return nil unless ostruct.fileName
+    return("RawDisk") if ostruct.rawDisk || File.extname(ostruct.fileName).downcase == ".img"
+    (nil)
+  end
 end

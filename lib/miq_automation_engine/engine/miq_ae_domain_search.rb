@@ -1,10 +1,13 @@
 module MiqAeEngine
   class MiqAeDomainSearch
     def initialize
-      @sorted_domains      = MiqAeDomain.enabled.order("priority DESC").pluck(:name)
       @fqns_id_cache       = {}
       @fqns_id_class_cache = {}
       @partial_ns          = []
+    end
+
+    def ae_user=(obj)
+      @sorted_domains ||= obj.current_tenant.enabled_domains.collect(&:name)
     end
 
     def get_alternate_domain(scheme, uri, ns, klass, instance)
@@ -26,8 +29,10 @@ module MiqAeEngine
     def search(uri, ns, klass, instance, method)
       unless @partial_ns.include?(ns)
         fqns = MiqAeNamespace.find_by_fqname(ns, false)
-        @fqns_id_cache[ns] = fqns.id if fqns
-        return ns if fqns
+        if fqns && !fqns.domain?
+          @fqns_id_cache[ns] = fqns.id
+          return ns
+        end
       end
       @partial_ns << ns unless @partial_ns.include?(ns)
       find_first_fq_domain(uri, ns, klass, instance, method)

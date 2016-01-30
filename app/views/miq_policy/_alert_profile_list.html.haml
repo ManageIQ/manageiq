@@ -1,4 +1,4 @@
-#alert_profile_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+#alert_profile_list_div
   - if @alert_profiles
     = render :partial => "layouts/flash_msg"
     - if @alert_profiles.empty?
@@ -12,7 +12,7 @@
             %tr{:title => _("View this Alert Profile"),
               :onclick => "miqDynatreeActivateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');"}
               %td.narrow
-                %img{:src => "/images/icons/new/miq_alert_profile.png"}
+                %img{:src => image_path('100/miq_alert_profile.png')}
               %td
                 = ap.description
   %hr

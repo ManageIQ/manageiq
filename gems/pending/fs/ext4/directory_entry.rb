@@ -1,7 +1,6 @@
 require 'binary_struct'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -23,7 +22,6 @@ module Ext4
   SIZEOF_DIR_ENTRY_NEW = DIR_ENTRY_NEW.size
 
   class DirectoryEntry
-
     FT_UNKNOWN    = 0
     FT_FILE       = 1
     FT_DIRECTORY  = 2
@@ -39,7 +37,7 @@ module Ext4
     def initialize(data, new_entry = true)
       raise "Ext4::DirectoryEntry.initialize: Nil directory entry data" if data.nil?
       @isNew    = new_entry
-      siz       = @isNew ? SIZEOF_DIR_ENTRY_NEW               : SIZEOF_DIR_ENTRY_ORIGINAL
+      siz       = @isNew ? SIZEOF_DIR_ENTRY_NEW : SIZEOF_DIR_ENTRY_ORIGINAL
       @de       = @isNew ? DIR_ENTRY_NEW.decode(data[0..siz]) : DIR_ENTRY_ORIGINAL.decode(data[0..siz])
       # If there's a name get it.
       @name     = data[siz, @de['name_len']] if @de['name_len'] != 0
@@ -49,13 +47,13 @@ module Ext4
     end
 
     def isDir?
-      return @fileType == FT_DIRECTORY
+      @fileType == FT_DIRECTORY
     end
 
     def isSymLink?
-      return @fileType == FT_SYM_LNK
+      @fileType == FT_SYM_LNK
     end
-    
+
     def fileTypeString
       return "UNKNOWN"   if @fileType == FT_UNKNOWN
       return "FILE"      if @fileType == FT_FILE
@@ -68,13 +66,12 @@ module Ext4
     end
 
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
-      out += "Inode   : #{self.inode}\n"
-      out += "Len     : #{self.len}\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
+      out += "Inode   : #{inode}\n"
+      out += "Len     : #{len}\n"
       out += "Name len: 0x#{'%04x' % @de['name_len']}\n"
-      out += "Type    : #{self.fileTypeString}\n" if @isNew
-      out += "Name    : #{self.name}\n"
+      out += "Type    : #{fileTypeString}\n" if @isNew
+      out += "Name    : #{name}\n"
     end
-
-    end #class
-end #module
+  end # class
+end # module

@@ -3713,5 +3713,4 @@ class CollapsedInitialMigration < ActiveRecord::Migration
     drop_trigger table, "#{table}_inheritance_before"
     drop_trigger table, "#{table}_inheritance_after"
   end
-
 end

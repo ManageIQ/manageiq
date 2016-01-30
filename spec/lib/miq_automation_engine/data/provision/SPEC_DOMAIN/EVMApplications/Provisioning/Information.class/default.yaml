@@ -20,7 +20,5 @@ object:
       value: /EVMApplications/Provisioning/UI_Choices/TTL/*#create
   - customization:
       value: /EVMApplications/Provisioning/Customization/Default#create
-  - domains:
-      value: /EVMApplications/Provisioning/Domain/*#create
   - networks:
       value: /EVMApplications/Provisioning/Network/*#create

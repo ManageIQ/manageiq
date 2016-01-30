@@ -1,43 +1,52 @@
-require "spec_helper"
-
 describe NewWithTypeStiMixin do
   context ".new" do
     it "without type" do
-      Host.new.class.should          == Host
-      ManageIQ::Providers::Redhat::InfraManager::Host.new.class.should    == ManageIQ::Providers::Redhat::InfraManager::Host
-      ManageIQ::Providers::Vmware::InfraManager::Host.new.class.should    == ManageIQ::Providers::Vmware::InfraManager::Host
-      ManageIQ::Providers::Vmware::InfraManager::HostEsx.new.class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(Host.new.class).to eq(Host)
+      expect(ManageIQ::Providers::Redhat::InfraManager::Host.new.class).to eq(ManageIQ::Providers::Redhat::InfraManager::Host)
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new.class).to eq(ManageIQ::Providers::Vmware::InfraManager::Host)
+      expect(ManageIQ::Providers::Vmware::InfraManager::HostEsx.new.class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
     end
 
     it "with type" do
-      Host.new(:type => "Host").class.should          == Host
-      Host.new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host").class.should    == ManageIQ::Providers::Redhat::InfraManager::Host
-      Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::Host").class.should    == ManageIQ::Providers::Vmware::InfraManager::Host
-      Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
-      ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(Host.new(:type => "Host").class).to eq(Host)
+      expect(Host.new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host").class).to eq(ManageIQ::Providers::Redhat::InfraManager::Host)
+      expect(Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::Host").class).to eq(ManageIQ::Providers::Vmware::InfraManager::Host)
+      expect(Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
 
-      Host.new("type" => "Host").class.should          == Host
-      Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host").class.should    == ManageIQ::Providers::Redhat::InfraManager::Host
-      Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Host").class.should    == ManageIQ::Providers::Vmware::InfraManager::Host
-      Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
-      ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(Host.new("type" => "Host").class).to eq(Host)
+      expect(Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host").class).to eq(ManageIQ::Providers::Redhat::InfraManager::Host)
+      expect(Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Host").class).to eq(ManageIQ::Providers::Vmware::InfraManager::Host)
+      expect(Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
     end
 
     context "with invalid type" do
       it "that doesn't exist" do
-        lambda { Host.new(:type  => "Xxx") }.should raise_error
-        lambda { Host.new("type" => "Xxx") }.should raise_error
+        expect { Host.new(:type  => "Xxx") }.to raise_error(NameError)
+        expect { Host.new("type" => "Xxx") }.to raise_error(NameError)
       end
 
       it "that isn't a subclass" do
-        lambda { Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::Vm") }.should raise_error
-        lambda { Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Vm") }.should raise_error
+        expect { Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::Vm") }
+          .to raise_error(RuntimeError, /Vm is not a subclass of Host/)
+        expect { Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Vm") }
+          .to raise_error(RuntimeError, /Vm is not a subclass of Host/)
 
-        lambda { ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "Host") }.should raise_error
-        lambda { ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "Host") }.should raise_error
+        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "Host") }
+          .to raise_error(RuntimeError, /Host is not a subclass of ManageIQ::Providers::.*/)
+        expect { ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "Host") }
+          .to raise_error(RuntimeError, /Host is not a subclass of ManageIQ::Providers::.*/)
 
-        lambda { ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Redhat::InfraManager::Host") }.should raise_error
-        lambda { ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host") }.should raise_error
+        expect do
+          ManageIQ::Providers::Vmware::InfraManager::Host
+            .new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host")
+        end.to raise_error(RuntimeError, /ManageIQ.*Redhat.*is not a subclass of ManageIQ.*Vmware.*/)
+
+        expect do
+          ManageIQ::Providers::Vmware::InfraManager::Host
+            .new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host")
+        end.to raise_error(RuntimeError, /ManageIQ.*Redhat.*is not a subclass of ManageIQ.*Vmware.*/)
       end
     end
   end

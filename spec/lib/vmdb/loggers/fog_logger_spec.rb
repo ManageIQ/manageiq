@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vmdb::Loggers::FogLogger do
   before(:each) do
     @log_stream = StringIO.new
@@ -15,7 +13,7 @@ describe Vmdb::Loggers::FogLogger do
     end
 
     it "with a block" do
-      expect(@log.instrument("excon.request", {}) { true }).to be_true
+      expect(@log.instrument("excon.request", {}) { true }).to be_truthy
       @log_stream.rewind
       expect(@log_stream.read).to match(/DEBUG -- : excon.request/)
     end

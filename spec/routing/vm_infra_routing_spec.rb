@@ -1,11 +1,9 @@
-require 'spec_helper'
 require 'routing/shared_examples'
 
 describe 'routes for VmInfra' do
   let(:controller_name) { 'vm_infra' }
 
   it_behaves_like 'A controller that has advanced search routes'
-  it_behaves_like "A controller that has column width routes"
   it_behaves_like 'A controller that has compare routes'
   it_behaves_like 'A controller that has dialog runner routes'
   it_behaves_like 'A controller that has download_data routes'
@@ -25,7 +23,7 @@ describe 'routes for VmInfra' do
   describe '#dialog_form_button_pressed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/dialog_form_button_pressed")
+        post("/#{controller_name}/dialog_form_button_pressed")
       ).to route_to("#{controller_name}#dialog_form_button_pressed")
     end
   end
@@ -87,7 +85,7 @@ describe 'routes for VmInfra' do
   describe '#reconfigure_field_changed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/reconfigure_field_changed")
+        post("/#{controller_name}/reconfigure_field_changed")
       ).to route_to("#{controller_name}#reconfigure_field_changed")
     end
   end
@@ -155,6 +153,12 @@ describe 'routes for VmInfra' do
   describe '#html5_console' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/html5_console")).to route_to("#{controller_name}#html5_console")
+    end
+  end
+
+  describe '#filesystem_download' do
+    it 'routes with GET' do
+      expect(get("/#{controller_name}/filesystem_download")).to route_to("#{controller_name}#filesystem_download")
     end
   end
 end

@@ -6,14 +6,16 @@ stack = $evm.root['orchestration_stack']
 $evm.log("info", "Checking stack #{stack.try(:name)} removed from provider")
 
 if stack && $evm.get_state_var('stack_exists_in_provider')
-  status, _reason = stack.raw_status
-  if status.nil?
+  begin
+    status, _reason = stack.normalized_live_status
+    if status == 'not_exist' || status == 'delete_complete'
+      $evm.set_state_var('stack_exists_in_provider', false)
+    else
+      $evm.root['ae_result'] = 'retry'
+      $evm.root['ae_retry_interval'] = '1.minute'
+    end
+  rescue => e
     $evm.root['ae_result'] = 'error'
-    $evm.root['ae_reason'] = 'Cannot find status of stack #{stack.name}. It may no longer exist in the provider'
-  elsif status.downcase == 'delete_complete'
-    $evm.set_state_var('stack_exists_in_provider', false)
-  else
-    $evm.root['ae_result']	   = 'retry'
-    $evm.root['ae_retry_interval'] = '1.minute'
+    $evm.root['ae_reason'] = e.message
   end
 end

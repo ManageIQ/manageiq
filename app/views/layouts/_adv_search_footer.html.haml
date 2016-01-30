@@ -13,12 +13,13 @@
 
     - else
       = link_to(_("Load..."),
-                {:action => "adv_search_button",
-                 :button => 'load'},
-                 :alt    => t = _("Load a filter"),
-                 :class  => "btn btn-primary pull-left",
-                 :remote => true,
-                 :title  => t)
+                {:action       => "adv_search_button",
+                 :button       => 'load'},
+                 :alt          => t = _("Load a filter"),
+                 :class        => "btn btn-primary pull-left",
+                 :remote       => true,
+                 "data-method" => :post,
+                 :title        => t)
 
     - if @edit[@expkey][:exp_table].flatten.first == "???"
       = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
@@ -31,38 +32,44 @@
                 :class                 => "btn btn-primary",
                 :alt                   => t = _("Apply the current filter"),
                 :remote                => true,
+                "data-method"          => :post,
                 :title                 => t)
     - if @edit[@expkey][:selected] && @edit[@expkey][:selected][:typ] != "default" && @edit[@expkey][:selected][:id] != 0
       - if admin_user? || @edit[@expkey][:selected][:typ] == "user"
+        - confirm_msg = _("Delete the %{model} filter named %{filter}?") % {:model  => ui_lookup(:model => @edit[@expkey][:exp_mode]),
+                                                                            :filter => @edit[:adv_search_name]}
+
         = link_to(_("Delete"),
                   {:action => "adv_search_button",
-                   :button => "delete" },
-                  :confirm => _("Delete the %{model} filter named %{filter}?") % {:model  => ui_lookup(:model => @edit[@expkey][:exp_mode]),
-                                                                                  :filter => @edit[:adv_search_name]},
-                  :class   => "btn btn-danger",
-                  :alt     => _("Delete the filter named %s") % @edit[@expkey][:selected][:description],
-                  :remote  => true,
-                  :title   => _("Delete the filter named %s" % @edit[@expkey][:selected][:description]))
+                   :button => "delete"},
+                  'data-confirm' => confirm_msg,
+                  :class         => "btn btn-danger",
+                  :alt           => t = _("Delete the filter named %s") % @edit[@expkey][:selected][:description],
+                  :remote        => true,
+                  "data-method"  => :post,
+                  :title         => t)
     - if @edit[@expkey][:exp_table].flatten.first == "???"
       = button_tag(_("Save..."), :class => "btn btn-primary btn-disabled")
     - else
       = link_to(_("Save..."),
                 {:action => "adv_search_button",
                  :button => "save"},
-                :class  => "btn btn-primary",
-                :alt    => t = _("Save the current filter"),
-                :remote => true,
-                :title  => t)
+                :class        => "btn btn-primary",
+                :alt          => t = _("Save the current filter"),
+                :remote       => true,
+                "data-method" => :post,
+                :title        => t)
     - if @edit[@expkey][:exp_table].flatten.first == "???"
       = button_tag("Reset", :class => "btn btn-default btn-disabled")
     - else
       = link_to(_("Reset"),
                 {:action => "adv_search_button",
                  :button => "reset"},
-                :class => "btn btn-default",
-                :alt   => t = _("Reset the filter"),
-                :remote => true,
-                :title  => t)
+                :class        => "btn btn-default",
+                :alt          => t = _("Reset the filter"),
+                :remote       => true,
+                "data-method" => :post,
+                :title        => t)
   - elsif mode == "load"
     - if @edit[@expkey][:exp_chosen_report].nil? && @edit[@expkey][:exp_chosen_search].nil?
       = button_tag(_("Load"),
@@ -71,31 +78,35 @@
                    :title => t)
     - else
       = link_to(_("Load"),
-                { :action => "adv_search_button",
-                  :button => "loadit" },
-                :class  => "btn btn-primary pull-left",
-                :alt    => t = _("Load the filter shown above"),
-                :remote => true,
-                :title  => t)
+                {:action => "adv_search_button",
+                 :button => "loadit"},
+                :class        => "btn btn-primary pull-left",
+                :alt          => t = _("Load the filter shown above"),
+                :remote       => true,
+                "data-method" => :post,
+                :title        => t)
     = link_to(_("Cancel"),
-              { :action => "adv_search_button",
-                :button => "cancel" },
-              :class => "btn btn-primary",
-              :alt   => t = _("Cancel the load"),
-              :remote => true,
-              :title  => t)
+              {:action => "adv_search_button",
+               :button => "cancel"},
+              :class        => "btn btn-primary",
+              :alt          => t = _("Cancel the load"),
+              :remote       => true,
+              "data-method" => :post,
+              :title        => t)
   - elsif mode == "save"
     = link_to(_("Save"),
                 {:action => "adv_search_button",
                  :button => "saveit"},
-                :class => "btn btn-primary",
-                :alt   => t = _("Save the current search"),
-                :remote => true,
-                :title  => t)
+                :class        => "btn btn-primary",
+                :alt          => t = _("Save the current search"),
+                :remote       => true,
+                "data-method" => :post,
+                :title        => t)
     = link_to(_("Cancel"),
               {:action => "adv_search_button",
                :button => "cancel"},
-              :class => "btn btn-default",
-              :alt   => t = _("Cancel the save"),
-              :remote => true,
-              :title  => t)
+              :class        => "btn btn-default",
+              :alt          => t = _("Cancel the save"),
+              :remote       => true,
+              "data-method" => :post,
+              :title        => t)

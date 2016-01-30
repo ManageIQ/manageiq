@@ -48,16 +48,16 @@ class VimPerformancePlanning < ActsAsArModel
     #                                              :storage => {:total => Count based on storage, :details => [{<storage.id> => Count for this storage}, ...],
     # ...]
     results = recs.inject([]) do |a, r|
-      rec = self.new(
-        :name             => r[:target].name,
-        :id               => r[:target].id,
-        :resource_type    => r[:target].class.name,
-        :total_vm_count   => r[:count][:total][:total]
+      rec = new(
+        :name           => r[:target].name,
+        :id             => r[:target].id,
+        :resource_type  => r[:target].class.name,
+        :total_vm_count => r[:count][:total][:total]
       )
-      rec[:cpu_vm_count]     = r[:count][:cpu][:total]      if r[:count].has_key?(:cpu)
-      rec[:vcpus_vm_count]   = r[:count][:vcpus][:total]    if r[:count].has_key?(:vcpus)
-      rec[:memory_vm_count]  = r[:count][:memory][:total]   if r[:count].has_key?(:memory)
-      rec[:storage_vm_count] = r[:count][:storage][:total]  if r[:count].has_key?(:storage)
+      rec[:cpu_vm_count]     = r[:count][:cpu][:total]      if r[:count].key?(:cpu)
+      rec[:vcpus_vm_count]   = r[:count][:vcpus][:total]    if r[:count].key?(:vcpus)
+      rec[:memory_vm_count]  = r[:count][:memory][:total]   if r[:count].key?(:memory)
+      rec[:storage_vm_count] = r[:count][:storage][:total]  if r[:count].key?(:storage)
       a << rec
     end
 
@@ -70,10 +70,10 @@ class VimPerformancePlanning < ActsAsArModel
       end
 
       method = case t
-        when :cpu     then vm_profile[t] = "#{vm_profile[t].round} MHz"
-        when :memory  then vm_profile[t] = "#{vm_profile[t].round} MB"
-        when :storage then vm_profile[t] = "#{(vm_profile[t].to_i / 1.gigabyte).round} GB"
-      end
+               when :cpu     then vm_profile[t] = "#{vm_profile[t].round} MHz"
+               when :memory  then vm_profile[t] = "#{vm_profile[t].round} MB"
+               when :storage then vm_profile[t] = "#{(vm_profile[t].to_i / 1.gigabyte).round} GB"
+               end
     end
     return results, {:vm_profile => vm_profile}
   end
@@ -100,7 +100,7 @@ class VimPerformancePlanning < ActsAsArModel
     #   }
     # }
 
-    VimPerformanceAnalysis::Planning::VM_CONSUMES_METRIC_DEFAULT.inject({}) do |h,v|
+    VimPerformanceAnalysis::Planning::VM_CONSUMES_METRIC_DEFAULT.inject({}) do |h, v|
       key, value = v
       h[key] = value[based_on].dup unless value[based_on].nil?
       h
@@ -121,9 +121,9 @@ class VimPerformancePlanning < ActsAsArModel
     vm_needs = anal.get_vm_needs
 
     # add value key to each of the passed in options
-    vm_needs.each do |k,v|
+    vm_needs.each do |k, v|
       options[:vm_options][k][:value] = v.round unless options[:vm_options][k].nil? || v.nil?
     end
-    return options
+    options
   end
-end #class VimPerformancePlanning
+end # class VimPerformancePlanning

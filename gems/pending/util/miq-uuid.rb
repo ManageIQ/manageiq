@@ -9,7 +9,7 @@ module MiqUUID
     return nil if g.strip.empty?
     return g if g.length == 36 && g =~ REGEX_FORMAT
     g.delete!('^0-9a-f')
-    return g.sub!(/^([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})$/, '\1-\2-\3-\4-\5')
+    g.sub!(/^([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})$/, '\1-\2-\3-\4-\5')
   end
 
   def self.new_guid

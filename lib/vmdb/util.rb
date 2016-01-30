@@ -6,14 +6,14 @@ module VMDB
       proxy = proxy.dup
 
       user     = proxy.delete(:user)
-      user     &&= CGI.escape(user)
+      user &&= CGI.escape(user)
       password = proxy.delete(:password)
       password &&= CGI.escape(password)
       userinfo = "#{user}:#{password}".chomp(":") unless user.blank?
 
       proxy[:userinfo]   = userinfo
-      proxy[:scheme]   ||= "http"
-      proxy[:port]     &&= proxy[:port].to_i
+      proxy[:scheme] ||= "http"
+      proxy[:port] &&= proxy[:port].to_i
 
       URI::Generic.build(proxy)
     end
@@ -25,64 +25,42 @@ module VMDB
       Dir.glob(gz_pattern).inject([]) do |arr, f|
         f.match(/.+-(\d+\.gz)/)
         name = File.join(log_dir, "*#{$1}")
-        arr <<  name unless $1.nil? || arr.include?(name);
+        arr << name unless $1.nil? || arr.include?(name)
         arr
       end
     end
 
-    #TODO: Move these methods to lib in case they can be used elsewhere
+    # TODO: Move these methods to lib in case they can be used elsewhere
     def self.get_evm_log_for_date(pattern)
       files = Dir.glob(pattern)
-      files.find {|f| f.match(/\/evm\.log/)}
+      files.find { |f| f.match(/\/evm\.log/) }
     end
 
-    def self.log_timestamp(line)
-      ts = nil
+    LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/.freeze
 
-      # Look for 4 digit year, hyphen, 2 digit month, hyphen, 2 digit day, T, etc.
-      # [2009-05-04T18:17:50.350850 #1335]
-      # Parse only the time component
-      if line.match(/\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/)
-        t  = Time.parse($1)
-        ts = Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
-      end
-
-      return ts
+    def self.log_timestamp(str)
+      return nil unless str
+      t  = Time.parse(str)
+      Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
     end
 
     def self.log_duration(filename)
-      first, last = nil
+      require 'elif'
 
-      begin
-        start_of_file = File.open(filename, 'r')
-
-        require 'elif'
-        end_of_file = Elif.open(filename) # Use Elif to read a file backwards just as File.open does forwards
-
-        first = find_timestamp(start_of_file)
-        last  = find_timestamp(end_of_file)
-      ensure
-        start_of_file.close if start_of_file
-        end_of_file.close   if end_of_file
-      end
+      first = File.open(filename, 'r') { |f| find_timestamp(f) }
+      last  = Elif.open(filename, 'r') { |f| find_timestamp(f) }
 
       return first, last
     end
 
     def self.get_log_start_end_times(filename)
-      start_time = nil
-      end_time   = nil
-
-      # Get the start and end time from the log
-      unless filename.nil? || !File.exist?(filename)
-        if filename.match(/\.gz$/)
-          start_time, end_time = log_duration_gz(filename)
-        else
-          start_time, end_time = log_duration(filename)
-        end
+      if filename.nil? || !File.exist?(filename)
+        return nil, nil
+      elsif filename.ends_with?('.gz')
+        log_duration_gz(filename)
+      else
+        log_duration(filename)
       end
-
-      return start_time, end_time
     end
 
     def self.log_duration_gz(filename)
@@ -90,38 +68,27 @@ module VMDB
 
       begin
         _log.info "Opening filename: [#{filename}], size: [#{File.size(filename)}]"
-        Zlib::GzipReader.open(filename) { |gz|
-          lcount = 0
-          gz.each_line { |line| lcount += 1 }
-          _log.info "Lines in file: [#{lcount}]"
+        Zlib::GzipReader.open(filename) do |gz|
+          line_count = 0
+          start_time_str = nil
+          end_time_str   = nil
 
-          hlines = []
-          tlines = []
-
-          gz.rewind
-          # Collect 2 arrays of lines
-          gz.each_line { |line|
-            hlines << line if gz.lineno <= 50
-            tlines << line if gz.lineno >= (lcount - 50)
-          }
-
-          start_time = nil
-          hlines.each do |l|
-            start_time = log_timestamp(l)
-            break unless start_time.nil?
+          gz.each_line do |line|
+            line_count += 1
+            next unless line =~ LOG_TIMESTAMP_REGEX
+            start_time_str ||= $1
+            end_time_str     = $1
           end
 
-          end_time = nil
-          tlines.reverse.each do |l|
-            end_time = log_timestamp(l)
-            break unless end_time.nil?
-          end
+          start_time = log_timestamp(start_time_str)
+          end_time   = log_timestamp(end_time_str)
 
+          _log.info "Lines in file: [#{line_count}]"
           _log.info "Start Time: [#{start_time.inspect}]"
           _log.info "End   Time: [#{end_time.inspect}]"
 
           return start_time, end_time
-        }
+        end
       rescue Exception => e
         _log.error "#{e}"
         return []
@@ -157,7 +124,8 @@ module VMDB
     end
 
     private
-    #TODO: Make a class out of this so we don't have to pass around the zip.
+
+    # TODO: Make a class out of this so we don't have to pass around the zip.
     def self.add_zip_entry(zip, file_path)
       entry = zip_entry_from_path(file_path)
       mtime = File.mtime(file_path)
@@ -170,22 +138,16 @@ module VMDB
       rails_root_directories = Rails.root.to_s.split("/")
       within_rails_root = path.split("/")[0, rails_root_directories.length] == rails_root_directories
       entry = within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
-      return entry
+      entry
     end
 
     def self.find_timestamp(handle)
-      lines     = 0
-      max_lines = 250
-      ts        = nil
-
-      handle.each_line do |l|
-        break if lines >= max_lines
-        ts = log_timestamp(l)
-        break if ts
-        lines += 1
-      end
-
-      ts
+      handle
+        .lazy
+        .take(250)
+        .map { |line| log_timestamp($1) if line =~ LOG_TIMESTAMP_REGEX }
+        .reject(&:nil?)
+        .first
     end
   end
 end

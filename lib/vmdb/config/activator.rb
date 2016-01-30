@@ -8,18 +8,22 @@ module VMDB
       def activate
         raise "configuration invalid, see errors for details" unless Validator.new(@config).valid?
 
-        @config.each_key {|k|
+        @config.each_key do|k|
           if respond_to?(k.to_s, true)
             ost = OpenStruct.new(@config[k].stringify_keys)
             send(k.to_s, ost)
           end
-        }
+        end
       end
 
       private
 
-      def log(_data)
-        Vmdb::Loggers.init
+      def log(data)
+        Vmdb::Loggers.apply_config(data)
+      end
+
+      def ntp(_data)
+        MiqServer.my_server.ntp_reload_queue unless MiqServer.my_server.nil? rescue nil
       end
 
       def session(data)

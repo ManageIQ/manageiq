@@ -1,6 +1,5 @@
 require 'trollop'
 require 'pathname'
-require 'appliance_console/env'
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
 require 'appliance_console/database_configuration'
@@ -27,7 +26,7 @@ module ApplianceConsole
 
     # machine host
     def host
-      options[:host] || Env["host"]
+      options[:host] || LinuxAdmin::Hosts.new.hostname
     end
 
     # database hostname
@@ -39,6 +38,10 @@ module ApplianceConsole
       name.presence.in?(["localhost", "127.0.0.1", nil])
     end
 
+    def set_host?
+      options[:host]
+    end
+
     def key?
       options[:key] || options[:fetch_key] || (local_database? && !key_configuration.key_exist?)
     end
@@ -48,11 +51,23 @@ module ApplianceConsole
     end
 
     def local_database?
-      hostname && local?(hostname)
+      database? && local?(hostname)
     end
 
     def certs?
       options[:postgres_client_cert] || options[:postgres_server_cert] || options[:http_cert]
+    end
+
+    def uninstall_ipa?
+      options[:uninstall_ipa]
+    end
+
+    def install_ipa?
+      options[:ipaserver]
+    end
+
+    def tmp_disk?
+      options[:tmpdisk]
     end
 
     def initialize(options = {})
@@ -108,12 +123,20 @@ module ApplianceConsole
     end
 
     def run
-      Env[:host] = options[:host] if options[:host]
+      Trollop.educate unless set_host? || key? || database? || tmp_disk? || uninstall_ipa? || install_ipa? || certs?
+      if set_host?
+        ip = LinuxAdmin::NetworkInterface.new("eth0").address
+        system_hosts = LinuxAdmin::Hosts.new
+        system_hosts.hostname = options[:host]
+        system_hosts.update_entry(ip, options[:host])
+        system_hosts.save
+        LinuxAdmin::Service.new("network").restart
+      end
       create_key if key?
-      set_db if hostname
-      config_tmp_disk if options[:tmpdisk]
-      uninstall_ipa if options[:uninstall_ipa]
-      install_ipa if options[:ipaserver]
+      set_db if database?
+      config_tmp_disk if tmp_disk?
+      uninstall_ipa if uninstall_ipa?
+      install_ipa if install_ipa?
       install_certs if certs?
     rescue AwesomeSpawn::CommandResultError => e
       say e.result.output
@@ -123,7 +146,7 @@ module ApplianceConsole
     end
 
     def set_db
-      raise "No v2_key present" unless key_configuration.key_exist?
+      raise "No encryption key (v2_key) present" unless key_configuration.key_exist?
       if local?
         set_internal_db
       else

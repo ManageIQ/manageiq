@@ -1,24 +1,21 @@
-require "spec_helper"
-
 describe ServiceTemplate do
-
   context "#type_display" do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
     end
 
     it "with service_type of unknown" do
-      @st1.type_display.should == 'Unknown'
+      expect(@st1.type_display).to eq('Unknown')
     end
 
     it "with service_type of atomic" do
       @st1.update_attributes(:service_type => 'atomic')
-      @st1.type_display.should == 'Item'
+      expect(@st1.type_display).to eq('Item')
     end
 
     it "with service_type of composite" do
       @st1.update_attributes(:service_type => 'composite')
-      @st1.type_display.should == 'Bundle'
+      expect(@st1.type_display).to eq('Bundle')
     end
   end
 
@@ -28,12 +25,12 @@ describe ServiceTemplate do
     end
 
     it "with service_type of unknown" do
-      @st1.atomic?.should be_false
+      expect(@st1.atomic?).to be_falsey
     end
 
     it "with service_type of atomic" do
       @st1.update_attributes(:service_type => 'atomic')
-      @st1.atomic?.should be_true
+      expect(@st1.atomic?).to be_truthy
     end
   end
 
@@ -43,15 +40,14 @@ describe ServiceTemplate do
     end
 
     it "with service_type of unknown" do
-      @st1.composite?.should be_false
+      expect(@st1.composite?).to be_falsey
     end
 
     it "with service_type of composite" do
       @st1.update_attributes(:service_type => 'composite')
-      @st1.composite?.should be_true
+      expect(@st1.composite?).to be_truthy
     end
   end
-
 
   context "with multiple services" do
     before(:each) do
@@ -69,11 +65,11 @@ describe ServiceTemplate do
       add_and_save_service(@svc_c, @svc_d)
 
       sub_svc = @svc_a.sub_services
-      sub_svc.should_not include(@svc_a)
-      sub_svc.should have(2).things
-      sub_svc.should include(@svc_b)
-      sub_svc.should include(@svc_c)
-      sub_svc.should_not include(@svc_d)
+      expect(sub_svc).not_to include(@svc_a)
+      expect(sub_svc.size).to eq(2)
+      expect(sub_svc).to include(@svc_b)
+      expect(sub_svc).to include(@svc_c)
+      expect(sub_svc).not_to include(@svc_d)
     end
 
     it "should return all sub-services" do
@@ -83,18 +79,18 @@ describe ServiceTemplate do
       add_and_save_service(@svc_c, @svc_d)
 
       sub_svc = @svc_a.sub_services({:recursive => true})
-      sub_svc.should have(5).things
-      sub_svc.should_not include(@svc_a)
-      sub_svc.should include(@svc_b)
-      sub_svc.should include(@svc_c)
-      sub_svc.should include(@svc_d)
+      expect(sub_svc.size).to eq(5)
+      expect(sub_svc).not_to include(@svc_a)
+      expect(sub_svc).to include(@svc_b)
+      expect(sub_svc).to include(@svc_c)
+      expect(sub_svc).to include(@svc_d)
 
       sub_svc.uniq!
-      sub_svc.should have(3).things
-      sub_svc.should_not include(@svc_a)
-      sub_svc.should include(@svc_b)
-      sub_svc.should include(@svc_c)
-      sub_svc.should include(@svc_d)
+      expect(sub_svc.size).to eq(3)
+      expect(sub_svc).not_to include(@svc_a)
+      expect(sub_svc).to include(@svc_b)
+      expect(sub_svc).to include(@svc_c)
+      expect(sub_svc).to include(@svc_d)
     end
 
     it "should return all parent services for a service" do
@@ -103,33 +99,33 @@ describe ServiceTemplate do
       add_and_save_service(@svc_a, @svc_d)
       add_and_save_service(@svc_b, @svc_c)
 
-      @svc_a.parent_services.should be_empty
+      expect(@svc_a.parent_services).to be_empty
 
       parents = @svc_b.parent_services
-      parents.should have(1).thing
-      parents.first.name.should == @svc_a.name
+      expect(parents.size).to eq(1)
+      expect(parents.first.name).to eq(@svc_a.name)
 
       parents = @svc_c.parent_services
-      parents.should have(2).things
+      expect(parents.size).to eq(2)
       parent_names = parents.collect(&:name)
-      parent_names.should include(@svc_a.name)
-      parent_names.should include(@svc_b.name)
+      expect(parent_names).to include(@svc_a.name)
+      expect(parent_names).to include(@svc_b.name)
     end
 
     it "should not allow service templates to be connected to itself" do
-      expect { add_and_save_service(@svc_a, @svc_a) }.to raise_error
+      expect { add_and_save_service(@svc_a, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should not allow service templates to be connected in a circular reference" do
-      lambda { add_and_save_service(@svc_a, @svc_b) }.should_not raise_error
-      lambda { add_and_save_service(@svc_b, @svc_c) }.should_not raise_error
-      lambda { add_and_save_service(@svc_a, @svc_c) }.should_not raise_error
-      lambda { add_and_save_service(@svc_c, @svc_d) }.should_not raise_error
-      lambda { add_and_save_service(@svc_a, @svc_e) }.should_not raise_error
+      expect { add_and_save_service(@svc_a, @svc_b) }.not_to raise_error
+      expect { add_and_save_service(@svc_b, @svc_c) }.not_to raise_error
+      expect { add_and_save_service(@svc_a, @svc_c) }.not_to raise_error
+      expect { add_and_save_service(@svc_c, @svc_d) }.not_to raise_error
+      expect { add_and_save_service(@svc_a, @svc_e) }.not_to raise_error
 
-      lambda { add_and_save_service(@svc_c, @svc_a) }.should raise_error
-      lambda { add_and_save_service(@svc_d, @svc_a) }.should raise_error
-      lambda { add_and_save_service(@svc_c, @svc_b) }.should raise_error
+      expect { add_and_save_service(@svc_c, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
+      expect { add_and_save_service(@svc_d, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
+      expect { add_and_save_service(@svc_c, @svc_b) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
 
       # Print tree-view of services
       # puts "\n#{svc_a.name}"
@@ -137,17 +133,17 @@ describe ServiceTemplate do
     end
 
     it "should not allow deeply nested service templates to be connected in a circular reference" do
-      lambda { add_and_save_service(@svc_a, @svc_b) }.should_not raise_error
-      lambda { add_and_save_service(@svc_b, @svc_c) }.should_not raise_error
+      expect { add_and_save_service(@svc_a, @svc_b) }.not_to raise_error
+      expect { add_and_save_service(@svc_b, @svc_c) }.not_to raise_error
 
-      lambda { add_and_save_service(@svc_d, @svc_e) }.should_not raise_error
-      lambda { add_and_save_service(@svc_e, @svc_a) }.should_not raise_error
+      expect { add_and_save_service(@svc_d, @svc_e) }.not_to raise_error
+      expect { add_and_save_service(@svc_e, @svc_a) }.not_to raise_error
 
-      lambda { add_and_save_service(@svc_c, @svc_d) }.should raise_error
+      expect { add_and_save_service(@svc_c, @svc_d) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should not allow service template to connect to self" do
-      expect { @svc_a << @svc_a }.to raise_error
+      expect { @svc_a << @svc_a }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
     it "should allow service template to connect to a service with the same id" do
@@ -160,71 +156,66 @@ describe ServiceTemplate do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_b, @svc_c)
 
-      lambda { @svc_b.destroy }.should raise_error
-      lambda { @svc_c.destroy }.should raise_error
+      expect { @svc_b.destroy }.to raise_error(MiqException::MiqServiceError, /Cannot delete.*child of another service/)
+      expect { @svc_c.destroy }.to raise_error(MiqException::MiqServiceError, /Cannot delete.*child of another service/)
 
-      lambda { @svc_a.destroy }.should_not raise_error
-      lambda { @svc_b.destroy }.should_not raise_error
-      lambda { @svc_c.destroy }.should_not raise_error
+      expect { @svc_a.destroy }.not_to raise_error
+      expect { @svc_b.destroy }.not_to raise_error
+      expect { @svc_c.destroy }.not_to raise_error
     end
-
   end
 
   context "with a small env" do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)
-      MiqServer.stub(:my_server).and_return(@zone1.miq_servers.first)
+      allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
     end
 
     it "should create a valid service template" do
-      @st1.guid.should_not be_empty
-      @st1.service_resources.should have(0).things
+      expect(@st1.guid).not_to be_empty
+      expect(@st1.service_resources.size).to eq(0)
     end
 
     it "should not set the owner for the service template" do
       @user         = nil
       @test_service = FactoryGirl.create(:service, :name => 'test service')
-      @test_service.evm_owner.should be_nil
+      expect(@test_service.evm_owner).to be_nil
       @st1.set_ownership(@test_service, @user)
-      @test_service.evm_owner.should be_nil
+      expect(@test_service.evm_owner).to be_nil
     end
 
     it "should set the owner and group for the service template" do
-      @group        = FactoryGirl.create(:miq_group, :description => 'Test Group')
-      @user         = FactoryGirl.create(:user,
-                                         :name       => 'Test Service Owner',
-                                         :userid     => 'test_user',
-                                         :miq_groups => [@group])
+      @user         = FactoryGirl.create(:user_with_group)
       @test_service = FactoryGirl.create(:service, :name => 'test service')
-      @test_service.evm_owner.should be_nil
+      expect(@test_service.evm_owner).to be_nil
       @st1.set_ownership(@test_service, @user)
       @test_service.reload
-      @test_service.evm_owner.name.should == 'Test Service Owner'
-      @test_service.evm_owner.current_group.should_not be_nil
-      @test_service.evm_owner.current_group.description.should == 'Test Group'
+      expect(@test_service.evm_owner.name).to eq(@user.name)
+      expect(@test_service.evm_owner.current_group).not_to be_nil
+      expect(@test_service.evm_owner.current_group.description).to eq(@user.current_group.description)
     end
 
     it "should create an empty service template without a type" do
-      @st1.service_type.should == 'unknown'
-      @st1.composite?.should be_false
-      @st1.atomic?.should be_false
+      expect(@st1.service_type).to eq('unknown')
+      expect(@st1.composite?).to be_falsey
+      expect(@st1.atomic?).to be_falsey
     end
 
     it "should create a composite service template" do
       st2 = FactoryGirl.create(:service_template, :name => 'Service Template 2')
       @st1.add_resource(st2)
-      @st1.service_resources.should have(1).thing
-      @st1.composite?.should be_true
-      @st1.atomic?.should be_false
+      expect(@st1.service_resources.size).to eq(1)
+      expect(@st1.composite?).to be_truthy
+      expect(@st1.atomic?).to be_falsey
     end
 
     it "should create an atomic service template" do
       vm = Vm.first
       @st1.add_resource(vm)
-      @st1.service_resources.should have(1).thing
-      @st1.atomic?.should be_true
-      @st1.composite?.should be_false
+      expect(@st1.service_resources.size).to eq(1)
+      expect(@st1.atomic?).to be_truthy
+      expect(@st1.composite?).to be_falsey
     end
 
     context "with a VM Provision Request Template" do
@@ -232,22 +223,22 @@ describe ServiceTemplate do
         admin = FactoryGirl.create(:user_admin)
 
         vm_template = Vm.first
-        ptr = FactoryGirl.create(:miq_provision_request_template, :userid => admin.userid, :src_vm_id => vm_template.id)
+        ptr = FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
       end
 
       it "should allow VM Provision Request Template as a resource" do
-        @st1.service_resources.should have(1).thing
-        @st1.atomic?.should be_true
-        @st1.composite?.should be_false
+        expect(@st1.service_resources.size).to eq(1)
+        expect(@st1.atomic?).to be_truthy
+        expect(@st1.composite?).to be_falsey
       end
 
       it "should delete the VM Provision Request Template when the service template is deleted" do
-        ServiceTemplate.count.should == 1
-        MiqProvisionRequestTemplate.count.should == 1
+        expect(ServiceTemplate.count).to eq(1)
+        expect(MiqProvisionRequestTemplate.count).to eq(1)
         @st1.destroy
-        ServiceTemplate.count.should == 0
-        MiqProvisionRequestTemplate.count.should == 0
+        expect(ServiceTemplate.count).to eq(0)
+        expect(MiqProvisionRequestTemplate.count).to eq(0)
       end
     end
   end
@@ -258,12 +249,12 @@ describe ServiceTemplate do
 
       user         = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       @vm_template = FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
-      @ptr = FactoryGirl.create(:miq_provision_request_template, :userid => user.userid, :src_vm_id => @vm_template.id)
+      @ptr = FactoryGirl.create(:miq_provision_request_template, :requester => user, :src_vm_id => @vm_template.id)
     end
 
     it 'unknown' do
       expect(@st1.service_type).to eq "unknown"
-      expect(@st1.template_valid?).to be_true
+      expect(@st1.template_valid?).to be_truthy
       expect(@st1.template_valid_error_message).to be_nil
     end
 
@@ -271,31 +262,31 @@ describe ServiceTemplate do
       before { @st1.add_resource(@ptr) }
 
       it 'valid template' do
-        expect(@st1.template_valid?).to be_true
+        expect(@st1.template_valid?).to be_truthy
         expect(@st1.template_valid_error_message).to be_nil
       end
 
       it 'orphaned template' do
-        VmOrTemplate.any_instance.stub(:orphaned?).and_return(true)
-        expect(@st1.template_valid?).to be_false
+        allow_any_instance_of(VmOrTemplate).to receive(:orphaned?).and_return(true)
+        expect(@st1.template_valid?).to be_falsey
         expect(@st1.template_valid_error_message).to include("Id <#{@vm_template.id}> is orphaned")
       end
 
       it 'archived template' do
-        VmOrTemplate.any_instance.stub(:archived?).and_return(true)
-        expect(@st1.template_valid?).to be_false
+        allow_any_instance_of(VmOrTemplate).to receive(:archived?).and_return(true)
+        expect(@st1.template_valid?).to be_falsey
         expect(@st1.template_valid_error_message).to include("Id <#{@vm_template.id}> is archived")
       end
 
       it 'not existing template' do
         @ptr.update_attributes(:src_vm_id => 999)
-        expect(@st1.template_valid?).to be_false
+        expect(@st1.template_valid?).to be_falsey
         expect(@st1.template_valid_error_message).to include("Unable to find VM with Id [999]")
       end
 
       it 'generic' do
         @st1.remove_resource(@ptr)
-        expect(@st1.template_valid?).to be_true
+        expect(@st1.template_valid?).to be_truthy
         expect(@st1.template_valid_error_message).to be_nil
       end
     end
@@ -308,37 +299,37 @@ describe ServiceTemplate do
       end
 
       it 'valid template' do
-        expect(@st2.template_valid?).to be_true
+        expect(@st2.template_valid?).to be_truthy
         expect(@st2.template_valid_error_message).to be_nil
       end
 
       it 'orphaned template' do
-        VmOrTemplate.any_instance.stub(:orphaned?).and_return(true)
-        expect(@st2.template_valid?).to be_false
+        allow_any_instance_of(VmOrTemplate).to receive(:orphaned?).and_return(true)
+        expect(@st2.template_valid?).to be_falsey
         expect(@st2.template_valid_error_message).to include("Id <#{@vm_template.id}> is orphaned")
       end
 
       it 'archived template' do
-        VmOrTemplate.any_instance.stub(:archived?).and_return(true)
-        expect(@st2.template_valid?).to be_false
+        allow_any_instance_of(VmOrTemplate).to receive(:archived?).and_return(true)
+        expect(@st2.template_valid?).to be_falsey
         expect(@st2.template_valid_error_message).to include("Id <#{@vm_template.id}> is archived")
       end
 
       it 'not existing template' do
         @ptr.update_attributes(:src_vm_id => 999)
-        expect(@st2.template_valid?).to be_false
+        expect(@st2.template_valid?).to be_falsey
         expect(@st2.template_valid_error_message).to include("Unable to find VM with Id [999]")
       end
     end
   end
 end
 
-def add_and_save_service(p,c)
+def add_and_save_service(p, c)
   p.add_resource(c)
   p.service_resources.each(&:save)
 end
 
-def print_svc(svc, indent="")
+def print_svc(svc, indent = "")
   return if indent.length > 10
   svc.service_resources.each do |s|
     puts indent + s.resource.name

@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe AddContainerEntitiesType do
@@ -28,9 +27,9 @@ describe AddContainerEntitiesType do
 
       migrate
 
-      ContainerNode.find(container_node.id).should_not respond_to(:type)
-      Container.find(container.id).should_not respond_to(:type)
-      ContainerGroup.find(container_group.id).should_not respond_to(:type)
+      expect(ContainerNode.find(container_node.id)).not_to respond_to(:type)
+      expect(Container.find(container.id)).not_to respond_to(:type)
+      expect(ContainerGroup.find(container_group.id)).not_to respond_to(:type)
     end
   end
 end

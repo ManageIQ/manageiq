@@ -1,11 +1,10 @@
-require "spec_helper"
-
 describe "SCVMM microsoft_best_fit_least_utilized" do
+  let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
                             "namespace=Infrastructure/VM/Provisioning&class=Placement" \
                             "&instance=default&message=microsoft&" \
-                            "MiqProvision::miq_provision=#{miq_provision.id}")
+                            "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
   let(:vm_template) do
     FactoryGirl.create(:template_microsoft,
@@ -16,6 +15,7 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
     FactoryGirl.create(:miq_provision_microsoft,
                        :options => {:src_vm_id      => vm_template.id,
                                     :placement_auto => [true, 1]},
+                       :userid  => user.userid,
                        :state   => 'active',
                        :status  => 'Ok')
   end
@@ -36,7 +36,8 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
       before do
         host_struct = MiqHashStruct.new(:id               => host.id,
                                         :evm_object_class => host.class.base_class.name.to_sym)
-        ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:allowed_hosts).and_return([host_struct])
+        allow_any_instance_of(ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow)
+          .to receive(:allowed_hosts).and_return([host_struct])
       end
 
       it "without storage will not set placement values" do
@@ -52,7 +53,8 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
           host.storages << storage
           storage_struct = MiqHashStruct.new(:id               => storage.id,
                                              :evm_object_class => storage.class.base_class.name.to_sym)
-          ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:allowed_storages).and_return([storage_struct])
+          allow_any_instance_of(ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow)
+            .to receive(:allowed_storages).and_return([storage_struct])
         end
 
         it "will set placement values" do

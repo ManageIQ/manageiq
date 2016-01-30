@@ -1,10 +1,8 @@
-require "spec_helper"
-
 describe OrchestrationTemplateAzure do
   describe ".eligible_manager_types" do
     it "lists the classes of eligible managers" do
       OrchestrationTemplateAzure.eligible_manager_types.each do |klass|
-        (klass <= ManageIQ::Providers::Azure::CloudManager).should be_true
+        expect(klass <= ManageIQ::Providers::Azure::CloudManager).to be_truthy
       end
     end
   end
@@ -14,11 +12,11 @@ describe OrchestrationTemplateAzure do
   context "when a raw template in JSON format is given" do
     it "parses parameters from a template" do
       groups = valid_template.parameter_groups
-      groups.size.should == 1
-      groups[0].label.should == "Parameters"
+      expect(groups.size).to eq(1)
+      expect(groups[0].label).to eq("Parameters")
 
       param_hash = groups[0].parameters.index_by(&:name)
-      param_hash.size.should == 3
+      expect(param_hash.size).to eq(3)
       assert_string_type(param_hash["adminUsername"])
       assert_secret_type(param_hash["adminPassword"])
       assert_allowed_values(param_hash["hostingPlanSku"])
@@ -26,7 +24,7 @@ describe OrchestrationTemplateAzure do
   end
 
   def assert_secret_type(parameter)
-    parameter.should have_attributes(
+    expect(parameter).to have_attributes(
       :name          => "adminPassword",
       :label         => "Admin Password",
       :description   => "Admin password",
@@ -38,7 +36,7 @@ describe OrchestrationTemplateAzure do
   end
 
   def assert_string_type(parameter)
-    parameter.should have_attributes(
+    expect(parameter).to have_attributes(
       :name          => "adminUsername",
       :label         => "Admin Username",
       :description   => "Administrator username",
@@ -50,7 +48,7 @@ describe OrchestrationTemplateAzure do
   end
 
   def assert_allowed_values(parameter)
-    parameter.should have_attributes(
+    expect(parameter).to have_attributes(
       :name          => "hostingPlanSku",
       :label         => "Hosting Plan Sku",
       :description   => nil,
@@ -59,10 +57,10 @@ describe OrchestrationTemplateAzure do
       :hidden        => false,
     )
     constraints = parameter.constraints
-    constraints.size.should == 1
-    constraints[0].should be_a OrchestrationTemplate::OrchestrationParameterAllowed
-    constraints[0].should be_kind_of OrchestrationTemplate::OrchestrationParameterConstraint
-    constraints[0].should have_attributes(
+    expect(constraints.size).to eq(1)
+    expect(constraints[0]).to be_a OrchestrationTemplate::OrchestrationParameterAllowed
+    expect(constraints[0]).to be_kind_of OrchestrationTemplate::OrchestrationParameterConstraint
+    expect(constraints[0]).to have_attributes(
       :description    => nil,
       :allowed_values => ["Free", "Shared", "Basic", "Standard", "Premium"]
     )
@@ -71,16 +69,16 @@ describe OrchestrationTemplateAzure do
   describe '#validate_format' do
     it 'passes validation if no content' do
       template = OrchestrationTemplateAzure.new
-      template.validate_format.should be_nil
+      expect(template.validate_format).to be_nil
     end
 
     it 'passes validation with correct JSON content' do
-      valid_template.validate_format.should be_nil
+      expect(valid_template.validate_format).to be_nil
     end
 
     it 'fails validations with incorrect JSON content' do
       template = OrchestrationTemplateAzure.new(:content => "invalid string")
-      template.validate_format.should_not be_nil
+      expect(template.validate_format).not_to be_nil
     end
   end
 end

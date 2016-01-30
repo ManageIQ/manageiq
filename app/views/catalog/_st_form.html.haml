@@ -15,6 +15,6 @@
                        :class    => "selectpicker")
           :javascript
             miqInitSelectPicker();
-            miqSelectPickerEvent('st_prov_type', "#{url}")
+            miqSelectPickerEvent('st_prov_type', "#{url}", {beforeSend: true, complete: true})
   - else
     = render :partial => "form"

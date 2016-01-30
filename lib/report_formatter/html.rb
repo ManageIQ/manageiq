@@ -4,14 +4,14 @@ module ReportFormatter
 
     def build_html_title
       mri = options.mri
-      mri.html_title = String.new
+      mri.html_title = ''
       mri.html_title << " <div style='height: 10px;'></div>"
       mri.html_title << "<ul id='tab'>"
       mri.html_title << "<li class='active'><a class='active'>"
       mri.html_title << " #{mri.title}" unless mri.title.nil?
       mri.html_title << "</a></li></ul>"
-      mri.html_title <<  '<div class="clr"></div><div class="clr"></div><div class="b"><div class="b"><div class="b"></div></div></div>'
-      mri.html_title <<  '<div id="element-box"><div class="t"><div class="t"><div class="t"></div></div></div><div class="m">'
+      mri.html_title << '<div class="clr"></div><div class="clr"></div><div class="b"><div class="b"><div class="b"></div></div></div>'
+      mri.html_title << '<div id="element-box"><div class="t"><div class="t"><div class="t"></div></div></div><div class="m">'
     end
 
     def pad(str, len)
@@ -42,7 +42,7 @@ module ReportFormatter
       output << '<tbody>'
 
       # table data
-#     save_val = nil
+      #     save_val = nil
       counter = 0
       row = 0
       unless mri.table.nil?
@@ -74,7 +74,7 @@ module ReportFormatter
         use_table = mri.sub_table ? mri.sub_table : mri.table
         use_table.data.each_with_index do |d, d_idx|
           break if row_limit != 0 && d_idx > row_limit - 1
-          if ["y","c"].include?(mri.group) && mri.sortby != nil && save_val != d.data[mri.sortby[0]].to_s
+          if ["y", "c"].include?(mri.group) && !mri.sortby.nil? && save_val != d.data[mri.sortby[0]].to_s
             unless d_idx == 0                       # If not the first row, we are at a group break
               output << group_rows(save_val, mri.col_order.length, group_text)
             end
@@ -89,39 +89,39 @@ module ReportFormatter
             output << '<tr class="row1 no-hover">'
             row = 0
           end
-          mri.col_formats ||= Array.new                 # Backward compat - create empty array for formats
+          mri.col_formats ||= []                 # Backward compat - create empty array for formats
           mri.col_order.each_with_index do |c, c_idx|
             if c == "resource_type"                     # Lookup models in resource_type col
               output << '<td>'
-              output << ui_lookup(:model=>d.data[c])
+              output << ui_lookup(:model => d.data[c])
               output << "</td>"
             elsif mri.db == "VimUsage"                  # Format usage columns
               case c
               when "cpu_usagemhz_rate_average"
                 output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format=>:general_number_precision_1))
+                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :general_number_precision_1))
                 tot_cpu += d.data[c].to_f
               when "derived_memory_used"
                 output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format=>:megabytes_human))
+                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :megabytes_human))
                 tot_ram += d.data[c].to_f
               when "derived_vm_used_disk_storage"
                 output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c], :format=>:bytes_human))
+                output << CGI.escapeHTML(mri.format(c, d.data[c], :format => :bytes_human))
                 tot_space += d.data[c].to_f
               when "derived_storage_used_managed"
                 output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c], :format=>:bytes_human))
+                output << CGI.escapeHTML(mri.format(c, d.data[c], :format => :bytes_human))
                 tot_space += d.data[c].to_f
               when "disk_usage_rate_average"
                 output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format=>:general_number_precision_1)) <<
-                          " (#{CGI.escapeHTML(mri.format(c, d.data[c].to_f*1.kilobyte*mri.extras[:interval], :format=>:bytes_human))})"
+                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
+                  " (#{CGI.escapeHTML(mri.format(c, d.data[c].to_f * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})"
                 tot_disk += d.data[c].to_f
               when "net_usage_rate_average"
                 output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format=>:general_number_precision_1)) <<
-                          " (#{CGI.escapeHTML(mri.format(c, d.data[c].to_f*1.kilobyte*mri.extras[:interval], :format=>:bytes_human))})"
+                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
+                  " (#{CGI.escapeHTML(mri.format(c, d.data[c].to_f * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})"
                 tot_net += d.data[c].to_f
               else
                 output << '<td>'
@@ -129,7 +129,7 @@ module ReportFormatter
               end
               output << "</td>"
             else
-              if d.data[c].is_a?(Time)
+              if d.data[c].kind_of?(Time)
                 output << '<td style="text-align:center">'
               elsif d.data[c].kind_of?(Bignum) || d.data[c].kind_of?(Fixnum) || d.data[c].kind_of?(Float)
                 output << '<td style="text-align:right">'
@@ -138,8 +138,8 @@ module ReportFormatter
               end
               output << CGI.escapeHTML(mri.format(c.split("__").first,
                                                   d.data[c],
-                                                  :format=>mri.col_formats[c_idx] ? mri.col_formats[c_idx] : :_default_,
-                                                  :tz=>tz))
+                                                  :format => mri.col_formats[c_idx] ? mri.col_formats[c_idx] : :_default_,
+                                                  :tz     => tz))
               output << "</td>"
             end
           end
@@ -160,33 +160,33 @@ module ReportFormatter
             case c
             when "cpu_usagemhz_rate_average"
               output << '<td style="text-align:right"><strong>' <<
-                        CGI.escapeHTML(mri.format(c, tot_cpu, :format=>:general_number_precision_1)) <<
-                        "</strong></td>"
+                CGI.escapeHTML(mri.format(c, tot_cpu, :format => :general_number_precision_1)) <<
+                "</strong></td>"
             when "derived_memory_used"
               output << '<td style="text-align:right"><strong>' <<
-                        CGI.escapeHTML(mri.format(c, tot_ram, :format=>:megabytes_human)) <<
-                        "</strong></td>"
+                CGI.escapeHTML(mri.format(c, tot_ram, :format => :megabytes_human)) <<
+                "</strong></td>"
             when "derived_storage_used_managed"
               output << '<td style="text-align:right"><strong>' <<
-                        CGI.escapeHTML(mri.format(c, tot_space, :format=>:bytes_human)) <<
-                        "</strong></td>"
+                CGI.escapeHTML(mri.format(c, tot_space, :format => :bytes_human)) <<
+                "</strong></td>"
             when "derived_vm_used_disk_storage"
               output << '<td style="text-align:right"><strong>' <<
-                        CGI.escapeHTML(mri.format(c, tot_space, :format=>:bytes_human)) <<
-                        "</strong></td>"
+                CGI.escapeHTML(mri.format(c, tot_space, :format => :bytes_human)) <<
+                "</strong></td>"
             when "disk_usage_rate_average"
-              output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(mri.format(c, tot_disk, :format=>:general_number_precision_1)) <<
-                                  " (#{CGI.escapeHTML(mri.format(c, tot_disk*1.kilobyte*mri.extras[:interval], :format=>:bytes_human))})" << "</strong></td>"
+              output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(mri.format(c, tot_disk, :format => :general_number_precision_1)) <<
+                " (#{CGI.escapeHTML(mri.format(c, tot_disk * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})" << "</strong></td>"
             when "net_usage_rate_average"
-              output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(mri.format(c, tot_net, :format=>:general_number_precision_1)) <<
-                                  " (#{CGI.escapeHTML(mri.format(c, tot_net*1.kilobyte*mri.extras[:interval], :format=>:bytes_human))})" << "</strong></td>"
+              output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(mri.format(c, tot_net, :format => :general_number_precision_1)) <<
+                " (#{CGI.escapeHTML(mri.format(c, tot_net * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})" << "</strong></td>"
             end
           end
           output << "</tr>"
         end
       end
 
-      if ["y","c"].include?(mri.group) && mri.sortby != nil
+      if ["y", "c"].include?(mri.group) && !mri.sortby.nil?
         output << group_rows(save_val, mri.col_order.length, group_text)
         output << group_rows(:_total_, mri.col_order.length)
       end
@@ -215,17 +215,17 @@ module ReportFormatter
           end
         end
         MiqReport::GROUPINGS.each do |calc|                     # Add an output row for each group calculation
-          if mri.extras[:grouping][group].has_key?(calc.first)  # Only add a row if there are calcs of this type for this group value
+          if mri.extras[:grouping][group].key?(calc.first)  # Only add a row if there are calcs of this type for this group value
             grp_output << "<tr>"
             grp_output << "<td class='group'>#{calc.last.pluralize}:</td>"
             mri.col_order.each_with_index do |c, c_idx|         # Go through the columns
               next if c_idx == 0                                # Skip first column
               grp_output << "<td class='group' style='text-align:right'>"
               grp_output << CGI.escapeHTML(mri.format(c.split("__").first,
-                                                  mri.extras[:grouping][group][calc.first][c],
-                                                  :format=>mri.col_formats[c_idx] ? mri.col_formats[c_idx] : :_default_
-                                                  )
-                                      ) if mri.extras[:grouping][group].has_key?(calc.first)
+                                                      mri.extras[:grouping][group][calc.first][c],
+                                                      :format => mri.col_formats[c_idx] ? mri.col_formats[c_idx] : :_default_
+                                                     )
+                                          ) if mri.extras[:grouping][group].key?(calc.first)
               grp_output << "</td>"
             end
             grp_output << "</tr>"
@@ -233,7 +233,7 @@ module ReportFormatter
         end
       end
       grp_output << "<tr><td class='group' colspan='#{col_count}'>&nbsp;</td></tr>" unless group == :_total_
-      return grp_output
+      grp_output
     end
 
     def build_document_footer
@@ -267,14 +267,14 @@ module ReportFormatter
         output << "#{mri.filter_summary}"
       end
 
-#     output << "<div class='clr'></div>"
-#     output << "</div>"
-#     output << "<div class='b'>"
-#     output << "<div class='b'>"
-#     output << "<div class='b'></div>"
-#     output << "</div>"
-#     output << "</div>"
-#     output << "</div>"
+      #     output << "<div class='clr'></div>"
+      #     output << "</div>"
+      #     output << "<div class='b'>"
+      #     output << "<div class='b'>"
+      #     output << "<div class='b'></div>"
+      #     output << "</div>"
+      #     output << "</div>"
+      #     output << "</div>"
     end
 
     def finalize_document

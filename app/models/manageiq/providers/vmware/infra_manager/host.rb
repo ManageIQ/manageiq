@@ -29,7 +29,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Host < ::Host
       begin
         vim_ds = vim.getVimDataStore(datastore.name)
         return vim_ds.dsFolderFileList
-      rescue Handsoap::Fault, StandardError, TimeoutError, DRb::DRbConnError => err
+      rescue Handsoap::Fault, StandardError, Timeout::Error, DRb::DRbConnError => err
         _log.log_backtrace(err)
         raise MiqException::MiqStorageError, "Error communicating with Host: [#{name}]"
       ensure
@@ -54,7 +54,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Host < ::Host
 
   def reserve_next_available_vnc_port
     port_start = ext_management_system.try(:host_default_vnc_port_start).try(:to_i) || 5900
-    port_end   = ext_management_system.try(:host_default_vnc_port_end).try(:to_i)   || 5999
+    port_end   = ext_management_system.try(:host_default_vnc_port_end).try(:to_i) || 5999
 
     lock do
       port = next_available_vnc_port

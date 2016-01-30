@@ -8,10 +8,10 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
   VMS_POWER_FILTER = "power_state != 'unknown'"
 
   def cores_quota_used
-    Hardware.joins(:vm).
-      where(:vms => {:cloud_tenant_id => cloud_tenant_id}).
-      where("vms.#{VMS_POWER_FILTER}").
-      sum(:numvcpus)
+    Hardware.joins(:vm)
+      .where(:vms => {:cloud_tenant_id => cloud_tenant_id})
+      .where("vms.#{VMS_POWER_FILTER}")
+      .sum(:cpu_total_cores)
   end
 
   def instances_quota_used
@@ -19,10 +19,10 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
   end
 
   def ram_quota_used
-    Hardware.joins(:vm).
-      where(:vms => {:cloud_tenant_id => cloud_tenant_id}).
-      where("vms.#{VMS_POWER_FILTER}").
-      sum(:memory_cpu)
+    Hardware.joins(:vm)
+      .where(:vms => {:cloud_tenant_id => cloud_tenant_id})
+      .where("vms.#{VMS_POWER_FILTER}")
+      .sum(:memory_mb)
   end
 
   # nova
@@ -35,7 +35,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
 
   # neutron
   def floatingip_quota_used
-    FloatingIp.where(:cloud_tenant_id => cloud_tenant_id).count
+    ::FloatingIp.where(:cloud_tenant_id => cloud_tenant_id).count
   end
 
   # nova
@@ -50,9 +50,9 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
   def security_group_rule_quota_used
     join = "inner join security_groups on security_groups.id = firewall_rules.resource_id "
     join += "and firewall_rules.resource_type = 'SecurityGroup'"
-    FirewallRule.joins(join).
-      where("security_groups.cloud_tenant_id" => cloud_tenant_id).
-      count
+    FirewallRule.joins(join)
+      .where("security_groups.cloud_tenant_id" => cloud_tenant_id)
+      .count
   end
 
   # nova

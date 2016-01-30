@@ -4,7 +4,7 @@ class ClassificationImport
   attr_accessor :stats
 
   REQUIRED_COLS = ["category", "entry"]
-  MATCH_KEYS = ["name","hardware.networks.hostname","guid"]
+  MATCH_KEYS = ["name", "hardware.networks.hostname", "guid"]
 
   def initialize(data)
     @data = data[0]
@@ -13,23 +13,23 @@ class ClassificationImport
   end
 
   def self.upload(fd)
-    import = self.new(MiqBulkImport.upload(fd, REQUIRED_COLS.dup, MATCH_KEYS.dup))
+    import = new(MiqBulkImport.upload(fd, REQUIRED_COLS.dup, MATCH_KEYS.dup))
     import.verify
-    return import
+    import
   end
 
   def verify
     @errors.clear
     @verified_data = {}
     good = bad = 0
-    @data.each {|line|
+    @data.each do|line|
       keys = []
-      @keys.each{|k|
+      @keys.each do|k|
         t = []
         t[0] = k
         t[1] = line[k]
         keys.push(t)
-      }
+      end
       vms = MiqBulkImport.find_entry_by_keys(VmOrTemplate, keys)
       if vms.empty?
         bad += 1
@@ -53,13 +53,13 @@ class ClassificationImport
         @verified_data[vms[0].id] ||= {}
         @verified_data[vms[0].id][line["category"]] ||= []
         entry = nil
-        cat.entries.each {|e|
+        cat.entries.each do|e|
           if e.description == line["entry"]
             @verified_data[vms[0].id][line["category"]].push(line["entry"])
             entry = e
             break
           end
-        }
+        end
         if entry.nil?
           bad += 1
           _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}, category: #{line["category"]}: Unable to find entry #{line["entry"]})"
@@ -68,10 +68,10 @@ class ClassificationImport
         end
         good += 1
       end
-    }
+    end
 
-    @verified_data.each{|id, data|
-      data.each{|category, entries|
+    @verified_data.each do|id, data|
+      data.each do|category, entries|
         cat = Classification.find_by_description(category)
         if cat.single_value && entries.length > 1
           vm = VmOrTemplate.find_by_id(id)
@@ -81,31 +81,31 @@ class ClassificationImport
             @errors.add(:singlevaluedcategory, "Vm #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
           end
         end
-      }
-    }
+      end
+    end
     @stats = {:good => good, :bad => bad}
     _log.info "Number of valid entries: #{@stats[:good]}, number of invalid entries: #{@stats[:bad]}"
-    return @stats
+    @stats
   end
 
   def apply
-    @verified_data.each {|id, data|
+    @verified_data.each do|id, data|
       vm = VmOrTemplate.find_by_id(id)
       if vm
-        data.each{|category, entries|
+        data.each do|category, entries|
           cat = Classification.find_by_description(category)
           next unless cat
-          entries.each{|ent|
-            cat.entries.each {|e|
+          entries.each do|ent|
+            cat.entries.each do|e|
               if e.description == ent
                 _log.info "Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}"
                 e.assign_entry_to(vm)
                 break
               end
-            }
-          }
-        }
+            end
+          end
+        end
       end
-    }
+    end
   end
 end

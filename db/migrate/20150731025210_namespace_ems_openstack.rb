@@ -25,8 +25,7 @@ class NamespaceEmsOpenstack < ActiveRecord::Migration
     VmOpenstack                             ManageIQ::Providers::Openstack::CloudManager::Vm
 
     ServiceOrchestration::OptionConverterOpenstack
-                                       ManageIQ::Providers::Openstack::CloudManager::OrchestrationServiceOptionConverter
-
+    ManageIQ::Providers::Openstack::CloudManager::OrchestrationServiceOptionConverter
 
     EmsOpenstackInfra                       ManageIQ::Providers::Openstack::InfraManager
     AuthKeyPairOpenstackInfra               ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair

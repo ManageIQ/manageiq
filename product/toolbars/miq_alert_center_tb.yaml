@@ -7,23 +7,23 @@
 - :name: miq_alert_vmdb
   :items:
   - :buttonSelect: miq_alert_vmdb_choice
-    :image: vmdb
+    :icon: fa fa-cog fa-lg
     :title: Configuration
     :text: Configuration
     :items:
     - :button: alert_edit
-      :image: edit
+      :icon: pficon pficon-edit fa-lg
       :text: 'Edit this Alert'
       :title: 'Edit this Alert'
       :url_parms: 'main_div'
     - :button: alert_copy
-      :image: copy
+      :icon: fa fa-files-o fa-lg
       :text: 'Copy this Alert'
       :title: 'Copy this Alert'
       :confirm: "Are you sure you want to copy this Alert?"
       :url_parms: '?copy=true'
     - :button: alert_delete
-      :image: delete
+      :icon: pficon pficon-delete fa-lg
       :text: 'Delete this Alert'
       :title: 'Delete this Alert'
       :url_parms: 'main_div'

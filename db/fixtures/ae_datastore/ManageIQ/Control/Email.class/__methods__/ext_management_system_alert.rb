@@ -31,7 +31,7 @@ def buildDetails(ext_management_system)
   body += "<br>IP Address(es): #{ext_management_system.ipaddress}"
   body += "<br>Host Information:"
   body += "<br>Aggregate Host CPU Speed: #{ext_management_system.aggregate_cpu_speed.to_i / 1000} Ghz"
-  body += "<br>Aggregate Host CPU Cores: #{ext_management_system.aggregate_logical_cpus}"
+  body += "<br>Aggregate Host CPU Cores: #{ext_management_system.aggregate_cpu_total_cores}"
   body += "<br>Aggregate Host CPUs: #{ext_management_system.hardware.aggregate_physical_cpus}"
   body += "<br>Aggregate Host Memory: #{ext_management_system.aggregate_memory}"
   body += "<br>SSH Permit Root: #{ext_management_system.aggregate_vm_cpus}"
@@ -69,7 +69,7 @@ end
 def emailAlert(options)
   # Get to_email_address from model unless specified below
   to = nil
-  to  ||= $evm.object['to_email_address']
+  to ||= $evm.object['to_email_address']
 
   # Get from_email_address from model unless specified below
   from = nil

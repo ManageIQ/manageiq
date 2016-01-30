@@ -19,7 +19,7 @@ class MiqAeMethodYaml
     define_instance_variables
     file_name = method_file_name
     contents  = ""
-    contents = File.open(file_name) { |f| f.read } if file_name
+    contents = File.open(file_name, &:read) if file_name
     instance_variable_set("@data", contents)
   end
 

@@ -7,29 +7,13 @@ class MiqTemplate < VmOrTemplate
     MiqTemplate
   end
 
-  def self.model_suffix
-    if parent == Object
-      self == MiqTemplate ? "" : self.name[8..-1]
-    elsif parent.parent == ManageIQ::Providers
-      parent.name.demodulize.sub(/Manager$/, '')
-    else
-      parent.parent.name.demodulize
-    end
-  end
-
   def self.corresponding_model
-    if parent == Object
-      @corresponding_model ||= "Vm#{self.model_suffix}".constantize
-    else
-      parent::Vm
-    end
+    parent::Vm
   end
-  class << self; alias corresponding_vm_model corresponding_model; end
+  class << self; alias_method :corresponding_vm_model, :corresponding_model; end
 
-  def corresponding_model
-    self.class.corresponding_model
-  end
-  alias corresponding_vm_model corresponding_model
+  delegate :corresponding_model, :to => :class
+  alias_method :corresponding_vm_model, :corresponding_model
 
   def scan_via_ems?
     true
@@ -39,12 +23,10 @@ class MiqTemplate < VmOrTemplate
     false
   end
 
-  def supports_kickstart_provisioning?
-    self.class.supports_kickstart_provisioning?
-  end
+  delegate :supports_kickstart_provisioning?, :to => :class
 
   def self.eligible_for_provisioning
-    where(self.arel_table[:ems_id].not_eq(nil))
+    where(arel_table[:ems_id].not_eq(nil))
   end
 
   def active?; false; end

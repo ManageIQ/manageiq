@@ -1,6 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 require File.expand_path('../preinitializer', __FILE__)
-require 'rails/all'
+require 'rails'
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'active_job/railtie'
+require 'sprockets/railtie'
 
 if defined?(Bundler)
   Bundler.require *Rails.groups(:assets => %w(development test))
@@ -54,7 +60,6 @@ module Vmdb
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-
     # Customize any additional options below...
 
     # HACK: By default, Rails.configuration.eager_load_paths contains all of the directories
@@ -76,26 +81,43 @@ module Vmdb
     # Defaults to every folder in the app directory of the application.
     config.eager_load_paths = []
 
-    require_relative 'environments/patches/database_configuration'
-
-    console do
-      Rails::ConsoleMethods.class_eval do
-        include Vmdb::ConsoleMethods
-      end
-    end
-
-    #logging requires configuration which requires encryption
-    require 'miq-password'
-    MiqPassword.key_root=Rails.root.join("certs")
-
+    # This must be done outside of initialization blocks
+    #   as the Vmdb::Logging constant is needed very early
     require 'vmdb/logging'
+
+    # This must be done outside of initialization blocks
+    #   as rake tasks that do not use the environment still need to log
+    require 'vmdb/loggers'
     Vmdb::Loggers.init
     config.logger = Vmdb.rails_logger
     config.colorize_logging = false
 
+    config.before_initialize do
+      require_relative 'environments/patches/database_configuration'
+
+      # To evaluate ERB from database.yml containing encrypted passwords
+      require 'miq-password'
+      MiqPassword.key_root = Rails.root.join("certs")
+
+      require 'vmdb_helper'
+    end
+
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
+    end
+
+    console do
+      # Re-enable SQL logging in the console.  This log level setting gets set
+      #   to INFO, by default, for the loggers in Vmdb::Initializer.init.  So,
+      #   we set the value back to DEBUG for now.
+      # TODO: This can be removed once we can have separate config settings for
+      #   dev/test/prod in the config revamp.
+      ActiveRecord::Base.logger.level = Logger::DEBUG
+
+      Rails::ConsoleMethods.class_eval do
+        include Vmdb::ConsoleMethods
+      end
     end
   end
 end

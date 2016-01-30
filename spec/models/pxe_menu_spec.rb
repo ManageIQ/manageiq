@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeMenu do
   before(:each) do
     @contents_pxelinux = <<-PXEMENU
@@ -127,14 +125,14 @@ PXEMENU
   end
 
   it ".class_from_contents" do
-    described_class.class_from_contents(@contents_pxelinux).should == PxeMenuPxelinux
-    described_class.class_from_contents(@contents_ipxe).should == PxeMenuIpxe
+    expect(described_class.class_from_contents(@contents_pxelinux)).to eq(PxeMenuPxelinux)
+    expect(described_class.class_from_contents(@contents_ipxe)).to eq(PxeMenuIpxe)
   end
 
   context "#synchronize" do
     before(:each) do
       @pxe_server = FactoryGirl.create(:pxe_server)
-      @pxe_server.stub(:read_file => @contents_ipxe)
+      allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end
 
     it "on typed menu" do
@@ -142,8 +140,8 @@ PXEMENU
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
-      new_pxe_menu.should be_kind_of(PxeMenuIpxe)
-      new_pxe_menu.pxe_images.length.should == 3
+      expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
+      expect(new_pxe_menu.pxe_images.length).to eq(3)
     end
 
     it "on untyped menu" do
@@ -151,8 +149,8 @@ PXEMENU
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
-      new_pxe_menu.should be_kind_of(PxeMenuIpxe)
-      new_pxe_menu.pxe_images.length.should == 3
+      expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
+      expect(new_pxe_menu.pxe_images.length).to eq(3)
     end
 
     it "on typed menu switching to a different type" do
@@ -160,10 +158,8 @@ PXEMENU
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
-      new_pxe_menu.should be_kind_of(PxeMenuIpxe)
-      new_pxe_menu.pxe_images.length.should == 3
+      expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
+      expect(new_pxe_menu.pxe_images.length).to eq(3)
     end
-
   end
-
 end

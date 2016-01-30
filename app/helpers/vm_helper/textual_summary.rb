@@ -87,11 +87,11 @@ module VmHelper::TextualSummary
     reg = @record.miq_region
     url = reg.remote_ui_url
     h[:value] = if url
-      # TODO: Why is this link different than the others?
-      link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
-    else
-      reg.description
-    end
+                  # TODO: Why is this link different than the others?
+                  link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
+                else
+                  reg.description
+                end
     h
   end
 
@@ -134,12 +134,12 @@ module VmHelper::TextualSummary
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
 
       cpu_details =
-        if @record.num_cpu && @record.cores_per_socket
-          " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+        if @record.num_cpu && @record.cpu_cores_per_socket
+          " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cpu_cores_per_socket, 'core')})"
         else
           ""
         end
-      h[:value] = "#{vendor}: #{pluralize(@record.logical_cpus, 'CPU')}#{cpu_details}, #{@record.mem_cpu} MB"
+      h[:value] = "#{vendor}: #{pluralize(@record.cpu_total_cores, 'CPU')}#{cpu_details}, #{@record.mem_cpu} MB"
     end
     h
   end
@@ -211,6 +211,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_retirement_date
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
   end
 
@@ -233,7 +234,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_cluster
@@ -269,20 +270,23 @@ module VmHelper::TextualSummary
 
   def textual_storage
     storages = @record.storages
-    label = ui_lookup(:tables=>"storages")
+    label = ui_lookup(:table => "storages")
     h = {:label => label, :image => "storage"}
     if storages.empty?
       h[:value] = "None"
     elsif storages.length == 1
       storage = storages.first
       h[:value] = storage.name
-      h[:title] = "Show this VM's #{label}"
+      h[:title] = "Show this #{label}"
       h[:link]  = url_for(:controller => 'storage', :action => 'show', :id => storage)
     else
       h.delete(:image) # Image will be part of each line item, instead
       main = @record.storage
       h[:value] = storages.sort_by { |s| s.name.downcase }.collect do |s|
-        {:image => "storage", :value => "#{s.name}#{" (main)" if s == main}", :title => "Show this VM's #{label}", :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
+        {:image => "storage",
+         :value => "#{s.name}#{" (main)" if s == main}",
+         :title => "Show this #{label}",
+         :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
       end
     end
     h
@@ -325,7 +329,7 @@ module VmHelper::TextualSummary
 
   def textual_parent_vm
     h = {:label => "Parent VM", :image => "vm"}
-    parent_vm = @record.with_relationship_type("genealogy") { |r| r.parent }
+    parent_vm = @record.with_relationship_type("genealogy", &:parent)
     if parent_vm.nil?
       h[:value] = "None"
     else
@@ -333,7 +337,7 @@ module VmHelper::TextualSummary
       h[:title] = "Show this VM's parent"
       h[:explorer] = true
       url, action = set_controller_action
-      h[:link]  = url_for(:controller => url, :action => action , :id => parent_vm)
+      h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
     end
     h
   end
@@ -347,11 +351,11 @@ module VmHelper::TextualSummary
       :explorer => true,
       :spinner  => true,
       :link     => url_for(
-                    :controller => controller.controller_name,
-                    :action     => 'show',
-                    :id         => @record,
-                    :display    => "vmtree_info"
-                    )
+        :controller => controller.controller_name,
+        :action     => 'show',
+        :id         => @record,
+        :display    => "vmtree_info"
+      )
     }
   end
 
@@ -583,12 +587,12 @@ module VmHelper::TextualSummary
     value = @record.uncommitted_storage
     h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
     h[:value] = if value.nil?
-      "N/A"
-    else
-      v = number_to_human_size(value.abs, :precision => 2)
-      v = "(#{v}) * Overallocated" if value < 0
-      v
-    end
+                  "N/A"
+                else
+                  v = number_to_human_size(value.abs, :precision => 2)
+                  v = "(#{v}) * Overallocated" if value < 0
+                  v
+                end
     h
   end
 

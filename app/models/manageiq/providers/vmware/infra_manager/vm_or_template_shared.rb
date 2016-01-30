@@ -21,7 +21,7 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared
       case api_type
       when "VirtualCenter"
         # The ems_ref in the VMDB is from the vCenter perspective
-        self.ems_ref
+        ems_ref
       when "HostAgent"
         # Since we are going directly to the host, it acts like a VC
         # Thus, there is only a single host in it

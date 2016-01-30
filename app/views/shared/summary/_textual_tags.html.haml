@@ -14,7 +14,7 @@
                 %td.label{:rowspan => item[:value].length}
                   = item[:label]
               %td
-                %img{:src => "/images/icons/new/#{subitem[:image]}.png"}
+                %img{:src => image_path("100/#{subitem[:image]}.png")}
                 = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;")}".html_safe
         - else
           %tr
@@ -22,5 +22,5 @@
               = item[:label]
             %td
               - if item[:image]
-                %img{:src => "/images/icons/new/#{item[:image]}.png"}
+                %img{:src => image_path("100/#{item[:image]}.png")}
                 = item[:value]

@@ -13,7 +13,6 @@ FactoryGirl.define do
           FactoryGirl.build(:miq_ae_value, {:field_id => field.id}.merge(evaluator.values[field.name]))
         end
       end
-
     end
   end
 end

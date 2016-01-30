@@ -1,4 +1,4 @@
-class ChargebackRate < ActiveRecord::Base
+class ChargebackRate < ApplicationRecord
   include UuidMixin
   include ReportableMixin
 
@@ -23,8 +23,8 @@ class ChargebackRate < ActiveRecord::Base
 
   def self.get_assignments(type)
     # type = :compute || :storage
-    #Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
-    self.validate_rate_type(type)
+    # Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
+    validate_rate_type(type)
     result = []
     ChargebackRate.where(:rate_type => type.to_s.capitalize).each do |rate|
       assigned_tos = rate.get_assigned_tos
@@ -45,28 +45,64 @@ class ChargebackRate < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
-      if File.exist?(fixture_file)
-        fixture = YAML.load_file(fixture_file)
+    # seeding the measure fixture before seed the chargeback rates fixtures
+    seed_chargeback_rate_measure
+    seed_chargeback_rate
+  end
 
-        fixture.each do |cbr|
-          rec = self.find_by_guid(cbr[:guid])
-          rates = cbr.delete(:rates)
-          if rec.nil?
-            _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-            rec = self.create(cbr)
+  def self.seed_chargeback_rate_measure
+    fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
+    if File.exist?(fixture_file_measure)
+      fixture = YAML.load_file(fixture_file_measure)
+      fixture.each do |cbr|
+        rec = ChargebackRateDetailMeasure.find_by_name(cbr[:name])
+        if rec.nil?
+          _log.info("Creating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
+          rec = ChargebackRateDetailMeasure.create(cbr)
+        else
+          fixture_mtime = File.mtime(fixture_file_measure).utc
+          if fixture_mtime > rec.created_at
+            _log.info("Updating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
+            rec.update_attributes(cbr)
+            rec.created_at = fixture_mtime
+            rec.save
+          end
+        end
+      end
+    end
+  end
+
+  def self.seed_chargeback_rate
+    # seeding the rates fixtures
+    fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
+    fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
+
+    if File.exist?(fixture_file)
+      fixture = YAML.load_file(fixture_file)
+      fixture.each do |cbr|
+        rec = find_by_guid(cbr[:guid])
+        rates = cbr.delete(:rates)
+        # The yml measure field is the name of the measure. It's changed to the id
+        rates.each do |rate_detail|
+          measure = ChargebackRateDetailMeasure.find_by(:name => rate_detail.delete(:measure))
+          unless measure.nil?
+            rate_detail[:chargeback_rate_detail_measure_id] = measure.id
+          end
+        end
+        if rec.nil?
+          _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+          rec = create(cbr)
+          rec.chargeback_rate_details.create(rates)
+        else
+          fixture_mtime = File.mtime(fixture_file).utc
+          fixture_mtime_measure = File.mtime(fixture_file_measure).utc
+          if fixture_mtime > rec.created_on || fixture_mtime_measure > rec.created_on
+            _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+            rec.update_attributes(cbr)
+            rec.chargeback_rate_details.clear
             rec.chargeback_rate_details.create(rates)
-          else
-            fixture_mtime = File.mtime(fixture_file).utc
-            if fixture_mtime > rec.created_on
-              _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-              rec.update_attributes(cbr)
-              rec.chargeback_rate_details.clear
-              rec.chargeback_rate_details.create(rates)
-              rec.created_on = fixture_mtime
-              rec.save
-            end
+            rec.created_on = fixture_mtime
+            rec.save
           end
         end
       end

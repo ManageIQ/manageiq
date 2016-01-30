@@ -1,4 +1,3 @@
-require "spec_helper"
 require "logger"
 require "util/duplicate_blocker"
 require "timecop"
@@ -80,7 +79,7 @@ describe DuplicateBlocker do
     t = @base_time + THRESHOLD * SHORT_TIME + SLOT_WIDTH
     assert_error_call :instance, t, 'arg'
 
-    @dedup_handler.logger.should_receive(:warn).twice
+    expect(@dedup_handler.logger).to receive(:warn).twice
     (DUPS_PER_LOG * 2).times do
       t += SHORT_TIME
       assert_error_call :instance, t, 'arg'
@@ -108,9 +107,9 @@ describe DuplicateBlocker do
     assert_safe_calls :class, 1, @base_time + SHORT_TIME, SHORT_TIME, 'arg3'
     assert_safe_calls :instance, 1, @base_time + TIME_WINDOW / 2 + SHORT_TIME * 2, SHORT_TIME, 'arg1', 'arg2'
     Timecop.freeze(@base_time + TIME_WINDOW + SHORT_TIME * 3) do
-      @dedup_handler.histories.size.should eq 2
+      expect(@dedup_handler.histories.size).to eq 2
       @dedup_handler.purge_histories
-      @dedup_handler.histories.size.should eq 1
+      expect(@dedup_handler.histories.size).to eq 1
     end
   end
 
@@ -128,7 +127,7 @@ describe DuplicateBlocker do
 
   def assert_safe_calls(meth, n, time, interval, *args)
     n.times do
-      make_a_call(meth, time) { |func| func.call(*args).should eq args }
+      make_a_call(meth, time) { |func| expect(func.call(*args)).to eq args }
       time += interval
     end
   end
@@ -140,6 +139,6 @@ describe DuplicateBlocker do
   end
 
   def assert_nil_call(meth, time, *args)
-    make_a_call(meth, time) { |func| func.call(*args).should be nil }
+    make_a_call(meth, time) { |func| expect(func.call(*args)).to be nil }
   end
 end

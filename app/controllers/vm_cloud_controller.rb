@@ -2,10 +2,10 @@ class VmCloudController < ApplicationController
   include VmCommon        # common methods for vm controllers
   include VmShowMixin
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.table_name
     @table_name ||= "vm_cloud"
@@ -21,7 +21,7 @@ class VmCloudController < ApplicationController
         :accord_name => "instances",
         :tree_name   => :instances_tree,
         :title       => "Instances by Provider",
-        :container   => "instances_tree_div"),
+        :container   => "instances_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "images_accord",
@@ -29,7 +29,7 @@ class VmCloudController < ApplicationController
         :accord_name => "images",
         :tree_name   => :images_tree,
         :title       => "Images by Provider",
-        :container   => "images_tree_div"),
+        :container   => "images_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "instances_filter_accord",
@@ -37,7 +37,7 @@ class VmCloudController < ApplicationController
         :accord_name => "instances_filter",
         :tree_name   => :instances_filter_tree,
         :title       => "Instances",
-        :container   => "instances_filter_tree_div"),
+        :container   => "instances_filter_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "images_filter_accord",
@@ -45,7 +45,7 @@ class VmCloudController < ApplicationController
         :accord_name => "images_filter",
         :tree_name   => :images_filter_tree,
         :title       => "Images",
-        :container   => "images_filter_tree_div")
+        :container   => "images_filter_accord")
     ]
   end
 
@@ -74,7 +74,7 @@ class VmCloudController < ApplicationController
       set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil, nil)
     else
       if (prefix == "vms" && role_allows(:feature => "vms_instances_filter_accord")) ||
-        (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
+         (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
         redirect_to(:controller => 'vm_or_template', :action => "explorer", :id => params[:id])
       else
         redirect_to(:controller => 'dashboard', :action => "auth_error")
@@ -91,6 +91,6 @@ class VmCloudController < ApplicationController
   end
 
   def skip_breadcrumb?
-    controller_referrer? && breadcrumb_prohibited_for_action?
+    breadcrumb_prohibited_for_action?
   end
 end

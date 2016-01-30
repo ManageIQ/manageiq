@@ -25,6 +25,7 @@ module ActiveRecord
       [:limit, :limit],
       [:order, :order],
       [:offset, :offset],
+      [:select, :select]
     ]
 
     def self.apply_legacy_finder_options(options)
@@ -34,13 +35,13 @@ module ActiveRecord
       # Determine whether any of the included associations are polymorphic
       has_polymorphic = included_associations(options[:include]).any? { |name| self.reflection_is_polymorphic?(name) }
 
-      LEGACY_FINDER_METHODS.inject(all) { |scope, (key, method)|
+      LEGACY_FINDER_METHODS.inject(all) do |scope, (key, method)|
         # Don't call references method on scope if polymorphic associations are
         # included to avoid ActiveRecord::EagerLoadPolymorphicError
         next(scope) if method == :references && has_polymorphic
         #
         options[key] ? scope.send(method, options[key]) : scope
-      }
+      end
     end
 
     def self.reflection_is_polymorphic?(name)

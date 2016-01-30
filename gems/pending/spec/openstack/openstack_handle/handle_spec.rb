@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'openstack/openstack_handle/handle'
 require 'fog/openstack'
 
@@ -13,19 +12,19 @@ describe OpenstackHandle::Handle do
   end
 
   context "errors from services" do
-
     before do
       @openstack_svc = double('network_service')
+      @openstack_project = double('project')
 
       @handle = OpenstackHandle::Handle.new("dummy", "dummy", "dummy")
-      @handle.stub(:service_for_each_accessible_tenant).and_yield(@openstack_svc)
+      allow(@handle).to receive(:service_for_each_accessible_tenant).and_yield(@openstack_svc, @openstack_project)
     end
 
     it "ignores 404 errors from services" do
       expect(@openstack_svc).to receive(:security_groups).and_raise(Fog::Network::OpenStack::NotFound)
 
       data = @handle.accessor_for_accessible_tenants("Network", :security_groups, :id)
-      data.should be_empty
+      expect(data).to be_empty
     end
 
     it "ignores 404 errors from services returning arrays" do
@@ -35,45 +34,126 @@ describe OpenstackHandle::Handle do
       expect(@openstack_svc).to receive(:security_groups).and_return(security_groups)
 
       data = @handle.accessor_for_accessible_tenants("Network", :security_groups, :id)
-      data.should be_empty
+      expect(data).to be_empty
     end
   end
 
   context "supports ssl" do
-    it "handles non-ssl connections just fine" do
+    it "handles default ssl type connections just fine" do
       fog      = double('fog')
       handle   = OpenstackHandle::Handle.new("dummy", "dummy", "address")
       auth_url = OpenstackHandle::Handle.auth_url("address", 5000, "https")
 
-      OpenstackHandle::Handle.should_receive(:raw_connect).once do |_, _, address|
-        address.should == auth_url
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).with(
+                                           "dummy",
+                                           "dummy",
+                                           "https://address:5000/v2.0/tokens",
+                                           "Compute",
+                                           {:openstack_tenant       => "admin",
+                                            :openstack_project_name => "admin",
+                                            :openstack_domain_name  => "admin_domain",
+                                            :connection_options     => {:ssl_verify_peer => false}})
+                                           .once do |_, _, address|
+        expect(address).to eq(auth_url)
         fog
       end
-      handle.connect(:tenant_name => "admin").should == fog
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
+    end
+
+    it "handles non ssl connections just fine" do
+      fog      = double('fog')
+      handle   = OpenstackHandle::Handle.new("dummy", "dummy", "address", 5000, 'v2', 'non-ssl')
+      auth_url = OpenstackHandle::Handle.auth_url("address", 5000, "http")
+
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).with(
+                                           "dummy",
+                                           "dummy",
+                                           "http://address:5000/v2.0/tokens",
+                                           "Compute",
+                                           {:openstack_tenant       => "admin",
+                                            :openstack_project_name => "admin",
+                                            :openstack_domain_name  => "admin_domain",
+                                            :connection_options     => {}})
+                                           .once do |_, _, address|
+        expect(address).to eq(auth_url)
+        fog
+      end
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
     end
 
     it "handles ssl connections just fine, too" do
       fog            = double('fog')
-      handle         = OpenstackHandle::Handle.new("dummy", "dummy", "address")
-      auth_url_nossl = OpenstackHandle::Handle.auth_url("address")
+      handle         = OpenstackHandle::Handle.new("dummy", "dummy", "address", 5000, 'v2', 'ssl')
       auth_url_ssl   = OpenstackHandle::Handle.auth_url("address", 5000, "https")
 
-      # setup the socket error for the initial ssl failure
-      socket_error = double('socket_error')
-      allow(socket_error).to receive(:message).and_return("unknown protocol (OpenSSL::SSL::SSLError)")
-      socket_error.should_receive(:class).and_return(Object)
-      socket_error.should_receive(:backtrace)
-
-      OpenstackHandle::Handle.should_receive(:raw_connect) do |_, _, address|
-        address.should == auth_url_ssl
-        raise Excon::Errors::SocketError.new(socket_error)
-      end
-      OpenstackHandle::Handle.should_receive(:raw_connect) do |_, _, address|
-        address.should == auth_url_nossl
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).with(
+                                           "dummy",
+                                           "dummy",
+                                           "https://address:5000/v2.0/tokens",
+                                           "Compute",
+                                           {:openstack_tenant       => "admin",
+                                            :openstack_project_name => "admin",
+                                            :openstack_domain_name  => "admin_domain",
+                                            :connection_options     => {:ssl_verify_peer => false}}) do |_, _, address|
+        expect(address).to eq(auth_url_ssl)
         fog
       end
 
-      handle.connect(:tenant_name => "admin").should == fog
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
+    end
+
+    it "handles ssl with validation connections just fine, too" do
+      fog            = double('fog')
+      handle         = OpenstackHandle::Handle.new("dummy", "dummy", "address", 5000, 'v2', 'ssl-with-validation')
+      auth_url_ssl   = OpenstackHandle::Handle.auth_url("address", 5000, "https")
+
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).with(
+                                           "dummy",
+                                           "dummy",
+                                           "https://address:5000/v2.0/tokens",
+                                           "Compute",
+                                           {:openstack_tenant       => "admin",
+                                            :openstack_project_name => "admin",
+                                            :openstack_domain_name  => "admin_domain",
+                                            :connection_options     => {:ssl_verify_peer => true}}) do |_, _, address|
+        expect(address).to eq(auth_url_ssl)
+        fog
+      end
+
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
+    end
+
+    it "handles ssl passing of extra params validation connections just fine, too" do
+      fog            = double('fog')
+      extra_options  = {
+        :ssl_ca_file    => "file",
+        :ssl_ca_path    => "path",
+        :ssl_cert_store => "store_obj"
+      }
+
+      expected_options = {:openstack_tenant       => "admin",
+                          :openstack_project_name => "admin",
+                          :openstack_domain_name  => "admin_domain",
+                          :connection_options     => {:ssl_verify_peer => true,
+                                                      :ssl_ca_file     => "file",
+                                                      :ssl_ca_path     => "path",
+                                                      :ssl_cert_store  => "store_obj"}}
+
+      handle           = OpenstackHandle::Handle.new("dummy", "dummy", "address", 5000, 'v2', 'ssl-with-validation', extra_options)
+      auth_url_ssl     = OpenstackHandle::Handle.auth_url("address", 5000, "https")
+
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).with(
+                                           "dummy",
+                                           "dummy",
+                                           "https://address:5000/v2.0/tokens",
+                                           "Compute",
+                                           expected_options
+                                           ) do |_, _, address|
+        expect(address).to eq(auth_url_ssl)
+        fog
+      end
+
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
     end
   end
 end

@@ -1,37 +1,35 @@
-require "spec_helper"
-
 module MiqAePathSpec
   include MiqAeEngine
   describe MiqAePath do
     context "#to_s" do
       it "handles empty path" do
         path = MiqAePath.new
-        path.to_s.should == ""
+        expect(path.to_s).to eq("")
       end
 
       it "handles single namespace" do
         path = MiqAePath.new(:ae_namespace => "NAMESPACE")
-        path.to_s.should == "/NAMESPACE//"
+        expect(path.to_s).to eq("/NAMESPACE//")
       end
 
       it "handles compound namespace" do
         path = MiqAePath.new(:ae_namespace => "NAMESPACE/FOO")
-        path.to_s.should == "/NAMESPACE/FOO//"
+        expect(path.to_s).to eq("/NAMESPACE/FOO//")
       end
 
       it "handles namespace and class" do
         path = MiqAePath.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS")
-        path.to_s.should == "/NAMESPACE/CLASS/"
+        expect(path.to_s).to eq("/NAMESPACE/CLASS/")
       end
 
       it "handles namespace, class and instance" do
         path = MiqAePath.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE")
-        path.to_s.should == "/NAMESPACE/CLASS/INSTANCE"
+        expect(path.to_s).to eq("/NAMESPACE/CLASS/INSTANCE")
       end
 
       it "handles namespace, class, instance and attribute" do
         path = MiqAePath.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE", :ae_attribute => "ATTRIBUTE")
-        path.to_s.should == "/NAMESPACE/CLASS/INSTANCE/ATTRIBUTE"
+        expect(path.to_s).to eq("/NAMESPACE/CLASS/INSTANCE/ATTRIBUTE")
       end
     end
 
@@ -40,37 +38,36 @@ module MiqAePathSpec
       ae_class     = "TEST_CLASS"
       ae_instance  = "TEST_INSTANCE"
       parts =  {
-          :ae_namespace => ae_namespace,
-          :ae_class     => ae_class,
-          :ae_instance  => ae_instance
-        }
+        :ae_namespace => ae_namespace,
+        :ae_class     => ae_class,
+        :ae_instance  => ae_instance
+      }
 
       path = MiqAePath.build(parts)
-      path.should be_kind_of MiqAePath
-      path.ae_namespace.should == ae_namespace
-      path.ae_class.should     == ae_class
-      path.ae_instance.should  == ae_instance
+      expect(path).to be_kind_of MiqAePath
+      expect(path.ae_namespace).to eq(ae_namespace)
+      expect(path.ae_class).to eq(ae_class)
+      expect(path.ae_instance).to eq(ae_instance)
     end
-
 
     it ".parse" do
       ae_namespace = "TEST_NAMESPACE"
       ae_class     = "TEST_CLASS"
       ae_instance  = "TEST_INSTANCE"
       parts =  {
-          :ae_namespace => ae_namespace,
-          :ae_class     => ae_class,
-          :ae_instance  => ae_instance
-        }
+        :ae_namespace => ae_namespace,
+        :ae_class     => ae_class,
+        :ae_instance  => ae_instance
+      }
 
       path_string = MiqAePath.new(parts).to_s
       path = MiqAePath.parse(path_string)
 
-      path.should be_kind_of MiqAePath
-      path.ae_namespace.should == ae_namespace
-      path.ae_class.should     == ae_class
-      path.ae_instance.should  == ae_instance
-      path.to_s.should         == path_string
+      expect(path).to be_kind_of MiqAePath
+      expect(path.ae_namespace).to eq(ae_namespace)
+      expect(path.ae_class).to eq(ae_class)
+      expect(path.ae_instance).to eq(ae_instance)
+      expect(path.to_s).to eq(path_string)
     end
 
     context ".split" do
@@ -79,20 +76,20 @@ module MiqAePathSpec
         @ae_class     = "TEST_CLASS"
         @ae_instance  = "TEST_INSTANCE"
         @parts =  {
-            :ae_namespace => @ae_namespace,
-            :ae_class     => @ae_class,
-            :ae_instance  => @ae_instance
-          }
+          :ae_namespace => @ae_namespace,
+          :ae_class     => @ae_class,
+          :ae_instance  => @ae_instance
+        }
       end
 
       def assert_split(parts, assertions = parts, method_options = {})
         path = MiqAePath.new(parts).to_s
         n, c, i, a = MiqAePath.split(path, method_options)
 
-        n.should == assertions[:ae_namespace]
-        c.should == assertions[:ae_class]
-        i.should == assertions[:ae_instance]
-        a.should == assertions[:ae_attribute]
+        expect(n).to eq(assertions[:ae_namespace])
+        expect(c).to eq(assertions[:ae_class])
+        expect(i).to eq(assertions[:ae_instance])
+        expect(a).to eq(assertions[:ae_attribute])
       end
 
       it "with simple namespace" do
@@ -111,7 +108,7 @@ module MiqAePathSpec
       end
 
       it "with option :has_instance_name => false" do
-        assertions = { :ae_namespace => [@ae_namespace, @ae_class].join("/"), :ae_class => @ae_instance }
+        assertions = {:ae_namespace => [@ae_namespace, @ae_class].join("/"), :ae_class => @ae_instance}
         assert_split(@parts, assertions, :has_instance_name => false)
       end
 
@@ -120,6 +117,5 @@ module MiqAePathSpec
         assert_split(@parts, @parts, :has_attribute_name => true)
       end
     end
-
   end
 end

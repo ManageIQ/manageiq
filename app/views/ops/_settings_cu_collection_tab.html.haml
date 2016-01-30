@@ -1,7 +1,10 @@
 - if @sb[:active_tab] == "settings_cu_collection"
   - url = url_for(:action => 'cu_collection_field_changed')
   - clusters_title = title_for_clusters
-  = form_tag({:action => 'cu_collection_update'}, :id => "config_form", :class => "form-horizontal") do
+  = form_tag({:action => 'cu_collection_update'},
+             :id     => "config_form",
+             :class  => "form-horizontal",
+             :method => :post) do
     = render :partial => "layouts/flash_msg"
     .row
       .col-md-12.col-lg-6
@@ -12,9 +15,10 @@
             %label.col-md-4.control-label
               = _("Collect for All %s") % clusters_title
             .col-md-8
-              = check_box_tag("all_clusters", "1", @edit[:new][:all_clusters],
-                              "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
-                              "data-miq_observe_checkbox" => {:url => url}.to_json)
+              = check_box_tag("all_clusters", true, @edit[:new][:all_clusters],
+                              "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => 'Yes', :off_text => 'No'})
+            :javascript
+              miqInitBootstrapSwitch('all_clusters', "#{url}")
           .note
             Note:
             %b= _("Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
@@ -47,9 +51,10 @@
             %label.col-md-4.control-label
               = _("Collect for All Datastores")
             .col-md-8
-              = check_box_tag("all_storages", "1", @edit[:new][:all_storages],
-                "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
-                "data-miq_observe_checkbox" => {:url => url}.to_json)
+              = check_box_tag("all_storages", true, @edit[:new][:all_storages],
+                "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => 'Yes', :off_text => 'No'})
+            :javascript
+              miqInitBootstrapSwitch('all_storages', "#{url}")
           #storages_div{:style => "display:#{@edit[:new][:all_storages] ? "none" : ""}"}
             - if @edit[:new][:storages].blank?
               = _("No Datastores found in the current region.")
@@ -68,4 +73,3 @@
                   :check_url => "/ops/cu_collection_field_changed/",
                   :exp_tree => false,
                   :checkboxes => true})
-  %div{:style => "padding-bottom:20px;"}

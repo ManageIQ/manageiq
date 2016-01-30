@@ -6,7 +6,7 @@ class MiqAutomate
       task.update_status("Finished", "Error", "No Server has Automate Role enabled")
     else
       MiqQueue.put(
-        :class_name  => self.to_s,
+        :class_name  => to_s,
         :method_name => "_async_datastore_reset",
         :args        => [task.id],
         :priority    => MiqQueue::HIGH_PRIORITY,
@@ -16,7 +16,7 @@ class MiqAutomate
       task.update_status("Queued", "Ok", "Task has been queued")
     end
 
-    return task.id
+    task.id
   end
 
   def self._async_datastore_reset(taskid)
@@ -25,5 +25,4 @@ class MiqAutomate
     MiqAeDatastore.reset_to_defaults
     task.update_status("Finished", "Ok", "Resetting Automate Datastore complete") if task
   end
-
 end

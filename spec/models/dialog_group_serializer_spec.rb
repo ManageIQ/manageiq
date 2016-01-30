@@ -1,7 +1,5 @@
-require "spec_helper"
-
 describe DialogGroupSerializer do
-  let(:dialog_field_serializer) { auto_loaded_instance_double("DialogFieldSerializer") }
+  let(:dialog_field_serializer) { double("DialogFieldSerializer") }
   let(:dialog_group_serializer) { described_class.new(dialog_field_serializer) }
 
   describe "#serialize" do
@@ -30,11 +28,11 @@ describe DialogGroupSerializer do
     end
 
     before do
-      dialog_field_serializer.stub(:serialize).with(dialog_field).and_return("serialized_dialog_fields")
+      allow(dialog_field_serializer).to receive(:serialize).with(dialog_field).and_return("serialized_dialog_fields")
     end
 
     it "serializes the dialog_group" do
-      dialog_group_serializer.serialize(dialog_group).should == expected_serialized_values
+      expect(dialog_group_serializer.serialize(dialog_group)).to eq(expected_serialized_values)
     end
   end
 end

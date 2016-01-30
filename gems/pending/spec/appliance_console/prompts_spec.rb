@@ -1,4 +1,3 @@
-require "spec_helper"
 require "stringio"
 require "appliance_console/errors"
 require "appliance_console/prompts"
@@ -91,13 +90,13 @@ describe ApplianceConsole::Prompts do
   end
 
   it "should ask for any key" do
-    subject.should_receive(:say)
-    STDIN.should_receive(:getc)
+    expect(subject).to receive(:say)
+    expect(STDIN).to receive(:getc)
     subject.press_any_key
   end
 
   it "should print for a clear screen" do
-    subject.should_receive(:print)
+    expect(subject).to receive(:print)
     subject.clear_screen
   end
 
@@ -106,19 +105,19 @@ describe ApplianceConsole::Prompts do
       prompt = "Are you sure? (Y/N): "
       error = %(Please enter "yes" or "no".\n)
       say %w(um yes)
-      expect(subject.are_you_sure?).to be_true
+      expect(subject.are_you_sure?).to be_truthy
       expect_heard [prompt + error, prompt]
     end
 
     it "should ask are you sure with clarifier" do
       say ["no"]
-      expect(subject.are_you_sure?("x y")).to be_false
+      expect(subject.are_you_sure?("x y")).to be_falsey
       expect_heard "Are you sure you want to x y? (Y/N): ", false
     end
 
     it "should ask are you sure with complete clarifier" do
       say ["no"]
-      expect(subject.are_you_sure?(" you dont want to x y")).to be_false
+      expect(subject.are_you_sure?(" you dont want to x y")).to be_falsey
       expect_heard "Are you sure you dont want to x y? (Y/N): ", false
     end
   end
@@ -262,7 +261,7 @@ describe ApplianceConsole::Prompts do
   context "#ask_for_disk" do
     context "with nodisks" do
       before do
-        LinuxAdmin::Disk.stub(:local => [double(:partitions => [:partition])])
+        allow(LinuxAdmin::Disk).to receive_messages(:local => [double(:partitions => [:partition])])
       end
 
       it "should be ok with not partitioning" do
@@ -295,7 +294,7 @@ describe ApplianceConsole::Prompts do
 
     context "with one disk" do
       before do
-        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk]))
+        allow(LinuxAdmin::Disk).to receive_messages(:local => double(:select => [first_disk]))
       end
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }
 
@@ -312,7 +311,7 @@ describe ApplianceConsole::Prompts do
 
     context "with disks" do
       before do
-        LinuxAdmin::Disk.stub(:local => double(:select => [first_disk, second_disk]))
+        allow(LinuxAdmin::Disk).to receive_messages(:local => double(:select => [first_disk, second_disk]))
       end
 
       let(:first_disk)  { double(:path => "/dev/a", :size => 10.megabyte) }
@@ -326,7 +325,7 @@ describe ApplianceConsole::Prompts do
                       "1) /dev/a: 10 MB", "",
                       "2) /dev/b: 20 MB", "",
                       "3) Don't partition the disk", "", "",
-                      "Choose the database disk: " +
+                      "Choose the database disk: " \
                       "You must choose one of [1, 2, 3, /dev/a: 10 MB, /dev/b: 20 MB, Don't partition the disk].",
                       prompt]
       end
@@ -421,38 +420,50 @@ describe ApplianceConsole::Prompts do
     it "should respond to yes (and enforce y/n)" do
       error = "Please provide yes or no."
       say %w(x z yes)
-      expect(subject.ask_yn?("prompt")).to be_true
+      expect(subject.ask_yn?("prompt")).to be_truthy
       expect_heard ["prompt? (Y/N): ", error, prompt + error, prompt]
     end
 
     it "should respond to no" do
       say %w(n)
-      expect(subject.ask_yn?("prompt")).not_to be_true
+      expect(subject.ask_yn?("prompt")).not_to be_truthy
       expect_heard "prompt? (Y/N): "
     end
 
     it "should support the default true" do
       say ""
-      expect(subject.ask_yn?("prompt", "Y")).to be_true
+      expect(subject.ask_yn?("prompt", "Y")).to be_truthy
       expect_heard "prompt? (Y/N): |Y| "
     end
 
     it "should support the default false" do
       say ""
-      expect(subject.ask_yn?("prompt", "N")).not_to be_true
+      expect(subject.ask_yn?("prompt", "N")).not_to be_truthy
       expect_heard "prompt? (Y/N): |N| "
     end
 
     it "should support overriding the default true" do
       say %w(no)
-      expect(subject.ask_yn?("prompt", "Y")).not_to be_true
+      expect(subject.ask_yn?("prompt", "Y")).not_to be_truthy
       expect_heard "prompt? (Y/N): |Y| "
     end
 
     it "should support overriding the default false" do
       say %w(yes)
-      expect(subject.ask_yn?("prompt", "N")).to be_true
+      expect(subject.ask_yn?("prompt", "N")).to be_truthy
       expect_heard "prompt? (Y/N): |N| "
+    end
+  end
+
+  describe "#ask_for_domain" do
+    it "supports second-level domains" do
+      say "example.com"
+      expect(subject.ask_for_domain("prompt")).to eq("example.com")
+    end
+
+    it "supports top-level domains" do
+      say "example"
+      expect(subject.ask_for_domain("prompt")).to eq("example")
     end
   end
 
@@ -486,7 +497,7 @@ describe ApplianceConsole::Prompts do
   end
 
   def expect_cls
-    subject.should_receive(:print)
+    expect(subject).to receive(:print)
   end
 
   def expect_heard(strs, check_eof = true)

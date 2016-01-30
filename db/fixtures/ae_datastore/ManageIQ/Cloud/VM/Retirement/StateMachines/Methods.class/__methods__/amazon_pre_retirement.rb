@@ -7,9 +7,9 @@ vm = $evm.root['vm']
 if vm && vm.attributes['power_state'] == 'on'
   ems = vm.ext_management_system
   if vm.hardware.root_device_type == "ebs"
-    $evm.log('info', "Stopping Amazon Instance <#{vm.name}> in EMS <#{ems ? ems.name : nil}>")
+    $evm.log('info', "Stopping Amazon Instance <#{vm.name}> in EMS <#{ems.try(:name)}>")
     vm.stop if ems
   else
-    $evm.log('info', "Skipping stopping of non EBS Amazon Instance <#{vm.name}> in EMS <#{ems ? ems.name : nil}>")
+    $evm.log('info', "Skipping stopping of non EBS Amazon Instance <#{vm.name}> in EMS <#{ems.try(:name)}>")
   end
 end

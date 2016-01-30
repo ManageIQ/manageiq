@@ -1,7 +1,4 @@
-require "spec_helper"
-
 describe Classification do
-
   context ".hash_all_by_type_and_name" do
     it "with entries duped across categories should return both entries" do
       clergy        = FactoryGirl.create(:classification,     :name => "clergy", :single_value => 1)
@@ -26,14 +23,14 @@ describe Classification do
     let(:tag) { FactoryGirl.build(:classification_tag, :parent => FactoryGirl.build(:classification)) }
 
     it "enforce_policy on sub-classed vm" do
-      MiqEvent.stub(:raise_evm_event).and_return(true)
+      allow(MiqEvent).to receive(:raise_evm_event).and_return(true)
 
       vm = FactoryGirl.build(:vm_vmware, :name => "VM1")
       tag.enforce_policy(vm, "fake_event")
     end
 
     it "enforce_policy on sub-classed host" do
-      MiqEvent.stub(:raise_evm_event).and_return(true)
+      allow(MiqEvent).to receive(:raise_evm_event).and_return(true)
 
       host = FactoryGirl.build(:host_vmware_esx)
       tag.enforce_policy(host, "fake_event")
@@ -116,7 +113,7 @@ describe Classification do
       cat.name = "test_update_entry"
 
       expect(cat).to      be_valid
-      expect(cat.save).to be_true
+      expect(cat.save).to be_truthy
     end
 
     it "should test add duplicate entry" do
@@ -135,7 +132,7 @@ describe Classification do
       ent.name = "test_update_entry"
 
       expect(ent).to      be_valid
-      expect(ent.save).to be_true
+      expect(ent.save).to be_truthy
     end
 
     it "should test update entry to duplicate" do
@@ -151,12 +148,12 @@ describe Classification do
       ['<My_Name>',
        'My Name',
        'My_Name_is...',
-       '123456789_123456789_123456789_1'
+       '123456789_123456789_123456789_123456789_123456789_1'
       ].each do |name|
         cat = Classification.new(:name => name, :parent_id => 0)
 
         expect(cat).to_not be_valid
-        expect(cat).to     have(1).error_on(:name)
+        expect(cat.errors[:name].size).to eq(1)
       end
     end
 
@@ -279,9 +276,10 @@ describe Classification do
       end
 
       it "with some errors" do
-        MiqEvent.stub(:raise_evm_event).and_raise
+        allow(MiqEvent).to receive(:raise_evm_event).and_raise
 
-        expect { Classification.bulk_reassignment(@options) }.to raise_error
+        expect { Classification.bulk_reassignment(@options) }
+          .to raise_error(RuntimeError, /Failures occurred during bulk reassignment/)
 
         @dels.each { |d| expect(any_tagged_with(Host, d.name, d.parent.name)).to_not be_empty }
         @adds.each { |a| expect(all_tagged_with(Host, a.name, a.parent.name)).to     be_empty }
@@ -302,9 +300,7 @@ describe Classification do
 
   describe ".seed" do
     before do
-      MiqRegion.seed
-
-      YAML.stub(:load_file).and_return([
+      allow(YAML).to receive(:load_file).and_return([
         {:name         => "cc",
          :description  => "Cost Center",
          :example_text => "Cost Center",
@@ -317,7 +313,7 @@ describe Classification do
          :entries      => [{:description => "Cost Center 001", :name => "001"},
                            {:description => "Cost Center 002", :name => "002"}]
         }]
-      )
+                                      )
     end
 
     context "after seeding" do

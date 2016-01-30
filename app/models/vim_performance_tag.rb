@@ -12,7 +12,7 @@ class VimPerformanceTag < MetricRollup
     raise "option :cat_model must have a value" unless options[:cat_model]
     cat_assoc = Object.const_get(options[:cat_model].to_s).table_name.to_sym
     tp = options.fetch_path(:ext_options, :time_profile)
-    results = recs.inject({:res => [], :tags => [], :tcols => []}) do |h,rec|
+    results = recs.inject(:res => [], :tags => [], :tcols => []) do |h, rec|
       if rec.class.name == "VimPerformanceTag"
         tvrecs = rec.vim_performance_tag_values.build_for_association(rec,
                                                                       options[:cat_model].pluralize.underscore,
@@ -21,13 +21,13 @@ class VimPerformanceTag < MetricRollup
         tvrecs = tvrecs.select { |r| r.category == options[:category] }
         rec.inside_time_profile = tp ? tp.ts_in_profile?(rec.timestamp) : true
       else
-        #TODO - Should use table name instead of options[:cat_model].pluralize.underscore
+        # TODO: - Should use table name instead of options[:cat_model].pluralize.underscore
         tvrecs = VimPerformanceTagValue.build_for_association(rec, options[:cat_model].pluralize.underscore, :save => false, :category => options[:category])
-        tvrecs = tvrecs.find_all {|r| r.category == options[:category]}
+        tvrecs = tvrecs.find_all { |r| r.category == options[:category] }
         rec.inside_time_profile = tp ? tp.ts_day_in_profile?(rec.timestamp) : true
       end
       if tvrecs.empty?
-        tvrecs = VimPerformanceTagValue.tag_cols(rec.resource_type).inject([]) do |arr,c|
+        tvrecs = VimPerformanceTagValue.tag_cols(rec.resource_type).inject([]) do |arr, c|
           trec = VimPerformanceTagValue.new(:column_name => c, :tag_name => "_none_")
           c == "assoc_ids" ? trec.assoc_ids = rec.send(c) : trec.value = rec.send(c)
           arr.push(trec)
@@ -55,22 +55,21 @@ class VimPerformanceTag < MetricRollup
 
     results[:res].each do |rec|
       # Default nil values in tag cols to 0 for records with timestamp that falls inside the time profile
-      results[:tcols].each {|c| rec.send("#{c}=", 0) if rec.send(c).nil?} if rec.inside_time_profile == true
+      results[:tcols].each { |c| rec.send("#{c}=", 0) if rec.send(c).nil? } if rec.inside_time_profile == true
 
       # Fill in missing assos ids
-      self.fill_assoc_ids(rec.timestamp, rec, cat_assoc, results[:tags])
+      fill_assoc_ids(rec.timestamp, rec, cat_assoc, results[:tags])
     end
 
     return results[:res], results[:tcols].sort, results[:tags].sort
   end
 
-  def self.fill_assoc_ids(ts, result, assoc, tags)
+  def self.fill_assoc_ids(_ts, result, assoc, tags)
     tags.each do |t|
       assoc_ids_meth = ["assoc_ids", t].join("_").to_s
       if result.send(assoc_ids_meth).nil?
-        result.send("#{assoc_ids_meth}=", { assoc => {:on => []}})
+        result.send("#{assoc_ids_meth}=", assoc => {:on => []})
       end
     end
   end
 end
-

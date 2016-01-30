@@ -2,7 +2,7 @@ class MiqHashStruct
   undef_method(:id) if method_defined?(:id)
   undef_method(:format) if private_method_defined?(:format)
 
-  def initialize(hash={})
+  def initialize(hash = {})
     raise ArgumentError, "hash expected to be a Hash" unless hash.respond_to?(:to_hash)
     @hash = hash.to_hash
 
@@ -16,8 +16,8 @@ class MiqHashStruct
   def _hash
     @hash
   end
-  alias :to_hash :_hash
-  alias :to_h :_hash
+  alias_method :to_hash, :_hash
+  alias_method :to_h, :_hash
 
   def _key_type
     @key_type
@@ -38,7 +38,7 @@ class MiqHashStruct
 
   def ==(other)
     return false unless self.class == other.class
-    self.to_h == other.to_h
+    to_h == other.to_h
   end
 
   def method_missing(m, *args)
@@ -57,6 +57,14 @@ class MiqHashStruct
 
   def respond_to_missing?(sym, *)
     # Methods for Marshal and YAML dumping and loading shouldn't #respond_to_missing?
-    !sym.in?([:encode_with, :init_with, :yaml_initialize, :marshal_dump, :_dump])
+    return false if sym.in?([:encode_with, :init_with, :yaml_initialize, :marshal_dump, :_dump])
+
+    # Setters are always true
+    return true if sym.to_s.end_with? '='
+
+    # Getters only when the attribute is defined
+    return true if @hash.key?(sym)
+
+    false
   end
 end

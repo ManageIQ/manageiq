@@ -1,59 +1,50 @@
-require "spec_helper"
-
 describe TimeProfile do
   before(:each) do
-    @guid   = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-
-    @zone   = FactoryGirl.create(:zone)
-    @server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.my_server_clear_cache
-
-    @ems    = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    @server = EvmSpecHelper.local_miq_server
+    @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     EvmSpecHelper.clear_caches
   end
 
   it "will default to the correct profile values" do
     t = TimeProfile.new
-    t.days.should  == TimeProfile::ALL_DAYS
-    t.hours.should == TimeProfile::ALL_HOURS
-    t.tz.should    be_nil
+    expect(t.days).to eq(TimeProfile::ALL_DAYS)
+    expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+    expect(t.tz).to be_nil
   end
 
   context "will seed the database" do
     before(:each) do
-      MiqRegion.seed
       TimeProfile.seed
     end
 
     it do
       t = TimeProfile.first
-      t.days.should  == TimeProfile::ALL_DAYS
-      t.hours.should == TimeProfile::ALL_HOURS
-      t.tz.should    == TimeProfile::DEFAULT_TZ
-      t.entire_tz?.should be_true
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to eq(TimeProfile::DEFAULT_TZ)
+      expect(t).to be_entire_tz
     end
 
     it "but not reseed when called twice" do
       TimeProfile.seed
-      TimeProfile.count.should == 1
+      expect(TimeProfile.count).to eq(1)
       t = TimeProfile.first
-      t.days.should  == TimeProfile::ALL_DAYS
-      t.hours.should == TimeProfile::ALL_HOURS
-      t.tz.should    == TimeProfile::DEFAULT_TZ
-      t.entire_tz?.should be_true
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to eq(TimeProfile::DEFAULT_TZ)
+      expect(t).to be_entire_tz
     end
   end
 
   it "will return the correct values for tz_or_default" do
     t = TimeProfile.new
-    t.tz_or_default.should == TimeProfile::DEFAULT_TZ
-    t.tz_or_default("Hawaii").should == "Hawaii"
+    expect(t.tz_or_default).to eq(TimeProfile::DEFAULT_TZ)
+    expect(t.tz_or_default("Hawaii")).to eq("Hawaii")
 
     t.tz = "Hawaii"
-    t.tz.should == "Hawaii"
-    t.tz_or_default.should == "Hawaii"
-    t.tz_or_default("Alaska").should == "Hawaii"
+    expect(t.tz).to eq("Hawaii")
+    expect(t.tz_or_default).to eq("Hawaii")
+    expect(t.tz_or_default("Alaska")).to eq("Hawaii")
   end
 
   it "will not rollup daily performances on create if rollups are disabled" do
@@ -110,7 +101,6 @@ describe TimeProfile do
 
   context "profiles_for_user" do
     before(:each) do
-      MiqRegion.seed
       TimeProfile.seed
     end
 
@@ -130,13 +120,12 @@ describe TimeProfile do
                          :profile_key          => "foo",
                          :rollup_daily_metrics => true)
       tp = TimeProfile.profiles_for_user("foo", MiqRegion.my_region_number)
-      tp.count.should == 2
+      expect(tp.count).to eq(2)
     end
   end
 
   context "profile_for_user_tz" do
     before(:each) do
-      MiqRegion.seed
       TimeProfile.seed
     end
 
@@ -155,27 +144,96 @@ describe TimeProfile do
                          :tz                   => "foo_tz",
                          :rollup_daily_metrics => true)
       tp = TimeProfile.profile_for_user_tz("foo", "foo_tz")
-      tp.description.should == "test2"
+      expect(tp.description).to eq("test2")
     end
+  end
+
+  describe "#profile_for_each_region" do
+    it "returns none for a non rollup metric" do
+      tp = FactoryGirl.create(:time_profile, :rollup_daily_metrics => false)
+
+      expect(tp.profile_for_each_region).to eq([])
+    end
+
+    it "returns unique entries" do
+      tp1a = FactoryGirl.create(:time_profile_with_rollup, :id => id_in_region(5, 1))
+      tp1b = FactoryGirl.create(:time_profile_with_rollup, :id => id_in_region(5, 2))
+      FactoryGirl.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(5, 3))
+      FactoryGirl.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(5, 4))
+      tp2 = FactoryGirl.create(:time_profile_with_rollup, :id => id_in_region(6, 1))
+      FactoryGirl.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(6, 2))
+      FactoryGirl.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(6, 3))
+
+      results = tp1a.profile_for_each_region
+      expect(results.size).to eq(2)
+      expect(results.map(&:region_id)).to match_array([5, 6])
+      expect(results.include?(tp1a) || results.include?(tp1b)).to be true
+      expect(results).to include(tp2)
+    end
+  end
+
+  describe ".all_timezones" do
+    it "works with seeds" do
+      FactoryGirl.create(:time_profile, :tz => "tz")
+      FactoryGirl.create(:time_profile, :tz => "tz")
+      FactoryGirl.create(:time_profile, :tz => "other_tz")
+
+      expect(TimeProfile.all_timezones).to match_array(%w(tz other_tz))
+    end
+  end
+
+  describe ".find_all_with_entire_tz" do
+    it "only returns profiles with all days" do
+      FactoryGirl.create(:time_profile, :days => [1, 2])
+      tp = FactoryGirl.create(:time_profile)
+
+      expect(TimeProfile.find_all_with_entire_tz).to eq([tp])
+    end
+  end
+
+  describe ".profile_for_user_tz" do
+    it "finds global profiles" do
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "global")
+      expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
+    end
+
+    it "finds user profiles" do
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => 1)
+      expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
+    end
+
+    it "skips invalid records" do
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "bad", :profile_type => "global")
+      FactoryGirl.create(:time_profile, :tz => "good", :profile_type => "global", :rollup_daily_metrics => false)
+      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => "2")
+
+      expect(TimeProfile.profile_for_user_tz(1, "good")).not_to be
+    end
+  end
+
+  private
+
+  def id_in_region(region, id)
+    region * MiqRegion::DEFAULT_RAILS_SEQUENCE_FACTOR + id
   end
 
   def assert_rebuild_daily_queued
     q_all = MiqQueue.all
-    q_all.length.should == 1
-    q_all[0].class_name.should  == "TimeProfile"
-    q_all[0].instance_id.should == @tp.id
-    q_all[0].method_name.should == "rebuild_daily_metrics"
+    expect(q_all.length).to eq(1)
+    expect(q_all[0].class_name).to eq("TimeProfile")
+    expect(q_all[0].instance_id).to eq(@tp.id)
+    expect(q_all[0].method_name).to eq("rebuild_daily_metrics")
   end
 
   def assert_destroy_queued
     q_all = MiqQueue.all
-    q_all.length.should == 1
-    q_all[0].class_name.should  == "TimeProfile"
-    q_all[0].instance_id.should == @tp.id
-    q_all[0].method_name.should == "destroy_metric_rollups"
+    expect(q_all.length).to eq(1)
+    expect(q_all[0].class_name).to eq("TimeProfile")
+    expect(q_all[0].instance_id).to eq(@tp.id)
+    expect(q_all[0].method_name).to eq("destroy_metric_rollups")
   end
 
   def assert_nothing_queued
-    MiqQueue.count.should == 0
+    expect(MiqQueue.count).to eq(0)
   end
 end

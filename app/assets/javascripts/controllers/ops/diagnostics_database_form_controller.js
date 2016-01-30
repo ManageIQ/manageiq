@@ -16,6 +16,8 @@ ManageIQ.angularApplication.controller('diagnosticsDatabaseFormController', ['$h
     $scope.modelCopy = angular.copy( $scope.diagnosticsDatabaseModel );
     $scope.dbBackupFormFieldChangedUrl = $attrs.dbBackupFormFieldChangedUrl;
     $scope.submitUrl = $attrs.submitUrl;
+    $scope.validateClicked = miqService.validateWithAjax;
+    $scope.model = 'diagnosticsDatabaseModel';
 
     ManageIQ.angularApplication.$scope = $scope;
 
@@ -41,12 +43,11 @@ ManageIQ.angularApplication.controller('diagnosticsDatabaseFormController', ['$h
 
     url = $scope.dbBackupFormFieldChangedUrl;
     $http.post(url + $scope.diagnosticsDatabaseModel.backup_schedule_type).success(function(data) {
+      $scope.$broadcast('resetClicked');
       $scope.diagnosticsDatabaseModel.depot_name = data.depot_name;
       $scope.diagnosticsDatabaseModel.uri = data.uri;
       $scope.diagnosticsDatabaseModel.uri_prefix = data.uri_prefix;
       $scope.diagnosticsDatabaseModel.log_userid = data.log_userid;
-      $scope.diagnosticsDatabaseModel.log_password = data.log_password;
-      $scope.diagnosticsDatabaseModel.log_verify = data.log_verify;
 
       if($scope.diagnosticsDatabaseModel.uri_prefix == 'nfs')
         $scope.diagnosticsDatabaseModel.log_protocol = 'Network File System';
@@ -54,6 +55,14 @@ ManageIQ.angularApplication.controller('diagnosticsDatabaseFormController', ['$h
         $scope.diagnosticsDatabaseModel.log_protocol = 'Samba';
 
       $scope.diagnosticsDatabaseModel.action_typ = 'db_backup';
+
+      if($scope.diagnosticsDatabaseModel.log_userid != '') {
+        $scope.diagnosticsDatabaseModel.log_password = $scope.diagnosticsDatabaseModel.log_verify = miqService.storedPasswordPlaceholder;
+      }
+
+      $scope.$broadcast('setNewRecord', { newRecord: false });
+      $scope.$broadcast('setUserId', { userIdName: 'log_userid',
+                                       userIdValue: $scope.diagnosticsDatabaseModel.log_userid });
 
       miqService.sparkleOff();
     });
@@ -80,6 +89,35 @@ ManageIQ.angularApplication.controller('diagnosticsDatabaseFormController', ['$h
       url = $scope.submitUrl;
       miqService.miqAjaxButton(url, true);
     }
+  };
+
+  $scope.canValidateBasicInfo = function () {
+    return $scope.isBasicInfoValid();
+  }
+
+  $scope.logProtocolChanged = function() {
+    $scope.diagnosticsDatabaseModel.backup_schedule_type = '';
+    if($scope.logProtocolSelected()) {
+      $scope.$broadcast('setNewRecord');
+      $scope.$broadcast('reactiveFocus');
+      miqDBBackupService.logProtocolChanged($scope.diagnosticsDatabaseModel);
+    }
+  };
+
+  $scope.logProtocolNotSelected = function() {
+    return miqDBBackupService.logProtocolNotSelected($scope.diagnosticsDatabaseModel);
+  };
+
+  $scope.logProtocolSelected = function() {
+    return miqDBBackupService.logProtocolSelected($scope.diagnosticsDatabaseModel);
+  };
+
+  $scope.sambaBackup = function() {
+    return miqDBBackupService.sambaBackup($scope.diagnosticsDatabaseModel);
+  };
+
+  $scope.sambaRequired = function(value) {
+    return miqDBBackupService.sambaRequired($scope.diagnosticsDatabaseModel, value);
   };
 
   init();

@@ -3,10 +3,10 @@ class VmOrTemplateController < ApplicationController
   include VmShowMixin
 
   # Exception due to open.window() in newer IE versions not sending request.referer
-  before_filter :check_privileges, :except => [:launch_vmware_console]
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges, :except => [:launch_vmware_console]
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   private
 
@@ -18,7 +18,7 @@ class VmOrTemplateController < ApplicationController
         :accord_name => "vms_instances_filter",
         :tree_name   => :vms_instances_filter_tree,
         :title       => "VMs & Instances",
-        :container   => "vms_instances_filter_tree_div"),
+        :container   => "vms_instances_filter_accord"),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "templates_images_filter_accord",
@@ -26,7 +26,7 @@ class VmOrTemplateController < ApplicationController
         :accord_name => "templates_images_filter",
         :tree_name   => :templates_images_filter_tree,
         :title       => "Templates & Images",
-        :container   => "templates_images_filter_tree_div"),
+        :container   => "templates_images_filter_accord"),
     ]
   end
 
@@ -38,7 +38,7 @@ class VmOrTemplateController < ApplicationController
   end
 
   def set_elements_and_redirect_unauthorized_user
-    @nodetype, _ = params[:id].split("_").last.split("-")
+    @nodetype, = params[:id].split("_").last.split("-")
     prefix = prefix_by_nodetype(@nodetype)
 
     # Position in tree that matches selected record
@@ -58,6 +58,6 @@ class VmOrTemplateController < ApplicationController
   end
 
   def skip_breadcrumb?
-    controller_referrer? && breadcrumb_prohibited_for_action?
+    breadcrumb_prohibited_for_action?
   end
 end

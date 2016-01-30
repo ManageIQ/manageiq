@@ -1,10 +1,5 @@
-class VmdbDatabaseSetting < ActiveRecord::Base
-  class << self
-    attr_accessor :aar_columns
-  end
-  self.aar_columns = []
-
-  self.table_name = 'pg_settings'
+class VmdbDatabaseSetting < ApplicationRecord
+  self.table_name = 'pg_catalog.pg_settings'
   self.primary_key = nil
 
   def self.sortable?
@@ -23,9 +18,7 @@ class VmdbDatabaseSetting < ActiveRecord::Base
     @vmdb_database ||= VmdbDatabase.my_database
   end
 
-  def vmdb_database_id
-    vmdb_database.id
-  end
+  delegate :id, :to => :vmdb_database, :prefix => true
 
   def minimum_value
     min_val || ''

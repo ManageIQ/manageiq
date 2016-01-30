@@ -1,13 +1,11 @@
-require "spec_helper"
-
 describe "Message Timeout Handling" do
   before(:each) do
     @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
+    allow(MiqServer).to receive(:my_guid).and_return(@guid)
 
     @zone       = FactoryGirl.create(:zone)
     @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.stub(:my_server).and_return(@miq_server)
+    allow(MiqServer).to receive(:my_server).and_return(@miq_server)
 
     @worker = FactoryGirl.create(:vmware_refresh_worker, :miq_server_id => @miq_server.id)
   end
@@ -28,8 +26,8 @@ describe "Message Timeout Handling" do
     it "should not be timed out after 15 minutes" do
       Timecop.travel(15.minutes) do
         time_threshold = @worker.current_timeout
-        time_threshold.should == 3600
-        time_threshold.seconds.ago.utc.should_not > @worker.last_heartbeat
+        expect(time_threshold).to eq(3600)
+        expect(time_threshold.seconds.ago.utc).not_to be > @worker.last_heartbeat
       end
     end
   end
@@ -38,10 +36,10 @@ describe "Message Timeout Handling" do
     before(:each) do
       @worker.update_attributes(:last_heartbeat => Time.now.utc, :status => 'started')
       @msg = MiqQueue.put(
-        :msg_timeout  => 3600,
-        :class_name   => "Vm",
-        :role         => "ems_inventory",
-        :zone         => @zone.name
+        :msg_timeout => 3600,
+        :class_name  => "Vm",
+        :role        => "ems_inventory",
+        :zone        => @zone.name
       )
 
       @msg.update_attributes(
@@ -55,8 +53,8 @@ describe "Message Timeout Handling" do
       @msg.update_attribute(:state, "dequeue")
       Timecop.travel(15.minutes) do
         time_threshold = @miq_server.get_time_threshold(@worker)
-        time_threshold.should == 3610
-        time_threshold.seconds.ago.utc.should_not > @worker.last_heartbeat
+        expect(time_threshold).to eq(3610)
+        expect(time_threshold.seconds.ago.utc).not_to be > @worker.last_heartbeat
       end
     end
 
@@ -64,8 +62,8 @@ describe "Message Timeout Handling" do
       @msg.update_attribute(:state, "error")
       Timecop.travel(15.minutes) do
         time_threshold = @miq_server.get_time_threshold(@worker)
-        time_threshold.should == 120
-        time_threshold.seconds.ago.utc.should > @worker.last_heartbeat
+        expect(time_threshold).to eq(120)
+        expect(time_threshold.seconds.ago.utc).to be > @worker.last_heartbeat
       end
     end
   end

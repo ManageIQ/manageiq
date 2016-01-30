@@ -9,16 +9,15 @@ FactoryGirl.define do
     association     :miq_group
   end
 
-  factory :miq_report_with_null_condition, :parent => :miq_report do
-    conditions nil
-  end
-
-  factory :miq_report_wo_null_but_nil_condition, :parent => :miq_report  do
-    conditions 'CRAP'
-  end
-
-  factory :miq_report_with_non_nil_condition, :parent => :miq_report  do
-    conditions MiqExpression.new({"FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]}})
+  factory :miq_report_filesystem, :parent => :miq_report do
+    sequence(:name) { |n| "Files #{seq_padded_for_sorting(n)}" }
+    db              'Filesystem'
+    title           'Files'
+    cols            %w(name base_name file_version size contents_available permissions updated_on mtime)
+    col_order       %w(name base_name file_version size contents_available permissions updated_on mtime)
+    headers         %w(Name File\ Name File\ Version Size Contents\ Available Permissions Collected\ On Last\ Modified)
+    sortby          ["name"]
+    order           "Ascending"
   end
 
   factory :miq_report_with_results, :parent => :miq_report do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe PxeMenuPxelinux do
   before(:each) do
     @contents = <<-PXEMENU
@@ -79,13 +77,13 @@ PXEMENU
   end
 
   it ".parse_contents" do
-    described_class.parse_contents(@contents).length.should == 10
-    described_class.parse_contents(@contents).all? { |h| h.kind_of?(Hash) }.should be_true
+    expect(described_class.parse_contents(@contents).length).to eq(10)
+    expect(described_class.parse_contents(@contents).all? { |h| h.kind_of?(Hash) }).to be_truthy
   end
 
   it ".parse_append" do
     a = "initrd=rhel6/initrd.img ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/01-78-2b-cb-00-f6-6c.ks.cfg ksdevice=78:2b:cb:00:f6:6c"
-    described_class.parse_append(a).should == ["ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/01-78-2b-cb-00-f6-6c.ks.cfg ksdevice=78:2b:cb:00:f6:6c", "rhel6/initrd.img"]
+    expect(described_class.parse_append(a)).to eq(["ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/01-78-2b-cb-00-f6-6c.ks.cfg ksdevice=78:2b:cb:00:f6:6c", "rhel6/initrd.img"])
   end
 
   context "#synchronize_images" do
@@ -97,14 +95,14 @@ PXEMENU
     it "finds correct number of menu items" do
       @pxe_menu.synchronize_images
       @pxe_menu.save!
-      @pxe_menu.pxe_images.length.should == 10
-      @pxe_menu.pxe_images.all? { |i| i.pxe_server == @pxe_server }.should be_true
+      expect(@pxe_menu.pxe_images.length).to eq(10)
+      expect(@pxe_menu.pxe_images.all? { |i| i.pxe_server == @pxe_server }).to be_truthy
 
       @pxe_menu.contents = @contents2
       @pxe_menu.synchronize_images
       @pxe_menu.save!
-      @pxe_menu.pxe_images.length.should == 1
-      @pxe_menu.pxe_images.all? { |i| i.pxe_server == @pxe_server }.should be_true
+      expect(@pxe_menu.pxe_images.length).to eq(1)
+      expect(@pxe_menu.pxe_images.all? { |i| i.pxe_server == @pxe_server }).to be_truthy
     end
   end
 end

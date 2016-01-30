@@ -7,7 +7,8 @@ require 'json'
 
 module ApiSpecHelper
   HEADER_ALIASES = {
-    "auth_token" => "HTTP_X_AUTH_TOKEN"
+    "auth_token" => "HTTP_X_AUTH_TOKEN",
+    "miq_group"  => "HTTP_X_MIQ_GROUP"
   }
 
   DEF_HEADERS = {
@@ -88,27 +89,28 @@ module ApiSpecHelper
     @user  = FactoryGirl.create(:user,
                                 :name             => api_config(:user_name),
                                 :userid           => api_config(:user),
-                                :password_digest  => BCrypt::Password.create(api_config(:password)),
+                                :password         => api_config(:password),
                                 :miq_groups       => [@group],
                                 :current_group_id => @group.id)
   end
 
   def init_api_spec_env
-    MiqRegion.seed
     MiqDatabase.seed
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    collections = %w(automation_requests availability_zones chargebacks clusters conditions
-                     data_stores events features flavors groups hosts pictures policies policy_actions
+    collections = %w(automation_requests availability_zones categories chargebacks clusters conditions
+                     data_stores events features flavors groups hosts instances pictures policies policy_actions
                      policy_profiles providers provision_dialogs provision_requests rates
                      reports request_tasks requests resource_pools results roles security_groups
                      servers service_dialogs service_catalogs service_requests service_templates
-                     services tags tasks templates users vms zones)
+                     services tags tasks templates tenants users vms zones)
 
     define_entrypoint_url_methods
     define_url_methods(collections)
     define_user
+
+    ApplicationController.handle_exceptions = true
   end
 
   def define_entrypoint_url_methods
@@ -158,21 +160,21 @@ module ApiSpecHelper
     api_server_config[:collections]
   end
 
-  def action_identifier(type, action, selection = :resource_actions)
-    collection_config.fetch_path(type, selection, :post)
+  def action_identifier(type, action, selection = :resource_actions, method = :post)
+    collection_config.fetch_path(type, selection, method)
       .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
-  def collection_action_identifier(type, action)
-    action_identifier(type, action, :collection_actions)
+  def collection_action_identifier(type, action, method = :post)
+    action_identifier(type, action, :collection_actions, method)
   end
 
-  def subcollection_action_identifier(type, subtype, action)
+  def subcollection_action_identifier(type, subtype, action, method = :post)
     subtype_actions = "#{subtype}_subcollection_actions".to_sym
     if collection_config.fetch_path(type, subtype_actions).present?
-      action_identifier(type, action, subtype_actions)
+      action_identifier(type, action, subtype_actions, method)
     else
-      action_identifier(subtype, action, :subcollection_actions)
+      action_identifier(subtype, action, :subcollection_actions, method)
     end
   end
 
@@ -235,7 +237,7 @@ module ApiSpecHelper
     href_list = fetch_value(hrefs)
     expect(@result[collection].size).to eq(href_list.size)
     href_list.each do |href|
-      expect(resources_include_suffix?(@result[collection], "href", href)).to be_true
+      expect(resources_include_suffix?(@result[collection], "href", href)).to be_truthy
     end
   end
 
@@ -252,23 +254,32 @@ module ApiSpecHelper
   def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
     pattern = fetch_value(pattern)
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_truthy
   end
 
   def expect_result_to_have_keys(keys)
-    fetch_value(keys).each { |key| expect(@result).to have_key(key) }
+    expect_hash_to_have_keys(@result, keys)
+  end
+
+  def expect_hash_to_have_keys(hash, keys)
+    fetch_value(keys).each { |key| expect(hash).to have_key(key) }
+  end
+
+  def expect_result_to_have_only_keys(keys)
+    expect_hash_to_have_only_keys(@result, keys)
+  end
+
+  def expect_hash_to_have_only_keys(hash, keys)
+    expect(hash.keys).to match_array(fetch_value(keys))
   end
 
   def expect_result_to_match_hash(result, attr_hash)
-    fetch_value(attr_hash).each do |key, value|
-      expect(result).to have_key(key)
+    attr_hash = fetch_value(attr_hash)
+    attr_hash.each do |key, value|
       value = fetch_value(value)
-      if key == "href" || value.kind_of?(Regexp)
-        expect(result[key]).to match(value)
-      else
-        expect(result[key]).to eq(value)
-      end
+      attr_hash[key] = (key == "href" || key.ends_with?("_href")) ? a_string_matching(value) : value
     end
+    expect(result).to include(attr_hash)
   end
 
   def expect_results_to_match_hash(collection, result_hash)
@@ -284,25 +295,25 @@ module ApiSpecHelper
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result[key].kind_of?(klass) }).to be_true
+    expect(@result[collection].all? { |result| result[key].kind_of?(klass) }).to be_truthy
   end
 
   def expect_result_resources_to_include_keys(collection, keys)
     expect(@result).to have_key(collection)
     results = @result[collection]
-    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_true }
+    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_truthy }
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)
     key_list = fetch_value(keys).sort
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result.keys.sort == key_list }).to be_true
+    expect(@result[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
   def expect_results_match_key_pattern(collection, key, value)
     pattern = fetch_value(value)
     expect(@result).to have_key(collection)
-    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_truthy
   end
 
   def expect_result_to_represent_task(result)
@@ -314,16 +325,12 @@ module ApiSpecHelper
 
   def expect_empty_query_result(collection)
     expect_request_success
-    expect(@result).to have_key("name")
-    expect(@result["name"]).to eq(collection.to_s)
-    expect(@result["resources"]).to be_empty
+    expect(@result).to include("name" => collection.to_s, "resources" => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
     expect_request_success
-    expect(@result).to have_key("name")
-    expect(@result["name"]).to eq(collection.to_s)
-    expect(@result["subcount"]).to eq(fetch_value(subcount))
+    expect(@result).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
     expect(@result["resources"].size).to eq(fetch_value(subcount))
     expect(@result["count"]).to eq(fetch_value(count)) if count.present?
   end
@@ -335,19 +342,9 @@ module ApiSpecHelper
 
   def expect_single_action_result(options = {})
     expect_request_success
-    if options[:success]
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to eq(options[:success])
-    end
-    if options[:message]
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match(options[:message])
-    end
-    if options[:href]
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(fetch_value(options[:href]))
-    end
-
+    expect(@result).to include("success" => options[:success]) if options.key?(:success)
+    expect(@result).to include("message" => a_string_matching(options[:message])) if options[:message]
+    expect(@result).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
     expect_result_to_represent_task(@result) if options[:task]
   end
 
@@ -356,7 +353,7 @@ module ApiSpecHelper
     expect(@result).to have_key("results")
     results = @result["results"]
     expect(results.size).to eq(count)
-    expect(results.all? { |r| r["success"] }).to be_true
+    expect(results.all? { |r| r["success"] }).to be_truthy
 
     results.each { |r| expect_result_to_represent_task(r) } if options[:task]
   end
@@ -367,11 +364,13 @@ module ApiSpecHelper
     expect(@result).to have_key("results")
     results = @result["results"]
     expect(results.size).to eq(tag_results.size)
-    [results, tag_results].transpose do |result, tag_result|
-      expect(result["success"]).to      eq(tag_result[:success])
-      expect(result["href"]).to         match(tag_result[:href])
-      expect(result["tag_category"]).to eq(tag_result[:tag_category])
-      expect(result["tag_name"]).to     eq(tag_result[:tag_name])
+    results.zip(tag_results) do |result, tag_result|
+      expect(result).to include(
+        "success"      => tag_result[:success],
+        "href"         => a_string_matching(tag_result[:href]),
+        "tag_category" => tag_result[:tag_category],
+        "tag_name"     => tag_result[:tag_name]
+      )
     end
   end
 end

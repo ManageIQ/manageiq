@@ -15,7 +15,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_template_cloud_relationships
-    %i(ems drift scan_history)
+    %i(ems parent_vm drift scan_history)
   end
 
   def textual_group_security
@@ -64,11 +64,11 @@ module VmCloudHelper::TextualSummary
     reg = @record.miq_region
     url = reg.remote_ui_url
     h[:value] = if url
-      # TODO: Why is this link different than the others?
-      link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
-    else
-      reg.description
-    end
+                  # TODO: Why is this link different than the others?
+                  link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
+                else
+                  reg.description
+                end
     h
   end
 
@@ -85,6 +85,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_ipaddress
+    return nil if @record.template?
     ips = @record.ipaddresses
     {:label => (ips.size > 1 ? "IP Address".pluralize : "IP Address"), :value => ips.join(", ")}
   end
@@ -114,7 +115,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_architecture
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
     bitness = @record.hardware.try(:bitness)
     {:label => "Architecture ", :value => bitness.nil? ? "" : "#{bitness} bit"}
   end
@@ -131,6 +132,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_resources
+    return nil if @record.template?
     {:label => "Resources", :value => "Available", :title => "Show resources of this VM", :explorer => true,
       :link => url_for(:action => 'show', :id => @record, :display => 'resources_info')}
   end
@@ -140,11 +142,11 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_ems_infra
-    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems), :as => EmsInfra)
+    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems))
   end
 
   def textual_cluster
@@ -198,6 +200,22 @@ module VmCloudHelper::TextualSummary
     if vm_template && role_allows(:feature => "miq_template_show")
       h[:title] = "Show this VM's #{label}"
       h[:link]  = url_for(:controller => 'miq_template', :action => 'show', :id => vm_template)
+    end
+    h
+  end
+
+  def textual_parent_vm
+    return nil unless @record.template?
+    h = {:label => "Parent VM", :image => "vm"}
+    parent_vm = @record.with_relationship_type("genealogy", &:parent)
+    if parent_vm.nil?
+      h[:value] = "None"
+    else
+      h[:value] = parent_vm.name
+      h[:title] = "Show this Image's parent"
+      h[:explorer] = true
+      url, action = set_controller_action
+      h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
     end
     h
   end
@@ -393,6 +411,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_processes
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     h = {:label => "Running Processes", :image => "processes"}
     date = last_date(:processes)
     if date.nil?
@@ -408,6 +427,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_event_logs
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
     h = {:label => "Event Logs", :image => "event_logs", :value => (num == 0 ? "Not Available" : "Available")}
     if num > 0
@@ -419,7 +439,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_vmsafe_enable
-    return nil if @record.vmsafe_enable
+    return nil if @record.vmsafe_enable || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     {:label => "Enable", :value => "false"}
   end
 
@@ -460,22 +480,6 @@ module VmCloudHelper::TextualSummary
     attrs.collect { |a| {:label => a.name, :value => a.value} }
   end
 
-  def textual_compliance_status
-    h = {:label => "Status"}
-    if @record.number_of(:compliances) == 0
-      h[:value] = "Never Verified"
-    else
-      compliant = @record.last_compliance_status
-      date      = @record.last_compliance_timestamp
-      h[:image] = compliant ? "check" : "x"
-      h[:value] = "#{"Non-" unless compliant}Compliant as of #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago"
-      h[:title] = "Show Details of Compliance Check on #{format_timezone(date)}"
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history', :count => 1)
-    end
-    h
-  end
-
   def textual_compliance_history
     h = {:label => "History"}
     if @record.number_of(:compliances) == 0
@@ -499,11 +503,13 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_boot_time
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     date = @record.boot_time
     {:label => "Last Boot Time", :value => (date.nil? ? "N/A" : format_timezone(date))}
   end
 
   def textual_state_changed_on
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     date = @record.state_changed_on
     {:label => "State Changed On", :value => (date.nil? ? "N/A" : format_timezone(date))}
   end
@@ -521,13 +527,13 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_virtualization_type
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
     v_type = @record.hardware.try(:virtualization_type)
     {:label => "Virtualization Type", :value => v_type.to_s}
   end
 
   def textual_root_device_type
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
     rd_type = @record.hardware.try(:root_device_type)
     {:label => "Root Device Type", :value => rd_type.to_s}
   end

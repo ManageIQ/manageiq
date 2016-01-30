@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Metric::ConfigSettings do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone
@@ -10,11 +8,11 @@ describe Metric::ConfigSettings do
 
     config.config.store_path(:performance, :host_overhead, :cpu, 1.23)
     config.save
-    described_class.host_overhead_cpu.should == 1.23
+    expect(described_class.host_overhead_cpu).to eq(1.23)
 
     config.config.delete_path(:performance, :host_overhead)
     config.save
-    described_class.host_overhead_cpu.should == 0.15
+    expect(described_class.host_overhead_cpu).to eq(0.15)
   end
 
   it ".host_overhead_memory" do
@@ -22,10 +20,10 @@ describe Metric::ConfigSettings do
 
     config.config.store_path(:performance, :host_overhead, :memory, 1.23)
     config.save
-    described_class.host_overhead_memory.should == 1.23
+    expect(described_class.host_overhead_memory).to eq(1.23)
 
     config.config.delete_path(:performance, :host_overhead)
     config.save
-    described_class.host_overhead_memory.should == 2.01
+    expect(described_class.host_overhead_memory).to eq(2.01)
   end
 end

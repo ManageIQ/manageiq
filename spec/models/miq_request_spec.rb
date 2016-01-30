@@ -1,8 +1,6 @@
-require "spec_helper"
-
 describe MiqRequest do
-  let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
-  let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
+  let(:fred)   { FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
+  let(:barney) { FactoryGirl.create(:user_with_group, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
 
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
@@ -25,7 +23,7 @@ describe MiqRequest do
   context "A new request" do
     let(:event_name)   { "hello" }
     let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
-    let(:request)      { FactoryGirl.create(:vm_migrate_request, :userid => fred.userid) }
+    let(:request)      { FactoryGirl.create(:vm_migrate_request, :requester => fred) }
     let(:ems)          { FactoryGirl.create(:ems_vmware) }
     let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
 
@@ -39,7 +37,7 @@ describe MiqRequest do
     context "#set_description" do
       it "should set a description when nil" do
         expect(host_request.description).to be_nil
-        host_request.should_receive(:update_attributes).with(:description => "PXE install on [] from image []")
+        expect(host_request).to receive(:update_attributes).with(:description => "PXE install on [] from image []")
 
         host_request.set_description
       end
@@ -53,14 +51,14 @@ describe MiqRequest do
 
       it "should set description when :force => true" do
         host_request.description = "test description"
-        host_request.should_receive(:update_attributes).with(:description => "PXE install on [] from image []")
+        expect(host_request).to receive(:update_attributes).with(:description => "PXE install on [] from image []")
 
         host_request.set_description(true)
       end
     end
 
     it "#call_automate_event_queue" do
-      MiqServer.stub(:my_zone).and_return("New York")
+      allow(MiqServer).to receive(:my_zone).and_return("New York")
 
       expect(MiqQueue.count).to eq(0)
 
@@ -76,28 +74,40 @@ describe MiqRequest do
       expect(msg.msg_timeout).to eq(1.hour)
     end
 
-    context "#call_automate_event" do
+    context "#call_automate_event_sync" do
       it "successful" do
-        MiqAeEvent.stub(:raise_evm_event).and_return("foo")
+        allow(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
 
-        expect(request.call_automate_event(event_name)).to eq("foo")
+        expect(request.call_automate_event_sync(event_name)).to eq("foo")
       end
 
       it "re-raises exceptions" do
-        MiqAeEvent.stub(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
+        allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
 
+        expect { request.call_automate_event_sync(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
+      end
+    end
+
+    context "#call_automate_event" do
+      it "successful" do
+        expect(MiqAeEvent).to receive(:raise_evm_event)
+        request.call_automate_event(event_name)
+      end
+
+      it "re-raises exceptions" do
+        allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
         expect { request.call_automate_event(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
       end
     end
 
     it "#pending" do
-      request.should_receive(:call_automate_event_queue).with("request_pending").once
+      expect(request).to receive(:call_automate_event_queue).with("request_pending").once
 
       request.pending
     end
 
     it "#approval_denied" do
-      request.should_receive(:call_automate_event_queue).with("request_denied").once
+      expect(request).to receive(:call_automate_event_queue).with("request_denied").once
 
       request.approval_denied
 
@@ -105,7 +115,7 @@ describe MiqRequest do
     end
 
     context "using Polymorphic Resource" do
-      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
+      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
 
       it { expect(provision_request.workflow_class).to eq(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow) }
       describe("#get_options")          { it { expect(provision_request.get_options).to eq(:number_of_vms => 1) } }
@@ -114,16 +124,16 @@ describe MiqRequest do
 
       context "#approval_approved" do
         it "not approved" do
-          provision_request.stub(:approved?).and_return(false)
+          allow(provision_request).to receive(:approved?).and_return(false)
 
-          expect(provision_request.approval_approved).to be_false
+          expect(provision_request.approval_approved).to be_falsey
         end
 
         it "approved" do
-          provision_request.stub(:approved?).and_return(true)
+          allow(provision_request).to receive(:approved?).and_return(true)
 
-          provision_request.should_receive(:call_automate_event_queue).with("request_approved").once
-          provision_request.resource.should_receive(:execute).once
+          expect(provision_request).to receive(:call_automate_event_queue).with("request_approved").once
+          expect(provision_request.resource).to receive(:execute).once
 
           provision_request.approval_approved
 
@@ -208,15 +218,15 @@ describe MiqRequest do
 
         context "#v_approved_by methods" do
           it "with one approval" do
-            fred_approval.approve(fred.userid, reason)
+            fred_approval.approve(fred, reason)
 
             expect(request.v_approved_by).to       eq(fred.name)
             expect(request.v_approved_by_email).to eq(fred.email)
           end
 
           it "with two approvals" do
-            fred_approval.approve(fred.userid, reason)
-            barney_approval.approve(barney.userid, reason)
+            fred_approval.approve(fred, reason)
+            barney_approval.approve(barney, reason)
 
             expect(request.v_approved_by).to       eq("#{fred.name}, #{barney.name}")
             expect(request.v_approved_by_email).to eq("#{fred.email}, #{barney.email}")
@@ -224,28 +234,28 @@ describe MiqRequest do
         end
 
         it "#approve" do
-          request.stub(:approved?).and_return(true, false)
+          allow(request).to receive(:approved?).and_return(true, false)
 
-          fred_approval.should_receive(:approve).once
+          expect(fred_approval).to receive(:approve).once
 
-          2.times { request.approve(fred.userid, reason) }
+          2.times { request.approve(fred, reason) }
         end
 
         it "#deny" do
-          fred_approval.should_receive(:deny).once
+          expect(fred_approval).to receive(:deny).once
 
-          request.deny(fred.userid, reason)
+          request.deny(fred, reason)
         end
       end
     end
 
     it "#deny" do
-      MiqApproval.any_instance.stub(:authorized? => true)
-      MiqServer.stub(:my_zone => "default")
+      allow_any_instance_of(MiqApproval).to receive_messages(:authorized? => true)
+      allow(MiqServer).to receive_messages(:my_zone => "default")
 
-      provision_request = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id)
+      provision_request = FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id)
 
-      provision_request.deny(fred.userid, "Why Not?")
+      provision_request.deny(fred, "Why Not?")
 
       provision_request.miq_approvals.each { |approval| expect(approval.state).to eq('denied') }
 
@@ -261,7 +271,7 @@ describe MiqRequest do
     context 'VM provisioning' do
       let(:description) { 'my original information' }
       let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
-      let(:request)     { FactoryGirl.build(:miq_provision_request, :userid => fred.userid, :description => description, :src_vm_id => template.id) }
+      let(:request)     { FactoryGirl.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
 
       it 'with 1 task' do
         request.options[:src_vm_id] = template.id
@@ -271,13 +281,13 @@ describe MiqRequest do
       end
 
       it 'with 0 tasks' do
-        request.stub(:requested_task_idx).and_return([])
+        allow(request).to receive(:requested_task_idx).and_return([])
         request.post_create_request_tasks
         expect(request.description).to eq(description)
       end
 
       it 'with >1 tasks' do
-        request.stub(:requested_task_idx).and_return([1, 2])
+        allow(request).to receive(:requested_task_idx).and_return([1, 2])
         request.post_create_request_tasks
         expect(request.description).to eq(description)
       end
@@ -285,7 +295,7 @@ describe MiqRequest do
 
     it 'non VM provisioning' do
       description = 'Service Request'
-      request   = FactoryGirl.create(:service_template_provision_request, :description => description, :userid => fred.userid)
+      request = FactoryGirl.create(:service_template_provision_request, :description => description, :requester => fred)
       request.post_create_request_tasks
       expect(request.description).to eq(description)
     end

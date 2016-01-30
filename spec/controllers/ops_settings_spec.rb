@@ -1,49 +1,48 @@
-require "spec_helper"
-
 describe OpsController do
   context "OpsSettings::Schedules" do
+    let(:user) { FactoryGirl.create(:user, :features => %w(schedule_enable schedule_disable)) }
     before do
-      seed_specific_product_features("schedule_enable", "schedule_disable")
+      login_as user
     end
 
     context "no schedules selected" do
       before do
         silence_warnings { OpsController::Settings::Schedules::STGROOT = 'ST' }
 
-        controller.stub(:find_checked_items).and_return([])
-        controller.should_receive(:render)
-        controller.should_receive(:schedule_build_list)
-        controller.should_receive(:settings_get_info)
-        controller.should_receive(:replace_right_cell)
+        allow(controller).to receive(:find_checked_items).and_return([])
+        expect(controller).to receive(:render)
+        expect(controller).to receive(:schedule_build_list)
+        expect(controller).to receive(:settings_get_info)
+        expect(controller).to receive(:replace_right_cell)
       end
 
       it "#schedule_enable" do
         controller.schedule_enable
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.first.should == {:message => "No Schedules were selected to be enabled", :level => :error }
+        expect(flash_messages.first).to eq(:message => "No Schedules were selected to be enabled", :level => :error)
       end
 
       it "#schedule_disable" do
         controller.schedule_disable
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.first.should == {:message => "No Schedules were selected to be disabled", :level => :error }
+        expect(flash_messages.first).to eq(:message => "No Schedules were selected to be disabled", :level => :error)
       end
     end
 
     context "normal case" do
       before do
         server = double
-        server.stub(:zone_id => 1)
-        MiqServer.stub(:my_server).and_return(server)
+        allow(server).to receive_messages(:zone_id => 1)
+        allow(MiqServer).to receive(:my_server).and_return(server)
 
         @sch = FactoryGirl.create(:miq_schedule)
         silence_warnings { OpsController::Settings::Schedules::STGROOT = 'ST' }
 
         controller.params["check_#{controller.to_cid(@sch.id)}"] = '1'
-        controller.should_receive(:render).never
-        controller.should_receive(:schedule_build_list)
-        controller.should_receive(:settings_get_info)
-        controller.should_receive(:replace_right_cell)
+        expect(controller).to receive(:render).never
+        expect(controller).to receive(:schedule_build_list)
+        expect(controller).to receive(:settings_get_info)
+        expect(controller).to receive(:replace_right_cell)
       end
 
       it "doesn't update schedules that don't change" do
@@ -52,12 +51,12 @@ describe OpsController do
 
         # enable the schedule and save it
         controller.schedule_disable
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_truthy
 
         @sch.reload
 
         # assert that it's disabled
-        @sch.should_not be_enabled
+        expect(@sch).not_to be_enabled
       end
 
       it "#schedule_enable" do
@@ -66,12 +65,12 @@ describe OpsController do
 
         # enable the schedule and save it
         controller.schedule_enable
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_truthy
 
         @sch.reload
 
         # assert that it's enabled
-        @sch.should be_enabled
+        expect(@sch).to be_enabled
       end
 
       it "#schedule_disable" do
@@ -80,20 +79,20 @@ describe OpsController do
 
         # disable the schedule and save it
         controller.schedule_disable
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_truthy
 
         @sch.reload
 
         # assert that it's disabled
-        @sch.should_not be_enabled
+        expect(@sch).not_to be_enabled
       end
     end
 
     context "schedule additon" do
       before(:each) do
         EvmSpecHelper.create_guid_miq_server_zone
-        controller.should_receive(:render)
-        @schedule = FactoryGirl.create(:miq_schedule, :userid => "test", :towhat => "Vm")
+        expect(controller).to receive(:render)
+        @schedule = FactoryGirl.create(:miq_schedule, :userid => user.userid, :towhat => "Vm")
         @params = {
           :action      => "schedule_edit",
           :button      => "add",
@@ -107,7 +106,7 @@ describe OpsController do
           :start_min   => "0",
           :start_date  => 2.days.from_now.utc.strftime("%m/%d/%Y")
         }
-        controller.stub(:assert_privileges)
+        allow(controller).to receive(:assert_privileges)
       end
 
       after(:each) do
@@ -119,29 +118,27 @@ describe OpsController do
         @params[:name] = @schedule.name
         controller.instance_variable_set(:@_params, @params)
         controller.send(:schedule_edit)
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include("Name has already been taken")
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
       end
 
       it "#does not allow duplicate names when editing" do
         @params[:id] = @schedule.id
         @params[:name] = "schedule01"
         controller.instance_variable_set(:@_params, @params)
-        FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => "test", :towhat => "Vm")
+        FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => user.userid, :towhat => "Vm")
         controller.send(:schedule_edit)
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include("Name has already been taken")
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
       end
     end
   end
 
   context "replace_right_cell" do
     before do
+      miq_server = EvmSpecHelper.local_miq_server
       MiqRegion.seed
-      zone       = FactoryGirl.create(:zone)
-      MiqRegion.my_region.stub(:zones).and_return([zone])
-      miq_server = FactoryGirl.create(:miq_server, :guid => 'guid', :zone => zone)
-      MiqServer.stub(:my_server).and_return(miq_server)
+      expect(MiqRegion.my_region.zones).to eq([miq_server.zone])
     end
 
     it "it renders replace_right_cell" do
@@ -150,12 +147,12 @@ describe OpsController do
                                        :active_accord => 'active_accord',
                                        :active_tab    => 'settings_server',
                                        :active_tree   => :settings_tree)
-      controller.should_receive(:x_active_tree_replace_cell)
-      controller.should_receive(:replace_explorer_trees)
-      controller.should_receive(:rebuild_toolbars)
-      controller.should_receive(:handle_bottom_cell)
-      controller.should_receive(:extra_js_commands)
-      controller.should_receive(:render)
+      expect(controller).to receive(:x_active_tree_replace_cell)
+      expect(controller).to receive(:replace_explorer_trees)
+      expect(controller).to receive(:rebuild_toolbars)
+      expect(controller).to receive(:handle_bottom_cell)
+      expect(controller).to receive(:extra_js_commands)
+      expect(controller).to receive(:render)
       controller.send(:replace_right_cell, 'svr', [:settings])
       expect(response.status).to eq(200)
     end

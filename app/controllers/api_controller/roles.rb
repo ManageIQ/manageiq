@@ -1,13 +1,12 @@
 class ApiController
   module Roles
-    include FeatureHelper
     def create_resource_roles(type, _id = nil, data = {})
       if data.key?("id") || data.key?("href")
         raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
       end
 
       # Can't create a read-only role (reserved for out-of-box roles)
-      if data ['read_only']
+      if data['read_only']
         raise BadRequestError, "Cannot create a read-only role."
       end
 

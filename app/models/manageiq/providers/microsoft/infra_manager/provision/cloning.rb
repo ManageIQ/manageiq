@@ -15,7 +15,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
   end
 
   def find_destination_in_vmdb(ems_ref)
-    ManageIQ::Providers::Microsoft::InfraManager::Vm.where(:name => dest_name, :ems_ref => ems_ref).first
+    ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by(:name => dest_name, :ems_ref => ems_ref)
   end
 
   def prepare_for_clone_task
@@ -36,7 +36,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
 
   def dest_mount_point
     name = dest_datastore.name.scan(MT_POINT_REGEX).flatten.pop
-    URI.decode(name.to_s).gsub('/', '\\')
+    URI.decode(name.to_s).tr('/', '\\')
   end
 
   def dest_virtual_network
