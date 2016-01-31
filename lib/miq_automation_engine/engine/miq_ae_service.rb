@@ -20,6 +20,7 @@ module MiqAeMethodService
     include DRbUndumped
     include MiqAeMethodService::MiqAeServiceModelLegacy
     include MiqAeMethodService::MiqAeServiceVmdb
+    include MiqConcurrency::PGMutex
 
     @@id_hash = {}
     @@current = []
@@ -318,6 +319,16 @@ module MiqAeMethodService
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
     end
 
+    def acquire_lock?(lock_name)
+      hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
+      MiqConcurrency::PGMutex.try_advisory_lock(hashcode)
+    end
+
+    def release_lock?(lock_name)
+      hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
+      MiqConcurrency::PGMutex.release_advisory_lock(hashcode)
+    end
+
     private
 
     def editable_instance?(path)
@@ -342,6 +353,7 @@ module MiqAeMethodService
       $log.warn "domain=#{dom} : is not viewable"
       false
     end
+
   end
 
 
