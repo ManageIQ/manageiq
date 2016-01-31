@@ -34,7 +34,7 @@ kubernetes-topology-icon.active {
    opacity: 1;
 }
 
-.kube-topology line.ContainerServiceContainerGroup, .kube-topology line.ContainerGroupContainerReplicator, .kube-topology line.ContainerServiceContainerRoute {
+.kube-topology line.ContainerServiceContainerGroup, .kube-topology line.ContainerReplicatorContainerGroup, .kube-topology line.ContainerServiceContainerRoute {
     stroke-linecap: round;
     stroke-dasharray: 5.5;
 }

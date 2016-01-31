@@ -26,7 +26,7 @@ class ContainerTopologyService
           if cg.container_replicator
             cr = cg.container_replicator
             topo_items[entity_id(cr)] = build_entity_data(cr)
-            links << build_link(entity_id(cg), entity_id(cr))
+            links << build_link(entity_id(cr), entity_id(cg))
           end
         end
 
