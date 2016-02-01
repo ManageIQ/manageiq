@@ -102,9 +102,7 @@ class MiqRegion < ApplicationRecord
     active_miq_servers.detect(&:is_master?)
   end
 
-  def self.my_region
-    find_by(:region => my_region_number)
-  end
+  cache_with_timeout(:my_region) { find_by(:region => my_region_number) }
 
   def self.seed
     # Get the region by looking at an existing MiqDatabase instance's id
