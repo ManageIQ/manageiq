@@ -88,12 +88,25 @@ module MiqAeEventSpec
       end
 
       context "with Host event" do
-        it "has tenant" do
+        it "has tenant from provider" do
           host = FactoryGirl.create(:host, :ext_management_system => ems)
           args = {
             :user_id      => admin.id,
             :miq_group_id => ems.tenant.default_miq_group.id,
             :tenant_id    => ems.tenant.id
+          }
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
+
+          MiqAeEvent.raise_evm_event("host_provisioned", host, :host => host)
+        end
+
+        it "without a provider, has tenant from root tenant" do
+          host = FactoryGirl.create(:host)
+
+          args = {
+            :user_id      => admin.id,
+            :miq_group_id => Tenant.root_tenant.default_miq_group.id,
+            :tenant_id    => Tenant.root_tenant.id
           }
           expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
 

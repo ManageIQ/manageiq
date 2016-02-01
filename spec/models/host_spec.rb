@@ -446,4 +446,29 @@ describe Host do
     @host.update_authentication(@data, @options)
     expect(@host.verify_credentials(:remote)).to be_truthy
   end
+
+  context "#tenant_identity" do
+    let(:admin)    { FactoryGirl.create(:user_with_group, :userid => "admin") }
+    let(:tenant)   { FactoryGirl.create(:tenant) }
+    let(:ems)      { FactoryGirl.create(:ext_management_system, :tenant => tenant) }
+    before         { admin }
+
+    subject        { @host.tenant_identity }
+
+    it "has tenant from provider" do
+      @host = FactoryGirl.create(:host, :ext_management_system => ems)
+
+      expect(subject).to                eq(admin)
+      expect(subject.current_group).to  eq(ems.tenant.default_miq_group)
+      expect(subject.current_tenant).to eq(ems.tenant)
+    end
+
+    it "without a provider, has tenant from root tenant" do
+      @host = FactoryGirl.create(:host)
+
+      expect(subject).to                eq(admin)
+      expect(subject.current_group).to  eq(Tenant.root_tenant.default_miq_group)
+      expect(subject.current_tenant).to eq(Tenant.root_tenant)
+    end
+  end
 end
