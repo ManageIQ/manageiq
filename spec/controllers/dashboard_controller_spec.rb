@@ -317,6 +317,7 @@ describe DashboardController do
       expect(session[:winW]).to eq(winW)
       expect(session[:user_TZO]).to eq(user_TZO)
       expect(session[:foo]).to eq(nil)
+      expect(browser_info(:version)).to eq(browser_info[:version])
     end
   end
 
@@ -339,5 +340,9 @@ describe DashboardController do
     # TODO: figure out why flash messages are not in result.body
     expect(response.body).to match(/flash_msg_div/) if flash
     # expect(result.body.to match(/flash_msg_div.*replaceWith.*#{msg}/) if flash
+  end
+
+  def browser_info(typ)
+    session.fetch_path(:browser, typ).to_s
   end
 end
