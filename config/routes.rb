@@ -866,6 +866,7 @@ Vmdb::Application.routes.draw do
         dialog_load
         download_data
         edit
+        filesystem_download
         filesystems
         firewall_rules
         timeline_data

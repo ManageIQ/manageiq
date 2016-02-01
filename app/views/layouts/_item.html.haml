@@ -90,7 +90,7 @@
         .col-md-8
           - if @item.has_contents?
             %p
-              = link_to("Download", "filesystem_download/#{@item.id}")
+              = link_to(_("Download"), :action => "filesystem_download", :id => @item.id)
             - if @item.contents_displayable?
               = text_area_tag("item_contents", @item.displayable_contents, :readonly => "readonly", :style => "overflow:auto;width:600px;height:400px;")
             - else
