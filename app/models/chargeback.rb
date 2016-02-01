@@ -240,16 +240,15 @@ class Chargeback < ActsAsArModel
     ChargebackRate.where(:default => true).each do |cb|
       cb.chargeback_rate_details.where.not(:rate => "0").each do |rd|
         column = rd.group + "_" + rd.source
+        hash_columns[(column + "_cost").to_sym] = :float
+        hash_columns[(rd.group + "_cost").to_sym] = :float
         if rd.group != "fixed"
-          hash_columns = hash_columns.merge((column + "_metric").to_sym => :float, (column + "_cost").to_sym => :float)
-          hash_columns = hash_columns.merge((rd.group + "_metric").to_sym => :float, (rd.group + "_cost").to_sym => :float)
-        else
-          hash_columns = hash_columns.merge((column + "_cost").to_sym => :float)
-          hash_columns = hash_columns.merge((rd.group + "_cost").to_sym => :float)
+          hash_columns[(column + "_metric").to_sym] = :float
+          hash_columns[(rd.group + "_metric").to_sym] = :float
         end
       end
     end
-    hash_columns = hash_columns.merge(:total_cost => :float)
+    hash_columns[:total_const] = :float
     hash_columns
   end
 
