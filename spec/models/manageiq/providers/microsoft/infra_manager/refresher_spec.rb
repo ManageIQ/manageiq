@@ -119,7 +119,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :name             => "hyperv-h01.manageiq.com",
       :hostname         => "hyperv-h01.manageiq.com",
       :ipaddress        => "192.168.252.99",
-      :vmm_vendor       => "Microsoft",
+      :vmm_vendor       => "microsoft",
       :vmm_version      => "6.3.9600.17039",
       :vmm_product      => "HyperV",
       :power_state      => "on",

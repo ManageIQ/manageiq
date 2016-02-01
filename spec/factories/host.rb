@@ -51,7 +51,7 @@ FactoryGirl.define do
   end
 
   factory :host_openstack_infra, :parent => :host, :class => "ManageIQ::Providers::Openstack::InfraManager::Host" do
-    vmm_vendor  ""
+    vmm_vendor  "unknown"
     ems_ref     "openstack-perf-host"
     ems_ref_obj "openstack-perf-host-nova-instance"
   end

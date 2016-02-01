@@ -1520,11 +1520,11 @@ class ApplicationController < ActionController::Base
       @account_policy.push(:field       => "Reset Lockout Counter",
                            :description => db_record.operating_system.reset_lockout_counter) unless db_record.operating_system.reset_lockout_counter.nil?
     end
-    if db_record.respond_to?("vmm_vendor") # For Host table, this will pull the VMM fields
+    if db_record.respond_to?("vmm_vendor_display") # For Host table, this will pull the VMM fields
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
       @vmminfo.push(:vmminfo     => "Vendor",
-                    :description => db_record.vmm_vendor) unless db_record.vmm_vendor.nil?
+                    :description => db_record.vmm_vendor_display)
       @vmminfo.push(:vmminfo     => "Product",
                     :description => db_record.vmm_product) unless db_record.vmm_product.nil?
       @vmminfo.push(:vmminfo     => "Version",

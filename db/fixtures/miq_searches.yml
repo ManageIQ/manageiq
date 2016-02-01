@@ -1,103 +1,103 @@
 ---
-- attributes: 
+- attributes:
     name: default_Environment / UAT
     description: Environment / UAT
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Vm.managed-environment
           value: uat
     search_type: default
     db: Vm
-- attributes: 
+- attributes:
     name: default_Environment / Prod
     description: Environment / Prod
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Vm.managed-environment
           value: prod
     search_type: default
     db: Vm
-- attributes: 
+- attributes:
     name: default_Environment / Test
     description: Environment / Test
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Vm.managed-environment
           value: test
     search_type: default
     db: Vm
-- attributes: 
+- attributes:
     name: default_Platform / Amazon
     description: Platform / Amazon
-    filter: !ruby/object:MiqExpression 
-      exp: 
+    filter: !ruby/object:MiqExpression
+      exp:
         "=":
           field: Vm-type
           value: ManageIQ::Providers::Amazon::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
-- attributes: 
+- attributes:
     name: default_Platform / VMware
     description: Platform / VMware
-    filter: !ruby/object:MiqExpression 
-      exp: 
+    filter: !ruby/object:MiqExpression
+      exp:
         "=":
           field: Vm-type
           value: ManageIQ::Providers::Vmware::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
-- attributes: 
+- attributes:
     name: default_Platform / Microsoft
     description: Platform / Microsoft
-    filter: !ruby/object:MiqExpression 
-      exp: 
+    filter: !ruby/object:MiqExpression
+      exp:
         "=":
           field: Vm-type
           value: ManageIQ::Providers::Microsoft::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
-- attributes: 
+- attributes:
     name: default_Status / Running
     description: Status / Running
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        "=": 
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
           field: Vm-power_state
-          value: "on"    
+          value: "on"
     search_type: default
     db: Vm
-- attributes: 
+- attributes:
     name: default_Status / Retired
     description: Status / Retired
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        "=": 
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
           value: "true"
           field: Vm-retired
     search_type: default
     db: Vm
-- attributes: 
+- attributes:
     name: default_Status / Archived
     description: Status / Archived
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        "=": 
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
           field: Vm-archived
           value: "true"
     search_type: default
     db: Vm
-- attributes: 
+- attributes:
     name: default_Status / Orphaned
     description: Status / Orphaned
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        "=": 
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
           value: "true"
           field: Vm-orphaned
     search_type: default
@@ -154,47 +154,36 @@
           value: "true"
     search_type: default
     db: Vm
-- attributes: 
-    name: default_Platform / EC2
-    description: Platform / EC2
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        "=": 
-          field: Host-vmm_vendor
-          value: EC2
-    search_type: default
-    search_key: _hidden_
-    db: Host
-- attributes: 
+- attributes:
     name: default_Platform / ESX 3.5
     description: Platform / ESX 3.5
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        and: 
-        - "=": 
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "=":
             field: Host-vmm_vendor
-            value: VMware
-        - INCLUDES: 
+            value: vmware
+        - INCLUDES:
             field: Host-vmm_product
             value: ESX
-        - "=": 
+        - "=":
             field: Host-vmm_version
             value: 3.5.0
     search_type: default
     db: Host
-- attributes: 
+- attributes:
     name: default_Platform / ESX 4.0
     description: Platform / ESX 4.0
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        and: 
-        - "=": 
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "=":
             field: Host-vmm_vendor
-            value: VMware
-        - INCLUDES: 
+            value: vmware
+        - INCLUDES:
             field: Host-vmm_product
             value: ESX
-        - "=": 
+        - "=":
             field: Host-vmm_version
             value: 4.0.0
     search_type: default
@@ -207,7 +196,7 @@
         and:
         - "=":
             field: Host-vmm_vendor
-            value: VMware
+            value: vmware
         - INCLUDES:
             field: Host-vmm_product
             value: ESX
@@ -224,7 +213,7 @@
         and:
         - "=":
             field: Host-vmm_vendor
-            value: VMware
+            value: vmware
         - INCLUDES:
             field: Host-vmm_product
             value: ESX
@@ -241,7 +230,7 @@
         and:
         - "=":
             field: Host-vmm_vendor
-            value: VMware
+            value: vmware
         - INCLUDES:
             field: Host-vmm_product
             value: ESX
@@ -258,7 +247,7 @@
         and:
         - "=":
             field: Host-vmm_vendor
-            value: VMware
+            value: vmware
         - INCLUDES:
             field: Host-vmm_product
             value: ESX
@@ -274,46 +263,46 @@
       exp:
         "=":
           field: Host-vmm_vendor
-          value: Microsoft
+          value: microsoft
     search_type: default
     search_key: _hidden_
     db: Host
-- attributes: 
+- attributes:
     name: default_Environment / Dev
     description: Environment / Dev
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Host.managed-environment
           value: dev
     search_type: default
     db: Host
-- attributes: 
+- attributes:
     name: default_Environment / Prod
     description: Environment / Prod
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Host.managed-environment
           value: prod
     search_type: default
     db: Host
-- attributes: 
+- attributes:
     name: default_Environment / Test
     description: Environment / Test
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Host.managed-environment
           value: test
     search_type: default
     db: Host
-- attributes: 
+- attributes:
     name: default_Environment / UAT
     description: Environment / UAT
-    filter: !ruby/object:MiqExpression 
-      exp: 
-        CONTAINS: 
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
           tag: Host.managed-environment
           value: uat
     search_type: default
@@ -499,7 +488,7 @@
     description: Status / Retired
     filter: !ruby/object:MiqExpression
       exp:
-        "=": 
+        "=":
           value: "true"
           field: MiqTemplate-retired
     search_type: default
@@ -1307,4 +1296,3 @@
           value: default
     search_type: default
     db: ContainerService
-

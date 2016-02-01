@@ -38,7 +38,7 @@ class Host < ApplicationRecord
   validates_presence_of     :name
   validates_uniqueness_of   :name
   validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
-  validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.values
+  validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.keys
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
   belongs_to                :ems_cluster
@@ -133,7 +133,7 @@ class Host < ApplicationRecord
   virtual_column :enabled_run_level_6_services, :type => :string_set,  :uses => :host_services
   virtual_column :last_scan_on,                 :type => :time,        :uses => :last_drift_state_timestamp
   virtual_column :v_annotation,                 :type => :string,      :uses => :hardware
-  virtual_column :vmm_vendor,                   :type => :string
+  virtual_column :vmm_vendor_display,           :type => :string
   virtual_column :ipmi_enabled,                 :type => :boolean
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
@@ -610,7 +610,7 @@ class Host < ApplicationRecord
   end
 
   def is_vmware?
-    vmm_vendor.to_s.strip.downcase == 'vmware'
+    vmm_vendor == 'vmware'
   end
 
   def is_vmware_esx?
@@ -639,15 +639,8 @@ class Host < ApplicationRecord
     h
   end
 
-  def vmm_vendor
-    VENDOR_TYPES[read_attribute(:vmm_vendor)]
-  end
-
-  def vmm_vendor=(v)
-    v = VENDOR_TYPES.key(v) if      VENDOR_TYPES.value?(v)
-    v = nil                 unless  VENDOR_TYPES.key?(v)
-
-    self[:vmm_vendor] = v
+  def vmm_vendor_display
+    VENDOR_TYPES[vmm_vendor]
   end
 
   #
@@ -908,7 +901,7 @@ class Host < ApplicationRecord
   def detect_discovered_os(ost)
     # Determine os
     os_type = nil
-    if vmm_vendor == "vmware"
+    if is_vmware?
       os_name = "VMware ESX Server"
     elsif ost.os.include?(:linux)
       os_name = "linux"
@@ -959,8 +952,8 @@ class Host < ApplicationRecord
       self.ipaddress    = nil
       self.hostname     = nil
     else
-      self.vmm_vendor   = ost.hypervisor.join(", ")
-      self.type         = "Host"
+      self.vmm_vendor = ost.hypervisor.join(", ")
+      self.type       = "Host"
     end
 
     find_method
@@ -1302,7 +1295,7 @@ class Host < ApplicationRecord
   end
 
   def set_custom_field(attribute, value)
-    return unless vmm_vendor == "VMware"
+    return unless is_vmware?
     raise "Host has no EMS, unable to set custom attribute" unless ext_management_system
 
     ext_management_system.set_custom_field(self, :attribute => attribute, :value => value)
@@ -1310,7 +1303,7 @@ class Host < ApplicationRecord
 
   def quickStats
     return @qs if @qs
-    return {} unless vmm_vendor == "VMware"
+    return {} unless is_vmware?
 
     begin
       raise "Host has no EMS, unable to get host statistics" unless ext_management_system
@@ -1630,7 +1623,7 @@ class Host < ApplicationRecord
   end
 
   def control_supported?
-    !(vmm_vendor == VENDOR_TYPES["vmware"] && vmm_product == "Workstation")
+    !(is_vmware? && vmm_product == "Workstation")
   end
 
   def event_where_clause(assoc = :ems_events)

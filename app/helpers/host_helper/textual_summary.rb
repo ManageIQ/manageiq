@@ -6,7 +6,7 @@ module HostHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
+    %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor_display model asset_tag service_tag osinfo
        power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cpu_cores_per_socket memory
        guid)
   end
@@ -122,7 +122,7 @@ module HostHelper::TextualSummary
     h
   end
 
-  def textual_vmm_vendor
+  def textual_vmm_vendor_display
     h = {:label => "VMM Information"}
     if @vmminfo.nil? || @vmminfo.empty?
       h[:value] = "None"
