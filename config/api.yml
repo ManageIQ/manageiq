@@ -325,6 +325,8 @@
         :identifier: instance_stop
       - :name: start
         :identifier: instance_start
+      - :name: pause
+        :identifier: instance_pause
     :resource_actions:
       :post:
       - :name: terminate
@@ -333,6 +335,8 @@
         :identifier: instance_stop
       - :name: start
         :identifier: instance_start
+      - :name: pause
+        :identifier: instance_pause
   :pictures:
     :description: Pictures
     :options:
