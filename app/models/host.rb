@@ -901,7 +901,7 @@ class Host < ApplicationRecord
   def detect_discovered_os(ost)
     # Determine os
     os_type = nil
-    if vmm_vendor_display == "vmware" # ??? This will never be true
+    if is_vmware?
       os_name = "VMware ESX Server"
     elsif ost.os.include?(:linux)
       os_name = "linux"
