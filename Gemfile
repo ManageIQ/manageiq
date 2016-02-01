@@ -49,6 +49,7 @@ gem "default_value_for",              "~>3.0.1"
 gem "draper",                         "~>2.1.0"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
+gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                           "~>2.13"
