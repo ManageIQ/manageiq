@@ -9,13 +9,15 @@
   - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 3
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
+  - calculate_toolbars
   .container-fluid.resizable-sidebar.max-height{:style => "overflow: hidden; height: 100%;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .row.toolbar-pf#toolbar
           .col-md-12
             .toolbar-pf-actions
-              = render :partial => "layouts/x_taskbar"
+              #taskbar_buttons_div-x
+                = render_toolbars
         #main-content.row
           .col-md-12
             .row
@@ -72,7 +74,9 @@
             .row.toolbar-pf#toolbar
               .col-md-12
                 .toolbar-pf-actions
-                  = render :partial => "layouts/taskbar"
+                  - if  @layout == "dashboard"
+                    = render :partial => "/layouts/tabs"
+                  = render_toolbars
           #main-content.row
             .col-md-12
               .row
@@ -151,3 +155,10 @@
 :javascript
   // a hack to prevent toolbars disappearing behind top menus, see BZ#1291465 for details
   $('.container-fluid').scrollTop(0);
+
+- if @record
+  :javascript
+    ManageIQ.record.recordId = '#{@record.id}';
+- else
+  :javascript
+    ManageIQ.record.recordId = null;
