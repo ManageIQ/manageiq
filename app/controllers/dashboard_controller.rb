@@ -664,7 +664,7 @@ class DashboardController < ApplicationController
     data_to_restore = keys_to_restore.each_with_object({}) { |k, v| v[k] = session[k] }
 
     session.clear
-    session.merge!(data_to_restore)
+    session.update(data_to_restore)
 
     # Clear instance vars that end up in the session
     @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign = nil
