@@ -28,7 +28,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
     refresh_worker_settings = configuration.fetch_with_fallback(*path)
     unless refresh_worker_settings.key?(:defaults)
       subclasses = ExtManagementSystem.types.collect { |k| "ems_refresh_worker_#{k}".to_sym }
-      _log.info("Migrating Settings for #{k}")
+      _log.info('Migrating Settings')
       defaults = refresh_worker_settings
       subclasses.each { |subclass_key| defaults.delete(subclass_key) }
       refresh_worker_settings = {:defaults => defaults}

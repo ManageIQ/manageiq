@@ -18,6 +18,12 @@ FactoryGirl.define do
   factory :ems_container, :aliases => ["manageiq/providers/container_manager"], :class => "ManageIQ::Providers::ContainerManager", :parent => :ext_management_system do
   end
 
+  factory :ems_middleware,
+          :aliases => ["manageiq/providers/middleware_manager"],
+          :class   => "ManageIQ::Providers::MiddlewareManager",
+          :parent  => :ext_management_system do
+  end
+
   factory :configuration_manager, :aliases => ["manageiq/providers/configuration_manager"], :class => "ManageIQ::Providers::ConfigurationManager", :parent => :ext_management_system do
   end
 
@@ -166,5 +172,13 @@ FactoryGirl.define do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end
+  end
+
+  # Leaf classes for middleware_manager
+
+  factory :middleware_manager,
+          :aliases => ["manageiq/providers/hawkular/middleware_manager"],
+          :class   => "ManageIQ::Providers::Hawkular::MiddlewareManager",
+          :parent  => :ems_middleware do
   end
 end

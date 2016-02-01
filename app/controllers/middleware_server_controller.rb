@@ -26,6 +26,6 @@ class MiddlewareServerController < ApplicationController
   private ############################
 
   def display_name
-    "Middleware Servers"
+    _('Middleware Servers')
   end
 end

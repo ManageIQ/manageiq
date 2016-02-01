@@ -4,19 +4,13 @@ module MiddlewareServerHelper::TextualSummary
   #
 
   def textual_group_properties
-
-    @prop_hash = eval(@record.properties)
-
     %i(name host bind_addr product version)
   end
 
   def textual_group_relationships
     # Order of items should be from parent to child
     %i(ems middleware_deployments)
-    # items.concat(%i(middleware_servers))
-    # items
   end
-
 
   def textual_group_smart_management
     %i(tags)
@@ -35,7 +29,7 @@ module MiddlewareServerHelper::TextualSummary
   end
 
   def textual_bind_addr
-    @prop_hash['Bound Address']
+    @record.properties['Bound Address']
   end
 
   def textual_product
@@ -43,15 +37,6 @@ module MiddlewareServerHelper::TextualSummary
   end
 
   def textual_version
-    @prop_hash['Version']
+    @record.properties['Version']
   end
-
-  # def textual_type
-  #   @ems.emstype_description
-  # end
-
-  # def textual_zone
-  #   {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
-  # end
-  # end
 end

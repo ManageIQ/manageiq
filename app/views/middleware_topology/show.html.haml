@@ -1,5 +1,4 @@
-%div{'data-ng-app' => "topologyApp", 'ng-controller' => "middlewareTopologyController"}
-  = stylesheet_link_tag 'container_topology'
+%div{'data-ng-app' => "mwTopologyApp", 'ng-controller' => "middlewareTopologyController"}
 
   .topology_header
     .refresh
@@ -15,18 +14,18 @@
           %svg.kube-topology
             %g.MiddlewareServer{:transform => "translate(21, 21)"}
               %circle{:r => "17"}
-              %image{:height => "20", :width => "20", :x => "-9", "xlink:href" => "/images/icons/new/middleware_server.png", :y => "-9"}
+              %image{:height => "20", :width => "20", :x => "-9", "xlink:href" => "/assets/100/middleware_server.png", :y => "-9"}
           %label Middleware Servers
         %kubernetes-topology-icon{:kind => "MiddlewareDeployment", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
           %svg.kube-topology
             %g.MiddlewareDeployment{:transform => "translate(21, 21)"}
               %circle{:r => "17"}
-              %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/middleware_deployment.png", :y => "-9"}
+              %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/assets/100/middleware_deployment.png", :y => "-9"}
           %label Middleware Deployments
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
       %span.pficon.pficon-close
     %span.pficon.pficon-info
-    %strong  Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages. 
+    %strong  Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages.
   %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}

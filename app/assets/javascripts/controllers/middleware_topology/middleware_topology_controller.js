@@ -1,8 +1,9 @@
-angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
-.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
-}])
-.controller('middlewareTopologyController', ['$scope', '$http', '$interval', "$location",  function($scope, $http, $interval, $location) {
+miqHttpInject(angular.module('mwTopologyApp', ['kubernetesUI', 'ui.bootstrap']))
+    .controller('middlewareTopologyController', MiddlewareTopologyCtrl);
+
+MiddlewareTopologyCtrl.$inject = ['$scope', '$http', '$interval', "$location" ];
+
+function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
     $scope.vs = null;
     $scope.refresh = function() {
         var id;
@@ -80,7 +81,7 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
         added.on("dblclick", function(d) {return dblclick(d)});
         added.append("image")
             .attr("xlink:href",function(d) {
-                return "/images/icons/new/" + class_name(d) + ".png";
+                return "/assets/100/" + class_name(d) + ".png";
             })
             .attr("y", function(d) { return getDimensions(d).y})
             .attr("x", function(d) { return getDimensions(d).x})
@@ -148,4 +149,4 @@ angular.module('topologyApp', ['kubernetesUI','ui.bootstrap'])
 
     }
 
-    }]);
+}

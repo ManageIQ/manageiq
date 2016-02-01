@@ -37,12 +37,19 @@ include_for_find:
   :tags: {}
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - name
 - hostname
 - ipaddress
 - port
 - emstype_description
+
+col_formats:
+-
+-
+-
+- :string_truncate_50
+-
 
 # Column titles, in order
 headers:
@@ -53,7 +60,7 @@ headers:
 - Type
 
 # Condition(s) string for the SQL query
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order: Ascending
@@ -76,8 +83,8 @@ group: n
 #   StackedColumn
 #   StackedThreedColumn
 
-graph: 
+graph:
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
-dims: 
+dims:

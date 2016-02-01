@@ -11,7 +11,6 @@ module EmsMiddlewareHelper::TextualSummary
     # Order of items should be from parent to child
     items = []
     items.concat(%i(middleware_servers middleware_deployments))
-    items
   end
 
   def textual_group_status
@@ -22,7 +21,6 @@ module EmsMiddlewareHelper::TextualSummary
     %i(tags)
   end
 
-
   def textual_refresh_status
     last_refresh_status = @ems.last_refresh_status.titleize
     if @ems.last_refresh_date
@@ -30,21 +28,18 @@ module EmsMiddlewareHelper::TextualSummary
       last_refresh_status << " - #{last_refresh_date} Ago"
     end
     {
-        :label => "Last Refresh",
-        :value => [{:value => last_refresh_status},
-                   {:value => @ems.last_refresh_error.try(:truncate, 120)}],
-        :title => @ems.last_refresh_error
+      :label => _('Last Refresh'),
+      :value => [{:value => last_refresh_status},
+                 {:value => @ems.last_refresh_error.try(:truncate, 120)}],
+      :title => @ems.last_refresh_error
     }
   end
-
-  # def textual_group_smart_management
-  #   %i(zone tags)
-  # end
 
   def textual_group_topology
     items = %w(topology)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
+
   #
   # Items
   #
@@ -65,15 +60,10 @@ module EmsMiddlewareHelper::TextualSummary
     @ems.supports_port? ? @ems.port : nil
   end
 
-  # def textual_zone
-  #   {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
-  # end
-
-
   def textual_topology
     {:label => N_('Topology'),
      :image => 'topology',
      :link  => url_for(:controller => 'middleware_topology', :action => 'show', :id => @ems.id),
-     :title => N_("Show topology")}
+     :title => N_('Show topology')}
   end
 end

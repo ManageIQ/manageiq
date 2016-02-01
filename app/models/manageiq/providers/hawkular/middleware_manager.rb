@@ -11,43 +11,46 @@ module ManageIQ::Providers
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
 
-    def verify_credentials(auth_type = nil, options = {})
-      auth_type ||= 'default'
+    def verify_credentials(_auth_type = nil, options = {})
+      begin
+
+        # As the connect will only give a handle
+        # we verify the credentials via an actual operation
+        connect(options).list_feeds
+      rescue => err
+        raise MiqException::MiqInvalidCredentialsError, err.message
+      end
+
+      true
     end
 
     def self.raw_connect(hostname, port, username, password)
       require 'hawkular_all'
-      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => "/hawkular/inventory").to_s
+      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/inventory').to_s
       ::Hawkular::Inventory::InventoryClient.new(url, :username => username, :password => password)
     end
 
-    def connect
-      $hawk_log.info("Connecting to Hawkular on #{hostname}:#{port}")
-      @connection ||= self.class.raw_connect(hostname, port, authentication_userid('default'), authentication_password('default'))
-    end
-
-    def connection
-      connect
-    end
-
-    def browser_url
-      "http://#{hostname}:#{port}"
+    def connect(_options = {})
+      self.class.raw_connect(hostname,
+                             port,
+                             authentication_userid('default'),
+                             authentication_password('default'))
     end
 
     def feeds
-      $hawk_log.info('connection class ' + connection.class.to_s)
-      if connection.respond_to? :to_s
-        $hawk_log.info(connection.to_s)
-      end
-      connection.list_feeds
+      with_provider_connection(&:list_feeds)
     end
 
     def eaps(feed)
-      connection.list_resources_for_type(feed, 'WildFly Server', true)
+      with_provider_connection do |connection|
+        connection.list_resources_for_type(feed, 'WildFly Server', true)
+      end
     end
 
-    def children(eap_parent)
-      connection.list_child_resources(eap_parent)
+    def child_resources(eap_parent)
+      with_provider_connection do |connection|
+        connection.list_child_resources(eap_parent)
+      end
     end
 
     # UI methods for determining availability of fields
@@ -62,7 +65,5 @@ module ManageIQ::Providers
     def self.description
       @description ||= "Hawkular".freeze
     end
-
-
   end
 end
