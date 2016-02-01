@@ -19,8 +19,8 @@ class Tenant < ApplicationRecord
   has_many :providers
   has_many :ext_management_systems
   has_many :vm_or_templates
-  has_many :vms
-  has_many :miq_templates
+  has_many :vms, :inverse_of => :tenant
+  has_many :miq_templates, :inverse_of => :tenant
   has_many :service_template_catalogs
   has_many :service_templates
 
@@ -32,7 +32,7 @@ class Tenant < ApplicationRecord
   has_many :miq_request_tasks, :dependent => :destroy
   has_many :services, :dependent => :destroy
 
-  belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy, :inverse_of => :tenant
+  belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
