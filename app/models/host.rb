@@ -45,13 +45,13 @@ class Host < ApplicationRecord
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
   has_many                  :vms_and_templates, :dependent => :nullify
-  has_many                  :vms
-  has_many                  :miq_templates
+  has_many                  :vms, :inverse_of => :host
+  has_many                  :miq_templates, :inverse_of => :host
   has_and_belongs_to_many   :storages, :join_table => :host_storages
   has_many                  :switches, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
-  has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id"
+  has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id", :inverse_of => :host
 
   has_many                  :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
