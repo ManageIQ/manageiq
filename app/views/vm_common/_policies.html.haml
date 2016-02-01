@@ -5,19 +5,16 @@
   %h3
     = _('Policy Simulation Details')
 
-  - squash_state = session[:squash_open] ? "false" : "true"
+  - squash_state = session[:squash_open] ? "up" : "down"
   - squash_title = session[:squash_open] ? _("Collapse All") : _("Expand All")
-  - link_image = image_tag(image_path("toolbars/squashed-all-#{squash_state}.png"),
-      :id => 'squash_img',
-      :class => "rollover small",
-      :alt => "#{squash_title}",
-      :title => "#{squash_title}")
-  = link_to(link_image,
-      {:action => 'squash_toggle',
-       :id     => @record.id},
-      :remote       => true,
-      "data-method" => :post,
-      :id           => 'squash')
+  %button.btn.btn-default{:title => squash_title,
+                          :remote => true,
+                          :id => 'squash_img',
+                          "data-method" => :post,
+                          "data-miq_sparkle_on" => true,
+                          "data-click_url" => {:url => url_for(:action => 'squash_toggle', :id => @record.id)}.to_json}
+    %i{:class => "fa fa-angle-double-#{squash_state} fa-lg"}
+
 
   %div{:id => "#{session[:tree_name]}box"}
 
