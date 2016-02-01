@@ -1289,7 +1289,7 @@ module ApplicationHelper
   end
 
   def tree_with_advanced_search?
-    %i(containers images instances providers vandt
+    %i(containers images cs_filter foreman_providers instances providers vandt
      images_filter instances_filter templates_filter templates_images_filter containers_filter
      vms_filter vms_instances_filter).include?(x_tree[:type])
   end

@@ -259,12 +259,12 @@ class ProviderForemanController < ApplicationController
     session[:edit] = @edit
     @explorer = true
 
-    if x_tree[:type] != :filter || x_node == "root"
+    if x_tree[:type] != :cs_filter || x_node == "root"
       listnav_search_selected(0)
     else
       @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
 
-      if x_tree[:type] == :filter && @nodetype == "ms"
+      if x_tree[:type] == :cs_filter && @nodetype == "ms"
         search_id = @nodetype == "root" ? 0 : from_cid(id)
         listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
         if @edit[:adv_search_applied] &&
@@ -427,8 +427,7 @@ class ProviderForemanController < ApplicationController
       self.x_active_accord = 'foreman_providers'
       default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
-      build_foreman_tree(:providers, :foreman_providers_tree)
-      @trees.push("foreman_providers_tree")
+      @trees << build_foreman_tree(:foreman_providers, :foreman_providers_tree)
       @accords.push(:name => "foreman_providers", :title => "Providers", :container => "foreman_providers_accord")
     end
     if role_allows(:feature => "configured_systems_filter_accord", :any => true)
@@ -436,8 +435,7 @@ class ProviderForemanController < ApplicationController
       self.x_active_accord = 'cs_filter'
       default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
-      build_foreman_tree(:filter, :cs_filter_tree)
-      @trees.push("cs_filter_tree")
+      @trees << build_foreman_tree(:cs_filter, :cs_filter_tree)
       @accords.push(:name => "cs_filter", :title => "Configured Systems", :container => "cs_filter_accord")
     end
     self.x_active_tree = default_active_tree
@@ -492,7 +490,7 @@ class ProviderForemanController < ApplicationController
         default_node
       end
     end
-    @right_cell_text += @edit[:adv_search_applied][:text] if x_tree[:type] == :filter && @edit && @edit[:adv_search_applied]
+    @right_cell_text += @edit[:adv_search_applied][:text] if x_tree[:type] == :cs_filter && @edit && @edit[:adv_search_applied]
 
     if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
       x_history_add_item(:id     => x_node,
@@ -649,6 +647,8 @@ class ProviderForemanController < ApplicationController
     @sb[:action] = nil
 
     record_showing = leaf_record
+    trees = {}
+    trees[:foreman_providers] = build_foreman_tree(:foreman_providers, :foreman_providers_tree) if replace_trees
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
@@ -660,7 +660,7 @@ class ProviderForemanController < ApplicationController
     update_partials(record_showing, presenter, r)
     replace_search_box(presenter, r)
     handle_bottom_cell(presenter, r)
-    replace_explorer_trees(replace_trees, presenter, r)
+    replace_trees_by_presenter(presenter, trees)
     rebuild_toolbars(record_showing, presenter)
     presenter[:right_cell_text] = @right_cell_text
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
@@ -738,7 +738,7 @@ class ProviderForemanController < ApplicationController
     # Replace the searchbox
     presenter.replace(:adv_searchbox_div,
         r[:partial => 'layouts/x_adv_searchbox',
-          :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}])
+          :locals  => {:nameonly => x_active_tree == :foreman_providers_tree}])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
@@ -763,13 +763,6 @@ class ProviderForemanController < ApplicationController
       presenter.show(:paging_div)
     else
       presenter.hide(:paging_div)
-    end
-  end
-
-  def replace_explorer_trees(replace_trees, presenter, r)
-    build_foreman_tree(:providers, :foreman_providers_tree) if replace_trees
-    replace_trees.each do |t|
-      presenter.replace("#{t}_tree_div", r[:partial => "provider_foreman/#{t}_tree"])
     end
   end
 
@@ -800,9 +793,12 @@ class ProviderForemanController < ApplicationController
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)
+    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter.hide(:quicksearchbox)
+    presenter[:hide_modal] = true
+
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
   end
 
