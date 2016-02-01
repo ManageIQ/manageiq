@@ -2,6 +2,8 @@
 #cat_tags_div
   = select_tag("tag_add",
     options_for_select(@entries.sort, "select"),
-    "data-miq_sparkle_on"  => true,
-    "data-miq_sparkle_off" => true,
-    "data-miq_observe"     => {:url => url}.to_json)
+    "data-miq_observe" => {:url => url}.to_json,
+    "class"            => "selectpicker")
+  :javascript
+    miqInitSelectPicker();
+    miqSelectPickerEvent("tag_add", "#{url}", {beforeSend: true, complete: true});
