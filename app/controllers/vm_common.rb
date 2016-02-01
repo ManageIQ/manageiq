@@ -1230,11 +1230,6 @@ module VmCommon
     replace_right_cell
   end
 
-  def filesystem_download
-    fs = identify_record(params[:id], Filesystem)
-    send_data fs.contents, :filename => fs.name
-  end
-
   private
 
   # First time thru, kick off the acquire ticket task
