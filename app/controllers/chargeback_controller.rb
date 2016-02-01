@@ -24,7 +24,8 @@ class ChargebackController < ApplicationController
     if x_active_tree == :cb_rates_tree
       @record = identify_record(params[:id], ChargebackRate)
       nodeid = x_build_node_id(@record)
-      params[:id] = "xx-#{@record.description}"
+      # We identified by the structure Compute_id:Storage_id
+      params[:id] = "xx-#{@record.id}:#{@record.id + 1}"
       params[:tree] = x_active_tree.to_s
       tree_select
     end
@@ -585,8 +586,8 @@ class ChargebackController < ApplicationController
         @right_cell_text = _("All %s") % ui_lookup(:models => "ChargebackRate")
         cb_rates_list
       else
-        # record has now two rates with the same descriptions (Compute, Storage)
-        @record = ChargebackRate.where("description = ?", node.split('_').last.split('-').last)
+        # record has now two rates (Compute, Storage)
+        @record = ChargebackRate.find(node.split('-').last.split(':'))
         @sb[:action] = nil
         # we use the compute rate ([0]) for reference
         @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @record[0].description}

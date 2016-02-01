@@ -67,9 +67,9 @@
               = check_box_tag("select", "#{i}", nil, "data-miq_observe_checkbox" => {:url => url_for(:action => 'cb_selected_rd', :index => "#{i}")}.to_json, :class => "select")
             %td
               - if r.rate_type == "Compute"
-                = image_tag "icons/new/hardware-processor.png"
+                = image_tag "/assets/100/hardware-processor.png"
               - else
-                = image_tag "icons/new/hardware-disk.png"
+                = image_tag "/assets/100/hardware-disk.png"
               = r.rate_type
             %td
               = Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
