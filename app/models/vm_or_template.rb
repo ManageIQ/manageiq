@@ -51,7 +51,7 @@ class VmOrTemplate < ApplicationRecord
   validates_presence_of     :name, :location
   validates_inclusion_of    :vendor, :in => VENDOR_TYPES.values
 
-  has_one                   :miq_server, :foreign_key => :vm_id
+  has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
 
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
