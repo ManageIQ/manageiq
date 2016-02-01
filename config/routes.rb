@@ -679,7 +679,7 @@ Vmdb::Application.routes.draw do
     },
 
     :middleware_topology       => {
-        :get => %w(
+      :get => %w(
         show
         data
       )
@@ -905,8 +905,8 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-            compare_get,
-        :post => %w(
+               compare_get,
+      :post => %w(
         button
         create
         dynamic_checkbox_refresh
@@ -923,14 +923,14 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-            adv_search_post +
-            compare_post +
-            exp_post +
-            save_post
+               adv_search_post +
+               compare_post +
+               exp_post +
+               save_post
     },
 
     :middleware_server            => {
-        :get  => %w(
+       :get  => %w(
         download_data
         edit
         index
@@ -940,8 +940,8 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-            compare_get,
-        :post => %w(
+               compare_get,
+      :post => %w(
         button
         create
         dynamic_checkbox_refresh
@@ -958,14 +958,14 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-            adv_search_post +
-            compare_post +
-            exp_post +
-            save_post
+               adv_search_post +
+               compare_post +
+               exp_post +
+               save_post
     },
 
     :middleware_deployment            => {
-        :get  => %w(
+       :get  => %w(
         download_data
         edit
         index
@@ -975,8 +975,8 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-            compare_get,
-        :post => %w(
+               compare_get,
+      :post => %w(
         button
         create
         dynamic_checkbox_refresh
@@ -993,10 +993,10 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-            adv_search_post +
-            compare_post +
-            exp_post +
-            save_post
+               adv_search_post +
+               compare_post +
+               exp_post +
+               save_post
     },
 
 

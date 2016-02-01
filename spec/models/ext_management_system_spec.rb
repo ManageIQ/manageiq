@@ -12,6 +12,7 @@ describe ExtManagementSystem do
       foreman_configuration
       foreman_provisioning
       gce
+      hawkular
       kubernetes
       openshift
       atomic

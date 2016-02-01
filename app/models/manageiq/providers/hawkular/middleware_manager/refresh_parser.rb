@@ -5,7 +5,7 @@ module ManageIQ::Providers
         new(ems, options).ems_inv_to_hashes
       end
 
-      def initialize(ems, options = nil)
+      def initialize(ems, _options = nil)
         @ems = ems
         @eaps = []
         @data = {}
@@ -33,7 +33,7 @@ module ManageIQ::Providers
       def get_deployments
         @data[:middleware_deployments] = []
         @eaps.map do |eap|
-          @ems.children(eap).map do |child|
+          @ems.child_resources(eap).map do |child|
             next unless child.type_path.end_with? 'Deployment'
             server = @data_index.fetch_path(:middleware_servers, :by_nativeid, eap.id)
             @data[:middleware_deployments] << parse_deployment(server, child)
@@ -43,17 +43,15 @@ module ManageIQ::Providers
 
       def parse_deployment(server, deployment)
         {
-          :name => parse_deployment_name(deployment.id),
-          :middleware_server => server,  # TODO does that make sense? What is better?
-          :nativeid => deployment.id,
-          :ems_ref => deployment.path
+          :name              => parse_deployment_name(deployment.id),
+          :middleware_server => server, # TODO: does that make sense? What is better?
+          :nativeid          => deployment.id,
+          :ems_ref           => deployment.path
         }
       end
 
       def parse_deployment_name(name)
-        tmp = name.dup
-        tmp.sub!(/^.*deployment=/,'')
-        tmp
+        name.sub(/^.*deployment=/, '')
       end
 
       def parse_middleware_server(eap)
@@ -62,20 +60,15 @@ module ManageIQ::Providers
           :ems_ref    => eap.path,
           :nativeid   => eap.id,
           :name       => parse_name(eap.id),
-          :host       => eap.properties['Hostname'] || '',
-          :product    => eap.properties['Product Name'] || '',
+          :host       => eap.properties['Hostname'],
+          :product    => eap.properties['Product Name'],
           :type_path  => eap.type_path,
           :properties => eap.properties
         }
       end
 
-
       def parse_name(name)
-
-        tmp = name.dup
-        tmp.sub!(/~~$/,'')
-        tmp.sub!(/^.*?~/,'')
-        tmp
+        name.sub(/~~$/, '').sub(/^.*?~/, '')
       end
     end
   end
