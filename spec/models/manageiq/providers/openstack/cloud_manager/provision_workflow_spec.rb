@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     FactoryGirl.create(:ems_openstack)
   end
 
-  let(:template) { FactoryGirl.create(:template_openstack, :name => "template", :ext_management_system => provider) }
+  let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => provider) }
 
   context "without applied tags" do
     let(:workflow) do
@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     context "security_groups" do
       context "non cloud network" do
         it "#get_targets_for_ems" do
-          sg = FactoryGirl.create(:security_group_amazon, :name => "sg_1", :ext_management_system => provider)
+          sg = FactoryGirl.create(:security_group_amazon, :ext_management_system => provider)
           provider.security_groups << sg
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup,
                                    'security_groups.non_cloud_network')
@@ -47,8 +47,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       context "cloud network" do
         it "#get_targets_for_ems" do
           cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => provider)
-          sg_cn = FactoryGirl.create(:security_group_amazon, :name => "sg_2", :ext_management_system => provider,
-                                     :cloud_network => cn1)
+          sg_cn = FactoryGirl.create(:security_group_amazon, :ext_management_system => provider, :cloud_network => cn1)
           provider.security_groups << sg_cn
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup, 'security_groups')
           expect(filtered.size).to eq(1)
@@ -59,7 +58,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
     context "Instance Type (Flavor)" do
       it "#get_targets_for_ems" do
-        flavor = FactoryGirl.create(:flavor_openstack, :name => "test_flavor_2")
+        flavor = FactoryGirl.create(:flavor_openstack)
         provider.flavors << flavor
         filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, Flavor, 'flavors')
         expect(filtered.size).to eq(1)
@@ -82,13 +81,13 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       admin.current_group.save
 
       2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => provider.id) }
-      2.times { FactoryGirl.create(:security_group_amazon, :name => "sgb_1", :ext_management_system => provider) }
-      ct1 = FactoryGirl.create(:cloud_tenant, :name => "admin1")
-      ct2 = FactoryGirl.create(:cloud_tenant, :name => "admin2")
+      2.times { FactoryGirl.create(:security_group_amazon, :ext_management_system => provider) }
+      ct1 = FactoryGirl.create(:cloud_tenant)
+      ct2 = FactoryGirl.create(:cloud_tenant)
       provider.cloud_tenants << ct1
       provider.cloud_tenants << ct2
-      provider.flavors << FactoryGirl.create(:flavor_openstack, :name => "test_flavor_3")
-      provider.flavors << FactoryGirl.create(:flavor_openstack, :name => "test_flavor_4")
+      provider.flavors << FactoryGirl.create(:flavor_openstack)
+      provider.flavors << FactoryGirl.create(:flavor_openstack)
 
       tagged_zone = provider.availability_zones.first
       tagged_sec = provider.security_groups.first
@@ -163,11 +162,21 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         described_class.new({:src_vm_id => template.id}, admin.userid)
       end
 
-      context "with empty relationships" do
-        it "#allowed_instance_types" do
-          expect(workflow.allowed_instance_types).to eq({})
-        end
+      context "#allowed_instance_types" do
+        let(:hardware) { FactoryGirl.create(:hardware, :size_on_disk => 1.gigabyte, :memory_mb_minimum => 512) }
+        let(:template) { FactoryGirl.create(:template_openstack, :hardware => hardware, :ext_management_system => provider) }
 
+        it "filters flavors too small" do
+          flavor = FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.terabyte)
+          provider.flavors << flavor
+          provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.megabyte) # Disk too small
+          provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.megabyte, :root_disk_size => 1.terabyte) # Memory too small
+
+          expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
+        end
+      end
+
+      context "with empty relationships" do
         it "#allowed_availability_zones" do
           expect(workflow.allowed_availability_zones).to eq({})
         end
@@ -182,12 +191,6 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
 
       context "with valid relationships" do
-        it "#allowed_instance_types" do
-          flavor = FactoryGirl.create(:flavor, :name => "flavor_1")
-          provider.flavors << flavor
-          expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
-        end
-
         it "#allowed_availability_zones" do
           az = FactoryGirl.create(:availability_zone_openstack)
           provider.availability_zones << az
@@ -210,37 +213,37 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         end
 
         it "#allowed_security_groups" do
-          sg = FactoryGirl.create(:security_group_openstack, :name => "sq_1")
+          sg = FactoryGirl.create(:security_group_openstack)
           provider.security_groups << sg
           expect(workflow.allowed_security_groups).to eq(sg.id => sg.name)
         end
       end
 
       context "#display_name_for_name_description" do
-        let(:flavor) { FactoryGirl.create(:flavor_openstack, :name => "test_flavor") }
+        let(:flavor) { FactoryGirl.create(:flavor_openstack) }
 
         it "with name only" do
-          expect(workflow.display_name_for_name_description(flavor)).to eq("test_flavor")
+          expect(workflow.display_name_for_name_description(flavor)).to eq(flavor.name)
         end
 
         it "with name and description" do
           flavor.description = "Small"
-          expect(workflow.display_name_for_name_description(flavor)).to eq("test_flavor: Small")
+          expect(workflow.display_name_for_name_description(flavor)).to eq("#{flavor.name}: Small")
         end
       end
 
       context "tenant filtering" do
         before do
-          @ct1 = FactoryGirl.create(:cloud_tenant, :name => "admin1")
-          @ct2 = FactoryGirl.create(:cloud_tenant, :name => "admin2")
+          @ct1 = FactoryGirl.create(:cloud_tenant)
+          @ct2 = FactoryGirl.create(:cloud_tenant)
           provider.cloud_tenants << @ct1
           provider.cloud_tenants << @ct2
         end
 
         context "cloud networks" do
           before do
-            @cn1 = FactoryGirl.create(:cloud_network, :name => "cn1")
-            @cn2 = FactoryGirl.create(:cloud_network, :name => "cn2")
+            @cn1 = FactoryGirl.create(:cloud_network)
+            @cn2 = FactoryGirl.create(:cloud_network)
             provider.cloud_networks << @cn1
             provider.cloud_networks << @cn2
             @ct1.cloud_networks << @cn1
@@ -261,8 +264,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
         context "security groups" do
           before do
-            @sg1 = FactoryGirl.create(:security_group_openstack, :name => "sg1")
-            @sg2 = FactoryGirl.create(:security_group_openstack, :name => "sg2")
+            @sg1 = FactoryGirl.create(:security_group_openstack)
+            @sg2 = FactoryGirl.create(:security_group_openstack)
             provider.security_groups << @sg1
             provider.security_groups << @sg2
             @ct1.security_groups << @sg1
