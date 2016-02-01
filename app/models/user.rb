@@ -322,6 +322,6 @@ class User < ApplicationRecord
   end
 
   def self.with_current_user_groups
-    includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
+    current_user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
   end
 end

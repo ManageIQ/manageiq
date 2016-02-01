@@ -252,6 +252,11 @@ class MiqGroup < ApplicationRecord
     where.not(:group_type => TENANT_GROUP)
   end
 
+  def self.with_current_user_groups
+    current_user = User.current_user
+    current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
+  end
+
   def self.valid_filters?(filters_hash)
     return true  unless filters_hash                  # nil ok
     return false unless filters_hash.kind_of?(Hash)   # must be Hash
