@@ -39,7 +39,7 @@ class MiqPolicy < ApplicationRecord
   def self.built_in_policies
     return @@built_in_policies.dup unless @@built_in_policies.nil?
 
-    policy_hashes = YAML.load_file(Rails.root.join("config", "built_in_policies.yml"))
+    policy_hashes = YAML.load_file(Rails.root.join("product", "policy", "built_in_policies.yml"))
 
     @@built_in_policies = policy_hashes.collect do |p_hash|
       policy = OpenStruct.new(p_hash)
