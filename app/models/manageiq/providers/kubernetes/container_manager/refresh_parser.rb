@@ -132,33 +132,39 @@ module ManageIQ::Providers::Kubernetes
       new_result = parse_base_item(node)
 
       new_result.merge!(
-        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
-        :identity_infra             => node.spec.externalID,
-        :identity_machine           => node.status.nodeInfo.machineID,
-        :identity_system            => node.status.nodeInfo.systemUUID,
-        :container_runtime_version  => node.status.nodeInfo.containerRuntimeVersion,
-        :kubernetes_proxy_version   => node.status.nodeInfo.kubeProxyVersion,
-        :kubernetes_kubelet_version => node.status.nodeInfo.kubeletVersion,
-        :labels                     => parse_labels(node),
-        :lives_on_id                => nil,
-        :lives_on_type              => nil
+        :type           => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :identity_infra => node.spec.externalID,
+        :labels         => parse_labels(node),
+        :lives_on_id    => nil,
+        :lives_on_type  => nil
       )
 
-      node_memory = node.status.capacity.try(:memory)
+      node_info = node.status.try(:nodeInfo)
+      if node_info
+        new_result.merge!(
+          :identity_machine           => node_info.machineID,
+          :identity_system            => node_info.systemUUID,
+          :container_runtime_version  => node_info.containerRuntimeVersion,
+          :kubernetes_proxy_version   => node_info.kubeProxyVersion,
+          :kubernetes_kubelet_version => node_info.kubeletVersion
+        )
+      end
+
+      node_memory = node.status.try(:capacity).try(:memory)
       node_memory &&= parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
         :hardware         => {
-          :cpu_total_cores => node.status.capacity.try(:cpu),
+          :cpu_total_cores => node.status.try(:capacity).try(:cpu),
           :memory_mb       => node_memory
         },
         :operating_system => {
-          :distribution   => node.status.nodeInfo.osImage,
-          :kernel_version => node.status.nodeInfo.kernelVersion
+          :distribution   => node_info.try(:osImage),
+          :kernel_version => node_info.try(:kernelVersion)
         }
       }
 
-      max_container_groups = node.status.capacity.try(:pods)
+      max_container_groups = node.status.try(:capacity).try(:pods)
       new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
@@ -170,7 +176,8 @@ module ManageIQ::Providers::Kubernetes
                ManageIQ::Providers::Vmware::InfraManager::Vm.name]
 
       # Searching for the underlying instance for Openstack or oVirt.
-      vms = Vm.where(:uid_ems => new_result[:identity_system].downcase, :type => types)
+      identity_system = new_result[:identity_system].try(:downcase)
+      vms = Vm.where(:uid_ems => identity_system, :type => types) if identity_system
       if vms.to_a.size == 1
         new_result[:lives_on_id] = vms.first.id
         new_result[:lives_on_type] = vms.first.type
@@ -481,7 +488,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_conditions(entity)
-      conditions = entity.status.conditions
+      conditions = entity.status.try(:conditions)
       conditions.to_a.collect do |condition|
         {
           :name                 => condition.type,

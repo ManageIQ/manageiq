@@ -636,6 +636,50 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
       })
     end
+
+    it "handles node without nodeInfo" do
+      expect(parser.send(
+        :parse_node,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-node',
+            :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+            :resourceVersion   => '369104',
+            :creationTimestamp => '2016-01-01T11:10:21Z'
+          },
+          :spec     => {
+            :externalID => '10.35.17.99'
+          },
+          :status   => {
+            :capacity => {}
+          }
+        )
+      )).to eq(
+        {
+          :name                 => 'test-node',
+          :ems_ref              => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+          :ems_created_on       => '2016-01-01T11:10:21Z',
+          :container_conditions => [],
+          :identity_infra       => '10.35.17.99',
+          :labels               => [],
+          :lives_on_id          => nil,
+          :lives_on_type        => nil,
+          :max_container_groups => nil,
+          :computer_system      => {
+            :hardware         => {
+              :cpu_total_cores => nil,
+              :memory_mb       => nil
+            },
+            :operating_system => {
+              :distribution   => nil,
+              :kernel_version => nil
+            }
+          },
+          :namespace            => nil,
+          :resource_version     => '369104',
+          :type                 => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+        })
+    end
   end
 
   describe "parse_persistent_volume" do
