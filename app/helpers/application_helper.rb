@@ -775,6 +775,7 @@ module ApplicationHelper
     defered_toolbar_render('center_tb', center_toolbar_filename)
     if fname = custom_toolbar_filename
       defered_toolbar_render('custom_tb', fname)
+    end
     defered_toolbar_render('view_tb', x_view_toolbar_filename)
   end
 

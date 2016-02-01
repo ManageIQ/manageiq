@@ -66,6 +66,7 @@
           = yield :left
         #custom_left_cell
 - else
+  - calculate_toolbars
   .container-fluid{:style => "overflow: hidden; height: 100%;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       - if layout_uses_listnav?
