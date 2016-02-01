@@ -199,7 +199,7 @@ class MiqRequestController < ApplicationController
         stamp_request.deny(current_user, @edit[:reason])
       end
       #     AuditEvent.success(build_saved_audit(request, @edit))
-      add_flash(_("Request \"%{name}\" was %{task}") % {:name => stamp_request.description, :task => (session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"})
+      add_flash(_("Request \"%{name}\" was %{task}") % {:name => stamp_request.description, :task => (session[:edit] && session[:edit][:stamp_typ]) == "approve" ? "approved" : "denied"})
       session[:flash_msgs] = @flash_array.dup                     # Put msg in session for next transaction to display
       @edit = nil
       render :update do |page|
