@@ -1,13 +1,8 @@
-- if display_back_button?
-  - defered_toolbar_render('summary_center_tb', controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb")
-
-- defered_toolbar_render('center_tb', center_toolbar_filename)
-- if fname = custom_toolbar_filename
-  - defered_toolbar_render('custom_tb', fname)
-- defered_toolbar_render('view_tb', view_toolbar_filename)
+- calculate_toolbars
 
 - if  @layout == "dashboard"
   = render :partial => "/layouts/tabs"
+
 = render_toolbars
 
 - if @record

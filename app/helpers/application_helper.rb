@@ -765,6 +765,19 @@ module ApplicationHelper
     )
   end
 
+  def calculate_toolbars
+    if inner_layout_present? # x_taskbar branch
+      defered_toolbar_render('history_tb', history_toolbar_filename)
+    elsif display_back_button? # taskbar branch
+      defered_toolbar_render('summary_center_tb', controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb")
+    end
+
+    defered_toolbar_render('center_tb', center_toolbar_filename)
+    if fname = custom_toolbar_filename
+      defered_toolbar_render('custom_tb', fname)
+    defered_toolbar_render('view_tb', x_view_toolbar_filename)
+  end
+
   # check if back to summary button needs to be show
   def display_back_button?
     # don't need to back button if @record is not there or @record doesnt have name or
