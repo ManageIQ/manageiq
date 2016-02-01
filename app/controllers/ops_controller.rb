@@ -624,7 +624,7 @@ class OpsController < ApplicationController
         if %w(save reset).include?(params[:button]) && is_browser_ie?
           presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true;"
         end
-      elsif x_node.split("-").first.split("__")[1] == "svr" && my_server_id != active_id.to_i
+      elsif x_node.split("-").first == "svr" && my_server_id != active_id.to_i
         # show only 4 tabs if not on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       end
