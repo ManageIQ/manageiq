@@ -552,6 +552,11 @@ class ApplicationController < ActionController::Base
     tree_select
   end
 
+  def filesystem_download
+    fs = identify_record(params[:id], Filesystem)
+    send_data fs.contents, :filename => fs.name
+  end
+
   protected
 
   def render_flash(add_flash_text = nil, severity = nil)
