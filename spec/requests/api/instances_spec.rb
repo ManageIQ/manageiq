@@ -168,4 +168,57 @@ RSpec.describe "Instances API" do
       expect_result_resources_to_include_hrefs("results", :instances_list)
     end
   end
+
+  describe "instance pause action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+
+      run_post(invalid_instance_url, gen_request(:pause))
+
+      expect_resource_not_found
+    end
+
+    it "pausing an invalid instance without appropriate role is forbidden" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:pause))
+
+      expect_request_forbidden
+    end
+
+    it "fails to pause a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+      update_raw_power_state("poweredOff", instance)
+
+      run_post(instance_url, gen_request(:pause))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "fails to pause a paused instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+      update_raw_power_state("paused", instance)
+
+      run_post(instance_url, gen_request(:pause))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "pauses an instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+
+      run_post(instance_url, gen_request(:pause))
+
+      expect_single_action_result(:success => true, :message => "pausing", :href => :instance_url, :task => true)
+    end
+
+    it "pauses multiple instances" do
+      api_basic_authorize action_identifier(:instances, :pause)
+
+      run_post(instances_url, gen_request(:pause, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
+    end
+  end
 end
