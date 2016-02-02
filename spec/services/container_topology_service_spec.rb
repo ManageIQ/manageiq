@@ -136,7 +136,7 @@ describe ContainerTopologyService do
 
       expect(subject[:relations].size).to eq(8)
       expect(subject[:relations]).to include(
-        {:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290"},
+        {:source => "8f8ca74c-3a41-11e5-a79a-001a4a231290", :target => "96c35ccd-3e00-11e5-a0d2-18037327aaeb"},
         {:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "ab5za74c-3a41-11e5-a79a-001a4a231290"},
         # cross provider correlations
         {:source => "558d9a08-7b13-11e5-8546-129aa6621998", :target => "abcd9a08-7b13-11e5-8546-129aa6621999"},
