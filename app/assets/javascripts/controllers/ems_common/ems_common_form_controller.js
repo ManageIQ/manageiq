@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$scope', '$attrs', 'emsCommonFormId', 'miqService', function($http, $scope, $attrs, emsCommonFormId, miqService) {
+ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '$attrs', 'emsCommonFormId', 'miqService', function($http, $scope, $attrs, emsCommonFormId, miqService) {
   var init = function() {
     $scope.emsCommonModel = {
       name: '',
@@ -38,7 +38,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
     $scope.updateUrl = $attrs.updateUrl;
     $scope.model = 'emsCommonModel';
 
-    ManageIQ.angularApplication.$scope = $scope;
+    ManageIQ.angular.scope = $scope;
 
     if (emsCommonFormId == 'new') {
       $scope.newRecord                  = true;

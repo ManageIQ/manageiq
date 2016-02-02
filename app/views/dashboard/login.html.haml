@@ -1,37 +1,36 @@
-- auth_mode   = get_vmdb_config[:authentication][:mode]
+- auth_mode = get_vmdb_config[:authentication][:mode]
+
 %span#badge
   %img{:src => "#{current_tenant.logo? ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
+
 .container
   .row
     .col-md-12
       #brand
         %img{:src => image_path("brand.svg"), :alt => "ManageIQ"}
+
     .col-md-6.col-lg-5.login
       .form-horizontal#login_div
-        = render(:partial => "layouts/spinner", 
+        = render(:partial => "layouts/spinner",
                  :locals  => {:login => true})
-        #invalid_sso_credentials_flash{:style => "display: none;"}
-          #flash_text_div{:title => _("Click to remove message")}
-            .alert.alert-danger
-              %span.pficon-layered
-                %span.pficon.pficon-error-octagon
-                %span.pficon.pficon-warning-exclamation
-              %strong= _("Invalid Single Sign-On credentials")
+
         = render :partial => "layouts/flash_msg"
+
         .form-group
           %label.col-md-3.control-label= _('Username')
           .col-md-9
-            = text_field_tag('user_name', @user_name, 
+            = text_field_tag('user_name', @user_name,
                              :class => "form-control",
                              :placeholder => _('Username'),
-                             :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
+                             :onkeypress => "if (miqEnterPressed(event)) miqAjaxAuth();")
             = javascript_tag(javascript_focus('user_name'))
+
         .form-group
           %label.col-md-3.control-label= _('Password')
           .col-md-9
             = password_field_tag('user_password',
               @user_password,
-              :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();",
+              :onkeypress => "if (miqEnterPressed(event)) miqAjaxAuth();",
               :autocomplete => "off",
               :placeholder => (auth_mode == "httpd" ? _('Password or Password+One-Time-Password') : _('Password')),
               :class => "form-control")
@@ -62,31 +61,25 @@
                           :title        => _("Update Password"))
 
           .col-xs-4.col-md-3.submit
-            = link_to(_("Login"),
-                      {:action => "authenticate",
-                       :button => "login"},
+            - login_url = url_for(:action => "authenticate",
+                                  :button => "login")
+            - sso_url = url_for(:action => "kerberos_authenticate",
+                                :button => "sso_login")
+
+            = link_to(_("Login"), '',
                       :id                   => "login",
                       :class                => "btn btn-primary",
                       :alt                  => "Login",
                       :title                => _("Login"),
-                      :remote               => true,
-                      "data-method"         => :post,
-                      "data-miq_sparkle_on" => true,
-                      "data-submit"         => 'login_div')
+                      :onclick              => "miqAjaxAuth('#{j login_url}'); return false;")
 
-            = link_to(_("SSO Login"),
-                      {:action => "kerberos_authenticate",
-                       :button => "sso_login"},
+            = link_to(_("SSO Login"), '',
                       :id                    => "sso_login",
                       :class                 => "btn btn-primary",
                       :alt                   => "SSO Login",
                       :title                 => _("SSO Login"),
-                      :remote                => true,
-                      "data-method"          => :post,
                       :style                 => "display: none;",
-                      "data-miq_sparkle_on"  => true,
-                      "data-miq_login_error" => true,
-                      "data-submit"          => 'login_div')
+                      :onclick              => "miqAjaxAuth('#{j sso_url}'); return false;")
 
     .col-md-6.col-lg-7.details
       - if get_vmdb_config[:session][:show_login_info]

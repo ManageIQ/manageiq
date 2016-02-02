@@ -2,7 +2,10 @@
 if (typeof(ManageIQ) === 'undefined') {
   var ManageIQ = {
     actionUrl: null, // action URL used in JS function miqGridSort
-    angularApplication: null, // angular application
+    angular: {
+      app: null, // angular application
+      scope: null,  // helper scope, pending refactor
+    },
     browser: null, // browser name
     controller: null, // stored controller, used to build URL
     changes: null, // indicate if there are unsaved changes

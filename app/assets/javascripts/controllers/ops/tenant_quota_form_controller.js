@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$scope', 'tenantQuotaFormId', 'tenantType', 'miqService', function($http, $scope, tenantQuotaFormId, tenantType, miqService) {
+ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 'tenantQuotaFormId', 'tenantType', 'miqService', function($http, $scope, tenantQuotaFormId, tenantType, miqService) {
   var init = function() {
     $scope.tenantQuotaModel = {
       name:'',
@@ -8,7 +8,7 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
 
-    ManageIQ.angularApplication.$scope = $scope;
+    ManageIQ.angular.scope = $scope;
     $scope.newRecord = false;
     miqService.sparkleOn();
     $http.get('/ops/tenant_quotas_form_fields/' + tenantQuotaFormId).success(function(data) {

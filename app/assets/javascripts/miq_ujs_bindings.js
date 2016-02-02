@@ -50,16 +50,6 @@ $(document).ready(function () {
     $(this).data('params', miqSerializeForm(form_id));
   });
 
-  // Handle 401 responses with javascript content on the login screen
-  $(document).on('ajax:error', 'a[data-miq_login_error]', function (xhr, status, error) {
-    var js_mimetypes = [ "text/javascript", "application/javascript" ];
-    if (status.status == 401 &&
-        js_mimetypes.indexOf(status.getResponseHeader("Content-Type")) > -1 &&
-        status.responseText.length > 0) {
-      $.globalEval(status.responseText);
-    }
-  });
-
   // Bind in the observe support. If interval is configured, use the observe_field function
   $(document).on('focus', '[data-miq_observe]', function () {
     var parms = $.parseJSON(this.getAttribute('data-miq_observe'));

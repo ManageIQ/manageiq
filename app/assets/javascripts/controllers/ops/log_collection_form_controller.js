@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', '$scope', 'serverId', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, serverId, $attrs, miqService, miqDBBackupService) {
+ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope', 'serverId', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, serverId, $attrs, miqService, miqDBBackupService) {
   var init = function() {
 
     $scope.logCollectionModel = {
@@ -18,7 +18,7 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
     $scope.validateClicked = miqService.validateWithAjax;
     $scope.model = 'logCollectionModel';
 
-    ManageIQ.angularApplication.$scope = $scope;
+    ManageIQ.angular.scope = $scope;
 
     if (serverId == 'new') {
       $scope.logCollectionModel.depot_name = '';

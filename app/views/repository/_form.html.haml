@@ -49,5 +49,5 @@
                         "ng-click" => "cancelClicked()")
 
 :javascript
-  ManageIQ.angularApplication.value('repositoryFormId', '#{@repo.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
+  ManageIQ.angular.app.value('repositoryFormId', '#{@repo.id || "new"}');
+  miq_bootstrap('#form_div');

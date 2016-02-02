@@ -17,6 +17,12 @@ class ApiController
       render_resource :auth, res
     end
 
+    def destroy_auth
+      @api_token_mgr.invalidate_token(@module, @auth_token)
+
+      render_normal_destroy
+    end
+
     #
     # REST APIs Authenticator and Redirector
     #

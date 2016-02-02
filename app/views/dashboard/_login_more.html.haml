@@ -5,7 +5,7 @@
         = _('New Password')
       .col-md-9
         = password_field_tag('user_new_password', nil,
-                             :onkeypress   => "if(miqEnterPressed(event)) miqAjaxAuth();",
+                             :onkeypress   => "if (miqEnterPressed(event)) miqAjaxAuth();",
                              :autocomplete => "off",
                              :class        => "form-control")
     .form-group
@@ -13,7 +13,7 @@
         = _('Verify Password')
       .col-md-9
         = password_field_tag('user_verify_password', nil,
-                             :onkeypress   => "if(miqEnterPressed(event)) miqAjaxAuth();",
+                             :onkeypress   => "if (miqEnterPressed(event)) miqAjaxAuth();",
                              :autocomplete => "off",
                              :class        => "form-control")
 - else

@@ -1,9 +1,5 @@
-angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap'])
-.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
-}])
-
-.controller('containerTopologyController',ContainerTopologyCtrl);
+miqHttpInject(angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap']))
+.controller('containerTopologyController', ContainerTopologyCtrl);
 
 ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location'];
 
@@ -39,7 +35,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   };
 
   $scope.legendTooltip = __("Click here to show/hide entities of this type");
-  
+
   $scope.show_hide_names = function() {
      var vertices = $scope.vs;
 
@@ -234,7 +230,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
 
    return status;
   };
-  
+
   this.geturl = function geturl(d) {
     var entity_url = "";
     var action = '/show/' + d.item.miq_id;

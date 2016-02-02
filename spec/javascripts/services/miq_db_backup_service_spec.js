@@ -1,7 +1,7 @@
 describe('miqDBBackupService', function() {
   var testService;
 
-  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(module('ManageIQ'));
 
   beforeEach(inject(function(miqDBBackupService) {
     testService = miqDBBackupService;

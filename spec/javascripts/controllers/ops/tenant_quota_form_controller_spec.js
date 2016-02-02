@@ -1,7 +1,7 @@
 describe('tenantQuotaFormController', function() {
   var $scope, $controller, $httpBackend, tenantType, miqService;
 
-  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(module('ManageIQ'));
 
   beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
     miqService = _miqService_;

@@ -103,5 +103,5 @@
               = render :partial => 'layouts/gtl'
 
 :javascript
-  ManageIQ.angularApplication.value('hostFormId', '#{(@host.id || (session[:host_items] && session[:host_items].join(","))) || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
+  ManageIQ.angular.app.value('hostFormId', '#{(@host.id || (session[:host_items] && session[:host_items].join(","))) || "new"}');
+  miq_bootstrap('#form_div');

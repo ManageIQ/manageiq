@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('requiredDependsOn', function() {
+ManageIQ.angular.app.directive('requiredDependsOn', function() {
   return {
     require: 'ngModel',
     link: function (scope, elem, attrs, ctrl) {

@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.service('miqDBBackupService', function() {
+ManageIQ.angular.app.service('miqDBBackupService', function() {
 
   this.knownProtocolsList = ["Anonymous FTP", "FTP", "NFS", "Samba"];
 

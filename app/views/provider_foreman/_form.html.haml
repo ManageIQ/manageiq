@@ -61,5 +61,5 @@
     %span{:style => "color:black"}= _("Required. Should have privileged access, such as root or administrator.")
 
 :javascript
-  ManageIQ.angularApplication.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
+  ManageIQ.angular.app.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');
+  miq_bootstrap('#form_div');

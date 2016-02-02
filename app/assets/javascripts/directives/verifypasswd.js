@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('verifypasswd', function() {
+ManageIQ.angular.app.directive('verifypasswd', function() {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {

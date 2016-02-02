@@ -19,6 +19,9 @@
   :sets:
     :g: &70174834086080
     - :get
+    :gd: &70174834086081
+    - :get
+    - :delete
     :gp: &70174834085860
     - :get
     - :post
@@ -43,7 +46,7 @@
     :description: REST API Authentication
     :options:
     - :primary
-    :methods: *70174834086080
+    :methods: *70174834086081
   :automation_requests:
     :description: Automation Requests
     :options:

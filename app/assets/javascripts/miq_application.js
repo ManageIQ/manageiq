@@ -303,11 +303,11 @@ function miqDimDiv(divname, status) {
 
 // Check for changes and prompt
 function miqCheckForChanges() {
-  if (ManageIQ.angularApplication.$scope) {
-    if (ManageIQ.angularApplication.$scope.form.$dirty) {
+  if (ManageIQ.angular.scope) {
+    if (ManageIQ.angular.scope.form.$dirty) {
       var answer = confirm(__("Abandon changes?"));
       if (answer) {
-        ManageIQ.angularApplication.$scope.form.$setPristine(true);
+        ManageIQ.angular.scope.form.$setPristine(true);
       }
       return answer;
     }
@@ -844,12 +844,75 @@ function miqEnterPressed(e) {
 }
 
 // Send login authentication via ajax
-function miqAjaxAuth() {
+function miqAjaxAuth(url) {
   miqEnableLoginFields(false);
-  miqJqueryRequest('/dashboard/authenticate', {
-    beforeSend: true,
-    data: miqSerializeForm('login_div'),
+  miqSparkleOn(); // miqJqueryRequest starts sparkle either way, but API.login doesn't
+
+  var credentials = {
+    login: $('#user_name').val(),
+    password: $('#user_password').val(),
+    serialized: miqSerializeForm('login_div'),
+  }
+
+  API.login(credentials.login, credentials.password)
+  .then(function() {
+    // API login ok, now do the normal one
+    miqJqueryRequest(url || '/dashboard/authenticate', {
+      beforeSend: true,
+      data: credentials.serialized,
+    });
+
+    // TODO API.autorenew is called on (non-login) page load - when?
+  })
+  .then(null, function() {
+    add_flash(__("API Authentication failed"), 'error');
+
+    miqEnableLoginFields(true);
+    miqSparkleOff();
   });
+}
+
+// add a flash message to an existing #flash_msg_div
+// levels are error, warning, info, success
+function add_flash(msg, level) {
+  level = level || 'success';
+  var cls = { alert: '', icon: '' };
+
+  switch (level) {
+    case 'error':
+      cls.alert = 'alert alert-danger';
+      cls.icon = 'pficon pficon-error-circle-o';
+      break;
+    case 'warning':
+      cls.alert = 'alert alert-warning';
+      cls.icon = 'pficon pficon-warning-triangle-o';
+      break;
+    case 'info':
+      cls.alert = 'alert alert-info';
+      cls.icon = 'pficon pficon-info';
+      break;
+    case 'success':
+      cls.alert = 'alert alert-success';
+      cls.icon = 'pficon pficon-ok';
+      break;
+  }
+
+  var icon_span = $('<span class="' + cls.icon + '"></span>');
+
+  var text_strong = $('<strong></strong>');
+  text_strong.text(msg);
+
+  var alert_div = $('<div class="' + cls.alert + '"></div>');
+  alert_div.append(icon_span, text_strong);
+
+  var text_div = $('<div class="flash_text_div"></div>');
+  text_div.attr('title', __('Click to remove message'));
+  text_div.on('click', function() {
+    text_div.remove();
+  });
+  text_div.append(alert_div);
+
+  $('#flash_msg_div').append(text_div).show();
 }
 
 function miqEnableLoginFields(enabled) {
