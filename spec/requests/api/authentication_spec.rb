@@ -202,5 +202,16 @@ describe ApiController do
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
       expect(@result["token_ttl"]).to eq(ui_token_ttl)
     end
+
+    it "forgets the current token when asked to" do
+      api_basic_authorize
+
+      run_get auth_url
+
+      auth_token = @result["auth_token"]
+
+      expect_any_instance_of(TokenManager).to receive(:invalidate_token).with("api", auth_token)
+      run_delete auth_url, "auth_token" => auth_token
+    end
   end
 end
