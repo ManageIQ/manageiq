@@ -46,27 +46,27 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(CloudNetwork.count).to        eql(1)
     expect(SecurityGroup.count).to       eql(1)
     expect(FirewallRule.count).to        eql(6)
-    expect(VmOrTemplate.count).to        eql(362)
+    expect(VmOrTemplate.count).to        eql(371)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(360)
+    expect(MiqTemplate.count).to         eql(369)
     expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(4)
-    expect(OperatingSystem.count).to     eql(362)
+    expect(OperatingSystem.count).to     eql(371)
     expect(Relationship.count).to        eql(4)
-    expect(MiqQueue.count).to            eql(362)
+    expect(MiqQueue.count).to            eql(371)
   end
 
   def assert_ems
     expect(@ems.flavors.size).to            eql(18)
     expect(@ems.key_pairs.size).to          eql(3)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(362)
+    expect(@ems.vms_and_templates.size).to  eql(371)
     expect(@ems.cloud_networks.size).to     eql(1)
     expect(@ems.security_groups.size).to    eql(1)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(360)
+    expect(@ems.miq_templates.size).to      eq(369)
   end
 
   def assert_specific_zone
@@ -256,7 +256,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "default External NAT").first
     expect(network).to have_attributes(
       :description => "default External NAT",
-      :ipaddress   => "104.196.100.207",
+      :ipaddress   => "104.196.37.81",
       :hostname    => nil
     )
   end
