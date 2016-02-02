@@ -49,6 +49,19 @@ class ApiController
       end
     end
 
+    def suspend_resource_instances(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for suspending a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        instance = resource_search(id, type, klass)
+        api_log_info("Suspending #{instance_ident(instance)}")
+
+        result = validate_instance_for_action(instance, "suspend")
+        result = suspend_instance(instance) if result[:success]
+        result
+      end
+    end
+
     private
 
     def instance_ident(instance)
@@ -90,6 +103,14 @@ class ApiController
     def validate_instance_for_action(instance, action)
       validation = instance.send("validate_#{action}")
       action_result(validation[:available], validation[:message].to_s)
+    end
+
+    def suspend_instance(instance)
+      desc = "#{instance_ident(instance)} suspending"
+      task_id = queue_object_action(instance, desc, :method_name => "suspend", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
     end
   end
 end
