@@ -58,7 +58,9 @@ module Openstack
             routers = {
               public_network_name => [{
                 :name      => "EmsRefreshSpec-Router",
-                :__subnets => subnets(private_network_name)}]}
+                :__subnets => subnets(private_network_name)}],
+              'non_existent_network' => [{
+                :name      => "DisconnectedRouter"}]}
 
             indexed_collection_return(routers, network_name)
           end
