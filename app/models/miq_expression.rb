@@ -685,7 +685,7 @@ class MiqExpression
         tag = exp[operator]["value"]
         klass = klass.constantize
         ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
-        clause = klass.send(:sanitize_sql_for_conditions, ["#{model.table_name}.id IN (?)", ids])
+        clause = klass.send(:sanitize_sql_for_conditions, ["#{klass.table_name}.id IN (?)", ids])
       else
         db, field = exp[operator]["field"].split(".")
         model = db.constantize
