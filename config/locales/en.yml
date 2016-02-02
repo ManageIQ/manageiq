@@ -949,28 +949,5 @@ en:
       vms_allocated: Allocated Number of Virtual Machines
       templates_allocated: Allocated Number of Templates
 
-    ui_action:
-      advanced_settings:   Advanced Settings
-      disks:               Number of Disks
-      drift_history:       Drift History
-      event_logs:          Event Logs
-      filesystem_drivers:  Filesystem Drivers
-      filesystems:         Filesystems
-      groups:              Groups
-      guest_applications:  Guest Applications
-      hv_info:             Container
-      kernel_drivers:      Kernel Drivers
-      linux_initprocesses: Init Processes
-      os_info:             OS Info
-      parent_vm:           Parent VM
-      patches:             Patches
-      processes:           Running Processes
-      registry_items:      Registry Items
-      resources_info:      Resources
-      scan_history:        Scan History
-      snapshot_info:       Snapshots
-      users:               Users
-      vmtree_info:         Genealogy
-      win32_services:      Win32 Services
     ui_title:
       foreman:             Foreman
