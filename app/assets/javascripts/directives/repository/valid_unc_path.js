@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('checkPath', function() {
+ManageIQ.angular.app.directive('checkPath', function() {
   return {
     require: 'ngModel',
        link: function (scope, elem, attr, ctrl) {

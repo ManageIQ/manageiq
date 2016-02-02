@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$locationProvider', function ($httpProvider, $stateProvider, $urlRouterProvider, $locationProvider) {
+ManageIQ.angular.app.config([ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$locationProvider', function ($httpProvider, $stateProvider, $urlRouterProvider, $locationProvider) {
   $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
 
   /**
@@ -28,8 +28,8 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
     });
   $stateProvider
     .state("otherwise", {
-    url: "*path"
-  });
+      url: "*path"
+    });
 
   // default fall back route
   //$urlRouterProvider.otherwise('/');
@@ -38,7 +38,7 @@ ManageIQ.angularApplication.config([ '$httpProvider', '$stateProvider', '$urlRou
   $locationProvider.html5Mode({enabled: true,requireBase: false});
 }]);
 
-ManageIQ.angularApplication.run(['$rootScope', 'miqService', '$window', function($rootScope, miqService, $window) {
+ManageIQ.angular.app.run(['$rootScope', 'miqService', '$window', function($rootScope, miqService, $window) {
   var otherwisePath;
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
     if (toState.name === "otherwise") {

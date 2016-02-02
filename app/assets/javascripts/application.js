@@ -23,7 +23,7 @@
 //= require_tree ./directives/
 //= require_tree ./factories/
 //= require_tree ./services/
-//= require miq_angular_configuration
+//= require miq_angular_routes_configuration.js
 //= require d3/d3
 //= require c3/c3
 //= require kubernetes-topology-graph/topology-graph

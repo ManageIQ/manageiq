@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('formButtons', function() {
+ManageIQ.angular.app.directive('formButtons', function() {
   return {
     restrict: 'E',
     scope: false,

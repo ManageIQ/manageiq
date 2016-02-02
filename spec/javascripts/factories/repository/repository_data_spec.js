@@ -4,7 +4,7 @@ describe('Testing repositoryDataFactory - Promise', function(){
     jsonResponse = [{"repo_name":"abc", "repo_path":"//aa/a"}];
 
   beforeEach(function(){
-    module('ManageIQ.angularApplication');
+    module('ManageIQ');
     inject(function($injector){
       repositoryDataFactory = $injector.get('repositoryDataFactory');
       $httpBackend = $injector.get('$httpBackend');

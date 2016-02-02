@@ -50,7 +50,7 @@
             :onresize         => "miqOnResize();",
             :onload           => is_browser_ie? ? '' : 'miqOnLoad();',
             'data-controller' => controller_name,
-            'ng-app'          => "ManageIQ.angularApplication"}
+            'ng-app'          => "ManageIQ"}
         = render :partial => "layouts/header"
         = render :partial => "layouts/content"
         = render :partial => 'layouts/footer'

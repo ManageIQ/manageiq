@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', 'repositoryData', function($http, $scope, repositoryFormId, miqService, repositoryData) {
+ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', 'repositoryData', function($http, $scope, repositoryFormId, miqService, repositoryData) {
   $scope.repoModel = { repo_name: '', repo_path: '' };
   $scope.path_type = '';
   $scope.formId = repositoryFormId;

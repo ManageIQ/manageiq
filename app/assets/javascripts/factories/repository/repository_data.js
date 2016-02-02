@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.factory('repositoryDataFactory', ['$http', function($http) {
+ManageIQ.angular.app.factory('repositoryDataFactory', ['$http', function($http) {
     var factoryRepository = {
       getRepositoryData: function(id) {
         if(angular.isDefined(id)) {
