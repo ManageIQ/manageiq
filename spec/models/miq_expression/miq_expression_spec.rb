@@ -7,6 +7,21 @@ describe MiqExpression do
     ]}
   end
 
+  describe "#to_sql" do
+    let(:tag) { FactoryGirl.create(:tag, :name => "/managed/operations/analysis_failed") }
+
+    before do
+      @vm = FactoryGirl.create(:vm_vmware, :tags => [tag])
+    end
+
+    it "returns condition with ids of the model, when operation is 'CONTAINS' some tag in expression" do
+      expression_with_tag = {"CONTAINS" => {"tag" => "VmInfra.managed-operations", "value" => "analysis_failed"}}
+      expression = MiqExpression.new(expression_with_tag)
+      sql_clause = expression.to_sql.first
+      expect(sql_clause).to eq("vms.id IN (#{@vm.id})")
+    end
+  end
+
   describe ".to_ruby" do
     # Based on FogBugz 6181: something INCLUDES []
     it "detects value empty array" do
