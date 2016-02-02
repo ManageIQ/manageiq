@@ -332,6 +332,8 @@
         :identifier: instance_pause
       - :name: suspend
         :identifier: instance_suspend
+      - :name: shelve
+        :identifier: instance_shelve
     :resource_actions:
       :post:
       - :name: terminate
@@ -344,6 +346,8 @@
         :identifier: instance_pause
       - :name: suspend
         :identifier: instance_suspend
+      - :name: shelve
+        :identifier: instance_shelve
   :pictures:
     :description: Pictures
     :options:
