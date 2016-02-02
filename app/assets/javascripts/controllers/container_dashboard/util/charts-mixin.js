@@ -1,6 +1,16 @@
 angular.module('miq.util').factory('chartsMixin', function() {
   'use strict';
 
+  var hourlyTimeTooltip = function(d) {
+    var theMoment = moment(d[0].x);
+    return _.template('<table class="c3-tooltip">' +
+    '  <tbody>' +
+    '    <td class="value"><%- col1 %></td>' +
+    '    <td class="value text-nowrap"><%- col2 %></td>' +
+    '  </tbody>' +
+    '</table>')({col1: theMoment.format('h:mm A'), col2: d[0].value + ' ' + d[0].name});
+  };
+
   var chartConfig = {
     cpuUsageConfig: {
       chartId: 'cpuUsageChart',
@@ -27,7 +37,8 @@ angular.module('miq.util').factory('chartsMixin', function() {
       headTitle  : __('Hourly Network Utilization'),
       timeFrame  : __('Last 24 hours'),
       units      : __('KBps'),
-      dataName   : __('KBps')
+      dataName   : __('KBps'),
+      tooltipFn  : hourlyTimeTooltip
     },
     dailyNetworkUsageConfig: {
       chartId  : 'networkUsageDailyChart',
