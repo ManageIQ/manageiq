@@ -62,6 +62,19 @@ class ApiController
       end
     end
 
+    def shelve_resource_instances(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for shelving a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        instance = resource_search(id, type, klass)
+        api_log_info("Shelving #{instance_ident(instance)}")
+
+        result = validate_instance_for_action(instance, "shelve")
+        result = shelve_instance(instance) if result[:success]
+        result
+      end
+    end
+
     private
 
     def instance_ident(instance)
@@ -108,6 +121,14 @@ class ApiController
     def suspend_instance(instance)
       desc = "#{instance_ident(instance)} suspending"
       task_id = queue_object_action(instance, desc, :method_name => "suspend", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def shelve_instance(instance)
+      desc = "#{instance_ident(instance)} shelving"
+      task_id = queue_object_action(instance, desc, :method_name => "shelve", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
