@@ -319,14 +319,27 @@ module MiqAeMethodService
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
     end
 
-    def acquire_lock?(lock_name)
+    def acquire_lock(lock_name)
       hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
       MiqConcurrency::PGMutex.try_advisory_lock(hashcode)
     end
 
-    def release_lock?(lock_name)
+    def release_lock(lock_name)
       hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
-      MiqConcurrency::PGMutex.release_advisory_lock(hashcode)
+      until locks_acquired(lock_name) == 0
+        MiqConcurrency::PGMutex.release_advisory_lock(hashcode)
+      end
+      return true
+    end
+
+    def locks_acquired(lock_name)
+      hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
+      num_locks_acquired = MiqConcurrency::PGMutex.count_advisory_lock(hashcode)
+      return num_locks_acquired
+    end
+
+    def has_lock?(lock_name)
+      return locks_acquired(lock_name) > 0
     end
 
     private
@@ -353,7 +366,6 @@ module MiqAeMethodService
       $log.warn "domain=#{dom} : is not viewable"
       false
     end
-
   end
 
 

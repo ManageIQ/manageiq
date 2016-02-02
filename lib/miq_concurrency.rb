@@ -28,6 +28,12 @@ module MiqConcurrency
         (result == 't' || result == true)
       end
 
+      def count_advisory_lock(hashcode)
+        sql = "SELECT count(*) from pg_locks where locktype = 'advisory' and classid = #{hashcode} and pid = pg_backend_pid()"
+        result = @connection.select_value(sql).to_i
+        return result
+      end
+
       def stable_hashcode(input)
         # Postgres requires a 31bit hashcode
         Zlib.crc32(input.to_s) & 0x7fffffff
