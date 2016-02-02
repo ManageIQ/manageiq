@@ -50,11 +50,9 @@ angular.module('miq.util').factory('chartsMixin', function() {
     }
   };
 
-  var processHeatmapData = function(data) {
+  var processHeatmapData = function(heatmapsStruct, data) {
     if (data) {
-      data = _.sortBy(data, 'value');
-
-      return data.map(function(d) {
+      heatmapsStruct.data = _.sortBy(data, 'value').map(function(d) {
         var percent = d.value * 100;
         var used = Math.floor(d.value * d.info.total);
         var available = d.info.total - used;
@@ -67,6 +65,20 @@ angular.module('miq.util').factory('chartsMixin', function() {
           "value": d.value
         };
       }).reverse()
+    } else  {
+      heatmapsStruct.dataAvailable = false
+    }
+
+    return heatmapsStruct
+  };
+
+  var processUtilizationData = function(data, xDataLabel, yDataLabel) {
+    if (data) {
+      data.xData.unshift(xDataLabel)
+      data.yData.unshift(yDataLabel)
+      return data;
+    } else {
+      return { dataAvailable: false }
     }
   };
 
@@ -74,6 +86,7 @@ angular.module('miq.util').factory('chartsMixin', function() {
     dashboardHeatmapChartHeight:    281,
     nodeHeatMapUsageLegendLabels:   ['< 70%', '70-80%' ,'80-90%', '> 90%'],
     chartConfig: chartConfig,
-    processHeatmapData: processHeatmapData
+    processHeatmapData: processHeatmapData,
+    processUtilizationData: processUtilizationData
   };
 });

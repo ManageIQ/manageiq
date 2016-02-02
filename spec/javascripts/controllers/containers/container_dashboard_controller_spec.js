@@ -75,15 +75,15 @@ describe('containerDashboardController gets no data and', function() {
     });
 
     it('in heatmaps and donut', function() {
-      expect($scope.nodeMemoryUsage.data).toBeDefined();
-      expect($scope.nodeCpuUsage.data).toBeDefined();
-      expect($scope.cpuUsageData).toBeDefined();
-      expect($scope.memoryUsageData).toBeDefined();
+      expect($scope.nodeMemoryUsage.dataAvailable).toBeDefined();
+      expect($scope.nodeCpuUsage.dataAvailable).toBeDefined();
+      expect($scope.cpuUsageData.dataAvailable).toBeDefined();
+      expect($scope.memoryUsageData.dataAvailable).toBeDefined();
     });
 
     it('in network metrics', function() {
-      expect($scope.dailyNetworkUtilization).toBeDefined();
-      expect($scope.hourlyNetworkUtilization).toBeDefined();
+      expect($scope.dailyNetworkUtilization.dataAvailable).toBeDefined();
+      expect($scope.hourlyNetworkUtilization.dataAvailable).toBeDefined();
     });
   });
 });

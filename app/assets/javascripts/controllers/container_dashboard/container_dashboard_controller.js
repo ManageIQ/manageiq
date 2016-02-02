@@ -109,64 +109,41 @@ angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.
           dashboardUtilsFactory.updateStatus($scope.objectStatus.routes, data.status.routes);
 
           // Node utilization donut
-          $scope.cpuUsageData = data.ems_utilization.cpu;
-          if (!$scope.cpuUsageData) {
-            $scope.cpuUsageData = { dataAvailable: false }
-          }
-
-          $scope.memoryUsageData = data.ems_utilization.mem;
-          if (!$scope.memoryUsageData) {
-            $scope.memoryUsageData = { dataAvailable: false }
-          }
+          $scope.cpuUsageData = chartsMixin.processUtilizationData(data.ems_utilization.cpu,
+                                                                   "dates",
+                                                                   $scope.cpuUsageConfig.units);
+          $scope.memoryUsageData = chartsMixin.processUtilizationData(data.ems_utilization.mem,
+                                                                      "dates",
+                                                                      $scope.memoryUsageConfig.units);
           $scope.utilizationLoadingDone = true;
 
           // Heatmaps
-          $scope.nodeCpuUsage.data = chartsMixin.processHeatmapData(data.heatmaps.nodeCpuUsage);
-          if (!$scope.nodeCpuUsage.data) {
-            $scope.nodeCpuUsage.dataAvailable = false;
-            $scope.nodeCpuUsage.data = [{id: 0, tooltip: '', value: 0}]; // pf-2.8.0 bug, accesses daa when no data
-          }
+          $scope.nodeCpuUsage = chartsMixin.processHeatmapData($scope.nodeCpuUsage, data.heatmaps.nodeCpuUsage);
           $scope.nodeCpuUsage.loadingDone = true;
 
-          $scope.nodeMemoryUsage.data = chartsMixin.processHeatmapData(data.heatmaps.nodeMemoryUsage);
-          if (!$scope.nodeMemoryUsage.data) {
-            $scope.nodeMemoryUsage.dataAvailable = false;
-            $scope.nodeMemoryUsage.data = [{id: 0, tooltip: '', value: 0}]; // pf-2.8.0 bug, accesses data when no data
-          }
+          $scope.nodeMemoryUsage =
+            chartsMixin.processHeatmapData($scope.nodeMemoryUsage, data.heatmaps.nodeMemoryUsage);
           $scope.nodeMemoryUsage.loadingDone = true;
 
           // Network metrics
           $scope.networkUtilizationHourlyConfig = chartsMixin.chartConfig.hourlyNetworkUsageConfig;
           $scope.networkUtilizationDailyConfig = chartsMixin.chartConfig.dailyNetworkUsageConfig;
 
-          // Workaround for pf-2.8.0 not accepting dates with hours without parsing them beforehand
           if (data.hourly_network_metrics != undefined) {
-            var hourlyxdata = [];
-
-            data.hourly_network_metrics.xData.forEach(function (date) {
-              hourlyxdata.push(dashboardUtilsFactory.parseDate(date))
-            })
-            $scope.hourlyNetworkUtilization = {
-              'yData': data.hourly_network_metrics.yData,
-              'xData': hourlyxdata
-            }
-          } else {
-            $scope.hourlyNetworkUtilization = {
-              dataAvailable: false,
-              yData: ["used"], // pf-2.8.0 bug, accesses data when no data
-              xData: ["date"] // pf-2.8.0 bug, accesses data when no data
-            }
+           data.hourly_network_metrics.xData = data.hourly_network_metrics.xData.map(function (date) {
+              return dashboardUtilsFactory.parseDate(date)
+            });
           }
 
-          $scope.dailyNetworkUtilization = data.daily_network_metrics;
-          if ($scope.dailyNetworkUtilization == undefined) {
-            $scope.dailyNetworkUtilization = {
-                dataAvailable: false,
-                yData: ["used"], // pf-2.8.0 bug, accesses data when no data
-                xData: ["date"] // pf-2.8.0 bug, accesses data when no data
-              }
+          $scope.hourlyNetworkUtilization =
+            chartsMixin.processUtilizationData(data.hourly_network_metrics,
+                                               "dates",
+                                               $scope.networkUtilizationHourlyConfig.units)
 
-          }
+          $scope.dailyNetworkUtilization =
+            chartsMixin.processUtilizationData(data.daily_network_metrics,
+                                               "dates",
+                                               $scope.networkUtilizationDailyConfig.units);
           $scope.networkUtilizationLoadingDone = true;
         });
       };
