@@ -110,6 +110,18 @@ module ContainerSummaryHelper
     textual_link(@record.container_image_registries)
   end
 
+  def textual_persistent_volume
+    textual_link(@record.persistent_volume)
+  end
+
+  def textual_persistent_volumes
+    textual_link(@record.persistent_volumes)
+  end
+
+  def textual_parent
+    textual_link(@record.parent)
+  end
+
   def textual_tags
     label = "#{session[:customer_name]} Tags"
     h = {:label => label}

@@ -73,6 +73,9 @@ module EmsCommon
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
       title = "Stacks"
       view_setup_helper(OrchestrationStack, title, title.singularize)
+    elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
+      title = ui_lookup(:tables => "persistent_volumes")
+      view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
     else  # Must be Hosts # FIXME !!!
       view_setup_helper(Host, "Managed Hosts", "Host")
     end
@@ -95,10 +98,12 @@ module EmsCommon
     end
   end
 
-  def view_setup_helper(kls, title, bottom_msg_name)
+  def view_setup_helper(kls, title, bottom_msg_name, parent_method = nil)
     drop_breadcrumb(:name => @ems.name + " (All #{title})",
                     :url  => show_link(@ems, :display => @display))
-    @view, @pages = get_view(kls, :parent => @ems)
+    opts = {:parent => @ems}
+    opts[:parent_method] = parent_method if parent_method
+    @view, @pages = get_view(kls, **opts)
     @showtype = @display
     if @view.extras[:total_count] && @view.extras[:auth_count] &&
        @view.extras[:total_count] > @view.extras[:auth_count]
