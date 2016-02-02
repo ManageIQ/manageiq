@@ -410,13 +410,17 @@ module ManageIQ::Providers
         metadata_ssh_keys.to_s.split("\n").each do |ssh_key|
           # Google returns the key in the form username:public_key
           name, public_key = ssh_key.split(":", 2)
-          fingerprint      = SSHKey.sha1_fingerprint(public_key)
+          begin
+            fingerprint = SSHKey.sha1_fingerprint(public_key)
 
-          ssh_keys << {
-            :name        => name,
-            :public_key  => public_key,
-            :fingerprint => fingerprint
-          }
+            ssh_keys << {
+              :name        => name,
+              :public_key  => public_key,
+              :fingerprint => fingerprint
+            }
+          rescue => err
+            _log.warn("Failed to parse public key #{name}: #{err}")
+          end
         end
 
         ssh_keys
