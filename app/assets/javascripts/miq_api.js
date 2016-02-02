@@ -125,6 +125,9 @@ angular.module('miq.api', [])
   return {
     get: angularify(API.get),
     post: angularify(API.post),
+    delete: angularify(API.delete),
+    put: angularify(API.put),
+    patch: angularify(API.patch),
     login: angularify(API.login),
     logout: API.logout,
     autorenew: API.autorenew,
