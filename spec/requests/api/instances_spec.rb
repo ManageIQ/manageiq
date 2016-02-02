@@ -221,4 +221,57 @@ RSpec.describe "Instances API" do
       expect_result_resources_to_include_hrefs("results", :instances_list)
     end
   end
+
+  context "Instance suspend action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+
+      run_post(invalid_instance_url, gen_request(:suspend))
+
+      expect_resource_not_found
+    end
+
+    it "responds forbidden for an invalid instance without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:suspend))
+
+      expect_request_forbidden
+    end
+
+    it "cannot suspend a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+      update_raw_power_state("poweredOff", instance)
+
+      run_post(instance_url, gen_request(:suspend))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "cannot suspend a suspended instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+      update_raw_power_state("suspended", instance)
+
+      run_post(instance_url, gen_request(:suspend))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "suspends an instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+
+      run_post(instance_url, gen_request(:suspend))
+
+      expect_single_action_result(:success => true, :message => "suspending", :href => :instance_url, :task => true)
+    end
+
+    it "suspends multiple instances" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+
+      run_post(instances_url, gen_request(:suspend, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
+    end
+  end
 end
