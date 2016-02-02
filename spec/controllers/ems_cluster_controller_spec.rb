@@ -60,4 +60,29 @@ describe EmsClusterController do
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
+
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @cluster = FactoryGirl.create(:ems_cluster)
+      @user = FactoryGirl.create(:user)
+      login_as @user
+    end
+
+    subject do
+      get :show, :id => @cluster.id
+    end
+
+    context "respond_with" do
+      it { is_expected.to have_http_status 200 }
+
+      it { is_expected.not_to have_http_status 500 }
+    end
+
+    context "render listnav partial" do
+      render_views
+
+      it { is_expected.to render_template(:partial => "layouts/listnav/_ems_cluster") }
+    end
+  end
 end
