@@ -266,7 +266,8 @@ module Rbac
       end
 
       cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.all(find_options.except(:conditions, :include)).where(cond).includes(incl).references(incl)
+      targets = klass.where(cond).includes(incl).references(incl).group(find_options[:group])
+                     .order(find_options[:order]).offset(find_options[:offset]).limit(find_options[:limit]).to_a
 
       [targets, targets.length, targets.length]
     else
