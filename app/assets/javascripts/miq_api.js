@@ -1,7 +1,10 @@
 /* functions to use the API from our JS/Angular:
  *
  * API.get(url, options) - use API.get('/api'), returns promise
+ * API.delete - (the same)
  * API.post(url, data, options) - returns promise
+ * API.put - (the same)
+ * API.patch - (the same)
  * API.login(login, password) - performs initial authentication, saves token on success, returns promise
  * API.logout() - clears login info, no return
  * API.autorenew() - registers a 60second interval to query /api, returns a function to clear the interval
@@ -29,6 +32,26 @@
     }, process_options(options)));
   };
 
+  API.delete = function(url, options) {
+    return $.ajax(url, _.extend({
+      method: 'DELETE',
+    }, process_options(options)));
+  };
+
+  API.put = function(url, data, options) {
+    return $.ajax(url, _.extend({
+      method: 'PUT',
+      data: data,
+    }, process_options(options)));
+  };
+
+  API.patch = function(url, data, options) {
+    return $.ajax(url, _.extend({
+      method: 'PATCH',
+      data: data,
+    }, process_options(options)));
+  };
+
   var base64encode = window.btoa; // browser api
 
   API.login = function(login, password) {
@@ -45,6 +68,10 @@
   };
 
   API.logout = function() {
+    if (sessionStorage.miq_token) {
+      API.delete('/api/auth');
+    }
+
     delete sessionStorage.miq_token;
   };
 
