@@ -781,7 +781,9 @@ module EmsCommon
 
     if task == "refresh_ems"
       model.refresh_ems(emss, true)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems", "#{ui_lookup(:tables => @table_name)}"), :count_model => pluralize(emss.length, ui_lookup(:table => @table_name))})
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
+        {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:tables => @table_name)}"),
+         :count_model => pluralize(emss.length, ui_lookup(:table => @table_name))})
       AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
           :message => "'#{task}' successfully initiated for #{pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")}",
           :target_class => model.to_s)
