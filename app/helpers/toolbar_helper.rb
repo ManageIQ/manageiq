@@ -27,25 +27,10 @@ module ToolbarHelper
     end.join('').html_safe
   end
 
-  # Request that a toolbar is rendered.
+  # Render a set of whole toolbars
   #
-  #   * div_id        -- toolbar div DOM id
-  #   * toolbar_name  -- toolbar name (presently means name of the yaml file
-  #                      with tb definition)
-  #
-  # We should remove this method as we refactor the partials that call it.
-  #
-  def defered_toolbar_render(div_id, toolbar_name)
-    div_id ||= 'center_tb'
-    @toolbars[div_id] = toolbar_name
-  end
-
-  # Actually render the toolbars requested by 'defered_toolbar_render'
-  #
-  # We should call rendering directly once when remove 'defered_toolbar_render'.
-  #
-  def render_toolbars
-    @toolbars.collect do |div_id, toolbar_name|
+  def render_toolbars(toolbars)
+    toolbars.collect do |div_id, toolbar_name|
       content_tag(:div, :id => div_id) do # div for each toolbar
         buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
         buttons_to_html(buttons)

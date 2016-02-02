@@ -765,18 +765,24 @@ module ApplicationHelper
     )
   end
 
+  # Calculate hash of toolbars to render
+  #
+  # keys are toolbar <div> names and values are toobar identifiers (now YAML files)
+  #
   def calculate_toolbars
+    toolbars = {}
     if inner_layout_present? # x_taskbar branch
-      defered_toolbar_render('history_tb', history_toolbar_filename)
+      toolbars['history_tb'] = history_toolbar_filename
     elsif display_back_button? # taskbar branch
-      defered_toolbar_render('summary_center_tb', controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb")
+      toolbars['summary_center_tb'] = controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb"
     end
 
-    defered_toolbar_render('center_tb', center_toolbar_filename)
+    toolbars['center_tb'] = center_toolbar_filename
     if fname = custom_toolbar_filename
-      defered_toolbar_render('custom_tb', fname)
+      toolbars['custom_tb'] = fname
     end
-    defered_toolbar_render('view_tb', x_view_toolbar_filename)
+    toolbars['view_tb'] = x_view_toolbar_filename
+    toolbars
   end
 
   # check if back to summary button needs to be show
