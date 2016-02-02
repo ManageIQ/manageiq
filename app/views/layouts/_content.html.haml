@@ -9,7 +9,6 @@
   - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 3
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
-  - calculate_toolbars
   .container-fluid.resizable-sidebar.max-height{:style => "overflow: hidden; height: 100%;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
@@ -17,7 +16,7 @@
           .col-md-12
             .toolbar-pf-actions
               #taskbar_buttons_div-x
-                = render_toolbars
+                = render_toolbars(calculate_toolbars)
         #main-content.row
           .col-md-12
             .row
@@ -66,7 +65,6 @@
           = yield :left
         #custom_left_cell
 - else
-  - calculate_toolbars
   .container-fluid{:style => "overflow: hidden; height: 100%;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       - if layout_uses_listnav?
@@ -77,7 +75,7 @@
                 .toolbar-pf-actions
                   - if  @layout == "dashboard"
                     = render :partial => "/layouts/tabs"
-                  = render_toolbars
+                  = render_toolbars(calculate_toolbars)
           #main-content.row
             .col-md-12
               .row
@@ -127,7 +125,7 @@
             .row.toolbar-pf#toolbar
               .col-md-12
                 .toolbar-pf-actions
-                  = render :partial => "layouts/taskbar"
+                  = render_toolbars(calculate_toolbars)
           #main-content.row
             .col-md-12
               .row
