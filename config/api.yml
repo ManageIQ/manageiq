@@ -336,6 +336,8 @@
         :identifier: instance_shelve
       - :name: soft_reboot
         :identifier: instance_guest_restart
+      - :name: hard_reboot
+        :identifier: instance_reset
     :resource_actions:
       :post:
       - :name: terminate
@@ -352,6 +354,8 @@
         :identifier: instance_shelve
       - :name: soft_reboot
         :identifier: instance_guest_restart
+      - :name: hard_reboot
+        :identifier: instance_reset
   :pictures:
     :description: Pictures
     :options:
