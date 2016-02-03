@@ -4,14 +4,14 @@
 - :name: cloud_volume_snapshot_policy
   :items:
   - :buttonSelect: cloud_volume_snapshot_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :enabled: 'false'
     :onwhen: '1+'
     :items:
     - :button: cloud_volume_snapshot_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit tags for the selected items'
       :url_parms: 'main_div'
