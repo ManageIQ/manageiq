@@ -50,29 +50,11 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   # Connections
   #
 
-  def self.raw_connect(access_key_id, secret_access_key, service, region = nil, proxy_uri = nil)
-    service ||= "EC2"
-    proxy_uri ||= VMDB::Util.http_proxy_uri
-
-    require 'aws-sdk-v1'
-    AWS.const_get(service).new(
-      :access_key_id     => access_key_id,
-      :secret_access_key => secret_access_key,
-      :region            => region,
-      :proxy_uri         => proxy_uri,
-
-      :logger            => $aws_log,
-      :log_level         => :debug,
-      :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
-    )
-  end
-
-  def self.raw_connect_v2(access_key_id, secret_access_key, service, region, proxy_uri = nil)
-    service ||= "EC2"
+  def self.raw_connect(access_key_id, secret_access_key, service, region, proxy_uri = nil)
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
     require 'aws-sdk'
-    Aws.const_get(service)::Resource.new(
+    Aws.const_get(service.to_s)::Resource.new(
       :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
       :region            => region,
@@ -92,14 +74,9 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
+    service  = options[:service] || :EC2
 
-    if options[:sdk_v2]
-      self.class.raw_connect_v2(username, password, options[:service],
-                                provider_region, options[:proxy_uri])
-    else
-      self.class.raw_connect(username, password, options[:service],
-                             provider_region, options[:proxy_uri])
-    end
+    self.class.raw_connect(username, password, service, provider_region, options[:proxy_uri])
   end
 
   def translate_exception(err)
@@ -120,7 +97,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
-      with_provider_connection(options.merge(:auth_type => auth_type, :sdk_v2 => true)) do |ec2|
+      with_provider_connection(options.merge(:auth_type => auth_type)) do |ec2|
         ec2.client.describe_regions.regions.map(&:region_name)
       end
     rescue => err
@@ -132,18 +109,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     end
 
     true
-  end
-
-  def ec2
-    @ec2 ||= connect(:service => "EC2", :sdk_v2 => true)
-  end
-
-  def s3
-    @s3 ||= connect(:service => "S3")
-  end
-
-  def cloud_formation
-    @cloud_formation ||= connect(:service => "CloudFormation", :sdk_v2 => true)
   end
 
   #
