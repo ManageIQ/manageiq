@@ -167,7 +167,8 @@ class RequestRefererService
 
   def allowed_access?(request, controller_name, action_name, referer)
     access_whitelisted?(request, controller_name, action_name) ||
-      referer_valid?(request.referer, referer, request.headers, controller_name, action_name)
+      referer_valid?(request.referer, referer, request.headers, controller_name, action_name) ||
+      (ENV['MIQ_DISABLE_RRS'] && Rails.env.development?)
   end
 
   def referer_valid?(referer, saved_referer, headers, controller_name, action_name)
