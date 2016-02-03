@@ -59,7 +59,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
       :secret_access_key => secret_access_key,
       :region            => region,
       :http_proxy        => proxy_uri,
-      :logger            => Logger.new(STDOUT),
+      :logger            => $aws_log,
       :log_level         => :debug,
       :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp)
     )
