@@ -1015,3 +1015,10 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+
+- :name: EvmRole-consumption_administrator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - dashboard
+  - chargeback
+  - miq_report
