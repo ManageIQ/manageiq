@@ -2,7 +2,7 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
   AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only)
 
   def automate_output_value
-    return nil unless @value
+    return nil if @value.blank?
     with_current_user_timezone { Time.zone.parse(@value).utc.iso8601 }
   end
 

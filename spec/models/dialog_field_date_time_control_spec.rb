@@ -47,6 +47,40 @@ describe DialogFieldDateTimeControl do
     end
   end
 
+  describe "#automate_output_value" do
+    let(:dialog_field) { described_class.new(:value => value) }
+
+    before do
+      allow(described_class).to receive(:server_timezone).and_return("UTC")
+    end
+
+    context "when the dialog_field is blank" do
+      let(:value) { "" }
+
+      it "returns nil" do
+        expect(dialog_field.automate_output_value).to be_nil
+      end
+    end
+
+    context "when the dialog_field has a value" do
+      context "when the value is a date formatted in ISO" do
+        let(:value) { "2013-08-07T12:34:00+00:00" }
+
+        it "returns the date and time in ISO format" do
+          expect(dialog_field.automate_output_value).to eq("2013-08-07T12:34:00Z")
+        end
+      end
+
+      context "when the value is a date formatted in %m/%d/%Y %H:%M" do
+        let(:value) { "08/07/2013 12:34" }
+
+        it "returns the date in ISO format" do
+          expect(dialog_field.automate_output_value).to eq("2013-08-07T12:34:00Z")
+        end
+      end
+    end
+  end
+
   describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
 
