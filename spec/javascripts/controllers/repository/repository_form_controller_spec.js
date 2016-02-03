@@ -21,9 +21,7 @@ describe('repositoryFormController', function() {
                             };
 
     $scope.repositoryForm.$invalid = false;
-    repositoryData = {data: {repo_name: '',
-                             repo_path: ''}
-                     };
+    repositoryData = {name: '', storage:{name: ''}};
     $controller = _$controller_('repositoryFormController', {
         $scope: $scope,
         repositoryFormId: 'new',
@@ -43,9 +41,7 @@ describe('repositoryFormController', function() {
       });
 
       describe('when the repositoryFormId is an Id', function() {
-        var repositoryData = {data: {repo_name: 'aaa',
-                                     repo_path: '//aa/a1'}
-                             };
+        var repositoryData = {name: 'aaa', storage:{name: '//aa/a1'}};
 
         describe('when the filter type is all', function() {
           beforeEach(inject(function(_$controller_) {

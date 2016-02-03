@@ -1,26 +1,21 @@
 describe('Testing repositoryDataFactory - Promise', function(){
   var repositoryDataFactory,
-    $httpBackend,
-    jsonResponse = [{"repo_name":"abc", "repo_path":"//aa/a"}];
+    jsonResponse = [{"name":"abc", storage:{"name":"//aa/a"}}];
 
   beforeEach(function(){
     module('ManageIQ');
     inject(function($injector){
       repositoryDataFactory = $injector.get('repositoryDataFactory');
-      $httpBackend = $injector.get('$httpBackend');
-      $httpBackend.whenGET('/repository/repository_form_fields/12345')
-        .respond( jsonResponse );
+      API = $injector.get('API');
+      API.get = jasmine.createSpy("get() spy").and.callFake(function() {
+        return jsonResponse;
+      });
     });
   });
 
-  it('returns Repository data', function(done) {
-    var promise = repositoryDataFactory.getRepositoryData(12345);
-    promise.then(function(data){
-      expect(data.data[0].repo_name).toEqual('abc');
-      expect(data.data[0].repo_path).toEqual('//aa/a');
-      expect(data.data.length).toEqual(1);
-      done();
-    });
-    $httpBackend.flush();
+  it('returns Repository data', function() {
+    var data = repositoryDataFactory.getRepositoryData(12345);
+    expect(data[0].name).toEqual('abc');
+    expect(data[0].storage.name).toEqual('//aa/a');
   });
 });
