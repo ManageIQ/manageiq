@@ -47,7 +47,7 @@ class AuthKeyPairCloudController < ApplicationController
     )
 
     case @display
-    when %w(download_pdf main summary_only)
+    when "download_pdf", "main", "summary_only"
       get_tagdata(@auth_key_pair_cloud)
       drop_breadcrumb(
         :name => @auth_key_pair_cloud.name + " (Summary)",
