@@ -51,6 +51,8 @@ class User < ApplicationRecord
   EVMROLE_SELF_SERVICE_ROLE_NAME         = "EvmRole-user_self_service"
   EVMROLE_LIMITED_SELF_SERVICE_ROLE_NAME = "EvmRole-user_limited_self_service"
 
+  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
+
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
@@ -278,17 +280,30 @@ class User < ApplicationRecord
 
   private
 
-  def self.seed
-    user = in_my_region.find_by_userid("admin")
-    if user.nil?
-      _log.info("Creating default admin user...")
-      user = create(:userid => "admin", :name => "Administrator", :password => "smartvm")
-      _log.info("Creating default admin user... Complete")
-    end
+  def self.seed_file_name
+    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
+  end
 
-    admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
-    user.miq_groups = [admin_group] if admin_group
-    user.save
+  def self.seed_data
+    File.exist?(seed_file_name) ? YAML.load_file(seed_file_name) : []
+  end
+
+  def self.seed
+    seed_data.each do |user_attributes|
+      user_id = user_attributes[:userid]
+      next if in_my_region.find_by_userid(user_id)
+      log_attrs = user_attributes.slice(:name, :userid, :group)
+      _log.info("Creating user with parameters #{log_attrs.inspect}")
+
+      group_description = user_attributes.delete(:group)
+      group = MiqGroup.in_my_region.find_by_description(group_description)
+
+      _log.info("Creating #{user_id} user...")
+      user = create(user_attributes)
+      user.miq_groups = [group] if group
+      user.save
+      _log.info("Creating #{user_id} user... Complete")
+    end
   end
 
   def self.current_tenant

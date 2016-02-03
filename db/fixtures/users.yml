@@ -1,0 +1,5 @@
+---
+- :name: Administrator
+  :userid: admin
+  :password: smartvm
+  :group: EvmGroup-super_administrator
