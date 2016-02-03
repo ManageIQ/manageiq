@@ -157,7 +157,9 @@ class ChargebackController < ApplicationController
         if @sb[:rate_compute].save && @sb[:rate_storage].save
           AuditEvent.success(build_saved_audit(@sb[:rate_compute], @edit))
           AuditEvent.success(build_saved_audit(@sb[:rate_storage], @edit))
-          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate_compute].description})
+          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackRate"),
+                                                           :name  => @sb[:rate_compute].description
+                                                          })
           @edit = session[:edit] = nil  # clean out the saved info
           session[:changed] =  @changed = false
           get_node_info(x_node)
@@ -185,7 +187,8 @@ class ChargebackController < ApplicationController
         if rate_detail_error == false && @sb[:rate_compute].save && @sb[:rate_storage].save
           AuditEvent.success(build_saved_audit(@sb[:rate_compute], @edit))
           AuditEvent.success(build_saved_audit(@sb[:rate_storage], @edit))
-          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate_compute].description})
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "ChargebackRate"),
+                                                           :name  => @sb[:rate_compute].description})
           @edit = session[:edit] = nil  # clean out the saved info
           @changed = false
           get_node_info(x_node)
@@ -249,7 +252,8 @@ class ChargebackController < ApplicationController
         # the rate_storage has a rate_compute_id (rate) +1 by convention
         @sb[:rate_storage] = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0].to_i + 1)
         @sb[:rate_storage].rate_type = "Storage"
-        @sb[:rate_details] = (@sb[:rate_compute].chargeback_rate_details.to_a + @sb[:rate_storage].chargeback_rate_details.to_a).uniq
+        @sb[:rate_details] = (@sb[:rate_compute].chargeback_rate_details.to_a
+                              + @sb[:rate_storage].chargeback_rate_details.to_a).uniq
 
         if @sb[:rate_details].blank?
           fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
@@ -257,7 +261,6 @@ class ChargebackController < ApplicationController
           if File.exist?(fixture_file)
             fixture = YAML.load_file(fixture_file)
             fixture.each do |cbr|
-
               rates = cbr.delete(:rates)
               rates.each do |r|
                 detail = ChargebackRateDetail.new
@@ -283,7 +286,6 @@ class ChargebackController < ApplicationController
                 end
                 @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
               end
-
             end
           end
         end
@@ -313,7 +315,7 @@ class ChargebackController < ApplicationController
     @edit = session[:edit]
     unless params[:select_all].nil?
       if params[:select_all] != "null"
-        @edit[:selected_rd_remove] = [*0..(@sb[:rate_details].select { |k| k.rate != "0" }).size-1]
+        @edit[:selected_rd_remove] = [*0..(@sb[:rate_details].select { |k| k.rate != "0" }).size - 1]
         enable_button = true
       else
         @edit[:selected_rd_remove] = []
@@ -336,7 +338,7 @@ class ChargebackController < ApplicationController
         if @edit[:selected_rd_remove].nil?
           @edit[:selected_rd_remove] = [params[:select].to_i]
         else
-          @edit[:selected_rd_remove] =  @edit[:selected_rd_remove].append(params[:select].to_i)
+          @edit[:selected_rd_remove] = @edit[:selected_rd_remove].append(params[:select].to_i)
         end
       else
         @edit[:selected_rd_remove].delete(params[:index].to_i)
@@ -363,16 +365,28 @@ class ChargebackController < ApplicationController
         end
         page << javascript_for_cb_button_add_metric_visibility(params[:metric] != "null")
       elsif !params[:group].nil?
-        rate_details_level = ( @edit[:new][:level] == 'Compute' || @edit[:new][:level].nil?) ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" } : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        if @edit[:new][:level] == 'Compute' || @edit[:new][:level].nil?
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" }
+        else
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        end
         @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, params[:group])
         @edit[:new][:group] = params[:group]
         page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
       elsif !params[:level].nil?
-        rate_details_level = (params[:level] == 'Compute') ? @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" } : @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        if params[:level] == 'Compute'
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" }
+        else
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        end
         @edit[:new][:groups] = chargeback_details_groups(rate_details_level)
         @edit[:new][:level] = params[:level]
         # showing all the metrics of the selected group
-        @edit[:new][:metrics] = @edit[:new][:groups].empty? ? [] : chargeback_details_metrics(rate_details_level, @edit[:new][:groups].first[1])
+        if @edit[:new][:groups].empty?
+          @edit[:new][:metrics] = []
+        else
+          @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, @edit[:new][:groups].first[1])
+        end
         page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
       end
     end
@@ -733,7 +747,9 @@ class ChargebackController < ApplicationController
         @edit[:new][:group] = session[:edit][:new][:group]
         rate_details_for_add = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == @edit[:new][:level] }
         @edit[:new][:groups] = chargeback_details_groups(rate_details_for_add)
-        if @edit[:new][:groups].value?(@edit[:new][:group])
+        if @edit[:new][:groups].empty?
+          @edit[:new][:metrics] = []
+        elsif @edit[:new][:groups].value?(@edit[:new][:group])
           @edit[:new][:metrics] = chargeback_details_metrics(rate_details_for_add, @edit[:new][:group])
         else
           @edit[:new][:metrics] = chargeback_details_metrics(rate_details_for_add, @edit[:new][:groups].first.second)
