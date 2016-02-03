@@ -7,8 +7,8 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def initialize(ems, options = nil)
     @ems                 = ems
-    @aws_ec2             = ems.ec2
-    @aws_cloud_formation = ems.cloud_formation
+    @aws_ec2             = ems.connect
+    @aws_cloud_formation = ems.connect(:service => :CloudFormation)
     @data                = {}
     @data_index          = {}
     @known_flavors       = Set.new
