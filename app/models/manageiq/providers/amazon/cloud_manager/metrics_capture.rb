@@ -56,6 +56,8 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   }
 
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
+    raise "No EMS defined" if target.ext_management_system.nil?
+
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     end_time ||= Time.now
@@ -64,47 +66,25 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
     start_time   = start_time.utc
 
     begin
-      perf_init_amazon
-      perf_capture_data_amazon(start_time, end_time)
+      # This is just for consistency, to produce a :connect benchmark
+      Benchmark.realtime_block(:connect) {}
+      target.ext_management_system.with_provider_connection(:service => :CloudWatch, :sdk_v2 => true) do |cloud_watch|
+        perf_capture_data_amazon(cloud_watch, start_time, end_time)
+      end
     rescue Exception => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       _log.log_backtrace(err)
       raise
-    ensure
-      perf_release_amazon
     end
   end
 
   private
 
-  #
-  # Connect / Disconnect / Intialize methods
-  #
-
-  def perf_init_amazon
-    raise "No EMS defined" if target.ext_management_system.nil?
-
-    @perf_ems, = Benchmark.realtime_block(:connect) do
-      # TODO: Fix connect timings.  Since Amazon is lazy connected, this is
-      #       near instant, and is really reflected in the very first call
-      target.ext_management_system.connect(:service => "CloudWatch")
-    end
-    @perf_ems
-  end
-
-  def perf_release_amazon
-    @perf_ems = nil
-  end
-
-  #
-  # Capture methods
-  #
-
-  def perf_capture_data_amazon(start_time, end_time)
+  def perf_capture_data_amazon(cloud_watch, start_time, end_time)
     counters, = Benchmark.realtime_block(:capture_counters) do
       filter = [{:name => "InstanceId", :value => target.ems_ref}]
-      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(COUNTER_NAMES) }
+      cloud_watch.client.list_metrics(:dimensions => filter).metrics.select { |m| m.metric_name.in?(COUNTER_NAMES) }
     end
 
     # Since we are unable to determine if the first datapoint we get is a
@@ -115,17 +95,18 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
 
     metrics_by_counter_name = {}
     counters.each do |c|
-      metrics = metrics_by_counter_name[c.name] = {}
+      metrics = metrics_by_counter_name[c.metric_name] = {}
 
       # Only ask for 1 day at a time, since there is a limitation on the number
       #   of datapoints you are allowed to ask for from Amazon Cloudwatch.
       #   http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html
       (start_time..end_time).step_value(1.day).each_cons(2) do |st, et|
         statistics, = Benchmark.realtime_block(:capture_counter_values) do
-          c.statistics(:start_time => st, :end_time => et, :statistics => ["Average"]).to_a
+          options = {:start_time => st, :end_time => et, :statistics => ["Average"], :period => 60}
+          cloud_watch.client.get_metric_statistics(c.to_hash.merge(options)).datapoints
         end
 
-        statistics.each { |s| metrics[s[:timestamp].utc] = s[:average] }
+        statistics.each { |s| metrics[s.timestamp.utc] = s.average }
       end
     end
 
