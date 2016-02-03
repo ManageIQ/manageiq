@@ -182,7 +182,9 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   # @return [nil] if the template is valid
   # @return [String] if the template is invalid this is the error message
   def orchestration_template_validate(template)
-    nil if cloud_formation.client.validate_template(:template_body => template.content)
+    with_provider_connection(:service => :CloudFormation, :sdk_v2 => true) do |cloud_formation|
+      nil if cloud_formation.client.validate_template(:template_body => template.content)
+    end
   rescue Aws::CloudFormation::Errors::ValidationError => validation_error
     validation_error.message
   rescue => err
