@@ -1,0 +1,2 @@
+class HostStorage < ApplicationRecord
+end
