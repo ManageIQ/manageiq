@@ -125,7 +125,8 @@ describe MiqProvisionWorkflow do
     end
 
     it 'with orphaned source' do
-      allow(template).to receive(:storage).and_return([])
+      template.storage = FactoryGirl.create(:storage)
+
       expect(template.orphaned?).to be_truthy
       expect(described_class.class_for_source(template.id)).to eq(workflow_class)
     end
