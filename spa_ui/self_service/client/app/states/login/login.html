@@ -9,7 +9,7 @@
         <form class="form-horizontal" role="form" ng-submit="vm.onSubmit()">
           <pf-notification-list></pf-notification-list>
           <div class="form-group">
-            <label for="inputUsername" class="col-sm-2 col-md-2 control-label">Username</label>
+            <label for="inputUsername" class="col-sm-2 col-md-2 control-label" translate>Username</label>
 
             <div class="col-sm-10 col-md-10">
               <input type="text" ng-model="vm.credentials.login" class="form-control" id="inputUsername" autofocus>
@@ -17,7 +17,7 @@
           </div>
           <!--/.form-group-*-->
           <div class="form-group">
-            <label for="inputPassword" class="col-sm-2 col-md-2 control-label">Password</label>
+            <label for="inputPassword" class="col-sm-2 col-md-2 control-label" translate>Password</label>
 
             <div class="col-sm-10 col-md-10">
               <input type="password" ng-model="vm.credentials.password" class="form-control" id="inputPassword">
@@ -36,7 +36,7 @@
             </div>
             -->
             <div class="col-xs-4 col-sm-4 col-md-4 pull-right submit">
-              <button type="submit" class="btn btn-primary btn-lg" tabindex="4">Log In</button>
+              <button type="submit" class="btn btn-primary btn-lg" tabindex="4" translate>Log In</button>
             </div>
           </div>
           <!--/.form-group-*-->

@@ -15,7 +15,7 @@
         url: '/logout',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Logout'
+        title: __('Logout')
       }
     };
   }
@@ -24,7 +24,7 @@
   function StateController($state, Session) {
     var vm = this;
 
-    vm.title = 'Logout';
+    vm.title = __('Logout');
 
     activate();
 

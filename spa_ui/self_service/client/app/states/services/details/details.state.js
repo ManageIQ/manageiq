@@ -16,7 +16,7 @@
         templateUrl: 'app/states/services/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Service Details',
+        title: __('Service Details'),
         resolve: {
           service: resolveService
         }
@@ -51,7 +51,7 @@
   function StateController($state, service, CollectionsApi, EditServiceModal, RetireServiceModal, Notifications) {
     var vm = this;
 
-    vm.title = 'Service Details';
+    vm.title = __('Service Details');
     vm.service = service;
 
     vm.activate = activate;
@@ -75,12 +75,12 @@
       CollectionsApi.post('services', vm.service.id, {}, removeAction).then(removeSuccess, removeFailure);
 
       function removeSuccess() {
-        Notifications.success(vm.service.name + ' was removed.');
+        Notifications.success(vm.service.name + __(' was removed.'));
         $state.go('services.list');
       }
 
       function removeFailure(data) {
-        Notifications.error('There was an error removing this service.');
+        Notifications.error(__('There was an error removing this service.'));
       }
     }
 
@@ -93,12 +93,12 @@
       CollectionsApi.post('services', vm.service.id, {}, data).then(retireSuccess, retireFailure);
 
       function retireSuccess() {
-        Notifications.success(vm.service.name + ' was retired.');
+        Notifications.success(vm.service.name + __(' was retired.'));
         $state.go('services.list');
       }
 
       function retireFailure() {
-        Notifications.error('There was an error retiring this service.');
+        Notifications.error(__('There was an error retiring this service.'));
       }
     }
 

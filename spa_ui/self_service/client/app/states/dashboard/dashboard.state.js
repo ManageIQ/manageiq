@@ -17,7 +17,7 @@
         templateUrl: 'app/states/dashboard/dashboard.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Dashboard',
+        title: __('Dashboard'),
         data: {
           requireUser: true
         },
@@ -108,15 +108,15 @@
     vm.requestsCount.approved = approvedRequests.subcount;
     vm.requestsCount.denied = deniedRequests.subcount;
 
-    vm.title = 'Dashboard';
+    vm.title = __('Dashboard');
 
     vm.navigateToRequestsList = function(filterValue) {
-      RequestsState.setFilters([{'id': 'approval_state', 'title': 'Request Status', 'value': filterValue}]);
+      RequestsState.setFilters([{'id': 'approval_state', 'title': __('Request Status'), 'value': filterValue}]);
       $state.go('requests.list');
     };
 
     vm.navigateToServicesList = function(filterValue) {
-      ServicesState.setFilters([{'id': 'retirement', 'title': 'Retirement Date', 'value': filterValue}]);
+      ServicesState.setFilters([{'id': 'retirement', 'title': __('Retirement Date'), 'value': filterValue}]);
       $state.go('services.list');
     };
   }

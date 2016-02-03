@@ -11,27 +11,27 @@
       items: {
         primary: {
           dashboard: {
-            title: 'Dashboard',
+            title: __('Dashboard'),
             state: 'dashboard',
             icon: 'fa fa-dashboard'
           },
           services: {
-            title: 'My Services',
+            title: __('My Services'),
             state: 'services',
             icon: 'fa fa-file-o',
-            tooltip: 'The total number of services that you have ordered, both active and retired'
+            tooltip: __('The total number of services that you have ordered, both active and retired')
           },
           requests: {
-            title: 'My Requests',
+            title: __('My Requests'),
             state: 'requests',
             icon: 'fa fa-file-text-o',
-            tooltip: 'The total number of requests that you have submitted'
+            tooltip: __('The total number of requests that you have submitted')
           },
           marketplace: {
-            title: 'Service Catalog',
+            title: __('Service Catalog'),
             state: 'marketplace',
             icon: 'fa fa-copy',
-            tooltip: 'The total number of available catalog items'
+            tooltip: __('The total number of available catalog items')
           }
         },
         secondary: {

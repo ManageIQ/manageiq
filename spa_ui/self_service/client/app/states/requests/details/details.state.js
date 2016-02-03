@@ -16,7 +16,7 @@
         templateUrl: 'app/states/requests/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Requests Details',
+        title: __('Requests Details'),
         resolve: {
           request: resolveRequest
         }
@@ -35,7 +35,7 @@
   function StateController(request) {
     var vm = this;
 
-    vm.title = 'Service Template Details';
+    vm.title = __('Service Template Details');
     vm.request = request;
   }
 })();

@@ -16,7 +16,7 @@
         templateUrl: 'app/states/requests/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Request List',
+        title: __('Request List'),
         resolve: {
           requests: resolveRequests
         }
@@ -36,7 +36,7 @@
   function StateController($state, requests, RequestsState, $filter, $rootScope) {
     var vm = this;
 
-    vm.title = 'Request List';
+    vm.title = __('Request List');
     vm.requests = requests.resources;
     vm.requestsList = angular.copy(vm.requests);
 
@@ -56,28 +56,28 @@
         fields: [
            {
             id: 'description',
-            title:  'Description',
-            placeholder: 'Filter by Description',
+            title:  __('Description'),
+            placeholder: __('Filter by Description'),
             filterType: 'text'
           },
           {
             id: 'request_id',
-            title: 'Request ID',
-            placeholder: 'Filter by ID',
+            title: __('Request ID'),
+            placeholder: __('Filter by ID'),
             filterType: 'text'
           },
           {
             id: 'request_date',
-            title: 'Request Date',
-            placeholder: 'Filter by Request Date',
+            title: __('Request Date'),
+            placeholder: __('Filter by Request Date'),
             filterType: 'text'
           },
           {
             id: 'approval_state',
-            title: 'Request Status',
-            placeholder: 'Filter by Status',
+            title: __('Request Status'),
+            placeholder: __('Filter by Status'),
             filterType: 'select',
-            filterValues: ['Pending', 'Denied', 'Approved']
+            filterValues: [__('Pending'), __('Denied'), __('Approved')]
           }
         ],
         resultsCount: vm.requestsList.length,
@@ -88,22 +88,22 @@
         fields: [
           {
             id: 'description',
-            title: 'Description',
+            title: __('Description'),
             sortType: 'alpha'
           },
           {
             id: 'id',
-            title: 'Request ID',
+            title: __('Request ID'),
             sortType: 'numeric'
           },
           {
             id: 'requested',
-            title: 'Request Date',
+            title: __('Request Date'),
             sortType: 'numeric'
           },
           {
             id: 'status',
-            title: 'Request Status',
+            title: __('Request Status'),
             sortType: 'alpha'
           }
         ],
