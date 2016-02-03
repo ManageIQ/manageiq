@@ -123,8 +123,8 @@ class VmOrTemplate < ApplicationRecord
   include ReportableMixin
 
   virtual_column :active,                               :type => :boolean
-  virtual_column :archived,                             :type => :boolean,    :uses => [:host, :storage]
-  virtual_column :orphaned,                             :type => :boolean,    :uses => [:host, :storage]
+  virtual_column :archived,                             :type => :boolean
+  virtual_column :orphaned,                             :type => :boolean
   virtual_column :disconnected,                         :type => :boolean
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
@@ -1333,12 +1333,12 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def archived?
-    ext_management_system.nil? && storage.nil?
+    ems_id.nil? && storage_id.nil?
   end
   alias_method :archived, :archived?
 
   def orphaned?
-    ext_management_system.nil? && !storage.nil?
+    ems_id.nil? && !storage_id.nil?
   end
   alias_method :orphaned, :orphaned?
 
