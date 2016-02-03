@@ -16,7 +16,7 @@
         templateUrl: 'app/states/products/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Products Details')
+        title: N_('Products Details')
       }
     };
   }

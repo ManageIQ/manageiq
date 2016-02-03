@@ -16,7 +16,7 @@
         templateUrl: 'app/states/requests/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Requests Details'),
+        title: N_('Requests Details'),
         resolve: {
           request: resolveRequest
         }

@@ -16,7 +16,7 @@
         templateUrl: 'app/states/services/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Service List'),
+        title: N_('Service List'),
         resolve: {
           services: resolveServices
         }
@@ -144,7 +144,7 @@
       /* Keep track of the current sorting state */
       ServicesState.setSort(sortId, vm.toolbarConfig.sortConfig.isAscending);
     }
-    
+
     function compareFn(item1, item2) {
       var compValue = 0;
       if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
