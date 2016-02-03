@@ -56,7 +56,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
             expect(subject).to receive(:sqs_get_queue_url).and_call_original
             expect(subject).not_to receive(:sqs_create_queue).and_call_original
             expect(subject).not_to receive(:subscribe_topic_to_queue).and_call_original
-            expect{ subject.send(:find_or_create_queue) }.to raise_exception(described_class::ProviderUnreachable)
+            expect { subject.send(:find_or_create_queue) }.to raise_exception(described_class::ProviderUnreachable)
           end
         end
       end

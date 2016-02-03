@@ -72,8 +72,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    username = options[:user]    || authentication_userid(options[:auth_type])
-    password = options[:pass]    || authentication_password(options[:auth_type])
+    username = options[:user] || authentication_userid(options[:auth_type])
+    password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || :EC2
 
     self.class.raw_connect(username, password, service, provider_region, options[:proxy_uri])
@@ -139,13 +139,12 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-
   # @param [OrchestrationTemplateCfn] template
   # @return [nil] if the template is valid
   # @return [String] if the template is invalid this is the error message
   def orchestration_template_validate(template)
     with_provider_connection(:service => :CloudFormation) do |cloud_formation|
-      nil if cloud_formation.client.validate_template(template_body: template.content)
+      nil if cloud_formation.client.validate_template(:template_body => template.content)
     end
   rescue Aws::CloudFormation::Errors::ValidationError => validation_error
     validation_error.message
@@ -167,7 +166,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     all_emses         = includes(:authentications)
     all_ems_names     = all_emses.map(&:name).to_set
     known_ems_regions = all_emses.select { |e| e.authentication_userid == access_key_id }.map &:provider_region
-    connect_options   = { :user => access_key_id, :pass => secret_access_key }
+    connect_options   = {:user => access_key_id, :pass => secret_access_key}
 
     ec2 = raw_connect(access_key_id, secret_access_key, :EC2, "us-east-1")
     region_names_to_discover = ec2.client.describe_regions.regions.map &:region_name
@@ -175,8 +174,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     (region_names_to_discover - known_ems_regions).each do |region_name|
       ec2_region = raw_connect(access_key_id, secret_access_key, :EC2, region_name)
       next if ec2_region.instances.count == 0 && # instances
-          ec2_region.images(:owners => %w(self)).count == 0 && # private images
-          ec2_region.images(:executable_users => %w(self)).count == 0 # shared  images
+              ec2_region.images(:owners => %w(self)).count == 0 && # private images
+              ec2_region.images(:executable_users => %w(self)).count == 0 # shared  images
       new_emses << create_discovered_region(region_name, access_key_id, secret_access_key, all_ems_names)
     end
 

@@ -122,8 +122,8 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     arn_attribute = "QueueArn"
     @ems.with_provider_connection(:service => :SQS) do |sqs|
       sqs.client.get_queue_attributes(
-          :queue_url       => queue_url,
-          :attribute_names => [arn_attribute]
+        :queue_url       => queue_url,
+        :attribute_names => [arn_attribute]
       ).attributes[arn_attribute]
     end
   end

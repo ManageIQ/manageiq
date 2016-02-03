@@ -26,7 +26,7 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
     #   true  => Advanced Monitoring
     #   false => Basic    Monitoring
     clone_options[:monitoring] = {
-        :enabled => get_option(:monitoring).to_s.downcase == "advanced"
+      :enabled => get_option(:monitoring).to_s.downcase == "advanced"
     }
     if clone_options[:availability_zone].present?
       clone_options[:placement] = {:availability_zone => clone_options[:availability_zone]}

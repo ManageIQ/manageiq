@@ -11,18 +11,18 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
     context ".raw_create_stack" do
       it "creates a stack" do
         stubbed_responses = {
-            :cloudformation => {
-                :create_stack => [:stack_id => "stack_id"],
-                :describe_stacks => {
-                    :stacks =>
-                        [
-                            :stack_name => "mystack",
-                            :creation_time => 10.minutes.ago,
-                            :stack_status => 'CREATE_COMPLETE',
-                            :stack_id => "stack_id"
-                        ]
-                }
+          :cloudformation => {
+            :create_stack    => [:stack_id => "stack_id"],
+            :describe_stacks => {
+              :stacks =>
+                    [
+                      :stack_name    => "mystack",
+                      :creation_time => 10.minutes.ago,
+                      :stack_status  => 'CREATE_COMPLETE',
+                      :stack_id      => "stack_id"
+                    ]
             }
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           stack = OrchestrationStack.create_stack(ems, "mystack", template)
@@ -34,9 +34,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
 
       it 'catches errors from provider' do
         stubbed_responses = {
-            :cloudformation => {
-                :create_stack => "AlreadyExistsException"
-            }
+          :cloudformation => {
+            :create_stack => "AlreadyExistsException"
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect do
@@ -49,9 +49,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
     context "#update_stack" do
       it 'updates the stack' do
         stubbed_responses = {
-            :cloudformation => {
-                :update_stack => { :stack_id => "stack_id"}
-            }
+          :cloudformation => {
+            :update_stack => {:stack_id => "stack_id"}
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect(orchestration_stack.update_stack(template, {}).stack_id).to eq("stack_id")
@@ -60,9 +60,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
 
       it "catches errors from provider" do
         stubbed_responses = {
-            :cloudformation => {
-                :update_stack => "ServiceError"
-            }
+          :cloudformation => {
+            :update_stack => "ServiceError"
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect do
@@ -75,9 +75,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
     context "#delete_stack" do
       it "deletes the stack" do
         stubbed_responses = {
-            :cloudformation => {
-                :delete_stack => {}
-            }
+          :cloudformation => {
+            :delete_stack => {}
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect(orchestration_stack.delete_stack).to be_truthy
@@ -86,9 +86,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
 
       it 'catches errors from provider' do
         stubbed_responses = {
-            :cloudformation => {
-                :delete_stack => "InsufficientCapabilitiesException"
-            }
+          :cloudformation => {
+            :delete_stack => "InsufficientCapabilitiesException"
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect do
@@ -103,16 +103,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
     context '#raw_status and #raw_exists' do
       it 'gets the stack status and reason' do
         stubbed_responses = {
-            :cloudformation => {
-                :describe_stacks => {
-                    :stacks => [
-                        :stack_name => "StackName",
-                        :creation_time => 10.minutes.ago,
-                        :stack_status => 'CREATE_COMPLETE',
-                        :stack_status_reason => 'complete'
-                    ]
-                }
+          :cloudformation => {
+            :describe_stacks => {
+              :stacks => [
+                :stack_name          => "StackName",
+                :creation_time       => 10.minutes.ago,
+                :stack_status        => 'CREATE_COMPLETE',
+                :stack_status_reason => 'complete'
+              ]
             }
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           raw_status = orchestration_stack.raw_status
@@ -124,9 +124,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
 
       it 'parses error message to determine stack not exist' do
         stubbed_responses = {
-            :cloudformation => {
-                :describe_stacks => Aws::CloudFormation::Errors::ValidationError.new(:no_context, "Stack with id stack_id does not exist")
-            }
+          :cloudformation => {
+            :describe_stacks => Aws::CloudFormation::Errors::ValidationError.new(:no_context, "Stack with id stack_id does not exist")
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStackNotExistError)
@@ -136,9 +136,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
 
       it 'catches errors from provider' do
         stubbed_responses = {
-            :cloudformation => {
-                :describe_stacks => "ServiceError"
-            }
+          :cloudformation => {
+            :describe_stacks => "ServiceError"
+          }
         }
         with_aws_stubbed(stubbed_responses) do
           expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
