@@ -14,8 +14,8 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
   } else {
     $scope.newRecord = false;
     $scope.afterGet = true;
-    $scope.repoModel.repo_name = repositoryData.data.repo_name;
-    $scope.repoModel.repo_path = repositoryData.data.repo_path;
+    $scope.repoModel.repo_name = repositoryData.name;
+    $scope.repoModel.repo_path = repositoryData.storage.name;
 
     $scope.modelCopy = angular.copy( $scope.repoModel );
    }

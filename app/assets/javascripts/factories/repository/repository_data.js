@@ -1,17 +1,11 @@
-ManageIQ.angular.app.factory('repositoryDataFactory', ['$http', function($http) {
+ManageIQ.angular.app.factory('repositoryDataFactory', ['API', function(API) {
     var factoryRepository = {
       getRepositoryData: function(id) {
         if(angular.isDefined(id)) {
-          var promise = $http({
-            method: 'GET',
-            url: '/repository/repository_form_fields/' + id
-          }).success(function (data, status, headers, config) {
-            return data;
-          });
-          return promise;
+          return API.get('/api/repositories/' + id + '?expand=resources&attributes=storage')
         }
       }
-    }
+    };
     return factoryRepository;
 }]);
 

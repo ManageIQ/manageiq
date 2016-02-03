@@ -1145,3 +1145,9 @@
       :delete:
       - :name: delete
         :identifier: zone_delete
+  :repositories:
+    :description: Repository
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Repository
