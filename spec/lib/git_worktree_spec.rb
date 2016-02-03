@@ -50,8 +50,8 @@ describe GitWorktree do
     end
 
     it "#delete_repo" do
-      @ae_db.delete_repo.should be_true
-      Dir.exist?(@repo_path).should be_false
+      expect(@ae_db.delete_repo).to be_truthy
+      expect(Dir.exist?(@repo_path)).to be_falsey
     end
 
     it "#remove of existing file" do
@@ -59,26 +59,26 @@ describe GitWorktree do
     end
 
     it "#remove of non existing file" do
-      expect { @ae_db.remove('A/NotExistent.YamL') }.to raise_error
+      expect { @ae_db.remove('A/NotExistent.YamL') }.to raise_error(Rugged::IndexError)
     end
 
     it "#remove_dir existing directory" do
       expect { @ae_db.remove_dir('A') }.to_not raise_error
-      @ae_db.file_exists?('A/File1.YamL').should be_true
+      expect(@ae_db.file_exists?('A/File1.YamL')).to be_truthy
     end
 
     it "#file_exists? missing" do
-      @ae_db.file_exists?('A/nothing.YamL').should be_false
+      expect(@ae_db.file_exists?('A/nothing.YamL')).to be_falsey
     end
 
     it "#read_file that exists" do
       fname = 'A/File1.YamL'
-      YAML.load(@ae_db.read_file(fname)).should have_attributes(@default_hash.merge(:fname => fname))
+      expect(YAML.load(@ae_db.read_file(fname))).to have_attributes(@default_hash.merge(:fname => fname))
     end
 
     it "#file_attributes" do
       fname = 'A/File1.YamL'
-      @ae_db.file_attributes(fname).keys.should match_array([:updated_on, :updated_by])
+      expect(@ae_db.file_attributes(fname).keys).to match_array([:updated_on, :updated_by])
     end
 
     it "#read_file that doesn't exist" do
@@ -86,25 +86,25 @@ describe GitWorktree do
     end
 
     it "#entries" do
-      @ae_db.entries("").should match_array(@dirnames)
+      expect(@ae_db.entries("")).to match_array(@dirnames)
     end
 
     it "#entries in A" do
-      @ae_db.entries("A").should match_array(%w(File1.YamL))
+      expect(@ae_db.entries("A")).to match_array(%w(File1.YamL))
     end
 
     it "get list of files" do
-      @ae_db.file_list.should match_array(@filenames + @dirnames)
+      expect(@ae_db.file_list).to match_array(@filenames + @dirnames)
     end
 
     it "#directory_exists?" do
-      @ae_db.directory_exists?('A').should be_true
+      expect(@ae_db.directory_exists?('A')).to be_truthy
     end
 
     it "#nodes" do
       node = @ae_db.nodes("A").first
-      node[:full_name].should eq("#{@git_db}/A/File1.YamL")
-      node[:rel_path].should  eq("A/File1.YamL")
+      expect(node[:full_name]).to eq("#{@git_db}/A/File1.YamL")
+      expect(node[:rel_path]).to  eq("A/File1.YamL")
     end
 
     it "rename directory" do
@@ -112,7 +112,7 @@ describe GitWorktree do
       dirnames  = %w(AAA B c)
       @ae_db.mv_dir('A', "AAA")
       @ae_db.save_changes("directories moved")
-      @ae_db.file_list.should match_array(filenames + dirnames)
+      expect(@ae_db.file_list).to match_array(filenames + dirnames)
     end
 
     it "rename directory when target exists" do
@@ -127,7 +127,7 @@ describe GitWorktree do
       @ae_db.save_changes("directories moved")
       filenames = %w(AAA/File1.YamL B/File2.YamL c/File3.YAML AAA/A/A/File1.YamL AAA/A/Aile2.YamL)
       dirnames  = %w(AAA B c AAA/A AAA/A/A)
-      @ae_db.file_list.should match_array(filenames + dirnames)
+      expect(@ae_db.file_list).to match_array(filenames + dirnames)
     end
 
     it "move intermediate directories with similar names" do
@@ -138,37 +138,37 @@ describe GitWorktree do
       @ae_db.save_changes("directories moved")
       filenames = %w(A/File1.YamL B/File2.YamL c/File3.YAML AAA/A/File1.YamL AAA/Aile2.YamL)
       dirnames  = %w(AAA B c AAA/A A)
-      @ae_db.file_list.should match_array(filenames + dirnames)
+      expect(@ae_db.file_list).to match_array(filenames + dirnames)
     end
 
     it "get list of files from a specific commit" do
       @ae_db.remove_dir("A")
       @ae_db.save_changes("directories deleted")
-      @ae_db.file_list.should match_array(@filenames + @dirnames - @deleted_names)
+      expect(@ae_db.file_list).to match_array(@filenames + @dirnames - @deleted_names)
       @repo_options[:commit_sha] = @original_commit
       @repo_options[:new] = false
       @orig_db = GitWorktree.new(@repo_options)
-      @orig_db.file_list.should match_array(@filenames + @dirnames)
+      expect(@orig_db.file_list).to match_array(@filenames + @dirnames)
     end
 
     it "can delete directories" do
       @dirnames.each { |d| @ae_db.remove_dir(d) }
       @ae_db.save_changes("directories deleted")
-      @filenames.each { |f| @ae_db.file_exists?(f).should be_false }
+      @filenames.each { |f| expect(@ae_db.file_exists?(f)).to be_falsey }
     end
 
     it "rename file with new contents" do
       filenames = %w(A/File11.YamL B/File2.YamL c/File3.YAML)
       @ae_db.mv_file_with_new_contents('A/File1.YamL', 'A/File11.YamL', "Hello")
       @ae_db.save_changes("file renamed")
-      @ae_db.file_list.should match_array(filenames + @dirnames)
+      expect(@ae_db.file_list).to match_array(filenames + @dirnames)
     end
 
     it "rename file" do
       filenames = %w(A/File11.YamL B/File2.YamL c/File3.YAML)
       @ae_db.mv_file('A/File1.YamL', 'A/File11.YamL')
       @ae_db.save_changes("file renamed")
-      @ae_db.file_list.should match_array(filenames + @dirnames)
+      expect(@ae_db.file_list).to match_array(filenames + @dirnames)
     end
 
     it "manage conflicts" do
@@ -185,7 +185,7 @@ describe GitWorktree do
 
     it "clone repo" do
       dirname, c_repo = clone(@master_url)
-      c_repo.file_list.should match_array(@ae_db.file_list)
+      expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
 
@@ -194,8 +194,8 @@ describe GitWorktree do
       new_file = "A/File12.yamL"
       c_repo.add(new_file, YAML.dump(@default_hash.merge(:fname => "new1")))
       c_repo.save_changes("new file added on slave", :remote)
-      c_repo.file_list.should match_array(@filenames + @dirnames + [new_file])
-      c_repo.file_list.should match_array(@ae_db.file_list)
+      expect(c_repo.file_list).to match_array(@filenames + @dirnames + [new_file])
+      expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
 
@@ -207,8 +207,8 @@ describe GitWorktree do
       @ae_db.save_changes("new file added in master")
       c_repo.add(new_file_c, YAML.dump(@default_hash.merge(:fname => "new1")))
       c_repo.save_changes("new file added on slave", :remote)
-      c_repo.file_list.should match_array(@filenames + @dirnames + [new_file_c, new_file_m])
-      c_repo.file_list.should match_array(@ae_db.file_list)
+      expect(c_repo.file_list).to match_array(@filenames + @dirnames + [new_file_c, new_file_m])
+      expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
 
@@ -220,19 +220,19 @@ describe GitWorktree do
       @ae_db.save_changes("updated on master")
       c_repo.add(new_file, "on slave")
       expect { c_repo.save_changes("updated on slave", :remote) }.to raise_error(GitWorktreeException::GitConflicts)
-      @ae_db.file_list.should match_array(@filenames + @dirnames + [new_file])
-      c_repo.file_list.should match_array(@ae_db.file_list)
-      c_repo.read_entry(c_repo.find_entry(new_file)).should eql(master_data)
+      expect(@ae_db.file_list).to match_array(@filenames + @dirnames + [new_file])
+      expect(c_repo.file_list).to match_array(@ae_db.file_list)
+      expect(c_repo.read_entry(c_repo.find_entry(new_file))).to eql(master_data)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
 
     it "pull updates in a cloned repo" do
       dirname, c_repo = clone(@master_url)
-      c_repo.file_list.should match_array(@ae_db.file_list)
+      expect(c_repo.file_list).to match_array(@ae_db.file_list)
       @ae_db.mv_file_with_new_contents('A/File1.YamL', 'A/File11.YamL', "Hello")
       @ae_db.save_changes("file renamed in master")
       c_repo.send(:pull)
-      c_repo.file_list.should match_array(@ae_db.file_list)
+      expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
   end
