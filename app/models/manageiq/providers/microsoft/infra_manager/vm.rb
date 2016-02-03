@@ -13,4 +13,8 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
   def validate_migrate
     validate_unsupported("Migrate")
   end
+
+  def validate_publish
+    validate_unsupported("Publish VM")
+  end
 end

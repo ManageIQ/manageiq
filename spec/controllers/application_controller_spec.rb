@@ -169,9 +169,12 @@ describe ApplicationController do
       expect(assigns(:flash_array).first[:message]).to include("does not apply to at least one of the selected")
     end
 
+    let(:ems)     { FactoryGirl.create(:ext_management_system) }
+    let(:storage) { FactoryGirl.create(:storage) }
+
     it "sets variables when Migrate button is pressed with list of VMware VMs" do
-      vm1 = FactoryGirl.create(:vm_vmware)
-      vm2 = FactoryGirl.create(:vm_vmware)
+      vm1 = FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
+      vm2 = FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
       controller.send(:prov_redirect, "migrate")

@@ -27,11 +27,6 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     true
   end
 
-  def validate_migrate
-    validate_supported
-  end
-
-  #
   # Show Reconfigure VM task
   def reconfigurable?
     true
