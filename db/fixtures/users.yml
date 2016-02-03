@@ -3,3 +3,7 @@
   :userid: admin
   :password: smartvm
   :group: EvmGroup-super_administrator
+- :name: Consumption Administrator
+  :userid: consumption_admin
+  :password: smartvm
+  :group: EvmGroup-consumption_administrator
