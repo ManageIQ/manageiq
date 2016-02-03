@@ -88,23 +88,24 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
                   :body           => message_body,
                   :receipt_handle => 'receipt_handle',
                   :message_id     => 'id'
+                },
+                {
+                  :body           => message_body,
+                  :receipt_handle => 'receipt_handle',
+                  :message_id     => 'id'
                 }
               ]
-            },
-            "Aws::SQS::Errors::ServiceError"
+            }
           ]
         }
       }
       with_aws_stubbed(stubbed_responses) do
         allow(subject).to receive(:parse_event).and_return(message_body)
         polled_event = nil
-        begin
-          subject.poll do |event|
-            polled_event = event
-          end
-        rescue described_class::ProviderUnreachable
+        subject.poll do |event|
+          polled_event = event
+          subject.stop!
         end
-
         expect(polled_event).to eq(message_body)
       end
     end

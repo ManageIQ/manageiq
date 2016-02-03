@@ -46,7 +46,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
           yield event if event
         end
       rescue Aws::SQS::Errors::ServiceError => exception
-        raise ProviderUnreachable.new(exception.message)
+        raise ProviderUnreachable, exception.message
       end
     end
   end
@@ -80,10 +80,10 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
         $aws_log.warn("#{log_header} Unable to find the AWS Config Topic '#{@topic_name}'. " \
                       "Cannot collect Amazon events for AWS Access Key ID #{@ems.authentication_userid}")
         $aws_log.warn("#{log_header} Contact Amazon to create the AWS Config service and topic for Amazon events.")
-        raise ProviderUnreachable.new("Unable to find the AWS Config Topic '#{@topic_name}'")
+        raise ProviderUnreachable, "Unable to find the AWS Config Topic '#{@topic_name}'"
       end
     rescue Aws::SQS::Errors::ServiceError => exception
-      raise ProviderUnreachable.new(exception.message)
+      raise ProviderUnreachable, exception.message
     end
   end
 
@@ -115,7 +115,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     # https://github.com/aws/aws-sdk-ruby/blob/74ba5e/lib/aws/sns/topic.rb#L368-L378
     queue_arn = queue_url_to_arn(queue_url)
     subscription = aws_config_topic.subscribe(:protocol => 'sqs', :endpoint => queue_arn)
-    raise ProviderUnreachable.new("Can't subscribe to #{queue_arn}") unless subscription.arn.present?
+    raise ProviderUnreachable, "Can't subscribe to #{queue_arn}" unless subscription.arn.present?
   end
 
   def queue_url_to_arn(queue_url)

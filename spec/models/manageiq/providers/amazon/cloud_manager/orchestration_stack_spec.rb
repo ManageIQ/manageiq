@@ -123,9 +123,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       end
 
       it 'parses error message to determine stack not exist' do
+        exception_message = "Stack with id stack_id does not exist"
         stubbed_responses = {
           :cloudformation => {
-            :describe_stacks => Aws::CloudFormation::Errors::ValidationError.new(:no_context, "Stack with id stack_id does not exist")
+            :describe_stacks => Aws::CloudFormation::Errors::ValidationError.new(:no_context, exception_message)
           }
         }
         with_aws_stubbed(stubbed_responses) do

@@ -165,11 +165,10 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     new_emses         = []
     all_emses         = includes(:authentications)
     all_ems_names     = all_emses.map(&:name).to_set
-    known_ems_regions = all_emses.select { |e| e.authentication_userid == access_key_id }.map &:provider_region
-    connect_options   = {:user => access_key_id, :pass => secret_access_key}
+    known_ems_regions = all_emses.select { |e| e.authentication_userid == access_key_id }.map(&:provider_region)
 
     ec2 = raw_connect(access_key_id, secret_access_key, :EC2, "us-east-1")
-    region_names_to_discover = ec2.client.describe_regions.regions.map &:region_name
+    region_names_to_discover = ec2.client.describe_regions.regions.map(&:region_name)
 
     (region_names_to_discover - known_ems_regions).each do |region_name|
       ec2_region = raw_connect(access_key_id, secret_access_key, :EC2, region_name)

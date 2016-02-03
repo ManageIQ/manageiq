@@ -68,7 +68,7 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     context "on amazon with two populated regions" do
       let(:stub_responses) do
         {
-          :describe_regions   => {
+          :describe_regions => {
             :regions => [
               {:region_name => 'us-east-1'},
               {:region_name => 'us-west-1'},
