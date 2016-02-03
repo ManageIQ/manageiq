@@ -140,7 +140,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-jqueryui",                        "~>1.9.2"
   gem "rails-assets-bootstrap-switch",                "~>3.3.2"
   gem "rails-assets-angular-bootstrap-switch",        "~>0.4.1"
-  gem "rails-assets-kubernetes-topology-graph",       "= 0.0.18"
+  gem "rails-assets-kubernetes-topology-graph",       "= 0.0.22"
   gem "rails-assets-moment",                          "~>2.10.3"
   gem "rails-assets-moment-strftime",                 "~>0.1.5"
   gem "rails-assets-moment-timezone",                 "~>0.4.0"
