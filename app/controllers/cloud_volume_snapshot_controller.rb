@@ -39,10 +39,10 @@ class CloudVolumeSnapshotController < ApplicationController
     )
 
     case @display
-    when %w(download_pdf main summary_only)
+    when "download_pdf", "main", "summary_only"
       get_tagdata(@snapshot)
       drop_breadcrumb(
-        :name => @snapshot.name.to_s + " (Summary)",
+        :name => _("%{name} (Summary)") % {:name => @snapshot.name},
         :url  => "/cloud_volume_snapshot/show/#{@snapshot.id}"
       )
       @showtype = "main"
