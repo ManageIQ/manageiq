@@ -6,15 +6,13 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ
   end
 
   def monitor_events
-    event_monitor_handle.start
-    event_monitor_handle.each_batch do |events|
-      _log.debug { "#{log_prefix} Received events #{events.collect(&:message)}" }
+    event_monitor_handle.poll do |event|
+      _log.debug { "#{log_prefix} Received event #{event["messageId"]}" }
       event_monitor_running
-      @queue.enq events
-      sleep_poll_normal
+      @queue.enq event
     end
   ensure
-    reset_event_monitor_handle
+    stop_event_monitor
   end
 
   def process_event(event)

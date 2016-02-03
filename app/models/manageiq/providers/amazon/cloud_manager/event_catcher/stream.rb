@@ -17,23 +17,16 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   # @param [String] sns_aws_config_topic_name
   AWS_CONFIG_TOPIC = "AWSConfig_topic"
   def initialize(ems, sns_aws_config_topic_name = AWS_CONFIG_TOPIC)
-    @ems               = ems
-    @topic_name        = sns_aws_config_topic_name
-    @collecting_events = false
-  end
-
-  #
-  # Start capturing events
-  #
-  def start
-    @collecting_events = true
+    @ems          = ems
+    @topic_name   = sns_aws_config_topic_name
+    @stop_polling = false
   end
 
   #
   # Stop capturing events
   #
   def stop
-    @collecting_events = false
+    @stop_polling = true
   end
 
   #
@@ -42,26 +35,23 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   #
   # :yield: array of Amazon events as hashes
   #
-  def each_batch
-    while @collecting_events
-      # allow the queue to be lazy created
-      # if the amazon account doesn't have AWS Config enabled yet, this will pick
-      # up if AWS Config is enabled later
-      queue_url ||= find_or_create_queue
-      yield collect_events(queue_url) if queue_url
+  def poll
+    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      queue_poller = Aws::SQS::QueuePoller.new(find_or_create_queue, :client => sqs.client)
+
+      begin
+        queue_poller.poll do |sqs_message|
+          throw :stop_polling if @stop_polling
+          event = parse_event(sqs_message)
+          yield event if event
+        end
+      rescue Aws::SQS::Errors::ServiceError => exception
+        raise ProviderUnreachable, exception.message
+      end
     end
   end
 
-  #
-  # Similar to #each_batch, but yields each event individually.
-  #
-  # :yield: an Amazon event as a hash
-  #
-  def each
-    each_batch do |events|
-      events.each { |e| yield e }
-    end
-  end
+  private
 
   #
   # Find the appliance-specific queue, or create the appliance-specific queue
@@ -90,26 +80,30 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
         $aws_log.warn("#{log_header} Unable to find the AWS Config Topic '#{@topic_name}'. " \
                       "Cannot collect Amazon events for AWS Access Key ID #{@ems.authentication_userid}")
         $aws_log.warn("#{log_header} Contact Amazon to create the AWS Config service and topic for Amazon events.")
-        raise ProviderUnreachable.new("Unable to find the AWS Config Topic '#{@topic_name}'")
+        raise ProviderUnreachable, "Unable to find the AWS Config Topic '#{@topic_name}'"
       end
     rescue Aws::SQS::Errors::ServiceError => exception
-      raise ProviderUnreachable.new(exception.message)
+      raise ProviderUnreachable, exception.message
     end
   end
 
-  private
-
   def sqs_create_queue(queue_name)
-    @ems.sqs.client.create_queue(:queue_name => queue_name).queue_url
+    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      sqs.client.create_queue(:queue_name => queue_name).queue_url
+    end
   end
 
   def sqs_get_queue_url(queue_name)
-    @ems.sqs.client.get_queue_url(:queue_name => queue_name).queue_url
+    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      sqs.client.get_queue_url(:queue_name => queue_name).queue_url
+    end
   end
 
   # @return [Aws::SNS::Topic] the found topic or nil
   def find_sns_topic(topic_name)
-    @ems.sns.topics.detect { |t| t.arn.split(/:/)[-1] == topic_name }
+    @ems.with_provider_connection(:service => :SNS, :sdk_v2 => true) do |sns|
+      sns.topics.detect { |t| t.arn.split(/:/)[-1] == topic_name }
+    end
   end
 
   # @param [Aws::SNS::Topic] aws_config_topic
@@ -121,25 +115,17 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     # https://github.com/aws/aws-sdk-ruby/blob/74ba5e/lib/aws/sns/topic.rb#L368-L378
     queue_arn = queue_url_to_arn(queue_url)
     subscription = aws_config_topic.subscribe(:protocol => 'sqs', :endpoint => queue_arn)
-    raise ProviderUnreachable.new("Can't subscribe to #{queue_arn}") unless subscription.arn.present?
+    raise ProviderUnreachable, "Can't subscribe to #{queue_arn}" unless subscription.arn.present?
   end
 
   def queue_url_to_arn(queue_url)
     arn_attribute = "QueueArn"
-    @ems.sqs.client.get_queue_attributes(
-      :queue_url       => queue_url,
-      :attribute_names => [arn_attribute]
-    ).attributes[arn_attribute]
-  end
-
-  def collect_events(queue_url)
-    events = []
-    queue_poller = Aws::SQS::QueuePoller.new(queue_url, :client => @ems.sqs.client)
-    queue_poller.poll(:idle_timeout => 5) do |sqs_message|
-      event = parse_event(sqs_message)
-      events << event if event
+    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      sqs.client.get_queue_attributes(
+        :queue_url       => queue_url,
+        :attribute_names => [arn_attribute]
+      ).attributes[arn_attribute]
     end
-    events
   end
 
   # @param [Aws::SQS::Types::Message] message
