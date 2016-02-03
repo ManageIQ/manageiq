@@ -146,8 +146,8 @@ describe DialogFieldDateControl do
   describe "#automate_output_value" do
     let(:dialog_field) { described_class.new(:value => value) }
 
-    context "when the dialog_field does not have a value" do
-      let(:value) { nil }
+    context "when the dialog_field is blank" do
+      let(:value) { "" }
 
       it "returns nil" do
         expect(dialog_field.automate_output_value).to be_nil
