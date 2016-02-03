@@ -3,7 +3,7 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
-    connection.instances[ems_ref]
+    connection.instances(ems_ref)
   end
 
   #
