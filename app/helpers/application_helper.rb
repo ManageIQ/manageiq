@@ -774,14 +774,15 @@ module ApplicationHelper
     if inner_layout_present? # x_taskbar branch
       toolbars['history_tb'] = history_toolbar_filename
     elsif display_back_button? # taskbar branch
-      toolbars['summary_center_tb'] = controller.send(:restful?) ? "summary_center_restful_tb" : "summary_center_tb"
+      toolbars['summary_center_tb'] = controller.restful? ? "summary_center_restful_tb" : "summary_center_tb"
     end
 
     toolbars['center_tb'] = center_toolbar_filename
     if fname = custom_toolbar_filename
       toolbars['custom_tb'] = fname
     end
-    toolbars['view_tb'] = x_view_toolbar_filename
+
+    toolbars['view_tb'] = inner_layout_present? ? x_view_toolbar_filename : view_toolbar_filename
     toolbars
   end
 
@@ -1084,7 +1085,7 @@ module ApplicationHelper
   def update_paging_url_parms(action_url, parameter_to_update = {}, post = false)
     url = update_query_string_params(parameter_to_update)
     action, an_id = action_url.split("/", 2)
-    if !post && controller.send(:restful?) && action == 'show'
+    if !post && controller.restful? && action == 'show'
       polymorphic_path(@record, url)
     else
       url[:action] = action
