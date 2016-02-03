@@ -13,7 +13,7 @@ module MiqAeCollectSpec
       MiqAeDatastore.reset
     end
 
-    MONTHS = {"January" => 1, "October" => 10, "June" => 6, "July" => 7, "February" => 2, "May" => 5, "March" => 3, "December" => 12, "August" => 8, "September" => 9, "November" => 11, "April" => 4}
+    let(:months) { {"January" => 1, "October" => 10, "June" => 6, "July" => 7, "February" => 2, "May" => 5, "March" => 3, "December" => 12, "August" => 8, "September" => 9, "November" => 11, "April" => 4} }
     it "collects months" do
       ws = MiqAeEngine.instantiate("/TEST/COLLECT/INFO#get_months", @user)
       expect(ws).not_to be_nil
@@ -23,7 +23,7 @@ module MiqAeCollectSpec
       expect(months).not_to be_nil
       expect(months.class.to_s).to eq("Hash")
       expect(months.length).to eq(12)
-      expect(months).to eq(MONTHS)
+      expect(months).to eq(months)
       expect(ws.root('sort')).to eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
       expect(ws.root('rsort')).to eq([12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
       expect(ws.root('count')).to eq(12)
@@ -32,7 +32,7 @@ module MiqAeCollectSpec
       expect(ws.root('mean')).to eq(6.5)
     end
 
-    WEEKDAYS = {"Wednesday" => 4, "Friday" => 6, "Saturday" => 7, "Tuesday" => 3, "Sunday" => 1, "Monday" => 2, "Thursday" => 5}
+    let(:weekdays) { {"Wednesday" => 4, "Friday" => 6, "Saturday" => 7, "Tuesday" => 3, "Sunday" => 1, "Monday" => 2, "Thursday" => 5} }
     it "collects weekdays" do
       ws = MiqAeEngine.instantiate("/TEST/COLLECT/INFO#get_weekdays", @user)
       expect(ws).not_to be_nil
@@ -41,7 +41,7 @@ module MiqAeCollectSpec
       expect(weekdays).not_to be_nil
       expect(weekdays.class.to_s).to eq("Hash")
       expect(weekdays.length).to eq(7)
-      expect(weekdays).to eq(WEEKDAYS)
+      expect(weekdays).to eq(weekdays)
       expect(ws.root('sum')).to eq(28)
     end
 

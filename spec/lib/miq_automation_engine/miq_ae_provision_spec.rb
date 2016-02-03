@@ -1,7 +1,8 @@
 module MiqAeProvisionSpec
   include MiqAeEngine
   describe "MiqAeProvision" do
-    EXPECTED_CUSTOMIZATION = {
+    let(:expected_customization) do
+    {
       :password             => {
         :plaintext => "true"
       },
@@ -39,6 +40,7 @@ module MiqAeProvisionSpec
         :deleteAccounts => 0
       }
     }
+    end
 
     context "Using provision yaml model" do
       before(:each) do
@@ -125,7 +127,7 @@ module MiqAeProvisionSpec
       it "should instantiate customization" do
         ws = MiqAeEngine.instantiate("/EVMApplications/Provisioning/Information/Default#get_customization", @user)
         expect(ws).not_to be_nil
-        expect(ws.root("customization")).to eq(EXPECTED_CUSTOMIZATION)
+        expect(ws.root("customization")).to eq(expected_customization)
       end
 
       it "should have Network class" do
