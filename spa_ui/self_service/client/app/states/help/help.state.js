@@ -17,7 +17,7 @@
         templateUrl: 'app/states/help/help.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Help')
+        title: N_('Help')
       }
     };
   }

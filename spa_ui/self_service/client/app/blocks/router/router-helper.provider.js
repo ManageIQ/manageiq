@@ -86,7 +86,7 @@
         }
         stateCounts.errors++;
         handlingStateChangeError = true;
-        destination = (toState && (toState.title || toState.name || toState.loadedTemplateUrl)) || 'unknown target';
+        destination = (toState && (toState.title ? __(toState.title) : (toState.name || toState.loadedTemplateUrl))) || 'unknown target';
         msg = 'Error routing to ' + destination + '. '
           + (error.data || '') + '. <br/>' + (error.statusText || '')
           + ': ' + (error.status || '');
@@ -97,7 +97,7 @@
       function updateTitle(event, toState) {
         stateCounts.changes++;
         handlingStateChangeError = false;
-        $rootScope.title = config.docTitle + ' ' + (toState.title || ''); // data bind to <title>
+        $rootScope.title = config.docTitle + ' ' + (toState.title ? __(toState.title) : ''); // data bind to <title>
       }
 
       function redirectTo(event, toState, toParams) {

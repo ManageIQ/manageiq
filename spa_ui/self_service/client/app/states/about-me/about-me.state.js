@@ -17,7 +17,7 @@
         templateUrl: 'app/states/about-me/about-me.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('About Me')
+        title: N_('About Me')
       }
     };
   }

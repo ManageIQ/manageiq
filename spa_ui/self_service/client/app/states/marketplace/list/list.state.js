@@ -16,7 +16,7 @@
         templateUrl: 'app/states/marketplace/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Service Catalog'),
+        title: N_('Service Catalog'),
         resolve: {
           serviceTemplates: resolveServiceTemplates,
           serviceCatalogs: resolveServiceCatalogs
@@ -166,7 +166,7 @@
           return false;
         }
       }
-      
+
       return matches;
     }
 
@@ -200,7 +200,7 @@
         } else {
           compValue = item1.service_template_catalog.name.localeCompare(item2.service_template_catalog.name);
         }
-      } 
+      }
 
       if (!vm.toolbarConfig.sortConfig.isAscending) {
         compValue = compValue * -1;

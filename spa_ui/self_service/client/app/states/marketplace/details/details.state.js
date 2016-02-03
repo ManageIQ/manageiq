@@ -16,7 +16,7 @@
         templateUrl: 'app/states/marketplace/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Service Template Details'),
+        title: N_('Service Template Details'),
         resolve: {
           dialogs: resolveDialogs,
           serviceTemplate: resolveServiceTemplate
