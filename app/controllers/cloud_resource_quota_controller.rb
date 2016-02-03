@@ -21,23 +21,20 @@ class CloudResourceQuotaController < ApplicationController
 
   def show
     @display = params[:display] || "main" unless control_selected?
-
+    @showtype = @display
     @lastaction = "show"
-    @showtype = "main"
+
     @resource_quota = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@resource_quota)
 
     @gtl_url = "/cloud_resource_quota/show/#{@resource_quota.id}?"
-    drop_breadcrumb(
-      {
-        :name => ui_lookup(:tables => 'cloud_resource_quota'),
-        :url  => "/cloud_resource_quota/show_list?page=#{@current_page}&refresh=y"
-      },
-      true
-    )
+    drop_breadcrumb({
+                      :name => ui_lookup(:tables => 'cloud_resource_quota'),
+                      :url  => "/cloud_resource_quota/show_list?page=#{@current_page}&refresh=y"
+                    }, true)
 
     case @display
-    when %w(download_pdf main summary_only)
+    when "download_pdf", "main", "summary_only"
       get_tagdata(@resource_quota)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @resource_quota.name},
@@ -66,6 +63,7 @@ class CloudResourceQuotaController < ApplicationController
     @display    = session[:cloud_resource_quota_display]
     @filters    = session[:cloud_resource_quota_filters]
     @catinfo    = session[:cloud_resource_quota_catinfo]
+    @showtype   = session[:cloud_resource_quota_showtype]
   end
 
   def set_session_data
@@ -73,5 +71,6 @@ class CloudResourceQuotaController < ApplicationController
     session[:cloud_resource_quota_display]    = @display unless @display.nil?
     session[:cloud_resource_quota_filters]    = @filters
     session[:cloud_resource_quota_catinfo]    = @catinfo
+    session[:cloud_resource_quota_showtype]   = @showtype
   end
 end

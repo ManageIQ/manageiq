@@ -4,11 +4,11 @@
 - :name: cloud_resource_quota_policy
   :items:
   - :buttonSelect: cloud_resource_quota_policy_choice
-    :image: policy
+    :icon: fa fa-shield fa-lg
     :title: Policy
     :text: Policy
     :items:
     - :button: cloud_resource_quota_tag
-      :image: tag
+      :icon: pficon pficon-edit fa-lg
       :text: "Edit Tags"
       :title: 'Edit tags for the selected items'
