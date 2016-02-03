@@ -50,29 +50,11 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   # Connections
   #
 
-  def self.raw_connect(access_key_id, secret_access_key, service, region = nil, proxy_uri = nil)
-    service ||= "EC2"
-    proxy_uri ||= VMDB::Util.http_proxy_uri
-
-    require 'aws-sdk-v1'
-    AWS.const_get(service).new(
-      :access_key_id     => access_key_id,
-      :secret_access_key => secret_access_key,
-      :region            => region,
-      :proxy_uri         => proxy_uri,
-
-      :logger            => $aws_log,
-      :log_level         => :debug,
-      :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
-    )
-  end
-
-  def self.raw_connect_v2(access_key_id, secret_access_key, service, region, proxy_uri = nil)
-    service ||= "EC2"
+  def self.raw_connect(access_key_id, secret_access_key, service, region, proxy_uri = nil)
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
     require 'aws-sdk'
-    Aws.const_get(service)::Resource.new(
+    Aws.const_get(service.to_s)::Resource.new(
       :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
       :region            => region,
@@ -92,14 +74,9 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
+    service  = options[:service] || :EC2
 
-    if options[:sdk_v2]
-      self.class.raw_connect_v2(username, password, options[:service],
-                                provider_region, options[:proxy_uri])
-    else
-      self.class.raw_connect(username, password, options[:service],
-                             provider_region, options[:proxy_uri])
-    end
+    self.class.raw_connect(username, password, service, provider_region, options[:proxy_uri])
   end
 
   def translate_exception(err)
@@ -120,7 +97,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
-      with_provider_connection(options.merge(:auth_type => auth_type, :sdk_v2 => true)) do |ec2|
+      with_provider_connection(options.merge(:auth_type => auth_type)) do |ec2|
         ec2.client.describe_regions.regions.map(&:region_name)
       end
     rescue => err
@@ -132,22 +109,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     end
 
     true
-  end
-
-  def ec2
-    @ec2 ||= connect(:service => "EC2", :sdk_v2 => true)
-  end
-
-  def s3
-    @s3 ||= connect(:service => "S3")
-  end
-
-  def sqs
-    @sqs ||= connect(:service => "SQS")
-  end
-
-  def cloud_formation
-    @cloud_formation ||= connect(:service => "CloudFormation", :sdk_v2 => true)
   end
 
   #
@@ -178,8 +139,15 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
+  # @param [OrchestrationTemplateCfn] template
+  # @return [nil] if the template is valid
+  # @return [String] if the template is invalid this is the error message
   def orchestration_template_validate(template)
-    cloud_formation.validate_template(template.content)[:message]
+    with_provider_connection(:service => :CloudFormation) do |cloud_formation|
+      nil if cloud_formation.client.validate_template(:template_body => template.content)
+    end
+  rescue Aws::CloudFormation::Errors::ValidationError => validation_error
+    validation_error.message
   rescue => err
     _log.error "template=[#{template.name}], error: #{err}"
     raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
@@ -194,25 +162,24 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   #   will automatically have EmsRefreshes queued up.  If this is a greenfield
   #   discovery, we will at least add an EmsAmazon for us-east-1
   def self.discover(access_key_id, secret_access_key)
-    new_emses = []
+    new_emses         = []
+    all_emses         = includes(:authentications)
+    all_ems_names     = all_emses.map(&:name).to_set
+    known_ems_regions = all_emses.select { |e| e.authentication_userid == access_key_id }.map(&:provider_region)
 
-    all_emses = includes(:authentications)
-    all_ems_names = all_emses.index_by(&:name)
+    ec2 = raw_connect(access_key_id, secret_access_key, :EC2, "us-east-1")
+    region_names_to_discover = ec2.client.describe_regions.regions.map(&:region_name)
 
-    known_emses = all_emses.select { |e| e.authentication_userid == access_key_id }
-    known_ems_regions = known_emses.index_by(&:provider_region)
-
-    ec2 = raw_connect(access_key_id, secret_access_key, "EC2")
-    ec2.regions.each do |region|
-      next if known_ems_regions.include?(region.name)
-      next if region.instances.count == 0 && # instances
-              region.images.with_owner(:self).count == 0 && # private images
-              region.images.executable_by(:self).count == 0  # shared  images
-      new_emses << create_discovered_region(region.name, access_key_id, secret_access_key, all_ems_names)
+    (region_names_to_discover - known_ems_regions).each do |region_name|
+      ec2_region = raw_connect(access_key_id, secret_access_key, :EC2, region_name)
+      next if ec2_region.instances.count == 0 && # instances
+              ec2_region.images(:owners => %w(self)).count == 0 && # private images
+              ec2_region.images(:executable_users => %w(self)).count == 0 # shared  images
+      new_emses << create_discovered_region(region_name, access_key_id, secret_access_key, all_ems_names)
     end
 
     # If greenfield Amazon, at least create the us-east-1 region.
-    if new_emses.blank? && known_emses.blank?
+    if new_emses.blank? && known_ems_regions.blank?
       new_emses << create_discovered_region("us-east-1", access_key_id, secret_access_key, all_ems_names)
     end
 
@@ -237,8 +204,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   def self.create_discovered_region(region_name, access_key_id, secret_access_key, all_ems_names)
     name = region_name
-    name = "#{region_name} #{access_key_id}" if all_ems_names.key?(name)
-    while all_ems_names.key?(name)
+    name = "#{region_name} #{access_key_id}" if all_ems_names.include?(name)
+    while all_ems_names.include?(name)
       name_counter = name_counter.to_i + 1 if defined?(name_counter)
       name = "#{region_name} #{name_counter}"
     end
