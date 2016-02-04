@@ -63,7 +63,7 @@ class ApiController
 
       filter_attr, _, filter_value = filter.partition(operator)
       filter_value.strip!
-      str_method = filter_value =~ /%/ && methods[:regex] || methods[:default]
+      str_method = filter_value =~ /%|\*/ && methods[:regex] || methods[:default]
 
       filter_value, method =
         case filter_value
@@ -77,9 +77,9 @@ class ApiController
           [filter_value, methods[:default]]
         end
 
-      if filter_value =~ /%/
+      if filter_value =~ /%|\*/
         filter_value = "/\\A#{Regexp.escape(filter_value)}\\z/"
-        filter_value.gsub!(/%/, ".*")
+        filter_value.gsub!(/%|\\\*/, ".*")
       end
 
       {:logical_or => logical_or, :operator => method, :attr => filter_attr.strip, :value => filter_value}

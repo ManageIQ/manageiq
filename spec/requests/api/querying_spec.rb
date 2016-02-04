@@ -134,6 +134,16 @@ describe ApiController do
                                              {"name" => vm1.name, "guid" => vm1.guid}])
     end
 
+    it "supports attribute pattern matching via *" do
+      vm1, _vm2, vm3 = create_vms_by_name(%w(aa_B2 bb aa_A1))
+
+      run_get vms_url, :expand => "resources", :filter => ["name='aa*'"], :sort_by => "name"
+
+      expect_query_result(:vms, 2, 3)
+      expect_result_resources_to_match_hash([{"name" => vm3.name, "guid" => vm3.guid},
+                                             {"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
     it "supports inequality test via !=" do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
