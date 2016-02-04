@@ -17,7 +17,7 @@
         templateUrl: 'app/states/login/login.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Login'),
+        title: N_('Login'),
         data: {
           layout: 'blank'
         }

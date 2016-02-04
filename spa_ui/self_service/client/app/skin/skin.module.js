@@ -1,17 +1,17 @@
 (function() {
   'use strict';
 
-  var text = {
-    app: {
-      name: __('ManageIQ Self Service')
-    },
-    login: {
-      brand: '<strong>ManageIQ</strong> ' + __('Self Service')
-    }
-  };
-
   angular.module('app.skin', [])
-    .value('Text', text)
+    .factory('Text', function() {
+      return {
+        app: {
+          name: __('ManageIQ Self Service'),
+        },
+        login: {
+          brand: '<strong>ManageIQ</strong> ' + __('Self Service'),
+        },
+      };
+    })
     .config(configure);
 
   /** @ngInject */

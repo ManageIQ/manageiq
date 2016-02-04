@@ -17,7 +17,7 @@
         templateUrl: 'app/states/dashboard/dashboard.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: __('Dashboard'),
+        title: N_('Dashboard'),
         data: {
           requireUser: true
         },
