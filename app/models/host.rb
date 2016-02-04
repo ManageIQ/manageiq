@@ -1852,5 +1852,13 @@ class Host < ApplicationRecord
     ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
 
+  def writable_storages
+    storages.where(:host_storages => {:read_only => [false, nil]})
+  end
+
+  def read_only_storages
+    storages.where(:host_storages => {:read_only => true})
+  end
+
   include DeprecatedCpuMethodsMixin
 end
