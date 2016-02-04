@@ -8,6 +8,10 @@ module Openstack
       File.join(base_dir, 'spec/vcr_cassettes/manageiq/providers/openstack/cloud_manager')
     end
 
+    def vcr_base_dir_infra
+      File.join(base_dir, 'spec/vcr_cassettes/manageiq/providers/openstack/infra_manager')
+    end
+
     def test_base_dir
       File.join(base_dir, 'spec/models/manageiq/providers/openstack/cloud_manager')
     end
