@@ -1,6 +1,7 @@
 class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
   include_concern 'RemoteConsole'
+  include_concern 'Resize'
 
   belongs_to :cloud_tenant
 

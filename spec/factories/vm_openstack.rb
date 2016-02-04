@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :vm_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :parent => :vm_cloud do
     vendor          "openstack"
     raw_power_state "ACTIVE"
-    ems_ref         "openstack-vm"
+    sequence(:ems_ref) { |n| "some-uuid-#{seq_padded_for_sorting(n)}" }
   end
 
   factory :vm_perf_openstack, :parent => :vm_openstack do

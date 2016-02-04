@@ -40,6 +40,18 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     true
   end
 
+  def resize(new_flavor)
+    raw_resize(new_flavor)
+  end
+
+  def resize_confirm
+    raw_resize_confirm
+  end
+
+  def resize_revert
+    raw_resize_revert
+  end
+
   private
 
   def raise_created_event

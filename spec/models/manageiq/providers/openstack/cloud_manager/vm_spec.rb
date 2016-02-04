@@ -100,4 +100,40 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       expect(vm.state).to eq("archived")
     end
   end
+
+  context "when resized" do
+    let(:ems) { FactoryGirl.create(:ems_openstack) }
+    let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant) }
+    let(:vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems, :cloud_tenant => cloud_tenant) }
+    let(:flavor) { FactoryGirl.create(:flavor_openstack, :ems_ref => '2') }
+
+    it "initiate resize process" do
+      service = double
+      allow(ems).to receive(:connect).and_return(service)
+      expect(vm.validate_resize).to be true
+      expect(vm.validate_resize_confirm).to be false
+      expect(service).to receive(:resize_server).with(vm.ems_ref, flavor.ems_ref)
+      vm.resize(flavor)
+    end
+
+    it 'confirm resize' do
+      vm.raw_power_state = 'VERIFY_RESIZE'
+      service = double
+      allow(ems).to receive(:connect).and_return(service)
+      expect(vm.validate_resize).to be false
+      expect(vm.validate_resize_confirm).to be true
+      expect(service).to receive(:confirm_resize_server).with(vm.ems_ref)
+      vm.resize_confirm
+    end
+
+    it 'revert resize' do
+      vm.raw_power_state = 'VERIFY_RESIZE'
+      service = double
+      allow(ems).to receive(:connect).and_return(service)
+      expect(vm.validate_resize).to be false
+      expect(vm.validate_resize_revert).to be true
+      expect(service).to receive(:revert_resize_server).with(vm.ems_ref)
+      vm.resize_revert
+    end
+  end
 end
