@@ -1650,9 +1650,10 @@ module ApplicationController::CiProcessing
     when "scan"
       each_host(hosts, task_name) do |host|
         if host.respond_to?(:scan)
-          add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
-        else
           host.send(task.to_sym, session[:userid]) # Scan needs userid
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
+        else
+          add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
         end
       end
     else
