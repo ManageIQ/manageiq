@@ -106,6 +106,12 @@ module JsHelper
       .html_safe
   end
 
+  # checking by class
+  def javascript_checked_by_class(element)
+    "if ($('.#{j_str(element)}').prop('type') == 'checkbox') {$('.#{j_str(element)}').prop('checked', 'checked');}"
+      .html_safe
+  end
+
   def javascript_unchecked(element)
     "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', false);}"
       .html_safe

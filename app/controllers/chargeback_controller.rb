@@ -1,4 +1,5 @@
 class ChargebackController < ApplicationController
+  include ChargebackHelper
   @@fixture_dir = File.join(Rails.root, "db/fixtures")
 
   before_action :check_privileges
@@ -23,7 +24,8 @@ class ChargebackController < ApplicationController
     if x_active_tree == :cb_rates_tree
       @record = identify_record(params[:id], ChargebackRate)
       nodeid = x_build_node_id(@record)
-      params[:id] = "xx-#{@record.rate_type}_#{nodeid}"
+      # We identified by the structure Compute_id:Storage_id
+      params[:id] = "xx-#{@record.id}:#{@record.id + 1}"
       params[:tree] = x_active_tree.to_s
       tree_select
     end
@@ -114,20 +116,11 @@ class ChargebackController < ApplicationController
     end
     @sortcol = session[:rates_sortcol].nil? ? 0 : session[:rates_sortcol].to_i
     @sortdir = session[:rates_sortdir].nil? ? "ASC" : session[:rates_sortdir]
-
-    @view, @pages = get_view(ChargebackRate, :conditions => ["rate_type=?", x_node.split('-').last])  # Get the records (into a view) and the paginator
-
+    # Get the records (into a view) and the paginator
+    @view, @pages = get_view(ChargebackRate, :conditions => ["rate_type=?", "Compute"])
     @current_page = @pages[:current] unless @pages.nil?  # save the current page number
     session[:rates_sortcol] = @sortcol
     session[:rates_sortdir] = @sortdir
-
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|                    # Use RJS to update the display
-        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "cb_rates_list"})
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-        page << "miqSparkle(false)"
-      end
-    end
   end
 
   def cb_rate_edit
@@ -137,14 +130,17 @@ class ChargebackController < ApplicationController
       add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? _("Add of new %s was cancelled by the user") % ui_lookup(:model => "ChargebackRate") :
         _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate].description}}")
       get_node_info(x_node)
-      @sb[:rate] = @sb[:rate_details] = nil
+      # We create the rate compute and the rate storage.
+      # The @sb[:rate_details] var groups both (compute and storage) rate details
+      @sb[:rate_compute] = @sb[:rate_storage] = @sb[:rate_details] = nil
       @edit = session[:edit] = nil  # clean out the saved info
       session[:changed] =  false
       replace_right_cell
     when "save", "add"
       id = params[:id] && params[:button] == "save" ? params[:id] : "new"
       return unless load_edit("cbrate_edit__#{id}", "replace_cell__chargeback")
-      @sb[:rate] = @edit[:rate] if @edit && @edit[:rate]
+      @sb[:rate_compute] = @edit[:rate_compute] if @edit && @edit[:rate_compute]
+      @sb[:rate_storage] = @edit[:rate_storage] if @edit && @edit[:rate_storage]
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("%s is required") % "Description", :error)
         render :update do |page|
@@ -152,21 +148,27 @@ class ChargebackController < ApplicationController
         end
         return
       end
-      @sb[:rate].description = @edit[:new][:description]
-      @sb[:rate].rate_type = @edit[:new][:rate_type] if @edit[:new][:rate_type]
+      @sb[:rate_compute].description = @edit[:new][:description]
+      @sb[:rate_storage].description = @edit[:new][:description]
       if params[:button] == "add"
         cb_rate_set_record_vars
-        @sb[:rate].chargeback_rate_details.replace(@sb[:rate_details])
-
-        if @sb[:rate].save
-          AuditEvent.success(build_saved_audit(@sb[:rate], @edit))
-          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate].description})
+        @sb[:rate_compute].chargeback_rate_details.replace(@sb[:rate_details].select { |k| k.rate_type == "Compute" })
+        @sb[:rate_storage].chargeback_rate_details.replace(@sb[:rate_details].select { |k| k.rate_type == "Storage" })
+        if @sb[:rate_compute].save && @sb[:rate_storage].save
+          AuditEvent.success(build_saved_audit(@sb[:rate_compute], @edit))
+          AuditEvent.success(build_saved_audit(@sb[:rate_storage], @edit))
+          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackRate"),
+                                                           :name  => @sb[:rate_compute].description
+                                                          })
           @edit = session[:edit] = nil  # clean out the saved info
           session[:changed] =  @changed = false
           get_node_info(x_node)
           replace_right_cell([:cb_rates])
         else
-          @sb[:rate].errors.each do |field, msg|
+          @sb[:rate_compute].errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          end
+          @sb[:rate_storage].errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @sb[:rate_details].each do |detail|
@@ -182,15 +184,20 @@ class ChargebackController < ApplicationController
         # Detect errors saving rate details
         rate_detail_error = false
         @sb[:rate_details].each { |detail| rate_detail_error = true if detail.save == false }
-        if rate_detail_error == false && @sb[:rate].save
-          AuditEvent.success(build_saved_audit(@sb[:rate], @edit))
-          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate].description})
+        if rate_detail_error == false && @sb[:rate_compute].save && @sb[:rate_storage].save
+          AuditEvent.success(build_saved_audit(@sb[:rate_compute], @edit))
+          AuditEvent.success(build_saved_audit(@sb[:rate_storage], @edit))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "ChargebackRate"),
+                                                           :name  => @sb[:rate_compute].description})
           @edit = session[:edit] = nil  # clean out the saved info
           @changed = false
           get_node_info(x_node)
           replace_right_cell([:cb_rates])
         else
-          @sb[:rate].errors.each do |field, msg|
+          @sb[:rate_compute].errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          end
+          @sb[:rate_storage].errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @sb[:rate_details].each do |detail|
@@ -208,15 +215,26 @@ class ChargebackController < ApplicationController
       if params[:typ] == "copy" # if tab was not changed
         session[:changed] = true
         @sb[:rate_details] = []
-        rate = ChargebackRate.find(obj[0])
-        @sb[:rate] = ChargebackRate.new
-        @sb[:rate].description = "Copy of " + rate.description
-        @sb[:rate].rate_type = rate.rate_type
-        rate_details = rate.chargeback_rate_details
+
+        rate_compute = ChargebackRate.find(obj[0])
+        # the storage_rate has id = compute_storage_id + 1 by convention
+        rate_storage = ChargebackRate.find(obj[0].to_i + 1)
+
+        @sb[:rate_compute] = ChargebackRate.new
+        @sb[:rate_compute].description = "Copy of " + rate_compute.description
+        @sb[:rate_compute].rate_type = rate_compute.rate_type
+
+        @sb[:rate_storage] = ChargebackRate.new
+        @sb[:rate_storage].description = "Copy of " + rate_storage.description
+        @sb[:rate_storage].rate_type = rate_storage.rate_type
+
+        # uniting the two rates details into one variable
+        rate_details = (rate_compute.chargeback_rate_details + rate_storage.chargeback_rate_details).uniq
         # Create new rate detail records for copied rate record
         rate_details.each do |r|
           detail = ChargebackRateDetail.new
           detail.description = r[:description]
+          detail.chargeback_rate_id = r[:chargeback_rate_id]
           detail.source = r[:source]
           detail.rate = r[:rate]
           detail.per_time = r[:per_time]
@@ -228,34 +246,45 @@ class ChargebackController < ApplicationController
         end
       else
         session[:changed] = false
-        @sb[:rate] = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0])
-        @sb[:rate_details] = @sb[:rate].chargeback_rate_details.to_a
+        @sb[:rate_compute] = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0])
+        @sb[:rate_compute].rate_type = "Compute"
+
+        # the rate_storage has a rate_compute_id (rate) +1 by convention
+        @sb[:rate_storage] = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0].to_i + 1)
+        @sb[:rate_storage].rate_type = "Storage"
+        @sb[:rate_details] = (@sb[:rate_compute].chargeback_rate_details.to_a
+                              + @sb[:rate_storage].chargeback_rate_details.to_a).uniq
+
         if @sb[:rate_details].blank?
           fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
+
           if File.exist?(fixture_file)
             fixture = YAML.load_file(fixture_file)
             fixture.each do |cbr|
-              if cbr[:rate_type] == x_node.split('-').last
-                rates = cbr.delete(:rates)
-                rates.each do |r|
-                  detail = ChargebackRateDetail.new
-                  detail.description = r[:description]
-                  detail.source = r[:source]
-                  # detail.rate = r[:rate]
-                  # detail.per_time = r[:per_time]
-                  detail.rate = ""
-                  detail.per_time = "hourly"
-                  detail.group = r[:group]
-                  detail.per_unit = r[:per_unit]
-                  detail.metric = r[:metric]
-                  # if the rate detail has a measure associated
-                  unless r[:measure].nil?
-                    # Copy the measure id of the rate_detail linkig with the rate_detail_measure
-                    id_measure = ChargebackRateDetailMeasure.find_by(:name => r[:measure]).id
-                    detail.chargeback_rate_detail_measure_id = id_measure
-                  end
-                  @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
+              rates = cbr.delete(:rates)
+              rates.each do |r|
+                detail = ChargebackRateDetail.new
+                detail.description = r[:description]
+                detail.source = r[:source]
+                detail.rate = r[:rate]
+                # detail.per_time = r[:per_time]
+                # detail.rate = ""
+                detail.per_time = "hourly"
+                detail.group = r[:group]
+                detail.per_unit = r[:per_unit]
+                detail.metric = r[:metric]
+                # if the rate detail has a measure associated
+                unless r[:measure].nil?
+                  # Copy the measure id of the rate_detail linkig with the rate_detail_measure
+                  id_measure = ChargebackRateDetailMeasure.find_by(:name => r[:measure]).id
+                  detail.chargeback_rate_detail_measure_id = id_measure
                 end
+                if cbr[:rate_type] == "Compute"
+                  detail.chargeback_rate = @sb[:rate_compute]
+                else
+                  detail.chargeback_rate = @sb[:rate_storage]
+                end
+                @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
               end
             end
           end
@@ -281,9 +310,135 @@ class ChargebackController < ApplicationController
     end
   end
 
+  # AJAX driven routine to storage the selected rate details for remove
+  def cb_selected_rd
+    @edit = session[:edit]
+    unless params[:select_all].nil?
+      if params[:select_all] != "null"
+        @edit[:selected_rd_remove] = [*0..(@sb[:rate_details].select { |k| k.rate != "0" }).size - 1]
+        enable_button = true
+      else
+        @edit[:selected_rd_remove] = []
+        enable_button = false
+      end
+      render :update do |page|
+        if enable_button
+          page << javascript_enable_field("btm-remove_rd")
+          page << javascript_checked_by_class("select")
+        else
+          page << javascript_disable_field("btm-remove_rd")
+          page << javascript_unchecked_by_class("select")
+        end
+      end
+    end
+
+    unless params[:select].nil?
+      if params[:select] != "null"
+        enable_button = true
+        if @edit[:selected_rd_remove].nil?
+          @edit[:selected_rd_remove] = [params[:select].to_i]
+        else
+          @edit[:selected_rd_remove] = @edit[:selected_rd_remove].append(params[:select].to_i)
+        end
+      else
+        @edit[:selected_rd_remove].delete(params[:index].to_i)
+        @edit[:selected_rd_remove].nil? ? enable_button = false : enable_button = true
+      end
+      render :update do |page|
+        if enable_button
+          page << javascript_enable_field("btm-remove_rd")
+        else
+          page << javascript_disable_field("btm-remove_rd")
+        end
+        page << javascript_unchecked("select_all")
+      end
+    end
+  end
+
+  # AJAX driven routine to check for changes in ANY field on the form off add rate detail in rate
+  def cb_add_rd_form_field_changed
+    @edit = session[:edit]
+    render :update do |page|
+      if !params[:metric].nil?
+        if params[:metric] != "null"
+          @edit[:selected_metrics] = params[:metric]
+        end
+        page << javascript_for_cb_button_add_metric_visibility(params[:metric] != "null")
+      elsif !params[:group].nil?
+        if @edit[:new][:level] == 'Compute' || @edit[:new][:level].nil?
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" }
+        else
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        end
+        @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, params[:group])
+        @edit[:new][:group] = params[:group]
+        page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
+      elsif !params[:level].nil?
+        if params[:level] == 'Compute'
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" }
+        else
+          rate_details_level = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+        end
+        @edit[:new][:groups] = chargeback_details_groups(rate_details_level)
+        @edit[:new][:level] = params[:level]
+        # showing all the metrics of the selected group
+        if @edit[:new][:groups].empty?
+          @edit[:new][:metrics] = []
+        else
+          @edit[:new][:metrics] = chargeback_details_metrics(rate_details_level, @edit[:new][:groups].first[1])
+        end
+        page.replace_html("add_metric_fields", :partial => "cb_rate_add_metrics")
+      end
+    end
+  end
+
+  def cb_add_rd
+    @edit = session[:edit]
+    # for save added rate details
+    @added_rds = []
+    case params[:button]
+    when "add_single"
+      selected_metrics = @edit[:selected_metrics].split(',')
+      selected_metrics.each do |sm|
+        # if the detail is not selectable by metric we select by description (for the Fixed rates datail)
+        rate_detail = @sb[:rate_details].select { |k| k.metric == sm || k.description == sm }
+        rate_detail[0].rate = 1.0
+        @added_rds.push(rate_detail[0])
+      end
+    when "add_all"
+      @added_rds = @sb[:rate_details].select { |k| k.rate == "0" }
+      @added_rds.each do |r|
+        r.rate = 1.0
+      end
+    end
+    cb_rate_set_form_vars
+    # flag to maintain the save button visible
+    @edit[:new][:added_metric] = true
+    replace_right_cell
+  end
+
+  def cb_remove_rd
+    @edit = session[:edit]
+    case params[:button]
+    when "remove_single"
+      rate_detail = @sb[:rate_details].select { |k| k.rate != "0" }[params['index'].to_i]
+      rate_detail.rate = "0"
+    when "remove_selected"
+      rate_details_temp = @sb[:rate_details].select { |k| k.rate != "0" }
+      @edit[:selected_rd_remove].each do |sm|
+        rate_details_temp[sm].rate = "0"
+      end
+      @sb[:rate_details] = (rate_details_temp + @sb[:rate_details]).uniq
+    end
+    cb_rate_set_form_vars
+    # flag to maintain the save button visible
+    @edit[:new][:added_metric] = true
+    replace_right_cell
+  end
+
   def cb_rate_show
     @display = "main"
-    @sb[:selected_rate_details] = @record.chargeback_rate_details.to_a
+    @sb[:selected_rate_details] = (@record[0].chargeback_rate_details + @record[1].chargeback_rate_details).uniq.select { |k| k.rate != "0" }
     @sb[:selected_rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
     if @record.nil?
       redirect_to :action => "cb_rates_list", :flash_msg => _("Error: Record no longer exists in the database"), :flash_error => true
@@ -294,16 +449,21 @@ class ChargebackController < ApplicationController
   # Delete all selected or single displayed action(s)
   def cb_rates_delete
     assert_privileges("chargeback_rates_delete")
-    rates = []
+    # we show the compute rates
+    rates_compute = []
     if !params[:id] # showing a list
-      rates = find_checked_items
-      if rates.empty?
+      rates_compute = find_checked_items
+      if rates_compute.empty?
         add_flash(_("No %s were selected for deletion") % ui_lookup(:models => "ChargebackRate"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
-      process_cb_rates(rates, "destroy")  unless rates.empty?
+      process_cb_rates(rates_compute, "destroy") unless rates_compute.empty?
+      # delete the storage rate (id_compute_rate + 1)
+      rates_storage = rates_compute.map { |v|; v + 1 }
+      process_cb_rates(rates_storage, "destroy") unless rates_storage.empty?
+
       add_flash(_("The selected %s were deleted") % ui_lookup(:models => "ChargebackRate"), :info, true) unless flash_errors?
       cb_rates_list
       @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
@@ -315,12 +475,16 @@ class ChargebackController < ApplicationController
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
-        rates.push(params[:id])
+        rates_compute.push(params[:id])
       end
       cb_rate = ChargebackRate.find_by_id(params[:id])
-      process_cb_rates(rates, "destroy")  unless rates.empty?
+      process_cb_rates(rates_compute, "destroy") unless rates_compute.empty?
+      rates_storage = rates_compute.map { |v|; v.to_i + 1 } unless rates_compute.empty?
+
+      process_cb_rates(rates_storage, "destroy") unless rates_storage.empty?
+
       add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackRate"), :info, true) unless flash_errors?
-      self.x_node = "xx-#{cb_rate.rate_type}"
+      self.x_node = "root"
       cb_rates_list
       @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
       replace_right_cell([:cb_rates])
@@ -434,14 +598,13 @@ class ChargebackController < ApplicationController
       if node == "root"
         @sb[:rate] = @record = @sb[:selected_rate_details] = nil
         @right_cell_text = _("All %s") % ui_lookup(:models => "ChargebackRate")
-      elsif ["xx-Compute", "xx-Storage"].include?(node)
-        @sb[:rate] = @record = @sb[:selected_rate_details] = nil
-        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
         cb_rates_list
       else
-        @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
+        # record has now two rates (Compute, Storage)
+        @record = ChargebackRate.find(node.split('-').last.split(':'))
         @sb[:action] = nil
-        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @record.rate_type, :model => ui_lookup(:model => "ChargebackRate"), :name => @record.description}
+        # we use the compute rate ([0]) for reference
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @record[0].description}
         cb_rate_show
       end
     elsif x_active_tree == :cb_assignments_tree
@@ -537,21 +700,25 @@ class ChargebackController < ApplicationController
   # Set form variables for edit
   def cb_rate_set_form_vars
     @edit = {}
-    @edit[:rate] = @sb[:rate]
-    @edit[:key] = "cbrate_edit__#{@sb[:rate].id || "new"}"
+    @edit[:rate_compute] = @sb[:rate_compute]
+    @edit[:rate_storage] = @sb[:rate_storage]
+
+    @edit[:key] = "cbrate_edit__#{@sb[:rate_compute].id || "new"}"
+
     @edit[:rate_details] = @sb[:rate_details]
+
     @edit[:new]     = HashWithIndifferentAccess.new
     @edit[:current] = HashWithIndifferentAccess.new
-    @edit[:rec_id] = @sb[:rate].id || nil
+    @edit[:rec_id] = @sb[:rate_compute].id || nil
     @in_a_form = true
 
-    @edit[:new][:description] = @sb[:rate].description
-    @edit[:new][:rate_type] = @sb[:rate].rate_type ? @sb[:rate].rate_type : x_node.split('-').last
+    @edit[:new][:description] = @sb[:rate_compute].description
     @edit[:new][:details] = []
 
-    @sb[:rate_details].each do |r|
+    @sb[:rate_details].select { |k| k.rate != "0" }.each do |r|
       temp = {}
       temp[:rate] = (!r.rate.nil? && r.rate != "") ? r.rate : 0
+      temp[:id] = r.id
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
       temp[:per_unit] = r.per_unit
       temp[:detail_measure] = r.detail_measure
@@ -564,13 +731,44 @@ class ChargebackController < ApplicationController
       "weekly"  => "Weekly",
       "monthly" => "Monthly"
     }
+    # creating a new set of rate details whose rate is 0
+    rate_details_compute_for_add = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Compute" }
+    rate_details_storage_for_add = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == "Storage" }
+
+    # if dont exist rate details not show the add rate detail form
+    if rate_details_compute_for_add.empty? && rate_details_storage_for_add.empty?
+      @edit[:new][:show_form] = false
+    else
+      @edit[:new][:show_form] = true
+      @edit[:new][:levels] = %w(Compute Storage)
+
+      if !session[:edit].nil? && !session[:edit][:new][:level].nil?
+        @edit[:new][:level] = session[:edit][:new][:level]
+        @edit[:new][:group] = session[:edit][:new][:group]
+        rate_details_for_add = @sb[:rate_details].select { |k| k.rate == "0" && k.rate_type == @edit[:new][:level] }
+        @edit[:new][:groups] = chargeback_details_groups(rate_details_for_add)
+        if @edit[:new][:groups].empty?
+          @edit[:new][:metrics] = []
+        elsif @edit[:new][:groups].value?(@edit[:new][:group])
+          @edit[:new][:metrics] = chargeback_details_metrics(rate_details_for_add, @edit[:new][:group])
+        else
+          @edit[:new][:metrics] = chargeback_details_metrics(rate_details_for_add, @edit[:new][:groups].first.second)
+        end
+      else
+        @edit[:new][:level] = "Compute"
+        rate_details_for_add = !rate_details_compute_for_add.empty? ? rate_details_compute_for_add : rate_details_storage_for_add
+        @edit[:new][:groups] = chargeback_details_groups(rate_details_for_add)
+        @edit[:new][:metrics] = chargeback_details_metrics(rate_details_for_add, @edit[:new][:groups].first.second)
+      end
+    end
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
 
   # Get variables from edit form
   def cb_rate_get_form_vars
-    @sb[:rate] = @edit[:rate]
+    @sb[:rate_compute] = @edit[:rate_compute]
+    @sb[:rate_storage] = @edit[:rate_storage]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
@@ -580,12 +778,14 @@ class ChargebackController < ApplicationController
   end
 
   def cb_rate_set_record_vars
+    # Updating only the rates detail with rate values different from 0
+    sb_temp = @sb[:rate_details].select { |k| k.rate != "0" }
     @edit[:new][:details].each_with_index do |_rate, i|
-      @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
-      @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
-      @sb[:rate_details][i].per_unit           = @edit[:new][:details][i][:per_unit]
-      @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
+      sb_temp[i].rate               = @edit[:new][:details][i][:rate]
+      sb_temp[i].per_time           = @edit[:new][:details][i][:per_time]
+      sb_temp[i].per_unit           = @edit[:new][:details][i][:per_unit]
     end
+    @sb[:rate_details] = (sb_temp + @sb[:rate_details].select { |k| k.rate == "0" }).uniq
   end
 
   # Set record vars for save
@@ -797,6 +997,10 @@ class ChargebackController < ApplicationController
         presenter.hide(:toolbar)
         # incase it was hidden for summary screen, and incase there were no records on show_list
         presenter.show(:paging_div, :form_buttons_div).hide(:pc_div_1)
+        if @edit[:new][:added_metric]
+          presenter[:set_visible_elements][:buttons_on] = true
+          presenter[:set_visible_elements][:buttons_off] = false
+        end
         locals = {:record_id => @edit[:rec_id]}
         if x_active_tree == :cb_rates_tree
           locals[:action_url] = 'cb_rate_edit'
@@ -815,14 +1019,18 @@ class ChargebackController < ApplicationController
     else
       presenter.hide(:form_buttons_div).show(:pc_div_1)
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
-         (x_active_tree == :cb_reports_tree && !@report) ||
-         (x_active_tree == :cb_rates_tree && x_node == "root")
+         (x_active_tree == :cb_reports_tree && !@report)
         presenter.hide(:toolbar, :pc_div_1)
       end
       presenter.show(:paging_div)
     end
 
-    presenter[:record_id] = determine_record_id_for_presenter
+    if @record && !@in_a_form
+      # We use the Compute rate (first) for reference
+      presenter[:record_id] = @record.first.id
+    else
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 

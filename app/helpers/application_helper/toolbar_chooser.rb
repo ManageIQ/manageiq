@@ -228,12 +228,10 @@ class ApplicationHelper::ToolbarChooser
   def center_toolbar_filename_chargeback
     if @report && x_active_tree == :cb_reports_tree
       return "chargeback_center_tb"
-    elsif x_active_tree == :cb_rates_tree && x_node != "root"
-      if ["Compute", "Storage"].include?(x_node.split('-').last)
+    elsif x_active_tree == :cb_rates_tree && x_node == "root"
         return "chargebacks_center_tb"
       else
         return "chargeback_center_tb"
-      end
     end
     "blank_view_tb"
   end
