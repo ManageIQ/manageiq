@@ -334,7 +334,7 @@
         :identifier: instance_suspend
       - :name: shelve
         :identifier: instance_shelve
-      - :name: soft_reboot
+      - :name: reboot_guest
         :identifier: instance_guest_restart
     :resource_actions:
       :post:
@@ -350,7 +350,7 @@
         :identifier: instance_suspend
       - :name: shelve
         :identifier: instance_shelve
-      - :name: soft_reboot
+      - :name: reboot_guest
         :identifier: instance_guest_restart
   :pictures:
     :description: Pictures
