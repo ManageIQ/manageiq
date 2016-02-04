@@ -506,7 +506,7 @@ module Rbac
 
     # Preserve sort order of incoming target_ids
     if !target_ids.nil? && !options[:order]
-      targets = targets.sort { |a, b| target_ids.index(a.id) <=> target_ids.index(b.id) }
+      targets = targets.sort_by { |a| target_ids.index(a.id) }
     end
 
     attrs.merge!(:total_count => total_count, :auth_count => auth_count)
