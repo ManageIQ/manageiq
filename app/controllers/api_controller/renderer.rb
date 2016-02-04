@@ -177,11 +177,20 @@ class ApiController
     end
 
     def collection_search(is_subcollection, type, klass)
+      miq_expression = filter_param(klass)
+
       res =
         if is_subcollection
           send("#{type}_query_resource", parent_resource_obj)
         elsif by_tag_param
           klass.find_tagged_with(:all => by_tag_param, :ns  => TAG_NAMESPACE)
+        elsif miq_expression
+          sql, _, attrs = miq_expression.to_sql
+          if attrs[:supported_by_sql]
+            klass.where(sql)
+          else
+            klass.all
+          end
         else
           klass.all
         end
@@ -192,8 +201,6 @@ class ApiController
       options = {:user => @auth_user_obj}
       options[:order] = sort_options if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
-
-      miq_expression = filter_param(klass)
       options[:filter] = miq_expression if miq_expression
 
       Rbac.filtered(res, options)
