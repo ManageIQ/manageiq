@@ -1,7 +1,7 @@
 describe EmsEvent do
-  context ".add_vc" do
-    DATA_DIR = Rails.root.join("spec/models/manageiq/providers/vmware/infra_manager/event_data")
+  let(:data_dir) { Rails.root.join("spec/models/manageiq/providers/vmware/infra_manager/event_data") }
 
+  context ".add_vc" do
     before(:each) do
       @zone = FactoryGirl.create(:small_environment)
       @ems = @zone.ext_management_systems.first
@@ -10,7 +10,7 @@ describe EmsEvent do
     end
 
     it "with a GeneralUserEvent" do
-      raw_event = YAML.load_file(File.join(DATA_DIR, 'general_user_event.yml'))
+      raw_event = YAML.load_file(File.join(data_dir, 'general_user_event.yml'))
       mock_raw_event_vm(raw_event)
       mock_raw_event_host(raw_event)
 
@@ -39,7 +39,7 @@ describe EmsEvent do
 
     context "with an EventEx event" do
       it "with an eventTypeId" do
-        raw_event = YAML.load_file(File.join(DATA_DIR, 'event_ex.yml'))
+        raw_event = YAML.load_file(File.join(data_dir, 'event_ex.yml'))
         mock_raw_event_host(raw_event)
 
         EmsEvent.add_vc(@ems.id, raw_event)
@@ -55,7 +55,7 @@ describe EmsEvent do
       end
 
       it "without an eventTypeId" do
-        raw_event = YAML.load_file(File.join(DATA_DIR, 'event_ex_without_eventtypeid.yml'))
+        raw_event = YAML.load_file(File.join(data_dir, 'event_ex_without_eventtypeid.yml'))
         mock_raw_event_host(raw_event)
 
         EmsEvent.add_vc(@ems.id, raw_event)
@@ -101,12 +101,13 @@ describe EmsEvent do
   end
 
   context ".process_container_entities_in_event!" do
+    let(:ems_ref) { "test_ems_ref" }
+
     before :each do
       @ems = FactoryGirl.create(:ems_kubernetes)
       @container_project = FactoryGirl.create(:container_project, :ext_management_system => @ems)
-      EMS_REF = "test_ems_ref"
       @event_hash = {
-        :ems_ref => EMS_REF,
+        :ems_ref => ems_ref,
         :ems_id  => @ems.id
       }
     end
@@ -116,7 +117,7 @@ describe EmsEvent do
         @container_node = FactoryGirl.create(:container_node,
                                              :ext_management_system => @ems,
                                              :name                  => "Test Node",
-                                             :ems_ref               => EMS_REF)
+                                             :ems_ref               => ems_ref)
       end
 
       it "should link node id to event" do
@@ -131,7 +132,7 @@ describe EmsEvent do
                                               :ext_management_system => @ems,
                                               :container_project     => @container_project,
                                               :name                  => "Test Group",
-                                              :ems_ref               => EMS_REF)
+                                              :ems_ref               => ems_ref)
       end
 
       it "should link pod id to event" do
@@ -146,7 +147,7 @@ describe EmsEvent do
                                                    :ext_management_system => @ems,
                                                    :container_project     => @container_project,
                                                    :name                  => "Test Replicator",
-                                                   :ems_ref               => EMS_REF)
+                                                   :ems_ref               => ems_ref)
       end
 
       it "should link replicator id to event" do
