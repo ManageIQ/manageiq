@@ -20,7 +20,6 @@ module MiqAeMethodService
     include DRbUndumped
     include MiqAeMethodService::MiqAeServiceModelLegacy
     include MiqAeMethodService::MiqAeServiceVmdb
-    include MiqConcurrency::PGMutex
 
     @@id_hash = {}
     @@current = []
@@ -319,23 +318,34 @@ module MiqAeMethodService
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
     end
 
+    def with_acquired_lock(lock_name, max_retry_time=60, min_retries=10)
+      give_up_at = Time.now + max_retry_time
+      retry_interval = max_retry_time / min_retries
+
+      while Time.now < give_up_at do
+        if MiqConcurrency::PGMutex.try_advisory_lock(lock_name)
+          begin
+            yield
+          ensure
+            MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
+          end
+          return # Success
+        end
+        sleep(rand(retry_interval))
+      end
+
+      raise MiqAeException::LockAcquisitionFailed, "Failed on lock_name=#{lock_name}"
+    end
+
     def acquire_lock(lock_name)
-      hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
-      MiqConcurrency::PGMutex.try_advisory_lock(hashcode)
+      MiqConcurrency::PGMutex.try_advisory_lock(lock_name)
     end
 
     def release_lock(lock_name)
-      hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
       until locks_acquired(lock_name) == 0
-        MiqConcurrency::PGMutex.release_advisory_lock(hashcode)
+        MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
       end
       return true
-    end
-
-    def locks_acquired(lock_name)
-      hashcode = MiqConcurrency::PGMutex.stable_hashcode(lock_name)
-      num_locks_acquired = MiqConcurrency::PGMutex.count_advisory_lock(hashcode)
-      return num_locks_acquired
     end
 
     def has_lock?(lock_name)
@@ -365,6 +375,11 @@ module MiqAeMethodService
       return true if domains.include?(dom.upcase)
       $log.warn "domain=#{dom} : is not viewable"
       false
+    end
+
+    def locks_acquired(lock_name)
+      num_locks_acquired = MiqConcurrency::PGMutex.count_advisory_lock(lock_name)
+      return num_locks_acquired
     end
   end
 
