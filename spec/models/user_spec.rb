@@ -448,28 +448,13 @@ describe User do
   end
 
   context ".seed" do
-    include_examples ".seed called multiple times"
+    include_examples(".seed called multiple times", 2)
 
-    it "empty database" do
-      User.seed
-      expect(User.where(:userid => "admin").first.current_group).to be_nil
-    end
+    include_examples("seeding users with", [])
 
-    it "with only MiqGroup seeded" do
-      MiqGroup.seed
-      User.seed
-      expect(User.where(:userid => "admin").first.current_group).to be_nil
-    end
+    include_examples("seeding users with", [MiqGroup])
 
-    it "with role and MiqGroup seeded" do
-      MiqUserRole.seed
-      MiqGroup.seed
-      User.seed
-
-      admin = User.where(:userid => "admin").first
-      expect(admin.current_group.name).to eq "EvmGroup-super_administrator"
-      expect(admin.current_group.miq_user_role_name).to eq "EvmRole-super_administrator"
-    end
+    include_examples("seeding users with", [MiqUserRole, MiqGroup])
   end
 
   context "#accessible_vms" do
