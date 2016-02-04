@@ -177,23 +177,21 @@ class ApiController
     end
 
     def collection_search(is_subcollection, type, klass)
-      miq_expression = filter_param(klass)
-
       res =
         if is_subcollection
           send("#{type}_query_resource", parent_resource_obj)
         elsif by_tag_param
           klass.find_tagged_with(:all => by_tag_param, :ns  => TAG_NAMESPACE)
-        elsif miq_expression
-          sql, _, attrs = miq_expression.to_sql
-          if attrs[:supported_by_sql]
-            klass.where(sql)
-          else
-            klass.all
-          end
         else
           klass.all
         end
+
+      miq_expression = filter_param(klass)
+
+      if miq_expression
+        sql, _, attrs = miq_expression.to_sql
+        res = res.where(sql) if attrs[:supported_by_sql]
+      end
 
       sort_options = sort_params(klass) if res.respond_to?(:reorder)
       res = res.reorder(sort_options) if sort_options.present?
