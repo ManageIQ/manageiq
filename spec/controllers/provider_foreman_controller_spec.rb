@@ -2,6 +2,7 @@ describe ProviderForemanController do
   render_views
   before(:each) do
     @zone = EvmSpecHelper.local_miq_server.zone
+    tag = Tag.add("/managed/quota_max_memory/2048", :ns => "")
 
     @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
@@ -32,6 +33,10 @@ describe ProviderForemanController do
                                                                                   :configuration_profile_id => nil,
                                                                                   :configuration_manager_id => @config_mgr2.id)
     controller.instance_variable_set(:@sb, :active_tree => :foreman_providers_tree)
+
+    [@configured_system, @configured_system2a, @configured_system2b, @configured_system_unprovisioned2].each do |cs|
+      cs.tag_with(tag, :namespace => '')
+    end
   end
 
   it "renders index" do
