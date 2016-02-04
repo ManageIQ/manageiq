@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   include Vmdb::Logging
 
   if Vmdb::Application.config.action_controller.allow_forgery_protection
-    protect_from_forgery :secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report, :with => :exception
+    protect_from_forgery :secret =>  MiqDatabase.connected? ? MiqDatabase.first.csrf_secret_token : SecureRandom.hex(64), :except => :csp_report, :with => :exception
   end
 
   helper ChartingHelper
@@ -550,6 +550,11 @@ class ApplicationController < ActionController::Base
   def reload
     @_params[:id] = x_node
     tree_select
+  end
+
+  def filesystem_download
+    fs = identify_record(params[:id], Filesystem)
+    send_data fs.contents, :filename => fs.name
   end
 
   protected
@@ -1515,11 +1520,11 @@ class ApplicationController < ActionController::Base
       @account_policy.push(:field       => "Reset Lockout Counter",
                            :description => db_record.operating_system.reset_lockout_counter) unless db_record.operating_system.reset_lockout_counter.nil?
     end
-    if db_record.respond_to?("vmm_vendor") # For Host table, this will pull the VMM fields
+    if db_record.respond_to?("vmm_vendor_display") # For Host table, this will pull the VMM fields
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
       @vmminfo.push(:vmminfo     => "Vendor",
-                    :description => db_record.vmm_vendor) unless db_record.vmm_vendor.nil?
+                    :description => db_record.vmm_vendor_display)
       @vmminfo.push(:vmminfo     => "Product",
                     :description => db_record.vmm_product) unless db_record.vmm_product.nil?
       @vmminfo.push(:vmminfo     => "Version",
@@ -2028,28 +2033,14 @@ class ApplicationController < ActionController::Base
 
   def task_supported?(typ)
     vm_ids = find_checked_items.map(&:to_i).uniq
+
     if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
       render_flash_not_applicable_to_model(typ, ui_lookup(:table => "miq_template"))
       return
     end
 
-    case typ
-    when "clone"
-      if vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
-        render_flash_not_applicable_to_model(typ)
-        return
-      end
-    when "migrate"
-      if vm_ids.present? && !VmOrTemplate.batch_operation_supported?('migrate', vm_ids)
-        render_flash_not_applicable_to_model(typ)
-        return
-      end
-    when "publish"
-      if VmOrTemplate.where(:id => vm_ids, :type => %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
-        render_flash_not_applicable_to_model(typ)
-        return
-      end
-    end
+    vms = VmOrTemplate.where(:id => vm_ids)
+    vms.each { |vm| render_flash_not_applicable_to_model(typ) unless vm.is_available?(typ) }
   end
 
   def prov_redirect(typ = nil)
@@ -2210,8 +2201,8 @@ class ApplicationController < ActionController::Base
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
-           "container_route", "container_project", "container_replicator", "container_image_registry", "container_image",
-           "container_topology", "container_dashboard"
+           "container_route", "container_project", "container_replicator", "persistent_volume",
+           "container_image_registry", "container_image", "container_topology", "container_dashboard"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"

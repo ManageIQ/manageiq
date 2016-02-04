@@ -17,9 +17,10 @@ describe "Quota Validation" do
     ws = run_automate_method(@miq_provision_request)
     root = ws.root
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceTenant)
-    expect(root['quota_used'][:storage]).to eq(0)
+    expect(root['quota_used'][:storage]).to eq(1_000_000)
     expect(root['quota_used'][:cpu]).to eq(0)
     expect(root['quota_used'][:vms]).to eq(2)
-    expect(root['quota_used'][:provisioned_storage]).to eq(1024)
+    expect(root['quota_used'][:provisioned_storage]).to eq(1_074_741_824)
+    expect(root['quota_used'][:memory]).to eq(1_073_741_824)
   end
 end

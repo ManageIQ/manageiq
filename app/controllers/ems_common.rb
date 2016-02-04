@@ -73,6 +73,9 @@ module EmsCommon
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
       title = "Stacks"
       view_setup_helper(OrchestrationStack, title, title.singularize)
+    elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
+      title = ui_lookup(:tables => "persistent_volumes")
+      view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
     else  # Must be Hosts # FIXME !!!
       view_setup_helper(Host, "Managed Hosts", "Host")
     end
@@ -95,10 +98,12 @@ module EmsCommon
     end
   end
 
-  def view_setup_helper(kls, title, bottom_msg_name)
+  def view_setup_helper(kls, title, bottom_msg_name, parent_method = nil)
     drop_breadcrumb(:name => @ems.name + " (All #{title})",
                     :url  => show_link(@ems, :display => @display))
-    @view, @pages = get_view(kls, :parent => @ems)
+    opts = {:parent => @ems}
+    opts[:parent_method] = parent_method if parent_method
+    @view, @pages = get_view(kls, **opts)
     @showtype = @display
     if @view.extras[:total_count] && @view.extras[:auth_count] &&
        @view.extras[:total_count] > @view.extras[:auth_count]
@@ -781,7 +786,9 @@ module EmsCommon
 
     if task == "refresh_ems"
       model.refresh_ems(emss, true)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems", "#{ui_lookup(:tables => @table_name)}"), :count_model => pluralize(emss.length, ui_lookup(:table => @table_name))})
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
+        {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:tables => @table_name)}"),
+         :count_model => pluralize(emss.length, ui_lookup(:table => @table_name))})
       AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
           :message => "'#{task}' successfully initiated for #{pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")}",
           :target_class => model.to_s)

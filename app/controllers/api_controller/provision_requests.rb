@@ -18,5 +18,25 @@ class ApiController
       MiqProvisionVirtWorkflow.from_ws(version_str, @auth_user_obj, template_fields, vm_fields, requester, tags,
                                        additional_values, ems_custom_attrs, miq_custom_attrs)
     end
+
+    def deny_resource_provision_requests(type, id, data)
+      api_action(type, id) do |klass|
+        provreq = resource_search(id, type, klass)
+        provreq.deny(@auth_user, data['reason'])
+        action_result(true, "Provision request #{id} denied")
+      end
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def approve_resource_provision_requests(type, id, data)
+      api_action(type, id) do |klass|
+        provreq = resource_search(id, type, klass)
+        provreq.approve(@auth_user, data['reason'])
+        action_result(true, "Provision request #{id} approved")
+      end
+    rescue => err
+      action_result(false, err.to_s)
+    end
   end
 end

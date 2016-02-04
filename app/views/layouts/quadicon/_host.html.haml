@@ -12,7 +12,7 @@
       %img{:src => image_path("72/currentstate-#{h(item.state.downcase)}.png")}
 
   .flobj{:class => "c#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.vmm_vendor.downcase)}.png")}
+    %img{:src => image_path("100/vendor-#{h(item.vmm_vendor_display.downcase)}.png")}
   .flobj{:class => "d#{size}"}
     - case item.authentication_status
     - when "Invalid"
@@ -33,7 +33,7 @@
   .flobj
     %img{:src => image_path("#{size}/base-single.png")}
   .flobj{:class => "e#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.vmm_vendor.downcase)}.png"), :width => width * 1.8, :height => width * 1.8}
+    %img{:src => image_path("100/vendor-#{h(item.vmm_vendor_display.downcase)}.png"), :width => width * 1.8, :height => width * 1.8}
 
 - if typ == :listnav
   -# Listnav, no href needed
@@ -53,4 +53,3 @@
     .flobj
       %a{:title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
         %img{:src => image_path("#{size}/reflection.png"), :width => size, :height => size}
-

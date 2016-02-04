@@ -1,6 +1,16 @@
 angular.module('miq.util').factory('chartsMixin', function() {
   'use strict';
 
+  var hourlyTimeTooltip = function(d) {
+    var theMoment = moment(d[0].x);
+    return _.template('<table class="c3-tooltip">' +
+    '  <tbody>' +
+    '    <td class="value"><%- col1 %></td>' +
+    '    <td class="value text-nowrap"><%- col2 %></td>' +
+    '  </tbody>' +
+    '</table>')({col1: theMoment.format('h:mm A'), col2: d[0].value + ' ' + d[0].name});
+  };
+
   var chartConfig = {
     cpuUsageConfig: {
       chartId: 'cpuUsageChart',
@@ -27,7 +37,8 @@ angular.module('miq.util').factory('chartsMixin', function() {
       headTitle  : __('Hourly Network Utilization'),
       timeFrame  : __('Last 24 hours'),
       units      : __('KBps'),
-      dataName   : __('KBps')
+      dataName   : __('KBps'),
+      tooltipFn  : hourlyTimeTooltip
     },
     dailyNetworkUsageConfig: {
       chartId  : 'networkUsageDailyChart',
@@ -39,23 +50,33 @@ angular.module('miq.util').factory('chartsMixin', function() {
     }
   };
 
-  var processHeatmapData = function(data) {
+  var processHeatmapData = function(heatmapsStruct, data) {
     if (data) {
-      data = _.sortBy(data, 'value');
-
-      return data.map(function(d) {
-        var percent = d.value * 100;
-        var used = Math.floor(d.value * d.info.total);
-        var available = d.info.total - used;
-        var tooltip = d.info.node + " : " + d.info.provider + "<br>" + percent + "%: " + used + " used of " +
-          d.info.total + " total <br> " + available + " Available";
+      heatmapsStruct.data = _.sortBy(data, 'percent').map(function(d) {
+        var percent = d.percent * 100;
+        var tooltip = "Node: " + d.node + "<br> Provider: " + d.provider + "<br> Usage: " + percent + "% in use of " +
+          d.total + " total";
 
         return {
           "id": d.id,
           "tooltip": tooltip,
-          "value": d.value
+          "value": d.percent
         };
       }).reverse()
+    } else  {
+      heatmapsStruct.dataAvailable = false
+    }
+
+    return heatmapsStruct
+  };
+
+  var processUtilizationData = function(data, xDataLabel, yDataLabel) {
+    if (data) {
+      data.xData.unshift(xDataLabel)
+      data.yData.unshift(yDataLabel)
+      return data;
+    } else {
+      return { dataAvailable: false }
     }
   };
 
@@ -63,6 +84,7 @@ angular.module('miq.util').factory('chartsMixin', function() {
     dashboardHeatmapChartHeight:    281,
     nodeHeatMapUsageLegendLabels:   ['< 70%', '70-80%' ,'80-90%', '> 90%'],
     chartConfig: chartConfig,
-    processHeatmapData: processHeatmapData
+    processHeatmapData: processHeatmapData,
+    processUtilizationData: processUtilizationData
   };
 });

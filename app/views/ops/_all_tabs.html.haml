@@ -85,7 +85,7 @@
             = render :partial => "settings_rhn_tab"
     -# Diagnostics
   - when :diagnostics_tree
-    - if x_node.split("__").last.split("-")[0] == "z"
+    - if x_node.split("-")[0] == "z"
       %ul.nav.nav-tabs
         = miq_tab_header("diagnostics_roles_servers", @sb[:active_tab]) do
           = _("Roles by Servers")
@@ -108,7 +108,7 @@
           = render :partial => "diagnostics_collect_logs_tab"
         = miq_tab_content("diagnostics_cu_repair", @sb[:active_tab]) do
           = render :partial => "diagnostics_cu_repair_tab"
-    - elsif x_node.split("__").last.split("-")[0] == "svr"
+    - elsif x_node.split("-")[0] == "svr"
       %ul.nav.nav-tabs
         - if @sb[:selected_server_id] == my_server_id || @selected_server.started?
           = miq_tab_header("diagnostics_summary", @sb[:active_tab]) do

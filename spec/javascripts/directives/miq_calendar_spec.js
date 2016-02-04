@@ -1,6 +1,6 @@
 describe('miq-calendar test', function() {
   var scope, form, element, compile;
-  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(module('ManageIQ'));
   beforeEach(inject(function($compile, $rootScope) {
     scope = $rootScope;
     compile = $compile;

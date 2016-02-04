@@ -20,8 +20,8 @@ class ContainerDashboardService
   end
 
   def status
-    if @ems.present? && @ems.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
-      routes_count = @ems.container_routes.count
+    if @ems.present?
+      routes_count = @ems.respond_to?(:container_routes) ? @ems.container_routes.count : 0 # ems might not have routes
     else
       routes_count = ContainerRoute.count
     end
@@ -129,24 +129,22 @@ class ContainerDashboardService
 
       metrics.each do |m|
         next if m.resource.nil? # Metrics are purged asynchronously and might be missing their node
+        provider_name = @ems.present? ? @ems.name : m.resource.ext_management_system.name
+
         node_cpu_usage << {
-          :id    => m.resource_id,
-          :info  => {
-            :node     => m.resource.name,
-            :provider => @ems.present? ? @ems.ext_management_system.name : m.resource.ext_management_system.name,
-            :total    => m.derived_vm_numvcpus
-          },
-          :value => (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+          :id       => m.resource.id,
+          :node     => m.resource.name,
+          :provider => provider_name,
+          :total    => m.derived_vm_numvcpus.round,
+          :percent  => (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
         }
 
         node_memory_usage << {
-          :id    => m.resource_id,
-          :info  => {
-            :node     => m.resource.name,
-            :provider => m.resource.ext_management_system.name,
-            :total    => m.derived_memory_available
-          },
-          :value => (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+          :id       => m.resource.id,
+          :node     => m.resource.name,
+          :provider => m.resource.ext_management_system.name,
+          :total    => m.derived_memory_available.round,
+          :percent  => (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
         }
       end
     end
@@ -176,14 +174,14 @@ class ContainerDashboardService
         :cpu => {
           :used  => used_cpu.values.last.round,
           :total => total_cpu.values.last.round,
-          :xData => ["date"] + used_cpu.keys,
-          :yData => ["used"] + used_cpu.values.map(&:round)
+          :xData => used_cpu.keys,
+          :yData => used_cpu.values.map(&:round)
         },
         :mem => {
           :used  => (used_mem.values.last / 1024.0).round,
           :total => (total_mem.values.last / 1024.0).round,
-          :xData => ["date"] + used_mem.keys,
-          :yData => ["used"] + used_mem.values.map { |m| (m / 1024.0).round }
+          :xData => used_mem.keys,
+          :yData => used_mem.values.map { |m| (m / 1024.0).round }
         }
       }
     else
@@ -209,8 +207,8 @@ class ContainerDashboardService
 
     if hourly_metrics.any?
       {
-        :xData => ["date"] + hourly_network_trend.keys,
-        :yData => ["used"] + hourly_network_trend.values.map(&:round)
+        :xData => hourly_network_trend.keys,
+        :yData => hourly_network_trend.values.map(&:round)
       }
     end
   end
@@ -224,8 +222,8 @@ class ContainerDashboardService
 
     if daily_provider_metrics.any?
       {
-        :xData => ["date"] + daily_network_metrics.keys,
-        :yData => ["used"] + daily_network_metrics.values.map(&:round)
+        :xData => daily_network_metrics.keys,
+        :yData => daily_network_metrics.values.map(&:round)
       }
     end
   end

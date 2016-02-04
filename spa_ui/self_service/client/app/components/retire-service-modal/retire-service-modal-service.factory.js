@@ -64,12 +64,12 @@
 
       function retireSuccess() {
         $modalInstance.close();
-        Notifications.success('Scheduling retirement for' + vm.service.name  + '.');
+        Notifications.success(__('Scheduling retirement for') + vm.service.name  + '.');
         $state.go($state.current, {}, {reload: true});
       }
 
       function retireFailure() {
-        Notifications.error('There was an error retiring this service.');
+        Notifications.error(__('There was an error retiring this service.'));
       }
     }
   }

@@ -1,0 +1,2 @@
+class CustomEvent < EventStream
+end

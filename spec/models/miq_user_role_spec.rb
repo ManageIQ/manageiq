@@ -1,7 +1,8 @@
 describe MiqUserRole do
   before do
-    @expected_user_role_count = 14
+    @expected_user_role_count = 15
   end
+
   context ".seed" do
     it "empty table" do
       MiqUserRole.seed
@@ -24,6 +25,17 @@ describe MiqUserRole do
       expect(MiqUserRole.count).to eq(@expected_user_role_count + 1)
       expect(changed.reload.read_only).to    be_truthy
       expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
+    end
+
+    it "fills up EvmRole-consumption_administrator role with 3 product features" do
+      MiqProductFeature.seed
+      MiqUserRole.seed
+
+      consumption_role = MiqUserRole.find_by(:name => "EvmRole-consumption_administrator")
+      expect(consumption_role).not_to be_nil
+      features = consumption_role.miq_product_features.collect(&:identifier)
+
+      expect(features).to match_array(%w(dashboard miq_report chargeback))
     end
   end
 

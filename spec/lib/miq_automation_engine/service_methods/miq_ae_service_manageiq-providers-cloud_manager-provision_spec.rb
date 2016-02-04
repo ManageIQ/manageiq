@@ -1,6 +1,6 @@
 module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqProvision do
-    %w(amazon openstack).each  do |t|
+    %w(amazon openstack google).each do |t|
       context "for #{t}" do
         before do
           @provider      = FactoryGirl.create("ems_#{t}_with_authentication")
@@ -136,28 +136,30 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        context "security_groups" do
-          it "workflow exposes allowed_security_groups" do
-            expect(workflow_klass.instance_methods).to include(:allowed_security_groups)
-          end
-
-          context "with a security_group" do
-            before do
-              @ci = FactoryGirl.create("security_group_#{t}")
-              allow_any_instance_of(workflow_klass).to receive(:allowed_security_groups).and_return(@ci.id => @ci.name)
+        if t != "google"
+          context "security_groups" do
+            it "workflow exposes allowed_security_groups" do
+              expect(workflow_klass.instance_methods).to include(:allowed_security_groups)
             end
 
-            it "#eligible_security_groups" do
-              result = ae_svc_prov.eligible_security_groups
+            context "with a security_group" do
+              before do
+                @ci = FactoryGirl.create("security_group_#{t}")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_security_groups).and_return(@ci.id => @ci.name)
+              end
 
-              expect(result).to be_kind_of(Array)
-              expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
-            end
+              it "#eligible_security_groups" do
+                result = ae_svc_prov.eligible_security_groups
 
-            it "#set_security_group" do
-              ae_svc_prov.eligible_security_groups.each { |rsc| ae_svc_prov.set_security_group(rsc) }
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
+              end
 
-              expect(@miq_provision.reload.options[:security_groups]).to eq([@ci.id])
+              it "#set_security_group" do
+                ae_svc_prov.eligible_security_groups.each { |rsc| ae_svc_prov.set_security_group(rsc) }
+
+                expect(@miq_provision.reload.options[:security_groups]).to eq([@ci.id])
+              end
             end
           end
         end
@@ -188,80 +190,86 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        context "cloud_subnets" do
-          it "workflow exposes allowed_cloud_subnets" do
-            expect(workflow_klass.instance_methods).to include(:allowed_cloud_subnets)
-          end
-
-          context "with a cloud_subnet" do
-            before do
-              @ci = FactoryGirl.create(:cloud_subnet)
-              allow_any_instance_of(workflow_klass).to receive(:allowed_cloud_subnets).and_return(@ci.id => @ci.name)
+        if t != "google"
+          context "cloud_subnets" do
+            it "workflow exposes allowed_cloud_subnets" do
+              expect(workflow_klass.instance_methods).to include(:allowed_cloud_subnets)
             end
 
-            it "#eligible_cloud_subnets" do
-              result = ae_svc_prov.eligible_cloud_subnets
+            context "with a cloud_subnet" do
+              before do
+                @ci = FactoryGirl.create(:cloud_subnet)
+                allow_any_instance_of(workflow_klass).to receive(:allowed_cloud_subnets).and_return(@ci.id => @ci.name)
+              end
 
-              expect(result).to be_kind_of(Array)
-              expect(result.first.class).to eq(MiqAeMethodService::MiqAeServiceCloudSubnet)
-            end
+              it "#eligible_cloud_subnets" do
+                result = ae_svc_prov.eligible_cloud_subnets
 
-            it "#set_cloud_subnet" do
-              ae_svc_prov.eligible_cloud_subnets.each { |rsc| ae_svc_prov.set_cloud_subnet(rsc) }
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq(MiqAeMethodService::MiqAeServiceCloudSubnet)
+              end
 
-              expect(@miq_provision.reload.options[:cloud_subnet]).to eq([@ci.id, @ci.name])
-            end
-          end
-        end
+              it "#set_cloud_subnet" do
+                ae_svc_prov.eligible_cloud_subnets.each { |rsc| ae_svc_prov.set_cloud_subnet(rsc) }
 
-        context "floating_ip_addresses" do
-          it "workflow exposes allowed_floating_ip_addresses" do
-            expect(workflow_klass.instance_methods).to include(:allowed_floating_ip_addresses)
-          end
-
-          context "with a floating_ip_address" do
-            before do
-              @ci = FactoryGirl.create("floating_ip_#{t}")
-              allow_any_instance_of(workflow_klass).to receive(:allowed_floating_ip_addresses).and_return(@ci.id => @ci.address)
-            end
-
-            it "#eligible_floating_ip_addresses" do
-              result = ae_svc_prov.eligible_floating_ip_addresses
-
-              expect(result).to be_kind_of(Array)
-              expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
-            end
-
-            it "#set_floating_ip_address" do
-              ae_svc_prov.eligible_floating_ip_addresses.each { |rsc| ae_svc_prov.set_floating_ip_address(rsc) }
-
-              expect(@miq_provision.reload.options[:floating_ip_address]).to eq([@ci.id, @ci.address])
+                expect(@miq_provision.reload.options[:cloud_subnet]).to eq([@ci.id, @ci.name])
+              end
             end
           end
         end
 
-        context "guest_access_key_pairs" do
-          it "workflow exposes allowed_guest_access_key_pairs" do
-            expect(workflow_klass.instance_methods).to include(:allowed_guest_access_key_pairs)
+        if t != "google"
+          context "floating_ip_addresses" do
+            it "workflow exposes allowed_floating_ip_addresses" do
+              expect(workflow_klass.instance_methods).to include(:allowed_floating_ip_addresses)
+            end
+
+            context "with a floating_ip_address" do
+              before do
+                @ci = FactoryGirl.create("floating_ip_#{t}")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_floating_ip_addresses).and_return(@ci.id => @ci.address)
+              end
+
+              it "#eligible_floating_ip_addresses" do
+                result = ae_svc_prov.eligible_floating_ip_addresses
+
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
+              end
+
+              it "#set_floating_ip_address" do
+                ae_svc_prov.eligible_floating_ip_addresses.each { |rsc| ae_svc_prov.set_floating_ip_address(rsc) }
+
+                expect(@miq_provision.reload.options[:floating_ip_address]).to eq([@ci.id, @ci.address])
+              end
+            end
           end
+        end
 
-          context "with a key_pairs" do
-            before do
-              @ci = FactoryGirl.create("auth_key_pair_#{t}")
-              allow_any_instance_of(workflow_klass).to receive(:allowed_guest_access_key_pairs).and_return(@ci.id => @ci.name)
+        if t != "google"
+          context "guest_access_key_pairs" do
+            it "workflow exposes allowed_guest_access_key_pairs" do
+              expect(workflow_klass.instance_methods).to include(:allowed_guest_access_key_pairs)
             end
 
-            it "#eligible_guest_access_key_pairs" do
-              result = ae_svc_prov.eligible_guest_access_key_pairs
+            context "with a key_pairs" do
+              before do
+                @ci = FactoryGirl.create("auth_key_pair_#{t}")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_guest_access_key_pairs).and_return(@ci.id => @ci.name)
+              end
 
-              expect(result).to be_kind_of(Array)
-              expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
-            end
+              it "#eligible_guest_access_key_pairs" do
+                result = ae_svc_prov.eligible_guest_access_key_pairs
 
-            it "#set_guest_access_key_pairs" do
-              ae_svc_prov.eligible_guest_access_key_pairs.each { |rsc| ae_svc_prov.set_guest_access_key_pair(rsc) }
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
+              end
 
-              expect(@miq_provision.reload.options[:guest_access_key_pair]).to eq([@ci.id, @ci.name])
+              it "#set_guest_access_key_pairs" do
+                ae_svc_prov.eligible_guest_access_key_pairs.each { |rsc| ae_svc_prov.set_guest_access_key_pair(rsc) }
+
+                expect(@miq_provision.reload.options[:guest_access_key_pair]).to eq([@ci.id, @ci.name])
+              end
             end
           end
         end

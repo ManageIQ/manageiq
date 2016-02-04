@@ -271,6 +271,47 @@ describe ApplicationController do
       expect(record).to be_a_kind_of(Host)
     end
   end
+
+  describe "#ownership_build_screen" do
+    before do
+      @admin_user = FactoryGirl.create(:user_admin)
+      @user = FactoryGirl.create(:user_with_group)
+      @vm_or_template = FactoryGirl.create(:vm_or_template)
+      @edit = {:ownership_items => [@vm_or_template.id], :klass => VmOrTemplate, :new => {:user => nil}}
+    end
+
+    it "lists all groups when (admin user is logged)" do
+      login_as(@admin_user)
+      controller.instance_variable_set(:@edit, @edit)
+      controller.ownership_build_screen
+      groups = controller.instance_variable_get(:@groups)
+      expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
+    end
+
+    it "lists all users when (admin user is logged)" do
+      login_as(@admin_user)
+      controller.instance_variable_set(:@edit, @edit)
+      controller.ownership_build_screen
+      users = controller.instance_variable_get(:@users)
+      expect(users.count).to eq(User.all.count)
+    end
+
+    it "lists users from current user's groups (non-admin user is logged)" do
+      login_as(@user)
+      controller.instance_variable_set(:@edit, @edit)
+      controller.ownership_build_screen
+      users = controller.instance_variable_get(:@users)
+      expect(users.count).to eq(1)
+    end
+
+    it "lists user's groups (non-admin user is logged)" do
+      login_as(@user)
+      controller.instance_variable_set(:@edit, @edit)
+      controller.ownership_build_screen
+      groups = controller.instance_variable_get(:@groups)
+      expect(groups.count).to eq(1)
+    end
+  end
 end
 
 describe HostController do

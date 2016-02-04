@@ -42,18 +42,14 @@ describe MiqLdap do
     end
   end
 
-  USERS = [
-    'rock@mycompany.com',
-    'smith@mycompany.com',
-    'will@mycompany.com',
-    'john@mycompany.com',
-  ]
+  let(:users) { %w(rock@mycompany.com smith@mycompany.com will@mycompany.com john@mycompany.com) }
+
   it "gets user information" do
     if @userid
       ldap = MiqLdap.new(:host => @host, :basedn => 'dc=mycompany,dc=com', :user_type => 'mail')
       ldap.bind(@userid, @password)
 
-      USERS.sort.each do |u|
+      users.sort.each do |u|
         udata = ldap.get_user_info(u)
         next if udata.nil?
         # puts "\nUser Data for #{udata[:display_name]}:"

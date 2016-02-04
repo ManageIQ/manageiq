@@ -57,12 +57,12 @@
 
       function saveSuccess() {
         $modalInstance.close();
-        Notifications.success(vm.service.name + ' was edited.');
+        Notifications.success(vm.service.name + __(' was edited.'));
         $state.go($state.current, {}, {reload: true});
       }
 
       function saveFailure() {
-        Notifications.error('There was an error editing this service.');
+        Notifications.error(__('There was an error editing this service.'));
       }
     }
   }

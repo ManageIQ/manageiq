@@ -100,7 +100,11 @@ module ManageIQ::Providers
 
       def get_stack_resources(name, group)
         resources = @tds.list_deployment_operations(name, group)
-        resources.reject! { |r| r.try(:properties).try(:target_resource).try(:id).nil? }
+        # exclude empty resources and resources with an action
+        resources.reject! do |r|
+          r.try(:properties).try(:target_resource).try(:id).nil? ||
+            r.properties.target_resource.try(:action_name)
+        end
 
         process_collection(resources, :orchestration_stack_resources) do |resource|
           parse_stack_resource(resource, group)

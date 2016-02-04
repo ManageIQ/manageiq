@@ -48,6 +48,6 @@
   = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
-  ManageIQ.angularApplication.value('tenantFormId', '#{@tenant.id || "new"}');
-  ManageIQ.angularApplication.value('tenantType', '#{@tenant_type}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
+  ManageIQ.angular.app.value('tenantFormId', '#{@tenant.id || "new"}');
+  ManageIQ.angular.app.value('tenantType', '#{@tenant_type}');
+  miq_bootstrap('#form_div');

@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.service('miqService', function() {
+ManageIQ.angular.app.service('miqService', function() {
 
   this.storedPasswordPlaceholder = "●●●●●●●●";
 

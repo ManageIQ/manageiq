@@ -4,6 +4,7 @@ module ApplicationHelper
   include_concern 'Discover'
   include_concern 'PageLayouts'
   include_concern 'FormTags'
+  include_concern 'Tasks'
   include Sandbox
   include CompressedIds
   include JsHelper
@@ -764,6 +765,27 @@ module ApplicationHelper
     )
   end
 
+  # Calculate hash of toolbars to render
+  #
+  # keys are toolbar <div> names and values are toobar identifiers (now YAML files)
+  #
+  def calculate_toolbars
+    toolbars = {}
+    if inner_layout_present? # x_taskbar branch
+      toolbars['history_tb'] = history_toolbar_filename
+    elsif display_back_button? # taskbar branch
+      toolbars['summary_center_tb'] = controller.restful? ? "summary_center_restful_tb" : "summary_center_tb"
+    end
+
+    toolbars['center_tb'] = center_toolbar_filename
+    if fname = custom_toolbar_filename
+      toolbars['custom_tb'] = fname
+    end
+
+    toolbars['view_tb'] = inner_layout_present? ? x_view_toolbar_filename : view_toolbar_filename
+    toolbars
+  end
+
   # check if back to summary button needs to be show
   def display_back_button?
     # don't need to back button if @record is not there or @record doesnt have name or
@@ -780,7 +802,7 @@ module ApplicationHelper
 
   def display_adv_search?
     %w(availability_zone cloud_volume container_group container_node container_service
-       container_route container_project container_replicator container_image container_image_registry
+       container_route container_project container_replicator container_image container_image_registry persistent_volume
        ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
@@ -1047,7 +1069,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
                         container_route container_project container_replicator container_image container_image_registry
-                        container_topology container_dashboard
+                        container_topology container_dashboard persistent_volume
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1063,7 +1085,7 @@ module ApplicationHelper
   def update_paging_url_parms(action_url, parameter_to_update = {}, post = false)
     url = update_query_string_params(parameter_to_update)
     action, an_id = action_url.split("/", 2)
-    if !post && controller.send(:restful?) && action == 'show'
+    if !post && controller.restful? && action == 'show'
       polymorphic_path(@record, url)
     else
       url[:action] = action
@@ -1088,7 +1110,7 @@ module ApplicationHelper
     if @lastaction == "show_list" && !session[:menu_click] &&
        %w(cloud_volume container_node container_service ems_container container_group ems_cloud ems_cluster
           container_route container_project container_replicator container_image container_image_registry
-          ems_infra host miq_template offline orchestration_stack repository
+          persistent_volume ems_infra host miq_template offline orchestration_stack repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1099,7 +1121,7 @@ module ApplicationHelper
       "vm"
     elsif %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
              container_route container_project container_replicator container_image container_image_registry
-             container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
+             container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra flavor
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
              scan_profile security_group service snia_local_file_system storage
@@ -1111,7 +1133,7 @@ module ApplicationHelper
   def show_adv_search?
     show_search = %w(availability_zone cim_base_storage_extent cloud_volume container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
-                     ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
+                     persistent_volume ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
@@ -1289,7 +1311,7 @@ module ApplicationHelper
   end
 
   def tree_with_advanced_search?
-    %i(containers images instances providers vandt
+    %i(containers images cs_filter foreman_providers instances providers vandt
      images_filter instances_filter templates_filter templates_images_filter containers_filter
      vms_filter vms_instances_filter).include?(x_tree[:type])
   end
@@ -1328,7 +1350,7 @@ module ApplicationHelper
       image = "vendor-#{vendor}"
     elsif db == "Host"
       host = @targets_hash[@id] if @targets_hash
-      vendor = host ? host.vmm_vendor.downcase : "unknown"
+      vendor = host ? host.vmm_vendor_display.downcase : "unknown"
       image = "vendor-#{vendor}"
     elsif db == "MiqAction"
       action = @targets_hash[@id.to_i]

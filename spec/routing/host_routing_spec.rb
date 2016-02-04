@@ -95,6 +95,12 @@ describe "routes for HostController" do
     end
   end
 
+  describe "#filesystem_download" do
+    it 'routes with GET' do
+      expect(get("/#{controller_name}/filesystem_download")).to route_to("#{controller_name}#filesystem_download")
+    end
+  end
+
   describe "#filesystems" do
     it "routes with GET" do
       expect(get("/host/filesystems")).to route_to("host#filesystems")

@@ -49,7 +49,7 @@
     "providers": [
       {
         "count": 2,
-        "providerType": "openShift"
+        "providerType": "openshift"
       },
       {
         "count": 1,

@@ -97,7 +97,7 @@ module ReportFormatter
           e_text = "&lt;a href='/vm/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
         when "Host"
           e_title = rec[:name]
-          e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor.downcase}.png")
+          e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor_display.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
           e_text = "&lt;a href='/host/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
         when "EventStream"

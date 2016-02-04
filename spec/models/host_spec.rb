@@ -37,11 +37,11 @@ describe Host do
     expect(DriftState.count).to eq(1)
 
     expect(host.drift_states.first.data).to eq({
-      :class              => "ManageIQ::Providers::Vmware::InfraManager::Host",
-      :id                 => host.id,
-      :name               => host.name,
-      :vmm_vendor         => "VMware",
-      :v_total_vms        => 0,
+      :class                         => "ManageIQ::Providers::Vmware::InfraManager::Host",
+      :id                            => host.id,
+      :name                          => host.name,
+      :vmm_vendor_display            => "VMware",
+      :v_total_vms                   => 0,
 
       :advanced_settings             => [],
       :filesystems                   => [],
@@ -198,13 +198,13 @@ describe Host do
     end
   end
 
-  context "#vmm_vendor" do
+  context "#vmm_vendor_display" do
     it "with known host type" do
-      expect(FactoryGirl.create(:host_vmware_esx).vmm_vendor).to eq("VMware")
+      expect(FactoryGirl.create(:host_vmware_esx).vmm_vendor_display).to eq("VMware")
     end
 
     it "with nil vendor" do
-      expect(FactoryGirl.create(:host, :vmm_vendor => nil).vmm_vendor).to eq("Unknown")
+      expect(FactoryGirl.create(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown")
     end
   end
 

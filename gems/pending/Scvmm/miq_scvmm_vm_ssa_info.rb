@@ -18,17 +18,6 @@ class MiqScvmmVmSSAInfo
     @parser = MiqScvmmParsePowershell.new
   end
 
-  def vm_host(vm_name)
-    host_script = <<-HOST_EOL
-Get-SCVirtualMachine -VMMServer localhost -Name "#{vm_name}" | \
-  Select-Object -ExpandProperty Hostname
-HOST_EOL
-
-    @hostname, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(host_script))
-    raise "Unable to obtain Host for #{vm_name}" if stderr =~ /At line:/
-    @hostname
-  end
-
   # Note the following method returns *all* hard disks and some common attributes from the Hyper-V host
   def vm_all_harddisks(vm_name, snapshot = nil, check_snapshot = TRUE)
     vhds       = vm_get_disks(vm_name, snapshot, check_snapshot)
@@ -45,17 +34,6 @@ HOST_EOL
       i += 1
     end
     new_vhds
-  end
-
-  def vm_vhdtype(vm_name)
-    vhdtype_script = <<-VHDTYPE_EOL
-Get-SCVirtualHardDisk -VMMServer localhost -VM "#{vm_name}" | \
-  Select-Object -ExpandProperty VHDType
-VHDTYPE_EOL
-
-    @vhd_type, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(vhdtype_script))
-    raise "Unable to obtain VHD Type for #{vm_name}" if stderr =~ /At line:/
-    @vhd_type
   end
 
   def vm_get_checkpoint(vm_name, snapshot)

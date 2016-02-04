@@ -835,6 +835,8 @@ en:
       container_routes:            Routes
       container_project:           Project
       container_projects:          Projects
+      persistent_volume:           Volume
+      persistent_volumes:          Volumes
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider
@@ -935,42 +937,5 @@ en:
       zone:                        Zone
       zones:                       Zones
 
-    task:
-      check_compliance_queue: check compliance
-      destroy:                delete
-      reboot_guest:           restart guest
-      retire_now:             retirement
-      scan:                   analysis
-
-    tenants:
-      cpu_allocated: Allocated Virtual CPUs
-      mem_allocated: Allocated Memory in GB
-      storage_allocated: Allocated Storage in GB
-      vms_allocated: Allocated Number of Virtual Machines
-      templates_allocated: Allocated Number of Templates
-
-    ui_action:
-      advanced_settings:   Advanced Settings
-      disks:               Number of Disks
-      drift_history:       Drift History
-      event_logs:          Event Logs
-      filesystem_drivers:  Filesystem Drivers
-      filesystems:         Filesystems
-      groups:              Groups
-      guest_applications:  Guest Applications
-      hv_info:             Container
-      kernel_drivers:      Kernel Drivers
-      linux_initprocesses: Init Processes
-      os_info:             OS Info
-      parent_vm:           Parent VM
-      patches:             Patches
-      processes:           Running Processes
-      registry_items:      Registry Items
-      resources_info:      Resources
-      scan_history:        Scan History
-      snapshot_info:       Snapshots
-      users:               Users
-      vmtree_info:         Genealogy
-      win32_services:      Win32 Services
     ui_title:
       foreman:             Foreman

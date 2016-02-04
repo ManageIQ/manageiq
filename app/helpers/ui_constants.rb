@@ -191,6 +191,7 @@ module UiConstants
       :containerproject                         => "list",
       :containerimage                           => "list",
       :containerimageregistry                   => "list",
+      :persistentvolume                         => "list",
       :cimbasestorageextent                     => "list",
       :cimstorageextent                         => "list",
       :cloudtenant                              => "list",

@@ -1,7 +1,7 @@
 describe('timerOptionService', function() {
   var testService;
 
-  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(module('ManageIQ'));
 
   beforeEach(inject(function(timerOptionService) {
     testService = timerOptionService;

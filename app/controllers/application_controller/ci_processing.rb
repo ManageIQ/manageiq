@@ -77,7 +77,7 @@ module ApplicationController::CiProcessing
   # Build the ownership assignment screen
   def ownership_build_screen
     @users = {}   # Users array for first chooser
-    User.all.each { |u| @users[u.name] = u.id.to_s }
+    User.with_current_user_groups.each { |u| @users[u.name] = u.id.to_s }
     record = @edit[:klass].find(@edit[:ownership_items][0])
     user = record.evm_owner if @edit[:ownership_items].length == 1
     @edit[:new][:user] = user ? user.id.to_s : nil            # Set to first category, if not already set
@@ -86,7 +86,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @edit[:ownership_items].length == 1
     @edit[:new][:group] = group ? group.id.to_s : nil
-    MiqGroup.all.each { |g| @groups[g.description] = g.id.to_s }
+    MiqGroup.non_tenant_groups.with_current_user_groups.each { |g| @groups[g.description] = g.id.to_s }
 
     @edit[:new][:user] = @edit[:new][:group] = DONT_CHANGE_OWNER if @edit[:ownership_items].length > 1
 
@@ -1256,7 +1256,7 @@ module ApplicationController::CiProcessing
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{model} from the CFME Database") %
-      {:task  => display_name ? display_name.titleize : Dictionary.gettext(task, :type => :task).titleize,
+      {:task  => display_name ? display_name.titleize : task_name(task),
        :model => pluralize(objs.length, ui_lookup(:model => klass.to_s))})
   end
 
@@ -1291,8 +1291,7 @@ module ApplicationController::CiProcessing
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
-      {:task        => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems",
-                                                                              "#{ui_lookup(:ui_title => 'foreman')}"),
+      {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'foreman')}"),
        :controller  => ui_lookup(:ui_title => 'foreman'),
        :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
   end
@@ -1636,7 +1635,9 @@ module ApplicationController::CiProcessing
     case task
     when "refresh_ems"
       Host.refresh_ems(hosts)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => (display_name || Dictionary.gettext(task, :type => :task).titleize), :count_model => pluralize(hosts.length, "Host")})
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
+        {:task        => (display_name || task_name(task)),
+         :count_model => pluralize(hosts.length, "Host")})
       AuditEvent.success(:userid => session[:userid], :event => "host_#{task}",
           :message => "'#{task_name}' successfully initiated for #{pluralize(hosts.length, "Host")}",
           :target_class => "Host")
@@ -1649,9 +1650,10 @@ module ApplicationController::CiProcessing
     when "scan"
       each_host(hosts, task_name) do |host|
         if host.respond_to?(:scan)
-          add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
-        else
           host.send(task.to_sym, session[:userid]) # Scan needs userid
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
+        else
+          add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
         end
       end
     else

@@ -199,7 +199,8 @@ class TreeBuilder
   end
 
   def set_nodes(nodes)
-    add_root_node(nodes)
+    # Add the root node even if it is not set
+    add_root_node(nodes) if @options.fetch(:add_root, :true)
     @tree_nodes = nodes.to_json
     @locals_for_render = set_locals_for_render
   end

@@ -13,9 +13,11 @@
               - @categories.delete(cat_key)
           = select_tag("tag_cat",
             options_for_select(@categories.sort, @edit[:cat].name),
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+            "data-miq_observe"     => {:url => url}.to_json,
+            "class"                => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("tag_cat", "#{url}", {beforeSend: true, complete: true});
         %th
           = render :partial => "layouts/tag_edit_cat_tags"
   = render :partial => 'layouts/tag_edit_assignments', :locals => {:entry => nil}

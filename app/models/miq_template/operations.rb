@@ -35,6 +35,10 @@ module MiqTemplate::Operations
     validate_invalid_for_template("Reset Operation")
   end
 
+  def validate_clone
+    {:available => true, :message => nil}
+  end
+
   private
 
   def validate_invalid_for_template(message_prefix)

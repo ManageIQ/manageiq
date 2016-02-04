@@ -168,4 +168,232 @@ RSpec.describe "Instances API" do
       expect_result_resources_to_include_hrefs("results", :instances_list)
     end
   end
+
+  describe "instance pause action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+
+      run_post(invalid_instance_url, gen_request(:pause))
+
+      expect_resource_not_found
+    end
+
+    it "pausing an invalid instance without appropriate role is forbidden" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:pause))
+
+      expect_request_forbidden
+    end
+
+    it "fails to pause a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+      update_raw_power_state("poweredOff", instance)
+
+      run_post(instance_url, gen_request(:pause))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "fails to pause a paused instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+      update_raw_power_state("paused", instance)
+
+      run_post(instance_url, gen_request(:pause))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "pauses an instance" do
+      api_basic_authorize action_identifier(:instances, :pause)
+
+      run_post(instance_url, gen_request(:pause))
+
+      expect_single_action_result(:success => true, :message => "pausing", :href => :instance_url, :task => true)
+    end
+
+    it "pauses multiple instances" do
+      api_basic_authorize action_identifier(:instances, :pause)
+
+      run_post(instances_url, gen_request(:pause, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
+    end
+  end
+
+  context "Instance suspend action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+
+      run_post(invalid_instance_url, gen_request(:suspend))
+
+      expect_resource_not_found
+    end
+
+    it "responds forbidden for an invalid instance without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:suspend))
+
+      expect_request_forbidden
+    end
+
+    it "cannot suspend a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+      update_raw_power_state("poweredOff", instance)
+
+      run_post(instance_url, gen_request(:suspend))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "cannot suspend a suspended instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+      update_raw_power_state("suspended", instance)
+
+      run_post(instance_url, gen_request(:suspend))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "suspends an instance" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+
+      run_post(instance_url, gen_request(:suspend))
+
+      expect_single_action_result(:success => true, :message => "suspending", :href => :instance_url, :task => true)
+    end
+
+    it "suspends multiple instances" do
+      api_basic_authorize action_identifier(:instances, :suspend)
+
+      run_post(instances_url, gen_request(:suspend, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
+    end
+  end
+
+  context "Instance shelve action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+
+      run_post(invalid_instance_url, gen_request(:shelve))
+
+      expect_resource_not_found
+    end
+
+    it "responds forbidden for an invalid instance without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:shelve))
+
+      expect_request_forbidden
+    end
+
+    it "shelves a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+      update_raw_power_state("SHUTOFF", instance)
+
+      run_post(instance_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => 'shelving', :href => :instance_url)
+    end
+
+    it "shelves a suspended instance" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+      update_raw_power_state("SUSPENDED", instance)
+
+      run_post(instance_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => 'shelving', :href => :instance_url)
+    end
+
+    it "shelves a paused instance" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+      update_raw_power_state("PAUSED", instance)
+
+      run_post(instance_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => 'shelving', :href => :instance_url)
+    end
+
+    it "cannot shelve a shelved instance" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+      update_raw_power_state("SHELVED", instance)
+
+      run_post(instance_url, gen_request(:shelve))
+
+      expect_single_action_result(
+        :success => false,
+        :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused",
+        :href    => :instance_url
+      )
+    end
+
+    it "shelves an instance" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+
+      run_post(instance_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true,
+                                  :message => "shelving",
+                                  :href    => :instance_url,
+                                  :task    => true)
+    end
+
+    it "shelves multiple instances" do
+      api_basic_authorize action_identifier(:instances, :shelve)
+
+      run_post(instances_url, gen_request(:shelve, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
+    end
+  end
+
+  describe "instance soft reboot action" do
+    it "responds not found for an invalid instance" do
+      api_basic_authorize action_identifier(:instances, :soft_reboot)
+
+      run_post(invalid_instance_url, gen_request(:soft_reboot))
+
+      expect_resource_not_found
+    end
+
+    it "responds forbidden for an invalid instance without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_instance_url, gen_request(:soft_reboot))
+
+      expect_request_forbidden
+    end
+
+    it "fails to soft reboot a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :soft_reboot)
+      update_raw_power_state("poweredOff", instance)
+
+      run_post(instance_url, gen_request(:soft_reboot))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
+    end
+
+    it "soft reboots a valid instance" do
+      api_basic_authorize action_identifier(:instances, :soft_reboot)
+
+      run_post(instance_url, gen_request(:soft_reboot))
+
+      expect_single_action_result(:success => true, :message => "soft rebooting", :href => :instance_url, :task => true)
+    end
+
+    it "soft reboots multiple valid instances" do
+      api_basic_authorize action_identifier(:instances, :soft_reboot)
+
+      run_post(instances_url, gen_request(:soft_reboot, nil, instance1_url, instance2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :instances_list)
+    end
+  end
 end

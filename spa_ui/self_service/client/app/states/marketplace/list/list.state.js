@@ -16,7 +16,7 @@
         templateUrl: 'app/states/marketplace/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Service Catalog',
+        title: N_('Service Catalog'),
         resolve: {
           serviceTemplates: resolveServiceTemplates,
           serviceCatalogs: resolveServiceCatalogs
@@ -48,7 +48,7 @@
   function StateController($state, serviceTemplates, serviceCatalogs, MarketplaceState) {
     var vm = this;
 
-    vm.title = 'Service Catalog';
+    vm.title = __('Service Catalog');
     vm.serviceTemplates = serviceTemplates.resources;
     vm.serviceTemplatesList = angular.copy(vm.serviceTemplates);
     vm.serviceCatalogs = serviceCatalogs.resources;
@@ -71,20 +71,20 @@
         fields: [
           {
             id: 'template_name',
-            title: 'Name',
-            placeholder: 'Filter by Name',
+            title: __('Name'),
+            placeholder: __('Filter by Name'),
             filterType: 'text'
           },
           {
             id: 'template_description',
-            title: 'Description',
-            placeholder: 'Filter by Description',
+            title: __('Description'),
+            placeholder: __('Filter by Description'),
             filterType: 'text'
           },
           {
             id: 'catalog_name',
-            title: 'Catalog Name',
-            placeholder: 'Filter by Catalog Name',
+            title: __('Catalog Name'),
+            placeholder: __('Filter by Catalog Name'),
             filterType: 'select',
             filterValues: categoryNames
           }
@@ -97,12 +97,12 @@
         fields: [
           {
             id: 'name',
-            title:  'Name',
+            title:  __('Name'),
             sortType: 'alpha'
           },
           {
             id: 'catalog_name',
-            title:  'Catalog Name',
+            title:  __('Catalog Name'),
             sortType: 'alpha'
           }
         ],
@@ -166,7 +166,7 @@
           return false;
         }
       }
-      
+
       return matches;
     }
 
@@ -200,7 +200,7 @@
         } else {
           compValue = item1.service_template_catalog.name.localeCompare(item2.service_template_catalog.name);
         }
-      } 
+      }
 
       if (!vm.toolbarConfig.sortConfig.isAscending) {
         compValue = compValue * -1;

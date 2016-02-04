@@ -40,6 +40,7 @@ module.exports = (function() {
   ];
 
   var clientJsOrder = [
+    '**/globals.js',
     '**/app.module.js',
     '**/*.module.js',
     '**/*.js'
@@ -62,7 +63,7 @@ module.exports = (function() {
     var files = [client + 'app/**/*.js', client + 'skin/**/*.js'];
 
     if (ordered) {
-      files = [].concat(client + 'app/app.module.js', client + 'app/**/*module*.js', files)
+      files = [].concat(client + 'app/globals.js', client + 'app/app.module.js', client + 'app/**/*module*.js', files)
     }
 
     if (excludeSpecs) {

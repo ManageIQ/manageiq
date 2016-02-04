@@ -1,8 +1,8 @@
 <ol class="breadcrumb">
   <li>
-    <a ui-sref="^"> <span class="fa fa-angle-double-left"/>&nbsp;Back to Service Catalog</a>
+    <a ui-sref="^"> <span class="fa fa-angle-double-left"/>&nbsp;{{'Back to Service Catalog'|translate}}</a>
   </li>
-  <li class="active"> <strong>Service:</strong> {{ ::vm.serviceTemplate.name }}
+  <li class="active"> <strong translate>Service:</strong> {{ ::vm.serviceTemplate.name }}
   </li>
 </ol>
 
@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
-              <button type="button" class="btn btn-primary" ng-click="vm.submitDialog()">Submit Request</button>
+              <button type="button" class="btn btn-primary" ng-click="vm.submitDialog()" translate>Submit Request</button>
             </div>
           </div>
         </div>

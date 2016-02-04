@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('datepickerInit', function () {
+ManageIQ.angular.app.directive('datepickerInit', function () {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {

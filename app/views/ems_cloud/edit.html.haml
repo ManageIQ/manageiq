@@ -13,6 +13,6 @@
   = render :partial => "shared/views/ems_common/angular/form"
 
 :javascript
-  ManageIQ.angularApplication.value('emsCommonFormId', '#{@ems.id || "new"}');
-  angular.bootstrap($($('#form_id').val()), ['ManageIQ.angularApplication'], { strictDi: true });
+  ManageIQ.angular.app.value('emsCommonFormId', '#{@ems.id || "new"}');
+  miq_bootstrap($('#form_id').val());
 

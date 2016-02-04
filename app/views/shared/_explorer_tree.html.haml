@@ -5,8 +5,6 @@
 -#   @trees - all the available trees generated with TreeBuilder
 
 - case controller.controller_name
-- when 'provider_foreman'
-  = render(:partial => "provider_foreman/#{name}_tree")
 - when 'miq_capacity'
   = render :partial => "#{controller.action_name}_tree"
 - when 'miq_policy'

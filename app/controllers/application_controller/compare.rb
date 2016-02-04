@@ -1560,7 +1560,7 @@ module ApplicationController::Compare
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>
                     </a>"
     elsif @sb[:compare_db] == "Host"
-      img = ActionController::Base.helpers.image_path("/100/vendor-#{h[:vmm_vendor].downcase}.png")
+      img = ActionController::Base.helpers.image_path("/100/vendor-#{h[:vmm_vendor_display].downcase}.png")
       html_text << "<a href=\"/host/show/#{h[:id]}\">
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\" />
                     </a>"

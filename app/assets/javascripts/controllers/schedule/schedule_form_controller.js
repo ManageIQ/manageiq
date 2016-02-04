@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
+ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
 
     $scope.scheduleModel = {
@@ -26,7 +26,7 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
     $scope.validateClicked = miqService.validateWithAjax;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
 
-    ManageIQ.angularApplication.$scope = $scope;
+    ManageIQ.angular.scope = $scope;
 
     if (scheduleFormId == 'new') {
       $scope.newRecord                = true;

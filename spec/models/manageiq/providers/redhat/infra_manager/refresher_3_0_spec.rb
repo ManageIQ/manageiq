@@ -137,7 +137,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :hostname         => "192.168.252.119",
       :ipaddress        => "192.168.252.119",
       :uid_ems          => "ca389dbc-2054-11e1-9241-005056af0085",
-      :vmm_vendor       => "RedHat",
+      :vmm_vendor       => "redhat",
       :vmm_version      => nil,
       :vmm_product      => "rhel",
       :vmm_buildnumber  => nil,

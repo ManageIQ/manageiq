@@ -245,7 +245,7 @@ module ApiSpecHelper
     value_list = fetch_value(values)
     expect(@result).to have_key(collection)
     expect(@result[collection].size).to eq(value_list.size)
-    @result[collection].zip(value_list).each do |hash, value|
+    value_list.zip(@result[collection]) do |value, hash|
       expect(hash).to have_key(key)
       expect(hash[key]).to match(value)
     end
@@ -284,7 +284,7 @@ module ApiSpecHelper
 
   def expect_results_to_match_hash(collection, result_hash)
     expect(@result).to have_key(collection)
-    @result[collection].zip(fetch_value(result_hash)).each do |actual, expected|
+    fetch_value(result_hash).zip(@result[collection]) do |expected, actual|
       expect_result_to_match_hash(actual, expected)
     end
   end
@@ -364,7 +364,7 @@ module ApiSpecHelper
     expect(@result).to have_key("results")
     results = @result["results"]
     expect(results.size).to eq(tag_results.size)
-    results.zip(tag_results) do |result, tag_result|
+    tag_results.zip(results) do |tag_result, result|
       expect(result).to include(
         "success"      => tag_result[:success],
         "href"         => a_string_matching(tag_result[:href]),

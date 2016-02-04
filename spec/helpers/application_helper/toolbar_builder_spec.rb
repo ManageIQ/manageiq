@@ -1115,6 +1115,7 @@ describe ApplicationHelper do
 
           it "and vendor is not redhat" do
             @record = FactoryGirl.create(:vm_vmware)
+            allow(@record).to receive(:archived?).and_return(false)
             expect(subject).to be_falsey
           end
         end
@@ -1145,7 +1146,8 @@ describe ApplicationHelper do
         end
 
         it "record is cloneable" do
-          @record = Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
+          @record = Vm.create(:type => "ManageIQ::Providers::Vmware::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
+          allow(@record).to receive(:archived?).and_return(false)
           expect(subject).to be_falsey
         end
       end
@@ -1406,7 +1408,7 @@ describe ApplicationHelper do
                                         :name     => "rh",
                                         :location => "loc1",
                                         :vendor   => "redhat")
-          expect(subject).to be_truthy
+          expect(subject).to be_falsey
         end
 
         it "record is cloneable" do
@@ -1692,6 +1694,45 @@ describe ApplicationHelper do
         @gtl_type = g
         expect(build_toolbar_disable_button("view_#{g}")).to be_truthy
       end
+    end
+
+    it "hides Lifecycle options in archived VMs list" do
+      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
+      @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "hides Lifecycle options in orphaned VMs list" do
+      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
+      @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "hides Lifecycle options for archived VMs" do
+      @record = FactoryGirl.create(:vm_microsoft)
+      allow(@record).to receive(:archived?).and_return(true)
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "hides Lifecycle options for orphaned VMs" do
+      @record = FactoryGirl.create(:vm_microsoft)
+      allow(@record).to receive(:orphaned?).and_return(true)
+      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+        expect(build_toolbar_hide_button(tb_button)).to be_truthy
+      end
+    end
+
+    it "when with 'history_1' and x_tree_history.length < 2" do
+      # setup for x_tree_history
+      @sb = {:history     => {:testing => %w(something)},
+             :active_tree => :testing}
+      expect(build_toolbar_disable_button('history_1')).to be_truthy
     end
 
     ['button_add', 'button_save', 'button_reset'].each do |b|
@@ -2744,6 +2785,19 @@ describe ApplicationHelper do
       it "when input[:onwhen] exists" do
         @input[:onwhen] = '1+'
         expect(subject).to have_key(:onwhen)
+      end
+    end
+
+    context "parameters correctness" do
+      it "Ensures that build_toolbar_disable_button method is called with correct parameters" do
+        button = {'child_id' => "vm_scan",
+                  'id'       => "vm_vmdb_choice__vm_scan",
+                  'type'     => "button"}
+        input = {'button'    => "vm_scan",
+                 'url_parms' => "main_div"}
+        b = _toolbar_builder
+        expect(b).to receive(:build_toolbar_disable_button).with("vm_scan")
+        b.send(:apply_common_props, button, input)
       end
     end
   end

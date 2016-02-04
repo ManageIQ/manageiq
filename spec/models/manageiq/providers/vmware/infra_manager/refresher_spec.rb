@@ -176,7 +176,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :hostname         => "VI4ESXM1.manageiq.com",
       :ipaddress        => "192.168.252.13",
       :uid_ems          => "vi4esxm1.manageiq.com",
-      :vmm_vendor       => "VMware",
+      :vmm_vendor       => "vmware",
       :vmm_version      => "4.1.0",
       :vmm_product      => "ESXi",
       :vmm_buildnumber  => "260247",

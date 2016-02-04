@@ -10,7 +10,7 @@ db: Host
 # Columns to fetch from the main table
 cols:
 - name
-- vmm_vendor
+- vmm_vendor_display
 - vmm_version
 - vmm_product
 - vmm_buildnumber
@@ -156,7 +156,7 @@ include:
 # Order of columns (from all tables)
 col_order:
 - name
-- vmm_vendor
+- vmm_vendor_display
 - vmm_version
 - vmm_product
 - vmm_buildnumber

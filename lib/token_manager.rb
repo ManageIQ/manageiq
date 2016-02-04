@@ -23,7 +23,7 @@ class TokenManager
     @instance ||= super
   end
 
-  delegate :configure, :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :to => self
+  delegate :configure, :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
 
   def self.configure(_namespace, options = {})
     @config.merge!(options)
@@ -70,6 +70,10 @@ class TokenManager
 
   def self.token_valid?(namespace, token)
     !global_token_store(namespace).read(token).nil?
+  end
+
+  def self.invalidate_token(namespace, token)
+    global_token_store(namespace).delete(token)
   end
 
   private

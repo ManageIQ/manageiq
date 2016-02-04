@@ -6,12 +6,12 @@ module ApplicationController::TreeSupport
     item = "h_#{@record.name}"
     render :update do |page|
       if session[:squash_open] == false
-        page << "$('#squash_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-all-false.png')})"
+        page << "$('#squash_img i').attr('class','fa fa-angle-double-up fa-lg')"
         page << "$('#squash_img').prop('title', 'Collapse All')"
         page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', true)"
         session[:squash_open] = true
       else
-        page << "$('#squash_img').prop('src', #{ActionController::Base.helpers.image_path('toolbars/squashed-all-true.png')})"
+        page << "$('#squash_img i').attr('class','fa fa-angle-double-down fa-lg')"
         page << "$('#squash_img').prop('title', 'Expand All')"
         page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', false);"
         page << "miqDynatreeActivateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"

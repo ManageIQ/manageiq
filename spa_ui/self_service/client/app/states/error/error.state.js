@@ -18,7 +18,7 @@
         templateUrl: 'app/states/error/error.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Error',
+        title: N_('Error'),
         data: {
           layout: 'blank'
         },

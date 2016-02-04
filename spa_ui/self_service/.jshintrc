@@ -80,6 +80,8 @@
   // Custom Globals
   "globals"       : {         // additional predefined global variables
     "angular": false,
-    "d3": false
+    "d3": false,
+    "__": false,
+    "N_": false
   }
 }

@@ -86,7 +86,7 @@
         } else if (assignedButton.method === 'delete') {
           CollectionsApi.delete(assignedButton.collection, assignedButton.id, {}).then(deleteSuccess, deleteFailure);
         } else {
-          Notifications.error('Button action not supported.');
+          Notifications.error(__('Button action not supported.'));
         }
 
         // Private functions
@@ -105,7 +105,7 @@
         }
 
         function postFailure() {
-          Notifications.error('Action not able to submit.');
+          Notifications.error(__('Action not able to submit.'));
         }
 
         function deleteSuccess(response) {
@@ -117,7 +117,7 @@
         }
 
         function deleteFailure() {
-          Notifications.error('Action not able to submit.');
+          Notifications.error(__('Action not able to submit.'));
         }
       }
     }

@@ -71,5 +71,5 @@
                      "ng-click" => "cancelClicked()")
 
 :javascript
-  ManageIQ.angularApplication.value('objectIds', #{ @retireitems.collect(&:id) });
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
+  ManageIQ.angular.app.value('objectIds', #{ @retireitems.collect(&:id) });
+  miq_bootstrap('#form_div');

@@ -18,7 +18,7 @@ class MiqServer < ApplicationRecord
   include ReportableMixin
   include RelationshipMixin
 
-  belongs_to              :vm
+  belongs_to              :vm, :inverse_of => :miq_server
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_groups, :as => :resource
