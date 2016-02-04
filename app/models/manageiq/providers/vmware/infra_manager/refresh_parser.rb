@@ -170,6 +170,9 @@ module ManageIQ::Providers
           # Link up the storages
           storages = get_mors(host_inv, 'datastore').collect { |s| storage_uids[s] }.compact
 
+          # Find the host->storage mount info
+          host_storages = host_inv_to_host_storages_hashes(host_inv, ems_inv[:storage], storage_uids)
+
           # Store the host 'name' value as uid_ems to use as the lookup value with MiqVim
           uid_ems = summary.nil? ? nil : summary.fetch_path('config', 'name')
 
@@ -214,6 +217,7 @@ module ManageIQ::Providers
             :hardware         => hardware,
             :switches         => switches,
             :storages         => storages,
+            :host_storages    => host_storages,
 
             :child_uids       => rp_uids,
           }
@@ -620,6 +624,25 @@ module ManageIQ::Providers
             :running      => data['running'].to_s == 'true',
           }
         end
+        result
+      end
+
+      def self.host_inv_to_host_storages_hashes(inv, storage_inv, storage_uids)
+        result = []
+
+        storage_inv.each do |s_mor, s_inv|
+          # Find the DatastoreHostMount object for this host
+          host_mount = Array.wrap(s_inv["host"]).detect { |host| host["key"] == inv["MOR"] }
+          next if host_mount.nil?
+
+          read_only = host_mount.fetch_path("mountInfo", "accessMode") == "readOnly"
+
+          result << {
+            :storage   => storage_uids[s_mor],
+            :read_only => read_only
+          }
+        end
+
         result
       end
 

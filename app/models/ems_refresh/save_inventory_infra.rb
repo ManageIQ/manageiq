@@ -122,7 +122,7 @@ module EmsRefresh::SaveInventoryInfra
                     []
                   end
 
-    child_keys = [:operating_system, :switches, :hardware, :system_services]
+    child_keys = [:operating_system, :switches, :hardware, :system_services, :host_storages]
     extra_keys = [:ems_cluster, :storages, :vms, :power_state, :ems_children]
     remove_keys = child_keys + extra_keys
 
@@ -209,6 +209,26 @@ module EmsRefresh::SaveInventoryInfra
         disconnects.each(&:disconnect_inv)
       end
     end
+  end
+
+  def save_host_storages_inventory(host, hashes, target = nil)
+    target = host if target.nil?
+
+    # Update the associated ids
+    hashes.each do |h|
+      h[:host_id]    = host.id
+      h[:storage_id] = h.fetch_path(:storage, :id)
+    end
+
+    host.host_storages(true)
+    deletes =
+      if target == host
+        host.host_storages.dup
+      else
+        []
+      end
+
+    save_inventory_multi(host.host_storages, hashes, deletes, [:host_id, :storage_id], nil, [:storage])
   end
 
   def save_folders_inventory(ems, hashes, target = nil)
