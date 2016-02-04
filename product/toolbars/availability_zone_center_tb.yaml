@@ -29,7 +29,7 @@
       :url: '/show'
       :url_parms: '?display=performance'
     - :button: availability_zone_timeline
-      ::icon: product product-timeline fa-lg
+      :icon: product product-timeline fa-lg
       :text: 'Timelines'
       :title: 'Show Timelines for this #{ui_lookup(:table=>"availability_zone")}'
       :url: '/show'
