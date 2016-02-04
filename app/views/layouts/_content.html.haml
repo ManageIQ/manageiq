@@ -15,7 +15,7 @@
         .row.toolbar-pf#toolbar
           .col-md-12
             .toolbar-pf-actions
-              = render :partial => "layouts/x_taskbar"
+              = render_toolbars(calculate_toolbars)
         #main-content.row
           .col-md-12
             .row
@@ -72,7 +72,9 @@
             .row.toolbar-pf#toolbar
               .col-md-12
                 .toolbar-pf-actions
-                  = render :partial => "layouts/taskbar"
+                  - if  @layout == "dashboard"
+                    = render :partial => "/layouts/tabs"
+                  = render_toolbars(calculate_toolbars)
           #main-content.row
             .col-md-12
               .row
@@ -122,7 +124,7 @@
             .row.toolbar-pf#toolbar
               .col-md-12
                 .toolbar-pf-actions
-                  = render :partial => "layouts/taskbar"
+                  = render_toolbars(calculate_toolbars)
           #main-content.row
             .col-md-12
               .row
@@ -151,3 +153,10 @@
 :javascript
   // a hack to prevent toolbars disappearing behind top menus, see BZ#1291465 for details
   $('.container-fluid').scrollTop(0);
+
+- if @record
+  :javascript
+    ManageIQ.record.recordId = '#{@record.id}';
+- else
+  :javascript
+    ManageIQ.record.recordId = null;
