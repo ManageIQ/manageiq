@@ -1134,7 +1134,7 @@ class Host < ApplicationRecord
   def refresh_services(ssu)
     xml = MiqXml.createDoc(:miq).root.add_element(:services)
 
-    services = ssu.shell_exec("systemctl -a --type service")
+    services = ssu.shell_exec("systemctl -a --type service --no-legend")
     if services
       # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
       services = MiqLinux::Utils.parse_systemctl_list(services)

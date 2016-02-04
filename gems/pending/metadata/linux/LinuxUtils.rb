@@ -122,7 +122,7 @@ module MiqLinux
       lines.each_line.map do |line|
         line = line.chomp
         parts = line.split(' ')
-        next unless /^.*?\.service$/ =~ parts[0]
+        next if (/^.*?\.service$/ =~ parts[0]).nil?
 
         name, = parts[0].split('.')
 
@@ -138,7 +138,7 @@ module MiqLinux
          :enable_run_level  => nil,
          :disable_run_level => nil,
          :running           => parts[3] == 'running'}
-      end.compact!
+      end.compact
     end
 
     def self.parse_openstack_status(lines)
