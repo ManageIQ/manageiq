@@ -1,3 +1,5 @@
+require 'aws-sdk'
+
 describe ManageIQ::Providers::Amazon::CloudManager do
   it ".ems_type" do
     expect(described_class.ems_type).to eq('ec2')
@@ -14,122 +16,155 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     end
   end
 
-  context ".discover" do
+  describe ".discover" do
+    let(:ec2_user) { "0123456789ABCDEFGHIJ" }
+    let(:ec2_pass) { "ABCDEFGHIJKLMNO1234567890abcdefghijklmno" }
+    subject { described_class.discover(ec2_user, ec2_pass) }
+
     before do
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
-      @ec2_user = "0123456789ABCDEFGHIJ"
-      @ec2_pass = "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"
-      @ec2_user2 = "testuser"
-      @ec2_pass2 = "secret"
+      Aws.config[:ec2] = {:stub_responses => stub_responses}
     end
 
-    def recorded_discover(example)
-      cassette_name = example.description.tr(" ", "_").delete(",").underscore
-      VCR.use_cassette("#{described_class.name.underscore}/discover/#{cassette_name}") do
-        ManageIQ::Providers::Amazon::CloudManager.discover(@ec2_user, @ec2_pass)
-      end
+    after do
+      Aws.config[:ec2].delete(:stub_responses)
     end
 
     def assert_region(ems, name)
       expect(ems.name).to eq(name)
       expect(ems.provider_region).to eq(name.split(" ").first)
-      expect(ems.auth_user_pwd).to eq([@ec2_user, @ec2_pass])
+      expect(ems.auth_user_pwd).to eq([ec2_user, ec2_pass])
     end
 
     def assert_region_on_another_account(ems, name)
       expect(ems.name).to eq(name)
       expect(ems.provider_region).to eq(name.split(" ").first)
-      expect(ems.auth_user_pwd).to eq([@ec2_user2, @ec2_pass2])
+      default_auth = FactoryGirl.build(:authentication)
+      expect(ems.auth_user_pwd).to eq([default_auth.userid, default_auth.password])
     end
 
-    it "with no existing records" do |example|
-      found = recorded_discover(example)
-      expect(found.count).to eq(2)
-
-      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      expect(emses.count).to eq(2)
-      assert_region(emses[0], "us-east-1")
-      assert_region(emses[1], "us-west-1")
-    end
-
-    it "with no existing records and greenfield Amazon" do |example|
-      found = recorded_discover(example)
-      expect(found.count).to eq(1)
-
-      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      expect(emses.count).to eq(1)
-      assert_region(emses[0], "us-east-1")
-    end
-
-    it "with some existing records" do |example|
-      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
-
-      found = recorded_discover(example)
-      expect(found.count).to eq(1)
-
-      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      expect(emses.count).to eq(2)
-      assert_region(emses[0], "us-east-1")
-      assert_region(emses[1], "us-west-1")
-    end
-
-    it "with all existing records" do |example|
-      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-east-1", :provider_region => "us-east-1")
-      FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
-
-      found = recorded_discover(example)
-      expect(found.count).to eq(0)
-
-      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      expect(emses.count).to eq(2)
-      assert_region(emses[0], "us-east-1")
-      assert_region(emses[1], "us-west-1")
-    end
-
-    context "with records from a different account" do
-      it "with the same name" do |example|
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
-
-        found = recorded_discover(example)
-        expect(found.count).to eq(2)
-
-        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        expect(emses.count).to eq(3)
-        assert_region(emses[0], "us-east-1")
-        assert_region_on_another_account(emses[1], "us-west-1")
-        assert_region(emses[2], "us-west-1 #{@ec2_user}")
+    context "on greenfield amazon" do
+      let(:stub_responses) do
+        {
+          :describe_regions => {
+            :regions => [
+              {:region_name => 'us-east-1'},
+              {:region_name => 'us-west-1'},
+            ]
+          }
+        }
       end
 
-      it "with the same name and backup name" do |example|
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
+      it "with no existing records only creates default ems" do
+        expect(subject.count).to eq(1)
 
-        found = recorded_discover(example)
-        expect(found.count).to eq(2)
-
-        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        expect(emses.count).to eq(4)
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
+        expect(emses.count).to eq(1)
         assert_region(emses[0], "us-east-1")
-        assert_region_on_another_account(emses[1], "us-west-1")
-        assert_region_on_another_account(emses[2], "us-west-1 #{@ec2_user}")
-        assert_region(emses[3], "us-west-1 1")
+      end
+    end
+
+    context "on amazon with two populated regions" do
+      let(:stub_responses) do
+        {
+          :describe_regions => {
+            :regions => [
+              {:region_name => 'us-east-1'},
+              {:region_name => 'us-west-1'},
+            ]
+          },
+          :describe_instances => {
+            :reservations => [
+              {
+                :instances => [
+                  {:instance_id => "id-1"},
+                  {:instance_id => "id-2"},
+                ]
+              }
+            ]
+          }
+        }
       end
 
-      it "with the same name, backup name, and secondary backup name" do |example|
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
-        FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 1", :provider_region => "us-west-1")
+      it "with no existing records" do
+        expect(subject.count).to eq(2)
 
-        found = recorded_discover(example)
-        expect(found.count).to eq(2)
-
-        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        expect(emses.count).to eq(5)
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
+        expect(emses.count).to eq(2)
         assert_region(emses[0], "us-east-1")
-        assert_region_on_another_account(emses[1], "us-west-1")
-        assert_region_on_another_account(emses[2], "us-west-1 #{@ec2_user}")
-        assert_region_on_another_account(emses[3], "us-west-1 1")
-        assert_region(emses[4], "us-west-1 2")
+        assert_region(emses[1], "us-west-1")
+      end
+
+      it "with some existing records" do
+        FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
+
+        expect(subject.count).to eq(1)
+
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
+        expect(emses.count).to eq(2)
+        assert_region(emses[0], "us-east-1")
+        assert_region(emses[1], "us-west-1")
+      end
+
+      it "with all existing records" do
+        FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-east-1", :provider_region => "us-east-1")
+        FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
+
+        expect(subject.count).to eq(0)
+
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
+        expect(emses.count).to eq(2)
+        assert_region(emses[0], "us-east-1")
+        assert_region(emses[1], "us-west-1")
+      end
+
+      context "with records on other account" do
+        def create_ems_on_other_account(name)
+          FactoryGirl.create(:ems_amazon_with_authentication_on_other_account,
+                             :name            => name,
+                             :provider_region => "us-west-1")
+        end
+
+        it "with the same name" do
+          create_ems_on_other_account("us-west-1")
+          expect(subject.count).to eq(2)
+
+          emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
+          expect(emses.count).to eq(3)
+          assert_region(emses[0], "us-east-1")
+          assert_region_on_another_account(emses[1], "us-west-1")
+          assert_region(emses[2], "us-west-1 #{ec2_user}")
+        end
+
+        it "with the same name and backup name" do
+          create_ems_on_other_account("us-west-1")
+          create_ems_on_other_account("us-west-1 #{ec2_user}")
+
+          expect(subject.count).to eq(2)
+
+          emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
+          expect(emses.count).to eq(4)
+          assert_region(emses[0], "us-east-1")
+          assert_region_on_another_account(emses[1], "us-west-1")
+          assert_region_on_another_account(emses[2], "us-west-1 #{ec2_user}")
+          assert_region(emses[3], "us-west-1 1")
+        end
+
+        it "with the same name, backup name, and secondary backup name" do
+          create_ems_on_other_account("us-west-1")
+          create_ems_on_other_account("us-west-1 #{ec2_user}")
+          create_ems_on_other_account("us-west-1 1")
+
+          expect(subject.count).to eq(2)
+
+          emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
+          expect(emses.count).to eq(5)
+          assert_region(emses[0], "us-east-1")
+          assert_region_on_another_account(emses[1], "us-west-1")
+          assert_region_on_another_account(emses[2], "us-west-1 #{ec2_user}")
+          assert_region_on_another_account(emses[3], "us-west-1 1")
+          assert_region(emses[4], "us-west-1 2")
+        end
       end
     end
   end
@@ -163,10 +198,6 @@ describe ManageIQ::Providers::Amazon::CloudManager do
   end
 
   context "translate_exception" do
-    before :all do
-      require 'aws-sdk'
-    end
-
     before :each do
       @ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
 
@@ -195,6 +226,44 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     it "handles MissingCredentialsErrror" do
       allow(@ems).to receive(:with_provider_connection).and_raise(Aws::Errors::MissingCredentialsError)
       expect { @ems.verify_credentials }.to raise_error(MiqException::MiqHostError, /Missing credentials/i)
+    end
+  end
+
+  context "#orchestration_template_validate" do
+    def with_aws_stubbed(stub_responses_per_service)
+      begin
+        stub_responses_per_service.each do |service, stub_responses|
+          raise "Aws.config[#{service}][:stub_responses] already set" if Aws.config.fetch(service, {})[:stub_responses]
+          Aws.config[service] ||= {}
+          Aws.config[service][:stub_responses] = stub_responses
+        end
+        yield
+      ensure
+        stub_responses_per_service.keys.each do |service|
+          Aws.config[service].delete(:stub_responses)
+        end
+      end
+    end
+
+    it "validates a correct template" do
+      template = FactoryGirl.create(:orchestration_template_cfn_with_content)
+      with_aws_stubbed(:cloudformation => {
+          :validate_template => {}
+      }) do
+        ems = FactoryGirl.create(:ems_amazon_with_authentication)
+        expect(ems.orchestration_template_validate(template)).to be_nil
+      end
+    end
+
+    it "returns an error string for an incorrect template" do
+      template = FactoryGirl.create(:orchestration_template_cfn_with_content)
+      error_message = "Template format error: At least one Resources member must be defined"
+      with_aws_stubbed(:cloudformation => {
+          :validate_template => Aws::CloudFormation::Errors::ValidationError.new(:no_context, error_message)
+      }) do
+        ems = FactoryGirl.create(:ems_amazon_with_authentication)
+        expect(ems.orchestration_template_validate(template)).to eq(error_message)
+      end
     end
   end
 end
