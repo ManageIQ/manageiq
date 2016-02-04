@@ -17,7 +17,9 @@ class EmsCluster < ApplicationRecord
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many    :policy_events, -> { order "timestamp" }
-  has_many    :miq_events,             :as => :target,    :dependent => :destroy
+  has_many    :miq_events,         :as => :target,   :dependent => :destroy
+  has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
+
 
   delegate :tenant_identity, :to => :ext_management_system
 
