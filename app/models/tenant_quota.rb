@@ -36,7 +36,8 @@ class TenantQuota < ApplicationRecord
 
   NAMES = QUOTA_BASE.keys.map(&:to_s)
 
-  validates :name, :inclusion => {:in => NAMES}
+  validates :name, :inclusion => {:in => NAMES},
+                   :uniqueness => { scope: [:name, :tenant_id] , message: "should be unique per tenant" }
   validates :unit, :value, :presence => true
   validates :value, :numericality => {:greater_than => 0}
   validates :warn_value, :numericality => {:greater_than => 0}, :if => "warn_value.present?"
