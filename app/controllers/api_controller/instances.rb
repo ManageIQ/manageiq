@@ -88,15 +88,15 @@ class ApiController
       end
     end
 
-    def hard_reboot_resource_instances(type, id = nil, _data = nil)
-      raise BadRequestError, "Must specify an id for hard rebooting a #{type} resource" unless id
+    def reset_resource_instances(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for resetting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Hard Rebooting #{instance_ident(instance)}")
+        api_log_info("Resetting #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "reset")
-        result = hard_reboot_instance(instance) if result[:success]
+        result = reset_instance(instance) if result[:success]
         result
       end
     end
@@ -168,8 +168,8 @@ class ApiController
       action_result(false, err.to_s)
     end
 
-    def hard_reboot_instance(instance)
-      desc = "#{instance_ident(instance)} hard rebooting"
+    def reset_instance(instance)
+      desc = "#{instance_ident(instance)} resetting"
       task_id = queue_object_action(instance, desc, :method_name => "reset", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err

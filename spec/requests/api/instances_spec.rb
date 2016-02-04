@@ -397,11 +397,11 @@ RSpec.describe "Instances API" do
     end
   end
 
-  describe "instance hard reboot action" do
+  describe "instance reset action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :hard_reboot)
+      api_basic_authorize action_identifier(:instances, :reset)
 
-      run_post(invalid_instance_url, gen_request(:hard_reboot))
+      run_post(invalid_instance_url, gen_request(:reset))
 
       expect_resource_not_found
     end
@@ -409,32 +409,32 @@ RSpec.describe "Instances API" do
     it "responds forbidden for an invalid instance without appropriate role" do
       api_basic_authorize
 
-      run_post(invalid_instance_url, gen_request(:hard_reboot))
+      run_post(invalid_instance_url, gen_request(:reset))
 
       expect_request_forbidden
     end
 
-    it "fails to hard reboot a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :hard_reboot)
+    it "fails to reset a powered off instance" do
+      api_basic_authorize action_identifier(:instances, :reset)
       update_raw_power_state("poweredOff", instance)
 
-      run_post(instance_url, gen_request(:hard_reboot))
+      run_post(instance_url, gen_request(:reset))
 
       expect_single_action_result(:success => false, :message => "is not powered on", :href => :instance_url)
     end
 
-    it "hard reboots a valid instance" do
-      api_basic_authorize action_identifier(:instances, :hard_reboot)
+    it "resets a valid instance" do
+      api_basic_authorize action_identifier(:instances, :reset)
 
-      run_post(instance_url, gen_request(:hard_reboot))
+      run_post(instance_url, gen_request(:reset))
 
-      expect_single_action_result(:success => true, :message => "hard rebooting", :href => :instance_url, :task => true)
+      expect_single_action_result(:success => true, :message => "resetting", :href => :instance_url, :task => true)
     end
 
-    it "hard reboots multiple valid instances" do
-      api_basic_authorize action_identifier(:instances, :hard_reboot)
+    it "resets multiple valid instances" do
+      api_basic_authorize action_identifier(:instances, :reset)
 
-      run_post(instances_url, gen_request(:hard_reboot, nil, instance1_url, instance2_url))
+      run_post(instances_url, gen_request(:reset, nil, instance1_url, instance2_url))
 
       expect_multiple_action_result(2, :task => true)
       expect_result_resources_to_include_hrefs("results", :instances_list)
