@@ -5,7 +5,7 @@
     .factory('Session', SessionFactory);
 
   /** @ngInject */
-  function SessionFactory($http, moment, $sessionStorage, gettextCatalog) {
+  function SessionFactory($http, moment, $sessionStorage, gettextCatalog, $window) {
     var model = {
       token: null,
       user: {}
@@ -18,6 +18,7 @@
       active: active,
       currentUser: currentUser,
       loadUser: loadUser,
+      switchGroup: switchGroup,
     };
 
     destroy();
@@ -57,6 +58,13 @@
       }
 
       return model.user;
+    }
+
+    function switchGroup(group) {
+      $sessionStorage.miqGroup = group;
+
+      // reload
+      $window.location = $window.location.href;
     }
 
     // Helpers

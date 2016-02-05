@@ -16,7 +16,8 @@
       return $http.get(API_BASE + '/api/auth?requester_type=ui', {
         headers: {
           'Authorization': 'Basic ' + $base64.encode([userLogin, password].join(':')),
-          'X-Auth-Token': void 0
+          'X-Auth-Token': undefined,
+          'X-Miq-Group': undefined,
         }
       }).then(loginSuccess, loginFailure);
 
