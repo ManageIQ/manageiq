@@ -123,8 +123,8 @@ VCR.configure do |c|
     next if [:secret_key_base, :secret_token].include?(provider) # Defaults
     cred_hash = secrets.public_send(provider)
     cred_hash.each do |key, value|
-      c.filter_sensitive_data("<#{provider.upcase}_#{key.upcase}>") { CGI.escape(value) }
-      c.filter_sensitive_data("<#{provider.upcase}_#{key.upcase}>") { value }
+      c.filter_sensitive_data("#{provider.upcase}_#{key.upcase}") { CGI.escape(value) }
+      c.filter_sensitive_data("#{provider.upcase}_#{key.upcase}") { value }
     end
   end
 
