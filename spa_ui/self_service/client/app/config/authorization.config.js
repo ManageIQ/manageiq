@@ -72,7 +72,10 @@
 
       $sessionStorage.$sync();  // needed when called right on reload
       if ($sessionStorage.token) {
-        Session.create({ auth_token: $sessionStorage.token });
+        Session.create({
+          auth_token: $sessionStorage.token,
+          miqGroup: $sessionStorage.miqGroup,
+        });
 
         return Session.loadUser();
       }

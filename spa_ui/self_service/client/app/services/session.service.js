@@ -27,13 +27,17 @@
     function create(data) {
       model.token = data.auth_token;
       $http.defaults.headers.common['X-Auth-Token'] = model.token;
+      $http.defaults.headers.common['X-Miq-Group'] = data.miqGroup || undefined;
       $sessionStorage.token = model.token;
+      $sessionStorage.miqGroup = data.miqGroup || null;
     }
 
     function destroy() {
       model.token = null;
       model.user = {};
       delete $http.defaults.headers.common['X-Auth-Token'];
+      delete $http.defaults.headers.common['X-Miq-Group'];
+      delete $sessionStorage.miqGroup;
       delete $sessionStorage.token;
     }
 
