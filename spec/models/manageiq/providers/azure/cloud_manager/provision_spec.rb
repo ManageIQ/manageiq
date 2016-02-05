@@ -12,26 +12,32 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
     name            = "vm_1"
     nic_id          = "nic_id_1"
 
-    before(:each) do
+    before do
       subject.source = template
       allow(subject).to receive(:gather_storage_account_properties).and_return(%w("target_uri", "source_uri", "windows"))
       allow(subject).to receive(:create_nic).and_return(nic_id)
     end
 
     context "#find_destination_in_vmdb" do
+      vm_uid_hash = {
+        :subscription_id => subscription_id,
+        :resource_group  => resource_group,
+        :type            => type,
+        :name            => name
+      }
       it "VM in same sub-class" do
         vm = FactoryGirl.create(:vm_azure, :ext_management_system => provider)
-        expect(subject.find_destination_in_vmdb([subscription_id, resource_group, type, name])).to eq(vm)
+        expect(subject.find_destination_in_vmdb(vm_uid_hash)).to eq(vm)
       end
 
       it "VM in same sub-class with invalid parameters" do
-        expect(subject.find_destination_in_vmdb(["invalid_subscription_id", resource_group, type, name])).to be_nil
+        vm_uid_hash[:subscription_id] = "invalid_subscription_id"
+        expect(subject.find_destination_in_vmdb(vm_uid_hash)).to be_nil
       end
 
       it "VM in different sub-class" do
         vm = FactoryGirl.create(:vm_openstack, :ext_management_system => provider)
-        vm.ems_ref = "openstack_vm"
-        expect(subject.find_destination_in_vmdb([vm.ems_ref])).to be_nil
+        expect(subject.find_destination_in_vmdb(:ems_ref=> vm.ems_ref)).to be_nil
       end
     end
 
