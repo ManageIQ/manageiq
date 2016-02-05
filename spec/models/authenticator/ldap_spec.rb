@@ -93,6 +93,7 @@ describe Authenticator::Ldap do
 
   before(:each) do
     allow(MiqLdap).to receive(:new) { FakeLdap.new(user_data) }
+    allow(MiqLdap).to receive(:using_ldap?) { true }
   end
 
   describe '#uses_stored_password?' do
@@ -163,6 +164,20 @@ describe Authenticator::Ldap do
     let(:username) { 'alice' }
     let(:password) { 'secret' }
 
+    context "when using LDAP" do
+      let(:config) { super().merge(:ldap_role => true) }
+
+      before do
+        allow(MiqQueue).to receive(:put)
+        allow(MiqTask).to receive(:create).and_return(double(:id => :return_value))
+      end
+
+      it "encrypts password for queuing" do
+        expect(subject).to receive(:encrypt_ldap_password)
+        authenticate
+      end
+    end
+
     context "with correct password" do
       context "using local authorization" do
         it "succeeds" do
@@ -199,6 +214,15 @@ describe Authenticator::Ldap do
       context "using external authorization" do
         let(:config) { super().merge(:ldap_role => true) }
         before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
+
+        context "with an LDAP user" do
+          before { allow(subject).to receive(:run_task) }
+
+          it "decrypts password after dequeuing" do
+            expect(subject).to receive(:decrypt_ldap_password)
+            subject.authorize(22, 'alice', 1)
+          end
+        end
 
         it "enqueues an authorize task" do
           expect(subject).to receive(:authorize_queue).and_return(123)

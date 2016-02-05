@@ -97,6 +97,7 @@ module Authenticator
 
     def authorize(taskid, username, *args)
       audit = {:event => "authorize", :userid => username}
+      decrypt_ldap_password(config) if MiqLdap.using_ldap?
 
       run_task(taskid, "Authorizing") do |task|
         begin
@@ -194,9 +195,18 @@ module Authenticator
       !defined?(Rails::Server)
     end
 
+    def decrypt_ldap_password(config)
+      config[:bind_pwd] = MiqPassword.try_decrypt(config[:bind_pwd])
+    end
+
+    def encrypt_ldap_password(config)
+      config[:bind_pwd] = MiqPassword.try_encrypt(config[:bind_pwd])
+    end
+
     def authorize_queue(username, _request, *args)
       task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
       if authorize_queue?
+        encrypt_ldap_password(config) if MiqLdap.using_ldap?
         MiqQueue.put(
           :queue_name   => "generic",
           :class_name   => self.class.to_s,
