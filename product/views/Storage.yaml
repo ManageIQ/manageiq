@@ -40,7 +40,7 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :hosts_storages: {}
+  :host_storages: {}
 
 # Order of columns (from all tables)
 col_order: 
