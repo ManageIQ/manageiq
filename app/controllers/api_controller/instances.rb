@@ -88,6 +88,19 @@ class ApiController
       end
     end
 
+    def reset_resource_instances(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for resetting a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        instance = resource_search(id, type, klass)
+        api_log_info("Resetting #{instance_ident(instance)}")
+
+        result = validate_instance_for_action(instance, "reset")
+        result = reset_instance(instance) if result[:success]
+        result
+      end
+    end
+
     private
 
     def instance_ident(instance)
@@ -150,6 +163,14 @@ class ApiController
     def soft_reboot_instance(instance)
       desc = "#{instance_ident(instance)} soft rebooting"
       task_id = queue_object_action(instance, desc, :method_name => "reboot_guest", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def reset_instance(instance)
+      desc = "#{instance_ident(instance)} resetting"
+      task_id = queue_object_action(instance, desc, :method_name => "reset", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
