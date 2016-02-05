@@ -1,19 +1,16 @@
 module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
   def do_clone_task_check(clone_task_ref)
     source.with_provider_connection do |azure|
-      vms               = Azure::Armrest::VirtualMachineService.new(azure)
-      vm_name           = clone_task_ref[3]
-      vm_resource_group = clone_task_ref[1]
-      instance          = vms.get(vm_name, vm_resource_group)
-      status            = instance.properties.provisioning_state
-
+      vms      = Azure::Armrest::VirtualMachineService.new(azure)
+      instance = vms.get(clone_task_ref[:vm_name], clone_task_ref[:vm_resource_group])
+      status   = instance.properties.provisioning_state
       return true if status == "Succeeded"
       return false, status
     end
   end
 
-  def find_destination_in_vmdb(vm_uid)
-    ems_ref = vm_uid.join("\\")
+  def find_destination_in_vmdb(vm_uid_hash)
+    ems_ref = vm_uid_hash.values.join("\\")
     ManageIQ::Providers::Azure::CloudManager::Vm.find_by(:ems_ref => ems_ref.downcase)
   end
 
@@ -37,10 +34,6 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
     end
 
     return target_uri, source_uri, blob_properties.x_ms_meta_microsoftazurecompute_ostype
-  end
-
-  def root_password
-    MiqPassword.decrypt(options[:root_password]) if options[:root_password]
   end
 
   def custom_data
@@ -92,10 +85,6 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
     source.location
   end
 
-  def resource_group
-    ResourceGroup.find_by(:id => options[:resource_group]).name
-  end
-
   def storage_account_resource_group
     source.description.split("\\").first
   end
@@ -137,7 +126,12 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
       vm  = vms.create(dest_name, resource_group, clone_options)
       subscription_id = vm.id.split('/')[2]
 
-      return subscription_id, vm.resource_group, vm.type.downcase, vm.name
+      {
+        :subscription_id   => subscription_id,
+        :vm_resource_group => vm.resource_group,
+        :type              => vm.type.downcase,
+        :vm_name           => vm.name
+      }
     end
   end
 end

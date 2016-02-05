@@ -143,14 +143,6 @@
           :display: :hide
           :default: false
           :data_type: :boolean
-        :placement_availability_zone:
-          :values_from:
-            :method: :allowed_availability_zones
-          :description: Availability Zone
-          :required: false
-          :display: :hide
-          :data_type: :integer
-          :required_description: Availability Zone Name
         :resource_group:
           :values_from:
             :method: :allowed_resource_groups
@@ -179,15 +171,6 @@
           :values_from:
             :method: :allowed_security_groups
           :description: Security Groups
-          :required: false
-          :display: :hide
-          :data_type: :integer
-        :floating_ip_address:
-          :values_from:
-            :method: :allowed_floating_ip_addresses
-          :description: Reserved IP Address
-          :auto_select_single: false
-          :default: nil
           :required: false
           :display: :hide
           :data_type: :integer
@@ -299,22 +282,6 @@
           :required: true
           :display: :edit
           :data_type: :integer
-        :guest_access_key_pair:
-          :values_from:
-            :method: :allowed_guest_access_key_pairs
-          :description: Guest Access Key Pair
-          :required: false
-          :display: :hide
-          :data_type: :integer
-        :monitoring:
-          :values:
-            basic: Basic
-            advanced: Advanced
-          :description: CloudWatch
-          :required: true
-          :default: basic
-          :display: :hide
-          :data_type: :string
       :display: :show
     :customize:
       :description: Customize
