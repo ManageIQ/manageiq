@@ -329,7 +329,7 @@ module MiqAeMethodService
           ensure
             MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
           end
-          return # Success
+          return
         end
         sleep(rand(retry_interval))
       end
