@@ -323,6 +323,11 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
+    if objects.nil?
+      Vmdb::Deprecation.deprecation_warning("objects = nil",
+                                            "use [] to get an empty result back. nil will return all records",
+                                            caller(0)) unless Rails.env.production?
+    end
     if objects.present?
       Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
     else
@@ -396,7 +401,7 @@ module Rbac
 
   # @param  options filtering options
   # @option options :targets       [nil|Array<Numeric|Object>|scope] Objects to be filtered
-  #   - an empty entry uses the optional where_clause
+  #   - an nil entry uses the optional where_clause
   #   - Array<Numeric> list if ids. :class is required. results are returned as ids
   #   - Array<Object> list of objects. results are returned as objects
   # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
@@ -429,6 +434,14 @@ module Rbac
   # @option attrs target_ids_for_paging
 
   def self.search(options = {})
+    # now:   search(:targets => [],  :class => Vm) searches Vms
+    # later: search(:targets => [],  :class => Vm) returns []
+    #        search(:targets => nil, :class => Vm) will always search Vms
+    if options.key?(:targets) && options[:targets].empty?
+      Vmdb::Deprecation.deprecation_warning(":targets => []", "use :targets => nil to search all records",
+                                            caller(0)) unless Rails.env.production?
+      options[:targets] = nil
+    end
     options = options.dup
     # => empty inputs - normal find with optional where_clause
     # => list if ids - :class is required for this format.
