@@ -399,13 +399,10 @@ msgstr ""
 msgid "Request Date"
 msgstr ""
 
+#: app/states/requests/details/details.html:37
 #: app/states/requests/list/list.state.js:65
 #: app/states/requests/list/list.state.js:96
 msgid "Request ID"
-msgstr ""
-
-#: app/states/requests/details/details.html:37
-msgid "Request Id"
 msgstr ""
 
 #: app/states/requests/list/list.state.js:19
@@ -443,8 +440,8 @@ msgstr ""
 msgid "Requests Details"
 msgstr ""
 
-#: app/states/services/details/details.html:43
-msgid "Retire <span class=\"caret\"></span>"
+#: app/states/services/details/details.html:44
+msgid "Retire"
 msgstr ""
 
 #: app/states/services/details/details.html:50
