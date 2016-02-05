@@ -12,7 +12,7 @@ $outdir.chomp!("/")
 $outdir.chomp!("\\")
 $outdir = File.expand_path($outdir)
 
-require 'fastercsv'
+require 'csv'
 
 def dump_csv(type, hashes)
   output = "#{$outdir}/#{type}.csv"
@@ -29,7 +29,7 @@ def dump_csv(type, hashes)
     keys += [:unaccounted, :total_time]
 
     graph_data = []
-    FasterCSV.open(output, "w") do |csv|
+    CSV.open(output, "w") do |csv|
       graph_data << keys[0...-1].collect(&:to_s)
       csv << keys
       hashes.each do |h|
