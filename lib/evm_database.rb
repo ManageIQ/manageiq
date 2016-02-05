@@ -63,6 +63,7 @@ class EvmDatabase
             klass.seed
           rescue => err
             _log.log_backtrace(err)
+            raise
           end
         else
           _log.error("Class #{klass} does not have a seed")
