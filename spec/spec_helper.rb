@@ -85,7 +85,7 @@ RSpec.configure do |config|
   # end
 
   config.before(:each) do
-    EmsRefresh.debug_failures = true
+    EmsRefresh.debug_failures = true if defined?(EmsRefresh) && EmsRefresh.respond_to?(:debug_failures)
     ApplicationController.handle_exceptions = false
   end
   config.after(:each) do
