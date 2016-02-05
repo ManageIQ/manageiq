@@ -83,8 +83,12 @@ class MiqLoggerProcessor
   end
 
   def self.csv_to_png(filename, options = {})
-    require 'fastercsv'
-    to_png(FasterCSV.read(filename), options)
+    to_png(read_csv(filename), options)
+  end
+
+  def self.read_csv(filename)
+    require 'csv'
+    CSV.read(filename)
   end
 
   private
