@@ -34,11 +34,7 @@
       vm.toggleNavigation = toggleNavigation;
       vm.clearMessages = clearMessages;
       vm.API_BASE = API_BASE;
-
-      vm.group_switch = function(group) {
-        // TODO - reload with X-Miq-Group set to $group
-        console.log('chosen', group);
-      };
+      vm.group_switch = Session.switchGroup;
 
       function activate() {
         vm.messages = Messages.items;
