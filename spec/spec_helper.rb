@@ -34,6 +34,9 @@ RSpec.configure do |config|
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
 
+  # File store for --only-failures option
+  config.example_status_persistence_file_path = "./spec/examples.txt"
+
   config.include VMDBConfigurationHelper
 
   config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
