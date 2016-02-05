@@ -71,7 +71,8 @@ module ManageIQ::Providers
             :type        => template_type,
             :name        => stack.stack_name,
             :description => template.description,
-            :content     => template.content
+            :content     => template.content,
+            :orderable   => false
           }
           return uid, new_result
         end

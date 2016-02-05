@@ -174,29 +174,87 @@ describe OrchestrationTemplate do
     end
   end
 
-  describe ".save_with_format_validation!" do
-    let(:template) { FactoryGirl.build(:orchestration_template) }
+  describe ".save_as_orderable!" do
+    let(:content) { "content of the test template" }
+    let(:existing_orderable_template) do
+      FactoryGirl.create(:orchestration_template, :content => content, :orderable => true)
+    end
+    let(:existing_discovered_template) do
+      FactoryGirl.create(:orchestration_template, :content => content, :orderable => false)
+    end
 
-    context "when format validation fails" do
-      it "raises an error showing the failure reason" do
-        allow(template).to receive_messages(:validate_format => "format is invalid")
-        expect { template.save_with_format_validation! }
-          .to raise_error(MiqException::MiqParsingError, "format is invalid")
+    context "save new template" do
+      let(:template) { FactoryGirl.build(:orchestration_template, :content => content) }
+
+      context "when format validation fails" do
+        it "raises an error showing the failure reason" do
+          allow(template).to receive_messages(:validate_format => "format is invalid")
+          expect { template.save_as_orderable! }
+            .to raise_error(MiqException::MiqParsingError, "format is invalid")
+        end
+      end
+
+      context "when format validation passes" do
+        it "saves the template" do
+          allow(template).to receive_messages(:validate_format => nil)
+          expect(template.save_as_orderable!).to be_truthy
+        end
+      end
+
+      context "when the template is draft" do
+        it "always saves the template" do
+          template.draft = true
+          allow(template).to receive_messages(:validate_format => "format is invalid")
+          expect(template.save_as_orderable!).to be_truthy
+        end
+      end
+
+      context "when conflicts with existing orderable template" do
+        before { existing_orderable_template }
+
+        it "raises an error" do
+          allow(template).to receive_messages(:validate_format => nil)
+          expect { template.save_as_orderable! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context "when conflicts with existing discovered template" do
+        before { existing_discovered_template }
+
+        it "updates the existing template" do
+          allow(template).to receive_messages(:validate_format => nil)
+          expect(template.save_as_orderable!).to be_truthy
+          expect(template).to have_attributes(:id => existing_discovered_template.id, :orderable => true)
+        end
       end
     end
 
-    context "when format validation passes" do
-      it "saves the template" do
-        allow(template).to receive_messages(:validate_format => nil)
-        expect(template.save_with_format_validation!).to be_truthy
-      end
-    end
+    context "modify and save an existing template" do
+      let(:template) { FactoryGirl.create(:orchestration_template, :content => "old content") }
 
-    context "when the template is draft" do
-      it "always saves the template" do
-        template.draft = true
-        allow(template).to receive_messages(:validate_format => "format is invalid")
-        expect(template.save_with_format_validation!).to be_truthy
+      before { template.content = content }
+
+      context "when conflicts with existing orderable template" do
+        before { existing_orderable_template }
+
+        it "raises an error" do
+          allow(template).to receive_messages(:validate_format => nil)
+          expect { template.save_as_orderable! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context "when conflicts with existing discovered template" do
+        let!(:stack) do
+          FactoryGirl.create(:orchestration_stack, :orchestration_template => existing_discovered_template)
+        end
+
+        it "updates the stacks from the discovered template to use the working template" do
+          allow(template).to receive_messages(:validate_format => nil)
+          expect(template.save_as_orderable!).to be_truthy
+          stack.reload
+          expect(stack.orchestration_template.id).to eq(template.id)
+          expect(described_class.find_by(:id => existing_discovered_template.id)).to be_nil
+        end
       end
     end
   end

@@ -426,7 +426,8 @@ module ManageIQ::Providers
           :type        => "OrchestrationTemplateAzure",
           :name        => deployment.name,
           :description => "contentVersion: #{ver}",
-          :content     => content
+          :content     => content,
+          :orderable   => false
         }
         return uid, new_result
       end
