@@ -4,12 +4,18 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => "eastus")
+
+    @client_id  = "AZURE_CLIENT_ID"
+    @client_key = "AZURE_CLIENT_SECRET"
+    @tenant_id  = "AZURE_TENANT_ID"
+
     cred = {
-      :userid   => "f895b5ef-3bb5-4366-8ce5-123456789012",
-      :password => "5YcZ1lwRmNPWgo82X%2F1l97Fe4VaBGi%2B123456789012"
+      :userid   => @client_id,
+      :password => @client_key
     }
+
     @ems.authentications << FactoryGirl.create(:authentication, cred)
-    @ems.update_attributes(:azure_tenant_id => "a50f9983-d1a2-4a8d-be7d-123456789012")
+    @ems.update_attributes(:azure_tenant_id => @tenant_id)
 
     # A true thread may fail the test with VCR
     allow(Thread).to receive(:new) do |*args, &block|
@@ -50,36 +56,36 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eql(1)
     expect(Flavor.count).to eql(42)
     expect(AvailabilityZone.count).to eql(1)
-    expect(VmOrTemplate.count).to eql(17)
-    expect(Vm.count).to eql(13)
+    expect(VmOrTemplate.count).to eql(13)
+    expect(Vm.count).to eql(9)
     expect(MiqTemplate.count).to eql(4)
-    expect(Disk.count).to eql(15)
+    expect(Disk.count).to eql(11)
     expect(GuestDevice.count).to eql(0)
-    expect(Hardware.count).to eql(17)
-    expect(Network.count).to eql(23)
-    expect(OperatingSystem.count).to eql(13)
+    expect(Hardware.count).to eql(13)
+    expect(Network.count).to eql(15)
+    expect(OperatingSystem.count).to eql(9)
     expect(Relationship.count).to eql(0)
-    expect(MiqQueue.count).to eql(17)
+    expect(MiqQueue.count).to eql(13)
     expect(OrchestrationTemplate.count).to eql(2)
-    expect(OrchestrationStack.count).to eql(7)
-    expect(OrchestrationStackParameter.count).to eql(72)
-    expect(OrchestrationStackOutput.count).to eql(5)
-    expect(OrchestrationStackResource.count).to eql(32)
+    expect(OrchestrationStack.count).to eql(9)
+    expect(OrchestrationStackParameter.count).to eql(100)
+    expect(OrchestrationStackOutput.count).to eql(9)
+    expect(OrchestrationStackResource.count).to eql(44)
   end
 
   def assert_ems
     expect(@ems).to have_attributes(
       :api_version => nil,
-      :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
+      :uid_ems     => @tenant_id
     )
     expect(@ems.flavors.size).to eql(42)
     expect(@ems.availability_zones.size).to eql(1)
-    expect(@ems.vms_and_templates.size).to eql(17)
-    expect(@ems.vms.size).to eql(13)
+    expect(@ems.vms_and_templates.size).to eql(13)
+    expect(@ems.vms.size).to eql(9)
     expect(@ems.miq_templates.size).to eq(4)
 
-    expect(@ems.orchestration_stacks.size).to eql(7)
-    expect(@ems.direct_orchestration_stacks.size).to eql(6)
+    expect(@ems.orchestration_stacks.size).to eql(9)
+    expect(@ems.direct_orchestration_stacks.size).to eql(8)
   end
 
   def assert_specific_flavor
@@ -199,7 +205,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "40.121.149.27",
+      :ipaddress   => "40.117.35.167",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
