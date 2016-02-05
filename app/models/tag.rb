@@ -11,7 +11,7 @@ class Tag < ApplicationRecord
   def self.add(list, options = {})
     ns = Tag.get_namespace(options)
     Tag.parse(list).each do |name|
-      Tag.find_or_create_by_name(File.join(ns, name))
+      Tag.find_or_create_by(:name => find_by_name(File.join(ns, name)))
     end
   end
 
