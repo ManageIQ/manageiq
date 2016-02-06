@@ -11,7 +11,7 @@ class ContainerGroup < ApplicationRecord
   has_many :container_definitions, :dependent => :destroy
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
-  has_many :node_selector_parts, -> { where(:section => "node_selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
   has_many :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
   belongs_to :container_node
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services

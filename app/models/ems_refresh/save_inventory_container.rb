@@ -212,7 +212,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions,
+                         [:container_definitions, :containers, :labels, :selector_parts, :container_conditions,
                           :container_volumes], [:container_node, :container_replicator, :project, :namespace, :build_pod_name])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
@@ -387,20 +387,6 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(entity.selector_parts, hashes, deletes, [:section, :name])
     store_ids_for_new_records(entity.selector_parts, hashes, [:section, :name])
-  end
-
-  def save_node_selector_parts_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.node_selector_parts(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                entity.node_selector_parts.dup
-              else
-                []
-              end
-
-    save_inventory_multi(entity.node_selector_parts, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 
   def save_container_builds_inventory(ems, hashes, target = nil)
