@@ -6,6 +6,9 @@
 :button_groups:
 - :name: ems_infra_vmdb
   :items:
+  - :button: refresh_server_summary
+    :icon: fa fa-repeat fa-lg
+    :title: 'Reload Current Display'
   - :buttonSelect: ems_infra_vmdb_choice
     :icon: fa fa-cog fa-lg
     :title: Configuration

@@ -396,6 +396,13 @@ module EmsCommon
         end
         return
       end
+      if params[:pressed] == "refresh_server_summary"
+        render :update do |page|
+          page.redirect_to  :back
+        end
+        return
+      end
+
       custom_buttons if params[:pressed] == "custom_button"
 
       return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
