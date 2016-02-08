@@ -32,37 +32,108 @@ describe('app.services.DialogFieldRefresh', function() {
     describe('when the API call is successful', function() {
       var successResponse;
 
-      beforeEach(function() {
-        successResponse = {
-          result: {
-            dialog1: {
-              data_type: 'string',
-              options: 'options',
-              read_only: false,
-              required: false,
-              values: 'Text'
+      describe('when the dialogfield type is DialogFieldDateControl', function() {
+        beforeEach(function() {
+          successResponse = {
+            result: {
+              dialog1: {
+                type: 'DialogFieldDateControl',
+                options: 'options',
+                read_only: false,
+                required: false,
+                values: '2016-01-02T00:00:00+00:00Z'
+              }
             }
-          }
-        };
+          };
 
-        triggerAutoRefreshSpy = sinon.stub(DialogFieldRefresh, 'triggerAutoRefresh');
-        collectionsApiSpy = sinon.stub(CollectionsApi, 'post').returns(Promise.resolve(successResponse));
+          triggerAutoRefreshSpy = sinon.stub(DialogFieldRefresh, 'triggerAutoRefresh');
+          collectionsApiSpy = sinon.stub(CollectionsApi, 'post').returns(Promise.resolve(successResponse));
+        });
+
+        it('updates the attributes for the dialog field', function(done) {
+          DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
+          done();
+          expect(dialog1.options).to.eq('options');
+          expect(dialog1.read_only).to.be.false;
+          expect(dialog1.required).to.be.false;
+          expect(dialog1.default_value).to.eq(new Date('2016-01-02T00:00:00+00:00Z'));
+        });
+
+        it('triggers an auto-refresh', function(done) {
+          DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
+          done();
+          expect(triggerAutoRefreshSpy).to.have.been.called;
+        });
       });
 
-      it('updates the attributes for the dialog field', function(done) {
-        DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
-        done();
-        expect(dialog1.data_type).to.eq('string');
-        expect(dialog1.options).to.eq('options');
-        expect(dialog1.read_only).to.be.false;
-        expect(dialog1.required).to.be.false;
-        expect(dialog1.default_value).to.eq('Text');
+      describe('when the dialogfield type is DialogFieldDateTimeControl', function() {
+        beforeEach(function() {
+          successResponse = {
+            result: {
+              dialog1: {
+                type: 'DialogFieldDateTimeControl',
+                options: 'options',
+                read_only: false,
+                required: false,
+                values: '2016-01-02T12:34:00+00:00Z'
+              }
+            }
+          };
+
+          triggerAutoRefreshSpy = sinon.stub(DialogFieldRefresh, 'triggerAutoRefresh');
+          collectionsApiSpy = sinon.stub(CollectionsApi, 'post').returns(Promise.resolve(successResponse));
+        });
+
+        it('updates the attributes for the dialog field', function(done) {
+          DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
+          done();
+          expect(dialog1.options).to.eq('options');
+          expect(dialog1.read_only).to.be.false;
+          expect(dialog1.required).to.be.false;
+          expect(dialog1.default_value).to.eq('Text');
+          expect(dialog1.default_value).to.eq(new Date('2016-01-02T12:34:00+00:00Z'));
+        });
+
+        it('triggers an auto-refresh', function(done) {
+          DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
+          done();
+          expect(triggerAutoRefreshSpy).to.have.been.called;
+        });
       });
 
-      it('triggers an auto-refresh', function(done) {
-        DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
-        done();
-        expect(triggerAutoRefreshSpy).to.have.been.called;
+      describe('when the dialogfield type is anything else', function() {
+        beforeEach(function() {
+          successResponse = {
+            result: {
+              dialog1: {
+                data_type: 'string',
+                options: 'options',
+                read_only: false,
+                required: false,
+                values: 'Text'
+              }
+            }
+          };
+
+          triggerAutoRefreshSpy = sinon.stub(DialogFieldRefresh, 'triggerAutoRefresh');
+          collectionsApiSpy = sinon.stub(CollectionsApi, 'post').returns(Promise.resolve(successResponse));
+        });
+
+        it('updates the attributes for the dialog field', function(done) {
+          DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
+          done();
+          expect(dialog1.data_type).to.eq('string');
+          expect(dialog1.options).to.eq('options');
+          expect(dialog1.read_only).to.be.false;
+          expect(dialog1.required).to.be.false;
+          expect(dialog1.default_value).to.eq('Text');
+        });
+
+        it('triggers an auto-refresh', function(done) {
+          DialogFieldRefresh.refreshSingleDialogField(allDialogFields, dialog1, 'the_url', 123);
+          done();
+          expect(triggerAutoRefreshSpy).to.have.been.called;
+        });
       });
     });
   });

@@ -77,7 +77,11 @@
           dialogField.default_value = String(newDialogField.values[0][0]);
         }
       } else {
-        dialogField.default_value = newDialogField.values;
+        if (dialogField.type === 'DialogFieldDateControl' || dialogField.type === 'DialogFieldDateTimeControl') {
+          dialogField.default_value = new Date(newDialogField.values);
+        } else {
+          dialogField.default_value = newDialogField.values;
+        }
       }
 
       function copyDynamicAttributes(currentDialogField, newDialogField) {

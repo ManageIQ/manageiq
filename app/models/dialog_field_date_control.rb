@@ -12,7 +12,7 @@ class DialogFieldDateControl < DialogField
   end
 
   def automate_output_value
-    return nil unless @value
+    return nil if @value.blank?
     Date.parse(@value).iso8601
   end
 
