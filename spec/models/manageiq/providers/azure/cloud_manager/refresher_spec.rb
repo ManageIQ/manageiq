@@ -5,9 +5,9 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => "eastus")
 
-    @client_id  = "AZURE_CLIENT_ID"
-    @client_key = "AZURE_CLIENT_SECRET"
-    @tenant_id  = "AZURE_TENANT_ID"
+    @client_id  = Rails.application.secrets.azure.try(:[], 'client_id') || 'AZURE_CLIENT_ID'
+    @client_key = Rails.application.secrets.azure.try(:[], 'client_secret') || 'AZURE_CLIENT_SECRET'
+    @tenant_id  = Rails.application.secrets.azure.try(:[], 'tenant_id') || 'AZURE_TENANT_ID'
 
     cred = {
       :userid   => @client_id,
