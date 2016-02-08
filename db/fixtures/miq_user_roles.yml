@@ -762,6 +762,13 @@
   - miq_request_view
   - my_settings_default_views
   - my_settings_visuals
+  - service_edit
+  - service_delete
+  - service_reconfigure
+  - service_tag
+  - service_retire_now
+  - service_view
+  - svc_catalog_provision
   - vm_clone
   - vm_cloud_explorer
   - vm_filter_accord
@@ -807,6 +814,13 @@
   - miq_request_admin
   - miq_request_view
   - provider_foreman_explorer
+  - service_edit
+  - service_delete
+  - service_reconfigure
+  - service_tag
+  - service_retire_now
+  - service_view
+  - svc_catalog_provision
   - vm_console
   - vm_clone
   - vm_cloud_explorer
