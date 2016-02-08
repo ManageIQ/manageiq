@@ -44,6 +44,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       assert_specific_cloud_network
       assert_specific_flavor
       assert_specific_disk
+      assert_specific_security_group
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
       assert_specific_template
@@ -56,21 +57,22 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eql(1)
     expect(Flavor.count).to eql(42)
     expect(AvailabilityZone.count).to eql(1)
-    expect(VmOrTemplate.count).to eql(13)
-    expect(Vm.count).to eql(9)
+    expect(VmOrTemplate.count).to eql(17)
+    expect(Vm.count).to eql(13)
     expect(MiqTemplate.count).to eql(4)
-    expect(Disk.count).to eql(11)
+    expect(Disk.count).to eql(15)
     expect(GuestDevice.count).to eql(0)
-    expect(Hardware.count).to eql(13)
-    expect(Network.count).to eql(15)
-    expect(OperatingSystem.count).to eql(9)
+    expect(Hardware.count).to eql(17)
+    expect(Network.count).to eql(22)
+    expect(OperatingSystem.count).to eql(13)
     expect(Relationship.count).to eql(0)
-    expect(MiqQueue.count).to eql(13)
+    expect(MiqQueue.count).to eql(17)
     expect(OrchestrationTemplate.count).to eql(2)
     expect(OrchestrationStack.count).to eql(9)
     expect(OrchestrationStackParameter.count).to eql(100)
     expect(OrchestrationStackOutput.count).to eql(9)
     expect(OrchestrationStackResource.count).to eql(44)
+    expect(SecurityGroup.count).to eql(11)
   end
 
   def assert_ems
@@ -80,12 +82,36 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     )
     expect(@ems.flavors.size).to eql(42)
     expect(@ems.availability_zones.size).to eql(1)
-    expect(@ems.vms_and_templates.size).to eql(13)
-    expect(@ems.vms.size).to eql(9)
+    expect(@ems.vms_and_templates.size).to eql(17)
+    expect(@ems.vms.size).to eql(13)
     expect(@ems.miq_templates.size).to eq(4)
 
     expect(@ems.orchestration_stacks.size).to eql(9)
     expect(@ems.direct_orchestration_stacks.size).to eql(8)
+  end
+
+  def assert_specific_security_group
+    @sg = ManageIQ::Providers::Azure::CloudManager::SecurityGroup.where(:name => "Chef-Prod").first
+
+    expect(@sg).to have_attributes(
+      :name        => "Chef-Prod",
+      :description => "Chef-Prod - Chef-Prod - eastus"
+    )
+
+    expected_firewall_rules = [
+      {:host_protocol => "TCP", :direction => "Inbound", :port => 22,  :end_port => 22,  :source_ip_range => "*"},
+      {:host_protocol => "TCP", :direction => "Inbound", :port => 80,  :end_port => 80,  :source_ip_range => "*"},
+      {:host_protocol => "TCP", :direction => "Inbound", :port => 443, :end_port => 443, :source_ip_range => "*"}
+    ]
+
+    expect(@sg.firewall_rules.size).to eq(3)
+
+    @sg.firewall_rules
+      .order(:host_protocol, :direction, :port, :end_port, :source_ip_range, :source_security_group_id)
+      .zip(expected_firewall_rules)
+      .each do |actual, expected|
+        expect(actual).to have_attributes(expected)
+      end
   end
 
   def assert_specific_flavor
