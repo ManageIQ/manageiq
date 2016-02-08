@@ -2,10 +2,6 @@
 def ui_lookup(_)
 end
 
-class MiqExpression
-  FORMAT_SUB_TYPES = 'nil'
-end
-
 require_relative '../../app/helpers/ui_constants'
 
 namespace :gettext do

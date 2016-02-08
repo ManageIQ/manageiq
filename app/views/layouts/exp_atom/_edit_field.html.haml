@@ -146,9 +146,9 @@
             \%
           - elsif @edit[@expkey][:val1][:type] == :megabytes
             MB
-          - elsif FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units]
+          - elsif MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units]
             = select_tag('chosen_suffix',
-              options_for_select(FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units], @edit[:suffix]),
+              options_for_select(MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units], @edit[:suffix]),
               :multiple              => false,
               :class                 => "widthed",
               "data-miq_sparkle_on"  => true,
