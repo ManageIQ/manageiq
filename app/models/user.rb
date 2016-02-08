@@ -220,10 +220,6 @@ class User < ApplicationRecord
     User.includes(:miq_groups).select { |u| u.miq_groups.include?(group) }
   end
 
-  def all_groups
-    miq_groups
-  end
-
   def admin?
     userid == "admin"
   end
