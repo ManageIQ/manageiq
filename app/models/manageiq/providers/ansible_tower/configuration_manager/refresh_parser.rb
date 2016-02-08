@@ -20,6 +20,7 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_hosts
+        get_job_templates
         _log.info("#{log_header}...Complete")
 
         @data
@@ -30,6 +31,11 @@ module ManageIQ::Providers
       def get_hosts
         hosts = @connection.api.hosts.all
         process_collection(hosts, :configured_systems) { |host| parse_hosts(host) }
+      end
+
+      def get_job_templates
+        job_templates = @connection.api.job_templates.all
+        process_collection(job_templates, :configuration_scripts) { |job_template| parse_job_template(job_template) }
       end
 
       def process_collection(collection, key)
@@ -51,6 +57,19 @@ module ManageIQ::Providers
           :type        => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
           :manager_ref => host.id.to_s,
           :hostname    => name,
+        }
+
+        return uid, new_result
+      end
+
+      def parse_job_template(job_template)
+        uid = job_template.name
+
+        new_result = {
+          :manager_ref => job_template.id.to_s,
+          :name        => job_template.name,
+          :description => job_template.description,
+          :variables   => job_template.extra_vars,
         }
 
         return uid, new_result
