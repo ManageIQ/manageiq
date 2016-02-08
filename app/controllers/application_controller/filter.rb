@@ -1088,8 +1088,8 @@ module ApplicationController::Filter
     elsif @edit[@expkey][:exp_typ] == "regkey"
       @edit[@expkey][:val1][:type] = :string
     end
-    @edit[@expkey][:val1][:title] = FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
-    @edit[@expkey][:val2][:title] = FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:title] if @edit[@expkey][:val2][:type]
+    @edit[@expkey][:val1][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
+    @edit[@expkey][:val2][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:title] if @edit[@expkey][:val2][:type]
   end
 
   # Get the field type for miqExpressionPrefill using the operator key and field
@@ -1097,7 +1097,7 @@ module ApplicationController::Filter
     return nil unless key && field
     return :regex if key.starts_with?("REG")
     typ = MiqExpression.get_col_info(field)[:format_sub_type] # :human_data_type?
-    if FORMAT_SUB_TYPES.keys.include?(typ)
+    if MiqExpression::FORMAT_SUB_TYPES.keys.include?(typ)
       return typ
     else
       return :string

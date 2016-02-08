@@ -449,7 +449,7 @@ module ReportController::Reports::Editor
               when :boolean
                 ["DEFAULT", "true"]
               when :integer, :float
-                ["DEFAULT", "", FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
+                ["DEFAULT", "", MiqExpression::FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? MiqExpression::FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
               else
                 ["DEFAULT", ""]
               end

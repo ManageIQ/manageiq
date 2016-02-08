@@ -486,9 +486,6 @@ module UiConstants
     "vm-tags"               => "Tagged #{ui_lookup(:tables => "vm")}"
   }
 
-  # Filter/search/expression constants
-  FORMAT_SUB_TYPES = MiqExpression::FORMAT_SUB_TYPES
-
   EXP_COUNT_TYPE = ["Count of", "count"]  # Selection for count based filters
   EXP_FIND_TYPE = ["Find", "find"]        # Selection for find/check filters
   EXP_TYPES = [                           # All normal filters
