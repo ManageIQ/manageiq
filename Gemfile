@@ -124,11 +124,11 @@ end
 
 # Assets from rails-assets.org
 source "https://rails-assets.org" do
-  gem "rails-assets-angular",                         "~>1.4.3"
-  gem "rails-assets-angular-animate",                 "~>1.4.3"
-  gem "rails-assets-angular-mocks",                   "~>1.4.3"
+  gem "rails-assets-angular",                         "~>1.5.0"
+  gem "rails-assets-angular-animate",                 "~>1.5.0"
+  gem "rails-assets-angular-mocks",                   "~>1.5.0"
   gem "rails-assets-angular-patternfly-sass",         "~>3.3.2"
-  gem "rails-assets-angular-sanitize",                "~>1.4.3"
+  gem "rails-assets-angular-sanitize",                "~>1.5.0"
   gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
   gem "rails-assets-bootstrap-filestyle",             "~>1.2.1"
   gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
@@ -140,8 +140,8 @@ source "https://rails-assets.org" do
   gem "rails-assets-jquery-ujs",                      "~>1.1.0"
   gem "rails-assets-jqueryui",                        "~>1.9.2"
   gem "rails-assets-bootstrap-switch",                "~>3.3.2"
-  gem "rails-assets-angular-bootstrap-switch",        "~>0.4.1"
-  gem "rails-assets-kubernetes-topology-graph",       "= 0.0.22"
+  gem "rails-assets-angular-bootstrap-switch",        "~>0.5.0"
+  gem "rails-assets-kubernetes-topology-graph",       "= 0.0.23"
   gem "rails-assets-moment-timezone",                 "~>0.4.0"
   gem "rails-assets-himdel--moment-strftime",         "~>0.1.7"
   gem "rails-assets-numeral",                         "~>1.5.3"
