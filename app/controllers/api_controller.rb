@@ -1,4 +1,7 @@
 class ApiController < ApplicationController
+  skip_before_action :get_global_session_data
+  skip_after_action :set_global_session_data
+
   class AuthenticationError < StandardError; end
   class Forbidden < StandardError; end
   class BadRequestError < StandardError; end
