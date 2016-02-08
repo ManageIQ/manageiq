@@ -523,7 +523,7 @@ module ApplicationController::Performance
       msg = "Chart menu selection not yet implemented"
     end
 
-    msg ? add_flash(msg, :warning) : add_flash(_("Unknown error has occurred", :error))
+    msg ? add_flash(msg, :warning) : add_flash(_("Unknown error has occurred"), :error)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"

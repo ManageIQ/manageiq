@@ -463,7 +463,7 @@ module ReportController::Menus
           if !user.admin_user? && r.miq_group_id.to_i != user.current_group.id.to_i && flg == 0
             flg = 1
             # only show this flash message once for all reports
-            add_flash(_("One or more selected reports are not owned by your group, they cannot be moved", :field => "fields"), :warning)
+            add_flash(_("One or more selected reports are not owned by your group, they cannot be moved"), :warning)
           end
           if user.admin_user? || r.miq_group_id.to_i == user.current_group.id.to_i
             @edit[:available_reports].push(nf) if @edit[:user_typ] || r.miq_group_id.to_i == user.current_group.id.to_i             # Add to the available fields list
