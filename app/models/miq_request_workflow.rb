@@ -60,7 +60,7 @@ class MiqRequestWorkflow
     group_description = values[:requester_group]
     if group_description && group_description != @requester.miq_group_description
       @requester = @requester.clone
-      @requester.miq_group_description = group_description
+      @requester.current_group_by_description = group_description
     end
     @values.merge!(options) unless options.blank?
   end
