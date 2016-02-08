@@ -1041,16 +1041,26 @@
       - :name: unassign
         :identifier: rbac_tenant_tags_edit
     :quotas_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_manage_quotas
       :post:
       - :name: create
         :identifier: rbac_tenant_manage_quotas
       - :name: edit
         :identifier: rbac_tenant_manage_quotas
-      :delete:
       - :name: delete
         :identifier: rbac_tenant_manage_quotas
     :quotas_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_manage_quotas
       :post:
+      - :name: edit
+        :identifier: rbac_tenant_manage_quotas
+      - :name: delete
+        :identifier: rbac_tenant_manage_quotas
+      :put:
       - :name: edit
         :identifier: rbac_tenant_manage_quotas
       :delete:
@@ -1063,16 +1073,26 @@
     :methods: *70174834084700
     :klass: TenantQuota
     :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_manage_quotas
       :post:
       - :name: create
         :identifier: rbac_tenant_manage_quotas
       - :name: edit
         :identifier: rbac_tenant_manage_quotas
-      :delete:
       - :name: delete
         :identifier: rbac_tenant_manage_quotas
     :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_manage_quotas
       :post:
+      - :name: edit
+        :identifier: rbac_tenant_manage_quotas
+      - :name: delete
+        :identifier: rbac_tenant_manage_quotas
+      :put:
       - :name: edit
         :identifier: rbac_tenant_manage_quotas
       :delete:
