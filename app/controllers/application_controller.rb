@@ -2041,7 +2041,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "availability_zone", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
+      when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
            "container_route", "container_project", "container_replicator", "persistent_volume",
@@ -2216,7 +2216,7 @@ class ApplicationController < ActionController::Base
         session[:tab_bc][:sto] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)
       when "ems_cloud", "availability_zone", "flavor"
         session[:tab_bc][:clo] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "ems_infra", "datacenter", "ems_cluster", "resource_pool", "storage", "repository", "pxe_server"
+      when "ems_infra", "datacenter", "ems_cluster", "resource_pool", "storage", "pxe_server"
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
       when "host"
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list", "log_viewer"].include?(action_name)

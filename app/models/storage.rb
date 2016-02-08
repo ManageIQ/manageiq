@@ -1,5 +1,4 @@
 class Storage < ApplicationRecord
-  has_many :repositories
   has_many :vms_and_templates, :foreign_key => :storage_id, :dependent => :nullify, :class_name => "VmOrTemplate"
   has_many :miq_templates,     :foreign_key => :storage_id
   has_many :vms,               :foreign_key => :storage_id

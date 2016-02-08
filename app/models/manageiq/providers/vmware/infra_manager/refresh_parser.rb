@@ -694,7 +694,7 @@ module ManageIQ::Providers
           raw_power_state = template ? "never" : runtime['powerState']
 
           begin
-            storage_name, location, = Repository.parse_path(pathname)
+            storage_name, location = VmOrTemplate.repository_parse_path(pathname)
           rescue => err
             _log.warn("Warning: [#{err.message}]")
             _log.debug("Problem processing location for VM [#{summary_config["name"]}] location: [#{pathname}]")

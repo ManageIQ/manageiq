@@ -2026,39 +2026,6 @@ Vmdb::Application.routes.draw do
                exp_post
     },
 
-    :repository               => {
-      :get  => %w(
-        download_data
-        edit
-        index
-        new
-        protect
-        repository_form_fields
-        show
-        show_list
-        tagging_edit
-      ) +
-               compare_get,
-      :post => %w(
-        button
-        create
-        form_field_changed
-        listnav_search_selected
-        quick_search
-        panel_control
-        protect
-        show
-        show_list
-        tag_edit_form_field_changed
-        tagging_edit
-        update
-      ) +
-               adv_search_post +
-               compare_post +
-               exp_post +
-               save_post
-    },
-
     :resource_pool            => {
       :get  => %w(
         download_data

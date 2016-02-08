@@ -240,7 +240,6 @@ module UiConstants
       :snialocalfilesystem                      => "list",
       :storage_files                            => "list",
       :registryitems                            => "list",
-      :repository                               => "grid",
       :serverbuild                              => "list",
       :storage                                  => "grid",
       :tagging                                  => "grid",

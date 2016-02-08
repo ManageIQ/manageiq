@@ -449,7 +449,7 @@ class ApplicationHelper::ToolbarChooser
               ems_network security_group floating_ip cloud_subnet network_router
               container_image_registry ems_infra flavor host container_build
               ontap_file_share ontap_logical_disk container_topology middleware_topology
-              ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
+              ontap_storage_system orchestration_stack resource_pool storage storage_manager
               timeline usage).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"

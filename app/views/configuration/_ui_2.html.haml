@@ -131,7 +131,7 @@
                   = _('Object Store')
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:cloudobjectstorecontainer, @edit[:new][:views][:cloudobjectstorecontainer])
-        - if has_any_role?(%w(ems_infra_show_list ems_cluster_show_list host_show_list resource_pool_show_list storage_show_list repository_show_list vandt_accord vms_filter_accord templates_filter_accord))
+        - if has_any_role?(%w(ems_infra_show_list ems_cluster_show_list host_show_list resource_pool_show_list storage_show_list vandt_accord vms_filter_accord templates_filter_accord))
           %fieldset
             %h3
               = _('Infrastructure')
@@ -177,12 +177,6 @@
                   = ui_lookup(:tables => "storages")
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:storage, @edit[:new][:views][:storage])
-            - if role_allows(:feature => "repository_show_list")
-              .form-group
-                %label.col-md-3.control-label
-                  = _('Repositories')
-                .col-md-8
-                  %ul.list-inline= render_view_buttons(:repository, @edit[:new][:views][:repository])
             - if role_allows(:feature => "providers_accord")
               .form-group
                 %label.col-md-3.control-label
