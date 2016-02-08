@@ -7,12 +7,12 @@ db: ContainerGroup
 cols:
 - name
 - ready_condition_status
-- creation_timestamp
+- ems_created_on
 include: {}
 col_order:
 - name
 - ready_condition_status
-- creation_timestamp
+- ems_created_on
 headers:
 - Name
 - Ready Status
@@ -20,7 +20,7 @@ headers:
 conditions:
 order: Descending
 sortby:
-- creation_timestamp
+- ems_created_on
 group:
 graph:
 dims:

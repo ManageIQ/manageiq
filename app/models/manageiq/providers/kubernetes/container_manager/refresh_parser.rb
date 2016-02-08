@@ -607,13 +607,13 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_base_item(item)
       {
-        :ems_ref            => item.metadata.uid,
-        :name               => item.metadata.name,
+        :ems_ref          => item.metadata.uid,
+        :name             => item.metadata.name,
         # namespace is overriden in more_core_extensions and hence needs
         # a non method access
-        :namespace          => item.metadata["table"][:namespace],
-        :creation_timestamp => item.metadata.creationTimestamp,
-        :resource_version   => item.metadata.resourceVersion
+        :namespace        => item.metadata["table"][:namespace],
+        :ems_created_on   => item.metadata.creationTimestamp,
+        :resource_version => item.metadata.resourceVersion
       }
     end
 
