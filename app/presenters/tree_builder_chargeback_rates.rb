@@ -45,7 +45,7 @@ class TreeBuilderChargebackRates < TreeBuilder
         objects = []
         grouped_rates.sort.map do |description_group|
           objects.push(
-            # We identified by the structure Compute_id-Storage_id
+            # We identified by the structure Compute_id:Storage_id
             :id    => description_group[1][0].id.to_s + ":" + description_group[1][1].id.to_s,
             :text  => description_group[0],
             :image => 'chargeback_rate',
