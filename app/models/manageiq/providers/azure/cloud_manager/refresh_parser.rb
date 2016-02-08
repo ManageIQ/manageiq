@@ -10,6 +10,10 @@ module ManageIQ::Providers
         new(ems, options).ems_inv_to_hashes
       end
 
+      def self.security_group_type
+        ManageIQ::Providers::Azure::CloudManager::SecurityGroup.name
+      end
+
       def initialize(ems, options = nil)
         @ems                = ems
         @config             = ems.connect
@@ -20,6 +24,7 @@ module ManageIQ::Providers
         @vns                = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
         @ips                = ::Azure::Armrest::Network::IpAddressService.new(@config)
         @nis                = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
+        @nsg                = ::Azure::Armrest::Network::NetworkSecurityGroupService.new(@config)
         @rgs                = ::Azure::Armrest::ResourceGroupService.new(@config)
         @sas                = ::Azure::Armrest::StorageAccountService.new(@config)
         @options            = options || {}
@@ -35,6 +40,7 @@ module ManageIQ::Providers
         _log.info("#{log_header}...")
         get_resource_groups
         get_network_interfaces
+        get_security_groups
         get_series
         get_availability_zones
         get_stacks
@@ -133,6 +139,18 @@ module ManageIQ::Providers
       def get_images
         images = gather_data_for_this_region(@sas, "list_private_images")
         process_collection(images, :vms) { |image| parse_image(image) }
+      end
+
+      def get_security_groups
+        security_groups = gather_data_for_this_region(@nsg)
+        process_collection(security_groups, :security_groups) { |sg| parse_security_group(sg) }
+      end
+
+      def get_vm_security_groups(instance)
+        get_vm_nics(instance).collect do |nic|
+          sec_id = nic.properties.try(:network_security_group).try(:id)
+          @data_index.fetch_path(:security_groups, sec_id) if sec_id
+        end.compact
       end
 
       def get_vm_nics(instance)
@@ -235,6 +253,7 @@ module ManageIQ::Providers
         series      = @data_index.fetch_path(:flavors, series_name)
 
         hardware_network_info = get_hardware_network_info(instance)
+        security_groups = get_vm_security_groups(instance)
 
         new_result = {
           :type                => 'ManageIQ::Providers::Azure::CloudManager::Vm',
@@ -246,6 +265,7 @@ module ManageIQ::Providers
           :operating_system    => process_os(instance),
           :flavor              => series,
           :location            => uid,
+          :security_groups     => security_groups,
           :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
           :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware            => {
@@ -253,10 +273,45 @@ module ManageIQ::Providers
             :networks => hardware_network_info
           },
         }
+
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
         populate_hardware_hash_with_series_attributes(new_result[:hardware], instance, series)
 
         return uid, new_result
+      end
+
+      def parse_security_group(security_group)
+        uid = security_group.id
+
+        description = [
+          security_group.name,
+          security_group.resource_group,
+          security_group.location
+        ].join(' - ')
+
+        new_result = {
+          :type           => self.class.security_group_type,
+          :ems_ref        => uid,
+          :name           => security_group.name,
+          :description    => description,
+          :firewall_rules => parse_firewall_rules(security_group)
+        }
+
+        return uid, new_result
+      end
+
+      def parse_firewall_rules(security_group)
+        security_group.properties.security_rules.map do |rule|
+          {
+            :name                  => rule.name,
+            :host_protocol         => rule.properties.protocol.upcase,
+            :port                  => rule.properties.destination_port_range.split('-').first,
+            :end_port              => rule.properties.destination_port_range.split('-').last,
+            :direction             => rule.properties.direction,
+            :source_ip_range       => rule.properties.source_address_prefix,
+            :source_security_group => @data_index.fetch_path(:security_groups, security_group.id)
+          }
+        end
       end
 
       def power_status(instance)
