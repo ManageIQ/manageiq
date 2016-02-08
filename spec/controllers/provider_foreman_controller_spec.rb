@@ -375,7 +375,7 @@ describe ProviderForemanController do
 
     it "uses the stored password for validation if params[:log_password] does not exist" do
       controller.instance_variable_set(:@_params, :log_userid => "userid")
-      controller.instance_variable_set(:@provider_foreman, @provider)
+      controller.instance_variable_set(:@provider_cfgmgmt, @provider)
       expect(@provider).to receive(:authentication_password).and_return('password')
       creds = {:userid => "userid", :password => "password"}
       expect(controller.send(:build_credentials)).to include(:default => creds)
@@ -389,7 +389,7 @@ describe ProviderForemanController do
     it "builds foreman tree with no nodes after rbac filtering" do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
-      controller.send(:build_foreman_tree, :providers, :configuration_manager_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       first_child = find_treenode_for_provider(@provider)
       expect(first_child).to eq(nil)
     end
@@ -403,7 +403,7 @@ describe ProviderForemanController do
                                        :object_ids => @configured_system.id,
                                        :add_ids    => quota_2gb_tag.id,
                                        :delete_ids => [])
-      controller.send(:build_foreman_tree, :providers, :configuration_manager_providers_tree)
+      controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       node1 = find_treenode_for_provider(@provider)
       node2 = find_treenode_for_provider(@provider2)
       expect(node1).not_to be_nil

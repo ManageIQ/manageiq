@@ -10,14 +10,20 @@ class TreeBuilderConfigurationManager < TreeBuilder
     locals.merge!(:id_prefix => 'pt_')
   end
 
-
-
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id => "fr",  :text => "Foreman Providers",   :image => "foreman_providers",  :tip => "Foreman Providers")   if ApplicationHelper.role_allows(:feature => "provider_foreman_view", :any => true)
-    objects.push(:id => "at", text: "Ansible Tower Providers",  :image => "ansible_tower_providers",  :tip => "Ansible Tower Providers")  if ApplicationHelper.role_allows(:feature => "provider_foreman_view", :any => true)
-    return count_only_or_objects(count_only, objects, nil)
+    objects.push(:id => "fr",
+                 :text => "Foreman Providers",
+                 :image => "foreman_providers",
+                 :tip => "Foreman Providers") if ApplicationHelper.role_allows(:feature => "provider_foreman_view",
+                                                                               :any => true)
+    objects.push(:id => "at",
+                 :text => "Ansible Tower Providers",
+                 :image => "ansible_tower_providers",
+                 :tip => "Ansible Tower Providers") if ApplicationHelper.role_allows(:feature => "provider_foreman_view",
+                                                                                     :any => true)
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_cmat_kids(object, count_only)
