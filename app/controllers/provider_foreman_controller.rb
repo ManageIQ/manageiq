@@ -29,7 +29,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def edit
-    @provider_types = Array({"Ansible Tower" => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager', "Foreman" => 'ManageIQ::Providers::Foreman::ConfigurationManager'})
+    @provider_types = Array("Ansible Tower" => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager', "Foreman" => 'ManageIQ::Providers::Foreman::ConfigurationManager')
     case params[:button]
     when "cancel"
       cancel_provider_foreman
@@ -47,19 +47,19 @@ class ProviderForemanController < ApplicationController
 
   def model_to_name(model)
     case model
-      when "ManageIQ::Providers::Foreman::ConfigurationManager"
-        return "Foreman"
-      when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-        return "Ansible Tower"
+    when "ManageIQ::Providers::Foreman::ConfigurationManager"
+      return "Foreman"
+    when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
+      return "Ansible Tower"
     end
   end
 
   def name_to_model(name)
     case name
-      when "Foreman"
-        return "ManageIQ::Providers::Foreman::ConfigurationManager"
-      when "Ansible Tower"
-        return "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
+    when "Foreman"
+      return "ManageIQ::Providers::Foreman::ConfigurationManager"
+    when "Ansible Tower"
+      return "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
     end
   end
 
@@ -144,9 +144,9 @@ class ProviderForemanController < ApplicationController
     if params[:id] == "new"
       if params[:provtype] == 'Ansible Tower'
         @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
-                                                                       :url        => params[:url],
-                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+                                                                            :url        => params[:url],
+                                                                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                            :verify_ssl => params[:verify_ssl].eql?("on"))
       else
         @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
                                                                        :url        => params[:url],
@@ -209,7 +209,6 @@ class ProviderForemanController < ApplicationController
   end
 
   def cancel_provider_foreman
-    # TODO - change the title to model name based on ems_type
     @in_a_form = false
     @sb[:action] = nil
     model = "#{ui_lookup(:ui_title => 'Configuration Manager')} #{ui_lookup(:model => 'ExtManagementSystem')}"
@@ -389,16 +388,16 @@ class ProviderForemanController < ApplicationController
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-      when "root" then  rec = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
-      when "xx" then
-        case nodes.second
-          when "fr" then rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
-          when "at" then rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
-          when "csf"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-          when "csa"   then  rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
-        end
-      when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-      when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+    when "root" then  rec = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "xx" then
+      case nodes.second
+      when "fr" then rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+      when "at" then rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
+      when "csf"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+      when "csa"   then  rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+      end
+    when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     end
     rec
   end
@@ -546,20 +545,20 @@ class ProviderForemanController < ApplicationController
 
     model = TreeBuilder.get_model_for_prefix(@nodetype)
     case model
-      when "ManageIQ::Providers::Foreman::ConfigurationManager", "ManageIQ::Providers::AnsibleTower::ConfigurationManager", "ExtManagementSystem"
-        provider_list(id, model)
-      when "ConfigurationProfile"
+    when "ManageIQ::Providers::Foreman::ConfigurationManager", "ManageIQ::Providers::AnsibleTower::ConfigurationManager", "ExtManagementSystem"
+      provider_list(id, model)
+    when "ConfigurationProfile"
+      configuration_profile_node(id, model)
+    when "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ConfiguredSystem"
+      configured_system_list(id, model)
+    when "MiqSearch"
+      miq_search_node
+    else
+      if unassigned_configuration_profile?(treenodeid)
         configuration_profile_node(id, model)
-      when "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ConfiguredSystem"
-        configured_system_list(id, model)
-      when "MiqSearch"
-        miq_search_node
       else
-        if unassigned_configuration_profile?(treenodeid)
-          configuration_profile_node(id, model)
-        else
-          default_node
-        end
+        default_node
+      end
     end
     @right_cell_text += @edit[:adv_search_applied][:text] if x_tree[:type] == :cs_filter && @edit && @edit[:adv_search_applied]
 
@@ -593,11 +592,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_list(id, model)
-    return provider_node( id, model) if !id.nil?
+    return provider_node(id, model) unless id.nil?
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "#{model}"}
       @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => model_to_name(model))
-       process_show_list(options)
+      process_show_list(options)
     end
   end
 
@@ -634,11 +633,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def configured_system_list(id, model)
-    return configured_system_node( id, model) if !id.nil?
+    return configured_system_node( id, model) unless id.nil?
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
       @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => model)
-       process_show_list(options)
+      process_show_list(options)
     end
   end
 
@@ -721,7 +720,6 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_title(presenter)
-    # TODO - replace ui title based on the ems_type for the model
     if action_name == "new"
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "Configuration Management")
     elsif action_name == "edit"
@@ -786,9 +784,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_record?(node = x_node)
-    foreman_provider_record?( node ) || ansible_tower_provider_record?(node)
+    foreman_provider_record?(node) || ansible_tower_provider_record?(node)
   end
-
 
   def search_text_type(node)
     return "provider" if provider_record?(node)

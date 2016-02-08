@@ -484,8 +484,8 @@ class ApplicationHelper::ToolbarChooser
 
   def configuration_manager_providers_tree_center_tb(nodes)
     case nodes.first
-      when "root"   then  "provider_foreman_center_tb"
-      when "xx"     then  "provider_foreman_center_tb"
+    when "root"   then  "provider_foreman_center_tb"
+    when "xx"     then  "provider_foreman_center_tb"
     when "e"    then  "configuration_profile_foreman_center_tb"
     when "cp"   then  configuration_profile_center_tb
     else unassigned_configuration_profile_node(nodes)
@@ -494,7 +494,7 @@ class ApplicationHelper::ToolbarChooser
 
   def cs_filter_tree_center_tb(nodes)
     case nodes.first
-    when "root", "ms", "xx", "csa", "csf" then  "configured_system_foreman_center_tb"
+    when "root", "ms", "xx", "csa", "csf" then "configured_system_foreman_center_tb"
     end
   end
 
