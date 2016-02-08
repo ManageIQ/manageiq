@@ -21,7 +21,7 @@ module ReportController::SavedReports
       return
     end
     @right_cell_text ||= _("%{model} \"%{name}\"") % {:name => "#{rr.name} - #{format_timezone(rr.created_on, Time.zone, "gt")}", :model => "Saved Report"}
-    if admin_user? || current_user.groups_include?(rr.miq_group)
+    if admin_user? || current_user.miq_group_ids.include?(rr.miq_group_id)
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
       task = MiqTask.find_by_id(rr.miq_task_id)
