@@ -294,7 +294,7 @@ module ReportController::Widgets
         end
       elsif @widget.visibility && @widget.visibility[:groups]
         @sb[:groups] = []
-        MiqGroup.all.sort_by(&:description).each do |r|
+        MiqGroup.non_tenant_groups.sort_by(&:description).each do |r|
           @sb[:groups].push(r.description) if @widget.visibility[:groups].include?(r.description)
         end
       end
@@ -350,7 +350,7 @@ module ReportController::Widgets
       .collect { |r| {r.name => to_cid(r.id)} }
 
     @edit[:sorted_groups] =
-      MiqGroup.all.sort_by { |g| g.description.downcase }
+      MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }
       .collect { |g| {g.description => to_cid(g.id)} }
 
     # Schedule Box - create new sched for copy/new, use existing for edit
