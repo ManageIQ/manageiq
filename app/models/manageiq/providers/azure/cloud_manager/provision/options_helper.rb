@@ -4,6 +4,6 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::OptionsHelper
   end
 
   def resource_group
-    ResourceGroup.find_by(:id => options[:resource_group]).name
+    @resource_group ||= ResourceGroup.find_by(:id => options[:resource_group])
   end
 end

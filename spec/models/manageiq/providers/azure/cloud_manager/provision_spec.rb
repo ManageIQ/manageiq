@@ -4,6 +4,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
   let(:provider) { FactoryGirl.create(:ems_azure_with_authentication) }
   let(:template) { FactoryGirl.create(:template_azure, :ext_management_system => provider) }
   let(:flavor)   { FactoryGirl.create(:flavor_azure) }
+  let(:vm)       { FactoryGirl.create(:vm_azure, :ext_management_system => provider) }
 
   context "#create vm" do
     subscription_id = "01234567890"
@@ -26,7 +27,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
         :name            => name
       }
       it "VM in same sub-class" do
-        vm = FactoryGirl.create(:vm_azure, :ext_management_system => provider)
+        vm_uid_hash[:subscription_id] = subscription_id
+        vm
         expect(subject.find_destination_in_vmdb(vm_uid_hash)).to eq(vm)
       end
 
@@ -37,7 +39,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
 
       it "VM in different sub-class" do
         vm = FactoryGirl.create(:vm_openstack, :ext_management_system => provider)
-        expect(subject.find_destination_in_vmdb(:ems_ref=> vm.ems_ref)).to be_nil
+        expect(subject.find_destination_in_vmdb(:ems_ref => vm.ems_ref)).to be_nil
       end
     end
 
