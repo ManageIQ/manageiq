@@ -325,20 +325,6 @@ describe MiqGroup do
     end
   end
 
-  describe "#all_users" do
-    it "finds users" do
-      g  = FactoryGirl.create(:miq_group)
-      g2 = FactoryGirl.create(:miq_group)
-
-      FactoryGirl.create(:user)
-      u_one  = FactoryGirl.create(:user, :miq_groups => [g])
-      u_two  = FactoryGirl.create(:user, :miq_groups => [g, g2], :current_group => g)
-
-      expect(g.all_users).to match_array([u_one, u_two])
-      expect(g2.all_users).to match_array([u_two])
-    end
-  end
-
   describe "#read_only" do
     it "is not read_only for regular groups" do
       expect(FactoryGirl.create(:miq_group)).not_to be_read_only
