@@ -942,12 +942,8 @@ class ApplicationController < ActionController::Base
   # Gather information for the report accordions
   def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
     populate_reports_menu(tree_type, mode)
-    if tree == "listnav"
-      if tree_type == "timeline"
-        build_timeline_tree(@sb[:rpt_menu], tree_type)
-      else
-        build_reports_tree
-      end
+    if tree == "listnav" && tree_type == "timeline"
+      build_timeline_tree(@sb[:rpt_menu], tree_type)
     else
       build_menu_tree(@sb[:rpt_menu], tree_type)
     end
