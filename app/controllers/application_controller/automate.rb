@@ -18,7 +18,7 @@ module ApplicationController::Automate
       begin
         build_results
       rescue MiqAeException::Error => bang
-        add_flash(_("Automation Error: ") << bang.message, :error)
+        add_flash(_("Automation Error: %{error_message}") % {:error_message => bang.message}, :error)
       end
     end
     c_tb = build_toolbar(center_toolbar_filename)

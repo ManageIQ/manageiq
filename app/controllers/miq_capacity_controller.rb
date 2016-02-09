@@ -715,7 +715,7 @@ class MiqCapacityController < ApplicationController
       begin
         @sb[:bottlenecks][:report].generate_table(:userid => session[:userid])
       rescue StandardError => bang
-        add_flash(_("Error building timeline ") << bang.message, :error)
+        add_flash(_("Error building timeline %{error_message}") % {:error_message => bang.message}, :error)
       else
         bottleneck_tl_to_xml
       end

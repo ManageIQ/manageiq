@@ -45,7 +45,8 @@ class ServiceController < ApplicationController
     if @refresh_partial
       replace_right_cell(action)
     else
-      add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
+      add_flash(_("Button not yet implemented %{model_name}:%{action_name}") %
+        {:model_name => model, :action_name => action}, :error) unless @flash_array
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end

@@ -246,7 +246,8 @@ module OpsController::Settings::Common
     begin
       GenericMailer.test_email(@sb[:new_to], @edit[:new][:smtp]).deliver
     rescue Exception => err
-      add_flash(_("Error during sending test email: ") << err.class.name << ", " << err.to_s, :error)
+      add_flash(_("Error during sending test email: %{class_name}, %{error_message}") %
+        {:class_name => err.class.name, :error_message => err.to_s}, :error)
     else
       add_flash(_("The test email is being delivered, check \"%s\" to verify it was successful") % @sb[:new_to])
     end
