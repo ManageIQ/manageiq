@@ -1,0 +1,216 @@
+class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basic
+  button_group('host_vmdb', [
+    {
+      :buttonSelect => "host_vmdb_choice",
+      :icon         => "fa fa-cog fa-lg",
+      :title        => N_("Configuration"),
+      :text         => N_("Configuration"),
+      :items => [
+        {
+          :button       => "host_refresh",
+          :icon         => "fa fa-refresh fa-lg",
+          :text         => N_("Refresh Relationships and Power States"),
+          :title        => N_("Refresh relationships and power states for all items related to the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Refresh relationships and power states for all items related to the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_scan",
+          :icon         => "fa fa-search fa-lg",
+          :text         => N_("Perform SmartState Analysis"),
+          :title        => N_("Perform SmartState Analysis on the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Perform SmartState Analysis on the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_compare",
+          :icon         => "product product-compare fa-lg",
+          :text         => N_("Compare Selected items"),
+          :title        => N_("Select two or more items to compare"),
+          :url_parms    => "main_div",
+          :enabled      => "false",
+          :onwhen       => "2+",
+        },
+        {
+          :button       => "host_discover",
+          :icon         => "fa fa-search fa-lg",
+          :text         => N_("Discover items"),
+          :title        => N_("Discover items"),
+          :url          => "/discover",
+          :url_parms    => "?discover_type=hosts",
+        },
+        {
+          :separator    => nil,
+        },
+        {
+          :button       => "host_new",
+          :icon         => "pficon pficon-add-circle-o fa-lg",
+          :url          => "/new",
+          :text         => N_("Add a New item"),
+          :title        => N_("Add a New item"),
+        },
+        {
+          :button       => "host_edit",
+          :icon         => "pficon pficon-edit fa-lg",
+          :text         => N_("Edit Selected items"),
+          :title        => N_("Edit Selected items"),
+          :url_parms    => "main_div",
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_delete",
+          :icon         => "pficon pficon-delete fa-lg",
+          :text         => N_("Remove items from the VMDB"),
+          :title        => N_("Remove Selected items from the VMDB"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+      ]
+    },
+  ])
+  button_group('host_policy', [
+    {
+      :buttonSelect => "host_policy_choice",
+      :icon         => "fa fa-shield fa-lg",
+      :title        => N_("Policy"),
+      :text         => N_("Policy"),
+      :enabled      => "false",
+      :onwhen       => "1+",
+      :items => [
+        {
+          :button       => "host_protect",
+          :icon         => "pficon pficon-edit fa-lg",
+          :text         => N_("Manage Policies"),
+          :title        => N_("Manage Policies for the selected items"),
+          :url_parms    => "main_div",
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_tag",
+          :icon         => "pficon pficon-edit fa-lg",
+          :text         => N_("Edit Tags"),
+          :title        => N_("Edit Tags for the selected items"),
+          :url_parms    => "main_div",
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_check_compliance",
+          :icon         => "fa fa-search fa-lg",
+          :text         => N_("Check Compliance of Last Known Configuration"),
+          :title        => N_("Check Compliance of the last known configuration for the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Initiate Check Compliance of the last known configuration for the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_analyze_check_compliance",
+          :icon         => "fa fa-search fa-lg",
+          :text         => N_("Analyze then Check Compliance"),
+          :title        => N_("Analyze then Check Compliance for the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Analyze then Check Compliance for the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+      ]
+    },
+  ])
+  button_group('host_lifecycle', [
+    {
+      :buttonSelect => "host_lifecycle_choice",
+      :icon         => "fa fa-recycle fa-lg",
+      :title        => N_("Lifecycle"),
+      :text         => N_("Lifecycle"),
+      :items => [
+        {
+          :button       => "host_miq_request_new",
+          :icon         => "pficon pficon-add-circle-o fa-lg",
+          :url_parms    => "main_div",
+          :text         => N_("Provision items"),
+          :title        => N_("Request to Provision items"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+      ]
+    },
+  ])
+  button_group('host_operations', [
+    {
+      :buttonSelect => "host_power_choice",
+      :icon         => "fa fa-power-off fa-lg",
+      :title        => N_("Power Operations"),
+      :text         => N_("Power"),
+      :enabled      => "false",
+      :onwhen       => "1+",
+      :items => [
+        {
+          :button       => "host_standby",
+          :image        => "standby",
+          :text         => N_("Enter Standby Mode"),
+          :title        => N_("Shutdown the selected items to Standby Mode"),
+          :confirm      => N_("Shutdown the selected items to Standy Mode?"),
+          :url_parms    => "main_div",
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_shutdown",
+          :image        => "guest_shutdown",
+          :text         => N_("Shutdown"),
+          :title        => N_("Shutdown the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Shutdown the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :button       => "host_reboot",
+          :image        => "guest_restart",
+          :text         => N_("Restart"),
+          :title        => N_("Restart the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Restart the selected items?"),
+          :enabled      => "false",
+          :onwhen       => "1+",
+        },
+        {
+          :separator    => nil,
+        },
+        {
+          :button       => "host_start",
+          :image        => "power_on",
+          :text         => N_("Power On"),
+          :title        => N_("Power On the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Power On the selected items?"),
+        },
+        {
+          :button       => "host_stop",
+          :image        => "power_off",
+          :text         => N_("Power Off"),
+          :title        => N_("Power Off the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Power Off the selected items?"),
+        },
+        {
+          :button       => "host_reset",
+          :image        => "power_reset",
+          :text         => N_("Reset"),
+          :title        => N_("Reset the selected items"),
+          :url_parms    => "main_div",
+          :confirm      => N_("Reset the selected items?"),
+        },
+      ]
+    },
+  ])
+end
