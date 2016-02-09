@@ -63,8 +63,32 @@ end
 
 def filter(hash)
   return false unless $target_types.nil? || $target_types.include?(hash[:target_type])
-  return false unless $targets.nil? || $targets.include?(hash[:target])
+  return false unless $targets.nil?      || $targets.include?(hash[:target])
   return true
+end
+
+def parse_refresh_target(line)
+  if line =~ /MIQ\(VcRefresher.refresh\).EMS:? \[(.*?)\].+Refreshing target ([^\s]+).\[(.*?)\].+Complete/
+    {
+      :time        => line.time,
+      :ems         => $1,
+      :target_type => $2,
+      :target      => $3
+    }
+  end
+end
+
+def parse_refresh_timings(line)
+  if line =~ /MIQ\(VcRefresher.refresh\).EMS:? \[(.*?)\].+Timings:? (\{.+)$/
+    ems             = $1
+    refresh_timings = eval($2)
+
+    refresh_timings[:ems]         = ems
+    refresh_timings[:end_time]    = Time.parse(line.time + " UTC")
+    refresh_timings[:start_time]  = refresh_timings[:end_time] - refresh_timings[:total_time]
+
+    refresh_timings
+  end
 end
 
 parse_args(ARGV)
@@ -78,31 +102,20 @@ all_targets = Hash.new { |k, v| k[v] = [] }
 $logfiles.each do |logfile|
   MiqLoggerProcessor.new(logfile).each do |line|
     # Find the target type
-    if line =~ /MIQ\(VcRefresher.refresh\).EMS:? \[(.*?)\].+Refreshing target ([^\s]+).\[(.*?)\].+Complete/
-      ems         = $1
-      target_type = $2
-      target      = $3
-
-      all_targets[ems] << {
-        :time        => line.time,
-        :target      => target,
-        :target_type => target_type
-      }
+    if target_hash = parse_refresh_target(line)
+      all_targets[target_hash[:ems]] << target_hash
     end
 
-    next unless line =~ /MIQ\(VcRefresher.refresh\).EMS:? \[(.*?)\].+Timings:? (\{.+)$/
-    ems     = $1
-    timings = eval($2)
+    if refresh_timings = parse_refresh_timings(line)
+      ems = refresh_timings[:ems]
 
-    timings[:end_time]    = Time.parse(line.time + " UTC")
-    timings[:start_time]  = timings[:end_time] - timings[:total_time]
-    timings[:target_type] = all_targets[ems].last[:target_type]
-    timings[:target]      = all_targets[ems].last[:target]
-    timings[:ems]         = ems
+      refresh_timings[:target]      = all_targets[ems].last[:target]
+      refresh_timings[:target_type] = all_targets[ems].last[:target_type]
 
-    if filter(timings)
-      all_timings      << timings
-      ems_timings[ems] << timings
+      if filter(refresh_timings)
+        ems_timings[refresh_timings[:ems]] << refresh_timings
+        all_timings                        << refresh_timings
+      end
     end
   end
 end
