@@ -1,79 +1,48 @@
-require "aws-sdk-v1"
+require 'aws-sdk'
 
 describe Authenticator::Amazon do
+  AWS_ROOT_USER_KEY = 'aws_root_key'
+  AWS_IAM_USER_KEY = 'aws_iam_key'
+
   subject { Authenticator::Amazon.new(config) }
-  let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }
+
+  let(:local_user) { FactoryGirl.create(:user, :userid => username) }
+  let(:username) { 'some_user' }
   let(:config) do
     {
       :amazon_role   => false,
-      :amazon_key    => 'awskey',
-      :amazon_secret => 'awssecret',
+      :amazon_key    => AWS_ROOT_USER_KEY,
+      :amazon_secret => 'aws_secret_key',
     }
   end
+  let(:describe_regions_response) do
+    {
+        :regions => [
+            {:region_name => 'us-east-1'},
+            {:region_name => 'us-west-1'},
+        ]
+    }
+  end
+  let(:aws_group_name) { 'group_on_aws' }
+  let(:miq_group_name) { aws_group_name }
 
-  class FakeAmazon
-    def initialize(user_data, *connect_args)
-      @user_data = user_data
-      _connect *connect_args
-    end
+  def stub_iam_responses_for_root(resource)
+    # root is also allowed to :list_users
+    response = resource.client.stub_data(:get_user)
+    resource.client.stub_responses(:list_users, users: [response.user.to_h])
 
-    def _connect(username, password, _service = nil)
-      if @user_data[username] && @user_data[username][:password] == password
-        @user = username
-      else
-        raise AWS::EC2::Errors::AuthFailure
-      end
-    end
+    # we are root
+    response = resource.client.stub_data(:get_user, :user => {:arn => 'arn:aws:iam::123456789:root'})
+    resource.client.stub_responses(:get_user, response)
 
-    def regions
-      []
-    end
+    # and :list_access_keys
+    response = resource.client.stub_data(:list_access_keys, access_key_metadata: [{access_key_id: AWS_IAM_USER_KEY}])
+    resource.client.stub_responses(:list_access_keys, response)
 
-    def users
-      @user_data.reject { |k, _v| k =~ /aws/ }.map { |k, v| FakeUser.new(k, v) }
-    end
+    # and :list_groups_for_user
+    response = resource.client.stub_data(:list_groups_for_user, :groups => [:group_name => aws_group_name])
+    resource.client.stub_responses(:list_groups_for_user, response)
 
-    def client
-      iam_username =
-        case @user_data[@user][:iam]
-        when false
-          nil
-        when :denied
-          raise AWS::IAM::Errors::AccessDenied
-        else
-          @user
-        end
-
-      Object.new.tap do |obj|
-        class << obj
-          attr_accessor :username
-          def get_user
-            {:user => {:user_name => username}}
-          end
-        end
-        obj.username = iam_username
-      end
-    end
-
-    class FakeUser < Struct.new(:username, :data)
-      def name
-        data[:name]
-      end
-
-      def access_keys
-        data[:access_keys].map { |key| FakeKey.new(key) }
-      end
-
-      def groups
-        data[:groups].map { |group| FakeGroup.new(group) }
-      end
-    end
-
-    class FakeKey < Struct.new(:id)
-    end
-
-    class FakeGroup < Struct.new(:name)
-    end
   end
 
   before(:each) do
@@ -85,47 +54,38 @@ describe Authenticator::Amazon do
     # external auth system: they get saved without a password, so User's
     # dummy_password_for_external_auth hook runs, and it needs to ask
     # Authenticator#uses_stored_password? whether it's allowed to do anything.
-
     allow(User).to receive(:authenticator).and_return(subject)
-  end
 
-  before(:each) do
-    wibble = FactoryGirl.create(:miq_group, :description => 'wibble')
-    wobble = FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
-
+    miq_group = FactoryGirl.create(:miq_group, :description => miq_group_name)
     allow(MiqServer).to receive(:my_server).and_return(
-      double(:my_server, :permitted_groups => [wibble, wobble])
+      double(:my_server, :permitted_groups => [miq_group])
     )
     allow(MiqLdap).to receive(:using_ldap?) { false }
+
+    allow_any_instance_of(described_class).to receive(:aws_connect) do |_instance, *args|
+      access_key_id, _secret_access_key, service = *args
+      service ||= :IAM
+      resource = Aws.const_get(service.to_s)::Resource.new(:stub_responses => true)
+
+      if resource.is_a? Aws::IAM::Resource
+        case access_key_id
+          when AWS_ROOT_USER_KEY
+            stub_iam_responses_for_root(resource)
+          when AWS_IAM_USER_KEY
+            get_user_response = resource.client.stub_data(:get_user).to_h
+            resource.client.stub_responses(:get_user, get_user_response)
+            resource.client.stub_responses(:list_users, 'AccessDenied')
+        end
+      end
+
+      if resource.is_a? Aws::EC2::Resource
+        resource.client.stub_responses(:describe_regions, describe_regions_response)
+      end
+
+      resource
+    end
   end
 
-  let(:user_data) do
-    {
-      'awskey' => {:password => 'awssecret', :iam => false},
-      'alice'  => alice_data,
-      'bob'    => bob_data,
-    }
-  end
-  let(:alice_data) do
-    {
-      :name        => 'Alice Aardvark',
-      :password    => 'secret',
-      :access_keys => %w(alice),
-      :groups      => %w(wibble bubble),
-    }
-  end
-  let(:bob_data) do
-    {
-      :name        => 'Bob Builderson',
-      :password    => 'secret',
-      :access_keys => %w(bob),
-      :groups      => %w(wibble bubble),
-    }
-  end
-
-  before(:each) do
-    allow_any_instance_of(described_class).to receive(:aws_connect) { |_instance, *args| FakeAmazon.new(user_data, *args) }
-  end
 
   describe '#uses_stored_password?' do
     it "is false" do
@@ -135,7 +95,8 @@ describe Authenticator::Amazon do
 
   describe '#lookup_by_identity' do
     it "finds existing users" do
-      expect(subject.lookup_by_identity('alice')).to eq(alice)
+      expect(local_user.userid).to eq(username)
+      expect(subject.lookup_by_identity(local_user.userid)).to eq(local_user)
     end
 
     it "doesn't create new users" do
@@ -146,7 +107,7 @@ describe Authenticator::Amazon do
   describe '.validate_connection' do
     let(:config) { super().merge(:mode => 'amazon') }
 
-    context "with valid details" do
+    context "with aws root account" do
       it "succeeds" do
         result, errors = described_class.validate_connection(:authentication => config)
         expect(result).to be_truthy
@@ -155,7 +116,8 @@ describe Authenticator::Amazon do
     end
 
     context "with bad credentials" do
-      let(:config) { super().merge(:amazon_secret => 'incorrect') }
+      # Aws::EC2::Errors::AuthFailure
+      let(:describe_regions_response) { 'AuthFailure' }
 
       it "fails" do
         result, errors = described_class.validate_connection(:authentication => config)
@@ -165,26 +127,25 @@ describe Authenticator::Amazon do
     end
 
     context "with IAM credentials" do
-      let(:config) { super().merge(:amazon_key => 'alice', :amazon_secret => 'secret') }
+      let(:config) { super().merge(:amazon_key => AWS_IAM_USER_KEY) }
 
       it "fails" do
         result, errors = described_class.validate_connection(:authentication => config)
         expect(result).not_to be
-        expect(errors).to eq("authentication_amazon" => "Access key alice belongs to IAM user, not to the AWS account holder.")
+        expect(errors).to eq("authentication_amazon" => "Access key #{config[:amazon_key]} belongs to IAM user, not to the AWS account holder.")
       end
     end
   end
 
   describe '#authenticate' do
     def authenticate
-      subject.authenticate(username, password)
+      subject.authenticate(username, "some_password")
     end
 
-    let(:username) { 'alice' }
-    let(:password) { 'secret' }
+    let(:username) { AWS_IAM_USER_KEY }
 
     context "without root credentials" do
-      let(:config) { super().merge(:amazon_key => 'alice', :amazon_secret => 'secret') }
+      let(:config) { super().merge(:amazon_key => AWS_IAM_USER_KEY) }
 
       it "fails" do
         expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -197,32 +158,34 @@ describe Authenticator::Amazon do
     end
 
     context "with correct password" do
+      let!(:local_user) { FactoryGirl.create(:user, :userid => username) }
+
       context "using local authorization" do
         it "succeeds" do
-          expect(authenticate).to eq(alice)
+          expect(authenticate).to eq(local_user)
         end
 
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'alice',
-            :message => "User alice successfully validated by Amazon IAM",
+            :userid  => username,
+            :message => "User #{username} successfully validated by Amazon IAM",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'alice',
-            :message => "Authentication successful for user alice",
+            :userid  => username,
+            :message => "Authentication successful for user #{username}",
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
         it "updates lastlogon" do
-          expect(-> { authenticate }).to change { alice.reload.lastlogon }
+          expect(-> { authenticate }).to change { local_user.reload.lastlogon }
         end
 
         context "with no corresponding Amazon IAM user" do
-          let(:alice_data) { nil }
+          let(:username) { 'some_key_not_on_IAM' }
           it "fails" do
             expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
           end
@@ -241,30 +204,30 @@ describe Authenticator::Amazon do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'alice',
-            :message => "User alice successfully validated by Amazon IAM",
+            :userid  => username,
+            :message => "User #{username} successfully validated by Amazon IAM",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'alice',
-            :message => "Authentication successful for user alice",
+            :userid  => username,
+            :message => "Authentication successful for user #{username}",
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
         it "updates lastlogon" do
-          expect(-> { authenticate }).to change { alice.reload.lastlogon }
+          expect(-> { authenticate }).to change { local_user.reload.lastlogon }
         end
 
         it "immediately completes the task" do
           task_id = authenticate
           task = MiqTask.find(task_id)
-          expect(User.find_by_userid(task.userid)).to eq(alice)
+          expect(User.find_by_userid(task.userid)).to eq(local_user)
         end
 
         context "with no corresponding Amazon IAM user" do
-          let(:alice_data) { nil }
+          let(:username) { 'some_key_not_on_IAM' }
           it "fails" do
             expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
           end
@@ -272,29 +235,29 @@ describe Authenticator::Amazon do
       end
 
       context "without EC2 permissions" do
+        # Aws::EC2::Errors::UnauthorizedOperation
+        let(:describe_regions_response) { 'UnauthorizedOperation' }
         it "succeeds" do
-          allow_any_instance_of(FakeAmazon).to receive(:regions) { raise AWS::EC2::Errors::UnauthorizedOperation }
-          expect(authenticate).to eq(alice)
+          expect(authenticate).to eq(local_user)
         end
       end
 
       context "without IAM permissions" do
-        let(:alice_data) { super().merge(:iam => :denied) }
         it "succeeds" do
-          expect(authenticate).to eq(alice)
+          expect(authenticate).to eq(local_user)
         end
       end
 
       context "with signature mismatch" do
+        let(:describe_regions_response) { 'SignatureDoesNotMatch' }
         it "fails" do
-          allow_any_instance_of(FakeAmazon).to receive(:regions) { raise AWS::EC2::Errors::SignatureDoesNotMatch }
+          # Aws::EC2::Errors::SignatureDoesNotMatch
           expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
         end
       end
 
       context "with root account credentials" do
-        let(:username) { 'awskey' }
-        let(:password) { 'awssecret' }
+        let(:username) { AWS_ROOT_USER_KEY }
 
         it "fails" do
           expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -308,7 +271,7 @@ describe Authenticator::Amazon do
     end
 
     context "with bad password" do
-      let(:password) { 'incorrect' }
+      let(:username) { 'not_able_to_auth_on_aws' }
 
       it "fails" do
         expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -317,27 +280,30 @@ describe Authenticator::Amazon do
       it "records one failing audit entry" do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_amazon',
-          :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
+          :userid  => username,
+          :message => "Authentication failed for userid #{username}",
         )
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
+
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
       end
+
       it "doesn't change lastlogon" do
-        expect(-> { authenticate rescue nil }).not_to change { alice.reload.lastlogon }
+        expect(-> { authenticate rescue nil }).not_to change { local_user.reload.lastlogon }
       end
     end
 
     context "with unknown username" do
-      let(:username) { 'bob' }
+      let(:username) { AWS_IAM_USER_KEY }
 
       context "with bad password" do
-        let(:password) { 'incorrect' }
+        # Aws::EC2::Errors::AuthFailure
+        let(:describe_regions_response) { 'AuthFailure' }
 
         it "fails" do
           expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -346,12 +312,13 @@ describe Authenticator::Amazon do
         it "records one failing audit entry" do
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'bob',
-            :message => "Authentication failed for userid bob",
+            :userid  => username,
+            :message => "Authentication failed for userid #{username}",
           )
           expect(AuditEvent).not_to receive(:success)
           authenticate rescue nil
         end
+
         it "logs the failure" do
           allow($log).to receive(:warn).with(/Audit/)
           expect($log).to receive(:warn).with(/Authentication failed$/)
@@ -367,13 +334,13 @@ describe Authenticator::Amazon do
         it "records one successful and one failing audit entry" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'bob',
-            :message => "User bob successfully validated by Amazon IAM",
+            :userid  => username,
+            :message => "User #{username} successfully validated by Amazon IAM",
           )
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'bob',
-            :message => "User bob authenticated but not defined in EVM",
+            :userid  => username,
+            :message => "User #{username} authenticated but not defined in EVM",
           )
           authenticate rescue nil
         end
@@ -397,13 +364,13 @@ describe Authenticator::Amazon do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'bob',
-            :message => "User bob successfully validated by Amazon IAM",
+            :userid  => username,
+            :message => "User #{username} successfully validated by Amazon IAM",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
-            :userid  => 'bob',
-            :message => "Authentication successful for user bob",
+            :userid  => username,
+            :message => "Authentication successful for user #{username}",
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
@@ -413,16 +380,16 @@ describe Authenticator::Amazon do
           task_id = authenticate
           task = MiqTask.find(task_id)
           user = User.find_by_userid(task.userid)
-          expect(user.name).to eq('Bob Builderson')
+          expect(user.userid).to eq(username)
           expect(user.email).to be_nil
         end
 
         it "creates a new User" do
-          expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
+          expect(-> { authenticate }).to change { User.where(:userid => username).count }.from(0).to(1)
         end
 
         context "with no matching groups" do
-          let(:bob_data) { super().merge(:groups => %w(bubble trouble)) }
+          let(:miq_group_name) { 'not_aws_group' }
 
           it "enqueues an authorize task" do
             expect(subject).to receive(:authorize_queue).and_return(123)
@@ -432,24 +399,24 @@ describe Authenticator::Amazon do
           it "records two successful audit entries plus one failure" do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_amazon',
-              :userid  => 'bob',
-              :message => "User bob successfully validated by Amazon IAM",
+              :userid  => username,
+              :message => "User #{username} successfully validated by Amazon IAM",
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_amazon',
-              :userid  => 'bob',
-              :message => "Authentication successful for user bob",
+              :userid  => username,
+              :message => "Authentication successful for user #{username}",
             )
             expect(AuditEvent).to receive(:failure).with(
               :event   => 'authorize',
-              :userid  => 'bob',
-              :message => "Authentication failed for userid bob, unable to match user's group membership to an EVM role",
+              :userid  => username,
+              :message => "Authentication failed for userid #{username}, unable to match user's group membership to an EVM role",
             )
             authenticate
           end
 
           it "doesn't create a new User" do
-            expect(-> { authenticate }).not_to change { User.where(:userid => 'bob').count }.from(0)
+            expect(-> { authenticate }).not_to change { User.where(:userid => username).count }.from(0)
           end
 
           it "immediately marks the task as errored" do
