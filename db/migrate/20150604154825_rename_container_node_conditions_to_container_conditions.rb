@@ -9,9 +9,7 @@ class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migrati
     add_column :container_conditions, :container_entity_type, :string
 
     say_with_time("Adding container_entity_type 'ContainerNode' to all existing node conditions") do
-      ContainerCondition.all.each do |condition|
-        condition.update_attributes!(:container_entity_type => 'ContainerNode')
-      end
+      ContainerCondition.update_all(:container_entity_type => 'ContainerNode')
     end
   end
 
