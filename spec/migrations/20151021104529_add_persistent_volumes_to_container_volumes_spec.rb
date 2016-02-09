@@ -20,8 +20,8 @@ describe AddPersistentVolumesToContainerVolumes do
 
       migrate
 
-      expect(ContainerVolume.find(container_volume.id)).not_to respond_to(:parent_type)
-      expect(ContainerVolume.exists?(persistent_volume.id)).to be false
+      expect(container_volume_stub.find(container_volume.id)).not_to respond_to(:parent_type)
+      expect(container_volume_stub.exists?(persistent_volume.id)).to be false
     end
   end
 end

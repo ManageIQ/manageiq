@@ -4,7 +4,7 @@ class AssignTenant < ActiveRecord::Migration
 
     # seed and return the current root_tenant
     def self.root_tenant
-      Tenant.create_with(
+      create_with(
         :name                      => "My Company",
         :description               => "Tenant for My Company",
         :divisible                 => true,
@@ -38,9 +38,6 @@ class AssignTenant < ActiveRecord::Migration
   end
 
   def change
-    Tenant.connection.schema_cache.clear!
-    Tenant.reset_column_information
-
     models = [ExtManagementSystem, MiqAeNamespace, MiqGroup,
               Provider, TenantQuota, Vm]
 

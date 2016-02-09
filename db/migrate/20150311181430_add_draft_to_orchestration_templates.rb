@@ -1,5 +1,7 @@
 class AddDraftToOrchestrationTemplates < ActiveRecord::Migration
-  class OrchestrationTemplate < ActiveRecord::Base; end
+  class OrchestrationTemplate < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
 
   def self.up
     add_column :orchestration_templates, :draft, :boolean

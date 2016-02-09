@@ -3,7 +3,8 @@ class AddFileDepotIdToMiqSchedule < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled
 
     def file_depot
-      FileDepot.where(:id => file_depot_id).first
+      return @file_depot if defined?(@file_depot)
+      @file_depot = FileDepot.where(:id => file_depot_id).first
     end
   end
 
@@ -11,7 +12,8 @@ class AddFileDepotIdToMiqSchedule < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled
 
     def resource
-      MiqSchedule.where(:id => resource_id).first
+      return @resource if defined?(@resource)
+      @resource = MiqSchedule.where(:id => resource_id).first
     end
   end
 
