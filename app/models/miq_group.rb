@@ -46,10 +46,6 @@ class MiqGroup < ApplicationRecord
     description
   end
 
-  def all_users
-    User.all_users_of_group(self)
-  end
-
   def self.allows?(_group, _options = {})
     # group: Id || Instance
     # :identifier => Feature Identifier
