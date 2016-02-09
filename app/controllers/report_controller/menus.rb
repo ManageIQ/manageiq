@@ -755,7 +755,7 @@ module ReportController::Menus
 
   def get_group_roles
     if super_admin_user?
-      roles = MiqGroup.all
+      roles = MiqGroup.non_tenant_groups
       title  = "All #{ui_lookup(:models => "MiqGroup")}"
     else
       title  = "My #{ui_lookup(:model => "MiqGroup")}"
