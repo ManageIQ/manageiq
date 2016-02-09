@@ -15,18 +15,12 @@ class VmOrTemplateController < ApplicationController
       ApplicationController::Feature.new_with_hash(
         :role        => "vms_instances_filter_accord",
         :name        => :vms_instances_filter,
-        :accord_name => "vms_instances_filter",
-        :tree_name   => :vms_instances_filter_tree,
-        :title       => "VMs & Instances",
-        :container   => "vms_instances_filter_accord"),
+        :title       => "VMs & Instances",),
 
       ApplicationController::Feature.new_with_hash(
         :role        => "templates_images_filter_accord",
         :name        => :templates_images_filter,
-        :accord_name => "templates_images_filter",
-        :tree_name   => :templates_images_filter_tree,
-        :title       => "Templates & Images",
-        :container   => "templates_images_filter_accord"),
+        :title       => "Templates & Images",),
     ]
   end
 
