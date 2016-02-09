@@ -11,54 +11,27 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix => 'cs_')
+    locals.merge!(
+            :autoload => true,
+            :id_prefix => 'cs_')
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id => "csf",  :text => "Foreman Configured Systems",   :image => "foreman_cs",  :tip => "Foreman Configured Systems ")   if ApplicationHelper.role_allows(:feature => "provider_foreman_view", :any => true)
-    objects.push(:id => "csa", text: "Ansible Tower Configured Systems",  :image => "ansible_tower_cs",  :tip => "Ansible Tower Configured Systems")  if ApplicationHelper.role_allows(:feature => "provider_foreman_view", :any => true)
-    return count_only_or_objects(count_only, objects, nil)
+    objects.push(:id => "csf",
+                 :text => "Foreman Configured Systems",
+                 :image => "folder",
+                 :tip => "Foreman Configured Systems",
+                 :expand => true)
+    objects.push(:id => "csa",
+                 :text => "Ansible Tower Configured Systems",
+                 :image => "folder",
+                 :tip => "Ansible Tower Configured Systems",
+                 :expand => true)
+    count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_csf_kids(_count_only, _options)
-    [
-      {:id          => "csf_global",
-       :text        => "Global Filters",
-       :image       => "folder",
-       :tip         => "Global Shared Filters",
-       :cfmeNoClick => true,
-       :expand      => true
-      },
-      {:id          => "csf_my",
-       :text        => "My Filters",
-       :image       => "folder",
-       :tip         => "My Personal Filters",
-       :cfmeNoClick => true,
-       :expand      => true
-      }
-    ]
-  end
-
-  def x_get_tree_csa_kids(_count_only, _options)
-    [
-      {:id          => "csa_global",
-       :text        => "Global Filters",
-       :image       => "folder",
-       :tip         => "Global Shared Filters",
-       :cfmeNoClick => true,
-       :expand      => true
-      },
-      {:id          => "csa_my",
-       :text        => "My Filters",
-       :image       => "folder",
-       :tip         => "My Personal Filters",
-       :cfmeNoClick => true,
-       :expand      => true
-      }
-    ]
-  end
 
   def x_get_tree_custom_kids(object, count_only, options)
     objects = x_get_search_results(object, options[:leaf])

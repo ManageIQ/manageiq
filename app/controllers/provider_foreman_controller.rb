@@ -24,12 +24,12 @@ class ProviderForemanController < ApplicationController
   def new
     assert_privileges("provider_foreman_add_provider")
     @provider_cfgmgmt = ManageIQ::Providers::ConfigurationManager.new
-    @provider_types = Array({"Ansible Tower" => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager', "Foreman" => 'ManageIQ::Providers::Foreman::ConfigurationManager'})
+    @provider_types = ["Ansible Tower", "Foreman"]
     render_form
   end
 
   def edit
-    @provider_types = Array("Ansible Tower" => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager', "Foreman" => 'ManageIQ::Providers::Foreman::ConfigurationManager')
+    @provider_types = ["Ansible Tower", "Foreman"]
     case params[:button]
     when "cancel"
       cancel_provider_foreman
@@ -46,27 +46,16 @@ class ProviderForemanController < ApplicationController
   end
 
   def model_to_name(model)
-    case model
-    when "ManageIQ::Providers::Foreman::ConfigurationManager"
-      return "Foreman"
-    when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
+    if model.include?("AnsibleTower")
       return "Ansible Tower"
-    end
-  end
-
-  def name_to_model(name)
-    case name
-    when "Foreman"
-      return "ManageIQ::Providers::Foreman::ConfigurationManager"
-    when "Ansible Tower"
-      return "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
+    elsif model.include?("Foreman")
+      return "Foreman"
     end
   end
 
   def delete
     assert_privileges("provider_foreman_delete_provider")
     checked_items = find_checked_items
-    #checked_items.push(params[:id]) if params[:id]
     providers = ManageIQ::Providers::ConfigurationManager.where(:id => checked_items).pluck(:provider_id, :type)
     if providers.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"),
@@ -192,11 +181,13 @@ class ProviderForemanController < ApplicationController
       AuditEvent.success(build_created_audit(@provider_cfgmgmt, @edit))
       @in_a_form = false
       @sb[:action] = nil
-      model = "#{ui_lookup(:ui_title => 'foreman')} #{ui_lookup(:model => 'ExtManagementSystem')}"
+      model = "#{ui_lookup(:ui_title => "#{@provider_cfgmgmt.type}")} #{ui_lookup(:model => 'ExtManagementSystem')}"
       add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => model,
                                                            :name   => @provider_cfgmgmt.name,
                                                            :action => params[:id] == "new" ? "added" : "updated"})
-      process_foreman([@provider_cfgmgmt.configuration_manager.id], "refresh_ems") if params[:id] == "new"
+      if params[:id] == "new"
+        process_cfgmgr([@provider_cfgmgmt.configuration_manager.id], "refresh_ems")
+      end
       replace_right_cell([:configuration_manager_providers])
     else
       @provider_cfgmgmt.errors.each do |field, msg|
@@ -239,14 +230,26 @@ class ProviderForemanController < ApplicationController
 
   def authentication_validate
     if params[:log_password]
-      @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                                     :url        => params[:url],
-                                                                     :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                     :verify_ssl => params[:verify_ssl].eql?("on"))
+      if params[:provtype] == 'Ansible Tower'
+        @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
+                                                                       :url        => params[:url],
+                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+
+      else
+        @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                                       :url        => params[:url],
+                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+      end
     else
-      @provider_cfgmgmt = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
+      if params[:provtype] == 'Ansible Tower'
+        @provider_cfgmgmt = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id]).provider
+      else
+        @provider_cfgmgmt = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
+      end
     end
-    update_authentication_provider_foreman
+    update_authentication_provider
 
     begin
       @provider_cfgmgmt.verify_credentials(params[:type])
@@ -255,9 +258,7 @@ class ProviderForemanController < ApplicationController
     else
       add_flash(_("Credential validation was successful"))
     end
-    render :update do |page|
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    render_flash
   end
 
   def show(id = nil)
@@ -322,7 +323,7 @@ class ProviderForemanController < ApplicationController
     else
       @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
 
-      if x_tree[:type] == :cs_filter && @nodetype == "ms"
+      if x_tree[:type] == :cs_filter && @nodetype == "xx-csf"
         search_id = @nodetype == "root" ? 0 : from_cid(id)
         listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
         if @edit[:adv_search_applied] &&
@@ -537,13 +538,14 @@ class ProviderForemanController < ApplicationController
 
   def get_node_info(treenodeid)
     @sb[:action] = nil
-    if treenodeid.split("-").first == "xx"
-      @nodetype, id = valid_active_node(treenodeid).split("-").last.split("-")
-    else
-      @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
-    end
+    @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
 
     model = TreeBuilder.get_model_for_prefix(@nodetype)
+    if model == "Hash"
+      model = TreeBuilder.get_model_for_prefix(id)
+      id = nil
+    end
+
     case model
     when "ManageIQ::Providers::Foreman::ConfigurationManager", "ManageIQ::Providers::AnsibleTower::ConfigurationManager", "ExtManagementSystem"
       provider_list(id, model)
@@ -560,7 +562,7 @@ class ProviderForemanController < ApplicationController
         default_node
       end
     end
-    @right_cell_text += @edit[:adv_search_applied][:text] if x_tree[:type] == :cs_filter && @edit && @edit[:adv_search_applied]
+    @right_cell_text += @edit[:adv_search_applied][:text] if x_tree && x_tree[:type] == :cs_filter && @edit && @edit[:adv_search_applied]
 
     if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
       x_history_add_item(:id     => x_node,
@@ -578,16 +580,24 @@ class ProviderForemanController < ApplicationController
       get_node_info("root")
       return
     else
-      options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem}
-      options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
-      @no_checkboxes = true
-      process_show_list(options)
-      add_unassigned_configuration_profile_record(provider.id)
-      record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
-      @right_cell_text =
+      case @record.type
+      when "ManageIQ::Providers::Foreman::ConfigurationManager"
+        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem}
+        options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
+        @no_checkboxes = true
+        process_show_list(options)
+        add_unassigned_configuration_profile_record(provider.id)
+        record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+        @right_cell_text =
+            _("%{model} \"%{name}\"") %
+            {:name  => provider.name,
+             :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
+      when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
+        @right_cell_text =
           _("%{model} \"%{name}\"") %
-          {:name  => provider.name,
-           :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
+            {:name  => provider.name,
+             :model => "#{record_model}"}
+      end
     end
   end
 
@@ -634,9 +644,10 @@ class ProviderForemanController < ApplicationController
 
   def configured_system_list(id, model)
     return configured_system_node( id, model) unless id.nil?
+    @listicon = "configured_system"
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => model)
+      @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => model_to_name(model))
       process_show_list(options)
     end
   end
@@ -725,7 +736,7 @@ class ProviderForemanController < ApplicationController
     elsif action_name == "edit"
       #get the selected record to display the matching type
       @record
-      @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
+      @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
     end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -917,7 +928,7 @@ class ProviderForemanController < ApplicationController
   def construct_edit
     @edit ||= {}
     @edit[:current] = {:name          => @provider_cfgmgmt.name,
-                       :provtype      => @provider_cfgmgmt.type,
+                       :provtype      => model_to_name(@provider_cfgmgmt.type),
                        :url           => @provider_cfgmgmt.url,
                        :verify_ssl    => @provider_cfgmgmt.verify_ssl}
     @edit[:new] = {:name          => params[:name],

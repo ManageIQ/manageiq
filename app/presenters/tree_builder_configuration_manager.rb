@@ -2,33 +2,40 @@ class TreeBuilderConfigurationManager < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "ManageIQ::Providers::ConfigurationManager"}
+    {:full_ids => true,
+     :open_all => true,
+     :leaf => "ManageIQ::Providers::ConfigurationManager"
+    }
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix => 'pt_')
+    locals.merge!(
+      :id_prefix => 'pt_',
+      :autoload => true)
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
     objects.push(:id => "fr",
+                 :tree => "fr_tree",
                  :text => "Foreman Providers",
-                 :image => "foreman_providers",
-                 :tip => "Foreman Providers") if ApplicationHelper.role_allows(:feature => "provider_foreman_view",
-                                                                               :any => true)
+                 :image => "folder",
+                 :tip => "Foreman Providers",
+                 :expand => true)
     objects.push(:id => "at",
+                 :tree => "at_tree",
                  :text => "Ansible Tower Providers",
-                 :image => "ansible_tower_providers",
-                 :tip => "Ansible Tower Providers") if ApplicationHelper.role_allows(:feature => "provider_foreman_view",
-                                                                                     :any => true)
+                 :image => "folder",
+                 :tip => "Ansible Tower Providers",
+                 :expand => true)
     count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_cmat_kids(object, count_only)
-    count_only_or_objects(count_only,
-                          "hostname")
+    objects = []
+    count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_cmf_kids(object, count_only)
@@ -72,8 +79,8 @@ class TreeBuilderConfigurationManager < TreeBuilder
   def x_get_tree_custom_kids(object_hash, count_only, _options)
     objects =
       case object_hash[:id]
-        when "fr"  then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"), :match_via_descendants => %w(ConfiguredSystem))
-        when "at"  then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
+      when "fr"  then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"), :match_via_descendants => %w(ConfiguredSystem))
+      when "at"  then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
       end
     count_only_or_objects(count_only, objects, "name")
   end
