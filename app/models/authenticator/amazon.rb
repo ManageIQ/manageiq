@@ -81,30 +81,31 @@ module Authenticator
     def iam_user_for_access_key(access_key_id)
       admin_connect.users.each do |user|
         user.access_keys.each do |access_key|
-          return user if access_key.id == access_key_id
+          return user if access_key.access_key_id == access_key_id
         end
       end
       raise MiqException::MiqHostError, "Access key #{access_key_id} does not match an IAM user for aws account holder."
     end
 
     def iam_user?(iam)
-      # for AWS user, name will be nil; for IAM user, there will be a
-      # name (if user has user/group management permissions), or
-      # get_user will throw an exception (for less-privileged users)
+      # for AWS root account keys: resource in arn will be root
+      # for IAM users: resource will be 'user/...user_name'
+      # http://docs.aws.amazon.com/de_de/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns
+      # or get_user will throw an exception (for less-privileged users)
 
-      iam.client.get_user[:user][:user_name].present?
-    rescue AWS::IAM::Errors::AccessDenied
+      iam.client.get_user[:user][:arn].split(/:/)[5].to_s != 'root'
+    rescue Aws::IAM::Errors::AccessDenied
       true
     end
 
     def verify_credentials(access_key_id, secret_access_key)
       begin
-        aws_connect(access_key_id, secret_access_key, :EC2).regions.map(&:name)
-      rescue AWS::EC2::Errors::SignatureDoesNotMatch
+        aws_connect(access_key_id, secret_access_key, :EC2).client.describe_regions.regions.map(&:region_name)
+      rescue Aws::EC2::Errors::SignatureDoesNotMatch
         raise MiqException::MiqHostError, "SignatureMismatch - check your AWS Secret Access Key and signing method"
-      rescue AWS::EC2::Errors::AuthFailure
+      rescue Aws::EC2::Errors::AuthFailure
         raise MiqException::MiqHostError, "Login failed due to a bad username or password."
-      rescue AWS::EC2::Errors::UnauthorizedOperation
+      rescue Aws::EC2::Errors::UnauthorizedOperation
         # user unauthorized for ec2, but still a valid IAM login
         return true
       rescue Exception => err
@@ -115,15 +116,11 @@ module Authenticator
     end
 
     def aws_connect(access_key_id, secret_access_key, service = :IAM)
-      require 'aws-sdk-v1'
-
-      AWS.const_get(service).new(
-        :access_key_id     => access_key_id,
-        :secret_access_key => secret_access_key,
-
-        :logger            => $aws_log,
-        :log_level         => :debug,
-        :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp),
+      ManageIQ::Providers::Amazon::CloudManager.raw_connect_v2(
+        access_key_id,
+        secret_access_key,
+        service,
+        'us-east-1' # IAM doesnt support regions, but the sdk requires one
       )
     end
   end
