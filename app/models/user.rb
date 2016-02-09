@@ -240,10 +240,6 @@ class User < ApplicationRecord
     subscribed_widget_sets.destroy_all
   end
 
-  def destroy_widget_sets_for_group(group_id)
-    subscribed_widget_sets_for_group(group_id).destroy_all
-  end
-
   def accessible_vms
     if limited_self_service?
       vms
