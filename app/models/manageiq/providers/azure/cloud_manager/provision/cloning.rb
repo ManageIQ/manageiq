@@ -44,20 +44,21 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
     nic_id = create_nic
     target_uri, source_uri, os = gather_storage_account_properties
 
-    cloud_options = {
+    cloud_options =
+    {
       :name       => dest_name,
       :location   => source.location,
       :properties => {
         :hardwareProfile => {
           :vmSize => instance_type.name
         },
-        :osProfile => {
-            :adminUserName => options[:root_username],
-            :adminPassword => root_password,
-            :computerName  => dest_name
+        :osProfile       => {
+          :adminUserName => options[:root_username],
+          :adminPassword => root_password,
+          :computerName  => dest_name
         },
-        :storageProfile => {
-          :osDisk => {
+        :storageProfile  => {
+          :osDisk        => {
             :createOption => 'FromImage',
             :caching      => 'ReadWrite',
             :name         => dest_name + SecureRandom.uuid + '.vhd',
@@ -66,7 +67,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
             :vhd          => {:uri => target_uri},
           }
         },
-        :networkProfile => {
+        :networkProfile  => {
           :networkInterfaces => [{:id => nic_id}],
         }
       }
@@ -98,15 +99,15 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
       nis = Azure::Armrest::Network::NetworkInterfaceService.new(azure)
       ips = Azure::Armrest::Network::IpAddressService.new(azure)
 
-      ip = ips.create("#{dest_name}-publicIp", resource_group, :location => region)
+      ip = ips.create("#{dest_name}-publicIp", resource_group.name, :location => region)
       network_options = {
         :location   => region,
         :properties => {
           :ipConfigurations => [
             :name       => dest_name,
             :properties => {
-              :subnet => {
-                :id => cloud_subnet.ems_ref
+              :subnet          => {
+                :id            => cloud_subnet.ems_ref
               },
               :publicIPAddress => {
                 :id => ip.id
@@ -116,14 +117,14 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
         }
       }
 
-      return nis.create(dest_name, resource_group, network_options).id
+      return nis.create(dest_name, resource_group.name, network_options).id
     end
   end
 
   def start_clone(clone_options)
     source.with_provider_connection do |azure|
       vms = Azure::Armrest::VirtualMachineService.new(azure)
-      vm  = vms.create(dest_name, resource_group, clone_options)
+      vm  = vms.create(dest_name, resource_group.name, clone_options)
       subscription_id = vm.id.split('/')[2]
 
       {
