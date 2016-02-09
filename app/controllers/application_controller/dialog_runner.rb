@@ -26,7 +26,7 @@ module ApplicationController::DialogRunner
       begin
         result = @edit[:wf].submit_request
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Provisioning" << bang.message, :error)
+        add_flash(_("Error during 'Provisioning': %{error_message}") % {:error_message => bang.message}, :error)
         render :update do |page|                    # Use RJS to update the display
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -40,7 +40,7 @@ module ApplicationController::DialogRunner
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
-          flash = _("%s Request was Submitted") % "Order"
+          flash = _("Order Request was Submitted")
           if role_allows(:feature => "miq_request_show_list", :any => true)
             @sb[:action] = @edit = nil
             @in_a_form = false
@@ -77,7 +77,7 @@ module ApplicationController::DialogRunner
       end
     else
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
-      add_flash(_("%s Button not yet implemented") % "#{params[:button].capitalize}", :error)
+      add_flash(_("%{button_name} Button not yet implemented") % {:button_name => params[:button].capitalize}, :error)
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end

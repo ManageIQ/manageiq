@@ -119,7 +119,7 @@ class MiqAeCustomizationController < ApplicationController
       timestamp = format_timezone(Time.current, Time.zone, "export_filename")
       send_data(dialog_yaml, :filename => "dialog_export_#{timestamp}.yml")
     else
-      add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num => 1, :model => "item", :action => "export"}, :error)
+      add_flash(_("At least 1 item must be selected for export"), :error)
       @sb[:flash_msg] = @flash_array
       redirect_to :action => :explorer
     end
