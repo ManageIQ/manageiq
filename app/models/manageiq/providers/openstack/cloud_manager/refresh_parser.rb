@@ -307,6 +307,7 @@ module ManageIQ::Providers
       uid = volume.id
       new_result = {
         :ems_ref           => uid,
+        :type              => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
         :name              => volume.display_name,
         :status            => volume.status,
         :bootable          => volume.attributes['bootable'],
@@ -315,7 +316,7 @@ module ManageIQ::Providers
         :volume_type       => volume.volume_type,
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
-        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.attributes['os-vol-tenant-attr:tenant_id']),
+        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
         :availability_zone => @data_index.fetch_path(:availability_zones, volume.availability_zone || "null_az"),
       }
 
@@ -348,6 +349,7 @@ module ManageIQ::Providers
       uid = snap['id']
       new_result = {
         :ems_ref       => uid,
+        :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
         :name          => snap['display_name'],
         :status        => snap['status'],
         :creation_time => snap['created_at'],

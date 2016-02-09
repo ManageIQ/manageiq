@@ -110,6 +110,11 @@ module MiqException
   class MiqOrchestrationDeleteError < Error; end
   class MiqOrchestrationStackNotExistError < Error; end
 
+  class MiqVolumeValidationError < Error; end
+  class MiqVolumeCreateError < Error; end
+  class MiqVolumeUpdateError < Error; end
+  class MiqVolumeDeleteError < Error; end
+
   class MiqOpenstackRequiredServiceMissing < Error; end
   class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackNovaServiceMissing < MiqOpenstackRequiredServiceMissing; end
