@@ -43,8 +43,7 @@ namespace :evm do
 
   task :compile_assets do
     EvmRakeHelper.with_dummy_database_url_configuration do
-      Rake::Task["assets:clobber"].invoke
-      Rake::Task["assets:precompile"].invoke
+      `LOAD_ASSETS=true bundle exec rake assets:clobber assets:precompile`
     end
   end
 
