@@ -8,6 +8,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   require_nested :Template
   require_nested :OrchestrationStack
   require_nested :OrchestrationServiceOptionConverter
+  require_nested :SecurityGroup
 
   alias_attribute :azure_tenant_id, :uid_ems
 
