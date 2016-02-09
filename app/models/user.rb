@@ -96,7 +96,7 @@ class User < ApplicationRecord
   before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
 
-  def miq_group_description=(group_description)
+  def current_group_by_description=(group_description)
     if group_description
       desired_group = miq_groups.detect { |g| g.description == group_description }
       desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
