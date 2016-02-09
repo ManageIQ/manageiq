@@ -82,7 +82,7 @@ class OpsController
         f_kids = [] # Array to hold node children
         f_node = {
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
-          :icon    => ActionController::Base.helpers.image_path("feature_#{details[:feature_type]}.png"),
+          :icon    => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
           :title   => details[:name],
           :tooltip => details[:description] || details[:name]
         }
