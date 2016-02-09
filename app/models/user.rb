@@ -216,20 +216,8 @@ class User < ApplicationRecord
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
   end
 
-  def miq_group_ids
-    miq_groups.collect(&:id)
-  end
-
   def self.all_users_of_group(group)
     User.includes(:miq_groups).select { |u| u.miq_groups.include?(group) }
-  end
-
-  def all_groups
-    miq_groups
-  end
-
-  def groups_include?(group)
-    miq_group_ids.include?(group.id)
   end
 
   def admin?
