@@ -323,7 +323,7 @@ class MiqRequestController < ApplicationController
       method = WORKFLOW_METHOD_WHITELIST[params[:field]]
       @edit[:wf].send(method, @edit[:new]) unless method.nil?
     rescue StandardError => bang
-      add_flash(_("Error retrieving LDAP info: ") << bang.message, :error)
+      add_flash(_("Error retrieving LDAP info: %{error_message}") % {:error_message => bang.message}, :error)
       render :update do |page|                    # Use JS to update the display
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end

@@ -744,7 +744,7 @@ module ApplicationController::MiqRequestMethods
       begin
         options[:wf] = @miq_request.workflow(@options)
       rescue MiqException::MiqVmError => bang
-        @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
+        @no_wf_msg = _("Cannot create Request Info, error: %{error_message}") % {:error_message => bang.message}
       end
       if options[:wf]
         options[:wf].init_from_dialog(@options)  # Create a new provision workflow for this edit session
@@ -931,7 +931,7 @@ module ApplicationController::MiqRequestMethods
     [wf_type.new(@edit[:new], current_user, options), pre_prov_values]  # Return the new workflow and any pre_prov_values
   rescue => bang
     # only add this message if showing a list of Catalog items, show screen already handles this
-    @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
+    @no_wf_msg = _("Cannot create Request Info, error: %{error_message}") % {:error_message => bang.message}
     _log.log_backtrace(bang)
     nil
   end
