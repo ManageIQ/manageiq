@@ -1287,25 +1287,25 @@ module ApplicationController::CiProcessing
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'foreman'),
                                                                 :task  => display_name}, :error)
       else
-        process_foreman(items, method) unless items.empty? && !flash_errors?
+        process_cfgmgr(items, method) unless items.empty? && !flash_errors?
       end
     end
   end
 
-  def process_foreman(providers, task)
-    providers, _services_out_region = filter_ids_in_region(providers, "ManageIQ::Providers::Foreman::ConfigurationManager")
+  def process_cfgmgr(providers, task)
+    providers, _services_out_region = filter_ids_in_region(providers, "ManageIQ::Providers::ConfigurationManager")
     return if providers.empty?
 
     options = {:ids => providers, :task => task, :userid => session[:userid]}
-    kls = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_id(providers.first).class.base_model
-    ManageIQ::Providers::Foreman::ConfigurationManager.process_tasks(options)
+    kls = ManageIQ::Providers::ConfigurationManager.find_by_id(providers.first).class
+    kls.process_tasks(options)
   rescue => err
-    add_flash(_("Error during '%{task}': %{error_message}") % {:task => task, :error_message => err.message}, :error)
+    add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
-      {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'foreman')}"),
-       :controller  => ui_lookup(:ui_title => 'foreman'),
-       :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
+                {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'configuration manager')}"),
+                 :controller  => ui_lookup(:ui_title => 'foreman'),
+                 :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
   end
 
   # Delete all selected or single displayed VM(s)

@@ -2,24 +2,8 @@
 # Toolbar config file
 #
 ---
-:model: ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
+:model: ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem
 :button_groups:
-- :name: provider_foreman_lifecycle
-  :items:
-  - :buttonSelect: provider_foreman_lifecycle_choice
-    :icon: fa fa-recycle fa-lg
-    :title: Lifecycle
-    :text: Lifecycle
-    :enabled: 'true'
-    :items:
-    - :button: configured_system_provision
-      :icon: pficon pficon-add-circle-o fa-lg
-      :text: "Provision Configured Systems"
-      :title: "Provision Configured Systems"
-      :url: provision
-      :url_parms: 'main_div'
-      :enabled: 'false'
-      :onwhen: '1+'
 - :name: provider_foreman_policy
   :items:
   - :buttonSelect: provider_foreman_policy_choice

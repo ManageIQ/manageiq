@@ -9,13 +9,13 @@
 #
 
 # Report title
-title: AnsibleTowerConfiguredSystem
+title: Ansible Tower Configured System
 
 # Menu name
 name: ConfiguredSystems
 
 # Main DB table report is based on
-db: ConfiguredSystem
+db: ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem
 
 # Columns to fetch from the main table
 cols:

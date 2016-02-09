@@ -1,5 +1,5 @@
 describe "shared/_explorer_tree.html.haml" do
-  let(:tree_1) { TreeBuilderForeman.new("tree_1", "tree_1", {}) }
+  let(:tree_1) { TreeBuilderConfigurationManager.new("tree_1", "tree_1", {}) }
 
   before do
     set_controller_for_view("provider_foreman")
