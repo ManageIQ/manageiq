@@ -244,10 +244,6 @@ class User < ApplicationRecord
     subscribed_widget_sets_for_group(group_id).destroy_all
   end
 
-  def destroy_orphaned_dashboards
-    (group_ids_of_subscribed_widget_sets - miq_group_ids).each { |group_id| destroy_widget_sets_for_group(group_id) }
-  end
-
   def valid_for_login?
     !!miq_user_role
   end
