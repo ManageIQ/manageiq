@@ -143,12 +143,6 @@ class MiqGroup < ApplicationRecord
     user_groups.first
   end
 
-  def get_user_scope(options = {})
-    scope = filters.kind_of?(MiqUserScope) ? filters : MiqUserScope.hash_to_scope(filters)
-
-    scope.get_filters(options)
-  end
-
   def get_filters(type = nil)
     if type
       (filters.respond_to?(:key?) && filters[type.to_s]) || []
