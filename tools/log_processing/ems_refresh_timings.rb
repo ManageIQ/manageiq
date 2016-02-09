@@ -91,6 +91,40 @@ def parse_refresh_timings(line)
   end
 end
 
+def sort_timings(timings)
+  timings.sort_by { |t| t[:start_time] }
+end
+
+def print_results(all_timings, ems_timings)
+  columns        = [:start_time, :end_time, :total_time, :ems, :target_type, :target]
+  column_lengths = [ 0, 0, 0, 0, 0, 0]
+
+  print "Found #{all_timings.length} refreshes from #{ems_timings.keys.length} providers\n"
+
+  # Calculate how much padding we need for each column
+  sort_timings(all_timings).each do |timing|
+    (0..columns.length - 1).each do |i|
+      column_lengths[i] = [column_lengths[i], timing[columns[i]].to_s.length].max
+    end
+  end
+
+  # Print the column headers
+  columns.each_with_index do |col, i|
+    print "#{col.to_s.ljust(column_lengths[i])}   "
+  end
+
+  print "\n"
+
+  # Print the results for each refresh
+  sort_timings(all_timings).each do |timing|
+    column_lengths.each_with_index do |column_length, i|
+      print "#{timing[columns[i]].to_s.ljust(column_length)} | "
+    end
+    print "\n"
+  end
+end
+
+
 parse_args(ARGV)
 
 puts "Processing file..."
@@ -120,24 +154,4 @@ $logfiles.each do |logfile|
   end
 end
 
-print "Found #{all_timings.length} refreshes from #{ems_timings.keys.length} providers\n"
-
-COLUMNS           = ["start", "end", "duration", "ems", "target-type", "target"]
-COLUMN_MAX_LENGTH = [ 0, 0, 0, 0, 0, 0]
-all_timings.sort_by { |t| t[:start_time] }.each do |timing|
-  COLUMN_MAX_LENGTH[0] = [COLUMN_MAX_LENGTH[0], timing[:start_time].to_s.length].max
-  COLUMN_MAX_LENGTH[1] = [COLUMN_MAX_LENGTH[1], timing[:end_time].to_s.length].max
-  COLUMN_MAX_LENGTH[2] = [COLUMN_MAX_LENGTH[2], timing[:total_time].to_s.length].max
-  COLUMN_MAX_LENGTH[3] = [COLUMN_MAX_LENGTH[3], timing[:ems].length].max
-  COLUMN_MAX_LENGTH[4] = [COLUMN_MAX_LENGTH[4], timing[:target_type].length].max
-  COLUMN_MAX_LENGTH[5] = [COLUMN_MAX_LENGTH[5], timing[:target].length].max
-end
-
-COLUMNS.each_with_index do |col, i|
-  print "#{col.ljust(COLUMN_MAX_LENGTH[i])}   "
-end
-print "\n"
-
-all_timings.sort_by { |t| t[:start_time] }.each do |timing|
-  print "#{timing[:start_time].to_s.ljust(COLUMN_MAX_LENGTH[0])} | #{timing[:end_time].to_s.ljust(COLUMN_MAX_LENGTH[1])} | #{timing[:total_time].to_s.ljust(COLUMN_MAX_LENGTH[2])} | #{timing[:ems].to_s.ljust(COLUMN_MAX_LENGTH[3])} | #{timing[:target_type].to_s.ljust(COLUMN_MAX_LENGTH[4])} | #{timing[:target].to_s.ljust(COLUMN_MAX_LENGTH[5])}\n"
-end
+print_results(all_timings, ems_timings)
