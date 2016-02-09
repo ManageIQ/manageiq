@@ -396,32 +396,6 @@ describe User do
     expect(user).not_to be_valid
   end
 
-  context "#group_ids_of_subscribed_widget_sets" do
-    subject { @user.group_ids_of_subscribed_widget_sets }
-    before do
-      @group = FactoryGirl.create(:miq_group, :description => 'dev group')
-      @user  = FactoryGirl.create(:user, :name => 'cloud', :userid => 'cloud', :miq_groups => [@group])
-      @ws_group = FactoryGirl.create(:miq_widget_set, :name => 'Home', :owner => @group)
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => @group.id)
-    end
-
-    it "none group" do
-      @group.users.destroy_all
-      @group.destroy
-      expect(subject).to be_empty
-    end
-
-    it "one group" do
-      expect(subject).to eq([@group.id])
-    end
-
-    it "multiple groups" do
-      group2 = FactoryGirl.create(:miq_group, :description => '2nd group')
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => group2.id)
-      expect(subject).to match_array([@group.id, group2.id])
-    end
-  end
-
   context ".authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
 
