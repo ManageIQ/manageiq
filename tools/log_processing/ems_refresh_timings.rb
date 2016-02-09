@@ -6,6 +6,7 @@ require 'time'
 
 $targets      = nil
 $target_types = nil
+$sort_key     = nil
 $logfiles     = []
 
 def usage
@@ -14,6 +15,8 @@ Description:
   Parse EMS Refreshes from a set of evm.log files and filter on a set of
   provided conditions.
 Options:
+  --sort-by=SORT_KEY   Key to sort by, options are start_time, end_time,
+                       total_time, ems, target_type, target
   --target-type=TYPES  Comma separated list of target types to filter, if not
                        specified all target types will be shown
   --target=TARGETS     Comma separated list of targets to filter, if not
@@ -32,7 +35,7 @@ Examples:
   Print all full provider refreshes for a set of logs:
     find /path/to/logs -name 'evm.log*' | \\
     xargs ruby tools/log_processing/ems_refresh_timings.rb --target-type=EmsVmware
-}
+  }
 end
 
 def parse_args(argv)
@@ -40,12 +43,15 @@ def parse_args(argv)
     if arg.start_with?('-')
       flag, optarg = arg.split('=')
       case flag
+      when '--sort-by'
+        $sort_key = optarg.to_sym
       when '--target'
         $targets = optarg.split(',')
       when '--target-type'
         $target_types = optarg.split(',')
       when '--time'
         # TODO: unimplemented
+        print "--time option not yet implemented, will be ignored\n"
       when '--help', '-h'
         print usage()
         exit
@@ -58,7 +64,10 @@ def parse_args(argv)
     end
   end
 
+  # If no logs were given on command line default to main project evm.log
   $logfiles << File.join(RAILS_ROOT, "log/evm.log") if $logfiles.empty?
+
+  $sort_key = :start_time if $sort_key.nil?
 end
 
 def filter(hash)
@@ -78,21 +87,30 @@ def parse_refresh_target(line)
   end
 end
 
-def parse_refresh_timings(line)
+def parse_refresh_timings(line, targets)
   if line =~ /MIQ\(VcRefresher.refresh\).EMS:? \[(.*?)\].+Timings:? (\{.+)$/
     ems             = $1
+    # Refresh timings are printed to the log as a hash, just eval it
     refresh_timings = eval($2)
 
+    # Find the most recent refresh target for our ems, since there is
+    # only one refresh worker this "has to be" the right one
+    # If this changes in the future we'll have to add a PID lookup here
+    refresh_target  = targets[ems].last
+
+    # Add other useful information to the refresh timings
     refresh_timings[:ems]         = ems
     refresh_timings[:end_time]    = Time.parse(line.time + " UTC")
     refresh_timings[:start_time]  = refresh_timings[:end_time] - refresh_timings[:total_time]
+    refresh_timings[:target]      = refresh_target[:target]
+    refresh_timings[:target_type] = refresh_target[:target_type]
 
     refresh_timings
   end
 end
 
 def sort_timings(timings)
-  timings.sort_by { |t| t[:start_time] }
+  timings.sort_by { |t| t[$sort_key] }
 end
 
 def print_results(all_timings, ems_timings)
@@ -135,20 +153,15 @@ all_targets = Hash.new { |k, v| k[v] = [] }
 
 $logfiles.each do |logfile|
   MiqLoggerProcessor.new(logfile).each do |line|
-    # Find the target type
+    # Parse out the refresh target or refresh timings
     if target_hash = parse_refresh_target(line)
       all_targets[target_hash[:ems]] << target_hash
-    end
-
-    if refresh_timings = parse_refresh_timings(line)
+    elsif refresh_timings = parse_refresh_timings(line, all_targets)
       ems = refresh_timings[:ems]
 
-      refresh_timings[:target]      = all_targets[ems].last[:target]
-      refresh_timings[:target_type] = all_targets[ems].last[:target_type]
-
       if filter(refresh_timings)
-        ems_timings[refresh_timings[:ems]] << refresh_timings
-        all_timings                        << refresh_timings
+        ems_timings[ems] << refresh_timings
+        all_timings      << refresh_timings
       end
     end
   end
