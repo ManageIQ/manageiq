@@ -1792,7 +1792,7 @@ module ApplicationController::Compare
     row
   end
 
-  def comp_record_data_compressed_nonexistsmode(idx, match, val, basval)
+  def comp_record_data_nonexistsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
       row.merge!(compare_add_txt_col(idx, "%:", "% Matched"))
@@ -1816,6 +1816,14 @@ module ApplicationController::Compare
       end
     end
     row
+  end
+
+  def comp_record_data_compressed_nonexistsmode(idx, match, val, basval)
+    comp_record_data_nonexistsmode(idx, match, val, basval)
+  end
+
+  def comp_record_data_expanded_nonexistsmode(idx, match, val, basval)
+    comp_record_data_nonexistsmode(idx, match, val, basval)
   end
 
   def comp_record_data_expanded(idx, match, val, basval)
@@ -1851,32 +1859,6 @@ module ApplicationController::Compare
           row.merge!(drift_add_image_col(idx, "16/minus-red.png", "", val))
         else                                                        # Base doesn't have the record, match
           row.merge!(drift_add_image_col(idx, "16/minus-green.png", "", val))
-        end
-      end
-    end
-    row
-  end
-
-  def comp_record_data_expanded_nonexistsmode(idx, match, val, basval)
-    row = {}
-    if idx == 0                                                     # On the base?
-      row.merge!(compare_add_txt_col(idx, "% Matched:"))
-    else
-      if val == "Found"       # This object has the record
-        if basval == "Found"  # Base has the record
-          img_src = calculate_match_img(match)
-          unset_same_flag(match)
-          row.merge!(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
-        else
-          unset_same_flag
-          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
-        end
-      else
-        if basval == "Found"
-          unset_same_flag
-          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
-        else
-          row.merge!(compare_add_piechart_image(idx, "100% matched", "20", ""))
         end
       end
     end
