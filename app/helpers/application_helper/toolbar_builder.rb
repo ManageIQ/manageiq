@@ -31,18 +31,14 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   ###
-  def load_yaml(tb_name)
-    @@toolbar_cache ||= {}
-    @@toolbar_cache[tb_name] ||= (
-      h = YAML.load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml")).freeze
-      h.values.map(&:freeze)
-      h
-    )
+  def generic_toolbar(tb_name)
+    class_name = 'ApplicationHelper::Toolbar::' + ActiveSupport::Inflector.camelize(tb_name.sub(/_tb$/, ''))
+    Kernel.const_get(class_name)
   end
 
   def build_toolbar(tb_name)
-    definition = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : load_yaml(tb_name)
-    build(definition)
+    toolbar = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : generic_toolbar(tb_name)
+    build(toolbar)
   end
 
   def build_select_button(bgi, index)
@@ -195,27 +191,30 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def build(definition)
+  def build(toolbar)
     @toolbar = []
     @groups_added = []
     @sep_needed = false
     @sep_added = nil
 
-    definition[:button_groups].each_with_index do |bg, bg_idx|
+    bg_idx = -1
+    toolbar.definition.each_pair do |name, items|
+      bg_idx += 1
+
       @sep_added = false
-      if @button_group && (!bg[:name].starts_with?(@button_group + "_") &&
-        !bg[:name].starts_with?("custom") && !bg[:name].starts_with?("dialog") &&
-        !bg[:name].starts_with?("miq_dialog") && !bg[:name].starts_with?("custom_button") &&
-        !bg[:name].starts_with?("instance_") && !bg[:name].starts_with?("image_")) &&
+      if @button_group && (!name.starts_with?(@button_group + "_") &&
+        !name.starts_with?("custom") && !name.starts_with?("dialog") &&
+        !name.starts_with?("miq_dialog") && !name.starts_with?("custom_button") &&
+        !name.starts_with?("instance_") && !name.starts_with?("image_")) &&
          !["record_summary", "summary_main", "summary_download", "tree_main",
-           "x_edit_view_tb", "history_main", "ems_container_dashboard"].include?(bg[:name])
+           "x_edit_view_tb", "history_main", "ems_container_dashboard"].include?(name)
         next      # Skip if button_group doesn't match
       else
         # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
         @groups_added.push(bg_idx)
       end
 
-      bg[:items].each do |bgi|
+      items.each do |bgi|
         build_button(bgi, bg_idx)
       end
     end
@@ -266,18 +265,15 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_custom_buttons_toolbar(record)
-    toolbar_hash = {:button_groups => custom_buttons_hash(record)}
-
+    toolbar = ApplicationHelper::Toolbar::Basic
     service_buttons = record_to_service_buttons(record)
+
     unless service_buttons.empty?
-      h =  {
-        :name  => "custom_buttons_",
-        :items => service_buttons.collect { |b| create_custom_button_hash(b, record, :enabled => nil) }
-      }
-      toolbar_hash[:button_groups].push(h)
+      buttons = service_buttons.collect { |b| create_custom_button_hash(b, record, :enabled => nil) }
+      toolbar.button_group("custom_buttons_", buttons)
     end
 
-    toolbar_hash
+    toolbar
   end
 
   def button_class_name(record)
