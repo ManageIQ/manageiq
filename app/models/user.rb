@@ -228,10 +228,6 @@ class User < ApplicationRecord
     MiqWidgetSet.subscribed_for_user(self)
   end
 
-  def subscribed_widget_sets_for_group(group_id)
-    subscribed_widget_sets.where(:group_id => group_id)
-  end
-
   def destroy_subscribed_widget_sets
     subscribed_widget_sets.destroy_all
   end
