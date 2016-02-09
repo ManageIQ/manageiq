@@ -44,7 +44,7 @@ class ContainerImage < ApplicationRecord
   alias_method :guid, :docker_id
 
   def display_registry
-    container_image_registry.present? ? container_image_registry.full_name : "Unknown image source"
+    container_image_registry.present? ? container_image_registry.full_name : _("Unknown image source")
   end
 
   def scan
