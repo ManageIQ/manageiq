@@ -420,14 +420,6 @@ describe User do
       FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => group2.id)
       expect(subject).to match_array([@group.id, group2.id])
     end
-
-    it "a belong to group is deleted" do
-      group2 = FactoryGirl.create(:miq_group, :description => '2nd group')
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => group2.id)
-
-      @user.destroy_widget_sets_for_group(group2)
-      expect(subject).to eq([@group.id])
-    end
   end
 
   context ".authenticate_with_http_basic" do

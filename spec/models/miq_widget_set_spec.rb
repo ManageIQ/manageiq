@@ -29,11 +29,6 @@ describe MiqWidgetSet do
       expect(MiqWidgetSet.count).to eq(2)
     end
 
-    it "no longer belonging to a group" do
-      user.destroy_widget_sets_for_group(group.id)
-      expect(MiqWidgetSet.count).to eq(1)
-    end
-
     it "the belong to group is being deleted" do
       expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
       expect(MiqWidgetSet.count).to eq(2)
