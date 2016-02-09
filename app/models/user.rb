@@ -48,9 +48,6 @@ class User < ApplicationRecord
 
   @role_changed = false
 
-  EVMROLE_SELF_SERVICE_ROLE_NAME         = "EvmRole-user_self_service"
-  EVMROLE_LIMITED_SELF_SERVICE_ROLE_NAME = "EvmRole-user_limited_self_service"
-
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
   serialize     :settings, Hash   # Implement settings column as a hash
