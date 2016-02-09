@@ -260,23 +260,27 @@ module ApplicationController::Compare
     render_pdf(rpt)
   end
 
-  # Create an MIQ_Report object from a compare object
-  def create_compare_or_drift_report(mode, csv = false)
+  def column_names_for_compare_or_drift_report(mode)
     # Collect the column names from the @compare object
-    colnames = ["Section", "Entry", "Sub-Entry"]
+    column_names = ["Section", "Entry", "Sub-Entry"]
 
     if mode == :compare
-      colnames << @compare.records[0].name
+      column_names << @compare.records[0].name
       @compare.records[1..-1].each do |r|
-        colnames.push(r["name"]) unless r["id"] == @compare.records[0]["id"]
+        column_names.push(r["name"]) unless r["id"] == @compare.records[0]["id"]
       end
     else
       @compare.ids.each do |r|
         t = r.getgm
-        colnames.push(t.strftime("%m/%d/%y") + " " + t.strftime("%H:%M ") + t.zone)
+        column_names.push(t.strftime("%m/%d/%y") + " " + t.strftime("%H:%M ") + t.zone)
       end
     end
 
+    column_names
+  end
+  private :column_names_for_compare_or_drift_report
+
+  def prepare_data_for_compare_or_drift_report(mode, csv)
     sb_key = (mode == :compare) ? :miq_temp_params : :miq_drift_params
 
     # Collect the data from the @compare object
@@ -389,14 +393,22 @@ module ApplicationController::Compare
         end
       end
     end # end of all includes/sections
+  end
+  private :prepare_data_for_compare_or_drift_report
 
-    rpt = MiqReport.new
-    rpt.table = Ruport::Data::Table.new(:data         => @data,
-                                        :column_names => colnames)
-    rpt.cols = colnames
-    rpt.col_order = colnames
-    rpt.headers = colnames
-    rpt.sortby = [colnames[0]]      # Set sortby to the first column
+
+  # Create an MIQ_Report object from a compare object
+  def create_compare_or_drift_report(mode, csv = false)
+    column_names  = column_names_for_compare_or_drift_report(mode)
+    prepare_data_for_compare_or_drift_report(mode, csv) # fills @data
+
+    rpt           = MiqReport.new
+    rpt.table     = Ruport::Data::Table.new(:data => @data, :column_names => column_names)
+    rpt.cols      = column_names
+    rpt.col_order = column_names
+    rpt.headers   = column_names
+    rpt.sortby    = [column_names[0]]      # Set sortby to the first column
+
     if mode == :compare
       rpt.db = "<compare>"            # Set special db setting for report formatter
       rpt.title = "#{ui_lookup(:model => @sb[:compare_db])} Compare Report (* = Value does not match base)"
@@ -407,6 +419,7 @@ module ApplicationController::Compare
 
     rpt
   end
+  private :create_compare_or_drift_report
 
   # Create an MIQ_Report object from a compare object
   def create_compare_report(csv = false)
