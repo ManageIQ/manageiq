@@ -225,28 +225,8 @@ class User < ApplicationRecord
     MiqWidgetSet.subscribed_for_user(self)
   end
 
-  def group_ids_of_subscribed_widget_sets
-    subscribed_widget_sets.pluck(:group_id).compact.uniq
-  end
-
-  def subscribed_widget_sets_for_group(group_id)
-    subscribed_widget_sets.where(:group_id => group_id)
-  end
-
   def destroy_subscribed_widget_sets
     subscribed_widget_sets.destroy_all
-  end
-
-  def destroy_widget_sets_for_group(group_id)
-    subscribed_widget_sets_for_group(group_id).destroy_all
-  end
-
-  def destroy_orphaned_dashboards
-    (group_ids_of_subscribed_widget_sets - miq_group_ids).each { |group_id| destroy_widget_sets_for_group(group_id) }
-  end
-
-  def valid_for_login?
-    !!miq_user_role
   end
 
   def accessible_vms
