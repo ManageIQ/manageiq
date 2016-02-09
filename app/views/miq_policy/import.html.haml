@@ -4,7 +4,23 @@
     %h3 Import
     - if @sb[:hide]
 
-      #import_grid
+      %table.table.table-bordered.table-treegrid
+        %thead
+          %tr
+            %th=_('Details')
+            %th=_('Message')
+        %tbody
+          - @import.each do |item|
+            %tr{'data-parent' => item[:parent]}
+              %td{:class => 'treegrid-node'}
+                %span{:class => "icon node-icon fa fa-fw #{item[:icon]}"}
+                %strong
+                  = "#{item[:type]}: "
+                = item[:title]
+              %td
+                = item[:messages]
+      :javascript
+        $('.table-treegrid').treegrid();
 
       %table{:width => "100%"}
         %tr
@@ -37,7 +53,3 @@
                         :remote       => true,
                         "data-method" => :post,
                         :title        => "Cancel Import")
-:javascript
-  var import_file_upload_id = "#{j @import_file_upload_id}";
-
-= javascript_include_tag "miq_policy/import"

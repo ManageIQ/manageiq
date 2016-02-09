@@ -15,7 +15,6 @@ src_files:
   - assets/application
   - assets/jasmine-jquery
   - assets/angular-mocks
-  - javascripts/import.js
   - __spec__/helpers/fixtures-fix.js
 
 # stylesheets

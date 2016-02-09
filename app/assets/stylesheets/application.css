@@ -21,7 +21,6 @@
  *= require jquery-ui-miq-theme/jquery-ui-1.9.2.custom
  *= require container_providers_dashboard
  *= require template
- *= require import_policy
  *= require container_topology
  *= require service_dialogs
  *= require xml_display
