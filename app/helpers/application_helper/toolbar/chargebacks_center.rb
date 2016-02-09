@@ -1,0 +1,22 @@
+class ApplicationHelper::Toolbar::ChargebacksCenter < ApplicationHelper::Toolbar::Basic
+  button_group('chargeback_vmdb', [
+    select(:chargeback_vmdb_choice, 'fa fa-cog fa-lg', N_('Configuration'), N_('Configuration'),
+      :items     => [
+        button(:chargeback_rates_new, 'pficon pficon-add-circle-o fa-lg', N_('Add a new Chargeback Rate'), N_('Add a new Chargeback Rate')),
+        button(:chargeback_rates_edit, 'pficon pficon-edit fa-lg', N_('Edit the selected Chargeback Rate'), N_('Edit the selected Chargeback Rate'),
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1"),
+        button(:chargeback_rates_copy, 'fa fa-files-o fa-lg', N_('Copy the selected Chargeback Rate to a new Chargeback Rate'), N_('Copy the selected Chargeback Rate to a new Chargeback Rate'),
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1"),
+        button(:chargeback_rates_delete, 'pficon pficon-delete fa-lg', N_('Remove selected Chargeback Rates from the VMDB'), N_('Remove selected Chargeback Rates from the VMDB'),
+          :url_parms => "main_div",
+          :confirm   => N_("Warning: The selected Chargeback Rate will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Chargeback Rates?"),
+          :enabled   => "false",
+          :onwhen    => "1+"),
+      ]
+    ),
+  ])
+end
