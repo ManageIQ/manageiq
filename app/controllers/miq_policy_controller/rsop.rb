@@ -51,6 +51,7 @@ module MiqPolicyController::Rsop
     else  # No params, first time in
       @breadcrumbs = []
       @accords = [{:name => "rsop", :title => "Options", :container => "rsop_options_div"}]
+      session[:changed] = false
       @sb[:rsop] ||= {}   # Leave exising values
       rsop_put_objects_in_sb(find_filtered(ExtManagementSystem, :all), :emss)
       rsop_put_objects_in_sb(find_filtered(EmsCluster, :all), :clusters)
