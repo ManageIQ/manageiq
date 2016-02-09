@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many   :miq_widget_contents, :dependent => :destroy
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_reports, :dependent => :nullify
+  has_many   :service_orders, :dependent => :nullify
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :admin, -> { where(:userid => "admin") }
