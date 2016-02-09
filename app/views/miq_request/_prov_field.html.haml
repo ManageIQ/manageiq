@@ -67,7 +67,7 @@
             :owner_manager_phone, :owner_phone, :owner_phone_mobile,
             :owner_state, :owner_title, :owner_zip, :request_notes,
             :subnet_mask, :memory_limit, :memory_reserve,
-            :root_password, :sysprep_password, :sysprep_domain_admin,
+            :root_username, :root_password, :sysprep_password, :sysprep_domain_admin,
             :sysprep_domain_password, :sysprep_workgroup_name,
             :sysprep_full_name, :sysprep_organization,
             :sysprep_product_id, :sysprep_computer_name,
@@ -240,6 +240,7 @@
                :vm_tag_2, :vm_tag_3, :vm_tag_4, :vm_tag_5, :vm_tag_6, :vm_tag_7, :vm_tag_8,
                :vm_tag_9, :vm_tag_10, :provision_type, :network_adapters, :retirement,
                :retirement_warn, :cloud_network, :cloud_subnet, :floating_ip_address,
+               :resource_group,
                :sysprep_auto_logon_count, :sysprep_domain_name, :sysprep_server_license_mode,
                :vlan, :cloud_tenant, :src_configuration_profile_id, :vm_minimum_memory, 
                :vm_maximum_memory, :boot_disk_size].include?(field)
