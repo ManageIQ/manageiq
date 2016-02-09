@@ -1188,6 +1188,7 @@ describe ReportController do
 
   context "#replace_right_cell" do
     before do
+      FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
       login_as FactoryGirl.create(:user_admin) # not sure why this needs to be an admin...
     end
 
@@ -1201,7 +1202,6 @@ describe ReportController do
       last_build_time = Time.now.utc
       controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
       FactoryGirl.create(:miq_report_with_results)
-      expect(controller).to receive(:build_report_listnav)
       expect(controller).to receive(:build_savedreports_tree)
       expect(controller).to receive(:build_db_tree)
       expect(controller).to receive(:build_widgets_tree)
