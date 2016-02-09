@@ -20,19 +20,19 @@ class VmInfraController < ApplicationController
   def features
     [
       ApplicationController::Feature.new_with_hash(
-        :role        => "vandt_accord",
-        :name        => :vandt,
-        :title       => "VMs & Templates"),
+        :role  => "vandt_accord",
+        :name  => :vandt,
+        :title => "VMs & Templates"),
 
       ApplicationController::Feature.new_with_hash(
-        :role        => "vms_filter_accord",
-        :name        => :vms_filter,
-        :title       => "VMs",),
+        :role  => "vms_filter_accord",
+        :name  => :vms_filter,
+        :title => "VMs",),
 
       ApplicationController::Feature.new_with_hash(
-        :role        => "templates_filter_accord",
-        :name        => :templates_filter,
-        :title       => "Templates",),
+        :role  => "templates_filter_accord",
+        :name  => :templates_filter,
+        :title => "Templates",),
     ]
   end
 
