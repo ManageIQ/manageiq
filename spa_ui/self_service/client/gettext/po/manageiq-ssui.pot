@@ -64,6 +64,10 @@ msgstr ""
 msgid "Back to My Requests"
 msgstr ""
 
+#: app/states/services/details/details.html:3
+msgid "Back to My Services"
+msgstr ""
+
 #: app/states/marketplace/details/details.html:3
 msgid "Back to Service Catalog"
 msgstr ""
@@ -131,6 +135,7 @@ msgstr ""
 msgid "Denied Requests"
 msgstr ""
 
+#: app/components/edit-service-modal/edit-service-modal.html:13
 #: app/states/marketplace/list/list.state.js:80
 #: app/states/requests/list/list.state.js:59
 #: app/states/requests/list/list.state.js:91
@@ -444,6 +449,10 @@ msgstr ""
 msgid "Retire"
 msgstr ""
 
+#: app/states/services/details/details.html:48
+msgid "Retire Now"
+msgstr ""
+
 #: app/states/services/details/details.html:50
 msgid "Retire Service Now"
 msgstr ""
@@ -476,6 +485,10 @@ msgstr ""
 #: app/components/edit-service-modal/edit-service-modal.html:22
 #: app/components/retire-service-modal/retire-service-modal.html:25
 msgid "Save"
+msgstr ""
+
+#: app/states/services/details/details.html:56
+msgid "Schedule Retirement"
 msgstr ""
 
 #: app/components/retire-service-modal/retire-service-modal.html:5
