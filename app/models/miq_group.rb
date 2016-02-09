@@ -46,22 +46,6 @@ class MiqGroup < ApplicationRecord
     description
   end
 
-  def self.allows?(_group, _options = {})
-    # group: Id || Instance
-    # :identifier => Feature Identifier
-    # :object => Vm, Host, etc.
-
-    # TODO
-    # group = self.extract_objects(group)
-    # return true if self.filters.nil? # TODO - Man need to check for filters like {:managed => [], :belongsto => []}
-    #
-    # feature_type = MiqProductFeature.feature_details(identifier)[:feature_type]
-    #
-    # self.filters = MiqUserScope.hash_to_scope(self.filters) unless self.filters.kind_of?(MiqUserScope)
-
-    true # Remove once this is implemented
-  end
-
   def self.next_sequence
     maximum(:sequence).to_i + 1
   end
