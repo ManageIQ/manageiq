@@ -178,8 +178,13 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
+  # @param [OrchestrationTemplateCfn] template
+  # @return [nil] if the template is valid
+  # @return [String] if the template is invalid this is the error message
   def orchestration_template_validate(template)
-    cloud_formation.validate_template(template.content)[:message]
+    nil if cloud_formation.client.validate_template(:template_body => template.content)
+  rescue Aws::CloudFormation::Errors::ValidationError => validation_error
+    validation_error.message
   rescue => err
     _log.error "template=[#{template.name}], error: #{err}"
     raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
