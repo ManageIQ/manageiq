@@ -1,5 +1,3 @@
-include UiConstants
-
 describe OpsController do
   render_views
 

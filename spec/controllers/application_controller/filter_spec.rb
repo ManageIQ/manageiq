@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ApplicationController, "::Filter" do
   before :each do
     controller.instance_variable_set(:@sb, {})

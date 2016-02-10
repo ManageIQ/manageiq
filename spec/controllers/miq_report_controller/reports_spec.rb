@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ReportController, "::Reports" do
   describe "#check_tabs" do
     tabs = {

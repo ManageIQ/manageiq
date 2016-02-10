@@ -1,5 +1,4 @@
 require "helpers/report_helper_spec"
-include UiConstants
 
 describe ReportController do
   context "Get form variables" do

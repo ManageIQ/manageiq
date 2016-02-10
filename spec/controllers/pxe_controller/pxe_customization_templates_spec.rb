@@ -1,5 +1,3 @@
-include UiConstants
-
 describe PxeController do
   context "#template_create_update" do
     it "correct method is being called when reset button is pressed" do
