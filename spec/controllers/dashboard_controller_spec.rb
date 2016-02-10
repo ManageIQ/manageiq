@@ -92,6 +92,35 @@ describe DashboardController do
     end
   end
 
+  context "SAML support" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+
+    it "SAML Login should redirect to the protected page" do
+      page = double("page")
+      expect(page).to receive(:redirect_to).with(controller.saml_protected_page)
+      expect(controller).to receive(:render).with(:update).and_yield(page)
+      controller.send(:initiate_saml_login)
+    end
+
+    it "SAML protected page should redirect to logout without a valid user" do
+      get :saml_login
+      expect(response).to redirect_to(:action => "logout")
+    end
+
+    it "SAML protected page should redirect to validation.url with a valid user" do
+      user = FactoryGirl.create(:user, :userid => "johndoe", :role => "test")
+      request.env["HTTP_X_REMOTE_USER"] = "johndoe"
+
+      skip_data_checks('/user_validation_url')
+      allow(User).to receive(:authenticate).and_return(user)
+
+      get :saml_login
+      expect(response).to redirect_to("/user_validation_url")
+    end
+  end
+
   # would like to test these controller by calling authenticate
   # need to ensure all cases are handled before deleting these
   context "#validate_user" do

@@ -1,6 +1,6 @@
 class RequestRefererService
-  def self.allowed_access?(request, controller_name, action_name, referer)
-    new.allowed_access?(request, controller_name, action_name, referer)
+  def self.allowed_access?(request, controller_name, action_name, referer, trusted_referer = nil)
+    new.allowed_access?(request, controller_name, action_name, referer, trusted_referer)
   end
 
   def self.access_whitelisted?(request, controller_name, action_name)
@@ -167,8 +167,9 @@ class RequestRefererService
     :vm_or_template       => %w(download_data)
   }.freeze
 
-  def allowed_access?(request, controller_name, action_name, referer)
+  def allowed_access?(request, controller_name, action_name, referer, trusted_referer = nil)
     access_whitelisted?(request, controller_name, action_name) ||
+      trusted_referer ||
       referer_valid?(request.referer, referer, request.headers, controller_name, action_name) ||
       (ENV['MIQ_DISABLE_RRS'] && Rails.env.development?)
   end

@@ -14,6 +14,22 @@ describe RequestRefererService do
   let(:get_request_no_id)    { double(:request_method => 'GET',  :parameters => {},          :xml_http_request? => false) }
   let(:get_request_xml_http) { double(:request_method => 'GET',  :parameters => {'id' => 1}, :xml_http_request? => true)  }
 
+  describe "#allowed_access?" do
+    let(:req) { ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=dashboard' }
+
+    describe "when the referer is external but trusted" do
+      it "returns true" do
+        expect(request_referer_service.allowed_access?(req, "dashboard", "show", "/external_idp", true)).to be_truthy
+      end
+    end
+
+    describe "when the referer is external but not-trusted" do
+      it "returns false" do
+        expect(request_referer_service.allowed_access?(req, "dashboard", "show", "/external_idp")).to be_falsey
+      end
+    end
+  end
+
   describe "#referer_valid?" do
     let(:referer)    { "PotatoHead" }
     let(:useragent)  { {"HTTP_USER_AGENT" => "Tater"} }

@@ -42,6 +42,7 @@ describe MiqApache::Conf do
       output = MiqApache::Conf.create_redirects_config(default_options).lines.to_a
       expect(output).to include("RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts)) /self_service/index.html [L]\n")
       expect(output).to include("RewriteCond \%{REQUEST_URI} !^/proxy_pages\n")
+      expect(output).to include("RewriteCond \%{REQUEST_URI} !^/saml2\n")
       expect(output).to include("RewriteCond \%{DOCUMENT_ROOT}/\%{REQUEST_FILENAME} !-f\n")
       expect(output).to include("RewriteRule ^/ balancer://evmcluster_ui\%{REQUEST_URI} [P,QSA,L]\n")
       expect(output).to include("ProxyPassReverse / balancer://evmcluster_ui/\n")
