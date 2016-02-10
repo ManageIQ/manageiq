@@ -172,7 +172,7 @@
             :method: :allowed_security_groups
           :description: Security Groups
           :required: false
-          :display: :hide
+          :display: :edit
           :data_type: :integer
       :display: :show
     :service:

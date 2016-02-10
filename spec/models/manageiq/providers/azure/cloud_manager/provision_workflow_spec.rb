@@ -31,6 +31,31 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
         expect(workflow.allowed_instance_types.length).to eq(1)
       end
     end
+
+    context "security_groups" do
+      context "non cloud network" do
+        it "#get_targets_for_ems" do
+          sg = FactoryGirl.create(:security_group, :ext_management_system => ems)
+          ems.security_groups << sg
+          filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup,
+                                   'security_groups.non_cloud_network')
+          expect(filtered.size).to eq(1)
+          expect(filtered.first.name).to eq(sg.name)
+        end
+      end
+
+      context "cloud network" do
+        it "#get_targets_for_ems" do
+          cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems)
+          sg_cn = FactoryGirl.create(:security_group, :ext_management_system => ems, :cloud_network => cn1)
+          ems.security_groups << sg_cn
+          filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
+          puts filtered.first.inspect
+          expect(filtered.size).to eq(1)
+          expect(filtered.first.name).to eq(sg_cn.name)
+        end
+      end
+    end
   end
 
   context "with applied tags" do
@@ -45,6 +70,25 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
                                         :supports_64_bit => true)
       tagged_flavor = ems.flavors.first
       Classification.classify(tagged_flavor, 'cc', '001')
+
+      2.times { FactoryGirl.create(:security_group, :ext_management_system => ems) }
+      tagged_sec = ems.security_groups.first
+      Classification.classify(tagged_sec, 'cc', '001')
+    end
+
+    context "security groups" do
+      it "#get_targets_for_ems" do
+        expect(ems.security_groups.size).to eq(2)
+        expect(ems.security_groups.first.tags.size).to eq(1)
+        expect(ems.security_groups.last.tags.size).to eq(0)
+
+        expect(workflow.send(:get_targets_for_ems,
+                             ems,
+                             :cloud_filter,
+                             SecurityGroup,
+                             'security_groups').size)
+          .to eq(1)
+      end
     end
 
     context "instance types (Flavor)" do

@@ -70,6 +70,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
     context "#prepare_for_clone_task" do
       before do
         allow(subject).to receive(:instance_type).and_return(flavor)
+        allow(subject).to receive(:dest_name).and_return(vm.name)
       end
 
       context "nic settings" do
