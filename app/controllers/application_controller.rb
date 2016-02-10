@@ -1135,7 +1135,10 @@ class ApplicationController < ActionController::Base
 
     return if action_name == 'auth_error'
 
-    if RequestRefererService.allowed_access?(request, controller_name, action_name, session['referer'])
+    trusted_referer = session[:saml_login_request]
+    session[:saml_login_request] = nil
+
+    if RequestRefererService.allowed_access?(request, controller_name, action_name, session['referer'], trusted_referer)
       # if we came in directly and were allowed then
       # we need to make sure we have the referer in the session for future requests
       session['referer'] = request.base_url + '/' unless session['referer'].present?

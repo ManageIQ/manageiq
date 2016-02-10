@@ -680,6 +680,8 @@ module OpsController::Settings::Common
         @authmode_changed = true
       end
       auth[:sso_enabled] = (params[:sso_enabled].to_s == "1") if params[:sso_enabled]
+      auth[:saml_enabled] = (params[:saml_enabled].to_s == "1") if params[:saml_enabled]
+      auth[:local_login_disabled] = (params[:local_login_disabled].to_s == "1") if params[:local_login_disabled]
       auth[:default_group_for_users] = params[:authentication_default_group_for_users] if params[:authentication_default_group_for_users]
     when "settings_workers"                                       # Workers Settings tab
       wb  = new.config[:workers][:worker_base]
@@ -852,6 +854,8 @@ module OpsController::Settings::Common
       @edit[:current].config[:authentication][:user_proxies] ||= [{}]
       @edit[:current].config[:authentication][:follow_referrals] ||= false
       @edit[:current].config[:authentication][:sso_enabled] ||= false
+      @edit[:current].config[:authentication][:saml_enabled] ||= false
+      @edit[:current].config[:authentication][:local_login_disabled] ||= false
       @sb[:newrole] = @edit[:current].config[:authentication][:ldap_role]
       @sb[:new_amazon_role] = @edit[:current].config[:authentication][:amazon_role]
       @sb[:new_httpd_role] = @edit[:current].config[:authentication][:httpd_role]

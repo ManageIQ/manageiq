@@ -12,11 +12,11 @@ class UserValidationService
   # Validate user login credentials
   #   return <url for redirect> as part of the result
   #
-  def validate_user(user, task_id = nil, request = nil)
+  def validate_user(user, task_id = nil, request = nil, authenticate_options = {})
     if task_id.present?
       validation = validate_user_collect_task(user, task_id)
     else # First time thru, kick off authenticate task
-      validation = validate_user_kick_off_task(user, request)
+      validation = validate_user_kick_off_task(user, request, authenticate_options)
       return validation unless validation.result == :pass
     end
 
@@ -92,12 +92,12 @@ class UserValidationService
     end
   end
 
-  def validate_user_kick_off_task(user, request)
+  def validate_user_kick_off_task(user, request, authenticate_options = {})
     validate_user_pre_auth_checks(user).tap { |result| return result if result }
 
     # Call the authentication, use wait_for_task if a task is spawned
     begin
-      user_or_taskid = User.authenticate(user[:name], user[:password], request)
+      user_or_taskid = User.authenticate(user[:name], user[:password], request, authenticate_options)
     rescue MiqException::MiqEVMLoginError
       user[:name] = nil
       return ValidateResult.new(:fail, _("Sorry, the username or password you entered is incorrect."))
