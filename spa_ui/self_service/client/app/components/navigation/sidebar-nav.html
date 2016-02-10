@@ -2,12 +2,14 @@
      ng-class="{collapsed: vm.state.isCollapsed, hidden: vm.state.isMobileNav, 'show-mobile-nav': vm.state.showMobileNav}">
     <ul class="list-group">
       <li ng-repeat="item in vm.items.primary" class="list-group-item" ui-sref-active="active">
-        <a ng-click="vm.navigate(item)"
-           ui-sref="{{ ::item.state }}">
-          <i class="{{ ::item.icon }}" title="{{ ::item.title | translate }}"></i>
-          <span class="list-group-item-value">{{ ::item.title | translate }}</span>
-          <span ng-if="item.count" class="badge" tooltip="{{ ::item.tooltip | translate }}" tooltip-placement="right" tooltip-append-to-body="true">{{ item.count }}</span>
-        </a>
+        <div ng-show="item.show">
+          <a ng-click="vm.navigate(item)"
+             ui-sref="{{ ::item.state }}">
+            <i class="{{ ::item.icon }}" title="{{ ::item.title | translate }}"></i>
+            <span class="list-group-item-value">{{ ::item.title | translate }}</span>
+            <span ng-if="item.count" class="badge" tooltip="{{ ::item.tooltip | translate }}" tooltip-placement="right" tooltip-append-to-body="true">{{ item.count }}</span>
+          </a>
+        </div>
       </li>
       <div ng-if="vm.state.showMobileNav" class="list-group-item-secondary">
         <li ng-repeat="item in items.secondary" class="list-group-item" ui-sref-active="active">
