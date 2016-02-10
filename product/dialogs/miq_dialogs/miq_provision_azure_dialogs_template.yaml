@@ -140,7 +140,7 @@
             true: 1
           :description: Choose Automatically
           :required: false
-          :display: :hide
+          :display: :edit
           :default: false
           :data_type: :boolean
         :resource_group:
