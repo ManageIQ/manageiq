@@ -19,7 +19,6 @@ class RequestRefererService
     'vm'                       => %w(launch_html5_console show:id show_list), # http://localhost:3000/vm/show/400r6
     # 'launch_html5_console' above added due to IE even in version 11 does not set the referrer headir
     # most likely when the new window is opened by JavaScript code
-    'auth_key_pair_cloud'      => %w(show:id show_list),
     'host'                     => %w(show:id show_list), # http://localhost:3000/host/show/400r6
     'miq_request'              => %w(show:id show_list), # http://localhost:3000/miq_request/show/400r3
     'ems_cluster'              => %w(show:id show_list), # http://localhost:3000/ems_cluster/show/400r2
