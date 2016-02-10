@@ -2,6 +2,7 @@ RAILS_ROOT = ENV['RAILS_ENV'] ? Rails.root : File.expand_path(File.join(__dir__,
 $LOAD_PATH.push File.join(RAILS_ROOT, 'gems/pending/util') unless ENV['RAILS_ENV']
 
 require 'miq_logger_processor'
+require 'active_support/core_ext/enumerable' # Pull in Enumerable sum method
 require 'trollop'
 require 'time'
 
@@ -84,11 +85,11 @@ def sort_timings(timings, sort_key)
   timings.sort_by { |t| t[sort_key.to_sym] }
 end
 
-def print_results(all_timings, ems_timings, opts)
+def print_results(all_timings, timings, opts)
   columns        = [:start_time, :end_time, :total_time, :ems, :target_type, :target]
   column_lengths = [0, 0, 0, 0, 0, 0]
 
-  print "Found #{all_timings.length} refreshes from #{ems_timings.keys.length} providers\n"
+  print "Found #{all_timings.length} refreshes from #{timings[:ems].keys.length} providers\n"
 
   # Calculate how much padding we need for each column
   sort_timings(all_timings, opts[:sort_by]).each do |timing|
@@ -113,13 +114,37 @@ def print_results(all_timings, ems_timings, opts)
   end
 end
 
+def mean(array)
+  array.sum.to_f / array.length
+end
+
+def print_stats(all_timings, timings)
+  timings.each do |type, values|
+    puts "\nAverage refresh time per #{type.to_s}"
+
+    padding = 0
+    values.each do |key, _timing|
+      padding = [padding, key.length].max
+    end
+
+    values.each do |key, timing|
+      durations = timing.collect { |t| t[:total_time] }
+      puts "#{key.ljust(padding)} #{mean(durations)}"
+    end
+  end
+end
+
 options, logfiles = parse_args(ARGV)
 
 puts 'Processing file...'
 
 all_timings = []
-ems_timings = Hash.new { |k, v| k[v] = [] }
 all_targets = Hash.new { |k, v| k[v] = [] }
+timings     = {
+  :ems         => Hash.new { |k, v| k[v] = [] },
+  :target      => Hash.new { |k, v| k[v] = [] },
+  :target_type => Hash.new { |k, v| k[v] = [] }
+}
 
 logfiles.each do |logfile|
   MiqLoggerProcessor.new(logfile).each do |line|
@@ -127,14 +152,19 @@ logfiles.each do |logfile|
     if (target_hash = parse_refresh_target(line))
       all_targets[target_hash[:ems]] << target_hash
     elsif (refresh_timings = parse_refresh_timings(line, all_targets))
-      ems = refresh_timings[:ems]
+      ems         = refresh_timings[:ems]
+      target      = refresh_timings[:target]
+      target_type = refresh_timings[:target_type]
 
       if filter(refresh_timings, options)
-        ems_timings[ems] << refresh_timings
         all_timings << refresh_timings
+        timings[:ems][ems] << refresh_timings
+        timings[:target][target] << refresh_timings
+        timings[:target_type][target_type] << refresh_timings
       end
     end
   end
 end
 
-print_results(all_timings, ems_timings, options)
+print_results(all_timings, timings, options)
+print_stats(all_timings, timings)
