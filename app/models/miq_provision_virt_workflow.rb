@@ -993,6 +993,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def ws_environment_fields(values, _fields, data)
+    # do not parse environment data unless :placement_auto is false
+    if data[:placement_auto].nil? || data[:placement_auto]
+      values[:placement_auto] = [true, 1]
+      return
+    end
+
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :environment)).nil?
 
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
@@ -1121,7 +1127,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
     p.refresh_field_values(values)
-    # values[:placement_auto] = [true, 1]
 
     p.ws_vm_fields(values, vm_fields)
     p.ws_requester_fields(values, requester)
