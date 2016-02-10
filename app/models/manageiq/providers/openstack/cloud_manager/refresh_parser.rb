@@ -321,6 +321,12 @@ module ManageIQ::Providers
       }
 
       volume.attachments.each do |a|
+        if a['device'].blank?
+          $fog_log.warn "#{log_header}: Volume: #{uid}, is missing a mountpoint, skipping the volume processing"
+          $fog_log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
+          next
+        end
+
         dev = File.basename(a['device'])
         disks = @data_index.fetch_path(:vms, a['server_id'], :hardware, :disks)
 
