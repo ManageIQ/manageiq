@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqAeCustomizationController do
   context "::OldDialogs" do
     context "#old_dialogs_button_operation" do

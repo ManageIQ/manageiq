@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqAeCustomizationController, "ApplicationController::Automate" do
   context "#resolve" do
     before(:each) do

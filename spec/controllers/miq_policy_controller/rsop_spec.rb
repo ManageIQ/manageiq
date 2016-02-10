@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqPolicyController do
   render_views
   before :each do

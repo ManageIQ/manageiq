@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ReportController do
   context "::Reports::Editor" do
     context "#set_form_vars" do

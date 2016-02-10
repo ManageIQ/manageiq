@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqPolicyController do
   before :each do
     set_user_privileges

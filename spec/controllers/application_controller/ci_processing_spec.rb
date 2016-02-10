@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ApplicationController do
   before do
     EvmSpecHelper.local_miq_server

@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqPolicyController do
   context "::AlertProfiles" do
     before do
