@@ -4,7 +4,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "1e4b5875bdd1a857e91d92d40f7082e607691986"})
+      :default => {:userid => "admin", :password => "6022c3e7c3243d49609523d0911467df578b0f97"})
   end
 
   it "will perform a full refresh" do
@@ -121,8 +121,8 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :memory_mb            => 8192,
       :memory_console       => nil,
       :disk_capacity        => 40,
-      :cpu_sockets          => 4,
-      :cpu_total_cores      => 4,
+      :cpu_sockets          => 2,
+      :cpu_total_cores      => 2,
       :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
@@ -149,7 +149,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_specific_public_template
-    assert_specific_template("overcloud-full-vmlinuz", true)
+    assert_specific_template("overcloud-full-vmlinuz", false)
   end
 
   def assert_specific_template(name, is_public = false)

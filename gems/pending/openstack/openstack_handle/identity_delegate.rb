@@ -23,7 +23,7 @@ module OpenstackHandle
     end
 
     def visible_tenants_v3
-      projects
+      projects.all
     end
 
     #
