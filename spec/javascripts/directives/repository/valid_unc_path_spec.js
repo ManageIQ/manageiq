@@ -1,35 +1,34 @@
-describe('checkpath initialization', function() {
-  var $scope, form;
+describe('checkPath initialization', function() {
+  var $scope;
   beforeEach(module('ManageIQ'));
   beforeEach(inject(function($compile, $rootScope, miqService) {
     $scope = $rootScope;
     var element = angular.element(
       '<form name="angularForm">' +
-      '<input checkpath type="text" ng-model="repo.path" name="repo_path"/>' +
+      '<input check-path type="text" ng-model="repo.path" name="repo_path"/>' +
       '</form>'
     );
     spyOn(miqService, 'miqFlash');
     $compile(element)($scope);
     $scope.$digest();
-    form = $scope.angularForm;
   }));
 
-  describe('checkpath', function() {
-    it('should pass with valid UNC path of type NAS', function() {
-      form.repo_path.$setViewValue('//storage/b');
-      expect(form.repo_path.$valid).toBeTruthy();
+  describe('checkPath', function() {
+    it('returns true for a valid UNC path of type NAS', function() {
+      $scope.angularForm.repo_path.$setViewValue('//storage/b');
+      expect($scope.angularForm.repo_path.$valid).toBeTruthy();
       expect($scope.path_type).toBe("NAS");
     });
 
-    it('should pass with valid UNC path of type VMFS', function() {
-      form.repo_path.$setViewValue('[C][D]');
-      expect(form.repo_path.$valid).toBeTruthy();
+    it('returns true for a valid UNC path of type VMFS', function() {
+      $scope.angularForm.repo_path.$setViewValue('[C][D]');
+      expect($scope.angularForm.repo_path.$valid).toBeTruthy();
       expect($scope.path_type).toBe("VMFS");
     });
 
-    it('should not pass with invalid UNC path', function() {
-      form.repo_path.$setViewValue('a');
-      expect(form.repo_path.$valid).toBeFalsy();
+    it('returns false for an invalid UNC path', function() {
+      $scope.angularForm.repo_path.$setViewValue('a');
+      expect($scope.angularForm.repo_path.$valid).toBeFalsy();
     });
   });
 });

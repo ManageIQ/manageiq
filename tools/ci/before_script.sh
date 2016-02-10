@@ -9,6 +9,8 @@ if [[ -n "$TEST_SUITE" ]] ; then
       npm version
     popd
   fi
+  npm install -g bower
+  bundle exec rake bower:install
   bundle exec rake test:$TEST_SUITE:setup
 fi
 

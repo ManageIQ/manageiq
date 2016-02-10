@@ -1,9 +1,9 @@
 describe('repositoryFormController', function() {
-  var $scope, $controller, $httpBackend, miqService;
+  var $scope, $controller, miqService;
 
   beforeEach(module('ManageIQ'));
 
-  beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
+  beforeEach(inject(function($rootScope, _$controller_, _miqService_) {
     miqService = _miqService_;
     spyOn(miqService, 'miqFlash');
     spyOn(miqService, 'miqAjaxButton');
@@ -21,19 +21,14 @@ describe('repositoryFormController', function() {
                             };
 
     $scope.repositoryForm.$invalid = false;
-    $httpBackend = _$httpBackend_;
-    $httpBackend.whenGET('/repository/repository_form_fields/new').respond();
-      $controller = _$controller_('repositoryFormController', {
+    repositoryData = {name: '', storage:{name: ''}};
+    $controller = _$controller_('repositoryFormController', {
         $scope: $scope,
         repositoryFormId: 'new',
-        miqService: miqService
+        miqService: miqService,
+        repositoryData: repositoryData
       });
     }));
-
-    afterEach(function() {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
 
     describe('initialization', function() {
       describe('when the repositoryFormId is new', function() {
@@ -46,17 +41,13 @@ describe('repositoryFormController', function() {
       });
 
       describe('when the repositoryFormId is an Id', function() {
-        var repositoryFormResponse = {
-          repo_name:'aaa',
-          repo_path: '//aa/a1'
-        };
+        var repositoryData = {name: 'aaa', storage:{name: '//aa/a1'}};
+
         describe('when the filter type is all', function() {
           beforeEach(inject(function(_$controller_) {
-
-            $httpBackend.whenGET('/repository/repository_form_fields/12345').respond(repositoryFormResponse);
-
-            $controller = _$controller_('repositoryFormController', {$scope: $scope, repositoryFormId: '12345'});
-            $httpBackend.flush();
+            $controller = _$controller_('repositoryFormController', {$scope: $scope,
+                                                                     repositoryFormId: '12345',
+                                                                     repositoryData:repositoryData});
           }));
 
           it('sets the repo_name to the value returned from the http request', function() {

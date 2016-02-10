@@ -89,15 +89,6 @@ class RepositoryController < ApplicationController
     end
   end
 
-  def repository_form_fields
-    assert_privileges("repository_edit")
-    repository = find_by_id_filtered(Repository, params[:id])
-    render :json => {
-      :repo_name => repository.name,
-      :repo_path => repository.path
-    }
-  end
-
   def edit
     assert_privileges("repository_edit")
     @repo = find_by_id_filtered(Repository, params[:id])
@@ -333,6 +324,10 @@ class RepositoryController < ApplicationController
         @refresh_partial = "main"
       end
     end
+  end
+
+  def angular_app?
+    true
   end
 
   # gather up the repository records from the DB

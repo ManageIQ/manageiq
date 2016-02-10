@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', function($http, $scope, repositoryFormId, miqService) {
+ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', 'repositoryData', function($http, $scope, repositoryFormId, miqService, repositoryData) {
   $scope.repoModel = { repo_name: '', repo_path: '' };
   $scope.path_type = '';
   $scope.formId = repositoryFormId;
@@ -8,23 +8,21 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
   ManageIQ.angular.scope = $scope;
 
   if (repositoryFormId == 'new') {
+    $scope.newRecord = true;
     $scope.repoModel.repo_name = "";
     $scope.repoModel.repo_path = "";
   } else {
-      miqService.sparkleOn();
+    $scope.newRecord = false;
+    $scope.afterGet = true;
+    $scope.repoModel.repo_name = repositoryData.name;
+    $scope.repoModel.repo_path = repositoryData.storage.name;
 
-      $http.get('/repository/repository_form_fields/' + repositoryFormId).success(function(data) {
-        $scope.afterGet = true;
-        $scope.repoModel.repo_name = data.repo_name;
-        $scope.repoModel.repo_path = data.repo_path;
-
-        $scope.modelCopy = angular.copy( $scope.repoModel );
-        miqService.sparkleOff();
-      });
+    $scope.modelCopy = angular.copy( $scope.repoModel );
    }
 
   $scope.$watch("repoModel.repo_name", function() {
-    $scope.form = $scope.repositoryForm;
+    $scope.form = $scope.angularForm;
+    $scope.model = "repoModel";
   });
 
   $scope.addClicked = function() {
@@ -52,7 +50,8 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
 
   $scope.resetClicked = function() {
     $scope.repoModel = angular.copy( $scope.modelCopy );
-    $scope.repositoryForm.$setPristine(true);
+    $scope.angularForm.$setUntouched(true);
+    $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
   };
 }]);
