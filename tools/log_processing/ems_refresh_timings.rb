@@ -64,10 +64,14 @@ def parse_refresh_timings(line, targets)
     # only one refresh worker this "has to be" the right one
     # If this changes in the future we'll have to add a PID lookup here
     refresh_target  = targets[ems].last
+    refresh_target = {
+      :target      => "unknown",
+      :target_type => "unknown"
+    } if refresh_target.nil?
 
     # Add other useful information to the refresh timings
     refresh_timings[:ems]         = ems
-    refresh_timings[:end_time]    = Time.parse(line.time + ' UTC')
+    refresh_timings[:end_time]    = Time.parse(line.time + ' UTC').utc
     refresh_timings[:start_time]  = refresh_timings[:end_time] - refresh_timings[:total_time]
     refresh_timings[:target]      = refresh_target[:target]
     refresh_timings[:target_type] = refresh_target[:target_type]
