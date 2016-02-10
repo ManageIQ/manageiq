@@ -74,14 +74,23 @@ class ApiController
         :group      => group.description,
         :group_href => "#{@req[:api_prefix]}/groups/#{group.id}",
         :role       => group.miq_user_role_name,
+        :role_href  => "#{@req[:api_prefix]}/roles/#{group.miq_user_role.id}",
         :tenant     => group.tenant.name,
         :groups     => user.miq_groups.pluck(:description),
       }
     end
 
+    def auth_authorization
+      user  = @auth_user_obj
+      group = user.current_group
+      {
+        :product_features => product_features(group.miq_user_role)
+      }
+    end
+
     def user_settings
       {
-        :locale     => I18n.locale.to_s.sub('-', '_'),
+        :locale => I18n.locale.to_s.sub('-', '_'),
       }
     end
 
@@ -114,6 +123,59 @@ class ApiController
         raise BadRequestError, "Invalid requester_type #{requester_type} specified, valid types are: #{requester_types}"
       end
       requester_type
+    end
+
+    private
+
+    def product_features(role)
+      pf_result = {}
+      role.feature_identifiers.each { |ident| add_product_feature(pf_result, ident) }
+      pf_result
+    end
+
+    def add_product_feature(pf_result, ident)
+      details  = MiqProductFeature.features[ident.to_s][:details]
+      children = MiqProductFeature.feature_children(ident)
+      add_product_feature_details(pf_result, ident, details, children)
+      children.each { |child_ident| add_product_feature(pf_result, child_ident) }
+    end
+
+    def add_product_feature_details(pf_result, ident, details, children)
+      ident_str = ident.to_s
+      res = {
+        "name"        => details[:name],
+        "description" => details[:description]
+      }
+      collection, method, action = referenced_identifiers[ident_str]
+      res["action"] = api_action_details(collection, method, action) if collection.present?
+      res["children"] = children if children.present?
+      pf_result[ident_str] = res
+    end
+
+    def api_action_details(collection, method, action)
+      {
+        "name"   => action[:name],
+        "method" => method,
+        "href"   => "#{@req[:api_prefix]}/#{collection}"
+      }
+    end
+
+    def referenced_identifiers
+      @referenced_identifiers ||= begin
+        identifiers = {}
+        collection_config.each do |collection, cspec|
+          next unless cspec[:collection_actions].present?
+          cspec[:collection_actions].each do |method, action_definitions|
+            next unless action_definitions.present?
+            action_definitions.each do |action|
+              identifier = action[:identifier]
+              next if action[:disabled] || identifiers.key?(identifier)
+              identifiers[identifier] = [collection, method, action]
+            end
+          end
+        end
+        identifiers
+      end
     end
   end
 end
