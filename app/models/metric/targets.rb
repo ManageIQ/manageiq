@@ -10,16 +10,17 @@ module Metric::Targets
 
   def self.capture_infra_targets(zone, options)
     # Preload all of the objects we are going to be inspecting.
-    # TODO: Include hosts under clusters
-    includes = {:ext_management_systems => {:hosts => {:tags => {}}, :ems_clusters => [:tags, :hosts]}}
+    includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
     MiqPreloader.preload(zone, includes)
 
-    targets = zone.ems_clusters + zone.non_clustered_hosts
+    targets = zone.hosts
     targets += zone.storages.select { |s| Storage::SUPPORTED_STORAGE_TYPES.include?(s.store_type) } unless options[:exclude_storages]
 
-    targets = targets.select(&:perf_capture_enabled?)
-    targets = targets.flat_map { |t| t.kind_of?(EmsCluster) ? t.hosts : t }
+    # If it can and does have a cluster, then ask that, otherwise, ask host itself.
+    targets = targets.select do |t|
+      t.respond_to?(:ems_cluster) && t.ems_cluster ? t.ems_cluster.perf_capture_enabled? : t.perf_capture_enabled?
+    end
 
     targets += capture_vm_targets(targets, Host, options)
 
@@ -33,7 +34,7 @@ module Metric::Targets
     # 3) cloudy clusters?
     targets = []
 
-    includes = {:availability_zones => {:tags => {}}}
+    includes = {:availability_zones => :tags}
     MiqPreloader.preload(zone.ems_clouds, includes)
 
     targets += capture_vm_targets(zone.availability_zones, AvailabilityZone, options)
@@ -49,11 +50,9 @@ module Metric::Targets
 
   def self.capture_container_targets(zone, _options)
     includes = {
-      :container_nodes  => {:tags => {}},
-      :container_groups => {
-        :containers => {:tags => {}},
-        :tags       => {}
-      }}
+      :container_nodes  => :tags,
+      :container_groups => [:tags, :containers => :tags],
+    }
 
     MiqPreloader.preload(zone.ems_containers, includes)
 
@@ -76,7 +75,7 @@ module Metric::Targets
         t.perf_capture_enabled? &&
         t.respond_to?(:vms)
       end
-      MiqPreloader.preload(enabled_parents, :vms)
+      MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
       vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
     end
     vms
