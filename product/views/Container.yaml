@@ -47,8 +47,8 @@ col_order:
 headers:
 - Name
 - Pod Name
-- State
 - Image
+- State
 
 # Condition(s) string for the SQL query
 conditions: 
