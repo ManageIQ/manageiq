@@ -113,9 +113,20 @@ describe ApiController do
         "group"      => group2.description,
         "group_href" => "/api/groups/#{group2.id}",
         "role"       => @role.name,
+        "role_href"  => "/api/roles/#{group2.miq_user_role.id}",
         "tenant"     => @group.tenant.name
       )
       expect(@result["identity"]["groups"]).to match_array(@user.miq_groups.pluck(:description))
+    end
+
+    it "querying user's authorization" do
+      api_basic_authorize
+
+      run_get entrypoint_url, :attributes => "authorization"
+
+      expect_single_resource_query
+      expect_result_to_have_keys(ENTRYPOINT_KEYS + %w(authorization))
+      expect_hash_to_have_keys(@result["authorization"], %w(product_features))
     end
   end
 
