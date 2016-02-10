@@ -100,7 +100,6 @@ describe ApplicationHelper do
     end
 
     context "when with :main_tab_id" do
-      include UiConstants
       it "and entitled" do
         expect(Menu::DefaultMenu.services_menu_section.visible?).to be_truthy
       end

@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ReportController do
   context "::Menus" do
     context "#menu_update" do

@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqAeCustomizationController do
   before(:each) do
     set_user_privileges

@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ApplicationController do
   context "#custom_buttons" do
     let(:resource_action) { FactoryGirl.create(:resource_action, :dialog_id => 1) }
