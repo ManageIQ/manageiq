@@ -3,6 +3,7 @@ $LOAD_PATH.push File.join(RAILS_ROOT, 'gems/pending/util') unless ENV['RAILS_ENV
 
 require 'miq_logger_processor'
 require 'active_support/core_ext/enumerable' # Pull in Enumerable sum method
+require 'more_core_extensions/core_ext/array'
 require 'trollop'
 require 'time'
 
@@ -85,52 +86,28 @@ def sort_timings(timings, sort_key)
   timings.sort_by { |t| t[sort_key.to_sym] }
 end
 
-def print_results(all_timings, timings, opts)
-  columns        = [:start_time, :end_time, :total_time, :ems, :target_type, :target]
-  column_lengths = [0, 0, 0, 0, 0, 0]
-
-  print "Found #{all_timings.length} refreshes from #{timings[:ems].keys.length} providers\n"
-
-  # Calculate how much padding we need for each column
-  sort_timings(all_timings, opts[:sort_by]).each do |timing|
-    (0..columns.length - 1).each do |i|
-      column_lengths[i] = [column_lengths[i], timing[columns[i]].to_s.length].max
-    end
-  end
-
-  # Print the column headers
-  columns.each_with_index do |col, i|
-    print "#{col.to_s.ljust(column_lengths[i])}   "
-  end
-
-  print "\n"
-
-  # Print the results for each refresh
-  sort_timings(all_timings, opts[:sort_by]).each do |timing|
-    column_lengths.each_with_index do |column_length, i|
-      print "#{timing[columns[i]].to_s.ljust(column_length)} | "
-    end
-    print "\n"
-  end
+def print_results(all_timings, opts)
+  columns = [:start_time, :end_time, :total_time, :ems, :target_type, :target]
+  puts sort_timings(all_timings, opts[:sort_by]).tableize(:columns => columns)
 end
 
 def mean(array)
   array.sum.to_f / array.length
 end
 
-def print_stats(all_timings, timings)
+def print_stats(timings)
   timings.each do |type, values|
-    puts "\nAverage refresh time per #{type.to_s}"
+    puts "\nAverage refresh time per #{type}"
 
-    padding = 0
-    values.each do |key, _timing|
-      padding = [padding, key.length].max
-    end
-
+    durations = []
     values.each do |key, timing|
-      durations = timing.collect { |t| t[:total_time] }
-      puts "#{key.ljust(padding)} #{mean(durations)}"
+      durations << {
+        type.to_sym => key,
+        :duration   => mean(timing.collect { |t| t[:total_time] })
+      }
     end
+
+    puts durations.tableize(:columns => [type.to_sym, :duration])
   end
 end
 
@@ -166,5 +143,8 @@ logfiles.each do |logfile|
   end
 end
 
-print_results(all_timings, timings, options)
-print_stats(all_timings, timings)
+puts "Found #{all_timings.length} refreshes from #{timings[:ems].keys.length} providers"
+unless all_timings.empty?
+  print_results(all_timings, options)
+  print_stats(timings)
+end
