@@ -32,11 +32,6 @@ module UiConstants
   TOOLBARS_FOLDER = File.join(Rails.root, "product/toolbars")
   USAGE_REPORTS_FOLDER = File.join(Rails.root, "product/usage/miq_reports")
 
-  CD_COLOR_HEADER = "#ffffff"
-  CD_COLOR_SECTION = "#bfebf2"
-  CD_COLOR_ROW = "#ffffff"
-  CD_COLOR_ROW2 = "#e5e1e2"
-
   TOP_TABLES_BY_ROWS_COUNT = 5
   TOP_TABLES_BY_SIZE_COUNT = 5
   TOP_TABLES_BY_WASTED_SPACE_COUNT = 5
@@ -384,7 +379,6 @@ module UiConstants
   NOTHING_STRING = "<<< Nothing >>>"
   SHOWALL_STRING = "<<< Show All >>>"
   MAX_REPORT_COLUMNS = 100      # Default maximum number of columns in a report
-  SQL_FILTER_OPERATORS = ["=", "!=", "<", "<=", ">=", ">", "LIKE", "NOT LIKE", "IS NULL", "IS NOT NULL"]
   BAND_UNITS = ["Second", "Minute", "Hour", "Day", "Week", "Month", "Year", "Decade"]
   GRAPH_MAX_COUNT = 10
 
@@ -435,15 +429,6 @@ module UiConstants
   CATEGORY_CHOICES["accounts"] = "User Accounts"
   CATEGORY_CHOICES["vmconfig"] = "VM Configuration"
   # CATEGORY_CHOICES["vmevents"] = "VM Events"
-
-  # Policy Root nodes
-  PROROOT = "PR"
-  POLROOT = "PO"
-  CONROOT = "CO"
-  EVTROOT = "EV"
-  ACTROOT = "AC"
-  ALPROOT = "AP"
-  ALTROOT = "AL"
 
   # Assignment choices
   ASSIGN_TOS = {}
