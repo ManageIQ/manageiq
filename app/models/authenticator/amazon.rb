@@ -115,12 +115,20 @@ module Authenticator
       true
     end
 
-    def aws_connect(access_key_id, secret_access_key, service = :IAM)
-      ManageIQ::Providers::Amazon::CloudManager.raw_connect_v2(
-        access_key_id,
-        secret_access_key,
-        service,
-        'us-east-1' # IAM doesnt support regions, but the sdk requires one
+    def aws_connect(access_key_id, secret_access_key, service = :IAM, proxy_uri = nil)
+      service   ||= :EC2
+      proxy_uri ||= VMDB::Util.http_proxy_uri
+
+      require 'aws-sdk'
+      Aws.const_get(service)::Resource.new(
+        :access_key_id     => access_key_id,
+        :secret_access_key => secret_access_key,
+        # IAM doesnt support regions, but the sdk requires one
+        :region            => 'us-east-1',
+        :http_proxy        => proxy_uri,
+        :logger            => $aws_log,
+        :log_level         => :debug,
+        :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp)
       )
     end
   end
