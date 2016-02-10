@@ -12,6 +12,6 @@ class ContainerImageRegistryController < ApplicationController
   private ############################
 
   def display_name
-    "Container Image Registry"
+    "Container Image Registries"
   end
 end
