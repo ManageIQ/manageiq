@@ -1,3 +1,5 @@
+require_relative 'aws_helper'
+
 describe ManageIQ::Providers::Amazon::CloudManager do
   it ".ems_type" do
     expect(described_class.ems_type).to eq('ec2')
@@ -21,12 +23,12 @@ describe ManageIQ::Providers::Amazon::CloudManager do
 
     before do
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
-      require 'aws-sdk'
-      Aws.config[:ec2] = {:stub_responses => stub_responses}
     end
 
-    after do
-      Aws.config[:ec2].delete(:stub_responses)
+    around do |example|
+      with_aws_stubbed(:ec2 => stub_responses) do
+        example.run
+      end
     end
 
     def assert_region(ems, name)
