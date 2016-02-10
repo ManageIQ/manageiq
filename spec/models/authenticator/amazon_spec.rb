@@ -26,20 +26,37 @@ describe Authenticator::Amazon do
   let(:aws_group_name) { 'group_on_aws' }
   let(:miq_group_name) { aws_group_name }
 
-  def stub_iam_responses_for_root(resource)
-    # root is also allowed to :list_users
+  def aws_allow_list_users!(resource)
     response = resource.client.stub_data(:get_user)
     resource.client.stub_responses(:list_users, :users => [response.user.to_h])
+  end
 
-    # we are root
-    response = resource.client.stub_data(:get_user, :user => {:arn => 'arn:aws:iam::123456789:root'})
+  def aws_deny_list_users!(resource)
+    resource.client.stub_responses(:list_users, 'AccessDenied')
+  end
+
+  def aws_get_user_is_root!(resource)
+    response = resource.client.stub_data(
+      :get_user,
+      :user => {:arn => 'arn:aws:iam::123456789:root'}
+    )
     resource.client.stub_responses(:get_user, response)
+  end
 
-    # and :list_access_keys
-    response = resource.client.stub_data(:list_access_keys, :access_key_metadata => [{:access_key_id => AWS_IAM_USER_KEY}])
+  def aws_allow_get_user!(resource)
+    response = resource.client.stub_data(:get_user).to_h
+    resource.client.stub_responses(:get_user, response)
+  end
+
+  def aws_allow_list_keys!(resource)
+    response = resource.client.stub_data(
+      :list_access_keys,
+      :access_key_metadata => [{:access_key_id => AWS_IAM_USER_KEY}]
+    )
     resource.client.stub_responses(:list_access_keys, response)
+  end
 
-    # and :list_groups_for_user
+  def aws_allow_list_groups!(resource)
     response = resource.client.stub_data(:list_groups_for_user, :groups => [:group_name => aws_group_name])
     resource.client.stub_responses(:list_groups_for_user, response)
   end
@@ -68,11 +85,13 @@ describe Authenticator::Amazon do
       if resource.kind_of? Aws::IAM::Resource
         case access_key_id
         when AWS_ROOT_USER_KEY
-          stub_iam_responses_for_root(resource)
+          aws_get_user_is_root!(resource)
+          aws_allow_list_groups!(resource)
+          aws_allow_list_keys!(resource)
+          aws_allow_list_users!(resource)
         when AWS_IAM_USER_KEY
-          get_user_response = resource.client.stub_data(:get_user).to_h
-          resource.client.stub_responses(:get_user, get_user_response)
-          resource.client.stub_responses(:list_users, 'AccessDenied')
+          aws_allow_get_user!(resource)
+          aws_deny_list_users!(resource)
         end
       end
 
