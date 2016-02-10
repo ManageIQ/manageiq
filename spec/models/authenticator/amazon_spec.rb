@@ -17,10 +17,10 @@ describe Authenticator::Amazon do
   end
   let(:describe_regions_response) do
     {
-        :regions => [
-            {:region_name => 'us-east-1'},
-            {:region_name => 'us-west-1'},
-        ]
+      :regions => [
+        {:region_name => 'us-east-1'},
+        {:region_name => 'us-west-1'},
+      ]
     }
   end
   let(:aws_group_name) { 'group_on_aws' }
@@ -29,20 +29,19 @@ describe Authenticator::Amazon do
   def stub_iam_responses_for_root(resource)
     # root is also allowed to :list_users
     response = resource.client.stub_data(:get_user)
-    resource.client.stub_responses(:list_users, users: [response.user.to_h])
+    resource.client.stub_responses(:list_users, :users => [response.user.to_h])
 
     # we are root
     response = resource.client.stub_data(:get_user, :user => {:arn => 'arn:aws:iam::123456789:root'})
     resource.client.stub_responses(:get_user, response)
 
     # and :list_access_keys
-    response = resource.client.stub_data(:list_access_keys, access_key_metadata: [{access_key_id: AWS_IAM_USER_KEY}])
+    response = resource.client.stub_data(:list_access_keys, :access_key_metadata => [{:access_key_id => AWS_IAM_USER_KEY}])
     resource.client.stub_responses(:list_access_keys, response)
 
     # and :list_groups_for_user
     response = resource.client.stub_data(:list_groups_for_user, :groups => [:group_name => aws_group_name])
     resource.client.stub_responses(:list_groups_for_user, response)
-
   end
 
   before(:each) do
@@ -62,30 +61,28 @@ describe Authenticator::Amazon do
     )
     allow(MiqLdap).to receive(:using_ldap?) { false }
 
-    allow_any_instance_of(described_class).to receive(:aws_connect) do |_instance, *args|
-      access_key_id, _secret_access_key, service = *args
+    allow_any_instance_of(described_class).to receive(:aws_connect) do |_instance, access_key_id, _secret_access_key, service|
       service ||= :IAM
       resource = Aws.const_get(service.to_s)::Resource.new(:stub_responses => true)
 
-      if resource.is_a? Aws::IAM::Resource
+      if resource.kind_of? Aws::IAM::Resource
         case access_key_id
-          when AWS_ROOT_USER_KEY
-            stub_iam_responses_for_root(resource)
-          when AWS_IAM_USER_KEY
-            get_user_response = resource.client.stub_data(:get_user).to_h
-            resource.client.stub_responses(:get_user, get_user_response)
-            resource.client.stub_responses(:list_users, 'AccessDenied')
+        when AWS_ROOT_USER_KEY
+          stub_iam_responses_for_root(resource)
+        when AWS_IAM_USER_KEY
+          get_user_response = resource.client.stub_data(:get_user).to_h
+          resource.client.stub_responses(:get_user, get_user_response)
+          resource.client.stub_responses(:list_users, 'AccessDenied')
         end
       end
 
-      if resource.is_a? Aws::EC2::Resource
+      if resource.kind_of? Aws::EC2::Resource
         resource.client.stub_responses(:describe_regions, describe_regions_response)
       end
 
       resource
     end
   end
-
 
   describe '#uses_stored_password?' do
     it "is false" do
