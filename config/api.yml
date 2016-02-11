@@ -199,11 +199,17 @@
     :subcollections:
     - :tags
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: storage_show_list
       :post:
       - :name: delete
         :identifier: storage_delete
         :disabled: true
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: storage_show
       :delete:
       - :name: delete
         :identifier: storage_delete
