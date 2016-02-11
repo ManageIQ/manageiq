@@ -141,11 +141,17 @@
     - :policies
     - :policy_profiles
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: ems_cluster_show_list
       :post:
       - :name: delete
         :identifier: ems_cluster_delete
         :disabled: true
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: ems_cluster_show
       :delete:
       - :name: delete
         :identifier: ems_cluster_delete
