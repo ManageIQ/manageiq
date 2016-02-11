@@ -30,7 +30,8 @@ module Openstack
                     :zone              => Zone.first,
                     :security_protocol => 'no_ssl'}
 
-      @ems = ManageIQ::Providers::Openstack::CloudManager.where(:hostname => hostname).first
+      @ems = ManageIQ::Providers::Openstack::CloudManager.joins(:endpoints).where(:endpoints => {
+                                                                                    :hostname => hostname}).first
       puts "Creating EMS for environment #{hostname}" unless @ems
       @ems ||= ManageIQ::Providers::Openstack::CloudManager.new
       @ems.update_attributes(attributes)
