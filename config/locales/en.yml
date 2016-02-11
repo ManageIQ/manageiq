@@ -810,6 +810,8 @@ en:
       Zone:                     Zone
 
     table:
+      auth_key_pair_cloud:         Key Pair
+      auth_key_pair_clouds:        Key Pairs
       availability_zone:           Availability Zone
       cdroms:                      CD/DVD Drives
       cim_base_storage_extent:     Base Extents
