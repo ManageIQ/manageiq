@@ -334,7 +334,7 @@
         :identifier: instance_suspend
       - :name: shelve
         :identifier: instance_shelve
-      - :name: soft_reboot
+      - :name: reboot_guest
         :identifier: instance_guest_restart
       - :name: reset
         :identifier: instance_reset
@@ -352,7 +352,7 @@
         :identifier: instance_suspend
       - :name: shelve
         :identifier: instance_shelve
-      - :name: soft_reboot
+      - :name: reboot_guest
         :identifier: instance_guest_restart
       - :name: reset
         :identifier: instance_reset
