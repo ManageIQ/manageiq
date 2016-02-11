@@ -227,6 +227,14 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqEventDefinition
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: event
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: event
   :features:
     :description: Product Features
     :options:
