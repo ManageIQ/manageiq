@@ -1615,17 +1615,14 @@ Vmdb::Application.routes.draw do
         preview_timeline
         render_chart
         report_only
-        review_import
         sample_chart
         sample_timeline
         send_report_data
         tree_autoload_dynatree
         tree_select
-        widget_json
       ),
       :post => %w(
         accordion_select
-        cancel_import
         change_tab
         create
         db_edit

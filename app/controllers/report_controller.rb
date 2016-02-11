@@ -225,17 +225,17 @@ class ReportController < ApplicationController
   end
 
   def upload_widget_import_file
-    redirect_options = {:action => :review_import}
-
     upload_file = params.fetch_path(:upload, :file)
 
     if upload_file.nil?
       add_flash("Use the browse button to locate an import file", :warning)
     else
       begin
-        import_file_upload_id = widget_import_service.store_for_import(upload_file.read)
+        @in_a_form = true
+        import_file = widget_import_service.store_for_import(upload_file.read)
+        @import_file_upload_id = import_file.id
+        @import = import_file.widget_list
         add_flash(_("Import file was uploaded successfully"), :success)
-        redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue WidgetImportValidator::NonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       rescue WidgetImportValidator::InvalidWidgetYamlError
@@ -243,47 +243,25 @@ class ReportController < ApplicationController
       end
     end
 
-    redirect_options[:message] = @flash_array.first
-
-    redirect_to redirect_options
+    replace_right_cell :partial => 'export_widgets'
   end
 
   def import_widgets
-    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
-
-    if import_file_upload
-      $log.info("[#{session[:userid]}] initiated import")
-      widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
-      add_flash(_("Widgets imported successfully"), :success)
+    if params[:commit] == _('Commit')
+      import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+      if import_file_upload
+        $log.info("[#{session[:userid]}] initiated import")
+        widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
+        add_flash(_("Widgets imported successfully"), :success)
+      else
+        add_flash(_("Error: Widget import file upload expired"), :error)
+      end
     else
-      add_flash(_("Error: Widget import file upload expired"), :error)
+      widget_import_service.cancel_import(params[:import_file_upload_id])
+      add_flash(_("Widget import cancelled"), :info)
     end
 
-    respond_to do |format|
-      format.js { render :json => @flash_array.to_json, :status => 200 }
-    end
-  end
-
-  def widget_json
-    import_file_upload_json = ImportFileUpload.find(params[:import_file_upload_id]).widget_json
-
-    respond_to do |format|
-      format.json { render :json => import_file_upload_json }
-    end
-  end
-
-  def review_import
-    @import_file_upload_id = params[:import_file_upload_id]
-    @message = params[:message]
-  end
-
-  def cancel_import
-    widget_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(_("Widget import cancelled"), :info)
-
-    respond_to do |format|
-      format.js { render :json => @flash_array.to_json, :status => 200 }
-    end
+    replace_right_cell :partial => 'export_widgets'
   end
 
   private ###########################
@@ -700,7 +678,7 @@ class ReportController < ApplicationController
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
 
     locals = set_form_locals if @in_a_form
-    partial = set_partial_name
+    partial = options[:partial] ? options[:partial] : set_partial_name
     unless @in_a_form
       c_tb = build_toolbar(center_toolbar_filename)
       h_tb = build_toolbar("x_history_tb")
