@@ -79,6 +79,7 @@ public/test_grid.xml
 public/test_grid-0.xml
 public/upload
 public/pictures/
+public/self_service/
 
 # public/dhtmlx/
 public/dhtmlx/dhtmlxtoolbar.js.orig
@@ -128,31 +129,3 @@ vendor/plugins/rails_sql_views/.gitignore
 
 # ignore included plugins in bundler.d
 bundler.d/*
-
-#
-# SPA UI
-
-### Bower ###
-bower_components
-.bower-cache
-.bower-registry
-.bower-tmp
-
-### Node Modules ###
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-node_modules
-
-### NPM Logs ###
-npm-debug.log
-
-### Plato Reports ###
-spa_ui/self_service/reports
-
-### Temp build directory ###
-.tmp
-
-### Build directory ###
-public/self_service
-
-### .gitignore overrides ###
-!spa_ui/self_service/**/region
