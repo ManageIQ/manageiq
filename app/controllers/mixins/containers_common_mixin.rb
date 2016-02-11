@@ -41,7 +41,15 @@ module ContainersCommonMixin
     end
   end
 
+  def show_list
+    process_show_list
+  end
+
   private
+
+  def display_name
+    ui_lookup(:tables => @record.class.base_class.name)
+  end
 
   def show_container(record, controller_name, display_name)
     return if record_no_longer_exists?(record)
