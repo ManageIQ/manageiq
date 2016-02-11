@@ -100,7 +100,7 @@ module ApplianceConsole
     def create_partition_to_fill_disk
       # FIXME: when LinuxAdmin has this feature
       @disk.create_partition_table # LinuxAdmin::Disk.create_partition has this already...
-      LinuxAdmin.run!("parted -s #{@disk.path} mkpart primary 0% 100%")
+      AwesomeSpawn.run!("parted -s #{@disk.path} mkpart primary 0% 100%")
 
       # FIXME: Refetch the disk after creating the partition
       @disk = LinuxAdmin::Disk.local.find { |d| d.path == @disk.path }
@@ -122,14 +122,14 @@ module ApplianceConsole
     def format_logical_volume
       # LogicalVolume#format_to(:ext4) should be a thing
       # LogicalVolume#fs_type => :ext4 should be a thing
-      LinuxAdmin.run!("mkfs.#{PostgresAdmin.database_disk_filesystem} #{@logical_volume.path}")
+      AwesomeSpawn.run!("mkfs.#{PostgresAdmin.database_disk_filesystem} #{@logical_volume.path}")
     end
 
     def mount_database_disk
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(PostgresAdmin.data_directory)
       FileUtils.mkdir_p(PostgresAdmin.data_directory)
-      LinuxAdmin.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
+      AwesomeSpawn.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
     end
 
     def update_fstab
@@ -157,7 +157,7 @@ module ApplianceConsole
     end
 
     def run_initdb
-      LinuxAdmin.run!("service", :params => {nil => [PostgresAdmin.service_name, "initdb"]})
+      AwesomeSpawn.run!("service", :params => {nil => [PostgresAdmin.service_name, "initdb"]})
     end
 
     def start_postgres
@@ -187,7 +187,7 @@ module ApplianceConsole
     end
 
     def relabel_postgresql_dir
-      LinuxAdmin.run!("/sbin/restorecon -R -v #{PostgresAdmin.data_directory}")
+      AwesomeSpawn.run!("/sbin/restorecon -R -v #{PostgresAdmin.data_directory}")
     end
   end
 end

@@ -117,7 +117,7 @@ describe ApplianceConsole::ServiceGroup do
   # this is private, but since we are stubbing it, make sure it works
   context "#enable_miqtop" do
     it "calls chkconfig" do
-      expect(LinuxAdmin).to receive(:run).with("chkconfig", :params => {"--add" => "miqtop"})
+      expect(AwesomeSpawn).to receive(:run).with("chkconfig", :params => {"--add" => "miqtop"})
       group.send(:enable_miqtop)
     end
   end
