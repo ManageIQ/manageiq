@@ -84,22 +84,22 @@ module ContainerHelper::TextualSummary
 
   def textual_se_linux_user
     se_linux_user = @record.security_context.try(:se_linux_user)
-    {:label => "Se Linux User", :value => se_linux_user} if se_linux_user
+    {:label => "SELinux User", :value => se_linux_user} if se_linux_user
   end
 
   def textual_se_linux_role
     se_linux_role = @record.security_context.try(:se_linux_role)
-    {:label => "Se Linux Role", :value => se_linux_role} if se_linux_role
+    {:label => "SELinux Role", :value => se_linux_role} if se_linux_role
   end
 
   def textual_se_linux_type
     se_linux_type = @record.security_context.try(:se_linux_type)
-    {:label => "Se Linux Type", :value => se_linux_type} if se_linux_type
+    {:label => "SELinux Type", :value => se_linux_type} if se_linux_type
   end
 
   def textual_se_linux_level
     se_linux_level = @record.security_context.try(:se_linux_level)
-    {:label => "Se Linux Level", :value => se_linux_level} if se_linux_level
+    {:label => "SELinux Level", :value => se_linux_level} if se_linux_level
   end
 
   def textual_run_as_non_root
