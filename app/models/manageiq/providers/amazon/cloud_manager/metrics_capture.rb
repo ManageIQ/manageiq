@@ -82,34 +82,22 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   private
 
   def perf_capture_data_amazon(cloud_watch, start_time, end_time)
-    counters, = Benchmark.realtime_block(:capture_counters) do
-      filter = [{:name => "InstanceId", :value => target.ems_ref}]
-      cloud_watch.client.list_metrics(:dimensions => filter).metrics.select { |m| m.metric_name.in?(COUNTER_NAMES) }
-    end
-
     # Since we are unable to determine if the first datapoint we get is a
     #   1-minute (detailed) or 5-minute (basic) interval, we will need to throw
     #   it away.  So, we ask for at least one datapoint earlier than what we
     #   need.
     start_time -= 5.minutes
 
-    metrics_by_counter_name = {}
-    counters.each do |c|
-      metrics = metrics_by_counter_name[c.metric_name] = {}
+    counters                = get_counters(cloud_watch)
+    metrics_by_counter_name = metrics_by_counter_name(cloud_watch, counters, start_time, end_time)
+    counter_values_by_ts    = counter_values_by_timestamp(metrics_by_counter_name)
 
-      # Only ask for 1 day at a time, since there is a limitation on the number
-      #   of datapoints you are allowed to ask for from Amazon Cloudwatch.
-      #   http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html
-      (start_time..end_time).step_value(1.day).each_cons(2) do |st, et|
-        statistics, = Benchmark.realtime_block(:capture_counter_values) do
-          options = {:start_time => st, :end_time => et, :statistics => ["Average"], :period => 60}
-          cloud_watch.client.get_metric_statistics(c.to_hash.merge(options)).datapoints
-        end
+    counters_by_id              = {target.ems_ref => VIM_STYLE_COUNTERS}
+    counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
+    return counters_by_id, counter_values_by_id_and_ts
+  end
 
-        statistics.each { |s| metrics[s.timestamp.utc] = s.average }
-      end
-    end
-
+  def counter_values_by_timestamp(metrics_by_counter_name)
     counter_values_by_ts = {}
     COUNTER_INFO.each do |i|
       timestamps = i[:amazon_counters].collect do |c|
@@ -132,9 +120,34 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
         end
       end
     end
+    counter_values_by_ts
+  end
 
-    counters_by_id              = {target.ems_ref => VIM_STYLE_COUNTERS}
-    counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
-    return counters_by_id, counter_values_by_id_and_ts
+  def metrics_by_counter_name(cloud_watch, counters, start_time, end_time)
+    metrics_by_counter_name = {}
+    counters.each do |c|
+      metrics = metrics_by_counter_name[c.metric_name] = {}
+
+      # Only ask for 1 day at a time, since there is a limitation on the number
+      #   of datapoints you are allowed to ask for from Amazon Cloudwatch.
+      #   http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html
+      (start_time..end_time).step_value(1.day).each_cons(2) do |st, et|
+        statistics, = Benchmark.realtime_block(:capture_counter_values) do
+          options = {:start_time => st, :end_time => et, :statistics => ["Average"], :period => 60}
+          cloud_watch.client.get_metric_statistics(c.to_hash.merge(options)).datapoints
+        end
+
+        statistics.each { |s| metrics[s.timestamp.utc] = s.average }
+      end
+    end
+    metrics_by_counter_name
+  end
+
+  def get_counters(cloud_watch)
+    counters, = Benchmark.realtime_block(:capture_counters) do
+      filter = [{:name => "InstanceId", :value => target.ems_ref}]
+      cloud_watch.client.list_metrics(:dimensions => filter).metrics.select { |m| m.metric_name.in?(COUNTER_NAMES) }
+    end
+    counters
   end
 end
