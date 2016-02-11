@@ -12,7 +12,6 @@ env:
   - TEST_SUITE=vmdb
   - TEST_SUITE=automation
   - TEST_SUITE=migrations
-  - TEST_SUITE=self_service SPA_UI=self_service
   - TEST_SUITE=brakeman
   - TEST_SUITE=replication
   - GEM=pending
