@@ -5,7 +5,7 @@
     .factory('Session', SessionFactory);
 
   /** @ngInject */
-  function SessionFactory($http, moment, $sessionStorage, gettextCatalog) {
+  function SessionFactory($http, moment, $sessionStorage, gettextCatalog, $window, $state) {
     var model = {
       token: null,
       user: {}
@@ -18,6 +18,7 @@
       active: active,
       currentUser: currentUser,
       loadUser: loadUser,
+      switchGroup: switchGroup,
     };
 
     destroy();
@@ -27,13 +28,17 @@
     function create(data) {
       model.token = data.auth_token;
       $http.defaults.headers.common['X-Auth-Token'] = model.token;
+      $http.defaults.headers.common['X-Miq-Group'] = data.miqGroup || undefined;
       $sessionStorage.token = model.token;
+      $sessionStorage.miqGroup = data.miqGroup || null;
     }
 
     function destroy() {
       model.token = null;
       model.user = {};
       delete $http.defaults.headers.common['X-Auth-Token'];
+      delete $http.defaults.headers.common['X-Miq-Group'];
+      delete $sessionStorage.miqGroup;
       delete $sessionStorage.token;
     }
 
@@ -53,6 +58,13 @@
       }
 
       return model.user;
+    }
+
+    function switchGroup(group) {
+      $sessionStorage.miqGroup = group;
+
+      // reload .. but on dashboard
+      $window.location.href = $state.href('dashboard');
     }
 
     // Helpers

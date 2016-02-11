@@ -34,6 +34,7 @@
       vm.toggleNavigation = toggleNavigation;
       vm.clearMessages = clearMessages;
       vm.API_BASE = API_BASE;
+      vm.group_switch = Session.switchGroup;
 
       function activate() {
         vm.messages = Messages.items;

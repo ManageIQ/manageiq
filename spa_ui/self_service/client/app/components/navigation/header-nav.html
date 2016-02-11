@@ -28,6 +28,33 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
+          <!-- Group switcher -->
+          <li class="dropdown-submenu pull-left" ng-if="vm.user().groups.length > 1">
+            <a href="#">
+              <span translate>
+                Change Group:
+              </span>
+              <ul class="dropdown-menu scrollable-menu">
+                <li ng-repeat="group in vm.user().groups">
+                  <a href="#" title="{{'Select to change to another Group' | translate}}" ng-click="vm.group_switch(group)">
+                    {{group}}
+                    <span translate ng-if="group === vm.user().group">
+                      (Current Group)
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </a>
+          </li>
+          <li class="disabled" ng-if="! (vm.user().groups.length > 1)">
+            <a href="#" title="{{'Current Group' | translate}}">
+              {{vm.user().group}}
+            </a>
+          </li>
+          <!-- /Group switcher -->
+
+          <li class="action divider"></li>
+
           <li class="action"><a ui-sref="logout" translate>Logout</a></li>
         </ul>
       </li>
