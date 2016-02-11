@@ -254,6 +254,14 @@
     - :collection
     :methods: *70174834086080
     :klass: Flavor
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: flavor_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: flavor_show
   :groups:
     :description: Groups
     :identifier: rbac_group
