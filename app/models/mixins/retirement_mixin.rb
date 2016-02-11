@@ -193,7 +193,7 @@ module RetirementMixin
     event_hash[retirement_base_model_name.underscore.to_sym] = self
     event_hash[:host] = host if self.respond_to?(:host)
     if requester
-      event_hash[:user_id] = requester
+      event_hash[:userid] = requester
       event_hash[:retirement_initiator] = "user"
     end
     event_hash[:type] ||= self.class.name

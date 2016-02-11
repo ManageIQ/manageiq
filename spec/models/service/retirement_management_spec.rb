@@ -33,7 +33,7 @@ describe "Service Retirement Management" do
     expect(@service.retirement_state).to be_nil
     event_name = 'request_service_retire'
     event_hash = {:service => @service, :type => "Service",
-                  :retirement_initiator => "user", :user_id => "freddy"}
+                  :retirement_initiator => "user", :userid => "freddy"}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
 
