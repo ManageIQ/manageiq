@@ -61,12 +61,14 @@
       - :name: create
   :availability_zones:
     :description: Availability Zones
+    :identifier: availability_zone
     :options:
     - :collection
     :methods: *70174834086080
     :klass: AvailabilityZone
   :categories:
     :description: Categories
+    :identifier: ops_settings
     :options:
     - :collection
     :methods: *70174834085620
@@ -98,6 +100,7 @@
         :identifier: ops_settings
   :chargebacks:
     :description: Chargebacks
+    :identifier: chargeback
     :options:
     - :collection
     :methods: *70174834086080
@@ -106,6 +109,7 @@
     - :rates
   :clusters:
     :description: Clusters
+    :identifier: ems_cluster
     :options:
     - :collection
     :methods: *70174834085860
@@ -143,6 +147,7 @@
         :identifier: ems_cluster_protect
   :conditions:
     :description: Conditions
+    :identifier: condition
     :options:
     - :collection
     - :subcollection
@@ -150,6 +155,7 @@
     :klass: Condition
   :data_stores:
     :description: Datastores
+    :identifier: storage
     :options:
     - :collection
     :methods: *70174834085860
@@ -173,6 +179,7 @@
         :identifier: storage_tag
   :events:
     :description: Events
+    :identifier: event
     :options:
     - :collection
     - :subcollection
@@ -192,12 +199,14 @@
       - :name: unassign
   :flavors:
     :description: Flavors
+    :identifier: flavor
     :options:
     - :collection
     :methods: *70174834086080
     :klass: Flavor
   :groups:
     :description: Groups
+    :identifier: rbac_group
     :options:
     - :collection
     :methods: *70174834084700
@@ -229,6 +238,7 @@
         :identifier: rbac_group_tags_edit
   :hosts:
     :description: Hosts
+    :identifier: host
     :options:
     - :collection
     :methods: *70174834085860
@@ -316,6 +326,7 @@
         :identifier: host_protect
   :instances:
     :description: Instances
+    :identifier: instance
     :klass: ManageIQ::Providers::CloudManager::Vm
     :methods: *70174834085860
     :options:
@@ -364,6 +375,7 @@
     :klass: Picture
   :policies:
     :description: Policies
+    :identifier: policy
     :options:
     - :collection
     - :subcollection
@@ -405,6 +417,7 @@
       - :name: resolve
   :policy_actions:
     :description: Actions
+    :identifier: control_explorer
     :options:
     - :collection
     - :subcollection
@@ -412,6 +425,7 @@
     :klass: MiqAction
   :policy_profiles:
     :description: Policy Profiles
+    :identifier: policy_profile
     :options:
     - :collection
     - :subcollection
@@ -451,6 +465,7 @@
       - :name: resolve
   :providers:
     :description: Providers
+    :identifier: ems_infra
     :options:
     - :collection
     :methods: *70174834085620
@@ -500,12 +515,14 @@
         :identifier: ems_infra_protect
   :provision_dialogs:
     :description: Provisioning Dialogs
+    :identifier: miq_ae_customization_explorer
     :options:
     - :collection
     :methods: *70174834086080
     :klass: MiqDialog
   :provision_requests:
     :description: Provision Requests
+    :identifier: miq_request
     :options:
     - :collection
     :methods: *70174834085860
@@ -529,6 +546,7 @@
         :identifier: miq_request_approval
   :rates:
     :description: Chargeback Rates
+    :identifier: chargeback_rates
     :options:
     - :collection
     - :subcollection
@@ -553,6 +571,7 @@
         :identifier: chargeback_rates_delete
   :reports:
     :description: Reports
+    :identifier: miq_report
     :options:
     - :collection
     :methods: *70174834085860
@@ -576,6 +595,7 @@
     :klass: MiqRequestTask
   :requests:
     :description: Requests
+    :identifier: miq_request
     :options:
     - :collection
     :methods: *70174834086080
@@ -588,6 +608,7 @@
     :klass: ResourceAction
   :resource_pools:
     :description: Resource Pools
+    :identifier: resource_pool
     :options:
     - :collection
     :methods: *70174834085860
@@ -625,6 +646,7 @@
         :identifier: resource_pool_protect
   :results:
     :description: Report Results
+    :identifier: miq_report_reports
     :options:
     - :collection
     - :subcollection
@@ -632,6 +654,7 @@
     :klass: MiqReportResult
   :roles:
     :description: Roles
+    :identifier: rbac_role
     :options:
     - :collection
     :methods: *70174834085620
@@ -659,6 +682,7 @@
         :identifier: rbac_role_delete
   :security_groups:
     :description: Security Groups
+    identifier: security_group
     :options:
     - :collection
     :methods: *70174834086080
@@ -671,6 +695,7 @@
     :klass: MiqServer
   :service_catalogs:
     :description: Service Catalogs
+    :identifier: st_catalog_accord
     :options:
     - :collection
     :methods: *70174834084700
@@ -698,6 +723,7 @@
         :identifier: st_catalog_delete
   :service_dialogs:
     :description: Service Dialogs
+    :identifier: miq_ae_customization_explorer
     :options:
     - :collection
     - :subcollection
@@ -729,6 +755,7 @@
         :identifier: svc_catalog_provision
   :service_requests:
     :description: Service Requests
+    :identifier: miq_request
     :options:
     - :collection
     - :subcollection
@@ -739,6 +766,7 @@
     - :tasks
   :service_templates:
     :description: Service Templates
+    :identifier: catalog_items_accord
     :options:
     - :collection
     - :subcollection
@@ -801,6 +829,7 @@
         :identifier: catalogitem_tag
   :services:
     :description: Services
+    :identifier: service
     :options:
     - :collection
     - :custom_actions
@@ -859,6 +888,7 @@
       - :name: delete
   :tags:
     :description: Tags
+    :identifier: ops_settings
     :options:
     - :collection
     - :subcollection
@@ -895,6 +925,7 @@
       - :name: unassign
   :tasks:
     :description: Tasks
+    :identifier: tasks
     :options:
     - :collection
     - :subcollection
@@ -902,6 +933,7 @@
     :klass: MiqTask
   :templates:
     :description: Templates
+    :identifier: miq_template
     :options:
     - :collection
     :methods: *70174834085620
@@ -959,6 +991,7 @@
         :identifier: miq_template_policy_sim
   :tenants:
     :description: Tenants
+    :identifier: rbac_tenant
     :options:
     - :collection
     :methods: *70174834084700
@@ -996,6 +1029,7 @@
         :identifier: rbac_tenant_tags_edit
   :users:
     :description: Users
+    :identifier: rbac_user
     :options:
     - :collection
     :methods: *70174834084700
@@ -1027,6 +1061,7 @@
         :identifier: rbac_user_tags_edit
   :vms:
     :description: Virtual Machines
+    :identifier: vm
     :options:
     - :collection
     :methods: *70174834085620
@@ -1154,6 +1189,7 @@
         :identifier: vm_policy_sim
   :zones:
     :description: Zones
+    :identifier: zone
     :options:
     - :collection
     :methods: *70174834086080
