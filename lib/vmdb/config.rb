@@ -164,7 +164,7 @@ module VMDB
 
     def config_mtime_from_db
       # log_header = "[#{@name}]"
-      server = MiqServer.my_server(true)
+      server = MiqServer.my_server
       return Time.at(0) if server.nil?
 
       conf = server.configurations.select("updated_on").where(:typ => @name).first
