@@ -62,7 +62,7 @@ describe ImportFileUpload do
     end
   end
 
-  describe "#widget_json" do
+  describe "#widget_list" do
     before do
       import_file_upload.create_binary_blob(
         :binary => <<-BINARY
@@ -82,7 +82,7 @@ describe ImportFileUpload do
       let(:exists?) { true }
 
       it "returns json with a checkmark status icon" do
-        expected_json = [{
+        expected_list = [{
           :id          => 0,
           :name        => "widget",
           :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
@@ -92,9 +92,9 @@ describe ImportFileUpload do
           :name        => "Widget1",
           :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
-        }].to_json
+        }]
 
-        expect(import_file_upload.widget_json).to eq(expected_json)
+        expect(import_file_upload.widget_list).to eq(expected_list)
       end
     end
 
@@ -102,7 +102,7 @@ describe ImportFileUpload do
       let(:exists?) { false }
 
       it "returns json with an equal-green status icon" do
-        expected_json = [{
+        expected_list = [{
           :id          => 0,
           :name        => "widget",
           :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
@@ -112,9 +112,9 @@ describe ImportFileUpload do
           :name        => "Widget1",
           :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
-        }].to_json
+        }]
 
-        expect(import_file_upload.widget_json).to eq(expected_json)
+        expect(import_file_upload.widget_list).to eq(expected_list)
       end
     end
   end

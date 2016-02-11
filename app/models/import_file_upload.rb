@@ -22,12 +22,12 @@ class ImportFileUpload < ApplicationRecord
     service_dialogs.to_json
   end
 
-  def widget_json
+  def widget_list
     sorted_widgets = uploaded_yaml_content.sort_by do |widget_contents|
       widget_contents["MiqWidget"]["title"].downcase
     end
 
-    widgets = sorted_widgets.collect.with_index do |widget, index|
+    sorted_widgets.collect.with_index do |widget, index|
       status_icon = MiqWidget.exists?(:title => widget["MiqWidget"]["title"]) ? "checkmark" : "equal-green"
       status = determine_status(status_icon)
 
@@ -38,8 +38,6 @@ class ImportFileUpload < ApplicationRecord
         :status      => status
       }
     end
-
-    widgets.to_json
   end
 
   def store_binary_data_as_yml(binary_data, name)
