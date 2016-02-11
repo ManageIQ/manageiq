@@ -95,6 +95,131 @@ describe ApiController do
     end
   end
 
+  context "AWS advanced provision requests" do
+    let(:ems)            { FactoryGirl.create(:ems_amazon_with_authentication) }
+    let(:template)       { FactoryGirl.create(:template_amazon, :name => "template1", :ext_management_system => ems) }
+    let(:flavor)         { FactoryGirl.create(:flavor_amazon, :ems_id => ems.id, :name => 't2.small', :cloud_subnet_required => true) }
+    let(:az)             { FactoryGirl.create(:availability_zone_amazon) }
+    let(:cloud_network1) { FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true) }
+    let(:cloud_subnet1)  { FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network1.id) }
+
+    let(:provreq_body) do
+      {
+        "template_fields" => {"guid" => template.guid},
+        "requester"       => {"user_name" => api_config(:user)}
+      }
+    end
+
+    let(:provreq1_body) do
+      provreq_body.merge({
+        "vm_fields" => {
+          "vm_name" => "api_test_aws",
+          "instance_type" => flavor.id,
+          "placement_auto" => false,
+          "placement_availability_zone" => az.id,
+          "cloud_network" => cloud_network1.id,
+          "cloud_subnet" => cloud_subnet1.id,
+          "security_groups" => 1,
+          "floating_ip_address" => 1
+        }
+      })
+    end
+
+    let(:provreq2_body) do
+      provreq_body.merge({
+        "vm_fields"       => {
+          "vm_name" => "api_test_aws",
+          "instance_type" => flavor.id,
+          "placement_availability_zone" => az.id
+        }
+      })
+    end
+
+    let(:provreq3_body) do
+      provreq_body.merge({
+        "vm_fields"       => {
+          "vm_name" => "api_test_aws",
+          "instance_type" => flavor.id,
+          "placement_auto" => true,
+          "placement_availability_zone" => az.id
+        }
+      })
+    end
+
+    let(:expected_provreq_attributes) { %w(id options) }
+
+    let(:expected_provreq_hash) do
+      {
+        "userid"         => api_config(:user),
+        "requester_name" => api_config(:user_name),
+        "approval_state" => "pending_approval",
+        "type"           => "MiqProvisionRequest",
+        "request_type"   => "template",
+        "message"        => /Provisioning/i,
+        "status"         => "Ok"
+      }
+    end
+
+
+    it "supports manual placement" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :create)
+
+      dialog  # Create the Provisioning dialog
+      run_post(provision_requests_url, provreq1_body)
+
+      expect_request_success
+      expect_result_resources_to_include_keys("results", expected_provreq_attributes)
+      expect_results_to_match_hash("results", [expected_provreq_hash])
+
+      options = @result["results"].first["options"]
+      expect(options["placement_auto"]).to eq([false, 0])
+      expect(options["placement_availability_zone"]).to eq(['xxx'])
+      expect(options["cloud_network"]).to eq(['xxx'])
+      expect(options["cloud_subnet"]).to eq(['xxx'])
+      expect(options["security_groups"]).to eq(['xxx'])
+      expect(options["floating_ip_address"]).to eq(['xxx'])
+
+      task_id = @result["results"].first["id"]
+      expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
+    end
+
+    it "does not process manual placement data if placement_auto is not set" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :create)
+
+      dialog  # Create the Provisioning dialog
+      run_post(provision_requests_url, provreq2_body)
+
+      expect_request_success
+      expect_result_resources_to_include_keys("results", expected_provreq_attributes)
+      expect_results_to_match_hash("results", [expected_provreq_hash])
+
+      options = @result["results"].first["options"]
+      expect(options["placement_auto"]).to eq([true, 1])
+      expect(options["placement_availability_zone"]).to be_nil
+
+      task_id = @result["results"].first["id"]
+      expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
+    end
+
+    it "does not process manual placement data if placement_auto is set to true" do
+      api_basic_authorize collection_action_identifier(:provision_requests, :create)
+
+      dialog  # Create the Provisioning dialog
+      run_post(provision_requests_url, provreq3_body)
+
+      expect_request_success
+      expect_result_resources_to_include_keys("results", expected_provreq_attributes)
+      expect_results_to_match_hash("results", [expected_provreq_hash])
+
+      options = @result["results"].first["options"]
+      expect(options["placement_auto"]).to eq([true, 1])
+      expect(options["placement_availability_zone"]).to be_nil
+
+      task_id = @result["results"].first["id"]
+      expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
+    end
+  end
+
   context "Provision requests approval" do
     let(:user)          { FactoryGirl.create(:user) }
     let(:template)      { FactoryGirl.create(:template_amazon) }
