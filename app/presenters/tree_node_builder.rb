@@ -1,5 +1,4 @@
 class TreeNodeBuilder
-  include UiConstants
   include MiqAeClassHelper
 
   # method to build non-explorer tree nodes
