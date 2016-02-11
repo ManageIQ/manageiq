@@ -852,4 +852,8 @@ class Storage < ApplicationRecord
                                                      !ext_management_systems.first.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     {:available => true,   :message => nil}
   end
+
+  def tenant_identity
+    ext_management_systems.first.tenant_identity
+  end
 end

@@ -21,6 +21,8 @@ class EmsCluster < ApplicationRecord
   has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
 
+  delegate :tenant_identity, :to => :ext_management_system
+
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_cpu_total_cores, :aggregate_vm_cpus]
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships

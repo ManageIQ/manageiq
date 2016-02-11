@@ -1918,6 +1918,12 @@ class VmOrTemplate < ApplicationRecord
      template_tenant_ids, vm_tenant_ids]
   end
 
+  def tenant_identity
+    user = evm_owner
+    user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.groups_include?(miq_group)
+    user
+  end
+
   private
 
   def set_tenant_from_group

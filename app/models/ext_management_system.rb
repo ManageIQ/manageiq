@@ -551,4 +551,8 @@ class ExtManagementSystem < ApplicationRecord
   def self.datastore?
     IsoDatastore.where(:ems_id => all).exists?
   end
+
+  def tenant_identity
+    User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
+  end
 end

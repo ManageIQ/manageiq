@@ -32,6 +32,7 @@ module MiqRequestMixin
   def get_user
     @user ||= User.find_by_userid(userid)
   end
+  alias_method :tenant_identity, :get_user
 
   def tags
     tag_ids.to_miq_a.each do |tag_id|

@@ -155,6 +155,8 @@ class Host < ApplicationRecord
   alias_method :parent_cluster, :ems_cluster
   alias_method :owning_cluster, :ems_cluster
 
+  delegate :tenant_identity, :to => :ext_management_system
+
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
