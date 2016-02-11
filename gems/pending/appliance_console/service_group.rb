@@ -49,7 +49,7 @@ module ApplianceConsole
     private
 
     def enable_miqtop
-      LinuxAdmin.run("chkconfig", :params => {"--add" => "miqtop"})  # Is this really needed?
+      AwesomeSpawn.run("chkconfig", :params => {"--add" => "miqtop"})
     end
 
     def run_service(service, action)
