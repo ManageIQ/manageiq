@@ -3402,6 +3402,10 @@
       :description: Display Individual Container Services
       :feature_type: view
       :identifier: container_service_show
+    - :name: Timeline
+      :description: Display Timelines for Container Services
+      :feature_type: view
+      :identifier: container_service_timeline
     - :name: Utilization
       :description: Show Capacity & Utilization data of Service
       :feature_type: view

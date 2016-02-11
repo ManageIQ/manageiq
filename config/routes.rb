@@ -542,6 +542,7 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        tl_chooser
         update
         wait_for_task
         tagging_edit
