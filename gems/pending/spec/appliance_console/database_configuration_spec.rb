@@ -233,8 +233,9 @@ describe ApplianceConsole::DatabaseConfiguration do
 
   it "#say_error interactive=> false" do
     config = described_class.new(:interactive => false)
-    expect(config).to receive(:say).never
-    config.say_error(:create_region, "Error message")
+    expect(config).to receive(:say)
+    expect(config).to_not receive(:press_any_key)
+    expect { config.say_error(:create_region, "Error message") }.to raise_error(MiqSignalError)
   end
 
   context "#log_and_feedback" do

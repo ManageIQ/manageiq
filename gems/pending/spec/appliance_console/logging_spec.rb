@@ -49,7 +49,11 @@ describe ApplianceConsole::Logging do
     it "should log_and_feedback when non-interactively failing" do
       begin
         subject.interactive = false
-        expect(subject.log_and_feedback("test") { raise "Issue" }).to be_nil
+        expect(subject).to receive(:say).with("Test starting")
+        expect(subject).to receive(:say).with(/Test.*error.*Issue/)
+        expect(subject).to_not receive(:press_any_key)
+
+        expect { subject.log_and_feedback("test") { raise "Issue" } }.to raise_error(MiqSignalError)
       ensure
         subject.interactive = true
       end
