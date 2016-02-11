@@ -253,7 +253,10 @@ class MiqReportResult < ApplicationRecord
 
       # temporarily stick last_run_on time into report object
       # to be used by report_formatter while generating downloadable text report
-      rpt.rpt_options.merge!(:last_run_on => last_run_on) if result_type.to_sym == :txt
+      if result_type.to_sym == :txt
+        rpt.rpt_options ||= {}
+        rpt.rpt_options[:last_run_on] = last_run_on
+      end
 
       new_res.report_results = user.with_my_timezone do
         case result_type.to_sym
