@@ -181,6 +181,14 @@
     - :subcollection
     :methods: *70174834086080
     :klass: Condition
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: condition
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: condition
   :data_stores:
     :description: Datastores
     :identifier: storage
