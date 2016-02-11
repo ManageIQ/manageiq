@@ -1085,10 +1085,10 @@ describe Rbac do
       expect(Rbac.filtered([], :class => Vm)).to eq([])
     end
 
-    # TODO: return all_vms
-    it "skips rbac on nil targets" do
+    # fix once Rbac filtered is fixed
+    skip "skips rbac on nil targets" do
       all_vms
-      expect(Rbac.filtered(nil, :class => Vm)).to be_nil
+      expect(Rbac.filtered(nil, :class => Vm)).to match_array(all_vms)
     end
 
     # it returns objects too
