@@ -33,7 +33,7 @@ describe "Service Retirement Management" do
     expect(@stack.retirement_state).to be_nil
     event_name = 'request_orchestration_stack_retire'
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
-                  :retirement_initiator => "user", :user_id => "freddy"}
+                  :retirement_initiator => "user", :userid => "freddy"}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
 
