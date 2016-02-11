@@ -11,7 +11,13 @@ describe('Session', function() {
       $provide.value('$window', {
         get location() {
           return {
-            href: window.location.href,
+            get href() {
+              return window.location.href;
+            },
+            set href(str) {
+              reloadOk = true;
+            },
+
             reload: function() {
               reloadOk = true;
             },
