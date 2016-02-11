@@ -5,7 +5,7 @@
     .factory('Session', SessionFactory);
 
   /** @ngInject */
-  function SessionFactory($http, moment, $sessionStorage, gettextCatalog, $window) {
+  function SessionFactory($http, moment, $sessionStorage, gettextCatalog, $window, $state) {
     var model = {
       token: null,
       user: {}
@@ -63,8 +63,8 @@
     function switchGroup(group) {
       $sessionStorage.miqGroup = group;
 
-      // reload
-      $window.location.reload();
+      // reload .. but on dashboard
+      $window.location.href = $state.href('dashboard');
     }
 
     // Helpers
