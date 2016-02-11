@@ -63,7 +63,9 @@ module Openstack
           print "Waiting for image #{image.name} to get in an 'active' state..."
 
           loop do
-            case image.reload.status
+            # TODO(lsmola) identity is missing in Glance V2 object, fix it in Fog, then image.reload will work
+            # case image.reload.status
+            case service.images.get(image.id).status
             when "active"
               break
             when "error"
