@@ -54,7 +54,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
     require 'aws-sdk'
-    Aws.const_get(service.to_s)::Resource.new(
+    Aws.const_get(service)::Resource.new(
       :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
       :region            => region,
