@@ -1920,7 +1920,7 @@ class VmOrTemplate < ApplicationRecord
 
   def tenant_identity
     user = evm_owner
-    user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.groups_include?(miq_group)
+    user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
     user
   end
 
