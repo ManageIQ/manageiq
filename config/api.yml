@@ -121,6 +121,14 @@
     :klass: ChargebackRate
     :subcollections:
     - :rates
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: chargeback
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: chargeback
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
