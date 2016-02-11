@@ -1,7 +1,7 @@
 RSpec.describe "categories API" do
   it "can list all the categories" do
     categories = FactoryGirl.create_list(:category, 2)
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:categories, :read, :get)
 
     run_get categories_url
 
@@ -15,7 +15,7 @@ RSpec.describe "categories API" do
   it "can filter the list of categories by name" do
     category_1 = FactoryGirl.create(:category, :name => "foo")
     _category_2 = FactoryGirl.create(:category, :name => "bar")
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:categories, :read, :get)
 
     run_get categories_url, :filter => ["name=foo"]
 
@@ -25,7 +25,7 @@ RSpec.describe "categories API" do
 
   it "will return a bad request error if the filter name is invalid" do
     FactoryGirl.create(:category)
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:categories, :read, :get)
 
     run_get categories_url, :filter => ["not_an_attribute=foo"]
 
@@ -34,7 +34,7 @@ RSpec.describe "categories API" do
 
   it "can read a category" do
     category = FactoryGirl.create(:category)
-    api_basic_authorize
+    api_basic_authorize action_identifier(:categories, :read, :resource_actions, :get)
 
     run_get categories_url(category.id)
     expect_result_to_match_hash(
