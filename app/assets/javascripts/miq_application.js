@@ -1177,9 +1177,13 @@ function miqJqueryRequest(url, options) {
     ajax_options.dataType = 'script';
   }
 
-  if (options.data) {
-    ajax_options.data = options.data;
-  }
+  // copy selected options over
+  _.extend(ajax_options, _.pick(options, [
+    'data',
+    'contentType',
+    'processData',
+    'cache'
+  ]));
 
   if (options.beforeSend) {
     ajax_options.beforeSend = function (request) {
