@@ -118,8 +118,14 @@ describe('dialogFieldRefresh', function() {
 
     it('triggers the auto refresh when the drop down changes', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
-      $("#"+fieldName).trigger('change');
+      $("#" + fieldName).trigger('change');
       expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'true');
+    });
+
+    it('triggers autorefresh with "false" when triggerAutoRefresh arg is false', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url, 'false');
+      $("#" + fieldName).trigger('change');
+      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'false');
     });
   });
 });

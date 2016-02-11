@@ -7,12 +7,14 @@ var dialogFieldRefresh = {
     });
   },
 
-  initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url) {
+  initializeDialogSelectPicker: function(fieldName, fieldId, selectedValue, url, triggerAutoRefresh) {
     miqInitSelectPicker();
-    $('#' + fieldName).selectpicker('val', selectedValue);
+    if (selectedValue !== undefined) {
+      $('#' + fieldName).selectpicker('val', selectedValue);
+    }
     miqSelectPickerEvent(fieldName, url);
-    $('#' + fieldName).on('change', function(){
-      dialogFieldRefresh.triggerAutoRefresh(fieldId, "true");
+    $('#' + fieldName).on('change', function() {
+      dialogFieldRefresh.triggerAutoRefresh(fieldId, triggerAutoRefresh || "true");
       return true;
     });
   },
@@ -44,7 +46,11 @@ var dialogFieldRefresh = {
   refreshDropDownList: function(fieldName, fieldId, selectedValue) {
     miqSparkleOn();
 
-    $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}).done(function(data) {
+    $.post('dynamic_radio_button_refresh', {
+      name: fieldName,
+      checked_value: selectedValue,
+    })
+    .done(function(data) {
       dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', selectedValue);
@@ -55,20 +61,23 @@ var dialogFieldRefresh = {
     var dropdownOptions = [];
 
     $.each(data.values.refreshed_values, function(index, value) {
-      var option = '<option ';
-      option += 'value="' + value[0] + '" ';
+      var option = $('<option></option>');
+
+      option.val(value[0]);
+      option.text(value[1]);
+
       if (data.values.checked_value !== null) {
         if (value[0] !== null) {
           if (data.values.checked_value.toString() === value[0].toString()) {
-            option += 'selected="selected" ';
+            option.prop('selected', true);
           }
         }
       } else {
         if (index === 0) {
-          option += 'selected="selected" ';
+          option.prop('selected', true);
         }
       }
-      option += '> ' + value[1] + '</option>';
+
       dropdownOptions.push(option);
     });
 
@@ -81,29 +90,38 @@ var dialogFieldRefresh = {
   refreshRadioList: function(fieldName, fieldId, checkedValue, onClickString) {
     miqSparkleOn();
 
-    $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
+    $.post('dynamic_radio_button_refresh', {
+      name: fieldName,
+      checked_value: checkedValue
+    }, function(data) {
       var radioButtons = [];
 
       $.each(data.values.refreshed_values, function(index, value) {
-        var radio = '<input type="radio" ';
-        radio += 'id="' + fieldId + '" ';
-        radio += 'value="' + value[0] + '" ';
-        radio += 'name="' + fieldName + '" ';
+        var radio = $('<input>')
+          .attr('id', fieldId)
+          .attr('name', fieldName)
+          .attr('type', 'radio')
+          .val(value[0]);
+
+        var label = $('<label></label>')
+          .addClass('dynamic-radio-label')
+          .text(value[1]);
+
         if (data.values.checked_value === value[0].toString()) {
-          radio += 'checked="" ';
+          radio.prop('checked', true);
         }
 
         if (data.values.read_only === true) {
-          radio += 'title="';
-          radio += __("This element is disabled because it is read only");
-          radio += '" disabled=true ';
+          radio.attr('title', __("This element is disabled because it is read only"));
+          radio.prop('disabled', true);
         } else {
-          radio += onClickString;
+          radio.on('click', new Function(onClickString));
         }
-        radio += '/> ';
-        radio += $('<label></label>').addClass('dynamic-radio-label').text(value[1]).prop('outerHTML');
-        radio += ' ';
+
         radioButtons.push(radio);
+        radioButtons.push(" ");
+        radioButtons.push(label);
+        radioButtons.push(" ");
       });
 
       $('#dynamic-radio-' + fieldId).html(radioButtons);

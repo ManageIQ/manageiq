@@ -86,7 +86,7 @@ module ApplicationHelper::Dialogs
     extra_options = {
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
-      "data-miq_observe"     => {:url => url}.merge(auto_refresh_options(field)).to_json
+      # data-miq_observe functionality is handled by dialogFieldRefresh.initializeDialogSelectPicker here
     }
 
     add_options_unless_read_only(extra_options, tag_options, field)
