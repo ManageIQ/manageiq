@@ -5,8 +5,6 @@ class ResourcePool < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :miq_events,            :as => :target, :dependent => :destroy
 
-  delegate :tenant_identity, :to => :ext_management_system
-
   include SerializedEmsRefObjMixin
   include FilterableMixin
 
@@ -35,6 +33,14 @@ class ResourcePool < ApplicationRecord
   virtual_has_many :vms_and_templates, :uses => :all_relationships
   virtual_has_many :vms,               :uses => :all_relationships
   virtual_has_many :miq_templates,     :uses => :all_relationships
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
+  end
 
   def hidden?
     is_default?

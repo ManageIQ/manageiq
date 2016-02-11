@@ -20,9 +20,6 @@ class EmsCluster < ApplicationRecord
   has_many    :miq_events,         :as => :target,   :dependent => :destroy
   has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
-
-  delegate :tenant_identity, :to => :ext_management_system
-
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_cpu_total_cores, :aggregate_vm_cpus]
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships
@@ -62,6 +59,14 @@ class EmsCluster < ApplicationRecord
   include MiqPolicyMixin
   include AsyncDeleteMixin
   include WebServiceAttributeMixin
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
+  end
 
   #
   # Provider Object methods

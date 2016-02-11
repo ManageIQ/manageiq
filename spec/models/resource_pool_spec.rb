@@ -66,4 +66,29 @@ describe ResourcePool do
       expect(@rp7.v_total_vms).to eq(0)
     end
   end
+
+  context "#tenant_identity" do
+    let(:admin)    { FactoryGirl.create(:user_with_group, :userid => "admin") }
+    let(:tenant)   { FactoryGirl.create(:tenant) }
+    let(:ems)      { FactoryGirl.create(:ext_management_system, :tenant => tenant) }
+    before         { admin }
+
+    subject        { @rp.tenant_identity }
+
+    it "has tenant from provider" do
+      @rp = FactoryGirl.create(:resource_pool, :ems_id => ems.id)
+
+      expect(subject).to                eq(admin)
+      expect(subject.current_group).to  eq(ems.tenant.default_miq_group)
+      expect(subject.current_tenant).to eq(ems.tenant)
+    end
+
+    it "without a provider, has tenant from root tenant" do
+      @rp = FactoryGirl.create(:resource_pool)
+
+      expect(subject).to                eq(admin)
+      expect(subject.current_group).to  eq(Tenant.root_tenant.default_miq_group)
+      expect(subject.current_tenant).to eq(Tenant.root_tenant)
+    end
+  end
 end
