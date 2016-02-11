@@ -63,7 +63,7 @@ module Openstack
             end
 
             if (volume_name = server.delete(:__block_device_name))
-              volume = volumes.detect { |x| x.display_name == volume_name }
+              volume = volumes.detect { |x| x.name == volume_name }
               server.merge!(
                 :block_device_mapping_v2 => [{
                   :source_type           => "image",

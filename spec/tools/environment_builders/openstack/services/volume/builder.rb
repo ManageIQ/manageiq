@@ -57,7 +57,7 @@ module Openstack
         end
 
         def find_or_create_volume_snapshots(volume)
-          volume_data = @data.volume_snapshots(volume.display_name)
+          volume_data = @data.volume_snapshots(volume.name)
 
           return if volume_data.blank?
 
@@ -90,7 +90,7 @@ module Openstack
         end
 
         def wait_for_volume(volume)
-          name = volume.respond_to?(:name) ? volume.name : volume.display_name
+          name = volume.respond_to?(:name) ? volume.name : volume.name
 
           print "Waiting for volume #{name} to get in a desired state..."
 

@@ -27,8 +27,8 @@ module Openstack
         def volumes(volume_type_name = nil)
           volumes = {
             volume_type_name_2 => [{
-              :display_name        => volume_name_1,
-              :display_description => "EmsRefreshSpec-Volume description",
+              :name        => volume_name_1,
+              :description => "EmsRefreshSpec-Volume description",
               :size                => 1}]}
 
           indexed_collection_return(volumes, volume_type_name)
@@ -46,8 +46,8 @@ module Openstack
         def volumes_from_snapshots(volume_snapshot_name = nil)
           volumes_from_snapshots = {
             volume_snapshot_name_1 => [{
-              :display_name        => "EmsRefreshSpec-Volume-FromSnapshot",
-              :display_description => "EmsRefreshSpec-Volume-FromSnapshot description"}]}
+              :name        => "EmsRefreshSpec-Volume-FromSnapshot",
+              :description => "EmsRefreshSpec-Volume-FromSnapshot description"}]}
 
           indexed_collection_return(volumes_from_snapshots, volume_snapshot_name)
         end
