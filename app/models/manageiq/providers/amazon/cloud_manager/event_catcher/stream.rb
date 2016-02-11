@@ -132,11 +132,9 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   def parse_event(message)
     log_header = "MIQ(#{self.class.name}##{__method__})"
     event = JSON.parse(JSON.parse(message.body)['Message'])
-    message_type = event["messageType"]
-    $log.info("#{log_header} Found SNS Message with message type #{message_type}")
-    return unless message_type == "ConfigurationItemChangeNotification"
+    $log.info("#{log_header} Found SNS Message with message type #{event["messageType"]}")
+    return unless event["messageType"] == "ConfigurationItemChangeNotification"
 
-    log_header = "MIQ(#{self.class.name}##{__method__})"
     event["messageId"] = message.message_id
     event["eventType"] = parse_event_type(event)
     $log.info("#{log_header} Parsed event from SNS Message #{event["eventType"]}")
