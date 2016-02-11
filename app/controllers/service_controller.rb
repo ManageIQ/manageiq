@@ -145,45 +145,27 @@ class ServiceController < ApplicationController
     assert_privileges("service_edit")
     case params[:button]
     when "cancel"
-      if session[:edit][:rec_id]
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "Service", :name => session[:edit][:new][:description]})
-      else
-        add_flash(_("Add of new %s was cancelled by the user") % "Service")
-      end
-      @edit = nil
-      @in_a_form = false
+      service = Service.find_by_id(params[:id])
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "Service",
+                                                                               :name  => service.description})
       replace_right_cell
     when "save", "add"
-      return unless load_edit("service_edit__#{params[:id] || "new"}", "replace_cell__explorer")
-      if @edit[:new][:name].blank?
-        add_flash(_("%s is required") % "Name", :error)
-      end
+      service = Service.find_by_id(params[:id])
+      service_set_record_vars(service)
 
-      if @flash_array
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-        return
-      end
-      @service = Service.find_by_id(@edit[:rec_id])
-      service_set_record_vars(@service)
       begin
-        @service.save
+        service.save
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Service Edit" << bang.message, :error)
       else
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model => "Service", :name => @edit[:new][:name]})
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => "Service", :name => service.name})
       end
-      @changed = session[:changed] = false
-      @in_a_form = false
-      @edit = session[:edit] = nil
       replace_right_cell(nil, [:svcs])
     when "reset", nil # Reset or first time in
-      service_set_form_vars
-      if params[:button] == "reset"
-        add_flash(_("All changes have been reset"), :warning)
-      end
-      @changed = session[:changed] = false
+      checked = find_checked_items
+      checked[0] = params[:id] if checked.blank? && params[:id]
+      @service = find_by_id_filtered(Service, checked[0])
+      @in_a_form = true
       replace_right_cell("service_edit")
       return
     end
@@ -207,45 +189,20 @@ class ServiceController < ApplicationController
     end
   end
 
-  def service_form_field_changed
-    id = session[:edit][:rec_id] || "new"
-    return unless load_edit("service_edit__#{id}", "replace_cell__explorer")
-    service_get_form_vars
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
-      if changed != session[:changed]
-        page << javascript_for_miq_button_visibility(changed)
-        session[:changed] = changed
-      end
-      page << "miqSparkle(false);"
-    end
+  def service_form_fields
+    service = Service.find_by_id(params[:id])
+
+    render :json => {
+      :name        => service.name,
+      :description => service.description
+    }
   end
 
   private
 
-  def service_get_form_vars
-    @edit[:new][:name] = params[:name] if params[:name]
-    @edit[:new][:description] = params[:description] if params[:description]
-  end
-
-  def service_set_form_vars
-    checked = find_checked_items
-    checked[0] = params[:id] if checked.blank? && params[:id]
-    @record = find_by_id_filtered(Service, checked[0])
-    @edit = {}
-    @edit[:key] = "service_edit__#{@record.id || "new"}"
-    @edit[:new] = {}
-    @edit[:current] = {}
-    @edit[:rec_id] = @record.id
-    @edit[:new][:name] = @record.name
-    @edit[:new][:description] = @record.description
-    @edit[:current] = copy_hash(@edit[:new])
-    @in_a_form = true
-  end
-
   def service_set_record_vars(svc)
-    svc.name = @edit[:new][:name]
-    svc.description = @edit[:new][:description]
+    svc.name = params[:name] if params[:name]
+    svc.description = params[:description] if params[:description]
   end
 
   def service_delete
@@ -315,7 +272,7 @@ class ServiceController < ApplicationController
       action = "retire"
     when "service_edit"
       partial = "service_form"
-      header = _("Editing %{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => "Service")}
+      header = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
       action = "service_edit"
     when "tag"
       partial = "layouts/tagging"
@@ -368,7 +325,7 @@ class ServiceController < ApplicationController
         r[:partial => "layouts/x_gtl"]
       end
     )
-    if %w(dialog_provision ownership service_edit tag).include?(action)
+    if %w(dialog_provision ownership tag).include?(action)
       presenter.show(:form_buttons_div).hide(:pc_div_1, :toolbar).show(:paging_div)
       if action == "dialog_provision"
         presenter.update(:form_buttons_div, r[:partial => "layouts/x_dialog_buttons",
