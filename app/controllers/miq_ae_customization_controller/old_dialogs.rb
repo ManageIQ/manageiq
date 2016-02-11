@@ -80,7 +80,7 @@ module MiqAeCustomizationController::OldDialogs
       replace_right_cell(x_node, [:old_dialogs])
     else # showing 1 vm
       if params[:id].nil? || MiqDialog.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqDialog"), :error)
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "MiqDialog")}, :error)
         old_dialogs_list
         @refresh_partial = "layouts/gtl"
       else
@@ -104,7 +104,7 @@ module MiqAeCustomizationController::OldDialogs
   def old_dialogs_get_node_info(treenodeid)
     if treenodeid == "root"
       old_dialogs_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => "MiqDialog")
+      @right_cell_text = _("All %{dialogs}") % {:dialogs => ui_lookup(:models => "MiqDialog")}
       @right_cell_div  = "old_dialogs_list"
     else
       nodes = treenodeid.split("_")
@@ -236,7 +236,7 @@ module MiqAeCustomizationController::OldDialogs
     when "cancel"
       @edit = session[:edit] = nil # clean out the saved info
       if !@dialog || @dialog.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqDialog"))
+        add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "MiqDialog")})
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqDialog"), :name => @dialog.name})
       end
@@ -246,15 +246,15 @@ module MiqAeCustomizationController::OldDialogs
       # dialog = find_by_id_filtered(MiqDialog, params[:id])
       dialog = @dialog.id.blank? ? MiqDialog.new : MiqDialog.find(@dialog.id) # Get new or existing record
       if @edit[:new][:name].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
       end
       unless @edit[:new][:dialog_type]
-        add_flash(_("%s must be selected") % "Dialog Type", :error)
+        add_flash(_("Dialog Type must be selected"), :error)
       end
       begin
         YAML.parse(@edit[:new][:content])
       rescue YAML::SyntaxError => ex
-        add_flash("#{_("Syntax error in YAML file: ")}#{ex.message}", :error)
+        add_flash(_("Syntax error in YAML file: %{error_message}") % {:error_message => ex.message}, :error)
       end
       if @flash_array
         render :update do |page|

@@ -90,9 +90,11 @@ class CatalogController < ApplicationController
     case params[:button]
     when "cancel"
       if session[:edit][:rec_id]
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "#{ui_lookup(:model => 'ServiceTemplate')}", :name => session[:edit][:new][:description]})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") %
+          {:model => ui_lookup(:model => 'ServiceTemplate'), :name => session[:edit][:new][:description]})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % "#{ui_lookup(:model => 'ServiceTemplate')}")
+        add_flash(_("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:model => 'ServiceTemplate')})
       end
       @edit = @record = nil
       @in_a_form = false
@@ -329,15 +331,18 @@ class CatalogController < ApplicationController
     if params[:id]
       elements.push(params[:id])
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:table => "service_template")) if @flash_array.nil?
+      add_flash(_("The selected %{record} was deleted") %
+        {:record => ui_lookup(:table => "service_template")}) if @flash_array.nil?
       self.x_node = "root"
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "service_template"), :task => "deletion"}, :error)
+        add_flash(_("No %{model} were selected for deletion") %
+          {:model => ui_lookup(:tables => "service_template")}, :error)
       end
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(_("The selected %s were deleted") % pluralize(elements.length, ui_lookup(:table => "service_template"))) unless flash_errors?
+      add_flash(_("The selected %{record} were deleted") %
+        {:record => pluralize(elements.length, ui_lookup(:table => "service_template"))}) unless flash_errors?
     end
     params[:id] = nil
     replace_right_cell(nil, trees_to_replace([:sandt, :svccat]))
@@ -351,7 +356,7 @@ class CatalogController < ApplicationController
       if session[:edit][:rec_id]
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "Catalog Bundle", :name => session[:edit][:new][:description]})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % "Catalog Bundle")
+        add_flash(_("Add of new Catalog Bundle was cancelled by the user"))
       end
       @edit = @record = nil
       @in_a_form = false
@@ -360,13 +365,13 @@ class CatalogController < ApplicationController
       return unless load_edit("st_edit__#{params[:id] || "new"}", "replace_cell__explorer")
       get_form_vars
       if @edit[:new][:name].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
       end
 
       if @edit[:new][:selected_resources].empty?
-        add_flash(_("%s must be selected") % "Resource", :error)
+        add_flash(_("Resource must be selected"), :error)
       end
-      add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:fqname].blank?
+      add_flash(_("Provisioning Entry Point is required"), :error) if @edit[:new][:fqname].blank?
       dialog_catalog_check
 
       if @flash_array
@@ -601,9 +606,11 @@ class CatalogController < ApplicationController
     case params[:button]
     when "cancel"
       if session[:edit][:rec_id]
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "ServiceTemplateCatalog", :name => session[:edit][:new][:name]})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") %
+          {:model => ui_lookup(:model => "ServiceTemplateCatalog"), :name => session[:edit][:new][:name]})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % "ServiceTemplateCatalog")
+        add_flash(_("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:model => "ServiceTemplateCatalog")})
       end
       @edit = nil
       @in_a_form = false
@@ -617,14 +624,12 @@ class CatalogController < ApplicationController
       begin
         @stc.save
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Catalog Edit" << bang.message, :error)
+        add_flash(_("Error during 'Catalog Edit': %{error_message}") % {:error_message => bang.message}, :error)
       else
         if @stc.errors.empty?
           add_flash(_("%{model} \"%{name}\" was saved") %
-                      {:model => "#{ui_lookup(:model => 'ServiceTemplateCatalog')}",
-                       :name  => @edit[:new][:name]
-                      }
-                   )
+                      {:model => ui_lookup(:model => 'ServiceTemplateCatalog'),
+                       :name  => @edit[:new][:name]})
         else
           @stc.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -671,8 +676,8 @@ class CatalogController < ApplicationController
       begin
         st.public_send(task.to_sym) if st.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => model_name, :name => st_name, :task => task} << bang.message,
-                  :error)
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
+          {:model => model_name, :name => st_name, :task => task, :error_message => bang.message}, :error)
       else
         AuditEvent.success(audit)
       end
@@ -697,7 +702,8 @@ class CatalogController < ApplicationController
     checked[0] = params[:id] if checked.blank? && params[:id]
     @record = find_by_id_filtered(OrchestrationTemplate, checked[0])
     if @record.in_use?
-      add_flash(_("Orchestration template \"%s\" is read-only and cannot be edited.") % @record.name, :error)
+      add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be edited.") %
+        {:name => @record.name}, :error)
       get_node_info(x_node)
       replace_right_cell(x_node)
       return
@@ -751,14 +757,16 @@ class CatalogController < ApplicationController
     elements = OrchestrationTemplate.where(:id => checked)
     elements.each do |ot|
       if ot.stacks.length > 0
-        add_flash(_("Orchestration template \"%s\" is read-only and cannot be deleted.") % ot.name, :error)
+        add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be deleted.") %
+          {:name => ot.name}, :error)
       else
         begin
           ot.delete
         rescue StandardError => bang
-          add_flash(_("Error during '%s': ") % "Orchestration Template Deletion" << bang.message, :error)
+          add_flash(_("Error during 'Orchestration Template Deletion': %{error_message}") %
+            {:error_message => bang.message}, :error)
         else
-          add_flash(_("Orchestration Template \"%s\" was deleted.") % ot.name)
+          add_flash(_("Orchestration Template \"%{name}\" was deleted.") % {:name => ot.name})
         end
       end
     end
@@ -855,9 +863,9 @@ class CatalogController < ApplicationController
     return unless load_edit("prov_edit__#{id}", "show_list")
     if @edit[:new][:name].blank?
       # check for service template required fields before creating a request
-      add_flash(_("%s is required") % "Name", :error)
+      add_flash(_("Name is required"), :error)
     end
-    add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:fqname].blank?
+    add_flash(_("Provisioning Entry Point is required"), :error) if @edit[:new][:fqname].blank?
 
     # Check for a Dialog if Display in Catalog is selected
     dialog_catalog_check
@@ -993,7 +1001,8 @@ class CatalogController < ApplicationController
       begin
         ot.save_with_format_validation!
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Orchestration Template Edit" << bang.message, :error)
+        add_flash(_("Error during 'Orchestration Template Edit': %{error_message}") %
+          {:error_message => bang.message}, :error)
         ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
@@ -1029,13 +1038,12 @@ class CatalogController < ApplicationController
     old_ot = OrchestrationTemplate.find_by_id(id)
     if params[:template_content] == old_ot.content
       add_flash(
-        _("Unable to create a new template copy \"%s\": old and new template content have to differ.") %
-          @edit[:new][:name], :error)
+        _("Unable to create a new template copy \"%{name}\": old and new template content have to differ.") %
+          {:name => @edit[:new][:name]}, :error)
       ot_action_submit_flash
     elsif params[:template_content].nil? || params[:template_content] == ""
-      add_flash(
-        _("Unable to create a new template copy \"%s\": new template content cannot be empty.") % @edit[:new][:name],
-        :error)
+      add_flash(_("Unable to create a new template copy \"%{name}\": new template content cannot be empty.") %
+        {:name => @edit[:new][:name]}, :error)
       ot_action_submit_flash
     else
       ot = OrchestrationTemplate.new(
@@ -1047,7 +1055,8 @@ class CatalogController < ApplicationController
       begin
         ot.save_with_format_validation!
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Orchestration Template Copy" << bang.message, :error)
+        add_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
+          {:error_message => bang.message}, :error)
         ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
@@ -1078,7 +1087,7 @@ class CatalogController < ApplicationController
     assert_privileges("orchestration_template_add")
     load_edit("ot_add__new", "replace_cell__explorer")
     if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure).include?(@edit[:new][:type])
-      add_flash(_("\"%s\" is not a valid Orchestration Template type") % @edit[:new][:type], :error)
+      add_flash(_("\"%{type}\" is not a valid Orchestration Template type") % {:type => @edit[:new][:type]}, :error)
       ot_action_submit_flash
     elsif params[:content].nil? || params[:content].strip == ""
       add_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
@@ -1093,7 +1102,8 @@ class CatalogController < ApplicationController
       begin
         ot.save_with_format_validation!
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Orchestration Template creation" << bang.message, :error)
+        add_flash(_("Error during 'Orchestration Template creation': %{error_message}") %
+          {:error_message => bang.message}, :error)
         ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
@@ -1133,12 +1143,14 @@ class CatalogController < ApplicationController
       ot = OrchestrationTemplate.find_by_id(params[:id])
       OrchestrationTemplateDialogService.new.create_dialog(@edit[:new][:dialog_name], ot)
     rescue => bang
-      add_flash(_("Error when creating a Service Dialog from Orchestration Template: ") << bang.message, :error)
+      add_flash(_("Error when creating a Service Dialog from Orchestration Template: %{error_message}") %
+        {:error_message => bang.message}, :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
-      add_flash(_("Service Dialog \"%s\" was successfully created") % @edit[:new][:dialog_name], :success)
+      add_flash(_("Service Dialog \"%{name}\" was successfully created") %
+        {:name => @edit[:new][:dialog_name]}, :success)
       @in_a_form = false
       @edit = @record = nil
       replace_right_cell
@@ -1197,7 +1209,8 @@ class CatalogController < ApplicationController
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => "ServiceTemplateCatalog"), :task => "deletion"}, :error)
+        add_flash(_("No %{model} were selected for deletion") %
+          {:model => ui_lookup(:models => "ServiceTemplateCatalog")}, :error)
       end
       process_elements(elements, ServiceTemplateCatalog, "destroy") unless elements.empty?
     end
@@ -1271,7 +1284,8 @@ class CatalogController < ApplicationController
                 st.add_resource(rsc, options)
               rescue MiqException::MiqServiceCircularReferenceError => bang
                 @add_rsc = false
-                add_flash(_("Error during '%s': ") % "Resource Add" << bang.message, :error)
+                add_flash(_("Error during 'Resource Add': %{error_message}") %
+                  {:error_message => bang.message}, :error)
                 break
               else
               end

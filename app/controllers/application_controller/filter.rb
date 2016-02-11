@@ -595,7 +595,7 @@ module ApplicationController::Filter
     case params[:button]
     when "saveit"
       if @edit[:new_search_name].nil? || @edit[:new_search_name] == ""
-        add_flash(_("%s is required") % "Search Name", :error)
+        add_flash(_("Search Name is required"), :error)
         params[:button] = "save"                                    # Redraw the save screen
       else
         #       @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression]) # Copy the current expression to new
@@ -639,7 +639,8 @@ module ApplicationController::Filter
         s.filter = MiqExpression.new(@edit[:new][@expkey])      # Set the new expression
         if s.save
           #         AuditEvent.success(build_created_audit(s, s_old))
-          add_flash(_("%{model} \"%{name}\" was saved") % {:model => "#{ui_lookup(:model => @edit[@expkey][:exp_model])} search", :name => @edit[:new_search_name]})
+          add_flash(_("%{model} search \"%{name}\" was saved") %
+            {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => @edit[:new_search_name]})
           adv_search_build_lists
 
           @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}     # Save the last search loaded (saved)
@@ -674,7 +675,8 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
       exp_array(:init, @edit[@expkey][:expression])
       @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
-      add_flash(_("%{model} \"%{name}\" was successfully loaded") % {:model => "#{ui_lookup(:model => @edit[@expkey][:exp_model])} search", :name => @edit[:new_search_name]})
+      add_flash(_("%{model} search \"%{name}\" was successfully loaded") %
+        {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => @edit[:new_search_name]})
 
     when "delete"
       s = MiqSearch.find(@edit[@expkey][:selected][:id])              # Fetch the latest record
@@ -683,8 +685,8 @@ module ApplicationController::Filter
       begin
         s.destroy                                                   # Delete the record
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqSearch"), :name  => sname, :task  => "delete"} << bang.message,
-                  :error)
+        add_flash(_("%{model} \"%{name}\": Error during 'delete': %{error_message}") %
+          {:model => ui_lookup(:model => "MiqSearch"), :name => sname, :error_message => bang.message}, :error)
       else
         if @settings[:default_search] && @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym] # See if a default search exists
           def_search = @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]
@@ -695,7 +697,8 @@ module ApplicationController::Filter
             @edit[:adv_search_applied] = nil          # clearing up applied search results
           end
         end
-        add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => "#{ui_lookup(:model => @edit[@expkey][:exp_model])} search", :name => sname})
+        add_flash(_("%{model} search \"%{name}\": Delete successful") %
+          {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => sname})
         audit = {:event        => "miq_search_record_delete",
                  :message      => "[#{sname}] Record deleted",
                  :target_id    => id,
@@ -1363,7 +1366,7 @@ module ApplicationController::Filter
     case @edit[@expkey][:exp_typ]
     when "field"
       if @edit[@expkey][:exp_field].nil?
-        add_flash(_("A %s must be chosen to commit this expression element") % "field", :error)
+        add_flash(_("A field must be chosen to commit this expression element"), :error)
       elsif @edit[@expkey][:exp_value] != :user_input &&
             e = MiqExpression.atom_error(@edit[@expkey][:exp_field],
                                          @edit[@expkey][:exp_key],
@@ -1371,7 +1374,7 @@ module ApplicationController::Filter
                                            @edit[@expkey][:exp_value] :
                                            (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
                                         )
-        add_flash(_("%{field} Value Error: %{msg}") % {:field => "Field", :msg => e}, :error)
+        add_flash(_("Field Value Error: %{msg}") % {:msg => e}, :error)
       else
         # Change datetime and date values from single element arrays to text string
         if [:datetime, :date].include?(@edit[@expkey][:val1][:type])
@@ -1392,7 +1395,7 @@ module ApplicationController::Filter
     when "count"
       if @edit[@expkey][:exp_value] != :user_input &&
          e = MiqExpression.atom_error(:count, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
-        add_flash(_("%{field} Value Error: %{msg}") % {:field => "Field", :msg => e}, :error)
+        add_flash(_("Field Value Error: %{msg}") % {:msg => e}, :error)
       else
         exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
         exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
@@ -1402,9 +1405,9 @@ module ApplicationController::Filter
       end
     when "tag"
       if @edit[@expkey][:exp_tag].nil?
-        add_flash(_("A %s must be chosen to commit this expression element") % "tag category", :error)
+        add_flash(_("A tag category must be chosen to commit this expression element"), :error)
       elsif @edit[@expkey][:exp_value].nil?
-        add_flash(_("A %s must be chosen to commit this expression element") % "tag value", :error)
+        add_flash(_("A tag value must be chosen to commit this expression element"), :error)
       else
         if exp.present?
           exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
@@ -1416,11 +1419,11 @@ module ApplicationController::Filter
       end
     when "regkey"
       if @edit[@expkey][:exp_regkey].blank?
-        add_flash(_("A %s must be entered to commit this expression element") % "registry key name", :error)
+        add_flash(_("A registry key name must be entered to commit this expression element"), :error)
       elsif @edit[@expkey][:exp_regval].blank? && @edit[@expkey][:exp_key] != "KEY EXISTS"
-        add_flash(_("A %s must be entered to commit this expression element") % "registry value name", :error)
+        add_flash(_("A registry value name must be entered to commit this expression element"), :error)
       elsif @edit[@expkey][:exp_key].include?("REGULAR EXPRESSION") && e = MiqExpression.atom_error(:regexp, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
-        add_flash(_("%{field} Value Error: %{msg}") % {:field => "Registry", :msg => e}, :error)
+        add_flash(_("Registry Value Error: %{msg}") % {:msg => e}, :error)
       else
         exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
         exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
@@ -1436,10 +1439,10 @@ module ApplicationController::Filter
       end
     when "find"
       if @edit[@expkey][:exp_field].nil?
-        add_flash(_("A %s must be chosen to commit this expression element") % "find field", :error)
+        add_flash(_("A find field must be chosen to commit this expression element"), :error)
       elsif ["checkall", "checkany"].include?(@edit[@expkey][:exp_check]) &&
             @edit[@expkey][:exp_cfield].nil?
-        add_flash(_("A %s must be chosen to commit this expression element") % "check field", :error)
+        add_flash(_("A check field must be chosen to commit this expression element"), :error)
       elsif @edit[@expkey][:exp_check] == "checkcount" &&
             (@edit[@expkey][:exp_cvalue].nil? || is_integer?(@edit[@expkey][:exp_cvalue]) == false)
         add_flash(_("The check count value must be an integer to commit this expression element"), :error)
@@ -1449,14 +1452,14 @@ module ApplicationController::Filter
                                            @edit[@expkey][:exp_value] :
                                            (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
                                         )
-        add_flash(_("%{field} Value Error: %{msg}") % {:field => "Find", :msg => e}, :error)
+        add_flash(_("Find Value Error: %{msg}") % {:msg => e}, :error)
       elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_check] == "checkcount" ? :count : @edit[@expkey][:exp_cfield],
                                          @edit[@expkey][:exp_ckey],
                                          @edit[@expkey][:exp_cvalue].kind_of?(Array) ?
                                            @edit[@expkey][:exp_cvalue] :
                                            (@edit[@expkey][:exp_cvalue].to_s + (@edit[:suffix2] ? ".#{@edit[:suffix2]}" : ""))
                                         )
-        add_flash(_("%{field} Value Error: %{msg}") % {:field => "Check", :msg => e}, :error)
+        add_flash(_("Check Value Error: %{msg}") % {:msg => e}, :error)
       else
         # Change datetime and date values from single element arrays to text string
         if [:datetime, :date].include?(@edit[@expkey][:val1][:type])
@@ -1493,7 +1496,7 @@ module ApplicationController::Filter
       end
     else
       add_flash(_("Select an expression element type"), :error)
-      add_flash(_("%s must be selected") % "Expression element type", :error)
+      add_flash(_("Expression element type must be selected"), :error)
     end
   end
 

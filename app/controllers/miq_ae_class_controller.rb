@@ -593,7 +593,7 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     when "save"
       if @edit[:new][:ae_inst]["name"].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
       end
       if @flash_array
         render :update do |page|
@@ -615,7 +615,7 @@ class MiqAeClassController < ApplicationController
           @ae_inst.save!
         end   # end of transaction
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
+        add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         flash_validation_errors(@ae_inst)
         render :update do |page|
@@ -654,7 +654,7 @@ class MiqAeClassController < ApplicationController
       return unless load_edit("aeinst_edit__new", "replace_cell__explorer")
       get_instances_form_vars
       if @edit[:new][:ae_inst]["name"].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
       end
       if @flash_array
         render :update do |page|
@@ -1006,7 +1006,7 @@ class MiqAeClassController < ApplicationController
           ae_class.save!
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
+        add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
         render :update do |page|
@@ -1052,7 +1052,7 @@ class MiqAeClassController < ApplicationController
           ae_class.save!
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
+        add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         flash_validation_errors(ae_class)
         session[:changed] = @changed = true
         render :update do |page|
@@ -1148,7 +1148,7 @@ class MiqAeClassController < ApplicationController
           ae_method.save!
         end  # end of transaction
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
+        add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         flash_validation_errors(ae_method)
         session[:changed] = @changed
         @changed = true
@@ -1212,7 +1212,7 @@ class MiqAeClassController < ApplicationController
     @in_a_form = true
     case params[:button]
     when "cancel"
-      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqAeClass"))
+      add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "MiqAeClass")})
       @in_a_form = false
       replace_right_cell([:ae])
     when "add"
@@ -1223,7 +1223,7 @@ class MiqAeClassController < ApplicationController
           add_aeclass.save!
         end
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
+        add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         render :update do |page|
           page.replace("flash_msg_div_class_props", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_props"})
@@ -1244,7 +1244,7 @@ class MiqAeClassController < ApplicationController
     @in_a_form = true
     case params[:button]
     when "cancel"
-      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqAeMethod"))
+      add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "MiqAeMethod")})
       @sb[:form_vars_set] = false
       @in_a_form = false
       replace_right_cell
@@ -1260,7 +1260,7 @@ class MiqAeClassController < ApplicationController
           add_aemethod.save!
         end
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
+        add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         flash_validation_errors(add_aemethod)
         @in_a_form = true
         render :update do |page|
@@ -1285,7 +1285,7 @@ class MiqAeClassController < ApplicationController
     get_ns_form_vars
     case params[:button]
     when "cancel"
-      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => @edit[:typ]))
+      add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => @edit[:typ])})
       @in_a_form = false
       replace_right_cell
     when "add"
@@ -1572,7 +1572,8 @@ class MiqAeClassController < ApplicationController
   def copy_objects
     ids = objects_to_copy
     if ids.blank?
-      add_flash(_("%{task} does not apply to selected %{model}") % {:task  => "Copy", :model => ui_lookup(:model => "MiqAeNamespace")}, :error)
+      add_flash(_("Copy does not apply to selected %{model}") %
+        {:model => ui_lookup(:model => "MiqAeNamespace")}, :error)
       @sb[:action] = session[:edit] = nil
       @in_a_form = false
       replace_right_cell
@@ -1698,13 +1699,14 @@ class MiqAeClassController < ApplicationController
     begin
       res = @edit[:typ].copy(options)
     rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "#{ui_lookup(:model => "#{@edit[:typ]}")} copy" << bang.message, :error)
+      add_flash(_("Error during '%{record} copy': %{error_message}") %
+        {:record => ui_lookup(:model => "#{@edit[:typ]}"), :error_message => bang.message}, :error)
       render :update do |page|
         page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       end
     else
       model = @edit[:selected_items].count > 1 ? :models : :model
-      add_flash(_("Copy selected %s was saved") % ui_lookup(model => "#{@edit[:typ]}"))
+      add_flash(_("Copy selected %{record} was saved") % {:record => ui_lookup(model => "#{@edit[:typ]}")})
       @record = res.kind_of?(Array) ? @edit[:typ].find_by_id(res.first) : res
       self.x_node = "#{TreeBuilder.get_prefix_for_model(@edit[:typ])}-#{to_cid(@record.id)}"
       @in_a_form = @changed = session[:changed] = false
@@ -1729,9 +1731,7 @@ class MiqAeClassController < ApplicationController
     @record = session[:edit][:typ].find_by_id(session[:edit][:rec_id])
     model = @edit[:selected_items].count > 1 ? :models : :model
     @sb[:action] = session[:edit] = nil # clean out the saved info
-    add_flash(_("Copy %s was cancelled by the user") % ui_lookup(model => "#{@edit[:typ]}")
-
-             )
+    add_flash(_("Copy %{record} was cancelled by the user") % {:record => ui_lookup(model => "#{@edit[:typ]}")})
     @in_a_form = false
     replace_right_cell
   end
@@ -1860,7 +1860,8 @@ class MiqAeClassController < ApplicationController
     end
 
     process_aeinstances(aeinstances, "destroy") unless aeinstances.empty?
-    add_flash(_("The selected %s were deleted") % ui_lookup(:models => "MiqAeInstances")) if @flash_array.nil?
+    add_flash(_("The selected %{record} were deleted") %
+      {:record => ui_lookup(:models => "MiqAeInstances")}) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 
@@ -1887,7 +1888,8 @@ class MiqAeClassController < ApplicationController
     end
 
     process_aemethods(aemethods, "destroy") unless aemethods.empty?
-    add_flash(_("The selected %s were deleted") % ui_lookup(:models => "MiqAeMethod")) if @flash_array.nil?
+    add_flash(_("The selected %{record} were deleted") %
+      {:record => ui_lookup(:models => "MiqAeMethod")}) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 
@@ -1912,8 +1914,7 @@ class MiqAeClassController < ApplicationController
           aedomains.push(domain.id)
         else
           add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
-                      {:model => ui_lookup(:model => "MiqAeDomain"), :name  => domain.name},
-                    :error)
+            {:model => ui_lookup(:model => "MiqAeDomain"), :name => domain.name}, :error)
         end
       end
     end
@@ -2058,7 +2059,7 @@ class MiqAeClassController < ApplicationController
       end
     elsif params[:button] == "accept"
       if session[:field_data]['name'].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
         return
       end
       new_fields = {}
@@ -2123,7 +2124,7 @@ class MiqAeClassController < ApplicationController
       session[:field_data] ||= {}
     elsif params[:button] == "accept"
       if @edit[:new_field].blank? || @edit[:new_field][:name].nil? || @edit[:new_field][:name] == ""
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
         return
       end
       new_field = {}
@@ -2318,7 +2319,7 @@ class MiqAeClassController < ApplicationController
 
   def move_selected_fields_up(available_fields, selected_fields, display_name)
     if no_items_selected?(selected_fields)
-      add_flash(_("No %s were selected to move up") % display_name, :error)
+      add_flash(_("No %{name} were selected to move up") % {:name => display_name}, :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?(available_fields, selected_fields)
@@ -2330,14 +2331,14 @@ class MiqAeClassController < ApplicationController
         end
       end
     else
-      add_flash(_("Select only one or consecutive %s to move up") % display_name, :error)
+      add_flash(_("Select only one or consecutive %{name} to move up") % {:name => display_name}, :error)
     end
     @selected = selected_fields
   end
 
   def move_selected_fields_down(available_fields, selected_fields, display_name)
     if no_items_selected?(selected_fields)
-      add_flash(_("No %s were selected to move down") % display_name, :error)
+      add_flash(_("No %{name} were selected to move down") % {:name => display_name}, :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?(available_fields, selected_fields)
@@ -2351,7 +2352,7 @@ class MiqAeClassController < ApplicationController
         end
       end
     else
-      add_flash(_("Select only one or consecutive %s to move down") % display_name, :error)
+      add_flash(_("Select only one or consecutive %{name} to move down") % {:name => display_name}, :error)
     end
     @selected = selected_fields
   end

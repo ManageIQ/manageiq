@@ -199,7 +199,7 @@ module ApplicationController::Explorer
   def x_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
-    add_flash(_("%s was cancelled by the user") % "Tag Edit")
+    add_flash(_("Tag Edit was cancelled by the user"))
     get_node_info(x_node)
     @edit = nil # clean out the saved info
     replace_right_cell
@@ -235,7 +235,8 @@ module ApplicationController::Explorer
     unless kls.where(:id => from_cid(rec_id)).exists?
       @replace_trees = [@sb[:active_accord]] # refresh trees
       self.x_node = "root"
-      add_flash(_("Last selected %s no longer exists") % ui_lookup(:model => kls.to_s), :error)
+      add_flash(_("Last selected %{record_name} no longer exists") %
+        {:record_name => ui_lookup(:model => kls.to_s)}, :error)
     end
     x_node
   end

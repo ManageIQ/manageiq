@@ -535,7 +535,7 @@ class ApplicationController < ActionController::Base
         MiqSchedule.new.verify_file_depot(settings)
       end
     rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
+      add_flash(_("Error during 'Validate': %{error_message}") % {:error_message => bang.message}, :error)
     else
       add_flash(msg)
     end
@@ -951,9 +951,14 @@ class ApplicationController < ActionController::Base
 
   def reports_group_title
     tenant_name = current_tenant.name
-    @sb[:grp_title] = current_user.admin_user? ?
-      "#{tenant_name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
-      "#{tenant_name} (#{_("%s") % ui_lookup(:model => "MiqGroup")}: #{current_user.current_group.description})"
+    if @sb[:grp_title] = current_user.admin_user?
+      _("%{tenant_name} (All %{groups})") % {:tenant_name => tenant_name, :groups => ui_lookup(:models => "MiqGroup")}
+    else
+      _("%{tenant_name} (%{group}): %{group_description}") %
+        {:tenant_name       => tenant_name,
+         :group             => ui_lookup(:model => "MiqGroup"),
+         :group_description => current_user.current_group.description}
+    end
   end
 
   def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
@@ -1589,10 +1594,12 @@ class ApplicationController < ActionController::Base
       end
     end
     if success_count > 0
-      add_flash(_("Successfully deleted %s from the CFME Database") % pluralize(success_count, "Saved Report"))
+      add_flash(n_("Successfully deleted Saved Report from the CFME Database",
+                   "Successfully deleted Saved Reports from the CFME Database", success_count))
     end
     if failure_count > 0
-      add_flash(_("Error during %s delete from the CFME Database") % pluralize(failure_count, "Saved Report"))
+      add_flash(n_("Error during Saved Report delete from the CFME Database",
+                   "Error during Saved Reports delete from the CFME Database", failure_count))
     end
   end
 
@@ -1604,13 +1611,15 @@ class ApplicationController < ActionController::Base
   def filter_ids_in_region(ids, label)
     in_reg, out_reg = ApplicationRecord.partition_ids_by_remote_region(ids)
     if ids.length == 1
-      add_flash(_("The selected %s is not in the current region") % label, :error) if in_reg.empty?
+      add_flash(_("The selected %{label} is not in the current region") % {:label => label}, :error) if in_reg.empty?
     elsif in_reg.empty?
-      add_flash(_("All selected %s are not in the current region") % label.pluralize, :error)
+      add_flash(_("All selected %{labels} are not in the current region") % {:labels => label.pluralize}, :error)
     else
       add_flash(out_reg.length == 1 ?
-          _("%s is not in the current region and will be skipped") % pluralize(out_reg.length, label) :
-          _("%s are not in the current region and will be skipped") % pluralize(out_reg.length, label), :error) unless out_reg.empty?
+          _("%{label} is not in the current region and will be skipped") %
+          {:label => pluralize(out_reg.length, label)} :
+          _("%{labels} are not in the current region and will be skipped") %
+          {:labels => pluralize(out_reg.length, label)}, :error) unless out_reg.empty?
     end
     return in_reg, out_reg
   end
@@ -2460,7 +2469,7 @@ class ApplicationController < ActionController::Base
     raise "Invalid input" unless is_integer?(id)
 
     unless db.where(:id => from_cid(id)).exists?
-      msg = _("Selected %s no longer exists") % ui_lookup(:model => db.to_s)
+      msg = _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => db.to_s)}
       raise msg
     end
 
@@ -2533,11 +2542,10 @@ class ApplicationController < ActionController::Base
     end
     if rec.nil?
       record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : "The selected record"
-      add_flash(_("%s no longer exists in the database") % record_name,
-                :error)
+      add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
     elsif authrec.nil?
-      add_flash(_("You are not authorized to view %s") % "#{ui_lookup(:model => rec.class.base_model.to_s)} '#{resource_name}'",
-                :error)
+      add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
+        {:model_name => ui_lookup(:model => rec.class.base_model.to_s), :resource_name => resource_name}, :error)
     end
     rec
   end
