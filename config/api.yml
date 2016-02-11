@@ -76,6 +76,9 @@
     :subcollections:
     - :tags
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: ops_settings
       :post:
       - :name: edit
         :identifier: ops_settings
@@ -84,6 +87,9 @@
       - :name: delete
         :identifier: ops_settings
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: ops_settings
       :post:
       - :name: edit
         :identifier: ops_settings
