@@ -45,7 +45,8 @@ module MiqAeServiceVmOpenstackSpec
 
         it "#cloud_network" do
           case t
-          when "openstack"
+          when "openstack", "google"
+            # Only OpenStack and Google have concept of cloud network
             expect(@vm.cloud_network).to be_kind_of(MiqAeMethodService::MiqAeServiceCloudNetwork)
           else
             expect(@vm.cloud_network).to be nil
