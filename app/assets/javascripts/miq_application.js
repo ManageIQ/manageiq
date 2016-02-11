@@ -1392,22 +1392,23 @@ function miqToolbarOnClick(e) {
 
   // TODO:
   // Checking for perf_reload button to not turn off spinning Q (will be done after charts are drawn).
+  // Checking for Report download button to allow controller method to turn off spinner
   // Need to design this feature into the toolbar button support at a later time.
-  if ((button.attr('name') == "perf_reload") ||
-      (button.attr('name') == "vm_perf_reload") ||
-      (button.attr('name').match("_console$"))) {
-    if (typeof params == "undefined") {
-      miqJqueryRequest(tb_url, {beforeSend: true});
-    } else {
-      miqJqueryRequest(tb_url, {beforeSend: true, data: params});
-    }
-  } else {
-    if (typeof params == "undefined") {
-      miqJqueryRequest(tb_url, {beforeSend: true, complete: true});
-    } else {
-      miqJqueryRequest(tb_url, {beforeSend: true, complete: true, data: params});
-    }
-  }
+  var no_complete = _.includes([
+      'perf_reload',
+      'vm_perf_reload',
+      'download_choice__render_report_csv',
+      'download_choice__render_report_pdf',
+      'download_choice__render_report_txt'
+    ], button.attr('name')) || button.attr('name').match(/_console$/);
+
+  var options = {
+    beforeSend: true,
+    complete: ! no_complete,
+    data: params
+  };
+
+  miqJqueryRequest(tb_url, options);
   return false;
 }
 
