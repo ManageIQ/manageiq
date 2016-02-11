@@ -66,6 +66,14 @@
     - :collection
     :methods: *70174834086080
     :klass: AvailabilityZone
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: availability_zone_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: availability_zone_show
   :categories:
     :description: Categories
     :identifier: ops_settings
