@@ -50,7 +50,6 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
           sg_cn = FactoryGirl.create(:security_group, :ext_management_system => ems, :cloud_network => cn1)
           ems.security_groups << sg_cn
           filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
-          puts filtered.first.inspect
           expect(filtered.size).to eq(1)
           expect(filtered.first.name).to eq(sg_cn.name)
         end
