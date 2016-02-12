@@ -562,6 +562,10 @@ module Rbac
         end
       elsif klass == Host
         results.concat(get_belongsto_matches_for_host(vcmeta_list.last))
+      elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
+        host = vcmeta_list.last
+        vms_and_templates = host.send(klass.base_model.to_s.tableize).to_a
+        results.concat(vms_and_templates)
       else
         vcmeta_list.each { |vcmeta| results.push(vcmeta) if vcmeta.kind_of?(klass) }
         results.concat(vcmeta_list.last.descendants.select { |obj| obj.kind_of?(klass) })
