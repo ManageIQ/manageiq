@@ -1,6 +1,6 @@
 module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqProvision do
-    %w(amazon openstack google).each do |t|
+    %w(amazon openstack google azure).each do |t|
       context "for #{t}" do
         before do
           @provider      = FactoryGirl.create("ems_#{t}_with_authentication")
@@ -269,6 +269,34 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
                 ae_svc_prov.eligible_guest_access_key_pairs.each { |rsc| ae_svc_prov.set_guest_access_key_pair(rsc) }
 
                 expect(@miq_provision.reload.options[:guest_access_key_pair]).to eq([@ci.id, @ci.name])
+              end
+            end
+          end
+        end
+
+        if t == 'azure'
+          context "resource_groups" do
+            it "workflow exposes allowed_resource_groups" do
+              expect(workflow_klass.instance_methods).to include(:allowed_resource_groups)
+            end
+
+            context "with a resource_group" do
+              before do
+                @rg = FactoryGirl.create("resource_group")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_resource_groups).and_return(@rg.id => @rg.name)
+              end
+
+              it "#eligible_resource_groups" do
+                result = ae_svc_prov.eligible_resource_groups
+
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeServiceResourceGroup".constantize)
+              end
+
+              it "#set_resource_group" do
+                ae_svc_prov.eligible_resource_groups.each { |rg| ae_svc_prov.set_resource_group(rg) }
+
+                expect(@miq_provision.reload.options[:resource_group]).to eq([@rg.id, @rg.name])
               end
             end
           end
