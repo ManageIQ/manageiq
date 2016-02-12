@@ -265,9 +265,13 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_custom_buttons_toolbar(record)
-    toolbar = ApplicationHelper::Toolbar::Basic
-    service_buttons = record_to_service_buttons(record)
+    # each custom toolbar is an anonymous subclass of this class
+    toolbar = Class.new(ApplicationHelper::Toolbar::Basic)
+    custom_buttons_hash(record).each do |button_group|
+      toolbar.button_group(button_group[:name], button_group[:items])
+    end
 
+    service_buttons = record_to_service_buttons(record)
     unless service_buttons.empty?
       buttons = service_buttons.collect { |b| create_custom_button_hash(b, record, :enabled => nil) }
       toolbar.button_group("custom_buttons_", buttons)
