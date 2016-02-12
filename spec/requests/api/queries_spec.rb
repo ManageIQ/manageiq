@@ -107,7 +107,7 @@ describe ApiController do
 
   describe "Querying encrypted attributes" do
     it "hides them from database records" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
 
       credentials = {:userid => "admin", :password => "super_password"}
 

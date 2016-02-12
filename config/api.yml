@@ -563,6 +563,9 @@
     - :policies
     - :policy_profiles
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: ems_infra_show_list
       :post:
       - :name: create
         :identifier: ems_infra_new
@@ -573,6 +576,9 @@
       - :name: delete
         :identifier: ems_infra_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: ems_infra_show
       :post:
       - :name: edit
         :identifier: ems_infra_edit
