@@ -768,6 +768,9 @@
     :subcollections:
     - :features
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_role_show_list
       :post:
       - :name: create
         :identifier: rbac_role_add
@@ -778,6 +781,9 @@
       - :name: delete
         :identifier: rbac_role_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_role_show
       :post:
       - :name: edit
         :identifier: rbac_role_edit
