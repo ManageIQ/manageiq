@@ -462,6 +462,9 @@
     - :policy_actions
     - :events
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: policy_show_list
       :post:
       - :name: add
         :identifier: policy_new
@@ -473,6 +476,9 @@
         :identifier: policy_delete
         :disabled: true
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: policy_show
       :post:
       - :name: edit
         :identifier: policy_edit

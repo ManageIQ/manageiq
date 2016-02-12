@@ -86,7 +86,7 @@ describe ApiController do
     end
 
     it "query policy with expanded policy actions" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_actions(4)
       relate_actions_to(policy)
 

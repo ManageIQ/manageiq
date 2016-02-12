@@ -101,7 +101,7 @@ describe ApiController do
 
   context "Policy collection" do
     it "query invalid policy" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
 
       run_get policies_url(999_999)
 
@@ -109,7 +109,7 @@ describe ApiController do
     end
 
     it "query policies" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policies, :read, :get)
 
       run_get policies_url
 
@@ -119,7 +119,7 @@ describe ApiController do
     end
 
     it "query policies in expanded form" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policies, :read, :get)
 
       run_get policies_url, :expand => "resources"
 

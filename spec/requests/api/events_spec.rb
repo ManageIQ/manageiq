@@ -84,7 +84,7 @@ describe ApiController do
     end
 
     it "query policy with expanded events" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_events(3)
       relate_events_to(policy)
 

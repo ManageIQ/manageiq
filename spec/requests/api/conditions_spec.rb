@@ -82,7 +82,7 @@ describe ApiController do
     end
 
     it "query policy with expanded conditions" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_conditions(3)
       assign_conditions_to(policy)
 
