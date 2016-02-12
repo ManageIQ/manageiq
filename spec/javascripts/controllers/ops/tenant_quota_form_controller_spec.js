@@ -64,7 +64,7 @@ describe('tenantQuotaFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_manage_quotas/1000000000001?button=cancel&divisible=');
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_manage_quotas/1000000000001?button=cancel&divisible=', undefined);
     });
   });
 

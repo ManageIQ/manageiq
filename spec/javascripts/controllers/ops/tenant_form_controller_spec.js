@@ -62,7 +62,7 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=cancel&divisible=' + tenantType);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=cancel&divisible=' + tenantType, undefined);
     });
   });
 
