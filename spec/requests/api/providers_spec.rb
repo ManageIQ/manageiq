@@ -62,7 +62,7 @@ describe ApiController do
     end
 
     it "supports requests with valid provider_class" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:providers, :read, :get)
 
       FactoryGirl.build(:provider_foreman)
       run_get providers_url, :provider_class => "provider", :expand => "resources"
