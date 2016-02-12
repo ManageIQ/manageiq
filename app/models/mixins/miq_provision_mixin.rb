@@ -19,6 +19,7 @@ module MiqProvisionMixin
     "CloudNetwork"                                   => [:cloud_networks,          :cloud_network],
     "CloudSubnet"                                    => [:cloud_subnets,           :cloud_subnet],
     "SecurityGroup"                                  => [:security_groups,         :security_groups],
+    "ResourceGroup"                                  => [:resource_groups,         :resource_group],
     "FloatingIp"                                     => [:floating_ip_addresses,   :floating_ip_address],
     "Flavor"                                         => [:instance_types,          :instance_type],
     "ManageIQ::Providers::CloudManager::AuthKeyPair" => [:guest_access_key_pairs,  :guest_access_key_pair]
