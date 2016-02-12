@@ -46,9 +46,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def model_to_name(model)
-    if model.include?("AnsibleTower")
+    if model.include?("ManageIQ::Providers::AnsibleTower")
       return "Ansible Tower"
-    elsif model.include?("Foreman")
+    elsif model.include?("ManageIQ::Providers::Foreman")
       return "Foreman"
     end
   end
