@@ -52,9 +52,9 @@ class EvmDatabase
       classes.each do |klass|
         begin
           klass = klass.constantize if klass.kind_of?(String)
-        rescue
-          _log.error("Class #{klass} does not exist")
-          next
+        rescue => err
+          _log.log_backtrace(err)
+          raise
         end
 
         if klass.respond_to?(:seed)
