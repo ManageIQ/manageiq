@@ -75,6 +75,9 @@ class MiqExpression
     configuration_profiles
     configuration_managers
     configured_systems
+    containers
+    container_groups
+    container_projects
     customization_scripts
     customization_script_media
     customization_script_ptables
