@@ -95,7 +95,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     expect(@sg).to have_attributes(
       :name        => "Chef-Prod",
-      :description => "Chef-Prod - Chef-Prod - eastus"
+      :description => "Chef-Prod-eastus"
     )
 
     expected_firewall_rules = [

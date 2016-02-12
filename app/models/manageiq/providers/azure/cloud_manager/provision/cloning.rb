@@ -103,7 +103,10 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
       network_options = {
         :location   => region,
         :properties => {
-          :ipConfigurations => [
+          :networkSecurityGroup => {
+            :id => security_group.ems_ref
+          },
+          :ipConfigurations     => [
             :name       => dest_name,
             :properties => {
               :subnet          => {

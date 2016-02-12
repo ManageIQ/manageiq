@@ -284,10 +284,9 @@ module ManageIQ::Providers
         uid = security_group.id
 
         description = [
-          security_group.name,
           security_group.resource_group,
           security_group.location
-        ].join(' - ')
+        ].join('-')
 
         new_result = {
           :type           => self.class.security_group_type,
