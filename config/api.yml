@@ -1039,6 +1039,9 @@
     :methods: *70174834085620
     :klass: Tag
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: ops_settings
       :post:
         - :name: create
           :identifier: ops_settings
@@ -1047,6 +1050,9 @@
         - :name: delete
           :identifier: ops_settings
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: ops_settings
       :post:
         - :name: edit
           :identifier: ops_settings
