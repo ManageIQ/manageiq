@@ -731,8 +731,7 @@ class ProviderForemanController < ApplicationController
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "Configuration Management")
     elsif action_name == "edit"
       # get the selected record to display the matching type
-      @record
-      @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
+       @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
     end
     presenter[:right_cell_text] = @right_cell_text
   end

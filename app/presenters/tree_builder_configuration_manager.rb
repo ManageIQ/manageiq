@@ -9,7 +9,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix  => 'pt_', :autoload   => true)
+    locals.merge!(:id_prefix => 'pt_', :autoload => true)
   end
 
   # Get root nodes count/array for explorer tree
@@ -30,9 +30,8 @@ class TreeBuilderConfigurationManager < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_cmat_kids(object, count_only)
-    objects = []
-    count_only_or_objects(count_only, objects, nil)
+  def x_get_tree_cmat_kids(_object, count_only)
+     count_only_or_objects(count_only, [], nil)
   end
 
   def x_get_tree_cmf_kids(object, count_only)
