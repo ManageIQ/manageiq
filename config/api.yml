@@ -799,6 +799,14 @@
     - :collection
     :methods: *70174834086080
     :klass: SecurityGroup
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: security_group_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: security_group_show
   :servers:
     :description: EVM Servers
     :options:
