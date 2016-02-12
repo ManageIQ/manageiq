@@ -512,6 +512,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :name        => stack.name,
       :description => stack.description,
       :content     => stack.client.get_template(:stack_name => stack.name).template_body,
+      :orderable   => false
     }
     return uid, new_result
   end

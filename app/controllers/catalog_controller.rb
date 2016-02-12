@@ -999,7 +999,7 @@ class CatalogController < ApplicationController
         ot.draft = @edit[:new][:draft]
       end
       begin
-        ot.save_with_format_validation!
+        ot.save_as_orderable!
       rescue StandardError => bang
         add_flash(_("Error during 'Orchestration Template Edit': %{error_message}") %
           {:error_message => bang.message}, :error)
@@ -1053,7 +1053,7 @@ class CatalogController < ApplicationController
         :content     => params[:template_content],
         :draft       => @edit[:new][:draft] == true || @edit[:new][:draft] == "true")
       begin
-        ot.save_with_format_validation!
+        ot.save_as_orderable!
       rescue StandardError => bang
         add_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
           {:error_message => bang.message}, :error)
@@ -1100,7 +1100,7 @@ class CatalogController < ApplicationController
         :content     => params[:content],
         :draft       => @edit[:new][:draft])
       begin
-        ot.save_with_format_validation!
+        ot.save_as_orderable!
       rescue StandardError => bang
         add_flash(_("Error during 'Orchestration Template creation': %{error_message}") %
           {:error_message => bang.message}, :error)

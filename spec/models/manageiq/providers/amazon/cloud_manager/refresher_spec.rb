@@ -474,6 +474,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     @orch_template = OrchestrationTemplateCfn.where(:md5 => "e929859521d64ac28ee29f8526d33e8f").first
     expect(@orch_template.description).to start_with("AWS CloudFormation Sample Template WordPress_Simple:")
     expect(@orch_template.content).to start_with("{\n  \"AWSTemplateFormatVersion\" : \"2010-09-09\",")
+    expect(@orch_template).to have_attributes(:draft => false, :orderable => false)
   end
 
   def assert_specific_orchestration_stack
