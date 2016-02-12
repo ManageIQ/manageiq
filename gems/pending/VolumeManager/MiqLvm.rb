@@ -233,10 +233,12 @@ class Lvm2MdParser
 
   def getSegObj(seg)
     segObj = LvSegment.new(seg['start_extent'], seg['extent_count'], seg['type'], seg['stripe_count'])
+    segObj.metadata = seg['metadata'] if seg.key?('metadata')
+    segObj.pool     = seg['pool']     if seg.key?('pool')
     seg['stripes'].each_slice(2) do |pv, o|
       segObj.stripes << pv
       segObj.stripes << o.to_i
-    end
+    end unless seg['stripes'].nil?
 
     segObj
   end # def getSegObj
@@ -312,8 +314,27 @@ class VolumeGroup
   end
 
   def getLvs
-    lvList = []
+    lvList  = []
+    skipLvs = []
     @logicalVolumes.each_value do |lvObj|
+      # 1297019 remove volume groups containing logical volumes w/ 'thin' and 'thin-pool' segments,
+      #         as well as the volumes references in those 'metadata' and 'pool' entries
+      unless lvObj.thin_segments.empty?
+        skipLvs << lvObj.lvName unless skipLvs.include?(lvObj.lvName)
+        metadata_volumes = lvObj.thin_segments.collect { |segment| segment.metadata }
+        pool_volumes     = lvObj.thin_segments.collect { |segment| segment.pool     }
+        (metadata_volumes + pool_volumes).each do |vol|
+          skipLvs <<  vol unless skipLvs.include?(vol)
+        end
+      end
+    end
+
+    @logicalVolumes.each_value do |lvObj|
+      if skipLvs.include?(lvObj.lvName)
+        $log.debug "Ignoring thin volume: #{lvObj.lvName}"
+        next
+      end
+
       #
       # get MiqDisk object for each LV and add to lvList.
       #
@@ -408,13 +429,17 @@ class LogicalVolume
     @status = []
     @vgObj = nil                        # a reference to this LV's volume group
   end
+
+  def thin_segments
+    @thin_segments ||= segments.select { |segment| ['thin-pool', 'thin'].include?(segment.type) }
+  end
 end # class LogicalVolume
 
 #
 # One object of this class for each segment in a logical volume.
 #
 class LvSegment
-  attr_accessor :startExtent, :extentCount, :type, :stripeCount, :stripes
+  attr_accessor :startExtent, :extentCount, :type, :stripeCount, :stripes, :metadata, :pool
 
   def initialize(startExtent = 0, extentCount = 0, type = nil, stripeCount = 0)
     @startExtent = startExtent.to_i     # the first logical extent of this segment
