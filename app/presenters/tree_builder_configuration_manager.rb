@@ -4,32 +4,30 @@ class TreeBuilderConfigurationManager < TreeBuilder
   def tree_init_options(_tree_name)
     {:full_ids => true,
      :open_all => true,
-     :leaf => "ManageIQ::Providers::ConfigurationManager"
-    }
+     :leaf     => "ManageIQ::Providers::ConfigurationManager"}
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => 'pt_',
-      :autoload => true)
+    locals.merge!(:id_prefix  => 'pt_',
+                  :autoload   => true)
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id => "fr",
-                 :tree => "fr_tree",
-                 :text => "Foreman Providers",
-                 :image => "folder",
-                 :tip => "Foreman Providers",
-                 :expand => true)
-    objects.push(:id => "at",
-                 :tree => "at_tree",
-                 :text => "Ansible Tower Providers",
-                 :image => "folder",
-                 :tip => "Ansible Tower Providers",
-                 :expand => true)
+    objects.push(:id      => "fr",
+                 :tree    => "fr_tree",
+                 :text    => "Foreman Providers",
+                 :image   => "folder",
+                 :tip     => "Foreman Providers",
+                 :expand  => true)
+    objects.push(:id      => "at",
+                 :tree    => "at_tree",
+                 :text    => "Ansible Tower Providers",
+                 :image   => "folder",
+                 :tip     => "Ansible Tower Providers",
+                 :expand  => true)
     count_only_or_objects(count_only, objects, nil)
   end
 
@@ -41,7 +39,8 @@ class TreeBuilderConfigurationManager < TreeBuilder
   def x_get_tree_cmf_kids(object, count_only)
     assigned_configuration_profile_objs =
       count_only_or_objects(count_only,
-                            rbac_filtered_objects(ConfigurationProfile.where(:configuration_manager_id => object[:id]), :match_via_descendants => %w(ConfiguredSystem)),
+                            rbac_filtered_objects(ConfigurationProfile.where(:configuration_manager_id => object[:id]),
+                                                  :match_via_descendants => %w(ConfiguredSystem)),
                             "name")
     unassigned_configuration_profile_objs =
       fetch_unassigned_configuration_profile_objects(count_only, object[:id])
@@ -72,15 +71,17 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def x_get_tree_cpf_kids(object, count_only)
     count_only_or_objects(count_only,
-                          rbac_filtered_objects(ConfiguredSystem.where(:configuration_profile_id => object[:id]), :match_via_descendants => ConfiguredSystem),
+                          rbac_filtered_objects(ConfiguredSystem.where(:configuration_profile_id => object[:id]),
+                                                :match_via_descendants => ConfiguredSystem),
                           "hostname")
   end
 
   def x_get_tree_custom_kids(object_hash, count_only, _options)
     objects =
       case object_hash[:id]
-      when "fr"  then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"), :match_via_descendants => %w(ConfiguredSystem))
-      when "at"  then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
+      when "fr" then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"),
+                                              :match_via_descendants => %w(ConfiguredSystem))
+      when "at" then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
       end
     count_only_or_objects(count_only, objects, "name")
   end

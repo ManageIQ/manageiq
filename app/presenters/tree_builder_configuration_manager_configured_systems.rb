@@ -12,26 +12,25 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-            :autoload => true,
-            :id_prefix => 'cs_')
+            :autoload   => true,
+            :id_prefix  => 'cs_')
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id => "csf",
-                 :text => "Foreman Configured Systems",
-                 :image => "folder",
-                 :tip => "Foreman Configured Systems",
-                 :expand => true)
-    objects.push(:id => "csa",
-                 :text => "Ansible Tower Configured Systems",
-                 :image => "folder",
-                 :tip => "Ansible Tower Configured Systems",
-                 :expand => true)
+    objects.push(:id      => "csf",
+                 :text    => "Foreman Configured Systems",
+                 :image   => "folder",
+                 :tip     => "Foreman Configured Systems",
+                 :expand  => true)
+    objects.push(:id      => "csa",
+                 :text    => "Ansible Tower Configured Systems",
+                 :image   => "folder",
+                 :tip     => "Ansible Tower Configured Systems",
+                 :expand  => true)
     count_only_or_objects(count_only, objects, nil)
   end
-
 
   def x_get_tree_custom_kids(object, count_only, options)
     objects = x_get_search_results(object, options[:leaf])

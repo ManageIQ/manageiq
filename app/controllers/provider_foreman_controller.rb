@@ -61,7 +61,8 @@ class ProviderForemanController < ApplicationController
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"),
                                                               :task  => "deletion"}, :error)
     else
-      ansible_providers, foreman_providers = providers.partition{ |prov| prov.last == "ManageIQ::Providers::AnsibleTower::ConfigurationManager"}
+      ansible_providers, foreman_providers =
+        providers.partition { |prov| prov.last == "ManageIQ::Providers::AnsibleTower::ConfigurationManager" }
 
       ManageIQ::Providers::Foreman::Provider.find_all_by_id(foreman_providers, :order => "lower(name)").each do |provider|
         id = provider.id
@@ -219,22 +220,21 @@ class ProviderForemanController < ApplicationController
     end
     authentications = Authentication.where(:resource_id => provider[:id], :resource_type => "Provider")
 
-    render :json => {
-      :provtype       => model_to_name(config_mgr.type),
-      :name           => provider.name,
-      :url            => provider.url,
-      :verify_ssl     => provider.verify_ssl,
-      :log_userid     => authentications[0].userid
-    }
+    render :json => {:provtype    => model_to_name(config_mgr.type),
+                     :name        => provider.name,
+                     :url         => provider.url,
+                     :verify_ssl  => provider.verify_ssl,
+                     :log_userid  => authentications[0].userid
+                    }
   end
 
   def authentication_validate
     if params[:log_password]
       if params[:provtype] == 'Ansible Tower'
         @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
-                                                                       :url        => params[:url],
-                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+                                                                            :url        => params[:url],
+                                                                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                            :verify_ssl => params[:verify_ssl].eql?("on"))
 
       else
         @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
@@ -389,13 +389,13 @@ class ProviderForemanController < ApplicationController
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then  rec = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "root" then rec = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
     when "xx" then
       case nodes.second
       when "fr" then rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
       when "at" then rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
-      when "csf"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-      when "csa"   then  rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+      when "csf" then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+      when "csa" then  rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
       end
     when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
     when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
@@ -407,7 +407,7 @@ class ProviderForemanController < ApplicationController
     nodes = x_node.split('-')
     case nodes.first
     when "root", "xx" then  rec = find_record(ConfiguredSystem, params[:id])
-    when "cs"   then  rec = find_record(ConfiguredSystem, from_cid(params[:id]))
+    when "cs" then  rec = find_record(ConfiguredSystem, from_cid(params[:id]))
     end
     rec
   end
@@ -590,13 +590,11 @@ class ProviderForemanController < ApplicationController
         record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
         @right_cell_text =
             _("%{model} \"%{name}\"") %
-            {:name  => provider.name,
-             :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
+              {:name  => provider.name,
+               :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
         @right_cell_text =
-          _("%{model} \"%{name}\"") %
-            {:name  => provider.name,
-             :model => "#{record_model}"}
+          _("%{model} \"%{name}\"") % {:name  => provider.name, :model => "#{record_model}"}
       end
     end
   end
@@ -643,7 +641,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def configured_system_list(id, model)
-    return configured_system_node( id, model) unless id.nil?
+    return configured_system_node(id, model) unless id.nil?
     @listicon = "configured_system"
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
@@ -734,7 +732,7 @@ class ProviderForemanController < ApplicationController
     if action_name == "new"
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "Configuration Management")
     elsif action_name == "edit"
-      #get the selected record to display the matching type
+      # get the selected record to display the matching type
       @record
       @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
     end
@@ -927,14 +925,14 @@ class ProviderForemanController < ApplicationController
 
   def construct_edit
     @edit ||= {}
-    @edit[:current] = {:name          => @provider_cfgmgmt.name,
-                       :provtype      => model_to_name(@provider_cfgmgmt.type),
-                       :url           => @provider_cfgmgmt.url,
-                       :verify_ssl    => @provider_cfgmgmt.verify_ssl}
-    @edit[:new] = {:name          => params[:name],
-                   :provtype      => params[:provtype],
-                   :url           => params[:url],
-                   :verify_ssl    => params[:verify_ssl]}
+    @edit[:current] = {:name        => @provider_cfgmgmt.name,
+                       :provtype    => model_to_name(@provider_cfgmgmt.type),
+                       :url         => @provider_cfgmgmt.url,
+                       :verify_ssl  => @provider_cfgmgmt.verify_ssl}
+    @edit[:new] = {:name        => params[:name],
+                   :provtype    => params[:provtype],
+                   :url         => params[:url],
+                   :verify_ssl  => params[:verify_ssl]}
   end
 
   def locals_for_tagging

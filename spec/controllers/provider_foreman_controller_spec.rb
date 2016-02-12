@@ -43,7 +43,6 @@ describe ProviderForemanController do
 
     @provider_ans2 = ManageIQ::Providers::AnsibleTower::Provider.create(:name => "ansibletest2", :url => "10.8.96.109", :zone => @zone)
     @config_ans2 = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by_provider_id(@provider_ans2.id)
-
   end
 
   it "renders index" do
@@ -148,7 +147,6 @@ describe ProviderForemanController do
       right_cell_text = nil
       set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
-      #controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       allow(controller).to receive(:get_view_calculate_gtl_type)
       allow(controller).to receive(:get_view_pages)
       allow(controller).to receive(:build_listnav_search_list)
@@ -161,7 +159,6 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      #controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       controller.send(:build_trees_and_accordions)
     end
     it "renders right cell text for root node" do
@@ -444,11 +441,9 @@ describe ProviderForemanController do
   end
 
   def find_treenode_for_provider(provider)
-    key =  ems_key_for_provider(provider)
-    tree =  JSON.parse(controller.instance_variable_get(:@configuration_manager_providers_tree))
-    if !tree[0]['children'][0]['children'].nil?
-      tree[0]['children'][0]['children'].find { |c| c['key'] == key }
-    end
+    key = ems_key_for_provider(provider)
+    tree = JSON.parse(controller.instance_variable_get(:@configuration_manager_providers_tree))
+    tree[0]['children'][0]['children'].find { |c| c['key'] == key } unless tree[0]['children'][0]['children'].nil?
   end
 
   def ems_key_for_provider(provider)

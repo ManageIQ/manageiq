@@ -61,7 +61,7 @@ class TreeBuilder
     when :cb_reports_tree               then [_("Saved Chargeback Reports"),       _("Saved Chargeback Reports")]
     when :containers_tree               then [_("All Containers"),                 _("All Containers")]
     when :containers_filter_tree        then [_("All Containers"),                 _("All Containers")]
-    when :cs_filter_tree                then [_("All Configured Systems"),    _("All Configured Systems")]
+    when :cs_filter_tree                then [_("All Configured Systems"),         _("All Configured Systems")]
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
       [title, title]
@@ -290,8 +290,10 @@ class TreeBuilder
                           # * All the rest 30+ ancestors ignore options hash.
                           x_get_tree_roots(count_only, options.dup)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
-                        when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, count_only)
-                        when ManageIQ::Providers::AnsibleTower::ConfigurationManager then x_get_tree_cmat_kids(parent, count_only)
+                        when ManageIQ::Providers::Foreman::ConfigurationManager then
+                            x_get_tree_cmf_kids(parent, count_only)
+                        when ManageIQ::Providers::AnsibleTower::ConfigurationManager then
+                            x_get_tree_cmat_kids(parent, count_only)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, count_only)
                         when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
@@ -490,8 +492,8 @@ class TreeBuilder
     "e"   => "ExtManagementSystem",
     "ev"  => "MiqEventDefinition",
     "c"   => "EmsCluster",
-    "csf"  => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
-    "csa"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
+    "csf" => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
+    "csa" => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
     "f"   => "EmsFolder",
     "fr"  => "ManageIQ::Providers::Foreman::ConfigurationManager",
     "g"   => "MiqGroup",
