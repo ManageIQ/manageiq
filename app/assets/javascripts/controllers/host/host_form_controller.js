@@ -97,7 +97,6 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
      $scope.currentTab = "default";
 
     $scope.$watch("hostModel.name", function() {
-      $scope.form = $scope.angularForm;
       $scope.model = "hostModel";
     });
   };

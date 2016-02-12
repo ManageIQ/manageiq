@@ -37,7 +37,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
     });
 
     $scope.$watch("tenantQuotaModel", function() {
-      $scope.form = $scope.angularForm;
       $scope.model = "tenantQuotaModel";
     });
   };

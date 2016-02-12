@@ -41,7 +41,6 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
       }
 
       $scope.$watch("tenantModel.name", function() {
-        $scope.form = $scope.angularForm;
         $scope.model = "tenantModel";
       });
     };

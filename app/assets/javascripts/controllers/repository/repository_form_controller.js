@@ -23,10 +23,6 @@ ManageIQ.angular.app.controller('repositoryFormController', ['$http', '$scope', 
       });
    }
 
-  $scope.$watch("repoModel.repo_name", function() {
-    $scope.form = $scope.repositoryForm;
-  });
-
   $scope.addClicked = function() {
     miqService.sparkleOn();
     var url = 'create/new' + '?button=add&path_type=' + $scope.path_type;
