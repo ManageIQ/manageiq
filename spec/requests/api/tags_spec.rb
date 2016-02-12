@@ -32,7 +32,7 @@ describe ApiController do
 
   context "Tag collection" do
     it "query all tags" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:tags, :read, :get)
 
       run_get tags_url
 
@@ -264,7 +264,7 @@ describe ApiController do
     end
 
     it "query a tag with an invalid Id" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
 
       run_get invalid_tag_url
 
@@ -272,7 +272,7 @@ describe ApiController do
     end
 
     it "query tags with expanded resources" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:tags, :read, :get)
 
       run_get tags_url, :expand => "resources"
 
@@ -281,7 +281,7 @@ describe ApiController do
     end
 
     it "query tag details with multiple virtual attributes" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
 
       tag = Tag.last
       attr_list = "category.name,category.description,classification.name,classification.description"
@@ -297,7 +297,7 @@ describe ApiController do
     end
 
     it "query tag details with categorization" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
 
       tag = Tag.last
       run_get tags_url(tag.id), :attributes => "categorization"
@@ -316,7 +316,7 @@ describe ApiController do
     end
 
     it "query all tags with categorization" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
 
       run_get tags_url, :expand => "resources", :attributes => "categorization"
 
