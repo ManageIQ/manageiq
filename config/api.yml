@@ -402,6 +402,9 @@
     :options:
     - :collection
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: instance_show_list
       :post:
       - :name: terminate
         :identifier: instance_terminate
@@ -420,6 +423,9 @@
       - :name: reset
         :identifier: instance_reset
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: instance_show
       :post:
       - :name: terminate
         :identifier: instance_terminate
