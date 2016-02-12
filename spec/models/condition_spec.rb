@@ -3,7 +3,7 @@ describe Condition do
     context "expression with <find>" do
       before do
         @cluster = FactoryGirl.create(:ems_cluster)
-        @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster)
+        @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster, :name => "XXX")
         @host2 = FactoryGirl.create(:host, :ems_cluster => @cluster)
         @rp1 = FactoryGirl.create(:resource_pool)
         @rp2 = FactoryGirl.create(:resource_pool)
@@ -21,6 +21,11 @@ describe Condition do
       it "valid expression" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2</check></find>"
         expect(Condition.subst(expr, @cluster, nil)).to be_truthy
+      end
+
+      it "has_one support" do
+        expr = "<find><search><value ref=vm, type=string>/virtual/host/name</value> == 'XXX'</search><check mode=count><count> == 1</check></find>"
+        expect(Condition.subst(expr, @vm1, nil)).to be_truthy
       end
 
       it "invalid expression should not raise security error because it is now parsed and not evaluated" do

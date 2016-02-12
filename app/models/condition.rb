@@ -137,10 +137,8 @@ class Condition < ApplicationRecord
     list = ref.send(method)
     return [] if list.nil?
 
-    result = []
-    result = list if methods.empty?
-    list = [list] unless list.kind_of?(Array)
-    list.each do|obj|
+    result = methods.empty? ? Array(list) : []
+    Array(list).each do |obj|
       result.concat(collect_children(obj, methods)) unless methods.empty?
     end
     result
