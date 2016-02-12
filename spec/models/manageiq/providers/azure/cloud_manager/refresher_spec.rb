@@ -243,7 +243,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_disk
-    disk = ManageIQ::Providers::Azure::CloudManager::Disk.where(:device_name => "Chef-Prod").first
+    disk = Disk.where(:device_name => "Chef-Prod").first
+
     expect(disk).to have_attributes(
       :location    => "http://chefprod5120.blob.core.windows.net/vhds/Chef-Prod.vhd",
       :size        => 1023.megabyte
