@@ -4,7 +4,7 @@ describe ProviderForemanController do
     @zone = EvmSpecHelper.local_miq_server.zone
     tag = Tag.add("/managed/quota_max_memory/2048", :ns => "")
 
-    @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
+    @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "testForeman", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
     @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name                     => "testprofile",
                                                                                                       :description              => "testprofile",
@@ -26,7 +26,7 @@ describe ProviderForemanController do
                                                                                   :configuration_profile_id => nil,
                                                                                   :configuration_manager_id => @config_mgr.id)
 
-    @provider2 = ManageIQ::Providers::Foreman::Provider.create(:name => "test2", :url => "10.8.96.103", :zone => @zone)
+    @provider2 = ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman", :url => "10.8.96.103", :zone => @zone)
     @config_mgr2 = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider2.id)
     @configured_system_unprovisioned2 =
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned2",
@@ -173,7 +173,7 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("Configuration Profiles under Provider \"test Configuration Manager\"")
+      expect(right_cell_text).to eq("Configuration Profiles under Provider \"testForeman Configuration Manager\"")
     end
   end
 
@@ -219,6 +219,18 @@ describe ProviderForemanController do
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
       expect(view.table.data.size).to eq(4)
+
+      controller.instance_variable_set(:@_params, :id => "xx-fr")
+      controller.instance_variable_set(:@search_text, "manager")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data.size).to eq(2)
+
+      controller.instance_variable_set(:@_params, :id => "xx-at")
+      controller.instance_variable_set(:@search_text, "manager")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data.size).to eq(2)
 
       ems_id = ems_key_for_provider(@provider)
       controller.instance_variable_set(:@_params, :id => ems_id)
@@ -408,7 +420,7 @@ describe ProviderForemanController do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
-      first_child = find_treenode_for_provider(@provider)
+      first_child = find_treenode_for_foreman_provider(@provider)
       expect(first_child).to eq(nil)
     end
 
@@ -422,8 +434,8 @@ describe ProviderForemanController do
                                        :add_ids    => quota_2gb_tag.id,
                                        :delete_ids => [])
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
-      node1 = find_treenode_for_provider(@provider)
-      node2 = find_treenode_for_provider(@provider2)
+      node1 = find_treenode_for_foreman_provider(@provider)
+      node2 = find_treenode_for_foreman_provider(@provider2)
       expect(node1).not_to be_nil
       expect(node2).to be_nil
     end
@@ -440,7 +452,7 @@ describe ProviderForemanController do
                           :perpage        => {:list => 10}}
   end
 
-  def find_treenode_for_provider(provider)
+  def find_treenode_for_foreman_provider(provider)
     key = ems_key_for_provider(provider)
     tree = JSON.parse(controller.instance_variable_get(:@configuration_manager_providers_tree))
     tree[0]['children'][0]['children'].find { |c| c['key'] == key } unless tree[0]['children'][0]['children'].nil?
