@@ -2,7 +2,7 @@ module Menu
   class DefaultMenu
     class << self
       def cloud_inteligence_menu_section
-        Menu::Section.new(:vi, N_("Cloud Intelligence"), 'fa fa-dashboard fa-2x', [
+        Menu::Section.new(:vi, N_("Cloud Intel"), 'fa fa-dashboard fa-2x', [
           Menu::Item.new('dashboard',  N_('Dashboard'),  'dashboard',  {:feature => 'dashboard_view'},           '/dashboard/'),
           Menu::Item.new('report',     N_('Reports'),    'miq_report', {:feature => 'miq_report', :any => true}, '/report/explorer'),
           # Menu::Item.new('usage',    N_('Usage'),      'usage',      {:feature => 'usage'},                    '/report/usage/'), #  / Hiding usage for now - release 5.2
@@ -176,7 +176,7 @@ module Menu
       end
 
       def configuration_menu_section
-        Menu::Section.new(:set, N_("Configure"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:set, N_("Settings"), 'fa fa-plus fa-2x', [
           Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
           Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
           Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),

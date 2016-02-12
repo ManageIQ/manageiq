@@ -1015,7 +1015,7 @@ module ApplicationHelper
     test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
     test_layout = 'cloud_object_store_container' if @layout == 'cloud_object_store_object'
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : ""
   end
 
   def primary_nav_class2(nav_id)
@@ -1027,7 +1027,7 @@ module ApplicationHelper
 
     return "dropdown-menu" if big_iframe
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "" : ""
   end
 
   def secondary_nav_class(nav_layout)

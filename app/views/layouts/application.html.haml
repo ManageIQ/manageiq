@@ -1,6 +1,6 @@
 = render :partial => 'layouts/doctype'
 - if @report_only
-  %html{:lang => I18n.locale.to_s.sub('-', '_')}
+  %html{:class => "layout-pf-alt layout-pf-alt-fixed layout-pf-alt-fixed-inner-scroll transitions",:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
       = favicon_link_tag
@@ -13,7 +13,7 @@
       = yield
 - else
   <!--[if IE 9]><html class="ie9"><![endif]-->
-  %html{:lang => I18n.locale.to_s.sub('-', '_')}
+  %html{:class => "layout-pf-alt layout-pf-alt-fixed layout-pf-alt-fixed-inner-scroll transitions",:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title= h(title_from_layout(@layout))
 
@@ -47,6 +47,7 @@
 
     - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
     %body{:id => id, :onresize => "miqOnResize();", :onload => is_browser_ie? ? '' : 'miqOnLoad();', 'data-controller' => controller_name}
+
       = render :partial => "layouts/header"
       = render :partial => "layouts/content"
       = render :partial => 'layouts/footer'
