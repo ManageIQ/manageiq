@@ -1,4 +1,5 @@
 require 'runcmd'
+require 'linux_admin'
 
 module MiqMemcached
   class Error < RuntimeError; end
@@ -92,14 +93,14 @@ END_OF_CONFIG
 
     def self.start(opts = {})
       MiqMemcached::Config.new(opts).save(CONF_FILE)
-      res = MiqUtil.runcmd("service memcached start >> #{Rails.root}/log/evm.log 2>&1")
-      _log.info("started memcached with options: #{opts.inspect}, result: #{res.to_s.chomp}")
+      LinuxAdmin::Service.new("memcached").start
+      _log.info("started memcached with options: #{opts.inspect}")
       true
     end
 
     def self.stop
-      res = MiqUtil.runcmd("service memcached stop")
-      _log.info("stopped memcached, result: #{res.to_s.chomp}")
+      LinuxAdmin::Service.new("memcached").stop
+      _log.info("stopped memcached")
     end
 
     def self.stop!
