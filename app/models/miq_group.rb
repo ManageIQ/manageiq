@@ -38,8 +38,6 @@ class MiqGroup < ApplicationRecord
   include TimezoneMixin
   include TenancyMixin
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   alias_method :current_tenant, :tenant
 
   def name

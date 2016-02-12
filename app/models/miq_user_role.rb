@@ -20,7 +20,6 @@ class MiqUserRole < ApplicationRecord
 
   include ReportableMixin
 
-  FIXTURE_DIR  = File.join(Rails.root, "db/fixtures")
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 

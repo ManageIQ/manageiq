@@ -25,7 +25,7 @@ class ServerRole < ApplicationRecord
   end
 
   def self.fixture_path
-    Rails.root.join("db/fixtures/#{to_s.pluralize.underscore}.csv")
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 
   def self.to_role(server_role)
