@@ -647,6 +647,9 @@
     :methods: *70174834084700
     :klass: ChargebackRateDetail
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: chargeback_rates_show_list
       :post:
       - :name: create
         :identifier: chargeback_rates_new
@@ -655,6 +658,9 @@
       - :name: delete
         :identifier: chargeback_rates_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: chargeback_rates_show
       :post:
       - :name: edit
         :identifier: chargeback_rates_edit
