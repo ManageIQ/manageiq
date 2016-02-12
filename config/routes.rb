@@ -1757,6 +1757,7 @@ Vmdb::Application.routes.draw do
         explorer
         retirement_info
         retire
+        service_form_fields
         show
       ),
       :post => %w(
@@ -1767,7 +1768,6 @@ Vmdb::Application.routes.draw do
         reload
         retire
         service_edit
-        service_form_field_changed
         service_tag
         tag_edit_form_field_changed
         tree_autoload_dynatree

@@ -1,26 +1,42 @@
-- url = url_for(:action => "service_form_field_changed", :id => "#{@edit[:rec_id] || 'new'}")
-#form_div
+- @angular_form = true
+
+%form.form-horizontal#form_div{"name"          => "angularForm",
+                               "ng-controller" => "serviceFormController",
+                               "ng-show"       => "afterGet"}
   = render :partial => "layouts/flash_msg"
-  -# show form if Catalog bundle is being added or if it's an edit of existing catalog item, else force user to select type
-  .row
-    .col-md-12.col-lg-12
-      .form-horizontal
-        .form-group
-          %label.control-label.col-md-2
-            = _('Name')
-          .col-md-8
-            #name_div
-              = text_field_tag("name", @edit[:new][:name].to_s,
-                                :maxlength         => 40,
-                                :class             => "form-control",
-                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        = javascript_tag(javascript_focus('name'))
-        .form-group
-          %label.control-label.col-md-2
-            = _('Description')
-          .col-md-8
-            #title_div
-              = text_field_tag("description", @edit[:new][:description],
-                                :maxlength         => 60,
-                                :class             => "form-control",
-                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+  = render :partial => "layouts/flash_msg"
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+        %label.col-md-2.control-label{"for" => "textInput-markup"}
+          = _("Name")
+        .col-md-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "textInput-markup",
+                              "name"        => "name",
+                              "ng-model"    => "serviceModel.name",
+                              "maxlength"   => "#{MAX_NAME_LEN}",
+                              "miqrequired" => "",
+                              "checkchange" => "",
+                              "auto-focus"  => ""}
+          %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
+            = _("Required")
+      .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
+        %label.col-md-2.control-label{"for" => "textInput-markup"}
+          = _("Description")
+        .col-md-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "textInput-markup",
+                              "name"        => "description",
+                              "ng-model"    => "serviceModel.description",
+                              "maxlength"  => "#{MAX_DESC_LEN}",
+                              "miqrequired" => "",
+                              "checkchange" => ""}
+  = render :partial => "layouts/angular/x_edit_buttons_angular"
+
+:javascript
+  ManageIQ.angular.app.value('serviceFormId', '#{@service.id}');
+  miq_bootstrap('#form_div');
