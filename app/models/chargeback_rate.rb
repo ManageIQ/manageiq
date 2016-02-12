@@ -11,8 +11,6 @@ class ChargebackRate < ApplicationRecord
   validates_uniqueness_of   :guid
   validates_uniqueness_of   :description, :scope => :rate_type
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
 
   def self.validate_rate_type(type)

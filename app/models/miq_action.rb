@@ -40,8 +40,6 @@ class MiqAction < ApplicationRecord
   # Add a instance method to store the sequence and synchronous values from the policy contents
   attr_accessor :sequence, :synchronous, :reserved
 
-  FIXTURE_DIR = Rails.root.join("db/fixtures")
-
   SCRIPT_DIR = Rails.root.join("product/conditions/scripts").expand_path
   SCRIPT_DIR.mkpath
 
