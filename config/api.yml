@@ -272,6 +272,9 @@
     :subcollections:
     - :tags
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_group_show_list
       :post:
       - :name: create
         :identifier: rbac_group_add
@@ -280,6 +283,9 @@
       - :name: delete
         :identifier: rbac_group_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_group_show
       :post:
       - :name: edit
         :identifier: rbac_group_edit
