@@ -1024,7 +1024,7 @@ module ApplicationHelper
 
     return "dropdown-menu" if big_iframe
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "" : "dropdown-menu"
   end
 
   def secondary_nav_class(nav_layout)

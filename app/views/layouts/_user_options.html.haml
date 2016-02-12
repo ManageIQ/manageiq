@@ -1,9 +1,10 @@
 - if current_user
   %li.dropdown
     %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
-      %span.pficon.pficon-user
-      = "#{current_user.name} | #{appliance_name}"
-      %b.caret
+      %i.fa.pficon-user
+      %p.navbar__user-name
+        = "#{current_user.name} | #{appliance_name}"
+      %span.caret
     %ul.dropdown-menu
       %li.disabled
         %a{:href => "#"}
