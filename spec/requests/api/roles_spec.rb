@@ -18,7 +18,7 @@
 describe ApiController do
   let(:feature_identifiers) do
     %w(vm_explorer ems_infra_tag my_settings_time_profiles
-       miq_request_view miq_report_run storage_manager_show_list)
+       miq_request_view miq_report_run storage_manager_show_list rbac_role_show)
   end
   let(:expected_attributes) { %w(id name read_only settings) }
   let(:sample_role1) do
@@ -60,7 +60,7 @@ describe ApiController do
   end
 
   def test_features_query(role, role_url, klass, attr = :id)
-    api_basic_authorize
+    api_basic_authorize action_identifier(:roles, :read, :resource_actions, :get)
 
     run_get role_url, :expand => "features"
     expect_request_success
