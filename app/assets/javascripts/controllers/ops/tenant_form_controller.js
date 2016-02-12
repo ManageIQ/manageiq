@@ -10,6 +10,7 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
       $scope.formId = tenantFormId;
       $scope.afterGet = false;
       $scope.modelCopy = angular.copy( $scope.tenantModel );
+      $scope.model = "tenantModel";
 
       ManageIQ.angular.scope = $scope;
 
@@ -39,12 +40,7 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
           miqService.sparkleOff();
         });
       }
-
-      $scope.$watch("tenantModel.name", function() {
-        $scope.model = "tenantModel";
-      });
     };
-
 
     var tenantEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();

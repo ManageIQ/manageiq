@@ -24,6 +24,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     };
 
     $scope.modelCopy = angular.copy( $scope.hostModel );
+    $scope.model = "hostModel";
     $scope.afterGet = false;
     $scope.formId = hostFormId;
     $scope.validateClicked = miqService.validateWithAjax;
@@ -94,11 +95,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
       $scope.afterGet = true;
     }
 
-     $scope.currentTab = "default";
-
-    $scope.$watch("hostModel.name", function() {
-      $scope.model = "hostModel";
-    });
+    $scope.currentTab = "default";
   };
 
   $scope.changeAuthTab = function(id) {

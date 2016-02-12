@@ -102,10 +102,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       });
     }
     $scope.currentTab = "default";
-
-    $scope.$watch("emsCommonModel.name", function() {
-      $scope.model = "emsCommonModel";
-    });
   };
 
   $scope.changeAuthTab = function(id) {

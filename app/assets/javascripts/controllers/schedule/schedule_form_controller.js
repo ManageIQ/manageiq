@@ -25,6 +25,8 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     $scope.afterGet = false;
     $scope.validateClicked = miqService.validateWithAjax;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
+    $scope.model = "scheduleModel";
+    $scope.form = $scope.angularForm;
 
     ManageIQ.angular.scope = $scope;
 
@@ -97,11 +99,6 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     }
 
     miqService.buildCalendar(oneMonthAgo.year, parseInt(oneMonthAgo.month) + 1, oneMonthAgo.date);
-
-    $scope.$watch("scheduleModel.name", function() {
-      $scope.form = $scope.angularForm;
-      $scope.model = "scheduleModel";
-    });
   };
 
   var buildFilterList = function(data) {
