@@ -718,11 +718,17 @@
     - :policies
     - :policy_profiles
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: resource_pool_show_list
       :post:
       - :name: delete
         :identifier: resource_pool_delete
         :disabled: true
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: resource_pool_show
       :delete:
       - :name: delete
         :identifier: resource_pool_delete
