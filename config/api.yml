@@ -823,6 +823,9 @@
     :subcollections:
     - :service_templates
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: svc_catalog_provision
       :post:
       - :name: create
         :identifier: st_catalog_new
@@ -833,6 +836,9 @@
       - :name: delete
         :identifier: st_catalog_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: svc_catalog_provision
       :post:
       - :name: edit
         :identifier: st_catalog_edit
