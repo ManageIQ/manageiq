@@ -48,10 +48,11 @@
               - url = "http://" + url if !url.starts_with?("http://") && !url.starts_with?("https://")
               = link_to(desc, url, :onclick => "return miqClickAndPop(this);")
               %br
-            %br
-            - rh_cust_portal = link_to(_("Red Hat Customer Portal"),
-                                       "https://access.redhat.com/home",
-                                       :onclick => "return miqClickAndPop(this);")
-            = _("For questions or problem reporting, go to the")
-            = rh_cust_portal
-            %br
+            - if admin_user?
+              %br
+              - rh_cust_portal = link_to(_("Red Hat Customer Portal"),
+                                         "https://access.redhat.com/home",
+                                         :onclick => "return miqClickAndPop(this);")
+              = _("For questions or problem reporting, go to the")
+              = rh_cust_portal
+              %br
