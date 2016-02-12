@@ -20,6 +20,6 @@ class MiqEventDefinitionSet < ApplicationRecord
   end
 
   def self.fixture_path
-    Rails.root.join("db/fixtures/#{to_s.pluralize.underscore}.csv")
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 end

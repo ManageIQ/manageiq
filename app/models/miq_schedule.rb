@@ -27,7 +27,6 @@ class MiqSchedule < ApplicationRecord
   serialize :filter
   serialize :run_at
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
   SYSTEM_SCHEDULE_CLASSES = ["MiqReport", "MiqAlert", "MiqWidget"]
   VALID_INTERVAL_UNITS = ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'once']
   ALLOWED_CLASS_METHOD_ACTIONS = ["db_backup", "db_gc"]

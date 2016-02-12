@@ -49,8 +49,6 @@ class User < ApplicationRecord
 
   @role_changed = false
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 

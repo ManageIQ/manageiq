@@ -18,8 +18,6 @@ class MiqEventDefinition < ApplicationRecord
 
   attr_accessor :reserved
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   def self.all_events
     where(:event_type => "Default")
   end

@@ -32,7 +32,7 @@ class Classification < ApplicationRecord
   default_value_for :single_value, false
   default_value_for :show,         true
 
-  FIXTURE_FILE = File.join(Rails.root, "db/fixtures/classifications.yml")
+  FIXTURE_FILE = FIXTURE_DIR.join("classifications.yml")
 
   def self.hash_all_by_type_and_name(conditions = {})
     ret = {}
