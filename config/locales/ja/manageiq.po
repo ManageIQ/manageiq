@@ -12756,9 +12756,6 @@ msgstr "所有者なし"
 msgid "Select a Group:"
 msgstr "グループの選択:"
 
-msgid "No Group"
-msgstr "グループなし"
-
 msgid "Affected Items"
 msgstr "影響を受ける項目"
 

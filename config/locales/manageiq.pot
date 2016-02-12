@@ -16365,10 +16365,6 @@ msgstr ""
 msgid "No Display Filter defined."
 msgstr ""
 
-#: ../../app/views/shared/views/_ownership.html.haml:52 ../../app/views/shared/views/_ownership.html.haml:54
-msgid "No Group"
-msgstr ""
-
 #: ../../app/controllers/application_controller/performance.rb:48
 msgid "No Hourly or Daily data is available, real time data from the Most Recent Hour is being displayed"
 msgstr ""

@@ -12739,9 +12739,6 @@ msgstr "没有所有者"
 msgid "Select a Group:"
 msgstr "选择组："
 
-msgid "No Group"
-msgstr "没有组"
-
 msgid "Affected Items"
 msgstr "受影响的项"
 

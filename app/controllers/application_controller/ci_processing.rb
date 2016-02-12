@@ -86,7 +86,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @edit[:ownership_items].length == 1
     @edit[:new][:group] = group ? group.id.to_s : nil
-    MiqGroup.non_tenant_groups.with_current_user_groups.each { |g| @groups[g.description] = g.id.to_s }
+    MiqGroup.with_current_user_groups.each { |g| @groups[g.description] = g.id.to_s }
 
     @edit[:new][:user] = @edit[:new][:group] = DONT_CHANGE_OWNER if @edit[:ownership_items].length > 1
 
