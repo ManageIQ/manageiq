@@ -1,3 +1,48 @@
+// NAVBAR TESTING
+
+.navbar-pf-alt { background-color: #063451; background-image: url(../images/bg-navbar.png); border-top: 0px; }
+.navbar-pf-alt .navbar-brand .navbar-brand-name { height: 20px; margin-top: 10px; }
+.layout-pf-alt-fixed .nav-pf-vertical-alt {overflow: visible !important}
+.navbar__user-name { display: inline-block; color: #FFFFFF; margin-left: 1ex; }
+
+.nav-pf-vertical-alt {width: 200px !important;background: #292e34}
+.nav-pf-vertical-alt .list-group-item, .nav-pf-vertical-alt li {background: #292e34}
+.nav-pf-vertical-alt .list-group-item, .nav-pf-vertical-alt li {border-color: #000}
+
+.nav-pf-vertical-alt li.active.list-group-item {background: #393f44; border-color: #000}
+.nav-pf-vertical-alt li.active.list-group-item a {color: #fff}
+
+.nav-pf-vertical-alt li.list-group-item:hover {background: #393f44; border-color: #000}
+.nav-pf-vertical-alt li.list-group-item a:hover {color: #fff}
+
+.nav-pf-vertical-alt li.list-group-item i{color: #72767b}
+.nav-pf-vertical-alt li.list-group-item a{color: #fff}
+
+.nav-pf-vertical-alt .list-group-item ul.dropdown-menu {border-color: #000; padding: 0; margin-right: 40px; margin-top: -1px}
+.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a{padding-top: 0; height: 30px !important}
+.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a:hover {background-color: #393f44; border-color: #393f44; color: #fff}
+.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a.open:hover {background-color: #393f44;}
+
+
+
+.container-pf-alt-nav-pf-vertical-alt {
+  margin-left: 200px !important;
+}
+.container-pf-alt-nav-pf-vertical-alt.collapsed-nav {
+  margin-left: 75px !important;
+}
+
+
+.layout-pf-alt-fixed .nav-pf-vertical-alt .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+}
+
+
+/////////////////////////
+
 .toolbar-pf#paging_div {
   border-top: 1px solid #c7c7c7;
   height: 44px;
@@ -44,7 +89,7 @@
 
 @media (min-width: $screen-sm) {
   body {
-    padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-top: px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
   }
 
   .login-pf body {
@@ -86,18 +131,6 @@
 
 /* Style changes applied when customer logo is active */
 
-nav.whitelabeled .navbar-header {
-  height: 39px !important;
-}
-
-nav.whitelabeled .navbar-utility > li > a {
-  padding: 14px 10px;
-}
-
-nav.whitelabeled .navbar-utility span.pficon-user {
-  padding-top: 5px;
-}
-
 li.brand-white-label.whitelabeled {
   width: 350px;
   height: 38px;
@@ -107,15 +140,6 @@ li.brand-white-label.whitelabeled {
 
 /* Navigation overrides */
 
-.persistent-secondary .dropdown-menu {
-  top: auto;
-  left: auto;
-}
-
-.navbar-pf .navbar-primary.persistent-secondary > li > .navbar-persistent > li {
-  font-size: 12px;
-  padding-bottom: 1px;
-}
 
 /* Login overrides */
 

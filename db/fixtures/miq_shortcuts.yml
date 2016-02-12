@@ -1,6 +1,6 @@
 ---
 - :name: dashboard_show
-  :description: Cloud Intelligence / Dashboard
+  :description: Cloud Intel / Dashboard
   :url: /dashboard/show
   :rbac_feature_name: dashboard_view
   :startup: true
