@@ -88,7 +88,6 @@ class ProviderForemanController < ApplicationController
       end
       ManageIQ::Providers::AnsibleTower::Provider.destroy_queue(ansible_providers)
 
-
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
                     {:task        => "Delete",
                      :count_model => pluralize(providers.length, "Provider")})
@@ -224,8 +223,7 @@ class ProviderForemanController < ApplicationController
                      :name        => provider.name,
                      :url         => provider.url,
                      :verify_ssl  => provider.verify_ssl,
-                     :log_userid  => authentications[0].userid
-                    }
+                     :log_userid  => authentications[0].userid}
   end
 
   def authentication_validate
@@ -406,8 +404,8 @@ class ProviderForemanController < ApplicationController
   def cs_filter_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root", "xx" then  rec = find_record(ConfiguredSystem, params[:id])
-    when "cs" then  rec = find_record(ConfiguredSystem, from_cid(params[:id]))
+    when "root", "xx" then rec = find_record(ConfiguredSystem, params[:id])
+    when "cs" then rec = find_record(ConfiguredSystem, from_cid(params[:id]))
     end
     rec
   end
@@ -594,7 +592,7 @@ class ProviderForemanController < ApplicationController
                :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
         @right_cell_text =
-          _("%{model} \"%{name}\"") % {:name  => provider.name, :model => "#{record_model}"}
+          _("%{model} \"%{name}\"") % {:name => provider.name, :model => "#{record_model}"}
       end
     end
   end

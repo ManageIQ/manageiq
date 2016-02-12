@@ -9,8 +9,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix  => 'pt_',
-                  :autoload   => true)
+    locals.merge!(:id_prefix  => 'pt_', :autoload   => true)
   end
 
   # Get root nodes count/array for explorer tree
@@ -80,7 +79,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
     objects =
       case object_hash[:id]
       when "fr" then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"),
-                                              :match_via_descendants => %w(ConfiguredSystem))
+                                           :match_via_descendants => %w(ConfiguredSystem))
       when "at" then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
       end
     count_only_or_objects(count_only, objects, "name")
