@@ -45,11 +45,8 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
     var tenantEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
       var url = '/ops/rbac_tenant_edit/' + tenantFormId + '?button=' + buttonName + '&divisible=' + tenantType;
-      if (serializeFields === undefined) {
-        miqService.miqAjaxButton(url);
-      } else {
-        miqService.miqAjaxButton(url, serializeFields);
-      }
+
+      miqService.miqAjaxButton(url, serializeFields);
     };
 
     $scope.cancelClicked = function() {

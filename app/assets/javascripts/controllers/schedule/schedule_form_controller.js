@@ -133,11 +133,8 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
   var scheduleEditButtonClicked = function(buttonName, serializeFields) {
     miqService.sparkleOn();
     var url = '/ops/schedule_edit/' + scheduleFormId + '?button=' + buttonName;
-    if (serializeFields === undefined) {
-      miqService.miqAjaxButton(url);
-    } else {
-      miqService.miqAjaxButton(url, serializeFields);
-    }
+
+    miqService.miqAjaxButton(url, serializeFields);
   };
 
   $scope.buildLegend = function() {
