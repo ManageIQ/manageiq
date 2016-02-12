@@ -516,6 +516,9 @@
     :subcollections:
     - :policies
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: profile_show_list
       :post:
       - :name: add
         :identifier: profile_new
@@ -527,6 +530,9 @@
         :identifier: profile_delete
         :disabled: true
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: profile_show
       :post:
       - :name: edit
         :identifier: profile_edit
