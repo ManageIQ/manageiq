@@ -1,4 +1,4 @@
-%nav{:class => "navbar navbar-default navbar-fixed-top navbar-pf #{current_tenant.logo? ? "whitelabeled" : ""}", :role => "navigation"}
+%header{:class => "navbar navbar-pf-alt #{current_tenant.logo? ? "whitelabeled" : ""}", :role => "navigation"}
   %div{:class => "navbar-header"}
     %button{:type => "button", :class => "navbar-toggle", "data-target" => ".navbar-collapse-1", "data-toggle" => "collapse"}
       %span.sr-only
@@ -7,10 +7,10 @@
       %span.icon-bar
       %span.icon-bar
     %a.navbar-brand{:href => "#", :style => "cursor: default"}
-      %img{:src => image_path("brand.svg"), :alt => "ManageIQ"}
-  %div{:class => "collapse navbar-collapse navbar-collapse-1"}
-    %ul{:class => "nav navbar-nav navbar-utility"}
-      %li{:class => "brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
+      %img.navbar-brand-name{:src => image_path("brand.svg"), :alt => "ManageIQ"}
+  %nav{:class => "collapse navbar-collapse navbar-collapse-1"}
+    %ul{:class => "nav navbar-nav navbar-right navbar-iconic"}
+      %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
       - Menu::Manager.menu(:top_right) do |menu_section|
         - if menu_section.visible?
           %li.dropdown
@@ -24,7 +24,6 @@
                     %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges()'}= _(menu_item.name)
 
       = render :partial => "layouts/user_options"
-    = render :partial => "layouts/page_header_navbar"
   = render :partial => "layouts/spinner"
   = render :partial => "layouts/lightbox_panel"
 
