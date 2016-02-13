@@ -11,6 +11,7 @@ require 'uri'
 require 'engine/miq_ae_uri'
 require 'engine/miq_ae_path'
 require 'engine/miq_ae_domain_search'
+require 'engine/miq_ae_expression_method'
 
 module MiqAeEngine
   DEFAULT_ATTRIBUTES = %w( User::user MiqServer::miq_server object_name )

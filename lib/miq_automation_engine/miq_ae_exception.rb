@@ -23,7 +23,11 @@ module MiqAeException
   class WorkspaceNotFound < MiqAeEngineError; end
   class AttributeNotFound < MiqAeEngineError; end
   class UntaggableModel < MiqAeEngineError; end
-
+  class MethodExpressionNotFound < MiqAeEngineError; end
+  class MethodExpressionTargetObjectMissing < MiqAeEngineError; end
+  class MethodExpressionResultTypeInvalid < MiqAeEngineError; end
+  class MethodParameterNotFound < MiqAeEngineError; end
+  class MethodNotDefined < MiqAeEngineError; end
   class MiqAeDatastoreError < Error; end
   class DomainNotFound < MiqAeDatastoreError; end
   class NamespaceNotFound < MiqAeDatastoreError; end

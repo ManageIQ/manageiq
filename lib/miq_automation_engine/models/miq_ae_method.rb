@@ -15,7 +15,7 @@ class MiqAeMethod < ApplicationRecord
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
-  AVAILABLE_LOCATIONS  = ["builtin", "inline", "uri"]
+  AVAILABLE_LOCATIONS  = ["builtin", "inline", "uri", "expression"]
   validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
