@@ -356,6 +356,7 @@ describe MiqRequestWorkflow do
 
     it 'boolean' do
       expect(workflow.cast_value('true', :boolean)).to  be true
+      expect(workflow.cast_value('t', :boolean)).to     be true
 
       expect(workflow.cast_value('false', :boolean)).to be false
       expect(workflow.cast_value('f', :boolean)).to     be false
