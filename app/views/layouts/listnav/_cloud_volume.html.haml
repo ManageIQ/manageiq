@@ -32,7 +32,7 @@
         - if role_allows(:feature => "cloud_volume_snapshot_show") && @record.base_snapshot
           %li
             = link_to("#{ui_lookup(:table => "base_snapshot")}: #{@record.base_snapshot.name}",
-              cloud_volume_snapshot_path(@record.base_snapshot.id),
+              {:action => 'show', :id => @record.base_snapshot.id, :controller => 'cloud_volume_snapshot'},
               :title => _("Show this Cloud Volume's parent %s") % ui_lookup(:table => "cloud_volume_snapshot"))
         - if role_allows(:feature => "cloud_volume_snapshot_show")
           - if @record.number_of(:cloud_volume_snapshots) == 0
@@ -40,7 +40,7 @@
               = link_to(_("%{children} (0)") % {:children => ui_lookup(:tables => "cloud_volume_snapshots")}, "#")
           - else
             %li
-              = link_to(_("%{children} (%{count})") % {:children => ui_lookup(:tables => "cloud_volume_snapshots",
-                                                                              :count  => @record.number_of(:cloud_volume_snapshots))},
-                {:action => 'show', :id => @record, :display => 'cloud_volumes'},
+              = link_to(_("%{children} (%{count})") % {:children => ui_lookup(:tables => "cloud_volume_snapshots"),
+                                                                              :count  => @record.number_of(:cloud_volume_snapshots)},
+                {:action => 'show', :id => @record, :display => 'cloud_volume_snapshots'},
                 :title => _("Show all %{children}") % {:children => ui_lookup(:tables => "cloud_volume_snapshots")})

@@ -37,12 +37,6 @@
             :display       => "cloud_volumes",
             :tables        => "cloud_volume",
             :controller    => "ems_cloud")
-        - if role_allows(:feature => "cloud_volume_snapshot_show_list")
-          = li_link(:count => @record.number_of(:cloud_volume_snapshots),
-            :record        => @record,
-            :display       => "cloud_volume_snapshots",
-            :tables        => "cloud_volume_snapshot",
-            :controller    => "ems_cloud")
         - if role_allows(:feature => "flavor_show_list")
           = li_link(:count => @record.number_of(:flavors),
             :record        => @record,
