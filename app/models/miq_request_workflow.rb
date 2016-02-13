@@ -1285,7 +1285,7 @@ class MiqRequestWorkflow
     case data_type
     when :integer then value.to_i_with_method
     when :float   then value.to_f
-    when :boolean then (value.to_s.downcase == 'true')
+    when :boolean then value.to_s.downcase.in?(%w(true t))
     when :time    then Time.parse(value)
     when :button  then value # Ignore
     else value # Ignore
