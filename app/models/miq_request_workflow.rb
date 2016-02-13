@@ -1258,14 +1258,7 @@ class MiqRequestWorkflow
 
     dlg_field = dlg_fields[key]
     data_type = dlg_field[:data_type]
-    set_value = case data_type
-                when :integer then value.to_i_with_method
-                when :float   then value.to_f
-                when :boolean then (value.to_s.downcase == 'true')
-                when :time    then Time.parse(value)
-                when :button  then value # Ignore
-                else value # Ignore
-                end
+    set_value = cast_value(value, data_type)
 
     result = nil
     if dlg_field.key?(:values)
@@ -1286,6 +1279,17 @@ class MiqRequestWorkflow
     _log.warn "Unable to find value for key <#{dialog_name}:#{key}(#{data_type})> with input value <#{set_value.inspect}>.  No matching item found." if result.nil?
     _log.info "setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
     values[key] = set_value
+  end
+
+  def cast_value(value, data_type)
+    case data_type
+    when :integer then value.to_i_with_method
+    when :float   then value.to_f
+    when :boolean then (value.to_s.downcase == 'true')
+    when :time    then Time.parse(value)
+    when :button  then value # Ignore
+    else value # Ignore
+    end
   end
 
   def set_ws_field_value_by_display_name(values, key, data, dialog_name, dlg_fields, obj_key = :name)
