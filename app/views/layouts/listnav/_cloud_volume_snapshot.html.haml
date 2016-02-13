@@ -31,7 +31,7 @@
           - else
             %li
               = link_to(_("Cloud Volumes based on Snapshot (%{count})") % {:count => @record.number_of(:based_volumes)},
-                {:action => 'show', :id => @record, :display => 'cloud_volumes'},
+                {:action => 'show', :id => @record, :display => 'based_volumes'},
                 :title => _("Show all Cloud Volumes based on this Snapshot"))
         - if role_allows(:feature => "cloud_tenant_show") && @record.cloud_tenant
           %li
