@@ -84,28 +84,30 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        context "availability_zone" do
-          it "workflow exposes allowed_availability_zones" do
-            expect(workflow_klass.instance_methods).to include(:allowed_availability_zones)
-          end
-
-          context "with an availability_zone" do
-            before do
-              @ci = FactoryGirl.create("availability_zone_#{t}")
-              allow_any_instance_of(workflow_klass).to receive(:allowed_availability_zones).and_return(@ci.id => @ci.name)
+        if t != "azure"
+          context "availability_zone" do
+            it "workflow exposes allowed_availability_zones" do
+              expect(workflow_klass.instance_methods).to include(:allowed_availability_zones)
             end
 
-            it "#eligible_availability_zones" do
-              result = ae_svc_prov.eligible_availability_zones
+            context "with an availability_zone" do
+              before do
+                @ci = FactoryGirl.create("availability_zone_#{t}")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_availability_zones).and_return(@ci.id => @ci.name)
+              end
 
-              expect(result).to be_kind_of(Array)
-              expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
-            end
+              it "#eligible_availability_zones" do
+                result = ae_svc_prov.eligible_availability_zones
 
-            it "#set_availability_zone" do
-              ae_svc_prov.eligible_availability_zones.each { |rsc| ae_svc_prov.set_availability_zone(rsc) }
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
+              end
 
-              expect(@miq_provision.reload.options[:placement_availability_zone]).to eq([@ci.id, @ci.name])
+              it "#set_availability_zone" do
+                ae_svc_prov.eligible_availability_zones.each { |rsc| ae_svc_prov.set_availability_zone(rsc) }
+
+                expect(@miq_provision.reload.options[:placement_availability_zone]).to eq([@ci.id, @ci.name])
+              end
             end
           end
         end
@@ -218,7 +220,7 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        if t != "google"
+        if t != "google" && t != "azure"
           context "floating_ip_addresses" do
             it "workflow exposes allowed_floating_ip_addresses" do
               expect(workflow_klass.instance_methods).to include(:allowed_floating_ip_addresses)
@@ -246,7 +248,7 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        if t != "google"
+        if t != "google" && t != "azure"
           context "guest_access_key_pairs" do
             it "workflow exposes allowed_guest_access_key_pairs" do
               expect(workflow_klass.instance_methods).to include(:allowed_guest_access_key_pairs)
