@@ -1,5 +1,4 @@
 class ContainerTopologyService
-  include ActionView::Helpers::AssetUrlHelper
 
   def initialize(provider_id)
     @provider_id = provider_id
