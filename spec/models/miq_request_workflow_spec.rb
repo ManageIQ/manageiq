@@ -367,7 +367,7 @@ describe MiqRequestWorkflow do
 
     it 'time' do
       time_str   = '2016-02-13 11:00:00.000000000 Z'
-      time_match = Time.parse(time_str)
+      time_match = Time.zone.parse(time_str)
       expect(workflow.cast_value(time_str, :time)).to eq(time_match)
 
       expect(workflow.cast_value('2016-02-13 11:00:00 Z', :time)).to eq(time_match)
