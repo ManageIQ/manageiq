@@ -340,4 +340,47 @@ describe MiqRequestWorkflow do
       expect(workflow.folder_to_respool(src)).to be_empty
     end
   end
+
+  describe '#cast_value' do
+    it 'integer' do
+      expect(workflow.cast_value(1,   :integer)).to eq(1)
+      expect(workflow.cast_value('1', :integer)).to eq(1)
+    end
+
+    it 'float' do
+      expect(workflow.cast_value(1,     :float)).to eq(1.0)
+      expect(workflow.cast_value('1',   :float)).to eq(1.0)
+      expect(workflow.cast_value(2.1,   :float)).to eq(2.1)
+      expect(workflow.cast_value('2.1', :float)).to eq(2.1)
+    end
+
+    it 'boolean' do
+      expect(workflow.cast_value('true', :boolean)).to  be true
+      expect(workflow.cast_value('t', :boolean)).to     be true
+
+      expect(workflow.cast_value('false', :boolean)).to be false
+      expect(workflow.cast_value('f', :boolean)).to     be false
+      expect(workflow.cast_value('1', :boolean)).to     be false
+      expect(workflow.cast_value('0', :boolean)).to     be false
+      expect(workflow.cast_value('test', :boolean)).to  be false
+    end
+
+    it 'time' do
+      time_str   = '2016-02-13 11:00:00.000000000 Z'
+      time_match = Time.zone.parse(time_str)
+      expect(workflow.cast_value(time_str, :time)).to eq(time_match)
+
+      expect(workflow.cast_value('2016-02-13 11:00:00 Z', :time)).to eq(time_match)
+    end
+
+    it 'button' do
+      expect(workflow.cast_value('data', :button)).to eq('data')
+      expect(workflow.cast_value(1, :button)).to      eq(1)
+    end
+
+    it 'other' do
+      expect(workflow.cast_value('data', :other)).to eq('data')
+      expect(workflow.cast_value(1, :other)).to      eq(1)
+    end
+  end
 end
