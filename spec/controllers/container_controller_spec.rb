@@ -75,8 +75,9 @@ describe ContainerController do
       container_group = ContainerGroup.create(:ext_management_system => ems,
                                               :container_project     => container_project)
       @ct = FactoryGirl.create(:container,
-                               :name            => "container-01",
-                               :container_group => container_group
+                               :name                  => "container-01",
+                               :container_group       => container_group,
+                               :ext_management_system => ems
                               )
       allow(controller).to receive(:x_node).and_return("cnt_#{controller.to_cid(@ct.id)}")
       controller.instance_variable_set(:@record, @ct)

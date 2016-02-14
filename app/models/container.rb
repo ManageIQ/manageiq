@@ -3,7 +3,7 @@ class Container < ApplicationRecord
   include NewWithTypeStiMixin
 
   has_one    :container_group, :through => :container_definition
-  has_one    :ext_management_system, :through => :container_group
+  belongs_to :ext_management_system, :foreign_key => :ems_id
   has_one    :container_node, :through => :container_group
   has_one    :container_replicator, :through => :container_group
   has_one    :container_project, :through => :container_group
@@ -18,7 +18,6 @@ class Container < ApplicationRecord
   has_many   :vim_performance_states, :as => :resource
 
   # Needed for metrics
-  delegate   :ems_id, :to => :container_group
   delegate   :my_zone, :to => :ext_management_system
 
   include EventMixin

@@ -229,6 +229,10 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
+    hashes.each do |h|
+      h[:ems_id] = container_group[:ems_id]
+    end
+
     save_inventory_multi(container_group.container_definitions, hashes, deletes, [:ems_ref],
                          [:container_port_configs, :container_env_vars, :security_context, :container], true)
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
@@ -328,6 +332,7 @@ module EmsRefresh::SaveInventoryContainer
     # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
     # save_inventory_single is used to delete any pre-existing entity in containers,
     hash[:container_image_id] = hash[:container_image][:id] unless hash.nil?
+    hash[:ems_id] = container_definition[:ems_id]
     save_inventory_single(:container, container_definition, hash, [], :container_image, true)
   end
 
