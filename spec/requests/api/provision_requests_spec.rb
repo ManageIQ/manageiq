@@ -96,9 +96,14 @@ describe ApiController do
   end
 
   context "AWS advanced provision requests" do
+    let(:aws_dialog)     { FactoryGirl.create(:miq_dialog_aws_provision) }
     let(:ems)            { FactoryGirl.create(:ems_amazon_with_authentication) }
-    let(:template)       { FactoryGirl.create(:template_amazon, :name => "template1", :ext_management_system => ems) }
-    let(:flavor)         { FactoryGirl.create(:flavor_amazon, :ems_id => ems.id, :name => 't2.small', :cloud_subnet_required => true) }
+    let(:template) do
+      FactoryGirl.create(:template_amazon, :name => "template1", :ext_management_system => ems)
+    end
+    let(:flavor) do
+      FactoryGirl.create(:flavor_amazon, :ems_id => ems.id, :name => 't2.small', :cloud_subnet_required => true)
+    end
     let(:az)             { FactoryGirl.create(:availability_zone_amazon) }
     let(:cloud_network1) { FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true) }
     let(:cloud_subnet1)  { FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network1.id) }
@@ -111,39 +116,39 @@ describe ApiController do
     end
 
     let(:provreq1_body) do
-      provreq_body.merge({
+      provreq_body.merge(
         "vm_fields" => {
-          "vm_name" => "api_test_aws",
-          "instance_type" => flavor.id,
-          "placement_auto" => false,
+          "vm_name"                     => "api_test_aws",
+          "instance_type"               => flavor.id,
+          "placement_auto"              => false,
           "placement_availability_zone" => az.id,
-          "cloud_network" => cloud_network1.id,
-          "cloud_subnet" => cloud_subnet1.id,
-          "security_groups" => 1,
-          "floating_ip_address" => 1
+          "cloud_network"               => cloud_network1.id,
+          "cloud_subnet"                => cloud_subnet1.id,
+          "security_groups"             => 1,
+          "floating_ip_address"         => 1
         }
-      })
+      )
     end
 
     let(:provreq2_body) do
-      provreq_body.merge({
-        "vm_fields"       => {
-          "vm_name" => "api_test_aws",
-          "instance_type" => flavor.id,
+      provreq_body.merge(
+        "vm_fields" => {
+          "vm_name"                     => "api_test_aws",
+          "instance_type"               => flavor.id,
           "placement_availability_zone" => az.id
         }
-      })
+      )
     end
 
     let(:provreq3_body) do
-      provreq_body.merge({
-        "vm_fields"       => {
-          "vm_name" => "api_test_aws",
-          "instance_type" => flavor.id,
-          "placement_auto" => true,
+      provreq_body.merge(
+        "vm_fields" => {
+          "vm_name"                     => "api_test_aws",
+          "instance_type"               => flavor.id,
+          "placement_auto"              => true,
           "placement_availability_zone" => az.id
         }
-      })
+      )
     end
 
     let(:expected_provreq_attributes) { %w(id options) }
@@ -160,18 +165,20 @@ describe ApiController do
       }
     end
 
-
     it "supports manual placement" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
-      dialog  # Create the Provisioning dialog
+      # dialog  # Create the Provisioning dialog
+      aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, provreq1_body)
 
+      # pp @result
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
       options = @result["results"].first["options"]
+      # pp options
       expect(options["placement_auto"]).to eq([false, 0])
       expect(options["placement_availability_zone"]).to eq(['xxx'])
       expect(options["cloud_network"]).to eq(['xxx'])
@@ -186,7 +193,8 @@ describe ApiController do
     it "does not process manual placement data if placement_auto is not set" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
-      dialog  # Create the Provisioning dialog
+      # dialog  # Create the Provisioning dialog
+      aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, provreq2_body)
 
       expect_request_success
@@ -204,7 +212,8 @@ describe ApiController do
     it "does not process manual placement data if placement_auto is set to true" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
-      dialog  # Create the Provisioning dialog
+      # dialog  # Create the Provisioning dialog
+      aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, provreq3_body)
 
       expect_request_success
