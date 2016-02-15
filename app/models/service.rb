@@ -205,9 +205,14 @@ class Service < ApplicationRecord
   def v_total_vms
     vms.size
   end
- 
+
   def set_tenant_from_group
     self.tenant_id = miq_group.tenant_id if miq_group
   end
 
+  def tenant_identity
+    user = evm_owner
+    user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
+    user
+  end
 end

@@ -22,7 +22,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container
       assert_specific_container_group
       assert_specific_container_node
-      assert_specific_container_service
+      assert_specific_container_services
+      assert_specific_container_image_registry
       assert_specific_container_project
       assert_specific_container_route
       assert_specific_container_build
@@ -98,7 +99,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(@containernode.ext_management_system).to eq(@ems)
   end
 
-  def assert_specific_container_service
+  def assert_specific_container_services
     @containersrv = ContainerService.find_by_name("frontend")
     expect(@containersrv).to have_attributes(
       :name             => "frontend",
@@ -108,6 +109,19 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
     expect(@containersrv.container_project).to eq(ContainerProject.find_by(:name => "test"))
     expect(@containersrv.ext_management_system).to eq(@ems)
+    expect(@containersrv.container_image_registry).to be_nil
+
+    expect(ContainerService.find_by_name("docker-registry").container_image_registry.name). to eq("172.30.44.14")
+  end
+
+  def assert_specific_container_image_registry
+    @registry = ContainerImageRegistry.find_by_name("172.30.44.14")
+    expect(@registry).to have_attributes(
+      :name => "172.30.44.14",
+      :host => "172.30.44.14",
+      :port => "5000"
+    )
+    expect(@registry.container_services.first.name).to eq("docker-registry")
   end
 
   def assert_specific_container_project

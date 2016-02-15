@@ -430,7 +430,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def total_storages
-    HostsStorage.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
+    HostStorage.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
   end
 
   def vm_count_by_state(state)
@@ -550,5 +550,9 @@ class ExtManagementSystem < ApplicationRecord
   # @return [Boolean] true if a datastore exists for this type of ems
   def self.datastore?
     IsoDatastore.where(:ems_id => all).exists?
+  end
+
+  def tenant_identity
+    User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
   end
 end

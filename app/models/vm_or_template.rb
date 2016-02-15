@@ -66,7 +66,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
   has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
-  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :vm, :class_name => "Vm"
+  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
   has_many                  :miq_provision_requests, :as => :source, :dependent => :destroy
 
   has_many                  :guest_applications, :dependent => :destroy
@@ -1916,6 +1916,12 @@ class VmOrTemplate < ApplicationRecord
 
     ["(vms.template = true AND vms.tenant_id IN (?)) OR (vms.template = false AND vms.tenant_id IN (?))",
      template_tenant_ids, vm_tenant_ids]
+  end
+
+  def tenant_identity
+    user = evm_owner
+    user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
+    user
   end
 
   private

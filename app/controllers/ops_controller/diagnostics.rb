@@ -616,7 +616,7 @@ module OpsController::Diagnostics
         options[:context] = klass.name
         instance.synchronize_logs(session[:userid], options)
       rescue StandardError => bang
-        add_flash(_("Log collection error returned: ") << bang.message, :error)
+        add_flash(_("Log collection error returned: %{error_message}") % {:error_message => bang.message}, :error)
       else
         add_flash(_("Log collection for CFME %{object_type} %{name} has been initiated") % {:object_type => klass.name, :name => instance.display_name})
       end

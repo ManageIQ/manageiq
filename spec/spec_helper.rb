@@ -34,6 +34,11 @@ RSpec.configure do |config|
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
 
+  unless ENV['CI']
+    # File store for --only-failures option
+    config.example_status_persistence_file_path = "./spec/examples.txt"
+  end
+
   config.include VMDBConfigurationHelper
 
   config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
@@ -85,7 +90,7 @@ RSpec.configure do |config|
   # end
 
   config.before(:each) do
-    EmsRefresh.debug_failures = true
+    EmsRefresh.debug_failures = true if defined?(EmsRefresh) && EmsRefresh.respond_to?(:debug_failures)
     ApplicationController.handle_exceptions = false
   end
   config.after(:each) do
@@ -123,8 +128,8 @@ VCR.configure do |c|
     next if [:secret_key_base, :secret_token].include?(provider) # Defaults
     cred_hash = secrets.public_send(provider)
     cred_hash.each do |key, value|
-      c.filter_sensitive_data("<#{provider.upcase}_#{key.upcase}>") { CGI.escape(value) }
-      c.filter_sensitive_data("<#{provider.upcase}_#{key.upcase}>") { value }
+      c.filter_sensitive_data("#{provider.upcase}_#{key.upcase}") { CGI.escape(value) }
+      c.filter_sensitive_data("#{provider.upcase}_#{key.upcase}") { value }
     end
   end
 

@@ -1,5 +1,3 @@
-include UiConstants
-
 shared_examples "logs_collect" do |type|
   let(:klass) { type.classify.constantize }
   let(:zone) { double("Zone", :name => "foo") }

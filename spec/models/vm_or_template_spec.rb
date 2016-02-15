@@ -415,17 +415,34 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available?" do
-    it "returns true for SCVMM VM" do
-      vm =  FactoryGirl.create(:vm_vmware)
+  context "#is_available? for migrate" do
+    it "returns true for vmware VM" do
+      vm = FactoryGirl.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
       expect(vm.is_available?(:migrate)).to eq(true)
     end
 
-    it "returns true for vmware VM" do
-      vm =  FactoryGirl.create(:vm_microsoft)
+    it "returns true for SCVMM VM" do
+      vm = FactoryGirl.create(:vm_microsoft)
       expect(vm.is_available?(:migrate)).to_not eq(true)
+    end
+
+    it "returns false for openstack VM" do
+      vm = FactoryGirl.create(:vm_openstack)
+      expect(vm.is_available?(:migrate)).to eq(false)
+    end
+  end
+
+  context "#is_available? for live_migrate" do
+    it "returns false for vmware VM" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.is_available?(:live_migrate)).to eq(false)
+    end
+
+    it "returns false for SCVMM VM" do
+      vm = FactoryGirl.create(:vm_microsoft)
+      expect(vm.is_available?(:live_migrate)).to eq(false)
     end
   end
 
@@ -488,5 +505,31 @@ describe VmOrTemplate do
       vm.update_attributes(:miq_group_id => group2.id)
       expect(vm.tenant).to eq(tenant2)
     end
+  end
+
+  it "#miq_provision_vms" do
+    ems      = FactoryGirl.create(:ems_vmware_with_authentication)
+    template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
+    vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+
+    options = {
+      :vm_name        => vm.name,
+      :vm_target_name => vm.name,
+      :src_vm_id      => [template.id, template.name]
+    }
+
+    provision = FactoryGirl.create(
+      :miq_provision_vmware,
+      :destination  => vm,
+      :source       => template,
+      :request_type => 'clone_to_vm',
+      :state        => 'finished',
+      :status       => 'Ok',
+      :options      => options
+    )
+
+    template.miq_provisions_from_template << provision
+
+    expect(template.miq_provision_vms.collect(&:id)).to eq([vm.id])
   end
 end

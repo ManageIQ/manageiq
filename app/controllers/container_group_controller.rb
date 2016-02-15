@@ -6,10 +6,6 @@ class ContainerGroupController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def show_list
-    process_show_list
-  end
-
   private ############################
 
   def display_name

@@ -7,6 +7,7 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 gem "activerecord-deprecated_finders", "~>1.0.4",  :require => "active_record/deprecated_finders"
 gem "rails",                           "~>4.2.5"
 gem "activerecord-session_store",      "~>0.1.2"
+gem "sprockets-es6",                   "~>0.9.0",  :require => "sprockets/es6"
 
 # Local gems
 path "gems/" do
@@ -103,8 +104,7 @@ gem "sshkey",                         "~>1.8.0",   :require => false
 #
 unless ENV['APPLIANCE']
   group :development do
-    gem "gettext",          "3.1.4",    :require => false  # Used for finding translations
-    gem "ruby-prof",                    :require => false
+    gem "gettext",          "3.1.9",    :require => false  # Used for finding translations
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
   end
 

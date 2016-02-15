@@ -29,6 +29,17 @@ module ApplianceConsole
       @ca_name ||= "ipa"
     end
 
+    def ask_questions
+      if ipa?
+        self.principal = just_ask("IPA Server Principal", @principal)
+        self.password  = ask_for_password("IPA Server Principal Password", @password)
+      end
+      self.pgclient = ask_yn("Configure certificate for postgres client", "Y")
+      self.pgserver = ask_yn("Configure certificate for postgres server", "Y")
+      self.http = ask_yn("Configure certificate for http server", "Y")
+      true
+    end
+
     def activate
       valid_environment?
 

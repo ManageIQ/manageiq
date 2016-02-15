@@ -26,8 +26,6 @@ class MiqAlert < ApplicationRecord
 
   acts_as_miq_set_member
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
-
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
 
   HOURLY_TIMER_EVENT   = "_hourly_timer_"

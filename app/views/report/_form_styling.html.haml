@@ -72,9 +72,9 @@
                       "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
                     - if field_type == :percent
                       \%
-                    - elsif FORMAT_SUB_TYPES.fetch_path(field_type, :units)
+                    - elsif MiqExpression::FORMAT_SUB_TYPES.fetch_path(field_type, :units)
                       = select_tag("stylesuffix_#{f_idx}_#{s_idx}",
-                        options_for_select(FORMAT_SUB_TYPES[field_type][:units], styles[s_idx][:value_suffix]),
+                        options_for_select(MiqExpression::FORMAT_SUB_TYPES[field_type][:units], styles[s_idx][:value_suffix]),
                         :multiple              => false,
                         :class                 => "widthed",
                         "data-miq_sparkle_on"  => true,

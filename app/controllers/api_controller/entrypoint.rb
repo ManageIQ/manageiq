@@ -10,10 +10,11 @@ class ApiController
         :description => @description,
         :version     => @version,
         :versions    => entrypoint_versions,
-        :identity    => auth_identity,
         :settings    => user_settings,
-        :collections => entrypoint_collections
+        :identity    => auth_identity
       }
+      res[:authorization] = auth_authorization if attribute_selection.include?("authorization")
+      res[:collections]   = entrypoint_collections
       render_resource :entrypoint, res
     end
 

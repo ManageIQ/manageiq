@@ -80,7 +80,7 @@ module ContainerSummaryHelper
   end
 
   def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
+    format_timezone(@record.ems_created_on)
   end
 
   def textual_guest_applications
@@ -94,8 +94,7 @@ module ContainerSummaryHelper
 
   def textual_container_image_registry
     object = @record.container_image_registry
-
-    if object.nil?
+    if object.nil? && @record.respond_to?(:display_registry)
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
         :image => "container_image_registry_unknown",

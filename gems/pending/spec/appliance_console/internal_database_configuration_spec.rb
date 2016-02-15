@@ -44,7 +44,7 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     disk_double = double(:path => "/dev/vdb")
     expect(disk_double).to receive(:create_partition_table)
     expect(disk_double).to receive(:partitions).and_return(["fake partition"])
-    expect(LinuxAdmin).to receive(:run!).with("parted -s /dev/vdb mkpart primary 0% 100%")
+    expect(AwesomeSpawn).to receive(:run!).with("parted -s /dev/vdb mkpart primary 0% 100%")
     expect(LinuxAdmin::Disk).to receive(:local).and_return([disk_double])
 
     @config.instance_variable_set(:@disk, disk_double)

@@ -37,9 +37,9 @@
                         = "%"
                       - elsif @edit[:qs_tokens][token][:value_type] == :megabytes
                         = "MB"
-                      - elsif FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units]
+                      - elsif MiqExpression::FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units]
                         = select_tag("suffix_#{token}",
-                                     options_for_select(FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units],
+                                     options_for_select(MiqExpression::FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units],
                                                         nil),
                                      :multiple              => false,
                                      :class                 => "widthed",

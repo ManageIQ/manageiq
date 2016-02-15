@@ -111,7 +111,8 @@ module MiqAeEvent
   end
 
   def self.call_automate(obj, attrs, instance_name, options = {})
-    user_id, group_id, tenant_id = automate_user_ids(obj, attrs[:event_type])
+    user = obj.tenant_identity
+    raise "A user is needed to raise #{instance_name} to automate. [#{obj.class.name}] id:[#{obj.id}]" unless user
 
     q_options = {
       :miq_callback => options[:miq_callback],
@@ -124,9 +125,9 @@ module MiqAeEvent
       :object_id        => obj.id,
       :attrs            => attrs,
       :instance_name    => instance_name,
-      :user_id          => user_id,
-      :miq_group_id     => group_id,
-      :tenant_id        => tenant_id,
+      :user_id          => user.id,
+      :miq_group_id     => user.current_group.id,
+      :tenant_id        => user.current_tenant.id,
       :automate_message => options[:message]
     }
 
@@ -137,45 +138,5 @@ module MiqAeEvent
       MiqAeEngine.deliver_queue(args, q_options)
     end
   end
-
-  def self.stream_target(object)
-    case object
-    when EmsEvent
-      object.vm_or_template || object.ext_management_system
-    when VmOrTemplate, MiqServer, Service, ExtManagementSystem, MiqRequest
-      object
-    when Storage
-      object.ext_management_systems.first
-    else
-      object.ext_management_system
-    end
-  end
-
-  def self.automate_user_ids(object, event_type)
-    target = stream_target(object)
-    case target
-    when VmOrTemplate, Service
-      group  = target.miq_group
-      user   = target.evm_owner
-      user   = User.super_admin if user.nil? || !user.miq_groups.include?(group)
-      tenant = target.tenant
-    when ExtManagementSystem
-      user   = User.super_admin
-      tenant = target.tenant
-      group  = tenant.default_miq_group
-    when MiqServer
-      user   = User.super_admin
-      tenant = user.current_tenant
-      group  = user.current_group
-    when MiqRequest
-      user   = target.get_user
-      tenant = user.current_tenant
-      group  = user.current_group
-    end
-
-    raise "A group is needed to raise an event. [#{object.class.name}] id:[#{object.id}] event_type: [#{event_type}]" unless group
-    [user.id, group.id, tenant.id]
-  end
-
-  private_class_method :call_automate, :automate_user_ids, :stream_target
+  private_class_method :call_automate
 end

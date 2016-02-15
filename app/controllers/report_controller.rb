@@ -139,78 +139,12 @@ class ReportController < ApplicationController
       return
     end
 
-    if role_allows(:feature => "miq_report_saved_reports", :any => true)
-      @trees << build_savedreports_tree
-      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_accord")
-      @lists.push("savedreports_list")
-      self.x_active_tree = 'savedreports_tree'
-      self.x_active_accord = 'savedreports'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    if role_allows(:feature => "miq_report_reports", :any => true)
-      @trees << build_report_listnav
-      @accords.push(:name => "reports", :title => "Reports", :container => "reports_accord")
-      @lists.push("report_list")
-      self.x_active_tree = 'reports_tree'
-      self.x_active_accord = 'reports'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    if role_allows(:feature => "miq_report_schedules", :any => true)
-      @trees << build_schedules_tree
-      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_accord")
-      @lists.push("schedule_list")
-      self.x_active_tree = 'schedules_tree'
-      self.x_active_accord = 'schedules'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    if role_allows(:feature => "miq_report_dashboard_editor")
-      @trees << build_db_tree
-      @accords.push(:name => "db", :title => "Dashboards", :container => "db_accord")
-      @lists.push("db_list")
-      self.x_active_tree = 'db_tree'
-      self.x_active_accord = 'db'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    if role_allows(:feature => "miq_report_widget_editor")
-      @trees << build_widgets_tree
-      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_accord")
-      @lists.push("widget_list")
-      self.x_active_tree = 'widgets_tree'
-      self.x_active_accord = 'widgets'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    if role_allows(:feature => "miq_report_menu_editor")
-      @trees << build_roles_tree
-      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_accord")
-      @lists.push("role_list")
-      self.x_active_tree = 'roles_tree'
-      self.x_active_accord = 'roles'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    if role_allows(:feature => "miq_report_export")
-      @trees << build_export_tree
-      @accords.push(:name => "export", :title => "Import/Export", :container => "export_accord")
-      @lists.push("export")
-      self.x_active_tree = "export_tree"
-      self.x_active_accord = "export"
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-    end
-
-    self.x_active_tree = default_active_tree
-    self.x_active_accord = default_active_accord.to_s
+    reports_menu_in_sb
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
     self.x_active_tree = x_last_active_tree if x_last_active_tree
     self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
@@ -291,17 +225,17 @@ class ReportController < ApplicationController
   end
 
   def upload_widget_import_file
-    redirect_options = {:action => :review_import}
-
     upload_file = params.fetch_path(:upload, :file)
 
     if upload_file.nil?
       add_flash("Use the browse button to locate an import file", :warning)
     else
       begin
-        import_file_upload_id = widget_import_service.store_for_import(upload_file.read)
+        @in_a_form = true
+        import_file = widget_import_service.store_for_import(upload_file.read)
+        @import_file_upload_id = import_file.id
+        @import = import_file.widget_list
         add_flash(_("Import file was uploaded successfully"), :success)
-        redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue WidgetImportValidator::NonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       rescue WidgetImportValidator::InvalidWidgetYamlError
@@ -309,50 +243,72 @@ class ReportController < ApplicationController
       end
     end
 
-    redirect_options[:message] = @flash_array.first
-
-    redirect_to redirect_options
+    replace_right_cell :partial => 'export_widgets'
   end
 
   def import_widgets
-    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
-
-    if import_file_upload
-      $log.info("[#{session[:userid]}] initiated import")
-      widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
-      add_flash(_("Widgets imported successfully"), :success)
+    if params[:commit] == _('Commit')
+      import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+      if import_file_upload
+        $log.info("[#{session[:userid]}] initiated import")
+        widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
+        add_flash(_("Widgets imported successfully"), :success)
+      else
+        add_flash(_("Error: Widget import file upload expired"), :error)
+      end
     else
-      add_flash(_("Error: Widget import file upload expired"), :error)
+      widget_import_service.cancel_import(params[:import_file_upload_id])
+      add_flash(_("Widget import cancelled"), :info)
     end
 
-    respond_to do |format|
-      format.js { render :json => @flash_array.to_json, :status => 200 }
-    end
-  end
-
-  def widget_json
-    import_file_upload_json = ImportFileUpload.find(params[:import_file_upload_id]).widget_json
-
-    respond_to do |format|
-      format.json { render :json => import_file_upload_json }
-    end
-  end
-
-  def review_import
-    @import_file_upload_id = params[:import_file_upload_id]
-    @message = params[:message]
-  end
-
-  def cancel_import
-    widget_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(_("Widget import cancelled"), :info)
-
-    respond_to do |format|
-      format.js { render :json => @flash_array.to_json, :status => 200 }
-    end
+    replace_right_cell :partial => 'export_widgets'
   end
 
   private ###########################
+
+  def set_active_elements(feature)
+    if feature
+      self.x_active_tree ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
+    end
+    get_node_info
+  end
+
+  def features
+    [{:role     => "miq_report_saved_reports",
+      :role_any => true,
+      :name     => :savedreports,
+      :title    => N_("Saved Reports")},
+
+     {:role     => "miq_report_reports",
+      :role_any => true,
+      :name     => :reports,
+      :title    => N_("Reports")},
+
+     {:role     => "miq_report_schedules",
+      :role_any => true,
+      :name     => :schedules,
+      :title    => N_("Schedules")},
+
+     {:role  => "miq_report_dashboard_editor",
+      :name  => :db,
+      :title => N_("Dashboards")},
+
+     {:role  => "miq_report_widget_editor",
+      :name  => :widgets,
+      :title => N_("Dashboard Widgets")},
+
+     {:role  => "miq_report_menu_editor",
+      :name  => :roles,
+      :title => N_("Edit Report Menus")},
+
+     {:role  => "miq_report_export",
+      :name  => :export,
+      :title => N_("Import/Export")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 
   def report_selection_menus
     @folders = []
@@ -680,6 +636,11 @@ class ReportController < ApplicationController
     add_nodes
   end
 
+  def reports_menu_in_sb
+    @sb[:rpt_menu]  = populate_reports_menu
+    @sb[:grp_title] = reports_group_title
+  end
+
   def replace_right_cell(options = {})  # :replace_trees key can be an array of tree symbols to be replaced
     @explorer = true
 
@@ -694,7 +655,10 @@ class ReportController < ApplicationController
 
     trees                = {}
     rebuild              = @in_a_form ? false : rebuild_trees
-    trees[:reports]      = build_report_listnav    if replace_trees.include?(:reports) || rebuild
+    if replace_trees.include?(:reports) || rebuild
+      reports_menu_in_sb
+      trees[:reports] = TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
+    end
     trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules)
     trees[:savedreports] = build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
     trees[:db]           = build_db_tree           if replace_trees.include?(:db) || rebuild
@@ -714,7 +678,7 @@ class ReportController < ApplicationController
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
 
     locals = set_form_locals if @in_a_form
-    partial = set_partial_name
+    partial = options[:partial] ? options[:partial] : set_partial_name
     unless @in_a_form
       c_tb = build_toolbar(center_toolbar_filename)
       h_tb = build_toolbar("x_history_tb")

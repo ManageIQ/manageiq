@@ -25,6 +25,14 @@ class TreeBuilder
     when :alert_profile    then TreeBuilderAlertProfile
     when :alert            then TreeBuilderAlert
 
+    # reports explorer trees
+    when :db               then TreeBuilderReportDashboards
+    when :export           then TreeBuilderReportExport
+    when :reports          then TreeBuilderReportReports
+    when :roles            then TreeBuilderReportRoles
+    when :savedreports     then TreeBuilderReportSavedReports
+    when :schedules        then TreeBuilderReportSchedules
+    when :widgets          then TreeBuilderReportWidgets
     end
   end
 

@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many   :miq_widget_contents, :dependent => :destroy
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_reports, :dependent => :nullify
+  has_many   :service_orders, :dependent => :nullify
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :admin, -> { where(:userid => "admin") }
@@ -47,11 +48,6 @@ class User < ApplicationRecord
   @@role_cat = "role"
 
   @role_changed = false
-
-  EVMROLE_SELF_SERVICE_ROLE_NAME         = "EvmRole-user_self_service"
-  EVMROLE_LIMITED_SELF_SERVICE_ROLE_NAME = "EvmRole-user_limited_self_service"
-
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
@@ -96,7 +92,7 @@ class User < ApplicationRecord
   before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
 
-  def miq_group_description=(group_description)
+  def current_group_by_description=(group_description)
     if group_description
       desired_group = miq_groups.detect { |g| g.description == group_description }
       desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
@@ -216,20 +212,8 @@ class User < ApplicationRecord
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
   end
 
-  def miq_group_ids
-    miq_groups.collect(&:id)
-  end
-
   def self.all_users_of_group(group)
     User.includes(:miq_groups).select { |u| u.miq_groups.include?(group) }
-  end
-
-  def all_groups
-    miq_groups
-  end
-
-  def groups_include?(group)
-    miq_group_ids.include?(group.id)
   end
 
   def admin?
@@ -240,28 +224,8 @@ class User < ApplicationRecord
     MiqWidgetSet.subscribed_for_user(self)
   end
 
-  def group_ids_of_subscribed_widget_sets
-    subscribed_widget_sets.pluck(:group_id).compact.uniq
-  end
-
-  def subscribed_widget_sets_for_group(group_id)
-    subscribed_widget_sets.where(:group_id => group_id)
-  end
-
   def destroy_subscribed_widget_sets
     subscribed_widget_sets.destroy_all
-  end
-
-  def destroy_widget_sets_for_group(group_id)
-    subscribed_widget_sets_for_group(group_id).destroy_all
-  end
-
-  def destroy_orphaned_dashboards
-    (group_ids_of_subscribed_widget_sets - miq_group_ids).each { |group_id| destroy_widget_sets_for_group(group_id) }
-  end
-
-  def valid_for_login?
-    !!miq_user_role
   end
 
   def accessible_vms

@@ -92,6 +92,11 @@ describe MiqExpression do
     expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
   end
 
+  # Note: To debug these tests, the following may be helpful:
+  # puts "Expression Raw:      #{filter.exp.inspect}"
+  # puts "Expression in Human: #{filter.to_human}"
+  # puts "Expression in Ruby:  #{filter.to_ruby}"
+
   it "expands ranges" do
     filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
@@ -134,10 +139,6 @@ describe MiqExpression do
         field: Host-service_names
         value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("<value ref=host, type=string_set>/virtual/service_names</value> == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -146,10 +147,6 @@ describe MiqExpression do
         field: Host-service_names
         value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> & ['ntpd','sshd','vmware-vpxa','vmware-webAccess']) == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -158,10 +155,6 @@ describe MiqExpression do
         field: Host-service_names
         value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("(['ntpd','sshd','vmware-vpxa','vmware-webAccess'] - <value ref=host, type=string_set>/virtual/service_names</value>) != ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -170,10 +163,6 @@ describe MiqExpression do
         field: Host-service_names
         value: "ntpd, sshd, vmware-vpxa"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []")
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -182,10 +171,6 @@ describe MiqExpression do
         field: Host-service_names
         value: "ntpd, sshd, vmware-vpxa"
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []")
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -200,11 +185,6 @@ describe MiqExpression do
             field: Host.filesystems-permissions
             value: "0644"
     '
-    # filter.to_human
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == "/etc/passwd"</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == "0644"</check></find>')
   end
 
@@ -215,10 +195,6 @@ describe MiqExpression do
         field: Host-name
         value: /^[^.]*\.galaxy\..*$/
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<value ref=host, type=string>/virtual/name</value> =~ /^[^.]*\.galaxy\..*$/')
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -227,10 +203,6 @@ describe MiqExpression do
         field: Host-name
         value: ^[^.]*\.galaxy\..*$
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<value ref=host, type=string>/virtual/name</value> =~ /^[^.]*\.galaxy\..*$/')
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -245,10 +217,6 @@ describe MiqExpression do
             field: Host.firewall_rules-name
             value: /^.*SLP.*$/'
 
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>')
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -263,10 +231,6 @@ describe MiqExpression do
             field: Host.firewall_rules-name
             value: /^.*SLP.*$/'
 
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>')
   end
 
@@ -277,10 +241,6 @@ describe MiqExpression do
         field: Host.filesystems-name
         value: /etc/shadow
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("<exist ref=host>/virtual/filesystems/name/%2fetc%2fshadow</exist>")
   end
 
@@ -291,10 +251,6 @@ describe MiqExpression do
         field: Vm.registry_items-data
         value: $foo
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("<value ref=vm, type=text>/virtual/registry_items/data</value> =~ /\\$foo/")
 
     data = {"registry_items.data" => "C:\\Documents and Users\\O'Neill, April\\", "/virtual/registry_items/data" => "C:\\Documents and Users\\O'Neill, April\\"}
@@ -311,10 +267,6 @@ describe MiqExpression do
         value: VMware Tools
     context_type: hash
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
     expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"VMware Tools\" == \"VMware Tools\"")
 
@@ -325,10 +277,6 @@ describe MiqExpression do
         value: /^[^.]*ware.*$/
     context_type: hash
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
     expect(Condition.subst(filter.to_ruby, data, {})).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
   end
@@ -341,10 +289,6 @@ describe MiqExpression do
         field: Vm-memory_shares
         value: 25.kilobytes
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/memory_shares</value> >= 25600')
 
     filter = YAML.load '--- !ruby/object:MiqExpression
@@ -354,14 +298,8 @@ describe MiqExpression do
         field: Vm-used_disk_storage
         value: 1,000.megabytes
     '
-    # puts "Expression Raw:      #{filter.exp.inspect}"
-    # puts "Expression in Human: #{filter.to_human}"
-    # puts "Expression in Ruby:  #{filter.to_ruby}"
-    # puts
     expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/used_disk_storage</value> >= 1048576000')
   end
-
-  # end to_ruby
 
   describe ".atom_error" do
     it "should test atom error" do

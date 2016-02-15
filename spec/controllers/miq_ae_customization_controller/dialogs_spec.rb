@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqAeCustomizationController do
   context "::Dialogs" do
     context "#dialog_delete" do

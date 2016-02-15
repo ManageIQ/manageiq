@@ -28,7 +28,7 @@ class MiqShortcut < ApplicationRecord
   end
 
   def self.fixture_file_name
-    @fixture_file_name ||= File.join(Rails.root, "db/fixtures", "miq_shortcuts.yml")
+    @fixture_file_name ||= FIXTURE_DIR.join("miq_shortcuts.yml")
   end
 
   def self.seed_data

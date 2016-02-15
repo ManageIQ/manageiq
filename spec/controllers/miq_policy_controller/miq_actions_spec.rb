@@ -1,5 +1,3 @@
-include UiConstants
-
 describe MiqPolicyController do
   context "::MiqActions" do
     context "#action_edit" do

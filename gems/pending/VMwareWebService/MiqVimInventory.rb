@@ -246,6 +246,19 @@ class MiqVimInventory < MiqVimClientBase
     end
 
     #
+    # Traverse Datacenter to Datastore folder.
+    #
+    datacenterDsFolderTs = VimHash.new("TraversalSpec") do |ts|
+      ts.name      = "dcTodf"
+      ts.type      = "Datacenter"
+      ts.path      = "datastoreFolder"
+      ts.skip      = "false"
+      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
+        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+      end
+    end
+
+    #
     # Traverse Datacenter to Datastore.
     #
     datacenterDsTs = VimHash.new("TraversalSpec") do |ts|
@@ -268,6 +281,7 @@ class MiqVimInventory < MiqVimClientBase
         ssa << datacenterHostTs
         ssa << datacenterVmTs
         ssa << datacenterDsTs
+        ssa << datacenterDsFolderTs
         ssa << computeResourceRpTs
         ssa << computeResourceHostTs
         ssa << resourcePoolTs

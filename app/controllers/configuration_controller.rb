@@ -204,7 +204,7 @@ class ConfigurationController < ApplicationController
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
-          add_flash(_("User Interface settings saved for User %s") % current_user.name)
+          add_flash(_("User Interface settings saved for User %{name}") % {:name => current_user.name})
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -217,7 +217,7 @@ class ConfigurationController < ApplicationController
         if current_user
           settings = merge_settings(current_user.settings, @settings)
           current_user.update_attributes(:settings => settings)
-          add_flash(_("User Interface settings saved for User %s") % current_user.name)
+          add_flash(_("User Interface settings saved for User %{name}") % {:name => current_user.name})
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -367,7 +367,8 @@ class ConfigurationController < ApplicationController
     unless params[:id] # showing a list, scan all selected timeprofiles
       timeprofiles = find_checked_items
       if timeprofiles.empty?
-        add_flash(_("No %s were selected for deletion") % ui_lookup(:models => "TimeProfile"), :error)
+        add_flash(_("No %{records} were selected for deletion") %
+          {:records => ui_lookup(:models => "TimeProfile")}, :error)
       else
         selected_timeprofiles = TimeProfile.find_all_by_id(timeprofiles)
         selected_timeprofiles.each do |tp|
@@ -480,20 +481,20 @@ class ConfigurationController < ApplicationController
     timeprofile_get_form_vars
     case params[:button]
     when "cancel"
-      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "TimeProfile"))
+      add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "TimeProfile")})
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
         page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
       end
     when "add"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(_("%s is required") % "Description", :error)
+        add_flash(_("Description is required"), :error)
       end
       if @edit[:new][:profile][:days].length <= 0
-        add_flash(_("At least one %s must be selected") % "Day", :error)
+        add_flash(_("At least one Day must be selected"), :error)
       end
       if @edit[:new][:profile][:hours].length <= 0
-        add_flash(_("At least one %s must be selected") % "Hour", :error)
+        add_flash(_("At least one Hour must be selected"), :error)
       end
       unless @flash_array.nil?
         drop_breadcrumb(:name => "Add New Time Profile", :url => "/configuration/timeprofile_edit")
@@ -506,7 +507,7 @@ class ConfigurationController < ApplicationController
       begin
         @timeprofile.save!
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
+        add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         drop_breadcrumb(:name => "Add New Time Profile", :url => "/configuration/timeprofile_edit")
         render :update do |page|
@@ -545,13 +546,13 @@ class ConfigurationController < ApplicationController
       end
     elsif params[:button] == "save"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(_("%s is required") % "Description", :error)
+        add_flash(_("Description is required"), :error)
       end
       if @edit[:new][:profile][:days].length <= 0
-        add_flash(_("At least one %s must be selected") % "Day", :error)
+        add_flash(_("At least one Day must be selected"), :error)
       end
       if @edit[:new][:profile][:hours].length <= 0
-        add_flash(_("At least one %s must be selected") % "Hour", :error)
+        add_flash(_("At least one Hour must be selected"), :error)
       end
       unless @flash_array.nil?
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
@@ -566,8 +567,8 @@ class ConfigurationController < ApplicationController
       begin
         timeprofile.save!
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => "TimeProfile", :name => timeprofile.description, :task => "save"} << bang.message,
-                  :error)
+        add_flash(_("%{model} \"%{name}\": Error during 'save': %{error_message}") %
+          {:model => "TimeProfile", :name => timeprofile.description, :error_message => bang.message}, :error)
         @in_a_form = true
         drop_breadcrumb(:name => "Edit '#{timeprofile.description}'", :url => "/configuration/timeprofile_edit")
         render :update do |page|

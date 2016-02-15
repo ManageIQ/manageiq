@@ -1,6 +1,7 @@
 class ManageIQ::Providers::ConfigurationManager < ::ExtManagementSystem
   has_many :configured_systems,     :dependent => :destroy
   has_many :configuration_profiles, :dependent => :destroy
+  has_many :configuration_scripts,  :dependent => :destroy
 
   virtual_column  :total_configuration_profiles, :type => :integer
   virtual_column  :total_configured_systems, :type => :integer

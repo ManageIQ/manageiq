@@ -41,8 +41,6 @@ class Chargeback < ActsAsArModel
     :total_cost               => :float
   )
 
-  RATES = YAML.load_file(File.join(Rails.root, "db/fixtures/chargeback_rates.yml"))
-
   def self.build_results_for_report_chargeback(options)
     # Options:
     #   :rpt_type => chargeback

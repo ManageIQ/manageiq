@@ -766,7 +766,7 @@ class DashboardController < ApplicationController
     @report  = miq_task.task_results
     session[:rpt_task_id] = miq_task.id
     if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
-      add_flash(_("Error building timeline ") << miq_task.message, :error)
+      add_flash(_("Error building timeline  %{error_message}") % {:error_message => miq_task.message}, :error)
       return
     end
 

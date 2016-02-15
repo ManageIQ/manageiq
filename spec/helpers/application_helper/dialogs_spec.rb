@@ -283,8 +283,7 @@ describe ApplicationHelper::Dialogs do
           expect(helper.drop_down_options(dialog_field, "url")).to eq(
             :class                 => "dynamic-drop-down-100 selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => '{"url":"url","auto_refresh":true,"field_id":"100","trigger":"true"}'
+            "data-miq_sparkle_off" => true
           )
         end
       end
@@ -296,8 +295,7 @@ describe ApplicationHelper::Dialogs do
           expect(helper.drop_down_options(dialog_field, "url")).to eq(
             :class                 => "dynamic-drop-down-100 selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => '{"url":"url"}'
+            "data-miq_sparkle_off" => true
           )
         end
       end

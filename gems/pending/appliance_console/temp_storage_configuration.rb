@@ -34,14 +34,14 @@ module ApplianceConsole
     end
 
     def format_partition(partition)
-      LinuxAdmin.run!("mkfs.#{TEMP_DISK_FILESYSTEM_TYPE} #{partition.path}")
+      AwesomeSpawn.run!("mkfs.#{TEMP_DISK_FILESYSTEM_TYPE} #{partition.path}")
     end
 
     def mount_temp_disk(partition)
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(TEMP_DISK_MOUNT_POINT)
       FileUtils.mkdir_p(TEMP_DISK_MOUNT_POINT)
-      LinuxAdmin.run!("mount", :params => {
+      AwesomeSpawn.run!("mount", :params => {
                         "-t" => TEMP_DISK_FILESYSTEM_TYPE,
                         "-o" => TEMP_DISK_MOUNT_OPTS,
                         nil  => [partition.path, TEMP_DISK_MOUNT_POINT]
@@ -69,7 +69,7 @@ module ApplianceConsole
     def create_partition_to_fill_disk(disk)
       # @disk.create_partition('primary', '100%')
       disk.create_partition_table # LinuxAdmin::Disk.create_partition has this already...
-      LinuxAdmin.run!("parted -s #{disk.path} mkpart primary 0% 100%")
+      AwesomeSpawn.run!("parted -s #{disk.path} mkpart primary 0% 100%")
 
       # FIXME: Refetch the disk after creating the partition
       disk = LinuxAdmin::Disk.local.find { |d| d.path == disk.path }

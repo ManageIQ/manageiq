@@ -128,6 +128,33 @@ Vmdb::Application.routes.draw do
       ),
     },
 
+    :auth_key_pair_cloud      => {
+      :get  => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+        update
+      ) + adv_search_post + compare_post + exp_post + save_post
+    },
+
     :availability_zone        => {
       :get  => %w(
         download_data
@@ -1588,17 +1615,14 @@ Vmdb::Application.routes.draw do
         preview_timeline
         render_chart
         report_only
-        review_import
         sample_chart
         sample_timeline
         send_report_data
         tree_autoload_dynatree
         tree_select
-        widget_json
       ),
       :post => %w(
         accordion_select
-        cancel_import
         change_tab
         create
         db_edit
@@ -1733,6 +1757,7 @@ Vmdb::Application.routes.draw do
         explorer
         retirement_info
         retire
+        service_form_fields
         show
       ),
       :post => %w(
@@ -1743,7 +1768,6 @@ Vmdb::Application.routes.draw do
         reload
         retire
         service_edit
-        service_form_field_changed
         service_tag
         tag_edit_form_field_changed
         tree_autoload_dynatree

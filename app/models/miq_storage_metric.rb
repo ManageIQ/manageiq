@@ -96,7 +96,7 @@ class MiqStorageMetric < ApplicationRecord
   end
 
   def metrics_rollups_by_rollup_type(rollup_type)
-    miq_metrics_rollups.where(rollup_type => rollup_type).to_a
+    miq_metrics_rollups.where(:rollup_type => rollup_type).to_a
   end
 
   def addDerivedMetric(derivedMetrics)
@@ -222,7 +222,7 @@ class MiqStorageMetric < ApplicationRecord
   # Called directly from MiqStorageMetric.
   #
   def self.metrics_rollup_class_names
-    subclasses.map(&:metrics_rollup_class_name).compact
+    sub_classes.map(&:metrics_rollup_class_name).compact
   end
 
   #

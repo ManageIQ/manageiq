@@ -80,6 +80,13 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     allowed_cloud_init_customization_templates(options)
   end
 
+  def validate_cloud_subnet(field, values, dlg, fld, value)
+    return nil unless value.blank?
+    return nil if get_value(values[:cloud_network]).to_i.zero?
+    return nil unless get_value(values[field]).blank?
+    "#{required_description(dlg, fld)} is required"
+  end
+
   private
 
   # Run the relationship methods and perform set intersections on the returned values.

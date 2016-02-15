@@ -40,7 +40,7 @@ module MiqAeCustomizationController::CustomButtons
     @sb[:buttons] = nil
 
     if @nodetype[0] == "root"
-      @right_cell_text = _("All %s") % "Object Types"
+      @right_cell_text = _("All Object Types")
       @sb[:obj_list] = {}
       if session[:resolve]
         @resolve = session[:resolve]
@@ -51,7 +51,7 @@ module MiqAeCustomizationController::CustomButtons
         @sb[:obj_list][node[0]] = "ab_#{node[0]}"
       end
     elsif @nodetype[0] == "xx-ab" && nodeid.length == 2   # one of the CI's node selected
-      @right_cell_text = _("%{typ} %{model}") % {:typ => @sb[:target_classes].invert[@nodetype[2]], :model => "Button Groups"}
+      @right_cell_text = _("%{typ} Button Groups") % {:typ => @sb[:target_classes].invert[@nodetype[2]]}
       @sb[:applies_to_class] = x_node.split('-').last.split('_').last
       asets = CustomButtonSet.find_all_by_class_name(@nodetype[1])
       @sb[:button_groups] = []
@@ -68,7 +68,8 @@ module MiqAeCustomizationController::CustomButtons
       end
     elsif @nodetype.length == 1 && nodeid[1] == "ub"        # Unassigned buttons group selected
       @sb[:buttons] = []
-      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @sb[:target_classes].invert[nodeid[2]], :model => "Button Group", :name => "Unassigned Buttons"}
+      @right_cell_text = _("%{typ} Button Group \"Unassigned Buttons\"") %
+                         {:typ => @sb[:target_classes].invert[nodeid[2]]}
       uri = CustomButton.buttons_for(nodeid[2]).sort_by(&:name)
       unless uri.blank?
         uri.each do |b|
@@ -120,11 +121,13 @@ module MiqAeCustomizationController::CustomButtons
               end
         @resolve[:new][:target_class] = @sb[:target_classes].invert[kls]
       end
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Button", :name => @custom_button.name}
+      @right_cell_text = _("Button \"%{name}\"") % {:name => @custom_button.name}
     else                # assigned buttons node/folder
       @sb[:applies_to_class] = @nodetype[1]
       @record = CustomButtonSet.find(from_cid(nodeid.last))
-      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @sb[:target_classes].invert[@nodetype[2]], :model => "Button Group", :name => @record.name.split("|").first}
+      @right_cell_text = _("%{typ} Button Group \"%{name}\"") %
+                         {:typ  => @sb[:target_classes].invert[@nodetype[2]],
+                          :name => @record.name.split("|").first}
       @sb[:button_group] = {}
       @sb[:button_group][:text] =
           @sb[:button_group][:hover_text] =

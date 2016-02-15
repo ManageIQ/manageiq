@@ -96,6 +96,7 @@ describe Authenticator::Amazon do
     allow(MiqServer).to receive(:my_server).and_return(
       double(:my_server, :permitted_groups => [wibble, wobble])
     )
+    allow(MiqLdap).to receive(:using_ldap?) { false }
   end
 
   let(:user_data) do

@@ -1100,13 +1100,13 @@ class MiqPolicyController < ApplicationController
   end
 
   def features
-    [{:name  => :policy_profile, :title => N_("Policy Profiles"), :container => 'policy_profile_accord'},
-     {:name  => :policy, :title => N_("Policies"), :container => 'policy_accord'},
-     {:name  => :event, :title => N_("Events"), :container => 'event_accord'},
-     {:name  => :condition, :title => N_("Conditions"), :container => 'condition_accord'},
-     {:name  => :action, :title => N_("Actions"), :container => 'action_accord'},
-     {:name  => :alert_profile, :title => N_("Alert Profiles"), :container => 'alert_profile_accord'},
-     {:name  => :alert, :title => N_("Alerts"), :container => 'alert_accord'},
+    [{:name  => :policy_profile, :title => N_("Policy Profiles")},
+     {:name  => :policy, :title => N_("Policies")},
+     {:name  => :event, :title => N_("Events")},
+     {:name  => :condition, :title => N_("Conditions")},
+     {:name  => :action, :title => N_("Actions")},
+     {:name  => :alert_profile, :title => N_("Alert Profiles")},
+     {:name  => :alert, :title => N_("Alerts")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end

@@ -21,7 +21,7 @@ describe AssignTenantToMiqRequest do
   end
 
   migration_context :up do
-    describe "#root_tenant" do
+    describe "tenant_stub.root_tenant" do
       it "doesnt create tenant if no records exist" do
         migrate
 

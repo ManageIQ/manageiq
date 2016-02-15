@@ -88,7 +88,7 @@ module ApplianceConsole
         temp.write(activation_code)
         temp.close
 
-        output = LinuxAdmin.run('script/rails', :chdir => RAILS_ROOT, :params => params).output
+        output = AwesomeSpawn.run('script/rails', :chdir => RAILS_ROOT, :params => params).output
       ensure
         temp.delete
       end

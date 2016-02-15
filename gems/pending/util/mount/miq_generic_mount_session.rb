@@ -29,6 +29,12 @@ class MiqGenericMountSession
 
   def self.runcmd(cmd_str)
     rv = `#{cmd_str} 2>&1`
+
+    # If sudo is required, ensure you have /etc/sudoers.d/miq
+    # Cmnd_Alias MOUNTALL = /bin/mount, /bin/umount
+    # %wheel ALL = NOPASSWD: MOUNTALL
+    rv = `sudo #{cmd_str} 2>&1` if rv.include?("mount: only root can do that")
+
     if $? != 0
       raise rv
     end

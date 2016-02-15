@@ -904,13 +904,13 @@ module ApplicationController::Compare
       title = request.parameters["controller"].pluralize.titleize
     end
     if vms.length < 2
-      add_flash(_("At least 2 %{model} must be selected for %{action}") % {:model => title, :action => "Compare"}, :error)
+      add_flash(_("At least 2 %{model} must be selected for Compare") % {:model => title}, :error)
       if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
       end
     elsif vms.length > 32
-      add_flash(_("No more than %{max} %{model} can be selected for %{action}") % {:max => 32, :model => title, :action => "Compare"}, :error)
+      add_flash(_("No more than 32 %{model} can be selected for Compare") % {:model => title}, :error)
       if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
@@ -955,11 +955,11 @@ module ApplicationController::Compare
     identify_obj
     tss = find_checked_items                                        # Get the indexes of the checked timestamps
     if tss.length < 2
-      add_flash(_("At least 2 %{model} must be selected for %{action}") % {:model => "Analyses", :action => "Drift"}, :error)
+      add_flash(_("At least 2 Analyses must be selected for Drift"), :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
     elsif tss.length > 10
-      add_flash(_("No more than %{max} %{model} can be selected for %{action}") % {:max => 10, :model => "Analyses", :action => "Drift"}, :error)
+      add_flash(_("No more than 10 Analyses can be selected for Drift"), :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
     else
@@ -1792,7 +1792,7 @@ module ApplicationController::Compare
     row
   end
 
-  def comp_record_data_compressed_nonexistsmode(idx, match, val, basval)
+  def comp_record_data_nonexistsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
       row.merge!(compare_add_txt_col(idx, "%:", "% Matched"))
@@ -1816,6 +1816,14 @@ module ApplicationController::Compare
       end
     end
     row
+  end
+
+  def comp_record_data_compressed_nonexistsmode(idx, match, val, basval)
+    comp_record_data_nonexistsmode(idx, match, val, basval)
+  end
+
+  def comp_record_data_expanded_nonexistsmode(idx, match, val, basval)
+    comp_record_data_nonexistsmode(idx, match, val, basval)
   end
 
   def comp_record_data_expanded(idx, match, val, basval)
@@ -1851,32 +1859,6 @@ module ApplicationController::Compare
           row.merge!(drift_add_image_col(idx, "16/minus-red.png", "", val))
         else                                                        # Base doesn't have the record, match
           row.merge!(drift_add_image_col(idx, "16/minus-green.png", "", val))
-        end
-      end
-    end
-    row
-  end
-
-  def comp_record_data_expanded_nonexistsmode(idx, match, val, basval)
-    row = {}
-    if idx == 0                                                     # On the base?
-      row.merge!(compare_add_txt_col(idx, "% Matched:"))
-    else
-      if val == "Found"       # This object has the record
-        if basval == "Found"  # Base has the record
-          img_src = calculate_match_img(match)
-          unset_same_flag(match)
-          row.merge!(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
-        else
-          unset_same_flag
-          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
-        end
-      else
-        if basval == "Found"
-          unset_same_flag
-          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
-        else
-          row.merge!(compare_add_piechart_image(idx, "100% matched", "20", ""))
         end
       end
     end

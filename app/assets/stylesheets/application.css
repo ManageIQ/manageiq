@@ -9,7 +9,6 @@
  *= require automate_import_export
  *= require dialog_import_export
  *= require dialog_fields
- *= require widget_import_export
  *= require angular
  *= require miq_timeline
  *= require angular-patternfly

@@ -62,10 +62,14 @@ class NamespaceEmsRedhat < ActiveRecord::Migration
   end
 
   def up
-    remap(NAME_MAP)
+    say_with_time "Rename class references for RedHat" do
+      remap(NAME_MAP)
+    end
   end
 
   def down
-    remap(NAME_MAP.invert)
+    say_with_time "Rename class references for RedHat" do
+      remap(NAME_MAP.invert)
+    end
   end
 end

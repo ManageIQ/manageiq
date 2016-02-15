@@ -57,17 +57,15 @@ module ApplianceConsole
 
     # TODO: move say_error and say_info to prompting module?
     def say_error(method, output)
-      if interactive?
-        log = "\nSee #{ApplianceConsole::Logging.log_filename} for details." if ApplianceConsole::Logging.log_filename
-        text = "#{method.to_s.humanize} failed with error - #{output.truncate(200)}.#{log}"
-        say(text)
-        press_any_key
-        raise MiqSignalError
-      end
+      log = "\nSee #{ApplianceConsole::Logging.log_filename} for details." if ApplianceConsole::Logging.log_filename
+      text = "#{method.to_s.humanize} failed with error - #{output.truncate(200)}.#{log}"
+      say(text)
+      press_any_key if interactive?
+      raise MiqSignalError
     end
 
     def say_info(method, output)
-      say("#{method.to_s.humanize} #{output}") if interactive?
+      say("#{method.to_s.humanize} #{output}")
     end
 
     def log_and_feedback(method)

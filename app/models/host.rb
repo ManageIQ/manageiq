@@ -47,7 +47,8 @@ class Host < ApplicationRecord
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms, :inverse_of => :host
   has_many                  :miq_templates, :inverse_of => :host
-  has_and_belongs_to_many   :storages, :join_table => :host_storages
+  has_many                  :host_storages
+  has_many                  :storages, :through => :host_storages
   has_many                  :switches, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
@@ -153,6 +154,8 @@ class Host < ApplicationRecord
 
   alias_method :parent_cluster, :ems_cluster
   alias_method :owning_cluster, :ems_cluster
+
+  delegate :tenant_identity, :to => :ext_management_system
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -1134,7 +1137,7 @@ class Host < ApplicationRecord
   def refresh_services(ssu)
     xml = MiqXml.createDoc(:miq).root.add_element(:services)
 
-    services = ssu.shell_exec("systemctl -a --type service")
+    services = ssu.shell_exec("systemctl -a --type service --no-legend")
     if services
       # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
       services = MiqLinux::Utils.parse_systemctl_list(services)

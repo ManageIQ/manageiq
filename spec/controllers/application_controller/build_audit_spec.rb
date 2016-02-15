@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ApplicationController do
   context "audit events" do
     it "tests build_config_audit" do

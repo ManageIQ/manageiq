@@ -33,7 +33,7 @@ describe "VM Retirement Management" do
   it "#retire_now with userid" do
     event_name = 'request_vm_retire'
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-                  :retirement_initiator => "user", :user_id => 'freddy'}
+                  :retirement_initiator => "user", :userid => 'freddy'}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
 

@@ -9,8 +9,20 @@ module OpenstackHandle
 
     def initialize(dobj, os_handle, name)
       super(dobj)
-      @os_handle = os_handle
-      @name      = name
+      @delegated_object = dobj
+      @os_handle        = os_handle
+      @name             = name
+    end
+
+    def version
+      case @delegated_object
+      when Fog::Image::OpenStack::V1::Real
+        :v1
+      when Fog::Image::OpenStack::V2::Real
+        :v2
+      else
+        raise "Non supported Glance version #{@delegated_object.class.name}"
+      end
     end
 
     def images_with_pagination_loop

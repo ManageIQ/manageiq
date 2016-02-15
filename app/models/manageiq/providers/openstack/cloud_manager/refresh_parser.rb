@@ -307,19 +307,26 @@ module ManageIQ::Providers
       uid = volume.id
       new_result = {
         :ems_ref           => uid,
-        :name              => volume.display_name,
+        :type              => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
+        :name              => volume_name(volume),
         :status            => volume.status,
         :bootable          => volume.attributes['bootable'],
         :creation_time     => volume.created_at,
-        :description       => volume.display_description,
+        :description       => volume_description(volume),
         :volume_type       => volume.volume_type,
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
-        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.attributes['os-vol-tenant-attr:tenant_id']),
+        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
         :availability_zone => @data_index.fetch_path(:availability_zones, volume.availability_zone || "null_az"),
       }
 
       volume.attachments.each do |a|
+        if a['device'].blank?
+          $fog_log.warn "#{log_header}: Volume: #{uid}, is missing a mountpoint, skipping the volume processing"
+          $fog_log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
+          next
+        end
+
         dev = File.basename(a['device'])
         disks = @data_index.fetch_path(:vms, a['server_id'], :hardware, :disks)
 
@@ -344,14 +351,31 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
+    def volume_name(volume)
+      # Cinder v1
+      return volume.display_name if volume.respond_to?(:display_name)
+      # Cinder v2
+      return volume.name
+    end
+
+    def volume_description(volume)
+      # Cinder v1
+      return volume.display_description if volume.respond_to?(:display_description)
+      # Cinder v2
+      return volume.description
+    end
+
     def parse_snapshot(snap)
       uid = snap['id']
       new_result = {
         :ems_ref       => uid,
-        :name          => snap['display_name'],
+        :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
+        # Supporting both Cinder v1 and Cinder v2
+        :name          => snap['display_name'] || snap['name'],
         :status        => snap['status'],
         :creation_time => snap['created_at'],
-        :description   => snap['display_description'],
+        # Supporting both Cinder v1 and Cinder v2
+        :description   => snap['display_description'] || snap['description'],
         :size          => snap['size'].to_i.gigabytes,
         :tenant        => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
         :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])

@@ -63,7 +63,6 @@ module ReportController::Reports::Editor
         # only do this for new reports
         unless @edit[:rpt_id]
           self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0"
-          build_report_listnav
           setnode_for_customreport
         end
         @edit = session[:edit] = nil # clean out the saved info
@@ -449,7 +448,7 @@ module ReportController::Reports::Editor
               when :boolean
                 ["DEFAULT", "true"]
               when :integer, :float
-                ["DEFAULT", "", FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
+                ["DEFAULT", "", MiqExpression::FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? MiqExpression::FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
               else
                 ["DEFAULT", ""]
               end
