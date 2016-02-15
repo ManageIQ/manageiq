@@ -2,55 +2,23 @@ class ContainerTopologyService < TopologyService
 
   def initialize(provider_id)
     @provider_id = provider_id
-    @providers = retrieve_providers(@provider_id, ManageIQ::Providers::ContainerManager)
+    @providers = retrieve_providers(ManageIQ::Providers::ContainerManager, @provider_id)
   end
 
   def build_topology
     topo_items = {}
     links = []
 
-    @providers.each do |provider|
-      topo_items[provider_id = entity_id(provider)] = build_entity_data(provider)
-      provider.container_nodes.each { |n|
-        topo_items[node_id = entity_id(n)] = build_entity_data(n)
-        links << build_link(provider_id, node_id)
-        n.container_groups.each do |cg|
-          topo_items[cg_id = entity_id(cg)] = build_entity_data(cg)
-          links << build_link(node_id, cg_id)
-          cg.containers.each do |c|
-            topo_items[container_id = entity_id(c)] = build_entity_data(c)
-            links << build_link(cg_id, container_id)
-          end
-          if cg.container_replicator
-            cr = cg.container_replicator
-            topo_items[cr_id = entity_id(cr)] = build_entity_data(cr)
-            links << build_link(cr_id, cg_id)
-          end
-        end
+    entity_relationships = {:ContainerManager => {:ContainerNodes =>
+                                                      {:ContainerGroups =>
+                                                         {:Containers => nil, :ContainerReplicator => nil, :ContainerServices => {:ContainerRoutes => nil}},
+                                                       :lives_on => {:Host => nil}
+                                                   }}}
 
-        if n.lives_on
-          topo_items[lives_on_id = entity_id(n.lives_on)] = build_entity_data(n.lives_on)
-          links << build_link(node_id, lives_on_id)
-          if n.lives_on.kind_of?(Vm) # add link to Host
-            host = n.lives_on.host
-            if host
-              topo_items[host_id = entity_id(host)] = build_entity_data(host)
-              links << build_link(lives_on_id, host_id)
-            end
-          end
-        end
-      }
-
-      provider.container_services.each { |s|
-        topo_items[service_id = entity_id(s)] = build_entity_data(s)
-        s.container_groups.each { |cg| links << build_link(service_id, entity_id(cg)) } unless s.container_groups.empty?
-        unless s.container_routes.empty?
-          s.container_routes.each { |r|
-            topo_items[route_id = entity_id(r)] = build_entity_data(r)
-            links << build_link(service_id, route_id)
-          }
-        end
-      }
+    preloaded = @providers.includes(:container_nodes => [:container_groups => [:containers, :container_replicator, :container_services => [:container_routes]],
+                                                         :lives_on => [:host]])
+    preloaded.each do |entity|
+      topo_items, links = build_recursive_topology(entity, entity_relationships[:ContainerManager], topo_items, links)
     end
 
     icons = {:ContainerReplicator => {:type => "glyph", :icon => "\uE624", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-replicator

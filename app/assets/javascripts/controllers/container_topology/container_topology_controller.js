@@ -208,7 +208,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr('class', function() {
          var class_name = "attached-label";
          if ($scope.checkboxModel.value) {
-           return class_name + ' visible';
+           return class_name + ' visible';container
          }
          else {
            return class_name;
