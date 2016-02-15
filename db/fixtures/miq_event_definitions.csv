@@ -114,11 +114,11 @@ request_vm_reset,VM Reset Request,Default,vm_operational
 vm_suspend,VM Suspend,Default,vm_operational
 request_vm_suspend,VM Suspend Request,Default,vm_operational
 vm_pause,VM Pause,Default,vm_operational
-request_vm_pause,VM Suspend Request,Default,vm_operational
+request_vm_pause,VM Pause Request,Default,vm_operational
 vm_shelve,VM Shelve,Default,vm_operational
-request_vm_shelve,VM Shelve offload Request,Default,vm_operational
-vm_shelve_offload,VM Suspend,Default,vm_operational
-request_vm_shelve_offload,VM Suspend Request,Default,vm_operational
+request_vm_shelve,VM Shelve Request,Default,vm_operational
+vm_shelve_offload,VM Shelve Offload,Default,vm_operational
+request_vm_shelve_offload,VM Shelve Offload Request,Default,vm_operational
 vm_poweroff,VM Power Off,Default,vm_operational
 request_vm_poweroff,VM Power Off Request,Default,vm_operational
 vm_shutdown_guest,VM Guest Shutdown,Default,vm_operational
