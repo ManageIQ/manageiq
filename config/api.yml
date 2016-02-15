@@ -912,6 +912,14 @@
     :subcollections:
     - :request_tasks
     - :tasks
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
   :service_templates:
     :description: Service Templates
     :identifier: catalog_items_accord
