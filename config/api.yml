@@ -979,6 +979,9 @@
     - :tags
     - :service_dialogs
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: service_view
       :post:
       - :name: edit
         :identifier: service_edit
@@ -989,6 +992,9 @@
       - :name: delete
         :identifier: service_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: service_view
       :post:
       - :name: edit
         :identifier: service_edit

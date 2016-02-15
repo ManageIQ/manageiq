@@ -63,7 +63,7 @@ describe ApiController do
   describe "Service query" do
     before do
       template.resource_actions = [provision_ra, retire_ra]
-      api_basic_authorize
+      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
     end
 
     it "can return the provision_dialog" do

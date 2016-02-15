@@ -69,7 +69,8 @@ describe ApiController do
 
   describe "Querying services with no custom actions" do
     it "returns core actions as authorized" do
-      api_basic_authorize action_identifier(:services, :edit)
+      api_basic_authorize(action_identifier(:services, :edit),
+                          action_identifier(:services, :read, :resource_actions, :get))
 
       run_get services_url(svc1.id)
 
@@ -84,7 +85,8 @@ describe ApiController do
     end
 
     it "returns core actions as authorized including custom action buttons" do
-      api_basic_authorize action_identifier(:services, :edit)
+      api_basic_authorize(action_identifier(:services, :edit),
+                          action_identifier(:services, :read, :resource_actions, :get))
 
       run_get services_url(svc1.id)
 
@@ -93,7 +95,8 @@ describe ApiController do
     end
 
     it "supports the custom_actions attribute" do
-      api_basic_authorize action_identifier(:services, :edit)
+      api_basic_authorize(action_identifier(:services, :edit),
+                          action_identifier(:services, :read, :resource_actions, :get))
 
       run_get services_url(svc1.id), :attributes => "custom_actions"
 
@@ -102,7 +105,8 @@ describe ApiController do
     end
 
     it "supports the custom_action_buttons attribute" do
-      api_basic_authorize action_identifier(:services, :edit)
+      api_basic_authorize(action_identifier(:services, :edit),
+                          action_identifier(:services, :read, :resource_actions, :get))
 
       run_get services_url(svc1.id), :attributes => "custom_action_buttons"
 
@@ -172,7 +176,7 @@ describe ApiController do
 
   describe "Services with custom button dialogs" do
     it "queries for custom_actions returns expanded details for dialog buttons" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
 
       template2 = FactoryGirl.create(:service_template, :name => "template2")
       dialog2   = FactoryGirl.create(:dialog, :label => "dialog2")
