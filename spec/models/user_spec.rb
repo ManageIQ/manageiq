@@ -418,8 +418,6 @@ describe User do
 
     include_examples("seeding users with", [])
 
-    include_examples("seeding users with", [MiqGroup])
-
     include_examples("seeding users with", [MiqUserRole, MiqGroup])
   end
 
