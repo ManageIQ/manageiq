@@ -125,7 +125,7 @@ describe ApiController do
     end
 
     it "hides them from provisioning hashes" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:provision_requests, :read, :resource_actions, :get)
 
       password_field = ::MiqRequestWorkflow.all_encrypted_options_fields.last.to_s
       options = {:attrs => {:userid => "admin", password_field.to_sym => "super_password"}}
