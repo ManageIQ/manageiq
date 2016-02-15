@@ -218,8 +218,9 @@ describe ApiController do
     end
 
     it "does not return reconfigure action for non-reconfigurable services" do
-      api_basic_authorize
-      update_user_role(@role, action_identifier(:services, :retire), action_identifier(:services, :reconfigure))
+      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get),
+                          action_identifier(:services, :retire),
+                          action_identifier(:services, :reconfigure))
 
       run_get services_url(svc1.id)
 
@@ -228,8 +229,9 @@ describe ApiController do
     end
 
     it "returns reconfigure action for reconfigurable services" do
-      api_basic_authorize
-      update_user_role(@role, action_identifier(:services, :retire), action_identifier(:services, :reconfigure))
+      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get),
+                          action_identifier(:services, :retire),
+                          action_identifier(:services, :reconfigure))
 
       st1.resource_actions = [ra1]
       svc1.service_template_id = st1.id

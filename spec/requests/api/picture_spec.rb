@@ -44,7 +44,7 @@ describe ApiController do
 
   describe "Queries of Services" do
     it "allows queries of the related picture and image_href" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
 
       run_get services_url(service.id), :attributes => "picture,picture.image_href"
 
