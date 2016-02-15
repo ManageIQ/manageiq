@@ -25,4 +25,5 @@
  *= require container_topology
  *= require service_dialogs
  *= require xml_display
+ *= require c3
 */

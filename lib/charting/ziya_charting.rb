@@ -100,6 +100,10 @@ class ZiyaCharting < Charting
     data
   end
 
+  def deserialized(data)
+    data
+  end
+
   CHART_NAMES = [
     # ["Area",                 "Area"],
     # ["Area, Stacked",        "StackedArea"],
