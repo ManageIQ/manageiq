@@ -4,10 +4,10 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 # VMDB specific gems
 #
 
-gem "activerecord-deprecated_finders", "~>1.0.4",  :require => "active_record/deprecated_finders"
-gem "rails",                           "~>4.2.5"
-gem "activerecord-session_store",      "~>0.1.2"
-gem "sprockets-es6",                   "~>0.9.0",  :require => "sprockets/es6"
+gem "rails",                           "~>5.0.x"
+gem "rails-controller-testing",        :require => false
+gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
+gem "activerecord-session_store",      "~>0.1.2", :require => false
 
 # Local gems
 path "gems/" do
@@ -19,10 +19,11 @@ gem "angular-ui-bootstrap-rails",     "~>0.13.0"
 gem "codemirror-rails",               "=4.2"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
-gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
+gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/matthewd/jquery-rjs.git", :branch => "rails5" # https://github.com/amatsuda/jquery-rjs/pull/4
 gem "lodash-rails",                   "~>3.10.0"
 gem "patternfly-sass",                "~>2.9.0"
 gem "sass-rails"
+gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
@@ -46,8 +47,8 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 gem "american_date"
 gem "azure-armrest",                  "~>0.1.0"
 gem "color",                          "~>1.8"
-gem "default_value_for",              "~>3.0.1"
-gem "draper",                         "~>2.1.0"
+gem "default_value_for",              "~>3.0.1", :git => "git://github.com/matthewd/default_value_for.git", :branch => "rails-50" # https://github.com/FooBarWidget/default_value_for/pull/57
+gem "draper",                         "~>2.1.0", :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
@@ -58,14 +59,14 @@ gem "recursive-open-struct",          "~>0.6.1"
 gem "responders",                     "~>2.0"
 gem "secure_headers",                 "~>2.4.4"
 gem "spice-html5-rails"
-gem "thin",                           "~>1.6.0"  # Used by rails server through rack
+#gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
 gem "gettext_i18n_rails",             "~>1.4.0"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
-gem "rails-i18n",                     "~>4.0.8"
+gem "rails-i18n",                     "~>5.x"
 
 # Needed by External Auth
 gem "ruby-dbus"
@@ -85,10 +86,10 @@ gem "logging",                        "~>1.6.1",   :require => false  # Ziya dep
 gem "net_app_manageability",          ">=0.1.0",   :require => false
 gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "~>2.9.2",   :require => false
-gem "omniauth",                       "~>1.3.0",   :require => false
-gem "omniauth-google-oauth2",         :git => "git://github.com/zquestz/omniauth-google-oauth2.git", :tag => "v0.2.6"
+gem "omniauth",                       "~>1.3.1",   :require => false
+gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",   :require => false
-gem "ovirt_metrics",                  "~>1.1.0",   :require => false
+gem "ovirt_metrics",                  :git => "git://github.com/matthewd/ovirt_metrics.git", :branch => "rails5", :require => false # https://github.com/ManageIQ/ovirt_metrics/pull/8
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
@@ -120,7 +121,7 @@ unless ENV['APPLIANCE']
   end
 
   group :development, :test do
-    gem "rspec-rails",      "~>3.5.0.beta1"
+    gem "rspec-rails",      "~>3.5.x"
   end
 end
 
