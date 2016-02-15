@@ -505,6 +505,14 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqAction
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: control_explorer_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: control_explorer_view
   :policy_profiles:
     :description: Policy Profiles
     :identifier: policy_profile
