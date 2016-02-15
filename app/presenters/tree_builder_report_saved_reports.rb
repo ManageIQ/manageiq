@@ -32,7 +32,7 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
-    objects = MiqReportResult.where(set_saved_reports_condition(from_cid(object[:id].split('-').last))).to_a
+    objects = MiqReportResult.with_current_user_groups_and_report(from_cid(object[:id].split('-').last)).to_a
     count_only_or_objects(count_only, objects, nil)
   end
 end
