@@ -29,7 +29,7 @@ module Vmdb
       # we do not fail in cases where the database is not yet created, not yet
       # available, or has not yet been seeded.
       def find_resource
-        database_connectivity? && MiqServer.table_exists? ? MiqServer.my_server(true) : nil
+        database_connectivity? && MiqServer.table_exists? && SettingsChange.table_exists? ? MiqServer.my_server(true) : nil
       end
 
       def database_connectivity?
