@@ -30,10 +30,9 @@ class ContainerTopologyService
         end
 
         if n.lives_on
-          kind = entity_type(n.lives_on)
           topo_items[entity_id(n.lives_on)] = build_entity_data(n.lives_on)
           links << build_link(entity_id(n), entity_id(n.lives_on))
-          if kind == 'Vm' # add link to Host
+          if n.lives_on.kind_of?(Vm) # add link to Host
             host = n.lives_on.host
             if host
               topo_items[entity_id(host)] = build_entity_data(host)
