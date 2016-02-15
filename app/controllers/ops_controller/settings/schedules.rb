@@ -196,9 +196,9 @@ module OpsController::Settings::Schedules
 
   def schedule_toggle(enable)
     msg = if enable
-            _("No %s were selected to be enabled")
+            _("The selected %s were enabled")
           else
-            _("No %s were selected to be disabled")
+            _("The selected %s were disabled")
           end
 
     schedules = find_checked_items

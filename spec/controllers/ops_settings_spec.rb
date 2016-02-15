@@ -19,13 +19,13 @@ describe OpsController do
       it "#schedule_enable" do
         controller.schedule_enable
         flash_messages = controller.instance_variable_get(:@flash_array)
-        expect(flash_messages.first).to eq(:message => "No Schedules were selected to be enabled", :level => :error)
+        expect(flash_messages.first).to eq(:message => "The selected Schedules were enabled", :level => :error)
       end
 
       it "#schedule_disable" do
         controller.schedule_disable
         flash_messages = controller.instance_variable_get(:@flash_array)
-        expect(flash_messages.first).to eq(:message => "No Schedules were selected to be disabled", :level => :error)
+        expect(flash_messages.first).to eq(:message => "The selected Schedules were disabled", :level => :error)
       end
     end
 
