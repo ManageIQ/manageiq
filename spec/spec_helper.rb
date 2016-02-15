@@ -91,10 +91,11 @@ RSpec.configure do |config|
   #   EvmSpecHelper.log_ruby_object_usage
   # end
 
-  config.before(:each) do
-    EmsRefresh.debug_failures = true if defined?(EmsRefresh) && EmsRefresh.respond_to?(:debug_failures)
-    ApplicationController.handle_exceptions = false
+  config.before(:each) do |example|
+    EmsRefresh.debug_failures = true if example.metadata[:migrations].blank?
+    ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
+
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end
