@@ -117,7 +117,8 @@ describe ApiController do
     end
 
     it "returns core actions as authorized excluding custom action buttons" do
-      api_basic_authorize action_identifier(:service_templates, :edit)
+      api_basic_authorize(action_identifier(:service_templates, :edit),
+                          action_identifier(:service_templates, :read, :resource_actions, :get))
 
       run_get service_templates_url(template1.id)
 
@@ -128,7 +129,7 @@ describe ApiController do
     end
 
     it "supports the custom_actions attribute" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
 
       run_get service_templates_url(template1.id), :attributes => "custom_actions"
 
@@ -137,7 +138,7 @@ describe ApiController do
     end
 
     it "supports the custom_action_buttons attribute" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
 
       run_get service_templates_url(template1.id), :attributes => "custom_action_buttons"
 
