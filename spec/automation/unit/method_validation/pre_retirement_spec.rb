@@ -22,7 +22,7 @@ describe "pre_retirement Method Validation" do
   end
 
   it "does not queue any operation for a vm in 'powered_off' state" do
-    @vm.update_attribute(:power_state, "off")
+    @vm.update_attribute(:raw_power_state, "PowerOff")
     run_automate_method
 
     expect(MiqQueue.exists?(:method_name => 'stop', :instance_id => @vm.id, :role => 'ems_operations')).to be_falsey
