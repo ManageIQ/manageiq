@@ -30,10 +30,10 @@ module ApplianceConsole
 
       if fetch_key?
         say("")
-        @host      = ask_for_ip_or_hostname("hostname for appliance with encryption key (v2_key)", @host)
+        @host      = ask_for_ip_or_hostname("hostname for appliance with encryption key", @host)
         @login     = ask_for_string("appliance SSH login", @login)
         @password  = ask_for_password("appliance SSH password", @password)
-        @key_path  = ask_for_string("path of remote encryption key (v2_key)", @key_path)
+        @key_path  = ask_for_string("path of remote encryption key", @key_path)
       end
       @action
     end

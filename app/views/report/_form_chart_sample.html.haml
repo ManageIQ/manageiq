@@ -14,3 +14,6 @@
                         :height => 250,
                         :rand   => "#{rand(999_999_999)}"),
                         :id => 'my_chart', :bgcolor => '#f2f2f2', :width => 400, :height => 250)
+      - elsif Charting.backend == :c3
+        -# TODO
+        = c3chart_sample

@@ -25,7 +25,7 @@
       - partial_name = item.class.name.underscore
     - elsif item.kind_of?(VmOrTemplate)
       - partial_name = item.class.base_model.to_s.underscore
-    - elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
+    - elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager) || item.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
       - partial_name = "single_quad"
     - elsif %w(ExtManagementSystem Host).include?(item.class.base_class.name)
       - partial_name = item.class.base_class.name.underscore
