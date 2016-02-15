@@ -32,6 +32,17 @@ module MiqAeServiceHostSpec
         expect(ae_result).to eq(1)
       end
 
+      it "with ems_events" do
+        @ems_event = FactoryGirl.create(:ems_event)
+        @host.ems_events << @ems_event
+        method   = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host').first.ems_events"
+        @ae_method.update_attributes(:data => method)
+        ae_result = invoke_ae.root(@ae_result_key)
+        expect(ae_result.first).to be_kind_of(MiqAeMethodService::MiqAeServiceEmsEvent)
+        expect(ae_result.first.id).to eq(@ems_event.id)
+
+      end
+
       it "with id" do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host', #{@host.id})"
         @ae_method.update_attributes(:data => method)
