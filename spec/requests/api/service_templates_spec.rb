@@ -20,10 +20,11 @@ describe ApiController do
     before do
       template.resource_actions = [ra1, ra2]
       template.picture = picture
-      api_basic_authorize
     end
 
     it "queries all resource actions of a Service Template" do
+      api_basic_authorize
+
       run_get "#{service_templates_url(template.id)}/resource_actions", :expand => "resources"
 
       resource_actions = template.resource_actions
@@ -32,6 +33,8 @@ describe ApiController do
     end
 
     it "queries a specific resource action of a Service Template" do
+      api_basic_authorize
+
       run_get "#{service_templates_url(template.id)}/resource_actions",
               :expand => "resources",
               :filter => ["action='Provision'"]
@@ -41,6 +44,8 @@ describe ApiController do
     end
 
     it "allows queries of the related picture" do
+      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
+
       run_get service_templates_url(template.id), :attributes => "picture"
 
       expect_result_to_have_keys(%w(id href picture))
@@ -48,6 +53,8 @@ describe ApiController do
     end
 
     it "allows queries of the related picture and image_href" do
+      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
+
       run_get service_templates_url(template.id), :attributes => "picture,picture.image_href"
 
       expect_result_to_have_keys(%w(id href picture))

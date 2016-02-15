@@ -914,6 +914,9 @@
     - :service_requests
     - :service_dialogs
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: svc_catalog_provision
       :post:
       - :name: edit
         :identifier: catalogitem_edit
@@ -934,6 +937,9 @@
       - :name: unassign
         :identifier: st_catalog_edit
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: svc_catalog_provision
       :post:
       - :name: edit
         :identifier: catalogitem_edit
