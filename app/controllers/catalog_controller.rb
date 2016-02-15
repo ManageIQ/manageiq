@@ -136,6 +136,7 @@ class CatalogController < ApplicationController
   def catalog_item_types
     {
       "amazon"                => "Amazon",
+      "azure"                 => "Azure",
       "generic"               => "Generic",
       "generic_orchestration" => "Orchestration",
       "google"                => "Google",
