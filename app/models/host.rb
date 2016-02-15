@@ -155,8 +155,6 @@ class Host < ApplicationRecord
   alias_method :parent_cluster, :ems_cluster
   alias_method :owning_cluster, :ems_cluster
 
-  delegate :tenant_identity, :to => :ext_management_system
-
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
@@ -191,6 +189,14 @@ class Host < ApplicationRecord
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
+  end
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
   end
 
   def make_smart
