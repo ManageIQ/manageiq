@@ -1289,6 +1289,9 @@
     - :custom_attributes
     - :software
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: vm_show_list
       :post:
       - :name: add
         :identifier: vm_miq_request_new
@@ -1333,6 +1336,9 @@
       - :name: delete
         :identifier: vm_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: vm_show
       :post:
       - :name: edit
         :identifier: vm_edit

@@ -18,7 +18,7 @@ describe ApiController do
 
   describe "Query collections" do
     it "returns resource lists with only hrefs" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
       create_vms(3)
 
       run_get vms_url
@@ -29,7 +29,7 @@ describe ApiController do
     end
 
     it "returns seperate ids and href when expanded" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
       create_vms(3)
 
       run_get vms_url, :expand => "resources"
@@ -41,7 +41,7 @@ describe ApiController do
     end
 
     it "always return ids and href when asking for specific attributes" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm1   # create resource
 
       run_get vms_url, :expand => "resources", :attributes => "guid"
@@ -53,7 +53,7 @@ describe ApiController do
 
   describe "Query resource" do
     it "returns both id and href" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
       vm1   # create resource
 
       run_get vm1_url

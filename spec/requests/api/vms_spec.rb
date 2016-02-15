@@ -74,7 +74,7 @@ describe ApiController do
     end
 
     it "query VM accounts subcollection with two related accounts using expand directive" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
       # create resources
       acct1
       acct2
@@ -131,7 +131,7 @@ describe ApiController do
     end
 
     it "query VM software subcollection with two related software using expand directive" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
       # create resources
       sw1
       sw2
@@ -669,7 +669,7 @@ describe ApiController do
     end
 
     it "getting custom_attributes from a vm using expand" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
       vm.custom_attributes = [ca1, ca2]
 
       run_get vm_url, :expand => "custom_attributes"
