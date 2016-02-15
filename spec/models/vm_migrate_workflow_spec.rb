@@ -57,6 +57,7 @@ describe VmMigrateWorkflow do
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
       expect(request.requester_name).to eq(admin.name)
+      expect(request.workflow).to be_a described_class
 
       # updates a request
 

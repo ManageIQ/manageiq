@@ -72,10 +72,6 @@ module MiqProvisionMixin
     MiqProvisionWorkflow.class_for_source(source)
   end
 
-  def workflow(prov_options = options, flags = {})
-    workflow_class.new(prov_options, get_user, flags)
-  end
-
   def eligible_resources(rsc_type)
     prov_options = options.dup
     prov_options[:placement_auto] = [false, 0]

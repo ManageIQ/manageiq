@@ -143,4 +143,8 @@ module MiqRequestMixin
     end
     ws_tag_data
   end
+
+  def workflow(request_options = options, flags = {})
+    workflow_class.new(request_options, get_user, flags) if workflow_class
+  end
 end

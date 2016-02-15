@@ -118,6 +118,12 @@ describe MiqRequest do
       let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
 
       it { expect(provision_request.workflow_class).to eq(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow) }
+
+      it "#workflow" do
+        expect(provision_request.workflow({:number_of_vms => 1}, :skip_dialog_load => true))
+          .to be_a ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
+      end
+
       describe("#get_options")          { it { expect(provision_request.get_options).to eq(:number_of_vms => 1) } }
       describe("#request_type")         { it { expect(provision_request.request_type).to eq(provision_request.provision_type) } }
       describe("#request_type_display") { it { expect(provision_request.request_type_display).to eq("VM Provision") } }
