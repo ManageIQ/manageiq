@@ -1093,6 +1093,14 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqTask
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: tasks_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: tasks_view
   :templates:
     :description: Templates
     :identifier: miq_template
