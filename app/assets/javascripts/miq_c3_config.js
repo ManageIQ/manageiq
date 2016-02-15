@@ -6,7 +6,7 @@
  *   https://github.com/patternfly/patternfly/blob/master/dist/js/patternfly.js
  */
 
-(function (miq) {
+(function (ManageIQ) {
 
   var pfColors = ['#0088ce', '#00659c', '#3f9c35', '#ec7a08', '#cc0000', '#3b0083'];
 
@@ -102,96 +102,100 @@
     return d3.format('%')(ratio);
   }
 
-  miq.charts.c3config = {
+  ManageIQ.charts.c3config = {
 
     Bar: _.defaultsDeep({
-      data: {
-        type: 'bar'
+        data: {
+          type: 'bar'
+        },
+        axis: {
+          rotated: true
+        }
       },
-      axis: {
-        rotated: true
-      }
-    },
       c3mixins.xAxisCategory,
       c3mixins.yAxisNoOuterTick,
       c3mixins.pfDataColorFunction,
       c3mixins.showGrid,
       c3mixins.smallerBarWidth,
       c3mixins.noLegend,
-      c3mixins.noTooltip),
+      c3mixins.noTooltip
+    ),
 
     Column: _.defaultsDeep({
-      data: {
-        type: 'bar'
-      }
-    },
+        data: {
+          type: 'bar'
+        }
+      },
       c3mixins.xAxisCategoryRotated,
       c3mixins.yAxisNoOuterTick,
       c3mixins.pfDataColorFunction,
       c3mixins.showGrid,
       c3mixins.smallerBarWidth,
       c3mixins.noLegend,
-      c3mixins.noTooltip),
+      c3mixins.noTooltip
+    ),
 
     StackedBar: _.defaultsDeep({
-      data: {
-        type: 'bar'
+        data: {
+          type: 'bar'
+        },
+        axis: {
+          rotated: true
+        }
       },
-      axis: {
-        rotated: true
-      }
-    },
       c3mixins.xAxisCategory,
       c3mixins.yAxisNoOuterTick,
       c3mixins.pfColorPattern,
       c3mixins.showGrid,
       c3mixins.smallerBarWidth,
       c3mixins.legendOnRightSide,
-      c3mixins.noTooltip),
+      c3mixins.noTooltip
+    ),
 
     StackedColumn: _.defaultsDeep({
-      data: {
-        type: 'bar'
-      }
-    },
+        data: {
+          type: 'bar'
+        }
+      },
       c3mixins.xAxisCategoryRotated,
       c3mixins.yAxisNoOuterTick,
       c3mixins.pfColorPattern,
       c3mixins.showGrid,
       c3mixins.smallerBarWidth,
       c3mixins.legendOnRightSide,
-      c3mixins.noTooltip),
+      c3mixins.noTooltip
+    ),
 
     Pie: _.defaultsDeep({
-      data: {
-        type: 'pie'
-      },
-      pie: {
-        label: {
-          format: percentLabelFormat
+        data: {
+          type: 'pie'
         },
-        expand: false
-      }
-    },
+        pie: {
+          label: {
+            format: percentLabelFormat
+          },
+          expand: false
+        }
+      },
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
-      c3mixins.noTooltip),
+      c3mixins.noTooltip
+    ),
 
     Donut: _.defaultsDeep({
-      data: {
-        type: 'donut'
-      },
-      donut: {
-        label: {
-          format: percentLabelFormat
+        data: {
+          type: 'donut'
         },
-        expand: false
-      }
-    },
+        donut: {
+          label: {
+            format: percentLabelFormat
+          },
+          expand: false
+        }
+      },
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
-      c3mixins.noTooltip)
-
+      c3mixins.noTooltip
+    )
   };
-
 })(ManageIQ);
