@@ -20,8 +20,8 @@ describe EmsInfraController do
     end
 
     it "when VM Migrate is pressed" do
-      vm = FactoryGirl.create(:vm_vmware)
-      ems = FactoryGirl.create("ems_vmware")
+      ems = FactoryGirl.create(:ems_vmware)
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
       post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => 1, :id => ems.id
       expect(controller.send(:flash_errors?)).not_to be_truthy
       expect(response.body).to include("/miq_request/prov_edit?")
