@@ -21,7 +21,7 @@ else
                 when "memory" then  :memory_store
                 when "cache" then   :dalli_store
                 else
-                  raise "session_store, '#{evm_store}', invalid. Should be one of 'sql', 'memory', 'cache'"
+                  raise "session_store, '#{evm_store}', invalid. Should be one of 'sql', 'memory', 'cache'.  Source configuration: #{config_file}"
                 end
 
   if rails_store == :dalli_store
