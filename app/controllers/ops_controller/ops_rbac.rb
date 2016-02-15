@@ -723,10 +723,11 @@ module OpsController::OpsRbac
              when :user  then @edit[:user_id] ? User.find_by_id(@edit[:user_id]) : User.new
              end
 
-    send("rbac_#{what}_set_record_vars", record)
     send("rbac_#{what}_validate?")
+    send("rbac_#{what}_set_record_vars", record)
 
     if record.valid? && !flash_errors? && record.save
+      set_role_features(record) if what == "role"
       AuditEvent.success(build_saved_audit(record, add_pressed))
       subkey = (key == :group) ? :description : :name
       add_flash(_("%{model} \"%{name}\" was saved") % {:model => what.titleize, :name => @edit[:new][subkey]})
@@ -1261,9 +1262,13 @@ module OpsController::OpsRbac
       role.settings[:restrictions] = {:vms => @edit[:new][:vm_restriction]}
     end
     role.settings = nil if role.settings.empty?
+  end
+
+  def set_role_features(role)
     role.miq_product_features =
       MiqProductFeature.find_all_by_identifier(rbac_compact_features(@edit[:new][:features], MiqProductFeature.feature_root))
   end
+
 
   # Validate some of the role fields
   def rbac_role_validate?
