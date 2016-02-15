@@ -778,6 +778,14 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqReportResult
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_view
   :roles:
     :description: Roles
     :identifier: rbac_role
