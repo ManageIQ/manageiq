@@ -318,20 +318,20 @@ module MiqAeMethodService
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
     end
 
-    def with_acquired_lock(lock_name, max_retry_time=60, min_retries=10)
-      give_up_at = Time.now + max_retry_time
-      retry_interval = max_retry_time / min_retries
+    def with_acquired_lock(lock_name, max_retry_time = 60, retries = 10)
+      give_up_at = Time.zone.now + max_retry_time
+      retry_interval = max_retry_time / retries
 
-      while Time.now < give_up_at do
+      while Time.zone.now < give_up_at
         if MiqConcurrency::PGMutex.try_advisory_lock(lock_name)
           begin
-            yield
+            return yield
           ensure
             MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
           end
           return
         end
-        sleep(rand(retry_interval))
+        sleep(retry_interval)
       end
 
       raise MiqAeException::LockAcquisitionFailed, "Failed on lock_name=#{lock_name}"
@@ -345,11 +345,11 @@ module MiqAeMethodService
       until locks_acquired(lock_name) == 0
         MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
       end
-      return true
+      true
     end
 
-    def has_lock?(lock_name)
-      return locks_acquired(lock_name) > 0
+    def locked?(lock_name)
+      locks_acquired(lock_name) > 0
     end
 
     private
@@ -378,8 +378,7 @@ module MiqAeMethodService
     end
 
     def locks_acquired(lock_name)
-      num_locks_acquired = MiqConcurrency::PGMutex.count_advisory_lock(lock_name)
-      return num_locks_acquired
+      MiqConcurrency::PGMutex.count_advisory_lock(lock_name)
     end
   end
 
