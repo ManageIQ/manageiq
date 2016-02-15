@@ -12,7 +12,7 @@
     %tbody
       - if (!params[:add] && session[:nteventlog_data].empty?) || params[:edit_entry]
         %tr#new_tr{:onclick => remote_function(:url => {:action => 'ap_ce_select', :add => 'new', :item1 => "nteventlog", :id => "#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
-          %td= image_tag(image_path('toolbars/new.png'), :class => "rollover small")
+          %td= image_tag(image_path('toolbars/import.png'), :class => "rollover small")
           %td= _("<New Entry>")
           %td= _("<Click on this row to create a new entry>")
           %td= _("<Click on this row to create a new entry>")
