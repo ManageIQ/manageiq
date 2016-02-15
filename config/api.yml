@@ -691,12 +691,18 @@
     :methods: *70174834085860
     :klass: MiqReport
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_saved_reports_view
       :post:
       - :name: run
         :identifier: miq_report_run
     :subcollections:
     - :results
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_saved_reports_view
       :post:
       - :name: import
         :identifier: miq_report_export
