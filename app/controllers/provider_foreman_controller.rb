@@ -219,11 +219,11 @@ class ProviderForemanController < ApplicationController
     end
     authentications = Authentication.where(:resource_id => provider[:id], :resource_type => "Provider")
 
-    render :json => {:provtype    => model_to_name(config_mgr.type),
-                     :name        => provider.name,
-                     :url         => provider.url,
-                     :verify_ssl  => provider.verify_ssl,
-                     :log_userid  => authentications[0].userid}
+    render :json => {:provtype   => model_to_name(config_mgr.type),
+                     :name       => provider.name,
+                     :url        => provider.url,
+                     :verify_ssl => provider.verify_ssl,
+                     :log_userid => authentications[0].userid}
   end
 
   def authentication_validate
@@ -586,10 +586,8 @@ class ProviderForemanController < ApplicationController
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
         record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
-        @right_cell_text =
-            _("%{model} \"%{name}\"") %
-              {:name  => provider.name,
-               :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
+                                                        :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
         @right_cell_text =
           _("%{model} \"%{name}\"") % {:name => provider.name, :model => "#{record_model}"}
@@ -730,8 +728,7 @@ class ProviderForemanController < ApplicationController
     if action_name == "new"
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "Configuration Management")
     elsif action_name == "edit"
-      # get the selected record to display the matching type
-       @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
+      @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
     end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -922,14 +919,14 @@ class ProviderForemanController < ApplicationController
 
   def construct_edit
     @edit ||= {}
-    @edit[:current] = {:name        => @provider_cfgmgmt.name,
-                       :provtype    => model_to_name(@provider_cfgmgmt.type),
-                       :url         => @provider_cfgmgmt.url,
-                       :verify_ssl  => @provider_cfgmgmt.verify_ssl}
-    @edit[:new] = {:name        => params[:name],
-                   :provtype    => params[:provtype],
-                   :url         => params[:url],
-                   :verify_ssl  => params[:verify_ssl]}
+    @edit[:current] = {:name       => @provider_cfgmgmt.name,
+                       :provtype   => model_to_name(@provider_cfgmgmt.type),
+                       :url        => @provider_cfgmgmt.url,
+                       :verify_ssl => @provider_cfgmgmt.verify_ssl}
+    @edit[:new] = {:name       => params[:name],
+                   :provtype   => params[:provtype],
+                   :url        => params[:url],
+                   :verify_ssl => params[:verify_ssl]}
   end
 
   def locals_for_tagging

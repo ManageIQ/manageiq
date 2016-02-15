@@ -3,7 +3,6 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def tree_init_options(_tree_name)
     {:full_ids => true,
-     :open_all => true,
      :leaf     => "ManageIQ::Providers::ConfigurationManager"}
   end
 
@@ -15,23 +14,23 @@ class TreeBuilderConfigurationManager < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id      => "fr",
-                 :tree    => "fr_tree",
-                 :text    => "Foreman Providers",
-                 :image   => "folder",
-                 :tip     => "Foreman Providers",
-                 :expand  => true)
-    objects.push(:id      => "at",
-                 :tree    => "at_tree",
-                 :text    => "Ansible Tower Providers",
-                 :image   => "folder",
-                 :tip     => "Ansible Tower Providers",
-                 :expand  => true)
+    objects.push(:id            => "fr",
+                 :tree          => "fr_tree",
+                 :text          => "Foreman Providers",
+                 :image         => "folder",
+                 :tip           => "Foreman Providers",
+                 :load_children => true)
+    objects.push(:id            => "at",
+                 :tree          => "at_tree",
+                 :text          => "Ansible Tower Providers",
+                 :image         => "folder",
+                 :tip           => "Ansible Tower Providers",
+                 :load_children => true)
     count_only_or_objects(count_only, objects, nil)
   end
 
   def x_get_tree_cmat_kids(_object, count_only)
-     count_only_or_objects(count_only, [], nil)
+    count_only_or_objects(count_only, [], nil)
   end
 
   def x_get_tree_cmf_kids(object, count_only)

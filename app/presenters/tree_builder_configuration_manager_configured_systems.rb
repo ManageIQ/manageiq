@@ -4,9 +4,7 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf     => "ConfiguredSystem",
-     :open_all => true
-    }
+    {:leaf => "ConfiguredSystem"}
   end
 
   def set_locals_for_render
@@ -17,26 +15,26 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id      => "csf",
-                 :text    => "Foreman Configured Systems",
-                 :image   => "folder",
-                 :tip     => "Foreman Configured Systems",
-                 :expand  => true)
-    objects.push(:id      => "csa",
-                 :text    => "Ansible Tower Configured Systems",
-                 :image   => "folder",
-                 :tip     => "Ansible Tower Configured Systems",
-                 :expand  => true)
-    objects.push(:id => "global",
-                 :text => _("Global Filters"),
-                 :image => "folder",
-                 :tip => _("Global Shared Filters"),
+    objects.push(:id            => "csf",
+                 :text          => "Foreman Configured Systems",
+                 :image         => "folder",
+                 :tip           => "Foreman Configured Systems",
+                 :load_children => true)
+    objects.push(:id            => "csa",
+                 :text          => "Ansible Tower Configured Systems",
+                 :image         => "folder",
+                 :tip           => "Ansible Tower Configured Systems",
+                 :load_children => true)
+    objects.push(:id          => "global",
+                 :text        => _("Global Filters"),
+                 :image       => "folder",
+                 :tip         => _("Global Shared Filters"),
                  :cfmeNoClick => true)
-    objects.push(:id => "my",
-                  :text => _("My Filters"),
-                  :image => "folder",
-                  :tip => _("My Personal Filters"),
-                  :cfmeNoClick => true)
+    objects.push(:id          => "my",
+                 :text        => _("My Filters"),
+                 :image       => "folder",
+                 :tip         => _("My Personal Filters"),
+                 :cfmeNoClick => true)
     count_only_or_objects(count_only, objects, nil)
   end
 
