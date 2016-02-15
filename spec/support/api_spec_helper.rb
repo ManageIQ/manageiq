@@ -124,8 +124,8 @@ module ApiSpecHelper
     end
   end
 
-  def api_basic_authorize(identifier = nil)
-    update_user_role(@role, identifier) unless identifier.blank?
+  def api_basic_authorize(*identifiers)
+    update_user_role(@role, *identifiers)
     basic_authorize api_config(:user), api_config(:password)
   end
 
