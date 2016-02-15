@@ -1,7 +1,7 @@
 module Rbac
   # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
   # Classes should be added to this list ONLY after:
-  # 1. It has been added to the MiqExpression.@@base_tables list
+  # 1. It has been added to the MiqExpression::BASE_TABLES list
   # 2. Tagging has been enabled in the UI
   # 3. Class contains acts_as_miq_taggable
   CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
