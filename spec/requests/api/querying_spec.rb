@@ -16,7 +16,7 @@ describe ApiController do
   let(:vm1) { FactoryGirl.create(:vm_vmware, :name => "vm1") }
 
   describe "Querying vms" do
-    before { api_basic_authorize }
+    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
     it "supports offset" do
       create_vms_by_name(%w(aa bb cc))
@@ -63,7 +63,7 @@ describe ApiController do
   end
 
   describe "Sorting vms by attribute" do
-    before { api_basic_authorize }
+    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
     it "supports ascending order" do
       create_vms_by_name %w(cc aa bb)
@@ -104,7 +104,7 @@ describe ApiController do
   end
 
   describe "Filtering vms" do
-    before { api_basic_authorize }
+    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
     it "supports attribute equality test using double quotes" do
       _vm1, vm2 = create_vms_by_name(%w(aa bb))
@@ -318,7 +318,7 @@ describe ApiController do
 
   describe "Querying vm attributes" do
     it "supports requests specific attributes" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm = create_vms_by_name(%w(aa)).first
 
       run_get vms_url, :expand => "resources", :attributes => "name,vendor"
@@ -329,7 +329,7 @@ describe ApiController do
     end
 
     it "skips requests of invalid attributes" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id), :attributes => "bogus"
 
@@ -340,7 +340,7 @@ describe ApiController do
 
   describe "Querying vms by tag" do
     it "is supported" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       dept = FactoryGirl.create(:classification_department)
@@ -356,7 +356,7 @@ describe ApiController do
   end
 
   describe "Querying vms" do
-    before { api_basic_authorize }
+    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
     it "and sorted by name succeeeds with unreferenced class" do
       run_get vms_url, :sort_by => "name", :expand => "resources"
@@ -401,7 +401,7 @@ describe ApiController do
 
   describe "Querying resources" do
     it "does not return actions if not entitled" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id)
 
@@ -410,7 +410,7 @@ describe ApiController do
     end
 
     it "returns actions if authorized" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize action_identifier(:vms, :edit), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id)
 
@@ -419,7 +419,7 @@ describe ApiController do
     end
 
     it "returns correct actions if authorized as such" do
-      api_basic_authorize action_identifier(:vms, :suspend)
+      api_basic_authorize action_identifier(:vms, :suspend), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id)
 
@@ -431,8 +431,9 @@ describe ApiController do
     end
 
     it "returns multiple actions if authorized as such" do
-      api_basic_authorize
-      update_user_role(@role, action_identifier(:vms, :start), action_identifier(:vms, :stop))
+      api_basic_authorize(action_identifier(:vms, :start),
+                          action_identifier(:vms, :stop),
+                          action_identifier(:vms, :read, :resource_actions, :get))
 
       run_get vms_url(vm1.id)
 
@@ -442,7 +443,7 @@ describe ApiController do
     end
 
     it "returns actions if asked for with physical attributes" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id), :attributes => "name,vendor,actions"
 
@@ -451,7 +452,7 @@ describe ApiController do
     end
 
     it "does not return actions if asking for a physical attribute" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id), :attributes => "name"
 
@@ -460,7 +461,7 @@ describe ApiController do
     end
 
     it "does return actions if asking for virtual attributes" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id), :attributes => "disconnected"
 
@@ -469,7 +470,7 @@ describe ApiController do
     end
 
     it "does not return actions if asking for physical and virtual attributes" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id), :attributes => "name,disconnected"
 
