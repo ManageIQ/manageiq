@@ -37,7 +37,7 @@ module ReportFormatter
       super
       mri.chart = {
         :miqChart => "#{mri.graph[:type]}",
-        :data => {
+        :data     => {
           :columns => []
         }
       }
@@ -57,11 +57,11 @@ module ReportFormatter
     end
 
     def chart_is_2d?
-      ['Bar', 'Column', 'StackedBar', 'StackedColumn'].include?(mri.graph[:type])
+      %w(Bar Column StackedBar StackedColumn).include?(mri.graph[:type])
     end
 
     def chart_is_stacked?
-      ['StackedBar', 'StackedColumn'].include?(mri.graph[:type])
+      %w(StackedBar StackedColumn).include?(mri.graph[:type])
     end
 
     def no_records_found_chart(*)
