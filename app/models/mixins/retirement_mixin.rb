@@ -39,6 +39,7 @@ module RetirementMixin
     if retires_on != timestamp
       self.retired              = false if timestamp.nil? || (timestamp.to_date > Date.today)
       self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
+      self.retirement_state     = RETIRED if timestamp && timestamp.to_date <= Date.today
       write_attribute(:retires_on, timestamp)
       self.retirement_requester = nil
     end
