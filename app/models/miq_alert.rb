@@ -12,7 +12,7 @@ class MiqAlert < ApplicationRecord
 
   attr_accessor :reserved
 
-  @@base_tables = %w(
+  BASE_TABLES = %w(
     Vm
     Host
     Storage
@@ -20,7 +20,10 @@ class MiqAlert < ApplicationRecord
     ExtManagementSystem
     MiqServer
   )
-  cattr_accessor :base_tables
+
+  def self.base_tables
+    BASE_TABLES
+  end
 
   include ReportableMixin
 
@@ -362,7 +365,7 @@ class MiqAlert < ApplicationRecord
 
   def self.automate_expressions
     @automate_expressions ||= [
-      {:name => "nothing", :description => " Nothing", :db => @@base_tables, :options => []},
+      {:name => "nothing", :description => " Nothing", :db => BASE_TABLES, :options => []},
       {:name => "ems_alarm", :description => "VMware Alarm", :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{expression[:options][:ems_id]}_#{expression[:options][:ems_alarm_mor]}',
         :options => [
           {:name => :ems_id, :description => "Management System"},
