@@ -58,7 +58,9 @@ class Host < ApplicationRecord
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many                  :ems_events, ->(host) { where("host_id = ? OR dest_host_id = ?", host.id, host.id).order(:timestamp) }, :class_name => "EmsEvent"
+  has_many                  :ems_events,
+                            ->(host) { where("host_id = ? OR dest_host_id = ?", host.id, host.id).order(:timestamp) },
+                            :class_name => "EmsEvent"
   has_many                  :ems_events_src, :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_host_id
 
