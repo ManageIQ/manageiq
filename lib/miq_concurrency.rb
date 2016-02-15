@@ -41,7 +41,6 @@ module MiqConcurrency
       def stable_hashcode(input)
         Zlib.crc32(input.to_s)
       end
-
     end
   end
 end

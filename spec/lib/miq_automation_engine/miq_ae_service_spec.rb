@@ -101,8 +101,8 @@ module MiqAeServiceSpec
 
     context "#acquire_lock" do
       let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
-      let(:lock_name) {'conch'}
-      let(:lock_hash) {Zlib.crc32(lock_name)}
+      let(:lock_name) { 'conch' }
+      let(:lock_hash) { Zlib.crc32(lock_name) }
 
       before do
         miq_ae_service.release_lock(lock_name)
@@ -121,7 +121,7 @@ module MiqAeServiceSpec
 
     context "#release_lock" do
       let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
-      let(:lock_name) {'conch'}
+      let(:lock_name) { 'conch' }
 
       before do
         miq_ae_service.release_lock(lock_name)
@@ -146,7 +146,7 @@ module MiqAeServiceSpec
 
     context "#locked?" do
       let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
-      let(:lock_name) {'conch'}
+      let(:lock_name) { 'conch' }
 
       before do
         miq_ae_service.release_lock(lock_name)
@@ -163,8 +163,8 @@ module MiqAeServiceSpec
 
     context "#with_acquired_lock" do
       let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
-      let(:lock_name) {'conch'}
-      let(:lock_hash) {Zlib.crc32(lock_name)}
+      let(:lock_name) { 'conch' }
+      let(:lock_hash) { Zlib.crc32(lock_name) }
 
       before do
         miq_ae_service.release_lock(lock_name)
