@@ -6,7 +6,7 @@ class C3Charting < Charting
 
   # for Charting.detect_available_plugin
   def self.priority
-    0 # TODO set to value > JqplotCharting.priority to take effect
+    0 # TODO: set to value > JqplotCharting.priority to take effect
   end
 
   # backend identifier
@@ -21,14 +21,12 @@ class C3Charting < Charting
 
   # formatter for Rupport::Controller#render - see lib/report_formatter/...
   def format
-    # TODO - the actual formatter
     :c3
   end
 
   # called from each ApplicationController instance
   def load_helpers(klass)
     klass.instance_eval do
-      # TODO
       helper C3Helper
     end
   end
@@ -41,7 +39,7 @@ class C3Charting < Charting
   end
 
   def sample_chart(_options, _report_theme)
-    # TODO TODO
+    # TODO: implement sample charts
   end
 
   def js_load_statement(delayed = false)
@@ -55,11 +53,10 @@ class C3Charting < Charting
 
   # list of themes - in options_for_select format
   def chart_themes_for_select
-    ['Default', 'default']
+    %w(Default default)
   end
 
   def serialized(data)
-    # ruby hash to yaml
     data.try(:to_yaml)
   end
 
