@@ -35,6 +35,18 @@ class MiqWinRM
   rescue WinRM::WinRMAuthorizationError
     $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
     raise
+  rescue WinRM::WinRMWMIError => error
+    $log.debug "Error Running Powershell on #{hostname} using user \"#{username}\": #{error}" unless $log.nil?
+    if error.to_s.include? "This user is allowed a maximum number of "
+      $log.debug "Re-opening connection and retrying" unless $log.nil?
+      @executor.close
+      @executor        = nil 
+      @connection      = raw_connect(@username, @password, @uri) if @elevated_runner
+      @elevated_runner = nil
+      retry
+    else
+      raise
+    end
   end
 
   def run_elevated_powershell_script(script)
@@ -44,6 +56,18 @@ class MiqWinRM
   rescue WinRM::WinRMAuthorizationError
     $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
     raise
+  rescue WinRM::WinRMWMIError => error
+    $log.debug "Error Running Powershell on #{hostname} using user \"#{username}\": #{error}" unless $log.nil?
+    if error.to_s.include? "This user is allowed a maximum number of "
+      $log.debug "Re-opening connection and retrying" unless $log.nil?
+      @connection      = raw_connect(@username, @password, @uri)
+      @elevated_runner = nil
+      @executor.close if @executor
+      @executor = nil 
+      retry
+    else
+      raise
+    end
   end
 
   private
