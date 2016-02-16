@@ -76,7 +76,7 @@ module MiqReport::Search
     assoc = options.delete(:association) || options.delete(:parent_method)
     assoc ||= db_class.base_model.to_s.pluralize.underscore  # Derive association from base model
     ref = parent.class.reflection_with_virtual(assoc.to_sym)
-    if ref.nil? || ref.kind_of?(VirtualReflection)
+    if ref.nil? || parent.class.virtual_reflection?(assoc)
       targets = parent.send(assoc).collect(&:id) # assoc is either a virtual reflection or a method so just call the association and collect the ids
     else
       targets = parent.send(assoc).ids

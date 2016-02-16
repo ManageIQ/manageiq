@@ -80,7 +80,7 @@ class Chargeback < ActsAsArModel
     vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
     options[:ext_options] ||= {}
 
-    perf_cols = MetricRollup.column_names
+    perf_cols = MetricRollup.attribute_names
     options[:ext_options][:only_cols] = Metric::BASE_COLS
     rates = ChargebackRate.where(:default => true)
     rates.each do |rate|
@@ -171,10 +171,6 @@ class Chargeback < ActsAsArModel
     @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents, :associations_preloaded => true)
   end
 
-  def self.column_names
-    @column_names ||= columns.collect(&:name).sort
-  end
-
   def self.calculate_costs(perf, h, rates)
     # This expects perf interval to be hourly. That will be the most granular interval available for chargeback.
     raise "expected 'hourly' performance interval but got '#{perf.capture_interval_name}" unless perf.capture_interval_name == "hourly"
@@ -195,7 +191,7 @@ class Chargeback < ActsAsArModel
         [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost   }
 
         col_hash.each do |k, val|
-          next unless column_names.include?(k)
+          next unless attribute_names.include?(k)
           h[k] ||= 0
           h[k] += val
         end

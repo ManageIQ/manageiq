@@ -9,6 +9,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'application_helper'
 
+require 'rails-controller-testing'
 require 'rspec/rails'
 require 'vcr'
 require 'cgi'
@@ -27,6 +28,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 

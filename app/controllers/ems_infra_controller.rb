@@ -40,7 +40,7 @@ class EmsInfraController < ApplicationController
 
     return unless params[:scale]
 
-    scale_parameters = params.select { |k, _v| k.include?('::count') || k.include?('Count') }
+    scale_parameters = params.select { |k, _v| k.include?('::count') || k.include?('Count') }.to_unsafe_h
     assigned_hosts = scale_parameters.values.sum(&:to_i)
     infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
     if assigned_hosts > infra.hosts.count

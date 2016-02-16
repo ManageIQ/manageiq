@@ -174,24 +174,15 @@ module Rbac
   end
 
   def self.compute_total_count(klass, scope, extra_target_ids, conditions, includes = nil)
-    cond_for_count =
-      if extra_target_ids.nil?
-        conditions
-      else
-        # sanitize_sql_for_conditions is deprecated (at least when given
-        # a hash).. but we can ignore it for now. When it goes away,
-        # we'll be on Rails 5.0, and can use Relation#or instead.
-        ActiveSupport::Deprecation.silence do
-          ids_clause = klass.send(:sanitize_sql_for_conditions, :id => extra_target_ids)
-          if conditions.nil?
-            ids_clause
-          else
-            original_conditions = klass.send(:sanitize_sql_for_conditions, conditions)
-            "(#{original_conditions}) OR (#{ids_clause})"
-          end
-        end
-      end
-    scope.where(cond_for_count).includes(includes).references(includes).count
+    if conditions && extra_target_ids
+      scope = scope.where(conditions).or(scope.where(:id => extra_target_ids))
+    elsif conditions
+      scope = scope.where(conditions)
+    elsif extra_target_ids
+      scope = scope.where(:id => extra_target_ids)
+    end
+
+    scope.includes(includes).references(includes).count
   end
 
   # @param parent_class [Class] Class of parent (e.g. Host)

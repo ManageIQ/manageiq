@@ -155,31 +155,19 @@ describe CatalogController do
     end
 
     it "uploads a selected png file " do
-      upload_image = File.new(Rails.root + 'spec/fixtures/files/upload_image.png')
-      @image = ActionDispatch::Http::UploadedFile.new(:tempfile => upload_image, :filename => File.basename(upload_image), :type => "image/png")
-      @upload =  {:image => @image}
-      @params =  {:commit => 'Upload', :controller => 'catalog', :action => 'st_upload_image', :id => @st.id,
-                  :upload => @upload}
-      controller.instance_variable_set(:@_params, @params)
-      post :st_upload_image, :format => :js, :id => @st.id, :upload => @upload, :active_tree => :sandt_tree
+      file = fixture_file_upload('files/upload_image.png', 'image/png')
+      post :st_upload_image, :format => :js, :id => @st.id, :upload => {:image => file}, :active_tree => :sandt_tree, :commit => 'Upload'
       expect(assigns(:flash_array).first[:message]).to include('Custom Image file "upload_image.png" successfully uploaded')
     end
 
-    it "displays an error when the selected fileis not a png file or .jpg " do
-      upload_image = File.new(Rails.root + 'spec/fixtures/files/upload_image.txt')
-      @image = ActionDispatch::Http::UploadedFile.new(:tempfile => upload_image, :filename => File.basename(upload_image), :type => "image/png")
-      @upload =  {:image => @image}
-      @params =  {:commit => 'Upload', :controller => 'catalog', :action => 'st_upload_image', :id => @st.id,
-                  :upload => @upload}
-      controller.instance_variable_set(:@_params, @params)
-      post :st_upload_image, :format => :js, :id => @st.id, :upload => @upload
+    it "displays an error when the selected file is not a png file or .jpg " do
+      file = fixture_file_upload('files/upload_image.txt', 'image/png')
+      post :st_upload_image, :format => :js, :id => @st.id, :upload => {:image => file}, :commit => 'Upload'
       expect(assigns(:flash_array).first[:message]).to include("Custom Image must be a .png or .jpg file")
     end
 
     it "displays a message when an image file is not selected " do
-      @params = {:commit => 'Upload', :controller => 'catalog', :action => 'st_upload_image', :id => @st.id}
-      controller.instance_variable_set(:@_params, @params)
-      post :st_upload_image, :format => :js, :id => @st.id, :params => @params
+      post :st_upload_image, :format => :js, :id => @st.id, :commit => 'Upload'
       expect(assigns(:flash_array).first[:message]).to include("Use the Browse button to locate a .png or .jpg image file")
     end
   end

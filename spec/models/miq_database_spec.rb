@@ -77,7 +77,7 @@ describe MiqDatabase do
         MiqDatabase.seed
         @db = MiqDatabase.first
 
-        @expected_tables = %w(schema_migrations vms miq_databases)
+        @expected_tables = %w(ar_internal_metadata schema_migrations vms miq_databases)
         allow(VmdbTable).to receive(:vmdb_table_names).and_return(@expected_tables)
       end
 

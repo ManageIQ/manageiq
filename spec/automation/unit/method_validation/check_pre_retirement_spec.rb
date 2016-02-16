@@ -12,7 +12,7 @@ describe "check_pre_retirement Method Validation" do
   end
 
   it "returns 'ok' for a vm in powered_off state" do
-    @vm.update_attribute(:power_state, "off")
+    @vm.update_attribute(:raw_power_state, "PowerOff")
 
     expect(ws.root['vm'].power_state).to eq("off")
     expect(ws.root['ae_result']).to eq("ok")
@@ -26,7 +26,7 @@ describe "check_pre_retirement Method Validation" do
   end
 
   it "retries for a vm in powered_on state" do
-    @vm.update_attribute(:power_state, "on")
+    @vm.update_attribute(:raw_power_state, "Running")
 
     expect(ws.root['ae_result']).to eq("retry")
     expect(ws.root['vm'].power_state).to eq("on")

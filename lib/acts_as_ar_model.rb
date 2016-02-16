@@ -1,16 +1,3 @@
-class ActsAsArModelColumn < ActiveRecord::ConnectionAdapters::Column
-  attr_reader :options
-
-  def initialize(name, options)
-    type = options.kind_of?(Symbol) ? options : options[:type]
-    raise ArgumentError, "type must be specified" if type.nil?
-
-    @options = options.kind_of?(Hash) ? options : {}
-
-    super(name.to_s, @options[:default], VirtualColumn::TYPE_MAP[type.to_sym])
-  end
-end
-
 class ActsAsArModel
   include Vmdb::Logging
 
@@ -44,90 +31,101 @@ class ActsAsArModel
   # Column methods
   #
 
-  def self.columns_hash
-    @columns_hash ||= {}
+  module FakeAttributeStore
+    extend ActiveSupport::Concern
+
+    # When ActiveRecord::Attributes gets [partially] extracted into
+    # ActiveModel (hopefully in 5.1), this should become redundant. For
+    # now, we'll just fake out the portion of the API we need.
+    #
+    # Based very heavily on matching methods in current ActiveRecord.
+
+    module ClassMethods
+      def load_schema
+        load_schema! if @attribute_types.nil?
+      end
+
+      def load_schema!
+        # no-op
+      end
+
+      def reload_schema_from_cache
+        @attribute_types = nil
+      end
+
+      def attribute_types
+        @attribute_types ||= Hash.new(ActiveModel::Type::Value.new)
+      end
+
+      def attribute_names
+        load_schema
+        attribute_types.keys
+      end
+
+      def has_attribute?(name)
+        load_schema
+        attribute_types.key?(name.to_s)
+      end
+
+      def type_for_attribute(attr_name)
+        load_schema
+        attribute_types[attr_name]
+      end
+    end
   end
 
-  def self.columns
-    @columns ||= columns_hash.values
-  end
+  module AttributeBag
+    def initialize
+      @attributes = {}
+    end
 
-  def self.column_names
-    @column_names ||= columns_hash.keys
-  end
+    def attributes=(values)
+      values.each do |attr, value|
+        send("#{attr}=", value)
+      end
+    end
 
-  def self.column_names_symbols
-    @column_names_symbols ||= column_names.collect(&:to_sym)
+    def attributes
+      @attributes.dup
+    end
+
+    def [](attr)
+      @attributes[attr.to_s]
+    end
+    alias_method :read_attribute, :[]
+
+    def []=(attr, value)
+      @attributes[attr.to_s] = value
+    end
+    alias_method :write_attribute, :[]=
   end
 
   def self.set_columns_hash(hash)
     hash[:id] ||= :integer
 
-    hash.each do |col, options|
-      columns_hash[col.to_s] = ActsAsArModelColumn.new(col.to_s, options)
+    hash.each do |attribute, type|
+      virtual_attribute attribute, type
 
-      define_method(col) do
-        read_attribute(col)
+      define_method(attribute) do
+        read_attribute(attribute)
       end
 
-      define_method("#{col}=") do |val|
-        write_attribute(col, val)
+      define_method("#{attribute}=") do |val|
+        write_attribute(attribute, val)
       end
     end
   end
 
-  #
-  # Reflection methods
-  #
+  include FakeAttributeStore
+  include VirtualAttributes
 
-  def self.reflections
-    @reflections ||= {}
-  end
-
-  #
-  # Acts As Reportable methods
-  #
-
-  #
-  # Virtual columns and reflections
-  #
-
-  extend VirtualFields
-
-  #
-  # Attributes
-  #
-
-  attr_accessor :attributes
-
-  def self.instances_are_derived?
-    true
-  end
-
-  def self.reflect_on_association(name)
-    virtual_reflection(name)
-  end
-
-  def self.compute_type(name)
-    ActiveRecord::Base.send :compute_type, name
-  end
+  include AttributeBag
 
   def initialize(values = {})
-    self.attributes = {}
-    values.each do |attr, value|
-      send("#{attr}=", value)
-    end
+    super()
+    self.attributes = values
   end
 
-  def [](attr)
-    attributes[attr.to_s]
-  end
-  alias_method :read_attribute, :[]
-
-  def []=(attr, value)
-    attributes[attr.to_s] = value
-  end
-  alias_method :write_attribute, :[]=
 
   #
   # Find routines
@@ -189,7 +187,7 @@ class ActsAsArModel
 
   # Returns the contents of the record as a nicely formatted string.
   def inspect
-    attributes_as_nice_string = self.class.column_names.collect do |name|
+    attributes_as_nice_string = self.class.attribute_names.collect do |name|
       "#{name}: #{attribute_for_inspect(name)}"
     end.compact.join(", ")
     "#<#{self.class} #{attributes_as_nice_string}>"
