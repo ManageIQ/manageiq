@@ -25,6 +25,7 @@ class RequestRefererService
     'ems_cluster'              => %w(show:id show_list), # http://localhost:3000/ems_cluster/show/400r2
     'storage'                  => %w(show:id show_list), # http://localhost:3000//storage/show/400r1
     'ems_container'            => %w(show:id show_list), # http://localhost:3000/ems_container/show/400r1
+    'flavor'                   => %w(show:id show_list),
     'cloud_tenant'             => %w(show:id show_list), # http://localhost:3000/cloud_tenant/show/400r1
     'cloud_volume'             => %w(show:id show_list), # http://localhost:3000/cloud_volume/show
     'cloud_volume_snapshot'    => %w(show:id show_list), # http://localhost:3000/cloud_volume_snapshot/show
