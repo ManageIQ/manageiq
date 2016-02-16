@@ -253,6 +253,8 @@ storage:
     :keep_hourly_metrics: 6.months
     :keep_realtime_metrics: 4.hours
     :purge_window_size: 1000
+ui:
+  mark_translated_strings: false
 webservices:
   consume_protocol: https
   contactwith: ipaddress
