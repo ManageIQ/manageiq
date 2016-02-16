@@ -8,7 +8,7 @@ describe OrchestrationStackController do
 
   render_views
 
-  context 'show instances' do
+  describe '#show' do
     let(:record) { FactoryGirl.create(:orchestration_stack) }
 
     before do
@@ -18,9 +18,22 @@ describe OrchestrationStackController do
     end
 
     it 'does not renders compliance check and comparison buttons' do
-      get :show, :params => { :id => record.id, :display => "instances" }
+      get :show, :params => {:id => record.id, :display => "instances"}
       expect(response.body).not_to include('instance_check_compliance')
       expect(response.body).not_to include('instance_compare')
+    end
+
+    context "respond with" do
+      subject { get :show, :id => record.id, :display => "instances" }
+
+      it { is_expected.to have_http_status 200 }
+      it { is_expected.not_to have_http_status 500 }
+    end
+
+    context "render listnav partial" do
+      subject { get :show, :id => record.id, :display => "instances" }
+
+      it { is_expected.to render_template(:partial => "layouts/listnav/_orchestration_stack") }
     end
   end
 end
