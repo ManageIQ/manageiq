@@ -703,6 +703,21 @@
     - :subcollection
     :methods: *70174834086080
     :klass: Dialog
+  :service_orders:
+    :description: Service Orders
+    :options:
+    - :collection
+    :methods: *70174834084700
+    :klass: ServiceOrder
+    :collection_actions:
+      :post:
+      - :name: create
+      - :name: edit
+      - :name: delete
+    :resource_actions:
+      :post:
+      - :name: edit
+      - :name: delete
   :service_requests:
     :description: Service Requests
     :options:
