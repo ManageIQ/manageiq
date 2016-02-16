@@ -1523,6 +1523,35 @@ class MiqVimInventory < MiqVimClientBase
   # Must be called with cache lock held
   # Returns with the cache lock held - must be unlocked by caller.
   #
+  def storagePods_locked
+    raise "storagePods_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@storagePods) if @storagePods
+
+    $vim_log.info "MiqVimInventory.storagePods_locked: loading Datastore cache for #{@connId}"
+    begin
+      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
+
+      ra = getMoPropMulti(inventoryHash_locked['StoragePod'], @propMap[:StoragePod][:props])
+
+      @storagePods      = {}
+      @storagePodsByMor = {}
+      ra.each do |dsObj|
+        addStoragePodObj(dsObj)
+      end
+    ensure
+      @cacheLock.sync_unlock if unlock
+    end
+    $vim_log.info "MiqVimInventory.dataStores_locked: loaded Datastore cache for #{@connId}"
+
+    @storagePods
+  end # def storagePods_locked
+  protected :storagePods_locked
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
   def dataStoresByMor_locked
     raise "dataStoresByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
     return(@dataStoresByMor) if @dataStoresByMor
@@ -1530,6 +1559,19 @@ class MiqVimInventory < MiqVimClientBase
     @dataStoresByMor
   end # def dataStoresByMor_locked
   protected :dataStoresByMor_locked
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def storagePodsByMor_locked
+    raise "storagePodsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@storagePodsByMor) if @storagePodsByMor
+    storagePods_locked
+    @storagePodsByMor
+  end # def storagePodsByMor_locked
+  protected :storagePodsByMor_locked
 
   #
   # Public accessor
@@ -1555,8 +1597,12 @@ class MiqVimInventory < MiqVimClientBase
     @cacheLock.synchronize(:SH) do
       if selSpec.nil?
         ds = dupObj(dataStoresByMor_locked)
+        sp = dupObj(storagePodsByMor_locked)
+        ds.merge!(sp)
       else
         ds = applySelector(dataStoresByMor_locked, selSpec)
+        sp = applySelector(storagePodsByMor_locked, selSpec)
+        ds.merge!(sp)
       end
     end
     assert_no_locks
@@ -1606,6 +1652,10 @@ class MiqVimInventory < MiqVimClientBase
 
   def addDataStoreObj(dsObj)
     addObjHash(:Datastore, dsObj)
+  end
+
+  def addStoragePodObj(dsObj)
+    addObjHash(:StoragePod, dsObj)
   end
 
   #

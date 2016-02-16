@@ -151,6 +151,8 @@ module EmsRefresh::VcUpdates
       "summary.type",
       "summary.uncommitted",
       "summary.url",
+      "childEntity",
+      "parent",
     ],
 
     :ems_refresh_cluster   => [
