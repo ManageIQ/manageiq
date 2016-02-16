@@ -2,8 +2,7 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
-  @@proto = VMDB::Config.new("vmdb").config[:product][:proto]
-  @@base_tables = %w(
+  BASE_TABLES = %w(
     AuditEvent
     AvailabilityZone
     BottleneckEvent
@@ -62,7 +61,7 @@ class MiqExpression
     Zone
   )
 
-  @@include_tables = %w(
+  INCLUDE_TABLES = %w(
     advanced_settings
     audit_events
     availability_zones
@@ -329,6 +328,11 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
+  end
+
+  def self.proto?
+    return @proto if defined?(@proto)
+    @proto = VMDB::Config.new("vmdb").config.fetch_path(:product, :proto)
   end
 
   def self.to_human(exp)
@@ -1392,7 +1396,7 @@ class MiqExpression
   end
 
   def self.base_tables
-    @@base_tables
+    BASE_TABLES
   end
 
   def self.model_details(model, opts = {:typ => "all", :include_model => true, :include_tags => false, :include_my_tags => false})
@@ -1518,8 +1522,8 @@ class MiqExpression
     end
 
     refs.each do |assoc, ref|
-      next unless @@include_tables.include?(assoc.to_s.pluralize)
-      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !@@proto
+      next unless INCLUDE_TABLES.include?(assoc.to_s.pluralize)
+      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !proto?
       next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host
 
       next if ref.macro == :belongs_to && model.name != parent[:root]
