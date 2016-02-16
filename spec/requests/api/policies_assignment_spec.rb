@@ -16,7 +16,7 @@
 #   /api/:collection/:id/policy_profiles
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
@@ -38,19 +38,13 @@ describe ApiController do
   let(:ps1) { FactoryGirl.create(:miq_policy_set, :description => "Policy Set 1") }
   let(:ps2) { FactoryGirl.create(:miq_policy_set, :description => "Policy Set 2") }
 
-  before(:each) do
-    init_api_spec_env
-
+  before do
     # Creating:  policy_set_1 = [policy_1, policy_2]  and  policy_set_2 = [policy_3]
 
     ps1.add_member(p1)
     ps1.add_member(p2)
 
     ps2.add_member(p3)
-  end
-
-  def app
-    Vmdb::Application
   end
 
   def test_policy_assign_no_role(object_policies_url)

@@ -2,15 +2,7 @@
 # REST API Request Tests - /api versioning
 #
 describe ApiController do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
+  include_context "api request specs"
 
   context "Versioning Queries" do
     it "test versioning query" do

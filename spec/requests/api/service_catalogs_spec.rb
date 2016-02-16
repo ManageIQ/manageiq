@@ -19,19 +19,11 @@
 # - Refresh dialog fields       /api/service_catalogs/:id/service_templates/:id action "refresh_dialog_fields"
 #
 describe ApiController do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
+  include_context "api request specs"
 
   def sc_templates_url(id, st_id = nil)
     st_base = "#{service_catalogs_url(id)}/service_templates"
     st_id ? "#{st_base}/#{st_id}" : st_base
-  end
-
-  def app
-    Vmdb::Application
   end
 
   describe "Service Catalogs create" do

@@ -1,11 +1,6 @@
 RSpec.describe "tenants API" do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
-  def app
-    Vmdb::Application
-  end
-
-  before { init_api_spec_env }
   let!(:root_tenant) { Tenant.seed }
 
   it "can list all the tenants" do

@@ -6,15 +6,7 @@
 # - Create multiple automation requests /api/automation_requests    action "create"
 #
 describe ApiController do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
+  include_context "api request specs"
 
   describe "Automation Requests" do
     let(:approver) { FactoryGirl.create(:user_miq_request_approver) }

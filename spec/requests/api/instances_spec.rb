@@ -1,9 +1,5 @@
 RSpec.describe "Instances API" do
-  include Rack::Test::Methods
-
-  def app
-    Vmdb::Application
-  end
+  include_context "api request specs"
 
   def update_raw_power_state(state, *instances)
     instances.each { |instance| instance.update_attributes!(:raw_power_state => state) }
@@ -20,7 +16,6 @@ RSpec.describe "Instances API" do
   let(:instance2_url) { instances_url(instance2.id) }
   let(:invalid_instance_url) { instances_url(999_999) }
   let(:instances_list) { [instance1_url, instance2_url] }
-  before(:each) { init_api_spec_env }
 
   context "Instance index" do
     it "lists only the cloud instances (no infrastructure vms)" do

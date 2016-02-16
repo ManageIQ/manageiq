@@ -10,11 +10,7 @@
 # - Delete multiple users                /api/users                           action "delete"
 #
 RSpec.describe "users API" do
-  include Rack::Test::Methods
-
-  def app
-    Vmdb::Application
-  end
+  include_context "api request specs"
 
   let(:expected_attributes) { %w(id name userid current_group_id) }
 
@@ -30,8 +26,6 @@ RSpec.describe "users API" do
 
   let(:user1) { FactoryGirl.create(:user, sample_user1.except(:group).merge(:miq_groups => [group1])) }
   let(:user2) { FactoryGirl.create(:user, sample_user2.except(:group).merge(:miq_groups => [group2])) }
-
-  before { init_api_spec_env }
 
   context "with an appropriate role" do
     it "can change the user's password" do
