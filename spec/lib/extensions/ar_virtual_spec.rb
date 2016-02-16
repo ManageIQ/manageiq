@@ -28,6 +28,7 @@ describe VirtualFields do
     end
 
     after(:each) do
+      TestClassBase.remove_connection
       Object.send(:remove_const, :TestClass)
       Object.send(:remove_const, :TestClassBase)
     end
