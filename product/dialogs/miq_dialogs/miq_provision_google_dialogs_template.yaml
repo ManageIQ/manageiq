@@ -159,6 +159,7 @@
           :values_from:
             :method: :allowed_cloud_networks
           :description: Cloud Network
+          :required_method: :validate_placement
           :auto_select_single: false
           :required: true
           :display: :edit
