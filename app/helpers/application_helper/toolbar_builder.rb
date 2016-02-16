@@ -1078,7 +1078,10 @@ class ApplicationHelper::ToolbarBuilder
         requester = current_user
         return false if requester.admin_user?
         return _("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
-        return _("%s requests cannot be deleted" % @record.approval_state.titleize) if %w(approved denied).include?(@record.approval_state)
+        if %w(approved denied).include?(@record.approval_state)
+          return _("%{approval_states} requests cannot be deleted") %
+            {:approval_states => @record.approval_state.titleize}
+        end
       end
     when "MiqGroup"
       case id
