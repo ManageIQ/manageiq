@@ -24,7 +24,7 @@
                 - t = _("Move selected fields up")
                 %button.btn.btn-default{:title           => t,
                                         :remote          => true,
-                                        "data-submit"    => "column_list",
+                                        "data-submit"    => "column_lists",
                                         "data-method"    => :post,
                                         "data-click_url" => {:url => url_for(:action => 'group_reorder_field_changed',
                                                                              :button => 'up',
@@ -37,7 +37,7 @@
                 - t = _("Move selected fields down")
                 %button.btn.btn-default{:title           => t,
                                         :remote          => true,
-                                        "data-submit"    => "column_list",
+                                        "data-submit"    => "column_lists",
                                         "data-method"    => :post,
                                         "data-click_url" => {:url => url_for(:action => 'group_reorder_field_changed',
                                                                              :button => 'down',
