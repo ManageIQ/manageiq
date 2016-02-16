@@ -15,7 +15,7 @@
           :id       => "available_fields")
       %td
     %tr
-      %td{:align => "center", :style => "padding-top: 15px;"}
+      %td.text-center{:style => "padding-top: 15px;"}
         - cond_down = @edit[:new][:model].nil? || MiqExpression.reporting_available_fields(@edit[:new][:model],
                                                                                            @edit[:new][:perf_interval]).length == 0
         - cond_up = @edit[:new][:fields].length == 0
@@ -51,24 +51,25 @@
           :style    => "width:850px;",
           :size     => 10,
           :id       => "selected_fields")
-      %td{:width => "30", :valign => "middle"}
-        - [['fa-angle-double-up',   'top',    _("to top")],
-           ['fa-angle-up',          'up',     _("up")],
-           ['fa-angle-down',        'down',   _("down")],
-           ['fa-angle-double-down', 'bottom', _("to bottom")]].each do |icon, button, text|
-          - t = _("Move selected fields %{where}") % {:where => text}
-          - if @edit[:new][:fields].length < 2
-            %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
-              %i.fa.fa-lg{:class => icon}
-          - else
-            // button has attribute onclick='return false;' to not send a form
-            %button.btn.btn-default{:title           => t,
-                                    :alt             => t,
-                                    :remote          => true,
-                                    :onclick         => 'return false;',
-                                    "data-submit"    => 'column_lists',
-                                    "data-method"    => :post,
-                                    "data-click_url" => {:url => url_for(:action => 'form_field_changed',
-                                                                         :button => button,
-                                                                         :id     => @edit[:rpt_id] || "new")}.to_json}
-              %i.fa.fa-lg{:class => icon}
+      %td.text-center{:width => "30"}
+        .btn-group-vertical
+          - [['fa-angle-double-up',   'top',    _("to top")],
+             ['fa-angle-up',          'up',     _("up")],
+             ['fa-angle-down',        'down',   _("down")],
+             ['fa-angle-double-down', 'bottom', _("to bottom")]].each do |icon, button, text|
+            - t = _("Move selected fields %{where}") % {:where => text}
+            - if @edit[:new][:fields].length < 2
+              %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
+                %i.fa.fa-lg{:class => icon}
+            - else
+              // button has attribute onclick='return false;' to not send a form
+              %button.btn.btn-default{:title           => t,
+                                      :alt             => t,
+                                      :remote          => true,
+                                      :onclick         => 'return false;',
+                                      "data-submit"    => 'column_lists',
+                                      "data-method"    => :post,
+                                      "data-click_url" => {:url => url_for(:action => 'form_field_changed',
+                                                                           :button => button,
+                                                                           :id     => @edit[:rpt_id] || "new")}.to_json}
+                %i.fa.fa-lg{:class => icon}
