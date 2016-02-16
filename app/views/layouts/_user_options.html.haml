@@ -15,11 +15,18 @@
             = _('Change Group:')
             %ul.dropdown-menu.scrollable-menu
               - current_user.miq_groups.sort_by_desc.each do |group|
-                %li
-                  %a{:title => _("Select to change to another Group"), :href => "#",
-                        :onclick => "miqSparkle(true);miqToggleUserOptions(#{group.id})"}
-                    = group.description
-                    = "(#{_('Current Group')})" if group == current_group
+                - if group == current_group
+                  %li.disabled
+                    %a{:title   => _("Currently Selected Group"),
+                       :href    => "#"}
+                      = group.description
+                      = "(#{_('Current Group')})"
+                - else
+                  %li
+                    %a{:title   => _("Change to this Group"),
+                      :href     => "#",
+                      :onclick  => "miqSparkle(true); miqToggleUserOptions(#{group.id})"}
+                      = group.description
       - else
         %li.disabled
           %a{:href => "#"}
