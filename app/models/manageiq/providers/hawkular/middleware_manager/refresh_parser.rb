@@ -60,7 +60,7 @@ module ManageIQ::Providers
           :ems_ref    => eap.path,
           :nativeid   => eap.id,
           :name       => parse_name(eap.id),
-          :host       => eap.properties['Hostname'],
+          :hostname   => eap.properties['Hostname'],
           :product    => eap.properties['Product Name'],
           :type_path  => eap.type_path,
           :properties => eap.properties

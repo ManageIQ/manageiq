@@ -6,7 +6,7 @@ class CreateMiddlewareServers < ActiveRecord::Migration
       t.string :ems_ref    # path
       t.string :nativeid   # id
       t.string :type_path
-      t.string :host
+      t.string :hostname
       t.string :product
       t.text   :properties
       t.bigint :ems_id

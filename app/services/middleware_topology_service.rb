@@ -54,7 +54,7 @@ class MiddlewareTopologyService
   end
 
   def build_kinds
-    [:MiddlewareServer, :MiddlewareDeployment].each_with_object({}) { |kind, h| h[kind] = true }
+    kinds = {:MiddlewareServer => true, :MiddlewareDeployment => true}
     if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Hawkular::MiddlewareManager) }
       kinds.merge!(:Hawkular => true)
     end
