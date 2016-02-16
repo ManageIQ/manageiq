@@ -21,7 +21,7 @@ describe ApplicationHelper do
     shared_examples "no custom buttons" do
       it("#get_custom_buttons")           { expect(get_custom_buttons(subject)).to be_blank }
       it("#custom_buttons_hash")          { expect(custom_buttons_hash(subject)).to be_blank }
-      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject)[:button_groups]).to be_blank }
+      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject).definition).to be_blank }
       it("#record_to_service_buttons")    { expect(record_to_service_buttons(subject)).to be_blank }
     end
 
@@ -104,12 +104,8 @@ describe ApplicationHelper do
           :enabled      => "true",
           :items        => button_set_item1_items
         }
-        button_set1_header = {
-          :name  => "custom_buttons_#{@button_set.name}",
-          :items => [button_set_item1]
-        }
-        button_groups = [button_set1_header]
-        expect(build_custom_buttons_toolbar(subject)).to eq(:button_groups => button_groups)
+        group_name = "custom_buttons_#{@button_set.name}"
+        expect(build_custom_buttons_toolbar(subject).definition[group_name]).to eq([button_set_item1])
       end
     end
 
