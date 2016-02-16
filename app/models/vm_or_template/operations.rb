@@ -89,6 +89,11 @@ module VmOrTemplate::Operations
     nil
   end
 
+  def validate_terminate
+    return {:available => false, :message => 'The VM is terminated'} if self.terminated?
+    {:available => true, :message => nil}
+  end
+
   def validate_vm_control_powered_on
     validate_vm_control_power_state(true)
   end
