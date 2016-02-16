@@ -16,7 +16,7 @@
 # - Delete multiple roles                 /api/roles                            action "delete"
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   let(:feature_identifiers) do
     %w(vm_explorer ems_infra_tag my_settings_time_profiles
@@ -56,15 +56,9 @@ describe ApiController do
   end
 
   before(:each) do
-    init_api_spec_env
-
     @product_features = feature_identifiers.collect do |identifier|
       FactoryGirl.create(:miq_product_feature, :identifier => identifier)
     end
-  end
-
-  def app
-    Vmdb::Application
   end
 
   def test_features_query(role, role_url, klass, attr = :id)

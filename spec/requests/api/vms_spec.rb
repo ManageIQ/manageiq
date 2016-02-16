@@ -2,7 +2,7 @@
 # REST API Request Tests - /api/vms
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
@@ -26,14 +26,6 @@ describe ApiController do
   let(:vm_url)             { vms_url(vm.id) }
 
   let(:invalid_vm_url) { vms_url(999_999) }
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
 
   def update_raw_power_state(state, *vms)
     vms.each { |vm| vm.update_attributes!(:raw_power_state => state) }

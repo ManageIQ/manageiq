@@ -14,7 +14,7 @@
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   ENDPOINT_ATTRS = ApiController::Providers::ENDPOINT_ATTRS
 
@@ -52,14 +52,6 @@ describe ApiController do
       "hostname"  => "sample_openshift.provider.com",
       "ipaddress" => "100.200.300.3",
     }
-  end
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
   end
 
   describe "Providers actions on Provider class" do

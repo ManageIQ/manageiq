@@ -2,7 +2,7 @@
 # REST API Request Tests - /api/tags
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server)   { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
@@ -25,17 +25,11 @@ describe ApiController do
   let(:tag_count)    { Tag.count }
 
   before(:each) do
-    init_api_spec_env
-
     FactoryGirl.create(:classification_department_with_tags)
     FactoryGirl.create(:classification_cost_center_with_tags)
 
     Classification.classify(vm2, tag1[:category], tag1[:name])
     Classification.classify(vm2, tag2[:category], tag2[:name])
-  end
-
-  def app
-    Vmdb::Application
   end
 
   context "Tag collection" do
