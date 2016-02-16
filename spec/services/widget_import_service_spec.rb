@@ -32,6 +32,21 @@ describe WidgetImportService do
     end
   end
 
+  describe "#import_widget_from_hash" do
+    let(:widget_to_import) do
+      {
+        "description" => "Test2",
+        "title"       => "potato"
+      }
+    end
+
+    it "builds a new widget" do
+      expect(MiqWidget.first).to be_nil
+      widget_import_service.import_widget_from_hash(widget_to_import)
+      expect(MiqWidget.first).not_to be_nil
+    end
+  end
+
   describe "#import_widgets" do
     let(:miq_queue) { double("MiqQueue") }
     let(:yaml_data) { "the yaml" }
