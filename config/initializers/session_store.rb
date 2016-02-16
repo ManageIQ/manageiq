@@ -25,6 +25,7 @@ else
                 end
 
   if rails_store == :mem_cache_store
+    require 'dalli'
     memcached_server = config.fetch_path("session", "memcache_server") || "127.0.0.1:11211"
     session_options = session_options.merge(
       :cache        => Dalli::Client.new(memcached_server, :namespace => "MIQ:VMDB"),
