@@ -18,6 +18,7 @@ module ApplicationHelper
               :class => 'documentation-link', :target => '_blank')
     end
   end
+
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
@@ -44,7 +45,7 @@ module ApplicationHelper
       out = content_tag(:li) do
         link_to("#{name}: #{ent.name}",
                 {:controller => table_name, :action => 'show', :id => ent.id.to_s},
-                :title       => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
+                :title => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
                                 {:entity_name        => record.class.name.demodulize.titleize,
                                  :linked_entity_name => name})
       end
@@ -96,8 +97,8 @@ module ApplicationHelper
   def no_hover_class(item)
     klass = if item[:link]
               ""
-            elsif item.has_key?(:value)
-              "" if item[:value].kind_of?(Array) && item[:value].any? {|val| val[:link]}
+            elsif item.key?(:value)
+              "" if item[:value].kind_of?(Array) && item[:value].any? { |val| val[:link] }
             end
     klass.nil? ? 'no-hover' : ''
   end
@@ -636,7 +637,7 @@ module ApplicationHelper
   # checking if any of the toolbar is visible
   def toolbars_visible?
     (@toolbars['history_tb'] || @toolbars['center_tb'] || @toolbars['view_tb']) &&
-    (@toolbars['history_tb'] != 'blank_view_tb' && @toolbars['history_tb'] != 'blank_view_tb' && @toolbars['view_tb'] != 'blank_view_tb')
+      (@toolbars['history_tb'] != 'blank_view_tb' && @toolbars['history_tb'] != 'blank_view_tb' && @toolbars['view_tb'] != 'blank_view_tb')
   end
 
   def inner_layout_present?
@@ -727,21 +728,13 @@ module ApplicationHelper
   end
 
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
-  def center_toolbar_filename
-    _toolbar_chooser.center_toolbar_filename
-  end
+  delegate :center_toolbar_filename, :to => :_toolbar_chooser
 
-  def history_toolbar_filename
-    _toolbar_chooser.history_toolbar_filename
-  end
+  delegate :history_toolbar_filename, :to => :_toolbar_chooser
 
-  def x_view_toolbar_filename
-    _toolbar_chooser.x_view_toolbar_filename
-  end
+  delegate :x_view_toolbar_filename, :to => :_toolbar_chooser
 
-  def view_toolbar_filename
-    _toolbar_chooser.view_toolbar_filename
-  end
+  delegate :view_toolbar_filename, :to => :_toolbar_chooser
 
   def _toolbar_chooser
     ToolbarChooser.new(
@@ -1304,6 +1297,99 @@ module ApplicationHelper
 
   def my_zone_name
     my_server.my_zone
+  end
+
+  def check_ssh_connection(ip, user, password)
+    if password.empty?
+      Net::SSH.start(ip, user) do |_ssh|
+        return true
+      end
+    else
+      Net::SSH.start(ip, user, :password => password) do |_ssh|
+        return true
+      end
+    end
+  rescue Net::SSH::AuthenticationFailed
+    return false
+  end
+
+  def make_deploy_playbook(user)
+    template = "
+---
+- hosts: master
+  remote_user: #{user}
+  tasks:
+
+  - name: clone git
+    git: repo=https://github.com/openshift/openshift-ansible.git dest=/tmp/openshift-ansible
+    sudo: true
+
+  - name: Create the inventory file
+    copy: src=../../to_send_inventory.yaml
+          dest=/tmp/openshift-ansible/
+          mode=0644
+
+  - name: add ansible package
+    yum: name=ansible state=present
+
+  - name: add pyOpenSSL package
+    yum: name=pyOpenSSL state=present
+
+  - name: Run playbook
+    shell: ansible-playbook /tmp/openshift-ansible/playbooks/byo/config.yml -i /tmp/openshift-ansible/to_send_inventory.yaml
+"
+    File.open('extras/playbooks/deploy_book.yaml', 'w') do |f|
+      f.write(template)
+    end
+  end
+
+  def make_ansible_master_inventory_file(master_ip, master_user, master_password)
+    template = "
+---
+[master]
+#{master_ip}
+
+[master:vars]
+ansible_ssh_user=#{master_user}
+#{'ansible_ssh_pass=' + master_password unless master_password.empty?}
+ansible_sudo=true
+deployment_type=origin
+#openshift_use_manageiq=True
+"
+
+    File.open('master_inventory.yaml', 'w') do |f|
+      f.write(template)
+    end
+  end
+
+  def make_ansible_inventory_file(master_ip, slaves_ips, user)
+    template = "
+[OSEv3:children]
+masters
+nodes
+
+[masters:vars]
+ansible_ssh_user=#{user}
+ansible_sudo=true
+deployment_type=origin
+#openshift_use_manageiq=True
+
+[nodes:vars]
+ansible_ssh_user=#{user}
+ansible_sudo=true
+deployment_type=origin
+#openshift_use_manageiq=True
+
+[masters]
+#{master_ip} openshift_scheduleable=True
+
+[nodes]
+#{slaves_ips[0]}
+#{slaves_ips[1]}
+"
+    File.open('to_send_inventory.yaml', 'w') do |f|
+      f.write(template)
+    end
   end
 
   def my_server

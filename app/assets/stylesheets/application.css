@@ -27,3 +27,7 @@
  *= require xml_display
  *= require c3
 */
+
+.display_none{
+    display: none;
+}

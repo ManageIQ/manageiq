@@ -1,0 +1,23 @@
+
+---
+- hosts: master
+  remote_user: agoldboi
+  tasks:
+
+  - name: clone git
+    git: repo=https://github.com/openshift/openshift-ansible.git dest=/tmp/openshift-ansible
+    sudo: true
+
+  - name: Create the inventory file
+    copy: src=../../to_send_inventory.yaml
+          dest=/tmp/openshift-ansible/
+          mode=0644
+
+  - name: add ansible package
+    yum: name=ansible state=present
+
+  - name: add pyOpenSSL package
+    yum: name=pyOpenSSL state=present
+
+  - name: Run playbook
+    shell: ansible-playbook /tmp/openshift-ansible/playbooks/byo/config.yml -i /tmp/openshift-ansible/to_send_inventory.yaml

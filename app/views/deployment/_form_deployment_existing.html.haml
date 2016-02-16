@@ -1,0 +1,35 @@
+.form-group.provider_row.display_none
+  %label.col-md-2.control-label
+    = _("Select Cloud/Infr Provider")
+  .col-md-6
+    = select("Provider", :provider_id, @providers.collect{ |p| [p.name, p.id]}, {:include_blank => true})
+
+.form-group.master_row.display_none
+  %label.col-md-2.control-label
+    = _("Select Master")
+  .col-md-1
+    = select("Vm", :master, [""])
+  .master_row_ssh.display_none
+    %label.col-md-1.control-label
+      = _("Master-user")
+    .col-md-1
+      = text_field_tag("providerMasterUsername", '', :maxlength  => 20, :placeholder => "ssh user")
+  .master_row_ssh.display_none
+    %label.col-md-1.control-label
+      = _("Master-pass")
+    .col-md-1
+      = password_field_tag("providerMasterPassword", '', :placeholder => "ssh user password")
+
+
+.form-group.slave_row.display_none
+  %label.col-md-2.control-label
+    = _("Select Slave1")
+  .col-md-2
+    = select("Vm", :vm1, [""])
+
+.form-group.slave_row.display_none
+  %label.col-md-2.control-label
+    = _("Select Slave2")
+  .col-md-2
+    = select("Vm", :vm2, [""])
+

@@ -1,0 +1,45 @@
+.form-group.master_ip.display_none
+  %label.col-md-2.control-label
+    = _("Master-ip")
+  .col-md-2
+    = text_field_tag 'masterIp', '0.0.0.0', :maxlength => 15, :size => 20, :class => "ip-input"
+  %label.col-md-1.control-label
+    = _("Master-user")
+  .col-md-2
+    = text_field_tag("masterUsername", '', :maxlength  => 20)
+  %label.col-md-1.control-label
+    = _("Master-pass")
+  .col-md-1
+    = password_field_tag("masterPassword", '', :placeholder => "user password")
+
+
+.form-group.slave_ip1.display_none
+  %label.col-md-2.control-label
+    = _("Slave1-ip")
+  .col-md-2
+    = text_field_tag 'slave1Ip', '0.0.0.0', :maxlength => 15, :size => 20, :class => "ip-input"
+  %label.col-md-1.control-label
+    = _("Slave1-user")
+  .col-md-2
+    = text_field_tag("slave1Username", '', :maxlength => 20)
+  %label.col-md-1.control-label
+    = _("Slave1-pass")
+  .col-md-1
+    = password_field_tag("slave1Password", '', :placeholder => "user password")
+
+
+.form-group.slave_ip2.display_none
+  %label.col-md-2.control-label
+    = _("Slave2-ip")
+  .col-md-2
+    = text_field_tag 'slave2Ip', '0.0.0.0', :maxlength => 15, :size => 20, :class => "ip-input"
+  %label.col-md-1.control-label
+    = _("Slave2-user")
+  .col-md-2
+    = text_field_tag("slave2Username", '', :maxlength => 20)
+  %label.col-md-1.control-label
+    = _("Slave2-pass")
+  .col-md-1
+    = password_field_tag("slave2Upassword", '', :placeholder => "user password")
+
+

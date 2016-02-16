@@ -11,6 +11,11 @@
     :title: Configuration
     :text: Configuration
     :items:
+    - :button: ems_container_new
+      :icon: pficon pficon-add-circle-o fa-lg
+      :url: '/deployment'
+      :text: 'Deploy a new OpenShift provider'
+      :title: 'Deploy a new OpenShift provider'
     - :button: ems_container_refresh
       :icon: icon fa fa-refresh fa-lg
       :text: 'Refresh Items and Relationships'
