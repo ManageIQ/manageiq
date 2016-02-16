@@ -8,7 +8,7 @@ class CloudVolume < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :availability_zone
   belongs_to :cloud_tenant
-  belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot'
+  belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
 
