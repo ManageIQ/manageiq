@@ -60,7 +60,7 @@
             - if role_allows(:feature => "rbac_tenant_show")
               - params[:class] = "#{params[:class]} pointer"
               - params.merge!({:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
-                               :title   => _("View this #{tenant.divisible ? "Tenant" : "Project"}")})
+                               :title   => tenant.divisible ? _("View this Tenant") : _("View this Project")})
             %span{params}
               = h(tenant.name)
         - else
@@ -170,7 +170,7 @@
         = escape_javascript(current_tenant.name)
         = _("Tags")
       = miq_tab_header('hosts_clusters') do
-        = _("#{title_for_hosts} & #{title_for_clusters}")
+        = _("%{title_for_hosts} & %{title_for_clusters}") % {:title_for_hosts => title_for_hosts, :title_for_clusters => title_for_clusters}
       = miq_tab_header('vms_templates') do
         = _("VMs & Templates")
     .tab-content

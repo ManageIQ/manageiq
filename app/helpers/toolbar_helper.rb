@@ -187,7 +187,7 @@ module ToolbarHelper
     h.update('title'      => _(props['title']),
              'data-click' => props['id'])
     h['name']         = props[:name] if props.key?(:name)
-    h['data-confirm-tb'] = _("#{props[:confirm]}") if props.key?(:confirm)
+    h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
     h
   end
 end
