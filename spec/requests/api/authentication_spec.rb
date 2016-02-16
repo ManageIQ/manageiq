@@ -2,16 +2,7 @@
 # REST API Request Tests - /api authentication
 #
 describe ApiController do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
-
+  include_context "api request specs"
   ENTRYPOINT_KEYS = %w(name description version versions identity collections)
 
   context "Basic Authentication" do

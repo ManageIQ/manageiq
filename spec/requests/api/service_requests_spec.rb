@@ -8,7 +8,7 @@
 #     GET /api/services/:id?attributes=provision_dialog
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   let(:provision_dialog1)    { FactoryGirl.create(:dialog, :label => "ProvisionDialog1") }
   let(:retirement_dialog2)   { FactoryGirl.create(:dialog, :label => "RetirementDialog2") }
@@ -26,14 +26,6 @@ describe ApiController do
 
   let(:request_task) { FactoryGirl.create(:miq_request_task, :miq_request => service_request) }
   let(:service) { FactoryGirl.create(:service, :name => "Service", :miq_request_task => request_task) }
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
 
   def expect_result_to_have_provision_dialog
     expect_result_to_have_keys(%w(id href provision_dialog))

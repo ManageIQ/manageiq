@@ -14,19 +14,11 @@
 # - Retire multiple services    /api/services         action "retire"
 #
 describe ApiController do
-  include Rack::Test::Methods
+  include_context "api request specs"
 
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
 
   describe "Services edit" do
     it "rejects requests without appropriate role" do

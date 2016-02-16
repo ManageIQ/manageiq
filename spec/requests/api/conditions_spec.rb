@@ -8,15 +8,7 @@
 #   /api/policies/:id/conditions
 #
 describe ApiController do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
+  include_context "api request specs"
 
   let(:condition_guid_list) { Condition.pluck(:guid) }
 
