@@ -623,7 +623,7 @@ module ApplicationHelper
         %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build container_topology container_dashboard).include?(@layout) ||
+           server_build container_topology middleware_topology container_dashboard).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
@@ -1069,7 +1069,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
                         container_route container_project container_replicator container_image container_image_registry
-                        container_topology container_dashboard persistent_volume
+                        container_topology container_dashboard middleware_topology persistent_volume
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1110,7 +1110,8 @@ module ApplicationHelper
     if @lastaction == "show_list" && !session[:menu_click] &&
        %w(auth_key_pair_cloud cloud_volume container_node container_service ems_container container_group ems_cloud
           ems_cluster container_route container_project container_replicator container_image container_image_registry
-          ems_infra host miq_template offline orchestration_stack persistent_volume repository
+          ems_infra host miq_template offline orchestration_stack persistent_volume repository ems_middleware
+          middleware_server middleware_deployment
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1121,7 +1122,8 @@ module ApplicationHelper
       "vm"
     elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
              container_route container_project container_replicator container_image container_image_registry
-             container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra flavor
+             container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
+             ems_middleware middleware_server middleware_deployment flavor
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
              scan_profile security_group service snia_local_file_system storage

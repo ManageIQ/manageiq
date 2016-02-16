@@ -386,6 +386,7 @@ workers:
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
+        :ems_refresh_worker_hawkular: {}
         :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_openshift: {}
         :ems_refresh_worker_atomic: {}

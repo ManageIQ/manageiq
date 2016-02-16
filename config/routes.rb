@@ -678,6 +678,13 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :middleware_topology       => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :container_dashboard      => {
       :get => %w(
         show
@@ -886,6 +893,112 @@ Vmdb::Application.routes.draw do
                perf_post +
                save_post
     },
+
+    :ems_middleware            => {
+      :get  => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+               compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tl_chooser
+        update
+        wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+               adv_search_post +
+               compare_post +
+               exp_post +
+               save_post
+    },
+
+    :middleware_server            => {
+      :get  => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+               compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tl_chooser
+        update
+        wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+               adv_search_post +
+               compare_post +
+               exp_post +
+               save_post
+    },
+
+    :middleware_deployment            => {
+      :get  => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+               compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tl_chooser
+        update
+        wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+               adv_search_post +
+               compare_post +
+               exp_post +
+               save_post
+    },
+
 
     :flavor                   => {
       # FIXME: Change tagging_edit to POST only; We need to remove the redirects
