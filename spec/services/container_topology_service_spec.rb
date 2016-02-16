@@ -35,12 +35,11 @@ describe ContainerTopologyService do
     it "provider has unknown status when no authentication exists" do
       allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_openshift])
       expect(subject[:items]).to eq(
-        ems_openshift.id.to_s         => {:id           => ems_openshift.id.to_s,
-                                          :name         => ems_openshift.name,
-                                          :status       => "Unknown",
-                                          :kind         => "ContainerManager",
-                                          :display_kind => "Openshift",
-                                          :miq_id       => ems_openshift.id})
+        "ContainerManager" + ems_openshift.compressed_id.to_s         => {:name         => ems_openshift.name,
+                                                                          :status       => "Unknown",
+                                                                          :kind         => "ContainerManager",
+                                                                          :display_kind => "Openshift",
+                                                                          :miq_id       => ems_openshift.id})
 
     end
 
@@ -55,93 +54,84 @@ describe ContainerTopologyService do
 
       allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_kube])
       container_replicator = ContainerReplicator.create(:ext_management_system => ems_kube,
-                                                        :ems_ref => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
-                                                        :name => "replicator1")
+                                                        :ems_ref               => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
+                                                        :name                  => "replicator1")
       container_route = ContainerRoute.create(:ext_management_system => ems_kube,
-                                              :ems_ref => "ab5za74c-3a41-11e5-a79a-001a4a231290",
-                                              :name => "route-edge")
+                                              :ems_ref               => "ab5za74c-3a41-11e5-a79a-001a4a231290",
+                                              :name                  => "route-edge")
       container_group = ContainerGroup.create(:ext_management_system => ems_kube,
-                                              :container_node => container_node, :container_replicator => container_replicator,
-                                              :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb",
-                                              :phase => "Running", :container_definitions => [container_def])
+                                              :container_node        => container_node, :container_replicator => container_replicator,
+                                              :name                  => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb",
+                                              :phase                 => "Running", :container_definitions => [container_def])
       container_service = ContainerService.create(:ext_management_system => ems_kube, :container_groups => [container_group],
-                                                  :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                                   :name => "service1", :container_routes => [container_route])
+                                                  :ems_ref               => "95e49048-3e00-11e5-a0d2-18037327aaeb",
+                                                  :name                  => "service1", :container_routes => [container_route])
       expect(subject[:items]).to eq(
-        ems_kube.id.to_s                       => {:id           => ems_kube.id.to_s,
-                                                   :name         => ems_kube.name,
-                                                   :status       => "Error",
-                                                   :kind         => "ContainerManager",
-                                                   :display_kind => "Kubernetes",
-                                                   :miq_id       => ems_kube.id},
+        "ContainerManager" + ems_kube.compressed_id.to_s                => {:name         => ems_kube.name,
+                                                                            :status       => "Error",
+                                                                            :kind         => "ContainerManager",
+                                                                            :display_kind => "Kubernetes",
+                                                                            :miq_id       => ems_kube.id},
 
-        "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_node.ems_ref,
-                                                   :name         => container_node.name,
-                                                   :status       => "Ready",
-                                                   :kind         => "ContainerNode",
-                                                   :display_kind => "Node",
-                                                   :miq_id       => container_node.id},
+        "ContainerNode" + container_node.compressed_id.to_s             => {:name         => container_node.name,
+                                                                            :status       => "Ready",
+                                                                            :kind         => "ContainerNode",
+                                                                            :display_kind => "Node",
+                                                                            :miq_id       => container_node.id},
 
-        "8f8ca74c-3a41-11e5-a79a-001a4a231290" => {:id           => container_replicator.ems_ref,
-                                                   :name         => container_replicator.name,
-                                                   :status       => "OK",
-                                                   :kind         => "ContainerReplicator",
-                                                   :display_kind => "Replicator",
-                                                   :miq_id       => container_replicator.id},
+        "ContainerReplicator" + container_replicator.compressed_id.to_s => {:name         => container_replicator.name,
+                                                                            :status       => "OK",
+                                                                            :kind         => "ContainerReplicator",
+                                                                            :display_kind => "Replicator",
+                                                                            :miq_id       => container_replicator.id},
 
-        "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_service.ems_ref,
-                                                   :name         => container_service.name,
-                                                   :status       => "Unknown",
-                                                   :kind         => "ContainerService",
-                                                   :display_kind => "Service",
-                                                   :miq_id       => container_service.id},
+        "ContainerService" + container_service.compressed_id.to_s       => {:name         => container_service.name,
+                                                                            :status       => "Unknown",
+                                                                            :kind         => "ContainerService",
+                                                                            :display_kind => "Service",
+                                                                            :miq_id       => container_service.id},
 
-        "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_group.ems_ref,
-                                                   :name         => container_group.name,
-                                                   :status       => "Running",
-                                                   :kind         => "ContainerGroup",
-                                                   :display_kind => "Pod",
-                                                   :miq_id       => container_group.id},
+        "ContainerGroup" + container_group.compressed_id.to_s           => {:name         => container_group.name,
+                                                                            :status       => "Running",
+                                                                            :kind         => "ContainerGroup",
+                                                                            :display_kind => "Pod",
+                                                                            :miq_id       => container_group.id},
 
-        "ab5za74c-3a41-11e5-a79a-001a4a231290" => {:id           => container_route.ems_ref,
-                                                   :name         => container_route.name,
-                                                   :status       => "Unknown",
-                                                   :kind         => "ContainerRoute",
-                                                   :display_kind => "Route",
-                                                   :miq_id       => container_route.id},
+        "ContainerRoute" + container_route.compressed_id.to_s           => {:name         => container_route.name,
+                                                                            :status       => "Unknown",
+                                                                            :kind         => "ContainerRoute",
+                                                                            :display_kind => "Route",
+                                                                            :miq_id       => container_route.id},
 
-        long_id                                => {:id           => container.ems_ref,
-                                                   :name         => container.name,
-                                                   :status       => "Running",
-                                                   :kind         => "Container",
-                                                   :display_kind => "Container",
-                                                   :miq_id       => container.id},
+        "Container" + container.compressed_id.to_s                      => {:name         => container.name,
+                                                                            :status       => "Running",
+                                                                            :kind         => "Container",
+                                                                            :display_kind => "Container",
+                                                                            :miq_id       => container.id},
 
-        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id           => vm_rhev.uid_ems,
-                                                   :name         => vm_rhev.name,
-                                                   :status       => "On",
-                                                   :kind         => "Vm",
-                                                   :display_kind => "VM",
-                                                   :miq_id       => vm_rhev.id,
-                                                   :provider     => ems_rhev.name},
+        "Vm" + vm_rhev.compressed_id.to_s                               => {:name         => vm_rhev.name,
+                                                                            :status       => "On",
+                                                                            :kind         => "Vm",
+                                                                            :display_kind => "VM",
+                                                                            :miq_id       => vm_rhev.id,
+                                                                            :provider     => ems_rhev.name},
 
-        "abcd9a08-7b13-11e5-8546-129aa6621999" => {:id           => host.uid_ems,
-                                                   :name         => host.name,
-                                                   :status       => "On",
-                                                   :kind         => "Host",
-                                                   :display_kind => "Host",
-                                                   :miq_id       => host.id,
-                                                   :provider     => ems_rhev.name}
+        "Host" + host.compressed_id.to_s                                => {:name         => host.name,
+                                                                            :status       => "On",
+                                                                            :kind         => "Host",
+                                                                            :display_kind => "Host",
+                                                                            :miq_id       => host.id,
+                                                                            :provider     => ems_rhev.name}
       )
 
       expect(subject[:relations].size).to eq(8)
       expect(subject[:relations]).to include(
-        {:source => "8f8ca74c-3a41-11e5-a79a-001a4a231290", :target => "96c35ccd-3e00-11e5-a0d2-18037327aaeb"},
-        {:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "ab5za74c-3a41-11e5-a79a-001a4a231290"},
+        {:source => "ContainerReplicator" + container_replicator.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s},
+        {:source => "ContainerService" + container_service.compressed_id.to_s, :target => "ContainerRoute" + container_route.compressed_id.to_s},
         # cross provider correlations
-        {:source => "558d9a08-7b13-11e5-8546-129aa6621998", :target => "abcd9a08-7b13-11e5-8546-129aa6621999"},
-        {:source => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :target => "558d9a08-7b13-11e5-8546-129aa6621998"},
-        {:source => ems_kube.id.to_s,                       :target => "905c90ba-3e00-11e5-a0d2-18037327aaeb"}
+        {:source => "Vm" + vm_rhev.compressed_id.to_s, :target => "Host" + host.compressed_id.to_s},
+        {:source => "ContainerNode" + container_node.compressed_id.to_s, :target => "Vm" + vm_rhev.compressed_id.to_s},
+        {:source => "ContainerManager" + ems_kube.compressed_id.to_s, :target =>  "ContainerNode" + container_node.compressed_id.to_s}
       )
     end
 
@@ -159,55 +149,49 @@ describe ContainerTopologyService do
       allow(container_topology_service).to receive(:entities).and_return([[container_node], [container_service]])
 
       expect(subject[:items]).to eq(
-        "905c90ba-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_node.ems_ref,
-                                                   :name         => container_node.name,
-                                                   :status       => "Ready",
-                                                   :kind         => "ContainerNode",
-                                                   :display_kind => "Node",
-                                                   :miq_id       => container_node.id},
+        "ContainerNode" + container_node.compressed_id.to_s       => {:name         => container_node.name,
+                                                                      :status       => "Ready",
+                                                                      :kind         => "ContainerNode",
+                                                                      :display_kind => "Node",
+                                                                      :miq_id       => container_node.id},
 
-        "95e49048-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_service.ems_ref,
-                                                   :name         => container_service.name,
-                                                   :status       => "Unknown",
-                                                   :kind         => "ContainerService",
-                                                   :display_kind => "Service",
-                                                   :miq_id       => container_service.id},
+        "ContainerService" + container_service.compressed_id.to_s => {:name         => container_service.name,
+                                                                      :status       => "Unknown",
+                                                                      :kind         => "ContainerService",
+                                                                      :display_kind => "Service",
+                                                                      :miq_id       => container_service.id},
 
-        "96c35ccd-3e00-11e5-a0d2-18037327aaeb" => {:id           => container_group.ems_ref,
-                                                   :name         => container_group.name,
-                                                   :status       => "Running",
-                                                   :kind         => "ContainerGroup",
-                                                   :display_kind => "Pod",
-                                                   :miq_id       => container_group.id},
+        "ContainerGroup" + container_group.compressed_id.to_s     => {:name         => container_group.name,
+                                                                      :status       => "Running",
+                                                                      :kind         => "ContainerGroup",
+                                                                      :display_kind => "Pod",
+                                                                      :miq_id       => container_group.id},
 
-        long_id                                => {:id           => container.ems_ref,
-                                                   :name         => container.name,
-                                                   :status       => "Running",
-                                                   :kind         => "Container",
-                                                   :display_kind => "Container",
-                                                   :miq_id       => container.id},
+        "Container" + container.compressed_id.to_s                => {:name         => container.name,
+                                                                      :status       => "Running",
+                                                                      :kind         => "Container",
+                                                                      :display_kind => "Container",
+                                                                      :miq_id       => container.id},
 
-        "558d9a08-7b13-11e5-8546-129aa6621998" => {:id           => vm_rhev.uid_ems,
-                                                   :name         => vm_rhev.name,
-                                                   :status       => "Off",
-                                                   :kind         => "Vm",
-                                                   :display_kind => "VM",
-                                                   :miq_id       => vm_rhev.id,
-                                                   :provider     => ems_rhev.name},
+        "Vm" + vm_rhev.compressed_id.to_s                         => {:name         => vm_rhev.name,
+                                                                      :status       => "Off",
+                                                                      :kind         => "Vm",
+                                                                      :display_kind => "VM",
+                                                                      :miq_id       => vm_rhev.id,
+                                                                      :provider     => ems_rhev.name},
 
-        ems_kube.id.to_s                       => {:id           => ems_kube.id.to_s,
-                                                   :name         => ems_kube.name,
-                                                   :status       => "Error",
-                                                   :kind         => "ContainerManager",
-                                                   :display_kind => "Kubernetes",
-                                                   :miq_id       => ems_kube.id}
+        "ContainerManager" + ems_kube.compressed_id.to_s          => {:name         => ems_kube.name,
+                                                                      :status       => "Error",
+                                                                      :kind         => "ContainerManager",
+                                                                      :display_kind => "Kubernetes",
+                                                                      :miq_id       => ems_kube.id}
       )
 
       expect(subject[:relations].size).to eq(5)
       expect(subject[:relations]).to include(
-        {:source => "95e49048-3e00-11e5-a0d2-18037327aaeb", :target => "96c35ccd-3e00-11e5-a0d2-18037327aaeb"},
+        {:source => "ContainerService" + container_service.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s},
         # cross provider correlation
-        {:source => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :target => "558d9a08-7b13-11e5-8546-129aa6621998"},
+        {:source => "ContainerNode" + container_node.compressed_id.to_s, :target => "Vm" + vm_rhev.compressed_id.to_s},
       )
     end
   end
