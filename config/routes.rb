@@ -930,7 +930,7 @@ Vmdb::Application.routes.draw do
     },
 
     :middleware_server            => {
-       :get  => %w(
+      :get  => %w(
         download_data
         edit
         index
@@ -965,7 +965,7 @@ Vmdb::Application.routes.draw do
     },
 
     :middleware_deployment            => {
-       :get  => %w(
+      :get  => %w(
         download_data
         edit
         index

@@ -4,7 +4,7 @@ module MiddlewareServerHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name host bind_addr product version)
+    %i(name hostname bind_addr product version)
   end
 
   def textual_group_relationships
@@ -24,12 +24,13 @@ module MiddlewareServerHelper::TextualSummary
     @record.name
   end
 
-  def textual_host
-    @record.host
+  def textual_hostname
+    @record.hostname
   end
 
   def textual_bind_addr
-    @record.properties['Bound Address']
+    {:label => 'Bind Address',
+     :value => @record.properties['Bound Address']}
   end
 
   def textual_product

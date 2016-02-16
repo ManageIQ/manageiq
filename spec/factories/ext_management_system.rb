@@ -176,7 +176,7 @@ FactoryGirl.define do
 
   # Leaf classes for middleware_manager
 
-  factory :middleware_manager,
+  factory :hawkular_manager,
           :aliases => ["manageiq/providers/hawkular/middleware_manager"],
           :class   => "ManageIQ::Providers::Hawkular::MiddlewareManager",
           :parent  => :ems_middleware do
