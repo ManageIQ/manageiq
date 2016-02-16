@@ -15,21 +15,29 @@
           :id       => "available_fields")
       %td
     %tr
-      %td{:align => "center"}
-        - t = _("Move selected fields down")
-        = link_image_if(:cond => @edit[:new][:model].nil? || MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).length == 0,
-          :image              => image_path('toolbars/down.png'),
-          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
-          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
-          :link               => {:action => 'form_field_changed', :button => 'right', :id => "#{@edit[:rpt_id] || "new"}"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
-        - t = _("Move selected fields up")
-        = link_image_if(:cond => @edit[:new][:fields].length == 0,
-          :image              => image_path('toolbars/up.png'),
-          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
-          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
-          :link               => {:action => 'form_field_changed', :button => 'left', :id => "#{@edit[:rpt_id] || "new"}"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
+      %td{:align => "center", :style => "padding-top: 15px;"}
+        - cond_down = @edit[:new][:model].nil? || MiqExpression.reporting_available_fields(@edit[:new][:model],
+                                                                                           @edit[:new][:perf_interval]).length == 0
+        - cond_up = @edit[:new][:fields].length == 0
+        - [['fa-angle-down', 'right', _("down"), cond_down],
+           ['fa-angle-up',   'left',  _("up"),   cond_up]].each do |icon, button, text, condition|
+          - t = _("Move selected fields %{where}") % {:where => text}
+          - if condition
+            %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
+              %i.fa.fa-lg{:class => icon}
+          - else
+            // button has attribute onclick='return false;' to not send a form
+            %button.btn.btn-default{:title           => t,
+                                    :alt             => t,
+                                    :remote          => true,
+                                    :onclick         => 'return false;',
+                                    "data-submit"    => 'column_lists',
+                                    "data-method"    => :post,
+                                    "data-click_url" => {:url => url_for(:action => 'form_field_changed',
+                                                                         :button => button,
+                                                                         :id     => @edit[:rpt_id] || "new")}.to_json}
+
+              %i.fa.fa-lg{:class => icon}
       %td
     %tr
       %td{:align => "left"}
@@ -44,31 +52,23 @@
           :size     => 10,
           :id       => "selected_fields")
       %td{:width => "30", :valign => "middle"}
-        - t = _("Move selected fields to top")
-        = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => image_path('toolbars/top.png'),
-          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
-          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
-          :link               => {:action => 'form_field_changed', :button => 'top', :id => "#{@edit[:rpt_id] || "new"}"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
-        - t = _("Move selected fields up")
-        = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => image_path('toolbars/up.png'),
-          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
-          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
-          :link               => {:action => 'form_field_changed', :button => 'up', :id => "#{@edit[:rpt_id] || "new"}"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
-        - t = _("Move selected fields down")
-        = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => image_path('toolbars/down.png'),
-          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
-          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
-          :link               => {:action => 'form_field_changed', :button => 'down', :id => "#{@edit[:rpt_id] || "new"}"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
-        - t = _("Move selected fields to bottom")
-        = link_image_if(:cond => @edit[:new][:fields].length < 2,
-          :image              => image_path('toolbars/bottom.png'),
-          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
-          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
-          :link               => {:action => 'form_field_changed', :button => 'bottom', :id => "#{@edit[:rpt_id] || "new"}"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => 'column_lists', :title => t})
+        - [['fa-angle-double-up',   'top',    _("to top")],
+           ['fa-angle-up',          'up',     _("up")],
+           ['fa-angle-down',        'down',   _("down")],
+           ['fa-angle-double-down', 'bottom', _("to bottom")]].each do |icon, button, text|
+          - t = _("Move selected fields %{where}") % {:where => text}
+          - if @edit[:new][:fields].length < 2
+            %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
+              %i.fa.fa-lg{:class => icon}
+          - else
+            // button has attribute onclick='return false;' to not send a form
+            %button.btn.btn-default{:title           => t,
+                                    :alt             => t,
+                                    :remote          => true,
+                                    :onclick         => 'return false;',
+                                    "data-submit"    => 'column_lists',
+                                    "data-method"    => :post,
+                                    "data-click_url" => {:url => url_for(:action => 'form_field_changed',
+                                                                         :button => button,
+                                                                         :id     => @edit[:rpt_id] || "new")}.to_json}
+              %i.fa.fa-lg{:class => icon}
