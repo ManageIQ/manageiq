@@ -8,5 +8,5 @@ gem "activesupport"
 gem "more_core_extensions"
 
 group :test do
-  gem "rspec",      "~>2.12.0", :require => false
+  gem "rspec", :require => false
 end
