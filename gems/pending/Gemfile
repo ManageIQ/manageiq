@@ -82,6 +82,7 @@ unless ENV['APPLIANCE']
     gem "test-unit",                    :require => false
     gem "camcorder",                    :require => false
     gem "jasmine",       "~>2.4.0",     :require => false
+    gem "phantomjs",     "=1.9.8.0",    :require => false
     gem "rspec",         "~>3.5.x",     :require => false
     gem "timecop",       "~>0.7.3",     :require => false
     gem "xml-simple",    "~>1.1.0",     :require => false  # Used by test/xml/tc_xmlhash_methods.rb
