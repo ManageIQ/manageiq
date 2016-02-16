@@ -13,7 +13,7 @@
         = _('Number of Hosts')
       .col-md-8
         = @infra.hosts.count
-    - @count_parameters.each do |parameter|
+    - @orig_parameters.each do |parameter|
       .form-group
         %label.col-md-2.control-label
           = parameter.name
