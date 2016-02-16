@@ -11,44 +11,44 @@ class ContainerTopologyService < TopologyService
     links = []
 
     @providers.each do |provider|
-      topo_items[entity_id(provider)] =  build_entity_data(provider)
+      topo_items[key = entity_id(provider)] = build_entity_data(provider)
       provider.container_nodes.each { |n|
         topo_items[entity_id(n)] = build_entity_data(n)
-        links << build_link(entity_id(provider), entity_id(n))
+        links << build_link(key, entity_id(n))
         n.container_groups.each do |cg|
-          topo_items[entity_id(cg)] = build_entity_data(cg)
-          links << build_link(entity_id(n), entity_id(cg))
+          topo_items[key = entity_id(cg)] = build_entity_data(cg)
+          links << build_link(entity_id(n), key)
           cg.containers.each do |c|
-            topo_items[entity_id(c)] = build_entity_data(c)
-            links << build_link(entity_id(cg), entity_id(c))
+            topo_items[key = entity_id(c)] = build_entity_data(c)
+            links << build_link(entity_id(cg), key)
           end
           if cg.container_replicator
             cr = cg.container_replicator
-            topo_items[entity_id(cr)] = build_entity_data(cr)
-            links << build_link(entity_id(cr), entity_id(cg))
+            topo_items[key = entity_id(cr)] = build_entity_data(cr)
+            links << build_link(key, entity_id(cg))
           end
         end
 
         if n.lives_on
-          topo_items[entity_id(n.lives_on)] = build_entity_data(n.lives_on)
-          links << build_link(entity_id(n), entity_id(n.lives_on))
+          topo_items[key = entity_id(n.lives_on)] = build_entity_data(n.lives_on)
+          links << build_link(entity_id(n), key)
           if n.lives_on.kind_of?(Vm) # add link to Host
             host = n.lives_on.host
             if host
-              topo_items[entity_id(host)] = build_entity_data(host)
-              links << build_link(entity_id(n.lives_on), entity_id(host))
+              topo_items[key = entity_id(host)] = build_entity_data(host)
+              links << build_link(entity_id(n.lives_on), key)
             end
           end
         end
       }
 
       provider.container_services.each { |s|
-        topo_items[entity_id(s)] = build_entity_data(s)
-        s.container_groups.each { |cg| links << build_link(entity_id(s), entity_id(cg)) } if s.container_groups.size > 0
+        topo_items[key = entity_id(s)] = build_entity_data(s)
+        s.container_groups.each { |cg| links << build_link(key, entity_id(cg)) } if s.container_groups.size > 0
         if s.container_routes.size > 0
           s.container_routes.each { |r|
-            topo_items[entity_id(r)] = build_entity_data(r)
-            links << build_link(entity_id(s), entity_id(r))
+            topo_items[key = entity_id(r)] = build_entity_data(r)
+            links << build_link(entity_id(s), key)
           }
         end
       }
@@ -85,8 +85,8 @@ class ContainerTopologyService < TopologyService
 
   def build_entity_data(entity)
     data = build_base_entity_data(entity)
-    data.merge!(:status       => entity_status(entity))
-    data.merge!(:display_kind => entity_display_type(entity))
+    data.merge!(:status       => entity_status(entity),
+                :display_kind => entity_display_type(entity))
 
     if entity.kind_of?(Host) || entity.kind_of?(Vm)
       data.merge!(:provider => entity.ext_management_system.name)
