@@ -12,3 +12,5 @@ object:
       value: best_fit_openstack
   - amazon:
       value: best_fit_amazon
+  - google:
+      value: best_fit_google
