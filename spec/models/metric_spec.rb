@@ -67,17 +67,17 @@ describe Metric do
           expect(MiqQueue.count).to eq(47)
 
           expected_targets = Metric::Targets.capture_targets
-          expected = expected_targets.collect do |t|
+          expected = expected_targets.flat_map do |t|
             # Storage is hourly only
             # Non-storage historical is expecting 7 days back, plus partial day = 8
-            t.kind_of?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
-          end.flatten
+            t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
+          end
 
-          selected = MiqQueue.where(:method_name => "perf_capture").order(:id).collect do |q|
+          selected = MiqQueue.where(:method_name => "perf_capture").map do |q|
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
-          end.flatten
+          end
 
-          expect(selected).to eq(expected)
+          expect(selected).to match_array(expected)
         end
 
         context "executing capture_targets for realtime targets with parent objects" do
@@ -92,7 +92,7 @@ describe Metric do
 
               task = MiqTask.find_by_name("Performance rollup for EmsCluster:#{cluster.id}")
               expect(task).not_to be_nil
-              expect(task.context_data[:targets].sort).to eq(cluster.hosts.collect { |h| "Host:#{h.id}" }.sort)
+              expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
 
               expected_hosts.each do |host|
                 messages = MiqQueue.where(:class_name => "Host", :instance_id => host.id).select { |m| m.args.first == "realtime" }
@@ -123,7 +123,7 @@ describe Metric do
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
               expect(tasks.length).to eq(2)
               tasks.each do |task|
-                expect(task.context_data[:targets].sort).to eq(cluster.hosts.collect { |h| "Host:#{h.id}" }.sort)
+                expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
               end
 
               task_ids = tasks.collect(&:id)
@@ -187,13 +187,13 @@ describe Metric do
           expect(MiqQueue.count).to eq(10)
 
           expected_targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
-          expected = expected_targets.collect { |t| [t, "historical"] * 2 }.flatten # Vm, Host, Host, Vm, Host
+          expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
 
-          selected = MiqQueue.order(:id).collect do |q|
+          selected = MiqQueue.all.map do |q|
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
-          end.flatten
+          end
 
-          expect(selected).to eq(expected)
+          expect(selected).to match_array(expected)
         end
       end
 
@@ -290,8 +290,8 @@ describe Metric do
               ["realtime", "sys_uptime_absolute_latest",          ""],
             ]
 
-            selected = counters.values.collect { |c| c.values_at(:capture_interval_name, :counter_key, :instance) }.sort
-            expect(selected).to eq(expected)
+            selected = counters.values.collect { |c| c.values_at(:capture_interval_name, :counter_key, :instance) }
+            expect(selected).to match_array(expected)
 
             counter_values = @counter_values_by_mor_and_ts[@vm.ems_ref_obj]
             timestamps = counter_values.keys.sort
@@ -319,7 +319,7 @@ describe Metric do
             ]
             selected = expected.transpose[0].collect { |k| [k, counter_values[k].values.sort] }
 
-            expect(selected).to eq(expected)
+            expect(selected).to match_array(expected)
           end
         end
 
@@ -531,7 +531,7 @@ describe Metric do
                                                       :resource  => @host1,
                                                       :timestamp => "2010-04-14T22:00:00Z")
           metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
-          expect(metrics.collect(&:resource_type).uniq.sort).to eq(%w(VmOrTemplate Host).uniq.sort)
+          expect(metrics.collect(&:resource_type).uniq).to match_array(%w(VmOrTemplate Host))
         end
 
         context "calling perf_rollup to daily on the Vm" do
@@ -572,7 +572,8 @@ describe Metric do
           it "should rollup Vm hourly into Vm daily rows correctly" do
             perfs = MetricRollup.daily
             expect(perfs.length).to eq(3)
-            expect(perfs.collect { |r| r.timestamp.iso8601 }.sort).to eq(["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"])
+            expect(perfs.collect { |r| r.timestamp.iso8601 }).to match_array(
+              ["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"])
           end
         end
 
@@ -1145,15 +1146,15 @@ describe Metric do
           expected_queue_count += 1                         # cleanup task
           expect(MiqQueue.count).to eq(expected_queue_count)
 
-          expected = expected_targets.collect do |t|
+          expected = expected_targets.flat_map do |t|
             # Storage is hourly only
             # Non-storage historical is expecting 7 days back, plus partial day = 8
-            t.kind_of?(Storage) ? [t, "hourly"] : [[t, "realtime"], [t, "historical"] * 8]
-          end.flatten
+            t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
+          end
 
-          selected = MiqQueue.where(:method_name => "perf_capture").order(:id).collect do |q|
+          selected = MiqQueue.where(:method_name => "perf_capture").map do |q|
             [Object.const_get(q.class_name).find(q.instance_id), q.args.first]
-          end.flatten
+          end
 
           expect(selected).to match_array(expected)
         end
