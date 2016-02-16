@@ -378,10 +378,56 @@ describe MiqReport do
   end
 
   describe "#generate_table" do
-    before :each do
-      EvmSpecHelper.local_miq_server
-      FactoryGirl.create(:time_profile_utc)
+    it "with has_many through" do
+      ems      = FactoryGirl.create(:ems_vmware_with_authentication)
+      user     = FactoryGirl.create(:user_with_group)
+      group    = user.miq_group
+      template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
+      vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+
+      options = {
+        :vm_name        => vm.name,
+        :vm_target_name => vm.name,
+        :provision_type => "vmware",
+        :src_vm_id      => [template.id, template.name]
+      }
+
+      provision = FactoryGirl.create(
+        :miq_provision_vmware,
+        :destination  => vm,
+        :source       => template,
+        :userid       => user.userid,
+        :request_type => 'template',
+        :state        => 'finished',
+        :status       => 'Ok',
+        :options      => options
+      )
+
+      template.miq_provisions_from_template << provision
+      template.save
+
+      report = MiqReport.create(
+        :name          => "VMs based on Disk Type",
+        :title         => "VMs using thin provisioned disks",
+        :rpt_group     => "Custom",
+        :rpt_type      => "Custom",
+        :db            => "VmOrTemplate",
+        :cols          => ["miq_provision_vms_name"],
+        :include       => {"miq_provision_vms" => {"columns" => ["name"]}},
+        :col_order     => ["miq_provision_vms.name"],
+        :headers       => ["Name"],
+        :template_type => "report",
+        :miq_group_id  => group.id,
+        :user_id       => user.userid,
+        :conditions    => MiqExpression.new(
+          {"FIND" => {"search" => {"=" => {"field" => "VmOrTemplate.miq_provision_vms-vendor", "value" => "VMware"}}, "checkall" => {"=" => {"field" => "VmOrTemplate.miq_provision_vms-vendor", "value" => "VMware"}}}},
+          nil
+        )
+      )
+      report.generate_table
+      expect(report.table.data.collect { |rec| rec.data['miq_provision_vms.name'] }).to eq([vm.name])
     end
+
     let(:report) do
       MiqReport.new(
         :name     => "All Departments with Performance", :title => "All Departments with Performance for last week",
