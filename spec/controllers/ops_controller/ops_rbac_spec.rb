@@ -344,6 +344,7 @@ describe OpsController do
 
   context "::MiqGroup" do
     before do
+      MiqUserRole.seed
       MiqGroup.seed
       MiqRegion.seed
       set_user_privileges

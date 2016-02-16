@@ -49,36 +49,30 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.seed
-    role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
+    role_map_file = FIXTURE_DIR.join("role_map.yaml")
+    role_map = YAML.load_file(role_map_file) if role_map_file.exist?
+    return unless role_map
+
+    filter_map_file = FIXTURE_DIR.join("filter_map.yaml")
+    ldap_to_filters = filter_map_file.exist? ? YAML.load_file(filter_map_file) : {}
     root_tenant = Tenant.root_tenant
-    if File.exist?(role_map_file)
-      filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
-      ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
 
-      role_map = YAML.load_file(role_map_file)
-      order = role_map.collect(&:keys).flatten
-      groups_to_roles = role_map.each_with_object({}) { |g, h| h[g.keys.first] = g[g.keys.first] }
-      seq = 1
-      order.each do |g|
-        group = find_by_description(g) || new(:description => g)
-        user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
-        if user_role.nil?
-          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[g]}' for group '#{g}'")
-          next
-        end
-        group.miq_user_role = user_role
-        group.sequence      = seq
-        group.filters       = ldap_to_filters[g]
-        group.group_type    = SYSTEM_GROUP
-        group.tenant        = root_tenant
+    role_map.each_with_index do |(group_name, role_name), index|
+      group = find_by_description(group_name) || new(:description => group_name)
+      user_role = MiqUserRole.find_by_name("EvmRole-#{role_name}")
+      if user_role.nil?
+        raise StandardError, "Unable to find user_role 'EvmRole-#{role_name}' for group '#{group_name}'"
+      end
+      group.miq_user_role = user_role
+      group.sequence      = index + 1
+      group.filters       = ldap_to_filters[group_name]
+      group.group_type    = SYSTEM_GROUP
+      group.tenant        = root_tenant
 
-        if group.changed?
-          mode = group.new_record? ? "Created" : "Updated"
-          group.save!
-          _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-        end
-
-        seq += 1
+      if group.changed?
+        mode = group.new_record? ? "Created" : "Updated"
+        group.save!
+        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
       end
     end
 
