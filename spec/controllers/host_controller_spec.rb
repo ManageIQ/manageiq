@@ -157,20 +157,33 @@ describe HostController do
     end
   end
 
-  it "#show" do
-    set_user_privileges
-    host = FactoryGirl.create(:host,
-                              :hardware => FactoryGirl.create(:hardware,
-                                                              :cpu_sockets          => 2,
-                                                              :cpu_cores_per_socket => 4,
-                                                              :cpu_total_cores      => 8
-                                                             )
-                             )
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @user = FactoryGirl.create(:user)
+      login_as @user
+      @host = FactoryGirl.create(:host,
+               :hardware => FactoryGirl.create(:hardware,
+                              :cpu_sockets          => 2,
+                              :cpu_cores_per_socket => 4,
+                              :cpu_total_cores      => 8))
+    end
 
-    get :show, :params => { :id => host.id }
+    subject { get :show, :id => @host.id }
 
-    expect(response.status).to eq(200)
-    expect(response).to render_template('host/show')
+    context "respond with" do
+      it { is_expected.to have_http_status 200 }
+      it { is_expected.not_to have_http_status 500 }
+    end
+
+    context "render" do
+      it { is_expected.to render_template('host/show') }
+    end
+
+    context "render listnav partial" do
+      render_views
+      it { is_expected.to render_template(:partial => "layouts/listnav/_host") }
+    end
   end
 
   context "#set_credentials" do
