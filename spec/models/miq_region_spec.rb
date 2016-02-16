@@ -36,6 +36,14 @@ describe MiqRegion do
     end
   end
 
+  it ".log_not_under_management" do
+    MiqRegion.seed
+    FactoryGirl.create(:host_vmware)
+    FactoryGirl.create(:vm_vmware)
+    expect($log).to receive(:info).with(/VMs: \[1\], Hosts: \[1\]/)
+    described_class.log_not_under_management("")
+  end
+
   context ".seed" do
     before do
       @region_number = 99
