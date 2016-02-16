@@ -54,15 +54,15 @@ class ScanItem < ApplicationRecord
 
   def self.preload_default_profile
     # Create sample VM scan profiles
-    vm_profile = ScanItemSet.find_or_initialize_by_name(SAMPLE_VM_PROFILE)
+    vm_profile = ScanItemSet.find_or_initialize_by(:name => SAMPLE_VM_PROFILE[:name])
     vm_profile.update_attributes(SAMPLE_VM_PROFILE)
 
     # Create sample Host scan profiles
-    host_profile = ScanItemSet.find_or_initialize_by_name(SAMPLE_HOST_PROFILE)
+    host_profile = ScanItemSet.find_or_initialize_by(:name => SAMPLE_HOST_PROFILE[:name])
     host_profile.update_attributes(SAMPLE_HOST_PROFILE)
 
     # Create default Host scan profiles
-    host_default = ScanItemSet.find_or_initialize_by_name(DEFAULT_HOST_PROFILE)
+    host_default = ScanItemSet.find_or_initialize_by(:name => DEFAULT_HOST_PROFILE[:name])
     load_host_default = host_default.new_record?
     host_default.update_attributes(DEFAULT_HOST_PROFILE)
 
