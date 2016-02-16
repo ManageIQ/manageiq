@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_AnsibleTower_ConfigurationManager < MiqAeServiceManageIQ_Providers_ConfigurationManager
+  end
+end
