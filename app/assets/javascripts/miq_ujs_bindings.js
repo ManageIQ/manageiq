@@ -22,6 +22,8 @@ $(document).ready(function () {
       miqJqueryRequest(url, {data: miqSerializeForm(submit)});
     else
       miqJqueryRequest(url, options);
+
+    return false;
   });
 
   // bind button click to call JS function to send up grid data
@@ -125,6 +127,8 @@ $(document).ready(function () {
       options.complete = true;
     }
     miqJqueryRequest(url, options);
+
+    return false;
   });
 
   ManageIQ.observeDate = function(el) {
