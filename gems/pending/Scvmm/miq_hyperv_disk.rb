@@ -52,7 +52,7 @@ STAT_EOL
   def close
     hit_or_miss if DEBUG_CACHE_STATS
     @file_offset = 0
-    @winrm.executor.close
+    @winrm.close
     @winrm = nil
   end
 
