@@ -507,10 +507,19 @@ describe VmOrTemplate do
     end
   end
 
+  it "with ems_events" do
+    ems       = FactoryGirl.create(:ems_vmware_with_authentication)
+    vm        = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+    ems_event = FactoryGirl.create(:ems_event)
+    vm.ems_events << ems_event
+    expect(vm.ems_events.first).to be_kind_of(EmsEvent)
+    expect(vm.ems_events.first.id).to eq(ems_event.id)
+  end
+
   it "#miq_provision_vms" do
-    ems      = FactoryGirl.create(:ems_vmware_with_authentication)
-    template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
-    vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+    ems       = FactoryGirl.create(:ems_vmware_with_authentication)
+    template  = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
+    vm        = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
 
     options = {
       :vm_name        => vm.name,

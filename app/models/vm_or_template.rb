@@ -103,7 +103,9 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile"
 
   # EMS Events
-  has_many                  :ems_events, -> { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", id, id]).order(:timestamp) }, :class_name => "EmsEvent"
+  has_many                  :ems_events, ->(vmt) { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
+                            :class_name => "EmsEvent"
+
   has_many                  :ems_events_src,  :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_vm_or_template_id
 
