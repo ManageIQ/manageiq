@@ -1,10 +1,11 @@
 describe OpsController do
-  let(:params) { {} }
-  let(:session) { {} }
+
 
   include_context "valid session"
 
   describe "#schedule_form_filter_type_field_changed" do
+    let(:params) { {} }
+    let(:session) { {} }
     before do
       params[:filter_type] = filter_type
       params[:id] = "123"
@@ -107,6 +108,38 @@ describe OpsController do
                   :uri_prefix => "smb"
                  }
       expect(controller.send(:build_uri_settings, mocked_filedepot)).to include(settings)
+    end
+  end
+
+  context "#toolbar buttons tests" do
+    before(:each) do
+      set_user_privileges
+      EvmSpecHelper.create_guid_miq_server_zone
+      ApplicationController.handle_exceptions = true
+    end
+
+    it "add schedule" do
+      session[:settings] = {}
+      allow_any_instance_of(OpsController).to receive(:extra_js_commands)
+      post :x_button, :pressed => "schedule_add"
+      expect(response.status).to eq(200)
+    end
+
+    it "edit schedule" do
+      schedule = FactoryGirl.create(:miq_schedule, :userid => '1')
+      session[:settings] = {}
+      allow_any_instance_of(OpsController).to receive(:extra_js_commands)
+      post :x_button, :pressed => "schedule_edit", :id => schedule.id
+      expect(response.status).to eq(200)
+    end
+
+    it "delete schedule" do
+      MiqRegion.seed
+      schedule = FactoryGirl.create(:miq_schedule, :userid => '1')
+      session[:settings] = {}
+      allow_any_instance_of(OpsController).to receive(:extra_js_commands)
+      post :x_button, :pressed => "schedule_delete", :id => schedule.id
+      expect(response.status).to eq(200)
     end
   end
 end
