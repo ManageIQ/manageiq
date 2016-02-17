@@ -166,6 +166,7 @@ module EmsRefresh::VcUpdates
     :ems_refresh_network   => [
       "MOR",
       "host",
+      "config",
       "vm",
       "summary.name"
     ],

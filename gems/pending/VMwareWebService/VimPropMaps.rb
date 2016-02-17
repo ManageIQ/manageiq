@@ -71,6 +71,14 @@ module VimPropMaps
       :baseName => "@networks",
       :keyPath  => ['summary', 'name'],
       :props    => ['summary', 'host', 'vm']
+    },
+    :DistributedVirtualPortgroup => {
+      :baseName => "@networks",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary',
+        'config'
+      ]
     }
   }
 
@@ -350,6 +358,14 @@ module VimPropMaps
         'host',
         'vm'
       ]
+    },
+    :DistributedVirtualPortgroup => {
+      :baseName => "@networks",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary',
+        'config'
+      ]
     }
   }
 
@@ -482,6 +498,14 @@ module VimPropMaps
         'summary.name',
         'host',
         'vm'
+      ]
+    },
+    :DistributedVirtualPortgroup => {
+      :baseName => "@networks",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary',
+        'config'
       ]
     }
   }

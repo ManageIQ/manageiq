@@ -1639,13 +1639,20 @@ class MiqVimInventory < MiqVimClientBase
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      ra = getMoPropMulti(inventoryHash_locked['Network'], @propMap[:Network][:props])
-
       @networks      = {}
       @networksByMor = {}
+
+      ra = getMoPropMulti(inventoryHash_locked['Network'], @propMap[:Network][:props])
+
       ra.each do |netObj|
         addNetworkObj(netObj)
       end
+
+      ra = getMoPropMulti(inventoryHash_locked['DistributedVirtualPortgroup'], @propMap[:DistributedVirtualPortgroup][:props])
+      ra.each do |dvsObj|
+        addDvsObj(dvsObj)
+      end
+
     ensure
       @cacheLock.sync_unlock if unlock
     end
@@ -1710,8 +1717,12 @@ class MiqVimInventory < MiqVimClientBase
     end
   end
 
-  def addNetworkObj(dsObj)
-    addObjHash(:Network, dsObj)
+  def addNetworkObj(netObj)
+    addObjHash(:Network, netObj)
+  end
+
+  def addDvsObj(netObj)
+    addObjHash(:DistributedVirtualPortgroup, netObj)
   end
 
   #
