@@ -138,7 +138,7 @@ describe Metric::CiMixin::Capture do
     end
 
     allow(@vm).to receive(:state_changed_on).and_return(second_collection_period_start)
-    @vm.perf_capture_realtime(Time.parse('2013-08-28T11:01:40Z'), Time.parse(second_collection_period_start))
+    @vm.perf_capture_realtime(Time.parse('2013-08-28T11:01:40Z').utc, Time.parse(second_collection_period_start).utc)
 
     # 2.collection period, save all metrics
     allow(@metering).to receive(:get_statistics) do |name, _options|
@@ -152,7 +152,7 @@ describe Metric::CiMixin::Capture do
     end
 
     allow(@vm).to receive(:state_changed_on).and_return(second_collection_period_start)
-    @vm.perf_capture_realtime(Time.parse(second_collection_period_start), Time.parse('2013-08-28T14:02:00Z'))
+    @vm.perf_capture_realtime(Time.parse(second_collection_period_start).utc, Time.parse('2013-08-28T14:02:00Z').utc)
 
     @metrics_by_ts = {}
     @vm.metrics.each do |x|
@@ -181,6 +181,6 @@ describe Metric::CiMixin::Capture do
 
   def parse_datetime(datetime)
     datetime << "Z" if datetime.size == 19
-    Time.parse(datetime)
+    Time.parse(datetime).utc
   end
 end

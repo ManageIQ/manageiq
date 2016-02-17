@@ -87,7 +87,7 @@ module Metric::Capture
   #
 
   def self.perf_capture_health_check(zone)
-    q_items = MiqQueue.select(:method_name, :created_on).order("created_on ASC")
+    q_items = MiqQueue.select(:method_name, :created_on).order(:created_on)
               .where(:state       => "ready",
                      :role        => "ems_metrics_collector",
                      :method_name => %w(perf_capture perf_capture_realtime perf_capture_hourly perf_capture_historical),

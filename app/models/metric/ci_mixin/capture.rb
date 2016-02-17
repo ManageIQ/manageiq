@@ -90,7 +90,8 @@ module Metric::CiMixin::Capture
           end
           qi
         else
-          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{qi[:method_name].sub("perf_capture_","")} is still running"
+          interval = qi[:method_name].sub("perf_capture_", "")
+          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running"
           # NOTE: do not update the message queue
           nil
         end
