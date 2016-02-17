@@ -3,7 +3,7 @@ module VmOrTemplate::Operations::Relocation
     raise NotImplementedError, "raw_live_migrate must be implemented in a subclass"
   end
 
-  def live_migrate(options = nil)
+  def live_migrate(options = {})
     raw_live_migrate(options)
   end
 
@@ -15,7 +15,7 @@ module VmOrTemplate::Operations::Relocation
     raise NotImplementedError, "raw_evacuate must be implemented in a subclass"
   end
 
-  def evacuate(options = nil)
+  def evacuate(options = {})
     raw_evacuate(options)
   end
 
