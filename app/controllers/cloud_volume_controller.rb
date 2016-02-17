@@ -50,6 +50,23 @@ class CloudVolumeController < ApplicationController
           :model    => ui_lookup(:tables => "cloud_volume")
         }
       end
+    when "instances"
+      title = ui_lookup(:tables => "vm_cloud")
+      kls   = ManageIQ::Providers::CloudManager::Vm
+      drop_breadcrumb(
+        :name => _("%{name} (All %{title})") % {:name => @volume.name, :title => title},
+        :url  => "/cloud_volume/show/#{@volume.id}?display=#{@display}"
+      )
+      @view, @pages = get_view(kls, :parent => @volume) # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] && @view.extras[:auth_count] &&
+         @view.extras[:total_count] > @view.extras[:auth_count]
+        unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
+        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
+          :children => pluralize(unauthorized_count, title),
+          :model    => ui_lookup(:table => "cloud_volume")
+        }
+      end
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
