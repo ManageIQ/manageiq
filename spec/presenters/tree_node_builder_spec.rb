@@ -355,6 +355,14 @@ describe TreeNodeBuilder do
       node = TreeNodeBuilder.build(tenant, "root", :expand => true, :open_all => true)
       expect(node[:expand]).to eq(true)
     end
+
+    it 'can handle an ExtManagementSystem node with no name' do
+      mgmt_system = FactoryGirl.build(:ems_redhat)
+      mgmt_system.name = nil
+      mgmt_system.id = 'e-1000'
+      node = TreeNodeBuilder.build(mgmt_system, nil, {})
+      expect(node).not_to be_nil
+    end
   end
 
   context "#node_with_display_name" do
