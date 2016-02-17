@@ -17,12 +17,14 @@ module ManageIQ::Providers
 
     has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
     has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_database_flavors,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_resource_quotas,         :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
     has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
     # TODO(lsmola) NetworkManager, when network manager is integrated to all cloud providers, change below relations
     # to delegations to network manager
