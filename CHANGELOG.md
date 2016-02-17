@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 
 
+## Unreleased - as of Sprint 36 end 2016-02-15
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+36+Ending+Feb+15%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - Containers
+    - Reports
+    - Linking registries with services
+  - OpenStack Integration Features
+     - Backend support for Live VM Migration
+     - Backend support for VM resize
+     - Support for Cinder and Glance v2
+  - Continued work on conversion to Amazon SDK v2
+  - Continued work on Multi-endpoint modeling
+  - Azure Provisioning
+  - Google Provisioning
+- Appliance
+  - Shopping cart model for ordering services
+  - consumption_administrator role with chargeback/reporting duties
+- REST API
+  - Actions for instances: stop, start, pause, suspend, shelve, reset, reboot guest
+  - Actions provided to approve or deny provision requests
+  - Ability to delete one’s own authenticated token
+- User Interface
+  - I18n support added to the Self Service UI
+  - Self Service UI group switcher
+  - Ansible Tower providers
+  - Containers: Persistent volumes, topology context menus     
+- Ansible
+  - Add Ansible as a Configuration Management Provider
+  - Refresh of Configuration Scripts (Job Templates)
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+36+Ending+Feb+15%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Retirement state-machine updates for SCVMM
+  - Enhanced .missing method support
+     - Save original method name in `_missing`_instance property
+     - Accessible during instance resolution and within methods
+- Updated to newer [ansible`_tower`_client gem](https://github.com/ManageIQ/ansible_tower_client):
+    - Accessors for Host#groups and #inventory_id
+  - Allow passing extra_vars to Job Template launch
+  - Added JSON validation for extra_vars
+- [Self Service UI](https://github.com/ManageIQ/manageiq-ui-self_service) extracted into its own repository setting up pattern for other independent UIs
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+36+Ending+Feb+15%2C+2016%22+label%3Abug)
+
+Notable fixes include:
+
+-  Initializers can now load ApplicationController w/o querying DB
+-  10-20% performance improvement in vm explorer
+-  DB seeding no longer silently catches exceptions
+
 ## Unreleased - as of Sprint 35 end 2016-01-25
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+35+Ending+Jan+25%2C+2016%22+label%3Aenhancement)
