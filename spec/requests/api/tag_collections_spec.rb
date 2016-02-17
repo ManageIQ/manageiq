@@ -2,8 +2,6 @@
 # REST API Request Tests - Tags subcollection specs for Non-Vm collections
 #
 describe ApiController do
-  include Rack::Test::Methods
-
   let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server)   { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:ems)          { FactoryGirl.create(:ems_vmware, :zone => zone) }
@@ -29,15 +27,9 @@ describe ApiController do
     expect(resource.tags.map(&:name).sort).to eq(tag_names.sort)
   end
 
-  before(:each) do
-    init_api_spec_env
-
+  before do
     FactoryGirl.create(:classification_department_with_tags)
     FactoryGirl.create(:classification_cost_center_with_tags)
-  end
-
-  def app
-    Vmdb::Application
   end
 
   context "Provider Tag subcollection" do

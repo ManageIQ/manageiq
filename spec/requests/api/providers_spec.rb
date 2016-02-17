@@ -14,8 +14,6 @@
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
 describe ApiController do
-  include Rack::Test::Methods
-
   ENDPOINT_ATTRS = ApiController::Providers::ENDPOINT_ATTRS
 
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }
@@ -52,14 +50,6 @@ describe ApiController do
       "hostname"  => "sample_openshift.provider.com",
       "ipaddress" => "100.200.300.3",
     }
-  end
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
   end
 
   describe "Providers actions on Provider class" do

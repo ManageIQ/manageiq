@@ -1,14 +1,4 @@
 RSpec.describe "API entrypoint" do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
-
   it "returns a :settings hash" do
     api_basic_authorize
 

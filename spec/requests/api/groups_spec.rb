@@ -11,8 +11,6 @@
 # - Delete multiple groups                /api/groups                           action "delete"
 #
 describe ApiController do
-  include Rack::Test::Methods
-
   let(:expected_attributes) { %w(id guid description group_type tenant_id) }
 
   let(:sample_group1) { {:description => "sample_group_1"} }
@@ -22,14 +20,6 @@ describe ApiController do
 
   let(:role3)    { FactoryGirl.create(:miq_user_role) }
   let(:tenant3)  { FactoryGirl.create(:tenant, :name => "Tenant3") }
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
 
   describe "groups create" do
     it "rejects creation without appropriate role" do

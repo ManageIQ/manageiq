@@ -1,12 +1,4 @@
 RSpec.describe "categories API" do
-  include Rack::Test::Methods
-
-  before { init_api_spec_env }
-
-  def app
-    Vmdb::Application
-  end
-
   it "can list all the categories" do
     categories = FactoryGirl.create_list(:category, 2)
     api_basic_authorize

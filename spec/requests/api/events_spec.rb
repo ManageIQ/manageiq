@@ -8,16 +8,6 @@
 #   /api/policies/:id/events
 #
 describe ApiController do
-  include Rack::Test::Methods
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
-
   let(:miq_event_guid_list) { MiqEventDefinition.pluck(:guid) }
 
   def create_events(count)
