@@ -36,12 +36,10 @@ class MiqPolicyImportService
   end
 
   def destroy_queued_deletion(import_file_upload_id)
-    MiqQueue.first(
-      :conditions => {
-        :class_name  => "ImportFileUpload",
-        :instance_id => import_file_upload_id,
-        :method_name => "destroy"
-      }
+    MiqQueue.find_by(
+      :class_name  => "ImportFileUpload",
+      :instance_id => import_file_upload_id,
+      :method_name => "destroy"
     ).destroy
   end
 

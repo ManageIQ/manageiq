@@ -140,4 +140,19 @@ EOF
       expect(report_result.report_results).to eq(txt)
     end
   end
+
+  describe ".counts_by_userid" do
+    it "fetches counts" do
+      u1 = FactoryGirl.create(:user)
+      u2 = FactoryGirl.create(:user)
+      FactoryGirl.create(:miq_report_result, :userid => u1.userid)
+      FactoryGirl.create(:miq_report_result, :userid => u1.userid)
+      FactoryGirl.create(:miq_report_result, :userid => u2.userid)
+
+      expect(MiqReportResult.counts_by_userid).to match_array([
+        {:userid => u1.userid, :count => 2},
+        {:userid => u2.userid, :count => 1}
+      ])
+    end
+  end
 end
