@@ -155,6 +155,7 @@ module ManageIQ::Providers
       VC_ACCESSORS = [
         [:dataStoresByMor,              :storage],
         [:storagePodsByMor,             :storage_pod],
+        [:networksByMor,                :network],
         [:hostSystemsByMor,             :host],
         [:virtualMachinesByMor,         :vm],
         [:datacentersByMor,             :dc],
@@ -305,6 +306,7 @@ module ManageIQ::Providers
 
       VC_ACCESSORS_BY_MOR = {
         :storage  => :dataStoreByMor,
+        :network  => :networkByMor,
         :host     => :hostSystemByMor,
         :vm       => :virtualMachineByMor,
         :dc       => :datacenterByMor,

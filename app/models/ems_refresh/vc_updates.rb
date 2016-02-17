@@ -163,6 +163,13 @@ module EmsRefresh::VcUpdates
       "parent"
     ],
 
+    :ems_refresh_network   => [
+      "MOR",
+      "host",
+      "vm",
+      "summary.name"
+    ],
+
     :ems_refresh_cluster   => [
       "MOR",
       "configuration.dasConfig.admissionControlEnabled",
