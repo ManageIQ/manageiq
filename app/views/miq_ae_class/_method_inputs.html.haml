@@ -62,7 +62,7 @@
             %th= _('Default Value')
             %th= _('Data Type')
         %tbody
-          - @record.inputs.flatten.each do |record|
+          - @record.inputs.each do |record|
             %tr
               %td= record_name(record)
               %td

@@ -35,7 +35,7 @@ class TreeBuilderAeClass < TreeBuilder
     objects = filter_ae_objects(object.ae_namespaces)
     unless MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
       ns_classes = filter_ae_objects(object.ae_classes)
-      objects += ns_classes.flatten unless ns_classes.blank?
+      objects += ns_classes unless ns_classes.blank?
     end
     count_only_or_objects(count_only, objects, [:display_name, :name])
   end
