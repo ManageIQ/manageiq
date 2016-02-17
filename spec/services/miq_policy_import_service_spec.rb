@@ -1,20 +1,15 @@
 describe MiqPolicyImportService do
   let(:miq_policy_import_service) { described_class.new }
   let(:import_file_upload) { double("ImportFileUpload") }
-  let(:miq_queue) { double("MiqQueue") }
+  let(:miq_queue) do
+    FactoryGirl.create(:miq_queue, :class_name => "ImportFileUpload", :instance_id => 123, :method_name => "destroy")
+  end
 
   describe "#cancel_import" do
     before do
       allow(import_file_upload).to receive(:destroy)
-      allow(miq_queue).to receive(:destroy)
       allow(ImportFileUpload).to receive(:find).with(123).and_return(import_file_upload)
-      allow(MiqQueue).to receive(:first).with(
-        :conditions => {
-          :class_name  => "ImportFileUpload",
-          :instance_id => 123,
-          :method_name => "destroy"
-        }
-      ).and_return(miq_queue)
+      miq_queue
     end
 
     it "destroys the import file upload" do
@@ -23,26 +18,19 @@ describe MiqPolicyImportService do
     end
 
     it "destroys the queue item" do
-      expect(miq_queue).to receive(:destroy)
       miq_policy_import_service.cancel_import(123)
+      expect(MiqQueue.where(:id => miq_queue.id)).not_to be_exists
     end
   end
 
   describe "#import_policy" do
     before do
+      miq_queue
       allow(import_file_upload).to receive(:destroy)
       allow(import_file_upload).to receive(:uploaded_yaml_content).and_return("upload_content")
-      allow(miq_queue).to receive(:destroy)
 
       allow(ImportFileUpload).to receive(:find).with(123).and_return(import_file_upload)
       allow(MiqPolicy).to receive(:import_from_array)
-      allow(MiqQueue).to receive(:first).with(
-        :conditions => {
-          :class_name  => "ImportFileUpload",
-          :instance_id => 123,
-          :method_name => "destroy"
-        }
-      ).and_return(miq_queue)
     end
 
     it "imports the policy using MiqPolicy" do
@@ -56,8 +44,8 @@ describe MiqPolicyImportService do
     end
 
     it "destroys the queue item" do
-      expect(miq_queue).to receive(:destroy)
       miq_policy_import_service.import_policy(123)
+      expect(MiqQueue.where(:id => miq_queue.id)).not_to be_exists
     end
   end
 

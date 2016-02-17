@@ -311,11 +311,8 @@ class MiqReportResult < ApplicationRecord
   end
 
   def self.counts_by_userid
-    all(
-      :conditions => "userid NOT LIKE 'widget%'",
-      :select     => "userid, COUNT(id) as count",
-      :group      => "userid"
-    ).collect { |rr| {:userid => rr.userid, :count => rr.count.to_i} }
+    where("userid NOT LIKE 'widget%'").select("userid, COUNT(id) as count").group("userid")
+      .collect { |rr| {:userid => rr.userid, :count => rr.count.to_i} }
   end
 
   def self.orphaned_counts_by_userid

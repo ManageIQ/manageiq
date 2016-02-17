@@ -20,7 +20,7 @@ class MiqSchedule < ApplicationRecord
   }
 
   scope :updated_since, lambda { |time|
-    {:conditions => ["updated_at > ?", time]}
+    where("updated_at > ?", time)
   }
 
   serialize :sched_action

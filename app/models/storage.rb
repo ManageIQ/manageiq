@@ -491,9 +491,13 @@ class Storage < ApplicationRecord
   end
 
   def smartstate_analysis_count_for_host_id(host_id)
-    MiqQueue.count(
-      :conditions => ["class_name = ? AND instance_id = ? AND method_name = ? AND target_id = ? AND state = ?", self.class.name, id, "smartstate_analysis", host_id, 'dequeue']
-    )
+    MiqQueue.where(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "smartstate_analysis",
+      :target_id   => host_id,
+      :state       => "dequeue"
+    ).count
   end
 
   def smartstate_analysis(miq_task_id = nil)

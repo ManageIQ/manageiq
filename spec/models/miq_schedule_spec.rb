@@ -701,4 +701,12 @@ describe MiqSchedule do
       expect(MiqSchedule.count).to    eq(0)
     end
   end
+
+  describe ".updated_since" do
+    it "fetches records" do
+      FactoryGirl.create(:miq_schedule, :updated_at => 1.year.ago)
+      s = FactoryGirl.create(:miq_schedule, :updated_at => 1.day.ago)
+      expect(MiqSchedule.updated_since(1.month.ago)).to eq([s])
+    end
+  end
 end
