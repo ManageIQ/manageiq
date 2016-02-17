@@ -1,6 +1,4 @@
 RSpec.describe "categories API" do
-  include_context "api request specs"
-
   it "can list all the categories" do
     categories = FactoryGirl.create_list(:category, 2)
     api_basic_authorize

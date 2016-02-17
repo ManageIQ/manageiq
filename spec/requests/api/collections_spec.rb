@@ -2,8 +2,6 @@
 # Rest API Collections Tests
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
   let(:template) do

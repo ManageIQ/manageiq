@@ -1,6 +1,4 @@
 RSpec.describe "chargebacks API" do
-  include_context "api request specs"
-
   it "can fetch the list of all chargeback rates" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 

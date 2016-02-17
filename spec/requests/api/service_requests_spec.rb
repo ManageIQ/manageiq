@@ -8,8 +8,6 @@
 #     GET /api/services/:id?attributes=provision_dialog
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:provision_dialog1)    { FactoryGirl.create(:dialog, :label => "ProvisionDialog1") }
   let(:retirement_dialog2)   { FactoryGirl.create(:dialog, :label => "RetirementDialog2") }
 

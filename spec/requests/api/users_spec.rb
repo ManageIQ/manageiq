@@ -10,8 +10,6 @@
 # - Delete multiple users                /api/users                           action "delete"
 #
 RSpec.describe "users API" do
-  include_context "api request specs"
-
   let(:expected_attributes) { %w(id name userid current_group_id) }
 
   let(:tenant1)  { FactoryGirl.create(:tenant, :name => "Tenant1") }

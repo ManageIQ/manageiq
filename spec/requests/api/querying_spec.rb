@@ -9,8 +9,6 @@
 #   - Resource actions
 #
 describe ApiController do
-  include_context "api request specs"
-
   def create_vms_by_name(names)
     names.each.collect { |name| FactoryGirl.create(:vm_vmware, :name => name) }
   end

@@ -14,8 +14,6 @@
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
 describe ApiController do
-  include_context "api request specs"
-
   ENDPOINT_ATTRS = ApiController::Providers::ENDPOINT_ATTRS
 
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }

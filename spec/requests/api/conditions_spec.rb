@@ -8,8 +8,6 @@
 #   /api/policies/:id/conditions
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:condition_guid_list) { Condition.pluck(:guid) }
 
   def create_conditions(count)

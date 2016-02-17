@@ -16,8 +16,6 @@
 #   /api/:collection/:id/policy_profiles
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:provider)   { FactoryGirl.create(:ems_vmware, :zone => zone) }
