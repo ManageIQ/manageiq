@@ -1013,6 +1013,7 @@ module ApplicationHelper
     test_layout = @layout
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
 
     Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
   end
@@ -1021,6 +1022,7 @@ module ApplicationHelper
     test_layout = @layout
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
 
     return "dropdown-menu" if big_iframe
 
@@ -1030,6 +1032,8 @@ module ApplicationHelper
   def secondary_nav_class(nav_layout)
     if nav_layout == 'my_tasks' # FIXME: exceptional behavior to remove
       nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
+    elsif nav_layout == 'cloud_volume' && @layout == 'cloud_volume_snapshot'
+      nav_layout = 'cloud_volume_snapshot'
     end
     nav_layout == @layout ? "active" : ""
   end
@@ -1067,7 +1071,7 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot 
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot
                         condition container_group container_route container_project
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume
