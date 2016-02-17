@@ -17,7 +17,8 @@
         %th= _('Message')
       %tbody
         - @ae_class.ae_fields.each do |record|
-          - ae_value = record.ae_values.find_or_initialize_by_instance_id(@record)
+          - ae_value = record.ae_values.where("instance_id = ?", @record.id).first
+          - ae_value ||= MiqAeValue.new(:instance_id => @record.id, :field_id => record.id)
           %tr
             %td
               %ul.icons.list-unstyled.pull-left
