@@ -269,6 +269,19 @@ class MiqVimInventory < MiqVimClientBase
     end
 
     #
+    # Traverse Datacenter to Network folder
+    #
+    datacenterNetworkFolderTs = VimHash.new("TraversalSpec") do |ts|
+      ts.name = "dcTonf"
+      ts.type = "Datacenter"
+      ts.path = "networkFolder"
+      ts.skip = "false"
+      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
+        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+      end
+    end
+
+    #
     # Traverse Folder to children.
     #
     folderTs = VimHash.new("TraversalSpec") do |ts|
@@ -282,6 +295,7 @@ class MiqVimInventory < MiqVimClientBase
         ssa << datacenterVmTs
         ssa << datacenterDsTs
         ssa << datacenterDsFolderTs
+        ssa << datacenterNetworkFolderTs
         ssa << computeResourceRpTs
         ssa << computeResourceHostTs
         ssa << resourcePoolTs
@@ -1606,6 +1620,98 @@ class MiqVimInventory < MiqVimClientBase
 
   def addDataStoreObj(dsObj)
     addObjHash(:Datastore, dsObj)
+  end
+
+  ##################
+  # Networks
+  ##################
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def networks_locked
+    raise "networks_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@networks) if @networks
+
+    $vim_log.info "MiqVimInventory.networks_locked: loading Network cache for #{@connId}"
+    begin
+      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
+
+      ra = getMoPropMulti(inventoryHash_locked['Network'], @propMap[:Network][:props])
+
+      @networks      = {}
+      @networksByMor = {}
+      ra.each do |netObj|
+        addNetworkObj(netObj)
+      end
+    ensure
+      @cacheLock.sync_unlock if unlock
+    end
+    $vim_log.info "MiqVimInventory.networks_locked: loaded Network cache for #{@connId}"
+
+    @networks
+  end # def networks_locked
+  protected :networks_locked
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def networksByMor_locked
+    raise "networksByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@networksByMor) if @networksByMor
+    networks_locked
+    @networksByMor
+  end # def networksByMor_locked
+  protected :networksByMor_locked
+
+  #
+  # Public accessor
+  #
+  def networks(selSpec = nil)
+    net = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        net = dupObj(networks_locked)
+      else
+        net = applySelector(networks_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    net
+  end # def networks
+
+  #
+  # Public accessor
+  #
+  def networksByMor(selSpec = nil)
+    net = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        net = dupObj(networksByMor_locked)
+      else
+        net = applySelector(networksByMor_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    net
+  end # def networksByMor
+
+  #
+  # Return a single network object, given its MOR
+  #
+  def networkByMor(netMor, selSpec = nil)
+    @cacheLock.synchronize(:SH) do
+      return(dupObj(networksByMor_locked[netMor])) if selSpec.nil?
+      return(applySelector(networksByMor_locked[netMor], selSpec))
+    end
+  end
+
+  def addNetworkObj(dsObj)
+    addObjHash(:Network, dsObj)
   end
 
   #

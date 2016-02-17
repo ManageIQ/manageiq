@@ -66,6 +66,11 @@ module VimPropMaps
       :baseName => "@storagePods",
       :keyPath  => ["summary", "name"],
       :props    => ["summary", "childEntity", "parent"]
+    },
+    :Network                => {
+      :baseName => "@networks",
+      :keyPath  => ['summary', 'name'],
+      :props    => ['summary', 'host', 'vm']
     }
   }
 
@@ -336,6 +341,15 @@ module VimPropMaps
         "childEntity",
         "parent"
       ]
+    },
+    :Network                => {
+      :baseName => "@networks",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary.name',
+        'host',
+        'vm'
+      ]
     }
   }
 
@@ -459,6 +473,15 @@ module VimPropMaps
         "summary.name",
         "childEntity",
         "parent"
+      ]
+    },
+    :Network                => {
+      :baseName => "@networks",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary.name',
+        'host',
+        'vm'
       ]
     }
   }
