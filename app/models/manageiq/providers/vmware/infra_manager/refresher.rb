@@ -155,6 +155,8 @@ module ManageIQ::Providers
       VC_ACCESSORS = [
         [:dataStoresByMor,              :storage],
         [:storagePodsByMor,             :storage_pod],
+        [:dvPortgroupsByMor,            :dvportgroup],
+        [:dvSwitchesByMor,              :dvswitch],
         [:hostSystemsByMor,             :host],
         [:virtualMachinesByMor,         :vm],
         [:datacentersByMor,             :dc],
@@ -304,15 +306,18 @@ module ManageIQ::Providers
       end
 
       VC_ACCESSORS_BY_MOR = {
-        :storage  => :dataStoreByMor,
-        :host     => :hostSystemByMor,
-        :vm       => :virtualMachineByMor,
-        :dc       => :datacenterByMor,
-        :folder   => :folderByMor,
-        :cluster  => :clusterComputeResourceByMor,
-        :host_res => :computeResourceByMor,
-        :rp       => :resourcePoolByMor,
-        :vapp     => :virtualAppByMor
+        :storage     => :dataStoreByMor,
+        :network     => :networkByMor,
+        :dvportgroup => :dvPortgroupByMor,
+        :dvswitch    => :dvSwitchByMor,
+        :host        => :hostSystemByMor,
+        :vm          => :virtualMachineByMor,
+        :dc          => :datacenterByMor,
+        :folder      => :folderByMor,
+        :cluster     => :clusterComputeResourceByMor,
+        :host_res    => :computeResourceByMor,
+        :rp          => :resourcePoolByMor,
+        :vapp        => :virtualAppByMor
       }
 
       def get_vc_data_by_mor(type, mor)
