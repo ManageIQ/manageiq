@@ -25,6 +25,8 @@
 #   - floating_ips
 #   - cloud_object_store_containers
 #     - cloud_object_store_objects
+#   - resource_groups
+#   - db_instances
 #
 
 module EmsRefresh::SaveInventoryCloud
@@ -62,7 +64,8 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects,
-      :resource_groups
+      :resource_groups,
+      :db_instances
     ]
 
     # Save and link other subsections
@@ -256,5 +259,20 @@ module EmsRefresh::SaveInventoryCloud
 
     save_inventory_multi(ems.resource_groups, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.resource_groups, hashes, :ems_ref)
+  end
+
+  def save_db_instances_inventory(ems, hashes, target = nil)
+    target ||= ems
+
+    ems.cloud_databases(true)
+    deletes = target == ems ? ems.cloud_databases.dup : []
+
+    hashes.each do |h|
+      h[:ems_id]    = ems.id
+      h[:flavor_id] = h.fetch_path(:flavor, :id)
+    end
+
+    save_inventory_multi(ems.cloud_databases, hashes, deletes, [:ems_ref], nil, [:flavor])
+    store_ids_for_new_records(ems.cloud_databases, hashes, :ems_ref)
   end
 end
