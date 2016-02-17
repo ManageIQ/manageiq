@@ -15,14 +15,17 @@
           %ul.dropdown-menu{:class => primary_nav_class2(menu_section.id)}
             - menu_section.items.each do |menu_item|
               - if menu_item.visible?
-                %li.dropdown-submenu{:class => secondary_nav_class(menu_item.id)}
-                  %a{:href    => menu_item.url,
-                     :onclick => 'return miqCheckForChanges()'}= _(menu_item.name)
-                  %ul.dropdown-menu
-                    %li
-                      %a
-                        tertiary #1
-                    %li
-                      %a
-                        tertiary #2
+                - if menu_item.leaf?
+                  %li{:class => secondary_nav_class(menu_item.id)}
+                    %a{:href    => menu_item.url,
+                       :onclick => 'return miqcheckforchanges()'}= _(menu_item.name)
+                - else
+                  %li.dropdown-submenu{:class => secondary_nav_class(menu_item.id)}
+                    %a{:href    => menu_item.url,
+                       :onclick => 'return miqcheckforchanges()'}= _(menu_item.name)
+                    %ul.dropdown-menu
+                      - menu_item.items.each do |menu_item_deep|
+                        %li
+                          %a{:href    => menu_item_deep.url,
+                             :onclick => 'return miqcheckforchanges()'}= _(menu_item_deep.name)
 
