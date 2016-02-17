@@ -177,11 +177,11 @@ class MiqAeClassController < ApplicationController
         @records = []
         # Add Namespaces under a namespace
         details = @record.ae_namespaces
-        @records += details.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
+        @records += details.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
         # Add classes under a namespace
         details_cls = @record.ae_classes
         unless details_cls.nil?
-          @records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
+          @records += details_cls.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
         end
         @combo_xml = build_type_options
         @dtype_combo_xml = build_dtype_options
@@ -428,7 +428,7 @@ class MiqAeClassController < ApplicationController
     # passing in mode, don't need to sort records for namaspace node, it will be passed in sorted order, need to show Namesaces first and then Classes
     records =
       if mode
-        view.flatten.sort_by { |v| [v.display_name.to_s, v.name.to_s] }
+        view.sort_by { |v| [v.display_name.to_s, v.name.to_s] }
       else
         view
       end
