@@ -476,6 +476,66 @@ describe MiqAeClassController do
     end
   end
 
+  context "save class/method" do
+    before do
+      set_user_privileges
+      ns = FactoryGirl.create(:miq_ae_namespace)
+      @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
+      @cls.ae_fields << FactoryGirl.create(:miq_ae_field, :name => 'fred',
+                                           :class_id => @cls.id, :priority => 1)
+      @cls.save
+      @method = FactoryGirl.create(:miq_ae_method, :name => "method01", :scope => "class",
+        :language => "ruby", :class_id => @cls.id, :data => "exit MIQ_OK", :location => "inline")
+      allow(controller).to receive(:replace_right_cell)
+      controller.instance_variable_set(:@sb, :trees       => {:ae_tree => {:active_node => "aec-#{@cls.id}"}},
+                                             :active_tree => :ae_tree)
+    end
+
+    it "update a method with inputs" do
+      field = {"default_value" => nil,
+               "datatype"      => nil,
+               "name"          => "name01",
+               "method_id"     => @method.id}
+      session[:edit] = {
+        :key              => "aemethod_edit__#{@method.id}",
+        :fields_to_delete => [],
+        :ae_class_id      => @cls.id,
+        :new_field        => {},
+        :new              => {
+          :name     => @method.name,
+          :language => 'ruby',
+          :scope    => 'instance',
+          :location => 'inline',
+          :fields   => [field]
+        }
+      }
+      controller.instance_variable_set(:@_params, :button => "save", :id => @method.id)
+      controller.send(:update_method)
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(response.status).to eq(200)
+    end
+
+    it "update a class with fields" do
+      field = {"aetype"   => "attribute",
+               "datatype" => "string",
+               "name"     => "name01"}
+      session[:edit] = {
+        :key              => "aefields_edit__#{@cls.id}",
+        :ae_class_id      => @cls.id,
+        :fields_to_delete => [],
+        :new              => {
+          :datatypes => [],
+          :aetypes   => [],
+          :fields    => [field]
+        }
+      }
+      controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
+      controller.send(:update_fields)
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "#copy_objects_edit_screen" do
     it "sets only current tenant's domains to be displayed in To Domain pull down" do
       FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)

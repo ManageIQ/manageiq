@@ -1047,7 +1047,7 @@ class MiqAeClassController < ApplicationController
       begin
         MiqAeClass.transaction do
           set_field_vars(ae_class)
-          ae_class.ae_fields.destroy(MiqAeField.find_all_by_id(@edit[:fields_to_delete]))
+          ae_class.ae_fields.destroy(MiqAeField.where("id = ?", @edit[:fields_to_delete]))
           ae_class.ae_fields.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_class.save!
         end  # end of transaction
@@ -1143,7 +1143,7 @@ class MiqAeClassController < ApplicationController
       begin
         MiqAeMethod.transaction do
           set_input_vars(ae_method)
-          ae_method.inputs.destroy(MiqAeField.find_all_by_id(@edit[:fields_to_delete]))
+          ae_method.inputs.destroy(MiqAeField.where("id = ?", @edit[:fields_to_delete]))
           ae_method.inputs.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_method.save!
         end  # end of transaction
