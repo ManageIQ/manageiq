@@ -4,7 +4,7 @@ module CloudVolumeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems availability_zone cloud_tenant base_snapshot cloud_volume_snapshots)
+    %i(ems availability_zone cloud_tenant base_snapshot cloud_volume_snapshots attachments)
   end
 
   def textual_group_tags
@@ -80,6 +80,17 @@ module CloudVolumeHelper::TextualSummary
       label = ui_lookup(:tables => "cloud_volume_snapshots")
       h[:title] = _("Show all %{models}") % {:models => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_volume_snapshots')
+    end
+    h
+  end
+
+  def textual_attachments
+    label = ui_lookup(:tables => "vm_cloud")
+    num   = @record.number_of(:attachments)
+    h     = {:label => label, :image => "vm", :value => num}
+    if num > 0 && role_allows(:feature => "vm_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @volume, :display => 'instances')
+      h[:title] = _("Show all attached %{models}") % {:models => label}
     end
     h
   end

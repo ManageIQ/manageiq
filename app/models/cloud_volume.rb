@@ -14,6 +14,10 @@ class CloudVolume < ApplicationRecord
 
   acts_as_miq_taggable
 
+  def vms
+    attachments.map { |disk| disk.hardware.vm }
+  end
+
   def self.available
     joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")
       .where("disks.backing_id" => nil)
