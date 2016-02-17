@@ -6,8 +6,6 @@
 # - Create multiple provision requests /api/provision_requests    action "create"
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
   let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }

@@ -7,8 +7,6 @@
 # - Delete multiple service templates   /api/service_templates        action "delete"
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:dialog1)    { FactoryGirl.create(:dialog, :label => "ServiceDialog1") }
   let(:dialog2)    { FactoryGirl.create(:dialog, :label => "ServiceDialog2") }
 

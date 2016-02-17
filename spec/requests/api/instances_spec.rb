@@ -1,6 +1,4 @@
 RSpec.describe "Instances API" do
-  include_context "api request specs"
-
   def update_raw_power_state(state, *instances)
     instances.each { |instance| instance.update_attributes!(:raw_power_state => state) }
   end
