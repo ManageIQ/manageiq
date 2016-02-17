@@ -65,10 +65,10 @@ RSpec.configure do |config|
   config.include MigrationSpecHelper, :migrations => :up
   config.include MigrationSpecHelper, :migrations => :down
 
-  config.include ApiSpecHelper,     :type => :request, :rest_api => true
+  config.include ApiSpecHelper,     :rest_api => true
   config.include AuthRequestHelper, :type => :request
   config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
-    metadata[:type] ||= :request
+    metadata[:rest_api] = true
   end
 
   config.include AuthHelper,  :type => :helper
