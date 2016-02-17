@@ -2,8 +2,6 @@
 # REST API Request Tests - Tags subcollection specs for Non-Vm collections
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server)   { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:ems)          { FactoryGirl.create(:ems_vmware, :zone => zone) }

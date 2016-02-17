@@ -1,6 +1,4 @@
 RSpec.describe "tenants API" do
-  include_context "api request specs"
-
   let!(:root_tenant) { Tenant.seed }
 
   it "can list all the tenants" do

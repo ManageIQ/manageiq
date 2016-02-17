@@ -6,8 +6,6 @@
 # - Create multiple automation requests /api/automation_requests    action "create"
 #
 describe ApiController do
-  include_context "api request specs"
-
   describe "Automation Requests" do
     let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
     let(:single_automation_request) do

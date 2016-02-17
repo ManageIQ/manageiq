@@ -14,8 +14,6 @@
 # - Retire multiple services    /api/services         action "retire"
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }

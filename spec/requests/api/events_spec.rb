@@ -8,8 +8,6 @@
 #   /api/policies/:id/events
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:miq_event_guid_list) { MiqEventDefinition.pluck(:guid) }
 
   def create_events(count)

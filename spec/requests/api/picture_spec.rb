@@ -6,8 +6,6 @@
 # - Query picture and image_href of service_requests   /api/service_requests/:id?attributes=picture,picture.image_href
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:dialog1)  { FactoryGirl.create(:dialog, :label => "ServiceDialog1") }
   let(:ra1)      { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
   let(:picture)  { FactoryGirl.create(:picture, :extension => "jpg") }

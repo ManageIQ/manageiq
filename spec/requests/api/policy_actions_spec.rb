@@ -8,8 +8,6 @@
 #   /api/policies/:id/policy_actions
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:miq_action_guid_list) { MiqAction.pluck(:guid) }
 
   def create_actions(count)

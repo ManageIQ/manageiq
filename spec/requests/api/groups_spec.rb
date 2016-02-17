@@ -11,8 +11,6 @@
 # - Delete multiple groups                /api/groups                           action "delete"
 #
 describe ApiController do
-  include_context "api request specs"
-
   let(:expected_attributes) { %w(id guid description group_type tenant_id) }
 
   let(:sample_group1) { {:description => "sample_group_1"} }
