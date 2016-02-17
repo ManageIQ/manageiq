@@ -250,37 +250,22 @@ module ActiveRecord
 
   module Associations
     class Preloader
-      def preloaders_on_with_virtual(association, records, preload_scope = nil)
-        records = records.compact
-        records_model = records.first.class
-        return preloaders_on_without_virtual(association, records, preload_scope) if records.empty?
+      def preloaders_for_one_with_virtual(association, records, scope)
+        klass_map = records.compact.group_by(&:class)
 
-        case association
-        when Hash
-          virtual_association, association = association.partition do |parent, _child|
-            raise "parent must be an association name" unless parent.kind_of?(String) || parent.kind_of?(Symbol)
-            records_model.virtual_field?(parent)
-          end
-          association = Hash[association]
-
-          virtual_association.each do |parent, child|
-            Array.wrap(records_model.virtual_includes(parent)).each { |f| preload(records, f) }
-
-            if records_model.virtual_attribute?(parent)
-              raise "child must be blank if parent is a virtual attribute" if !child.blank?
-              next
-            end
-
-            parents = records.map { |record| record.send(parent) }.flatten.compact
-            MiqPreloader.preload(parents, child) unless parents.empty?
-          end
-        when String, Symbol
-          return Array.wrap(records_model.virtual_includes(association)).each { |f| preload(records, f) }
+        loaders = klass_map.keys.group_by { |klass| klass.virtual_includes(association) }.flat_map do |virtuals, klasses|
+          subset = klasses.flat_map { |klass| klass_map[klass] }
+          preload subset, virtuals
         end
 
-        preloaders_on_without_virtual(association, records, preload_scope)
+        records_with_association = klass_map.select { |k, rs| k.reflect_on_association(association) }.flat_map { |k, rs| rs }
+        if records_with_association.any?
+          loaders.concat preloaders_for_one_without_virtual(association, records_with_association, scope)
+        end
+
+        loaders
       end
-      alias_method_chain :preloaders_on, :virtual
+      alias_method_chain :preloaders_for_one, :virtual
     end
   end
 
