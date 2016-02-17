@@ -2,7 +2,8 @@ require 'rubygems'
 require 'net/ssh'
 
 #test SSH connection to vm
-def checkSSH(ipaddress, user)
+
+def check_ssh(ipaddress, user)
   $evm.root['Phase'] = "check ssh"
   $evm.log(:info, "**************** #{$evm.root["Phase"]} ****************")
   $evm.log(:info, "Connecting to IPaddress - #{ipaddress}")
@@ -18,4 +19,17 @@ def checkSSH(ipaddress, user)
   $evm.log(:info, "#{$evm.root['Phase']} : #{$evm.root['ae_result']} : #{$evm.root['Message']}")
 end
 
-checkSSH("104.155.115.140", "dkorn")
+$evm.log(:info, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+$evm.log(:info, $evm.root['automation_task'].automation_request.inspect)
+
+
+# check ssh to master
+def check_ssh_to_master
+  masters = $evm.root['automation_task'].automation_request.options[:attrs][:masters]
+  $evm.log(:info, "xxxxxxxxxxxxxxxxxxxxxx masters xxxxxxxxxxxxxxxxxxxxxxxx")
+  $evm.log(:info, masters)
+end
+
+
+check_ssh_to_master
+#check ssh to slaves

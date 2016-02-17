@@ -6,7 +6,7 @@ class ManageIQ::Providers::InfraManager::Vm < ::Vm
     true
   end
 
-  def memory_mb_available?
+    def memory_mb_available?
     true
   end
 
