@@ -10,7 +10,7 @@ module MiqPolicyController::MiqActions
       if @action && @action.id
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqAction"), :name => @action.description})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqAction"))
+        add_flash(_("Add of new %{models} was cancelled by the user") % {:models => ui_lookup(:model => "MiqAction")})
       end
       @sb[:action] = nil
       get_node_info(x_node)
@@ -71,13 +71,14 @@ module MiqPolicyController::MiqActions
     actions = []
     # showing 1 action, delete it
     if params[:id].nil? || MiqAction.find_by_id(params[:id]).nil?
-      add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqAction"),
+      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqAction")},
                 :error)
     else
       actions.push(params[:id])
     end
     process_actions(actions, "destroy") unless actions.empty?
-    add_flash(_("The selected %s was deleted") % ui_lookup(:models => "MiqAction")) if @flash_array.nil?
+    add_flash(_("The selected %{models} was deleted") %
+      {:models => ui_lookup(:models => "MiqAction")}) if @flash_array.nil?
     @new_action_node = self.x_node = "root"
     get_node_info(x_node)
     replace_right_cell("root", [:action])
@@ -186,7 +187,8 @@ module MiqPolicyController::MiqActions
                                       choices_chosen = :choices_chosen)
     if params[:button].ends_with?("_left")
       if params[members_chosen].nil?
-        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{members} were selected to move left") %
+          {:members => members.to_s.split("_").first.titleize}, :error)
       else
         mems = @edit[:new][members].invert
         params[members_chosen].each do |mc|
@@ -196,7 +198,8 @@ module MiqPolicyController::MiqActions
       end
     elsif params[:button].ends_with?("_right")
       if params[choices_chosen].nil?
-        add_flash(_("No %s were selected to move right") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{members} were selected to move right") %
+          {:members => members.to_s.split("_").first.titleize}, :error)
       else
         mems = @edit[choices].invert
         params[choices_chosen].each do |mc|
@@ -206,7 +209,8 @@ module MiqPolicyController::MiqActions
       end
     elsif params[:button].ends_with?("_allleft")
       if @edit[:new][members].length == 0
-        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{members} were selected to move left") %
+          {:members => members.to_s.split("_").first.titleize}, :error)
       else
         @edit[:new][members].each do |key, value|
           @edit[choices][key] = value
@@ -376,33 +380,33 @@ module MiqPolicyController::MiqActions
   def action_valid_record?(rec)
     edit = @edit[:new]
     options = edit[:options]
-    add_flash(_("%s is required") % "Description", :error) if edit[:description].blank?
-    add_flash(_("%s must be selected") % "Action Type", :error) if edit[:action_type].blank?
+    add_flash(_("Description is required"), :error) if edit[:description].blank?
+    add_flash(_("Action Type must be selected"), :error) if edit[:action_type].blank?
     if edit[:action_type] == "assign_scan_profile" && options[:scan_item_set_name].blank?
-      add_flash(_("%s is required") % "Analysis Profile", :error)
+      add_flash(_("Analysis Profile is required"), :error)
     end
     if edit[:action_type] == "set_custom_attribute" && options[:attribute].blank?
-      add_flash(_("%s is required") % "Attribute Name", :error)
+      add_flash(_("Attribute Name is required"), :error)
     end
     edit[:attrs].each do |k, v|
       add_flash(_("%{val} missing for %{field}") % {:val => "Attribute", :field => v}, :error) if k.blank? && !v.blank?
       add_flash(_("%{val} missing for %{field}") % {:val => "Value", :field => k}, :error) if !k.blank? && v.blank?
     end
     if edit[:action_type] == "evaluate_alerts" && edit[:alerts].empty?
-      add_flash(_("%s must be selected") % "At least one Alert", :error)
+      add_flash(_("At least one Alert must be selected"), :error)
     end
     if edit[:action_type] == "inherit_parent_tags" && options[:parent_type].blank?
-      add_flash(_("%s must be selected") % "Parent Type", :error)
+      add_flash(_("Parent Type must be selected"), :error)
     end
     if ["inherit_parent_tags", "remove_tags"].include?(edit[:action_type]) && options[:cats].blank?
-      add_flash(_("%s must be selected") % "At least one Category", :error)
+      add_flash(_("At least one Category must be selected"), :error)
     end
     if edit[:action_type] == "delete_snapshots_by_age" && options[:age].blank?
-      add_flash(_("%s must be selected") % "Snapshot Age", :error)
+      add_flash(_("Snapshot Age must be selected"), :error)
     end
     if edit[:action_type] == "email"
-      add_flash(_("E-mail address '%s' is not valid") % 'From', :error) unless edit[:options][:from].to_s.email?
-      add_flash(_("E-mail address '%s' is not valid") % 'To', :error) unless edit[:options][:to].to_s.email?
+      add_flash(_("E-mail address 'From' is not valid"), :error) unless edit[:options][:from].to_s.email?
+      add_flash(_("E-mail address 'To' is not valid"), :error) unless edit[:options][:to].to_s.email?
     end
     if edit[:action_type] == "snmp_trap"
       validate_snmp_options(options)
@@ -411,7 +415,7 @@ module MiqPolicyController::MiqActions
       end
     end
     if edit[:action_type] == "tag" && options[:tags].blank?
-      add_flash(_("%s must be selected") % "At least one Tag", :error)
+      add_flash(_("At least one Tag must be selected"), :error)
     end
     @flash_array.nil?
   end
@@ -432,8 +436,10 @@ module MiqPolicyController::MiqActions
 
     if %w(inherit_parent_tags remove_tags).include?(@action.action_type)
       tag = Tag.find_by_classification_name(@action.options[:cats])
-      cats = Classification.where(:tag_id => tag.id).pluck(:description)
-      @cats = cats.sort_by(&:downcase).join(" | ")
+      if tag.present?
+        cats = Classification.where(:tag_id => tag.id).pluck(:description)
+        @cats = cats.sort_by(&:downcase).join(" | ")
+      end
     end
   end
 end
