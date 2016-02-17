@@ -95,7 +95,7 @@ class MiqCapacityController < ApplicationController
                  (vm_opts[:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
                  (vm_opts[:memory] && @sb[:planning][:options][:trend_memory]) ||
                  (vm_opts[:storage] && @sb[:planning][:options][:trend_storage])
-            add_flash(_("At least one %s must be selected") % "VM Options", :error)
+            add_flash(_("At least one VM Option must be selected"), :error)
             render :update do |page|                    # Use JS to update the display
               page.replace("planning_options_div", :partial => "planning_options")
               page << "miqSparkle(false);"
@@ -236,7 +236,7 @@ class MiqCapacityController < ApplicationController
            (@sb[:planning][:vm_opts][:vcpus] && @sb[:planning][:options][:trend_vcpus]) ||
            (@sb[:planning][:vm_opts][:memory] && @sb[:planning][:options][:trend_memory]) ||
            (@sb[:planning][:vm_opts][:storage] && @sb[:planning][:options][:trend_storage])
-      add_flash(_("At least one %s must be selected") % "VM Options", :error)
+      add_flash(_("At least one VM Option must be selected"), :error)
       @sb[:planning][:options][:trend_cpu] = true if params[:trend_cpu]
       @sb[:planning][:options][:trend_vcpus] = true if params[:trend_vcpus]
       @sb[:planning][:options][:trend_memory] = true if params[:trend_memory]
@@ -609,7 +609,11 @@ class MiqCapacityController < ApplicationController
     presenter.set_visibility(@sb[:active_tab] == 'report', :toolbar)
 
     presenter.update(:main_div, r[:partial => 'planning_tabs'])
-    presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
+    presenter[:replace_cell_text] = if @sb[:planning][:options][:target_typ] == 'Host'
+                                      _("Best Fit Hosts")
+                                    else
+                                      _("Best Fit Clusters")
+                                    end
 
     presenter[:extra_js] << "curTab = $('#planning_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
     presenter[:extra_js] << "tab = curTab.prop('id');"

@@ -10,7 +10,7 @@ module MiqPolicyController::Policies
       if @policy && @policy.id
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicy"), :name => @policy.description})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqPolicy"))
+        add_flash(_("Add of new %{models} was cancelled by the user") % {:models => ui_lookup(:model => "MiqPolicy")})
       end
       @edit = nil
       get_node_info(x_node)
@@ -119,14 +119,15 @@ module MiqPolicyController::Policies
     # showing 1 policy, delete it
     pol = MiqPolicy.find_by_id(params[:id])
     if params[:id].nil? || pol.nil?
-      add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqPolicy"),
+      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqPolicy")},
                 :error)
     else
       policies.push(params[:id])
       self.x_node = @new_policy_node = "xx-#{pol.mode.downcase}_xx-#{pol.mode.downcase}-#{pol.towhat.downcase}"
     end
     process_policies(policies, "destroy") unless policies.empty?
-    add_flash(_("The selected %s was deleted") % ui_lookup(:models => "MiqPolicy")) if @flash_array.nil?
+    add_flash(_("The selected %{models} was deleted") %
+      {:models => ui_lookup(:models => "MiqPolicy")}) if @flash_array.nil?
     get_node_info(@new_policy_node)
     replace_right_cell("xx", [:policy, :policy_profile])
   end
@@ -228,7 +229,7 @@ module MiqPolicyController::Policies
       @right_cell_div = "policy_folders"
     else
       @folders = ["Compliance", "Control"]
-      @right_cell_text = _("All %s") % ui_lookup(:models => "MiqPolicy")
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicy")}
       @right_cell_div = "policy_folders"
     end
   end

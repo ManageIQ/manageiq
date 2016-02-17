@@ -184,7 +184,11 @@ class MiqRequestController < ApplicationController
   def stamp
     assert_privileges("miq_request_approval")
     if params[:button] == "cancel"
-      add_flash(_("Request %s was cancelled by the user") % (session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approval" : "denial")
+      if (session[:edit] && session[:edit][:stamp_typ]) == "a"
+        add_flash(_("Request approval was cancelled by the user"))
+      else
+        add_flash(_("Request denial was cancelled by the user"))
+      end
       session[:flash_msgs] = @flash_array.dup
       @edit = nil
       render :update do |page|
@@ -353,7 +357,7 @@ class MiqRequestController < ApplicationController
     end
 
     applied_states_blank = @sb[:def_prov_options][resource_type][:applied_states].blank?
-    add_flash(_("At least one %s must be selected") % "status", :warning) if applied_states_blank
+    add_flash(_("At least one status must be selected"), :warning) if applied_states_blank
 
     render :update do |page| # Do nothing to the page
       unless applied_states_blank
@@ -525,16 +529,18 @@ class MiqRequestController < ApplicationController
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "miq_request"), :task => "deletion"}, :error)
       end
       process_requests(miq_requests, "destroy") unless miq_requests.empty?
-      add_flash(_("The selected %s were deleted") % ui_lookup(:tables => "miq_request")) unless flash_errors?
+      add_flash(_("The selected %{tables} were deleted") %
+        {:tables => ui_lookup(:tables => "miq_request")}) unless flash_errors?
     else # showing 1 request, delete it
       if params[:id].nil? || MiqRequest.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:table => "miq_request"), :error)
+        add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "miq_request")}, :error)
       else
         miq_requests.push(params[:id])
       end
       @single_delete = true
       process_requests(miq_requests, "destroy") unless miq_requests.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:table => "miq_request")) unless flash_errors?
+      add_flash(_("The selected %{table} was deleted") %
+        {:table => ui_lookup(:table => "miq_request")}) unless flash_errors?
     end
     show_list
     @refresh_partial = "layouts/gtl"

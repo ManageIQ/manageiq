@@ -25,7 +25,7 @@ class MiqPolicyController < ApplicationController
     when "cancel"
       @sb = nil
       if @lastaction != "fetch_yaml"
-        add_flash(_("%s cancelled by user") % "Export")
+        add_flash(_("Export cancelled by user"))
       end
       render :update do |page|                    # Use JS to update the display
         page.redirect_to :action => "explorer"
@@ -37,7 +37,7 @@ class MiqPolicyController < ApplicationController
         @sb[:new][:choices_chosen] = []
       end
       if @sb[:new][:choices_chosen].length == 0 # At least one member is required
-        add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num => 1, :model => "item", :action => "export"}, :error)
+        add_flash(_("At least 1 item must be selected for export"), :error)
         render :update do |page|                    # Use JS to update the display
           page.replace_html("profile_export_div", :partial => "export")
           page << "miqSparkle(false);"
@@ -60,7 +60,7 @@ class MiqPolicyController < ApplicationController
             page.redirect_to :action => 'fetch_yaml', :fname => filename, :escape => false
           end
         rescue StandardError => bang
-          add_flash(_("Error during '%s': ") % "export" << bang.message, :error)
+          add_flash(_("Error during export: %{error_message}") % {:error_message => bang.message}, :error)
           render :update do |page|                    # Use JS to update the display
             page.replace_html("profile_export_div", :partial => "export")
             page << "miqSparkle(false);"
@@ -154,7 +154,8 @@ class MiqPolicyController < ApplicationController
 
         redirect_options.merge!(:import_file_upload_id => import_file_upload.id)
       rescue => err
-        redirect_options.merge!(:flash_msg   => _("Error during '%s': ") % "Policy Import" + err.message,
+        redirect_options.merge!(:flash_msg   => _("Error during 'Policy Import': %{messages}") %
+          {:messages => err.message},
                                 :flash_error => true,
                                 :action      => "export")
       end
@@ -186,7 +187,7 @@ class MiqPolicyController < ApplicationController
       begin
         miq_policy_import_service.import_policy(@import_file_upload_id)
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
+        add_flash(_("Error during upload: %{messages}") % {:messages => bang.message}, :error)
       else
         @sb[:hide] = false
         add_flash(_("Import file was uploaded successfully"))
@@ -200,7 +201,7 @@ class MiqPolicyController < ApplicationController
       miq_policy_import_service.cancel_import(params[:import_file_upload_id])
 
       render :update do |page|
-        page.redirect_to :action => 'export', :flash_msg => _("%s cancelled by user") % "Import"
+        page.redirect_to :action => 'export', :flash_msg => _("Import cancelled by user")
       end
 
     # init import
@@ -261,7 +262,7 @@ class MiqPolicyController < ApplicationController
       if MiqPolicySet.exists?(:id => profile_id)
         self.x_node = "pp_#{profile_id}"
       else
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqPolicySet"), :error)
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "MiqPolicySet")}, :error)
         self.x_node = "root"
       end
     end
@@ -439,7 +440,7 @@ class MiqPolicyController < ApplicationController
     end
 
     @sb[:tree_typ]   = what.pluralize
-    @right_cell_text = _("All %s") % what.pluralize.titleize
+    @right_cell_text = _("All %{items}") % {:items => what.pluralize.titleize}
     @right_cell_div  = "#{what}_list"
   end
 
@@ -601,12 +602,12 @@ class MiqPolicyController < ApplicationController
       end
 
       presenter.update(:main_div, r[:partial => partial_name])
-      right_cell_text = _("All %s") % model
+      right_cell_text = _("All %{models}") % {:models => model}
     when 'pp'
       presenter.update(:main_div, r[:partial => 'profile_details'])
       right_cell_text =
         if @profile && @profile.id.blank?
-          _("Adding a new %s") % ui_lookup(:model => 'MiqPolicySet')
+          _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqPolicySet')}
         else
           @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => "MiqPolicySet")} :
                   _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description.gsub(/'/, "\\'")}
@@ -631,13 +632,22 @@ class MiqPolicyController < ApplicationController
     when 'p'
       presenter.update(:main_div, r[:partial => 'policy_details', :locals => {:read_only => true}])
       if @policy.id.blank?
-        right_cell_text = _("Adding a new %s") % "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy"
+        right_cell_text = if @sb[:mode]
+                            _("Adding a new %{model_name} %{mode} Policy") %
+                            {:model_name => ui_lookup(:model => @sb[:nodeid]), :mode => @sb[:mode].capitalize}
+                          else
+                            _("Adding a new %{model_name} Policy") % {:model_name => ui_lookup(:model => @sb[:nodeid])}
+                          end
       else
         right_cell_text = @edit ?
             _("Editing %{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/, "\\'")} :
             _("%{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/, "\\'")}
-        right_cell_text += _(" %s Assignments") % ui_lookup(:model => 'Condition') if @edit && @edit[:typ] == 'conditions'
-        right_cell_text += _(" %s Assignments") % ui_lookup(:model => 'Event')     if @edit && @edit[:typ] == 'events'
+        if @edit && @edit[:typ] == 'conditions'
+          right_cell_text += _(" %{model} Assignments") % {:model => ui_lookup(:model => 'Condition')}
+        end
+        if @edit && @edit[:typ] == 'events'
+          right_cell_text += _(" %{model} Assignments") % {:model => ui_lookup(:model => 'Event')}
+        end
       end
     when 'co'
       # Set the JS types and titles vars if value fields are showing (needed because 2 expression editors are present)
@@ -654,11 +664,17 @@ class MiqPolicyController < ApplicationController
       end
       presenter.update(:main_div, r[:partial => 'condition_details', :locals => {:read_only => true}])
       right_cell_text = if @condition.id.blank?
-                          _("Adding a new %s") % ui_lookup(:model => 'Condition')
+                          _("Adding a new %{model}") % {:model => ui_lookup(:model => 'Condition')}
                         else
-                          @right_cell_text = @edit ?
-                            _("Editing %{model} \"%{name}\"") % {:name => @condition.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @edit[:new][:towhat])} Condition"} :
-                            _("%{model} \"%{name}\"") % {:name => @condition.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @condition.towhat)} Condition"}
+                          if @right_cell_text == @edit
+                            _("Editing %{model} Condition \"%{name}\"") %
+                            {:name  => @condition.description.gsub(/'/, "\\'"),
+                             :model => ui_lookup(:model => @edit[:new][:towhat])}
+                          else
+                            _("%{model} Condition \"%{name}\"") %
+                            {:name  => @condition.description.gsub(/'/, "\\'"),
+                             :model => ui_lookup(:model => @condition.towhat)}
+                          end
                         end
     when 'ev'
       presenter.update(:main_div, r[:partial => 'event_details', :locals => {:read_only => true}])
@@ -667,7 +683,7 @@ class MiqPolicyController < ApplicationController
     when 'a', 'ta', 'fa'
       presenter.update(:main_div, r[:partial => 'action_details', :locals => {:read_only => true}])
       right_cell_text = if @action.id.blank?
-                          _("Adding a new %s") % ui_lookup(:model => 'MiqAction')
+                          _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAction')}
                         else
                           if @edit
                             _("Editing %{model} \"%{name}\"") %
@@ -682,7 +698,7 @@ class MiqPolicyController < ApplicationController
     when 'ap'
       presenter.update(:main_div, r[:partial => 'alert_profile_details', :locals => {:read_only => true}])
       right_cell_text = if @alert_profile.id.blank?
-                          _("Adding a new %s") % ui_lookup(:model => 'MiqAlertSet')
+                          _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAlertSet')}
                         else
                           @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
                                   _("%{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'MiqAlertSet')}
@@ -690,7 +706,7 @@ class MiqPolicyController < ApplicationController
     when 'al'
       presenter.update(:main_div, r[:partial => 'alert_details', :locals => {:read_only => true}])
       right_cell_text = if @alert.id.blank?
-                          _("Adding a new %s") % ui_lookup(:model => 'MiqAlert')
+                          _("Adding a new %{alerts}") % {:alerts => ui_lookup(:model => 'MiqAlert')}
                         else
                           pfx = @assign ? ' assignments for ' : ''
                           msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
@@ -800,7 +816,8 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_right")
       if params[choices_chosen].nil?
-        add_flash(_("No %s were selected to move right") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{member} were selected to move right") %
+          {:member => members.to_s.split("_").first.titleize}, :error)
       else
         mems = @edit[choices].invert
         if @edit[:event_id]                                           # Handle Actions for an Event
@@ -817,7 +834,8 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_allleft")
       if @edit[:new][members].length == 0
-        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{member} were selected to move left") %
+          {:member => members.to_s.split("_").first.titleize}, :error)
       else
         if @edit[:event_id]                                           # Handle Actions for an Event
           @edit[:new][members].each do |m|
@@ -832,7 +850,8 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_up")
       if params[members_chosen].nil? || params[members_chosen].length != 1
-        add_flash(_("Select only one or consecutive %s to move up") % members.to_s.split("_").first.singularize.titleize, :error)
+        add_flash(_("Select only one or consecutive %{member} to move up") %
+          {:member => members.to_s.split("_").first.singularize.titleize}, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -848,7 +867,8 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_down")
       if params[members_chosen].nil? || params[members_chosen].length != 1
-        add_flash(_("Select only one or consecutive %s to move down") % members.to_s.split("_").first.singularize.titleize, :error)
+        add_flash(_("Select only one or consecutive %{member} to move down") %
+          {:member => members.to_s.split("_").first.singularize.titleize}, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -864,7 +884,8 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_sync")
       if params[members_chosen].nil?
-        add_flash(_("No %s selected to set to Synchronous") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{member} selected to set to Synchronous") %
+          {:member => members.to_s.split("_").first.titleize}, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -881,7 +902,8 @@ class MiqPolicyController < ApplicationController
       end
     elsif params[:button].ends_with?("_async")
       if params[members_chosen].nil?
-        add_flash(_("No %s selected to set to Asynchronous") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{member} selected to set to Asynchronous") %
+          {:member => members.to_s.split("_").first.titleize}, :error)
       else
         if params[:button].starts_with?("true")
           @true_selected = params[members_chosen][0].to_i
@@ -997,11 +1019,16 @@ class MiqPolicyController < ApplicationController
 
   def validate_snmp_options(options)
     if options[:host].nil? || options[:host] == ""
-      add_flash(_("%s is required") % "Host", :error)
+      add_flash(_("Host is required"), :error)
     end
-    trap_text = options[:snmp_version] == "v1" || options[:snmp_version].nil? ? "Trap Number" : "Trap Object ID"
+
     if options[:trap_id].nil? || options[:trap_id] == ""
-      add_flash(_("%s is required") % "#{trap_text}", :error)
+      trap_text = if options[:snmp_version] == "v1" || options[:snmp_version].nil?
+                    _("Trap Number is required")
+                  else
+                    _("Trap Object ID is required")
+                  end
+      add_flash(trap_text, :error)
     end
     options[:variables].each_with_index do |var, _i|
       if var[:oid].blank? || var[:value].blank? || var[:var_type] == "<None>"

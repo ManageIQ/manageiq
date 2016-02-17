@@ -96,7 +96,7 @@ class OntapFileShareController < CimInstanceController
 
   def create_ds_cancel
     return unless load_edit("ontap_file_share_create_ds__#{params[:id]}")
-    add_flash(_("%s was cancelled by the user") % "Create Datastore")
+    add_flash(_("Create Datastore was cancelled by the user"))
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
@@ -114,8 +114,8 @@ class OntapFileShareController < CimInstanceController
   end
 
   def create_ds_valid?
-    add_flash(_("%s is required") % "Name", :error) if @edit[:new][:ds_name].blank?
-    add_flash(_("%s is required") % "Host", :error) if @edit[:new][:host_id].blank?
+    add_flash(_("Name is required"), :error) if @edit[:new][:ds_name].blank?
+    add_flash(_("Host is required"), :error) if @edit[:new][:host_id].blank?
     @flash_array.nil?
   end
 end

@@ -7,7 +7,8 @@ module MiqPolicyController::PolicyProfiles
       @edit = nil
       @profile = MiqPolicySet.find_by_id(session[:edit][:profile_id]) if session[:edit] && session[:edit][:profile_id]
       if !@profile || (@profile && @profile.id.blank?)
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqPolicySet"))
+        add_flash(_("Add of new %{models} was cancelled by the user") %
+          {:models => ui_lookup(:model => "MiqPolicySet")})
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description})
       end
@@ -45,7 +46,8 @@ module MiqPolicyController::PolicyProfiles
           policies.each { |c| profile.remove_member(MiqPolicy.find(c)) unless mems.include?(c.id) } # Remove any policies no longer in the members list box
           mems.each_key { |m| profile.add_member(MiqPolicy.find(m)) unless current.include?(m) }    # Add any policies not in the set
         rescue StandardError => bang
-          add_flash(_("Error during '%s': ") % "Policy Profile #{params[:button]}" << bang.message, :error)
+          add_flash(_("Error during 'Policy Profile %{params}': %{messages}") %
+            {:params => params[:button], :messages => bang.message}, :error)
         end
         AuditEvent.success(build_saved_audit(profile, params[:button] == "add"))
         flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
@@ -74,13 +76,14 @@ module MiqPolicyController::PolicyProfiles
     profiles = []
     # showing 1 policy set, delete it
     if params[:id].nil? || MiqPolicySet.find_by_id(params[:id]).nil?
-      add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqPolicySet"),
+      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqPolicySet")},
                 :error)
     else
       profiles.push(params[:id])
     end
     process_profiles(profiles, "destroy") unless profiles.empty?
-    add_flash(_("The selected %s was deleted") % ui_lookup(:models => "MiqPolicySet")) if @flash_array.nil?
+    add_flash(_("The selected %{models} was deleted") %
+      {:models => ui_lookup(:models => "MiqPolicySet")}) if @flash_array.nil?
     self.x_node = @new_profile_node = 'root'
     get_node_info('root')
     replace_right_cell('root', [:policy_profile])
@@ -140,7 +143,7 @@ module MiqPolicyController::PolicyProfiles
     @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
     set_search_text
     @profiles = apply_search_filter(@search_text, @profiles) unless @search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:models => "MiqPolicySet")
+    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicySet")}
     @right_cell_div = "profile_list"
   end
 
