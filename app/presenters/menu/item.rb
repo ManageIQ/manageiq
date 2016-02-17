@@ -19,5 +19,9 @@ module Menu
       else                  href
       end
     end
+
+    def leaf?
+      true
+    end
   end
 end
