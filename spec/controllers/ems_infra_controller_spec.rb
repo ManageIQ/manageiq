@@ -178,6 +178,17 @@ describe EmsInfraController do
     end
   end
 
+  describe "#show_list" do
+    before(:each) do
+      session[:settings] = {:views => {}}
+      set_user_privileges
+      FactoryGirl.create(:ems_vmware)
+      get :show_list
+    end
+    it { expect(response.status).to eq(200) }
+
+  end
+
   describe "UI interactions in the form" do
     render_views
     context "#form_field_changed" do
