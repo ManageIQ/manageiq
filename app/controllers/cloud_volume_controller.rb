@@ -65,7 +65,7 @@ class CloudVolumeController < ApplicationController
   private
 
   def get_session_data
-    @title      = "Cloud Volume"
+    @title      = ui_lookup(:table => 'cloud_volume')
     @layout     = "cloud_volume"
     @lastaction = session[:cloud_volume_lastaction]
     @display    = session[:cloud_volume_display]
