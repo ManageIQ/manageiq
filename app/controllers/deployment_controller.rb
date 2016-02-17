@@ -38,11 +38,12 @@ class DeploymentController < ApplicationController
       end
       # to do
         add_flash("Started deploying provider")
-        ansible_deploy(params["providerMasterUsername"], ip_master, ip_slave1, ip_slave2)
+        ansible_deploy(params["providerMasterUsername"], params["providerMasterPassword"], ip_master, ip_slave1, ip_slave2)
     else
       # to do
         add_flash("Started deploying provider")
         ansible_deploy(params["masterUsername"],
+                       params["masterPassword"],
                        params['masterIp'],
                        params['slave1Ip'],
                        params['slave2Ip'])
@@ -53,7 +54,7 @@ class DeploymentController < ApplicationController
   private
 
   # can deploy by the rails server and (commented is on the master vm).
-  def ansible_deploy(master_ssh_user, ip_master, ip_slave1, ip_slave2)
+  def ansible_deploy(master_ssh_user, master_ssh_password, ip_master, ip_slave1, ip_slave2)
     url = 'http://localhost:3000'
     query = '/api/automation_requests'
 
@@ -69,8 +70,11 @@ class DeploymentController < ApplicationController
       },
       :parameters => {
         # need to add params
-        :lunch => "sandwich",
-        :dinner => "steak"
+        :type     => "managed_existing", # managed_existing, managed_provision, not_managed
+        :masters  => [ip_master],
+        :nodes    => [ip_slave1, ip_slave2],
+        :user     => master_ssh_user,
+        :password => master_ssh_password
       }
     }.to_json
 
