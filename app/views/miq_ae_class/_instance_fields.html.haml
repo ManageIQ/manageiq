@@ -16,42 +16,41 @@
         %th= _('Max Time')
         %th= _('Message')
       %tbody
-        - @ae_class.ae_fields.each do |record|
-          - ae_value = record.ae_values.where("instance_id = ?", @record.id).first
-          - ae_value ||= MiqAeValue.new(:instance_id => @record.id, :field_id => record.id)
+        - @ae_class.ae_fields.each do |field|
+          - ae_value = field.ae_values.find_or_initialize_by(:instance_id => @record.id, :field_id => field.id)
           %tr
             %td
               %ul.icons.list-unstyled.pull-left
                 %li
-                  %span.product{:class => "product-ae_#{record.aetype}", :title => _("Type: %s") % record.aetype}
-              - unless record.datatype.blank? || record.datatype == 'string'
+                  %span.product{:class => "product-ae_#{field.aetype}", :title => _("Type: %s") % field.aetype}
+              - unless field.datatype.blank? || field.datatype == 'string'
                 %ul.icons.list-unstyled.pull-left
                   %li
-                    %span.product{:class => "product-#{record.datatype}", :title => _("Data type: %s") % record.datatype}
+                    %span.product{:class => "product-#{field.datatype}", :title => _("Data type: %s") % field.datatype}
               %ul.icons.list-unstyled.pull-left
                 %li
-                  %span.pficon{:class => "pficon-ok#{record.substitute ? '' : '-closed'}", :title => _("Substitute: %s") % record.substitute}
+                  %span.pficon{:class => "pficon-ok#{field.substitute ? '' : '-closed'}", :title => _("Substitute: %s") % field.substitute}
               &nbsp;
-              = record_name(record)
+              = record_name(field)
             %td
-              - if record.datatype == 'password'
+              - if field.datatype == 'password'
                 ********
               - else
-                = nonblank(ae_value.value, record.default_value)
+                = nonblank(ae_value.value, field.default_value)
             %td
-              = nonblank(ae_value.on_entry, record.on_entry)
+              = nonblank(ae_value.on_entry, field.on_entry)
             %td
-              = nonblank(ae_value.on_exit, record.on_exit)
+              = nonblank(ae_value.on_exit, field.on_exit)
             %td
-              = nonblank(ae_value.on_error, record.on_error)
+              = nonblank(ae_value.on_error, field.on_error)
             %td
-              = nonblank(ae_value.collect, record.collect)
+              = nonblank(ae_value.collect, field.collect)
             %td
-              = nonblank(ae_value.max_retries, record.max_retries)
+              = nonblank(ae_value.max_retries, field.max_retries)
             %td
-              = nonblank(ae_value.max_time, record.max_time)
+              = nonblank(ae_value.max_time, field.max_time)
             %td
-              = record.message
+              = field.message
 
   - else
     #form_div
