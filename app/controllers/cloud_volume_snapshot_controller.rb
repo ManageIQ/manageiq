@@ -11,7 +11,6 @@ class CloudVolumeSnapshotController < ApplicationController
   # handle buttons pressed on the button bar
   def button
     @edit = session[:edit] # Restore @edit for adv search box
-    params[:display] = @display if %w(vms instances images).include?(@display)
     params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
     return tag("CloudVolumeSnapshot") if params[:pressed] == 'cloud_volume_snapshot_tag'
     if @refresh_div == "main_div" && @lastaction == "show_list"
