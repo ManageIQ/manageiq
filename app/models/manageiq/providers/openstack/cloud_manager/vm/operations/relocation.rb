@@ -23,14 +23,6 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
     self.update_attributes!(:raw_power_state => "MIGRATING")
   end
 
-  def live_migrate(options = {})
-    raw_live_migrate(options)
-  end
-
-  def evacuate(options = nil)
-    raw_evacuate(options)
-  end
-
   def validate_live_migrate
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
