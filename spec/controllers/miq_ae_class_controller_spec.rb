@@ -263,6 +263,22 @@ describe MiqAeClassController do
       allow(MiqAeDomain).to receive(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
     end
 
+    context "#node_info" do
+      it "collect namespace info" do
+        set_user_privileges
+        d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
+        ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
+        FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => ns1.id)
+        FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+        node = "aen-#{ns1.id}"
+        controller.instance_variable_set(:@sb,
+                                         :active_tree => :ae_tree,
+                                         :trees       => {:ae_tree => {:active_node => node}})
+        controller.send(:get_node_info, node)
+        expect(assigns(:sb)[:namespace_path]).to eq(ns1.fqname.gsub!(%r{\/}, " / "))
+      end
+    end
+
     context "#get_instance_node_info" do
       context "when record does not exist" do
         it "sets active node back to root" do
