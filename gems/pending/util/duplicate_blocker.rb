@@ -46,7 +46,7 @@
 #   dedup_class_method :class_service        # register class methods to hijack
 # end
 #
-# Duplicate block was inspired from GitHub project https://github.com/wsargent/circuit_breaker
+# Duplicate blocker was inspired from GitHub project https://github.com/wsargent/circuit_breaker
 # Particularly module DuplicateBlocker was modified from original module CircuitBreaker.
 #
 # Original copyright:
