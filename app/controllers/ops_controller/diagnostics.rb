@@ -1012,7 +1012,7 @@ module OpsController::Diagnostics
             role_node[:select] = true
           end
           status = "stopped"
-          r.assigned_server_roles.find_all_by_active(true).each do |asr|            # Go thru all active assigned server roles
+          r.assigned_server_roles.where(:active => true).each do |asr|            # Go thru all active assigned server roles
             if asr.miq_server.started?        # Find a started server
               if parent.kind_of?(MiqRegion) || # it's in the region
                  (parent.kind_of?(Zone) && asr.miq_server.my_zone == parent.name) # it's in the zone
