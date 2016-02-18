@@ -89,9 +89,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
       ).attributes[policy_attribute]
     end
 
-    unless policy == queue_policy(queue_url_to_arn(queue_url), topic_arn)
-      add_policy_to_queue(queue_url, topic_arn)
-    end
+    policy == queue_policy(queue_url_to_arn(queue_url), topic_arn)
   end
 
   def queue_subscribed_to_topic?(queue_url, topic)
@@ -146,12 +144,15 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def queue_url_to_arn(queue_url)
-    arn_attribute = "QueueArn"
-    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
-      sqs.client.get_queue_attributes(
-        :queue_url       => queue_url,
-        :attribute_names => [arn_attribute]
-      ).attributes[arn_attribute]
+    @queue_url_to_arn ||= {}
+    @queue_url_to_arn[queue_url] ||= begin
+      arn_attribute = "QueueArn"
+      @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+        sqs.client.get_queue_attributes(
+          :queue_url       => queue_url,
+          :attribute_names => [arn_attribute]
+        ).attributes[arn_attribute]
+      end
     end
   end
 
