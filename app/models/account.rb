@@ -23,7 +23,7 @@ class Account < ApplicationRecord
     hashes.each do |nh|
       member_map[nh[:name]] = nh.delete(:members)
 
-      found = parent.accounts.find_by_name_and_accttype(nh[:name], typeName)
+      found = parent.accounts.find_by(:name => nh[:name], :accttype => typeName)
       found.nil? ? new_accts << nh : found.update_attributes(nh)
       deletes.delete_if { |ele| ele[1] == nh[:name] }
     end
@@ -42,7 +42,7 @@ class Account < ApplicationRecord
 
     # Only need to check one direction, as both directions are implied in the xml
     user_map.each do |name, curr_groups|
-      acct = parent.accounts.find_by_name_and_accttype(name, 'user')
+      acct = parent.accounts.find_by(:name => name, :accttype => 'user')
       prev_groups = acct.groups.collect(&:name)
 
       # Remove the common elements from both groups to determine the add/deletes
@@ -50,8 +50,8 @@ class Account < ApplicationRecord
       prev_groups -= common
       curr_groups -= common
 
-      prev_groups.each { |group| acct.remove_group(parent.accounts.find_by_name_and_accttype(group, 'group')) }
-      curr_groups.each { |group| acct.add_group(parent.accounts.find_by_name_and_accttype(group, 'group')) }
+      prev_groups.each { |group| acct.remove_group(parent.accounts.find_by(:name => group, :accttype => 'group')) }
+      curr_groups.each { |group| acct.add_group(parent.accounts.find_by(:name => group, :accttype => 'group')) }
     end
   end
 
