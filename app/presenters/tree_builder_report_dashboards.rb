@@ -19,7 +19,7 @@ class TreeBuilderReportDashboards < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    default_ws = MiqWidgetSet.find_by_name_and_read_only('default', true)
+    default_ws = MiqWidgetSet.find_by(:name => 'default', :read_only => true)
     text = "#{default_ws.description} (#{default_ws.name})"
     objects.push(:id => to_cid(default_ws.id), :text => text, :image => 'dashboard', :tip => text)
     objects.push(:id => 'g', :text => 'All Groups', :image => 'folder', :tip => 'All Groups')
@@ -39,7 +39,7 @@ class TreeBuilderReportDashboards < TreeBuilder
   def x_get_tree_g_kids(object, count_only)
     objects = []
     # dashboard nodes under each group
-    widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", object.id)
+    widgetsets = MiqWidgetSet.where(:owner_type => "MiqGroup", :owner_id => object.id)
     # if dashboard sequence was saved, build tree using that, else sort by name and build the tree
     if object.settings && object.settings[:dashboard_order]
       object.settings[:dashboard_order].each do |ws_id|
