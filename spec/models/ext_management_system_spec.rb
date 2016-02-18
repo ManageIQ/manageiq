@@ -6,34 +6,38 @@ describe ExtManagementSystem do
     expect(described_class.model_name_from_emstype('foo')).to be_nil
   end
 
-  let(:all_types) do
-    %w(
-      ec2
-      foreman_configuration
-      foreman_provisioning
-      gce
-      hawkular
-      kubernetes
-      openshift
-      atomic
-      openshift_enterprise
-      atomic_enterprise
-      openstack
-      openstack_infra
-      rhevm
-      scvmm
-      vmwarews
-      azure
-      ansible_tower_configuration
-    )
+  let(:all_types_and_descriptions) do
+    {
+      "ansible_tower_configuration" => "Ansible Tower Configuration",
+      "atomic"                      => "Atomic",
+      "atomic_enterprise"           => "Atomic Enterprise",
+      "azure"                       => "Azure",
+      "ec2"                         => "Amazon EC2",
+      "foreman_configuration"       => "Foreman Configuration",
+      "foreman_provisioning"        => "Foreman Provisioning",
+      "gce"                         => "Google Compute Engine",
+      "hawkular"                    => "Hawkular",
+      "kubernetes"                  => "Kubernetes",
+      "openshift"                   => "OpenShift Origin",
+      "openshift_enterprise"        => "OpenShift Enterprise",
+      "openstack"                   => "OpenStack",
+      "openstack_infra"             => "OpenStack Platform Director",
+      "rhevm"                       => "Red Hat Enterprise Virtualization Manager",
+      "scvmm"                       => "Microsoft System Center VMM",
+      "vmwarews"                    => "VMware vCenter",
+    }
   end
 
   it ".types" do
-    expect(described_class.types).to match_array(all_types)
+    expect(described_class.types).to match_array(all_types_and_descriptions.keys)
   end
 
   it ".supported_types" do
-    expect(described_class.supported_types).to match_array(all_types)
+    expect(described_class.supported_types).to match_array(all_types_and_descriptions.keys)
+  end
+
+  it ".supported_types_and_descriptions_hash" do
+    expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
   end
 
   it ".ems_infra_discovery_types" do
