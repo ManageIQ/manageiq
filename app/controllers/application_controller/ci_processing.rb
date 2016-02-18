@@ -1526,7 +1526,7 @@ module ApplicationController::CiProcessing
     return if clusters.empty?
 
     if task == "destroy"
-      EmsCluster.find_all_by_id(clusters, :order => "lower(name)").each do |cluster|
+      EmsCluster.where(:id => clusters).order("lower(name)").each do |cluster|
         id = cluster.id
         cluster_name = cluster.name
         audit = {:event => "ems_cluster_record_delete_initiated", :message => "[#{cluster_name}] Record delete initiated", :target_id => id, :target_class => "EmsCluster", :userid => session[:userid]}
@@ -1534,7 +1534,7 @@ module ApplicationController::CiProcessing
       end
       EmsCluster.destroy_queue(clusters)
     else
-      EmsCluster.find_all_by_id(clusters, :order => "lower(name)").each do |cluster|
+      EmsCluster.where(:id => clusters).order("lower(name)").each do |cluster|
         cluster_name = cluster.name
         begin
           cluster.send(task.to_sym) if cluster.respond_to?(task)    # Run the task
@@ -1557,7 +1557,7 @@ module ApplicationController::CiProcessing
     return if rps.empty?
 
     if task == "destroy"
-      ResourcePool.find_all_by_id(rps, :order => "lower(name)").each do |rp|
+      ResourcePool.where(:id => rps).order("lower(name)").each do |rp|
         id = rp.id
         rp_name = rp.name
         audit = {:event => "rp_record_delete_initiated", :message => "[#{rp_name}] Record delete initiated", :target_id => id, :target_class => "ResourcePool", :userid => session[:userid]}
@@ -1565,7 +1565,7 @@ module ApplicationController::CiProcessing
       end
       ResourcePool.destroy_queue(rps)
     else
-      ResourcePool.find_all_by_id(rps, :order => "lower(name)").each do |rp|
+      ResourcePool.where(:id => rps).order("lower(name)").each do |rp|
         rp_name = rp.name
         begin
           rp.send(task.to_sym) if rp.respond_to?(task)    # Run the task
@@ -1695,7 +1695,7 @@ module ApplicationController::CiProcessing
     return if stacks.empty?
 
     if task == "destroy"
-      OrchestrationStack.find_all_by_id(stacks, :order => "lower(name)").each do |stack|
+      OrchestrationStack.where(:id => stacks).order("lower(name)").each do |stack|
         id = stack.id
         stack_name = stack.name
         audit = {:event        => "stack_record_delete_initiated",
@@ -1793,7 +1793,7 @@ module ApplicationController::CiProcessing
     return if storages.empty?
 
     if task == "destroy"
-      Storage.find_all_by_id(storages, :order => "lower(name)").each do |storage|
+      Storage.where(:id => storages).order("lower(name)").each do |storage|
         id = storage.id
         storage_name = storage.name
         audit = {:event => "storage_record_delete_initiated", :message => "[#{storage_name}] Record delete initiated", :target_id => id, :target_class => "Storage", :userid => session[:userid]}
@@ -1803,7 +1803,7 @@ module ApplicationController::CiProcessing
       add_flash(n_("Delete initiated for Datastore from the CFME Database",
                    "Delete initiated for Datastores from the CFME Database", storages.length))
     else
-      Storage.find_all_by_id(storages, :order => "lower(name)").each do |storage|
+      Storage.where(:id => storages).order("lower(name)").each do |storage|
         storage_name = storage.name
         begin
           if task == "scan"
