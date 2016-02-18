@@ -1288,7 +1288,7 @@ class Host < ApplicationRecord
 
   def self.ready_for_provisioning?(ids)
     errors = ActiveModel::Errors.new(self)
-    hosts = find_all_by_id(ids)
+    hosts = where(:id => ids)
     missing = ids - hosts.collect(&:id)
     errors.add(:missing_ids, "Unable to find Hosts with the following ids #{missing.inspect}") unless missing.empty?
 

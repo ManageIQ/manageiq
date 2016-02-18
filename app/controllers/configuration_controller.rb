@@ -370,7 +370,7 @@ class ConfigurationController < ApplicationController
         add_flash(_("No %{records} were selected for deletion") %
           {:records => ui_lookup(:models => "TimeProfile")}, :error)
       else
-        selected_timeprofiles = TimeProfile.find_all_by_id(timeprofiles)
+        selected_timeprofiles = TimeProfile.where(:id => timeprofiles)
         selected_timeprofiles.each do |tp|
           if tp.description == "UTC"
             timeprofiles.delete(tp.id.to_s)

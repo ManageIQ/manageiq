@@ -232,7 +232,7 @@ class MiqTaskController < ApplicationController
     when "my_ui_tasks", "all_ui_tasks"
       db_class = MiqTask
     end
-    db_class.find_all_by_id(jobs, :order => "lower(name)").each do |job|
+    db_class.where(:id => jobs).order("lower(name)").each do |job|
       id = job.id
       job_name = job.name
       if task == "destroy"

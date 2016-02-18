@@ -542,7 +542,7 @@ class MiqRequestController < ApplicationController
 
   # Common Request button handler routines
   def process_requests(miq_requests, task)
-    MiqRequest.find_all_by_id(miq_requests).each do |miq_request|
+    MiqRequest.where(:id => miq_requests).each do |miq_request|
       id = miq_request.id
       request_name = miq_request.description
       if task == "destroy"

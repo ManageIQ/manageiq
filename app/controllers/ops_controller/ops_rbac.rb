@@ -266,7 +266,7 @@ module OpsController::OpsRbac
     users = []
     unless params[:id] # showing a list
       ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
-      users = User.find_all_by_id(ids).compact
+      users = User.where(:id => ids).compact
       if users.empty?
         add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => "Administrator"}, :error)
         render :update do |page|
@@ -315,7 +315,7 @@ module OpsController::OpsRbac
     roles = []
     if !params[:id] # showing a role list
       ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
-      roles = MiqUserRole.find_all_by_id(ids)
+      roles = MiqUserRole.where(:id => ids)
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
       if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
@@ -352,7 +352,7 @@ module OpsController::OpsRbac
     tenants = []
     if !params[:id] # showing a tenants list
       ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
-      tenants = Tenant.find_all_by_id(ids)
+      tenants = Tenant.where(:id => ids)
       tenants.reject! do |t|
         t.parent.nil?
         add_flash(_("Default %{model} \"%{name}\" can not be deleted") % {:model => ui_lookup(:model => "Tenant"),
@@ -378,7 +378,7 @@ module OpsController::OpsRbac
     groups = []
     if !params[:id] # showing a list
       ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
-      groups = MiqGroup.find_all_by_id(ids)
+      groups = MiqGroup.where(:id => ids)
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g"  # reset node to show list
     else # showing 1 group, delete it

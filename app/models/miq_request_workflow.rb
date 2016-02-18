@@ -656,7 +656,7 @@ class MiqRequestWorkflow
     tag_cats = allowed_tags.dup
     tag_cat_names = tag_cats.collect { |cat| cat[:name] }
 
-    Classification.find_all_by_id(pre_tags).each do |tag|
+    Classification.where(:id => pre_tags).each do |tag|
       parent = tag.parent
       next if tag_cat_names.include?(parent.name)
 

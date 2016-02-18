@@ -246,7 +246,7 @@ class RepositoryController < ApplicationController
       end
     end
     if task == "destroy"
-      Repository.find_all_by_id(repos, :order => "lower(name)").each do |repo|
+      Repository.where(:id => repos).order("lower(name)").each do |repo|
         id = repo.id
         repo_name = repo.name
         audit = {:event => "repo_record_delete_initiated", :message => "[#{repo_name}] Record delete initiated", :target_id => id, :target_class => "Repository", :userid => session[:userid]}
@@ -255,7 +255,7 @@ class RepositoryController < ApplicationController
       Repository.destroy_queue(repos)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Delete", :count_model => pluralize(repos.length, "Repository")})
     else
-      Repository.find_all_by_id(repos, :order => "lower(name)").each do |repo|
+      Repository.where(:id => repos).order("lower(name)").each do |repo|
         id = repo.id
         repo_name = repo.name
         audit = {:event => "repository_record_delete", :message => "[#{repo_name}] Record deleted", :target_id => id, :target_class => "Repository", :userid => session[:userid]} if task == "destroy"
