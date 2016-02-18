@@ -669,7 +669,7 @@ class CatalogController < ApplicationController
   end
 
   def process_sts(sts, task, _display_name = nil)
-    ServiceTemplate.find_all_by_id(sts, :order => "lower(name)").each do |st|
+    ServiceTemplate.where(:id => sts).order("lower(name)").each do |st|
       id = st.id
       st_name = st.name
       audit = {:event => "st_record_delete", :message => "[#{st_name}] Record deleted", :target_id => id, :target_class => "ServiceTemplate", :userid => session[:userid]}
