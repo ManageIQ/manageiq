@@ -389,10 +389,9 @@ class ProviderForemanController < ApplicationController
   def cs_filter_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root", "xx" then rec = find_record(ConfiguredSystem, params[:id])
-    when "ms" then rec = find_record(ConfiguredSystem, from_cid(params[:id]))
+    when "root", "xx" then find_record(ConfiguredSystem, params[:id])
+    when "ms"         then find_record(ConfiguredSystem, from_cid(params[:id]))
     end
-    rec
   end
 
   def show_record(_id = nil)
