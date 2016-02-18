@@ -21,14 +21,14 @@ describe OpsController do
       ApplicationController.handle_exceptions = true
     end
     it "add new host analysis profile" do
-      session[:sandboxes] = {"ops" => {:active_tree => :settings_tree, :active_tab=>"settings_list", :osf_node => "xx-sis", :x_node => "xx-sis"}}
+      session[:sandboxes] = {"ops" => {:active_tree => :settings_tree, :active_tab => "settings_list", :osf_node => "xx-sis", :x_node => "xx-sis"}}
       allow_any_instance_of(OpsController).to receive(:extra_js_commands)
       post :x_button, :pressed => "ap_host_edit", :typ => "Host"
       expect(response.status).to eq(200)
     end
 
     it "add new vm analysis profile" do
-      session[:sandboxes] = {"ops" => {:active_tree => :settings_tree, :active_tab=>"settings_list", :osf_node => "xx-sis", :x_node => "xx-sis"}}
+      session[:sandboxes] = {"ops" => {:active_tree => :settings_tree, :active_tab => "settings_list", :osf_node => "xx-sis", :x_node => "xx-sis"}}
       allow_any_instance_of(OpsController).to receive(:extra_js_commands)
       post :x_button, :pressed => "ap_vm_edit", :typ => "Host"
       expect(response.status).to eq(200)

@@ -1,6 +1,5 @@
 describe OpsController do
 
-
   include_context "valid session"
 
   describe "#schedule_form_filter_type_field_changed" do
