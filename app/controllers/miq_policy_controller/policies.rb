@@ -193,7 +193,7 @@ module MiqPolicyController::Policies
       conditions.each { |c| @edit[:new][:conditions][c.description] = c.id }   # Build a hash for the members list box
 
       @edit[:choices] = {}
-      Condition.find_all_by_towhat(@edit[:new][:towhat]).each { |c| @edit[:choices][c.description] = c.id } # Build a hash for the policies to choose from
+      Condition.where(:towhat => @edit[:new][:towhat]).each { |c| @edit[:choices][c.description] = c.id } # Build a hash for the policies to choose from
 
       @edit[:new][:conditions].each_key { |key| @edit[:choices].delete(key) }  # Remove any choices that are in the members list box
     when "events" # Editing event assignments
