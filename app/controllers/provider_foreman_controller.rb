@@ -54,8 +54,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def delete
-    assert_privileges("provider_foreman_delete_provider")
-    checked_items = find_checked_items
+    assert_privileges("provider_foreman_delete_provider") # TODO: Privelege name should match generic ways from Infra and Cloud
+    checked_items = find_checked_items # TODO: Checked items are managers, not providers.  Make them providers
     providers = ManageIQ::Providers::ConfigurationManager.where(:id => checked_items).pluck(:provider_id, :type)
     if providers.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"),
