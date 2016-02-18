@@ -1284,7 +1284,7 @@ module ApplicationController::CiProcessing
     else
       items = find_checked_items
       if items.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'foreman'),
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'providers'),
                                                                 :task  => display_name}, :error)
       else
         process_cfgmgr(items, method) unless items.empty? && !flash_errors?
@@ -1302,10 +1302,10 @@ module ApplicationController::CiProcessing
   rescue => err
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
-    add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
-                {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'configuration manager')}"),
-                 :controller  => ui_lookup(:ui_title => 'foreman'),
-                 :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
+    add_flash(_("%{task} initiated for %{count_model} (%{controller})") %
+                {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'provider')}"),
+                 :controller  => ui_lookup(:ui_title => ProviderForemanController.model_to_name(kls.to_s)),
+                 :count_model => pluralize(providers.length, _("provider"))})
   end
 
   # Delete all selected or single displayed VM(s)
