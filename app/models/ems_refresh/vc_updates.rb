@@ -151,8 +151,15 @@ module EmsRefresh::VcUpdates
       "summary.type",
       "summary.uncommitted",
       "summary.url",
-      "childEntity",
-      "parent",
+      "parent"
+    ],
+
+    :ems_refresh_storage_pod => [
+      "MOR",
+      "summary.capacity",
+      "summary.freeSpace",
+      "summary.name",
+      "childEntity"
     ],
 
     :ems_refresh_cluster   => [
