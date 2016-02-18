@@ -372,18 +372,15 @@ class ProviderForemanController < ApplicationController
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then rec = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "root" then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "e"    then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "cp"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     when "xx" then
       case nodes.second
-      when "fr" then rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
-      when "at" then rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
-      when "csf" then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-      when "csa" then  rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+      when "at", "fr"   then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+      when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
       end
-    when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-    when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     end
-    rec
   end
 
   def cs_filter_tree_rec
