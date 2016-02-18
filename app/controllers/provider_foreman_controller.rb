@@ -58,35 +58,18 @@ class ProviderForemanController < ApplicationController
     checked_items = find_checked_items # TODO: Checked items are managers, not providers.  Make them providers
     providers = ManageIQ::Providers::ConfigurationManager.where(:id => checked_items).includes(:provider).collect(&:provider)
     if providers.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"),
-                                                              :task  => "deletion"}, :error)
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"), :task => "deletion"}, :error)
     else
-      ansible_providers, foreman_providers =
-        providers.partition { |prov| prov.last == "ManageIQ::Providers::AnsibleTower::ConfigurationManager" }
-
-      ManageIQ::Providers::Foreman::Provider.find_all_by_id(foreman_providers, :order => "lower(name)").each do |provider|
-        id = provider.id
-        provider_name = provider.name
-        audit = {:event        => "configuration_manager_record_delete_initiated",
-                 :message      => "[#{provider_name}] Record delete initiated",
-                 :target_id    => id,
-                 :target_class => "ManageIQ::Providers::Foreman::Provider",
-                 :userid       => session[:userid]}
-        AuditEvent.success(audit)
+      providers.each do |provider|
+        AuditEvent.success(
+          :event        => "configuration_manager_record_delete_initiated", # TODO: Should be provider_record_delete_initiated
+          :message      => "[#{provider.name}] Record delete initiated",
+          :target_id    => provider.id,
+          :target_class => provider.type,
+          :userid       => session[:userid]
+        )
+        provider.destroy_queue
       end
-      ManageIQ::Providers::Foreman::Provider.destroy_queue(foreman_providers)
-
-      ManageIQ::Providers::AnsibleTower::Provider.find_all_by_id(ansible_providers, :order => "lower(name)").each do |provider|
-        id = provider.id
-        provider_name = provider.name
-        audit = {:event        => "configuration_manager_record_delete_initiated",
-                 :message      => "[#{provider_name}] Record delete initiated",
-                 :target_id    => id,
-                 :target_class => "ManageIQ::Providers::AnsibleTower::Provider",
-                 :userid       => session[:userid]}
-        AuditEvent.success(audit)
-      end
-      ManageIQ::Providers::AnsibleTower::Provider.destroy_queue(ansible_providers)
 
       add_flash(_("%{task} initiated for %{count_model}") % {:task => "Delete", :count_model => pluralize(providers.length, "provider")})
     end
