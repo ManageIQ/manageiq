@@ -123,7 +123,7 @@ class EmsEvent < EventStream
 
     if event[id_key].nil?
       ems_ref = event[ems_ref_key]
-      object  = klass.base_class.find_by_ems_ref_and_ems_id(ems_ref, event[:ems_id]) unless ems_ref.nil?
+      object  = klass.base_class.find_by(:ems_ref => ems_ref, :ems_id => event[:ems_id]) unless ems_ref.nil?
 
       unless object.nil?
         event[id_key]     = object.id

@@ -132,7 +132,7 @@ module EmsRefresh::SaveInventoryInfra
         found = nil
         if h[:ems_ref]
           _log.debug "#{log_header} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems.id}]"
-          found = Host.find_by_ems_ref_and_ems_id(h[:ems_ref], ems.id)
+          found = Host.find_by(:ems_ref => h[:ems_ref], :ems_id => ems.id)
         end
 
         if found.nil?
