@@ -20,7 +20,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   def find_destination_in_vmdb
     # The new VM will have the guid we placed in the annotations field
     validation_guid = phase_context[:new_vm_validation_guid]
-    VmOrTemplate.find_all_by_name(dest_name).detect do |v|
+    VmOrTemplate.where(:name => dest_name).detect do |v|
       v.hardware.annotation && v.hardware.annotation.include?(validation_guid)
     end
   end
