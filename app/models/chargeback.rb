@@ -61,6 +61,7 @@ class Chargeback < ActsAsArModel
     cb = new
     report_user = User.find_by(:userid => options[:userid])
 
+    #_log.info("Aritag - options: #{options}")
     # Find Vms by user or by tag
     if options[:owner]
       user = User.find_by_userid(options[:owner])
@@ -70,8 +71,11 @@ class Chargeback < ActsAsArModel
       end
       vms = user.vms
     elsif options[:tag]
-      vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
+      #_log.info("Aritag - elsif options[:tag]")
+      vms = [].concat(Vm.find_tagged_with(:all => options[:tag], :ns => "*"))
       vms &= report_user.accessible_vms if report_user && report_user.self_service?
+      vms.concat(ContainerGroup.find_tagged_with(:all => options[:tag], :ns => "*"))
+      #_log.info("Aritag - vms - #{vms}")
     else
       raise "must provide options :owner or :tag"
     end
@@ -94,8 +98,8 @@ class Chargeback < ActsAsArModel
 
     (start_time..end_time).step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
       if options[:tag] && (report_user.nil? || !report_user.self_service?)
-        cond = ["resource_type = ? and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
-                "VmOrTemplate",
+        cond = ["resource_type IN (?) and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
+                ["VmOrTemplate", "ContainerGroup"],
                 query_start_time,
                 query_end_time,
                 "hourly",
@@ -111,11 +115,12 @@ class Chargeback < ActsAsArModel
                ]
       end
       _log.debug("Conditions: #{cond.inspect}")
-
+      #_log.info("Aritag - Conditions - #{cond.inspect}")
       recs = MetricRollup
              .where(cond)
              .includes(
                :resource           => :hardware,
+               :resource           => {:container_node => :hardware},
                :parent_host        => :tags,
                :parent_ems_cluster => :tags,
                :parent_storage     => :tags,
@@ -141,18 +146,17 @@ class Chargeback < ActsAsArModel
               "end_date"      => end_ts,
               "display_range" => display_range,
               "interval_name" => interval,
-              "vm_name"       => perf.resource_name,
+              "vm_name"       => perf.resource_name || perf.resource.name,
               "owner_name"    => vm_owners[perf.resource_id]
             }
           end
-
           rates_to_apply = cb.get_rates(perf)
           calculate_costs(perf, data[key], rates_to_apply)
         end
       end
     end
     _log.info("Calculating chargeback costs...Complete")
-
+    #_log.info("Aritag - Calculating chargeback costs...Complete")
     [data.map { |r| new(r.last) }]
   end
 

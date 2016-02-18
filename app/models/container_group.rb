@@ -2,6 +2,7 @@ class ContainerGroup < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
   include NewWithTypeStiMixin
+  include OwnershipMixin
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
@@ -30,6 +31,7 @@ class ContainerGroup < ApplicationRecord
 
   # Needed for metrics
   delegate :my_zone, :to => :ext_management_system
+  delegate :hardware, :to => :container_node
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
