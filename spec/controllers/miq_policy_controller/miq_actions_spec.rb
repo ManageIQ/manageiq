@@ -61,5 +61,24 @@ describe MiqPolicyController do
         expect(controller.send(:flash_errors?)).not_to be_truthy
       end
     end
+    describe "#action_get_info" do
+      before do
+        FactoryGirl.create(:classification, :description => res.first)
+        FactoryGirl.create(:classification, :description => res.second)
+        controller.instance_variable_set(:@sb, :active_tree => :action_tree)
+      end
+
+      let(:res) { %w(test1 test2) }
+      let(:action) do
+        FactoryGirl.create(:miq_action,
+                           :action_type => 'inherit_parent_tags',
+                           :options     => {:cats => %w(category_0000000000001 category_0000000000002)})
+      end
+
+      it "joins classification tags" do
+        controller.send(:action_get_info, action)
+        expect(controller.instance_variable_get(:@cats)).to eq(res.join(' | '))
+      end
+    end
   end
 end
