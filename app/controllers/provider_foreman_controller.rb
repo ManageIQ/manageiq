@@ -13,6 +13,18 @@ class ProviderForemanController < ApplicationController
     @table_name ||= "provider_foreman"
   end
 
+  def self.model_to_name(provmodel)
+    if provmodel.include?("ManageIQ::Providers::AnsibleTower")
+      return "Ansible Tower"
+    elsif provmodel.include?("ManageIQ::Providers::Foreman")
+      return "Foreman"
+    end
+  end
+
+  def model_to_name(provmodel)
+    ProviderForemanController.model_to_name(provmodel)
+  end
+
   def index
     redirect_to :action => 'explorer'
   end
@@ -42,14 +54,6 @@ class ProviderForemanController < ApplicationController
                                       from_cid(params[:miq_grid_checks] || params[:id] || find_checked_items[0]))
       @providerdisplay_type = model_to_name(@provider_cfgmgmt.type)
       render_form
-    end
-  end
-
-  def model_to_name(model)
-    if model.include?("ManageIQ::Providers::AnsibleTower")
-      return "Ansible Tower"
-    elsif model.include?("ManageIQ::Providers::Foreman")
-      return "Foreman"
     end
   end
 
@@ -162,7 +166,7 @@ class ProviderForemanController < ApplicationController
       AuditEvent.success(build_created_audit(@provider_cfgmgmt, @edit))
       @in_a_form = false
       @sb[:action] = nil
-      model = "#{ui_lookup(:ui_title => "#{@provider_cfgmgmt.type}")} #{ui_lookup(:model => 'ExtManagementSystem')}"
+      model = "#{ui_lookup(:ui_title => "#{model_to_name(@provider_cfgmgmt.type)}")} #{ui_lookup(:model => 'ExtManagementSystem')}"
       add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => model,
                                                            :name   => @provider_cfgmgmt.name,
                                                            :action => params[:id] == "new" ? "added" : "updated"})
