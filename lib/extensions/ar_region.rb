@@ -13,8 +13,13 @@ module ArRegion
     def inherited(other)
       if other == other.base_class
         other.class_eval do
+          alias_method :_region_description, :region_description
+
           virtual_column :region_number,      :type => :integer
           virtual_column :region_description, :type => :string
+
+          alias_method :region_number, :region_id
+          alias_method :region_description, :_region_description
         end
       end
       super
@@ -168,4 +173,10 @@ module ArRegion
   end
 end
 
-ApplicationRecord.include ArRegion
+ActiveRecord::Base.singleton_class.prepend Module.new {
+  def dangerous_attribute_method?(name)
+    !%(region_number region_description).include?(name.to_s) && super
+  end
+}
+
+ActiveRecord::Base.include ArRegion
