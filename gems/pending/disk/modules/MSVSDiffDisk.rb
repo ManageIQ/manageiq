@@ -14,12 +14,14 @@ module MSVSDiffDisk
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
-    if @dInfo.hyperv_connection
-      @ms_disk_file = MSCommon.connect_to_hyperv(@dInfo)
+    if dInfo.hyperv_connection
+      @hyperv_connection = dInfo.hyperv_connection
+      @ms_disk_file      = MSCommon.connect_to_hyperv(dInfo)
     else
-      @ms_disk_file = MiqLargeFile.open(@dInfo.fileName, fileMode) unless @dInfo.baseOnly
+      @hyperv_connection = nil
+      @ms_disk_file      = MiqLargeFile.open(dInfo.fileName, fileMode) unless dInfo.baseOnly
     end
-    MSCommon.d_init_common(@dInfo, @ms_disk_file) unless @dInfo.baseOnly
+    MSCommon.d_init_common(dInfo, @ms_disk_file) unless dInfo.baseOnly
 
     # Get parent locators.
     @locators = []
@@ -95,9 +97,10 @@ module MSVSDiffDisk
 
   def getParent(locator)
     if locator.key?('fileName')
-      @parentOstruct = OpenStruct.new
-      @parentOstruct.fileName = locator['fileName']
-      @parent = MiqDisk.getDisk(@parentOstruct)
+      @parent_ostruct                   = OpenStruct.new
+      @parent_ostruct.fileName          = locator['fileName']
+      @parent_ostruct.hyperv_connection = @hyperv_connection unless @hyperv_connection.nil?
+      @parent                           = MiqDisk.getDisk(@parent_ostruct)
     end
   end
 
