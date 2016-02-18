@@ -219,7 +219,7 @@ module OpsController::Settings::AnalysisProfiles
         if @scan
           add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "ScanItemSet"), :name => @scan.name})
         else
-          add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "ScanItemSet"))
+          add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "ScanItemSet")})
         end
         get_node_info(x_node)
         #       @scan = @edit[:scan] = nil
@@ -409,13 +409,13 @@ module OpsController::Settings::AnalysisProfiles
       ap_process_scanitemsets(scanitemsets, "destroy")  unless scanitemsets.empty?
     else # showing 1 scanitemset, delete it
       if params[:id].nil? || ScanItemSet.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "ScanItemSet"), :error)
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "ScanItemSet")}, :error)
       else
         scanitemsets.push(params[:id])
       end
       @single_delete = true
       ap_process_scanitemsets(scanitemsets, "destroy")  unless scanitemsets.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:models => "ScanItemSet")) if @flash_array.nil?
+      add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:models => "ScanItemSet")}) if @flash_array.nil?
     end
     self.x_node = "xx-sis"
     get_node_info(x_node)
@@ -575,7 +575,7 @@ module OpsController::Settings::AnalysisProfiles
 
   def ap_get_form_vars_file
     unless params[:entry]['fname'].present?
-      add_flash(_("%s is required") % "File Entry", :error)
+      add_flash(_("File Entry is required"), :error)
       return
     end
     item_type = params[:item]['type1']
@@ -609,7 +609,7 @@ module OpsController::Settings::AnalysisProfiles
         :key   => params[:entry]['kname'],
         :value => params[:entry]['value'],
       }
-      add_flash(_("%s is required") % "Registry Entry", :error)
+      add_flash(_("Registry Entry is required"), :error)
       return
     end
     session[:reg_data] = {}
@@ -667,7 +667,7 @@ module OpsController::Settings::AnalysisProfiles
       # session[:nteventlog_data][:rec_count] = params[:entry]["rec_count"].to_i
       session[:nteventlog_data][:num_days] = params[:entry]["num_days"].to_i
       session[:nteventlog_data][:source] = params[:entry]["source"]
-      add_flash(_("%s is required") % "Event log name", :error)
+      add_flash(_("Event log name is required"), :error)
       return
     else
       session[:nteventlog_data] = {}

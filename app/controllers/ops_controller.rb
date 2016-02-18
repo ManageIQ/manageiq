@@ -543,7 +543,7 @@ class OpsController < ApplicationController
       # when editing zone in settings tree
       if @zone.id.blank?
         partial_div = :settings_list
-        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "Zone")
+        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "Zone")}
       else
         partial_div = :settings_evm_servers
         @right_cell_text = @edit ?
@@ -555,7 +555,7 @@ class OpsController < ApplicationController
       # when editing/adding category in settings tree
       presenter.update(:settings_co_categories, r[:partial => "category_form"])
       if !@category
-        @right_cell_text = _("Adding a new %s") % "Category"
+        @right_cell_text = _("Adding a new Category")
       else
         @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @category.description, :model => "Category"}
       end
@@ -563,7 +563,7 @@ class OpsController < ApplicationController
       #  editing/adding scanitem in settings tree
       presenter.update(:settings_list, r[:partial => "ap_form"])
       if !@scan.id
-        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ScanItemSet")
+        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "ScanItemSet")}
       else
         @right_cell_text = @edit ?
           _("Editing %{model} \"%{name}\"") % {:name => @scan.name, :model => ui_lookup(:model => "ScanItemSet")} :
@@ -576,7 +576,7 @@ class OpsController < ApplicationController
         :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
       if !@schedule.id
-        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqSchedule")
+        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqSchedule")}
       else
         model = ui_lookup(:model => "MiqSchedule")
         @right_cell_text = @edit ?
@@ -587,7 +587,7 @@ class OpsController < ApplicationController
       # when editing/adding ldap domain in settings tree
       presenter.update(:settings_list, r[:partial => "ldap_domain_form"])
       if !@ldap_domain.id
-        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapDomain")
+        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "LdapDomain")}
       else
         model = ui_lookup(:model => "LdapDomain")
         @right_cell_text = @edit ?
@@ -598,7 +598,7 @@ class OpsController < ApplicationController
       # when edi ting/adding ldap region in settings tree
       presenter.update(:settings_list, r[:partial => "ldap_region_form"])
       if !@ldap_region.id
-        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapRegion")
+        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "LdapRegion")}
       else
         model = ui_lookup(:model => "LdapRegion")
         @right_cell_text = @edit ?
