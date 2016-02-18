@@ -553,6 +553,16 @@ module ActiveRecord
         end.compact
       end
 
+      def primary_key?(table_name)
+        select_value(<<-SQL)
+          SELECT EXISTS(
+            SELECT 1
+            FROM pg_index
+            WHERE indrelid = '#{table_name}'::regclass AND indisprimary = true
+          )
+        SQL
+      end
+
       def table_metrics_bloat(table_name)
         data = select(<<-SQL, "Table Metrics Bloat Analysis")
                 SELECT tablename                                                    AS table_name
