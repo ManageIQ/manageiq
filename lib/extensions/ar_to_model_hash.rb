@@ -4,7 +4,7 @@ module ToModelHash
   module ClassMethods
     def to_model_hash_options
       fname = "#{table_name}.yaml"
-      r = MiqReport.find_by_filename_and_template_type(fname, "compare").try(:attributes)
+      r = MiqReport.find_by(:filename => fname, :template_type => "compare").try(:attributes)
       if r.nil?
         fname = Rails.root.join("product", "compare", fname)
         r = YAML.load_file(fname) if File.exist?(fname)
