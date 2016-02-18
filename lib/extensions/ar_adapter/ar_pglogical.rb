@@ -1,8 +1,8 @@
-require 'pglogical'
+require 'ar_pglogical/pglogical_raw'
 
 module PgLogicalAdapterMixin
   def pglogical
-    PgLogical.new(self)
+    PgLogicalRaw.new(self)
   end
 end
 

@@ -1,4 +1,4 @@
-class PgLogical
+class PgLogicalRaw
   attr_accessor :connection
 
   # @param connection [PostgreSQLAdapter] ActiveRecord database connection
