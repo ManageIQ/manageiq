@@ -64,7 +64,7 @@ module MiqReport::Seeding
       rpt[:file_mtime] = File.mtime(filename).utc.round
       rpt[:priority] = File.basename(filename).split("_").first.to_i
       # rec = self.find_by_name_and_rpt_group(rpt[:name], rpt[:rpt_group])
-      # rec = self.find_by_name_and_filename(rpt[:name], rpt[:filename])
+      # rec = self.find_by(:name => rpt[:name], :filename => rpt[:filename])
       rpt[:template_type] = typ
       rec = find_by_filename(rpt[:filename])
 

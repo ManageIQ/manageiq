@@ -30,7 +30,7 @@ class MiqDialog < ApplicationRecord
     item[:file_mtime] = File.mtime(filename).utc
     item[:default] = true
 
-    rec = find_by_name_and_filename(item[:name], item[:filename])
+    rec = find_by(:name => item[:name], :filename => item[:filename])
 
     if rec
       if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < item[:file_mtime])
