@@ -35,7 +35,7 @@ class MiqEnterprise < ApplicationRecord
     # Cache the enterprise instance, but clear the association
     #   cache to support keeping the associations fresh
     @my_enterprise ||= in_my_region.first
-    @my_enterprise.clear_association_cache unless @my_enterprise.nil?
+    @my_enterprise.send(:clear_association_cache) unless @my_enterprise.nil?
     @my_enterprise
   end
 
