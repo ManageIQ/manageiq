@@ -561,7 +561,7 @@ class MiqCompare
   # Retrieve all records from the source for the set of ids (drift mode)
   def get_drift_records
     return unless @mode == :drift
-    @records = drift_model_record.drift_states.find_all_by_timestamp(@ids).collect(&:data_obj)
+    @records = drift_model_record.drift_states.where(:timestamp => @ids).collect(&:data_obj)
   end
 
   # Retrieve the record from the source (drift mode)
