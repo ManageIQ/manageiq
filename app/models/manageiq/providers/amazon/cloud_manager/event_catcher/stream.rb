@@ -20,6 +20,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     @ems          = ems
     @topic_name   = sns_aws_config_topic_name
     @stop_polling = false
+    @before_poll  = nil
   end
 
   #
@@ -27,6 +28,10 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   #
   def stop
     @stop_polling = true
+  end
+
+  def before_poll(&block)
+    @before_poll = block
   end
 
   #
@@ -37,10 +42,15 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   #
   def poll
     @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
-      queue_poller = Aws::SQS::QueuePoller.new(find_or_create_queue, :client => sqs.client)
-
+      queue_poller = Aws::SQS::QueuePoller.new(
+        find_or_create_queue,
+        :client            => sqs.client,
+        :wait_time_seconds => 20,
+        :before_request    => @before_poll
+      )
       begin
         queue_poller.poll do |sqs_message|
+          $aws_log.debug("#{log_header} received message #{sqs_message}")
           throw :stop_polling if @stop_polling
           event = parse_event(sqs_message)
           yield event if event
@@ -53,38 +63,40 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
 
   private
 
-  #
-  # Find the appliance-specific queue, or create the appliance-specific queue
-  # and subscribe it to the AWS Config topic.
-  #
   # @return [String] is a queue_url
   def find_or_create_queue
-    log_header = "MIQ(#{self.class.name}##{__method__})"
-    queue_name = "manageiq-awsconfig-queue-#{@ems.guid}"
+    queue_url = sqs_get_queue_url(queue_name)
+    subscribe_topic_to_queue(sns_topic, queue_url) unless queue_subscribed_to_topic?(queue_url, sns_topic)
+    add_policy_to_queue(queue_url, sns_topic.arn) unless queue_has_policy?(queue_url, sns_topic.arn)
+    queue_url
+  rescue Aws::SQS::Errors::NonExistentQueue
+    $aws_log.info("#{log_header} Amazon SQS Queue #{queue_name} does not exist; creating queue")
+    queue_url = sqs_create_queue(queue_name)
+    subscribe_topic_to_queue(sns_topic, queue_url)
+    add_policy_to_queue(queue_url, sns_topic.arn)
+    $aws_log.info("#{log_header} Created Amazon SQS Queue #{queue_name} and subscribed to AWSConfig_topic")
+    queue_url
+  rescue Aws::SQS::Errors::ServiceError => exception
+    raise ProviderUnreachable, exception.message
+  end
 
-    begin
-      $aws_log.debug("#{log_header} Looking for Amazon SQS Queue #{queue_name} ...")
-      queue_url = sqs_get_queue_url(queue_name)
-      $aws_log.debug("#{log_header} ... found Amazon SQS Queue")
-      queue_url
-    rescue Aws::SQS::Errors::NonExistentQueue
-      sns_topic = find_sns_topic(@topic_name)
-      if sns_topic
-        $aws_log.info("#{log_header} Amazone SQS Queue #{queue_name} does not exist; creating queue")
-        queue_url = sqs_create_queue(queue_name)
-        $aws_log.info("#{log_header} Subscribing Queue #{queue_name} to AWSConfig_topic")
-        subscribe_topic_to_queue(sns_topic, queue_url)
-        $aws_log.info("#{log_header} Created Amazon SQS Queue #{queue_name} and subscribed to AWSConfig_topic")
-        queue_url
-      else
-        $aws_log.warn("#{log_header} Unable to find the AWS Config Topic '#{@topic_name}'. " \
-                      "Cannot collect Amazon events for AWS Access Key ID #{@ems.authentication_userid}")
-        $aws_log.warn("#{log_header} Contact Amazon to create the AWS Config service and topic for Amazon events.")
-        raise ProviderUnreachable, "Unable to find the AWS Config Topic '#{@topic_name}'"
-      end
-    rescue Aws::SQS::Errors::ServiceError => exception
-      raise ProviderUnreachable, exception.message
+  def queue_has_policy?(queue_url, topic_arn)
+    policy_attribute = 'Policy'
+    policy = @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      sqs.client.get_queue_attributes(
+        :queue_url       => queue_url,
+        :attribute_names => [policy_attribute]
+      ).attributes[policy_attribute]
     end
+
+    unless policy == queue_policy(queue_url_to_arn(queue_url), topic_arn)
+      add_policy_to_queue(queue_url, topic_arn)
+    end
+  end
+
+  def queue_subscribed_to_topic?(queue_url, topic)
+    queue_arn = queue_url_to_arn(queue_url)
+    topic.subscriptions.any? { |subscription| subscription.attributes['Endpoint'] == queue_arn }
   end
 
   def sqs_create_queue(queue_name)
@@ -94,28 +106,43 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def sqs_get_queue_url(queue_name)
+    $aws_log.debug("#{log_header} Looking for Amazon SQS Queue #{queue_name} ...")
     @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
       sqs.client.get_queue_url(:queue_name => queue_name).queue_url
     end
   end
 
-  # @return [Aws::SNS::Topic] the found topic or nil
-  def find_sns_topic(topic_name)
+  # @return [Aws::SNS::Topic] the found topic
+  # @raise [ProviderUnreachable] in case the topic is not found
+  def sns_topic
     @ems.with_provider_connection(:service => :SNS, :sdk_v2 => true) do |sns|
-      sns.topics.detect { |t| t.arn.split(/:/)[-1] == topic_name }
+      sns.topics.detect { |t| t.arn.split(/:/)[-1] == @topic_name }
+    end || begin
+      $aws_log.warn("#{log_header} Unable to find the AWS Config Topic '#{@topic_name}'. " \
+      "Cannot collect Amazon events for AWS Access Key ID #{@ems.authentication_userid}")
+      $aws_log.warn("#{log_header} Contact Amazon to create the AWS Config service and topic for Amazon events.")
+      raise ProviderUnreachable, "Unable to find the AWS Config Topic '#{@topic_name}'"
     end
   end
 
-  # @param [Aws::SNS::Topic] aws_config_topic
-  # @param [String] queue_url
-  def subscribe_topic_to_queue(aws_config_topic, queue_url)
-    # the old behavior also added a policy to the queue to allow the topic
-    # to send the queue messages - not sure if this is wanted...
-    # https://github.com/aws/aws-sdk-ruby/blob/74ba5e/lib/aws/sns/topic.rb#L86-L90
-    # https://github.com/aws/aws-sdk-ruby/blob/74ba5e/lib/aws/sns/topic.rb#L368-L378
+  # @param [Aws::SNS::Topic] topic
+  def subscribe_topic_to_queue(topic, queue_url)
     queue_arn = queue_url_to_arn(queue_url)
-    subscription = aws_config_topic.subscribe(:protocol => 'sqs', :endpoint => queue_arn)
+    $aws_log.info("#{log_header} Subscribing Queue #{queue_url} to #{topic.arn}")
+    subscription = topic.subscribe(:protocol => 'sqs', :endpoint => queue_arn)
     raise ProviderUnreachable, "Can't subscribe to #{queue_arn}" unless subscription.arn.present?
+  end
+
+  def add_policy_to_queue(queue_url, topic_arn)
+    queue_arn = queue_url_to_arn(queue_url)
+    policy    = queue_policy(queue_arn, topic_arn)
+
+    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      sqs.client.set_queue_attributes(
+        :queue_url  => queue_url,
+        :attributes => {'Policy' => policy}
+      )
+    end
   end
 
   def queue_url_to_arn(queue_url)
@@ -130,7 +157,6 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
 
   # @param [Aws::SQS::Types::Message] message
   def parse_event(message)
-    log_header = "MIQ(#{self.class.name}##{__method__})"
     event = JSON.parse(JSON.parse(message.body)['Message'])
     $log.info("#{log_header} Found SNS Message with message type #{event["messageType"]}")
     return unless event["messageType"] == "ConfigurationItemChangeNotification"
@@ -139,6 +165,9 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     event["eventType"] = parse_event_type(event)
     $log.info("#{log_header} Parsed event from SNS Message #{event["eventType"]}")
     event
+  rescue JSON::ParserError => err
+    $log.error("#{log_header} JSON::ParserError parsing '#{message.body}' - #{err.message}")
+    nil
   end
 
   def parse_event_type(event)
@@ -162,5 +191,38 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
 
     state_changed = event.fetch_path("configurationItemDiff", "changedProperties", "Configuration.State.Name")
     state_changed ? state_changed["updatedValue"] : change_type
+  end
+
+  def log_header
+    @log_header ||= "MIQ(#{self.class.name}#)"
+  end
+
+  def queue_name
+    @queue_name ||= "manageiq-awsconfig-queue-#{@ems.guid}"
+  end
+
+  def queue_policy(queue_arn, topic_arn)
+    <<EOT
+{
+  "Version": "2012-10-17",
+  "Id": "#{queue_arn}/SQSDefaultPolicy",
+  "Statement": [
+    {
+      "Sid": "#{Digest::MD5.hexdigest(queue_arn)}",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "SQS:SendMessage",
+      "Resource": "#{queue_arn}",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "#{topic_arn}"
+        }
+      }
+    }
+  ]
+}
+EOT
   end
 end
