@@ -84,7 +84,7 @@ class OntapStorageSystemController < CimInstanceController
        ccs.create_logical_disk(@edit[:new][:ld_name],
                                @edit[:new][:aggregate_name],
                                @edit[:new][:ld_size].to_i)
-      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "OntapStorageSystem"), :name => ccs.name, :task => "Create Logical Disk"})
+      add_flash(_("%{model} \"%{name}\": Create Logical Disk successfully initiated") % {:model => ui_lookup(:model => "OntapStorageSystem"), :name => ccs.name})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -102,7 +102,7 @@ class OntapStorageSystemController < CimInstanceController
 
   def create_ld_cancel
     return unless load_edit("ontap_storage_system_create_ld__#{params[:id]}")
-    add_flash(_("%s was cancelled by the user") % "Create Logical Disk")
+    add_flash(_("Create Logical Disk was cancelled by the user"))
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
@@ -121,10 +121,10 @@ class OntapStorageSystemController < CimInstanceController
   end
 
   def create_ld_valid?
-    add_flash(_("%s is required") % "Name", :error) if @edit[:new][:ld_name].blank?
-    add_flash(_("%s is required") % "Aggregate", :error) if @edit[:new][:aggregate_name].blank?
-    add_flash(_("%s is required") % "Size", :error) if @edit[:new][:ld_size].blank?
-    add_flash(_("%s must be an integer") % "Size", :error) if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
+    add_flash(_("Name is required"), :error) if @edit[:new][:ld_name].blank?
+    add_flash(_("Aggregate is required"), :error) if @edit[:new][:aggregate_name].blank?
+    add_flash(_("Size is required"), :error) if @edit[:new][:ld_size].blank?
+    add_flash(_("Size must be an integer"), :error) if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
     @flash_array.nil?
   end
 end

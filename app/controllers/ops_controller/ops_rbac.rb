@@ -103,7 +103,8 @@ module OpsController::OpsRbac
     when "cancel"
       @tenant = Tenant.find_by_id(params[:id])
       if @tenant.try(:id).nil?
-        add_flash(_("Add of new %s was cancelled by the user") % tenant_type_title_string(params[:divisible] == "true"))
+        add_flash(_("Add of new %{model} was cancelled by the user") %
+                    {:model => tenant_type_title_string(params[:divisible] == "true")})
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") %
                     {:model => tenant_type_title_string(params[:divisible] == "true"), :name => @tenant.name})
@@ -122,7 +123,7 @@ module OpsController::OpsRbac
       begin
         tenant.save!
       rescue StandardError => bang
-        add_flash(_("Error when adding a new tenant: ") << bang.message, :error)
+        add_flash(_("Error when adding a new tenant: %{message}") % {:message => bang.message}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -199,7 +200,7 @@ module OpsController::OpsRbac
           tenant.set_quotas(tenant_quotas.to_hash)
         end
       rescue StandardError => bang
-        add_flash(_("Error when saving tenant quota: ") << bang.message, :error)
+        add_flash(_("Error when saving tenant quota: %{message}") % {:message => bang.message}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -287,7 +288,7 @@ module OpsController::OpsRbac
       process_users(users, "destroy") unless users.empty?
     else # showing 1 user, delete it
       if params[:id].nil? || User.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % "User", :error)
+        add_flash(_("User no longer exists"), :error)
       else
         user = User.find_by_id(params[:id])
         if rbac_user_delete_restriction?(user)
@@ -318,7 +319,7 @@ module OpsController::OpsRbac
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
       if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % "Role", :error)
+        add_flash(_("Role no longer exists"), :error)
       else
         roles.push(params[:id])
       end
@@ -359,7 +360,7 @@ module OpsController::OpsRbac
       end
     else # showing 1 tenant, delete it
       if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % "Tenant", :error)
+        add_flash(_("Tenant no longer exists"), :error)
       else
         tenants.push(params[:id])
       end
@@ -382,7 +383,7 @@ module OpsController::OpsRbac
       self.x_node  = "xx-g"  # reset node to show list
     else # showing 1 group, delete it
       if params[:id].nil? || MiqGroup.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % "MiqGroup", :error)
+        add_flash(_("MiqGroup no longer exists"), :error)
       else
         groups.push(params[:id])
       end
@@ -457,12 +458,12 @@ module OpsController::OpsRbac
   def move_cols_up
     return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(_("No %s were selected to move up") % "fields", :error)
+      add_flash(_("No fields were selected to move up"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move up"), :error)
     else
       if first_idx > 0
         @edit[:new][:ldap_groups_list][first_idx..last_idx].reverse_each do |field|
@@ -479,12 +480,12 @@ module OpsController::OpsRbac
   def move_cols_down
     return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
     if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(_("No %s were selected to move down") % "fields", :error)
+      add_flash(_("No fields were selected to move down"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move down"), :error)
     else
       if last_idx < @edit[:new][:ldap_groups_list].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
@@ -527,14 +528,14 @@ module OpsController::OpsRbac
     rbac_group_user_lookup_field_changed
     auth = get_vmdb_config[:authentication]
     if @edit[:new][:user].nil? || @edit[:new][:user] == ""
-      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User", :error)
+      add_flash(_("User must be entered to perform LDAP Group Look Up"), :error)
     end
     if auth[:mode] != "httpd"
       if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
-        add_flash(_("%s must be entered to perform LDAP Group Look Up") % "Username", :error)
+        add_flash(_("Username must be entered to perform LDAP Group Look Up"), :error)
       end
       if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ""
-        add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Password", :error)
+        add_flash(_("User Password must be entered to perform LDAP Group Look Up"), :error)
       end
     end
     if !@flash_array.nil?
@@ -554,7 +555,7 @@ module OpsController::OpsRbac
         end
       rescue StandardError => bang
         @edit[:ldap_groups_by_user] = []
-        add_flash(_("Error during '%s': ") % "LDAP Group Look Up" << bang.message, :error)
+        add_flash(_("Error during 'LDAP Group Look Up': %{message}") % {:message => bang.message}, :error)
         render :update do |page|                    # Use JS to update the display
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           page.replace("ldap_user_div", :partial => "ldap_auth_users")
@@ -624,7 +625,7 @@ module OpsController::OpsRbac
   def rbac_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
-    add_flash(_("%s was cancelled by the user") % "Tag Edit")
+    add_flash(_("Tag Edit was cancelled by the user"))
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
@@ -649,7 +650,11 @@ module OpsController::OpsRbac
     when :tenant
       record_id = id
     end
-    add_flash(record_id ? _("Edit of %s was cancelled by the user") % what.titleize : _("Add of new %s was cancelled by the user") % what.titleize)
+    add_flash(if record_id
+                _("Edit of %{name} was cancelled by the user") % {:name => what.titleize}
+              else
+                _("Add of new %{name} was cancelled by the user") % {:name => what.titleize}
+              end)
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
@@ -700,7 +705,7 @@ module OpsController::OpsRbac
       caption = (key == :group) ? @record.description : @record.name
       @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => caption, :model => what.titleize}
     else
-      @right_cell_text = _("Adding a new %s") % what.titleize
+      @right_cell_text = _("Adding a new %{name}") % {:name => what.titleize}
     end
     replace_right_cell(x_node)
   end
@@ -861,17 +866,16 @@ module OpsController::OpsRbac
     when "xx"
       case id
       when "u"
-        @right_cell_text = _("%{typ} %{model}") % {:typ => "Access Control", :model => ui_lookup(:models => "User")}
+        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "User")}
         rbac_users_list
       when "g"
-        @right_cell_text = _("%{typ} %{model}") % {:typ => "Access Control", :model => ui_lookup(:models => "MiqGroup")}
+        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "MiqGroup")}
         rbac_groups_list
       when "ur"
-        @right_cell_text = _("%{typ} %{model}") % {:typ => "Access Control", :model => ui_lookup(:models => "MiqUserRole")}
+        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "MiqUserRole")}
         rbac_roles_list
       when "tn"
-        @right_cell_text = _("%{typ} %{model}") % {:typ   => "Access Control",
-                                                   :model => ui_lookup(:models => "Tenant")}
+        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "Tenant")}
         rbac_tenants_list
       end
     when "u"
@@ -888,7 +892,9 @@ module OpsController::OpsRbac
       @right_cell_text = _("%{model} \"%{name}\"") % {:model => tenant_type_title_string(@tenant.divisible),
                                                       :name  => @tenant.name}
     else  # Root node
-      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => "Access Control", :name => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model => ui_lookup(:model => "MiqRegion")}
+      @right_cell_text = _("Access Control %{model} \"%{name}\"") %
+                           {:name  => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",
+                            :model => ui_lookup(:model => "MiqRegion")}
       @users_count   = User.in_my_region.count
       @groups_count  = MiqGroup.non_tenant_groups.count
       @roles_count   = MiqUserRole.count
@@ -1263,7 +1269,7 @@ module OpsController::OpsRbac
   def rbac_role_validate?
     valid = true
     if @edit[:new][:features].empty?
-      add_flash(_("At least one %s must be selected") % "Product Feature", :error)
+      add_flash(_("At least one Product Feature must be selected"), :error)
       valid = false
     end
     valid

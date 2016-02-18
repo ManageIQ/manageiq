@@ -18,7 +18,7 @@ module OpsController::Settings
       begin
         session[:imports].apply
       rescue StandardError => bang
-        msg = _("Error during '%s': ") % "apply" << bang
+        msg = _("Error during 'apply': %{error}") % {:error => bang}
         err = true
       else
         msg = _("Records were successfully imported")
@@ -26,7 +26,7 @@ module OpsController::Settings
         session[:imports] = @sb[:imports] = nil
       end
     else
-      msg = _("Use the Browse button to locate %s file") % "CSV"
+      msg = _("Use the Browse button to locate CSV file")
       err = true
     end
     @sb[:show_button] = err
@@ -96,7 +96,7 @@ module OpsController::Settings
     forest_get_form_vars
     no_changes = true
     if @ldap_info[:ldaphost] == ""
-      add_flash(_("%s is required") % "LDAP Host", :error)
+      add_flash(_("LDAP Host is required"), :error)
       no_changes = false
     elsif @edit[:new][:authentication][:user_proxies].blank? || @edit[:new][:authentication][:user_proxies][0].blank?   # if adding forest first time, delete a blank record
       @edit[:new][:authentication][:user_proxies].delete_at(0)
@@ -104,7 +104,7 @@ module OpsController::Settings
       @edit[:new][:authentication][:user_proxies].each do |f|
         if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry][:ldaphost] != @ldap_info[:ldaphost]   # check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
           no_changes = false
-          add_flash(_("%s should be unique") % "LDAP Host", :error)
+          add_flash(_("LDAP Host should be unique"), :error)
           break
         end
       end
@@ -133,7 +133,7 @@ module OpsController::Settings
     w = wb[:replication_worker][:replication][:destination]
     valid = MiqRegionRemote.validate_connection_settings(w[:host], w[:port], w[:username], w[:password], w[:database])
     if valid.nil?
-      add_flash(_("%s Credentials validated successfully") % "Replication Worker")
+      add_flash(_("Replication Worker Credentials validated successfully"))
     else
       valid.each do |v|
         add_flash(v, :error)
@@ -146,7 +146,9 @@ module OpsController::Settings
 
   def region_edit
     settings_set_view_vars
-    @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => "Settings", :name => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model => ui_lookup(:model => "MiqRegion")}
+    @right_cell_text = _("Settings %{model} \"%{name}\"") %
+                       {:name  => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",
+                        :model => ui_lookup(:model => "MiqRegion")}
     case params[:button]
     when "cancel"
       session[:edit] = @edit = nil
@@ -154,7 +156,7 @@ module OpsController::Settings
     when "save"
       return unless load_edit("region_edit__#{params[:id]}", "replace_cell__explorer")
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(_("%s is required") % "Region description", :error)
+        add_flash(_("Region description is required"), :error)
       end
       unless @flash_array.nil?
         session[:changed] = @changed = true
