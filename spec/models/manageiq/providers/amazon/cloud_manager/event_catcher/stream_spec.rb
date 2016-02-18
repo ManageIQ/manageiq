@@ -6,11 +6,25 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
     described_class.new(ems)
   end
   let(:queue_url) { "https://sqs.eu-central-1.amazonaws.com/995412904407/the_queue_name" }
+  let(:get_queue_attributes) do
+    Aws::SQS::Client.new(:stub_responses => true).stub_data(:get_queue_attributes, :attributes => {'QueueArn' => 'arn'})
+  end
 
   describe "#find_or_create_queue" do
     context "with queue present on amazon" do
       it "finds the queue" do
-        with_aws_stubbed(:sqs => {:get_queue_url => {:queue_url => queue_url}}) do
+        stubbed_responses = {
+          :sqs => {
+            :get_queue_url        => {:queue_url => queue_url},
+            :get_queue_attributes => get_queue_attributes
+          },
+          :sns => {
+            :list_topics => {
+              :topics => [{:topic_arn => "arn:aws:sns:region:account-id:#{described_class::AWS_CONFIG_TOPIC}"}]
+            }
+          }
+        }
+        with_aws_stubbed(stubbed_responses) do
           expect(subject).to receive(:sqs_get_queue_url).and_call_original
           expect(subject).not_to receive(:sqs_create_queue).and_call_original
           expect(subject.send(:find_or_create_queue)).to eq(queue_url)
@@ -23,8 +37,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
         it "creates the queue" do
           stubbed_responses = {
             :sqs => {
-              :get_queue_url => 'NonExistentQueue',
-              :create_queue  => {:queue_url => queue_url}
+              :get_queue_url        => 'NonExistentQueue',
+              :get_queue_attributes => get_queue_attributes,
+              :create_queue         => {:queue_url => queue_url}
             },
             :sns => {
               :list_topics => {
@@ -54,9 +69,6 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
             }
           }
           with_aws_stubbed(stubbed_responses) do
-            expect(subject).to receive(:sqs_get_queue_url).and_call_original
-            expect(subject).not_to receive(:sqs_create_queue).and_call_original
-            expect(subject).not_to receive(:subscribe_topic_to_queue).and_call_original
             expect { subject.send(:find_or_create_queue) }.to raise_exception(described_class::ProviderUnreachable)
           end
         end
@@ -82,7 +94,6 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
       message_body = File.read(File.join(File.dirname(__FILE__), "sqs_message.json"))
       stubbed_responses = {
         :sqs => {
-          :get_queue_url   => {:queue_url => queue_url},
           :receive_message => [
             {
               :messages => [
@@ -99,6 +110,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
         }
       }
       with_aws_stubbed(stubbed_responses) do
+        allow(subject).to receive(:find_or_create_queue).and_return(queue_url)
         allow(subject).to receive(:parse_event).and_return(message_body)
         expect(subject)
         polled_event = nil

@@ -31,7 +31,13 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ
   end
 
   def event_monitor_handle
-    @event_monitor_handle ||= ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream.new(@ems)
+    @event_monitor_handle ||= begin
+      stream = ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream.new(@ems)
+      stream.before_poll do
+        heartbeat
+      end
+      stream
+    end
   end
 
   def reset_event_monitor_handle
