@@ -15,6 +15,10 @@ class ManageIQ::Providers::Foreman::ProvisioningManager < ManageIQ::Providers::P
   has_many :configuration_organizations, :foreign_key => :provisioning_manager_id
 
   def self.ems_type
-    "foreman_provisioning".freeze
+    @ems_type ||= "foreman_provisioning".freeze
+  end
+
+  def self.description
+    @description ||= "Foreman Provisioning".freeze
   end
 end
