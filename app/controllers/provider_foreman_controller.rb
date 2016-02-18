@@ -88,9 +88,7 @@ class ProviderForemanController < ApplicationController
       end
       ManageIQ::Providers::AnsibleTower::Provider.destroy_queue(ansible_providers)
 
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
-                    {:task        => "Delete",
-                     :count_model => pluralize(providers.length, "Provider")})
+      add_flash(_("%{task} initiated for %{count_model}") % {:task => "Delete", :count_model => pluralize(providers.length, "provider")})
     end
     replace_right_cell
   end
