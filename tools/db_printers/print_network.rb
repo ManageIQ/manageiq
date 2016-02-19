@@ -12,7 +12,7 @@ Host.all.each do |host|
 
   found_switches = []
   unless host.hardware.nil?
-    pnics = host.hardware.guest_devices.find_all_by_device_type('ethernet', :order => "lower(device_name)")
+    pnics = host.hardware.guest_devices.where(:device_type => 'ethernet').order("lower(device_name)")
 
     # Group the pNICs by Switch
     pnics_grouped = []
