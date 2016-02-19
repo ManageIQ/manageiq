@@ -70,10 +70,10 @@ module ReportController::Menus
       rows.each do |row|
         if row[:text].nil?
           @sb[:tree_err] = true
-          add_flash(_("%s is required") % "Folder name", :error)
+          add_flash(_("Folder name is required"), :error)
         elsif @edit[:tree_arr].include?(row[:text])
           @sb[:tree_err] = true
-          add_flash(_("%{field} '%{value}' is already in use") % {:field => "Folder name", :value => row[:text]}, :error)
+          add_flash(_("Folder name '%{value}' is already in use") % {:value => row[:text]}, :error)
         else
           @edit[:tree_arr].push(row[:text])
           @edit[:tree_hash][row[:id].split('_')[1]] = row[:text]
@@ -189,7 +189,8 @@ module ReportController::Menus
     menu_get_form_vars
     # @changed = (@edit[:new] != @edit[:current])
     if params[:button] == "cancel"
-      add_flash(_("Edit of %{model} for role \"%{role}\" was cancelled by the user") % {:model => "Report Menu", :role => session[:role_choice]})
+      add_flash(_("Edit of Report Menu for role \"%{role}\" was cancelled by the user") %
+                  {:role => session[:role_choice]})
       session[:node_selected]   = ""
       session[:role_choice]     = nil
       @new_menu_node            = "roleroot"
@@ -210,7 +211,7 @@ module ReportController::Menus
       @menu_roles_tree = build_report_listnav("reports", "menu", "default")
       @edit[:new]               = copy_array(@rpt_menu)
       @menu_lastaction          = "default"
-      add_flash(_("%s set to default") % "Report Menu", :warning)
+      add_flash(_("Report Menu set to default"), :warning)
       get_tree_data
       # set menu_default flag to true
       @sb[:menu_default] = true
@@ -230,7 +231,7 @@ module ReportController::Menus
 
       if rec.save
         session[:edit] = nil  # clean out the saved info
-        add_flash(_("%{model} for role \"%{role}\" was saved") % {:model => "Report Menu", :role => session[:role_choice]})
+        add_flash(_("Report Menu for role \"%{role}\" was saved") % {:role => session[:role_choice]})
         get_tree_data
         session[:node_selected]   = ""
         session[:role_choice]     = nil
@@ -436,7 +437,7 @@ module ReportController::Menus
 
   def move_menu_cols_left
     if params[:available_reports].nil? || params[:available_reports].length == 0 || params[:available_reports][0] == ""
-      add_flash(_("No %s were selected to move left") % "fields", :error)
+      add_flash(_("No fields were selected to move left"), :error)
     else
       @edit[:available_reports].each do |af|                  # Go thru all available columns
         if params[:available_reports].include?(af)            # See if this column was selected to move
@@ -451,7 +452,7 @@ module ReportController::Menus
 
   def move_menu_cols_right
     if params[:selected_reports].nil? || params[:selected_reports].length == 0 || params[:selected_reports][0] == ""
-      add_flash(_("No %s were selected to move right") % "fields", :error)
+      add_flash(_("No fields were selected to move right"), :error)
       return
     else
       user = current_user
@@ -480,12 +481,12 @@ module ReportController::Menus
 
   def move_menu_cols_up
     if !params[:selected_reports] || params[:selected_reports].length == 0 || params[:selected_reports][0] == ""
-      add_flash(_("No %s were selected to move up") % "fields", :error)
+      add_flash(_("No fields were selected to move up"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move up"), :error)
     else
       if first_idx > 0
         @edit[:selected_reports][first_idx..last_idx].reverse_each do |field|
@@ -501,12 +502,12 @@ module ReportController::Menus
 
   def move_menu_cols_down
     if !params[:selected_reports] || params[:selected_reports].length == 0 || params[:selected_reports][0] == ""
-      add_flash(_("No %s were selected to move down") % "fields", :error)
+      add_flash(_("No fields were selected to move down"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move down"), :error)
     else
       if last_idx < @edit[:selected_reports].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
@@ -524,12 +525,12 @@ module ReportController::Menus
 
   def move_menu_cols_top
     if !params[:selected_reports] || params[:selected_reports].length == 0 || params[:selected_reports][0] == ""
-      add_flash(_("No %s were selected to move up") % "fields", :error)
+      add_flash(_("No fields were selected to move up") % "", :error)
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move up"), :error)
     else
       if first_idx > 0
         @edit[:selected_reports][first_idx..last_idx].reverse_each do |field|
@@ -545,12 +546,12 @@ module ReportController::Menus
 
   def move_menu_cols_bottom
     if !params[:selected_reports] || params[:selected_reports].length == 0 || params[:selected_reports][0] == ""
-      add_flash(_("No %s were selected to move down") % "fields", :error)
+      add_flash(_("No fields were selected to move down"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move down"), :error)
     else
       if last_idx < @edit[:selected_reports].length - 1
         @edit[:selected_reports][first_idx..last_idx].each do |field|
@@ -736,7 +737,7 @@ module ReportController::Menus
     end
     @right_cell_text = title == "My #{ui_lookup(:model => "MiqGroup")}" ?
       title :
-      _("All %s") % ui_lookup(:models => "MiqGroup")
+      _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
     @right_cell_div = "role_list"
     @menu_roles_tree = nil
   end

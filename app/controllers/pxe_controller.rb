@@ -212,7 +212,7 @@ class PxeController < ApplicationController
       right_cell_text =
         case nodetype
         when 'root' then _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
-        when 'isd'  then _("Adding a new %{models}") % {:models => ui_lookup(:model  => "IsoDatastore")}
+        when 'isd'  then _("Adding a new %{models}") % {:models => ui_lookup(:model => "IsoDatastore")}
         when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "IsoImage")}
         end
     end

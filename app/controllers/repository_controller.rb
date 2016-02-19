@@ -60,7 +60,8 @@ class RepositoryController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %s was cancelled by the user") % ui_lookup(:model => "Repository")
+        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:model => "Repository")}
       end
     when "add"
       if %w(NAS VMFS).include?(params[:path_type])
@@ -236,11 +237,12 @@ class RepositoryController < ApplicationController
           sp = MiqProxy.find(spid)
         rescue StandardError => bang
           add_flash(_("The Default Repository SmartProxy is not valid, contact your CFME Administrator"), :error)
-          add_flash(_("Error during '%s': ") % "refresh" << bang.message, :error)
+          add_flash(_("Error during 'refresh': %{message}") % {:message => bang.message}, :error)
           return
         end
         if sp.state != "on"                     # Repo scanning SmartProxy not running
-          add_flash(_("The Default Repository SmartProxy, \"%s\", is not running, contact your CFME Administrator") % sp.name, :error)
+          add_flash(_("The Default Repository SmartProxy, \"%{name}\", is not running, contact your CFME Administrator") %
+                      {:name => sp.name}, :error)
           return
         end
       end
@@ -266,7 +268,9 @@ class RepositoryController < ApplicationController
             repo.send(task.to_sym) if repo.respond_to?(task)  # Run the task
           end
         rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "Repository"), :name => repo_name, :task => task} << bang.message, :error)
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
+                      {:model   => ui_lookup(:model => "Repository"), :name => repo_name, :task => task,
+                       :message => bang.message}, :error)
         else
           if task == "destroy"
             AuditEvent.success(audit)
@@ -286,19 +290,20 @@ class RepositoryController < ApplicationController
     if @lastaction == "show_list" # showing a list, scan all selected repos
       repos = find_checked_items
       if repos.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "repository"), :task => "deletion"}, :error)
+        add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "repository")}, :error)
       end
       process_repos(repos, "destroy") unless repos.empty?
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Delete", :count_model => pluralize(repos.length, "Repository")}) if @flash_array.nil?
+      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
+                  {:count_model => pluralize(repos.length, "Repository")}) if @flash_array.nil?
     else # showing 1 repository, scan it
       if params[:id].nil? || Repository.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % "Repository", :error)
+        add_flash(_("Repository no longer exists"), :error)
       else
         repos.push(params[:id])
       end
       @single_delete = true
       process_repos(repos, "destroy") unless repos.empty?
-      add_flash(_("The selected %s was deleted") % "Repository") if @flash_array.nil?
+      add_flash(_("The selected Repository was deleted")) if @flash_array.nil?
     end
     show_list
     @refresh_partial = "layouts/gtl"
@@ -311,20 +316,22 @@ class RepositoryController < ApplicationController
     if @lastaction == "show_list" # showing a list, scan all selected repositories
       repos = find_checked_items
       if repos.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "repository"), :task => "refresh"}, :error)
+        add_flash(_("No %{model} were selected for refresh") % {:model => ui_lookup(:tables => "repository")}, :error)
       end
       process_repos(repos, "refresh") unless repos.empty?
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Refresh", :count_model => pluralize(repos.length, ui_lookup(:table => "Repository"))}) if @flash_array.nil?
+      add_flash(_("Refresh initiated for %{count_model} from the CFME Database") %
+                  {:count_model => pluralize(repos.length, ui_lookup(:table => "Repository"))}) if @flash_array.nil?
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 repo, refresh it
       if params[:id].nil? || Repository.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % "Repository", :error)
+        add_flash(_("Repository no longer exists"), :error)
       else
         repos.push(params[:id])
       end
       process_repos(repos, "refresh") unless repos.empty?
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Refresh", :count_model => pluralize(repos.length, ui_lookup(:table => "Repository"))}) if @flash_array.nil?
+      add_flash(_("Refresh initiated for %{count_model} from the CFME Database") %
+                  {:count_model => pluralize(repos.length, ui_lookup(:table => "Repository"))}) if @flash_array.nil?
       params[:display] = @display
       show
       if @display == "vms"
