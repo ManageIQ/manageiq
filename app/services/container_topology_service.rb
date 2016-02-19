@@ -63,7 +63,7 @@ class ContainerTopologyService < TopologyService
   def entity_display_type(entity)
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       entity.type.split('::')[2]
-    elsif entity.kind_of?(ManageIQ::Providers::ContainerManager::ContainerGroup)
+    elsif entity.kind_of?(ContainerGroup)
       "Pod"
     else
       name = entity.class.name.demodulize
