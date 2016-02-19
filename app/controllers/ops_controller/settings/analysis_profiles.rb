@@ -415,7 +415,9 @@ module OpsController::Settings::AnalysisProfiles
       end
       @single_delete = true
       ap_process_scanitemsets(scanitemsets, "destroy")  unless scanitemsets.empty?
-      add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:models => "ScanItemSet")}) if @flash_array.nil?
+      if @flash_array.nil?
+        add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:models => "ScanItemSet")})
+      end
     end
     self.x_node = "xx-sis"
     get_node_info(x_node)
@@ -509,7 +511,9 @@ module OpsController::Settings::AnalysisProfiles
             # resetting flash_array to not show a message for each memmber that is saved for a scanitemset
             @flash_array = []
           rescue StandardError => bang
-            add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "ScanItemSet"), :name => scanitem.name, :task => "update"} << bang.message,
+            add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
+                        {:model => ui_lookup(:model => "ScanItemSet"),
+                         :name  => scanitem.name, :task => "update", :message => bang.message},
                       :error)
           end
         end

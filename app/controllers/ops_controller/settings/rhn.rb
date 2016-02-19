@@ -165,7 +165,7 @@ module OpsController::Settings::RHN
     if params[:task_id] # wait_for_task is done --> read the task record
       miq_task = MiqTask.find(params[:task_id])
       if miq_task.status != 'Ok'
-        add_flash(_("Credential validation returned: %s") % miq_task.message, :error)
+        add_flash(_("Credential validation returned: %{message}") % {:message => miq_task.message}, :error)
       else
         # task succeeded, we have the array of organization names in miq_task.task_results
         add_flash(_("Credential validation was successful"))
@@ -218,7 +218,7 @@ module OpsController::Settings::RHN
       if @edit[:new][field].present?
         false
       else
-        add_flash(_("%s is required") % RHN_OBLIGATORY_FIELD_NAMES[field], :error)
+        add_flash(_("%{name} is required") % {:name => RHN_OBLIGATORY_FIELD_NAMES[field]}, :error)
         true
       end
     end.empty?
@@ -296,9 +296,9 @@ module OpsController::Settings::RHN
             MiqServer.queue_apply_updates(server_ids)
           end
 
-          add_flash(_("%s has been initiated for the selected Servers") % verb)
+          add_flash(_("%{item} has been initiated for the selected Servers") % {:item => verb})
         rescue => error
-          add_flash(_("Error occured when queuing action: %s") % error.message, :error)
+          add_flash(_("Error occured when queuing action: %{message}") % {:message => error.message}, :error)
         end
       end
     end
