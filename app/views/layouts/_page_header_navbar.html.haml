@@ -1,33 +1,33 @@
-%nav.nav-pf-vertical-alt
-  %ul.listgroup{:id => "maintab", :style => "margin-left: -40px;"}
+.nav-pf-vertical.nav-pf-vertical-with-secondary-nav
+  %ul.list-group{:id => "maintab"}
     - Menu::Manager.menu do |menu_section|
       - if menu_section.visible?
-        %li.list-group-item{:class => primary_nav_class(menu_section.id)}
+        %li.list-group-item.persistent-secondary{"data-target" => "##{menu_section.name}", :class => primary_nav_class(menu_section.id)}
           %a{:href         => menu_section.url,
-             :class       => "",
-             "data-hover" => "dropdown",
-             "data-delay" => "1000",
              :onclick     => 'return miqCheckForChanges()'}
-            - if menu_section.subsection?
-              = "..."
-            %i{:class => menu_section.icon}
+            %span{:class => menu_section.icon}
             %span.list-group-item-value
               = h(_(menu_section.name))
 
-          %ul.dropdown-menu{:class => primary_nav_class2(menu_section.id)}
+          .nav-pf-persistent-secondary{:id => menu_section.name}
+            .persistent-secondary-header
+              %a.fa.fa-arrow-circle-o-left{:href => "#", "data-toggle" => "collapse-secondary-nav"}
+              %span
+                = h(_(menu_section.name))
             - menu_section.items.each do |menu_item|
               - if menu_item.visible?
                 - if menu_item.leaf?
-                  %li{:class => secondary_nav_class(menu_item.id)}
-                    %a{:href    => menu_item.url,
-                       :onclick => 'return miqcheckforchanges()'}= _(menu_item.name)
+                  %ul.list-group
+                    %li.list-group-item
+                      %a{:href    => menu_item.url,
+                         :onclick => 'return miqcheckforchanges()'}= _(menu_item.name)
                 - else
-                  %li.dropdown-submenu{:class => secondary_nav_class(menu_item.id)}
-                    %a{:href    => menu_item.url,
-                       :onclick => 'return miqcheckforchanges()'}= _(menu_item.name)
-                    %ul.dropdown-menu
-                      - menu_item.items.each do |menu_item_deep|
-                        %li
-                          %a{:href    => menu_item_deep.url,
-                             :onclick => 'return miqcheckforchanges()'}= _(menu_item_deep.name)
-
+                  %ul.list-group
+                    %li.list-group-item
+                      %a{:href    => menu_item.url,
+                         :onclick => 'return miqcheckforchanges()'}= _(menu_item.name)
+                      %ul.list-group
+                        - menu_item.items.each do |menu_item_deep|
+                          %li.list-group-item
+                            %a{:href    => menu_item_deep.url,
+                               :onclick => 'return miqcheckforchanges()'}= _(menu_item_deep.name)

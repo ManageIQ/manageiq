@@ -1,16 +1,14 @@
 // Product overrides of Boostrap & Patternfly variables
-$screen-sm:                                 768px;    // sets the breakpoint between mobile and desktop modes
-$screen-md:                                 1024px;
+
 $navbar-pf-navbar-navbar-brand-min-width:   270px;
 $navbar-pf-navbar-navbar-brand-padding:     8px 0 2px;
 $dropdown-link-hover-bg:                    #d4edfa;  // sets dropdown link hover
 $link-color:                                #0099d3;  // sets link (also accordion hover, selected table cell) color globally
 //$navbar-pf-border-color:                    #063451;  // sets 3px border color at top of screen
-//$navbar-pf-bg-color:                        #063451;  // sets backgound color of navigation bar
 
-//$nav-pf-vertical-alt-bg-color:              #063451;
-
-//$img-bg-navbar:                             "../navbar.png"; // sets a custom background image in the header
+$navbar-pf-alt-bg-color:                    #0c69a5; // sets backgound color of navigation bar
+$navbar-pf-alt-navbar-toggle-icon-bar-hover-bg: #fff;
+$img-bg-navbar:                             "navbar.png"; // sets a custom background image in the header
 $color-success:                             #3f9c35;
 $color-warning:                             #ec7a08;
 $color-critical:                            #cc0000;
@@ -29,7 +27,7 @@ $login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);
 @import "patternfly_overrides";
 @import "login";
 @import "icon_customizations";
-//@import "header_background"; // sets a custom background image in the header
+@import "header_background"; // sets a custom background image in the header
 
 
 .login-pf #brand img { // sets size of brand.svg on login screen (upstream only)

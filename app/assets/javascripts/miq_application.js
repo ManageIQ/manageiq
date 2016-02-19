@@ -1578,4 +1578,5 @@ function chartData(type, data, data2) {
 
 $( document ).ready(function() {
     check_for_ellipsis();
+    $().setupVerticalNavigation(true);
 });

@@ -2,7 +2,7 @@ module Menu
   class DefaultMenu
     class << self
       def compute_menu_section
-        Menu::Section.new(:compute, N_("Compute"), 'fa fa-plus', [
+        Menu::Section.new(:compute, N_("Compute"), 'fa product-memory fa-2x', [
           services_menu_section,
           clouds_menu_section,
           infrastructure_menu_section,
@@ -11,7 +11,7 @@ module Menu
       end
 
       def configuration_menu_section
-        Menu::Section.new(:conf, N_("Configuration"), 'fa fa-plus', [
+        Menu::Section.new(:conf, N_("Configuration"), 'fa fa-cog  fa-2x', [
           Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer',
                          {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer')
         ])
@@ -164,7 +164,7 @@ module Menu
       end
 
       def control_menu_section
-        Menu::Section.new(:con, N_("Control"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:con, N_("Control"), 'fa fa-shield fa-2x', [
           Menu::Item.new('miq_policy',        N_('Explorer'),        'control_explorer',     {:feature => 'control_explorer_view'}, '/miq_policy/explorer'),
           Menu::Item.new('miq_policy_rsop',   N_('Simulation'),      'policy_simulation',    {:feature => 'policy_simulation'},     '/miq_policy/rsop'),
           Menu::Item.new('miq_policy_export', N_('Import / Export'), 'policy_import_export', {:feature => 'policy_import_export'},  '/miq_policy/export'),
@@ -173,7 +173,7 @@ module Menu
       end
 
       def automate_menu_section
-        Menu::Section.new(:aut, N_("Automate"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:aut, N_("Automate"), 'fa fa-recycle fa-2x', [
           Menu::Item.new('miq_ae_class',         N_('Explorer'),        'miq_ae_class_explorer',         {:feature => 'miq_ae_domain_view'},            '/miq_ae_class/explorer'),
           Menu::Item.new('miq_ae_tools',         N_('Simulation'),      'miq_ae_class_simulation',       {:feature => 'miq_ae_class_simulation'},       '/miq_ae_tools/resolve'),
           Menu::Item.new('miq_ae_customization', N_('Customization'),   'miq_ae_customization_explorer', {:feature => 'miq_ae_customization_explorer'}, '/miq_ae_customization/explorer'),
@@ -192,7 +192,7 @@ module Menu
       end
 
       def settings_menu_section
-        Menu::Section.new(:set, N_("Settings"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:set, N_("Settings"), 'pficon pficon-settings fa-2x', [
           Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
           Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
           Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
