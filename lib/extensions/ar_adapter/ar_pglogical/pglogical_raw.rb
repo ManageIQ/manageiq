@@ -11,11 +11,11 @@ class PgLogicalRaw
       .cast_values.first
   end
 
-  # Returns whether pglogical is currently configured or not
+  # Returns whether pglogical is currently enabled or not
   #
   # @return [Boolean]
-  def configured?
-    connection.extension_enabled?("pglogical") && connection.extension_enabled("pglogical_origin")
+  def enabled?
+    connection.extension_enabled?("pglogical") && connection.extension_enabled?("pglogical_origin")
   end
 
   # Enables pglogical postgres extensions
@@ -41,6 +41,14 @@ class PgLogicalRaw
   # @param ifexists [Boolean]
   def node_drop(name, ifexists = false)
     typed_exec("SELECT pglogical.drop_node($1, $2)", name, ifexists)
+  end
+
+  def nodes
+    typed_exec(<<-SQL)
+      SELECT node_name AS name, if_dsn AS conn_string
+      FROM pglogical.node join pglogical.node_interface
+        ON if_nodeid = node_id
+    SQL
   end
 
   # Subscription Management
@@ -192,7 +200,7 @@ class PgLogicalRaw
   # @param set_name [String] replication set name
   # @return [Array<String>] names of the tables in the given set
   def tables_in_replication_set(set_name)
-    typed_exec("SELECT relname FROM pglogical.tables WHERE set_name = '$1'", set_name).values.flatten
+    typed_exec("SELECT relname FROM pglogical.tables WHERE set_name = $1", set_name).values.flatten
   end
 
   private

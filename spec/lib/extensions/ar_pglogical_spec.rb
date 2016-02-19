@@ -5,7 +5,7 @@ describe "ar_pglogical extension" do
     skip "pglogical must be installed" unless connection.pglogical.installed?
   end
 
-  describe "#pglogical_enable" do
+  describe "#enable" do
     it "enables the pglogical extension" do
       connection.pglogical.enable
       expect(connection.extensions).to include("pglogical")
@@ -25,7 +25,13 @@ describe "ar_pglogical extension" do
       connection.pglogical.enable
     end
 
-    describe "#pglogical_node_create" do
+    describe "#enabled?" do
+      it "detects that the extensions are enabled" do
+        expect(connection.pglogical.enabled?).to be true
+      end
+    end
+
+    describe "#node_create" do
       it "creates a node" do
         connection.pglogical.node_create(node_name, node_dsn)
         res = connection.exec_query(<<-SQL).first
@@ -44,7 +50,17 @@ describe "ar_pglogical extension" do
         connection.pglogical.node_create(node_name, node_dsn)
       end
 
-      describe "#pglogical_node_drop" do
+      describe "#nodes" do
+        it "lists the node's names and connection strings" do
+          expected = {
+            "name"        => node_name,
+            "conn_string" => node_dsn
+          }
+          expect(connection.pglogical.nodes.first).to eq(expected)
+        end
+      end
+
+      describe "#node_drop" do
         it "removes a node" do
           connection.pglogical.node_drop(node_name)
           res = connection.exec_query(<<-SQL)
@@ -55,7 +71,7 @@ describe "ar_pglogical extension" do
         end
       end
 
-      describe "#pglogical_replication_set_create" do
+      describe "#replication_set_create" do
         it "creates a replication set" do
           rep_insert = true
           rep_update = true
@@ -85,7 +101,14 @@ describe "ar_pglogical extension" do
           connection.pglogical.replication_set_create(set_name)
         end
 
-        describe "#pglogical_replication_set_alter" do
+        describe "#replication_sets" do
+          it "lists the set names" do
+            expected = ["default", "default_insert_only", "ddl_sql", set_name]
+            expect(connection.pglogical.replication_sets).to match_array(expected)
+          end
+        end
+
+        describe "#replication_set_alter" do
           it "alters the replication set" do
             connection.pglogical.replication_set_alter(set_name, true, true,
                                                        false, false)
@@ -101,7 +124,7 @@ describe "ar_pglogical extension" do
           end
         end
 
-        describe "#pglogical_replication_set_drop" do
+        describe "#replication_set_drop" do
           it "removes a replication set" do
             connection.pglogical.replication_set_drop(set_name)
             res = connection.exec_query(<<-SQL)
@@ -114,7 +137,7 @@ describe "ar_pglogical extension" do
           end
         end
 
-        describe "#pglogical_replication_set_*_table" do
+        describe "#replication_set_*_table" do
           it "adds and removes a table to/from the set" do
             # create a test table
             connection.exec_query(<<-SQL)
@@ -143,7 +166,7 @@ describe "ar_pglogical extension" do
           end
         end
 
-        describe "#pglogical_replication_set_add_all_tables" do
+        describe "#replication_set_add_all_tables" do
           it "adds all the tables in a schema" do
             schema_name = "test_schema"
             connection.exec_query("CREATE SCHEMA #{schema_name}")
@@ -163,6 +186,19 @@ describe "ar_pglogical extension" do
             SQL
             expect(set_tables).to include("test1")
             expect(set_tables).to include("test2")
+          end
+        end
+
+        describe "#tables_in_replication_set" do
+          it "lists the tables in the set" do
+            # create a test table
+            connection.exec_query(<<-SQL)
+              CREATE TABLE test (id INTEGER PRIMARY KEY)
+            SQL
+
+            connection.pglogical.replication_set_add_table(set_name, "test")
+
+            expect(connection.pglogical.tables_in_replication_set(set_name)).to eq(["test"])
           end
         end
       end
