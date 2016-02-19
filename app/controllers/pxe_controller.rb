@@ -159,12 +159,12 @@ class PxeController < ApplicationController
     when :pxe_servers_tree
       presenter.update(:main_div, r[:partial => "pxe_server_list"])
       if nodetype == "root"
-        right_cell_text = _("All %s") % ui_lookup(:models => "PxeServer")
+        right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "PxeServer")}
       else
         right_cell_text = case nodetype
                           when 'ps'
                             if @ps.id.blank?
-                              _("Adding a new %s") % ui_lookup(:model => "PxeServer")
+                              _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeServer")}
                             else
                               temp = _("%{model} \"%{name}\"") % {:name  => @ps.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeServer")}
                               @edit ? "Editing #{temp}" : temp
@@ -179,10 +179,10 @@ class PxeController < ApplicationController
       presenter.update(:main_div, r[:partial => "pxe_image_type_list"])
       right_cell_text = case nodetype
                         when 'root'
-                          _("All %s") % ui_lookup(:models => "PxeImageType")
+                          _("All %{models}") % {:models => ui_lookup(:models => "PxeImageType")}
                         when 'pit'
                           if @pxe_image_type.id.blank?
-                            _("Adding a new %s") % ui_lookup(:model => "PxeImageType")
+                            _("Adding a new %{models}") % {:models => ui_lookup(:model => "PxeImageType")}
                           else
                             temp = _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
                             @edit ? "Editing #{temp}" : temp
@@ -196,7 +196,7 @@ class PxeController < ApplicationController
       if @in_a_form
         right_cell_text =
           if @ct.id.blank?
-            _("Adding a new %s") % ui_lookup(:model => "PxeCustomizationTemplate")
+            _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeCustomizationTemplate")}
           else
             @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
                     _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
@@ -211,8 +211,8 @@ class PxeController < ApplicationController
       presenter.update(:main_div, r[:partial => "iso_datastore_list"])
       right_cell_text =
         case nodetype
-        when 'root' then _("All %s") % ui_lookup(:models => "IsoDatastore")
-        when 'isd'  then _("Adding a new %s") % ui_lookup(:model  => "IsoDatastore")
+        when 'root' then _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
+        when 'isd'  then _("Adding a new %{models}") % {:models => ui_lookup(:model  => "IsoDatastore")}
         when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "IsoImage")}
         end
     end

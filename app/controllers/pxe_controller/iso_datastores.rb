@@ -40,13 +40,13 @@ module PxeController::IsoDatastores
     iso_datastore_get_form_vars
     if params[:button] == "cancel"
       @edit = session[:edit] = nil # clean out the saved info
-      add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "IsoDatastore"))
+      add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "IsoDatastore")})
       get_node_info(x_node)
       replace_right_cell(x_node)
     elsif params[:button] == "add"
       isd = params[:id] ? find_by_id_filtered(IsoDatastore, params[:id]) : IsoDatastore.new
       if @edit[:new][:ems_id].blank?
-        add_flash(_("%s is required") % "Provider", :error)
+        add_flash(_("Provider is required"), :error)
       end
       if @flash_array
         render :update do |page|
@@ -114,7 +114,7 @@ module PxeController::IsoDatastores
       replace_right_cell(x_node, [:iso_datastores])
     else # showing 1 vm
       if params[:id].nil? || IsoDatastore.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "IsoDatastore"),
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "IsoDatastore")},
                   :error)
         iso_datastore_list
         @refresh_partial = "layouts/x_gtl"
@@ -304,7 +304,7 @@ module PxeController::IsoDatastores
   def iso_datastore_get_node_info(treenodeid)
     if treenodeid == "root"
       iso_datastore_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => "IsoDatastore")
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
       @right_cell_div  = "iso_datastore_list"
     else
       @right_cell_div = "iso_datastore_details"
