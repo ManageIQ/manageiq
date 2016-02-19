@@ -16,14 +16,14 @@ describe GenericMailer do
     GenericMailer.deliver_queue(:generic_notification, @args)
     expect(BinaryBlob.count).to eq(1)
     expect(MiqQueue.exists?(:method_name => 'deliver',
-                            :class_name  => described_class,
+                            :class_name  => described_class.name,
                             :role        => 'notifier')).to be_truthy
   end
 
   it "call deliver_queue for automation_notification" do
     GenericMailer.deliver_queue(:automation_notification, @args)
     expect(MiqQueue.exists?(:method_name => 'deliver',
-                            :class_name  => described_class,
+                            :class_name  => described_class.name,
                             :role        => 'notifier')).to be_truthy
   end
 

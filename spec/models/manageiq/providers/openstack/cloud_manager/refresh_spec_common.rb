@@ -293,7 +293,7 @@ module Openstack
     def assert_specific_az
       # This tests OpenStack functionality more than ManageIQ
       @nova_az = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone.where(
-        :type => ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone, :ems_id => @ems.id).first
+        :type => ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone.name, :ems_id => @ems.id).first
       # standard openstack AZs have their ems_ref set to their name ("nova" in the test case)...
       # the "null" openstack AZ has a unique ems_ref and name
       expect(@nova_az).to have_attributes(
