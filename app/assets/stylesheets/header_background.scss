@@ -2,11 +2,11 @@
 /* Header background image*/
 
 @media (min-width: $screen-sm) {
-  .navbar-pf {
-    background: url("#{$img-path}/#{$img-bg-navbar}");
+  .navbar-pf-alt {
+    background: image-url($img-bg-navbar);
     background-repeat: no-repeat;
     background-position: 100% 0;
-    background-color: $navbar-pf-bg-color;
+    background-color: $navbar-pf-alt-bg-color;
   }
   .navbar-pf .navbar-utility > .active > a,
   .navbar-pf .navbar-utility > .active > a:hover,
