@@ -1207,7 +1207,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.assign_ems_created_on(vm_ids)
-    vms_to_update = VmOrTemplate.find_all_by_id_and_ems_created_on(vm_ids, nil)
+    vms_to_update = VmOrTemplate.where(:id => vm_ids, :ems_created_on => nil)
     return if vms_to_update.empty?
 
     # Of the VMs without a VM create time, filter out the ones for which we
