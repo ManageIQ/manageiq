@@ -609,7 +609,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def delete_legacy_contents_for_group(group)
-    MiqWidgetContent.destroy_all(:miq_widget_id => id, :miq_group_id => group.id, :user_id => nil)
+    MiqWidgetContent.where(:miq_widget_id => id, :miq_group_id => group.id, :user_id => nil).destroy_all
   end
 
   private

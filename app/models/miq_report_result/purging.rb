@@ -36,8 +36,8 @@ module MiqReportResult::Purging
     end
 
     def purge_associated_records(ids)
-      MiqReportResultDetail.delete_all(:miq_report_result_id => ids)
-      BinaryBlob.destroy_all(:resource_type => name, :resource_id => ids)
+      MiqReportResultDetail.where(:miq_report_result_id => ids).delete_all
+      BinaryBlob.where(:resource_type => name, :resource_id => ids).destroy_all
     end
 
     private

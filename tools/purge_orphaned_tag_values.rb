@@ -54,7 +54,7 @@ if perf_ids_count > 0
     pbar = ProgressBar.create(:title => "Deleting", :total => deleted_ids_count, :autofinish => false)
     deleted_ids.each do |type, ids|
       ids.each_slice(opts[:delete_window]) do |ids_window|
-        VimPerformanceTagValue.delete_all(:metric_type => type, :metric_id => ids_window)
+        VimPerformanceTagValue.where(:metric_type => type, :metric_id => ids_window).delete_all
         pbar.progress += ids_window.length
       end
     end

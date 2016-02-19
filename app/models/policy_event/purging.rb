@@ -27,7 +27,7 @@ class PolicyEvent < ApplicationRecord
       end
 
       def purge_associated_records(ids)
-        PolicyEventContent.delete_all(:policy_event_id => ids)
+        PolicyEventContent.where(:policy_event_id => ids).delete_all
       end
 
       private

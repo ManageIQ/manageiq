@@ -441,7 +441,7 @@ class MiqQueue < ApplicationRecord
       options = YAML.load(ERB.new(File.read(@@delete_command_file)).result)
       if options[:required_role].nil? || MiqServer.my_server(true).has_active_role?(options[:required_role])
         _log.info("Executing: [#{@@delete_command_file}], Options: [#{options.inspect}]")
-        deleted = delete_all(options[:conditions])
+        deleted = where(options[:conditions]).delete_all
         _log.info("Executing: [#{@@delete_command_file}] complete, #{deleted} rows deleted")
       end
       File.delete(@@delete_command_file)

@@ -2,12 +2,12 @@ module MiqServer::WorkerManagement::Monitor::Stop
   extend ActiveSupport::Concern
 
   def clean_stop_worker_queue_items
-    MiqQueue.destroy_all(
+    MiqQueue.where(
       :class_name  => self.class.name,
       :method_name => "stop_worker",
       :queue_name  => 'miq_server',
       :server_guid => guid
-    )
+    ).destroy_all
   end
 
   def stop_worker_queue(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)

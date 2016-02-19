@@ -1,3 +1,3 @@
 puts "Deleting ems_metadata Relationships..."
-Relationship.delete_all(:relationship => "ems_metadata")
+Relationship.where(:relationship => "ems_metadata").delete_all
 puts "Deleting ems_metadata Relationships...Complete"

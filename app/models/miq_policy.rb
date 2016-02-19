@@ -110,7 +110,7 @@ class MiqPolicy < ApplicationRecord
   end
 
   def delete_event(event)
-    MiqPolicyContent.destroy_all(:miq_policy => self, :miq_event_definition => event)
+    MiqPolicyContent.where(:miq_policy => self, :miq_event_definition => event).destroy_all
   end
 
   def add_event(event)

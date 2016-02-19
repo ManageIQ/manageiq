@@ -38,7 +38,7 @@ class MiqWorker < ApplicationRecord
     clean_all_workers
 
     # Clean queue of any worker startup entries
-    MiqQueue.destroy_all(:method_name => "start_event_monitor", :server_guid => MiqServer.my_guid)
+    MiqQueue.where(:method_name => "start_event_monitor", :server_guid => MiqServer.my_guid).destroy_all
   end
 
   def self.atShutdown

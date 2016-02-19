@@ -158,7 +158,7 @@ class MiqReportResult < ApplicationRecord
   def self.purge_for_user(options = {})
     options[:userid] ||= "%" # This will purge for all users
     cond = ["userid like ? and userid NOT like 'widget%' and last_accessed_on < ?", "#{options[:userid]}|%", 1.day.ago.utc]
-    delete_all(cond)
+    where(cond).delete_all
   end
 
   def purge_for_user
