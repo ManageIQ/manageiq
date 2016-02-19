@@ -95,7 +95,7 @@ PolicySet.all.each do |ps|
   
   tag = Tag.find_by_name("/policy/assignment/policy_set/#{ps.id}")
   if tag
-    Tagging.find_all_by_tag_id(tag.id).each do |tg|
+    Tagging.where(:tag_id => tag.id).each do |tg|
       resource = tg.taggable
       ntag = "miq_policy_set/#{nps.id}"
 
