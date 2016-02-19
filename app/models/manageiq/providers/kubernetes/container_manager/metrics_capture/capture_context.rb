@@ -98,7 +98,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
     end
 
     def hawkular_client
-      require 'hawkularclient'
+      require 'hawkular_all'
       @client ||= Hawkular::Metrics::Client.new(
         hawkular_entrypoint, hawkular_credentials, hawkular_options)
     end
