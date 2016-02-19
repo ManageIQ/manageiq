@@ -11,7 +11,7 @@ class ApiController
     def log_api_auth
       log_request("Authentication", :type        => @auth_token.blank? ? "basic" : "token",
                                     :token       => @auth_token,
-                                    :x_miq_group => request.env['HTTP_X_MIQ_GROUP'],
+                                    :x_miq_group => request.headers['X-MIQ-Group'],
                                     :user        => @auth_user)
       if @auth_user_obj
         group = @auth_user_obj.current_group

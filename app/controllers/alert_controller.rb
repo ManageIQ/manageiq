@@ -39,11 +39,11 @@ class AlertController < ApplicationController
     if feed_record.nil?
       raise "Requested feed is invalid"
     end
-    proto = request.env["HTTP_REFERER"] ? request.env["HTTP_REFERER"].split("://")[0] : nil   # Get protocol from the request
-    proto = nil unless [nil, "http", "https"].include?(proto)                                   # Make sure it's http or https
-    proto ||= session[:req_protocol]                                                          # If nil, use previously discovered value
-    session[:req_protocol] ||= proto                                                          # Save protocol in session
-    feed_data = feed_record.generate(request.env["HTTP_HOST"], local, proto)
+    proto = request.referer && request.referer.split("://")[0]   # Get protocol from the request
+    proto = nil unless [nil, "http", "https"].include?(proto)    # Make sure it's http or https
+    proto ||= session[:req_protocol]                             # If nil, use previously discovered value
+    session[:req_protocol] ||= proto                             # Save protocol in session
+    feed_data = feed_record.generate(request.host_with_port, local, proto)
 
     return feed_data if local
     render feed_data unless local

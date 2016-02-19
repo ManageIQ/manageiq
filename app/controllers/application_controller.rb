@@ -2159,7 +2159,7 @@ class ApplicationController < ActionController::Base
     # Get timelines hash, if it is in the session for the running controller
     @tl_options = session["#{controller_name}_tl".to_sym]
 
-    session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"].nil?
+    session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
 
     unless request.xml_http_request?  # Don't capture ajax URLs
@@ -2626,7 +2626,7 @@ class ApplicationController < ActionController::Base
       # OR not defined
       # use HTTP_ACCEPT_LANGUAGE
       locale = if server_locale == "default" || server_locale.nil?
-                 env['HTTP_ACCEPT_LANGUAGE']
+                 request.headers['Accept-Language']
                else
                  server_locale
                end
