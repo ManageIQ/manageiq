@@ -143,7 +143,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   # @return [nil] if the template is valid
   # @return [String] if the template is invalid this is the error message
   def orchestration_template_validate(template)
-    with_provider_connection(:service => :CloudFormation, :sdk_v2 => true) do |cloud_formation|
+    with_provider_connection(:service => :CloudFormation) do |cloud_formation|
       nil if cloud_formation.client.validate_template(:template_body => template.content)
     end
   rescue Aws::CloudFormation::Errors::ValidationError => validation_error
@@ -167,11 +167,11 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     all_ems_names     = all_emses.map(&:name).to_set
     known_ems_regions = all_emses.select { |e| e.authentication_userid == access_key_id }.map(&:provider_region)
 
-    ec2 = raw_connect_v2(access_key_id, secret_access_key, :EC2, "us-east-1")
+    ec2 = raw_connect(access_key_id, secret_access_key, :EC2, "us-east-1")
     region_names_to_discover = ec2.client.describe_regions.regions.map(&:region_name)
 
     (region_names_to_discover - known_ems_regions).each do |region_name|
-      ec2_region = raw_connect_v2(access_key_id, secret_access_key, :EC2, region_name)
+      ec2_region = raw_connect(access_key_id, secret_access_key, :EC2, region_name)
       next if ec2_region.instances.count == 0 && # instances
               ec2_region.images(:owners => %w(self)).count == 0 && # private images
               ec2_region.images(:executable_users => %w(self)).count == 0 # shared  images

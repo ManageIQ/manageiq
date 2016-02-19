@@ -68,7 +68,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
     begin
       # This is just for consistency, to produce a :connect benchmark
       Benchmark.realtime_block(:connect) {}
-      target.ext_management_system.with_provider_connection(:service => :CloudWatch, :sdk_v2 => true) do |cloud_watch|
+      target.ext_management_system.with_provider_connection(:service => :CloudWatch) do |cloud_watch|
         perf_capture_data_amazon(cloud_watch, start_time, end_time)
       end
     rescue Exception => err
