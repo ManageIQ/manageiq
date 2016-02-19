@@ -34,5 +34,3 @@ module ArLock
     end
   end
 end
-
-ApplicationRecord.include ArLock
