@@ -74,7 +74,7 @@ class Storage < ApplicationRecord
 
   def ext_management_systems
     @ext_management_systems ||= ExtManagementSystem.joins(:hosts => :storages).where(
-      :host_storages => {:storage_id => id}).uniq.to_a
+      :host_storages => {:storage_id => id}).distinct.to_a
   end
 
   def ext_management_systems_in_zone(zone_name)
