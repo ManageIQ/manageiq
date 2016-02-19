@@ -68,7 +68,7 @@ module PurgingMixin
         end
 
         _log.info("Purging #{current_window} #{table_name.humanize}.")
-        count = unscoped.delete_all(:id => batch_ids)
+        count = unscoped.where(:id => batch_ids).delete_all
         break if count == 0
         total += count
 

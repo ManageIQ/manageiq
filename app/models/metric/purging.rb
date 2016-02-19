@@ -68,7 +68,7 @@ module Metric::Purging
     _log.info("Purging associated tag values.")
     ids.each_slice(50) do |vp_ids|
       tv_count, = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
-        VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => metric_type)
+        VimPerformanceTagValue.where(:metric_id => vp_ids, :metric_type => metric_type).delete_all
       end
       count_tag_values += tv_count
     end
@@ -111,7 +111,7 @@ module Metric::Purging
 
         _log.info("Purging #{current_window} metrics.")
         count, = Benchmark.realtime_block(:purge_metrics) do
-          scope.unscoped.delete_all(:id => batch_ids)
+          scope.unscoped.where(:id => batch_ids).delete_all
         end
         break if count == 0
         total += count

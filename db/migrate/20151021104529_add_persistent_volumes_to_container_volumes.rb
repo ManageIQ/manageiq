@@ -31,7 +31,7 @@ class AddPersistentVolumesToContainerVolumes < ActiveRecord::Migration
     remove_column :container_volumes, :status_message, :string
     remove_column :container_volumes, :status_reason, :string
     say_with_time("Deleting ContainerVolumes not belonging to ContainerGroups") do
-      ContainerVolume.delete_all("parent_type != 'ContainerGroup'")
+      ContainerVolume.where("parent_type != 'ContainerGroup'").delete_all
     end
     remove_column :container_volumes, :parent_type, :string
     rename_column :container_volumes, :parent_id, :container_group_id

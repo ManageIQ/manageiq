@@ -25,7 +25,7 @@ puts "[#{Time.now}] Removing previously migrated policies..."
 MiqPolicy.destroy_all
 MiqPolicySet.destroy_all
 # Remove policy assignments refrencing new models
-Tag.destroy_all(["name like ?", "/miq_policy/assignment/miq_policy_set/%"])
+Tag.where(["name like ?", "/miq_policy/assignment/miq_policy_set/%"]).destroy_all
 #
 puts "[#{Time.now}] Removing previously migrated policies... Complete"
 puts

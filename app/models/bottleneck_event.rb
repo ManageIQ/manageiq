@@ -58,7 +58,7 @@ class BottleneckEvent < ApplicationRecord
   end
 
   def self.delete_future_events_for_obj(obj)
-    delete_all(:resource => obj, :future => true)
+    where(:resource => obj, :future => true).delete_all
   end
 
   def context

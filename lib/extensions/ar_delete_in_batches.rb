@@ -17,7 +17,7 @@ module ArDeleteInBatches
         # do not fetch the ids
         cur_ids = ids
 
-        count = unscoped.delete_all(:id => cur_ids)
+        count = unscoped.where(:id => cur_ids).delete_all
         break if count == 0
         total += count
 
