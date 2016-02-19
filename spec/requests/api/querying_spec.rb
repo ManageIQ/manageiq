@@ -93,8 +93,8 @@ describe ApiController do
     end
 
     it "supports sorting with physical attributes" do
-      FactoryGirl.create(:vm_vmware, :name => "vmware_vm")
-      FactoryGirl.create(:vm_redhat, :name => "redhat_vm")
+      FactoryGirl.create(:vm_vmware, :vendor => "vmware", :name => "vmware_vm")
+      FactoryGirl.create(:vm_redhat, :vendor => "redhat", :name => "redhat_vm")
 
       run_get vms_url, :sort_by => "vendor", :sort_order => "asc", :expand => "resources"
 
