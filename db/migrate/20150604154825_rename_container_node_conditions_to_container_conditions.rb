@@ -15,7 +15,7 @@ class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migrati
 
   def down
     say_with_time("remove all container group conditions to leave only container node conditions") do
-      ContainerCondition.destroy_all(:container_entity_type => 'ContainerGroup')
+      ContainerCondition.where(:container_entity_type => 'ContainerGroup').destroy_all
     end
 
     remove_column :container_conditions, :container_entity_type
