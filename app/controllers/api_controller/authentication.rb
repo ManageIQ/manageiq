@@ -29,15 +29,15 @@ class ApiController
     def require_api_user_or_token
       log_request_initiated
       @auth_token = @auth_user = nil
-      if request.env.key?('HTTP_X_AUTH_TOKEN')
-        @auth_token  = request.env['HTTP_X_AUTH_TOKEN']
+      if request.headers['X-Auth-Token']
+        @auth_token  = request.headers['X-Auth-Token']
         if !@api_token_mgr.token_valid?(@module, @auth_token)
           raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
         else
           @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
 
-          unless request.env['HTTP_X_AUTH_SKIP_TOKEN_RENEWAL'] == 'true'
+          unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
             @api_token_mgr.reset_token(@module, @auth_token)
           end
 
@@ -99,7 +99,7 @@ class ApiController
     end
 
     def authorize_user_group(user_obj)
-      group_name = request.env['HTTP_X_MIQ_GROUP']
+      group_name = request.headers['X-MIQ-Group']
       if group_name.present?
         group_obj = user_obj.miq_groups.find_by_description(group_name)
         raise AuthenticationError, "Invalid Authorization Group #{group_name} specified" if group_obj.nil?
