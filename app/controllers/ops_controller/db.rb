@@ -174,23 +174,23 @@ module OpsController::Db
       # If root node is selected
       if @sb[:active_tab] == "db_summary"
         @record = VmdbDatabase.my_database
-        @right_cell_text = _("%s Summary") % "VMDB"
+        @right_cell_text = _("VMDB Summary")
       elsif @sb[:active_tab] == "db_utilization"
         @record = VmdbDatabase.my_database
         perf_gen_init_options               # Initialize perf chart options, charts will be generated async
         @sb[:record_class] = @record.class.base_class.name  # Hang on to record class/id for async trans
         @sb[:record_id] = @record.id
-        @right_cell_text = _("%s Utilization") % "VMDB"
+        @right_cell_text = _("VMDB Utilization")
       else
         @right_cell_text = case @sb[:active_tab]
                            when "db_connections"
-                             @right_cell_text = _("%s Client Connections") % "VMDB"
+                             @right_cell_text = _("VMDB Client Connections")
                            when "db_details"
-                             @right_cell_text = _("All %s") % ui_lookup(:models => "VmdbTable")
+                             @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "VmdbTable")}
                            when "db_indexes"
-                             @right_cell_text = _("All %s Indexes") % "VMDB"
+                             @right_cell_text = _("All VMDB Indexes")
                            else
-                             @right_cell_text = _("%s Settings") % "VMDB"
+                             @right_cell_text = _("VMDB Settings")
                            end
         @force_no_grid_xml = true
         db_list
@@ -215,7 +215,7 @@ module OpsController::Db
         perf_gen_init_options               # Initialize perf chart options, charts will be generated async
         @sb[:record_class] = @record.class.base_class.name  # Hang on to record class/id for async trans
         @sb[:record_id] = @record.id
-        @right_cell_text = _("%s Utilization") % "VMDB Table \"#{@record.name}\""
+        @right_cell_text = _("VMDB \"%{name}\" Table Utilization") % {:name => @record.name}
         @tab_text = @record.name
       else
         @sb[:active_tab] = "db_details"

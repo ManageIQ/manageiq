@@ -38,7 +38,7 @@ module OpsController::Settings::Schedules
     when "cancel"
       @schedule = MiqSchedule.find_by_id(params[:id])
       if !@schedule || @schedule.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqSchedule"))
+        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "MiqSchedule")})
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqSchedule"), :name => @schedule.name})
       end
@@ -66,7 +66,7 @@ module OpsController::Settings::Schedules
       begin
         schedule.save!
       rescue StandardError => bang
-        add_flash(_("Error when adding a new schedule: ") << bang.message, :error)
+        add_flash(_("Error when adding a new schedule: %{message}") % {:message => bang.message}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -180,7 +180,7 @@ module OpsController::Settings::Schedules
       replace_right_cell("root", [:settings])
     else # showing 1 schedule, delete it
       if params[:id].nil? || MiqSchedule.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:table => "miq_schedule"), :error)
+        add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "miq_schedule")}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -196,20 +196,20 @@ module OpsController::Settings::Schedules
 
   def schedule_toggle(enable)
     msg = if enable
-            _("The selected %s were enabled")
+            _("The selected Schedules were enabled")
           else
-            _("The selected %s were disabled")
+            _("The selected Schedules were disabled")
           end
 
     schedules = find_checked_items
     if schedules.empty?
-      add_flash(msg % ui_lookup(:models => "MiqSchedule"), :error)
+      add_flash(msg, :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
     schedule_enable_disable(schedules, enable)  unless schedules.empty?
-    add_flash(msg % ui_lookup(:models => "MiqSchedule"), :info, true) unless flash_errors?
+    add_flash(msg, :info, true) unless flash_errors?
     schedule_build_list
     settings_get_info("st")
     replace_right_cell("root")
@@ -236,7 +236,7 @@ module OpsController::Settings::Schedules
     begin
       MiqSchedule.new.verify_file_depot(uri_settings)
     rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
+      add_flash(_("Error during 'Validate': %{message}") % {:message => bang.message}, :error)
     else
       add_flash(_('Depot Settings successfuly validated'))
     end
@@ -399,11 +399,11 @@ module OpsController::Settings::Schedules
     if params[:action_typ] != "db_backup"
       if %w(global my).include?(params[:filter_typ])
         if params[:filter_value].blank?  # Check for search filter chosen
-          add_flash(_("%s must be selected") % "filter", :error)
+          add_flash(_("Filter must be selected"), :error)
           valid = false
         end
       elsif sched.filter.exp.keys.first != "IS NOT NULL" && params[:filter_value].blank? # Check for empty filter value
-        add_flash(_("%s must be selected") % "filter value", :error)
+        add_flash(_("Filter value must be selected"), :error)
         valid = false
       end
     end
