@@ -51,7 +51,6 @@ class C3Charting < Charting
     }
     sample[:data][:groups] = [['data1','data2', 'data3']] if _options[:graph_type].include? 'Stacked'
     sample
-
   end
 
   def js_load_statement(delayed = false)
