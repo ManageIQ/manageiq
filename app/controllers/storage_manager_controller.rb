@@ -76,18 +76,19 @@ class StorageManagerController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %s was cancelled by the user") % ui_lookup(:table => "StorageManager")
+        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:table => "StorageManager")}
       end
     when "add"
       if @edit[:new][:sm_type].nil?
-        add_flash(_("%s is required") % "Type", :error)
+        add_flash(_("Type is required"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
       if @edit[:new][:sm_type].nil? || @edit[:new][:sm_type] == ""
-        add_flash(_("%s is required") % "Type", :error)
+        add_flash(_("Type is required"), :error)
       end
       unless @flash_array
         add_sm = StorageManager.new_of_type(@edit[:new][:sm_type])
@@ -116,7 +117,7 @@ class StorageManagerController < ApplicationController
     when "validate"
       # Need to pass in smtype so the proper mixins are loaded.
       if @edit[:new][:sm_type].blank?
-        add_flash(_("%s is required") % "Type", :error)
+        add_flash(_("Type is required"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -422,7 +423,7 @@ class StorageManagerController < ApplicationController
 
     else # showing 1 Storage Manager
       if params[:id].nil? || StorageManager.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "StorageManager"), :error)
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "StorageManager")}, :error)
         show_list
         @refresh_partial = "layouts/gtl"
       else
@@ -445,7 +446,7 @@ class StorageManagerController < ApplicationController
       begin
         StorageManager.refresh_inventory(sms, true)
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % task << bang.message,
+        add_flash(_("Error during '%{task}': %{message}") % {:task => task, :message => bang.message},
                   :error)
         AuditEvent.failure(:userid => session[:userid], :event => "storage_manager_#{task}",
           :message => "Error during '" << task << "': " << bang.message,
@@ -467,7 +468,10 @@ class StorageManagerController < ApplicationController
         begin
           sm.send(task.to_sym) if sm.respond_to?(task)    # Run the task
         rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "StorageManager"), :name => sm_name, :task => task} << bang.message,
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
+                      {:model   => ui_lookup(:model => "StorageManager"),
+                       :name    => sm_name, :task => task,
+                       :message => bang.message},
                     :error)
           AuditEvent.failure(:userid => session[:userid], :event => "storage_manager_#{task}",
             :message => "#{sm_name}: Error during '" << task << "': " << bang.message,

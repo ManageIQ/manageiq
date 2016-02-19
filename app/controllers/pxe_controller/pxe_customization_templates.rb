@@ -98,7 +98,8 @@ module PxeController::PxeCustomizationTemplates
     if params[:button] == "cancel"
       @edit = session[:edit] = nil # clean out the saved info
       @ct.id ? add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeCustomizationTemplate"), :name => @ct.name}) :
-              add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "PxeCustomizationTemplate")})
+              add_flash(_("Add of new %{model} was cancelled by the user") %
+                         {:model => ui_lookup(:model => "PxeCustomizationTemplate")})
       get_node_info(x_node)
       replace_right_cell(x_node)
     elsif ["add", "save"].include?(params[:button])

@@ -94,7 +94,8 @@ module ReportController::Reports
         audit = {:event => "report_record_delete", :message => "[#{rpt_name}] Record deleted", :target_id => rpt.id, :target_class => "MiqReport", :userid => session[:userid]}
         rpt.destroy
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :task => 'miq_report_delete'} << bang.message, :error)
+        add_flash(_("%{model} \"%{name}\": Error during 'miq_report_delete': %{message}") %
+                    {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :message =>  bang.message}, :error)
         render :update do |page|
           page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
         end
@@ -223,37 +224,37 @@ module ReportController::Reports
     active_tab = "edit_1"
     if @edit[:new][:model] == TREND_MODEL
       unless @edit[:new][:perf_trend_col]
-        add_flash(_("%s is required") % "Trending for", :error)
+        add_flash(_("Trending for is required"), :error)
       end
       unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
-        add_flash(_("%s must be configured") % "Trend Target Limit", :error)
+        add_flash(_("Trend Target Limit must be configured"), :error)
       end
       if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
-        add_flash(_("%s must be numeric") % "Trend Target Limit", :error)
+        add_flash(_("Trend Target Limit must be numeric"), :error)
       end
     else
       if @edit[:new][:fields].length == 0
-        add_flash(_("At least one %s must be selected") % "Field", :error)
+        add_flash(_("At least one Field must be selected"), :error)
       end
     end
 
     if @edit[:new][:model] == "Chargeback"
       unless @edit[:new][:cb_show_typ]
-        add_flash(_("%s must be selected") % "Show Costs by", :error)
+        add_flash(_("Show Costs by must be selected"), :error)
         active_tab = "edit_3"
       else
         if @edit[:new][:cb_show_typ] == "owner"
           unless @edit[:new][:cb_owner_id]
-            add_flash(_("%s must be selected") % "An Owner", :error)
+            add_flash(_("An Owner must be selected"), :error)
             active_tab = "edit_3"
           end
         elsif @edit[:new][:cb_show_typ] == "tag"
           unless @edit[:new][:cb_tag_cat]
-            add_flash(_("%s must be selected") % "A Tag Category", :error)
+            add_flash(_("A Tag Category must be selected"), :error)
             active_tab = "edit_3"
           else
             unless @edit[:new][:cb_tag_value]
-              add_flash(_("%s must be selected") % "A Tag", :error)
+              add_flash(_("A Tag must be selected"), :error)
               active_tab = "edit_3"
             end
           end
@@ -274,13 +275,15 @@ module ReportController::Reports
                                               s[:value])
                 msg = case s_idx + 1
                       when 1
-                        _("Styling for '%s', first value is in error: ")
+                        add_flash(_("Styling for '%{item}', first value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
                       when 2
-                        _("Styling for '%s', second value is in error: ")
+                        add_flash(_("Styling for '%{item}', second value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
                       when 3
-                        _("Styling for '%s', third value is in error: ")
+                        add_flash(_("Styling for '%{item}', third value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
                       end
-                add_flash((msg % f.first) + e.message, :error)
                 active_tab = "edit_9"
               end
             end
@@ -305,42 +308,42 @@ module ReportController::Reports
     case @sb[:miq_tab].split("_")[1]
     when "8"
       if @edit[:new][:fields].length == 0
-        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Consolidation", :error)
+        add_flash(_("Consolidation tab is not available until at least 1 field has been selected"), :error)
       end
     when "2"
       if @edit[:new][:fields].length == 0
-        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Formatting", :error)
+        add_flash(_("Formatting tab is not available until at least 1 field has been selected"), :error)
       end
     when "3"
       if @edit[:new][:model] == TREND_MODEL
         unless @edit[:new][:perf_trend_col]
-          add_flash(_("%{tab} tab is not available until %{field} field has been selected") % {:tab => "Filter", :field => "Trending for"}, :error)
+          add_flash(_("Filter tab is not available until Trending for field has been selected"), :error)
         end
         unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
-          add_flash(_("%{tab} tab is not available until %{field} has been configured") % {:tab => "Filter", :field => "Trending Target Limit"}, :error)
+          add_flash(_("Filter tab is not available until Trending Target Limit has been configured"), :error)
         end
         if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
           add_flash(_("%s must be numeric") % "Trend Target Limit", :error)
         end
       else
         if @edit[:new][:fields].length == 0
-          add_flash(_("%s tab is not available until at least 1 field has been selected") % "Filter", :error)
+          add_flash(_("Filter tab is not available until at least 1 field has been selected"), :error)
         end
       end
     when "4"
       if @edit[:new][:fields].length == 0
-        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Summary", :error)
+        add_flash(_("Summary tab is not available until at least 1 field has been selected"), :error)
       end
     when "5"
       if @edit[:new][:fields].length == 0
-        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Charts", :error)
+        add_flash(_("Charts tab is not available until at least 1 field has been selected"), :error)
       elsif @edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING
-        add_flash(_("%s tab is not available unless a sort field has been selected") % "Charts", :error)
+        add_flash(_("Charts tab is not available unless a sort field has been selected"), :error)
         active_tab = "edit_4"
       end
     when "6"
       if @edit[:new][:fields].length == 0
-        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Timeline", :error)
+        add_flash(_("Timeline tab is not available until at least 1 field has been selected"), :error)
       else
         found = false
         @edit[:new][:fields].each do |field|
@@ -350,35 +353,35 @@ module ReportController::Reports
           end
         end
         unless found
-          add_flash(_("%s tab is not available unless at least 1 time field has been selected") % "Timeline", :error)
+          add_flash(_("Timeline tab is not available unless at least 1 time field has been selected"), :error)
         end
       end
     when "7"
       if @edit[:new][:model] == TREND_MODEL
         unless @edit[:new][:perf_trend_col]
-          add_flash(_("%{tab} tab is not available until %{field} field has been selected") % {:tab => "Preview", :field => "Trending for"}, :error)
+          add_flash(_("Preview tab is not available until Trending for field has been selected"), :error)
         end
         unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
-          add_flash(_("%{tab} tab is not available until %{field} has been configured") % {:tab => "Preview", :field => "Trend Target Limit"}, :error)
+          add_flash(_("Preview tab is not available until Trend Target Limit has been configured"), :error)
         end
         if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
-          add_flash(_("%s must be numeric") % "Trend Target Limit: Value", :error)
+          add_flash(_("Trend Target Limit: Value must be numeric"), :error)
         end
       else
         if @edit[:new][:fields].length == 0
-          add_flash(_("%s tab is not available until at least 1 field has been selected") % "Preview", :error)
+          add_flash(_("Preview tab is not available until at least 1 field has been selected"), :error)
         elsif @edit[:new][:model] == "Chargeback"
           unless @edit[:new][:cb_show_typ] &&
                  ((@edit[:new][:cb_show_typ] == "owner" && @edit[:new][:cb_owner_id]) ||
                    (@edit[:new][:cb_show_typ] == "tag" && @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]))
-            add_flash(_("%{tab} tab is not available until %{field} has been configured") % {:tab => "Preview", :field => "Chargeback Filters"}, :error)
+            add_flash(_("Preview tab is not available until Chargeback Filters has been configured"), :error)
             active_tab = "edit_3"
           end
         end
       end
     when "9"
       if @edit[:new][:fields].length == 0
-        add_flash(_("%s tab is not available until at least 1 field has been selected") % "Styling", :error)
+        add_flash(_("Styling tab is not available until at least 1 field has been selected"), :error)
       end
     end
     @sb[:miq_tab] = active_tab if flash_errors?

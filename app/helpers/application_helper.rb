@@ -15,7 +15,8 @@ module ApplicationHelper
 
   def documentation_link(url = nil, documentation_subject = "")
     if url
-      link_to(_("For more information, visit the %s documentation.") % documentation_subject, url, :rel => 'external',
+      link_to(_("For more information, visit the %{subject} documentation.") % {:subject => documentation_subject},
+              url, :rel => 'external',
               :class => 'documentation-link', :target => '_blank')
     end
   end
@@ -1060,7 +1061,7 @@ module ApplicationHelper
   def record_no_longer_exists?(what, model = nil)
     return false unless what.nil?
     add_flash(@bang || model.present? ?
-      _("%s no longer exists") % ui_lookup(:model => model) :
+      _("%{model} no longer exists") % {:model => ui_lookup(:model => model)} :
       _("Error: Record no longer exists in the database"))
     session[:flash_msgs] = @flash_array
     # Error message is displayed in 'show_list' action if such action exists
@@ -1333,7 +1334,7 @@ module ApplicationHelper
     if %w(Job MiqTask).include?(db)
       img_attr = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
       if row["state"].downcase == "finished" && row["status"]
-        row_status = _("Status = %s") % row["status"].capitalize
+        row_status = _("Status = %{row}") % {:row => row["status"].capitalize}
         strsearch = row["message"].gsub!("cancel", "cancel")
         if row["status"].downcase == "ok" && strsearch.nil?
           image = "checkmark"
