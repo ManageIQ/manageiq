@@ -26,7 +26,7 @@ gem "httpclient",              "~>2.5.3",           :require => false
 gem "image-inspector-client",  "~>1.0.0",           :require => false
 gem "kubeclient",              "=0.8.0",            :require => false
 gem "hawkular-client",         "~>0.2.0",           :require => false
-gem "linux_admin",             "~>0.15.0",          :require => false
+gem "linux_admin",             "~>0.16.0",          :require => false
 gem "log4r",                   "=1.1.8",            :require => false
 gem "memoist",                 "~>0.14.0",          :require => false
 gem "memory_buffer",           ">=0.1.0",           :require => false
