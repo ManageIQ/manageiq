@@ -52,7 +52,7 @@ module MiqAeDatastore
     end
 
     def self.export_all_classes_for_namespace(ns, xml)
-      MiqAeClass.find_all_by_namespace_id(ns.id.to_i).sort_by(&:fqname).each  do  |c|
+      MiqAeClass.where(:namespace_id => ns.id.to_i).sort_by(&:fqname).each  do  |c|
         c.to_export_xml(:builder => xml, :skip_instruct => true, :indent => 2)
       end
     end
