@@ -39,7 +39,7 @@ class OntapFileShareController < CimInstanceController
 
     @edit[:new][:ds_name] = params[:ds_name] if params[:ds_name]
     @edit[:new][:host_id] = params[:host_id] if params[:host_id]
-    render :nothing => true                                 # No response needed
+    head :ok                                 # No response needed
   end
 
   private ############################

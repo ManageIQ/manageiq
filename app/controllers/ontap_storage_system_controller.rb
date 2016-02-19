@@ -44,7 +44,7 @@ class OntapStorageSystemController < CimInstanceController
     @edit[:new][:ld_name] = params[:ld_name] if params[:ld_name]
     @edit[:new][:aggregate_name] = params[:aggregate_name] if params[:aggregate_name]
     @edit[:new][:ld_size] = params[:ld_size] if params[:ld_size]
-    render :nothing => true                                 # No response needed
+    head :ok                                 # No response needed
   end
 
   private ############################

@@ -23,7 +23,7 @@ class ReportController < ApplicationController
 
   def export_field_changed
     @sb[:choices_chosen] = params[:choices_chosen] ? params[:choices_chosen].split(',') : []
-    render :nothing => true
+    head :ok
   end
 
   REPORT_X_BUTTON_ALLOWED_ACTIONS = {
@@ -175,7 +175,7 @@ class ReportController < ApplicationController
 
       replace_right_cell(:replace_trees => trees_to_replace)
     else
-      render :nothing => true
+      head :ok
     end
   end
 

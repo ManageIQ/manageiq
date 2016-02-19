@@ -10,7 +10,7 @@ module OpsController::Settings::Common
   def settings_form_field_changed
     tab = params[:id] ? "settings_#{params[:id]}" : nil # workaround to prevent an error that happens when IE sends a transaction when tab is changed when there is text_area in the form, checking for tab id
     if tab && tab != @sb[:active_tab] && params[:id] != 'new'
-      render :nothing => true
+      head :ok
       return
     end
 

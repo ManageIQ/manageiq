@@ -39,7 +39,7 @@ module ApplicationController::Automate
 
   def resolve_button_copy # Copy current URI as an automate button
     session[:resolve_object] = copy_hash(@resolve)
-    render :nothing => true
+    head :ok
   end
   private :resolve_button_copy
 
