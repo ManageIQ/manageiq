@@ -82,4 +82,32 @@ describe ChargebackController do
       expect(response.body).to_not be_empty
     end
   end
+
+  context "#process_cb_rates" do
+    it "delete unassigned" do
+      cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage", :description => "Storage Rate")
+
+      rates = [cbr.id]
+      controller.send(:process_cb_rates, rates, "destroy")
+
+      expect(controller.send(:flash_errors?)).to be_falsey
+
+      flash_array = assigns(:flash_array)
+      expect(flash_array.first[:message]).to include("Delete successful")
+    end
+
+    it "delete assigned" do
+      cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage", :description => "Storage Rate")
+      host = FactoryGirl.create(:host)
+      cbr.assign_to_objects(host)
+
+      rates = [cbr.id]
+      controller.send(:process_cb_rates, rates, "destroy")
+
+      expect(controller.send(:flash_errors?)).to be_truthy
+
+      flash_array = assigns(:flash_array)
+      expect(flash_array.first[:message]).to include("rate is assigned and cannot be deleted")
+    end
+  end
 end

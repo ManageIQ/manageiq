@@ -305,11 +305,16 @@ class ChargebackController < ApplicationController
         end
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
-      add_flash(_("The selected %{records} were deleted") %
-        {:records => ui_lookup(:models => "ChargebackRate")}, :info, true) unless flash_errors?
-      cb_rates_list
-      @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
-      replace_right_cell([:cb_rates])
+      if flash_errors? && @flash_array.count == 1
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        cb_rates_list
+        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
+                           :model => ui_lookup(:models => "ChargebackRate")}
+        replace_right_cell([:cb_rates])
+      end
     else # showing 1 rate, delete it
       if params[:id].nil? || ChargebackRate.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
@@ -321,12 +326,17 @@ class ChargebackController < ApplicationController
       end
       cb_rate = ChargebackRate.find_by_id(params[:id])
       process_cb_rates(rates, "destroy")  unless rates.empty?
-      add_flash(_("The selected %{record} was deleted") %
-        {:record => ui_lookup(:model => "ChargebackRate")}, :info, true) unless flash_errors?
       self.x_node = "xx-#{cb_rate.rate_type}"
-      cb_rates_list
-      @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
-      replace_right_cell([:cb_rates])
+      if flash_errors?
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        cb_rates_list
+        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
+                           :model => ui_lookup(:models => "ChargebackRate")}
+        replace_right_cell([:cb_rates])
+      end
     end
   end
 

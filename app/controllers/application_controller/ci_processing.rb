@@ -957,34 +957,48 @@ module ApplicationController::CiProcessing
       description = get_record_display_name(elem)
       name        = elem.send(order_field.to_sym)
       if task == "destroy"
-        audit = {:event        => "#{klass.name.downcase}_record_delete",
-                 :message      => "[#{name}] Record deleted",
-                 :target_id    => id,
-                 :target_class => klass.base_class.name,
-                 :userid       => session[:userid]}
-      end
-
-      model_name = ui_lookup(:model => klass.name)  # Lookup friendly model name in dictionary
-      begin
-        elem.send(task.to_sym) if elem.respond_to?(task)    # Run the task
-      rescue => err
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
-          {:model         => model_name,
-           :name          => description,
-           :task          => (display_name || task),
-           :error_message => err.message}, :error)
+        process_element_destroy(elem, klass, name)
       else
-        if task == "destroy"
-          AuditEvent.success(audit)
-          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => description})
+        model_name = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
+        begin
+          elem.send(task.to_sym) if elem.respond_to?(task) # Run the task
+        rescue => bang
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_msg}") %
+                   {:model => model_name, :name => record_name, :task => (display_name || task),
+                    :error_msg => bang.message}, :error)
         else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => model_name, :name => description, :task => (display_name || task)})
+          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") %
+                   {:model => model_name, :name => description, :task => (display_name || task)})
         end
       end
     end
   end
 
   private ############################
+
+  def process_element_destroy(element, klass, name)
+    return unless element.respond_to?(:destroy)
+
+    audit = {:event        => "#{klass.name.downcase}_record_delete",
+             :message      => "[#{name}] Record deleted",
+             :target_id    => element.id,
+             :target_class => klass.base_class.name,
+             :userid       => session[:userid]}
+
+    model_name  = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
+    record_name = get_record_display_name(element)
+
+    element.destroy
+
+    if element.destroyed?
+      AuditEvent.success(audit)
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => record_name})
+    else
+      error_msg = element.errors.collect { |_attr, msg| msg }.join(';')
+      add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
+               {:model => model_name, :name => record_name, :error_msg => error_msg}, :error)
+    end
+  end
 
   # find the record that was chosen
   def identify_record(id, klass = self.class.model)
