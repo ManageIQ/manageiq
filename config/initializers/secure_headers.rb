@@ -11,11 +11,11 @@ SecureHeaders::Configuration.configure do |config|
   }
   config.csp = {
     :enforce     => true,
-    :default_src => "'self'",
-    :frame_src   => "'self'",
-    :connect_src => "'self'",
-    :style_src   => "'unsafe-inline' 'self'",
-    :script_src  => "'unsafe-eval' 'unsafe-inline' 'self'",
-    :report_uri  => "/dashboard/csp_report"
+    :default_src => ["'self'"],
+    :frame_src   => ["'self'"],
+    :connect_src => ["'self'"],
+    :style_src   => ["'unsafe-inline'", "'self'"],
+    :script_src  => ["'unsafe-eval'", "'unsafe-inline'", "'self'"],
+    :report_uri  => ["/dashboard/csp_report"]
   }
 end
