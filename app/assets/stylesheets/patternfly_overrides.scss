@@ -1,11 +1,10 @@
 // NAVBAR TESTING
 
-.navbar-pf-alt { background-color: #063451; background-image: url(../images/bg-navbar.png); border-top: 0px; }
 .navbar-pf-alt .navbar-brand .navbar-brand-name { height: 20px; margin-top: 10px; }
 .layout-pf-alt-fixed .nav-pf-vertical-alt {overflow: visible !important}
 .navbar__user-name { display: inline-block; color: #FFFFFF; margin-left: 1ex; }
 
-.nav-pf-vertical-alt {width: 200px !important;background: #292e34}
+.nav-pf-vertical-alt {background: #292e34}
 .nav-pf-vertical-alt .list-group-item, .nav-pf-vertical-alt li {background: #292e34}
 .nav-pf-vertical-alt .list-group-item, .nav-pf-vertical-alt li {border-color: #000}
 
@@ -23,15 +22,7 @@
 .nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a:hover {background-color: #393f44; border-color: #393f44; color: #fff}
 .nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a.open:hover {background-color: #393f44;}
 
-
-
-.container-pf-alt-nav-pf-vertical-alt {
-  margin-left: 200px !important;
-}
-.container-pf-alt-nav-pf-vertical-alt.collapsed-nav {
-  margin-left: 75px !important;
-}
-
+.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown a.open:hover{background-color: #000 !important}
 
 .layout-pf-alt-fixed .nav-pf-vertical-alt .dropdown-menu {
   top: 0;
@@ -40,6 +31,10 @@
   margin-left: -1px;
 }
 
+li.leaf a:before, li.leaf a:after{
+    border-bottom: none;
+    content: none;
+}
 
 /////////////////////////
 
@@ -68,7 +63,6 @@
   line-height: 26px;
 }
 
-
 #main-content {
   overflow: auto;
 }
@@ -76,9 +70,6 @@
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: $screen-sm) {
-  body {
-    padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-  }
   .scrollable-sm {
     height: 100% !important; //overrides the height calculations used to create the scrollable area
     overflow: auto;
@@ -88,23 +79,12 @@
 /* This media query makes the left column and the main area independently scrollable and sets the paging_div at the bottom of the column */
 
 @media (min-width: $screen-sm) {
-  body {
-    padding-top: px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-  }
 
   .login-pf body {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
-  .scrollable {
-    height: 100%;
-    overflow: auto;
-  }
 
-  /* compensates for left-padding of first rendered form-group */
-  .toolbar-pf > .col-md-12 {
-    padding-left: 0 !important;
-  }
 
   #paging_div {
     bottom: 0;
@@ -132,6 +112,7 @@
 /* Style changes applied when customer logo is active */
 
 li.brand-white-label.whitelabeled {
+  margin-top: 10px;
   width: 350px;
   height: 38px;
   background: url(/upload/custom_logo.png) right top no-repeat;
@@ -353,7 +334,7 @@ iframe, .iframe {
 }
 .resizer-box {
   position: absolute;
-  bottom: 40px;
+  bottom: 50px;
   left: -18px;
   width: 38px
 }
