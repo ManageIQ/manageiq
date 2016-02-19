@@ -1,4 +1,4 @@
-%header{:class => "navbar navbar-pf-alt #{current_tenant.logo? ? "whitelabeled" : ""}", :role => "navigation"}
+%header{:class => "navbar navbar-pf-alt", :role => "navigation"}
   %div{:class => "navbar-header"}
     %button{:type => "button", :class => "navbar-toggle", "data-target" => ".navbar-collapse-1", "data-toggle" => "collapse"}
       %span.sr-only
@@ -14,7 +14,7 @@
       - Menu::Manager.menu(:top_right) do |menu_section|
         - if menu_section.visible?
           %li.dropdown
-            %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
+            %a{:href => "#", :class => "dropdown-toggle nav-item-iconic", "data-toggle" => "dropdown"}
               = _(menu_section.name)
               %b.caret
             %ul.dropdown-menu#custom_menu_div
