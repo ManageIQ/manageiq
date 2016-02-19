@@ -23,5 +23,5 @@ BinaryBlob.where(:id => blob_ids).find_each do |bb|
   end
 
   # clear the binary_blob_parts from memory
-  bb.clear_association_cache
+  bb.send(:clear_association_cache)
 end

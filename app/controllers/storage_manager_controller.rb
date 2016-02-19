@@ -458,7 +458,7 @@ class StorageManagerController < ApplicationController
             :target_class => "StorageManager")
       end
     else
-      StorageManager.find_all_by_id(sms, :order => "lower(name)").each do |sm|
+      StorageManager.where(:id => sms).order("lower(name)").each do |sm|
         id = sm.id
         sm_name = sm.name
         if task == "destroy"

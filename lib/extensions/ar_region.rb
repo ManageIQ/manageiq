@@ -167,5 +167,3 @@ module ArRegion
     self.class.split_id(id)
   end
 end
-
-ApplicationRecord.include ArRegion

@@ -244,7 +244,7 @@ class MiqRegion < ApplicationRecord
   def self.log_not_under_management(prefix)
     hosts_objs = Host.where(:ems_id => nil)
     hosts      = hosts_objs.count
-    vms        = VmOrTemplate.count(:conditions =>  {:ems_id => nil})
+    vms        = VmOrTemplate.where(:ems_id => nil).count
     sockets    = my_region.aggregate_physical_cpus(hosts_objs)
     $log.info("#{prefix}, Not Under Management: VMs: [#{vms}], Hosts: [#{hosts}], Sockets: [#{sockets}]")
   end

@@ -33,7 +33,7 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 gem "net-ldap",                       "~>0.7.0",   :require => false
 gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/matthewd/rubyrep.git", :branch => "rails5"
 gem "simple-rss",                     "~>1.3.1",   :require => false
-gem "winrm",                          "~>1.5.0",   :require => false
+gem "winrm",                          "~>1.7.0",   :require => false
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
 
 # Not vendored, but required
@@ -57,7 +57,7 @@ gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                           "~>2.13"
 gem "recursive-open-struct",          "~>0.6.1"
 gem "responders",                     "~>2.0"
-gem "secure_headers",                 "~>2.4.4"
+gem "secure_headers",                 "~>2.5.2"
 gem "spice-html5-rails"
 #gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 

@@ -800,7 +800,7 @@ module EmsCommon
           :message => "'#{task}' successfully initiated for #{pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")}",
           :target_class => model.to_s)
     elsif task == "destroy"
-      model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
+      model.where(:id => emss).order("lower(name)").each do |ems|
         id = ems.id
         ems_name = ems.name
         audit = {:event => "ems_record_delete_initiated", :message => "[#{ems_name}] Record delete initiated", :target_id => id, :target_class => model.to_s, :userid => session[:userid]}
@@ -810,7 +810,7 @@ module EmsCommon
       add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
         {:count_model => pluralize(emss.length, ui_lookup(:table => @table_name))}) if @flash_array.nil?
     else
-      model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
+      model.where(:id => emss).order("lower(name)").each do |ems|
         id = ems.id
         ems_name = ems.name
         if task == "destroy"

@@ -108,7 +108,7 @@ module ReportController::Schedules
         add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqSchedule"), :error)
       end
     end
-    MiqSchedule.find_all_by_id(scheds, :order => "lower(name)").each do |sched|
+    MiqSchedule.where(:id => scheds).order("lower(name)").each do |sched|
       MiqSchedule.queue_scheduled_work(sched.id, nil, Time.now.utc.to_i, nil)
       audit = {
         :event        => "queue_scheduled_work",

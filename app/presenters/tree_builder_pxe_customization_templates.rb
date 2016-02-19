@@ -35,12 +35,12 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
     if nodes[1] == "system" || nodes[2] == "system"
       # root node was clicked or if folder node was clicked
       # System templates
-      objects = CustomizationTemplate.find_all_by_pxe_image_type_id(nil)
+      objects = CustomizationTemplate.where(:pxe_image_type_id => nil)
     else
       # root node was clicked or if folder node was clicked
       id =  nodes.length >= 3 ? nodes[2] : nodes[1]
       pxe_img = PxeImageType.find_by_id(from_cid(id))
-      objects = CustomizationTemplate.find_all_by_pxe_image_type_id(pxe_img.id)
+      objects = CustomizationTemplate.where(:pxe_image_type_id => pxe_img.id)
     end
     count_only_or_objects(count_only, objects, "name")
   end

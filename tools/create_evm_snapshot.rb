@@ -14,7 +14,7 @@ ids  = $2.split(',').collect { |id| id.strip!; id.blank? ? nil : id.to_i }.compa
 
 case type
 when 'vm'
-  vms = Vm.find_all_by_id(ids)
+  vms = Vm.where(:id => ids)
   puts "Warning: Unable to find Vms for the following ids: #{ids - vms.collect(&:id)}" if ids.length != vms.length
   return if vms.empty?
 
@@ -23,7 +23,7 @@ when 'vm'
     descs << "Snapshot for scan job: #{MiqUUID.new_guid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
   end
 when 'job'
-  jobs = Job.find_all_by_id(ids)
+  jobs = Job.where(:id => ids)
   puts "Warning: Unable to find Jobs for the following ids: #{ids - jobs.collect(&:id)}" if ids.length != jobs.length
   return if jobs.empty?
 
