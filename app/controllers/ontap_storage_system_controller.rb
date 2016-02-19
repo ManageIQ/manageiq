@@ -84,7 +84,8 @@ class OntapStorageSystemController < CimInstanceController
        ccs.create_logical_disk(@edit[:new][:ld_name],
                                @edit[:new][:aggregate_name],
                                @edit[:new][:ld_size].to_i)
-      add_flash(_("%{model} \"%{name}\": Create Logical Disk successfully initiated") % {:model => ui_lookup(:model => "OntapStorageSystem"), :name => ccs.name})
+      add_flash(_("%{model} \"%{name}\": Create Logical Disk successfully initiated") %
+                  {:model => ui_lookup(:model => "OntapStorageSystem"), :name => ccs.name})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -124,7 +125,9 @@ class OntapStorageSystemController < CimInstanceController
     add_flash(_("Name is required"), :error) if @edit[:new][:ld_name].blank?
     add_flash(_("Aggregate is required"), :error) if @edit[:new][:aggregate_name].blank?
     add_flash(_("Size is required"), :error) if @edit[:new][:ld_size].blank?
-    add_flash(_("Size must be an integer"), :error) if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
+    if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
+      add_flash(_("Size must be an integer"), :error)
+    end
     @flash_array.nil?
   end
 end

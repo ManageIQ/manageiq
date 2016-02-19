@@ -251,7 +251,8 @@ module OpsController::Diagnostics
       begin
         Metric::Capture.perf_capture_gap_queue(from, to, selected_zone)
       rescue StandardError => bang
-        add_flash(_("Error during 'C & U Gap Collection': %{message}") % {:message => bang.message}, :error)  # Push msg and error flag
+        # Push msg and error flag
+        add_flash(_("Error during 'C & U Gap Collection': %{message}") % {:message => bang.message}, :error)
       else
         @edit[:new][:start_date] = @edit[:new][:end_date] = ""
         add_flash(_("C & U Gap Collection successfully initiated"))
@@ -415,8 +416,8 @@ module OpsController::Diagnostics
   def orphaned_records_delete
     MiqReportResult.delete_by_userid(params[:userid])
   rescue StandardError => bang
-    add_flash(_("Error during Orphaned Records delete for user %{id}: %{message}") % {:id => params[:userid],
-                                                                            :message => bang.message}, :error)
+    add_flash(_("Error during Orphaned Records delete for user %{id}: %{message}") % {:id      => params[:userid],
+                                                                                      :message => bang.message}, :error)
     render :update do |page|                    # Use RJS to update the display
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
@@ -830,12 +831,12 @@ module OpsController::Diagnostics
       diagnostics_server_list if @sb[:active_tab] == "diagnostics_server_list"
       @right_cell_text = if my_zone_name == @selected_server.name
                            _("Diagnostics %{model} \"%{name}\" (current)") %
-                             {:name  => @selected_server.description,
-                              :model => ui_lookup(:model => @selected_server.class.to_s)}
+                           {:name  => @selected_server.description,
+                            :model => ui_lookup(:model => @selected_server.class.to_s)}
                          else
                            _("Diagnostics %{model} \"%{name}\"") %
-                             {:name  => @selected_server.description,
-                              :model => ui_lookup(:model => @selected_server.class.to_s)}
+                           {:name  => @selected_server.description,
+                            :model => ui_lookup(:model => @selected_server.class.to_s)}
                          end
     elsif x_node == "root"
       if @sb[:active_tab] == "diagnostics_zones"
@@ -860,8 +861,8 @@ module OpsController::Diagnostics
         diagnostics_server_list
       end
       @right_cell_text = _("Diagnostics %{model} \"%{name}\"") %
-                           {:name  => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",
-                            :model => ui_lookup(:model => "MiqRegion")}
+                         {:name  => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",
+                          :model => ui_lookup(:model => "MiqRegion")}
     elsif active_node && active_node.split('-').first == "svr"
       @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       if @sb[:selected_server_id] == my_server_id
@@ -924,12 +925,12 @@ module OpsController::Diagnostics
       end
       @right_cell_text = if my_server_id == @sb[:selected_server_id]
                            _("Diagnostics %{model} \"%{name}\" (current)") %
-                             {:name  => "#{@selected_server.name} [#{@selected_server.id}]",
-                              :model => ui_lookup(:model => @selected_server.class.to_s)}
+                           {:name  => "#{@selected_server.name} [#{@selected_server.id}]",
+                            :model => ui_lookup(:model => @selected_server.class.to_s)}
                          else
                            _("Diagnostics %{model} \"%{name}\"") %
-                             {:name  => "#{@selected_server.name} [#{@selected_server.id}]",
-                              :model => ui_lookup(:model => @selected_server.class.to_s)}
+                           {:name  => "#{@selected_server.name} [#{@selected_server.id}]",
+                            :model => ui_lookup(:model => @selected_server.class.to_s)}
                          end
     end
   end

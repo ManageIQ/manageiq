@@ -27,14 +27,14 @@ module OpsController::Settings::Upload
       else
         File.open(typ == "custom" ? @@logo_file : @@login_logo_file, "wb") { |f| f.write(params["#{fld}".to_sym][:logo].read) }
         msg = if typ == "custom"
-                _('Custom Logo file "%s" uploaded') % params[fld.to_sym][:logo].original_filename
+                _('Custom Logo file "%{name}" uploaded') % {:name => params[fld.to_sym][:logo].original_filename}
               else
-                _('Custom login file "%s" uploaded') % params[fld.to_sym][:logo].original_filename
+                _('Custom login file "%{name}" uploaded') % {:name => params[fld.to_sym][:logo].original_filename}
               end
         err = false
       end
     else
-      msg = _("Use the Browse button to locate %s file") % ".png image"
+      msg = _("Use the Browse button to locate .png image file")
       err = true
     end
     redirect_to :action => 'explorer', :flash_msg => msg, :flash_error => err, :no_refresh => true
@@ -93,7 +93,7 @@ module OpsController::Settings::Upload
         end
       end
     else
-      msg = _("Use the Browse button to locate %s file") % "CSV"
+      msg = _("Use the Browse button to locate CSV file")
       err = true
     end
     @sb[:show_button] = (@sb[:good] && @sb[:good] > 0)
