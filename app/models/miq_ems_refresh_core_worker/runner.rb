@@ -118,7 +118,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     props.delete("runtime.memoryOverhead")
     return if props.empty?
 
-    vm = VmOrTemplate.find_by_ems_ref_and_ems_id(mor, @ems.id)
+    vm = VmOrTemplate.find_by(:ems_ref => mor, :ems_id => @ems.id)
     return if vm.nil?
 
     new_attrs = {}

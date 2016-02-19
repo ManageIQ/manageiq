@@ -287,7 +287,7 @@ module EmsRefresh::VcUpdates
     type, klass = OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
     return if type.nil?
 
-    obj = klass.find_by_ems_ref_and_ems_id(mor, ems_id)
+    obj = klass.find_by(:ems_ref => mor, :ems_id => ems_id)
     return if obj.nil?
 
     change_set = event[:changeSet]
