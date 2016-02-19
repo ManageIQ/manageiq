@@ -119,5 +119,3 @@ module ToModelHash
     end
   end
 end
-
-ApplicationRecord.include ToModelHash
