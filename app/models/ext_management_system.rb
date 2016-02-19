@@ -348,12 +348,6 @@ class ExtManagementSystem < ApplicationRecord
     hosts.where.not(:ems_cluster_id => nil)
   end
 
-  def clear_association_cache_with_storages
-    @storages = nil
-    clear_association_cache_without_storages
-  end
-  alias_method_chain :clear_association_cache, :storages
-
   alias_method :storages,               :all_storages
   alias_method :datastores,             :all_storages # Used by web-services to return datastores as the property name
 
@@ -554,5 +548,12 @@ class ExtManagementSystem < ApplicationRecord
 
   def tenant_identity
     User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
+  end
+
+  private
+
+  def clear_association_cache
+    @storages = nil
+    super
   end
 end
