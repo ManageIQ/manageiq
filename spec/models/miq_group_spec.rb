@@ -4,6 +4,26 @@ describe MiqGroup do
       @miq_group = FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator")
     end
 
+    describe ".remove_tag_from_all_managed_filters" do
+      let(:other_miq_group) { FactoryGirl.create(:miq_group) }
+      let(:filters) { [["/managed/prov_max_memory/test", "/managed/prov_max_memory/1024"], ["/managed/my_name/test"]] }
+
+      before do
+        @miq_group.set_managed_filters(filters)
+        other_miq_group.set_managed_filters(filters)
+        [@miq_group, other_miq_group].each(&:save)
+      end
+
+      it "removes managed filter from all groups" do
+        MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(filters) }
+
+        MiqGroup.remove_tag_from_all_managed_filters("/managed/my_name/test")
+
+        expected_filters = [["/managed/prov_max_memory/test", "/managed/prov_max_memory/1024"]]
+        MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(expected_filters) }
+      end
+    end
+
     context "#get_filters" do
       it "normal" do
         expected = {:test => "test filter"}

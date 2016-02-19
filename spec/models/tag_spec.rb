@@ -88,4 +88,25 @@ describe Tag do
       expect(Tag.find_by_classification_name("test_entry", nil, ns).name).to eq("#{ns}/test_entry")
     end
   end
+
+  describe "#destroy" do
+    let(:miq_group)       { FactoryGirl.create(:miq_group) }
+    let(:other_miq_group) { FactoryGirl.create(:miq_group) }
+    let(:filters)         { [["/managed/prov_max_memory/test"], ["/managed/my_name/test"]] }
+    let(:tag)             { FactoryGirl.create(:tag, :name => "/managed/my_name/test") }
+
+    before :each do
+      miq_group.set_managed_filters(filters)
+      other_miq_group.set_managed_filters(filters)
+      [miq_group, other_miq_group].each(&:save)
+    end
+
+    it "destroys tag and remove it from all groups's managed filters" do
+      tag.destroy
+
+      expected_filters = [["/managed/prov_max_memory/test"]]
+      MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(expected_filters) }
+      expect(Tag.all).to be_empty
+    end
+  end
 end
