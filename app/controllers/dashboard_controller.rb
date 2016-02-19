@@ -448,8 +448,8 @@ class DashboardController < ApplicationController
 
   # Handle single-signon from login screen
   def kerberos_authenticate
-    if @user_name.blank? && request.env.key?("HTTP_X_REMOTE_USER").present?
-      @user_name = params[:user_name] = request.env["HTTP_X_REMOTE_USER"].split("@").first
+    if @user_name.blank? && request.headers["X-Remote-User"].present?
+      @user_name = params[:user_name] = request.headers["X-Remote-User"].split("@").first
     end
 
     authenticate
@@ -490,7 +490,7 @@ class DashboardController < ApplicationController
     }
 
     if params[:user_name].blank? && params[:user_password].blank? &&
-       request.env["HTTP_X_REMOTE_USER"].blank? &&
+       request.headers["X-Remote-User"].blank? &&
        get_vmdb_config[:authentication][:mode] == "httpd" &&
        get_vmdb_config[:authentication][:sso_enabled] &&
        params[:action] == "authenticate"
