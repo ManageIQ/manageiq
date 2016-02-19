@@ -1,4 +1,4 @@
-SecureHeaders::Configuration.configure do |config|
+SecureHeaders::Configuration.default do |config|
   config.hsts = {
     :max_age            => 20.years.to_i,
     :include_subdomains => false
