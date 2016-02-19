@@ -512,7 +512,7 @@ describe Rbac do
         end
       end
 
-      context "when applying a filter to the host's cluster (FB17114)" do
+      context "when applying a filter to the host and it's cluster (FB17114)" do
         before(:each) do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems')
           @ems_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}"
@@ -540,6 +540,25 @@ describe Rbac do
 
           @template1 = FactoryGirl.create(:template_vmware, :name => "Template1", :host => @host_1, :ext_management_system => @ems)
           @template2 = FactoryGirl.create(:template_vmware, :name => "Template2", :host => @host_2, :ext_management_system => @ems)
+        end
+
+        it "returns all host's VMs and templates when host filter is set up" do
+          @host_1.parent = @hfolder # add host to folder's hierarchy
+          mtc_folder_path_with_host = "#{@mtc_folder_path}/EmsFolder|host/Host|#{@host_1.name}"
+          group.update_attributes(:filters => {"managed" => [], "belongsto" => [mtc_folder_path_with_host]})
+
+          ["ManageIQ::Providers::Vmware::InfraManager::Vm", "Vm"].each do |klass|
+            results2 = Rbac.search(:class => klass, :user => user, :results_format => :objects).first
+            expect(results2.length).to eq(1)
+          end
+
+          results2 = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects).first
+          expect(results2.length).to eq(2)
+
+          ["ManageIQ::Providers::Vmware::InfraManager::Template", "MiqTemplate"].each do |klass|
+            results2 = Rbac.search(:class => klass, :user => user, :results_format => :objects).first
+            expect(results2.length).to eq(1)
+          end
         end
 
         it "get all the descendants without belongsto filter" do

@@ -116,21 +116,24 @@ module MiqFilter
 
     r = parts.shift
     klass, name = r.split("|")
-    obj = klass.constantize.find_by_name(name)
+    klass = klass.constantize
+    obj = klass.find_by_name(name)
 
     if obj.nil?
-      _log.warn("lookup for klass=#{klass.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")
+      _log.warn("lookup for klass=#{klass.to_s.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")
       return []
     end
 
     result = [obj]
     parts.each do |p|
-      klass, name = p.split("|")
+      tag_part_klass, name = p.split("|")
+      tag_part_klass = tag_part_klass.constantize
+
       match = nil
 
       obj.with_relationship_type('ems_metadata') do
         obj.children.each do |c|
-          if c.class.to_s == klass && c.name == name
+          if c.kind_of?(tag_part_klass) && c.name == name
             match = c
             break
           end
@@ -174,8 +177,12 @@ module MiqFilter
           end
           break if filtered.last == p
         else
-          vcmeta = belongsto2object(tag)
+          vcmeta_list = belongsto2object_list(tag)
+          vcmeta_list.pop if vcmeta_list.last.kind_of?(Host)
+          vcmeta = vcmeta_list.last
+
           next if vcmeta.nil?
+
           if vcmeta == p || vcmeta.with_relationship_type("ems_metadata") { vcmeta.is_ancestor_of?(p) }
             filtered.push(p)
             break
