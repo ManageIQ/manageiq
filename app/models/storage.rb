@@ -552,7 +552,7 @@ class Storage < ApplicationRecord
   end
 
   def set_unassigned_storage_files_to_vms
-    StorageFile.link_storage_files_to_vms(storage_files.find_all_by_vm_or_template_id(nil), vm_ids_by_path)
+    StorageFile.link_storage_files_to_vms(storage_files.where(:vm_or_template_id => nil), vm_ids_by_path)
   end
 
   def vm_ids_by_path
