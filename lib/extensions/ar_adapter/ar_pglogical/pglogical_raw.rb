@@ -11,6 +11,13 @@ class PgLogicalRaw
       .cast_values.first
   end
 
+  # Returns whether pglogical is currently configured or not
+  #
+  # @return [Boolean]
+  def configured?
+    connection.extension_enabled?("pglogical") && connection.extension_enabled("pglogical_origin")
+  end
+
   # Enables pglogical postgres extensions
   def enable
     connection.enable_extension("pglogical")
@@ -115,6 +122,13 @@ class PgLogicalRaw
   # Replication Sets
   #
 
+  # Lists the current replication sets
+  #
+  # @return [Array<String>] the replication sets
+  def replication_sets
+    typed_exec("SELECT set_name FROM pglogical.replication_set").values.flatten
+  end
+
   # Creates a new replication set
   #
   # @param set_name [String] new replication set name
@@ -171,6 +185,14 @@ class PgLogicalRaw
   # @param table_name [String] table to remove
   def replication_set_remove_table(set_name, table_name)
     typed_exec("SELECT pglogical.replication_set_remove_table($1, $2)", set_name, table_name)
+  end
+
+  # Lists the tables currently in the replication set
+  #
+  # @param set_name [String] replication set name
+  # @return [Array<String>] names of the tables in the given set
+  def tables_in_replication_set(set_name)
+    typed_exec("SELECT relname FROM pglogical.tables WHERE set_name = '$1'", set_name).values.flatten
   end
 
   private
