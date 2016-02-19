@@ -80,6 +80,7 @@ EOXML
 
     it "when the yaml file is updated" do
       RssFeed.seed
+      original_time = RssFeed.find_by(:name => @name).yml_file_mtime
       old_count = RssFeed.count
 
       NEW_YML_FILE = <<-EOF
@@ -89,7 +90,7 @@ EOXML
         feed_link: "/alert/rss?feed=newest_hosts"
         EOF
 
-      allow(File).to receive_messages(:mtime => Time.now.utc)
+      allow(File).to receive_messages(:mtime => original_time + 1)
       allow(File).to receive(:read).and_return(NEW_YML_FILE)
 
       described_class.sync_from_yml_file(@name)
