@@ -20,6 +20,7 @@ msgstr ""
 msgid "CPU"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.mem_cpu
 msgid "Memory"
 msgstr ""
 
@@ -47,30 +48,58 @@ msgstr ""
 msgid "Network Utilization Trends"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ExtManagementSystem (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::BaseManager (plural form)
 msgid "Providers"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerNode (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_node (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_nodes
 msgid "Nodes"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Container (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.containers
 msgid "Containers"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.registry_items (plural form)
 msgid "Registries"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerProject (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_project (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_projects
 msgid "Projects"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerGroup (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_group (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_groups
 msgid "Pods"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerService (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.Service (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_service (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_services
+#. TRANSLATORS: en.yml key: dictionary.table.host_services
 msgid "Services"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerImage (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Template (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_image (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_images
+#. TRANSLATORS: en.yml key: dictionary.table.template_cloud (plural form)
 msgid "Images"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerRoute (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_route (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_routes
 msgid "Routes"
 msgstr ""
 
@@ -215,9 +244,11 @@ msgstr ""
 msgid "Second"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.compliance_details
 msgid "Details"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.v_message
 msgid "Message"
 msgstr ""
 
@@ -476,6 +507,7 @@ msgstr ""
 msgid "%{model}: %{task} successfully initiated"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.hosts
 msgid "Hosts / Nodes"
 msgstr ""
 
@@ -742,6 +774,7 @@ msgstr ""
 msgid "* You are not authorized to view %{children} on this %{model}"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
 msgid "Key Pair"
 msgstr ""
 
@@ -969,6 +1002,7 @@ msgstr ""
 msgid "Default Filters"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.TimeProfile (plural form)
 msgid "Time Profiles"
 msgstr ""
 
@@ -1075,6 +1109,8 @@ msgstr ""
 msgid "%s (All cloud tenants present on this host)"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Filesystem (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.filesystems
 msgid "Files"
 msgstr ""
 
@@ -1096,6 +1132,8 @@ msgstr ""
 msgid "Credentials/Settings saved successfully"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_server (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_servers
 msgid "Middleware Servers"
 msgstr ""
 
@@ -1206,9 +1244,13 @@ msgstr ""
 msgid "%{typ} Button Group \"Unassigned Buttons\""
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Host
+#. TRANSLATORS: en.yml key: dictionary.table.host
 msgid "Host / Node"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.EmsCluster
+#. TRANSLATORS: en.yml key: dictionary.table.ems_cluster
 msgid "Cluster / Deployment Role"
 msgstr ""
 
@@ -1295,6 +1337,9 @@ msgstr ""
 msgid "%{val} missing for %{field}"
 msgstr ""
 
+msgid "At least one VM Option must be selected"
+msgstr ""
+
 msgid "No Utilization data available to generate planning results"
 msgstr ""
 
@@ -1304,13 +1349,25 @@ msgstr ""
 msgid "Planning options have been reset by the user"
 msgstr ""
 
-msgid "Best Fit %s"
+msgid "Best Fit Hosts"
 msgstr ""
 
-msgid "%s cancelled by user"
+msgid "Best Fit Clusters"
 msgstr ""
 
-msgid "At least %{num} %{model} must be selected for %{action}"
+msgid "Export cancelled by user"
+msgstr ""
+
+msgid "Error during export: %{error_message}"
+msgstr ""
+
+msgid "Error during 'Policy Import': %{messages}"
+msgstr ""
+
+msgid "Error during upload: %{messages}"
+msgstr ""
+
+msgid "Import cancelled by user"
 msgstr ""
 
 msgid "Import not available due to conflicts"
@@ -1319,67 +1376,158 @@ msgstr ""
 msgid "Press commit to Import"
 msgstr ""
 
-msgid "%s no longer exists"
+msgid "All %{items}"
+msgstr ""
+
+msgid "All %{models}"
+msgstr ""
+
+msgid "Adding a new %{record}"
 msgstr ""
 
 msgid "All %{typ} %{model}"
 msgstr ""
 
-msgid " %s Assignments"
+msgid "Adding a new %{model_name} %{mode} Policy"
 msgstr ""
 
-msgid "Select only one or consecutive %s to move up"
+msgid "Adding a new %{model_name} Policy"
 msgstr ""
 
-msgid "Select only one or consecutive %s to move down"
+msgid " %{model} Assignments"
 msgstr ""
 
-msgid "No %s selected to set to Synchronous"
+msgid "Adding a new %{model}"
 msgstr ""
 
-msgid "No %s selected to set to Asynchronous"
+msgid "Editing %{model} Condition \"%{name}\""
 msgstr ""
 
+msgid "%{model} Condition \"%{name}\""
+msgstr ""
+
+msgid "Adding a new %{alerts}"
+msgstr ""
+
+msgid "No %{member} were selected to move right"
+msgstr ""
+
+msgid "No %{member} were selected to move left"
+msgstr ""
+
+msgid "Select only one or consecutive %{member} to move up"
+msgstr ""
+
+msgid "Select only one or consecutive %{member} to move down"
+msgstr ""
+
+msgid "No %{member} selected to set to Synchronous"
+msgstr ""
+
+msgid "No %{member} selected to set to Asynchronous"
+msgstr ""
+
+msgid "Host is required"
+msgstr ""
+
+msgid "Trap Number is required"
+msgstr ""
+
+msgid "Trap Object ID is required"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqPolicySet (plural form)
 msgid "Policy Profiles"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqPolicy (plural form)
 msgid "Policies"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqEventDefinition (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_event_definition (plural form)
 msgid "Events"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Condition (plural form)
 msgid "Conditions"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAction (plural form)
 msgid "Actions"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAlertSet (plural form)
 msgid "Alert Profiles"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAlert (plural form)
 msgid "Alerts"
 msgstr ""
 
 msgid "%{model} must contain at least one %{field}"
 msgstr ""
 
+msgid "Error during 'Alert Profile %{params}': "
+msgstr ""
+
+msgid "Edit %{model} assignments cancelled by user"
+msgstr ""
+
+msgid "A Tag Category must be selected"
+msgstr ""
+
 msgid "At least one Selection must be checked"
 msgstr ""
 
-msgid "Alert Profile \"%s\" assignments succesfully saved"
+msgid "Alert Profile \"%{alert_profile}\" assignments succesfully saved"
 msgstr ""
 
-msgid "The selected %s was deleted"
+msgid "%{model} no longer exists"
+msgstr ""
+
+msgid "The selected %{model} was deleted"
+msgstr ""
+
+msgid "All %{records}"
+msgstr ""
+
+msgid "Add of new %{models} was cancelled by the user"
+msgstr ""
+
+msgid "%{models} no longer exists"
+msgstr ""
+
+msgid "The selected %{models} was deleted"
+msgstr ""
+
+msgid "Error during alarms: %{messages}"
 msgstr ""
 
 msgid "A valid expression must be present"
 msgstr ""
 
-msgid "%s must be an integer"
+msgid "A Driving Event must be selected"
 msgstr ""
 
-msgid "At least one %s must be configured"
+msgid "Event name is required"
+msgstr ""
+
+msgid "Event to Check is required"
+msgstr ""
+
+msgid "Value Threshold must be an integer"
+msgstr ""
+
+msgid "Trend Steepness must be an integer"
+msgstr ""
+
+msgid ""
+"At least one of E-mail, SNMP Trap, Timeline Event, or Management Event must be"
+" configured"
+msgstr ""
+
+msgid "At least one E-mail recipient must be configured"
 msgstr ""
 
 msgid ""
@@ -1390,13 +1538,55 @@ msgstr ""
 msgid "Condition \"%{cond_name}\" has been removed from Policy \"%{pol_name}\""
 msgstr ""
 
-msgid "Actions for Policy Event \"%s\" were saved"
+msgid "Edit Event cancelled by user"
 msgstr ""
 
-msgid "E-mail address '%s' is not valid"
+msgid "Actions for Policy Event \"%{events}\" were saved"
+msgstr ""
+
+msgid "All %{tables}"
+msgstr ""
+
+msgid "No %{members} were selected to move left"
+msgstr ""
+
+msgid "No %{members} were selected to move right"
+msgstr ""
+
+msgid "Action Type must be selected"
+msgstr ""
+
+msgid "Analysis Profile is required"
+msgstr ""
+
+msgid "Attribute Name is required"
+msgstr ""
+
+msgid "At least one Alert must be selected"
+msgstr ""
+
+msgid "Parent Type must be selected"
+msgstr ""
+
+msgid "At least one Category must be selected"
+msgstr ""
+
+msgid "Snapshot Age must be selected"
+msgstr ""
+
+msgid "E-mail address 'From' is not valid"
+msgstr ""
+
+msgid "E-mail address 'To' is not valid"
+msgstr ""
+
+msgid "At least one Tag must be selected"
 msgstr ""
 
 msgid "%{model} \"%{name}\" already exists"
+msgstr ""
+
+msgid "Error during 'Policy Profile %{params}': %{messages}"
 msgstr ""
 
 msgid "No VMs match the selection criteria"
@@ -1405,7 +1595,10 @@ msgstr ""
 msgid "Policy Simulation generation returned: %{error_message}"
 msgstr ""
 
-msgid "Request %s was cancelled by the user"
+msgid "Request approval was cancelled by the user"
+msgstr ""
+
+msgid "Request denial was cancelled by the user"
 msgstr ""
 
 msgid "Request \"%{name}\" was %{task}"
@@ -1414,7 +1607,16 @@ msgstr ""
 msgid "Error retrieving LDAP info: %{error_message}"
 msgstr ""
 
-msgid "The selected %s were deleted"
+msgid "At least one status must be selected"
+msgstr ""
+
+msgid "The selected %{tables} were deleted"
+msgstr ""
+
+msgid "%{table} no longer exists"
+msgstr ""
+
+msgid "The selected %{table} was deleted"
 msgstr ""
 
 msgid "%{model} \"%{name}\": Error during '%{task}': "
@@ -1429,10 +1631,34 @@ msgstr ""
 msgid "The selected job no longer exists, Delete all older Tasks was not completed"
 msgstr ""
 
+msgid "%s no longer exists"
+msgstr ""
+
 msgid "%{model} \"%{name}\": Error during 'Analysis': "
 msgstr ""
 
 msgid "\"%{record}\": Analysis successfully initiated"
+msgstr ""
+
+msgid "Create Datastore was cancelled by the user"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Create Logical Disk successfully initiated"
+msgstr ""
+
+msgid "Create Logical Disk was cancelled by the user"
+msgstr ""
+
+msgid "Aggregate is required"
+msgstr ""
+
+msgid "Size is required"
+msgstr ""
+
+msgid "Size must be an integer"
+msgstr ""
+
+msgid "Adding a new Category"
 msgstr ""
 
 msgid "Manage quotas for %{model} \"%{name}\""
@@ -1444,34 +1670,49 @@ msgstr ""
 msgid "Export generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
 
-msgid "%s Summary"
+msgid "VMDB Summary"
 msgstr ""
 
-msgid "%s Utilization"
+msgid "VMDB Utilization"
 msgstr ""
 
-msgid "%s Client Connections"
+msgid "VMDB Client Connections"
 msgstr ""
 
-msgid "All %s Indexes"
+msgid "All VMDB Indexes"
 msgstr ""
 
-msgid "%s Settings"
+msgid "VMDB Settings"
 msgstr ""
 
 msgid "Indexes for %{model} \"%{name}\""
 msgstr ""
 
+msgid "VMDB \"%{name}\" Table Utilization"
+msgstr ""
+
+msgid "Error during 'Appliance restart': %{message}"
+msgstr ""
+
 msgid "CFME Appliance restart initiated successfully"
 msgstr ""
 
-msgid "'%s' Worker restart initiated successfully"
+msgid "Error during 'workers restart': %{message}"
+msgstr ""
+
+msgid "'%{type}' Worker restart initiated successfully"
 msgstr ""
 
 msgid "Edit Log Depot settings was cancelled by the user"
 msgstr ""
 
+msgid "Error during 'Save': %{message}"
+msgstr ""
+
 msgid "Log Depot Settings were saved"
+msgstr ""
+
+msgid "Error during 'Validate': %{message}"
 msgstr ""
 
 msgid "Log Depot Settings were validated"
@@ -1480,13 +1721,34 @@ msgstr ""
 msgid "End Date cannot be greater than Start Date"
 msgstr ""
 
-msgid "%s successfully initiated"
+msgid "Error during 'C & U Gap Collection': %{message}"
 msgstr ""
 
-msgid "Error during Orphaned Records delete for user %s: "
+msgid "C & U Gap Collection successfully initiated"
 msgstr ""
 
-msgid "Orphaned Records for userid %s were successfully deleted"
+msgid "Error during 'Reset/synchronization process': %{message}"
+msgstr ""
+
+msgid "Reset/synchronization process successfully initiated"
+msgstr ""
+
+msgid "Database Backup successfully initiated"
+msgstr ""
+
+msgid "Error during 'Database Garbage Collection': %{message}"
+msgstr ""
+
+msgid "Database Garbage Collection successfully initiated"
+msgstr ""
+
+msgid "Error during Orphaned Records delete for user %{id}: %{message}"
+msgstr ""
+
+msgid "Orphaned Records for userid %{id} were successfully deleted"
+msgstr ""
+
+msgid "Error during 'Clear Connection Broker cache': %{message}"
 msgstr ""
 
 msgid "Connection Broker cache cleared successfully"
@@ -1506,7 +1768,16 @@ msgstr ""
 msgid "Log collection for CFME %{object_type} %{name} has been initiated"
 msgstr ""
 
-msgid "%s is not allowed for the selected item"
+msgid "Start is not allowed for the selected item"
+msgstr ""
+
+msgid "Start successfully initiated"
+msgstr ""
+
+msgid "Suspend is not allowed for the selected item"
+msgstr ""
+
+msgid "Suspend successfully initiated"
 msgstr ""
 
 msgid "Setting priority is not allowed for the selected item"
@@ -1515,19 +1786,37 @@ msgstr ""
 msgid "CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
 msgstr ""
 
-msgid "Error when adding a new tenant: "
+msgid "Diagnostics %{model} \"%{name}\" (current)"
+msgstr ""
+
+msgid "Diagnostics %{model} \"%{name}\""
+msgstr ""
+
+msgid "Error when adding a new tenant: %{message}"
 msgstr ""
 
 msgid "Manage quotas for %{model} \"%{name}\" was cancelled by the user"
 msgstr ""
 
-msgid "Error when saving tenant quota: "
+msgid "Error when saving tenant quota: %{message}"
 msgstr ""
 
 msgid "Quotas for %{model} \"%{name}\" were saved"
 msgstr ""
 
+msgid "User no longer exists"
+msgstr ""
+
+msgid "Role no longer exists"
+msgstr ""
+
 msgid "Default %{model} \"%{name}\" can not be deleted"
+msgstr ""
+
+msgid "Tenant no longer exists"
+msgstr ""
+
+msgid "MiqGroup no longer exists"
 msgstr ""
 
 msgid "Edit Sequence of User Groups was cancelled by the user"
@@ -1536,25 +1825,43 @@ msgstr ""
 msgid "User Group Sequence was saved"
 msgstr ""
 
-msgid "No %s were selected to move up"
+msgid "User must be entered to perform LDAP Group Look Up"
 msgstr ""
 
-msgid "No %s were selected to move down"
+msgid "Username must be entered to perform LDAP Group Look Up"
 msgstr ""
 
-msgid "%s must be entered to perform LDAP Group Look Up"
+msgid "User Password must be entered to perform LDAP Group Look Up"
+msgstr ""
+
+msgid "Error during 'LDAP Group Look Up': %{message}"
 msgstr ""
 
 msgid "Current %{model} \"%{name}\" cannot be deleted"
 msgstr ""
 
-msgid "Edit of %s was cancelled by the user"
+msgid "Edit of %{name} was cancelled by the user"
+msgstr ""
+
+msgid "Add of new %{name} was cancelled by the user"
 msgstr ""
 
 msgid "Read Only %{model} \"%{name}\" can not be edited"
 msgstr ""
 
+msgid "Adding a new %{name}"
+msgstr ""
+
+msgid "Access Control %{model}"
+msgstr ""
+
+msgid "Access Control %{model} \"%{name}\""
+msgstr ""
+
 msgid "A User must be assigned to a Group"
+msgstr ""
+
+msgid "At least one Product Feature must be selected"
 msgstr ""
 
 msgid "A User Group must be assigned a Role"
@@ -1563,22 +1870,43 @@ msgstr ""
 msgid "Access Rules for all Virtual Machines"
 msgstr ""
 
+msgid "Error during 'apply': %{error}"
+msgstr ""
+
 msgid "Records were successfully imported"
 msgstr ""
 
-msgid "Use the Browse button to locate %s file"
+msgid "Use the Browse button to locate CSV file"
 msgstr ""
 
-msgid "%s should be unique"
+msgid "LDAP Host is required"
 msgstr ""
 
-msgid "%s Credentials validated successfully"
+msgid "LDAP Host should be unique"
+msgstr ""
+
+msgid "Replication Worker Credentials validated successfully"
+msgstr ""
+
+msgid "Settings %{model} \"%{name}\""
+msgstr ""
+
+msgid "Region description is required"
 msgstr ""
 
 msgid "At least one item must be entered to create Analysis Profile"
 msgstr ""
 
 msgid "Sample %{model} \"%{name}\" can not be edited"
+msgstr ""
+
+msgid "File Entry is required"
+msgstr ""
+
+msgid "Registry Entry is required"
+msgstr ""
+
+msgid "Event log name is required"
 msgstr ""
 
 msgid "Capacity and Utilization Collection settings saved"
@@ -1596,7 +1924,9 @@ msgstr ""
 msgid "Error during sending test email: %{class_name}, %{error_message}"
 msgstr ""
 
-msgid "The test email is being delivered, check \"%s\" to verify it was successful"
+msgid ""
+"The test email is being delivered, check \"%{email}\" to verify it was successfu"
+"l"
 msgstr ""
 
 msgid "CFME Database settings validation was successful"
@@ -1607,18 +1937,26 @@ msgid ""
 "estart"
 msgstr ""
 
-msgid "Error during %s: "
+msgid "Error during Server restart: %{message}"
 msgstr ""
 
-msgid "%s file saved"
+msgid "%{model}: Restart successfully initiated"
 msgstr ""
 
-msgid "Error when saving new server name: "
+msgid "%{name} file saved"
+msgstr ""
+
+msgid "Error when saving new server name: %{message}"
 msgstr ""
 
 msgid ""
-"%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone"
-"}\""
+"Configuration settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone "
+"\"%{zone}\""
+msgstr ""
+
+msgid ""
+"Authentication settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone"
+" \"%{zone}\""
 msgstr ""
 
 msgid "Edit of Customer Information was cancelled"
@@ -1627,10 +1965,19 @@ msgstr ""
 msgid "Custom Support URL and Description both must be entered."
 msgstr ""
 
+msgid "VNC Proxy Port must be numeric"
+msgstr ""
+
 msgid "When configuring a VNC Proxy, both Address and Port are required"
 msgstr ""
 
+msgid "Error during Analysis Affinity save: %{message}"
+msgstr ""
+
 msgid "Analysis Affinity was saved"
+msgstr ""
+
+msgid "Settings %{model} \"%{name}\" (current)"
 msgstr ""
 
 msgid "Locate and upload a file to start the import process"
@@ -1639,10 +1986,19 @@ msgstr ""
 msgid "Choose the type of custom variables to be imported"
 msgstr ""
 
+msgid "Settings %{model}"
+msgstr ""
+
+msgid "Hostname is required"
+msgstr ""
+
 msgid "Customer Information successfully saved"
 msgstr ""
 
-msgid "Credential validation returned: %s"
+msgid "Credential validation returned: %{message}"
+msgstr ""
+
+msgid "%{name} is required"
 msgstr ""
 
 msgid "No Server was selected"
@@ -1657,27 +2013,36 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-msgid "%s has been initiated for the selected Servers"
+msgid "%{item} has been initiated for the selected Servers"
 msgstr ""
 
-msgid "Error occured when queuing action: %s"
+msgid "Error occured when queuing action: %{message}"
 msgstr ""
 
-msgid "Error when adding a new schedule: "
+msgid "Error when adding a new schedule: %{message}"
 msgstr ""
 
-msgid "The selected %s were enabled"
+msgid "The selected Schedules were enabled"
 msgstr ""
 
-msgid "The selected %s were disabled"
+msgid "The selected Schedules were disabled"
 msgstr ""
 
 msgid "Depot Settings successfuly validated"
 msgstr ""
 
+msgid "Filter must be selected"
+msgstr ""
+
+msgid "Filter value must be selected"
+msgstr ""
+
 msgid ""
 "Warning: This 'Run Once' timer is in the past and will never run as currently "
 "configured"
+msgstr ""
+
+msgid "Long Description is required"
 msgstr ""
 
 msgid "Custom logo image must be a .png file"
@@ -1686,10 +2051,13 @@ msgstr ""
 msgid "Custom login image must be a .png file"
 msgstr ""
 
-msgid "Custom Logo file \"%s\" uploaded"
+msgid "Custom Logo file \"%{name}\" uploaded"
 msgstr ""
 
-msgid "Custom login file \"%s\" uploaded"
+msgid "Custom login file \"%{name}\" uploaded"
+msgstr ""
+
+msgid "Use the Browse button to locate .png image file"
 msgstr ""
 
 msgid "Import validation complete: %{good_record}, %{bad_record}"
@@ -1699,6 +2067,15 @@ msgid "No valid import records were found, please upload another file"
 msgstr ""
 
 msgid "Press the Apply button to import the good records into the CFME database"
+msgstr ""
+
+msgid "Add of new %{table} was cancelled by the user"
+msgstr ""
+
+msgid "Zone name is required"
+msgstr ""
+
+msgid "%{task} initiated for %{count_model}"
 msgstr ""
 
 msgid "No common configuration profiles available for the selected configured %s"
@@ -1754,6 +2131,9 @@ msgstr ""
 msgid "Import file cannot be empty"
 msgstr ""
 
+msgid "At least %{num} %{model} must be selected for %{action}"
+msgstr ""
+
 msgid "Error: the file uploaded contains no widgets"
 msgstr ""
 
@@ -1772,9 +2152,12 @@ msgstr ""
 msgid "Saved Reports"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqReport (plural form)
 msgid "Reports"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqSchedule (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_schedules
 msgid "Schedules"
 msgstr ""
 
@@ -1803,6 +2186,9 @@ msgstr ""
 msgid "Dashboard Sequence was saved"
 msgstr ""
 
+msgid "The selected %s was deleted"
+msgstr ""
+
 msgid "%{model} for \"%{name}\""
 msgstr ""
 
@@ -1810,6 +2196,18 @@ msgid "%{field} cannot contain \"%{character}\""
 msgstr ""
 
 msgid "%s must be unique for this group"
+msgstr ""
+
+msgid "No %s were selected to move up"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move up"
+msgstr ""
+
+msgid "No %s were selected to move down"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move down"
 msgstr ""
 
 msgid ""
@@ -1897,6 +2295,9 @@ msgstr ""
 msgid "Saved Report \"%s\" not found, Schedule may have failed"
 msgstr ""
 
+msgid "The selected %s were deleted"
+msgstr ""
+
 msgid "No Report Schedules were selected to be Run now"
 msgstr ""
 
@@ -1909,7 +2310,16 @@ msgstr ""
 msgid "No %s were selected to be enabled"
 msgstr ""
 
+msgid "The selected %s were enabled"
+msgstr ""
+
 msgid "No %s were selected to be disabled"
+msgstr ""
+
+msgid "The selected %s were disabled"
+msgstr ""
+
+msgid "At least one %s must be configured"
 msgstr ""
 
 msgid "Widget content generation error: "
@@ -2023,6 +2433,8 @@ msgid_plural "Guest Applications"
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Container
+#. TRANSLATORS: en.yml key: dictionary.table.container
 #, fuzzy
 msgid "Container"
 msgid_plural "Container"
@@ -2160,9 +2572,12 @@ msgstr ""
 msgid "Hosts"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerNode
+#. TRANSLATORS: en.yml key: dictionary.table.container_node
 msgid "Node"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.ems_cluster_name
 msgid "Cluster"
 msgstr ""
 
@@ -2175,6 +2590,7 @@ msgstr ""
 msgid "Deployment Roles"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.ems_clusters
 msgid "Clusters / Deployment Roles"
 msgstr ""
 
@@ -2250,6 +2666,7 @@ msgstr ""
 msgid "Analysis"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqPolicy
 msgid "Policy"
 msgstr ""
 
@@ -3334,6 +3751,56 @@ msgstr ""
 msgid "Edit Tags for the selected #{ui_lookup(:tables=>\"ems_infras\")}"
 msgstr ""
 
+msgid ""
+"Refresh items and relationships related to this #{ui_lookup(:table=>\"ems_middl"
+"eware\")}"
+msgstr ""
+
+msgid ""
+"Refresh items and relationships related to this #{ui_lookup(:table=>\"ems_middl"
+"eware\")}?"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"ems_middleware\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"ems_middleware\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"ems_middleware\")} and ALL of its components"
+" will be permanently removed from the Virtual Management Database.  Are you su"
+"re you want to remove this #{ui_lookup(:table=>\"ems_middleware\")}?"
+msgstr ""
+
+msgid "Show Timelines for this #{ui_lookup(:table=>\"ems_middleware\")}"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"ems_middleware\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"ems_middleware\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"ems_middleware\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"ems_middleware\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"ems_middlewares\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"ems_middlewares\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"ems_middlewares\")} and ALL of thei"
+"r components will be permanently removed from the Virtual Management Database."
+"  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"ems_middl"
+"ewares\")}?"
+msgstr ""
+
 msgid "Edit Tags for this Flavor"
 msgstr ""
 
@@ -3631,6 +4098,46 @@ msgid "Reload the #{@msg_title} Log Display"
 msgstr ""
 
 msgid "Download the Entire #{@msg_title} Log File"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"middleware_server\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"middleware_server\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"middleware_server\")} and ALL of its compone"
+"nts will be permanently removed from the Virtual Management Database.  Are you"
+" sure you want to remove this #{ui_lookup(:table=>\"middleware_server\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"middleware_server\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"middleware_server\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"middleware_server\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"middleware_server\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"middleware_servers\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"middleware_servers\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"middleware_servers\")} and ALL of t"
+"heir components will be permanently removed from the Virtual Management Databa"
+"se.  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"middle"
+"ware_servers\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"middleware_servers\")}"
 msgstr ""
 
 msgid "Edit this Action"
@@ -5350,6 +5857,7 @@ msgstr ""
 msgid "Start the selected items"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.start_trend_value
 msgid "Start"
 msgstr ""
 
@@ -5476,6 +5984,8 @@ msgstr ""
 msgid "Request to Provision"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqProvision
+#. TRANSLATORS: en.yml key: dictionary.table.miq_provision
 msgid "Provision"
 msgstr ""
 
@@ -5787,6 +6297,9 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.action_type_description
+#. TRANSLATORS: en.yml key: dictionary.column.emstype_description
+#. TRANSLATORS: en.yml key: dictionary.column.mode
 msgid "Type"
 msgstr ""
 
@@ -5808,9 +6321,11 @@ msgstr ""
 msgid "Default Limit"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.max_trend_value
 msgid "Max"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.min_trend_value
 msgid "Min"
 msgstr ""
 
@@ -5892,15 +6407,21 @@ msgstr ""
 msgid "IPMI Present"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.ip_address
+#. TRANSLATORS: en.yml key: dictionary.column.ipaddress
 msgid "IP Address"
 msgstr ""
 
 msgid "Mac address"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ExtManagementSystem
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::BaseManager
 msgid "Provider"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Zone
+#. TRANSLATORS: en.yml key: dictionary.table.zone
 msgid "Zone"
 msgstr ""
 
@@ -5919,6 +6440,7 @@ msgstr ""
 msgid "Compute Profile"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.v_arch
 msgid "Architecture"
 msgstr ""
 
@@ -5937,6 +6459,7 @@ msgstr ""
 msgid "Configuration Organization"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.operating_system
 msgid "OS"
 msgstr ""
 
@@ -5995,6 +6518,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Wachtwoord"
 
+#. TRANSLATORS: en.yml key: dictionary.model.Chargeback
 msgid "Chargeback"
 msgstr ""
 
@@ -6004,48 +6528,72 @@ msgstr ""
 msgid "My Services"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplateCatalog (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.service_template_catalog (plural form)
 msgid "Catalogs"
 msgstr ""
 
 msgid "Workloads"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqRequest (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_request (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_requests
 msgid "Requests"
 msgstr ""
 
 msgid "Clouds"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.AvailabilityZone (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.availability_zone (plural form)
 msgid "Availability Zones"
 msgstr ""
 
 msgid "Tenants"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.persistent_volume (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.persistent_volumes
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_logical_disk
 msgid "Volumes"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Flavor (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.flavor (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.flavors
 msgid "Flavors"
 msgstr ""
 
 msgid "Security Groups"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Vm (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.vm_cloud (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.vm_clouds
 msgid "Instances"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.orchestration_stack (plural form)
 msgid "Stacks"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_clouds
 msgid "Key Pairs"
 msgstr ""
 
 msgid "Infrastructure"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Vm (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.vm_infra (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.vm_or_template (plural form)
 msgid "Virtual Machines"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ResourcePool (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.resource_pools
 msgid "Resource Pools"
 msgstr ""
 
@@ -6073,6 +6621,7 @@ msgstr ""
 msgid "Middleware"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.StorageManager (plural form)
 msgid "Storage Managers"
 msgstr ""
 
@@ -6110,6 +6659,7 @@ msgstr ""
 msgid "My Settings"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.miq_task (plural form)
 msgid "Tasks"
 msgstr ""
 
@@ -6119,9 +6669,12 @@ msgstr ""
 msgid "Object Types"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Storage
+#. TRANSLATORS: en.yml key: dictionary.table.storage
 msgid "Datastore"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqEnterprise
 msgid "Enterprise"
 msgstr ""
 
@@ -6483,12 +7036,15 @@ msgstr ""
 msgid "Display in Catalog"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplateCatalog
+#. TRANSLATORS: en.yml key: dictionary.table.service_template_catalog
 msgid "Catalog"
 msgstr ""
 
 msgid "Unassigned"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqDialog
 msgid "Dialog"
 msgstr ""
 
@@ -6498,6 +7054,8 @@ msgstr ""
 msgid "Choose"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplate
+#. TRANSLATORS: en.yml key: dictionary.table.orchestration_template
 msgid "Orchestration Template"
 msgstr ""
 
@@ -6552,6 +7110,7 @@ msgstr ""
 msgid "Selected Resources"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAction
 msgid "Action"
 msgstr ""
 
@@ -6636,6 +7195,7 @@ msgstr ""
 msgid "No Catalog Items found."
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.service_template (plural form)
 msgid "Catalog Items"
 msgstr ""
 
@@ -6777,6 +7337,8 @@ msgstr ""
 msgid "Grid/Tile Icons"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template
+#. TRANSLATORS: en.yml key: dictionary.table.template_infra
 msgid "Template"
 msgstr ""
 
@@ -6840,6 +7402,8 @@ msgstr ""
 msgid "Tagging"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplate (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.orchestration_template (plural form)
 msgid "Orchestration Templates"
 msgstr ""
 
@@ -6852,9 +7416,12 @@ msgstr ""
 msgid "VMs & Instances"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.vms
 msgid "VMs"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.template_infra (plural form)
 msgid "Templates"
 msgstr ""
 
@@ -6876,6 +7443,7 @@ msgstr ""
 msgid "Roll Up Performance"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.userid
 msgid "Username"
 msgstr "Gebruikersnaam"
 
@@ -7074,9 +7642,12 @@ msgstr ""
 msgid "Custom Identifier"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.ipmi_address
 msgid "IPMI IP Address"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.mac_address
+#. TRANSLATORS: en.yml key: dictionary.column.macaddress
 msgid "MAC Address"
 msgstr ""
 
@@ -7099,6 +7670,8 @@ msgstr ""
 msgid "Custom Attributes"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.ems_custom_attribute (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_custom_attributes
 msgid "VC Custom Attributes"
 msgstr ""
 
@@ -7186,6 +7759,8 @@ msgstr ""
 msgid "System/Process"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqRequest
+#. TRANSLATORS: en.yml key: dictionary.table.miq_request
 msgid "Request"
 msgstr ""
 
@@ -7230,6 +7805,7 @@ msgstr "Nieuw wachtwoord"
 msgid "Private Key"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Classification
 msgid "Category"
 msgstr ""
 
@@ -7488,6 +8064,7 @@ msgstr ""
 msgid "Options %s"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.interval
 msgid "Interval"
 msgstr ""
 
@@ -7507,6 +8084,7 @@ msgstr ""
 msgid "Show VM Types"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.TimeProfile
 msgid "Time Profile"
 msgstr ""
 
@@ -7883,6 +8461,7 @@ msgstr ""
 msgid "Show %{host_title}"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.v_direct_vms
 msgid "Direct VMs"
 msgstr ""
 
@@ -7943,6 +8522,7 @@ msgstr ""
 msgid "Show this Flavor's parent %s"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.guest_devices
 msgid "Devices"
 msgstr ""
 
@@ -8429,6 +9009,8 @@ msgstr ""
 msgid "Dialog Information"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.CustomButton (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.custom_button (plural form)
 msgid "Buttons"
 msgstr ""
 
@@ -8576,6 +9158,7 @@ msgstr ""
 msgid "Select a node on the left to view Bottlenecks timeline."
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqReport
 msgid "Report"
 msgstr ""
 
@@ -8632,6 +9215,7 @@ msgstr ""
 msgid "VM Options"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_speed
 msgid "CPU Speed"
 msgstr ""
 
@@ -8814,6 +9398,7 @@ msgstr ""
 msgid "Object ID"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ScanItemSet
 msgid "Analysis Profile"
 msgstr ""
 
@@ -8835,6 +9420,7 @@ msgstr ""
 msgid "Parent Type"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Classification (plural form)
 msgid "Categories"
 msgstr ""
 
@@ -8892,6 +9478,7 @@ msgstr ""
 msgid "SNMP Trap Settings"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ScanItemSet (plural form)
 msgid "Analysis Profiles"
 msgstr ""
 
@@ -8931,6 +9518,8 @@ msgstr ""
 msgid "Choose a %s first"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.active
+#. TRANSLATORS: en.yml key: dictionary.column.enabled
 msgid "Active"
 msgstr ""
 
@@ -9015,6 +9604,8 @@ msgstr ""
 msgid "No Alerts are defined %s."
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.EmsEvent
+#. TRANSLATORS: en.yml key: dictionary.table.ems_event
 msgid "Management Event"
 msgstr ""
 
@@ -9439,6 +10030,7 @@ msgstr ""
 msgid "Datacenter"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ResourcePool
 msgid "Resource Pool"
 msgstr ""
 
@@ -9490,6 +10082,7 @@ msgstr ""
 msgid "Approved/Denied on"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.miq_provision_vms
 msgid "Provisioned VMs"
 msgstr ""
 
@@ -9556,6 +10149,8 @@ msgstr ""
 msgid "SmartProxy Affinity"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqServer
+#. TRANSLATORS: en.yml key: dictionary.table.miq_server
 msgid "Server"
 msgstr ""
 
@@ -9589,6 +10184,9 @@ msgstr ""
 msgid "Servers by Roles"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqServer (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_server (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_servers
 msgid "Servers"
 msgstr ""
 
@@ -9625,9 +10223,11 @@ msgstr ""
 msgid "Amazon access key and secret are needed to validate Amazon Settings"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Filesystem
 msgid "File"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.registry_items
 msgid "Registry"
 msgstr ""
 
@@ -9703,6 +10303,7 @@ msgstr ""
 msgid "Rows"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.v_size_numeric
 msgid "Size"
 msgstr ""
 
@@ -9822,12 +10423,15 @@ msgstr ""
 msgid "LDAP Groups for User"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.LdapServer (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ldap_server (plural form)
 msgid "LDAP Servers"
 msgstr ""
 
 msgid "Mode"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.ldap
 msgid "LDAP"
 msgstr ""
 
@@ -9864,6 +10468,8 @@ msgstr ""
 msgid "Click to edit this forest"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.LdapDomain (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ldap_domain (plural form)
 msgid "LDAP Domains"
 msgstr ""
 
@@ -9946,6 +10552,7 @@ msgstr ""
 msgid "(Look Up LDAP Groups)"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqUserRole
 msgid "Role"
 msgstr ""
 
@@ -10048,6 +10655,7 @@ msgstr ""
 msgid "User Information"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.User.name
 #, fuzzy
 msgid "Full Name"
 msgstr "Nederlands"
@@ -10117,9 +10725,11 @@ msgstr "Aangepast op"
 msgid "Stopped On"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.memory_size
 msgid "Memory Usage"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_time
 msgid "CPU Time"
 msgstr ""
 
@@ -10282,6 +10892,9 @@ msgstr ""
 msgid "View Zones"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.Zone (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.zone (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.zones
 msgid "Zones"
 msgstr ""
 
@@ -10291,6 +10904,8 @@ msgstr ""
 msgid "View LDAP Regions"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.LdapRegion (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ldap_region (plural form)
 msgid "LDAP Regions"
 msgstr ""
 
@@ -10529,6 +11144,9 @@ msgstr ""
 msgid "Appliances in this region can be registered with:"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerService
+#. TRANSLATORS: en.yml key: dictionary.model.Service
+#. TRANSLATORS: en.yml key: dictionary.table.container_service
 msgid "Service"
 msgstr ""
 
@@ -10612,6 +11230,8 @@ msgstr ""
 msgid "Tenancy"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.IsoImage (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.iso_image (plural form)
 msgid "ISO Images"
 msgstr ""
 
@@ -10651,6 +11271,7 @@ msgid ""
 " PXE Server"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.PxeImage (plural form)
 msgid "PXE Images"
 msgstr ""
 
@@ -10696,13 +11317,22 @@ msgstr ""
 msgid "Available Fields:"
 msgstr ""
 
+msgid "down"
+msgstr ""
+
+msgid "up"
+msgstr ""
+
+msgid "Move selected fields %{where}"
+msgstr ""
+
 msgid "Selected Fields:"
 msgstr ""
 
-msgid "Move selected fields to top"
+msgid "to bottom"
 msgstr ""
 
-msgid "Move selected fields to bottom"
+msgid "to top"
 msgstr ""
 
 msgid "Tab Title"
@@ -10762,6 +11392,7 @@ msgstr ""
 msgid "Commit Changes"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqWidget (plural form)
 msgid "Widgets"
 msgstr ""
 
@@ -10905,6 +11536,7 @@ msgstr ""
 msgid "Show Costs by"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.owner_name
 msgid "Owner"
 msgstr ""
 
@@ -11396,6 +12028,10 @@ msgstr ""
 msgid "Hover Text"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerImage
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Template
+#. TRANSLATORS: en.yml key: dictionary.table.container_image
+#. TRANSLATORS: en.yml key: dictionary.table.template_cloud
 msgid "Image"
 msgstr ""
 
@@ -11419,6 +12055,12 @@ msgid "Move selected fields right"
 msgstr ""
 
 msgid "Move selected fields left"
+msgstr ""
+
+msgid "Move selected fields to top"
+msgstr ""
+
+msgid "Move selected fields to bottom"
 msgstr ""
 
 msgid "Button Group Text"
@@ -11478,6 +12120,8 @@ msgstr ""
 msgid "Placement"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.EmsFolder
+#. TRANSLATORS: en.yml key: dictionary.table.ems_folder
 msgid "Folder"
 msgstr ""
 
@@ -11587,9 +12231,13 @@ msgstr ""
 msgid "Add this %s"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiqRegion
+#. TRANSLATORS: en.yml key: dictionary.table.miq_region
 msgid "Region"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerProject
+#. TRANSLATORS: en.yml key: dictionary.table.container_project
 msgid "Project"
 msgstr ""
 
@@ -11684,18 +12332,22 @@ msgstr ""
 msgid "Network Type"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.nics
 msgid "Network Adapters"
 msgstr ""
 
 msgid "%s has no network adapters"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.dhcp_enabled
 msgid "DHCP Enabled"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.dhcp_server
 msgid "DHCP Server"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.dns_server
 msgid "DNS Server"
 msgstr ""
 
@@ -11708,18 +12360,23 @@ msgstr ""
 msgid "Subnet Mask"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_limit
 msgid "CPU Limit"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_reserve
 msgid "CPU Reserve"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_reserve_expand
 msgid "CPU Reserve Expand"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_shares
 msgid "CPU Shares"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_shares_level
 msgid "CPU Shares Level"
 msgstr ""
 
@@ -11741,6 +12398,7 @@ msgstr ""
 msgid "Device Type"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.column.partitions_aligned
 msgid "Partitions Aligned"
 msgstr ""
 
@@ -11941,6 +12599,3293 @@ msgstr ""
 #. TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
 msgid "locale_name"
 msgstr "Nederlands"
+
+#. TRANSLATORS: en.yml key: dictionary.column.availability_zone.total_vms
+#. TRANSLATORS: en.yml key: dictionary.column.ems_cloud.total_vms
+#. TRANSLATORS: en.yml key: dictionary.column.flavor.total_vms
+msgid "Total Instances"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ems_cloud.total_miq_templates
+msgid "Total Images"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.cpu_usage_rate_average
+msgid "CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.derived_cpu_available
+msgid "CPU - Total Installed - Sum of Child Hosts (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.disk_usage_rate_average
+msgid "Disk I/O - Aggregate of Avg for Child Hosts (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average
+msgid "CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average_avg_over_time_period
+msgid ""
+"CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Avg ("
+"%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average_avg_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host"
+" Overhead 30 Day Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average_high_over_time_period
+msgid ""
+"CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day High "
+"Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average_high_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host"
+" Overhead 30 Day High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average_low_over_time_period
+msgid ""
+"CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Low A"
+"vg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usage_rate_average_low_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals Without Host"
+" Overhead 30 Day Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_cpu_usagemhz_rate_average
+msgid "CPU - Peak Usage Rate Avg for Child Hosts for Collected intervals (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_disk_usage_rate_average
+msgid "Disk I/O - Peak Avg for Child Hosts  for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average_avg_over_time_period
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals 30 Day Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average_avg_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals Without Host Overhead 30 Day Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average_high_over_time_period
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals 30 Day High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average_high_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals Without Host Overhead 30 Day High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average_low_over_time_period
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals 30 Day Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_mem_usage_absolute_average_low_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Inter"
+"vals Without Host Overhead 30 Day Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.max_net_usage_rate_average
+msgid "Network I/O - Peak Avg for Child Hosts for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.mem_usage_absolute_average
+msgid "Memory - Avg Usage of Total Allocated for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.min_cpu_usage_rate_average
+msgid "CPU - Min Usage Rate Avg for Child Hosts for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.min_cpu_usagemhz_rate_average
+msgid "CPU - Min Usage Rate Avg for Child Hosts for Collected Intervals (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.min_disk_usage_rate_average
+msgid "Disk I/O - Min Avg for Child Hosts for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.min_mem_usage_absolute_average
+msgid ""
+"Memory - Min Aggregate Usage of Allocated for Child Hosts for Collected Interv"
+"als (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.min_net_usage_rate_average
+msgid "Network I/O - Min Avg for Child Hosts for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.EmsClusterPerformance.net_usage_rate_average
+msgid "Network I/O - Aggregate of Avg for Child Hosts (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.HostPerformance.derived_cpu_available
+msgid "CPU - Total Installed - from Host Analysis (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.StoragePerformance.max_derived_storage_total
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_storage_total
+msgid "Disk Space Max Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.Vm.cpu_usagemhz_rate_average_avg_over_time_period
+msgid "CPU - Usage Rate for Collected Intervals 30 Day Avg (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.Vm.cpu_usagemhz_rate_average_high_over_time_period
+msgid "CPU - Usage Rate for Collected Intervals 30 Day High Avg (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.Vm.cpu_usagemhz_rate_average_low_over_time_period
+msgid "CPU - Usage Rate for Collected Intervals 30 Day Low Avg (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.Vm.derived_memory_used_avg_over_time_period
+msgid "Memory - Avg Used for Collected Intervals 30 Day Avg (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.Vm.derived_memory_used_high_over_time_period
+msgid "Memory - Avg Used for Collected Intervals 30 Day High Avg (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.Vm.derived_memory_used_low_over_time_period
+msgid "Memory - Avg Used for Collected Intervals 30 Day Low Avg (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.cpu_ready_delta_summation
+msgid "CPU - Time Spent In Ready State (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.cpu_system_delta_summation
+msgid "CPU - Time Spent in System State (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.cpu_usagemhz_rate_average
+msgid "CPU - Usage Rate for Collected Intervals (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.cpu_used_delta_summation
+msgid "CPU - Time Used (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.cpu_wait_delta_summation
+msgid "CPU - Time Spent in Wait State (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.derived_cpu_available
+msgid "CPU - Total - from VM Analysis (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.derived_cpu_reserved
+msgid "CPU - Reserved (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.derived_memory_available
+msgid "Memory - Total Allocated (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.derived_memory_reserved
+msgid "Memory - Reserved (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.derived_memory_used
+msgid "Memory - Avg Used for Collected Intervals (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.max_derived_cpu_reserved
+msgid "CPU Max Reserved MHz"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.max_derived_memory_available
+msgid "Memory Max Allocated"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.max_derived_memory_reserved
+msgid "Memory Max Reserved"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.max_derived_memory_used
+msgid "Memory - Peak Avg Used for Collected Intervals (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.min_derived_memory_used
+msgid "Memory - Minimum Avg Used for Collected Intervals (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.v_derived_cpu_reserved_pct
+msgid "CPU - Reserved (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.v_derived_memory_reserved_pct
+msgid "Memory - Reserved (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_cpu_usage_rate_average_timestamp
+msgid "CPU - Absolute Max Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_cpu_usage_rate_average_value
+msgid "CPU - Absolute Max Usage Rate (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_disk_usage_rate_average_timestamp
+msgid "Disk I/O - Absolute Max Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_disk_usage_rate_average_value
+msgid "Disk I/O - Absolute Max Usage Rate (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_mem_usage_absolute_average_timestamp
+msgid "Memory - Absolute Max Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_mem_usage_absolute_average_value
+msgid "Memory - Absolute Max Usage Rate (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_net_usage_rate_average_timestamp
+msgid "Network I/O - Absolute Max Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_max_net_usage_rate_average_value
+msgid "Network I/O - Absolute Max Usage Rate (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_cpu_usage_rate_average_timestamp
+msgid "CPU - Absolute Min Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_cpu_usage_rate_average_value
+msgid "CPU - Absolute Min Usage Rate (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_disk_usage_rate_average_timestamp
+msgid "Disk I/O - Absolute Min Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_disk_usage_rate_average_value
+msgid "Disk I/O - Absolute Min Usage Rate (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_mem_usage_absolute_average_timestamp
+msgid "Memory - Absolute Min Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_mem_usage_absolute_average_value
+msgid "Memory - Absolute Min Usage Rate (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_net_usage_rate_average_timestamp
+msgid "Network I/O - Absolute Min Usage Rate (Timestamp)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.abs_min_net_usage_rate_average_value
+msgid "Network I/O - Absolute Min Usage Rate (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.acctid
+msgid "Account ID"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.accttype
+msgid "Account Type"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.admin_disabled
+msgid "Lockdown Mode"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggregate_cpu_speed
+msgid "Total CPU Speed"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggregate_cpu_total_cores
+msgid "Total Number of Logical CPUs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggregate_memory
+msgid "Total Memory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggregate_physical_cpus
+msgid "Total Number of Physical CPUs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.allocated_memory
+msgid "Allocated Memory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.allocated_storage
+msgid "Allocated Storage"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.allocated_vcpu
+msgid "Allocated vCPU"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.avg_latency
+msgid "Usage (All) - Latency in MicroSeconds for All Operations Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.avg_latency_max
+msgid "Usage (All) - Latency in MicroSeconds for All Operations Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.avg_latency_min
+msgid "Usage (All) - Latency in MicroSeconds for All Operations Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.bios
+msgid "BIOS"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.bios_location
+msgid "BIOS Location"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.chain_id
+msgid "Chain ID"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_other_latency
+msgid "Usage (CIFS) - Time for Other Operations Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_other_latency_max
+msgid "Usage (CIFS) - Time for Other Operations Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_other_latency_min
+msgid "Usage (CIFS) - Time for Other Operations Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_other_ops
+msgid "Usage (CIFS) - Number of Other Operations per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_other_ops_max
+msgid "Usage (CIFS) - Number of Other Operations per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_other_ops_min
+msgid "Usage (CIFS) - Number of Other Operations per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_data
+msgid "Usage (CIFS) - Bytes Read per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_data_max
+msgid "Usage (CIFS) - Bytes Read per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_data_min
+msgid "Usage (CIFS) - Bytes Read per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_latency
+msgid "Usage (CIFS) - Time for Reads Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_latency_max
+msgid "Usage (CIFS) - Time for Reads Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_latency_min
+msgid "Usage (CIFS) - Time for Reads Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_ops
+msgid "Usage (CIFS) - Number of Reads per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_ops_max
+msgid "Usage (CIFS) - Number of Reads per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_read_ops_min
+msgid "Usage (CIFS) - Number of Reads per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_data
+msgid "Usage (CIFS) - Bytes Written per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_data_max
+msgid "Usage (CIFS) - Bytes Written per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_data_min
+msgid "Usage (CIFS) - Bytes Written per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_latency
+msgid "Usage (CIFS) - Time for Writes Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_latency_max
+msgid "Usage (CIFS) - Time for Writes Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_latency_min
+msgid "Usage (CIFS) - Time for Writes Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_ops
+msgid "Usage (CIFS) - Number of Writes per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_ops_max
+msgid "Usage (CIFS) - Number of Writes per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cifs_write_ops_min
+msgid "Usage (CIFS) - Number of Writes per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.config_xml
+msgid "Configuration XML"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.count_of_trend
+msgid "Data Points"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_affinity
+msgid "CPU Affinity"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_ready_delta_summation
+msgid "CPU - Aggregate Time Child VMs Spent in Ready State (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_system_delta_summation
+msgid "CPU - Aggregate Time Child VMs Spent in System State (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_type
+#, fuzzy
+msgid "CPU Type"
+msgstr "Gebruikersnaam"
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_usage_rate_average
+msgid "CPU - Usage Rate for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_usagemhz_rate_average
+msgid "CPU - Aggregate Usage Rate for Child VMs for Collected Intervals (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_usagemhz_rate_average_avg_over_time_period
+msgid ""
+"CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Avg (M"
+"Hz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_usagemhz_rate_average_high_over_time_period
+msgid ""
+"CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day High A"
+"vg (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_usagemhz_rate_average_low_over_time_period
+msgid ""
+"CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Low Av"
+"g (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_usagemhz_rate_average_max_over_time_period
+msgid ""
+"CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Max (M"
+"Hz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_used_delta_summation
+msgid "CPU - Aggregate Time Used for Child VMs (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_wait_delta_summation
+msgid "CPU - Aggregate Time Spent in Wait State for Child VMs (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.created_at
+#. TRANSLATORS: en.yml key: dictionary.column.created_on
+msgid "Date Created"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.depend_on_group
+msgid "Depends on Group"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.depend_on_service
+msgid "Depends on Service"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_cpu_available
+msgid "CPU Total Installed"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_cpu_reserved
+msgid "CPU - Available (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_host_count_off
+msgid "State - Number of Hosts Powered Off  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_host_count_on
+msgid "State - Number of Hosts Powered On  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_available
+msgid "Memory - Total Allocated for Child VMs (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_reserved
+msgid "Memory - Available (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_used
+msgid "Memory - Aggregate Used for Child VMs for Collected Intervals (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_used_avg_over_time_period
+msgid "Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Avg (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_used_high_over_time_period
+msgid ""
+"Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day High Avg "
+"(MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_used_low_over_time_period
+msgid ""
+"Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Low Avg ("
+"MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_memory_used_max_over_time_period
+msgid "Memory - Aggregate Used for Child VMs for Collected Intervals 30 Day Max (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_disk_managed
+msgid "Content - Avg of Total Size of Managed VMs Disk Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_disk_registered
+msgid "Content - Avg of Total Size of Registered VMs Disk Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_disk_unmanaged
+msgid "Content - Avg of Total Size of Unmanaged VMs Disk Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_disk_unregistered
+msgid "Content - Avg of Total Size of Unregistered VMs Disk Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_free
+msgid "Capacity - Avg Free Space for Collected Intervals (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_mem_managed
+msgid "Content - Avg of Total Size of Managed VMs Memory Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_mem_registered
+msgid "Content - Avg of Total Size of Registered VMs Memory Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_mem_unmanaged
+msgid "Content - Avg of Total Size of Unmanaged VMs Memory Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_mem_unregistered
+msgid "Content - Avg of Total Size of Unregistered VMs Memory Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_snapshot_managed
+msgid "Content - Avg of Total Size of Managed VMs Snapshot Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_snapshot_registered
+msgid "Content - Avg of Total Size of Registered VMs Snapshot Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_snapshot_unmanaged
+msgid "Content - Avg of Total Size of Unmanaged VMs Snapshot Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_snapshot_unregistered
+msgid "Content - Avg of Total Size of Unregistered VMs Snapshot Files (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_total
+msgid "Capacity - Total Space (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_used_managed
+msgid "Content - Avg Space Used by Managed VMs for Collected Intervals (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_used_registered
+msgid "Content - Avg Space Used by Registered VMs for Collected Intervals (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_used_unmanaged
+msgid "Content - Avg Space Used by Unmanaged VMs for Collected Intervals (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_used_unregistered
+msgid "Content - Avg Space Used by Unregistered VMs for Collected Intervals (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_vm_count_managed
+msgid "Content - Avg Count of Managed VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_vm_count_registered
+msgid "Content - Avg Count of Registered VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_vm_count_unmanaged
+msgid "Content - Avg Count of Unmanaged VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_storage_vm_count_unregistered
+msgid "Content - Avg Count of Unregistered VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_vm_count_off
+msgid "State - Peak Avg VMs Powered-off - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.derived_vm_count_on
+msgid "State - Peak Avg VMs Powered-On - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.dest_host_name
+msgid "Destination Host Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.dest_vm_location
+msgid "Destination VM Location"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.dest_vm_name
+msgid "Destination VM Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.direction_of_trend
+msgid "Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_devicelatency_absolute_average
+msgid "Disk Latency - Avg (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_kernellatency_absolute_average
+msgid "Disk Kernel Latency - Avg (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_queuelatency_absolute_average
+msgid "Disk Queue Latency - Avg (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_usage_rate_average
+msgid "Disk I/O - Avg (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disks_aligned
+msgid "Disks Aligned"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.effective_cpu
+msgid "CPU - Effective"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.effective_memory
+msgid "Memory - Effective"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.end_trend_value
+msgid "End"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.evaluation_description
+msgid "What is evaluated"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.event_src
+msgid "Event Source"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.filename
+#, fuzzy
+msgid "File Name"
+msgstr "Nederlands"
+
+#. TRANSLATORS: en.yml key: dictionary.column.fqname
+msgid "Fully Qualified Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.guest_os
+msgid "Guest OS"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.guid
+msgid "EVM Unique ID (Guid)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.has_rdm_disk
+msgid "Has an RDM Disk?"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.health_state
+msgid "Health State Code"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.health_state_str
+msgid "Health State"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.homedir
+msgid "Home Directory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.host_name
+#. TRANSLATORS: en.yml key: dictionary.column.v_parent_host
+msgid "Parent Host"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.hostnames
+msgid "Host Names"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ip_addresses
+#. TRANSLATORS: en.yml key: dictionary.column.ipaddresses
+msgid "IP Addresses"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ipmi_enabled
+msgid "IPMI Enabled"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.is_evm_appliance
+msgid "Is an EVM Appliance?"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.last_scan_attempt_on
+msgid "Last Analysis Attempt On"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.last_scan_on
+msgid "Last Analysis Time"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.last_sync_on
+msgid "Last Sync Time"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.last_update_status
+msgid "Last Update Status Code"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.last_update_status_str
+msgid "Last Update Status"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ldap_group
+#. TRANSLATORS: en.yml key: dictionary.column.owning_ldap_group
+msgid "LDAP Group"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_total_cores
+msgid "Number of CPU Cores"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mac_addresses
+#. TRANSLATORS: en.yml key: dictionary.column.macaddresses
+msgid "MAC Addresses"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average
+msgid "CPU - Peak Usage Rate Avg for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_avg_over_time_period
+msgid "CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_avg_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day"
+" Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_high_over_time_period
+msgid "CPU - Peak Usage Rate Avg for Collected Intervals 30 Day High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_high_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day"
+" High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_low_over_time_period
+msgid "CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_low_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day"
+" Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_max_over_time_period
+msgid "CPU - Peak Usage Rate for Collected Intervals 30 Day Max (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usage_rate_average_max_over_time_period_without_overhead
+msgid ""
+"CPU - Peak Usage Rate for Collected Intervals Without Host Overhead 30 Day Max"
+" (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_cpu_usagemhz_rate_average
+msgid "CPU - Peak Usage Rate for Collected Intervals (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_cpu_available
+msgid "CPU Max Total MHz"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_cpu_reserved
+msgid "CPU Max Available MHz"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_host_count_off
+msgid "State - Peak Number of Hosts Powered Off  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_host_count_on
+msgid "State - Peak Number of Hosts Powered On  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_memory_available
+msgid "Memory Max Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_memory_reserved
+msgid "Memory Max Available"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_memory_used
+msgid "Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_storage_free
+msgid "Disk Space Max Free"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_vm_count_off
+msgid "State - Peak Number of VMs Powered Off  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_derived_vm_count_on
+msgid "State - Peak Number of VMs Powered On  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_disk_usage_rate_average
+msgid "Disk I/O - Peak Avg for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_swapin_absolute_average
+msgid "Memory - Swap In Max Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_swapout_absolute_average
+msgid "Memory - Swap Out Max Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_swapped_absolute_average
+msgid "Memory - Swapped Max Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_swaptarget_absolute_average
+msgid "Memory - Swap Target Max Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average
+msgid "Memory - Peak Usage of Allocated for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_avg_over_time_period
+msgid "Memory - Peak Usage of Allocated for Collected Intervals 30 Day Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_avg_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead"
+" 30 Day Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_high_over_time_period
+msgid "Memory - Peak Usage of Allocated for Collected Intervals 30 Day High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_high_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead"
+" 30 Day High Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_low_over_time_period
+msgid "Memory - Peak Usage of Allocated for Collected Intervals 30 Day Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_low_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead"
+" 30 Day Low Avg (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_max_over_time_period
+msgid "Memory - Peak Usage of Allocated for Collected Intervals 30 Day Max (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_usage_absolute_average_max_over_time_period_without_overhead
+msgid ""
+"Memory - Peak Usage of Allocated for Collected Intervals Without Host Overhead"
+" 30 Day Max (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_vmmemctl_absolute_average
+msgid "Memory - Balloon Max Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_mem_vmmemctltarget_absolute_average
+msgid "Memory - Balloon Target Max Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_net_usage_rate_average
+msgid "Network I/O - Peak Avg for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_sys_uptime_absolute_latest
+msgid "Uptime - Peak Uptime for Collected Intervals (Seconds)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.max_v_derived_storage_used
+msgid "Disk Space Max Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_swapin_absolute_average
+msgid "Memory - Swap In Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_swapout_absolute_average
+msgid "Memory - Swap Out Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_swapped_absolute_average
+msgid "Memory - Swapped Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_swaptarget_absolute_average
+msgid "Memory - Swap Target Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_usage_absolute_average
+msgid "Memory - Usage of Total Allocated (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_vmmemctl_absolute_average
+msgid "Memory - Balloon Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.mem_vmmemctltarget_absolute_average
+msgid "Memory - Balloon Target Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_mb
+msgid "RAM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_cpu_usage_rate_average
+msgid "CPU - Min Usage Rate for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_cpu_usagemhz_rate_average
+msgid "CPU - Min Usage for Collected Intervals (MHz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_derived_host_count_off
+msgid "State - Min Number of Hosts Powered Off  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_derived_host_count_on
+msgid "State - Min Number of Hosts Powered On  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_derived_memory_used
+msgid "Memory - Minimum Aggregate Avg Used for Child VMs for Collected Intervals (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_derived_storage_free
+msgid "Disk Space Min Free"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_derived_vm_count_off
+msgid "State - Min Number of VMs Powered Off  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_derived_vm_count_on
+msgid "State - Min Number of VMs Powered On  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_disk_usage_rate_average
+msgid "Disk I/O - Min Avg for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_swapin_absolute_average
+msgid "Memory - Swap In Min Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_swapout_absolute_average
+msgid "Memory - Swap Out Min Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_swapped_absolute_average
+msgid "Memory - Swapped Min Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_swaptarget_absolute_average
+msgid "Memory - Swap Min Target Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_usage_absolute_average
+msgid "Memory - Min Usage of Allocated for Collected Intervals (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_vmmemctl_absolute_average
+msgid "Memory - Balloon Min Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_mem_vmmemctltarget_absolute_average
+msgid "Memory - Balloon Target Min Average"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_net_usage_rate_average
+msgid "Network I/O - Min Avg for Collected Intervals (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_sys_uptime_absolute_latest
+msgid "Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.min_v_derived_storage_used
+msgid "Disk Space Min Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.multiplehostaccess
+msgid "Multiple Host Access"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.net_usage_rate_average
+msgid "Network I/O - Avg (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_other_latency
+msgid "Usage (NFS) - Time for Other Operations Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_other_latency_max
+msgid "Usage (NFS) - Time for Other Operations Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_other_latency_min
+msgid "Usage (NFS) - Time for Other Operations Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_other_ops
+msgid "Usage (NFS) - Number of Other Operations per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_other_ops_max
+msgid "Usage (NFS) - Number of Other Operations per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_other_ops_min
+msgid "Usage (NFS) - Number of Other Operations per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_data
+msgid "Usage (NFS) - Bytes Read per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_data_max
+msgid "Usage (NFS) - Bytes Read per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_data_min
+msgid "Usage (NFS) - Bytes Read per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_latency
+msgid "Usage (NFS) - Time for Reads Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_latency_max
+msgid "Usage (NFS) - Time for Reads Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_latency_min
+msgid "Usage (NFS) - Time for Reads Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_ops
+msgid "Usage (NFS) - Number of Reads per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_ops_max
+msgid "Usage (NFS) - Number of Reads per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_read_ops_min
+msgid "Usage (NFS) - Number of Reads per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_data
+msgid "Usage (NFS) - Bytes Written per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_data_max
+msgid "Usage (NFS) - Bytes Written per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_data_min
+msgid "Usage (NFS) - Bytes Written per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_latency
+msgid "Usage (NFS) - Time for Writes Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_latency_max
+msgid "Usage (NFS) - Time for Writes Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_latency_min
+msgid "Usage (NFS) - Time for Writes Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_ops
+msgid "Usage (NFS) - Number of Writes per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_ops_max
+msgid "Usage (NFS) - Number of Writes per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.nfs_write_ops_min
+msgid "Usage (NFS) - Number of Writes per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.notify_automate
+msgid "Management Event Raised"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.notify_email
+msgid "Email"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.notify_evm_event
+msgid "Event on Timeline"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.notify_snmp
+msgid "SNMP"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.num_cpu
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_sockets
+msgid "Number of CPUs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.num_disks
+msgid "Number of Disks"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.num_hard_disks
+msgid "Number of Hard Disks"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.operational_status
+msgid "Operational Status Code"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.operational_status_str
+msgid "Operational Status"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.os_image_name
+msgid "OS Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.other_latency
+msgid "Usage (Other) - Time for Other Operations Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.other_latency_max
+msgid "Usage (Other) - Time for Other Operations Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.other_latency_min
+msgid "Usage (Other) - Time for Other Operations Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.other_ops
+msgid "Usage (Other) - Number of Other Operations per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.other_ops_max
+msgid "Usage (Other) - Number of Other Operations per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.other_ops_min
+msgid "Usage (Other) - Number of Other Operations per Second Miin"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.overallocated_mem_pct
+msgid "Memory - % Overallocated"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.overallocated_vcpus_pct
+msgid "CPU - % Overallocated"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.owned_by_current_ldap_group
+msgid "In My LDAP Group?"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.owned_by_current_user
+msgid "Owned by Me?"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_1_name
+msgid "Folder Name (VMs & Templates) 1"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_2_name
+msgid "Folder Name (VMs & Templates) 2"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_3_name
+msgid "Folder Name (VMs & Templates) 3"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_4_name
+msgid "Folder Name (VMs & Templates) 4"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_5_name
+msgid "Folder Name (VMs & Templates) 5"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_6_name
+msgid "Folder Name (VMs & Templates) 6"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_7_name
+msgid "Folder Name (VMs & Templates) 7"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_8_name
+msgid "Folder Name (VMs & Templates) 8"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.parent_blue_folder_9_name
+msgid "Folder Name (VMs & Templates) 9"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.percent_cpu
+msgid "CPU %"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.percent_memory
+msgid "Memory %"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.pid
+msgid "PID"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.provisioned_storage
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_provisioned
+msgid "Total Provisioned Space"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ram_size
+msgid "RAM Size (MB)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_data
+msgid "Usage (Other) - Bytes Read per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_data_max
+msgid "Usage (Other) - Bytes Read per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_data_min
+msgid "Usage (Other) - Bytes Read per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_latency
+msgid "Usage (Other) - Time for Reads Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_latency_max
+msgid "Usage (Other) - Time for Reads Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_latency_min
+msgid "Usage (Other) - Time for Reads Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_ops
+msgid "Usage (Other) - Number of Reads per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_ops_max
+msgid "Usage (Other) - Number of Reads per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_ops_min
+msgid "Usage (Other) - Number of Reads per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.resource_name
+#, fuzzy
+msgid "Asset Name"
+msgstr "Gebruikersnaam"
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_vms_never
+msgid "Total VMs Powered Never"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_vms_off
+msgid "Total VMs Powered Off"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_vms_on
+msgid "Total VMs Powered On"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_vms_suspended
+msgid "Total VMs Power Suspended"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_vms_unknown
+msgid "Total VMs Powered Unknown"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_derived_cpu_reserved_pct
+msgid "CPU - Available (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_derived_host_count
+msgid "State - Number of Hosts  - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_derived_memory_reserved_pct
+msgid "Memory - Available (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_derived_vm_count
+msgid "State - Peak Avg VMs - Hourly Count / Daily Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_derived_cpu_total_cores_used
+msgid "CPU - Usage Rate for Collected Intervals (Number of Cores)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggressive_mem_recommended_change
+msgid "Memory - Aggressive Recommendation Savings"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggressive_mem_recommended_change_pct
+msgid "Memory - Aggressive Recommendation Savings (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_mem
+msgid "Memory - Aggressive Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
+msgid "CPU - Aggressive Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggressive_vcpus_recommended_change
+msgid "CPU - Aggressive Recommendation Savings"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.aggressive_vcpus_recommended_change_pct
+msgid "CPU - Aggressive Recommendation Savings (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_available_host_memory
+msgid "Capacity - Profile 1 - Total Memory with HA"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_available_host_vcpu
+msgid "Capacity - Profile 1 - Total CPU with HA"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_memory_commitment_ratio
+msgid "Capacity - Profile 1 - Memory Commitment Ratio"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_memory_maximum
+msgid "Capacity - Profile 1 - Maximum Memory per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_memory_method
+msgid "Capacity - Profile 1 - Memory Calculation Method"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_memory_minimum
+msgid "Capacity - Profile 1 - Minimum Memory per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_memory_per_vm
+msgid "Capacity - Profile 1 - Memory per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_memory_per_vm_with_min_max
+msgid "Capacity - Profile 1 - Memory per VM Used in Calculation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_projected_vm_count_based_on_all
+msgid "Capacity - Profile 1 - VM Count (combined)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_projected_vm_count_based_on_memory
+msgid "Capacity - Profile 1 - VM Count based on Memory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_projected_vm_count_based_on_vcpu
+msgid "Capacity - Profile 1 - VM Count based on vCPU"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_remaining_host_memory
+msgid "Capacity - Profile 1 - Available Memory for New VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_remaining_host_vcpu
+msgid "Capacity - Profile 1 - Available vCPUs for New VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_remaining_vm_count_based_on_all
+msgid "Capacity - Profile 1 - Available VM Count (combined)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_remaining_vm_count_based_on_memory
+msgid "Capacity - Profile 1 - Available VM Count based on Memory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_remaining_vm_count_based_on_vcpu
+msgid "Capacity - Profile 1 - Available VM Count based on vCPU"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_vcpu_commitment_ratio
+msgid "Capacity - Profile 1 - vCPU Commitment Ratio"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_vcpu_maximum
+msgid "Capacity - Profile 1 - Maximum vCPU per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_vcpu_method
+msgid "Capacity - Profile 1 - vCPU Calculation Method"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_vcpu_minimum
+msgid "Capacity - Profile 1 - Minimum vCPU per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_vcpu_per_vm
+msgid "Capacity - Profile 1 - Number of vCPUs per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_1_vcpu_per_vm_with_min_max
+msgid "Capacity - Profile 1 - Number of vCPUs per VM Used in Calculation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_available_host_memory
+msgid "Capacity - Profile 2 - Memory Effective with HA"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_available_host_vcpu
+msgid "Capacity - Profile 2 - CPU Effective with HA (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_memory_commitment_ratio
+msgid "Capacity - Profile 2 - Memory Commitment Ratio"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_memory_maximum
+msgid "Capacity - Profile 2 - Maximum Memory per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_memory_method
+msgid "Capacity - Profile 2 - Memory Calculation Method"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_memory_minimum
+msgid "Capacity - Profile 2 - Minimum Memory per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_memory_per_vm
+msgid "Capacity - Profile 2 - Memory per VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_memory_per_vm_with_min_max
+msgid "Capacity - Profile 2 - Memory per VM Used in Calculation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_projected_vm_count_based_on_all
+msgid "Capacity - Profile 2 - VM Count (combined)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_projected_vm_count_based_on_memory
+msgid "Capacity - Profile 2 - VM Count based on Memory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_projected_vm_count_based_on_vcpu
+msgid "Capacity - Profile 2 - VM Count based on vCPU"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_remaining_host_memory
+msgid "Capacity - Profile 2 - Available Memory for New VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_remaining_host_vcpu
+msgid "Capacity - Profile 2 - Available vCPUs for New VMs (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_remaining_vm_count_based_on_all
+msgid "Capacity - Profile 2 - Available VM Count (combined)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_remaining_vm_count_based_on_memory
+msgid "Capacity - Profile 2 - Available VM Count based on Memory"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_remaining_vm_count_based_on_vcpu
+msgid "Capacity - Profile 2 - Available VM Count based on vCPU"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_vcpu_commitment_ratio
+msgid "Capacity - Profile 2 - vCPU Commitment Ratio"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_vcpu_maximum
+msgid "Capacity - Profile 2 - Maximum vCPU per VM (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_vcpu_method
+msgid "Capacity - Profile 2 - vCPU Calculation Method"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_vcpu_minimum
+msgid "Capacity - Profile 2 - Minimum vCPU per VM (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_vcpu_per_vm
+msgid "Capacity - Profile 2 - CPU Peak Avg per VM (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.capacity_profile_2_vcpu_per_vm_with_min_max
+msgid "Capacity - Profile 2 - CPU Peak Avg per VM Used in Calculation (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.conservative_mem_recommended_change
+msgid "Memory - Conservative Recommendation Savings"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.conservative_mem_recommended_change_pct
+msgid "Memory - Conservative Recommendation Savings (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.conservative_recommended_mem
+msgid "Memory - Conservative Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.conservative_recommended_vcpus
+msgid "CPU - Conservative Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.conservative_vcpus_recommended_change
+msgid "CPU - Conservative Recommendation Savings"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.conservative_vcpus_recommended_change_pct
+msgid "CPU - Conservative Recommendation Savings (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ems_created_on
+msgid "Created on Time"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.moderate_mem_recommended_change
+msgid "Memory - Moderate Recommendation Savings"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.moderate_mem_recommended_change_pct
+msgid "Memory - Moderate Recommendation Savings (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_mem
+msgid "Memory - Moderate Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_vcpus
+msgid "CPU - Moderate Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.moderate_vcpus_recommended_change
+msgid "CPU - Moderate Recommendation Savings"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.moderate_vcpus_recommended_change_pct
+msgid "CPU - Moderate Recommendation Savings (%)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.recommended_mem
+msgid "Memory - Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.recommended_vcpus
+msgid "CPU - Recommendation"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_other_latency
+msgid "Usage (Other) - Time for Other Block Protocol Operations Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_other_latency_max
+msgid "Usage (Other) - Time for Other Block Protocol Operations Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_other_latency_min
+msgid "Usage (Other) - Time for Other Block Protocol Operations Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_other_ops
+msgid "Usage (Block Protocol) - Number of Other Operations per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_other_ops_max
+msgid "Usage (Block Protocol) - Number of Other Operations per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_other_ops_min
+msgid "Usage (Block Protocol) - Number of Other Operations per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_data
+msgid "Usage (Block Protocol) - Bytes Read per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_data_max
+msgid "Usage (Block Protocol) - Bytes Read per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_data_min
+msgid "Usage (Block Protocol) - Bytes Read per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_latency
+msgid "Usage (Block Protocol) - Time for Reads Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_latency_max
+msgid "Usage (Block Protocol) - Time for Reads Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_latency_min
+msgid "Usage (Block Protocol) - Time for Reads Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_ops
+msgid "Usage (Block Protocol) - Number of Reads per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_ops_max
+msgid "Usage (Block Protocol) - Number of Reads per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_read_ops_min
+msgid "Usage (Block Protocol) - Number of Reads per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_data
+msgid "Usage (Block Protocol) - Bytes Written per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_data_max
+msgid "Usage (Block Protocol) - Bytes Written per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_data_min
+msgid "Usage (Block Protocol) - Bytes Written per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_latency
+msgid "Usage (Block Protocol) - Time for Writes Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_latency_max
+msgid "Usage (Block Protocol) - Time for Writes Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_latency_min
+msgid "Usage (Block Protocol) - Time for Writes Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_ops
+msgid "Usage (Block Protocol) - Number of Writes per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_ops_max
+msgid "Usage (Block Protocol) - Number of Writes per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.san_write_ops_min
+msgid "Usage (Block Protocol) - Number of Writes per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.slope
+msgid "Slope"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.src_host_name
+msgid "Source Host Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.src_vm_location
+msgid "Source VM Location"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.src_vm_name
+msgid "Source VM Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ssh_permit_root_login
+msgid "SSH Root Access"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.svc_type
+msgid "Service Type"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.sys_uptime_absolute_latest
+msgid "Asset - Uptime (Seconds)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.thin_provisioned
+msgid "Thin Provisioned"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.timestamp
+#. TRANSLATORS: en.yml key: dictionary.column.statistic_time
+msgid "Activity Sample - Timestamp (Day/Time)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_ops
+msgid "Usage (All) - Number of Operations per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_ops_max
+msgid "Usage (All) - Number of Operations per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_ops_min
+msgid "Usage (All) - Number of Operations per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_cpu_usagemhz_rate_average
+msgid "CPU Average Used MHz Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_derived_memory_used
+msgid "Memory Average Used Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_max_cpu_usagemhz_rate_average
+msgid "CPU Max Used MHz Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_max_derived_memory_used
+msgid "Memory Max Used Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_max_disk_usage_rate_average
+msgid "Disk I/O Max Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_max_net_usage_rate_average
+msgid "Network I/O Max Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_max_v_derived_storage_used
+msgid "Disk Space Max Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.trend_v_derived_storage_used
+msgid "Disk Space Average Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.typename
+msgid "Type Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.uid
+msgid "UID"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.uncommitted_storage
+msgid "Uncommitted Space"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.updated_at
+#. TRANSLATORS: en.yml key: dictionary.column.updated_on
+msgid "Date Updated"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.used_disk_storage
+msgid "Total Used Disk Space"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.used_percent_of_provisioned
+msgid "Percent Used Provisioned Space"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.used_storage_by_state
+msgid "Currently Used Space"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_cpu_vr_ratio
+msgid "CPU Cores Virtual to Real Ratio"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_datastore_path
+msgid "Datastore Path"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_date
+#. TRANSLATORS: en.yml key: dictionary.column.v_statistic_date
+msgid "Activity Sample - Day (MM DD YY)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_debris_percent_of_used
+msgid "Non-VM Files Percent of Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_derived_storage_used
+msgid "Capacity - Used Space (B)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_disk_percent_of_used
+msgid "Disk Files Percent of Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_free_space_percent_of_total
+msgid "Free Space Percent of Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_host_vmm_product
+msgid "Parent Host Platform"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_is_a_template
+msgid "Is a Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_memory_percent_of_used
+msgid "VM Memory Files Percent of Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_month
+msgid "Activity Sample - Month (YYYY/MM)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_blue_folder
+msgid "Parent Folder (VMs & Templates)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_blue_folder_path
+msgid "Parent Folder Path (VMs & Templates)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_cluster
+#. TRANSLATORS: en.yml key: dictionary.column.v_parent_cluster
+msgid "Parent Cluster"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_datacenter
+#. TRANSLATORS: en.yml key: dictionary.column.v_parent_datacenter
+msgid "Parent Datacenter"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_folder
+msgid "Parent Folder (Hosts & Clusters)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_folder_path
+msgid "Parent Folder Path (Hosts & Clusters)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_owning_resource_pool
+#. TRANSLATORS: en.yml key: dictionary.column.v_parent_resource_pool
+msgid "Parent Resource Pool"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_parent_folder
+msgid "Parent Folder"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_pct_cpu_ready_delta_summation
+msgid "CPU - % Ready"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_pct_cpu_used_delta_summation
+msgid "CPU - % Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_pct_cpu_wait_delta_summation
+msgid "CPU - % Wait"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_pct_free_disk_space
+msgid "Pct Free Disk"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_provisioned_percent_of_total
+msgid "Provisioned Space Percent of Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_qualified_desc
+msgid "Cluster in Datacenter"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_ram_vr_ratio
+msgid "Memory Virtual to Real Ratio"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_snapshot_percent_of_used
+msgid "Snapshot Files Percent of Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_time
+#. TRANSLATORS: en.yml key: dictionary.column.v_statistic_time
+msgid "Activity Sample - Time (HH MM SS)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_debris_size
+msgid "Size of Non-VM Files"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_disk_size
+msgid "Size of VM Provisioned Disk Files"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_hosts
+msgid "Total Hosts"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_memory_size
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_vm_ram_size
+msgid "Size of VM Memory Files"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_snapshot_size
+msgid "Size of VM Snapshot Files"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_snapshots
+msgid "Total Snapshots"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_storages
+msgid "Total Datastores"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_vm_misc_size
+msgid "Size of Other VM Files"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_total_vms
+msgid "Total VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_used_space
+#, fuzzy
+msgid "Used Space"
+msgstr "Gebruikersnaam"
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_used_space_percent_of_total
+msgid "Used Space Percent of Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.v_vm_misc_percent_of_used
+msgid "Other VM Files Percent of Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.virtual_hw_version
+msgid "Virtual Hardware Version"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmm_buildnumber
+msgid "VMM Build Number"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmm_product
+msgid "VMM Platform"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmm_vendor
+msgid "VMM Vendor"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmm_version
+msgid "VMM Version"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmsafe_agent_address
+msgid "VMsafe Agent Address"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmsafe_agent_port
+msgid "VMsafe Agent Port"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmsafe_enable
+msgid "VMsafe Enable"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmsafe_fail_open
+msgid "VMsafe Fail Open"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmsafe_immutable_vm
+msgid "VMsafe Immutable VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vmsafe_timeout_ms
+msgid "VMsafe Timeout (ms)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_data
+msgid "Usage (All) - Bytes Written per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_data_max
+msgid "Usage (All) - Bytes Written per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_data_min
+msgid "Usage (All) - Bytes Written per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_latency
+msgid "Usage (All) - Time for Writes Avg"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_latency_max
+msgid "Usage (All) - Time for Writes Avg Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_latency_min
+msgid "Usage (All) - Time for Writes Avg Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_ops
+msgid "Usage (All) - Number of Writes per Second"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_ops_max
+msgid "Usage (All) - Number of Writes per Second Max"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_ops_min
+msgid "Usage (All) - Number of Writes per Second Min"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.ws_port
+msgid "Web Services Port"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.zone_name
+msgid "EVM Zone"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_allocated_cost
+msgid "vCPUs Allocated Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_allocated_metric
+msgid "vCPUs Allocated over Time Period"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_cost
+msgid "CPU Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_metric
+msgid "CPU Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_used_cost
+msgid "CPU Used Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.cpu_used_metric
+msgid "CPU Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_io_cost
+msgid "Disk I/O Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_io_metric
+msgid "Disk I/O Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_io_used_cost
+msgid "Disk I/O Used Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.disk_io_used_metric
+msgid "Disk I/O Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.display_range
+msgid "Date Range"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.fixed_compute_1_cost
+msgid "Fixed Compute Cost 1"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.fixed_compute_2_cost
+msgid "Fixed Compute Cost 2"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.fixed_cost
+msgid "Fixed Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.fixed_storage_1_cost
+msgid "Fixed Storage Cost 1"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.fixed_storage_2_cost
+msgid "Fixed Storage Cost 2"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_allocated_cost
+msgid "Memory Allocated Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_allocated_metric
+msgid "Memory Allocated over Time Period"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_cost
+msgid "Memory Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_metric
+msgid "Memory Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_used_cost
+msgid "Memory Used Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.memory_used_metric
+msgid "Memory Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.net_io_cost
+msgid "Network I/O Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.net_io_metric
+msgid "Network I/O Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.net_io_used_cost
+msgid "Network I/O Used Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.net_io_used_metric
+msgid "Network I/O Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.storage_allocated_cost
+msgid "Storage Allocated Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.storage_allocated_metric
+msgid "Storage Allocated"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.storage_cost
+msgid "Storage Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.storage_metric
+msgid "Storage Total"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.storage_used_cost
+msgid "Storage Used Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.storage_used_metric
+msgid "Storage Used"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_cost
+msgid "Total Cost"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.vm_name
+msgid "VM Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.avg_read_size
+msgid "Average Read Size"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.avg_write_size
+msgid "Average Write Size"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.k_bytes_read_per_sec
+msgid "Read (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.k_bytes_transferred_per_sec
+msgid "Transferred (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.k_bytes_written_per_sec
+msgid "Written (KBps)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.pct_hit
+msgid "Hit %"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.pct_read
+msgid "Read %"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.pct_write
+msgid "Write %"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.queue_depth
+msgid "Queue Depth"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_hit_ios_per_sec
+msgid "Read Hit (IOPS)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.read_ios_per_sec
+msgid "Read (IOPS)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.response_time_sec
+msgid "Response Time (Seconds)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.service_time_sec
+msgid "Service Time (Seconds)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.total_ios_per_sec
+msgid "Total (IOPS)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.utilization
+msgid "Utilization %"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.wait_time_sec
+msgid "Wait Time (Seconds)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_hit_ios_per_sec
+msgid "Write Hit (IOPS)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.column.write_ios_per_sec
+msgid "Write (IOPS)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.AuditEvent
+msgid "EVM Audit Event"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.AuditEvent (plural form)
+msgid "EVM Audit Events"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.AvailabilityZone
+#. TRANSLATORS: en.yml key: dictionary.table.availability_zone
+msgid "Availability Zone"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Chargeback (plural form)
+msgid "Chargebacks"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ChargebackRate
+msgid "Chargeback Rate"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ChargebackRate (plural form)
+msgid "Chargeback Rates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.CimStorageExtent
+msgid "Storage - Extent"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.CimStorageExtent (plural form)
+msgid "Storage - Extents"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Compliance
+#. TRANSLATORS: en.yml key: dictionary.model.Compliances
+#. TRANSLATORS: en.yml key: dictionary.table.compliances
+msgid "Compliance History"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Compliance (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.Compliances (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.compliances (plural form)
+#, fuzzy
+msgid "Compliance Histories"
+msgstr "Toestel:"
+
+#. TRANSLATORS: en.yml key: dictionary.model.Condition
+msgid "Condition"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.CustomButton
+#. TRANSLATORS: en.yml key: dictionary.table.custom_button
+msgid "Button"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet
+#. TRANSLATORS: en.yml key: dictionary.table.custom_button_set
+msgid "Buttons Group"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.custom_button_set (plural form)
+msgid "Buttons Groups"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerGroup
+#. TRANSLATORS: en.yml key: dictionary.table.container_group
+msgid "Pod"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry
+#. TRANSLATORS: en.yml key: dictionary.table.container_image_registry
+msgid "Image Registry"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_image_registry (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_image_registries
+msgid "Image Registries"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerRoute
+#. TRANSLATORS: en.yml key: dictionary.table.container_route
+msgid "Route"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerReplicator
+#. TRANSLATORS: en.yml key: dictionary.table.container_replicator
+msgid "Replicator"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ContainerReplicator (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_replicator (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.container_replicators
+msgid "Replicators"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.EmsCluster (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_cluster (plural form)
+msgid "Cluster / Deployment Roles"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.EmsClusterPerformance
+msgid "Performance - Cluster"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.EmsClusterPerformance (plural form)
+msgid "Performance - Clusters"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.EmsEvent (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_event (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_events
+msgid "Management Events"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.EmsFolder (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_folder (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_folders
+msgid "Folders"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ExtManagementSystemPerformance
+msgid "Performance - Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ExtManagementSystemPerformance (plural form)
+msgid "Performance - Providers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtp
+msgid "FTP"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtp (plural form)
+msgid "FTPs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtpAnonymous
+msgid "Anonymous FTP"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtpAnonymous (plural form)
+msgid "Anonymous FTPs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotNfs
+msgid "NFS"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotSmb
+msgid "Samba"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.FileDepotSmb (plural form)
+msgid "Sambas"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Flavor
+#. TRANSLATORS: en.yml key: dictionary.table.flavor
+msgid "Flavor"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Host (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.host (plural form)
+msgid "Host / Nodes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.HostPerformance
+msgid "Performance - Host"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.HostPerformance (plural form)
+msgid "Performance - Hosts"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.IsoDatastore
+#. TRANSLATORS: en.yml key: dictionary.table.iso_datastore
+msgid "ISO Datastore"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.IsoDatastore (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.iso_datastore (plural form)
+msgid "ISO Datastores"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.IsoImage
+#. TRANSLATORS: en.yml key: dictionary.table.iso_image
+msgid "ISO Image"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.LdapDomain
+#. TRANSLATORS: en.yml key: dictionary.table.ldap_domain
+msgid "LDAP Domain"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.LdapRegion
+#. TRANSLATORS: en.yml key: dictionary.table.ldap_region
+msgid "LDAP Region"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.LdapServer
+#. TRANSLATORS: en.yml key: dictionary.table.ldap_server
+msgid "LDAP Server"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager
+msgid "Configuration Manager"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager (plural form)
+msgid "Configuration Managers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
+msgid "Foreman Configured System"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem (plural form)
+msgid "Foreman Configured Systems"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager
+#. TRANSLATORS: en.yml key: dictionary.table.ems_cloud
+msgid "Cloud Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_cloud (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_clouds
+msgid "Cloud Providers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Vm
+#. TRANSLATORS: en.yml key: dictionary.table.vm_cloud
+msgid "Instance"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager
+#. TRANSLATORS: en.yml key: dictionary.table.ems_container
+msgid "Containers Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_container (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_containers
+msgid "Containers Providers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager
+#. TRANSLATORS: en.yml key: dictionary.table.ems_infra
+msgid "Infrastructure Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_infra (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_infras
+msgid "Infrastructure Providers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Vm
+#. TRANSLATORS: en.yml key: dictionary.table.vm_infra
+#. TRANSLATORS: en.yml key: dictionary.table.vm_or_template
+msgid "Virtual Machine"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager
+msgid "Infrastructure Provider (Openstack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager (plural form)
+msgid "Infrastructure Providers (Openstack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager
+msgid "Infrastructure Provider (Microsoft)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager (plural form)
+msgid "Infrastructure Providers (Microsoft)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Redhat::InfraManager
+msgid "Infrastructure Provider (Redhat)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Redhat::InfraManager (plural form)
+msgid "Infrastructure Providers (Redhat)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager
+msgid "Infrastructure Provider (Vmware)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager (plural form)
+msgid "Infrastructure Providers (Vmware)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager
+msgid "Cloud Provider (Openstack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager (plural form)
+msgid "Cloud Providers (Openstack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager
+msgid "Cloud Provider (Amazon)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager (plural form)
+msgid "Cloud Providers (Amazon)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager
+msgid "Cloud Provider (Microsoft Azure)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager (plural form)
+msgid "Cloud Providers (Microsoft Azure)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Atomic::ContainerManager
+msgid "Container Provider (Atomic)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Atomic::ContainerManager (plural form)
+msgid "Container Providers (Atomic)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Kubernetes::ContainerManager
+msgid "Container Provider (Kubernetes)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Kubernetes::ContainerManager (plural form)
+msgid "Container Providers (Kubernetes)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager
+msgid "Container Provider (Openshift)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager (plural form)
+msgid "Container Providers (Openshift)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OpenshiftEnterprise::ContainerManager
+msgid "Container Provider (Openshift Enterprise)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OpenshiftEnterprise::ContainerManager (plural form)
+msgid "Container Providers (Openshift Enterprise)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeClass
+msgid "Automate Class"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeClass (plural form)
+msgid "Automate Classes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeDomain
+msgid "Automate Domain"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeDomain (plural form)
+msgid "Automate Domains"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeInstance
+msgid "Automate Instance"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeInstance (plural form)
+msgid "Automate Instances"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeMethod
+msgid "Automate Method"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeMethod (plural form)
+msgid "Automate Methods"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeNamespace
+msgid "Automate Namespace"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAeNamespace (plural form)
+msgid "Automate Namespaces"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
+msgid "Alert"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqAlertSet
+msgid "Alert Profile"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqDialog (plural form)
+msgid "Dialogs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqEnterprise (plural form)
+msgid "Enterprises"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqEventDefinition
+#. TRANSLATORS: en.yml key: dictionary.table.miq_event_definition
+msgid "Event"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqGroup
+msgid "EVM Group"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqGroup (plural form)
+msgid "EVM Groups"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqPolicySet
+msgid "Policy Profile"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqProvision (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_provision (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_provisions
+msgid "Provisions"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqProxy
+msgid "SmartProxy"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqProxy (plural form)
+msgid "SmartProxies"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqRegion (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_region (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_regions
+#, fuzzy
+msgid "Regions"
+msgstr "Regio:"
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqSchedule
+msgid "Schedule"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqSearch
+msgid "Search"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqSearch (plural form)
+msgid "Searches"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqSmisAgent
+msgid "SMI-S Agent"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqSmisAgent (plural form)
+msgid "SMI-S Agents"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqTemplate
+msgid "VM Template and Image"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqTemplate (plural form)
+msgid "VM Template and Images"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqUserRole (plural form)
+msgid "Roles"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
+msgid "Widget"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqWorker
+#. TRANSLATORS: en.yml key: dictionary.table.miq_worker
+msgid "EVM Worker"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiqWorker (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_worker (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_workers
+msgid "EVM Workers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.NetappRemoteService
+msgid "NetApp Remote Service"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.NetappRemoteService (plural form)
+msgid "NetApp Remote Services"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapConcreteExtent
+msgid "Storage - Aggregate"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapConcreteExtent (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_concrete_extents
+msgid "Storage - Aggregates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapFileShare
+msgid "Storage - File Share"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapFileShare (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_file_shares
+msgid "Storage - File Shares"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapLogicalDisk
+msgid "Storage - Volume"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapLogicalDisk (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_logical_disks
+msgid "Storage - Volumes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapPlexExtent
+msgid "Storage - Plex"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapPlexExtent (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_plex_extents
+msgid "Storage - Plexes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapRaidGroupExtent
+msgid "Storage - Raid Group"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapRaidGroupExtent (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_raid_group_extents
+msgid "Storage - Raid Groups"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapStorageSystem
+msgid "Storage - Filer"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapStorageSystem (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_storage_systems
+msgid "Storage - Filers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapStorageVolume
+msgid "Storage - LUN"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapStorageVolume (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_storage_volumes
+msgid "Storage - LUNs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OntapVolumeMetricsRollup
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_volume_metrics_rollup
+msgid "Storage Performance - Volumes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateCfn
+msgid "CloudFormation Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateCfn (plural form)
+msgid "CloudFormation Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateHot
+msgid "Heat Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateHot (plural form)
+msgid "Heat Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateAzure
+msgid "Azure Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateAzure (plural form)
+msgid "Azure Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate
+msgid "Product Update"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
+msgid "Product Updates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeCustomizationTemplate
+msgid "Customization Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeCustomizationTemplate (plural form)
+msgid "Customization Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeImage
+msgid "PXE Image"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeImageType
+msgid "System Image Type"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeImageType (plural form)
+msgid "System Image Types"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeServer
+msgid "PXE Server"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.PxeServer (plural form)
+msgid "PXE Servers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ScanItem
+msgid "Scan Item"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ScanItem (plural form)
+msgid "Scan Items"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplate
+msgid "Service Catalog Item"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplate (plural form)
+msgid "Service Catalog Items"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.SniaLocalFileSystem
+msgid "Storage - Local File System"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.SniaLocalFileSystem (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.snia_local_file_system
+msgid "Storage - Local File Systems"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Storage (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.storage (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.storages
+msgid "Datastores"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.StorageFile
+#. TRANSLATORS: en.yml key: dictionary.table.storage_file
+msgid "Datastore File"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.StorageFile (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.storage_file (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.storage_files
+msgid "Datastore Files"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.StorageManager
+msgid "Storage Manager"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.StoragePerformance
+msgid "Performance - Datastore"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.StoragePerformance (plural form)
+msgid "Performance - Datastores"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.User
+msgid "EVM User"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.User (plural form)
+msgid "EVM Users"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VimPerformanceTrend
+msgid "Performance Trend"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VimPerformanceTrend (plural form)
+msgid "Performance Trends"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Vm
+#. TRANSLATORS: en.yml key: dictionary.table.vm
+msgid "VM and Instance"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.vm (plural form)
+msgid "VM and Instances"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VmdbTable
+msgid "VMDB Table"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VmdbTable (plural form)
+msgid "VMDB Tables"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
+msgid "VM or Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate (plural form)
+msgid "VM or Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VmPerformance
+msgid "Performance - VM"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.VmPerformance (plural form)
+msgid "Performance - VMs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.cdroms
+msgid "CD/DVD Drives"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
+msgid "Base Extents"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.cloud_volume
+msgid "Cloud Volume"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.cloud_volume (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.cloud_volumes
+msgid "Cloud Volumes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.persistent_volume
+msgid "Volume"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_custom_attribute
+msgid "VC Custom Attribute"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_middleware
+msgid "Middleware Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_middleware (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_middlewares
+msgid "Middleware Providers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_server
+msgid "Middleware Server"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_deployment
+msgid "Middleware Deployment"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_deployment (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_deployments
+msgid "Middleware Deployments"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.evm_owner
+msgid "EVM Owner"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.evm_owner (plural form)
+msgid "EVM Owners"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ext_management_system
+msgid "Cloud/Infrastructure Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ext_management_system (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ext_management_systems
+msgid "Cloud/Infrastructure Providers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.filesystem_drivers
+msgid "File System Drivers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.floppies
+msgid "Floppy Drives"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.lans
+msgid "vLANs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.last_compliance
+msgid "Last Compliance History"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.last_compliance (plural form)
+msgid "Last Compliance Histories"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ldap (plural form)
+msgid "LDAPs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.linux_initprocesses
+msgid "Linux Init Processes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_approval_stamps
+msgid "Stamped Approvals"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_approvals
+msgid "Approvals"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute
+msgid "EVM Custom Attribute"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attributes
+msgid "EVM Custom Attributes"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_foreman_configuration_manager_configuration_profile
+msgid "Configuration Profile (Foreman)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_foreman_configuration_manager_configuration_profile (plural form)
+msgid "Configuration Profiles (Foreman)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
+msgid "Cloud Networks (Openstack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
+msgid "Cloud Tenants (Openstack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_provision_template
+msgid "Provisioned From Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_provision_template (plural form)
+msgid "Provisioned From Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_proxy_builds
+msgid "SmartProxy Builds"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_scsi_luns
+msgid "SCSI LUNs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_task
+msgid "Task"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_template
+msgid "VM Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.miq_template (plural form)
+msgid "VM Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_file_share
+msgid "File Shares"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_storage_system
+msgid "Filers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ontap_storage_volume
+msgid "LUNs"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.orchestration_stack
+#, fuzzy
+msgid "Stack"
+msgstr "Terug"
+
+#. TRANSLATORS: en.yml key: dictionary.table.server_builds
+msgid "EVM Builds"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.service_template
+msgid "Catalog Item"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.switches
+msgid "vSwitches"
+msgstr ""
 
 msgid "Account|Acctid"
 msgstr ""
@@ -12462,9 +16407,6 @@ msgid "Computer system"
 msgstr ""
 
 msgid "ComputerSystem|Managed entity type"
-msgstr ""
-
-msgid "Condition"
 msgstr ""
 
 msgid "Condition|Applies to exp"
@@ -13581,9 +17523,6 @@ msgid "FirewallRule|Source ip range"
 msgstr ""
 
 msgid "FirewallRule|Updated on"
-msgstr ""
-
-msgid "Flavor"
 msgstr ""
 
 msgid "Flavor|Block storage based only"
@@ -18817,9 +22756,6 @@ msgid "VmdbTable|Name"
 msgstr ""
 
 msgid "VmdbTable|Prior raw metrics"
-msgstr ""
-
-msgid "Volume"
 msgstr ""
 
 msgid "Volume|Created on"
