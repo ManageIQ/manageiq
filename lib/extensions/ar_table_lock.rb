@@ -25,5 +25,3 @@ module ArTableLock
     end
   end
 end
-
-ApplicationRecord.extend ArTableLock

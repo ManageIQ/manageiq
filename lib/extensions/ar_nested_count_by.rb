@@ -16,5 +16,3 @@ module ArNestedCountBy
     end
   end
 end
-
-ApplicationRecord.include ArNestedCountBy
