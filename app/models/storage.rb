@@ -558,7 +558,7 @@ class Storage < ApplicationRecord
   def vm_ids_by_path
     host_ids = hosts.collect(&:id)
     return nil if host_ids.empty?
-    Vm.where("host_id IN (?)", host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
+    Vm.where(:host_id => host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
   end
 
   # TODO: Is this still needed?
