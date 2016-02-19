@@ -3,7 +3,7 @@ module ApplicationController::Compare
 
   def get_compare_report(model)
     db = model.kind_of?(String) ? model.constantize : model
-    MiqReport.find_by_filename_and_template_type("#{db.table_name}.yaml", "compare")
+    MiqReport.find_by(:filename => "#{db.table_name}.yaml", :template_type => "compare")
   end
 
   def create_compare_view
