@@ -91,6 +91,16 @@ describe ApiController do
       expect_query_result(:vms, 3, 3)
       expect_result_resources_to_match_hash([{"name" => "a"}, {"name" => "B"}, {"name" => "c"}])
     end
+
+    it "supports sorting with physical attributes" do
+      FactoryGirl.create(:vm_vmware, :name => "vmware_vm")
+      FactoryGirl.create(:vm_redhat, :name => "redhat_vm")
+
+      run_get vms_url, :sort_by => "vendor", :sort_order => "asc", :expand => "resources"
+
+      expect_query_result(:vms, 2, 2)
+      expect_result_resources_to_match_hash([{"name" => "redhat_vm"}, {"name" => "vmware_vm"}])
+    end
   end
 
   describe "Filtering vms" do
