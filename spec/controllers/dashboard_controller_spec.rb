@@ -248,7 +248,7 @@ describe DashboardController do
     before(:each) do
       controller.params[:sidebar] = sidebar
       controller.params[:context] = context
-      expect(controller).to receive(:render).with(:nothing => true)
+      expect(controller).to receive(:head).with(:ok)
       controller.send(:resize_layout)
     end
 

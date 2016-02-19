@@ -5,7 +5,7 @@ class PictureController < ApplicationController
     if picture && picture.extension == extension
       render_picture_content(picture)
     else
-      render :nothing => true, :status => 404
+      head :not_found
     end
   end
 

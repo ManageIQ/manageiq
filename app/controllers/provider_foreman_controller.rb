@@ -322,7 +322,7 @@ class ProviderForemanController < ApplicationController
         session[:exp_parms] = {:id => tree_node_id}
         redirect_to :action => "explorer"
       end
-      format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
+      format.any { head :not_found }  # Anything else, just send 404
     end
   end
 

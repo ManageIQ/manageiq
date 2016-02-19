@@ -898,7 +898,7 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to check for changes in ANY field on the form
   def form_method_field_changed
     if !@sb[:form_vars_set]  # workaround to prevent an error that happens when IE sends a transaction form form even after save button is clicked when there is text_area in the form
-      render :nothing => true
+      head :ok
     else
       return unless load_edit("aemethod_edit__#{params[:id]}", "replace_cell__explorer")
       @prev_location = @edit[:new][:location]
