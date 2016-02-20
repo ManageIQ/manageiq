@@ -71,11 +71,7 @@
           .flobj
             %img{:src => image_path("#{size}/reflection.png")}
         - elsif @sb[:compare_db] == "EmsCluster"
-          = render(:partial => "layouts/quadicon",
-            :locals         => {:mode => :icon,
-              :item                   => @drift_obj,
-              :size                   => size,
-              :typ                    => :listnav})
+          = render_quadicon(@drift_obj, :mode => :icon, :size => size, :typ => :listnav)
       - if @sb[:compare_db] != "EmsCluster"
         %div{:style => "margin-top: -25px;"}
           %center{:style => "color:#000;"}

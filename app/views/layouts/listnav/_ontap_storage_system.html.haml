@@ -1,7 +1,7 @@
 - if @record.try(:evm_display_name)
   #accordion.panel-group
     = miq_accordion_panel(truncate(@record.evm_display_name, :length => truncate_length), true, "icon") do
-      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+      = render_quadicon(@record, :mode => :icon, :size => 72, :typ => :listnav)
 
     = miq_accordion_panel(_("Properties"), false, "cim_cs_prop") do
       %ul.nav.nav-pills.nav-stacked

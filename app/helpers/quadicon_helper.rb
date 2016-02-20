@@ -65,18 +65,18 @@ module QuadiconHelper
   end
 
   def partial_name_from_item(item)
-    if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage).include?(item.class.name)
-      item.class.name.underscore
-    elsif item.kind_of?(VmOrTemplate)
-      item.class.base_model.to_s.underscore
-    elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager) || item.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
-      "single_quad"
-    elsif %w(ExtManagementSystem Host).include?(item.class.base_class.name)
-      item.class.base_class.name.underscore
-    else
-      # All other models that only need single large icon and use name for hover text
-      partial_name = "single_quad"
-    end
+    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage).include?(item.class.name)
+                     item.class.name.underscore
+                   elsif item.kind_of?(VmOrTemplate)
+                     item.class.base_model.to_s.underscore
+                   elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager) || item.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
+                     "single_quad"
+                   elsif %w(ExtManagementSystem Host).include?(item.class.base_class.name)
+                     item.class.base_class.name.underscore
+                   else
+                     # All other models that only need single large icon and use name for hover text
+                     "single_quad"
+                   end
 
     # VMs and miq_templates use the same partial
     partial_name = 'vm_or_template' if %w(miq_template vm).include?(partial_name)
