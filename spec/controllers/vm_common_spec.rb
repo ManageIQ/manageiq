@@ -22,13 +22,13 @@ describe VmOrTemplateController do
     end
 
     it "snapshot node exists in tree" do
-      post :snap_pressed, :id => @snapshot.id
+      post :snap_pressed, :params => { :id => @snapshot.id }
       expect(response).to render_template('vm_common/_snapshots_tree')
       expect(assigns(:flash_array)).to be_blank
     end
 
     it "when snapshot is selected center toolbars are replaced" do
-      post :snap_pressed, :id => @snapshot.id
+      post :snap_pressed, :params => { :id => @snapshot.id }
       expect(response).to render_template('vm_common/_snapshots_tree')
       expect(response.body).to include("center_tb")
       expect(assigns(:flash_array)).to be_blank
@@ -36,7 +36,7 @@ describe VmOrTemplateController do
 
     it "deleted node pressed in snapshot tree" do
       expect(controller).to receive(:build_snapshot_tree)
-      post :snap_pressed, :id => "some_id"
+      post :snap_pressed, :params => { :id => "some_id" }
       expect(response).to render_template('vm_common/_snapshots_tree')
       expect(assigns(:flash_array).first[:message]).to eq("Last selected Snapshot no longer exists")
       expect(assigns(:flash_array).first[:level]).to eq(:error)

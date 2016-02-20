@@ -14,7 +14,7 @@ describe ContainerRouteController do
     EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_route = ContainerRoute.create(:ext_management_system => ems, :name => "Test Route")
-    get :show, :id => container_route.id
+    get :show, :params => { :id => container_route.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Container Routes",

@@ -60,16 +60,16 @@ describe MiqAeToolsController do
 
     it "cancels the import" do
       expect(automate_import_service).to receive(:cancel_import).with("123")
-      xhr :post, :cancel_import, params
+      post :cancel_import, :params => params, :xhr => true
     end
 
     it "returns a 200" do
-      xhr :post, :cancel_import, params
+      post :cancel_import, :params => params, :xhr => true
       expect(response.status).to eq(200)
     end
 
     it "returns the flash messages" do
-      xhr :post, :cancel_import, params
+      post :cancel_import, :params => params, :xhr => true
       expect(response.body).to eq([{:message => "Datastore import was cancelled or is finished", :level => :info}].to_json)
     end
   end
@@ -89,13 +89,13 @@ describe MiqAeToolsController do
     end
 
     it "returns the expected json" do
-      xhr :get, :automate_json, params
+      get :automate_json, :params => params, :xhr => true
       expect(response.body).to eq("the json")
     end
 
     it "returns a 500 error code for invalid file" do
       allow(automate_import_json_serializer).to receive(:serialize).with(import_file_upload).and_raise(StandardError)
-      xhr :get, :automate_json, params
+      get :automate_json, :params => params, :xhr => true
       expect(response.status).to eq(500)
     end
   end
@@ -147,16 +147,16 @@ describe MiqAeToolsController do
             "tomato",
             ["datastore", "datastore/namespace", "datastore/namespace/test"]
           )
-          xhr :post, :import_automate_datastore, params
+          post :import_automate_datastore, :params => params, :xhr => true
         end
 
         it "returns with a 200 status" do
-          xhr :post, :import_automate_datastore, params
+          post :import_automate_datastore, :params => params, :xhr => true
           expect(response.status).to eq(200)
         end
 
         it "returns the flash message" do
-          xhr :post, :import_automate_datastore, params
+          post :import_automate_datastore, :params => params, :xhr => true
           expected_message = <<-MESSAGE
 Datastore import was successful.
 Namespaces updated/added: 4
@@ -172,12 +172,12 @@ Methods updated/added: 10
         let(:import_file_upload) { nil }
 
         it "returns with a 200 status" do
-          xhr :post, :import_automate_datastore, params
+          post :import_automate_datastore, :params => params, :xhr => true
           expect(response.status).to eq(200)
         end
 
         it "returns the flash message" do
-          xhr :post, :import_automate_datastore, params
+          post :import_automate_datastore, :params => params, :xhr => true
           expect(response.body).to eq(
             [{:message => "Error: Datastore import file upload expired", :level => :error}].to_json
           )
@@ -189,12 +189,12 @@ Methods updated/added: 10
       let(:selected_namespaces) { nil }
 
       it "returns with a 200 status" do
-        xhr :post, :import_automate_datastore, params
+        post :import_automate_datastore, :params => params, :xhr => true
         expect(response.status).to eq(200)
       end
 
       it "returns the flash message" do
-        xhr :post, :import_automate_datastore, params
+        post :import_automate_datastore, :params => params, :xhr => true
         expect(response.body).to eq(
           [{:message => "You must select at least one namespace to import", :level => :info}].to_json
         )
@@ -212,12 +212,12 @@ Methods updated/added: 10
     end
 
     it "assigns the import file upload id" do
-      get :review_import, params
+      get :review_import, :params => params
       expect(assigns(:import_file_upload_id)).to eq("123")
     end
 
     it "assigns the message" do
-      get :review_import, params
+      get :review_import, :params => params
       expect(assigns(:message)).to eq("the message")
     end
   end
@@ -231,7 +231,7 @@ Methods updated/added: 10
 
     shared_examples_for "MiqAeToolsController#upload_import_file that does not upload a file" do
       it "redirects with a warning message" do
-        xhr :post, :upload_import_file, params
+        post :upload_import_file, :params => params, :xhr => true
         expect(response).to redirect_to(
           :action  => :review_import,
           :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
@@ -251,11 +251,11 @@ Methods updated/added: 10
 
       it "stores the file for import" do
         expect(automate_import_service).to receive(:store_for_import).with("the yaml data\n")
-        xhr :post, :upload_import_file, params
+        post :upload_import_file, :params => params, :xhr => true
       end
 
       it "redirects to review_import" do
-        xhr :post, :upload_import_file, params
+        post :upload_import_file, :params => params, :xhr => true
         expect(response).to redirect_to(
           :action                => :review_import,
           :import_file_upload_id => 123,

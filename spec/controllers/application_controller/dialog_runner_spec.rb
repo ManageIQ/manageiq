@@ -25,13 +25,13 @@ describe CatalogController do
     end
 
     it "includes disabling the sparkle in the response" do
-      xhr :post, :dialog_field_changed, params, session
+      post :dialog_field_changed, :params => params, :session => session, :xhr => true
       expect(response.body).to include("miqSparkle(false);")
     end
 
     it "stores the incoming value in the edit variable" do
       expect(wf).to receive(:set_value).with("test", "new value")
-      xhr :post, :dialog_field_changed, params, session
+      post :dialog_field_changed, :params => params, :session => session, :xhr => true
     end
   end
 
@@ -50,7 +50,7 @@ describe CatalogController do
     end
 
     it "returns the correct json response" do
-      xhr :post, :dynamic_checkbox_refresh, params, session
+      post :dynamic_checkbox_refresh, :params => params, :session => session, :xhr => true
       expect(response.body).to eq({:values => "lol"}.to_json)
     end
   end
@@ -70,7 +70,7 @@ describe CatalogController do
     end
 
     it "returns the correct json response" do
-      xhr :post, :dynamic_checkbox_refresh, params, session
+      post :dynamic_checkbox_refresh, :params => params, :session => session, :xhr => true
       expect(response.body).to eq({:values => "true"}.to_json)
     end
   end
@@ -90,7 +90,7 @@ describe CatalogController do
     end
 
     it "returns the correct json response" do
-      xhr :post, :dynamic_date_refresh, params, session
+      post :dynamic_date_refresh, :params => params, :session => session, :xhr => true
       expect(response.body).to eq({:values => "01/02/2015"}.to_json)
     end
   end

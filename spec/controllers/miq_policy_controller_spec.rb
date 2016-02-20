@@ -15,7 +15,7 @@ describe MiqPolicyController do
 
     shared_examples_for "MiqPolicyController#import" do
       it "assigns the import file upload id" do
-        post :import, params
+        post :import, :params => params
         expect(assigns(:import_file_upload_id)).to eq("123")
       end
     end
@@ -31,7 +31,7 @@ describe MiqPolicyController do
 
       it "imports a policy" do
         expect(miq_policy_import_service).to receive(:import_policy).with("123")
-        post :import, params
+        post :import, :params => params
       end
     end
 
@@ -46,7 +46,7 @@ describe MiqPolicyController do
 
       it "cancels the import" do
         expect(miq_policy_import_service).to receive(:cancel_import).with("123")
-        post :import, params
+        post :import, :params => params
       end
     end
   end
@@ -56,7 +56,7 @@ describe MiqPolicyController do
 
     shared_examples_for "MiqPolicyController#upload that cannot locate an import file" do
       it "redirects with a cannot locate import file error message" do
-        post :upload, params
+        post :upload, :params => params
         expect(response).to redirect_to(
           :action      => "export",
           :dbtype      => "dbtype",
@@ -91,17 +91,17 @@ describe MiqPolicyController do
             end
 
             it "sets the sandbox hide variable to true" do
-              post :upload, params
+              post :upload, :params => params
               expect(assigns(:sb)[:hide]).to be_truthy
             end
 
             it "imports a policy" do
               expect(miq_policy_import_service).to receive(:store_for_import).with(an_instance_of(ActionDispatch::Http::UploadedFile))
-              post :upload, params
+              post :upload, :params => params
             end
 
             it "redirects to import with the import_file_upload_id" do
-              post :upload, params
+              post :upload, :params => params
               expect(response).to redirect_to(:action => "import", :dbtype => "dbtype", :import_file_upload_id => 123)
             end
           end
@@ -113,7 +113,7 @@ describe MiqPolicyController do
             end
 
             it "redirects to export with an error message" do
-              post :upload, params
+              post :upload, :params => params
               expect(response).to redirect_to(
                 :action      => "export",
                 :dbtype      => "dbtype",
@@ -148,7 +148,7 @@ describe MiqPolicyController do
   describe '#explorer' do
     context 'when profile param present, but non-existent' do
       it 'renders explorer with flash message' do
-        post :explorer, :profile => 42
+        post :explorer, :params => { :profile => 42 }
         expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
         expect(flash_messages.find { |m| m[:message] == 'Policy Profile no longer exists' }).not_to be_nil
@@ -168,7 +168,7 @@ describe MiqPolicyController do
       it 'renders explorer w/o flash and assigns to x_node' do
         profile = FactoryGirl.create(:miq_policy_set)
         allow(controller).to receive(:get_node_info).and_return(true)
-        post :explorer, :profile => profile.id
+        post :explorer, :params => { :profile => profile.id }
         expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
         expect(flash_messages).to be_nil
@@ -192,7 +192,7 @@ describe MiqPolicyController do
         session[:sandboxes] = {"miq_policy" => {:active_tree => tree_sym}}
         session[:settings] ||= {}
 
-        post :tree_select, :id => node, :format => :js
+        post :tree_select, :params => { :id => node, :format => :js }
         expect(response).to render_template(partial_name)
         expect(response.status).to eq(200)
       end
@@ -231,13 +231,13 @@ describe MiqPolicyController do
       MiqPolicyController::POLICY_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
           expect(controller).to receive(method)
-          get :x_button, :pressed => action_name
+          get :x_button, :params => { :pressed => action_name }
         end
       end
     end
 
     it 'exception is raised for unknown action' do
-      get :x_button, :pressed => 'random_dude', :format => :html
+      get :x_button, :params => { :pressed => 'random_dude', :format => :html }
       expect(response).to render_template('layouts/exception')
     end
   end
