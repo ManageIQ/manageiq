@@ -81,10 +81,7 @@
       #inner
         %div{:id => "#{prefix}-#{v.id}", :style => "display:none; z-index:10; width: 72px; height: 72px; padding: 0 0px 0px 0px"}
           %div{:style => "margin-left: -70px;"}
-            = render(:partial => "layouts/quadicon", :locals => {:mode => :icon,
-              :item => v,
-              :typ => :listnav,
-              :size => 72})
+            = render_quadicon(v, :mode => :icon, :typ => :listnav, :size => 72)
             %div
               %center{:style => 'color:#000;'}
                 = h(v.product_name)

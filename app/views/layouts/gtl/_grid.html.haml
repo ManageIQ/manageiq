@@ -17,7 +17,7 @@
                   :class   => "list-grid-checkbox",
                   :onclick => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
               %td
-                = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => item}
+                = render_quadicon(item, :mode => :icon)
             %tr
               %td{:colspan => "2", :style => "text-align: center; padding-top: 0px; margin-top: 0px;color: #000;"}
-                = render :partial => "layouts/quadicon", :locals => {:mode => :text, :row => row, :item => item}
+                = render_quadicon(item, :mode => :text, :row => row)

@@ -3,7 +3,7 @@
   - clusters_title = title_for_clusters
   #accordion.panel-group
     = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
-      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+      = render_quadicon(@record, :mode => :icon, :size => 72, :typ => :listnav)
 
     = miq_accordion_panel(_("Properties"), false, "ems_prop") do
       %ul.nav.nav-pills.nav-stacked

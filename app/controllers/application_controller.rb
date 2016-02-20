@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   include JsHelper
   helper ToolbarHelper
   helper JsHelper
+  helper QuadiconHelper
 
   helper CloudResourceQuotaHelper
 
