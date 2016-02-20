@@ -9,30 +9,30 @@
 #
 
 # Report title
-title: Cloud Volumes based on Snapshot
+title: Cloud Volume Snapshot
 
 # Menu name
-name: CloudVolume
+name: CloudVolumeSnapshot
 
 # Main DB table report is based on
-db: CloudVolume
+db: CloudVolumeSnapshot
 
 # Columns to fetch from the main table
 cols:
 - name
 - size
 - status
-- volume_type
-- bootable
+- total_based_volumes
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  availability_zone:
+  cloud_volume:
     columns:
     - name
   ext_management_system:
     columns:
     - name
+
 
 # Included tables and columns for query performance
 # include_for_find:
@@ -42,9 +42,8 @@ col_order:
 - name
 - size
 - status
-- volume_type
-- bootable
-- availability_zone.name
+- cloud_volume.name
+- total_based_volumes
 - ext_management_system.name
 
 # Column titles, in order
@@ -52,9 +51,8 @@ headers:
 - Name
 - Size
 - Status
-- Type
-- Bootable?
-- Availability Zone
+- Cloud Volume
+- Based Volumes
 - Cloud Provider
 
 # Condition(s) string for the SQL query

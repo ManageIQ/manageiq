@@ -33,6 +33,40 @@ class CloudVolumeController < ApplicationController
       drop_breadcrumb(:name => @volume.name.to_s + " (Summary)", :url => "/cloud_volume/show/#{@volume.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+    when "cloud_volume_snapshots"
+      title = ui_lookup(:tables => 'cloud_volume_snapshots')
+      kls   = CloudVolumeSnapshot
+      drop_breadcrumb(
+        :name => _("%{name} (All %{children})") % {:name => @volume.name, :children => title},
+        :url  => "/cloud_volume/show/#{@volume.id}?display=cloud_volume_snapshots"
+      )
+      @view, @pages = get_view(kls, :parent => @volume, :association => :cloud_volume_snapshots)
+      @showtype = "cloud_volume_snapshots"
+      if @view.extras[:total_count] && @view.extras[:auth_count] &&
+         @view.extras[:total_count] > @view.extras[:auth_count]
+        unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
+        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
+          :children => pluralize(unauthorized_count, "other #{title.singularize}"),
+          :model    => ui_lookup(:tables => "cloud_volume")
+        }
+      end
+    when "instances"
+      title = ui_lookup(:tables => "vm_cloud")
+      kls   = ManageIQ::Providers::CloudManager::Vm
+      drop_breadcrumb(
+        :name => _("%{name} (All %{title})") % {:name => @volume.name, :title => title},
+        :url  => "/cloud_volume/show/#{@volume.id}?display=#{@display}"
+      )
+      @view, @pages = get_view(kls, :parent => @volume) # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] && @view.extras[:auth_count] &&
+         @view.extras[:total_count] > @view.extras[:auth_count]
+        unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
+        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
+          :children => pluralize(unauthorized_count, title),
+          :model    => ui_lookup(:table => "cloud_volume")
+        }
+      end
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
@@ -48,7 +82,7 @@ class CloudVolumeController < ApplicationController
   private
 
   def get_session_data
-    @title      = "Cloud Volume"
+    @title      = ui_lookup(:table => 'cloud_volume')
     @layout     = "cloud_volume"
     @lastaction = session[:cloud_volume_lastaction]
     @display    = session[:cloud_volume_display]

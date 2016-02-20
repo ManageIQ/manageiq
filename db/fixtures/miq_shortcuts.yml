@@ -79,6 +79,11 @@
   :url: /cloud_volume/show_list
   :rbac_feature_name: cloud_volume_show_list
   :startup: true
+- :name: cloud_volumes
+  :description: Clouds / Snapshots
+  :url: /cloud_volume_snapshot/show_list
+  :rbac_feature_name: cloud_volume_snapshot_show_list
+  :startup: true
 - :name: vm_cloud_instances_accord
   :description: Clouds / Instances / Instances By Providers
   :url: /vm_cloud/explorer?accordion=instances
