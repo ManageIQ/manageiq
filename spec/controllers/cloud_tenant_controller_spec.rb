@@ -9,13 +9,13 @@ describe CloudTenantController do
 
     it "when Instance Retire button is pressed" do
       expect(controller).to receive(:retirevms).once
-      post :button, :pressed => "instance_retire", :format => :js
+      post :button, :params => { :pressed => "instance_retire", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when Instance Tag is pressed" do
       expect(controller).to receive(:tag).with(VmOrTemplate)
-      post :button, :pressed => "instance_tag", :format => :js
+      post :button, :params => { :pressed => "instance_tag", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
@@ -52,20 +52,20 @@ describe CloudTenantController do
     end
 
     it "builds tagging screen" do
-      post :button, :pressed => "cloud_tenant_tag", :format => :js, :id => @ct.id
+      post :button, :params => { :pressed => "cloud_tenant_tag", :format => :js, :id => @ct.id }
       expect(assigns(:flash_array)).to be_nil
     end
 
     it "cancels tags edit" do
       session[:breadcrumbs] = [{:url => "cloud_tenant/show/#{@ct.id}"}, 'placeholder']
-      post :tagging_edit, :button => "cancel", :format => :js, :id => @ct.id
+      post :tagging_edit, :params => { :button => "cancel", :format => :js, :id => @ct.id }
       expect(assigns(:flash_array).first[:message]).to include("was cancelled by the user")
       expect(assigns(:edit)).to be_nil
     end
 
     it "save tags" do
       session[:breadcrumbs] = [{:url => "cloud_tenant/show/#{@ct.id}"}, 'placeholder']
-      post :tagging_edit, :button => "save", :format => :js, :id => @ct.id
+      post :tagging_edit, :params => { :button => "save", :format => :js, :id => @ct.id }
       expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
       expect(assigns(:edit)).to be_nil
     end

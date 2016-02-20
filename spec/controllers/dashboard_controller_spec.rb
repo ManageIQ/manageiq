@@ -10,7 +10,7 @@ describe DashboardController do
 
     it "validates user" do
       skip_data_checks
-      post :authenticate, :user_name => user_with_role.userid, :user_password => 'dummy'
+      post :authenticate, :params => { :user_name => user_with_role.userid, :user_password => 'dummy' }
       expect_successful_login(user_with_role)
     end
 
@@ -22,7 +22,7 @@ describe DashboardController do
 
     it "requires user" do
       skip_data_checks
-      post :authenticate, :user_name => 'bogus', :password => "bad"
+      post :authenticate, :params => { :user_name => 'bogus', :password => "bad" }
       expect_failed_login('username or password')
     end
 
@@ -32,7 +32,7 @@ describe DashboardController do
       user_with_role.update_attributes(:miq_groups => [group1, group2])
 
       skip_data_checks
-      post :authenticate, :user_name => user_with_role.userid, :user_password => 'dummy'
+      post :authenticate, :params => { :user_name => user_with_role.userid, :user_password => 'dummy' }
       expect_successful_login(user_with_role)
 
       user_with_role.update_attributes(:current_group => group2)
@@ -44,7 +44,7 @@ describe DashboardController do
 
     it "verifies group" do
       skip_data_checks
-      post :authenticate, :user_name => user_with_role.userid, :user_password => 'dummy'
+      post :authenticate, :params => { :user_name => user_with_role.userid, :user_password => 'dummy' }
       expect_successful_login(user_with_role)
 
       # no longer has access to this group
@@ -58,25 +58,25 @@ describe DashboardController do
 
     it "requires group" do
       user = FactoryGirl.create(:user, :current_group => nil)
-      post :authenticate, :user_name => user.userid, :user_password => "dummy"
+      post :authenticate, :params => { :user_name => user.userid, :user_password => "dummy" }
       expect_failed_login('Group')
     end
 
     it "requires role" do
       user = FactoryGirl.create(:user_with_group)
-      post :authenticate, :user_name => user.userid, :user_password => "dummy"
+      post :authenticate, :params => { :user_name => user.userid, :user_password => "dummy" }
       expect_failed_login('Role')
     end
 
     it "allow users in with no vms" do
       skip_data_checks
-      post :authenticate, :user_name => user_with_role.userid, :user_password => "dummy"
+      post :authenticate, :params => { :user_name => user_with_role.userid, :user_password => "dummy" }
       expect_successful_login(user_with_role)
     end
 
     it "redirects to a proper start page" do
       skip_data_checks('some_url')
-      post :authenticate, :user_name => user_with_role.userid, :user_password => "dummy"
+      post :authenticate, :params => { :user_name => user_with_role.userid, :user_password => "dummy" }
       expect_successful_login(user_with_role, 'some_url')
     end
   end
@@ -172,7 +172,7 @@ describe DashboardController do
       it "for tab ':#{tab}'" do
         login_as FactoryGirl.create(:user, :features => feature)
         session[:tab_url] = {}
-        post :maintab, :tab => tab
+        post :maintab, :params => { :tab => tab }
         url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
         expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
@@ -190,7 +190,7 @@ describe DashboardController do
 
     it "for Configure maintab" do
       session[:tab_url] = {}
-      post :maintab, :tab => "set"
+      post :maintab, :params => { :tab => "set" }
       url_controller = Menu::Manager.tab_features_by_id(:set).find { |f| f.ends_with?("_explorer") }
       expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
     end
@@ -289,7 +289,7 @@ describe DashboardController do
       breadcrumbs = [{:name => "Name", :url => "/controller/action"}]
       session[:breadcrumbs] = breadcrumbs
       session[:tab_url] = {:clo => {:controller => "ems_cloud", :action => "show", :id => ems_cloud_amz.id}}
-      post :maintab, :tab => "clo"
+      post :maintab, :params => { :tab => "clo" }
       expect(response.header['Location']).to include(ems_cloud_path(ems_cloud_amz))
       expect(controller.instance_variable_get(:@breadcrumbs)).to eq([])
     end

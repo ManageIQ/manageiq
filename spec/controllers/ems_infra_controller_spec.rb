@@ -9,20 +9,20 @@ describe EmsInfraController do
 
     it "when VM Right Size Recommendations is pressed" do
       expect(controller).to receive(:vm_right_size)
-      post :button, :pressed => "vm_right_size", :format => :js
+      post :button, :params => { :pressed => "vm_right_size", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Migrate is pressed" do
       expect(controller).to receive(:prov_redirect).with("migrate")
-      post :button, :pressed => "vm_migrate", :format => :js
+      post :button, :params => { :pressed => "vm_migrate", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Migrate is pressed" do
       ems = FactoryGirl.create(:ems_vmware)
       vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-      post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => 1, :id => ems.id
+      post :button, :params => { :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => 1, :id => ems.id }
       expect(controller.send(:flash_errors?)).not_to be_truthy
       expect(response.body).to include("/miq_request/prov_edit?")
       expect(response.status).to eq(200)
@@ -30,44 +30,44 @@ describe EmsInfraController do
 
     it "when VM Retire is pressed" do
       expect(controller).to receive(:retirevms).once
-      post :button, :pressed => "vm_retire", :format => :js
+      post :button, :params => { :pressed => "vm_retire", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Manage Policies is pressed" do
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
-      post :button, :pressed => "vm_protect", :format => :js
+      post :button, :params => { :pressed => "vm_protect", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when MiqTemplate Manage Policies is pressed" do
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
-      post :button, :pressed => "miq_template_protect", :format => :js
+      post :button, :params => { :pressed => "miq_template_protect", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Tag is pressed" do
       expect(controller).to receive(:tag).with(VmOrTemplate)
-      post :button, :pressed => "vm_tag", :format => :js
+      post :button, :params => { :pressed => "vm_tag", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when MiqTemplate Tag is pressed" do
       expect(controller).to receive(:tag).with(VmOrTemplate)
-      post :button, :pressed => 'miq_template_tag', :format => :js
+      post :button, :params => { :pressed => 'miq_template_tag', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "should set correct VM for right-sizing when on list of VM's of another CI" do
       ems_infra = FactoryGirl.create(:ext_management_system)
-      post :button, :pressed => "vm_right_size", :id => ems_infra.id, :display => 'vms', :check_10r839 => '1'
+      post :button, :params => { :pressed => "vm_right_size", :id => ems_infra.id, :display => 'vms', :check_10r839 => '1' }
       expect(controller.send(:flash_errors?)).not_to be_truthy
       expect(response.body).to include("/vm/right_size/#{ApplicationRecord.uncompress_id('10r839')}")
     end
 
     it "when Host Analyze then Check Compliance is pressed" do
       expect(controller).to receive(:analyze_check_compliance_hosts)
-      post :button, :pressed => "host_analyze_check_compliance", :format => :js
+      post :button, :params => { :pressed => "host_analyze_check_compliance", :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
@@ -101,15 +101,15 @@ describe EmsInfraController do
     end
 
     it "when values are not changed" do
-      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id
+      post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id }
       expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include(_("A value must be changed or provider will not be scaled"))
     end
 
     it "when values are changed, but exceed number of hosts available" do
-      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
-           @orchestration_stack_parameter_compute.name => @ems.hosts.count * 2
+      post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => @ems.hosts.count * 2 }
       expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include(
@@ -119,8 +119,8 @@ describe EmsInfraController do
     it "when values are changed, and values do not exceed number of hosts available" do
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
         .to receive(:raw_update_stack)
-      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
-           @orchestration_stack_parameter_compute.name => 2
+      post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2 }
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.body).to include("redirected")
       expect(response.body).to include("show")
@@ -129,7 +129,7 @@ describe EmsInfraController do
 
     it "when no orchestration stack is available" do
       @ems = FactoryGirl.create(:ems_openstack_infra)
-      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => nil
+      post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => nil }
       expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include(_("Orchestration stack could not be found."))
@@ -138,8 +138,8 @@ describe EmsInfraController do
     it "when patch operation fails, an error message should be displayed" do
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
         .to receive(:raw_update_stack) { raise _("my error") }
-      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
-           @orchestration_stack_parameter_compute.name => 2
+      post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2 }
       expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include(_("Unable to initiate scaling: my error"))
@@ -148,8 +148,8 @@ describe EmsInfraController do
     it "when operation in progress, an error message should be displayed" do
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
         .to receive(:raw_status).and_return(["CREATE_IN_PROGRESS", nil])
-      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
-           @orchestration_stack_parameter_compute.name => 2
+      post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2 }
       expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include(
@@ -161,7 +161,7 @@ describe EmsInfraController do
     before(:each) do
       session[:settings] = {:views => {}}
       set_user_privileges
-      get :show, {:id => ems.id}.merge(url_params)
+      get :show, :params => {:id => ems.id}.merge(url_params)
     end
     let(:url_params) { {} }
     let(:ems) do
@@ -208,7 +208,7 @@ describe EmsInfraController do
                             "rhevm"           => "Red Hat Enterprise Virtualization Manager",
                             "vmwarews"        => "VMware vCenter"}
         controller.instance_variable_set(:@edit, edit)
-        post :form_field_changed, :id => "new", :server_emstype => "scvmm"
+        post :form_field_changed, :params => { :id => "new", :server_emstype => "scvmm" }
         edit = controller.instance_variable_get(:@edit)
         expect(edit[:new][:name]).to eq('abc')
         expect(response.body).to include('input type=\"text\" name=\"name\" id=\"name\" value=\"abc\"')
@@ -225,7 +225,7 @@ describe EmsInfraController do
     context "when previous breadcrumbs path contained 'Cloud Providers'" do
       it "shows 'Infrastructure Providers -> (Summary)' breadcrumb path" do
         ems = FactoryGirl.create("ems_vmware")
-        get :show, :id => ems.id
+        get :show, :params => { :id => ems.id }
         breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
         expect(breadcrumbs).to eq([{:name => "Infrastructure Providers",
                                     :url  => "/ems_infra/show_list?page=&refresh=y"},

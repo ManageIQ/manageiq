@@ -24,8 +24,8 @@ describe StorageManagerController do
                                    :password      => "password",
                                    :resource_id   => sm.id,
                                    :resource_type => "StorageManager")
-      post :edit, :id => sm.id
-      post :form_field_changed, :id => sm.id, :password => "", :verify => ""
+      post :edit, :params => { :id => sm.id }
+      post :form_field_changed, :params => { :id => sm.id, :password => "", :verify => "" }
       expect(response.status).to eq(200)
       edit = controller.instance_variable_get(:@edit)
       expect(edit[:new][:userid]).to eq(auth.userid)
@@ -38,8 +38,8 @@ describe StorageManagerController do
                                    :password      => "password",
                                    :resource_id   => sm.id,
                                    :resource_type => "StorageManager")
-      post :edit, :id => sm.id
-      post :form_field_changed, :id => sm.id, :password => "", :verify => "", :restore_password => true
+      post :edit, :params => { :id => sm.id }
+      post :form_field_changed, :params => { :id => sm.id, :password => "", :verify => "", :restore_password => true }
       expect(response.status).to eq(200)
       edit = controller.instance_variable_get(:@edit)
       expect(edit[:new][:userid]).to eq(auth.userid)

@@ -54,7 +54,7 @@ describe ReportController, "::Reports" do
         }
       }
 
-      get :x_button, :id => report.id, :pressed => 'miq_report_delete'
+      get :x_button, :params => { :id => report.id, :pressed => 'miq_report_delete' }
       expect(response.status).to eq(200)
       expect(MiqReport.find_by(:id => report.id)).to be_nil
     end
@@ -68,7 +68,7 @@ describe ReportController, "::Reports" do
         }
       }
 
-      get :x_button, :id => report.id, :pressed => 'miq_report_delete'
+      get :x_button, :params => { :id => report.id, :pressed => 'miq_report_delete' }
       expect(response.status).to eq(200)
       expect(MiqReport.find_by(:id => report.id)).not_to be_nil
     end

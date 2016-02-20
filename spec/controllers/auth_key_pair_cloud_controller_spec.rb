@@ -38,20 +38,20 @@ describe AuthKeyPairCloudController do
     end
 
     it "builds tagging screen" do
-      post :button, :pressed => "auth_key_pair_cloud_tag", :format => :js, :id => @kp.id
+      post :button, :params => { :pressed => "auth_key_pair_cloud_tag", :format => :js, :id => @kp.id }
       expect(assigns(:flash_array)).to be_nil
     end
 
     it "cancels tags edit" do
       session[:breadcrumbs] = [{:url => "auth_key_pair_cloud/show/#{@kp.id}"}, 'placeholder']
-      post :tagging_edit, :button => "cancel", :format => :js, :id => @kp.id
+      post :tagging_edit, :params => { :button => "cancel", :format => :js, :id => @kp.id }
       expect(assigns(:flash_array).first[:message]).to include("was cancelled by the user")
       expect(assigns(:edit)).to be_nil
     end
 
     it "save tags" do
       session[:breadcrumbs] = [{:url => "auth_key_pair_cloud/show/#{@kp.id}"}, 'placeholder']
-      post :tagging_edit, :button => "save", :format => :js, :id => @kp.id
+      post :tagging_edit, :params => { :button => "save", :format => :js, :id => @kp.id }
       expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
       expect(assigns(:edit)).to be_nil
     end

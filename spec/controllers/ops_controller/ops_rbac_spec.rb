@@ -11,7 +11,7 @@ describe OpsController do
     context "#tree_select" do
       it "renders rbac_details tab when rbac_tree root node is selected" do
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
-        post :tree_select, :id => 'root', :format => :js
+        post :tree_select, :params => { :id => 'root', :format => :js }
 
         expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
@@ -21,7 +21,7 @@ describe OpsController do
         tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
 
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
-        post :tree_select, :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js
+        post :tree_select, :params => { :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js }
 
         expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
@@ -31,7 +31,7 @@ describe OpsController do
         tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
 
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
-        post :tree_select, :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js
+        post :tree_select, :params => { :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js }
 
         expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
@@ -45,7 +45,7 @@ describe OpsController do
                           :mem_allocated => {:value => 4096 * GIGABYTE})
 
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
-        post :tree_select, :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js
+        post :tree_select, :params => { :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js }
 
         expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)

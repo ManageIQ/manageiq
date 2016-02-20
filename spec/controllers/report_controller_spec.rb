@@ -863,13 +863,13 @@ describe ReportController do
       ReportController::REPORT_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
           expect(controller).to receive(method)
-          get :x_button, :pressed => action_name
+          get :x_button, :params => { :pressed => action_name }
         end
       end
     end
 
     it 'exception is raised for unknown action' do
-      get :x_button, :pressed => 'random_dude', :format => :html
+      get :x_button, :params => { :pressed => 'random_dude', :format => :html }
       expect(response).to render_template('layouts/exception')
     end
   end
@@ -895,13 +895,13 @@ describe ReportController do
       end
 
       it "sends the data" do
-        get :export_widgets, params
+        get :export_widgets, :params => params
         expect(response.body).to eq("the widget yaml")
       end
 
       it "sets the filename to the current date" do
         Timecop.freeze(2013, 1, 2) do
-          get :export_widgets, params
+          get :export_widgets, :params => params
           expect(response.header['Content-Disposition']).to include("widget_export_20130102_000000.yml")
         end
       end
@@ -911,21 +911,21 @@ describe ReportController do
       let(:widget_list) { nil }
 
       it "sets a flash message" do
-        get :export_widgets, params
+        get :export_widgets, :params => params
         expect(assigns(:flash_array))
           .to eq([{:message => "At least 1 item must be selected for export",
                    :level   => :error}])
       end
 
       it "sets the flash array on the sandbox" do
-        get :export_widgets, params
+        get :export_widgets, :params => params
         expect(assigns(:sb)[:flash_msg])
           .to eq([{:message => "At least 1 item must be selected for export",
                    :level   => :error}])
       end
 
       it "redirects to the explorer" do
-        get :export_widgets, params
+        get :export_widgets, :params => params
         expect(response).to redirect_to(:action => :explorer)
       end
     end
@@ -944,7 +944,7 @@ describe ReportController do
 
     shared_examples_for "ReportController#upload_widget_import_file that does not upload a file" do
       it "returns with a warning message" do
-        xhr :post, :upload_widget_import_file, params
+        post :upload_widget_import_file, :params => params, :xhr => true
         expect(controller.instance_variable_get(:@flash_array))
           .to include(:message => "Use the browse button to locate an import file", :level => :warning)
       end
@@ -968,7 +968,7 @@ describe ReportController do
         end
 
         it "returns with an import file upload id" do
-          xhr :post, :upload_widget_import_file, params
+          post :upload_widget_import_file, :params => params, :xhr => true
           expect(controller.instance_variable_get(:@flash_array))
             .to include(:message => "Import file was uploaded successfully", :level => :success)
           expect(controller.instance_variable_get(:@import_file_upload_id)).to eq(123)
@@ -976,7 +976,7 @@ describe ReportController do
 
         it "imports the widgets" do
           expect(widget_import_service).to receive(:store_for_import).with("the yaml data\n")
-          xhr :post, :upload_widget_import_file, params
+          post :upload_widget_import_file, :params => params, :xhr => true
         end
       end
 
@@ -986,7 +986,7 @@ describe ReportController do
         end
 
         it "returns with an error message" do
-          xhr :post, :upload_widget_import_file, params
+          post :upload_widget_import_file, :params => params, :xhr => true
           expect(controller.instance_variable_get(:@flash_array))
             .to include(:message => "Error: the file uploaded is not of the supported format", :level => :error)
         end
@@ -999,7 +999,7 @@ describe ReportController do
         end
 
         it "returns with an error message" do
-          xhr :post, :upload_widget_import_file, params
+          post :upload_widget_import_file, :params => params, :xhr => true
           expect(controller.instance_variable_get(:@flash_array))
             .to include(:message => "Error: the file uploaded contains no widgets", :level => :error)
         end
@@ -1040,7 +1040,7 @@ describe ReportController do
 
       shared_examples_for "ReportController#import_widgets" do
         it "returns a status of 200" do
-          xhr :post, :import_widgets, params
+          post :import_widgets, :params => params, :xhr => true
           expect(response.status).to eq(200)
         end
       end
@@ -1056,11 +1056,11 @@ describe ReportController do
 
         it "imports the data" do
           expect(widget_import_service).to receive(:import_widgets).with(import_file_upload, ["potato"])
-          xhr :post, :import_widgets, params
+          post :import_widgets, :params => params, :xhr => true
         end
 
         it "returns the flash message" do
-          xhr :post, :import_widgets, params
+          post :import_widgets, :params => params, :xhr => true
           expect(controller.instance_variable_get(:@flash_array))
             .to include(:message => "Widgets imported successfully", :level => :success)
         end
@@ -1072,7 +1072,7 @@ describe ReportController do
         it_behaves_like "ReportController#import_widgets"
 
         it "returns the flash message" do
-          xhr :post, :import_widgets, params
+          post :import_widgets, :params => params, :xhr => true
           expect(controller.instance_variable_get(:@flash_array))
             .to include(:message => "Error: Widget import file upload expired", :level => :error)
         end
@@ -1089,16 +1089,16 @@ describe ReportController do
 
       it "cancels the import" do
         expect(widget_import_service).to receive(:cancel_import).with("123")
-        xhr :post, :import_widgets, params
+        post :import_widgets, :params => params, :xhr => true
       end
 
       it "returns a 200" do
-        xhr :post, :import_widgets, params
+        post :import_widgets, :params => params, :xhr => true
         expect(response.status).to eq(200)
       end
 
       it "returns the flash messages" do
-        xhr :post, :import_widgets, params
+        post :import_widgets, :params => params, :xhr => true
         expect(controller.instance_variable_get(:@flash_array))
           .to include(:message => "Widget import cancelled", :level => :info)
       end
