@@ -1543,26 +1543,14 @@ module ApplicationController::Compare
   end
 
   def comp_add_header_expanded(view, h, i)
-    @id = view.ids[i]
-    @vm_ids = view.ids
-    # Generate html for the records quad icon
-    quad_html = render_to_string(:partial => "layouts/quadicon",
-                                 :locals  => {:item => @sb[:compare_db].constantize.find(@id),
-                                              :mode => "icon",
-                                              :db   => @sb[:compare_db]})
-
-    quad_html = "<div class='quadicon_grid'>#{quad_html}</div>"
-    txt = h[:name]  # Show full name in non-compressed mode
-    if i == 0
-      html_text = "<b title='#{h[:name]} is the base'>#{txt}  (base)</b>"
-    else
-      url = "/#{controller_name}/compare_choose_base/#{h["id"]}"
-      html_text = "<a title='Make #{h[:name]} the base'
-                      onclick = \"miqJqueryRequest('#{url}',
-                                {beforeSend: true, complete: true});\" href='#'>#{txt}</a>"
-    end
-    html_text = "<div class='cell-text-wrap'>#{html_text}</div>"
-    html_text << "<br/><br/>" << quad_html
+    render_to_string(
+      :partial => 'shared/compare_header_expanded',
+      :locals  => {
+        :base  => i == 0,
+        :vm_id => view.ids[i],
+        :h     => h
+      }
+    )
   end
 
   def comp_add_footer(view)

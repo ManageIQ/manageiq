@@ -1,0 +1,13 @@
+.cell-text-wrap
+  - if base
+    %b{:title => "#{h[:name]} is the base"}
+      = h[:name]
+      (base)
+  - else
+    - url = "/#{controller_name}/compare_choose_base/#{h["id"]}"
+    %a{:title => "Make #{h[:name]} the base", :onclick => "miqJqueryRequest('#{url}', {beforeSend: true, complete: true});", :href => '#'}
+      = h[:name]
+%br
+%br
+.quadicon_grid
+  = render_quadicon(@sb[:compare_db].constantize.find(vm_id), :mode => "icon", :db => @sb[:compare_db])
