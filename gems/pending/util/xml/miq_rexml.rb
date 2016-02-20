@@ -110,34 +110,6 @@ end
 
 module REXML
   class Attributes
-    #   TODO: is this still needed now that we're on 1.9.3???
-    #   This was a work-around for Ruby 1.8.6 (patch 111) were REXML
-    #   introduced backwards compatibility issues.  Currently we are not
-    #   running on that level of code due to other REXML source issues in that build.
-    #
-    alias_method :bracket_equal_old, :[]=
-
-    def []=(name, value)
-      if !value.nil? && !value.kind_of?(Attribute)
-        value = value.to_s
-      end
-
-      begin
-        bracket_equal_old(name.to_s, value)
-      rescue => err
-        if err.class == ::Encoding::CompatibilityError
-          nv = value.dup.force_encoding('UTF-8')
-          unless nv.valid_encoding?
-            nv.force_encoding('UTF-16')
-            nv.encode!('UTF-8', 'UTF-16', :invalid => :replace, :replace => '')
-          end
-          bracket_equal_old(name.to_s, nv)
-        else
-          raise
-        end
-      end
-    end
-
     def to_h(use_symbols = true)
       ret = {}
       each { |name, value| ret[use_symbols ? name.to_sym : name] = value }
