@@ -15,7 +15,7 @@ describe ContainerImageRegistryController do
     ems = FactoryGirl.create(:ems_kubernetes)
     container_image_registry =
         ContainerImageRegistry.create(:ext_management_system => ems, :name => "Test Image Registry")
-    get :show, :id => container_image_registry.id
+    get :show, :params => { :id => container_image_registry.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Container Image Registries",

@@ -12,25 +12,25 @@ describe PictureController do
   end
 
   it 'can serve a picture directly from the database' do
-    get :show, :basename => "#{picture.compressed_id}.#{picture.extension}"
+    get :show, :params => { :basename => "#{picture.compressed_id}.#{picture.extension}" }
     expect(response.status).to eq(200)
     expect(response.body).to eq(picture_content)
   end
 
   it 'can serve a picture directly from the database using the uncompressed id' do
-    get :show, :basename => "#{picture.compressed_id}.#{picture.extension}"
+    get :show, :params => { :basename => "#{picture.compressed_id}.#{picture.extension}" }
     expect(response.status).to eq(200)
     expect(response.body).to eq(picture_content)
   end
 
   it "responds with a Not Found with pictures of incorrect extension" do
-    get :show, :basename => "#{picture.compressed_id}.png"
+    get :show, :params => { :basename => "#{picture.compressed_id}.png" }
     expect(response.status).to eq(404)
     expect(response.body).to be_blank
   end
 
   it "responds with a Not Found with unknown pictures" do
-    get :show, :basename => "bogusimage.gif"
+    get :show, :params => { :basename => "bogusimage.gif" }
     expect(response.status).to eq(404)
     expect(response.body).to be_blank
   end

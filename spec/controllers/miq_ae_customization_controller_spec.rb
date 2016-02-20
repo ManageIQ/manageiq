@@ -20,36 +20,36 @@ describe MiqAeCustomizationController do
 
     context "#move_cols_up" do
       it "move one button up" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields' => ['101']
+        post :group_reorder_field_changed, :params => { :id => 'seq', :button => 'up', 'selected_fields' => ['101'] }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test1', 101], ['test', 100], ['test2', 102], ['test3', 103]]})
       end
 
       it "move 2 button up" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields' => ['101', '102']
+        post :group_reorder_field_changed, :params => { :id => 'seq', :button => 'up', 'selected_fields' => ['101', '102'] }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test1', 101], ['test2', 102], ['test', 100], ['test3', 103]]})
       end
     end
 
     context "#move_cols_down" do
       it "move one button down" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields' => ['101']
+        post :group_reorder_field_changed, :params => { :id => 'seq', :button => 'down', 'selected_fields' => ['101'] }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test', 100], ['test2', 102], ['test1', 101], ['test3', 103]]})
       end
 
       it "move 2 buttons down" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields' => ['101', '102']
+        post :group_reorder_field_changed, :params => { :id => 'seq', :button => 'down', 'selected_fields' => ['101', '102'] }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['test', 100], ['test3', 103], ['test1', 101], ['test2', 102]]})
       end
     end
 
     context "no button selected" do
       it "moves up and display error message" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'up'
+        post :group_reorder_field_changed, :params => { :id => 'seq', :button => 'up' }
         expect(response.body).to include("flash")
       end
 
       it "moves down and display error message" do
-        post :group_reorder_field_changed, :id => 'seq', :button => 'down'
+        post :group_reorder_field_changed, :params => { :id => 'seq', :button => 'down' }
         expect(response.body).to include("flash")
       end
     end
@@ -63,55 +63,55 @@ describe MiqAeCustomizationController do
 
     context "assign buttons" do
       it "moves button up" do
-        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'up'
+        post :group_form_field_changed, :params => { 'selected_fields' => ['101'], :button => 'up' }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value1', 101], ['value', 100], ['value2', 102], ['value3', 103]]})
       end
 
       it "moves button down" do
-        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'down'
+        post :group_form_field_changed, :params => { 'selected_fields' => ['101'], :button => 'down' }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value2', 102], ['value1', 101], ['value3', 103]]})
       end
 
       it "moves button to the top" do
-        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'top'
+        post :group_form_field_changed, :params => { 'selected_fields' => ['101'], :button => 'top' }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value1', 101], ['value', 100], ['value2', 102], ['value3', 103]]})
       end
 
       it "moves button to the bottom" do
-        post :group_form_field_changed, 'selected_fields' => ['101'], :button => 'bottom'
+        post :group_form_field_changed, :params => { 'selected_fields' => ['101'], :button => 'bottom' }
         expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value2', 102], ['value3', 103], ['value1', 101]]})
       end
 
       context "no selected button" do
         it "moves up and display error message" do
-          post :group_form_field_changed, :button => 'up'
+          post :group_form_field_changed, :params => { :button => 'up' }
           expect(response.body).to include("flash")
         end
 
         it "moves down and display error message" do
-          post :group_form_field_changed, :button => 'down'
+          post :group_form_field_changed, :params => { :button => 'down' }
           expect(response.body).to include("flash")
         end
 
         it "moves up and display error message" do
-          post :group_form_field_changed, :button => 'top'
+          post :group_form_field_changed, :params => { :button => 'top' }
           expect(response.body).to include("flash")
         end
 
         it "moves down and display error message" do
-          post :group_form_field_changed, :button => 'bottom'
+          post :group_form_field_changed, :params => { :button => 'bottom' }
           expect(response.body).to include("flash")
         end
       end
 
       context "all buttons selected" do
         it "moves to the top and nothing happen" do
-          post :group_form_field_changed, :button => 'top', 'selected_fields' => ['100', '101', '102', '103']
+          post :group_form_field_changed, :params => { :button => 'top', 'selected_fields' => ['100', '101', '102', '103'] }
           expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value1', 101], ['value2', 102], ['value3', 103]]})
         end
 
         it "moves to the bottom and nothing happen" do
-          post :group_form_field_changed, :button => 'bottom', 'selected_fields' => ['100', '101', '102', '103']
+          post :group_form_field_changed, :params => { :button => 'bottom', 'selected_fields' => ['100', '101', '102', '103'] }
           expect(controller.instance_variable_get(:@edit)).to eql(:new => {:fields => [['value', 100], ['value1', 101], ['value2', 102], ['value3', 103]]})
         end
       end
@@ -130,13 +130,13 @@ describe MiqAeCustomizationController do
       MiqAeCustomizationController::AE_CUSTOM_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
         it "calls the appropriate method: '#{method}' for action '#{action_name}'" do
           expect(controller).to receive(method)
-          get :x_button, :pressed => action_name
+          get :x_button, :params => { :pressed => action_name }
         end
       end
     end
 
     it 'exception is raised for unknown action' do
-      get :x_button, :pressed => 'random_dude', :format => :html
+      get :x_button, :params => { :pressed => 'random_dude', :format => :html }
       expect(response).to render_template('layouts/exception')
     end
   end
@@ -235,7 +235,7 @@ describe MiqAeCustomizationController do
 
     shared_examples_for "MiqAeCustomizationController#upload_import_file that does not upload a file" do
       it "redirects with a warning message" do
-        xhr :post, :upload_import_file, params
+        post :upload_import_file, :params => params, :xhr => true
         expect(response).to redirect_to(
           :action  => :review_import,
           :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
@@ -258,7 +258,7 @@ describe MiqAeCustomizationController do
         end
 
         it "redirects to review_import with an import file upload id" do
-          xhr :post, :upload_import_file, params
+          post :upload_import_file, :params => params, :xhr => true
           expect(response).to redirect_to(
             :action                => :review_import,
             :import_file_upload_id => 123,
@@ -268,7 +268,7 @@ describe MiqAeCustomizationController do
 
         it "imports the dialogs" do
           expect(dialog_import_service).to receive(:store_for_import).with("the yaml data\n")
-          xhr :post, :upload_import_file, params
+          post :upload_import_file, :params => params, :xhr => true
         end
       end
 
@@ -279,7 +279,7 @@ describe MiqAeCustomizationController do
         end
 
         it "redirects with an error message" do
-          xhr :post, :upload_import_file, params
+          post :upload_import_file, :params => params, :xhr => true
           expect(response).to redirect_to(
             :action  => :review_import,
             :message => {
@@ -297,7 +297,7 @@ describe MiqAeCustomizationController do
         end
 
         it "redirects with an error message" do
-          xhr :post, :upload_import_file, params
+          post :upload_import_file, :params => params, :xhr => true
           expect(response).to redirect_to(
             :action  => :review_import,
             :message => {
@@ -315,7 +315,7 @@ describe MiqAeCustomizationController do
         end
 
         it "redirects with an error message" do
-          xhr :post, :upload_import_file, params
+          post :upload_import_file, :params => params, :xhr => true
           expect(response).to redirect_to(
             :action  => :review_import,
             :message => {
@@ -354,7 +354,7 @@ describe MiqAeCustomizationController do
 
     shared_examples_for "MiqAeCustomizationController#import_service_dialogs" do
       it "returns a status of 200" do
-        xhr :post, :import_service_dialogs, params
+        post :import_service_dialogs, :params => params, :xhr => true
         expect(response.status).to eq(200)
       end
     end
@@ -370,11 +370,11 @@ describe MiqAeCustomizationController do
 
       it "imports the data" do
         expect(dialog_import_service).to receive(:import_service_dialogs).with(import_file_upload, ["potato"])
-        xhr :post, :import_service_dialogs, params
+        post :import_service_dialogs, :params => params, :xhr => true
       end
 
       it "returns the flash message" do
-        xhr :post, :import_service_dialogs, params
+        post :import_service_dialogs, :params => params, :xhr => true
         expect(response.body).to eq([{:message => "Service dialogs imported successfully", :level => :success}].to_json)
       end
     end
@@ -385,7 +385,7 @@ describe MiqAeCustomizationController do
       it_behaves_like "MiqAeCustomizationController#import_service_dialogs"
 
       it "returns the flash message" do
-        xhr :post, :import_service_dialogs, params
+        post :import_service_dialogs, :params => params, :xhr => true
         expect(response.body).to eq([{:message => "Error: ImportFileUpload expired", :level => :error}].to_json)
       end
     end
@@ -401,12 +401,12 @@ describe MiqAeCustomizationController do
     end
 
     it "assigns the import file upload id" do
-      get :review_import, params
+      get :review_import, :params => params
       expect(assigns(:import_file_upload_id)).to eq("123")
     end
 
     it "assigns the message" do
-      get :review_import, params
+      get :review_import, :params => params
       expect(assigns(:message)).to eq("the message")
     end
   end
@@ -425,16 +425,16 @@ describe MiqAeCustomizationController do
 
     it "cancels the import" do
       expect(dialog_import_service).to receive(:cancel_import).with("123")
-      xhr :post, :cancel_import, params
+      post :cancel_import, :params => params, :xhr => true
     end
 
     it "returns a 200" do
-      xhr :post, :cancel_import, params
+      post :cancel_import, :params => params, :xhr => true
       expect(response.status).to eq(200)
     end
 
     it "returns the flash messages" do
-      xhr :post, :cancel_import, params
+      post :cancel_import, :params => params, :xhr => true
       expect(response.body).to eq([{:message => "Service dialog import cancelled", :level => :success}].to_json)
     end
   end
@@ -452,7 +452,7 @@ describe MiqAeCustomizationController do
     end
 
     it "returns the json" do
-      xhr :get, :service_dialog_json, params
+      get :service_dialog_json, :params => params, :xhr => true
       expect(response.body).to eq("the service dialog json")
     end
   end
@@ -479,17 +479,17 @@ describe MiqAeCustomizationController do
 
       it "serializes given dialogs to yml" do
         expect(dialog_yaml_serializer).to receive(:serialize).with(dialogs)
-        get :export_service_dialogs, params
+        get :export_service_dialogs, :params => params
       end
 
       it "sends the data" do
-        get :export_service_dialogs, params
+        get :export_service_dialogs, :params => params
         expect(response.body).to eq("the dialog yml")
       end
 
       it "sets the filename to the current date" do
         Timecop.freeze(2013, 1, 2) do
-          get :export_service_dialogs, params
+          get :export_service_dialogs, :params => params
           expect(response.header['Content-Disposition']).to include("dialog_export_20130102_000000.yml")
         end
       end
@@ -499,20 +499,20 @@ describe MiqAeCustomizationController do
       let(:service_dialogs) { nil }
 
       it "sets a flash message" do
-        get :export_service_dialogs, params
+        get :export_service_dialogs, :params => params
         expect(assigns(:flash_array))
           .to eq([{:message => "At least 1 item must be selected for export",
                    :level   => :error}])
       end
 
       it "sets the flash array on the sandbox" do
-        get :export_service_dialogs, params
+        get :export_service_dialogs, :params => params
         expect(assigns(:sb)[:flash_msg]).to eq([{:message => "At least 1 item must be selected for export",
                                                  :level   => :error}])
       end
 
       it "redirects to the explorer" do
-        get :export_service_dialogs, params
+        get :export_service_dialogs, :params => params
         expect(response).to redirect_to(:action => :explorer)
       end
     end

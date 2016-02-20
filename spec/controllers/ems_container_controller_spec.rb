@@ -14,7 +14,7 @@ describe EmsContainerController do
 
   it "#show" do
     ems = FactoryGirl.create(:ems_kubernetes)
-    get :show, :id => ems.id
+    get :show, :params => { :id => ems.id }
 
     expect(response.status).to eq(200)
     expect(response).to render_template('ems_container/show')

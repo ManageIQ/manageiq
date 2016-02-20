@@ -51,14 +51,14 @@ describe EmsCloudController do
       it "form_div should be updated when server type is sent up" do
         controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
-        post :form_field_changed, :server_emstype => "rhevm", :id => "new"
+        post :form_field_changed, :params => { :server_emstype => "rhevm", :id => "new" }
         expect(response.body).to include("form_div")
       end
 
       it "form_div should not be updated when other fields are sent up" do
         controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
-        post :form_field_changed, :name => "Test", :id => "new"
+        post :form_field_changed, :params => { :name => "Test", :id => "new" }
         expect(response.body).not_to include("form_div")
       end
     end
@@ -127,7 +127,7 @@ describe EmsCloudController do
         allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_vmware)
         ems = FactoryGirl.create("ems_vmware")
-        post :button, :pressed => "instance_retire", "check_#{vm.id}" => "1", :format => :js, :id => ems.id, :display => 'instances'
+        post :button, :params => { :pressed => "instance_retire", "check_#{vm.id}" => "1", :format => :js, :id => ems.id, :display => 'instances' }
         expect(response.status).to eq 200
         expect(response.body).to include('vm/retire')
       end
@@ -179,7 +179,7 @@ describe EmsContainerController do
                                          :key    => "ems_edit__#{@ems.id}",
                                          :ems_id => @ems.id)
         session[:edit] = assigns(:edit)
-        post :update, :button => "save", :id => @ems.id, :type => @ems.type
+        post :update, :params => { :button => "save", :id => @ems.id, :type => @ems.type }
         expect(response.status).to eq(200)
         expect(ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer"))
           .to eq("valid-token")
@@ -195,7 +195,7 @@ describe EmsContainerController do
       it "when VM Migrate is pressed for unsupported type" do
         allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_microsoft)
-        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        post :button, :params => { :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1" }
         expect(controller.send(:flash_errors?)).to be_truthy
         expect(assigns(:flash_array).first[:message]).to include('does not apply')
       end
@@ -206,14 +206,14 @@ describe EmsContainerController do
       it "when VM Migrate is pressed for supported type" do
         allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
-        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        post :button, :params => { :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1" }
         expect(controller.send(:flash_errors?)).not_to be_truthy
       end
 
       it "when VM Migrate is pressed for supported type" do
         allow(controller).to receive(:role_allows).and_return(true)
         vm = FactoryGirl.create(:vm_vmware)
-        post :button, :pressed => "vm_edit", :format => :js, "check_#{vm.id}" => "1"
+        post :button, :params => { :pressed => "vm_edit", :format => :js, "check_#{vm.id}" => "1" }
         expect(controller.send(:flash_errors?)).not_to be_truthy
       end
     end

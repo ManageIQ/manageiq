@@ -6,7 +6,7 @@ describe MiqRequestController do
 
     it "when called with a task id" do
       expect(MiqRequestTask).to receive(:post_install_callback).with("12345").once
-      get 'post_install_callback', :task_id => 12345
+      get 'post_install_callback', :params => { :task_id => 12345 }
       expect(response.body).to be_blank
     end
 
@@ -131,13 +131,13 @@ describe MiqRequestController do
                                                                 :requester      => User.current_user)
     end
     it "when edit request button is pressed" do
-      post :button, :pressed => "miq_request_edit", :id => @miq_request.id, :format => :js
+      post :button, :params => { :pressed => "miq_request_edit", :id => @miq_request.id, :format => :js }
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
     end
 
     it "when copy request button is pressed" do
-      post :button, :pressed => "miq_request_copy", :id => @miq_request.id, :format => :js
+      post :button, :params => { :pressed => "miq_request_copy", :id => @miq_request.id, :format => :js }
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
     end
@@ -155,7 +155,7 @@ describe MiqRequestController do
     it "when the edit button is pressed the request is displayed" do
       session[:settings] = {:display   => {:quad_truncate => 'f'},
                             :quadicons => {:host => 'foo'}}
-      get :show, :id => @miq_request.id
+      get :show, :params => { :id => @miq_request.id }
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
     end
@@ -171,7 +171,7 @@ describe MiqRequestController do
     end
 
     it "miq_request/show_list sets @layout='miq_request_vm' when redirected via foreman provisioning" do
-      post :show_list, :typ => "configured_systems"
+      post :show_list, :params => { :typ => "configured_systems" }
       layout = controller.instance_variable_get(:@layout)
       expect(layout).to eq("miq_request_vm")
     end

@@ -21,13 +21,13 @@ describe "Login process" do
     end
 
     it "allows login with correct password" do
-      post '/dashboard/authenticate', :user_name => user.userid, :user_password => 'smartvm'
+      post '/dashboard/authenticate', :params => { :user_name => user.userid, :user_password => 'smartvm' }
       expect(response.status).to eq(200)
       expect(response.body).not_to match(/password you entered is incorrect/)
     end
 
     it "does now allow login with incorrect password" do
-      post '/dashboard/authenticate', :user_name => user.userid, :user_password => 'fantomas'
+      post '/dashboard/authenticate', :params => { :user_name => user.userid, :user_password => 'fantomas' }
       expect(response.status).to eq(200)
       expect(response.body).to match(/password you entered is incorrect/)
     end
@@ -35,19 +35,19 @@ describe "Login process" do
 
   context 'w/ a valid session' do
     it "allows access w/ a valid referer" do
-      post '/dashboard/authenticate', :user_name => user.userid, :user_password => 'smartvm'
-      get '/ems_cloud/show_list', nil, 'HTTP_REFERER' => "http://www.example.com/"
+      post '/dashboard/authenticate', :params => { :user_name => user.userid, :user_password => 'smartvm' }
+      get '/ems_cloud/show_list', :headers => { 'Referer' => "http://www.example.com/" }
       expect(response.status).to eq(200)
     end
 
     it "does not allow access w/o a valid referer" do
-      post '/dashboard/authenticate', :user_name => user.userid, :user_password => 'smartvm'
-      get '/ems_cloud/show_list', nil, 'HTTP_REFERER' => "http://foo.bar.com"
+      post '/dashboard/authenticate', :params => { :user_name => user.userid, :user_password => 'smartvm' }
+      get '/ems_cloud/show_list', :headers => { 'Referer' => "http://foo.bar.com" }
       expect(response.status).to eq(403)
     end
 
     it "allows access w/o a valid referer to a whitelisted entry point" do
-      post '/dashboard/authenticate', :user_name => user.userid, :user_password => 'smartvm'
+      post '/dashboard/authenticate', :params => { :user_name => user.userid, :user_password => 'smartvm' }
       host = FactoryGirl.create(:host)
       get "/host/show/#{host.id}"
       expect(response.status).to eq(200)

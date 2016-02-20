@@ -37,7 +37,7 @@ describe MiqAeCustomizationController do
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
       session[:resolve] = {}
-      post :automate_button_field_changed, :instance_name => 'CustomButton', :name => 'test', :button_image => '01'
+      post :automate_button_field_changed, :params => { :instance_name => 'CustomButton', :name => 'test', :button_image => '01' }
       expect(response.status).to eq(200)
     end
   end

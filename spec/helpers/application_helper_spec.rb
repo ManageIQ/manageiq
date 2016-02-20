@@ -1250,8 +1250,7 @@ describe ApplicationHelper do
 
     context "when the given parameter is a hash" do
       before do
-        get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
-           "&page=2&sb_controller=host")
+        get "/vm/show_list/100", :params => "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5&page=2&sb_controller=host"
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_message_expectations_on_nil
       end
@@ -1265,7 +1264,7 @@ describe ApplicationHelper do
       before do
         FactoryGirl.create(:ems_cloud, :zone => Zone.seed)
         @record = ManageIQ::Providers::CloudManager.first
-        get("/ems_cloud/#{@record.id}", :display => 'images')
+        get "/ems_cloud/#{@record.id}", :params => { :display => 'images' }
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_message_expectations_on_nil
       end

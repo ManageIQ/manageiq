@@ -16,7 +16,7 @@ describe ReportController do
       end
 
       it 'renders list' do
-        post :tree_select, :id => 'root', :format => :js, :accord => 'savedreports'
+        post :tree_select, :params => { :id => 'root', :format => :js, :accord => 'savedreports' }
         expect(response).to render_template('report/_savedreports_list')
       end
 
@@ -41,7 +41,7 @@ describe ReportController do
                            :data           => "--- Quota \xE2\x80\x93 Max CPUs\n...\n",
                            :binary_blob_id => binary_blob.id)
 
-        post :tree_select, :id => "rr-#{report_result.id}", :format => :js, :accord => 'savedreports'
+        post :tree_select, :params => { :id => "rr-#{report_result.id}", :format => :js, :accord => 'savedreports' }
         expect(response).to render_template('shared/_report_chart_and_html')
       end
     end
@@ -53,7 +53,7 @@ describe ReportController do
 
       it 'renders list of Reports in Reports - Custom tree' do
         FactoryGirl.create(:miq_report)
-        post :tree_select, :id => 'reports_xx-0', :format => :js
+        post :tree_select, :params => { :id => 'reports_xx-0', :format => :js }
         expect(response).to render_template('report/_report_list')
       end
     end
@@ -64,13 +64,13 @@ describe ReportController do
       end
 
       it 'renders list of Schedules in Schedules tree' do
-        post :tree_select, :id => 'root', :format => :js, :accord => 'schedules'
+        post :tree_select, :params => { :id => 'root', :format => :js, :accord => 'schedules' }
         expect(response).to render_template('report/_schedule_list')
       end
 
       it 'renders show of Schedule in Schedules tree' do
         schedule = FactoryGirl.create(:miq_schedule)
-        post :tree_select, :id => "msc-#{schedule.id}", :format => :js, :accord => 'schedules'
+        post :tree_select, :params => { :id => "msc-#{schedule.id}", :format => :js, :accord => 'schedules' }
         expect(response).to render_template('report/_show_schedule')
       end
     end
@@ -82,7 +82,7 @@ describe ReportController do
 
       it 'renders list of Dashboards in Dashboards tree' do
         MiqWidgetSet.seed
-        post :tree_select, :id => 'root', :format => :js, :accord => 'db'
+        post :tree_select, :params => { :id => 'root', :format => :js, :accord => 'db' }
         expect(response).to render_template('report/_db_list')
       end
 
@@ -93,7 +93,7 @@ describe ReportController do
         user = FactoryGirl.create(:user_with_group)
         login_as user
         widget_set = FactoryGirl.create(:miq_widget_set, :group_id => user.current_group.id)
-        post :tree_select, :id => "xx-g_g-#{user.current_group.id}_-#{widget_set.id}", :format => :js, :accord => 'db'
+        post :tree_select, :params => { :id => "xx-g_g-#{user.current_group.id}_-#{widget_set.id}", :format => :js, :accord => 'db' }
         expect(response).to render_template('report/_db_show')
       end
     end
@@ -104,7 +104,7 @@ describe ReportController do
       end
 
       it 'renders list of Dashboard Widgets in Widgets tree' do
-        post :tree_select, :id => 'root', :format => :js, :accord => 'widgets'
+        post :tree_select, :params => { :id => 'root', :format => :js, :accord => 'widgets' }
         expect(response).to render_template('report/_widget_list')
       end
 
@@ -112,7 +112,7 @@ describe ReportController do
         ApplicationController.handle_exceptions = true
 
         widget = FactoryGirl.create(:miq_widget)
-        post :tree_select, :id => "xx-r_-#{widget.id}", :format => :js, :accord => 'widgets'
+        post :tree_select, :params => { :id => "xx-r_-#{widget.id}", :format => :js, :accord => 'widgets' }
         expect(response).to render_template('report/_widget_show')
       end
     end
@@ -124,7 +124,7 @@ describe ReportController do
 
       it 'renders list of Roles in Roles tree' do
         login_as (FactoryGirl.create(:user_with_group))
-        post :tree_select, :id => 'root', :format => :js, :accord => 'roles'
+        post :tree_select, :params => { :id => 'root', :format => :js, :accord => 'roles' }
         expect(response).to render_template('report/_role_list')
       end
 
@@ -132,7 +132,7 @@ describe ReportController do
         FactoryGirl.create(:miq_report)
         user = FactoryGirl.create(:user_with_group)
         login_as user
-        post :tree_select, :id => "g-#{user.current_group.id}", :format => :js, :accord => 'roles'
+        post :tree_select, :params => { :id => "g-#{user.current_group.id}", :format => :js, :accord => 'roles' }
         expect(response).to render_template('report/_menu_form1')
       end
     end

@@ -125,19 +125,19 @@ describe ProviderForemanController do
     end
 
     it "renders the edit page when the configuration manager id is supplied" do
-      post :edit, :id => @config_mgr.id
+      post :edit, :params => { :id => @config_mgr.id }
       expect(response.status).to eq(200)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
       expect(right_cell_text).to eq(_("Edit Configuration Manager Provider"))
     end
 
     it "renders the edit page when the configuration manager id is selected from a list view" do
-      post :edit, :miq_grid_checks => @config_mgr.id
+      post :edit, :params => { :miq_grid_checks => @config_mgr.id }
       expect(response.status).to eq(200)
     end
 
     it "renders the edit page when the configuration manager id is selected from a grid/tile" do
-      post :edit, "check_#{ApplicationRecord.compress_id(@config_mgr.id)}" => "1"
+      post :edit, :params => { "check_#{ApplicationRecord.compress_id(@config_mgr.id)}" => "1" }
       expect(response.status).to eq(200)
     end
   end
@@ -334,7 +334,7 @@ describe ProviderForemanController do
     parent = FactoryGirl.create(:classification, :name => "test_category")
     FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
     FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
-    post :tagging, :id => @configured_system.id, :format => :js
+    post :tagging, :params => { :id => @configured_system.id, :format => :js }
     expect(response.status).to eq(200)
   end
 
@@ -352,7 +352,7 @@ describe ProviderForemanController do
     set_user_privileges
 
     key = ems_key_for_provider(@provider)
-    post :tree_select, :id => key, :format => :js
+    post :tree_select, :params => { :id => key, :format => :js }
     expect(response.status).to eq(200)
   end
 
@@ -372,7 +372,7 @@ describe ProviderForemanController do
     it "does not hide Configuration button in the toolbar" do
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       key = ems_key_for_provider(@provider)
-      post :tree_select, :id => key
+      post :tree_select, :params => { :id => key }
       expect(response.status).to eq(200)
       expect(response.body).not_to include('<div class=\"hidden btn-group dropdown\"><button data-explorer=\"true\" title=\"Configuration\"')
     end

@@ -20,46 +20,48 @@ describe EmsCloudController do
     render_views
 
     it 'shows the edit page' do
-      get :edit, :id => FactoryGirl.create(:ems_amazon).id
+      get :edit, :params => { :id => FactoryGirl.create(:ems_amazon).id }
       expect(response.status).to eq(200)
     end
 
     it 'creates on post' do
       expect do
-        post :create,
-             "button"               => "add",
-             "name"                 => "foo",
-             "emstype"              => "ec2",
-             "provider_region"      => "ap-southeast-1",
-             "port"                 => "",
-             "zone"                 => zone.name,
-             "default_userid"       => "foo",
-             "default_password"     => "[FILTERED]",
-             "default_verify"       => "[FILTERED]",
-             "metrics_userid"       => "",
-             "metrics_password"     => "[FILTERED]",
-             "metrics_verify"       => "[FILTERED]",
-             "amqp_userid"          => "",
-             "amqp_password"        => "[FILTERED]",
-             "amqp_verify"          => "[FILTERED]",
-             "ssh_keypair_userid"   => "",
-             "ssh_keypair_password" => "[FILTERED]"
+        post :create, :params => {
+          "button"               => "add",
+          "name"                 => "foo",
+          "emstype"              => "ec2",
+          "provider_region"      => "ap-southeast-1",
+          "port"                 => "",
+          "zone"                 => zone.name,
+          "default_userid"       => "foo",
+          "default_password"     => "[FILTERED]",
+          "default_verify"       => "[FILTERED]",
+          "metrics_userid"       => "",
+          "metrics_password"     => "[FILTERED]",
+          "metrics_verify"       => "[FILTERED]",
+          "amqp_userid"          => "",
+          "amqp_password"        => "[FILTERED]",
+          "amqp_verify"          => "[FILTERED]",
+          "ssh_keypair_userid"   => "",
+          "ssh_keypair_password" => "[FILTERED]"
+        }
       end.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
     end
 
     it 'creates and updates an authentication record on post' do
       expect do
-        post :create,
-             "button"           => "add",
-             "hostname"         => "host_openstack",
-             "name"             => "foo_openstack",
-             "emstype"          => "openstack",
-             "provider_region"  => "",
-             "port"             => "5000",
-             "zone"             => zone.name,
-             "default_userid"   => "foo",
-             "default_password" => "[FILTERED]",
-             "default_verify"   => "[FILTERED]"
+        post :create, :params => {
+          "button"           => "add",
+          "hostname"         => "host_openstack",
+          "name"             => "foo_openstack",
+          "emstype"          => "openstack",
+          "provider_region"  => "",
+          "port"             => "5000",
+          "zone"             => zone.name,
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
+        }
       end.to change { Authentication.count }.by(1)
 
       expect(response.status).to eq(200)
@@ -67,17 +69,18 @@ describe EmsCloudController do
       expect(openstack.authentications.size).to eq(1)
 
       expect do
-        post :update,
-             "id"               => openstack.id,
-             "button"           => "save",
-             "hostname"         => "host_openstack_updated",
-             "name"             => "foo_openstack",
-             "emstype"          => "openstack",
-             "provider_region"  => "",
-             "port"             => "5000",
-             "default_userid"   => "bar",
-             "default_password" => "[FILTERED]",
-             "default_verify"   => "[FILTERED]"
+        post :update, :params => {
+          "id"               => openstack.id,
+          "button"           => "save",
+          "hostname"         => "host_openstack_updated",
+          "name"             => "foo_openstack",
+          "emstype"          => "openstack",
+          "provider_region"  => "",
+          "port"             => "5000",
+          "default_userid"   => "bar",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
+        }
       end.not_to change { Authentication.count }
 
       expect(response.status).to eq(200)
@@ -85,45 +88,48 @@ describe EmsCloudController do
     end
 
     it "validates credentials for a new record" do
-      post :create,
-           "button"           => "validate",
-           "cred_type"        => "default",
-           "name"             => "foo_ec2",
-           "emstype"          => "ec2",
-           "provider_region"  => "ap-southeast-1",
-           "zone"             => "default",
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
+      post :create, :params => {
+        "button"           => "validate",
+        "cred_type"        => "default",
+        "name"             => "foo_ec2",
+        "emstype"          => "ec2",
+        "provider_region"  => "ap-southeast-1",
+        "zone"             => "default",
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
+      }
 
       expect(response.status).to eq(200)
     end
 
     it "cancels a new record" do
-      post :create,
-           "button"           => "cancel",
-           "cred_type"        => "default",
-           "name"             => "foo_ec2",
-           "emstype"          => "ec2",
-           "provider_region"  => "ap-southeast-1",
-           "zone"             => "default",
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
+      post :create, :params => {
+        "button"           => "cancel",
+        "cred_type"        => "default",
+        "name"             => "foo_ec2",
+        "emstype"          => "ec2",
+        "provider_region"  => "ap-southeast-1",
+        "zone"             => "default",
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
+      }
 
       expect(response.status).to eq(200)
     end
 
     it "adds a record of type azure" do
-      post :create,
-           "button"           => "add",
-           "azure_tenant_id"  => "azure",
-           "name"             => "foo_azure",
-           "emstype"          => "azure",
-           "zone"             => zone.name,
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
+      post :create, :params => {
+        "button"           => "add",
+        "azure_tenant_id"  => "azure",
+        "name"             => "foo_azure",
+        "emstype"          => "azure",
+        "zone"             => zone.name,
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
+      }
 
       expect(response.status).to eq(200)
       edit = controller.instance_variable_get(:@edit)
@@ -139,37 +145,39 @@ describe EmsCloudController do
     end
 
     it 'gets the ems cloud form fields on a get' do
-      post :create,
-           "button"           => "add",
-           "hostname"         => "host_openstack",
-           "name"             => "foo_openstack",
-           "emstype"          => "openstack",
-           "provider_region"  => "",
-           "port"             => "5000",
-           "zone"             => zone.name,
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
+      post :create, :params => {
+        "button"           => "add",
+        "hostname"         => "host_openstack",
+        "name"             => "foo_openstack",
+        "emstype"          => "openstack",
+        "provider_region"  => "",
+        "port"             => "5000",
+        "zone"             => zone.name,
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
+      }
 
       expect(response.status).to eq(200)
       openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
-      get :ems_cloud_form_fields, "id" => openstack.id
+      get :ems_cloud_form_fields, :params => { "id" => openstack.id }
       expect(response.status).to eq(200)
       expect(response.body).to include('"name":"foo_openstack"')
     end
 
     it 'strips whitespace from name, hostname and api_port form fields on create' do
-      post :create,
-           "button"           => "add",
-           "hostname"         => "  host_openstack     ",
-           "name"             => "  foo_openstack     ",
-           "emstype"          => "openstack",
-           "provider_region"  => "",
-           "api_port"         => "   5000     ",
-           "zone"             => zone.name,
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
+      post :create, :params => {
+        "button"           => "add",
+        "hostname"         => "  host_openstack     ",
+        "name"             => "  foo_openstack     ",
+        "emstype"          => "openstack",
+        "provider_region"  => "",
+        "api_port"         => "   5000     ",
+        "zone"             => zone.name,
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
+      }
 
       expect(response.status).to eq(200)
       expect(ManageIQ::Providers::Openstack::CloudManager.with_hostname('host_openstack')
@@ -188,27 +196,29 @@ describe EmsCloudController do
 
     it 'gets the restful show link and timeline link paths' do
       session[:settings] = {:views => {:vm_summary_cool => ""}}
-      post :create,
-           "button"           => "add",
-           "hostname"         => "host_openstack",
-           "name"             => "foo_openstack",
-           "emstype"          => "openstack",
-           "provider_region"  => "",
-           "port"             => "5000",
-           "zone"             => zone.name,
-           "default_userid"   => "foo",
-           "default_password" => "[FILTERED]",
-           "default_verify"   => "[FILTERED]"
+      post :create, :params => {
+        "button"           => "add",
+        "hostname"         => "host_openstack",
+        "name"             => "foo_openstack",
+        "emstype"          => "openstack",
+        "provider_region"  => "",
+        "port"             => "5000",
+        "zone"             => zone.name,
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
+      }
 
       expect(response.status).to eq(200)
       openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
       show_link_actual_path = controller.send(:show_link, openstack)
       expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.id}")
 
-      post :show,
-           "button"  => "timeline",
-           "display" => "timeline",
-           "id"      => openstack.id
+      post :show, :params => {
+        "button"  => "timeline",
+        "display" => "timeline",
+        "id"      => openstack.id
+      }
 
       expect(response.status).to eq(200)
       show_link_actual_path = controller.send(:show_link, openstack, :display => "timeline")
@@ -280,31 +290,31 @@ describe EmsCloudController do
     it "refresh relationships and power states" do
       session[:settings] = {:views => {}}
       ems = FactoryGirl.create(:ems_amazon)
-      post :button, :id => ems.id, :pressed => "ems_cloud_refresh"
+      post :button, :params => { :id => ems.id, :pressed => "ems_cloud_refresh" }
       expect(response.status).to eq(200)
     end
 
     it "discover cloud providers" do
-      get :discover, :discover_type => "ems"
+      get :discover, :params => { :discover_type => "ems" }
       expect(response.status).to eq(200)
       expect(response).to render_template('ems_cloud/discover')
     end
 
     it 'edit selected cloud provider' do
       ems = FactoryGirl.create(:ems_amazon)
-      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_edit"
+      post :button, :params => { :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_edit" }
       expect(response.status).to eq(200)
     end
 
     it 'edit cloud provider tags' do
       ems = FactoryGirl.create(:ems_amazon)
-      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_tag"
+      post :button, :params => { :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_tag" }
       expect(response.status).to eq(200)
     end
 
     it 'manage cloud provider policies' do
       ems = FactoryGirl.create(:ems_amazon)
-      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_protect"
+      post :button, :params => { :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_protect" }
       expect(response.status).to eq(200)
 
       get :protect
@@ -314,17 +324,17 @@ describe EmsCloudController do
 
     it 'edit cloud provider tags' do
       ems = FactoryGirl.create(:ems_amazon)
-      post :button, :id => ems.id, :pressed => "ems_cloud_timeline"
+      post :button, :params => { :id => ems.id, :pressed => "ems_cloud_timeline" }
       expect(response.status).to eq(200)
 
       session[:settings] = {:views => {}}
-      get :show, :display => "timeline", :id => ems.id
+      get :show, :params => { :display => "timeline", :id => ems.id }
       expect(response.status).to eq(200)
     end
 
     it 'edit cloud providers' do
       ems = FactoryGirl.create(:ems_amazon)
-      post :button, :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_edit"
+      post :button, :params => { :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_edit" }
       expect(response.status).to eq(200)
     end
   end

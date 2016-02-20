@@ -62,7 +62,7 @@ describe VmInfraController do
         controller.instance_variable_set(:@settings,  {})
         expect(user).to receive(:save)
         width = '100'
-        get :x_settings_changed, :width => width
+        get :x_settings_changed, :params => { :width => width }
 
         expect(user.settings[:explorer][controller.controller_name][:width]).to eq(width)
         expect(session[:settings][:explorer][controller.controller_name][:width]).to eq(width)

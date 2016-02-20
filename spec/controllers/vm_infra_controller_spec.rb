@@ -27,14 +27,14 @@ describe VmInfraController do
     ApplicationController.handle_exceptions = true
 
     seed_session_trees('vm_infra', 'vms_instances_filter_tree')
-    xhr :post, :show, :id => vm_vmware.id, :display => 'vmtree_info'
+    post :show, :params => { :id => vm_vmware.id, :display => 'vmtree_info' }, :xhr => true
     expect(response.status).to eq(200)
     expect(response).to render_template('vm_common/_vmtree')
   end
 
   # http://localhost:3000/vm_infra/show/10000000000449
   it 'can open a VM and select it in the left tree' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
@@ -48,13 +48,13 @@ describe VmInfraController do
   end
 
   it 'can open the right size tab' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_right_size', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_right_size', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
@@ -62,13 +62,13 @@ describe VmInfraController do
     vm = FactoryGirl.create(:vm_vmware, :host => host_1x1, :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm.id
+    get :show, :params => { :id => vm.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
     expect(response.status).to eq(200)
   end
 
@@ -76,12 +76,12 @@ describe VmInfraController do
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_protect', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_protect', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
 
-    post :x_button, :pressed => 'vm_edit', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_edit', :id => vm_vmware.id }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'vm_common/_form')
   end
@@ -90,18 +90,18 @@ describe VmInfraController do
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_protect', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_protect', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
 
-    post :x_button, :pressed => 'vm_ownership', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_ownership', :id => vm_vmware.id }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'shared/views/_ownership')
   end
 
   it 'can Extract Running Processes form VM' do
-    post :x_button, :pressed => 'vm_collect_running_processes', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_collect_running_processes', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
@@ -123,26 +123,26 @@ describe VmInfraController do
 
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
     post :explorer
     expect(response.status).to eq(200)
 
     controller.instance_variable_set(:@settings, :views => {:compare => "compressed"})
     controller.instance_variable_set(:@export_reports, [])
-    post :x_button, :pressed => 'vm_compare', "check_#{to_cid(vm.id)}" => "1",
-                                              "check_#{to_cid(vm2.id)}" => "1", "type" => "compressed"
+    post :x_button, :params => { :pressed => 'vm_compare', "check_#{to_cid(vm.id)}" => "1",
+                                              "check_#{to_cid(vm2.id)}" => "1", "type" => "compressed" }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'layouts/_compare')
   end
 
   it 'can Perform VM Smart State Analysis' do
-    post :x_button, :pressed => 'vm_scan', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_scan', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
   it 'can Refresh Relationships and Power Status VM Smart State Analysis' do
-    post :x_button, :pressed => 'vm_refresh', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_refresh', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
@@ -150,7 +150,7 @@ describe VmInfraController do
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_protect', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_protect', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
@@ -160,13 +160,13 @@ describe VmInfraController do
                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_policy_sim', :id => vm.id
+    post :x_button, :params => { :pressed => 'vm_policy_sim', :id => vm.id }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'layouts/_policy_sim')
   end
@@ -179,71 +179,71 @@ describe VmInfraController do
     @tag2 = FactoryGirl.create(:classification_tag,
                                :name   => "tag2",
                                :parent => classification)
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_tag', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_tag', :id => vm_vmware.id }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'layouts/_tagging')
   end
 
   it 'can Check VM Compliance' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_check_compliance', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_check_compliance', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
   it 'can provision VMs' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_miq_request_new', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_miq_request_new', :id => vm_vmware.id }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'miq_request/_pre_prov')
   end
 
   it 'can set retirement date' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_retire', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_retire', :id => vm_vmware.id }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'shared/views/_retire')
   end
 
   it 'can retire selected items' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_retire_now', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_retire_now', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
   it 'can migrate selected items' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_migrate', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_migrate', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
@@ -253,64 +253,64 @@ describe VmInfraController do
                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_publish', :id => vm.id
+    post :x_button, :params => { :pressed => 'vm_publish', :id => vm.id }
     expect(response.status).to eq(200)
   end
 
   it 'can clone selected VM' do
-    get :show, :id => vm_vmware.id
+    get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_clone', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_clone', :id => vm_vmware.id }
     expect(response.status).to eq(200)
   end
 
   it 'can Shutdown Guest' do
-    post :x_button, :pressed => 'vm_guest_shutdown', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_guest_shutdown', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     expect(response.body).to include('Shutdown Guest initiated for 1 VM and Instance from the CFME Database')
   end
 
   it 'can Restart Guest' do
-    post :x_button, :pressed => 'vm_guest_restart', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_guest_restart', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     expect(response.body).to include('Restart Guest initiated for 1 VM and Instance from the CFME Database')
   end
 
   it 'can Power On VM' do
-    post :x_button, :pressed => 'vm_start', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_start', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     expect(response.body).to include('Start initiated for 1 VM and Instance from the CFME Database')
   end
 
   it 'can Power Off VM' do
-    post :x_button, :pressed => 'vm_stop', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_stop', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     expect(response.body).to include('Stop initiated for 1 VM and Instance from the CFME Database')
   end
 
   it 'can Suspend VM' do
-    post :x_button, :pressed => 'vm_suspend', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_suspend', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     expect(response.body).to include('Suspend initiated for 1 VM and Instance from the CFME Database')
   end
 
   it 'can Reset VM' do
-    post :x_button, :pressed => 'vm_reset', :id => vm_vmware.id
+    post :x_button, :params => { :pressed => 'vm_reset', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
     expect(response.body).to include('Reset initiated for 1 VM and Instance from the CFME Database')
@@ -322,13 +322,13 @@ describe VmInfraController do
                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '04'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm.id
+    get :show, :params => { :id => vm.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not include('Total Processors')
   end
@@ -339,13 +339,13 @@ describe VmInfraController do
                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm.id
+    get :show, :params => { :id => vm.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
     expect(response.status).to eq(200)
     expect(response.body).to include('Total Processors')
   end
@@ -356,13 +356,13 @@ describe VmInfraController do
                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :id => vm.id
+    get :show, :params => { :id => vm.id }
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
     expect(response.status).to eq(200)
     expect(response.body).to include('button=submit')
     expect(response.body).to include('button=cancel')
@@ -376,12 +376,12 @@ describe VmInfraController do
       before { get :explorer }
 
       it 'skips dropping a breadcrumb when a button action is executed' do
-        post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
+        post :x_button, :params => { :id => vm_vmware.id, :pressed => 'vm_ownership' }
         expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
       end
 
       it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
-        post :accordion_select, :id => "vms_filter"
+        post :accordion_select, :params => { :id => "vms_filter" }
         expect(subject).to eq([{:name => "Virtual Machines", :url => "/vm_infra/explorer"}])
       end
     end
@@ -399,10 +399,10 @@ describe VmInfraController do
       it 'retains the breadcrumb path when cancel is pressed from a VM action' do
         get :explorer
         allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
-        post :x_button, :id => vm_vmware.id, :pressed => 'vm_ownership'
+        post :x_button, :params => { :id => vm_vmware.id, :pressed => 'vm_ownership' }
 
         controller.instance_variable_set(:@in_a_form, nil)
-        post :ownership_update, :button => 'cancel'
+        post :ownership_update, :params => { :button => 'cancel' }
 
         expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
       end

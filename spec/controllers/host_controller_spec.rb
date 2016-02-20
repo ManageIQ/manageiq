@@ -22,43 +22,43 @@ describe HostController do
 
     it "when VM Right Size Recommendations is pressed" do
       expect(controller).to receive(:vm_right_size)
-      post :button, :pressed => 'vm_right_size', :format => :js
+      post :button, :params => { :pressed => 'vm_right_size', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Migrate is pressed" do
       expect(controller).to receive(:prov_redirect).with("migrate")
-      post :button, :pressed => 'vm_migrate', :format => :js
+      post :button, :params => { :pressed => 'vm_migrate', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Retire is pressed" do
       expect(controller).to receive(:retirevms).once
-      post :button, :pressed => 'vm_retire', :format => :js
+      post :button, :params => { :pressed => 'vm_retire', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Manage Policies is pressed" do
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
-      post :button, :pressed => 'vm_protect', :format => :js
+      post :button, :params => { :pressed => 'vm_protect', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when MiqTemplate Manage Policies is pressed" do
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
-      post :button, :pressed => 'miq_template_protect', :format => :js
+      post :button, :params => { :pressed => 'miq_template_protect', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when VM Tag is pressed" do
       expect(controller).to receive(:tag).with(VmOrTemplate)
-      post :button, :pressed => 'vm_tag', :format => :js
+      post :button, :params => { :pressed => 'vm_tag', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when MiqTemplate Tag is pressed" do
       expect(controller).to receive(:tag).with(VmOrTemplate)
-      post :button, :pressed => 'miq_template_tag', :format => :js
+      post :button, :params => { :pressed => 'miq_template_tag', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
@@ -71,14 +71,14 @@ describe HostController do
       ra = FactoryGirl.create(:resource_action, :dialog_id => d.id)
       custom_button.resource_action = ra
       custom_button.save
-      post :button, :pressed => "custom_button", :id => host.id, :button_id => custom_button.id
+      post :button, :params => { :pressed => "custom_button", :id => host.id, :button_id => custom_button.id }
       expect(response.status).to eq(200)
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
     it "when Drift button is pressed" do
       expect(controller).to receive(:drift_analysis)
-      post :button, :pressed => 'common_drift', :format => :js
+      post :button, :params => { :pressed => 'common_drift', :format => :js }
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
@@ -148,7 +148,7 @@ describe HostController do
     it "renders show_details" do
       controller.instance_variable_set(:@breadcrumbs, [])
       allow(controller).to receive(:get_view)
-      get :guest_applications, :id => @host.id
+      get :guest_applications, :params => { :id => @host.id }
       expect(response.status).to eq(200)
       expect(response).to render_template('host/show')
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
@@ -167,7 +167,7 @@ describe HostController do
                                                              )
                              )
 
-    get :show, :id => host.id
+    get :show, :params => { :id => host.id }
 
     expect(response.status).to eq(200)
     expect(response).to render_template('host/show')

@@ -14,7 +14,7 @@ describe ContainerServiceController do
     EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_service = ContainerService.create(:ext_management_system => ems, :name => "Test Service")
-    get :show, :id => container_service.id
+    get :show, :params => { :id => container_service.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Container Services",

@@ -17,7 +17,7 @@ describe ContainerGroupController do
     container_group = ContainerGroup.create(:ext_management_system => ems,
                                             :container_project     => container_project,
                                             :name                  => "Test Group")
-    get :show, :id => container_group.id
+    get :show, :params => { :id => container_group.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Pods",
