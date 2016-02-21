@@ -1,0 +1,2 @@
+class DatabaseFlavor < Flavor
+end

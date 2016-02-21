@@ -150,6 +150,10 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     @cloud_formation ||= connect(:service => "CloudFormation", :sdk_v2 => true)
   end
 
+  def rds
+    @rds ||= connect(:service => "RDS", :sdk_v2 => true)
+  end
+
   #
   # Operations
   #

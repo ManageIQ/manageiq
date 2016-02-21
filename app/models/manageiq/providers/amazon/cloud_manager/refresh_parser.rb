@@ -9,6 +9,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     @ems                 = ems
     @aws_ec2             = ems.ec2
     @aws_cloud_formation = ems.cloud_formation
+    @aws_rds             = ems.rds
     @data                = {}
     @data_index          = {}
     @known_flavors       = Set.new
@@ -25,6 +26,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
     $aws_log.info("#{log_header}...")
     get_flavors
+    get_db_flavors
     get_availability_zones
     get_key_pairs
     get_stacks
@@ -35,6 +37,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     get_public_images  if @options["get_public_images"]
     get_instances
     get_floating_ips
+    get_db_instances
     $aws_log.info("#{log_header}...Complete")
 
     filter_unused_disabled_flavors
@@ -50,6 +53,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def get_flavors
     process_collection(ManageIQ::Providers::Amazon::InstanceTypes.all, :flavors) { |flavor| parse_flavor(flavor) }
+  end
+
+  def get_db_flavors
+    process_collection(ManageIQ::Providers::Amazon::DatabaseTypes.all, :flavors) { |flavor| parse_db_flavor(flavor) }
   end
 
   def get_availability_zones
@@ -152,6 +159,11 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
   end
 
+  def get_db_instances
+    instances = @aws_rds.db_instances
+    process_collection(instances, :db_instances) { |instance| parse_db_instance(instance) }
+  end
+
   def process_collection(collection, key)
     @data[key] ||= []
 
@@ -186,6 +198,21 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :cloud_subnet_required    => flavor[:vpc_only],
       :ephemeral_disk_size      => flavor[:instance_store_size],
       :ephemeral_disk_count     => flavor[:instance_store_volumes]
+    }
+
+    return uid, new_result
+  end
+
+  def parse_db_flavor(flavor)
+    name = uid = flavor[:name]
+
+    new_result = {
+      :type    => ManageIQ::Providers::Amazon::CloudManager::Database::Flavor.name,
+      :ems_ref => uid,
+      :name    => name,
+      :enabled => true,
+      :cpus    => flavor[:vcpu],
+      :memory  => flavor[:memory]
     }
 
     return uid, new_result
@@ -440,6 +467,23 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :cloud_network_only => ip.domain["vpc"] ? true : false,
 
       :vm                 => associated_vm
+    }
+
+    return uid, new_result
+  end
+
+  def parse_db_instance(instance)
+    uid = instance.id
+    flavor = @data_index.fetch_path(:flavors, instance.db_instance_class)
+
+    new_result = {
+      :type          => ManageIQ::Providers::Amazon::CloudManager::CloudDatabase.name,
+      :ems_ref       => uid,
+      :name          => instance.db_name,
+      :status        => instance.db_instance_status,
+      :db_engine     => "#{instance.engine} #{instance.engine_version}",
+      :flavor        => flavor,
+      :storage_quota => instance.allocated_storage.gigabytes,
     }
 
     return uid, new_result
