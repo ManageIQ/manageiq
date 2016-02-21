@@ -10,4 +10,13 @@ class ContainerImageController < ApplicationController
     show_association('guest_applications', _('Packages'), 'guest_application', :guest_applications, GuestApplication)
   end
 
+  def openscap_rule_results
+    show_association('openscap_rule_results', 'Openscap', 'openscap_rule_result', :openscap_rule_results,
+                     OpenscapRuleResult)
+  end
+
+  def openscap_html
+    @record = identify_record(params[:id])
+    send_data(@record.openscap_result.html, :filename => "openscap_result.html")
+  end
 end

@@ -100,6 +100,39 @@ module ContainerSummaryHelper
                                                                  :db         => controller.controller_name))
   end
 
+  def textual_openscap
+    textual_link(
+      @record.openscap_rule_results,
+      :feature => "container_image_show",
+      :label   => _("OpenSCAP Results"),
+      :link    => url_for(
+        :controller => controller.controller_name,
+        :action     => 'openscap_rule_results',
+        :id         => @record,
+        :db         => controller.controller_name,
+      )
+    )
+  end
+
+  def textual_last_scan
+    format_timezone(@record.last_sync_on)
+  end
+
+  def textual_openscap_html
+    h = {:label => _("OpenSCAP HTML")}
+    if @record.openscap_result
+      h[:value] = _('Available')
+      h[:link] = url_for(
+        :id         => @record,
+        :controller => controller.controller_name,
+        :action     => 'openscap_html'
+      )
+    else
+      h[:value] = _('Not Available')
+    end
+    h
+  end
+
   def textual_container_image_registry
     object = @record.container_image_registry
     if object.nil? && @record.respond_to?(:display_registry)
