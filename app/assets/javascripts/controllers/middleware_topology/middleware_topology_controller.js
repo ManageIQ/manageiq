@@ -149,4 +149,35 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
 
     }
 
+    function getSVG() {
+        var graph = d3.select("kubernetes-topology-graph");
+        var svg = graph.select('svg');
+        return svg;
+    }
+
+    $scope.searchNode = function() {
+        var svg = getSVG();
+        var query = $scope.search.query;
+
+        var nodes = svg.selectAll("g");
+        if (query != "") {
+            var selected = nodes.filter(function (d) {
+                return d.item.name != query;
+            });
+            selected.style("opacity", "0.2");
+            var links = svg.selectAll("line");
+            links.style("opacity", "0.2");
+        }
+    };
+
+    $scope.resetSearch = function() {
+        // Display all topology nodes and links
+        d3.selectAll("g, line").transition()
+            .duration(2000)
+            .style("opacity", 1);
+
+        // Reset the search term in search input
+        $scope.search.query = "";
+    };
+
 }
