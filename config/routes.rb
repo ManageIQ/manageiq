@@ -574,6 +574,8 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         guest_applications
+        openscap_rule_results
+        openscap_html
       ),
       :post => %w(
         button
@@ -590,6 +592,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         guest_applications
+        openscap_rule_results
       ) + adv_search_post + exp_post + save_post
     },
 
