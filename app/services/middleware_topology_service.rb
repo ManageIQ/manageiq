@@ -24,6 +24,7 @@ class MiddlewareTopologyService
     topology[:items] = topo_items
     topology[:relations] = links
     topology[:kinds] = build_kinds
+    topology
   end
 
   def build_entity_data(entity, kind)
