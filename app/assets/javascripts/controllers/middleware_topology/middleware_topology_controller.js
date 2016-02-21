@@ -94,7 +94,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
             .style("display", function(d) {if ($scope.checkboxModel.value) {return "block"} else {return "none"}});
 
         added.selectAll("title").text(function(d) {
-            var status = "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status;
+            var status = "Name: " + d.item.name + "\nType: " + d.item.display_kind + "\nStatus: " + d.item.status;
             if (d.item.kind == 'Host' || d.item.kind == 'VM') {
                     status += "\nProvider: " + d.item.provider;
             }
@@ -115,7 +115,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
             case "MiddlewareServer":
                 class_name = "middleware_server";
                 break;
-            case "Hawkular":
+            case "MiddlewareManager":
                 class_name = "vendor-hawkular";
                 break;
         }
@@ -125,7 +125,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
     function dblclick(d) {
         var entity_url = "";
         switch (d.item.kind) {
-            case "Hawkular":
+            case "MiddlewareManager":
                 entity_url = "ems_middleware";
                 break;
             default :
@@ -137,7 +137,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
 
     function getDimensions(d) {
         switch (d.item.kind) {
-            case "Hawkular":
+            case "MiddlewareManager":
                 return { x: -20, y: -20, height: 40, width: 40, r: 28};
             case "Container" :
                 return { x: -7, y: -7,height: 14, width: 14, r: 13};
