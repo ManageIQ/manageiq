@@ -14,16 +14,8 @@
 
   - if @lastaction == "policy_sim"
     - if @policy_sim && session[:policies].length > 0
-      - result = item.passes_profiles?(session[:policies].keys)
-      - if result == true
-        .flobj{:class => "d#{size}"}
-          %img{:src => image_path('100/check.png')}
-      - elsif result == "N/A"
-        .flobj{:class => "d#{size}"}
-          %img{:src => image_path('100/na.png')}
-      - else
-        .flobj{:class => "d#{size}"}
-          %img{:src => image_path('100/x.png')}
+      .flobj{:class => "d#{size}"}
+        %img{:src => image_path(img_for_compliance(item))}
   - else
     .flobj{:class => "d#{size}"}
       %p
@@ -33,24 +25,16 @@
     %img{:src => image_path("#{size}/base-single.png")}
   - if @policy_sim == true
     - if @policy_sim && session[:policies].length > 0
-      - result = item.passes_profiles?(session[:policies].keys)
-      - if result == true
-        .flobj{:class => "e#{size}"}
-          %img{:src => image_path('100/check.png'), :width => width * 1.8, :height => width * 1.8}
-      - elsif result == "N/A"
-        .flobj{:class => "e#{size}"}
-          %img{:src => image_path('100/na.png'), :width => width * 1.8, :height => width * 1.8}
-      - else
-        .flobj{:class => "e#{size}"}
-          %img{:src => image_path('100/x.png'), :width => width * 1.8, :height => width * 1.8}
+      .flobj{:class => "e#{size}"}
+        %img{:src => image_path(img_for_compliance(item)), :width => width * 1.8, :height => width * 1.8}
     - else
       .flobj{:class => "e#{size}"}
-        %img{:src => image_path("100/vendor-#{h(item.vendor.downcase)}.png"), :width => width * 1.8, :height => width * 1.8}
+        %img{:src => image_path(img_for_vendor(item)), :width => width * 1.8, :height => width * 1.8}
   - else
     .flobj
       %img{:src => image_path("#{size}/base-single.png")}
     .flobj{:class => "e#{size}"}
-      %img{:src => image_path("100/vendor-#{h(item.vendor.downcase)}.png"), :width => width * 1.8, :height => width * 1.8}
+      %img{:src => image_path(img_for_vendor(item)), :width => width * 1.8, :height => width * 1.8}
 
 - unless typ == :listnav
   .flobj

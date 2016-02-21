@@ -1,29 +1,18 @@
 - if @settings[:quadicons][:host]
   .flobj
     %img{:src => image_path("#{size}/base.png"), :width => size, :height => size}
-  -# Get the VM count %>
-  - vcount = item.vms.size
   .flobj{:class => "a#{size}"}
     %p
-      = vcount
+      = item.vms.size
 
   - unless item.state.blank?
     .flobj{:class => "b#{size}"}
       %img{:src => image_path("72/currentstate-#{h(item.state.downcase)}.png")}
 
   .flobj{:class => "c#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.vmm_vendor_display.downcase)}.png")}
+    %img{:src => image_path(img_for_host_vendor(item))}
   .flobj{:class => "d#{size}"}
-    - case item.authentication_status
-    - when "Invalid"
-      - auth_status = "x"
-    - when "Valid"
-      - auth_status = "checkmark"
-    - when "None"
-      - auth_status = "unknown"
-    - else
-      - auth_status = "exclamationpoint"
-    %img{:src => image_path("100/#{h(auth_status)}.png")}
+    %img{:src => image_path(img_for_auth_status(item))}
 
   - if item.get_policies.length > 0
     .flobj{:class => "g#{size}"}
@@ -33,7 +22,7 @@
   .flobj
     %img{:src => image_path("#{size}/base-single.png")}
   .flobj{:class => "e#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.vmm_vendor_display.downcase)}.png"), :width => width * 1.8, :height => width * 1.8}
+    %img{:src => image_path(img_for_host_vendor(item)), :width => width * 1.8, :height => width * 1.8}
 
 - if typ == :listnav
   -# Listnav, no href needed

@@ -83,4 +83,33 @@ module QuadiconHelper
 
     partial_name
   end
+
+  def img_for_compliance(item)
+    result = item.passes_profiles?(session[:policies].keys)
+    if result == true
+      '100/check.png'
+    elsif result == "N/A"
+      '100/na.png'
+    else
+      '100/x.png'
+    end
+  end
+
+  def img_for_vendor(item)
+    "100/vendor-#{h(item.vendor.downcase)}.png"
+  end
+
+  def img_for_auth_status(item)
+    img = case item.authentication_status
+          when "Invalid" then "x"
+          when "Valid"   then "checkmark"
+          when "None"    then "unknown"
+          else "exclamationpoint"
+          end
+    "100/#{h(img)}.png"
+  end
+
+  def img_for_host_vendor(item)
+    "100/vendor-#{h(item.vmm_vendor_display.downcase)}.png"
+  end
 end
