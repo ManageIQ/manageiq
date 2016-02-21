@@ -85,15 +85,14 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def update_ssh_auth_status!
-    unless (auth = authentication_type(:ssh_keypair))
-      # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
-      # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
-      auth = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
-        :name          => "#{self.class.name} #{name}",
-        :authtype      => :ssh_keypair,
-        :resource_id   => id,
-        :resource_type => 'Host')
-    end
+    # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
+    # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
+    auth = authentication_type(:ssh_keypair) ||
+           ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
+             :name          => "#{self.class.name} #{name}",
+             :authtype      => :ssh_keypair,
+             :resource_id   => id,
+             :resource_type => 'Host')
 
     # If authentication is defined per host, use that
     best_fit_auth = authentication_best_fit
