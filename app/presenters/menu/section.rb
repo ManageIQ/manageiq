@@ -5,7 +5,7 @@ module Menu
     end
 
     def features
-      Array(items).collect(&:feature).compact
+      Array(items).collect { |el| el.try(:feature) || el.try(:features) }.flatten.compact
     end
 
     def visible?
@@ -21,6 +21,10 @@ module Menu
       when :big_iframe then "/dashboard/iframe?sid=#{id}"
       else                  "/dashboard/maintab/?tab=#{id}"
       end
+    end
+
+    def leaf?
+      false
     end
   end
 end
