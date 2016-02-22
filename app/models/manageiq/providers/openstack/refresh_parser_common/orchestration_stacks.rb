@@ -5,7 +5,7 @@ module ManageIQ::Providers
         def stack_resources(stack)
           return @resources[stack.id] if @resources && !@resources.fetch_path(stack.id).blank?
           @resources = {} unless @resources
-          @resources[stack.id] = stack.resources
+          @resources[stack.id] = safe_list { stack.resources }
         end
 
         def load_orchestration_stacks
@@ -133,7 +133,7 @@ module ManageIQ::Providers
         end
 
         def find_stack_parameters(stack)
-          raw_parameters = stack.parameters
+          raw_parameters = safe_list { stack.parameters }
           get_stack_parameters(stack.id, raw_parameters)
           raw_parameters.collect do |parameter|
             @data_index.fetch_path(:orchestration_stack_parameters, compose_ems_ref(stack.id, parameter[0]))
@@ -146,7 +146,7 @@ module ManageIQ::Providers
         end
 
         def find_stack_outputs(stack)
-          raw_outputs = stack.outputs || []
+          raw_outputs = safe_list { stack.outputs }
           get_stack_outputs(stack.id, raw_outputs)
           raw_outputs.collect do |output|
             @data_index.fetch_path(:orchestration_stack_outputs, compose_ems_ref(stack.id, output['output_key']))
