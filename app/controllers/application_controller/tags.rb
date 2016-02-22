@@ -120,7 +120,8 @@ module ApplicationController::Tags
       recs = [params[:id]]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to %{task}") % {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize, :task => "Smart Tagging"}, :error)
+      add_flash(_("One or more %{model} must be selected to Smart Tagging") %
+        {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return
@@ -172,7 +173,7 @@ module ApplicationController::Tags
   def tagging_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}")
-    add_flash(_("%s was cancelled by the user") % "Tag Edit")
+    add_flash(_("Tag Edit was cancelled by the user"))
     session[:tag_items] = nil                                 # reset tag_items in session
     if tagging_explorer_controller?
       @edit = nil # clean out the saved info
@@ -225,7 +226,7 @@ module ApplicationController::Tags
                                       :delete_ids => @edit[:current][:assignments] - @edit[:new][:assignments]
                                     })
   rescue StandardError => bang
-    add_flash(_("Error during '%s': ") % "Save Tags" << bang.message, :error) # Push msg and error flag
+    add_flash(_("Error during 'Save Tags': %{error_message}") % {:error_message => bang.message}, :error)
   else
     add_flash(_("Tag edits were successfully saved"))
   end

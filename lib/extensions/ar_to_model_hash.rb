@@ -4,7 +4,7 @@ module ToModelHash
   module ClassMethods
     def to_model_hash_options
       fname = "#{table_name}.yaml"
-      r = MiqReport.find_by_filename_and_template_type(fname, "compare").try(:attributes)
+      r = MiqReport.find_by(:filename => fname, :template_type => "compare").try(:attributes)
       if r.nil?
         fname = Rails.root.join("product", "compare", fname)
         r = YAML.load_file(fname) if File.exist?(fname)
@@ -110,18 +110,12 @@ module ToModelHash
     columns  = ((options && options[:columns]) || [])
     includes = ((options && options[:include]) || {})
 
-    result = columns.select { |c| parent_class.virtual_column?(c) }
+    result = columns.select { |c| parent_class.virtual_attribute?(c) }
 
     result += includes.collect do |k, v|
       association_class = parent_class.reflections_with_virtual[k.to_sym].klass
       sub_result        = to_model_hash_build_preload(v, association_class)
       sub_result.blank? ? k : {k => sub_result}
     end
-  end
-end
-
-module ActiveRecord
-  class Base
-    include ToModelHash
   end
 end

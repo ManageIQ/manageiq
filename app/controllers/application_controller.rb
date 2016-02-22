@@ -345,7 +345,7 @@ class ApplicationController < ActionController::Base
     if MiqTask.find(params[:task_id].to_i).state != "Finished" # Task not done --> retry
       browser_refresh_task(params[:task_id])
     else                                                  # Task done
-      @_params.merge!(session[:async][:params])           # Merge in the original parms and
+      @_params.instance_variable_get(:@parameters).merge!(session[:async][:params])           # Merge in the original parms and
       send(session.fetch_path(:async, :params, :action))  # call the orig. method
     end
   end
@@ -535,7 +535,7 @@ class ApplicationController < ActionController::Base
         MiqSchedule.new.verify_file_depot(settings)
       end
     rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
+      add_flash(_("Error during 'Validate': %{error_message}") % {:error_message => bang.message}, :error)
     else
       add_flash(msg)
     end
@@ -772,7 +772,7 @@ class ApplicationController < ActionController::Base
   def build_user_emails_for_edit
     @edit[:user_emails] = {}
     to_email = @edit[:new][:email][:to] || []
-    users_in_current_groups = User.with_current_user_groups.uniq.sort_by { |u| u.name.downcase }
+    users_in_current_groups = User.with_current_user_groups.distinct.sort_by { |u| u.name.downcase }
     users_in_current_groups.each do |u|
       next if u.email.blank?
       next if to_email.include?(u.email)
@@ -942,12 +942,8 @@ class ApplicationController < ActionController::Base
   # Gather information for the report accordions
   def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
     populate_reports_menu(tree_type, mode)
-    if tree == "listnav"
-      if tree_type == "timeline"
-        build_timeline_tree(@sb[:rpt_menu], tree_type)
-      else
-        build_reports_tree
-      end
+    if tree == "listnav" && tree_type == "timeline"
+      build_timeline_tree(@sb[:rpt_menu], tree_type)
     else
       build_menu_tree(@sb[:rpt_menu], tree_type)
     end
@@ -955,9 +951,14 @@ class ApplicationController < ActionController::Base
 
   def reports_group_title
     tenant_name = current_tenant.name
-    @sb[:grp_title] = current_user.admin_user? ?
-      "#{tenant_name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
-      "#{tenant_name} (#{_("%s") % ui_lookup(:model => "MiqGroup")}: #{current_user.current_group.description})"
+    if @sb[:grp_title] = current_user.admin_user?
+      _("%{tenant_name} (All %{groups})") % {:tenant_name => tenant_name, :groups => ui_lookup(:models => "MiqGroup")}
+    else
+      _("%{tenant_name} (%{group}): %{group_description}") %
+        {:tenant_name       => tenant_name,
+         :group             => ui_lookup(:model => "MiqGroup"),
+         :group_description => current_user.current_group.description}
+    end
   end
 
   def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
@@ -1593,10 +1594,12 @@ class ApplicationController < ActionController::Base
       end
     end
     if success_count > 0
-      add_flash(_("Successfully deleted %s from the CFME Database") % pluralize(success_count, "Saved Report"))
+      add_flash(n_("Successfully deleted Saved Report from the CFME Database",
+                   "Successfully deleted Saved Reports from the CFME Database", success_count))
     end
     if failure_count > 0
-      add_flash(_("Error during %s delete from the CFME Database") % pluralize(failure_count, "Saved Report"))
+      add_flash(n_("Error during Saved Report delete from the CFME Database",
+                   "Error during Saved Reports delete from the CFME Database", failure_count))
     end
   end
 
@@ -1608,13 +1611,15 @@ class ApplicationController < ActionController::Base
   def filter_ids_in_region(ids, label)
     in_reg, out_reg = ApplicationRecord.partition_ids_by_remote_region(ids)
     if ids.length == 1
-      add_flash(_("The selected %s is not in the current region") % label, :error) if in_reg.empty?
+      add_flash(_("The selected %{label} is not in the current region") % {:label => label}, :error) if in_reg.empty?
     elsif in_reg.empty?
-      add_flash(_("All selected %s are not in the current region") % label.pluralize, :error)
+      add_flash(_("All selected %{labels} are not in the current region") % {:labels => label.pluralize}, :error)
     else
       add_flash(out_reg.length == 1 ?
-          _("%s is not in the current region and will be skipped") % pluralize(out_reg.length, label) :
-          _("%s are not in the current region and will be skipped") % pluralize(out_reg.length, label), :error) unless out_reg.empty?
+          _("%{label} is not in the current region and will be skipped") %
+          {:label => pluralize(out_reg.length, label)} :
+          _("%{labels} are not in the current region and will be skipped") %
+          {:labels => pluralize(out_reg.length, label)}, :error) unless out_reg.empty?
     end
     return in_reg, out_reg
   end
@@ -1762,11 +1767,11 @@ class ApplicationController < ActionController::Base
       :parent_method         => options[:parent_method],
       :targets_hash          => true,
       :association           => association,
-      :filter                => get_view_filter(options),
+      :filter                => get_view_filter(options[:filter]),
       :sub_filter            => get_view_process_search_text(view),
       :page                  => options[:all_pages] ? 1 : @current_page,
       :per_page              => options[:all_pages] ? ONE_MILLION : @items_per_page,
-      :where_clause          => get_view_where_clause(options),
+      :where_clause          => get_view_where_clause(options[:where_clause]),
       :named_scope           => options[:named_scope],
       :display_filter_hash   => options[:display_filter_hash],
       :userid                => session[:userid],
@@ -1791,7 +1796,7 @@ class ApplicationController < ActionController::Base
     [view, get_view_pages(dbname, view)]
   end
 
-  def get_view_where_clause(options)
+  def get_view_where_clause(default_where_clause)
     # If doing charts, limit the records to ones showing in the chart
     if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
       menu_click_parts = session[:menu_click].split('_')
@@ -1812,13 +1817,13 @@ class ApplicationController < ActionController::Base
         ["\"#{model.downcase.pluralize}\".id IN (?)",
          data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym]]
       end
-    elsif options[:where_clause]
-      options[:where_clause]
+    else
+      default_where_clause
     end
   end
   private :get_view_where_clause
 
-  def get_view_filter(options)
+  def get_view_filter(default_filter)
     # Get the advanced search filter
     filter = nil
     if @edit && @edit[:adv_search_applied] && !session[:menu_click]
@@ -1827,8 +1832,7 @@ class ApplicationController < ActionController::Base
 
     # workaround to pass MiqExpression as a filter to paged_view_search for MiqRequest
     # show_list, can't be used with advanced search or other list view screens
-    filter ||= options[:filter]
-    filter
+    filter || default_filter
   end
   private :get_view_filter
 
@@ -2155,7 +2159,7 @@ class ApplicationController < ActionController::Base
     # Get timelines hash, if it is in the session for the running controller
     @tl_options = session["#{controller_name}_tl".to_sym]
 
-    session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"].nil?
+    session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
 
     unless request.xml_http_request?  # Don't capture ajax URLs
@@ -2204,6 +2208,8 @@ class ApplicationController < ActionController::Base
            "container_route", "container_project", "container_replicator", "persistent_volume",
            "container_image_registry", "container_image", "container_topology", "container_dashboard"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
+      when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
+        session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
         session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
@@ -2464,7 +2470,7 @@ class ApplicationController < ActionController::Base
     raise "Invalid input" unless is_integer?(id)
 
     unless db.where(:id => from_cid(id)).exists?
-      msg = _("Selected %s no longer exists") % ui_lookup(:model => db.to_s)
+      msg = _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => db.to_s)}
       raise msg
     end
 
@@ -2537,11 +2543,10 @@ class ApplicationController < ActionController::Base
     end
     if rec.nil?
       record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : "The selected record"
-      add_flash(_("%s no longer exists in the database") % record_name,
-                :error)
+      add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
     elsif authrec.nil?
-      add_flash(_("You are not authorized to view %s") % "#{ui_lookup(:model => rec.class.base_model.to_s)} '#{resource_name}'",
-                :error)
+      add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
+        {:model_name => ui_lookup(:model => rec.class.base_model.to_s), :resource_name => resource_name}, :error)
     end
     rec
   end
@@ -2621,7 +2626,7 @@ class ApplicationController < ActionController::Base
       # OR not defined
       # use HTTP_ACCEPT_LANGUAGE
       locale = if server_locale == "default" || server_locale.nil?
-                 env['HTTP_ACCEPT_LANGUAGE']
+                 request.headers['Accept-Language']
                else
                  server_locale
                end

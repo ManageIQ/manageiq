@@ -14,7 +14,7 @@ describe ContainerProjectController do
     EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_project = ContainerProject.create(:ext_management_system => ems, :name => "Test Project")
-    get :show, :id => container_project.id
+    get :show, :params => { :id => container_project.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Container Projects",

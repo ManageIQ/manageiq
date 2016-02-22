@@ -6,7 +6,7 @@ module MiqPolicyController::Events
     case params[:button]
     when "cancel"
       @edit = nil
-      add_flash(_("%s cancelled by user") % "Edit Event")
+      add_flash(_("Edit Event cancelled by user"))
       get_node_info(x_node)
       replace_right_cell(@nodetype)
       return
@@ -34,7 +34,7 @@ module MiqPolicyController::Events
                     @edit[:new][:actions_false].collect { |a| [MiqAction.find(a.last), {:qualifier => :failure, :synchronous => a[1]}] }
       policy.replace_actions_for_event(event, action_list)
       AuditEvent.success(build_saved_audit(event))
-      add_flash(_("Actions for Policy Event \"%s\" were saved") % event.description)
+      add_flash(_("Actions for Policy Event \"%{events}\" were saved") % {:events => event.description})
       @nodetype = "ev"
       event_get_info(MiqEventDefinition.find(event.id))
       @edit = nil
@@ -105,7 +105,7 @@ module MiqPolicyController::Events
     @events = MiqPolicy.all_policy_events.sort_by { |e| e.description.downcase }
     set_search_text
     @events = apply_search_filter(@search_text, @events) unless @search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:tables => "miq_event_definition")
+    @right_cell_text = _("All %{tables}") % {:tables => ui_lookup(:tables => "miq_event_definition")}
     @right_cell_div = "event_list"
   end
 

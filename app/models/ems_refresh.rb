@@ -3,6 +3,7 @@ module EmsRefresh
   extend EmsRefresh::SaveInventoryCloud
   extend EmsRefresh::SaveInventoryInfra
   extend EmsRefresh::SaveInventoryContainer
+  extend EmsRefresh::SaveInventoryMiddleware
   extend EmsRefresh::SaveInventoryHelper
   extend EmsRefresh::SaveInventoryProvisioning
   extend EmsRefresh::SaveInventoryConfiguration
@@ -221,8 +222,8 @@ module EmsRefresh
     locs, names = hashes.partition { |h| h[:location] }
     locs.collect!  { |h| h[:location] }
     names.collect! { |h| h[:name] }
-    locs  = Storage.where("location IN (?)", locs) unless locs.empty?
-    names = Storage.where("location IS NULL AND name IN (?)", names) unless names.empty?
+    locs  = Storage.where(:location => locs) unless locs.empty?
+    names = Storage.where(:location => nil, :name => names) unless names.empty?
 
     hashes.each do |h|
       found = if h[:location]

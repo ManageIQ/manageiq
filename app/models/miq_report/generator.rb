@@ -89,7 +89,7 @@ module MiqReport::Generator
     if klass.nil?
       klass = db_class
       result = {}
-      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_column?(c) } if cols
+      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_attribute?(c) } if cols
     end
 
     if includes.kind_of?(Hash)
@@ -108,7 +108,7 @@ module MiqReport::Generator
             result.merge!(k => get_include_for_find(v["include"], assoc_klass)) if assoc_klass
           end
 
-          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_column?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_column?) && v["columns"]
+          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
         end
       end
     elsif includes.kind_of?(Array)
@@ -348,7 +348,7 @@ module MiqReport::Generator
   def build_table(data, db, options = {})
     klass = db.respond_to?(:constantize) ? db.constantize : db
     data = data.to_a
-    objs = data[0] && data[0].kind_of?(Integer) ? klass.find_all_by_id(data) : data.compact
+    objs = data[0] && data[0].kind_of?(Integer) ? klass.where(:id => data) : data.compact
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
     if klass.to_s.ends_with?("Performance")

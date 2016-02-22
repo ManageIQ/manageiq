@@ -3,6 +3,18 @@ class ChargebackRate < ApplicationRecord
   include ReportableMixin
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :storage, :ext_management_system, :my_enterprise]
+
+  ################################################################################
+  # NOTE:                                                                        #
+  # ensure_unassigned must occur before the taggings relation is destroyed,      #
+  # since it uses the taggings for its calculation.  The :dependent => :destroy  #
+  # on taggings is part of the destroy callback chain, so we must define this    #
+  # before_destroy here, before that relation is defined, otherwise the callback #
+  # chain is out of order.  The taggings relation is defined in ar_taggable.rb,  #
+  # and is brought in by the call to acts_as_miq_taggable in the AssignmentMixin #
+  ################################################################################
+  before_destroy :ensure_unassigned
+
   include AssignmentMixin
 
   has_many :chargeback_rate_details, :dependent => :destroy
@@ -10,8 +22,6 @@ class ChargebackRate < ApplicationRecord
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :guid
   validates_uniqueness_of   :description, :scope => :rate_type
-
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
 
@@ -106,6 +116,21 @@ class ChargebackRate < ApplicationRecord
           end
         end
       end
+    end
+  end
+
+  def assigned?
+    get_assigned_tos != {:objects => [], :tags => []}
+  end
+
+  ###########################################################
+
+  private
+
+  def ensure_unassigned
+    if assigned?
+      errors.add(:rate, "rate is assigned and cannot be deleted")
+      return false
     end
   end
 end

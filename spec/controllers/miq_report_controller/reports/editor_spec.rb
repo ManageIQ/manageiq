@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ReportController do
   context "::Reports::Editor" do
     context "#set_form_vars" do
@@ -64,7 +62,7 @@ describe ReportController do
         allow(controller).to receive(:get_all_widgets)
         allow(controller).to receive(:replace_right_cell)
 
-        post :miq_report_edit, :id => rep.id, :button => 'save'
+        post :miq_report_edit, :params => { :id => rep.id, :button => 'save' }
 
         rep.reload
 
@@ -115,7 +113,7 @@ describe ReportController do
 
         allow(controller).to receive(:replace_right_cell)
 
-        post :miq_report_edit, :id => rep.id, :button => 'reset'
+        post :miq_report_edit, :params => { :id => rep.id, :button => 'reset' }
         expect(assigns(:sb)[:miq_tab]).to eq("edit_1")
         expect(assigns(:tabs)).to include(["edit_1", ""])
       end

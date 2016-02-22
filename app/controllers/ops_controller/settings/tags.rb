@@ -37,7 +37,8 @@ module OpsController::Settings::Tags
     when "cancel"
       @category = session[:edit][:category] if session[:edit] && session[:edit][:category]
       if !@category || @category.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "Classification"))
+        add_flash(_("Add of new %{model} was cancelled by the user") %
+                    {:model => ui_lookup(:model => "Classification")})
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Classification"), :name => @category.name})
       end
@@ -50,13 +51,13 @@ module OpsController::Settings::Tags
       @ldap_group = @edit[:ldap_group] if @edit && @edit[:ldap_group]
       @category = @edit[:category] if @edit && @edit[:category]
       if @edit[:new][:name].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
       end
       if @edit[:new][:description].blank?
-        add_flash(_("%s is required") % "Description", :error)
+        add_flash(_("Description is required"), :error)
       end
       if @edit[:new][:example_text].blank?
-        add_flash(_("%s is required") % "Long Description", :error)
+        add_flash(_("Long Description is required"), :error)
       end
       unless @flash_array.nil?
         render :update do |page|

@@ -33,7 +33,7 @@ class ScanItem < ApplicationRecord
     item[:file_mtime] = File.mtime(filename).utc
     item[:prod_default] = "Default"
 
-    rec = find_by_name_and_filename(item[:name], item[:filename])
+    rec = find_by(:name => item[:name], :filename => item[:filename])
 
     if rec
       if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < item[:file_mtime])
@@ -54,15 +54,15 @@ class ScanItem < ApplicationRecord
 
   def self.preload_default_profile
     # Create sample VM scan profiles
-    vm_profile = ScanItemSet.find_or_initialize_by_name(SAMPLE_VM_PROFILE)
+    vm_profile = ScanItemSet.find_or_initialize_by(:name => SAMPLE_VM_PROFILE[:name])
     vm_profile.update_attributes(SAMPLE_VM_PROFILE)
 
     # Create sample Host scan profiles
-    host_profile = ScanItemSet.find_or_initialize_by_name(SAMPLE_HOST_PROFILE)
+    host_profile = ScanItemSet.find_or_initialize_by(:name => SAMPLE_HOST_PROFILE[:name])
     host_profile.update_attributes(SAMPLE_HOST_PROFILE)
 
     # Create default Host scan profiles
-    host_default = ScanItemSet.find_or_initialize_by_name(DEFAULT_HOST_PROFILE)
+    host_default = ScanItemSet.find_or_initialize_by(:name => DEFAULT_HOST_PROFILE[:name])
     load_host_default = host_default.new_record?
     host_default.update_attributes(DEFAULT_HOST_PROFILE)
 

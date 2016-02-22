@@ -1,7 +1,5 @@
 class Chargeback < ActsAsArModel
 
-  RATES = YAML.load_file(File.join(Rails.root, "db/fixtures/chargeback_rates.yml"))
-
   def self.build_results_for_report_chargeback(options)
     # Options:
     #   :rpt_type => chargeback
@@ -41,7 +39,7 @@ class Chargeback < ActsAsArModel
     vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
     options[:ext_options] ||= {}
 
-    perf_cols = MetricRollup.column_names
+    perf_cols = MetricRollup.attribute_names
     options[:ext_options][:only_cols] = Metric::BASE_COLS
     rates = ChargebackRate.where(:default => true)
     rates.each do |rate|
@@ -157,7 +155,7 @@ class Chargeback < ActsAsArModel
         [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost   }
 
         col_hash.each do |k, val|
-          next unless column_names.include?(k)
+          next unless attribute_names.include?(k)
           h[k] ||= 0
           h[k] += val
         end

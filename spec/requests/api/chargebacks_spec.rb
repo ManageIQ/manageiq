@@ -1,12 +1,4 @@
 RSpec.describe "chargebacks API" do
-  include Rack::Test::Methods
-
-  def app
-    Vmdb::Application
-  end
-
-  before { init_api_spec_env }
-
   it "can fetch the list of all chargeback rates" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 

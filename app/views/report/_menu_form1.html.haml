@@ -46,7 +46,7 @@
                             :action => 'add',
                             :id => 'folder_add'}]
               - buttons.each do |btn|
-                %button.btn.btn-default{:title => _("#{btn[:label]}"), 'data-grid_submit' => "#{btn[:action]}"}
+                %button.btn.btn-default{:title => btn[:label], 'data-grid_submit' => "#{btn[:action]}"}
                   %i{:class => "#{h btn[:icon]} fa-lg"}
         %tr
           %td{:colspan => "2"}
@@ -67,8 +67,6 @@
               %button.btn.btn-default{:title => t,
                   "data-submit"         => 'column_lists',
                   "data-miq_sparkle_on" => true,
-                  :remote               => true,
-                  "data-method"         => :post,
                   :remote               => true,
                   :id                   => 'folder_discard',
                   "data-method"         => :post,

@@ -21,7 +21,7 @@ describe ApplicationHelper do
     shared_examples "no custom buttons" do
       it("#get_custom_buttons")           { expect(get_custom_buttons(subject)).to be_blank }
       it("#custom_buttons_hash")          { expect(custom_buttons_hash(subject)).to be_blank }
-      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject)[:button_groups]).to be_blank }
+      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject).definition).to be_blank }
       it("#record_to_service_buttons")    { expect(record_to_service_buttons(subject)).to be_blank }
     end
 
@@ -104,12 +104,8 @@ describe ApplicationHelper do
           :enabled      => "true",
           :items        => button_set_item1_items
         }
-        button_set1_header = {
-          :name  => "custom_buttons_#{@button_set.name}",
-          :items => [button_set_item1]
-        }
-        button_groups = [button_set1_header]
-        expect(build_custom_buttons_toolbar(subject)).to eq(:button_groups => button_groups)
+        group_name = "custom_buttons_#{@button_set.name}"
+        expect(build_custom_buttons_toolbar(subject).definition[group_name]).to eq([button_set_item1])
       end
     end
 
@@ -2876,7 +2872,7 @@ describe ApplicationHelper do
 
     context "when the given parameter exists in the request query string" do
       before do
-        get("/vm/show_list/100", "type=grid")
+        get "/vm/show_list/100", :params => "type=grid"
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
@@ -2889,7 +2885,7 @@ describe ApplicationHelper do
 
     context "when the given parameters do not exist in the request query string" do
       before do
-        get("/vm/show_list/100")
+        get "/vm/show_list/100"
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
@@ -2902,8 +2898,7 @@ describe ApplicationHelper do
 
     context "when the request query string has a few specific params to be retained" do
       before do
-        get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
-          "&sb_controller=host")
+        get "/vm/show_list/100", :params => "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5&sb_controller=host" 
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
@@ -2917,7 +2912,7 @@ describe ApplicationHelper do
 
     context "when the request query string has a few specific params to be excluded" do
       before do
-        get("/vm/show_list/100", "page=1")
+        get "/vm/show_list/100", :params => "page=1"
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil

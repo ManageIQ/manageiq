@@ -49,21 +49,21 @@ describe ContainerController do
     end
 
     it "builds tagging screen" do
-      post :x_button, :pressed => "container_tag", :format => :js, :id => @ct.id
+      post :x_button, :params => { :pressed => "container_tag", :format => :js, :id => @ct.id }
       expect(assigns(:flash_array)).to be_nil
       expect(assigns(:entries)).not_to be_nil
     end
 
     it "cancels tags edit" do
       session[:breadcrumbs] = [{:url => "container/explorer}"}, 'placeholder']
-      post :container_tag, :button => "cancel", :id => @ct.id
+      post :container_tag, :params => { :button => "cancel", :id => @ct.id }
       expect(assigns(:flash_array).first[:message]).to include("was cancelled")
       expect(assigns(:edit)).to be_nil
     end
 
     it "save tags" do
       session[:breadcrumbs] = [{:url => "container/explorer"}, 'placeholder']
-      post :container_tag, :button => "save", :format => :js, :id => @ct.id
+      post :container_tag, :params => { :button => "save", :format => :js, :id => @ct.id }
       expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
       expect(assigns(:edit)).to be_nil
     end
@@ -89,19 +89,21 @@ describe ContainerController do
     end
 
     it "renders timeline views" do
-      post :x_button,
-           :pressed => "container_timeline",
-           :id      => @ct.id,
-           :display => 'timeline'
+      post :x_button, :params => {
+        :pressed => "container_timeline",
+        :id      => @ct.id,
+        :display => 'timeline'
+      }
       expect(response).to render_template('layouts/_tl_show')
       expect(response).to render_template('layouts/_tl_detail')
     end
 
     it "renders utilization views" do
-      post :x_button,
-           :pressed => "container_perf",
-           :id      => @ct.id,
-           :display => 'performance'
+      post :x_button, :params => {
+        :pressed => "container_perf",
+        :id      => @ct.id,
+        :display => 'performance'
+      }
       expect(response).to render_template('layouts/_perf_options')
       expect(response).to render_template('layouts/_perf_charts')
     end

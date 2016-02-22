@@ -475,4 +475,34 @@ describe Storage do
       expect(counts[6]).to eq(1)
     end
   end
+
+  context "#is_available? for Smartstate Analysis" do
+    before do
+      @storage = FactoryGirl.create(:storage)
+    end
+
+    it "returns true for VMware Storage" do
+      FactoryGirl.create(:host_vmware,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :storages              => [@storage])
+      expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
+    end
+
+    it "returns false for non-vmware Storage" do
+      expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
+    end
+  end
+  describe "#smartstate_analysis_count_for_host_id" do
+    it "returns counts" do
+      EvmSpecHelper.local_miq_server
+      host = FactoryGirl.create(:host)
+      storage = FactoryGirl.create(:storage)
+      storage.scan_queue_item(1)
+      storage.scan_queue_item(2)
+      MiqQueue.update_all(:target_id => host.id, :state => "dequeue")
+      storage.scan_queue_item(3)
+
+      expect(storage.smartstate_analysis_count_for_host_id(host.id)).to eq(2)
+    end
+  end
 end

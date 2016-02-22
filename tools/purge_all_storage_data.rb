@@ -31,7 +31,7 @@ begin
     log "-- Purging table: #{tn}..."
     sc.select(:id).find_in_batches(:batch_size => 500) do |ma|
       ids = ma.collect(&:id)
-      total += sc.delete_all(:id => ids)
+      total += sc.where(:id => ids).delete_all
     end
     gtotal += total
     log "-- Done. Purged #{total} records from #{tn} table."

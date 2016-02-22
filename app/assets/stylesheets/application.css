@@ -9,7 +9,6 @@
  *= require automate_import_export
  *= require dialog_import_export
  *= require dialog_fields
- *= require widget_import_export
  *= require angular
  *= require miq_timeline
  *= require angular-patternfly
@@ -26,4 +25,5 @@
  *= require container_topology
  *= require service_dialogs
  *= require xml_display
+ *= require c3
 */

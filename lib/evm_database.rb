@@ -32,7 +32,12 @@ class EvmDatabase
   end
 
   def self.seed_primordial
-    seed(PRIMORDIAL_CLASSES)
+    if ENV['SKIP_PRIMORDIAL_SEED'] && MiqDatabase.count > 0
+      puts "** Primordial seedings is skipped."
+      puts "** Unset SKIP_PRIMORDIAL_SEED to re-enable"
+    else
+      seed(PRIMORDIAL_CLASSES)
+    end
   end
 
   def self.seed_last
@@ -52,9 +57,9 @@ class EvmDatabase
       classes.each do |klass|
         begin
           klass = klass.constantize if klass.kind_of?(String)
-        rescue
-          _log.error("Class #{klass} does not exist")
-          next
+        rescue => err
+          _log.log_backtrace(err)
+          raise
         end
 
         if klass.respond_to?(:seed)

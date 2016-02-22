@@ -1,7 +1,7 @@
 module Rbac
   # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
   # Classes should be added to this list ONLY after:
-  # 1. It has been added to the MiqExpression.@@base_tables list
+  # 1. It has been added to the MiqExpression::BASE_TABLES list
   # 2. Tagging has been enabled in the UI
   # 3. Class contains acts_as_miq_taggable
   CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
@@ -174,24 +174,15 @@ module Rbac
   end
 
   def self.compute_total_count(klass, scope, extra_target_ids, conditions, includes = nil)
-    cond_for_count =
-      if extra_target_ids.nil?
-        conditions
-      else
-        # sanitize_sql_for_conditions is deprecated (at least when given
-        # a hash).. but we can ignore it for now. When it goes away,
-        # we'll be on Rails 5.0, and can use Relation#or instead.
-        ActiveSupport::Deprecation.silence do
-          ids_clause = klass.send(:sanitize_sql_for_conditions, :id => extra_target_ids)
-          if conditions.nil?
-            ids_clause
-          else
-            original_conditions = klass.send(:sanitize_sql_for_conditions, conditions)
-            "(#{original_conditions}) OR (#{ids_clause})"
-          end
-        end
-      end
-    scope.where(cond_for_count).includes(includes).references(includes).count
+    if conditions && extra_target_ids
+      scope = scope.where(conditions).or(scope.where(:id => extra_target_ids))
+    elsif conditions
+      scope = scope.where(conditions)
+    elsif extra_target_ids
+      scope = scope.where(:id => extra_target_ids)
+    end
+
+    scope.includes(includes).references(includes).count
   end
 
   # @param parent_class [Class] Class of parent (e.g. Host)
@@ -323,6 +314,11 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
+    if objects.nil?
+      Vmdb::Deprecation.deprecation_warning("objects = nil",
+                                            "use [] to get an empty result back. nil will return all records",
+                                            caller(0)) unless Rails.env.production?
+    end
     if objects.present?
       Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
     else
@@ -396,7 +392,7 @@ module Rbac
 
   # @param  options filtering options
   # @option options :targets       [nil|Array<Numeric|Object>|scope] Objects to be filtered
-  #   - an empty entry uses the optional where_clause
+  #   - an nil entry uses the optional where_clause
   #   - Array<Numeric> list if ids. :class is required. results are returned as ids
   #   - Array<Object> list of objects. results are returned as objects
   # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
@@ -429,6 +425,14 @@ module Rbac
   # @option attrs target_ids_for_paging
 
   def self.search(options = {})
+    # now:   search(:targets => [],  :class => Vm) searches Vms
+    # later: search(:targets => [],  :class => Vm) returns []
+    #        search(:targets => nil, :class => Vm) will always search Vms
+    if options.key?(:targets) && options[:targets].empty?
+      Vmdb::Deprecation.deprecation_warning(":targets => []", "use :targets => nil to search all records",
+                                            caller(0)) unless Rails.env.production?
+      options[:targets] = nil
+    end
     options = options.dup
     # => empty inputs - normal find with optional where_clause
     # => list if ids - :class is required for this format.
@@ -558,6 +562,10 @@ module Rbac
         end
       elsif klass == Host
         results.concat(get_belongsto_matches_for_host(vcmeta_list.last))
+      elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
+        host = vcmeta_list.last
+        vms_and_templates = host.send(klass.base_model.to_s.tableize).to_a
+        results.concat(vms_and_templates)
       else
         vcmeta_list.each { |vcmeta| results.push(vcmeta) if vcmeta.kind_of?(klass) }
         results.concat(vcmeta_list.last.descendants.select { |obj| obj.kind_of?(klass) })

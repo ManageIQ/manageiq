@@ -18,7 +18,7 @@ describe ContainerReplicatorController do
       :container_project     => ContainerProject.create(:ext_management_system => ems, :name => "test"),
       :name                  => "Test Replicator"
     )
-    get :show, :id => container_replicator.id
+    get :show, :params => { :id => container_replicator.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Container Replicators",

@@ -142,7 +142,7 @@ class ChargebackController < ApplicationController
       @sb[:rate_compute] = @edit[:rate_compute] if @edit && @edit[:rate_compute]
       @sb[:rate_storage] = @edit[:rate_storage] if @edit && @edit[:rate_storage]
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(_("%s is required") % "Description", :error)
+        add_flash(_("Description is required"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -453,11 +453,13 @@ class ChargebackController < ApplicationController
     if !params[:id] # showing a list
       rates_compute = find_checked_items
       if rates_compute.empty?
-        add_flash(_("No %s were selected for deletion") % ui_lookup(:models => "ChargebackRate"), :error)
+        add_flash(_("No %{records} were selected for deletion") %
+          {:records => ui_lookup(:models => "ChargebackRate")}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
+<<<<<<< HEAD
       process_cb_rates(rates_compute, "destroy") unless rates_compute.empty?
       # delete the storage rate (id_compute_rate + 1)
       rates_storage = rates_compute.map { |v|; v.to_i + 1 }
@@ -469,7 +471,7 @@ class ChargebackController < ApplicationController
       replace_right_cell([:cb_rates])
     else # showing 1 rate, delete it
       if params[:id].nil? || ChargebackRate.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "ChargebackRate"), :error)
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -513,12 +515,12 @@ class ChargebackController < ApplicationController
       begin
         ChargebackRate.set_assignments(rate_type, @edit[:set_assignments])
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Rate assignments" << bang.message, :error)
+        add_flash(_("Error during 'Rate assignments': %{error_message}") % {:error_message => bang.message}, :error)
         render :update do |page|                    # Use RJS to update the display
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
-        add_flash(_("%s saved") % "Rate Assignments")
+        add_flash(_("Rate Assignments saved"))
         get_node_info(x_node)
         replace_right_cell
       end
@@ -555,8 +557,8 @@ class ChargebackController < ApplicationController
       @report = rr.report_results
       session[:rpt_task_id] = nil
       if @report.blank?
-        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") %
-          format_timezone(rr.last_run_on, Time.zone, "gtl"), :error)
+        add_flash(_("Saved Report \"%{name}\" not found, Schedule may have failed") %
+          {:name => format_timezone(rr.last_run_on, Time.zone, "gtl")}, :error)
         @saved_reports = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
         rep = MiqReport.find_by_id(rr.miq_report_id)
         if x_active_tree == :cb_reports
@@ -631,7 +633,7 @@ class ChargebackController < ApplicationController
           @right_cell_div = "reports_list_div"
           @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Saved Chargeback Report", :name => format_timezone(s.last_run_on, Time.zone, "gtl")}
         else
-          add_flash(_("Selected %s Report no longer exists") % "Saved Chargeback", :warning)
+          add_flash(_("Selected Saved Chargeback Report no longer exists"), :warning)
           self.x_node = nodes[0..1].join("_")
           cb_rpts_build_tree # Rebuild tree
         end
@@ -646,7 +648,7 @@ class ChargebackController < ApplicationController
           @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Saved Chargeback Reports", :name => miq_report.name}
           @sb[:parent_reports] = nil  unless @sb[:saved_reports].blank?    # setting it to nil so saved reports can be displayed, unless all saved reports were deleted
         else
-          add_flash(_("Selected %s Report no longer exists") % "Chargeback", :warning)
+          add_flash(_("Selected Chargeback Report no longer exists"), :warning)
           self.x_node = nodes[0]
           @saved_reports = nil
           cb_rpts_build_tree # Rebuild tree

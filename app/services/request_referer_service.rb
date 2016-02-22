@@ -25,11 +25,13 @@ class RequestRefererService
     'storage'                  => %w(show:id show_list), # http://localhost:3000//storage/show/400r1
     'ems_container'            => %w(show:id show_list), # http://localhost:3000/ems_container/show/400r1
     'cloud_volume'             => %w(show:id show_list), # http://localhost:3000/cloud_volume/show
+    'cloud_volume_snapshot'    => %w(show:id show_list), # http://localhost:3000/cloud_volume_snapshot/show
     'container'                => %w(explorer), # http://localhost:3000/container/explorer
     'container_group'          => %w(show:id show_list), # http://localhost:3000/container_group/show/400r1
     'container_node'           => %w(show:id show_list), # http://localhost:3000/container_node/show/400r1
     'container_service'        => %w(show:id show_list), # http://localhost:3000/container_service/show/400r1
     'container_topology'       => %w(show:id show),      # http://localhost:3000/container_topology/show/5 or http://localhost:3000/container_topology/show
+    'middleware_topology'      => %w(show:id show),      # http://localhost:3000/middleware_topology/show/5 or http://localhost:3000/middleware_topology/show
     'container_replicator'     => %w(show:id show_list), # http://localhost:3000/container_replicator/show/400r1
     'container_route'          => %w(show:id show_list), # http://localhost:3000/container_route/show/400r1
     'container_project'        => %w(show:id show_list), # http://localhost:3000/container_project/show/400r1

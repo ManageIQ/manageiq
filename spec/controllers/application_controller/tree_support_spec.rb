@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ApplicationController do
   context "#tree_autoload_dynatree" do
     describe "verify @edit object" do

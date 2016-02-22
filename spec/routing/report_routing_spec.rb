@@ -31,18 +31,6 @@ describe "routes for ReportController" do
     end
   end
 
-  describe "#review_import" do
-    it "routes with GET" do
-      expect(get("/report/review_import")).to route_to("report#review_import")
-    end
-  end
-
-  describe "#cancel_import" do
-    it "routes with POST" do
-      expect(post("/report/cancel_import")).to route_to("report#cancel_import")
-    end
-  end
-
   describe "#import_widgets" do
     it "routes with POST" do
       expect(post("/report/import_widgets")).to route_to("report#import_widgets")
@@ -305,12 +293,6 @@ describe "routes for ReportController" do
   describe "#widget_edit" do
     it "routes with POST" do
       expect(post("/report/widget_edit")).to route_to("report#widget_edit")
-    end
-  end
-
-  describe "#widget_json" do
-    it "routes with GET" do
-      expect(get("/report/widget_json")).to route_to("report#widget_json")
     end
   end
 

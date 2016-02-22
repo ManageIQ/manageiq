@@ -5,6 +5,7 @@ module EmsRefresh::SaveInventory
     when EmsInfra                                  then save_ems_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager then save_configuration_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ContainerManager     then save_ems_container_inventory(ems, hashes, target)
+    when ManageIQ::Providers::MiddlewareManager    then save_ems_middleware_inventory(ems, hashes, target)
     end
   end
 

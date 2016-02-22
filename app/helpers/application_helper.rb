@@ -632,7 +632,7 @@ module ApplicationHelper
         %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build container_topology container_dashboard).include?(@layout) ||
+           server_build container_topology middleware_topology container_dashboard).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
@@ -1022,6 +1022,7 @@ module ApplicationHelper
     test_layout = @layout
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
 
     Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
   end
@@ -1030,6 +1031,7 @@ module ApplicationHelper
     test_layout = @layout
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
 
     return "dropdown-menu" if big_iframe
 
@@ -1039,6 +1041,8 @@ module ApplicationHelper
   def secondary_nav_class(nav_layout)
     if nav_layout == 'my_tasks' # FIXME: exceptional behavior to remove
       nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
+    elsif nav_layout == 'cloud_volume' && @layout == 'cloud_volume_snapshot'
+      nav_layout = 'cloud_volume_snapshot'
     end
     nav_layout == @layout ? "active" : ""
   end
@@ -1076,9 +1080,10 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
-                        container_route container_project container_replicator container_image container_image_registry
-                        container_topology container_dashboard persistent_volume
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot
+                        condition container_group container_route container_project
+                        container_replicator container_image container_image_registry
+                        container_topology container_dashboard middleware_topology persistent_volume
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1117,9 +1122,10 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(cloud_volume container_node container_service ems_container container_group ems_cloud ems_cluster
-          container_route container_project container_replicator container_image container_image_registry
-          persistent_volume ems_infra host miq_template offline orchestration_stack repository
+       %w(auth_key_pair_cloud cloud_volume cloud_volume_snapshot container_node container_service ems_container container_group ems_cloud
+          ems_cluster container_route container_project container_replicator container_image container_image_registry
+          ems_infra host miq_template offline orchestration_stack persistent_volume repository ems_middleware
+          middleware_server middleware_deployment
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1128,9 +1134,10 @@ module ApplicationHelper
       "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant cloud_volume condition container_group
+    elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
-             container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra flavor
+             container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
+             ems_middleware middleware_server middleware_deployment flavor
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
              scan_profile security_group service snia_local_file_system storage
@@ -1140,7 +1147,7 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    show_search = %w(availability_zone cim_base_storage_extent cloud_volume container_group container_node container_service
+    show_search = %w(availability_zone cim_base_storage_extent cloud_volume cloud_volume_snapshot container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
                      persistent_volume ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume

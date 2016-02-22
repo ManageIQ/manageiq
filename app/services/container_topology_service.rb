@@ -1,9 +1,8 @@
-class ContainerTopologyService
-  include ActionView::Helpers::AssetUrlHelper
+class ContainerTopologyService < TopologyService
 
   def initialize(provider_id)
     @provider_id = provider_id
-    @providers = retrieve_providers
+    @providers = retrieve_providers(@provider_id, ManageIQ::Providers::ContainerManager)
   end
 
   def build_topology
@@ -31,10 +30,9 @@ class ContainerTopologyService
         end
 
         if n.lives_on
-          kind = entity_type(n.lives_on)
           topo_items[entity_id(n.lives_on)] = build_entity_data(n.lives_on)
           links << build_link(entity_id(n), entity_id(n.lives_on))
-          if kind == 'Vm' # add link to Host
+          if n.lives_on.kind_of?(Vm) # add link to Host
             host = n.lives_on.host
             if host
               topo_items[entity_id(host)] = build_entity_data(host)
@@ -61,15 +59,11 @@ class ContainerTopologyService
     topology[:kinds] = build_kinds
     topology
   end
-  
-  def entity_type(entity)
-      entity.class.name.demodulize
-  end
 
   def entity_display_type(entity)
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       entity.type.split('::')[2]
-    elsif entity.kind_of?(ManageIQ::Providers::ContainerManager::ContainerGroup)
+    elsif entity.kind_of?(ContainerGroup)
       "Pod"
     else
       name = entity.class.name.demodulize
@@ -89,26 +83,10 @@ class ContainerTopologyService
     end
   end
 
-  def entity_id(entity)
-    if entity.kind_of?(ManageIQ::Providers::ContainerManager)
-      id = entity.id.to_s
-    elsif entity.kind_of?(Host) || entity.kind_of?(Vm)
-      id = entity.uid_ems
-    else
-      id = entity.ems_ref
-    end
-    id
-  end
-
   def build_entity_data(entity)
-    type = entity_type(entity)
-    status = entity_status(entity)
-    data = {:id           => entity_id(entity),
-            :name         => entity.name,
-            :status       => status,
-            :kind         => type,
-            :display_kind => entity_display_type(entity),
-            :miq_id       => entity.id}
+    data = build_base_entity_data(entity)
+    data.merge!(:status       => entity_status(entity))
+    data.merge!(:display_kind => entity_display_type(entity))
 
     if entity.kind_of?(Host) || entity.kind_of?(Vm)
       data.merge!(:provider => entity.ext_management_system.name)
@@ -143,26 +121,9 @@ class ContainerTopologyService
     status
   end
 
-  def build_link(source, target)
-    {:source => source, :target => target}
-  end
-
-  def retrieve_providers
-    if @provider_id
-      providers = ManageIQ::Providers::ContainerManager.where(:id => @provider_id)
-    else  # provider id is empty when the topology is generated for all the providers together
-      providers = ManageIQ::Providers::ContainerManager.all
-    end
-    providers
-  end
-
   def build_kinds
     kinds = [:ContainerReplicator, :ContainerGroup, :Container, :ContainerNode,
-             :ContainerService, :Host, :Vm, :ContainerRoute]
-
-    if @providers.size > 0
-      kinds << :ContainerManager
-    end
-    kinds.each_with_object({}) { |kind, h| h[kind] = true }
+             :ContainerService, :Host, :Vm, :ContainerRoute, :ContainerManager]
+    build_legend_kinds(kinds)
   end
 end

@@ -31,4 +31,4 @@
             %td
               = h(feed.description)
             %td
-              = h(feed.url(request.env["HTTP_HOST"]))
+              = h(feed.url(request.host_with_port))

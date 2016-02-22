@@ -47,13 +47,6 @@ class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ManageIQ::P
     allowed_ci(:availability_zones, [:cloud_network, :cloud_subnet, :security_group], targets.map(&:id))
   end
 
-  def validate_cloud_subnet(field, values, dlg, fld, value)
-    return nil unless value.blank?
-    return nil if get_value(values[:cloud_network]).to_i.zero?
-    return nil unless get_value(values[field]).blank?
-    "#{required_description(dlg, fld)} is required"
-  end
-
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')

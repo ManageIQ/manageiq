@@ -74,7 +74,7 @@ class Storage < ApplicationRecord
 
   def ext_management_systems
     @ext_management_systems ||= ExtManagementSystem.joins(:hosts => :storages).where(
-      :host_storages => {:storage_id => id}).uniq.to_a
+      :host_storages => {:storage_id => id}).distinct.to_a
   end
 
   def ext_management_systems_in_zone(zone_name)
@@ -491,9 +491,13 @@ class Storage < ApplicationRecord
   end
 
   def smartstate_analysis_count_for_host_id(host_id)
-    MiqQueue.count(
-      :conditions => ["class_name = ? AND instance_id = ? AND method_name = ? AND target_id = ? AND state = ?", self.class.name, id, "smartstate_analysis", host_id, 'dequeue']
-    )
+    MiqQueue.where(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "smartstate_analysis",
+      :target_id   => host_id,
+      :state       => "dequeue"
+    ).count
   end
 
   def smartstate_analysis(miq_task_id = nil)
@@ -548,13 +552,13 @@ class Storage < ApplicationRecord
   end
 
   def set_unassigned_storage_files_to_vms
-    StorageFile.link_storage_files_to_vms(storage_files.find_all_by_vm_or_template_id(nil), vm_ids_by_path)
+    StorageFile.link_storage_files_to_vms(storage_files.where(:vm_or_template_id => nil), vm_ids_by_path)
   end
 
   def vm_ids_by_path
     host_ids = hosts.collect(&:id)
     return nil if host_ids.empty?
-    Vm.where("host_id IN (?)", host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
+    Vm.where(:host_id => host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
   end
 
   # TODO: Is this still needed?
@@ -851,5 +855,9 @@ class Storage < ApplicationRecord
     return {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"} if ext_management_systems.blank? ||
                                                      !ext_management_systems.first.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     {:available => true,   :message => nil}
+  end
+
+  def tenant_identity
+    ext_management_systems.first.tenant_identity
   end
 end

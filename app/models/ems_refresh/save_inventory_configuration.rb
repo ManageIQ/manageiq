@@ -13,7 +13,7 @@ module EmsRefresh
   module SaveInventoryConfiguration
     def save_configuration_manager_inventory(manager, hashes, target = nil)
       return if hashes.nil?
-      save_child_inventory(manager, hashes, [:configuration_profiles, :configured_systems], target)
+      save_child_inventory(manager, hashes, [:configuration_profiles, :configured_systems, :configuration_scripts], target)
       manager.save
     end
 
@@ -33,6 +33,11 @@ module EmsRefresh
       end
       save_inventory_assoc(manager.configured_systems, hashes, delete_missing_records, [:manager_ref], nil,
                            [:configuration_profile])
+    end
+
+    def save_configuration_scripts_inventory(manager, hashes, target)
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(manager.configuration_scripts, hashes, delete_missing_records, [:manager_ref], nil, [:configuration_script])
     end
   end
 end

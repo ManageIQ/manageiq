@@ -66,7 +66,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
   has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
-  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :vm, :class_name => "Vm"
+  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
   has_many                  :miq_provision_requests, :as => :source, :dependent => :destroy
 
   has_many                  :guest_applications, :dependent => :destroy
@@ -103,7 +103,9 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile"
 
   # EMS Events
-  has_many                  :ems_events, -> { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", id, id]).order(:timestamp) }, :class_name => "EmsEvent"
+  has_many                  :ems_events, ->(vmt) { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
+                            :class_name => "EmsEvent"
+
   has_many                  :ems_events_src,  :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_vm_or_template_id
 
@@ -1201,7 +1203,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.assign_ems_created_on(vm_ids)
-    vms_to_update = VmOrTemplate.find_all_by_id_and_ems_created_on(vm_ids, nil)
+    vms_to_update = VmOrTemplate.where(:id => vm_ids, :ems_created_on => nil)
     return if vms_to_update.empty?
 
     # Of the VMs without a VM create time, filter out the ones for which we
@@ -1916,6 +1918,12 @@ class VmOrTemplate < ApplicationRecord
 
     ["(vms.template = true AND vms.tenant_id IN (?)) OR (vms.template = false AND vms.tenant_id IN (?))",
      template_tenant_ids, vm_tenant_ids]
+  end
+
+  def tenant_identity
+    user = evm_owner
+    user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
+    user
   end
 
   private

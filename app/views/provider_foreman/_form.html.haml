@@ -21,6 +21,27 @@
                             "start-form-div" => "start_form_div"}
         %span.help-block{"ng-show" => "angularForm.name.$error.required"}
           = _("Required")
+
+    .form-group{"ng-class" => "{'has-error': angularForm.type.$invalid}"}
+      %label.col-md-2.control-label{"for" => "textInput-markup"}
+        = _('Type')
+      .col-md-8
+        = select_tag('provtype',
+                     options_for_select([["<#{_('Choose>')}", nil]] + @provider_types, disabled: ["<#{_('Choose')}>", nil]),
+                     "ng-if"                       => "newRecord",
+                     "ng-model"                    => "providerForemanModel.provtype",
+                     "ng-change"                   => "providerTypeChanged()",
+                     "required"                    => "",
+                     "checkchange"                 => "",
+                     "selectpicker-for-select-tag" => "")
+        %div{"ng-if" => "!newRecord"}
+          %input.form-control{:type        => "text",
+                              :name        => "provtype",
+                              "ng-model"    => "providerForemanModel.provtype",
+                              "ng-if"       => "!newRecord",
+                              "readonly"    => true,
+                              "style"       => "color: black; font-weight: normal;"}
+
     .form-group{"ng-class" => "{'has-error': angularForm.url.$invalid}"}
       %label.col-md-2.control-label
         = _("Url")
@@ -53,7 +74,7 @@
                           :ng_reqd_password  => true,
                           :ng_reqd_verify    => true,
                           :validate_url      => "authentication_validate",
-                          :id                => @provider_foreman.id || "new",
+                          :id                => @provider_cfgmgmt.id || "new",
                           :valtype           => nil,
                           :basic_info_needed => true}
 
@@ -61,5 +82,5 @@
     %span{:style => "color:black"}= _("Required. Should have privileged access, such as root or administrator.")
 
 :javascript
-  ManageIQ.angular.app.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');
+  ManageIQ.angular.app.value('providerForemanFormId', '#{@provider_cfgmgmt.id || "new"}');
   miq_bootstrap('#form_div');

@@ -37,7 +37,7 @@ module ActsAsTaggable
 
       taggings = Tagging.arel_table
       self_arel = arel_table
-      query = uniq.joins(:taggings).where(taggings[:tag_id].in tag_ids)
+      query = distinct.joins(:taggings).where(taggings[:tag_id].in tag_ids)
 
       if options[:all]
         grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] }

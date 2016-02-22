@@ -19,6 +19,7 @@ module MiqProvisionMixin
     "CloudNetwork"                                   => [:cloud_networks,          :cloud_network],
     "CloudSubnet"                                    => [:cloud_subnets,           :cloud_subnet],
     "SecurityGroup"                                  => [:security_groups,         :security_groups],
+    "ResourceGroup"                                  => [:resource_groups,         :resource_group],
     "FloatingIp"                                     => [:floating_ip_addresses,   :floating_ip_address],
     "Flavor"                                         => [:instance_types,          :instance_type],
     "ManageIQ::Providers::CloudManager::AuthKeyPair" => [:guest_access_key_pairs,  :guest_access_key_pair]
@@ -62,17 +63,13 @@ module MiqProvisionMixin
       email = get_option(:owner_email).try(:downcase)
       return if email.blank?
       User.find_by_lower_email(email, get_user).tap do |owner|
-        owner.miq_group_description = get_option(:owner_group) if owner
+        owner.current_group_by_description = get_option(:owner_group) if owner
       end
     end
   end
 
   def workflow_class
     MiqProvisionWorkflow.class_for_source(source)
-  end
-
-  def workflow(prov_options = options, flags = {})
-    workflow_class.new(prov_options, get_user, flags)
   end
 
   def eligible_resources(rsc_type)

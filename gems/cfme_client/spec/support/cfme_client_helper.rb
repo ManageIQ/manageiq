@@ -20,9 +20,5 @@ end
 # Check the CfmeClient API only if we successfuly connected to the REST API.
 #
 def test_api?
-  if @cfme[:client].code == 0
-    puts "#{@cfme[:client].message} - Skipping"
-    return false
-  end
-  true
+  skip(@cfme[:client].message) if @cfme[:client].code == 0
 end

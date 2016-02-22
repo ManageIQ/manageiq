@@ -75,15 +75,15 @@ class ApiController
       end
     end
 
-    def soft_reboot_resource_instances(type, id = nil, _data = nil)
-      raise BadRequestError, "Must specify an id for soft rebooting a #{type} resource" unless id
+    def reboot_guest_resource_instances(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for rebooting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Soft Rebooting #{instance_ident(instance)}")
+        api_log_info("Rebooting #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "reboot_guest")
-        result = soft_reboot_instance(instance) if result[:success]
+        result = reboot_guest_instance(instance) if result[:success]
         result
       end
     end
@@ -160,8 +160,8 @@ class ApiController
       action_result(false, err.to_s)
     end
 
-    def soft_reboot_instance(instance)
-      desc = "#{instance_ident(instance)} soft rebooting"
+    def reboot_guest_instance(instance)
+      desc = "#{instance_ident(instance)} rebooting"
       task_id = queue_object_action(instance, desc, :method_name => "reboot_guest", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err

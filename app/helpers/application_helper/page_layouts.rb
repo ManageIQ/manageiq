@@ -8,6 +8,7 @@ module ApplicationHelper::PageLayouts
       configuration
       container_dashboard
       container_topology
+      middleware_topology
       diagnostics
       exception
       miq_ae_automate_button

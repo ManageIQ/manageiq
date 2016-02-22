@@ -2,8 +2,6 @@
 # REST API Request Tests - Queries
 #
 describe ApiController do
-  include Rack::Test::Methods
-
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
@@ -13,14 +11,6 @@ describe ApiController do
   let(:vm1_url)    { vms_url(vm1.id) }
 
   let(:vm_href_pattern) { %r{^http://.*/api/vms/[0-9]+$} }
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
 
   def create_vms(count)
     count.times { FactoryGirl.create(:vm_vmware) }

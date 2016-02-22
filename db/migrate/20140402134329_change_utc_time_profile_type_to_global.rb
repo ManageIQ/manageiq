@@ -13,8 +13,4 @@ class ChangeUtcTimeProfileTypeToGlobal < ActiveRecord::Migration
       end
     end
   end
-
-  def down
-    # Non-reversible
-  end
 end

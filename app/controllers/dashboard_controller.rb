@@ -55,7 +55,7 @@ class DashboardController < ApplicationController
   end
 
   VALID_TABS = ->(x) { Hash[x.map(&:to_s).zip(x)] }[[
-    :vi, :svc, :clo, :inf, :cnt, :con, :aut, :opt, :set,  # normal tabs
+    :vi, :svc, :clo, :inf, :cnt, :mdl, :con, :aut, :opt, :set, # normal tabs
     :sto                                                  # hidden tabs
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
 
@@ -448,8 +448,8 @@ class DashboardController < ApplicationController
 
   # Handle single-signon from login screen
   def kerberos_authenticate
-    if @user_name.blank? && request.env.key?("HTTP_X_REMOTE_USER").present?
-      @user_name = params[:user_name] = request.env["HTTP_X_REMOTE_USER"].split("@").first
+    if @user_name.blank? && request.headers["X-Remote-User"].present?
+      @user_name = params[:user_name] = request.headers["X-Remote-User"].split("@").first
     end
 
     authenticate
@@ -490,7 +490,7 @@ class DashboardController < ApplicationController
     }
 
     if params[:user_name].blank? && params[:user_password].blank? &&
-       request.env["HTTP_X_REMOTE_USER"].blank? &&
+       request.headers["X-Remote-User"].blank? &&
        get_vmdb_config[:authentication][:mode] == "httpd" &&
        get_vmdb_config[:authentication][:sso_enabled] &&
        params[:action] == "authenticate"
@@ -766,7 +766,7 @@ class DashboardController < ApplicationController
     @report  = miq_task.task_results
     session[:rpt_task_id] = miq_task.id
     if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
-      add_flash(_("Error building timeline ") << miq_task.message, :error)
+      add_flash(_("Error building timeline  %{error_message}") % {:error_message => miq_task.message}, :error)
       return
     end
 

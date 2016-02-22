@@ -1,6 +1,6 @@
 module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqProvision do
-    %w(amazon openstack google).each do |t|
+    %w(amazon openstack google azure).each do |t|
       context "for #{t}" do
         before do
           @provider      = FactoryGirl.create("ems_#{t}_with_authentication")
@@ -84,28 +84,30 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        context "availability_zone" do
-          it "workflow exposes allowed_availability_zones" do
-            expect(workflow_klass.instance_methods).to include(:allowed_availability_zones)
-          end
-
-          context "with an availability_zone" do
-            before do
-              @ci = FactoryGirl.create("availability_zone_#{t}")
-              allow_any_instance_of(workflow_klass).to receive(:allowed_availability_zones).and_return(@ci.id => @ci.name)
+        if t != "azure"
+          context "availability_zone" do
+            it "workflow exposes allowed_availability_zones" do
+              expect(workflow_klass.instance_methods).to include(:allowed_availability_zones)
             end
 
-            it "#eligible_availability_zones" do
-              result = ae_svc_prov.eligible_availability_zones
+            context "with an availability_zone" do
+              before do
+                @ci = FactoryGirl.create("availability_zone_#{t}")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_availability_zones).and_return(@ci.id => @ci.name)
+              end
 
-              expect(result).to be_kind_of(Array)
-              expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
-            end
+              it "#eligible_availability_zones" do
+                result = ae_svc_prov.eligible_availability_zones
 
-            it "#set_availability_zone" do
-              ae_svc_prov.eligible_availability_zones.each { |rsc| ae_svc_prov.set_availability_zone(rsc) }
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
+              end
 
-              expect(@miq_provision.reload.options[:placement_availability_zone]).to eq([@ci.id, @ci.name])
+              it "#set_availability_zone" do
+                ae_svc_prov.eligible_availability_zones.each { |rsc| ae_svc_prov.set_availability_zone(rsc) }
+
+                expect(@miq_provision.reload.options[:placement_availability_zone]).to eq([@ci.id, @ci.name])
+              end
             end
           end
         end
@@ -218,7 +220,7 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        if t != "google"
+        if t != "google" && t != "azure"
           context "floating_ip_addresses" do
             it "workflow exposes allowed_floating_ip_addresses" do
               expect(workflow_klass.instance_methods).to include(:allowed_floating_ip_addresses)
@@ -246,7 +248,7 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
         end
 
-        if t != "google"
+        if t != "google" && t != "azure"
           context "guest_access_key_pairs" do
             it "workflow exposes allowed_guest_access_key_pairs" do
               expect(workflow_klass.instance_methods).to include(:allowed_guest_access_key_pairs)
@@ -269,6 +271,34 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
                 ae_svc_prov.eligible_guest_access_key_pairs.each { |rsc| ae_svc_prov.set_guest_access_key_pair(rsc) }
 
                 expect(@miq_provision.reload.options[:guest_access_key_pair]).to eq([@ci.id, @ci.name])
+              end
+            end
+          end
+        end
+
+        if t == 'azure'
+          context "resource_groups" do
+            it "workflow exposes allowed_resource_groups" do
+              expect(workflow_klass.instance_methods).to include(:allowed_resource_groups)
+            end
+
+            context "with a resource_group" do
+              before do
+                @rg = FactoryGirl.create("resource_group")
+                allow_any_instance_of(workflow_klass).to receive(:allowed_resource_groups).and_return(@rg.id => @rg.name)
+              end
+
+              it "#eligible_resource_groups" do
+                result = ae_svc_prov.eligible_resource_groups
+
+                expect(result).to be_kind_of(Array)
+                expect(result.first.class).to eq("MiqAeMethodService::MiqAeServiceResourceGroup".constantize)
+              end
+
+              it "#set_resource_group" do
+                ae_svc_prov.eligible_resource_groups.each { |rg| ae_svc_prov.set_resource_group(rg) }
+
+                expect(@miq_provision.reload.options[:resource_group]).to eq([@rg.id, @rg.name])
               end
             end
           end

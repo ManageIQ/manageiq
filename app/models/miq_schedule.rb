@@ -20,14 +20,13 @@ class MiqSchedule < ApplicationRecord
   }
 
   scope :updated_since, lambda { |time|
-    {:conditions => ["updated_at > ?", time]}
+    where("updated_at > ?", time)
   }
 
   serialize :sched_action
   serialize :filter
   serialize :run_at
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
   SYSTEM_SCHEDULE_CLASSES = ["MiqReport", "MiqAlert", "MiqWidget"]
   VALID_INTERVAL_UNITS = ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'once']
   ALLOWED_CLASS_METHOD_ACTIONS = ["db_backup", "db_gc"]

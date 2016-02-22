@@ -77,8 +77,8 @@ module EmsRefresh::SaveInventoryInfra
     locs, names = hashes.partition { |h| h[:location] }
     locs.collect!  { |h| h[:location] }
     names.collect! { |h| h[:name] }
-    locs  = Storage.where("location IN (?)", locs) unless locs.empty?
-    names = Storage.where("location IS NULL AND name IN (?)", names) unless names.empty?
+    locs  = Storage.where(:location => locs) unless locs.empty?
+    names = Storage.where(:location => nil, :name => names) unless names.empty?
 
     hashes.each do |h|
       found = if h[:location]
@@ -129,7 +129,7 @@ module EmsRefresh::SaveInventoryInfra
         found = nil
         if h[:ems_ref]
           _log.debug "#{log_header} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems.id}]"
-          found = Host.find_by_ems_ref_and_ems_id(h[:ems_ref], ems.id)
+          found = Host.find_by(:ems_ref => h[:ems_ref], :ems_id => ems.id)
         end
 
         if found.nil?

@@ -89,7 +89,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
       it "with a subnet" do
         cloud_subnet = FactoryGirl.create(:cloud_subnet)
         subject.options[:cloud_subnet] = [cloud_subnet.id, cloud_subnet.name]
-        expect(subject.prepare_for_clone_task[:subnet]).to eq(cloud_subnet.ems_ref)
+        expect(subject.prepare_for_clone_task[:subnet_id]).to eq(cloud_subnet.ems_ref)
       end
     end
   end

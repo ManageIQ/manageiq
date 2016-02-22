@@ -23,13 +23,15 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
 
       assert_counts
       assert_configured_system
+      assert_configuration_script
     end
   end
 
   def assert_counts
-    expect(Provider.count).to                                 eq(1)
-    expect(configuration_manager).to                          have_attributes(:api_version => "2.4.2")
-    expect(configuration_manager.configured_systems.count).to eq(48)
+    expect(Provider.count).to                                    eq(1)
+    expect(configuration_manager).to                             have_attributes(:api_version => "2.4.2")
+    expect(configuration_manager.configured_systems.count).to    eq(58)
+    expect(configuration_manager.configuration_scripts.count).to eq(5)
   end
 
   def assert_configured_system
@@ -39,6 +41,17 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
       :type        => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
       :hostname    => "Ansible-Host",
       :manager_ref => "48",
+    )
+  end
+
+  def assert_configuration_script
+    system = configuration_manager.configuration_scripts.where(:name => "Ansible-JobTemplate").first
+
+    expect(system).to have_attributes(
+      :name        => "Ansible-JobTemplate",
+      :description => "Ansible-JobTemplate-Description",
+      :manager_ref => "149",
+      :variables   => "{\n \"abc\": 123\n}",
     )
   end
 end

@@ -32,6 +32,7 @@ module MiqRequestMixin
   def get_user
     @user ||= User.find_by_userid(userid)
   end
+  alias_method :tenant_identity, :get_user
 
   def tags
     tag_ids.to_miq_a.each do |tag_id|
@@ -141,5 +142,9 @@ module MiqRequestMixin
                      }
     end
     ws_tag_data
+  end
+
+  def workflow(request_options = options, flags = {})
+    workflow_class.new(request_options, get_user, flags) if workflow_class
   end
 end

@@ -73,7 +73,11 @@ describe('resizable-sidebar.js', function () {
   });
 
   it('narrow sidebar', function () {
-    for (var i=5; i<=2; i--) {
+    for (var i=2; i<5; i++) {
+      $('.resize-right').click();
+    }
+
+    for (var i=5; i>=2; i--) {
       expect($('#left')).not.toHaveClass('col-md-' + (i+1));
       expect($('#left')).not.toHaveClass('col-md-pull-' + (13-i));
       expect($('#left')).toHaveClass('col-md-' + i);
@@ -84,7 +88,7 @@ describe('resizable-sidebar.js', function () {
       expect($('#right')).toHaveClass('col-md-' + (12-i));
       expect($('#right')).toHaveClass('col-md-push-' + i);
 
-      $('.resize-right').click();
+      $('.resize-left').click();
     }
   });
 

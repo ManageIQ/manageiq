@@ -30,7 +30,8 @@ module Menu
           Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
           Menu::Item.new('security_group',      N_('Security Groups'),     'security_group',            {:feature => 'security_group_show_list'},                '/security_group'),
           Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
-          Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack')
+          Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack'),
+          Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),           'auth_key_pair_cloud',       {:feature => 'auth_key_pair_cloud_show_list'},           '/auth_key_pair_cloud')
         ])
       end
 
@@ -108,6 +109,16 @@ module Menu
         ])
       end
 
+      def middleware_menu_section
+        Menu::Section.new(:mdl, N_("Middleware"), [
+          Menu::Item.new('ems_middleware', N_('Providers'), 'ems_middleware', {:feature => 'ems_middleware_show_list'}, '/ems_middleware'),
+          Menu::Item.new('middleware_server', deferred_ui_lookup(:tables => 'middleware_server'), 'middleware_server', {:feature => 'middleware_server_show_list'}, '/middleware_server'),
+          Menu::Item.new('middleware_deployment', deferred_ui_lookup(:tables => 'middleware_deployment'), 'middleware_deployment', {:feature => 'middleware_deployment_show_list'}, '/middleware_deployment'),
+          Menu::Item.new('middleware_topology', N_('Topology'), 'middleware_topology', {:feature => 'middleware_topology', :any => true}, '/middleware_topology')
+
+        ])
+      end
+
       def storage_menu_section
         Menu::Section.new(:sto, N_("Storage"), [
           Menu::Item.new('ontap_storage_system', deferred_ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
@@ -159,7 +170,7 @@ module Menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
 
         [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section,
-         container_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
+         container_menu_section, middleware_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
          automate_menu_section, optimize_menu_section, configuration_menu_section].compact
       end
     end

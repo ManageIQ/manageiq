@@ -9,7 +9,7 @@
 #
 
 # Report title
-title: Cloud Volume
+title: Cloud Volumes based on Snapshot
 
 # Menu name
 name: CloudVolume
@@ -33,7 +33,6 @@ include:
   ext_management_system:
     columns:
     - name
-
 
 # Included tables and columns for query performance
 # include_for_find:

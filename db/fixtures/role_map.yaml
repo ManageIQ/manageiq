@@ -1,16 +1,16 @@
---- 
-  - EvmGroup-super_administrator: super_administrator
-  - EvmGroup-operator: operator
-  - EvmGroup-user: user
-  - EvmGroup-administrator: administrator
-  - EvmGroup-approver: approver
-  - EvmGroup-auditor: auditor
-  - EvmGroup-support: support
-  - EvmGroup-vm_user: vm_user
-  - EvmGroup-security: security
-  - EvmGroup-desktop: desktop
-  - EvmGroup-user_self_service: user_self_service
-  - EvmGroup-user_limited_self_service: user_limited_self_service
-  - EvmGroup-tenant_administrator: tenant_administrator
-  - EvmGroup-tenant_quota_administrator: tenant_quota_administrator
-  - EvmGroup-consumption_administrator: consumption_administrator
+---
+  EvmGroup-super_administrator: super_administrator
+  EvmGroup-operator: operator
+  EvmGroup-user: user
+  EvmGroup-administrator: administrator
+  EvmGroup-approver: approver
+  EvmGroup-auditor: auditor
+  EvmGroup-support: support
+  EvmGroup-vm_user: vm_user
+  EvmGroup-security: security
+  EvmGroup-desktop: desktop
+  EvmGroup-user_self_service: user_self_service
+  EvmGroup-user_limited_self_service: user_limited_self_service
+  EvmGroup-tenant_administrator: tenant_administrator
+  EvmGroup-tenant_quota_administrator: tenant_quota_administrator
+  EvmGroup-consumption_administrator: consumption_administrator

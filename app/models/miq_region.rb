@@ -102,9 +102,7 @@ class MiqRegion < ApplicationRecord
     active_miq_servers.detect(&:is_master?)
   end
 
-  def self.my_region
-    find_by(:region => my_region_number)
-  end
+  cache_with_timeout(:my_region) { find_by(:region => my_region_number) }
 
   def self.seed
     # Get the region by looking at an existing MiqDatabase instance's id
@@ -153,6 +151,10 @@ class MiqRegion < ApplicationRecord
 
   def ems_containers
     ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ContainerManager }
+  end
+
+  def ems_middlewares
+    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MiddlewareManager }
   end
 
   def assigned_roles
@@ -242,7 +244,7 @@ class MiqRegion < ApplicationRecord
   def self.log_not_under_management(prefix)
     hosts_objs = Host.where(:ems_id => nil)
     hosts      = hosts_objs.count
-    vms        = VmOrTemplate.count(:conditions =>  {:ems_id => nil})
+    vms        = VmOrTemplate.where(:ems_id => nil).count
     sockets    = my_region.aggregate_physical_cpus(hosts_objs)
     $log.info("#{prefix}, Not Under Management: VMs: [#{vms}], Hosts: [#{hosts}], Sockets: [#{sockets}]")
   end

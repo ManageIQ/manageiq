@@ -7,8 +7,6 @@
 # - Delete multiple service templates   /api/service_templates        action "delete"
 #
 describe ApiController do
-  include Rack::Test::Methods
-
   let(:dialog1)    { FactoryGirl.create(:dialog, :label => "ServiceDialog1") }
   let(:dialog2)    { FactoryGirl.create(:dialog, :label => "ServiceDialog2") }
 
@@ -17,14 +15,6 @@ describe ApiController do
 
   let(:picture)    { FactoryGirl.create(:picture, :extension => "jpg") }
   let(:template)   { FactoryGirl.create(:service_template, :name => "ServiceTemplate") }
-
-  before(:each) do
-    init_api_spec_env
-  end
-
-  def app
-    Vmdb::Application
-  end
 
   describe "Service Templates query" do
     before do

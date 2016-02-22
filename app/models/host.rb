@@ -58,7 +58,9 @@ class Host < ApplicationRecord
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many                  :ems_events, -> { where("host_id = ? OR dest_host_id = ?", id, id).order(:timestamp) }, :class_name => "EmsEvent"
+  has_many                  :ems_events,
+                            ->(host) { where("host_id = ? OR dest_host_id = ?", host.id, host.id).order(:timestamp) },
+                            :class_name => "EmsEvent"
   has_many                  :ems_events_src, :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_host_id
 
@@ -189,6 +191,14 @@ class Host < ApplicationRecord
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
+  end
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
   end
 
   def make_smart
@@ -1135,7 +1145,7 @@ class Host < ApplicationRecord
   def refresh_services(ssu)
     xml = MiqXml.createDoc(:miq).root.add_element(:services)
 
-    services = ssu.shell_exec("systemctl -a --type service")
+    services = ssu.shell_exec("systemctl -a --type service --no-legend")
     if services
       # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
       services = MiqLinux::Utils.parse_systemctl_list(services)
@@ -1278,7 +1288,7 @@ class Host < ApplicationRecord
 
   def self.ready_for_provisioning?(ids)
     errors = ActiveModel::Errors.new(self)
-    hosts = find_all_by_id(ids)
+    hosts = where(:id => ids)
     missing = ids - hosts.collect(&:id)
     errors.add(:missing_ids, "Unable to find Hosts with the following ids #{missing.inspect}") unless missing.empty?
 

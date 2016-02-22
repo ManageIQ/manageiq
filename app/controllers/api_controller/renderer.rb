@@ -286,27 +286,25 @@ class ApiController
 
     def attr_accessible?(object, attr)
       return false unless object && object.respond_to?(attr)
-      is_reflection = object.class.reflection_with_virtual(attr.to_sym)
-      is_column     = object.class.columns_hash_with_virtual.key?(attr) unless is_reflection
-      is_reflection || is_column
+      object.class.has_attribute?(attr) ||
+        object.class.reflect_on_association(attr) ||
+        object.class.virtual_attribute?(attr) ||
+        object.class.virtual_reflection?(attr)
     end
 
     def attr_virtual?(object, attr)
       return false if ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
-      return false unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
-      is_reflection     = object.class.reflection_with_virtual(primary.to_sym)
-      is_virtual_column = object.class.virtual_columns_hash.key?(primary) unless is_reflection
-      is_reflection || is_virtual_column
+      (object.class.respond_to?(:reflect_on_association) && object.class.reflect_on_association(primary)) ||
+        (object.class.respond_to?(:virtual_attribute?) && object.class.virtual_attribute?(primary)) ||
+        (object.class.respond_to?(:virtual_reflection?) && object.class.virtual_reflection?(primary))
     end
 
     def attr_physical?(object, attr)
       return true if ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
-      object &&
-        object.respond_to?(:attributes) &&
-        object.respond_to?(primary) &&
-        object.class.columns_hash.key?(primary)
+      (object.class.respond_to?(:has_attribute?) && object.class.has_attribute?(attr)) &&
+        !(object.class.respond_to?(:virtual_attribute?) && object.class.virtual_attribute?(attr))
     end
 
     def attr_split(attr)

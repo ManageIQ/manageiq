@@ -1,5 +1,6 @@
 class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migration
   class ContainerCondition < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
   end
 
   def up
@@ -8,15 +9,13 @@ class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migrati
     add_column :container_conditions, :container_entity_type, :string
 
     say_with_time("Adding container_entity_type 'ContainerNode' to all existing node conditions") do
-      ContainerCondition.all.each do |condition|
-        condition.update_attributes!(:container_entity_type => 'ContainerNode')
-      end
+      ContainerCondition.update_all(:container_entity_type => 'ContainerNode')
     end
   end
 
   def down
     say_with_time("remove all container group conditions to leave only container node conditions") do
-      ContainerCondition.destroy_all(:container_entity_type => 'ContainerGroup')
+      ContainerCondition.where(:container_entity_type => 'ContainerGroup').destroy_all
     end
 
     remove_column :container_conditions, :container_entity_type

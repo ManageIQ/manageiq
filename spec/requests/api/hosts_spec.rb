@@ -1,12 +1,4 @@
 RSpec.describe "hosts API" do
-  include Rack::Test::Methods
-
-  before { init_api_spec_env }
-
-  def app
-    Vmdb::Application
-  end
-
   describe "editing a host's password" do
     context "with an appropriate role" do
       it "can edit the password on a host" do

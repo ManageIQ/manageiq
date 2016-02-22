@@ -1,5 +1,4 @@
 class TreeNodeBuilder
-  include UiConstants
   include MiqAeClassHelper
 
   # method to build non-explorer tree nodes
@@ -152,7 +151,7 @@ class TreeNodeBuilder
   end
 
   def generic_node(text, image, tip = nil)
-    text = ERB::Util.html_escape(URI.unescape(text)) unless text.html_safe?
+    text = ERB::Util.html_escape(text ? URI.unescape(text) : text) unless text.html_safe?
     @node = {
       :key   => build_object_id,
       :title => text,

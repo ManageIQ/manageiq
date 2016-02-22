@@ -164,7 +164,7 @@ module VMDB
 
     def config_mtime_from_db
       # log_header = "[#{@name}]"
-      server = MiqServer.my_server(true)
+      server = MiqServer.my_server
       return Time.at(0) if server.nil?
 
       conf = server.configurations.select("updated_on").where(:typ => @name).first
@@ -259,7 +259,7 @@ module VMDB
       config.store_path(keys, value)
     end
 
-    def save
+    def save(save_db_file = true)
       raise "configuration invalid, see errors for details" unless validate
 
       begin
@@ -272,10 +272,10 @@ module VMDB
       case configuration_source
       when :database
         @db_record = Configuration.create_or_update(svr, @config, @name)
-        save_file(@cfile_db)
+        save_file(@cfile_db) if save_db_file
         _log.info("Saved Config [#{@name}] from database in file: [#{@cfile_db}]")
       when :filesystem
-        save_file(@cfile_db)
+        save_file(@cfile_db) if save_db_file
         _log.info("Saved Config [#{@name}] in file: [#{@cfile_db}]")
       end
       update_cache_metadata

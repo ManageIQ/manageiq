@@ -46,7 +46,7 @@
             %td
               = h(row.platform)
             %td
-              = h(row.logical_cpus)
+              = h(row.cpu_total_cores)
             %td
               = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
             %td
@@ -77,7 +77,7 @@
           %td
             = h(@vm.platform)
           %td
-            = h(@vm.logical_cpus)
+            = h(@vm.cpu_total_cores)
           %td
             = h(number_to_human_size(@vm.mem_cpu.to_i * 1024 * 1024))
           %td

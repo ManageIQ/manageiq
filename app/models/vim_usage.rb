@@ -2,9 +2,9 @@ class VimUsage < ActsAsArModel
   set_columns_hash(
     :resource_name                => :string,
     :resource_id                  => :integer,
-    :derived_vm_used_disk_storage => {:type => :float, :daily_pfx => "max"},
+    :derived_vm_used_disk_storage => :float,
     :cpu_usagemhz_rate_average    => :float,
-    :derived_memory_used          => {:type => :float, :daily_pfx => "max"},
+    :derived_memory_used          => :float,
     :disk_usage_rate_average      => :float,
     :net_usage_rate_average       => :float
 
@@ -44,14 +44,14 @@ class VimUsage < ActsAsArModel
   def self.build(perfs, interval)
     perfs.inject([]) do |arr, perf|
       cols_hash = column_names.inject(:id => perf.resource_id) do |h, c|
-        col_options = columns_hash[c].options
+        #col_options = columns_hash[c].options
         if interval == "daily"
-          col = col_options[:daily_pfx] ? [col_options[:daily_pfx], c.to_s].join("_") : c
+          col = c =~ /^derived_/ ? "max_#{c}" : c
           value = perf.send(col)
-          value = (value * col_options[:mult] * 24) if value && col_options[:mult]
+          #value = (value * col_options[:mult] * 24) if value && col_options[:mult]
         else
           value = perf.send(c)
-          value = (value * col_options[:mult]) if value && col_options[:mult]
+          #value = (value * col_options[:mult]) if value && col_options[:mult]
         end
         h[c] = value
         h

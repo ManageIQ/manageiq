@@ -1,5 +1,6 @@
 require 'util/miq_tempfile'
 require_relative '../../MiqVm/MiqVm'
+require_relative 'MiqOpenStackCommon'
 
 #
 # TODO: Create common base class for MiqOpenStackInstance and MiqOpenStackImage
@@ -7,6 +8,8 @@ require_relative '../../MiqVm/MiqVm'
 #
 
 class MiqOpenStackInstance
+  include MiqOpenStackCommon
+
   attr_reader :vmConfigFile
 
   SUPPORTED_METHODS = [:rootTrees, :extract, :diskInitErrors]
@@ -58,7 +61,7 @@ class MiqOpenStackInstance
       end
 
       if miq_snapshot
-        raise "Already has an EVM snapshot: #{miq_snapshot.name}"
+        raise "Already has an EVM snapshot: #{miq_snapshot.name}, with id: #{miq_snapshot.id}"
       else
         $log.debug "#{log_prefix}: Snapshot does not exist, deleting metadata"
         snapshot_metadata.destroy
@@ -71,13 +74,15 @@ class MiqOpenStackInstance
     # TODO: pass in snapshot name.
     rv = compute_service.create_image(instance.id, "EvmSnapshot", :description => options[:desc])
     rv.body['image'][:service] = image_service
-    miq_snapshot = Fog::Image::OpenStack::Image.new(rv.body['image'])
-    miq_snapshot.collection = image_service.images
+
+    miq_snapshot = image_service.images.get(rv.body['image']['id'])
 
     until miq_snapshot.status.upcase == "ACTIVE"
       $log.debug "#{log_prefix}: #{miq_snapshot.status}"
       sleep 1
-      miq_snapshot.reload
+      # TODO(lsmola) identity is missing in Glance V2 object, fix it in Fog, then miq_snapshot.reload will work
+      # miq_snapshot.reload
+      miq_snapshot = image_service.images.get(miq_snapshot.id)
     end
     $log.debug "#{log_prefix}: #{miq_snapshot.status}"
     $log.debug "#{log_prefix}: EVM snapshot creation complete"
@@ -127,7 +132,7 @@ class MiqOpenStackInstance
       hardware  = "scsi0:0.present = \"TRUE\"\n"
       hardware += "scsi0:0.filename = \"#{@temp_image_file.path}\"\n"
 
-      diskFormat = image_service.get_image(snapshot_image_id).headers['X-Image-Meta-Disk_format']
+      diskFormat = disk_format(snapshot_image_id)
       $log.debug "diskFormat = #{diskFormat}"
 
       ost = OpenStruct.new
@@ -137,54 +142,7 @@ class MiqOpenStackInstance
   end
 
   def get_image_file(image_id)
-    log_prefix = "#{self.class.name}##{__method__}"
-
-    image = image_service.get_image(image_id)
-    raise "Image #{image_id} not found" unless image
-    $log.debug "#{log_prefix}: image = #{image.class.name}"
-
-    iname = image.headers['X-Image-Meta-Name']
-    isize = image.headers['X-Image-Meta-Size'].to_i
-    $log.debug "#{log_prefix}: iname = #{iname}"
-    $log.debug "#{log_prefix}: isize = #{isize}"
-
-    raise "Image: #{iname} (#{image_id}) is empty" unless isize > 0
-
-    tot = 0
-    tf = MiqTempfile.new(iname, :encoding => 'ascii-8bit')
-    $log.debug "#{log_prefix}: saving image to #{tf.path}"
-    response_block = lambda do |buf, _rem, sz|
-      tf.write buf
-      tot += buf.length
-      $log.debug "#{log_prefix}: response_block: #{tot} bytes written of #{sz}"
-    end
-
-    #
-    # We're calling the low-level request method here, because
-    # the Fog "get image" methods don't currently support passing
-    # a response block. We should attempt to remedy this in Fog
-    # upstream and modify this code accordingly.
-    #
-    rv = image_service.request(
-      :expects        => [200, 204],
-      :method         => 'GET',
-      :path           => "images/#{image_id}",
-      :response_block => response_block
-    )
-
-    tf.close
-
-    checksum = rv.headers['X-Image-Meta-Checksum']
-    $log.debug "#{log_prefix}: Checksum: #{checksum}" if $log.debug?
-    $log.debug "#{log_prefix}: #{`ls -l #{tf.path}`}" if $log.debug?
-
-    if tf.size != isize
-      $log.error "#{log_prefix}: Error downloading image #{iname}"
-      $log.error "#{log_prefix}: Downloaded size does not match image size #{tf.size} != #{isize}"
-      raise "Image download failed"
-    end
-
-    tf
+    get_image_file_common(image_id)
   end
 
   def method_missing(sym, *args)

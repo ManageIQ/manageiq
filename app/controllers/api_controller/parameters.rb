@@ -48,7 +48,7 @@ class ApiController
                        else
                          parsed_filter[:logical_or] ? res_filter.or(arel) : res_filter.and(arel)
                        end
-        elsif parsed_filter[:ruby_operator].present? && klass.virtual_column?(parsed_filter[:attr])
+        elsif parsed_filter[:ruby_operator].present? && klass.virtual_attribute?(parsed_filter[:attr])
           ruby_filters << lambda do |result_set|
             result_set.select do |resource|
               attr = resource.public_send("#{parsed_filter[:attr]}")

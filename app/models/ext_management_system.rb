@@ -296,7 +296,7 @@ class ExtManagementSystem < ApplicationRecord
   def self.refresh_ems(ems_ids, reload = false)
     ems_ids = [ems_ids] unless ems_ids.kind_of?(Array)
 
-    ExtManagementSystem.find_all_by_id(ems_ids).each { |ems| ems.reset_vim_cache_queue if ems.respond_to?(:reset_vim_cache_queue) } if reload
+    ExtManagementSystem.where(:id => ems_ids).each { |ems| ems.reset_vim_cache_queue if ems.respond_to?(:reset_vim_cache_queue) } if reload
 
     ems_ids = ems_ids.collect { |id| [ExtManagementSystem, id] }
     EmsRefresh.queue_refresh(ems_ids)
@@ -347,12 +347,6 @@ class ExtManagementSystem < ApplicationRecord
   def clustered_hosts
     hosts.where.not(:ems_cluster_id => nil)
   end
-
-  def clear_association_cache_with_storages
-    @storages = nil
-    clear_association_cache_without_storages
-  end
-  alias_method_chain :clear_association_cache, :storages
 
   alias_method :storages,               :all_storages
   alias_method :datastores,             :all_storages # Used by web-services to return datastores as the property name
@@ -430,7 +424,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def total_storages
-    HostStorage.count(:conditions => {:host_id => host_ids}, :select => "DISTINCT storage_id")
+    HostStorage.where(:host_id => host_ids).count("DISTINCT storage_id")
   end
 
   def vm_count_by_state(state)
@@ -550,5 +544,16 @@ class ExtManagementSystem < ApplicationRecord
   # @return [Boolean] true if a datastore exists for this type of ems
   def self.datastore?
     IsoDatastore.where(:ems_id => all).exists?
+  end
+
+  def tenant_identity
+    User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
+  end
+
+  private
+
+  def clear_association_cache
+    @storages = nil
+    super
   end
 end

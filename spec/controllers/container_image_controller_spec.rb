@@ -8,7 +8,7 @@ describe ContainerImageController do
     ApplicationController.handle_exceptions = true
 
     expect(controller).to receive(:scan_images)
-    post :button, :pressed => 'container_image_scan', :format => :js
+    post :button, :params => { :pressed => 'container_image_scan', :format => :js }
     expect(controller.send(:flash_errors?)).not_to be_truthy
   end
 
@@ -22,7 +22,7 @@ describe ContainerImageController do
     EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_image = ContainerImage.create(:ext_management_system => ems, :name => "Test Image")
-    get :show, :id => container_image.id
+    get :show, :params => { :id => container_image.id }
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name => "Container Images",

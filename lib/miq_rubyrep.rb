@@ -50,6 +50,8 @@ class MiqRubyrep
     config.options[:sync_conflict_handling]        = :left_wins
     config.options[:heartbeat_file]                = heartbeat_file
 
+    config.options[:id_range]                      = ApplicationRecord.rails_sequence_range
+
     rp_conf[:include_tables] ||= %w(.+)
     include_tables = rp_conf[:include_tables].to_a.join("|")
     include_tables = "^(#{include_tables})$"

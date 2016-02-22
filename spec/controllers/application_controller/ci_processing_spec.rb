@@ -1,5 +1,3 @@
-include UiConstants
-
 describe ApplicationController do
   before do
     EvmSpecHelper.local_miq_server
@@ -326,7 +324,7 @@ describe HostController do
     it "renders show_item" do
       controller.instance_variable_set(:@breadcrumbs, [])
       allow(controller).to receive(:get_view)
-      get :guest_applications, :id => @host.id, :show => @guest_application.id
+      get :guest_applications, :params => { :id => @host.id, :show => @guest_application.id }
       expect(response.status).to eq(200)
       expect(response).to render_template('host/show')
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
@@ -339,7 +337,7 @@ describe HostController do
     it "renders show_details" do
       controller.instance_variable_set(:@breadcrumbs, [])
       allow(controller).to receive(:get_view)
-      get :guest_applications, :id => @host.id
+      get :guest_applications, :params => { :id => @host.id }
       expect(response.status).to eq(200)
       expect(response).to render_template('host/show')
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",

@@ -270,14 +270,13 @@ describe MiqGroup do
     it "adds new groups after initial seed" do
       [Tenant, MiqUserRole, MiqGroup].each(&:seed)
 
-      role_map_path = File.expand_path(File.join(Rails.root, "db/fixtures/role_map.yaml"))
+      role_map_path = ApplicationRecord::FIXTURE_DIR.join("role_map.yaml")
       role_map = YAML.load_file(role_map_path)
-      role_map.unshift('EvmRole-test_role' => 'tenant_quota_administrator')
-      filter_map_path = File.expand_path(File.join(Rails.root, "db/fixtures/filter_map.yaml"))
-      filter_map = YAML.load_file(filter_map_path)
+      role_map = {'EvmRole-test_role' => 'tenant_quota_administrator'}.merge(role_map)
+      filter_map_path = ApplicationRecord::FIXTURE_DIR.join("filter_map.yaml")
 
       allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
-      allow(YAML).to receive(:load_file).with(filter_map_path).and_return(filter_map)
+      allow(YAML).to receive(:load_file).with(filter_map_path).and_call_original
 
       expect {
         MiqGroup.seed
@@ -322,20 +321,6 @@ describe MiqGroup do
       gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)
 
       expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc, tenant.default_miq_group])
-    end
-  end
-
-  describe "#all_users" do
-    it "finds users" do
-      g  = FactoryGirl.create(:miq_group)
-      g2 = FactoryGirl.create(:miq_group)
-
-      FactoryGirl.create(:user)
-      u_one  = FactoryGirl.create(:user, :miq_groups => [g])
-      u_two  = FactoryGirl.create(:user, :miq_groups => [g, g2], :current_group => g)
-
-      expect(g.all_users).to match_array([u_one, u_two])
-      expect(g2.all_users).to match_array([u_two])
     end
   end
 

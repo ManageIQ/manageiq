@@ -34,6 +34,14 @@ class ResourcePool < ApplicationRecord
   virtual_has_many :vms,               :uses => :all_relationships
   virtual_has_many :miq_templates,     :uses => :all_relationships
 
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
+  end
+
   def hidden?
     is_default?
   end

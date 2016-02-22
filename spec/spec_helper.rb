@@ -9,6 +9,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'application_helper'
 
+require 'rails-controller-testing'
 require 'rspec/rails'
 require 'vcr'
 require 'cgi'
@@ -27,12 +28,18 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 
   # From rspec-rails, infer what helpers to mix in, such as `get` and
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
+
+  unless ENV['CI']
+    # File store for --only-failures option
+    config.example_status_persistence_file_path = "./spec/examples.txt"
+  end
 
   config.include VMDBConfigurationHelper
 
@@ -58,10 +65,10 @@ RSpec.configure do |config|
   config.include MigrationSpecHelper, :migrations => :up
   config.include MigrationSpecHelper, :migrations => :down
 
-  config.include ApiSpecHelper,     :type => :request, :rest_api => true
+  config.include ApiSpecHelper,     :rest_api => true
   config.include AuthRequestHelper, :type => :request
   config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
-    metadata[:type] ||= :request
+    metadata[:rest_api] = true
   end
 
   config.include AuthHelper,  :type => :helper
@@ -84,10 +91,11 @@ RSpec.configure do |config|
   #   EvmSpecHelper.log_ruby_object_usage
   # end
 
-  config.before(:each) do
-    EmsRefresh.debug_failures = true
-    ApplicationController.handle_exceptions = false
+  config.before(:each) do |example|
+    EmsRefresh.debug_failures = true if example.metadata[:migrations].blank?
+    ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
+
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end

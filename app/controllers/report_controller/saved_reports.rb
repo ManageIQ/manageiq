@@ -21,7 +21,7 @@ module ReportController::SavedReports
       return
     end
     @right_cell_text ||= _("%{model} \"%{name}\"") % {:name => "#{rr.name} - #{format_timezone(rr.created_on, Time.zone, "gt")}", :model => "Saved Report"}
-    if admin_user? || current_user.groups_include?(rr.miq_group)
+    if admin_user? || current_user.miq_group_ids.include?(rr.miq_group_id)
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
       task = MiqTask.find_by_id(rr.miq_task_id)
@@ -119,8 +119,10 @@ module ReportController::SavedReports
     @sortcol = session["#{x_active_tree}_sortcol".to_sym].nil? ? 0 : session["#{x_active_tree}_sortcol".to_sym].to_i
     @sortdir = session["#{x_active_tree}_sortdir".to_sym].nil? ? "DESC" : session["#{x_active_tree}_sortdir".to_sym]
     @no_checkboxes = !role_allows(:feature => "miq_report_saved_reports_admin", :any => true)
+
     # show all saved reports
-    @view, @pages = get_view(MiqReportResult, :association => "all", :where_clause => set_saved_reports_condition)
+    @view, @pages = get_view(MiqReportResult, :association => "all",
+                                              :named_scope => :with_current_user_groups_and_report)
 
     # build_savedreports_tree
     @sb[:saved_reports] = nil
@@ -137,30 +139,5 @@ module ReportController::SavedReports
   # Build the main Saved Reports tree
   def build_savedreports_tree
     TreeBuilderReportSavedReports.new('savedreports_tree', 'savedreports', @sb)
-  end
-
-  def set_saved_reports_condition(rep_id = nil)
-    cond = []
-
-    # Replaced this code as all saved, requested, scheduled reports have miq_report_id set, others don't
-    # cond[0] = "(report_source=? OR report_source=? OR report_source=?)"
-    # cond.push("Saved by user")
-    # cond.push("Requested by user")
-    # cond.push("Scheduled")
-
-    if rep_id.nil?
-      cond[0] = "miq_report_id IS NOT NULL"
-    else
-      cond[0] = "miq_report_id=?"
-      cond.push(rep_id)
-    end
-
-    # Admin users can see all saved reports
-    unless admin_user?
-      cond[0] << " AND miq_group_id IN (?)"
-      cond.push(current_user.miq_groups.collect(&:id))
-    end
-
-    cond
   end
 end

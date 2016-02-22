@@ -21,6 +21,7 @@ db: ManageIQ::Providers::Foreman::ConfigurationManager
 cols:
 - name
 - url
+- type
 - zone.name
 - last_refresh_date
 - region_description
@@ -47,6 +48,7 @@ include_for_find:
 col_order:
 - name
 - provider.url
+- type
 - zone.name
 - last_refresh_date
 - region_description
@@ -59,6 +61,7 @@ headers:
 - Provider Name
 - URL
 - Zone
+- Type
 - Last Refresh Date
 - Region Description
 - Status
@@ -66,6 +69,7 @@ headers:
 - Total Configured Systems
 
 col_formats:
+-
 -
 -
 -

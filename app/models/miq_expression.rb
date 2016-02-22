@@ -2,8 +2,7 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
-  @@proto = VMDB::Config.new("vmdb").config[:product][:proto]
-  @@base_tables = %w(
+  BASE_TABLES = %w(
     AuditEvent
     AvailabilityZone
     BottleneckEvent
@@ -62,7 +61,7 @@ class MiqExpression
     Zone
   )
 
-  @@include_tables = %w(
+  INCLUDE_TABLES = %w(
     advanced_settings
     audit_events
     availability_zones
@@ -75,6 +74,9 @@ class MiqExpression
     configuration_profiles
     configuration_managers
     configured_systems
+    containers
+    container_groups
+    container_projects
     customization_scripts
     customization_script_media
     customization_script_ptables
@@ -326,6 +328,11 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
+  end
+
+  def self.proto?
+    return @proto if defined?(@proto)
+    @proto = VMDB::Config.new("vmdb").config.fetch_path(:product, :proto)
   end
 
   def self.to_human(exp)
@@ -911,9 +918,20 @@ class MiqExpression
     [merge_where_clauses(*where_clauses), merge_includes(*includes)]
   end
 
+  def self.expand_conditional_clause(klass, cond)
+    return klass.send(:sanitize_sql_for_conditions, cond) unless cond.is_a?(Hash)
+
+    cond = klass.predicate_builder.resolve_column_aliases(cond)
+    cond = klass.send(:expand_hash_conditions_for_aggregates, cond)
+
+    klass.predicate_builder.build_from_hash(cond).map { |b|
+      klass.connection.visitor.compile b
+    }.join(' AND ')
+  end
+
   def self.merge_where_clauses(*list)
     list = list.compact.collect do |s|
-      s = ActiveSupport::Deprecation.silence { MiqReport.send(:sanitize_sql_for_conditions, s) }
+      expand_conditional_clause(MiqReport, s)
     end.compact
 
     if list.size == 0
@@ -969,7 +987,7 @@ class MiqExpression
     parts.each do |assoc|
       assoc = assoc.to_sym
       ref = model.reflection_with_virtual(assoc)
-      result[:virtual_reflection] = true if ref.kind_of?(VirtualReflection)
+      result[:virtual_reflection] = true if model.virtual_reflection?(assoc)
 
       unless result[:virtual_reflection]
         cur_incl[assoc] ||= {}
@@ -987,7 +1005,7 @@ class MiqExpression
     if col
       result[:data_type] = col_type(model, col)
       result[:format_sub_type] = MiqReport::FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col.to_sym] || result[:data_type]
-      result[:virtual_column] = true if model.virtual_columns_hash.include?(col.to_s)
+      result[:virtual_column] = true if model.virtual_attribute?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
     end
     result
@@ -1389,7 +1407,7 @@ class MiqExpression
   end
 
   def self.base_tables
-    @@base_tables
+    BASE_TABLES
   end
 
   def self.model_details(model, opts = {:typ => "all", :include_model => true, :include_tags => false, :include_my_tags => false})
@@ -1506,7 +1524,7 @@ class MiqExpression
     parent[:class_path] ||= model.name
     parent[:assoc_path] ||= model.name
     parent[:root] ||= model.name
-    result = {:columns => model.column_names_with_virtual, :parent => parent}
+    result = {:columns => model.attribute_names, :parent => parent}
     result[:reflections] = {}
 
     refs = model.reflections_with_virtual
@@ -1515,8 +1533,8 @@ class MiqExpression
     end
 
     refs.each do |assoc, ref|
-      next unless @@include_tables.include?(assoc.to_s.pluralize)
-      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !@@proto
+      next unless INCLUDE_TABLES.include?(assoc.to_s.pluralize)
+      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !proto?
       next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host
 
       next if ref.macro == :belongs_to && model.name != parent[:root]
@@ -1619,8 +1637,7 @@ class MiqExpression
 
   def self.col_type(model, col)
     model = model_class(model)
-    col = model.columns_hash_with_virtual[col.to_s]
-    col.nil? ? nil : col.type
+    model.type_for_attribute(col).type
   end
 
   def self.parse_field(field)

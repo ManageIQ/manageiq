@@ -54,6 +54,11 @@
   :url: /ems_cloud/show_list
   :rbac_feature_name: ems_cloud_show_list
   :startup: true
+- :name: auth_key_pair_clouds
+  :description: Clouds / Key Pairs
+  :url: /auth_key_pair_cloud/show_list
+  :rbac_feature_name: auth_key_pair_cloud_show_list
+  :startup: true
 - :name: availability_zones
   :description: Clouds / Availability Zones
   :url: /availability_zone/show_list
@@ -73,6 +78,11 @@
   :description: Clouds / Volumes
   :url: /cloud_volume/show_list
   :rbac_feature_name: cloud_volume_show_list
+  :startup: true
+- :name: cloud_volumes
+  :description: Clouds / Snapshots
+  :url: /cloud_volume_snapshot/show_list
+  :rbac_feature_name: cloud_volume_snapshot_show_list
   :startup: true
 - :name: vm_cloud_instances_accord
   :description: Clouds / Instances / Instances By Providers

@@ -23,7 +23,7 @@ module MiqProvision::Naming
         options        = prov_obj.options
         options[:tags] = prov_obj.get_tags
 
-        load File.join(File.expand_path(Rails.root), 'db/fixtures/miq_provision_naming.rb')
+        load ApplicationRecord::FIXTURE_DIR.join("miq_provision_naming.rb")
         unresolved_vm_name = MiqProvisionNaming.naming(options)
       end
 

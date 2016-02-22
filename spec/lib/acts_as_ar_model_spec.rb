@@ -2,8 +2,8 @@ describe ActsAsArModel do
   before { base_class }
 
   # id is a default column included regardless if it's in the set_columns_hash
-  let(:col_names_syms) { [:str, :id, :int, :flt, :dt, :str_with_options] }
-  let(:col_names_strs) { %w(str id int flt dt str_with_options) }
+  let(:col_names_syms) { [:str, :id, :int, :flt, :dt] }
+  let(:col_names_strs) { %w(str id int flt dt) }
 
   let(:base_class) do
     Class.new(ActsAsArModel) do
@@ -12,7 +12,6 @@ describe ActsAsArModel do
         :int              => :integer,
         :flt              => :float,
         :dt               => :datetime,
-        :str_with_options => {:type => :string, :some_opt => 'opt_value'}
       )
     end
   end
@@ -21,19 +20,7 @@ describe ActsAsArModel do
     it(".base_class") { expect(base_class.base_class).to eq(base_class) }
     it(".base_model") { expect(base_class.base_model).to eq(base_class) }
 
-    it { expect(base_class).to respond_to(:columns_hash) }
-    it { expect(base_class).to respond_to(:columns) }
-    it { expect(base_class).to respond_to(:column_names) }
-    it { expect(base_class).to respond_to(:column_names_symbols) }
-
-    it { expect(base_class).to respond_to(:virtual_columns) }
-
-    it { expect(base_class.columns_hash.values[0]).to be_kind_of(ActsAsArModelColumn) }
-    it { expect(base_class.columns_hash.keys).to      match_array(col_names_strs) }
-    it { expect(base_class.column_names).to           match_array(col_names_strs) }
-    it { expect(base_class.column_names_symbols).to   match_array(col_names_syms) }
-
-    it { expect(base_class.columns_hash["str_with_options"].options[:some_opt]).to eq('opt_value') }
+    it { expect(base_class.attribute_names).to match_array(col_names_strs) }
 
     describe "instance" do
       it { expect(base_class.new).to respond_to(:attributes) }
@@ -67,7 +54,7 @@ describe ActsAsArModel do
     it(".base_class") { expect(sub_class.base_class).to eq(sub_class) }
     it(".base_model") { expect(sub_class.base_model).to eq(sub_class) }
 
-    it { expect(sub_class.columns_hash).to be_empty }
+    it { expect(sub_class.attribute_names).to be_empty }
   end
 
   context "AR backed model" do

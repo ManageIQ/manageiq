@@ -219,7 +219,7 @@ module ApplicationController::Timelines
     begin
       @report.generate_table(:userid => session[:userid])
     rescue StandardError => bang
-      add_flash(_("Error building timeline ") << bang.message, :error)
+      add_flash(_("Error building timeline %{error_message}") % {:error_message => bang.message}, :error)
     else
       if @report.table.data.length == 0
         add_flash(_("No records found for this timeline"), :warning)
@@ -474,7 +474,7 @@ module ApplicationController::Timelines
       @report = miq_task.task_results
 
       if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-        add_flash(_("Error building timeline ") << miq_task.message, :error)
+        add_flash(_("Error building timeline %{error_message}") % {:error_message => miq_task.message}, :error)
       else
         @timeline = @timeline_filter = true
         if @report.table.data.length == 0

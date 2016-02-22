@@ -396,40 +396,6 @@ describe User do
     expect(user).not_to be_valid
   end
 
-  context "#group_ids_of_subscribed_widget_sets" do
-    subject { @user.group_ids_of_subscribed_widget_sets }
-    before do
-      @group = FactoryGirl.create(:miq_group, :description => 'dev group')
-      @user  = FactoryGirl.create(:user, :name => 'cloud', :userid => 'cloud', :miq_groups => [@group])
-      @ws_group = FactoryGirl.create(:miq_widget_set, :name => 'Home', :owner => @group)
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => @group.id)
-    end
-
-    it "none group" do
-      @group.users.destroy_all
-      @group.destroy
-      expect(subject).to be_empty
-    end
-
-    it "one group" do
-      expect(subject).to eq([@group.id])
-    end
-
-    it "multiple groups" do
-      group2 = FactoryGirl.create(:miq_group, :description => '2nd group')
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => group2.id)
-      expect(subject).to match_array([@group.id, group2.id])
-    end
-
-    it "a belong to group is deleted" do
-      group2 = FactoryGirl.create(:miq_group, :description => '2nd group')
-      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => @user.userid, :group_id => group2.id)
-
-      @user.destroy_widget_sets_for_group(group2)
-      expect(subject).to eq([@group.id])
-    end
-  end
-
   context ".authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
 
@@ -451,8 +417,6 @@ describe User do
     include_examples(".seed called multiple times", 2)
 
     include_examples("seeding users with", [])
-
-    include_examples("seeding users with", [MiqGroup])
 
     include_examples("seeding users with", [MiqUserRole, MiqGroup])
   end
@@ -516,41 +480,44 @@ describe User do
     end
   end
 
-  describe "#miq_group_description=" do
+  describe "#current_group_by_description=" do
+    subject { FactoryGirl.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
     let(:g1) { FactoryGirl.create(:miq_group) }
     let(:g2) { FactoryGirl.create(:miq_group) }
-    let(:u)  { FactoryGirl.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
 
     it "ignores blank" do
-      u.miq_group_description = ""
-      expect(u.current_group).to eq(g1)
-      expect(u.miq_group_description).to eq(g1.description)
+      subject.current_group_by_description = ""
+      expect(subject.current_group).to eq(g1)
+      expect(subject.miq_group_description).to eq(g1.description)
     end
 
     it "ignores not found" do
-      u.miq_group_description = "not_found"
-      expect(u.current_group).to eq(g1)
-      expect(u.miq_group_description).to eq(g1.description)
+      subject.current_group_by_description = "not_found"
+      expect(subject.current_group).to eq(g1)
+      expect(subject.miq_group_description).to eq(g1.description)
     end
 
     it "ignores a group that you do not belong" do
-      u.miq_group_description = FactoryGirl.create(:miq_group).description
-      expect(u.current_group).to eq(g1)
-      expect(u.miq_group_description).to eq(g1.description)
+      subject.current_group_by_description = FactoryGirl.create(:miq_group).description
+      expect(subject.current_group).to eq(g1)
+      expect(subject.miq_group_description).to eq(g1.description)
     end
 
     it "sets by description" do
-      u.miq_group_description = g2.description
-      expect(u.current_group).to eq(g2)
-      expect(u.miq_group_description).to eq(g2.description)
+      subject.current_group_by_description = g2.description
+      expect(subject.current_group).to eq(g2)
+      expect(subject.miq_group_description).to eq(g2.description)
     end
 
-    it "sets any group to super admin" do
-      a = FactoryGirl.create(:user, :role => "super_administrator")
-      expect(a).to be_super_admin_user
+    context "as a super admin" do
+      subject { FactoryGirl.create(:user, :role => "super_administrator") }
 
-      a.miq_group_description = g2.description
-      expect(a.current_group).to eq(g2)
+      it "sets any group, regardless of group membership" do
+        expect(subject).to be_super_admin_user
+
+        subject.current_group_by_description = g2.description
+        expect(subject.current_group).to eq(g2)
+      end
     end
   end
 

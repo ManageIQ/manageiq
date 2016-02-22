@@ -63,7 +63,6 @@ module ReportController::Reports::Editor
         # only do this for new reports
         unless @edit[:rpt_id]
           self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0"
-          build_report_listnav
           setnode_for_customreport
         end
         @edit = session[:edit] = nil # clean out the saved info

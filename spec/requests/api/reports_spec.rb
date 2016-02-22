@@ -1,12 +1,4 @@
 RSpec.describe "reports API" do
-  include Rack::Test::Methods
-
-  def app
-    Vmdb::Application
-  end
-
-  before { init_api_spec_env }
-
   it "can fetch all the reports" do
     report_1 = FactoryGirl.create(:miq_report_with_results)
     report_2 = FactoryGirl.create(:miq_report_with_results)

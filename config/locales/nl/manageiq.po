@@ -17,10 +17,217 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "\n"
 
+msgid "CPU"
+msgstr ""
+
+msgid "Memory"
+msgstr ""
+
+msgid "Cores"
+msgstr ""
+
+msgid "Used"
+msgstr ""
+
+msgid "Last 30 Days"
+msgstr ""
+
+msgid "GB"
+msgstr ""
+
+msgid "Hourly Network Utilization"
+msgstr ""
+
+msgid "Last 24 hours"
+msgstr ""
+
+msgid "KBps"
+msgstr ""
+
+msgid "Network Utilization Trends"
+msgstr ""
+
+msgid "Providers"
+msgstr ""
+
+msgid "Nodes"
+msgstr ""
+
+msgid "Containers"
+msgstr ""
+
+msgid "Registries"
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "Pods"
+msgstr ""
+
+msgid "Services"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Routes"
+msgstr ""
+
+msgid "Click here to show/hide entities of this type"
+msgstr ""
+
+msgid "Name: "
+msgstr ""
+
+msgid "Type: "
+msgstr ""
+
+msgid "Status: "
+msgstr ""
+
+msgid "Provider: "
+msgstr ""
+
+msgid "All changes have been reset"
+msgstr ""
+
+msgid "VM Selection"
+msgstr ""
+
+msgid "Host Selection"
+msgstr ""
+
+msgid "Template Selection"
+msgstr ""
+
+msgid "Cluster Selection"
+msgstr ""
+
+msgid "Datastore Selection"
+msgstr ""
+
+msgid "Database Backup Selection"
+msgstr ""
+
+msgid "This element is disabled because it is read only"
+msgstr ""
+
+msgid "Service Dialog Name"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Need a valid UNC path"
+msgstr ""
+
+msgid "Incorrect UNC path"
+msgstr ""
+
+msgid "true/false"
+msgstr ""
+
+msgid "Number (Bytes)"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Date/Time"
+msgstr ""
+
+msgid "Integer"
+msgstr ""
+
+msgid "Number"
+msgstr ""
+
+msgid "Number (GB)"
+msgstr ""
+
+msgid "Number (kB)"
+msgstr ""
+
+msgid "Number (MB)"
+msgstr ""
+
+msgid "MHz"
+msgstr ""
+
+msgid "Number List"
+msgstr ""
+
+msgid "Percent"
+msgstr ""
+
+msgid "Text (REGEX)"
+msgstr ""
+
+msgid "Ruby Script"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "String List"
+msgstr ""
+
+msgid "Registry Key"
+msgstr ""
+
+msgid "Registry Key Value"
+msgstr ""
+
+msgid "Abandon changes?"
+msgstr ""
+
+msgid "API Authentication failed"
+msgstr ""
+
+msgid "Click to remove message"
+msgstr ""
+
+msgid "Enter Support Case:"
+msgstr ""
+
+msgid "Support Case must be provided to collect logs"
+msgstr ""
+
+msgid "Are you sure you want to reset this Dashboard's Widgets to the defaults?"
+msgstr ""
+
+msgid "New name?"
+msgstr ""
+
+msgid "New Folder"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Hour"
+msgstr ""
+
+msgid "Minute"
+msgstr ""
+
+msgid "Second"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Click to remove messages"
+msgstr ""
+
 msgid "Report generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
 
-msgid "Error during '%s': "
+msgid "Error during 'Validate': %{error_message}"
 msgstr ""
 
 msgid "No %s were selected to move left"
@@ -38,37 +245,47 @@ msgid ""
 "ions before proceeding."
 msgstr ""
 
+msgid "%{tenant_name} (All %{groups})"
+msgstr ""
+
+msgid "%{tenant_name} (%{group}): %{group_description}"
+msgstr ""
+
 msgid "The user is not authorized for this task or item."
 msgstr ""
 
 msgid "\"%{record}\": %{task} successfully initiated"
 msgstr ""
 
-msgid "Successfully deleted %s from the CFME Database"
+msgid "Successfully deleted Saved Report from the CFME Database"
+msgid_plural "Successfully deleted Saved Reports from the CFME Database"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Error during Saved Report delete from the CFME Database"
+msgid_plural "Error during Saved Reports delete from the CFME Database"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The selected %{label} is not in the current region"
 msgstr ""
 
-msgid "Error during %s delete from the CFME Database"
+msgid "All selected %{labels} are not in the current region"
 msgstr ""
 
-msgid "The selected %s is not in the current region"
+msgid "%{label} is not in the current region and will be skipped"
 msgstr ""
 
-msgid "All selected %s are not in the current region"
+msgid "%{labels} are not in the current region and will be skipped"
 msgstr ""
 
-msgid "%s is not in the current region and will be skipped"
+msgid "Selected %{model_name} no longer exists"
 msgstr ""
 
-msgid "%s are not in the current region and will be skipped"
+msgid "%{record_name} no longer exists in the database"
 msgstr ""
 
-msgid "Selected %s no longer exists"
-msgstr ""
-
-msgid "%s no longer exists in the database"
-msgstr ""
-
-msgid "You are not authorized to view %s"
+msgid "You are not authorized to view %{model_name} '%{resource_name}'"
 msgstr ""
 
 msgid "%{task} does not apply to at least one of the selected %{model}"
@@ -77,43 +294,34 @@ msgstr ""
 msgid "Automation Simulation has been run"
 msgstr ""
 
-msgid "Automation Error: "
+msgid "Automation Error: %{error_message}"
 msgstr ""
 
-msgid "Automate button %s has been cleared"
+msgid "%{model_name} Group Reorder cancelled"
 msgstr ""
 
-msgid "Automate button %{btn_num} has been set to %{btn_txt}"
-msgstr ""
-
-msgid "All changes have been reset"
-msgstr ""
-
-msgid "%s Group Reorder cancelled"
-msgstr ""
-
-msgid "%s Group Reorder saved"
+msgid "%{model_name} Group Reorder saved"
 msgstr ""
 
 msgid "%{model} \"%{name}\": Delete successful"
 msgstr ""
 
-msgid "'%s' can not be deleted"
+msgid "'Unassigned Buttons Group' can not be deleted"
 msgstr ""
 
 msgid "%{record} - \"%{button_text}\""
 msgstr ""
 
-msgid "Error executing: \"%s\" "
+msgid "Error executing: \"%{task_description}\" %{error_message}"
 msgstr ""
 
-msgid "\"%s\" was executed"
+msgid "\"%{task_description}\" was executed"
 msgstr ""
 
 msgid "Edit of %{model} \"%{name}\" was cancelled by the user"
 msgstr ""
 
-msgid "Add of new %s was cancelled by the user"
+msgid "Add of new %{model_name} was cancelled by the user"
 msgstr ""
 
 msgid "%s is required"
@@ -125,25 +333,49 @@ msgstr ""
 msgid "%{model} \"%{name}\" was saved"
 msgstr ""
 
+msgid "Error during 'edit': %{field_name} %{error_message}"
+msgstr ""
+
 msgid "%{model} \"%{name}\" was added"
 msgstr ""
 
-msgid "'%s' can not be edited"
+msgid "Error during 'add': %{field_name} %{error_name}"
 msgstr ""
 
-msgid "No %s were selected to move top"
+msgid "Error during 'add': %{error_message}"
 msgstr ""
 
-msgid "Select only one or consecutive %s to move to the top"
+msgid "'Unassigned Buttons Group' can not be edited"
 msgstr ""
 
-msgid "No %s were selected to move bottom"
+msgid "No fields were selected to move top"
 msgstr ""
 
-msgid "Select only one or consecutive %s to move to the bottom"
+msgid "Select only one or consecutive fields to move to the top"
 msgstr ""
 
-msgid "At least one %s must be selected"
+msgid "No fields were selected to move bottom"
+msgstr ""
+
+msgid "Select only one or consecutive fields to move to the bottom"
+msgstr ""
+
+msgid "Button Text is required"
+msgstr ""
+
+msgid "Button Image must be selected"
+msgstr ""
+
+msgid "Button Hover Text is required"
+msgstr ""
+
+msgid "Starting Process is required"
+msgstr ""
+
+msgid "Request is required"
+msgstr ""
+
+msgid "At least one Role must be selected"
 msgstr ""
 
 msgid "%{model} for \"%{record}\""
@@ -155,31 +387,31 @@ msgstr ""
 msgid "Simulation unavailable: Required Class \"System/Process\" is missing"
 msgstr ""
 
-msgid "No %s were selected to move up"
+msgid "No fields were selected to move up"
 msgstr ""
 
-msgid "Select only one or consecutive %s to move up"
+msgid "Select only one or consecutive fields to move up"
 msgstr ""
 
-msgid "No %s were selected to move down"
+msgid "No fields were selected to move down"
 msgstr ""
 
-msgid "Select only one or consecutive %s to move down"
+msgid "Select only one or consecutive fields to move down"
 msgstr ""
 
 msgid "One or more %{model} must be selected to %{task}"
 msgstr ""
 
-msgid "%s was cancelled by the user"
+msgid "Set Ownership was cancelled by the user"
 msgstr ""
 
-msgid "Ownership saved for selected %s"
+msgid "Ownership saved for selected %{object_types}"
 msgstr ""
 
-msgid "%{task} does not apply to selected %{model}"
+msgid "Set Retirement Date does not apply to selected %{model}"
 msgstr ""
 
-msgid "At least %{num} %{model} must be selected for %{action}"
+msgid "At least one %{model} must be selected for tagging"
 msgstr ""
 
 msgid "Retirement date removed"
@@ -194,22 +426,39 @@ msgstr ""
 msgid "Retirement dates set to %s"
 msgstr ""
 
+msgid "One or more %{model} must be selected to Right-Size Recommendations"
+msgstr ""
+
+msgid "Right-Size Recommendations does not apply to selected %{model}"
+msgstr ""
+
 msgid "VM Reconfigure Request was cancelled by the user"
 msgstr ""
 
 msgid "At least one option must be selected to reconfigure"
 msgstr ""
 
-msgid "Change %s value to submit reconfigure request"
+msgid "Change Memory value to submit reconfigure request"
 msgstr ""
 
-msgid "%s must be an integer"
+msgid "Memory must be an integer"
+msgstr ""
+
+msgid ""
+"Change Processor Sockets or Cores Per Socket value to submit reconfigure reque"
+"st"
 msgstr ""
 
 msgid "VM Reconfigure Request was saved"
 msgstr ""
 
-msgid "%s are required"
+msgid "%s was cancelled by the user"
+msgstr ""
+
+msgid "Client ID, Client Key and Azure Tenant ID are required"
+msgstr ""
+
+msgid "Username is required"
 msgstr ""
 
 msgid "Username must be entered if Password is entered"
@@ -218,67 +467,128 @@ msgstr ""
 msgid "Password/Verify Password do not match"
 msgstr ""
 
-msgid "%s Discovery returned: "
+msgid "At least 1 item must be selected for discovery"
+msgstr ""
+
+msgid "%{title} Discovery returned: %{error_message}"
 msgstr ""
 
 msgid "%{model}: %{task} successfully initiated"
 msgstr ""
 
-msgid "%{model} \"%{name}\": Error during '%{task}': "
+msgid "Hosts / Nodes"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
 msgstr ""
 
 msgid "%{model} \"%{name}\": %{task} successfully initiated"
 msgstr ""
 
-msgid "%{task} does not apply because you selected at least one %{model}"
+msgid "One or more %{model} must be selected to Reconfigure"
 msgstr ""
 
-msgid "%{task} does not apply because you selected at least one un-reconfigurable VM"
+msgid "Reconfigure does not apply because you selected at least one %{model}"
+msgstr ""
+
+msgid ""
+"Reconfigure does not apply because you selected at least one un-reconfigurable"
+" VM"
+msgstr ""
+
+msgid "Retire does not apply to selected %{model}"
 msgstr ""
 
 msgid "No %{model} were selected for %{task}"
 msgstr ""
 
-msgid "%s no longer exists"
+msgid "%{record} no longer exists"
+msgstr ""
+
+msgid "Error during '%{task}': %{error_message}"
 msgstr ""
 
 msgid "%{task} initiated for %{model} from the CFME Database"
 msgstr ""
 
+msgid "Error during '%s': "
+msgstr ""
+
 msgid "%{task} initiated for %{count_model} (%{controller}) from the CFME Database"
+msgstr ""
+
+msgid "At least 1 %{model} must be selected for Policy Simulation"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Error during '%{task}': %{message}"
 msgstr ""
 
 msgid "%{task} initiated for %{count_model} from the CFME Database"
 msgstr ""
 
-msgid "\"%s\": cannot be removed, has vms or hosts"
+msgid "\"%{task}\": not supported for %{hostname}"
 msgstr ""
 
-msgid "The selected %s was deleted"
+msgid "\"%{task}\": not available for %{hostname}"
 msgstr ""
 
-msgid "At least 2 %{model} must be selected for %{action}"
+msgid "Delete initiated for Datastore from the CFME Database"
+msgid_plural "Delete initiated for Datastores from the CFME Database"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "\"%{record}\": Refresh successfully initiated"
 msgstr ""
 
-msgid "No more than %{max} %{model} can be selected for %{action}"
+msgid "\"%{datastore_name}\": cannot be removed, has vms or hosts"
 msgstr ""
 
-msgid "%s Request was Submitted"
+msgid "The selected %{record} was deleted"
 msgstr ""
 
-msgid "%s Button not yet implemented"
+msgid "No %{model} were selected for deletion"
 msgstr ""
 
-msgid "Button not yet implemented"
+msgid "Delete initiated for %{count_model} from the CFME Database"
+msgstr ""
+
+msgid "At least 2 %{model} must be selected for Compare"
+msgstr ""
+
+msgid "No more than 32 %{model} can be selected for Compare"
+msgstr ""
+
+msgid "At least 2 Analyses must be selected for Drift"
+msgstr ""
+
+msgid "No more than 10 Analyses can be selected for Drift"
+msgstr ""
+
+msgid "Error during 'Provisioning': %{error_message}"
+msgstr ""
+
+msgid "Order Request was Submitted"
+msgstr ""
+
+msgid "%{button_name} Button not yet implemented"
+msgstr ""
+
+msgid "Button not yet implemented %{model}:%{action}"
 msgstr ""
 
 msgid "Editing %{model} for \"%{name}\""
 msgstr ""
 
+msgid "Tag Edit was cancelled by the user"
+msgstr ""
+
 msgid "No Class found for explorer tree node id '%s'"
 msgstr ""
 
-msgid "Last selected %s no longer exists"
+msgid "Last selected %{record_name} no longer exists"
+msgstr ""
+
+msgid "Button not yet implemented"
 msgstr ""
 
 msgid ""
@@ -294,7 +604,19 @@ msgstr ""
 msgid "Error details: %s"
 msgstr ""
 
-msgid "%{model} \"%{name}\" was successfully loaded"
+msgid "Search Name is required"
+msgstr ""
+
+msgid "%{model} search \"%{name}\" was saved"
+msgstr ""
+
+msgid "%{model} search \"%{name}\" was successfully loaded"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Error during 'delete': %{error_message}"
+msgstr ""
+
+msgid "%{model} search \"%{name}\": Delete successful"
 msgstr ""
 
 msgid "The current search details have been reset"
@@ -306,19 +628,49 @@ msgstr ""
 msgid "The selected Filter can not be set as Default because it requires user input"
 msgstr ""
 
-msgid "A %s must be chosen to commit this expression element"
+msgid "A field must be chosen to commit this expression element"
 msgstr ""
 
-msgid "%{field} Value Error: %{msg}"
+msgid "Field Value Error: %{msg}"
 msgstr ""
 
-msgid "A %s must be entered to commit this expression element"
+msgid "A tag category must be chosen to commit this expression element"
+msgstr ""
+
+msgid "A tag value must be chosen to commit this expression element"
+msgstr ""
+
+msgid "A registry key name must be entered to commit this expression element"
+msgstr ""
+
+msgid "A registry value name must be entered to commit this expression element"
+msgstr ""
+
+msgid "Registry Value Error: %{msg}"
+msgstr ""
+
+msgid "A find field must be chosen to commit this expression element"
+msgstr ""
+
+msgid "A check field must be chosen to commit this expression element"
 msgstr ""
 
 msgid "The check count value must be an integer to commit this expression element"
 msgstr ""
 
+msgid "Find Value Error: %{msg}"
+msgstr ""
+
+msgid "Check Value Error: %{msg}"
+msgstr ""
+
 msgid "Select an expression element type"
+msgstr ""
+
+msgid "Expression element type must be selected"
+msgstr ""
+
+msgid "Add of new %s was cancelled by the user"
 msgstr ""
 
 msgid "Provision %s was cancelled by the user"
@@ -334,7 +686,7 @@ msgid ""
 "eady"
 msgstr ""
 
-msgid "Cannot create Request Info, error: "
+msgid "Cannot create Request Info, error: %{error_message}"
 msgstr ""
 
 msgid ""
@@ -366,22 +718,52 @@ msgstr ""
 msgid "Use the Browse button to locate an Upload file"
 msgstr ""
 
+msgid "One or more %{model} must be selected to Smart Tagging"
+msgstr ""
+
+msgid "Error during 'Save Tags': %{error_message}"
+msgstr ""
+
 msgid "Tag edits were successfully saved"
+msgstr ""
+
+msgid "At least one %s must be selected"
 msgstr ""
 
 msgid "No events available for this timeline"
 msgstr ""
 
-msgid "Error building timeline "
+msgid "Error building timeline %{error_message}"
 msgstr ""
 
 msgid "No records found for this timeline"
 msgstr ""
 
+msgid "* You are not authorized to view %{children} on this %{model}"
+msgstr ""
+
+msgid "Key Pair"
+msgstr ""
+
+msgid "Add of new %{model} was cancelled by the user"
+msgstr ""
+
 msgid "Adding a new %s"
 msgstr ""
 
-msgid "The selected %s were deleted"
+msgid "The selected %{record} were deleted"
+msgstr ""
+
+msgid "Add of new Catalog Bundle was cancelled by the user"
+msgstr ""
+
+msgid "Name is required"
+msgstr ""
+
+msgid "Resource must be selected"
+msgstr ""
+
+msgid "Provisioning Entry Point is required"
 msgstr ""
 
 msgid "Custom Image successfully removed"
@@ -402,7 +784,10 @@ msgstr ""
 msgid "No Ordering Dialog is available"
 msgstr ""
 
-msgid "Orchestration template \"%s\" is read-only and cannot be edited."
+msgid "Error during 'Catalog Edit': %{error_message}"
+msgstr ""
+
+msgid "Orchestration template \"%{name}\" is read-only and cannot be edited."
 msgstr ""
 
 msgid "Editing %s"
@@ -411,10 +796,13 @@ msgstr ""
 msgid "Copying %s"
 msgstr ""
 
-msgid "Orchestration template \"%s\" is read-only and cannot be deleted."
+msgid "Orchestration template \"%{name}\" is read-only and cannot be deleted."
 msgstr ""
 
-msgid "Orchestration Template \"%s\" was deleted."
+msgid "Error during 'Orchestration Template Deletion': %{error_message}"
+msgstr ""
+
+msgid "Orchestration Template \"%{name}\" was deleted."
 msgstr ""
 
 msgid "Adding a new Orchestration Template"
@@ -438,23 +826,29 @@ msgstr ""
 msgid "New template content cannot be empty"
 msgstr ""
 
+msgid "Error during 'Orchestration Template Edit': %{error_message}"
+msgstr ""
+
 msgid "Copy of %{model} \"%{name}\" was cancelled by the user"
 msgstr ""
 
 msgid ""
-"Unable to create a new template copy \"%s\": old and new template content have t"
-"o differ."
+"Unable to create a new template copy \"%{name}\": old and new template content h"
+"ave to differ."
 msgstr ""
 
 msgid ""
-"Unable to create a new template copy \"%s\": new template content cannot be empt"
-"y."
+"Unable to create a new template copy \"%{name}\": new template content cannot be"
+" empty."
+msgstr ""
+
+msgid "Error during 'Orchestration Template Copy': %{error_message}"
 msgstr ""
 
 msgid "Creation of a new Orchestration Template was cancelled by the user"
 msgstr ""
 
-msgid "\"%s\" is not a valid Orchestration Template type"
+msgid "\"%{type}\" is not a valid Orchestration Template type"
 msgstr ""
 
 msgid ""
@@ -462,16 +856,24 @@ msgid ""
 "mpty"
 msgstr ""
 
+msgid "Error during 'Orchestration Template creation': %{error_message}"
+msgstr ""
+
 msgid "Creation of a new Service Dialog was cancelled by the user"
 msgstr ""
 
-msgid "Error when creating a Service Dialog from Orchestration Template: "
+msgid ""
+"Error when creating a Service Dialog from Orchestration Template: %{error_mess"
+"age}"
 msgstr ""
 
-msgid "Service Dialog \"%s\" was successfully created"
+msgid "Service Dialog \"%{name}\" was successfully created"
 msgstr ""
 
 msgid "Editing %{model} \"%{name}\""
+msgstr ""
+
+msgid "Error during 'Resource Add': %{error_message}"
 msgstr ""
 
 msgid "All %s"
@@ -486,31 +888,43 @@ msgstr ""
 msgid "Dialog has to be set if Display in Catalog is chosen"
 msgstr ""
 
+msgid "Description is required"
+msgstr ""
+
 msgid "Error: Record no longer exists in the database"
 msgstr ""
 
-msgid "No %s were selected for deletion"
+msgid "No %{records} were selected for deletion"
+msgstr ""
+
+msgid "The selected %{records} were deleted"
 msgstr ""
 
 msgid "%{typ} %{model}"
 msgstr ""
 
-msgid "%s saved"
+msgid "Error during 'Rate assignments': %{error_message}"
+msgstr ""
+
+msgid "Rate Assignments saved"
 msgstr ""
 
 msgid "Report is not authorized for the logged in user"
 msgstr ""
 
-msgid "Saved Report \"%s\" not found, Schedule may have failed"
+msgid "Saved Report \"%{name}\" not found, Schedule may have failed"
 msgstr ""
 
 msgid "%{typ} %{model} \"%{name}\""
 msgstr ""
 
-msgid "Selected %s Report no longer exists"
+msgid "Selected Saved Chargeback Report no longer exists"
 msgstr ""
 
-msgid "User Interface settings saved for User %s"
+msgid "Selected Chargeback Report no longer exists"
+msgstr ""
+
+msgid "User Interface settings saved for User %{name}"
 msgstr ""
 
 msgid "User Interface settings saved for this session"
@@ -532,6 +946,18 @@ msgid "\"%{name}\": Global %{model} cannot be deleted"
 msgstr ""
 
 msgid "\"%{name}\": In use by %{rep_count}, cannot be deleted"
+msgstr ""
+
+msgid "Add of new %{record} was cancelled by the user"
+msgstr ""
+
+msgid "At least one Day must be selected"
+msgstr ""
+
+msgid "At least one Hour must be selected"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Error during 'save': %{error_message}"
 msgstr ""
 
 msgid "Visual"
@@ -558,6 +984,9 @@ msgstr ""
 msgid "Press your browser's Back button or click a tab to continue"
 msgstr ""
 
+msgid "Error building timeline  %{error_message}"
+msgstr ""
+
 msgid "Credential validation was successful"
 msgstr ""
 
@@ -579,6 +1008,15 @@ msgstr ""
 msgid "All %s with %s"
 msgstr ""
 
+msgid "Type is required"
+msgstr ""
+
+msgid "Realm is required"
+msgstr ""
+
+msgid "Credential validation was not successful: %{details}"
+msgstr ""
+
 msgid "%s must be numeric"
 msgstr ""
 
@@ -590,6 +1028,21 @@ msgstr ""
 msgid ""
 "The Host Default VNC Port Range ending port must be equal to or higher than th"
 "e starting point"
+msgstr ""
+
+msgid "No %s were selected for deletion"
+msgstr ""
+
+msgid "No %{model} were selected for scanning"
+msgstr ""
+
+msgid "Analysis initiated for %{count_model} from the CFME Database"
+msgstr ""
+
+msgid "No %{model} were selected for refresh"
+msgstr ""
+
+msgid "Refresh initiated for %{count_model} from the CFME Database"
 msgstr ""
 
 msgid "Scale Infrastructure Provider"
@@ -628,9 +1081,6 @@ msgstr ""
 msgid "Configuration files of %s"
 msgstr ""
 
-msgid "Services"
-msgstr ""
-
 msgid "Running system services of %s"
 msgstr ""
 
@@ -646,10 +1096,16 @@ msgstr ""
 msgid "Credentials/Settings saved successfully"
 msgstr ""
 
+msgid "Middleware Servers"
+msgstr ""
+
 msgid "Invalid button action."
 msgstr ""
 
 msgid "%s domain: Current version - %s, Available version - %s"
+msgstr ""
+
+msgid "Error during 'save': %{error_message}"
 msgstr ""
 
 msgid "Data validated successfully"
@@ -676,16 +1132,34 @@ msgstr ""
 msgid "Priority Order was saved"
 msgstr ""
 
-msgid "Copy selected %s was saved"
+msgid "Copy does not apply to selected %{model}"
 msgstr ""
 
-msgid "Copy %s was cancelled by the user"
+msgid "Error during '%{record} copy': %{error_message}"
+msgstr ""
+
+msgid "Copy selected %{record} was saved"
+msgstr ""
+
+msgid "Copy %{record} was cancelled by the user"
 msgstr ""
 
 msgid "Read Only %{model} \"%{name}\" cannot be deleted"
 msgstr ""
 
 msgid "\"%{field}\" %{model} cannot be deleted"
+msgstr ""
+
+msgid "No %{name} were selected to move up"
+msgstr ""
+
+msgid "Select only one or consecutive %{name} to move up"
+msgstr ""
+
+msgid "No %{name} were selected to move down"
+msgstr ""
+
+msgid "Select only one or consecutive %{name} to move down"
 msgstr ""
 
 msgid "Read Only %{model} \"%{name}\" cannot be edited"
@@ -720,25 +1194,73 @@ msgstr ""
 msgid "Service dialog import cancelled"
 msgstr ""
 
+msgid "At least 1 item must be selected for export"
+msgstr ""
+
+msgid "All Object Types"
+msgstr ""
+
+msgid "%{typ} Button Groups"
+msgstr ""
+
+msgid "%{typ} Button Group \"Unassigned Buttons\""
+msgstr ""
+
+msgid "Host / Node"
+msgstr ""
+
+msgid "Cluster / Deployment Role"
+msgstr ""
+
+msgid "Button \"%{name}\""
+msgstr ""
+
+msgid "%{typ} Button Group \"%{name}\""
+msgstr ""
+
 msgid "%{field} '%{value}' is already in use"
 msgstr ""
 
-msgid "%{field1} and %{field2} fields can't be blank"
+msgid "Value and Description fields can't be blank"
+msgstr ""
+
+msgid "Dialog Label is required"
+msgstr ""
+
+msgid "Tab Label is required"
+msgstr ""
+
+msgid "Box Label is required"
+msgstr ""
+
+msgid "Element Label is required"
 msgstr ""
 
 msgid "Entry Point must be given."
 msgstr ""
 
-msgid "%s must be alphanumeric characters and underscores without spaces"
+msgid "Element Name must be alphanumeric characters and underscores without spaces"
 msgstr ""
 
-msgid "%s must not be 'action' or 'controller'"
+msgid "Element Name must not be 'action' or 'controller'"
+msgstr ""
+
+msgid "Element Type is required"
 msgstr ""
 
 msgid "Dropdown elements require some entries"
 msgstr ""
 
+msgid "All %{dialogs}"
+msgstr ""
+
 msgid "Default %{model} \"%{name}\" can not be edited"
+msgstr ""
+
+msgid "Dialog Type must be selected"
+msgstr ""
+
+msgid "Syntax error in YAML file: %{error_message}"
 msgstr ""
 
 msgid "Logs for this CFME Server are not available for viewing"
@@ -788,16 +1310,28 @@ msgstr ""
 msgid "%s cancelled by user"
 msgstr ""
 
+msgid "At least %{num} %{model} must be selected for %{action}"
+msgstr ""
+
 msgid "Import not available due to conflicts"
 msgstr ""
 
 msgid "Press commit to Import"
 msgstr ""
 
+msgid "%s no longer exists"
+msgstr ""
+
 msgid "All %{typ} %{model}"
 msgstr ""
 
 msgid " %s Assignments"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move up"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move down"
 msgstr ""
 
 msgid "No %s selected to set to Synchronous"
@@ -836,7 +1370,13 @@ msgstr ""
 msgid "Alert Profile \"%s\" assignments succesfully saved"
 msgstr ""
 
+msgid "The selected %s was deleted"
+msgstr ""
+
 msgid "A valid expression must be present"
+msgstr ""
+
+msgid "%s must be an integer"
 msgstr ""
 
 msgid "At least one %s must be configured"
@@ -862,7 +1402,7 @@ msgstr ""
 msgid "No VMs match the selection criteria"
 msgstr ""
 
-msgid "Policy Simulation generation returned: "
+msgid "Policy Simulation generation returned: %{error_message}"
 msgstr ""
 
 msgid "Request %s was cancelled by the user"
@@ -871,7 +1411,13 @@ msgstr ""
 msgid "Request \"%{name}\" was %{task}"
 msgstr ""
 
-msgid "Error retrieving LDAP info: "
+msgid "Error retrieving LDAP info: %{error_message}"
+msgstr ""
+
+msgid "The selected %s were deleted"
+msgstr ""
+
+msgid "%{model} \"%{name}\": Error during '%{task}': "
 msgstr ""
 
 msgid "Finished Task cannot be cancelled"
@@ -954,7 +1500,7 @@ msgid ""
 "is scope"
 msgstr ""
 
-msgid "Log collection error returned: "
+msgid "Log collection error returned: %{error_message}"
 msgstr ""
 
 msgid "Log collection for CFME %{object_type} %{name} has been initiated"
@@ -988,6 +1534,12 @@ msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr ""
 
 msgid "User Group Sequence was saved"
+msgstr ""
+
+msgid "No %s were selected to move up"
+msgstr ""
+
+msgid "No %s were selected to move down"
 msgstr ""
 
 msgid "%s must be entered to perform LDAP Group Look Up"
@@ -1041,7 +1593,7 @@ msgstr ""
 msgid "Amazon Settings validation was successful"
 msgstr ""
 
-msgid "Error during sending test email: "
+msgid "Error during sending test email: %{class_name}, %{error_message}"
 msgstr ""
 
 msgid "The test email is being delivered, check \"%s\" to verify it was successful"
@@ -1114,10 +1666,10 @@ msgstr ""
 msgid "Error when adding a new schedule: "
 msgstr ""
 
-msgid "No %s were selected to be enabled"
+msgid "The selected %s were enabled"
 msgstr ""
 
-msgid "No %s were selected to be disabled"
+msgid "The selected %s were disabled"
 msgstr ""
 
 msgid "Depot Settings successfuly validated"
@@ -1163,10 +1715,13 @@ msgstr ""
 msgid "%{action} %{model} was cancelled by the user"
 msgstr ""
 
+msgid "All %s Providers"
+msgstr ""
+
 msgid "All %s Configured Systems"
 msgstr ""
 
-msgid "All %s Providers"
+msgid "All Configured Systems"
 msgstr ""
 
 msgid "Edit Tags for Configured Systems"
@@ -1202,6 +1757,9 @@ msgstr ""
 msgid "Error: the file uploaded contains no widgets"
 msgstr ""
 
+msgid "Commit"
+msgstr ""
+
 msgid "Widgets imported successfully"
 msgstr ""
 
@@ -1209,6 +1767,28 @@ msgid "Error: Widget import file upload expired"
 msgstr ""
 
 msgid "Widget import cancelled"
+msgstr ""
+
+msgid "Saved Reports"
+msgstr ""
+
+msgid "Reports"
+msgstr ""
+
+msgid "Schedules"
+msgstr ""
+
+#, fuzzy
+msgid "Dashboards"
+msgstr "Wachtwoord"
+
+msgid "Dashboard Widgets"
+msgstr ""
+
+msgid "Edit Report Menus"
+msgstr ""
+
+msgid "Import/Export"
 msgstr ""
 
 msgid "Editing %{model} sequence for \"%{name}\""
@@ -1305,7 +1885,16 @@ msgstr ""
 msgid "No %s were selected to move to the top"
 msgstr ""
 
+msgid "Select only one or consecutive %s to move to the top"
+msgstr ""
+
 msgid "No %s were selected to move to the bottom"
+msgstr ""
+
+msgid "Select only one or consecutive %s to move to the bottom"
+msgstr ""
+
+msgid "Saved Report \"%s\" not found, Schedule may have failed"
 msgstr ""
 
 msgid "No Report Schedules were selected to be Run now"
@@ -1317,10 +1906,10 @@ msgstr ""
 msgid "The selected Schedules have been queued to run"
 msgstr ""
 
-msgid "The selected %s were enabled"
+msgid "No %s were selected to be enabled"
 msgstr ""
 
-msgid "The selected %s were disabled"
+msgid "No %s were selected to be disabled"
 msgstr ""
 
 msgid "Widget content generation error: "
@@ -1355,6 +1944,9 @@ msgid ""
 "inistrator"
 msgstr ""
 
+msgid "Button not yet implemented %{model_name}:%{action_name}"
+msgstr ""
+
 msgid "Set Ownership for %s"
 msgstr ""
 
@@ -1364,7 +1956,13 @@ msgstr ""
 msgid "Console access failed: proxy errror"
 msgstr ""
 
+msgid "Last selected %s no longer exists"
+msgstr ""
+
 msgid "Create Snapshot for %{model} \"%{name}\" was started"
+msgstr ""
+
+msgid "%s saved"
 msgstr ""
 
 msgid "Add VM \"%s\" to a Service was cancelled by the user"
@@ -1381,6 +1979,126 @@ msgstr ""
 
 msgid "Console access failed: %s"
 msgstr ""
+
+msgid "Advanced Setting"
+msgid_plural "Advanced Settings"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Number of Disk"
+msgid_plural "Number of Disks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Drift History"
+msgid_plural "Drift History"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Event Log"
+msgid_plural "Event Logs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Filesystem Driver"
+msgid_plural "Filesystem Drivers"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Filesystem"
+msgid_plural "Filesystems"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Group"
+msgid_plural "Groups"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Guest Application"
+msgid_plural "Guest Applications"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Container"
+msgid_plural "Container"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Kernel Driver"
+msgid_plural "Kernel Drivers"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Init Process"
+msgid_plural "Init Processes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "OS Info"
+msgid_plural "OS Info"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Parent VM"
+msgid_plural "Parent VM"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Patch"
+msgid_plural "Patches"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Running Process"
+msgid_plural "Running Processes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Registry Item"
+msgid_plural "Registry Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Resource"
+msgid_plural "Resources"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Scan History"
+msgid_plural "Scan History"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Snapshot"
+msgid_plural "Snapshots"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "User"
+msgid_plural "Users"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Genealogy"
+msgid_plural "Genealogy"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Win32 Service"
+msgid_plural "Win32 Services"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Compare %s"
 msgstr ""
@@ -1427,10 +2145,37 @@ msgstr ""
 msgid "No child VMs to move right, no action taken"
 msgstr ""
 
+msgid "For more information, visit the %s documentation."
+msgstr ""
+
 msgid "Show this %{entity_name}'s parent %{linked_entity_name}"
 msgstr ""
 
 msgid "Show %{plural_linked_name}"
+msgstr ""
+
+msgid "Host"
+msgstr ""
+
+msgid "Hosts"
+msgstr ""
+
+msgid "Node"
+msgstr ""
+
+msgid "Cluster"
+msgstr ""
+
+msgid "Clusters"
+msgstr ""
+
+msgid "Deployment Role"
+msgstr ""
+
+msgid "Deployment Roles"
+msgstr ""
+
+msgid "Clusters / Deployment Roles"
 msgstr ""
 
 msgid "Status = %s"
@@ -1448,16 +2193,173 @@ msgstr ""
 msgid "Orchestration Templates that are in use cannot be removed"
 msgstr ""
 
-msgid "Users are only allowed to delete their own requests"
+msgid "Disk I/O"
 msgstr ""
 
-msgid "%s requests cannot be deleted"
+msgid "Fixed"
 msgstr ""
 
-msgid "Expanded View"
+msgid "Network I/O"
 msgstr ""
 
-msgid "Compressed View"
+msgid "Storage"
+msgstr ""
+
+msgid "Azure"
+msgstr ""
+
+msgid "Amazon"
+msgstr ""
+
+msgid "ESX"
+msgstr ""
+
+msgid "Hyper-V"
+msgstr ""
+
+msgid "IPMI"
+msgstr ""
+
+msgid "KVM"
+msgstr ""
+
+msgid "MS vCenter"
+msgstr ""
+
+msgid "Red Hat Enterprise Virtualization Manager"
+msgstr ""
+
+msgid "Microsoft System Center VMM"
+msgstr ""
+
+msgid "VMware vCenter"
+msgstr ""
+
+msgid "VMware Server"
+msgstr ""
+
+msgid "Check Compliance"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Restart Guest"
+msgstr ""
+
+msgid "Analysis"
+msgstr ""
+
+msgid "Policy"
+msgstr ""
+
+msgid "Edit Tags for this Availability Zone"
+msgstr ""
+
+msgid "Edit Tags"
+msgstr ""
+
+msgid "Monitoring"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Availability Zone"
+msgstr ""
+
+msgid "Utilization"
+msgstr ""
+
+msgid "Show Timelines for this #{ui_lookup(:table=>\"availability_zone\")}"
+msgstr ""
+
+msgid "Timelines"
+msgstr ""
+
+msgid "Edit Tags for the selected Availability Zones"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download this report in text format"
+msgstr ""
+
+msgid "Download as Text"
+msgstr ""
+
+msgid "Download this report in CSV format"
+msgstr ""
+
+msgid "Download as CSV"
+msgstr ""
+
+msgid "Download this report in PDF format"
+msgstr ""
+
+msgid "Download as PDF"
+msgstr ""
+
+msgid "Show full screen report"
+msgstr ""
+
+msgid ""
+"This will show the entire report (all rows) in your browser.  Do you want to p"
+"roceed?"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
+msgid "Edit this Chargeback Rate"
+msgstr ""
+
+msgid "Copy this Chargeback Rate"
+msgstr ""
+
+msgid "Remove this Chargeback Rate from the VMDB"
+msgstr ""
+
+msgid "Remove from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Chargeback Rate will be permanently removed from the Virtual Man"
+"agement Database.  Are you sure you want to remove this Chargeback Rate?"
+msgstr ""
+
+msgid "Add a new Chargeback Rate"
+msgstr ""
+
+msgid "Edit the selected Chargeback Rate"
+msgstr ""
+
+msgid "Copy the selected Chargeback Rate to a new Chargeback Rate"
+msgstr ""
+
+msgid "Remove selected Chargeback Rates from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Chargeback Rate will be permanently removed from the Vir"
+"tual Management Database.  Are you sure you want to remove the selected Charge"
+"back Rates?"
+msgstr ""
+
+msgid "Edit tags for this Cloud Tenant"
+msgstr ""
+
+msgid "Edit tags for the selected items"
+msgstr ""
+
+msgid "Edit tags for this #{ui_lookup(:table=>\"cloud_volumes\")}"
+msgstr ""
+
+msgid "All attributes"
+msgstr ""
+
+msgid "Attributes with different values"
+msgstr ""
+
+msgid "Attributes with same values"
 msgstr ""
 
 msgid "Details Mode"
@@ -1466,10 +2368,976 @@ msgstr ""
 msgid "Exists Mode"
 msgstr ""
 
-msgid "Large Trees"
+msgid "Expanded View"
 msgstr ""
 
-msgid "Small Trees"
+msgid "Compressed View"
+msgstr ""
+
+msgid "Download comparison report in text format"
+msgstr ""
+
+msgid "Download comparison report in CSV format"
+msgstr ""
+
+msgid "Download comparison report in PDF format"
+msgstr ""
+
+msgid "Edit this Condition"
+msgstr ""
+
+msgid "Copy this Condition to a new Condition"
+msgstr ""
+
+msgid ""
+"Copy this Condition to a new Condition assigned to Policy [#{@condition_policy"
+".description}]"
+msgstr ""
+
+msgid "Delete this #{ui_lookup(:model=>@condition.towhat)} Condition"
+msgstr ""
+
+msgid ""
+"Are you sure you want to delete this #{ui_lookup(:model=>@condition.towhat)} C"
+"ondition?"
+msgstr ""
+
+msgid "Remove this Condition from Policy [#{@condition_policy.description}]"
+msgstr ""
+
+msgid ""
+"Are you sure you want to remove this Condition from Policy [#{@condition_polic"
+"y.description}]?"
+msgstr ""
+
+msgid ""
+"Add a New #{@sb[:folder].upcase == \"VM\" ? \"VM\" : ui_lookup(:model=>@sb[:folder"
+"])} Condition"
+msgstr ""
+
+msgid "Refresh relationships for all items related to this Provider"
+msgstr ""
+
+msgid "Refresh Relationships and Power states"
+msgstr ""
+
+msgid "Refresh relationships for all items related to this Provider?"
+msgstr ""
+
+msgid "Edit this Provider"
+msgstr ""
+
+msgid "Remove this Provider from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Provider and ALL of their components will be permanently"
+" removed from the Virtual Management Database.  Are you sure you want to remov"
+"e this Provider?"
+msgstr ""
+
+msgid "Lifecycle"
+msgstr ""
+
+msgid "Provision Configured Systems"
+msgstr ""
+
+msgid "Edit Tags for this Configured System"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container\")} and ALL of its components will"
+" be permanently removed from the Virtual Management Database.  Are you sure yo"
+"u want to remove this #{ui_lookup(:table=>\"container\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container\")}"
+msgstr ""
+
+msgid "Show Timelines for this Container"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Container"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_group\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_group\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_group\")} and ALL of its component"
+"s will be permanently removed from the Virtual Management Database.  Are you s"
+"ure you want to remove this #{ui_lookup(:table=>\"container_group\")}?"
+msgstr ""
+
+msgid "Show Timelines for this Group"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Group"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_group\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container_group\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container_group\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container_group\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"container_groups\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"container_groups\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"container_groups\")} and ALL of the"
+"ir components will be permanently removed from the Virtual Management Database"
+".  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"containe"
+"r_groups\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_groups\")}"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this item"
+msgstr ""
+
+msgid "Perform SmartState Analysis"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this item?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_image\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container_image_registry\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container_image_registry\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container_image_registry\")}"
+msgstr ""
+
+msgid ""
+"Remove selected #{ui_lookup(:tables=>\"container_image_registries\")} from the V"
+"MDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"container_image_registries\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"container_image_registries\")} and "
+"ALL of their components will be permanently removed from the Virtual Managemen"
+"t Database.  Are you sure you want to remove the selected #{ui_lookup(:tables="
+">\"container_image_registries\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_image_registries\")}"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_image_registry\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_image_registry\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_image_registry\")} and ALL of its "
+"components will be permanently removed from the Virtual Management Database.  "
+"Are you sure you want to remove this #{ui_lookup(:table=>\"container_image_regi"
+"stry\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_image_registry\")}"
+msgstr ""
+
+msgid "Perform SmartState Analysis on the selected items"
+msgstr ""
+
+msgid "Perform SmartState Analysis on the selected items?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_images\")}"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_node\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_node\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_node\")} and ALL of its components"
+" will be permanently removed from the Virtual Management Database.  Are you su"
+"re you want to remove this #{ui_lookup(:table=>\"container_node\")}?"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Node"
+msgstr ""
+
+msgid "Show Timelines for this Node"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_node\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container_node\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container_node\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container_node\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"container_nodes\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"container_nodes\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"container_nodes\")} and ALL of thei"
+"r components will be permanently removed from the Virtual Management Database."
+"  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"container"
+"_nodes\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_nodes\")}"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_project\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_project\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_project\")} and ALL of its compone"
+"nts will be permanently removed from the Virtual Management Database.  Are you"
+" sure you want to remove this #{ui_lookup(:table=>\"container_project\")}?"
+msgstr ""
+
+msgid "Show Timelines for this Project"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Project"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_project\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container_service\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container_service\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container_service\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"container_services\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"container_services\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"container_services\")} and ALL of t"
+"heir components will be permanently removed from the Virtual Management Databa"
+"se.  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"contai"
+"ner_services\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_projects\")}"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_replicator\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_replicator\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_replicator\")} and ALL of its comp"
+"onents will be permanently removed from the Virtual Management Database.  Are "
+"you sure you want to remove this #{ui_lookup(:table=>\"container_replicator\")}?"
+msgstr ""
+
+msgid "Show Timelines for this Replicator"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Replicator"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_replicator\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container_replicator\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container_replicator\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container_replicator\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"container_replicators\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"container_replicators\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"container_replicators\")} and ALL o"
+"f their components will be permanently removed from the Virtual Management Dat"
+"abase.  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"con"
+"tainer_replicators\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_replicators\")}"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_route\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_route\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_route\")} and ALL of its component"
+"s will be permanently removed from the Virtual Management Database.  Are you s"
+"ure you want to remove this #{ui_lookup(:table=>\"container_route\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_route\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container_project\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container_project\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container_project\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"container_projects\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"container_project\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"container_projects\")} and ALL of t"
+"heir components will be permanently removed from the Virtual Management Databa"
+"se.  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"contai"
+"ner_projects\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_routes\")}"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"container_service\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"container_service\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"container_service\")} and ALL of its compone"
+"nts will be permanently removed from the Virtual Management Database.  Are you"
+" sure you want to remove this #{ui_lookup(:table=>\"container_service\")}?"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Service"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_service\")}"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"container_services\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"container\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"container\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"container\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"containers\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"containers\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"containers\")} and ALL of their com"
+"ponents will be permanently removed from the Virtual Management Database.  Are"
+" you sure you want to remove the selected #{ui_lookup(:tables=>\"containers\")}?"
+msgstr ""
+
+msgid "Edit Tags for selected #{ui_lookup(:tables=>\"container\")}"
+msgstr ""
+
+msgid "Edit this Button"
+msgstr ""
+
+msgid "Remove this Button"
+msgstr ""
+
+msgid ""
+"Warning: This Button will be permanently removed from the Virtual Management D"
+"atabase.  Are you sure you want to remove this Button?"
+msgstr ""
+
+msgid "Simulate using Button details"
+msgstr ""
+
+msgid "Simulate"
+msgstr ""
+
+msgid "Add a new Button Group"
+msgstr ""
+
+msgid "Add a new Button"
+msgstr ""
+
+msgid "Reorder #{x_active_tree == :ab_tree ? \"Buttons Groups\" : \"Buttons and Groups\"}"
+msgstr ""
+
+msgid "Reorder"
+msgstr ""
+
+msgid "Edit this Button Group"
+msgstr ""
+
+msgid "Remove this Button Group"
+msgstr ""
+
+msgid ""
+"Warning: The selected Button Group will be permanently removed.  Are you sure "
+"you want to remove the selected Button Group?"
+msgstr ""
+
+msgid "Copy this Customization Template"
+msgstr ""
+
+msgid "Edit this Customization Template"
+msgstr ""
+
+msgid "Remove this Customization Template from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Customization Template will be permanently removed from the Virt"
+"ual Management Database.  Are you sure you want to remove this Customization T"
+"emplate?"
+msgstr ""
+
+msgid "Add a New Customization Template"
+msgstr ""
+
+msgid "Select a single Customization Templates to copy"
+msgstr ""
+
+msgid "Copy Selected Customization Templates"
+msgstr ""
+
+msgid "Select a single Customization Templates to edit"
+msgstr ""
+
+msgid "Edit Selected Customization Templates"
+msgstr ""
+
+msgid "Remove selected Customization Templates from the VMDB"
+msgstr ""
+
+msgid "Remove Customization Templates from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Customization Templates will be permanently removed from"
+" the Virtual Management Database.  Are you sure you want to remove the selecte"
+"d Customization Templates?"
+msgstr ""
+
+#, fuzzy
+msgid "Dashboard View"
+msgstr "Wachtwoord"
+
+msgid "Summary View"
+msgstr ""
+
+msgid "Reload Current Display"
+msgstr ""
+
+msgid "Delete Server #{@record.name} [#{@record.id}]"
+msgstr ""
+
+msgid "Do you want to delete Server #{@record.name} [#{@record.id}]?"
+msgstr ""
+
+msgid ""
+"Start the #{@record.server_role.description} Role on Server #{@record.miq_serv"
+"er.name} [#{@record.miq_server.id}]"
+msgstr ""
+
+#, fuzzy
+msgid "Start Role"
+msgstr "Gebruikersnaam"
+
+msgid ""
+"Start the #{@record.server_role.description} Role on Server #{@record.miq_serv"
+"er.name} [#{@record.miq_server.id}]?"
+msgstr ""
+
+msgid ""
+"Suspend the #{@record.server_role.description} Role on Server #{@record.miq_se"
+"rver.name} [#{@record.miq_server.id}]"
+msgstr ""
+
+#, fuzzy
+msgid "Suspend Role"
+msgstr "Gebruikersnaam"
+
+msgid ""
+"Suspend the #{@record.server_role.description} Role on Server #{@record.miq_se"
+"rver.name} [#{@record.miq_server.id}]?"
+msgstr ""
+
+msgid ""
+"Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to seconda"
+"ry for the #{@record.server_role.description} Role"
+msgstr ""
+
+msgid "Demote Server"
+msgstr ""
+
+msgid ""
+"Do you want to demote this Server to secondary?  This will leave no primary Se"
+"rver for this Role."
+msgstr ""
+
+msgid ""
+"Promote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to primar"
+"y for the #{@record.server_role.description} Role"
+msgstr ""
+
+msgid "Promote Server"
+msgstr ""
+
+msgid ""
+"Do you want to promote this Server to primary?  This will replace any existing"
+" primary Server for this Role."
+msgstr ""
+
+msgid "Reload current workers display"
+msgstr ""
+
+msgid "Reload the Audit Log Display"
+msgstr ""
+
+msgid "Download the Entire Audit Log File"
+msgstr ""
+
+msgid "Reload the EVM Log Display"
+msgstr ""
+
+msgid "Download the Entire EVM Log File"
+msgstr ""
+
+msgid "Reload the #{@sb[:rails_log]} Log Display"
+msgstr ""
+
+msgid "Download the Entire #{@sb[:rails_log]} Log File"
+msgstr ""
+
+msgid "Collect Logs"
+msgstr ""
+
+msgid "Collect"
+msgstr ""
+
+msgid "Collect the current logs from the selected #{ui_lookup(:table=>\"miq_servers\")}"
+msgstr ""
+
+msgid "Collect current logs"
+msgstr ""
+
+msgid "Collect all logs from the selected #{ui_lookup(:table=>\"miq_servers\")}"
+msgstr ""
+
+msgid "Collect all logs"
+msgstr ""
+
+msgid ""
+"Edit the Log Depot settings for the selected #{ui_lookup(:table=>\"miq_servers\""
+")}"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Restart server"
+msgstr ""
+
+msgid "Warning: Server will be restarted, do you want to continue?"
+msgstr ""
+
+msgid "Select a worker to restart"
+msgstr ""
+
+msgid "Restart selected worker"
+msgstr ""
+
+msgid "Warning: Selected node will be restarted, do you want to continue?"
+msgstr ""
+
+msgid "Collect the current logs from the selected #{ui_lookup(:table=>\"zone\")}"
+msgstr ""
+
+msgid "Collect all logs from the selected #{ui_lookup(:table=>\"zone\")}"
+msgstr ""
+
+msgid "Edit the Log Depot settings for the selected #{ui_lookup(:table=>\"zone\")}"
+msgstr ""
+
+msgid "Edit this Dialog"
+msgstr ""
+
+msgid "Copy this Dialog"
+msgstr ""
+
+msgid "Remove this Dialog from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Dialog will be permanently removed from the Virtual Management D"
+"atabase.  Are you sure you want to remove this Dialog?"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Add a new Tab to this Dialog"
+msgstr ""
+
+msgid "Add a new Box to this Tab"
+msgstr ""
+
+msgid "Add a new Element to this Box"
+msgstr ""
+
+msgid "Discard this new #{@sb[:node_typ].titleize}"
+msgstr ""
+
+msgid "Delete selected #{@sb[:txt]}"
+msgstr ""
+
+msgid "Add a new Dialog"
+msgstr ""
+
+msgid "Edit the selected Dialog"
+msgstr ""
+
+msgid "Copy the selected Dialog to a new Dialog"
+msgstr ""
+
+msgid "Remove selected Dialogs from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Dialog will be permanently removed from the Virtual Mana"
+"gement Database.  Are you sure you want to remove the selected Dialogs?"
+msgstr ""
+
+msgid "Select up to 10 timestamps for Drift Analysis"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to this #{ui_look"
+"up(:table=>\"ems_cloud\")}"
+msgstr ""
+
+msgid "Refresh Relationships and Power States"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to this #{ui_look"
+"up(:table=>\"ems_cloud\")}?"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"ems_cloud\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"ems_cloud\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"ems_cloud\")} and ALL of its components will"
+" be permanently removed from the Virtual Management Database.  Are you sure yo"
+"u want to remove this #{ui_lookup(:table=>\"ems_cloud\")}?"
+msgstr ""
+
+msgid "Manage Policies for this #{ui_lookup(:table=>\"ems_cloud\")}"
+msgstr ""
+
+#, fuzzy
+msgid "Manage Policies"
+msgstr "Toestel:"
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"ems_cloud\")}"
+msgstr ""
+
+msgid "Show Timelines for this #{ui_lookup(:table=>\"ems_cloud\")}"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected #"
+"{ui_lookup(:tables=>\"ems_clouds\")}"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected #"
+"{ui_lookup(:tables=>\"ems_clouds\")}?"
+msgstr ""
+
+msgid "Discover #{ui_lookup(:tables=>\"ems_clouds\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"ems_cloud\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"ems_cloud\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"ems_cloud\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"ems_clouds\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"ems_clouds\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"ems_clouds\")} and ALL of their com"
+"ponents will be permanently removed from the Virtual Management Database.  Are"
+" you sure you want to remove the selected #{ui_lookup(:tables=>\"ems_clouds\")}?"
+msgstr ""
+
+msgid "Manage Policies for the selected #{ui_lookup(:tables=>\"ems_clouds\")}"
+msgstr ""
+
+msgid "Edit Tags for the selected #{ui_lookup(:tables=>\"ems_clouds\")}"
+msgstr ""
+
+msgid "Remove this item from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This item and ALL of its components will be permanently removed from "
+"the Virtual Management Database.  Are you sure you want to remove this item?"
+msgstr ""
+
+msgid "Manage Policies for this item"
+msgstr ""
+
+msgid "Edit Tags for this item"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this item"
+msgstr ""
+
+msgid "Show Timelines for this item"
+msgstr ""
+
+msgid "Select two or more items to compare"
+msgstr ""
+
+msgid "Compare Selected items"
+msgstr ""
+
+msgid "Remove selected items from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected items and ALL of their components will be permanently re"
+"moved from the Virtual Management Database.  Are you sure you want to remove t"
+"he selected items?"
+msgstr ""
+
+msgid "Manage Policies for the selected items"
+msgstr ""
+
+msgid "Edit Tags for the selected items"
+msgstr ""
+
+msgid ""
+"Refresh items and relationships related to this #{ui_lookup(:table=>\"ems_conta"
+"iner\")}"
+msgstr ""
+
+msgid "Refresh items and relationships"
+msgstr ""
+
+msgid ""
+"Refresh items and relationships related to this #{ui_lookup(:table=>\"ems_conta"
+"iner\")}?"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"ems_container\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"ems_container\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"ems_container\")} and ALL of its components "
+"will be permanently removed from the Virtual Management Database.  Are you sur"
+"e you want to remove this #{ui_lookup(:table=>\"ems_container\")}?"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Provider"
+msgstr ""
+
+msgid "Show Timelines for this #{ui_lookup(:table=>\"ems_container\")}"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"ems_container\")}"
+msgstr ""
+
+msgid "Refresh Items and Relationships for all #{ui_lookup(:table=>\"ems_containers\")}"
+msgstr ""
+
+msgid "Refresh Items and Relationships"
+msgstr ""
+
+msgid ""
+"Refresh Items and Relationships related to  #{ui_lookup(:table=>\"ems_container"
+"s\")}?"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"ems_container\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"ems_container\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"ems_container\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"ems_containers\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"ems_containers\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"ems_containers\")} and ALL of their"
+" components will be permanently removed from the Virtual Management Database. "
+" Are you sure you want to remove the selected #{ui_lookup(:tables=>\"ems_contai"
+"ners\")}?"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to this #{ui_look"
+"up(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to this #{ui_look"
+"up(:table=>\"ems_infra\")}?"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid "Scale this #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"ems_infra\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"ems_infra\")} and ALL of its components will"
+" be permanently removed from the Virtual Management Database.  Are you sure yo"
+"u want to remove this #{ui_lookup(:table=>\"ems_infra\")}?"
+msgstr ""
+
+msgid "Manage Policies for this #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid "Show Timelines for this #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected #"
+"{ui_lookup(:tables=>\"ems_infras\")}"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected #"
+"{ui_lookup(:tables=>\"ems_infras\")}?"
+msgstr ""
+
+msgid "Discover #{ui_lookup(:tables=>\"ems_infras\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"ems_infra\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"ems_infra\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"ems_infras\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"ems_infras\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"ems_infras\")} and ALL of their com"
+"ponents will be permanently removed from the Virtual Management Database.  Are"
+" you sure you want to remove the selected #{ui_lookup(:tables=>\"ems_infras\")}?"
+msgstr ""
+
+msgid "Manage Policies for the selected #{ui_lookup(:tables=>\"ems_infras\")}"
+msgstr ""
+
+msgid "Edit Tags for the selected #{ui_lookup(:tables=>\"ems_infras\")}"
+msgstr ""
+
+msgid "Edit Tags for this Flavor"
+msgstr ""
+
+msgid "Edit Tags for the selected Flavors"
 msgstr ""
 
 msgid "Grid View"
@@ -1481,10 +3349,2369 @@ msgstr ""
 msgid "List View"
 msgstr ""
 
-msgid "Name"
+msgid "Refresh relationships and power states for all items related to this item"
 msgstr ""
 
-msgid "Status"
+msgid "Refresh relationships and power states for all items related to this item?"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this item"
+msgstr "Update dit object"
+
+msgid "Check Compliance of the last known configuration for this item"
+msgstr ""
+
+msgid "Check Compliance of Last Known Configuration"
+msgstr ""
+
+msgid "Initiate Check Compliance of the last known configuration for this item?"
+msgstr ""
+
+msgid "Analyze then Check Compliance for this item"
+msgstr ""
+
+msgid "Analyze then Check Compliance"
+msgstr ""
+
+msgid "Analyze then Check Compliance for this item?"
+msgstr ""
+
+msgid "Provision this item"
+msgstr ""
+
+msgid "Power Functions"
+msgstr ""
+
+msgid "Power"
+msgstr ""
+
+msgid "Put this item into Maintenance Mode"
+msgstr ""
+
+msgid "Enter Maintenance Mode"
+msgstr ""
+
+msgid "Put this item into Maintenance Mode?"
+msgstr ""
+
+msgid "Take this item out of Maintenance Mode"
+msgstr ""
+
+msgid "Exit Maintenance Mode"
+msgstr ""
+
+msgid "Take this item out of Maintenance Mode?"
+msgstr ""
+
+msgid "Shutdown this item to Standby Mode"
+msgstr ""
+
+msgid "Enter Standby Mode"
+msgstr ""
+
+msgid "Shutdown this item to Standby Mode?"
+msgstr ""
+
+msgid "Shutdown this item"
+msgstr ""
+
+msgid "Shutdown"
+msgstr ""
+
+msgid "Shutdown this item?"
+msgstr ""
+
+msgid "Restart this item"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Restart this item?"
+msgstr ""
+
+msgid "Power On this item"
+msgstr ""
+
+msgid "Power On"
+msgstr ""
+
+msgid "Power On this item?"
+msgstr ""
+
+msgid "Power Off this item"
+msgstr ""
+
+msgid "Power Off"
+msgstr ""
+
+msgid "Power Off this item?"
+msgstr ""
+
+msgid "Reset this item"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Reset this item?"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected i"
+"tems"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected i"
+"tems?"
+msgstr ""
+
+msgid "Discover items"
+msgstr ""
+
+msgid "Add a New item"
+msgstr ""
+
+msgid "Edit Selected items"
+msgstr ""
+
+msgid "Remove Selected items from the VMDB"
+msgstr ""
+
+msgid "Remove items from the VMDB"
+msgstr ""
+
+msgid "Check Compliance of the last known configuration for the selected items"
+msgstr ""
+
+msgid ""
+"Initiate Check Compliance of the last known configuration for the selected ite"
+"ms?"
+msgstr ""
+
+msgid "Analyze then Check Compliance for the selected items"
+msgstr ""
+
+msgid "Analyze then Check Compliance for the selected items?"
+msgstr ""
+
+msgid "Request to Provision items"
+msgstr ""
+
+msgid "Provision items"
+msgstr ""
+
+msgid "Power Operations"
+msgstr ""
+
+msgid "Shutdown the selected items to Standby Mode"
+msgstr ""
+
+msgid "Shutdown the selected items to Standy Mode?"
+msgstr ""
+
+msgid "Shutdown the selected items"
+msgstr ""
+
+msgid "Shutdown the selected items?"
+msgstr ""
+
+msgid "Restart the selected items"
+msgstr ""
+
+msgid "Restart the selected items?"
+msgstr ""
+
+msgid "Power On the selected items"
+msgstr ""
+
+msgid "Power On the selected items?"
+msgstr ""
+
+msgid "Power Off the selected items"
+msgstr ""
+
+msgid "Power Off the selected items?"
+msgstr ""
+
+msgid "Reset the selected items"
+msgstr ""
+
+msgid "Reset the selected items?"
+msgstr ""
+
+msgid "Remove this ISO Datastore from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This ISO Datastore and ALL of its components will be permanently remo"
+"ved from the Virtual Management Database.  Are you sure you want to remove thi"
+"s ISO Datastore?"
+msgstr ""
+
+msgid "Refresh Relationships for this ISO Datastore"
+msgstr ""
+
+msgid "Refresh Relationships"
+msgstr ""
+
+msgid "Refresh Relationships for this ISO Datastore?"
+msgstr ""
+
+msgid "Add a New ISO Datastore"
+msgstr ""
+
+msgid "Remove selected ISO Datastores from the VMDB"
+msgstr ""
+
+msgid "Remove ISO Datastores from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected ISO Datastores and ALL of their components will be perma"
+"nently removed from the Virtual Management Database.  Are you sure you want to"
+" remove the selected ISO Datastores?"
+msgstr ""
+
+msgid "Refresh Relationships for selected ISO Datastores"
+msgstr ""
+
+msgid "Refresh Relationships for selected ISO Datastores?"
+msgstr ""
+
+msgid "Edit this ISO Image"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this LDAP Domain"
+msgstr "Update dit object"
+
+#, fuzzy
+msgid "Delete this LDAP Domain"
+msgstr "Update dit object"
+
+msgid "Are you sure you want to delete this LDAP Domain?"
+msgstr ""
+
+msgid "Add a new LDAP Domain"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this LDAP Region"
+msgstr "Update dit object"
+
+#, fuzzy
+msgid "Delete this LDAP Region"
+msgstr "Update dit object"
+
+msgid "Are you sure you want to delete this LDAP Region?"
+msgstr ""
+
+msgid "Add a new LDAP Region"
+msgstr ""
+
+msgid "Select a single LDAP Region to edit"
+msgstr ""
+
+msgid "Edit the selected LDAP Region"
+msgstr ""
+
+msgid "Select one or more LDAP Regions to delete"
+msgstr ""
+
+msgid "Delete selected LDAP Regions"
+msgstr ""
+
+msgid "Delete all selected LDAP Regions?"
+msgstr ""
+
+msgid "Reload the #{@msg_title} Log Display"
+msgstr ""
+
+msgid "Download the Entire #{@msg_title} Log File"
+msgstr ""
+
+msgid "Edit this Action"
+msgstr ""
+
+msgid "Delete this Action"
+msgstr ""
+
+msgid "Are you sure you want to delete this Action?"
+msgstr ""
+
+msgid "Add a new Action"
+msgstr ""
+
+msgid "Edit this Class"
+msgstr ""
+
+msgid "Copy this Class"
+msgstr ""
+
+msgid "Remove this Class"
+msgstr ""
+
+msgid "Are you sure you want to remove this Class?"
+msgstr ""
+
+msgid "Edit this Domain"
+msgstr ""
+
+msgid "Remove this Domain"
+msgstr ""
+
+msgid "Are you sure you want to remove this Domain?"
+msgstr ""
+
+msgid "Unlock this Domain"
+msgstr ""
+
+msgid "Lock this Domain"
+msgstr ""
+
+msgid "Add a New Namespace"
+msgstr ""
+
+msgid "Select a single Namespace to edit"
+msgstr ""
+
+msgid "Edit Selected Namespace"
+msgstr ""
+
+msgid "Remove selected Namespaces"
+msgstr ""
+
+msgid "Remove Namespaces"
+msgstr ""
+
+msgid "Are you sure you want to remove the selected Namespaces?"
+msgstr ""
+
+msgid "Add a New Domain"
+msgstr ""
+
+msgid "Select a single Domains to edit"
+msgstr ""
+
+msgid "Edit Selected Domains"
+msgstr ""
+
+msgid "Remove selected Domains"
+msgstr ""
+
+msgid "Remove Domains"
+msgstr ""
+
+msgid "Are you sure you want to remove the selected Domains?"
+msgstr ""
+
+msgid "Edit Priority Order  of Domains"
+msgstr ""
+
+msgid "Edit Priority Order of Domains"
+msgstr ""
+
+msgid "Edit selected Schema"
+msgstr ""
+
+msgid "Edit sequence of Class Schema"
+msgstr ""
+
+msgid "Edit sequence"
+msgstr ""
+
+msgid "Edit this Instance"
+msgstr ""
+
+msgid "Copy this Instance"
+msgstr ""
+
+msgid "Remove this Instance"
+msgstr ""
+
+msgid "Are you sure you want to remove this Instance?"
+msgstr ""
+
+msgid "Add a New Instance"
+msgstr ""
+
+msgid "Select a single Instance to edit"
+msgstr ""
+
+msgid "Edit Selected Instance"
+msgstr ""
+
+msgid "Select Instances to copy"
+msgstr ""
+
+msgid "Copy selected Instances"
+msgstr ""
+
+msgid "Remove selected Instances"
+msgstr ""
+
+msgid "Remove Instances"
+msgstr ""
+
+msgid "Are you sure you want to remove the selected Instances?"
+msgstr ""
+
+msgid "Edit this Method"
+msgstr ""
+
+msgid "Copy this Method"
+msgstr ""
+
+msgid "Remove this Method"
+msgstr ""
+
+msgid "Are you sure you want to remove this Method?"
+msgstr ""
+
+msgid "Add a New Method"
+msgstr ""
+
+msgid "Select a single Method to edit"
+msgstr ""
+
+msgid "Edit Selected Method"
+msgstr ""
+
+msgid "Select Methods to copy"
+msgstr ""
+
+msgid "Copy selected Methods"
+msgstr ""
+
+msgid "Remove selected Methods"
+msgstr ""
+
+msgid "Remove Methods"
+msgstr ""
+
+msgid "Are you sure you want to remove the selected Methods?"
+msgstr ""
+
+msgid "Edit this Namespace"
+msgstr ""
+
+msgid "Remove this Namespace"
+msgstr ""
+
+msgid "Are you sure you want to remove this Namespace?"
+msgstr ""
+
+msgid "Add a New Class"
+msgstr ""
+
+msgid "Edit Selected Item"
+msgstr ""
+
+msgid "Select Classes to copy"
+msgstr ""
+
+msgid "Copy selected Classes"
+msgstr ""
+
+msgid "Remove selected Items"
+msgstr ""
+
+msgid "Are you sure you want to remove selected Items?"
+msgstr ""
+
+msgid "Copy object details for use in a Button"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this Alert"
+msgstr "Update dit object"
+
+msgid "Copy this Alert"
+msgstr ""
+
+msgid "Are you sure you want to copy this Alert?"
+msgstr ""
+
+#, fuzzy
+msgid "Delete this Alert"
+msgstr "Update dit object"
+
+msgid "Are you sure you want to delete this Alert?"
+msgstr ""
+
+msgid "Edit this Alert Profile"
+msgstr ""
+
+msgid "Edit assignments for this Alert Profile"
+msgstr ""
+
+msgid "Delete this Alert Profile"
+msgstr ""
+
+msgid "Are you sure you want to delete this Alert Profile?"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile"
+msgstr ""
+
+msgid "Add a New Alert"
+msgstr ""
+
+msgid "Edit Actions for this Policy Event"
+msgstr ""
+
+msgid "Edit this Group"
+msgstr ""
+
+msgid "Delete this Group"
+msgstr ""
+
+msgid "Are you sure you want to delete this Group?"
+msgstr ""
+
+msgid "Edit '#{session[:customer_name]}' Tags for this Group"
+msgstr ""
+
+msgid "Add a new Group"
+msgstr ""
+
+msgid "Select a single Group to edit"
+msgstr ""
+
+msgid "Edit the selected Group"
+msgstr ""
+
+msgid "Select one or more Groups to delete"
+msgstr ""
+
+msgid "Delete selected Groups"
+msgstr ""
+
+msgid "Delete all selected Groups?"
+msgstr ""
+
+msgid "Edit Sequence of User Groups for LDAP Look Up"
+msgstr ""
+
+msgid "Edit '#{session[:customer_name]}' Tags for the selected Groups"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:model=>@sb[:nodeid])} #{@sb[:mode].capitalize} Policy"
+msgstr ""
+
+msgid "Edit Basic Info, Scope, and Notes"
+msgstr ""
+
+msgid ""
+"Copy this Policy to new Policy [#{truncate(\"Copy of #{@policy.description}\", :"
+"length => 255, :omission => \"\")}]"
+msgstr ""
+
+msgid "Copy this #{ui_lookup(:model=>@policy.towhat)} Policy"
+msgstr ""
+
+msgid ""
+"Are you sure you want to create Policy [#{truncate(\"Copy of #{@policy.descript"
+"ion}\", :length => 255, :omission => \"\")}] from this Policy?"
+msgstr ""
+
+msgid "Delete this #{ui_lookup(:model=>@policy.towhat)} Policy"
+msgstr ""
+
+msgid ""
+"Are you sure you want to delete this #{ui_lookup(:model=>@policy.towhat)} Poli"
+"cy?"
+msgstr ""
+
+msgid "Create a new Condition assigned to this Policy"
+msgstr ""
+
+msgid "Edit this Policy's Condition assignments"
+msgstr ""
+
+msgid "Edit this Policy's Event assignments"
+msgstr ""
+
+msgid "Edit this Policy Profile"
+msgstr ""
+
+msgid "Remove this Policy Profile"
+msgstr ""
+
+msgid "Are you sure you want to remove this Policy Profile?"
+msgstr ""
+
+msgid "Add a New Policy Profile"
+msgstr ""
+
+msgid "Collapse All"
+msgstr ""
+
+msgid "Expand All"
+msgstr ""
+
+msgid "Queue this Report to be generated"
+msgstr ""
+
+msgid "Queue"
+msgstr ""
+
+msgid "Add a new Report"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this Report"
+msgstr "Update dit object"
+
+msgid "Copy this Report"
+msgstr ""
+
+msgid "Delete this Saved Report from the Database"
+msgstr ""
+
+msgid ""
+"The selected Saved Reports will be permanently removed from the database. Are "
+"you sure you want to delete this saved Report?"
+msgstr ""
+
+msgid "Delete this Report from the Database"
+msgstr ""
+
+msgid ""
+"The selected Reports will be permanently removed from the database. Are you su"
+"re you want to delete this Report?"
+msgstr ""
+
+msgid "Add a new Schedule"
+msgstr ""
+
+msgid "Edit this Schedule"
+msgstr ""
+
+msgid "Delete this Schedule from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Schedule and ALL of its components will be permanently removed f"
+"rom the VMDB.  Are you sure you want to delete this Schedule?"
+msgstr ""
+
+msgid "Queue up this Schedule to run now"
+msgstr ""
+
+msgid "Edit the selected Schedule"
+msgstr ""
+
+msgid "Delete the selected Schedules from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Schedules and ALL of their components will be permanentl"
+"y removed from the VMDB.  Are you sure you want to delete the selected Schedul"
+"es?"
+msgstr ""
+
+msgid "Enable the selected Schedules"
+msgstr ""
+
+msgid "Disable the selected Schedules"
+msgstr ""
+
+msgid "Queue up selected Schedules to run now"
+msgstr ""
+
+msgid "Copy original Request"
+msgstr ""
+
+msgid "Edit the original Request"
+msgstr ""
+
+msgid "Delete this Request"
+msgstr ""
+
+msgid "Are you sure you want to delete this Request?"
+msgstr ""
+
+msgid "Reload the current display"
+msgstr ""
+
+#, fuzzy
+msgid "Reload"
+msgstr "Upload"
+
+msgid "Approve this Request"
+msgstr ""
+
+msgid "Deny this Request"
+msgstr ""
+
+msgid "Delete this Schedule from the Database"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Template"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Template?"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this Template"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this Template?"
+msgstr ""
+
+msgid "Edit this Template"
+msgstr ""
+
+msgid "Set Ownership for this Template"
+msgstr ""
+
+msgid "Set Ownership"
+msgstr ""
+
+msgid "Remove this Template from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Template and ALL of its components will be permanently removed f"
+"rom the Virtual Management Database.  Are you sure you want to remove this Tem"
+"plate?"
+msgstr ""
+
+msgid "Manage Policies for this Template"
+msgstr ""
+
+msgid "View Policy Simulation for this Template"
+msgstr ""
+
+msgid "Policy Simulation"
+msgstr ""
+
+msgid "Edit Tags for this Template"
+msgstr ""
+
+msgid "Check Compliance of the last known configuration for this Template"
+msgstr ""
+
+msgid "Initiate Check Compliance of the last known configuration for this Template?"
+msgstr ""
+
+msgid "Clone this Template"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Template"
+msgstr ""
+
+msgid "Show Timelines for this Template"
+msgstr ""
+
+msgid "Create a new snapshot for this Template"
+msgstr ""
+
+msgid "Delete Snapshots"
+msgstr ""
+
+msgid "Delete Selected Snapshot"
+msgstr ""
+
+msgid ""
+"The selected snapshot will be permanently deleted. Are you sure you want to de"
+"lete the selected snapshot?"
+msgstr ""
+
+msgid "Delete All Existing Snapshots"
+msgstr ""
+
+msgid "Delete all of this Templates existing snapshots?"
+msgstr ""
+
+msgid "Revert to selected snapshot"
+msgstr ""
+
+msgid ""
+"This Template will revert to selected snapshot. Are you sure you want to rever"
+"t to the selected snapshot?"
+msgstr ""
+
+msgid "Compare selected Templates"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected T"
+"emplates"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected T"
+"emplates?"
+msgstr ""
+
+msgid "Select two or more Templates to compare"
+msgstr ""
+
+msgid "Compare Selected Templates"
+msgstr ""
+
+msgid "Select a single Template to edit"
+msgstr ""
+
+msgid "Edit Selected Template"
+msgstr ""
+
+msgid "Set Ownership for the selected Templates"
+msgstr ""
+
+msgid "Remove selected Templates from the VMDB"
+msgstr ""
+
+msgid "Remove Templates from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Templates and ALL of their components will be permanentl"
+"y removed from the Virtual Management Database.  Are you sure you want to remo"
+"ve the selected Templates?"
+msgstr ""
+
+msgid "Manage Policies for the selected Templates"
+msgstr ""
+
+msgid "View Policy Simulation for the selected Templates"
+msgstr ""
+
+msgid "Edit tags for the selected Templates"
+msgstr ""
+
+msgid "Check Compliance of the last known configuration for the selected Templates"
+msgstr ""
+
+msgid ""
+"Initiate Check Compliance of the last known configuration for the selected Tem"
+"plates?"
+msgstr ""
+
+msgid "Edit this Widget"
+msgstr ""
+
+msgid "Copy this Widget"
+msgstr ""
+
+msgid "Delete this Widget from the Database"
+msgstr ""
+
+msgid ""
+"Warning: This Widget and ALL of its components will be permanently removed fro"
+"m the VMDB.  Are you sure you want to delete this Widget?"
+msgstr ""
+
+msgid "Generate Widget content now"
+msgstr ""
+
+msgid "Are you sure you want initiate content generation for this Widget now?"
+msgstr ""
+
+msgid "Edit this Dashboard"
+msgstr ""
+
+msgid "Delete this Dashboard from the Database"
+msgstr ""
+
+msgid ""
+"Warning: This Dashboard and ALL of its components will be permanently removed "
+"from the VMDB.  Are you sure you want to delete this Dashboard?"
+msgstr ""
+
+msgid "Add a new Dashboard"
+msgstr ""
+
+msgid "Edit Sequence of Dashboards"
+msgstr ""
+
+msgid "Reload Widgets"
+msgstr ""
+
+msgid "Add a new Widget"
+msgstr ""
+
+msgid ""
+"Create a Datastore based on this #{ui_lookup(:model=>\"OntapFileShare\").split(\""
+" - \").last}"
+msgstr ""
+
+msgid "Create Datastore"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:model=>\"OntapFileShare\").split(\" - \").last}"
+msgstr ""
+
+msgid ""
+"Show Utilization for this #{ui_lookup(:model=>\"OntapFileShare\").split(\" - \").l"
+"ast}"
+msgstr ""
+
+msgid "Edit tags for the selected File Shares"
+msgstr ""
+
+msgid "Edit Tags for this Logical Disk"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Logical Disk"
+msgstr ""
+
+msgid "Show Utilization Statistics for this Logical Disk"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Edit tags for the selected Logical Disks"
+msgstr ""
+
+msgid ""
+"Create a Logical Disk (NetApp Flexible Volume) on this #{ui_lookup(:model=>\"On"
+"tapStorageSystem\").split(\" - \").last}"
+msgstr ""
+
+msgid "Create Logical Disk"
+msgstr ""
+
+msgid ""
+"Edit Tags for this #{ui_lookup(:model=>\"OntapStorageSystem\").split(\" - \").last"
+"}"
+msgstr ""
+
+msgid ""
+"Show Utilization for this #{ui_lookup(:model=>\"OntapStorageSystem\").split(\" - "
+"\").last}"
+msgstr ""
+
+msgid "Edit tags for the selected Systems"
+msgstr ""
+
+msgid "Edit Tags for this Volume"
+msgstr ""
+
+msgid "Show Utilization for this Storage System"
+msgstr ""
+
+msgid "Edit tags for the selected Volumes"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"orchestration_stack\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"orchestration_stack\")} and ALL of its compo"
+"nents will be permanently removed from the Virtual Management Database.  Are y"
+"ou sure you want to remove this #{ui_lookup(:table=>\"orchestration_stack\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:tables=>\"orchestration_stack\")}"
+msgstr ""
+
+msgid "Set Retirement Dates for this Orchestration Stack"
+msgstr ""
+
+msgid "Set Retirement Date"
+msgstr ""
+
+msgid "Retire this Orchestration Stack"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"orchestration_stack\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"orchestration_stack\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"orchestration_stack\")} and ALL of "
+"their components will be permanently removed from the Virtual Management Datab"
+"ase.  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"orche"
+"stration_stack\")}?"
+msgstr ""
+
+msgid "Edit Tags for the selected #{ui_lookup(:tables=>\"orchestration_stack\")}"
+msgstr ""
+
+msgid ""
+"Set Retirement Dates for the selected #{ui_lookup(:tables=>\"orchestration_stac"
+"k\")}"
+msgstr ""
+
+msgid "Set Retirement Dates"
+msgstr ""
+
+msgid "Retire selected #{ui_lookup(:tables => \"orchestration_stack\")}"
+msgstr ""
+
+msgid "Retire the selected #{ui_lookup(:tables => \"orchestration_stack\")}?"
+msgstr ""
+
+msgid "Create Service Dialog from Orchestration Template"
+msgstr ""
+
+msgid "Edit this Orchestration Template"
+msgstr ""
+
+msgid "Copy this Orchestration Template"
+msgstr ""
+
+msgid "Remove this Orchestration Template"
+msgstr ""
+
+msgid "Remove this Orchestration Template?"
+msgstr ""
+
+msgid "Edit Tags for this Orchestration Template"
+msgstr ""
+
+msgid "Create new Orchestration Template"
+msgstr ""
+
+msgid "Edit selected Orchestration Template"
+msgstr ""
+
+msgid "Copy selected Orchestration Template"
+msgstr ""
+
+msgid "Remove selected Orchestration Templates"
+msgstr ""
+
+msgid "Remove selected Orchestration Templates?"
+msgstr ""
+
+msgid "Edit tags for the selected Items"
+msgstr ""
+
+msgid "Edit this #{ui_lookup(:table=>\"persistent_volume\")}"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"persistent_volume\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"persistent_volume\")} and ALL of its compone"
+"nts will be permanently removed from the Virtual Management Database.  Are you"
+" sure you want to remove this #{ui_lookup(:table=>\"persistent_volume\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"persistent_volume\")}"
+msgstr ""
+
+msgid "Add a New #{ui_lookup(:table=>\"persistent_volume\")}"
+msgstr ""
+
+msgid "Select a single #{ui_lookup(:table=>\"persistent_volume\")} to edit"
+msgstr ""
+
+msgid "Edit Selected #{ui_lookup(:table=>\"persistent_volume\")}"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"persistent_volumes\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"persistent_volumes\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"persistent_volumes\")} and ALL of t"
+"heir components will be permanently removed from the Virtual Management Databa"
+"se.  Are you sure you want to remove the selected #{ui_lookup(:tables=>\"persis"
+"tent_volumes\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"persistent_volumes\")}"
+msgstr ""
+
+msgid "Refresh relationships for all items related to the selected items"
+msgstr ""
+
+msgid "Refresh relationships for all items related to the selected items?"
+msgstr ""
+
+msgid "Add a new Provider"
+msgstr ""
+
+msgid "Select a single item to edit"
+msgstr ""
+
+msgid "Edit Selected item"
+msgstr ""
+
+msgid "Edit this PXE Image"
+msgstr ""
+
+msgid "Edit this System Image Type"
+msgstr ""
+
+msgid "Remove this System Image Type from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This System Image Type will be permanently removed from the Virtual M"
+"anagement Database.  Are you sure you want to remove this System Image Type?"
+msgstr ""
+
+msgid "Add a new System Image Type"
+msgstr ""
+
+msgid "Select a single System Image Type to edit"
+msgstr ""
+
+msgid "Edit the selected System Image Type"
+msgstr ""
+
+msgid "Remove selected System Image Types from the VMDB"
+msgstr ""
+
+msgid "Remove System Image Types from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected System Image Types will be permanently removed from the "
+"Virtual Management Database.  Are you sure you want to remove the selected Sys"
+"tem Image Types?"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this PXE Server"
+msgstr "Update dit object"
+
+msgid "Remove this PXE Server from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This PXE Server and ALL of its components will be permanently removed"
+" from the Virtual Management Database.  Are you sure you want to remove this P"
+"XE Server?"
+msgstr ""
+
+msgid "Refresh Relationships for this PXE Server"
+msgstr ""
+
+msgid "Refresh Relationships for this PXE Server?"
+msgstr ""
+
+msgid "Add a New PXE Server"
+msgstr ""
+
+msgid "Select a single PXE Servers to edit"
+msgstr ""
+
+msgid "Edit Selected PXE Servers"
+msgstr ""
+
+msgid "Remove selected PXE Servers from the VMDB"
+msgstr ""
+
+msgid "Remove PXE Servers from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected PXE Servers and ALL of their components will be permanen"
+"tly removed from the Virtual Management Database.  Are you sure you want to re"
+"move the selected PXE Servers?"
+msgstr ""
+
+msgid "Refresh Relationships for selected PXE Servers"
+msgstr ""
+
+msgid "Refresh Relationships for selected PXE Servers?"
+msgstr ""
+
+msgid "Graph View"
+msgstr ""
+
+msgid "Hybrid View"
+msgstr ""
+
+msgid "Tabular View"
+msgstr ""
+
+msgid ""
+"Refresh Relationships and Power States for all items related to the selected R"
+"epositories"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to the selected R"
+"epositories?"
+msgstr ""
+
+#, fuzzy
+msgid "Add a new Repository"
+msgstr "Wachtwoord veranderen"
+
+msgid "Select a single Repository to edit"
+msgstr ""
+
+msgid "Edit the Selected Repository"
+msgstr ""
+
+msgid "Remove Selected Repositories from the VMDB"
+msgstr ""
+
+msgid "Remove Repositories from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Repositories and ALL of their components will be permane"
+"ntly removed from the Virtual Management Database.  Are you sure you want to r"
+"emove the selected Repositories?"
+msgstr ""
+
+msgid "Manage Policies for the selected Repositories"
+msgstr ""
+
+msgid "Edit Tags for the selected Repositories"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to this Repositor"
+"y"
+msgstr ""
+
+msgid ""
+"Refresh relationships and power states for all items related to this Repositor"
+"y?"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this Repository"
+msgstr "Wachtwoord veranderen"
+
+msgid "Remove this Repository from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Repository and ALL of its components will be permanently removed"
+" from the Virtual Management Database.  Are you sure you want to remove this R"
+"epository?"
+msgstr ""
+
+msgid "Manage Policies for this Repository"
+msgstr ""
+
+msgid "Edit Tags for this Repository"
+msgstr ""
+
+msgid "Remove this Resource Pool from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Resource Pool and ALL of its components will be permanently remo"
+"ved from the Virtual Management Database.  Are you sure you want to remove thi"
+"s Resource Pool?"
+msgstr ""
+
+msgid "Manage Policies for this Resource Pool"
+msgstr ""
+
+msgid "Edit Tags for this Resource Pool"
+msgstr ""
+
+msgid "Remove selected Resource Pools from the VMDB"
+msgstr ""
+
+msgid "Remove Resource Pools from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Resource Pools and ALL of their components will be perma"
+"nently removed from the Virtual Management Database.  Are you sure you want to"
+" remove the selected Resource Pools?"
+msgstr ""
+
+msgid "Manage Policies for the selected Resource Pools"
+msgstr ""
+
+msgid "Edit Tags for the selected Resource Pools"
+msgstr ""
+
+msgid "Show full screen Report"
+msgstr ""
+
+msgid ""
+"Warning: This Saved Report and ALL of its components will be permanently remov"
+"ed from the VMDB.  Are you sure you want to delete this Saved Report?"
+msgstr ""
+
+msgid "Reload selected Reports"
+msgstr ""
+
+msgid "Delete selected Saved Reports"
+msgstr ""
+
+msgid ""
+"The selected Saved Reports will be permanently removed from the database. Are "
+"you sure you want to delete the selected Saved Reports?"
+msgstr ""
+
+msgid "Edit this Analysis Profile"
+msgstr ""
+
+msgid "Copy this selected Analysis Profile"
+msgstr ""
+
+msgid "Delete this Analysis Profile from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Analysis Profile and ALL of its components will be permanently r"
+"emoved from the VMDB.  Are you sure you want to delete this Analysis Profile?"
+msgstr ""
+
+msgid "Add a new Host Analysis Profile"
+msgstr ""
+
+msgid "Add Host Analysis Profile"
+msgstr ""
+
+msgid "Add a new VM Analysis Profile"
+msgstr ""
+
+msgid "Add VM Analysis Profile"
+msgstr ""
+
+msgid "Edit the selected Analysis Profiles"
+msgstr ""
+
+msgid "Copy the selected Analysis Profiles"
+msgstr ""
+
+msgid "Delete the selected Analysis Profiles from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Analysis Profiles and ALL of their components will be pe"
+"rmanently removed from the VMDB.  Are you sure you want to delete the selected"
+" Analysis Profiles?"
+msgstr ""
+
+msgid "Edit Tags for this Security Group"
+msgstr ""
+
+msgid "Edit Tags for the selected Security Groups"
+msgstr ""
+
+msgid "Edit this Service"
+msgstr ""
+
+msgid "Remove this Service from the VMDB"
+msgstr ""
+
+msgid "Remove Service from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Service and ALL of their components will be permanently removed "
+"from the Virtual Management Database.  Are you sure you want to remove this Se"
+"rvice?"
+msgstr ""
+
+msgid "Set Ownership for this Service"
+msgstr ""
+
+msgid "Reconfigure the options of this Service"
+msgstr ""
+
+msgid "Reconfigure this Service"
+msgstr ""
+
+msgid "Edit Tags for this Service"
+msgstr ""
+
+msgid "Set Retirement Dates for this Service"
+msgstr ""
+
+msgid "Retire this Service"
+msgstr ""
+
+msgid "Retire this Service?"
+msgstr ""
+
+msgid "Select a single service to edit"
+msgstr ""
+
+msgid "Edit Selected Service"
+msgstr ""
+
+msgid "Remove selected Services from the VMDB"
+msgstr ""
+
+msgid "Remove Services from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Services and ALL of their components will be permanently"
+" removed from the Virtual Management Database.  Are you sure you want to remov"
+"e the selected Services?"
+msgstr ""
+
+msgid "Set Ownership for the selected Services"
+msgstr ""
+
+msgid "Set Retirement Dates for the selected items"
+msgstr ""
+
+msgid "Retire the selected items"
+msgstr ""
+
+msgid "Retire selected items"
+msgstr ""
+
+msgid "Retire the selected items?"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this Item"
+msgstr "Update dit object"
+
+msgid "Remove this Item from the VMDB"
+msgstr ""
+
+msgid "Remove Item from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Catalog Items and ALL of their components will be permanently re"
+"moved from the Virtual Management Database.  Are you sure you want to remove t"
+"his Catalog Item?"
+msgstr ""
+
+msgid "Edit Tags for this Catalog Item"
+msgstr ""
+
+msgid ""
+"Warning: This Catalog will be permanently removed from the Virtual Management "
+"Database.  Are you sure you want to remove this Catalog?"
+msgstr ""
+
+msgid "Add a New Catalog"
+msgstr ""
+
+msgid "Select a single Item to edit"
+msgstr ""
+
+msgid "Remove selected Items from the VMDB"
+msgstr ""
+
+msgid "Remove Items from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Items will be permanently removed from the Virtual Manag"
+"ement Database.  Are you sure you want to remove the selected Items?"
+msgstr ""
+
+msgid "Add a New Catalog Item"
+msgstr ""
+
+msgid "Add a New Catalog Bundle"
+msgstr ""
+
+msgid ""
+"Warning: The selected Items and ALL of their components will be permanently re"
+"moved from the Virtual Management Database.  Are you sure you want to remove t"
+"he selected Items?"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this #{ui_lookup(:table=>\"storages\")}"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this #{ui_lookup(:table=>\"storages\")}?"
+msgstr ""
+
+msgid "Remove this #{ui_lookup(:table=>\"storages\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This #{ui_lookup(:table=>\"storages\")} and ALL of its components will "
+"be permanently removed from the Virtual Management Database.  Are you sure you"
+" want to remove this #{ui_lookup(:table=>\"storages\")}?"
+msgstr ""
+
+msgid "Edit Tags for this #{ui_lookup(:table=>\"storages\")}"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this #{ui_lookup(:table=>\"storages\")}"
+msgstr ""
+
+msgid "Refresh Inventory for all Storage CIs known to this Storage Manager"
+msgstr ""
+
+msgid "Refresh Inventory"
+msgstr ""
+
+msgid "Refresh Inventory for all Storage CIs known to this Storage Manager?"
+msgstr ""
+
+msgid "Refresh Status for all Storage CIs known to this Storage Manager"
+msgstr ""
+
+msgid "Refresh Status"
+msgstr ""
+
+msgid "Refresh Status for all Storage CIs known to this Storage Manager?"
+msgstr ""
+
+msgid "Edit this Storage Manager"
+msgstr ""
+
+msgid "Remove this Storage Manager from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Storage Manager and ALL of its components will be permanently re"
+"moved from the Virtual Management Database.  Are you sure you want to remove t"
+"his Storage Manager?"
+msgstr ""
+
+msgid "Refresh Inventory for all Storage CIs known to the selected Storage Managers"
+msgstr ""
+
+msgid "Refresh Inventory for all Storage CIs known to the selected Storage Managers?"
+msgstr ""
+
+msgid "Refresh Status for all Storage CIs known to the selected Storage Managers"
+msgstr ""
+
+msgid "Refresh Status for all Storage CIs known to the selected Storage Managers?"
+msgstr ""
+
+msgid "Add a New Storage Manager"
+msgstr ""
+
+msgid "Select a single Storage Manager to edit"
+msgstr ""
+
+msgid "Edit Selected Storage Manager"
+msgstr ""
+
+msgid "Remove selected Storage Managers from the VMDB"
+msgstr ""
+
+msgid "Remove Storage Managers from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected Storage Managers and ALL of their components will be per"
+"manently removed from the Virtual Management Database.  Are you sure you want "
+"to remove the selected Storage Managers?"
+msgstr ""
+
+msgid "Perform SmartState Analysis on the selected #{ui_lookup(:tables=>\"storages\")}"
+msgstr ""
+
+msgid "Perform SmartState Analysis on the selected #{ui_lookup(:tables=>\"storages\")}?"
+msgstr ""
+
+msgid "Remove selected #{ui_lookup(:tables=>\"storages\")} from the VMDB"
+msgstr ""
+
+msgid "Remove #{ui_lookup(:tables=>\"storages\")} from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected #{ui_lookup(:tables=>\"storages\")} and ALL of their compo"
+"nents will be permanently removed from the Virtual Management Database.  Are y"
+"ou sure you want to remove the selected #{ui_lookup(:tables=>\"storages\")}?"
+msgstr ""
+
+msgid "Edit Tags for the selected #{ui_lookup(:tables=>\"storages\")}"
+msgstr ""
+
+msgid ""
+"Show #{@layout == \"cim_base_storage_extent\" ? @record.evm_display_name : @reco"
+"rd.name} Summary"
+msgstr ""
+
+msgid "Download summary in PDF format"
+msgstr ""
+
+msgid "Delete Tasks"
+msgstr ""
+
+msgid "Delete selected tasks from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: The selected tasks will be permanently removed from the database. Are"
+" you sure you want to delete the selected tasks?"
+msgstr ""
+
+msgid "Delete tasks older than the selected task"
+msgstr ""
+
+msgid "Delete Older"
+msgstr ""
+
+msgid ""
+"Warning: Tasks that are older than selected task will be permanently removed f"
+"rom the database. Are you sure you want to delete older tasks?"
+msgstr ""
+
+msgid "Delete all finished tasks"
+msgstr ""
+
+msgid "Delete All"
+msgstr ""
+
+msgid ""
+"Warning: Finished tasks will be permanently removed from the database. Are you"
+" sure you want to delete all finished tasks?"
+msgstr ""
+
+msgid "Cancel the selected task"
+msgstr ""
+
+msgid "Cancel Job"
+msgstr ""
+
+msgid ""
+"Warning: The selected task will be cancelled. Are you sure you want to cancel "
+"the task?"
+msgstr ""
+
+msgid "Set Ownership for the selected items"
+msgstr ""
+
+msgid "CPU/Memory Recommendations of selected item"
+msgstr ""
+
+msgid "Right-Size Recommendations"
+msgstr ""
+
+msgid "Reconfigure the Memory/CPUs of selected items"
+msgstr ""
+
+msgid "Reconfigure Selected items"
+msgstr ""
+
+msgid "View Policy Simulation for the selected items"
+msgstr ""
+
+msgid "Perform SmartState Analysis on the selected Templates"
+msgstr ""
+
+msgid "Perform SmartState Analysis on the selected Templates?"
+msgstr ""
+
+msgid "Clone selected Template"
+msgstr ""
+
+msgid "Add child Tenant to this Tenant"
+msgstr ""
+
+msgid "Add Project to this Tenant"
+msgstr ""
+
+msgid "Manage Quotas"
+msgstr ""
+
+#, fuzzy
+msgid "Delete this item"
+msgstr "Update dit object"
+
+msgid "Are you sure you want to delete this item and all of it's children?"
+msgstr ""
+
+msgid "Edit '#{session[:customer_name]}' Tags for this Tenant"
+msgstr ""
+
+msgid "Edit the selected item"
+msgstr ""
+
+msgid "Select one or more items to delete"
+msgstr ""
+
+msgid "Delete selected items"
+msgstr ""
+
+msgid "Delete all selected items and all of their children?"
+msgstr ""
+
+msgid "Select a single item to manage quotas"
+msgstr ""
+
+msgid "Manage Quotas for the Selected Item"
+msgstr ""
+
+msgid "Edit '#{session[:customer_name]}' Tags for the selected Tenant"
+msgstr ""
+
+msgid "Add a new Time Profile"
+msgstr ""
+
+msgid "Select a single Time Profile to edit"
+msgstr ""
+
+msgid "Edit selected Time Profile"
+msgstr ""
+
+msgid "Select a single Time Profile to copy"
+msgstr ""
+
+msgid "Copy selected Time Profile"
+msgstr ""
+
+msgid "Delete selected Time Profiles"
+msgstr ""
+
+msgid ""
+"Warning: The selected Time Profiles will be permanently removed from the VMDB."
+" Are you sure you want to delete the selected Time Profiles?"
+msgstr ""
+
+msgid "Download this Timeline data in text format"
+msgstr ""
+
+msgid "Download this Timeline data in CSV format"
+msgstr ""
+
+msgid "Download this Timeline data in PDF format"
+msgstr ""
+
+#, fuzzy
+msgid "Edit this User"
+msgstr "Update dit object"
+
+msgid "Copy this User to a new User"
+msgstr ""
+
+#, fuzzy
+msgid "Delete this User"
+msgstr "Update dit object"
+
+msgid "Are you sure you want to delete this User?"
+msgstr ""
+
+msgid "Edit '#{session[:customer_name]}' Tags for this User"
+msgstr ""
+
+msgid "Edit this Role"
+msgstr ""
+
+msgid "Copy this Role to a new Role"
+msgstr ""
+
+msgid "Delete this Role"
+msgstr ""
+
+msgid "Are you sure you want to delete this Role?"
+msgstr ""
+
+msgid "Add a new Role"
+msgstr ""
+
+msgid "Select a single Role to edit"
+msgstr ""
+
+msgid "Edit the selected Role"
+msgstr ""
+
+msgid "Select a single Role to copy"
+msgstr ""
+
+msgid "Copy the selected Role to a new Role"
+msgstr ""
+
+msgid "Delete the selected Roles from the VMDB"
+msgstr ""
+
+msgid "Delete selected Roles"
+msgstr ""
+
+msgid "Delete all selected Roles?"
+msgstr ""
+
+msgid "Add a new User"
+msgstr ""
+
+msgid "Select a single User to edit"
+msgstr ""
+
+msgid "Edit the selected User"
+msgstr ""
+
+msgid "Select a single User to copy"
+msgstr ""
+
+msgid "Copy the selected User to a new User"
+msgstr ""
+
+msgid "Select one or more Users to delete"
+msgstr ""
+
+msgid "Delete selected Users"
+msgstr ""
+
+msgid "Delete all selected Users?"
+msgstr ""
+
+msgid "Edit '#{session[:customer_name]}' Tags for the selected Users"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this VM"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this VM?"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this VM"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this VM?"
+msgstr ""
+
+msgid "Extract Running Processes for this VM"
+msgstr ""
+
+msgid "Extract Running Processes"
+msgstr ""
+
+msgid "Extract Running Processes for this VM?"
+msgstr ""
+
+msgid "Edit this VM"
+msgstr ""
+
+msgid "Set Ownership for this VM"
+msgstr ""
+
+msgid "Remove this VM from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This VM and ALL of its components will be permanently removed from th"
+"e Virtual Management Database.  Are you sure you want to remove this VM?"
+msgstr ""
+
+msgid "Edit Management Engine Relationship"
+msgstr ""
+
+msgid "CPU/Memory Recommendations of this VM"
+msgstr ""
+
+msgid "Reconfigure the Memory/CPU of this VM"
+msgstr ""
+
+msgid "Reconfigure this VM"
+msgstr ""
+
+msgid "Manage Policies for this VM"
+msgstr ""
+
+msgid "View Policy Simulation for this VM"
+msgstr ""
+
+msgid "Edit Tags for this VM"
+msgstr ""
+
+msgid "Check Compliance of the last known configuration for this VM"
+msgstr ""
+
+msgid "Initiate Check Compliance of the last known configuration for this VM?"
+msgstr ""
+
+msgid "Clone this VM"
+msgstr ""
+
+msgid "Publish this VM to a Template"
+msgstr ""
+
+msgid "Migrate this VM to another Host/Datastore"
+msgstr ""
+
+msgid "Migrate this VM"
+msgstr ""
+
+msgid "Set Retirement Dates for this VM"
+msgstr ""
+
+msgid "Retire this VM"
+msgstr ""
+
+msgid "Retire this VM?"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this VM"
+msgstr ""
+
+msgid "Show Timelines for this VM"
+msgstr ""
+
+msgid "VM Power Functions"
+msgstr ""
+
+msgid "Shutdown the Guest OS on this VM"
+msgstr ""
+
+msgid "Shutdown Guest"
+msgstr ""
+
+msgid "Shutdown the Guest OS on this VM?"
+msgstr ""
+
+msgid "Restart the Guest OS on this VM"
+msgstr ""
+
+msgid "Restart the Guest OS on this VM?"
+msgstr ""
+
+msgid "Power On this VM"
+msgstr ""
+
+msgid "Power On this VM?"
+msgstr ""
+
+msgid "Power Off this VM"
+msgstr ""
+
+msgid "Power Off this VM?"
+msgstr ""
+
+msgid "Suspend this VM"
+msgstr ""
+
+msgid "Suspend"
+msgstr ""
+
+msgid "Suspend this VM?"
+msgstr ""
+
+msgid "Reset this VM"
+msgstr ""
+
+msgid "Reset this VM?"
+msgstr ""
+
+msgid "Open a web-based console for this VM"
+msgstr ""
+
+msgid ""
+"Opening a VM web-based console can take a while and requires that the VMware M"
+"KS plugin version configured for Management Engine already be installed and wo"
+"rking.  Are you sure?"
+msgstr ""
+
+msgid "Open a web-based VNC or SPICE console for this VM"
+msgstr ""
+
+msgid ""
+"Opening a web-based VM VNC or SPICE console requires that the Provider is pre-"
+"configured to allow VNC connections.  Are you sure?"
+msgstr ""
+
+msgid "Open a web-based VMRC console for this VM"
+msgstr ""
+
+msgid ""
+"Opening a VM web-based VMRC console requires that VMRC is pre-configured to wo"
+"rk in your browser.  Are you sure?"
+msgstr ""
+
+msgid "Create a new snapshot for this VM"
+msgstr ""
+
+msgid "Delete all of this VMs existing snapshots?"
+msgstr ""
+
+msgid ""
+"This VM will revert to selected snapshot. Are you sure you want to revert to t"
+"he selected snapshot?"
+msgstr ""
+
+msgid "Compare selected VMs"
+msgstr ""
+
+msgid "Request to Provision Instances"
+msgstr ""
+
+msgid "Provision Instances"
+msgstr ""
+
+msgid "Stop the selected items"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stop the selected items?"
+msgstr ""
+
+msgid "Start the selected items"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start the selected items?"
+msgstr ""
+
+msgid "Pause the selected items"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Pause the selected items?"
+msgstr ""
+
+msgid "Suspend the selected items"
+msgstr ""
+
+msgid "Suspend the selected items?"
+msgstr ""
+
+msgid "Shelve the selected items"
+msgstr ""
+
+msgid "Shelve"
+msgstr ""
+
+msgid "Shelve the selected items?"
+msgstr ""
+
+msgid "Shelve Offload the selected items"
+msgstr ""
+
+msgid "Shelve Offload"
+msgstr ""
+
+msgid "Shelve Offload the selected items?"
+msgstr ""
+
+msgid "Resume the selected items"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Resume the selected items?"
+msgstr ""
+
+msgid "Soft Reboot the selected items"
+msgstr ""
+
+msgid "Soft Reboot"
+msgstr ""
+
+msgid "Soft Reboot the selected items?"
+msgstr ""
+
+msgid "Hard Reboot the Guest OS on the selected items"
+msgstr ""
+
+msgid "Hard Reboot"
+msgstr ""
+
+msgid "Hard Reboot the Guest OS on the selected items?"
+msgstr ""
+
+msgid "Terminate the selected items"
+msgstr ""
+
+msgid "Terminate"
+msgstr ""
+
+msgid "Terminate the selected items?"
+msgstr ""
+
+msgid "Extract Running Processes for the selected items"
+msgstr ""
+
+msgid "Extract Running Processes for the selected items?"
+msgstr ""
+
+msgid "Request to Provision VMs"
+msgstr ""
+
+msgid "Provision VMs"
+msgstr ""
+
+msgid "Clone this item"
+msgstr ""
+
+msgid "Clone selected item"
+msgstr ""
+
+msgid "Publish selected VM to a Template"
+msgstr ""
+
+msgid "Migrate selected items to another Host/Datastore"
+msgstr ""
+
+msgid "Migrate selected items"
+msgstr ""
+
+msgid "Shutdown the Guest OS on the selected items"
+msgstr ""
+
+msgid "Shutdown the Guest OS on the selected items?"
+msgstr ""
+
+msgid "Restart the Guest OS on the selected items"
+msgstr ""
+
+msgid "Restart the Guest OS on the selected items?"
+msgstr ""
+
+msgid "Initiate refresh of recent C&U data"
+msgstr ""
+
+msgid "Initiate refresh of recent C&U data?"
+msgstr ""
+
+msgid "Reload the charts from the most recent C&U data"
+msgstr ""
+
+msgid "Request to Provision"
+msgstr ""
+
+msgid "Provision"
+msgstr ""
+
+msgid "Edit this Windows Image"
+msgstr ""
+
+msgid "Provision Configured System"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Cancel Changes"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Download these items in text format"
+msgstr ""
+
+msgid "Download these items in CSV format"
+msgstr ""
+
+msgid "Download these items in PDF format"
+msgstr ""
+
+msgid "History"
+msgstr ""
+
+msgid "Go to this item"
+msgstr ""
+
+msgid "Reload current display"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Image"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Image?"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this Image"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this Image?"
+msgstr ""
+
+msgid "Edit this Image"
+msgstr ""
+
+msgid "Set Ownership for this Image"
+msgstr ""
+
+msgid "Remove this Image from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Image and ALL of its components will be permanently removed from"
+" the Virtual Management Database.  Are you sure you want to remove this Image?"
+msgstr ""
+
+msgid "CPU/Memory Recommendations of this Image"
+msgstr ""
+
+msgid "Reconfigure the Memory/CPU of this Image"
+msgstr ""
+
+msgid "Reconfigure this Image"
+msgstr ""
+
+msgid "Manage Policies for this Image"
+msgstr ""
+
+msgid "View Policy Simulation for this Image"
+msgstr ""
+
+msgid "Edit Tags for this Image"
+msgstr ""
+
+msgid "Check Compliance of the last known configuration for this Image"
+msgstr ""
+
+msgid "Initiate Check Compliance of the last known configuration for this Image?"
+msgstr ""
+
+msgid ""
+"Open a web-based VMRC console for this VM.  This requires that VMRC is pre-con"
+"figured to work in your browser."
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Instance"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Instance?"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this Instance"
+msgstr ""
+
+msgid "Perform SmartState Analysis on this Instance?"
+msgstr ""
+
+msgid "Set Ownership for this Instance"
+msgstr ""
+
+msgid "Remove this Instance from the VMDB"
+msgstr ""
+
+msgid ""
+"Warning: This Instance and ALL of its components will be permanently removed f"
+"rom the Virtual Management Database.  Are you sure you want to remove this Ins"
+"tance?"
+msgstr ""
+
+msgid "Manage Policies for this Instance"
+msgstr ""
+
+msgid "View Policy Simulation for this Instance"
+msgstr ""
+
+msgid "Edit Tags for this Instance"
+msgstr ""
+
+msgid "Check Compliance of the last known configuration for this Instance"
+msgstr ""
+
+msgid "Initiate Check Compliance of the last known configuration for this Instance?"
+msgstr ""
+
+msgid "Set Retirement Dates for this Instance"
+msgstr ""
+
+msgid "Retire this Instance"
+msgstr ""
+
+msgid "Retire this Instance?"
+msgstr ""
+
+msgid "Show Capacity & Utilization data for this Instance"
+msgstr ""
+
+msgid "Show Timelines for this Instance"
+msgstr ""
+
+msgid "Instance Power Functions"
+msgstr ""
+
+msgid "Stop this Instance"
+msgstr ""
+
+msgid "Stop this Instance?"
+msgstr ""
+
+msgid "Start this Instance"
+msgstr ""
+
+msgid "Start this Instance?"
+msgstr ""
+
+msgid "Pause this Instance"
+msgstr ""
+
+msgid "Pause this Instance?"
+msgstr ""
+
+msgid "Suspend this Instance"
+msgstr ""
+
+msgid "Suspend this Instance?"
+msgstr ""
+
+msgid "Shelve this Instance"
+msgstr ""
+
+msgid "Shelve this Instance?"
+msgstr ""
+
+msgid "Shelve Offload this Instance"
+msgstr ""
+
+msgid "Shelve Offload this Instance?"
+msgstr ""
+
+msgid "Resume this Instance"
+msgstr ""
+
+msgid "Resume this Instance?"
+msgstr ""
+
+msgid "Soft Reboot this Instance"
+msgstr ""
+
+msgid "Soft Reboot this Instance?"
+msgstr ""
+
+msgid "Hard Reboot the Guest OS on this Instance"
+msgstr ""
+
+msgid "Hard Reboot the Guest OS on this Instance?"
+msgstr ""
+
+msgid "Terminate this Instance"
+msgstr ""
+
+msgid "Terminate this Instance?"
+msgstr ""
+
+msgid "Edit this Zone"
+msgstr ""
+
+msgid "Delete this Zone"
+msgstr ""
+
+msgid "Are you sure you want to delete this Zone?"
+msgstr ""
+
+msgid "Add a new Zone"
+msgstr ""
+
+msgid "Users are only allowed to delete their own requests"
+msgstr ""
+
+msgid "%{approval_states} requests cannot be deleted"
+msgstr ""
+
+msgid "Large Trees"
+msgstr ""
+
+msgid "Small Trees"
+msgstr ""
+
+msgid "Name"
 msgstr ""
 
 msgid "Storage Medium Type"
@@ -1560,6 +5787,9 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
+msgid "Type"
+msgstr ""
+
 msgid "Last Transition Time"
 msgstr ""
 
@@ -1575,9 +5805,6 @@ msgstr ""
 msgid "Observed"
 msgstr ""
 
-msgid "Resource"
-msgstr ""
-
 msgid "Default Limit"
 msgstr ""
 
@@ -1585,9 +5812,6 @@ msgid "Max"
 msgstr ""
 
 msgid "Min"
-msgstr ""
-
-msgid "Type"
 msgstr ""
 
 msgid "Default Request"
@@ -1641,6 +5865,9 @@ msgstr ""
 msgid "Show topology"
 msgstr ""
 
+msgid "Last Refresh"
+msgstr ""
+
 msgid "Show list of running %s"
 msgstr ""
 
@@ -1671,13 +5898,13 @@ msgstr ""
 msgid "Mac address"
 msgstr ""
 
-msgid "Configuration Profile Description"
-msgstr ""
-
 msgid "Provider"
 msgstr ""
 
 msgid "Zone"
+msgstr ""
+
+msgid "Configuration Profile Description"
 msgstr ""
 
 msgid "Environment"
@@ -1719,7 +5946,7 @@ msgstr ""
 msgid "By %{typ}: %{values}"
 msgstr ""
 
-msgid "\"#{props[:confirm]}\""
+msgid "Unknown image source"
 msgstr ""
 
 msgid "\"#{db}Performance.#{c}\""
@@ -1737,6 +5964,30 @@ msgstr ""
 msgid "File is empty"
 msgstr ""
 
+msgid "Host Properties"
+msgstr ""
+
+msgid "VM Properties"
+msgstr ""
+
+msgid "Workload"
+msgstr ""
+
+msgid "Allocated Virtual CPUs"
+msgstr ""
+
+msgid "Allocated Memory in GB"
+msgstr ""
+
+msgid "Allocated Storage in GB"
+msgstr ""
+
+msgid "Allocated Number of Virtual Machines"
+msgstr ""
+
+msgid "Allocated Number of Templates"
+msgstr ""
+
 msgid "Cloud Intelligence"
 msgstr ""
 
@@ -1744,13 +5995,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Wachtwoord"
 
-msgid "Reports"
-msgstr ""
-
 msgid "Chargeback"
-msgstr ""
-
-msgid "Timelines"
 msgstr ""
 
 msgid "RSS"
@@ -1771,13 +6016,13 @@ msgstr ""
 msgid "Clouds"
 msgstr ""
 
-msgid "Providers"
-msgstr ""
-
 msgid "Availability Zones"
 msgstr ""
 
 msgid "Tenants"
+msgstr ""
+
+msgid "Volumes"
 msgstr ""
 
 msgid "Flavors"
@@ -1792,22 +6037,7 @@ msgstr ""
 msgid "Stacks"
 msgstr ""
 
-msgid "Hosts"
-msgstr ""
-
-msgid "Hosts / Nodes"
-msgstr ""
-
-msgid "Nodes"
-msgstr ""
-
-msgid "Clusters"
-msgstr ""
-
-msgid "Clusters / Deployment Roles"
-msgstr ""
-
-msgid "Deployment Roles"
+msgid "Key Pairs"
 msgstr ""
 
 msgid "Infrastructure"
@@ -1828,9 +6058,6 @@ msgstr ""
 msgid "Configuration Management"
 msgstr ""
 
-msgid "Containers"
-msgstr ""
-
 msgid "Overview"
 msgstr ""
 
@@ -1843,7 +6070,7 @@ msgstr ""
 msgid "Container Images"
 msgstr ""
 
-msgid "Storage"
+msgid "Middleware"
 msgstr ""
 
 msgid "Storage Managers"
@@ -1871,9 +6098,6 @@ msgstr ""
 msgid "Optimize"
 msgstr ""
 
-msgid "Utilization"
-msgstr ""
-
 msgid "Planning"
 msgstr ""
 
@@ -1887,9 +6111,6 @@ msgid "My Settings"
 msgstr ""
 
 msgid "Tasks"
-msgstr ""
-
-msgid "Configuration"
 msgstr ""
 
 msgid "About"
@@ -1916,7 +6137,6 @@ msgstr ""
 msgid "All Containers"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "All Dashboards"
 msgstr "Wachtwoord"
@@ -2041,6 +6261,18 @@ msgstr ""
 msgid "All VM and Instance Conditions"
 msgstr ""
 
+msgid "Global Filters"
+msgstr ""
+
+msgid "Global Shared Filters"
+msgstr ""
+
+msgid "My Filters"
+msgstr ""
+
+msgid "My Personal Filters"
+msgstr ""
+
 msgid "All Events"
 msgstr ""
 
@@ -2088,25 +6320,13 @@ msgstr ""
 msgid "All Policy Profiles"
 msgstr ""
 
-msgid "Click to open"
+msgid "Cluster / Deployment Role (Click to open)"
 msgstr ""
 
 msgid "Archived VMs and Templates"
 msgstr ""
 
 msgid "Orphaned VMs and Templates"
-msgstr ""
-
-msgid "Global Filters"
-msgstr ""
-
-msgid "Global Shared Filters"
-msgstr ""
-
-msgid "My Filters"
-msgstr ""
-
-msgid "My Personal Filters"
 msgstr ""
 
 msgid "Open the chart and full report in a new window"
@@ -2227,10 +6447,13 @@ msgstr ""
 msgid "Relationships"
 msgstr ""
 
-msgid "Totals for %s"
+msgid "Properties"
 msgstr ""
 
 msgid "Smart Management"
+msgstr ""
+
+msgid "Totals for Availability Zone"
 msgstr ""
 
 msgid "Unassigned:"
@@ -2242,19 +6465,10 @@ msgstr ""
 msgid "Move Selected buttons right"
 msgstr ""
 
-msgid "Move Selected fields right"
-msgstr ""
-
 msgid "Move Selected buttons left"
 msgstr ""
 
-msgid "Move Selected fields left"
-msgstr ""
-
 msgid "Basic Info"
-msgstr ""
-
-msgid "Details"
 msgstr ""
 
 msgid "Resources"
@@ -2350,28 +6564,10 @@ msgstr ""
 msgid "Provision Order"
 msgstr ""
 
-msgid "Start"
-msgstr ""
-
-msgid "Stop"
-msgstr ""
-
 msgid "Click to remove this Resource from the Catalog Item"
 msgstr ""
 
 msgid "Do Nothing"
-msgstr ""
-
-msgid "Power On"
-msgstr ""
-
-msgid "Power Off"
-msgstr ""
-
-msgid "Shutdown"
-msgstr ""
-
-msgid "Suspend"
 msgstr ""
 
 msgid "None"
@@ -2431,9 +6627,6 @@ msgstr ""
 msgid "Click to this Catalog Item"
 msgstr ""
 
-msgid "Service Dialog Name"
-msgstr ""
-
 msgid "Catalog Item Type"
 msgstr ""
 
@@ -2477,9 +6670,6 @@ msgid "Rate"
 msgstr ""
 
 msgid "Rate Details"
-msgstr ""
-
-msgid "Group"
 msgstr ""
 
 msgid "Per Time"
@@ -2578,22 +6768,13 @@ msgstr ""
 msgid "In use by %s reports, cannot be disabled"
 msgstr ""
 
-msgid "Add"
-msgstr ""
-
 msgid "Add this Time Profile"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Reports Currently Using This Time Profile"
 msgstr ""
 
 msgid "Grid/Tile Icons"
-msgstr ""
-
-msgid "Host"
 msgstr ""
 
 msgid "Template"
@@ -2671,9 +6852,6 @@ msgstr ""
 msgid "VMs & Instances"
 msgstr ""
 
-msgid "Images"
-msgstr ""
-
 msgid "VMs"
 msgstr ""
 
@@ -2689,7 +6867,7 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
-msgid "Checked default filters will be visible."
+msgid "(Checked default filters will be visible.)"
 msgstr ""
 
 msgid "No Records Found."
@@ -2707,7 +6885,7 @@ msgstr ""
 msgid "Click to view/edit Time Profile"
 msgstr ""
 
-msgid "Properties"
+msgid "Environment variables"
 msgstr ""
 
 msgid "Labels"
@@ -2716,7 +6894,7 @@ msgstr ""
 msgid "Node Selector"
 msgstr ""
 
-msgid "Volumes"
+msgid "Container Statuses Summary"
 msgstr ""
 
 msgid "Resource Quota"
@@ -2729,6 +6907,12 @@ msgid "Selector"
 msgstr ""
 
 msgid "Port Configurations"
+msgstr ""
+
+msgid "Display Names"
+msgstr ""
+
+msgid "Refresh"
 msgstr ""
 
 #, fuzzy
@@ -2794,12 +6978,6 @@ msgstr ""
 msgid "Authorization Error"
 msgstr ""
 
-msgid "Click to remove message"
-msgstr ""
-
-msgid "Invalid Single Sign-On credentials"
-msgstr ""
-
 msgid "Password"
 msgstr "Wachtwoord"
 
@@ -2833,7 +7011,6 @@ msgid "Appliance:"
 msgstr "Toestel:"
 
 #, fuzzy
-#, fuzzy
 msgid "Discover Type"
 msgstr "Gebruikersnaam"
 
@@ -2847,6 +7024,9 @@ msgid "Not Available"
 msgstr ""
 
 msgid "Storage Relationships"
+msgstr ""
+
+msgid "Totals for %s"
 msgstr ""
 
 msgid "Totals for VMs"
@@ -2967,9 +7147,6 @@ msgstr ""
 msgid "Apply the current filter"
 msgstr ""
 
-msgid "Delete"
-msgstr ""
-
 msgid "Delete the %{model} filter named %{filter}?"
 msgstr ""
 
@@ -2980,9 +7157,6 @@ msgid "Save..."
 msgstr ""
 
 msgid "Save the current filter"
-msgstr ""
-
-msgid "Reset"
 msgstr ""
 
 msgid "Reset the filter"
@@ -3000,28 +7174,16 @@ msgstr ""
 msgid "Cancel the load"
 msgstr ""
 
-msgid "Save"
-msgstr ""
-
 msgid "Save the current search"
 msgstr ""
 
 msgid "Cancel the save"
 msgstr ""
 
-msgid "Search by Name within results"
-msgstr ""
-
-msgid "Remove the current filter"
-msgstr ""
-
 msgid "Object Details"
 msgstr ""
 
 msgid "System/Process"
-msgstr ""
-
-msgid "Message"
 msgstr ""
 
 msgid "Request"
@@ -3052,7 +7214,6 @@ msgid "Token"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Change stored password"
 msgstr "Nieuw wachtwoord"
 
@@ -3062,7 +7223,6 @@ msgstr ""
 msgid "Note: Username must be in the format: name@realm"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Confirm %s"
 msgstr "Nieuw wachtwoord"
@@ -3125,9 +7285,6 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-msgid "Save Changes"
-msgstr ""
-
 msgid "Reset Changes"
 msgstr ""
 
@@ -3156,9 +7313,6 @@ msgid "Continue"
 msgstr ""
 
 msgid "Reset All menus to defaults"
-msgstr ""
-
-msgid "Cancel Changes"
 msgstr ""
 
 msgid "Database Backup Settings"
@@ -3238,9 +7392,6 @@ msgstr ""
 msgid "Wrap this expression element with a NOT"
 msgstr ""
 
-msgid "Click to remove messages"
-msgstr ""
-
 msgid "Validate Database Settings for the Server"
 msgstr ""
 
@@ -3281,9 +7432,6 @@ msgid "Remote Login"
 msgstr ""
 
 msgid "Web Services"
-msgstr ""
-
-msgid "IPMI"
 msgstr ""
 
 msgid "Access Key ID"
@@ -3351,9 +7499,6 @@ msgid "back"
 msgstr "Terug"
 
 msgid "Range"
-msgstr ""
-
-msgid "Date"
 msgstr ""
 
 msgid "Group by"
@@ -3498,10 +7643,13 @@ msgstr "Gebruikersnaam"
 msgid "Change Group:"
 msgstr ""
 
-msgid "Select to change to another Group"
+msgid "Currently Selected Group"
 msgstr ""
 
 msgid "Current Group"
+msgstr ""
+
+msgid "Change to this Group"
 msgstr ""
 
 msgid "Click to Logout"
@@ -3514,6 +7662,9 @@ msgstr ""
 msgid "Logging into"
 msgstr "Aanmelden"
 
+msgid "Search by Name within results"
+msgstr ""
+
 msgid "Submit"
 msgstr ""
 
@@ -3524,9 +7675,6 @@ msgid "Export"
 msgstr ""
 
 msgid "Create"
-msgstr ""
-
-msgid "Copy"
 msgstr ""
 
 msgid "Reset All menus to CFME defaults"
@@ -3591,7 +7739,6 @@ msgstr ""
 msgid "Change stored private key"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Confirm Private Key"
 msgstr "Nieuw wachtwoord"
@@ -3691,31 +7838,25 @@ msgstr ""
 msgid "Show Summary"
 msgstr ""
 
-msgid "Show this Availability Zone's parent %s"
-msgstr ""
-
 msgid "Instances (%s)"
 msgstr ""
 
 msgid "Show all Instances"
 msgstr ""
 
-msgid "Show all %s"
-msgstr ""
-
-msgid "Infrastructure Relationships"
+msgid "Show this Availability Zone's parent %s"
 msgstr ""
 
 msgid "Show this Cloud Tenant's parent %s"
 msgstr ""
 
-msgid "Security Groups (%s)"
-msgstr ""
-
-msgid "Images (%s)"
+msgid "Show all Security Groups"
 msgstr ""
 
 msgid "Show all Images"
+msgstr ""
+
+msgid "Show this Cloud Volumes's parent %s"
 msgstr ""
 
 msgid "Comparison Sections"
@@ -3739,52 +7880,25 @@ msgstr ""
 msgid "Show configuration"
 msgstr ""
 
-msgid "Show %s"
+msgid "Show %{host_title}"
 msgstr ""
 
-msgid "Direct VMs: 0"
-msgstr ""
-
-msgid "Direct VMs: %{total_direct_vms}"
-msgstr ""
-
-msgid "Show VMs in this %{cluster_title}, but not in Resource Pools below"
-msgstr ""
-
-msgid "All VMs: 0"
-msgstr ""
-
-msgid "All VMs: %{total_vms}"
+msgid "Direct VMs"
 msgstr ""
 
 msgid "Show all VMs in this %{cluster_title}"
 msgstr ""
 
-msgid "All Templates: 0"
-msgstr ""
-
-msgid "All Templates: %{total_miq_templates}"
-msgstr ""
-
 msgid "Show all Templates in this %{cluster_title}"
 msgstr ""
 
-msgid "All VMs (Tree View): 0"
-msgstr ""
-
-msgid "All VMs (Tree View): %{total_vms}"
+msgid "All VMs (Tree View)"
 msgstr ""
 
 msgid "Show tree of all VMs by Resource Pool in this %{cluster_title}"
 msgstr ""
 
-msgid "Resource Pools (%{resource_pools})"
-msgstr ""
-
 msgid "Show Resource Pools"
-msgstr ""
-
-msgid "Drift History (%{drift_states})"
 msgstr ""
 
 msgid "Show %{cluster_title} drift history"
@@ -3799,25 +7913,28 @@ msgstr ""
 msgid "Show all %{base_storage_extent}"
 msgstr ""
 
-msgid "Show %s & %s"
+msgid "%{hosts} & %{clusters}"
 msgstr ""
 
-msgid "VMs & Templates"
+msgid "Show %{hosts} & %{clusters}"
 msgstr ""
 
 msgid "Show VMs & Templates"
 msgstr ""
 
-msgid "Show all managed %s"
+msgid "VMs & Templates"
 msgstr ""
 
-msgid "VMs (%s)"
+msgid "Show all managed %{cluster}"
+msgstr ""
+
+msgid "Show all managed %{hosts}"
+msgstr ""
+
+msgid "Show all managed %{storages}"
 msgstr ""
 
 msgid "Show all VMs"
-msgstr ""
-
-msgid "Templates (%s)"
 msgstr ""
 
 msgid "Show all Templates"
@@ -3838,19 +7955,19 @@ msgstr ""
 msgid "Show %s network"
 msgstr ""
 
-msgid "Storage Adapters"
+msgid "Show %s storage adapters"
 msgstr ""
 
-msgid "Show %s storage adapters"
+msgid "Storage Adapters"
 msgstr ""
 
 msgid "Show %s OS information"
 msgstr ""
 
-msgid "VMM Information"
+msgid "Show VMM information"
 msgstr ""
 
-msgid "Show VMM information"
+msgid "VMM Information"
 msgstr ""
 
 msgid "ESX Logs"
@@ -3865,130 +7982,85 @@ msgstr ""
 msgid "Show %s parent %s"
 msgstr ""
 
-msgid "Resource Pools (0)"
+msgid "Show %{host} drift history"
 msgstr ""
 
-msgid "Resource Pools (%s)"
+msgid "Show the users defined on this %{host}"
 msgstr ""
 
-msgid "VMs (0)"
+msgid "Show the groups defined on this %{host}"
 msgstr ""
 
-msgid "Templates (0)"
+msgid "Patches"
 msgstr ""
 
-msgid "Drift History (0)"
+msgid "Show the patches installed on this %{host}"
 msgstr ""
 
-msgid "Drift History (%s)"
+msgid "Firewall Rules"
 msgstr ""
 
-msgid "Show %s drift history"
+msgid "Show the firewall rules on this %{host}"
 msgstr ""
 
-msgid "Users (0)"
+msgid "Packages"
 msgstr ""
 
-msgid "Show the users defined on this %s"
+msgid "Show the packages installed on this %{host}"
 msgstr ""
 
-msgid "Users (%s)"
+msgid "Show the services installed on this %{host}"
 msgstr ""
 
-msgid "Groups (0)"
+msgid "Show the files on this %{host}"
 msgstr ""
 
-msgid "Groups (%s)"
+msgid "Advanced Settings"
 msgstr ""
 
-msgid "Show the groups defined on this %s"
-msgstr ""
-
-msgid "Patches (%s)"
-msgstr ""
-
-msgid "Show the patches installed on this %s"
-msgstr ""
-
-msgid "Firewall Rules (0)"
-msgstr ""
-
-msgid "Firewall Rules (%s)"
-msgstr ""
-
-msgid "Show the firewall rules on this %s"
-msgstr ""
-
-msgid "Packages (0)"
-msgstr ""
-
-msgid "Packages (%s)"
-msgstr ""
-
-msgid "Show the packages installed on this %s"
-msgstr ""
-
-msgid "Services (0)"
-msgstr ""
-
-msgid "Services (%s)"
-msgstr ""
-
-msgid "Show the services installed on this %s"
-msgstr ""
-
-msgid "Files (0)"
-msgstr ""
-
-msgid "Files (%s)"
-msgstr ""
-
-msgid "Show the files on this %s"
-msgstr ""
-
-msgid "Advanced Settings (0)"
-msgstr ""
-
-msgid "Show the advanced settings on this %s"
+msgid "Show the advanced settings on this %{host}"
 msgstr ""
 
 msgid "View Instances"
 msgstr ""
 
-msgid "%s: None"
+msgid "Infrastructure Relationships"
+msgstr ""
+
+msgid "Show all %s"
+msgstr ""
+
+msgid "Show %s"
 msgstr ""
 
 msgid "Show parent %s for this %s"
 msgstr ""
 
-msgid "Show all Security Groups"
-msgstr ""
-
-msgid "Cloud Networks (%s)"
+msgid "Cloud Networks"
 msgstr ""
 
 msgid "Show all Cloud Networks"
 msgstr ""
 
-msgid "Parameters (%s)"
+msgid "Parameters"
 msgstr ""
 
 msgid "Show all Parameters"
 msgstr ""
 
-msgid "Outputs (%s)"
+msgid "Outputs"
 msgstr ""
 
 msgid "Show all Outputs"
 msgstr ""
 
-msgid "Resources (%s)"
-msgstr ""
-
 msgid "Show all Resources"
 msgstr ""
 
-msgid "Discovered VMs (%s)"
+msgid "Show this container volume's parent %s"
+msgstr ""
+
+msgid "Discovered VMs"
 msgstr ""
 
 msgid "Show all discovered VMs"
@@ -3997,34 +8069,19 @@ msgstr ""
 msgid "Show all discovered Templates"
 msgstr ""
 
-msgid "Parent %s: None"
-msgstr ""
-
-msgid "Parent %s: %s"
+msgid "Parent %{title}: %{name}"
 msgstr ""
 
 msgid "Show VMs"
 msgstr ""
 
-msgid "Show Parent %s"
-msgstr ""
-
-msgid "Direct VMs: %s"
+msgid "Show Parent %{host}"
 msgstr ""
 
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
 msgstr ""
 
-msgid "All VMs: %s"
-msgstr ""
-
 msgid "Show all VMs in this Resource Pool"
-msgstr ""
-
-msgid "Total VMs: 0"
-msgstr ""
-
-msgid "All VMs (Tree View): %s"
 msgstr ""
 
 msgid "Show tree of all VMs in this Resource Pool"
@@ -4051,7 +8108,7 @@ msgstr ""
 msgid "Select a filter to set it as my default"
 msgstr ""
 
-msgid "Show all registered %s"
+msgid "Show all registered %{hosts}"
 msgstr ""
 
 msgid "Show registered VMs"
@@ -4096,165 +8153,6 @@ msgstr ""
 msgid "Show non-VM files on this %s"
 msgstr ""
 
-msgid "Container"
-msgstr ""
-
-msgid "Show virtual machine container information"
-msgstr ""
-
-msgid "Operating System"
-msgstr ""
-
-msgid "Show virtual machine OS information"
-msgstr ""
-
-msgid "Networks"
-msgstr ""
-
-msgid "Show virtual machine networks"
-msgstr ""
-
-msgid "Running Processes (0)"
-msgstr ""
-
-msgid "Running Processes (%s)"
-msgstr ""
-
-msgid "Show running process on this VM"
-msgstr ""
-
-msgid "Show snapshot info"
-msgstr ""
-
-msgid "Snapshots"
-msgstr ""
-
-msgid "Event Logs"
-msgstr ""
-
-msgid "Show event logs on this VM"
-msgstr ""
-
-msgid "Show this Vm's parent %s"
-msgstr ""
-
-msgid "Show this VM's parent %s"
-msgstr ""
-
-msgid "Service: %s"
-msgstr ""
-
-msgid "Show this VM's parent Service"
-msgstr ""
-
-msgid "Service: None"
-msgstr ""
-
-msgid "Parent VM: %s"
-msgstr ""
-
-msgid "Show this VM's parent"
-msgstr ""
-
-msgid "Parent VM: None"
-msgstr ""
-
-msgid "Genealogy"
-msgstr ""
-
-msgid "Show virtual machine genealogy"
-msgstr ""
-
-msgid "Show virtual machine drift history"
-msgstr ""
-
-msgid "Analysis History (%s)"
-msgstr ""
-
-msgid "Show virtual machine Analysis History"
-msgstr ""
-
-msgid "Show the users defined on this VM"
-msgstr ""
-
-msgid "Show the groups defined on this VM"
-msgstr ""
-
-msgid "Show the patches installed on this VM"
-msgstr ""
-
-msgid "Init Processes (%s)"
-msgstr ""
-
-msgid "Show the files on this VM"
-msgstr ""
-
-msgid "Applications (%s)"
-msgstr ""
-
-msgid "Show the applications installed on this VM"
-msgstr ""
-
-msgid "Win32 Services (%s)"
-msgstr ""
-
-msgid "Show the Win32 services installed on this VM"
-msgstr ""
-
-msgid "Kernel Drivers (%s)"
-msgstr ""
-
-msgid "Show the kernel drivers installed on this VM"
-msgstr ""
-
-msgid "File System Drivers (%s)"
-msgstr ""
-
-msgid "Show the file system drivers installed on this VM"
-msgstr ""
-
-msgid "Registry Entries (%s)"
-msgstr ""
-
-msgid "Show the registry items on this VM"
-msgstr ""
-
-msgid "Disks (0)"
-msgstr ""
-
-msgid "Disks (%s)"
-msgstr ""
-
-msgid "Show disks"
-msgstr ""
-
-msgid "Advanced Settings (%s)"
-msgstr ""
-
-msgid "Show the advanced settings on this VM"
-msgstr ""
-
-msgid "Show Resources of this VM"
-msgstr ""
-
-msgid "Running Processes (%s Ago)"
-msgstr ""
-
-msgid "Show Running Processes on this VM"
-msgstr ""
-
-msgid "Running Processes (Not Available)"
-msgstr ""
-
-msgid "Event Logs (Not Available)"
-msgstr ""
-
-msgid "Event Logs (Available)"
-msgstr ""
-
-msgid "Show Event Logs on this VM"
-msgstr ""
-
 msgid "Name: %s | Hostname: %s | Refresh Status: %s"
 msgstr ""
 
@@ -4283,9 +8181,6 @@ msgid "Namespace Details"
 msgstr ""
 
 msgid "Namespaces"
-msgstr ""
-
-msgid "Collect"
 msgstr ""
 
 msgid "Default Value"
@@ -4498,9 +8393,6 @@ msgstr ""
 msgid "Value Type"
 msgstr ""
 
-msgid "Integer"
-msgstr ""
-
 msgid "String"
 msgstr ""
 
@@ -4532,9 +8424,6 @@ msgid "Import"
 msgstr ""
 
 msgid "Import Service Dialogs"
-msgstr ""
-
-msgid "Commit"
 msgstr ""
 
 msgid "Dialog Information"
@@ -4631,6 +8520,12 @@ msgid "Toggle All/None"
 msgstr ""
 
 msgid "Submit Automation Simulation with the specified options"
+msgstr ""
+
+msgid "Retry state machine simulation, with preserved attributes"
+msgstr ""
+
+msgid "Retry"
 msgstr ""
 
 msgid "Reset all options"
@@ -4740,9 +8635,6 @@ msgstr ""
 msgid "CPU Speed"
 msgstr ""
 
-msgid "MHz"
-msgstr ""
-
 msgid "vCPU Count"
 msgstr ""
 
@@ -4753,9 +8645,6 @@ msgid "MB"
 msgstr ""
 
 msgid "Disk Space"
-msgstr ""
-
-msgid "GB"
 msgstr ""
 
 msgid "Target Options / Limits"
@@ -4841,13 +8730,7 @@ msgstr ""
 msgid "Select a node on the left to view Utilization report."
 msgstr ""
 
-msgid "CPU"
-msgstr ""
-
 msgid "Disk"
-msgstr ""
-
-msgid "Memory"
 msgstr ""
 
 msgid "Submit Planning options"
@@ -5085,9 +8968,6 @@ msgid "10 Minutes"
 msgstr ""
 
 msgid "Expression (Choose an element of the expression to edit)"
-msgstr ""
-
-msgid "Parameters"
 msgstr ""
 
 msgid "An alert must contain a valid expression."
@@ -5409,9 +9289,6 @@ msgstr ""
 msgid "No %s Policy Profiles are defined%s."
 msgstr ""
 
-msgid "VM Selection"
-msgstr ""
-
 msgid "Single VM"
 msgstr ""
 
@@ -5640,9 +9517,6 @@ msgstr ""
 msgid "All Zones"
 msgstr ""
 
-msgid "User"
-msgstr ""
-
 msgid "24 Hour Time Period"
 msgstr ""
 
@@ -5718,9 +9592,6 @@ msgstr ""
 msgid "Servers"
 msgstr ""
 
-msgid "Collect Logs"
-msgstr ""
-
 msgid "C & U Gap Collection"
 msgstr ""
 
@@ -5757,9 +9628,6 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-msgid "Event Log"
-msgstr ""
-
 msgid "Registry"
 msgstr ""
 
@@ -5788,9 +9656,6 @@ msgid "Registry Entry"
 msgstr ""
 
 msgid "Registry Hive"
-msgstr ""
-
-msgid "Registry Key"
 msgstr ""
 
 msgid "Registry Value"
@@ -6053,7 +9918,13 @@ msgstr ""
 msgid "View Users"
 msgstr ""
 
+msgid "Users (%s)"
+msgstr ""
+
 msgid "View Groups"
+msgstr ""
+
+msgid "Groups (%s)"
 msgstr ""
 
 #, fuzzy
@@ -6084,6 +9955,12 @@ msgstr ""
 msgid "Project/Tenant"
 msgstr ""
 
+msgid "View this Project"
+msgstr ""
+
+msgid "View this Tenant"
+msgstr ""
+
 msgid "Users in this Group"
 msgstr ""
 
@@ -6100,6 +9977,9 @@ msgid "Assign Filters"
 msgstr ""
 
 msgid "Assigned Filters (read only)"
+msgstr ""
+
+msgid "%{title_for_hosts} & %{title_for_clusters}"
 msgstr ""
 
 msgid "This user is limited to items with the selected tags."
@@ -6156,9 +10036,6 @@ msgstr ""
 msgid "Click to view child Tenant"
 msgstr ""
 
-msgid "Projects"
-msgstr ""
-
 msgid "Click to view child TenantProject"
 msgstr ""
 
@@ -6198,9 +10075,6 @@ msgid "Compliance Check"
 msgstr "Toestel:"
 
 msgid "Database Backup"
-msgstr ""
-
-msgid "Analysis"
 msgstr ""
 
 msgid "Run At"
@@ -6279,9 +10153,6 @@ msgid "Editing %s File"
 msgstr ""
 
 msgid "Session Timeout"
-msgstr ""
-
-msgid "Amazon"
 msgstr ""
 
 msgid "External (httpd)"
@@ -6417,9 +10288,6 @@ msgstr ""
 msgid "View Schedules"
 msgstr ""
 
-msgid "Schedules"
-msgstr ""
-
 msgid "View LDAP Regions"
 msgstr ""
 
@@ -6468,9 +10336,6 @@ msgstr ""
 msgid "Register to"
 msgstr ""
 
-msgid "Channel Name(s):"
-msgstr ""
-
 msgid "Repository Name(s):"
 msgstr ""
 
@@ -6481,9 +10346,6 @@ msgid "Use HTTP Proxy"
 msgstr ""
 
 msgid "HTTP Proxy Address"
-msgstr ""
-
-msgid "Organization ID"
 msgstr ""
 
 msgid "Organization"
@@ -6613,9 +10475,6 @@ msgstr ""
 msgid "C & U Data Processors"
 msgstr ""
 
-msgid "Refresh"
-msgstr ""
-
 msgid "VM Analysis Collectors"
 msgstr ""
 
@@ -6679,9 +10538,6 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-msgid "Channel Name(s)"
-msgstr ""
-
 msgid "Repository Name(s)"
 msgstr ""
 
@@ -6741,13 +10597,16 @@ msgstr ""
 msgid "Platform Updates Available"
 msgstr ""
 
-msgid "Lifecycle"
+msgid "Choose>"
 msgstr ""
 
 msgid "Url"
 msgstr ""
 
 msgid "Verify Peer Certificate"
+msgstr ""
+
+msgid "Operating System"
 msgstr ""
 
 msgid "Tenancy"
@@ -6894,16 +10753,19 @@ msgstr ""
 msgid "Available Custom Reports:"
 msgstr ""
 
+msgid "Import Widgets"
+msgstr ""
+
+msgid "Widget name"
+msgstr ""
+
+msgid "Commit Changes"
+msgstr ""
+
 msgid "Widgets"
 msgstr ""
 
 msgid "Available Widgets:"
-msgstr ""
-
-msgid "Import Widgets"
-msgstr ""
-
-msgid "Commit Changes"
 msgstr ""
 
 msgid "Basic Report Info"
@@ -7056,9 +10918,6 @@ msgid "VM/Instance"
 msgstr ""
 
 msgid "Chargeback Interval"
-msgstr ""
-
-msgid "Day"
 msgstr ""
 
 msgid "Month"
@@ -7262,6 +11121,9 @@ msgstr ""
 msgid "Move selected folder up"
 msgstr ""
 
+msgid "Discard"
+msgstr ""
+
 msgid "Manage Accordions & Folders"
 msgstr ""
 
@@ -7328,9 +11190,6 @@ msgstr ""
 msgid "Report Info"
 msgstr ""
 
-msgid "Saved Reports"
-msgstr ""
-
 msgid "Choose a Report to view from the menus on the left."
 msgstr ""
 
@@ -7353,9 +11212,6 @@ msgid "Send if Report is Empty"
 msgstr ""
 
 msgid "Attachments"
-msgstr ""
-
-msgid "Text"
 msgstr ""
 
 msgid "CSV"
@@ -7505,9 +11361,6 @@ msgstr ""
 msgid "End Port"
 msgstr ""
 
-msgid "Firewall Rules"
-msgstr ""
-
 msgid "Host Protocol"
 msgstr ""
 
@@ -7581,12 +11434,6 @@ msgid "Assign Buttons"
 msgstr ""
 
 msgid "Button Group Order:"
-msgstr ""
-
-msgid "Collapse All"
-msgstr ""
-
-msgid "Expand All"
 msgstr ""
 
 msgid "Changes"
@@ -7724,9 +11571,6 @@ msgid "New setting will affect VM"
 msgid_plural "New setting will affect VMs"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Choose>"
-msgstr ""
 
 msgid "API Port"
 msgstr ""
@@ -7917,9 +11761,6 @@ msgid "Not a Server"
 msgstr ""
 
 msgid "Parent VM Selection"
-msgstr ""
-
-msgid "Parent VM"
 msgstr ""
 
 msgid "Child VM Selection"
@@ -9638,9 +13479,6 @@ msgid "FileDepot|Support case"
 msgstr ""
 
 msgid "FileDepot|Uri"
-msgstr ""
-
-msgid "Filesystem"
 msgstr ""
 
 msgid "Filesystem|Atime"
@@ -13693,9 +17531,6 @@ msgstr ""
 msgid "Partition|Volume group"
 msgstr ""
 
-msgid "Patch"
-msgstr ""
-
 msgid "Patch|Created on"
 msgstr ""
 
@@ -14252,9 +18087,6 @@ msgid "ServiceTemplateCatalog|Description"
 msgstr ""
 
 msgid "ServiceTemplateCatalog|Name"
-msgstr ""
-
-msgid "Snapshot"
 msgstr ""
 
 msgid "Snapshot|Create time"
@@ -15048,2767 +18880,4 @@ msgid "Zone|Settings"
 msgstr ""
 
 msgid "Zone|Updated on"
-msgstr ""
-
-msgid "Add Host Analysis Profile"
-msgstr ""
-
-msgid "Add Project to this Tenant"
-msgstr ""
-
-msgid "Add VM Analysis Profile"
-msgstr ""
-
-msgid ""
-"\"Add a New #{@sb[:folder].upcase == \"VM\" ? \"VM\" : ui_lookup(:model=>@sb[:folde"
-"r])} Condition\""
-msgstr ""
-
-msgid "\"Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile\""
-msgstr ""
-
-msgid "\"Add a New #{ui_lookup(:model=>@sb[:nodeid])} #{@sb[:mode].capitalize} Policy\""
-msgstr ""
-
-msgid "Add a New "
-msgstr ""
-
-msgid "Add a New Alert"
-msgstr ""
-
-msgid "Add a New Catalog Bundle"
-msgstr ""
-
-msgid "Add a New Catalog Item"
-msgstr ""
-
-msgid "Add a New Catalog"
-msgstr ""
-
-msgid "Add a New Class"
-msgstr ""
-
-msgid "Add a New Customization Template"
-msgstr ""
-
-msgid "Add a New Domain"
-msgstr ""
-
-msgid "Add a New ISO Datastore"
-msgstr ""
-
-msgid "Add a New Instance"
-msgstr ""
-
-msgid "Add a New Method"
-msgstr ""
-
-msgid "Add a New Namespace"
-msgstr ""
-
-msgid "Add a New PXE Server"
-msgstr ""
-
-msgid "Add a New Policy Profile"
-msgstr ""
-
-msgid "Add a New Storage Manager"
-msgstr ""
-
-msgid "Add a New item"
-msgstr ""
-
-msgid "Add a new Action"
-msgstr ""
-
-msgid "Add a new Box to this Tab"
-msgstr ""
-
-msgid "Add a new Button Group"
-msgstr ""
-
-msgid "Add a new Button"
-msgstr ""
-
-msgid "Add a new Chargeback Rate"
-msgstr ""
-
-msgid "Add a new Dashboard"
-msgstr ""
-
-msgid "Add a new Dialog"
-msgstr ""
-
-msgid "Add a new Element to this Box"
-msgstr ""
-
-msgid "Add a new Group"
-msgstr ""
-
-msgid "Add a new Host Analysis Profile"
-msgstr ""
-
-msgid "Add a new LDAP Domain"
-msgstr ""
-
-msgid "Add a new LDAP Region"
-msgstr ""
-
-msgid "Add a new Provider"
-msgstr ""
-
-msgid "Add a new Report"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Add a new Repository"
-msgstr "Wachtwoord veranderen"
-
-msgid "Add a new Role"
-msgstr ""
-
-msgid "Add a new Schedule"
-msgstr ""
-
-msgid "Add a new System Image Type"
-msgstr ""
-
-msgid "Add a new Tab to this Dialog"
-msgstr ""
-
-msgid "Add a new Time Profile"
-msgstr ""
-
-msgid "Add a new User"
-msgstr ""
-
-msgid "Add a new VM Analysis Profile"
-msgstr ""
-
-msgid "Add a new Widget"
-msgstr ""
-
-msgid "Add a new Zone"
-msgstr ""
-
-msgid "Add child Tenant to this Tenant"
-msgstr ""
-
-msgid "All attributes"
-msgstr ""
-
-msgid "Analyze then Check Compliance for the selected items"
-msgstr ""
-
-msgid "Analyze then Check Compliance for the selected items?"
-msgstr ""
-
-msgid "Analyze then Check Compliance for this item"
-msgstr ""
-
-msgid "Analyze then Check Compliance for this item?"
-msgstr ""
-
-msgid "Analyze then Check Compliance"
-msgstr ""
-
-msgid "Approve this Request"
-msgstr ""
-
-msgid "Are you sure you want initiate content generation for this Widget now?"
-msgstr ""
-
-msgid "Are you sure you want to copy this Alert?"
-msgstr ""
-
-msgid ""
-"\"Are you sure you want to create Policy [#{truncate(\"Copy of #{@policy.descrip"
-"tion}\", :length => 255, :omission => \"\")}] from this Policy?\""
-msgstr ""
-
-msgid ""
-"\"Are you sure you want to delete this #{ui_lookup(:model=>@condition.towhat)} "
-"Condition?\""
-msgstr ""
-
-msgid ""
-"\"Are you sure you want to delete this #{ui_lookup(:model=>@policy.towhat)} Pol"
-"icy?\""
-msgstr ""
-
-msgid "Are you sure you want to delete this Action?"
-msgstr ""
-
-msgid "Are you sure you want to delete this Alert Profile?"
-msgstr ""
-
-msgid "Are you sure you want to delete this Alert?"
-msgstr ""
-
-msgid "Are you sure you want to delete this Group?"
-msgstr ""
-
-msgid "Are you sure you want to delete this LDAP Domain?"
-msgstr ""
-
-msgid "Are you sure you want to delete this LDAP Region?"
-msgstr ""
-
-msgid "Are you sure you want to delete this Request?"
-msgstr ""
-
-msgid "Are you sure you want to delete this Role?"
-msgstr ""
-
-msgid "Are you sure you want to delete this User?"
-msgstr ""
-
-msgid "Are you sure you want to delete this Zone?"
-msgstr ""
-
-msgid "Are you sure you want to delete this item and all of it's children?"
-msgstr ""
-
-msgid "Are you sure you want to remove selected Items?"
-msgstr ""
-
-msgid "Are you sure you want to remove the selected Domains?"
-msgstr ""
-
-msgid "Are you sure you want to remove the selected Instances?"
-msgstr ""
-
-msgid "Are you sure you want to remove the selected Methods?"
-msgstr ""
-
-msgid "Are you sure you want to remove the selected Namespaces?"
-msgstr ""
-
-msgid "Are you sure you want to remove this Class?"
-msgstr ""
-
-msgid ""
-"\"Are you sure you want to remove this Condition from Policy [#{@condition_poli"
-"cy.description}]?\""
-msgstr ""
-
-msgid "Are you sure you want to remove this Domain?"
-msgstr ""
-
-msgid "Are you sure you want to remove this Instance?"
-msgstr ""
-
-msgid "Are you sure you want to remove this Method?"
-msgstr ""
-
-msgid "Are you sure you want to remove this Namespace?"
-msgstr ""
-
-msgid "Are you sure you want to remove this Policy Profile?"
-msgstr ""
-
-msgid "Attributes with different values"
-msgstr ""
-
-msgid "Attributes with same values"
-msgstr ""
-
-msgid "CPU/Memory Recommendations of selected item"
-msgstr ""
-
-msgid "CPU/Memory Recommendations of this Image"
-msgstr ""
-
-msgid "CPU/Memory Recommendations of this VM"
-msgstr ""
-
-msgid "Cancel Job"
-msgstr ""
-
-msgid "Cancel the selected task"
-msgstr ""
-
-msgid "Check Compliance of Last Known Configuration"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for the selected Templates"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for the selected items"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for this Image"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for this Instance"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for this Template"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for this VM"
-msgstr ""
-
-msgid "Check Compliance of the last known configuration for this item"
-msgstr ""
-
-msgid "Clone selected Template"
-msgstr ""
-
-msgid "Clone selected item"
-msgstr ""
-
-msgid "Clone this Template"
-msgstr ""
-
-msgid "Clone this VM"
-msgstr ""
-
-msgid "Clone this item"
-msgstr ""
-
-msgid "Collect all logs from the selected "
-msgstr ""
-
-msgid "Collect all logs"
-msgstr ""
-
-msgid "Collect current logs"
-msgstr ""
-
-msgid "Collect the current logs from the selected "
-msgstr ""
-
-msgid "Compare Selected Templates"
-msgstr ""
-
-msgid "Compare Selected items"
-msgstr ""
-
-msgid "Compare selected Templates"
-msgstr ""
-
-msgid "Compare selected VMs"
-msgstr ""
-
-msgid "Copy Selected Customization Templates"
-msgstr ""
-
-msgid "Copy object details for use in a Button"
-msgstr ""
-
-msgid "Copy original Request"
-msgstr ""
-
-msgid "Copy selected Classes"
-msgstr ""
-
-msgid "Copy selected Instances"
-msgstr ""
-
-msgid "Copy selected Methods"
-msgstr ""
-
-msgid "Copy selected Orchestration Template"
-msgstr ""
-
-msgid "Copy selected Time Profile"
-msgstr ""
-
-msgid "Copy the selected Analysis Profiles"
-msgstr ""
-
-msgid "Copy the selected Chargeback Rate to a new Chargeback Rate"
-msgstr ""
-
-msgid "Copy the selected Dialog to a new Dialog"
-msgstr ""
-
-msgid "Copy the selected Role to a new Role"
-msgstr ""
-
-msgid "Copy the selected User to a new User"
-msgstr ""
-
-msgid "\"Copy this #{ui_lookup(:model=>@policy.towhat)} Policy\""
-msgstr ""
-
-msgid "Copy this Alert"
-msgstr ""
-
-msgid "Copy this Chargeback Rate"
-msgstr ""
-
-msgid "Copy this Class"
-msgstr ""
-
-msgid ""
-"\"Copy this Condition to a new Condition assigned to Policy [#{@condition_polic"
-"y.description}]\""
-msgstr ""
-
-msgid "Copy this Condition to a new Condition"
-msgstr ""
-
-msgid "Copy this Customization Template"
-msgstr ""
-
-msgid "Copy this Dialog"
-msgstr ""
-
-msgid "Copy this Instance"
-msgstr ""
-
-msgid "Copy this Method"
-msgstr ""
-
-msgid "Copy this Orchestration Template"
-msgstr ""
-
-msgid ""
-"\"Copy this Policy to new Policy [#{truncate(\"Copy of #{@policy.description}\", "
-":length => 255, :omission => \"\")}]\""
-msgstr ""
-
-msgid "Copy this Report"
-msgstr ""
-
-msgid "Copy this Role to a new Role"
-msgstr ""
-
-msgid "Copy this User to a new User"
-msgstr ""
-
-msgid "Copy this Widget"
-msgstr ""
-
-msgid "Copy this selected Analysis Profile"
-msgstr ""
-
-msgid "Create Datastore"
-msgstr ""
-
-msgid "Create Logical Disk"
-msgstr ""
-
-msgid "Create Service Dialog from Orchestration Template"
-msgstr ""
-
-msgid ""
-"\"Create a Datastore based on this #{ui_lookup(:model=>\"OntapFileShare\").split("
-"\" - \").last}\""
-msgstr ""
-
-msgid ""
-"\"Create a Logical Disk (NetApp Flexible Volume) on this #{ui_lookup(:model=>\"O"
-"ntapStorageSystem\").split(\" - \").last}\""
-msgstr ""
-
-msgid "Create a new Condition assigned to this Policy"
-msgstr ""
-
-msgid "Create a new snapshot for this Template"
-msgstr ""
-
-msgid "Create a new snapshot for this VM"
-msgstr ""
-
-msgid "Create new Orchestration Template"
-msgstr ""
-
-msgid "Delete All Existing Snapshots"
-msgstr ""
-
-msgid "Delete All"
-msgstr ""
-
-msgid "Delete Older"
-msgstr ""
-
-msgid "Delete Selected Snapshot"
-msgstr ""
-
-msgid "\"Delete Server #{@record.name} [#{@record.id}]\""
-msgstr ""
-
-msgid "Delete Snapshots"
-msgstr ""
-
-msgid "Delete Tasks"
-msgstr ""
-
-msgid "Delete all finished tasks"
-msgstr ""
-
-msgid "Delete all of this Templates existing snapshots?"
-msgstr ""
-
-msgid "Delete all of this VMs existing snapshots?"
-msgstr ""
-
-msgid "Delete all selected Groups?"
-msgstr ""
-
-msgid "Delete all selected LDAP Regions?"
-msgstr ""
-
-msgid "Delete all selected Roles?"
-msgstr ""
-
-msgid "Delete all selected Users?"
-msgstr ""
-
-msgid "Delete all selected items and all of their children?"
-msgstr ""
-
-msgid "\"Delete selected #{@sb[:txt]}\""
-msgstr ""
-
-msgid "Delete selected Groups"
-msgstr ""
-
-msgid "Delete selected LDAP Regions"
-msgstr ""
-
-msgid "Delete selected Roles"
-msgstr ""
-
-msgid "Delete selected Saved Reports"
-msgstr ""
-
-msgid "Delete selected Time Profiles"
-msgstr ""
-
-msgid "Delete selected Users"
-msgstr ""
-
-msgid "Delete selected items"
-msgstr ""
-
-msgid "Delete selected tasks from the VMDB"
-msgstr ""
-
-msgid "Delete tasks older than the selected task"
-msgstr ""
-
-msgid "Delete the selected Analysis Profiles from the VMDB"
-msgstr ""
-
-msgid "Delete the selected Roles from the VMDB"
-msgstr ""
-
-msgid "Delete the selected Schedules from the VMDB"
-msgstr ""
-
-msgid "\"Delete this #{ui_lookup(:model=>@condition.towhat)} Condition\""
-msgstr ""
-
-msgid "\"Delete this #{ui_lookup(:model=>@policy.towhat)} Policy\""
-msgstr ""
-
-msgid "Delete this Action"
-msgstr ""
-
-msgid "Delete this Alert Profile"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Delete this Alert"
-msgstr "Update dit object"
-
-msgid "Delete this Analysis Profile from the VMDB"
-msgstr ""
-
-msgid "Delete this Dashboard from the Database"
-msgstr ""
-
-msgid "Delete this Group"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Delete this LDAP Domain"
-msgstr "Update dit object"
-
-#, fuzzy
-#, fuzzy
-msgid "Delete this LDAP Region"
-msgstr "Update dit object"
-
-msgid "Delete this Report from the Database"
-msgstr ""
-
-msgid "Delete this Request"
-msgstr ""
-
-msgid "Delete this Role"
-msgstr ""
-
-msgid "Delete this Saved Report from the Database"
-msgstr ""
-
-msgid "Delete this Schedule from the Database"
-msgstr ""
-
-msgid "Delete this Schedule from the VMDB"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Delete this User"
-msgstr "Update dit object"
-
-msgid "Delete this Widget from the Database"
-msgstr ""
-
-msgid "Delete this Zone"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Delete this item"
-msgstr "Update dit object"
-
-msgid ""
-"\"Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to second"
-"ary for the #{@record.server_role.description} Role\""
-msgstr ""
-
-msgid "Demote Server"
-msgstr ""
-
-msgid "Deny this Request"
-msgstr ""
-
-msgid "Disable the selected Schedules"
-msgstr ""
-
-msgid "\"Discard this new #{@sb[:node_typ].titleize}\""
-msgstr ""
-
-msgid "Discover "
-msgstr ""
-
-msgid "Discover items"
-msgstr ""
-
-msgid "\"Do you want to delete Server #{@record.name} [#{@record.id}]?\""
-msgstr ""
-
-msgid ""
-"Do you want to demote this Server to secondary?  This will leave no primary Se"
-"rver for this Role."
-msgstr ""
-
-msgid ""
-"Do you want to promote this Server to primary?  This will replace any existing"
-" primary Server for this Role."
-msgstr ""
-
-msgid "Download as CSV"
-msgstr ""
-
-msgid "Download as PDF"
-msgstr ""
-
-msgid "Download as Text"
-msgstr ""
-
-msgid "Download comparison report in CSV format"
-msgstr ""
-
-msgid "Download comparison report in PDF format"
-msgstr ""
-
-msgid "Download comparison report in text format"
-msgstr ""
-
-msgid "Download summary in PDF format"
-msgstr ""
-
-msgid "Download the Entire  Log File"
-msgstr ""
-
-msgid "\"Download the Entire #{@sb[:rails_log]} Log File\""
-msgstr ""
-
-msgid "Download the Entire Audit Log File"
-msgstr ""
-
-msgid "Download the Entire EVM Log File"
-msgstr ""
-
-msgid "Download these items in CSV format"
-msgstr ""
-
-msgid "Download these items in PDF format"
-msgstr ""
-
-msgid "Download these items in text format"
-msgstr ""
-
-msgid "Download this Timeline data in CSV format"
-msgstr ""
-
-msgid "Download this Timeline data in PDF format"
-msgstr ""
-
-msgid "Download this Timeline data in text format"
-msgstr ""
-
-msgid "Download this report in CSV format"
-msgstr ""
-
-msgid "Download this report in PDF format"
-msgstr ""
-
-msgid "Download this report in text format"
-msgstr ""
-
-msgid "Download"
-msgstr ""
-
-msgid "\"Edit '#{session[:customer_name]}' Tags for the selected Groups\""
-msgstr ""
-
-msgid "\"Edit '#{session[:customer_name]}' Tags for the selected Tenant\""
-msgstr ""
-
-msgid "\"Edit '#{session[:customer_name]}' Tags for the selected Users\""
-msgstr ""
-
-msgid "\"Edit '#{session[:customer_name]}' Tags for this Group\""
-msgstr ""
-
-msgid "\"Edit '#{session[:customer_name]}' Tags for this Tenant\""
-msgstr ""
-
-msgid "\"Edit '#{session[:customer_name]}' Tags for this User\""
-msgstr ""
-
-msgid "Edit Actions for this Policy Event"
-msgstr ""
-
-msgid "Edit Basic Info, Scope, and Notes"
-msgstr ""
-
-msgid "Edit Management Engine Relationship"
-msgstr ""
-
-msgid "Edit Priority Order  of Domains"
-msgstr ""
-
-msgid "Edit Priority Order of Domains"
-msgstr ""
-
-msgid "Edit Selected "
-msgstr ""
-
-msgid "Edit Selected Customization Templates"
-msgstr ""
-
-msgid "Edit Selected Domains"
-msgstr ""
-
-msgid "Edit Selected Instance"
-msgstr ""
-
-msgid "Edit Selected Item"
-msgstr ""
-
-msgid "Edit Selected Method"
-msgstr ""
-
-msgid "Edit Selected Namespace"
-msgstr ""
-
-msgid "Edit Selected PXE Servers"
-msgstr ""
-
-msgid "Edit Selected Service"
-msgstr ""
-
-msgid "Edit Selected Storage Manager"
-msgstr ""
-
-msgid "Edit Selected Template"
-msgstr ""
-
-msgid "Edit Selected item"
-msgstr ""
-
-msgid "Edit Selected items"
-msgstr ""
-
-msgid "Edit Sequence of Dashboards"
-msgstr ""
-
-msgid "Edit Sequence of User Groups for LDAP Look Up"
-msgstr ""
-
-msgid "Edit Tags for the selected "
-msgstr ""
-
-msgid "Edit Tags for the selected Availability Zones"
-msgstr ""
-
-msgid "Edit Tags for the selected Flavors"
-msgstr ""
-
-msgid "Edit Tags for the selected Repositories"
-msgstr ""
-
-msgid "Edit Tags for the selected Resource Pools"
-msgstr ""
-
-msgid "Edit Tags for the selected Security Groups"
-msgstr ""
-
-msgid "Edit Tags for the selected items"
-msgstr ""
-
-msgid "\"Edit Tags for this #{ui_lookup(:model=>\"OntapFileShare\").split(\" - \").last}\""
-msgstr ""
-
-msgid ""
-"\"Edit Tags for this #{ui_lookup(:model=>\"OntapStorageSystem\").split(\" - \").las"
-"t}\""
-msgstr ""
-
-msgid "Edit Tags for this "
-msgstr ""
-
-msgid "Edit Tags for this Availability Zone"
-msgstr ""
-
-msgid "Edit Tags for this Catalog Item"
-msgstr ""
-
-msgid "Edit Tags for this Configured System"
-msgstr ""
-
-msgid "Edit Tags for this Flavor"
-msgstr ""
-
-msgid "Edit Tags for this Image"
-msgstr ""
-
-msgid "Edit Tags for this Instance"
-msgstr ""
-
-msgid "Edit Tags for this Logical Disk"
-msgstr ""
-
-msgid "Edit Tags for this Orchestration Template"
-msgstr ""
-
-msgid "Edit Tags for this Repository"
-msgstr ""
-
-msgid "Edit Tags for this Resource Pool"
-msgstr ""
-
-msgid "Edit Tags for this Security Group"
-msgstr ""
-
-msgid "Edit Tags for this Service"
-msgstr ""
-
-msgid "Edit Tags for this Template"
-msgstr ""
-
-msgid "Edit Tags for this VM"
-msgstr ""
-
-msgid "Edit Tags for this Volume"
-msgstr ""
-
-msgid "Edit Tags for this item"
-msgstr ""
-
-msgid "Edit Tags"
-msgstr ""
-
-msgid "Edit assignments for this Alert Profile"
-msgstr ""
-
-msgid "Edit selected Orchestration Template"
-msgstr ""
-
-msgid "Edit selected Schema"
-msgstr ""
-
-msgid "Edit selected Time Profile"
-msgstr ""
-
-msgid "Edit sequence of Class Schema"
-msgstr ""
-
-msgid "Edit sequence"
-msgstr ""
-
-msgid "Edit tags for the selected File Shares"
-msgstr ""
-
-msgid "Edit tags for the selected Items"
-msgstr ""
-
-msgid "Edit tags for the selected Logical Disks"
-msgstr ""
-
-msgid "Edit tags for the selected Systems"
-msgstr ""
-
-msgid "Edit tags for the selected Templates"
-msgstr ""
-
-msgid "Edit tags for the selected Volumes"
-msgstr ""
-
-msgid "Edit tags for the selected items"
-msgstr ""
-
-msgid "Edit tags for this Cloud Tenant"
-msgstr ""
-
-msgid "Edit the Log Depot settings for the selected "
-msgstr ""
-
-msgid "Edit the Selected Repository"
-msgstr ""
-
-msgid "Edit the original Request"
-msgstr ""
-
-msgid "Edit the selected Analysis Profiles"
-msgstr ""
-
-msgid "Edit the selected Chargeback Rate"
-msgstr ""
-
-msgid "Edit the selected Dialog"
-msgstr ""
-
-msgid "Edit the selected Group"
-msgstr ""
-
-msgid "Edit the selected LDAP Region"
-msgstr ""
-
-msgid "Edit the selected Role"
-msgstr ""
-
-msgid "Edit the selected Schedule"
-msgstr ""
-
-msgid "Edit the selected System Image Type"
-msgstr ""
-
-msgid "Edit the selected User"
-msgstr ""
-
-msgid "Edit the selected item"
-msgstr ""
-
-msgid "Edit this "
-msgstr ""
-
-msgid "Edit this Action"
-msgstr ""
-
-msgid "Edit this Alert Profile"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this Alert"
-msgstr "Update dit object"
-
-msgid "Edit this Analysis Profile"
-msgstr ""
-
-msgid "Edit this Button Group"
-msgstr ""
-
-msgid "Edit this Button"
-msgstr ""
-
-msgid "Edit this Chargeback Rate"
-msgstr ""
-
-msgid "Edit this Class"
-msgstr ""
-
-msgid "Edit this Condition"
-msgstr ""
-
-msgid "Edit this Customization Template"
-msgstr ""
-
-msgid "Edit this Dashboard"
-msgstr ""
-
-msgid "Edit this Dialog"
-msgstr ""
-
-msgid "Edit this Domain"
-msgstr ""
-
-msgid "Edit this Group"
-msgstr ""
-
-msgid "Edit this ISO Image"
-msgstr ""
-
-msgid "Edit this Image"
-msgstr ""
-
-msgid "Edit this Instance"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this Item"
-msgstr "Update dit object"
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this LDAP Domain"
-msgstr "Update dit object"
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this LDAP Region"
-msgstr "Update dit object"
-
-msgid "Edit this Method"
-msgstr ""
-
-msgid "Edit this Namespace"
-msgstr ""
-
-msgid "Edit this Orchestration Template"
-msgstr ""
-
-msgid "Edit this PXE Image"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this PXE Server"
-msgstr "Update dit object"
-
-msgid "Edit this Policy Profile"
-msgstr ""
-
-msgid "Edit this Policy's Condition assignments"
-msgstr ""
-
-msgid "Edit this Policy's Event assignments"
-msgstr ""
-
-msgid "Edit this Provider"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this Report"
-msgstr "Update dit object"
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this Repository"
-msgstr "Wachtwoord veranderen"
-
-msgid "Edit this Role"
-msgstr ""
-
-msgid "Edit this Schedule"
-msgstr ""
-
-msgid "Edit this Service"
-msgstr ""
-
-msgid "Edit this Storage Manager"
-msgstr ""
-
-msgid "Edit this System Image Type"
-msgstr ""
-
-msgid "Edit this Template"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this User"
-msgstr "Update dit object"
-
-msgid "Edit this VM"
-msgstr ""
-
-msgid "Edit this Widget"
-msgstr ""
-
-msgid "Edit this Windows Image"
-msgstr ""
-
-msgid "Edit this Zone"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Edit this item"
-msgstr "Update dit object"
-
-msgid "Edit"
-msgstr ""
-
-msgid "Enable the selected Schedules"
-msgstr ""
-
-msgid "Enter Maintenance Mode"
-msgstr ""
-
-msgid "Enter Standby Mode"
-msgstr ""
-
-msgid "Exit Maintenance Mode"
-msgstr ""
-
-msgid "Extract Running Processes for the selected items"
-msgstr ""
-
-msgid "Extract Running Processes for the selected items?"
-msgstr ""
-
-msgid "Extract Running Processes for this VM"
-msgstr ""
-
-msgid "Extract Running Processes for this VM?"
-msgstr ""
-
-msgid "Extract Running Processes"
-msgstr ""
-
-msgid "Generate Widget content now"
-msgstr ""
-
-msgid "Go to this item"
-msgstr ""
-
-msgid "Graph View"
-msgstr ""
-
-msgid "Hard Reboot the Guest OS on this Instance"
-msgstr ""
-
-msgid "Hard Reboot the Guest OS on this Instance?"
-msgstr ""
-
-msgid "Hard Reboot"
-msgstr ""
-
-msgid "History"
-msgstr ""
-
-msgid "Hybrid View"
-msgstr ""
-
-msgid ""
-"Initiate Check Compliance of the last known configuration for the selected Tem"
-"plates?"
-msgstr ""
-
-msgid ""
-"Initiate Check Compliance of the last known configuration for the selected ite"
-"ms?"
-msgstr ""
-
-msgid "Initiate Check Compliance of the last known configuration for this Image?"
-msgstr ""
-
-msgid "Initiate Check Compliance of the last known configuration for this Instance?"
-msgstr ""
-
-msgid "Initiate Check Compliance of the last known configuration for this Template?"
-msgstr ""
-
-msgid "Initiate Check Compliance of the last known configuration for this VM?"
-msgstr ""
-
-msgid "Initiate Check Compliance of the last known configuration for this item?"
-msgstr ""
-
-msgid "Initiate refresh of recent C&U data"
-msgstr ""
-
-msgid "Initiate refresh of recent C&U data?"
-msgstr ""
-
-msgid "Instance Power Functions"
-msgstr ""
-
-msgid "Lock this Domain"
-msgstr ""
-
-msgid "Manage Policies for the selected "
-msgstr ""
-
-msgid "Manage Policies for the selected Repositories"
-msgstr ""
-
-msgid "Manage Policies for the selected Resource Pools"
-msgstr ""
-
-msgid "Manage Policies for the selected Templates"
-msgstr ""
-
-msgid "Manage Policies for the selected items"
-msgstr ""
-
-msgid "Manage Policies for this "
-msgstr ""
-
-msgid "Manage Policies for this Image"
-msgstr ""
-
-msgid "Manage Policies for this Instance"
-msgstr ""
-
-msgid "Manage Policies for this Repository"
-msgstr ""
-
-msgid "Manage Policies for this Resource Pool"
-msgstr ""
-
-msgid "Manage Policies for this Template"
-msgstr ""
-
-msgid "Manage Policies for this VM"
-msgstr ""
-
-msgid "Manage Policies for this item"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Manage Policies"
-msgstr "Toestel:"
-
-msgid "Manage Quotas for the Selected Item"
-msgstr ""
-
-msgid "Manage Quotas"
-msgstr ""
-
-msgid "Migrate selected items to another Host/Datastore"
-msgstr ""
-
-msgid "Migrate selected items"
-msgstr ""
-
-msgid "Migrate this VM to another Host/Datastore"
-msgstr ""
-
-msgid "Migrate this VM"
-msgstr ""
-
-msgid "Monitoring"
-msgstr ""
-
-msgid "Open a web-based VMRC console for this VM"
-msgstr ""
-
-msgid ""
-"Open a web-based VMRC console for this VM.  This requires that VMRC is pre-con"
-"figured to work in your browser."
-msgstr ""
-
-msgid "Open a web-based VNC or SPICE console for this VM"
-msgstr ""
-
-msgid "Open a web-based console for this VM"
-msgstr ""
-
-msgid ""
-"Opening a VM web-based VMRC console requires that VMRC is pre-configured to wo"
-"rk in your browser.  Are you sure?"
-msgstr ""
-
-msgid ""
-"Opening a VM web-based console can take a while and requires that the VMware M"
-"KS plugin version configured for Management Engine already be installed and wo"
-"rking.  Are you sure?"
-msgstr ""
-
-msgid ""
-"Opening a web-based VM VNC or SPICE console requires that the Provider is pre-"
-"configured to allow VNC connections.  Are you sure?"
-msgstr ""
-
-msgid "Pause this Instance"
-msgstr ""
-
-msgid "Pause this Instance?"
-msgstr ""
-
-msgid "Pause"
-msgstr ""
-
-msgid "Perform SmartState Analysis on the selected "
-msgstr ""
-
-msgid "Perform SmartState Analysis on the selected ?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on the selected Templates"
-msgstr ""
-
-msgid "Perform SmartState Analysis on the selected Templates?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on the selected items"
-msgstr ""
-
-msgid "Perform SmartState Analysis on the selected items?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this "
-msgstr ""
-
-msgid "Perform SmartState Analysis on this ?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this Image"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this Image?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this Instance"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this Instance?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this Template"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this Template?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this VM"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this VM?"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this item"
-msgstr ""
-
-msgid "Perform SmartState Analysis on this item?"
-msgstr ""
-
-msgid "Perform SmartState Analysis"
-msgstr ""
-
-msgid "Policy Simulation"
-msgstr ""
-
-msgid "Policy"
-msgstr ""
-
-msgid "Power Functions"
-msgstr ""
-
-msgid "Power Off the selected items"
-msgstr ""
-
-msgid "Power Off the selected items?"
-msgstr ""
-
-msgid "Power Off this VM"
-msgstr ""
-
-msgid "Power Off this VM?"
-msgstr ""
-
-msgid "Power Off this item"
-msgstr ""
-
-msgid "Power Off this item?"
-msgstr ""
-
-msgid "Power On the selected items"
-msgstr ""
-
-msgid "Power On the selected items?"
-msgstr ""
-
-msgid "Power On this VM"
-msgstr ""
-
-msgid "Power On this VM?"
-msgstr ""
-
-msgid "Power On this item"
-msgstr ""
-
-msgid "Power On this item?"
-msgstr ""
-
-msgid "Power Operations"
-msgstr ""
-
-msgid "Power"
-msgstr ""
-
-msgid ""
-"\"Promote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to prima"
-"ry for the #{@record.server_role.description} Role\""
-msgstr ""
-
-msgid "Promote Server"
-msgstr ""
-
-msgid "Provision Configured System"
-msgstr ""
-
-msgid "Provision Configured Systems"
-msgstr ""
-
-msgid "Provision Instances"
-msgstr ""
-
-msgid "Provision VMs"
-msgstr ""
-
-msgid "Provision items"
-msgstr ""
-
-msgid "Provision this item"
-msgstr ""
-
-msgid "Provision"
-msgstr ""
-
-msgid "Publish selected VM to a Template"
-msgstr ""
-
-msgid "Publish this VM to a Template"
-msgstr ""
-
-msgid "Put this item into Maintenance Mode"
-msgstr ""
-
-msgid "Put this item into Maintenance Mode?"
-msgstr ""
-
-msgid "Queue this Report to be generated"
-msgstr ""
-
-msgid "Queue up selected Schedules to run now"
-msgstr ""
-
-msgid "Queue up this Schedule to run now"
-msgstr ""
-
-msgid "Queue"
-msgstr ""
-
-msgid "Reconfigure Selected items"
-msgstr ""
-
-msgid "Reconfigure the Memory/CPU of this Image"
-msgstr ""
-
-msgid "Reconfigure the Memory/CPU of this VM"
-msgstr ""
-
-msgid "Reconfigure the Memory/CPUs of selected items"
-msgstr ""
-
-msgid "Reconfigure the options of this Service"
-msgstr ""
-
-msgid "Reconfigure this Image"
-msgstr ""
-
-msgid "Reconfigure this Service"
-msgstr ""
-
-msgid "Reconfigure this VM"
-msgstr ""
-
-msgid "Refresh Inventory for all Storage CIs known to the selected Storage Managers"
-msgstr ""
-
-msgid "Refresh Inventory for all Storage CIs known to the selected Storage Managers?"
-msgstr ""
-
-msgid "Refresh Inventory for all Storage CIs known to this Storage Manager"
-msgstr ""
-
-msgid "Refresh Inventory for all Storage CIs known to this Storage Manager?"
-msgstr ""
-
-msgid "Refresh Inventory"
-msgstr ""
-
-msgid ""
-"Refresh Relationships and Power States for all items related to the selected R"
-"epositories"
-msgstr ""
-
-msgid "Refresh Relationships and Power States"
-msgstr ""
-
-msgid "Refresh Relationships and Power states"
-msgstr ""
-
-msgid "Refresh Relationships for selected ISO Datastores"
-msgstr ""
-
-msgid "Refresh Relationships for selected ISO Datastores?"
-msgstr ""
-
-msgid "Refresh Relationships for selected PXE Servers"
-msgstr ""
-
-msgid "Refresh Relationships for selected PXE Servers?"
-msgstr ""
-
-msgid "Refresh Relationships for this ISO Datastore"
-msgstr ""
-
-msgid "Refresh Relationships for this ISO Datastore?"
-msgstr ""
-
-msgid "Refresh Relationships for this PXE Server"
-msgstr ""
-
-msgid "Refresh Relationships for this PXE Server?"
-msgstr ""
-
-msgid "Refresh Relationships"
-msgstr ""
-
-msgid "Refresh Status for all Storage CIs known to the selected Storage Managers"
-msgstr ""
-
-msgid "Refresh Status for all Storage CIs known to the selected Storage Managers?"
-msgstr ""
-
-msgid "Refresh Status for all Storage CIs known to this Storage Manager"
-msgstr ""
-
-msgid "Refresh Status for all Storage CIs known to this Storage Manager?"
-msgstr ""
-
-msgid "Refresh Status"
-msgstr ""
-
-msgid "Refresh items and relationships related to this "
-msgstr ""
-
-msgid "Refresh items and relationships related to this ?"
-msgstr ""
-
-msgid "Refresh items and relationships"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to the selected "
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to the selected ?"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to the selected R"
-"epositories?"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to the selected T"
-"emplates"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to the selected T"
-"emplates?"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to the selected i"
-"tems"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to the selected i"
-"tems?"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this "
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this ?"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this Image"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this Image?"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this Instance"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this Instance?"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to this Repositor"
-"y"
-msgstr ""
-
-msgid ""
-"Refresh relationships and power states for all items related to this Repositor"
-"y?"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this Template"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this Template?"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this VM"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this VM?"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this item"
-msgstr ""
-
-msgid "Refresh relationships and power states for all items related to this item?"
-msgstr ""
-
-msgid "Refresh relationships for all items related to the selected items"
-msgstr ""
-
-msgid "Refresh relationships for all items related to the selected items?"
-msgstr ""
-
-msgid "Refresh relationships for all items related to this Provider"
-msgstr ""
-
-msgid "Refresh relationships for all items related to this Provider?"
-msgstr ""
-
-msgid "Reload Current Display"
-msgstr ""
-
-msgid "Reload Widgets"
-msgstr ""
-
-msgid "Reload current display"
-msgstr ""
-
-msgid "Reload current workers display"
-msgstr ""
-
-msgid "Reload selected Reports"
-msgstr ""
-
-msgid "Reload the  Log Display"
-msgstr ""
-
-msgid "\"Reload the #{@sb[:rails_log]} Log Display\""
-msgstr ""
-
-msgid "Reload the Audit Log Display"
-msgstr ""
-
-msgid "Reload the EVM Log Display"
-msgstr ""
-
-msgid "Reload the charts from the most recent C&U data"
-msgstr ""
-
-msgid "Reload the current display"
-msgstr ""
-
-#, fuzzy
-msgid "Reload"
-msgstr "Upload"
-
-msgid "Remove  from the VMDB"
-msgstr ""
-
-msgid "Remove Customization Templates from the VMDB"
-msgstr ""
-
-msgid "Remove Domains"
-msgstr ""
-
-msgid "Remove ISO Datastores from the VMDB"
-msgstr ""
-
-msgid "Remove Instances"
-msgstr ""
-
-msgid "Remove Item from the VMDB"
-msgstr ""
-
-msgid "Remove Items from the VMDB"
-msgstr ""
-
-msgid "Remove Methods"
-msgstr ""
-
-msgid "Remove Namespaces"
-msgstr ""
-
-msgid "Remove PXE Servers from the VMDB"
-msgstr ""
-
-msgid "Remove Repositories from the VMDB"
-msgstr ""
-
-msgid "Remove Resource Pools from the VMDB"
-msgstr ""
-
-msgid "Remove Selected Repositories from the VMDB"
-msgstr ""
-
-msgid "Remove Selected items from the VMDB"
-msgstr ""
-
-msgid "Remove Service from the VMDB"
-msgstr ""
-
-msgid "Remove Services from the VMDB"
-msgstr ""
-
-msgid "Remove Storage Managers from the VMDB"
-msgstr ""
-
-msgid "Remove System Image Types from the VMDB"
-msgstr ""
-
-msgid "Remove Templates from the VMDB"
-msgstr ""
-
-msgid "Remove from the VMDB"
-msgstr ""
-
-msgid "Remove items from the VMDB"
-msgstr ""
-
-msgid "Remove selected  from the VMDB"
-msgstr ""
-
-msgid "Remove selected Chargeback Rates from the VMDB"
-msgstr ""
-
-msgid "Remove selected Customization Templates from the VMDB"
-msgstr ""
-
-msgid "Remove selected Dialogs from the VMDB"
-msgstr ""
-
-msgid "Remove selected Domains"
-msgstr ""
-
-msgid "Remove selected ISO Datastores from the VMDB"
-msgstr ""
-
-msgid "Remove selected Instances"
-msgstr ""
-
-msgid "Remove selected Items from the VMDB"
-msgstr ""
-
-msgid "Remove selected Items"
-msgstr ""
-
-msgid "Remove selected Methods"
-msgstr ""
-
-msgid "Remove selected Namespaces"
-msgstr ""
-
-msgid "Remove selected Orchestration Templates"
-msgstr ""
-
-msgid "Remove selected Orchestration Templates?"
-msgstr ""
-
-msgid "Remove selected PXE Servers from the VMDB"
-msgstr ""
-
-msgid "Remove selected Resource Pools from the VMDB"
-msgstr ""
-
-msgid "Remove selected Services from the VMDB"
-msgstr ""
-
-msgid "Remove selected Storage Managers from the VMDB"
-msgstr ""
-
-msgid "Remove selected System Image Types from the VMDB"
-msgstr ""
-
-msgid "Remove selected Templates from the VMDB"
-msgstr ""
-
-msgid "Remove selected items from the VMDB"
-msgstr ""
-
-msgid "Remove this  from the VMDB"
-msgstr ""
-
-msgid "Remove this Button Group"
-msgstr ""
-
-msgid "Remove this Button"
-msgstr ""
-
-msgid "Remove this Chargeback Rate from the VMDB"
-msgstr ""
-
-msgid "Remove this Class"
-msgstr ""
-
-msgid "\"Remove this Condition from Policy [#{@condition_policy.description}]\""
-msgstr ""
-
-msgid "Remove this Customization Template from the VMDB"
-msgstr ""
-
-msgid "Remove this Dialog from the VMDB"
-msgstr ""
-
-msgid "Remove this Domain"
-msgstr ""
-
-msgid "Remove this ISO Datastore from the VMDB"
-msgstr ""
-
-msgid "Remove this Image from the VMDB"
-msgstr ""
-
-msgid "Remove this Instance from the VMDB"
-msgstr ""
-
-msgid "Remove this Instance"
-msgstr ""
-
-msgid "Remove this Item from the VMDB"
-msgstr ""
-
-msgid "Remove this Method"
-msgstr ""
-
-msgid "Remove this Namespace"
-msgstr ""
-
-msgid "Remove this Orchestration Template"
-msgstr ""
-
-msgid "Remove this Orchestration Template?"
-msgstr ""
-
-msgid "Remove this PXE Server from the VMDB"
-msgstr ""
-
-msgid "Remove this Policy Profile"
-msgstr ""
-
-msgid "Remove this Provider from the VMDB"
-msgstr ""
-
-msgid "Remove this Repository from the VMDB"
-msgstr ""
-
-msgid "Remove this Resource Pool from the VMDB"
-msgstr ""
-
-msgid "Remove this Service from the VMDB"
-msgstr ""
-
-msgid "Remove this Storage Manager from the VMDB"
-msgstr ""
-
-msgid "Remove this System Image Type from the VMDB"
-msgstr ""
-
-msgid "Remove this Template from the VMDB"
-msgstr ""
-
-msgid "Remove this VM from the VMDB"
-msgstr ""
-
-msgid "Remove this item from the VMDB"
-msgstr ""
-
-msgid ""
-"\"Reorder #{x_active_tree == :ab_tree ? \"Buttons Groups\" : \"Buttons and Groups\""
-"}\""
-msgstr ""
-
-msgid "Reorder"
-msgstr ""
-
-msgid "Request to Provision Instances"
-msgstr ""
-
-msgid "Request to Provision VMs"
-msgstr ""
-
-msgid "Request to Provision items"
-msgstr ""
-
-msgid "Request to Provision"
-msgstr ""
-
-msgid "Reset the selected items"
-msgstr ""
-
-msgid "Reset the selected items?"
-msgstr ""
-
-msgid "Reset this VM"
-msgstr ""
-
-msgid "Reset this VM?"
-msgstr ""
-
-msgid "Reset this item"
-msgstr ""
-
-msgid "Reset this item?"
-msgstr ""
-
-msgid "Restart Guest"
-msgstr ""
-
-msgid "Restart selected worker"
-msgstr ""
-
-msgid "Restart server"
-msgstr ""
-
-msgid "Restart the Guest OS on the selected items"
-msgstr ""
-
-msgid "Restart the Guest OS on the selected items?"
-msgstr ""
-
-msgid "Restart the Guest OS on this VM"
-msgstr ""
-
-msgid "Restart the Guest OS on this VM?"
-msgstr ""
-
-msgid "Restart the selected items"
-msgstr ""
-
-msgid "Restart the selected items?"
-msgstr ""
-
-msgid "Restart this item"
-msgstr ""
-
-msgid "Restart this item?"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
-msgid "Resume this Instance"
-msgstr ""
-
-msgid "Resume this Instance?"
-msgstr ""
-
-msgid "Resume"
-msgstr ""
-
-msgid "Retire selected "
-msgstr ""
-
-msgid "Retire selected items"
-msgstr ""
-
-msgid "Retire the selected ?"
-msgstr ""
-
-msgid "Retire the selected items"
-msgstr ""
-
-msgid "Retire the selected items?"
-msgstr ""
-
-msgid "Retire this Instance"
-msgstr ""
-
-msgid "Retire this Instance?"
-msgstr ""
-
-msgid "Retire this Orchestration Stack"
-msgstr ""
-
-msgid "Retire this Service"
-msgstr ""
-
-msgid "Retire this Service?"
-msgstr ""
-
-msgid "Retire this VM"
-msgstr ""
-
-msgid "Retire this VM?"
-msgstr ""
-
-msgid "Revert to selected snapshot"
-msgstr ""
-
-msgid "Right-Size Recommendations"
-msgstr ""
-
-msgid "Scale this "
-msgstr ""
-
-msgid "Select Classes to copy"
-msgstr ""
-
-msgid "Select Instances to copy"
-msgstr ""
-
-msgid "Select Methods to copy"
-msgstr ""
-
-msgid "Select a single  to edit"
-msgstr ""
-
-msgid "Select a single Customization Templates to copy"
-msgstr ""
-
-msgid "Select a single Customization Templates to edit"
-msgstr ""
-
-msgid "Select a single Domains to edit"
-msgstr ""
-
-msgid "Select a single Group to edit"
-msgstr ""
-
-msgid "Select a single Instance to edit"
-msgstr ""
-
-msgid "Select a single Item to edit"
-msgstr ""
-
-msgid "Select a single LDAP Region to edit"
-msgstr ""
-
-msgid "Select a single Method to edit"
-msgstr ""
-
-msgid "Select a single Namespace to edit"
-msgstr ""
-
-msgid "Select a single PXE Servers to edit"
-msgstr ""
-
-msgid "Select a single Repository to edit"
-msgstr ""
-
-msgid "Select a single Role to copy"
-msgstr ""
-
-msgid "Select a single Role to edit"
-msgstr ""
-
-msgid "Select a single Storage Manager to edit"
-msgstr ""
-
-msgid "Select a single System Image Type to edit"
-msgstr ""
-
-msgid "Select a single Template to edit"
-msgstr ""
-
-msgid "Select a single Time Profile to copy"
-msgstr ""
-
-msgid "Select a single Time Profile to edit"
-msgstr ""
-
-msgid "Select a single User to copy"
-msgstr ""
-
-msgid "Select a single User to edit"
-msgstr ""
-
-msgid "Select a single item to edit"
-msgstr ""
-
-msgid "Select a single item to manage quotas"
-msgstr ""
-
-msgid "Select a single service to edit"
-msgstr ""
-
-msgid "Select a worker to restart"
-msgstr ""
-
-msgid "Select one or more Groups to delete"
-msgstr ""
-
-msgid "Select one or more LDAP Regions to delete"
-msgstr ""
-
-msgid "Select one or more Users to delete"
-msgstr ""
-
-msgid "Select one or more items to delete"
-msgstr ""
-
-msgid "Select two or more Templates to compare"
-msgstr ""
-
-msgid "Select two or more items to compare"
-msgstr ""
-
-msgid "Select up to 10 timestamps for Drift Analysis"
-msgstr ""
-
-msgid "Set Ownership for the selected Services"
-msgstr ""
-
-msgid "Set Ownership for the selected Templates"
-msgstr ""
-
-msgid "Set Ownership for the selected items"
-msgstr ""
-
-msgid "Set Ownership for this Image"
-msgstr ""
-
-msgid "Set Ownership for this Instance"
-msgstr ""
-
-msgid "Set Ownership for this Service"
-msgstr ""
-
-msgid "Set Ownership for this Template"
-msgstr ""
-
-msgid "Set Ownership for this VM"
-msgstr ""
-
-msgid "Set Ownership"
-msgstr ""
-
-msgid "Set Retirement Date"
-msgstr ""
-
-msgid "Set Retirement Dates for the selected "
-msgstr ""
-
-msgid "Set Retirement Dates for the selected items"
-msgstr ""
-
-msgid "Set Retirement Dates for this Instance"
-msgstr ""
-
-msgid "Set Retirement Dates for this Orchestration Stack"
-msgstr ""
-
-msgid "Set Retirement Dates for this Service"
-msgstr ""
-
-msgid "Set Retirement Dates for this VM"
-msgstr ""
-
-msgid "Set Retirement Dates"
-msgstr ""
-
-msgid "Shelve Offload this Instance"
-msgstr ""
-
-msgid "Shelve Offload this Instance?"
-msgstr ""
-
-msgid "Shelve Offload"
-msgstr ""
-
-msgid "Shelve this Instance"
-msgstr ""
-
-msgid "Shelve this Instance?"
-msgstr ""
-
-msgid "Shelve"
-msgstr ""
-
-msgid ""
-"\"Show #{@layout == \"cim_base_storage_extent\" ? @record.evm_display_name : @rec"
-"ord.name} Summary\""
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this "
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Availability Zone"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Container"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Group"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Instance"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Logical Disk"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Node"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this Template"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this VM"
-msgstr ""
-
-msgid "Show Capacity & Utilization data for this item"
-msgstr ""
-
-msgid "Show Timelines for this "
-msgstr ""
-
-msgid "Show Timelines for this Container"
-msgstr ""
-
-msgid "Show Timelines for this Group"
-msgstr ""
-
-msgid "Show Timelines for this Instance"
-msgstr ""
-
-msgid "Show Timelines for this Node"
-msgstr ""
-
-msgid "Show Timelines for this Project"
-msgstr ""
-
-msgid "Show Timelines for this Replicator"
-msgstr ""
-
-msgid "Show Timelines for this Template"
-msgstr ""
-
-msgid "Show Timelines for this VM"
-msgstr ""
-
-msgid "Show Timelines for this item"
-msgstr ""
-
-msgid "Show Utilization Statistics for this Logical Disk"
-msgstr ""
-
-msgid ""
-"\"Show Utilization for this #{ui_lookup(:model=>\"OntapFileShare\").split(\" - \")."
-"last}\""
-msgstr ""
-
-msgid ""
-"\"Show Utilization for this #{ui_lookup(:model=>\"OntapStorageSystem\").split(\" -"
-" \").last}\""
-msgstr ""
-
-msgid "Show Utilization for this Storage System"
-msgstr ""
-
-msgid "Show full screen report"
-msgstr ""
-
-msgid "Shutdown Guest"
-msgstr ""
-
-msgid "Shutdown the Guest OS on the selected items"
-msgstr ""
-
-msgid "Shutdown the Guest OS on the selected items?"
-msgstr ""
-
-msgid "Shutdown the Guest OS on this VM"
-msgstr ""
-
-msgid "Shutdown the Guest OS on this VM?"
-msgstr ""
-
-msgid "Shutdown the selected items to Standby Mode"
-msgstr ""
-
-msgid "Shutdown the selected items to Standy Mode?"
-msgstr ""
-
-msgid "Shutdown the selected items"
-msgstr ""
-
-msgid "Shutdown the selected items?"
-msgstr ""
-
-msgid "Shutdown this item to Standby Mode"
-msgstr ""
-
-msgid "Shutdown this item to Standby Mode?"
-msgstr ""
-
-msgid "Shutdown this item"
-msgstr ""
-
-msgid "Shutdown this item?"
-msgstr ""
-
-msgid "Simulate using Button details"
-msgstr ""
-
-msgid "Simulate"
-msgstr ""
-
-msgid "Soft Reboot this Instance"
-msgstr ""
-
-msgid "Soft Reboot this Instance?"
-msgstr ""
-
-msgid "Soft Reboot"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Start Role"
-msgstr "Gebruikersnaam"
-
-msgid ""
-"\"Start the #{@record.server_role.description} Role on Server #{@record.miq_ser"
-"ver.name} [#{@record.miq_server.id}]\""
-msgstr ""
-
-msgid ""
-"\"Start the #{@record.server_role.description} Role on Server #{@record.miq_ser"
-"ver.name} [#{@record.miq_server.id}]?\""
-msgstr ""
-
-msgid "Start this Instance"
-msgstr ""
-
-msgid "Start this Instance?"
-msgstr ""
-
-msgid "Statistics"
-msgstr ""
-
-msgid "Stop this Instance"
-msgstr ""
-
-msgid "Stop this Instance?"
-msgstr ""
-
-#, fuzzy
-#, fuzzy
-msgid "Suspend Role"
-msgstr "Gebruikersnaam"
-
-msgid ""
-"\"Suspend the #{@record.server_role.description} Role on Server #{@record.miq_s"
-"erver.name} [#{@record.miq_server.id}]\""
-msgstr ""
-
-msgid ""
-"\"Suspend the #{@record.server_role.description} Role on Server #{@record.miq_s"
-"erver.name} [#{@record.miq_server.id}]?\""
-msgstr ""
-
-msgid "Suspend the selected items"
-msgstr ""
-
-msgid "Suspend the selected items?"
-msgstr ""
-
-msgid "Suspend this Instance"
-msgstr ""
-
-msgid "Suspend this Instance?"
-msgstr ""
-
-msgid "Suspend this VM"
-msgstr ""
-
-msgid "Suspend this VM?"
-msgstr ""
-
-msgid "Tabular View"
-msgstr ""
-
-msgid "Take this item out of Maintenance Mode"
-msgstr ""
-
-msgid "Take this item out of Maintenance Mode?"
-msgstr ""
-
-msgid "Terminate the selected items"
-msgstr ""
-
-msgid "Terminate the selected items?"
-msgstr ""
-
-msgid "Terminate this Instance"
-msgstr ""
-
-msgid "Terminate this Instance?"
-msgstr ""
-
-msgid "Terminate"
-msgstr ""
-
-msgid ""
-"The selected Reports will be permanently removed from the database. Are you su"
-"re you want to delete this Report?"
-msgstr ""
-
-msgid ""
-"The selected Saved Reports will be permanently removed from the database. Are "
-"you sure you want to delete the selected Saved Reports?"
-msgstr ""
-
-msgid ""
-"The selected Saved Reports will be permanently removed from the database. Are "
-"you sure you want to delete this saved Report?"
-msgstr ""
-
-msgid ""
-"The selected snapshot will be permanently deleted. Are you sure you want to de"
-"lete the selected snapshot?"
-msgstr ""
-
-msgid ""
-"This Template will revert to selected snapshot. Are you sure you want to rever"
-"t to the selected snapshot?"
-msgstr ""
-
-msgid ""
-"This VM will revert to selected snapshot. Are you sure you want to revert to t"
-"he selected snapshot?"
-msgstr ""
-
-msgid ""
-"This will show the entire report (all rows) in your browser.  Do you want to p"
-"roceed?"
-msgstr ""
-
-msgid "Unlock this Domain"
-msgstr ""
-
-msgid "VM Power Functions"
-msgstr ""
-
-msgid "View Policy Simulation for the selected Templates"
-msgstr ""
-
-msgid "View Policy Simulation for the selected items"
-msgstr ""
-
-msgid "View Policy Simulation for this Image"
-msgstr ""
-
-msgid "View Policy Simulation for this Instance"
-msgstr ""
-
-msgid "View Policy Simulation for this Template"
-msgstr ""
-
-msgid "View Policy Simulation for this VM"
-msgstr ""
-
-msgid ""
-"Warning: Finished tasks will be permanently removed from the database. Are you"
-" sure you want to delete all finished tasks?"
-msgstr ""
-
-msgid "Warning: Selected node will be restarted, do you want to continue?"
-msgstr ""
-
-msgid "Warning: Server will be restarted, do you want to continue?"
-msgstr ""
-
-msgid ""
-"Warning: Tasks that are older than selected task will be permanently removed f"
-"rom the database. Are you sure you want to delete older tasks?"
-msgstr ""
-
-msgid ""
-"Warning: The selected  and ALL of their components will be permanently removed"
-" from the Virtual Management Database.  Are you sure you want to remove the se"
-"lected ?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Analysis Profiles and ALL of their components will be pe"
-"rmanently removed from the VMDB.  Are you sure you want to delete the selected"
-" Analysis Profiles?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Button Group will be permanently removed.  Are you sure "
-"you want to remove the selected Button Group?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Chargeback Rate will be permanently removed from the Vir"
-"tual Management Database.  Are you sure you want to remove the selected Charge"
-"back Rates?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Customization Templates will be permanently removed from"
-" the Virtual Management Database.  Are you sure you want to remove the selecte"
-"d Customization Templates?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Dialog will be permanently removed from the Virtual Mana"
-"gement Database.  Are you sure you want to remove the selected Dialogs?"
-msgstr ""
-
-msgid ""
-"Warning: The selected ISO Datastores and ALL of their components will be perma"
-"nently removed from the Virtual Management Database.  Are you sure you want to"
-" remove the selected ISO Datastores?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Items and ALL of their components will be permanently re"
-"moved from the Virtual Management Database.  Are you sure you want to remove t"
-"he selected Items?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Items will be permanently removed from the Virtual Manag"
-"ement Database.  Are you sure you want to remove the selected Items?"
-msgstr ""
-
-msgid ""
-"Warning: The selected PXE Servers and ALL of their components will be permanen"
-"tly removed from the Virtual Management Database.  Are you sure you want to re"
-"move the selected PXE Servers?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Provider and ALL of their components will be permanently"
-" removed from the Virtual Management Database.  Are you sure you want to remov"
-"e this Provider?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Repositories and ALL of their components will be permane"
-"ntly removed from the Virtual Management Database.  Are you sure you want to r"
-"emove the selected Repositories?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Resource Pools and ALL of their components will be perma"
-"nently removed from the Virtual Management Database.  Are you sure you want to"
-" remove the selected Resource Pools?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Schedules and ALL of their components will be permanentl"
-"y removed from the VMDB.  Are you sure you want to delete the selected Schedul"
-"es?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Services and ALL of their components will be permanently"
-" removed from the Virtual Management Database.  Are you sure you want to remov"
-"e the selected Services?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Storage Managers and ALL of their components will be per"
-"manently removed from the Virtual Management Database.  Are you sure you want "
-"to remove the selected Storage Managers?"
-msgstr ""
-
-msgid ""
-"Warning: The selected System Image Types will be permanently removed from the "
-"Virtual Management Database.  Are you sure you want to remove the selected Sys"
-"tem Image Types?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Templates and ALL of their components will be permanentl"
-"y removed from the Virtual Management Database.  Are you sure you want to remo"
-"ve the selected Templates?"
-msgstr ""
-
-msgid ""
-"Warning: The selected Time Profiles will be permanently removed from the VMDB."
-" Are you sure you want to delete the selected Time Profiles?"
-msgstr ""
-
-msgid ""
-"Warning: The selected items and ALL of their components will be permanently re"
-"moved from the Virtual Management Database.  Are you sure you want to remove t"
-"he selected items?"
-msgstr ""
-
-msgid ""
-"Warning: The selected task will be cancelled. Are you sure you want to cancel "
-"the task?"
-msgstr ""
-
-msgid ""
-"Warning: The selected tasks will be permanently removed from the database. Are"
-" you sure you want to delete the selected tasks?"
-msgstr ""
-
-msgid ""
-"Warning: This  and ALL of its components will be permanently removed from the "
-"Virtual Management Database.  Are you sure you want to remove this ?"
-msgstr ""
-
-msgid ""
-"Warning: This Analysis Profile and ALL of its components will be permanently r"
-"emoved from the VMDB.  Are you sure you want to delete this Analysis Profile?"
-msgstr ""
-
-msgid ""
-"Warning: This Button will be permanently removed from the Virtual Management D"
-"atabase.  Are you sure you want to remove this Button?"
-msgstr ""
-
-msgid ""
-"Warning: This Catalog Items and ALL of their components will be permanently re"
-"moved from the Virtual Management Database.  Are you sure you want to remove t"
-"his Catalog Item?"
-msgstr ""
-
-msgid ""
-"Warning: This Catalog will be permanently removed from the Virtual Management "
-"Database.  Are you sure you want to remove this Catalog?"
-msgstr ""
-
-msgid ""
-"Warning: This Chargeback Rate will be permanently removed from the Virtual Man"
-"agement Database.  Are you sure you want to remove this Chargeback Rate?"
-msgstr ""
-
-msgid ""
-"Warning: This Customization Template will be permanently removed from the Virt"
-"ual Management Database.  Are you sure you want to remove this Customization T"
-"emplate?"
-msgstr ""
-
-msgid ""
-"Warning: This Dashboard and ALL of its components will be permanently removed "
-"from the VMDB.  Are you sure you want to delete this Dashboard?"
-msgstr ""
-
-msgid ""
-"Warning: This Dialog will be permanently removed from the Virtual Management D"
-"atabase.  Are you sure you want to remove this Dialog?"
-msgstr ""
-
-msgid ""
-"Warning: This ISO Datastore and ALL of its components will be permanently remo"
-"ved from the Virtual Management Database.  Are you sure you want to remove thi"
-"s ISO Datastore?"
-msgstr ""
-
-msgid ""
-"Warning: This Image and ALL of its components will be permanently removed from"
-" the Virtual Management Database.  Are you sure you want to remove this Image?"
-msgstr ""
-
-msgid ""
-"Warning: This Instance and ALL of its components will be permanently removed f"
-"rom the Virtual Management Database.  Are you sure you want to remove this Ins"
-"tance?"
-msgstr ""
-
-msgid ""
-"Warning: This PXE Server and ALL of its components will be permanently removed"
-" from the Virtual Management Database.  Are you sure you want to remove this P"
-"XE Server?"
-msgstr ""
-
-msgid ""
-"Warning: This Repository and ALL of its components will be permanently removed"
-" from the Virtual Management Database.  Are you sure you want to remove this R"
-"epository?"
-msgstr ""
-
-msgid ""
-"Warning: This Resource Pool and ALL of its components will be permanently remo"
-"ved from the Virtual Management Database.  Are you sure you want to remove thi"
-"s Resource Pool?"
-msgstr ""
-
-msgid ""
-"Warning: This Saved Report and ALL of its components will be permanently remov"
-"ed from the VMDB.  Are you sure you want to delete this Saved Report?"
-msgstr ""
-
-msgid ""
-"Warning: This Schedule and ALL of its components will be permanently removed f"
-"rom the VMDB.  Are you sure you want to delete this Schedule?"
-msgstr ""
-
-msgid ""
-"Warning: This Service and ALL of their components will be permanently removed "
-"from the Virtual Management Database.  Are you sure you want to remove this Se"
-"rvice?"
-msgstr ""
-
-msgid ""
-"Warning: This Storage Manager and ALL of its components will be permanently re"
-"moved from the Virtual Management Database.  Are you sure you want to remove t"
-"his Storage Manager?"
-msgstr ""
-
-msgid ""
-"Warning: This System Image Type will be permanently removed from the Virtual M"
-"anagement Database.  Are you sure you want to remove this System Image Type?"
-msgstr ""
-
-msgid ""
-"Warning: This Template and ALL of its components will be permanently removed f"
-"rom the Virtual Management Database.  Are you sure you want to remove this Tem"
-"plate?"
-msgstr ""
-
-msgid ""
-"Warning: This VM and ALL of its components will be permanently removed from th"
-"e Virtual Management Database.  Are you sure you want to remove this VM?"
-msgstr ""
-
-msgid ""
-"Warning: This Widget and ALL of its components will be permanently removed fro"
-"m the VMDB.  Are you sure you want to delete this Widget?"
-msgstr ""
-
-msgid ""
-"Warning: This item and ALL of its components will be permanently removed from "
-"the Virtual Management Database.  Are you sure you want to remove this item?"
 msgstr ""

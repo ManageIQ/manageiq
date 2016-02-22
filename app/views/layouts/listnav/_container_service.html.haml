@@ -27,3 +27,4 @@
         = single_relationship_link(@record, :container_project)
         - %i(container_route container_group container_node).each do |ent|
           = multiple_relationship_link(@record, ent)
+        = single_relationship_link(@record, :container_image_registry)

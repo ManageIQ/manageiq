@@ -25,7 +25,7 @@ module ReportController::Reports
     rr               = MiqReportResult.find(@sb[:pages][:rr_id])
     rr.save_for_user(session[:userid])                # Save the current report results for this user
     @_params[:sortby] = "last_run_on"
-    view, pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(@sb[:miq_report_id]))
+    view, _page = get_view(MiqReportResult, :named_scope => [:with_current_user_groups_and_report, @sb[:miq_report_id]])
     savedreports = view.table.data
     r = savedreports.first
     @right_cell_div  = "report_list"
@@ -171,7 +171,8 @@ module ReportController::Reports
       @sortcol = session["#{x_active_tree}_sortcol".to_sym].nil? ? 0 : session["#{x_active_tree}_sortcol".to_sym].to_i
       @sortdir = session["#{x_active_tree}_sortdir".to_sym].nil? ? "DESC" : session["#{x_active_tree}_sortdir".to_sym]
 
-      @view, @pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(from_cid(nodeid.split('_')[0])))
+      report_id = from_cid(nodeid.split('_')[0])
+      @view, @pages = get_view(MiqReportResult, :named_scope => [:with_current_user_groups_and_report, report_id])
       @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr
       # Saving converted time to be displayed on saved reports list view
       @view.table.data.each_with_index do |s, _s_idx|
@@ -384,7 +385,7 @@ module ReportController::Reports
   end
 
   def menu_repname_update(old_name, new_name)
-    all_roles = MiqGroup.all
+    all_roles = MiqGroup.non_tenant_groups
     all_roles.each do |role|
       rec = MiqGroup.find_by_description(role.name)
       menu = rec.settings[:report_menus] if rec.settings
@@ -428,8 +429,7 @@ module ReportController::Reports
 
   # Build the main reports tree
   def build_reports_tree
-    @sb[:rpt_menu]  = populate_reports_menu
-    @sb[:grp_title] = reports_group_title
+    reports_menu_in_sb
     TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
   end
 end

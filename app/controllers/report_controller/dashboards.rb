@@ -232,14 +232,14 @@ module ReportController::Dashboards
       @db_nodes["All Groups"][:text] = "All Groups"
     elsif @sb[:nodes].length == 2 && @sb[:nodes].last == "g"
       # All groups node is selected
-      @miq_groups = MiqGroup.all
+      @miq_groups = MiqGroup.non_tenant_groups
       @right_cell_div  = "db_list"
       @right_cell_text = _("All %s") % ui_lookup(:models => "MiqGroup")
     elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g"
       g = MiqGroup.find(from_cid(@sb[:nodes].last))
       @right_cell_text = _("%{model} for \"%{name}\"") % {:model => "Dashboards", :name => g.description}
       @right_cell_div  = "db_list"
-      widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", g.id)
+      widgetsets = MiqWidgetSet.where(:owner_type => "MiqGroup", :owner_id => g.id)
       @widgetsets = []
       if g.settings && g.settings[:dashboard_order]
         g.settings[:dashboard_order].each do |ws_id|
@@ -336,7 +336,7 @@ module ReportController::Dashboards
     end
     # no need to check this for default dashboard, it doesn't belong to any group
     if @sb[:nodes][2] != "d"
-      ws = MiqWidgetSet.find_all_by_owner_id(@sb[:nodes][2])
+      ws = MiqWidgetSet.where(:owner_id => @sb[:nodes][2])
       # make sure description is unique within group
       ws.each do |w|
         if w.description == @edit[:new][:description] && (@edit[:db_id] && w.id != @edit[:db_id])
@@ -386,7 +386,7 @@ module ReportController::Dashboards
         @edit[:new][:dashboard_order].push(ws.name)
       end
     else
-      dbs = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", g.id)
+      dbs = MiqWidgetSet.where(:owner_type => "MiqGroup", :owner_id => g.id)
       dbs.sort_by(&:name).each do |ws|
         @edit[:new][:dashboard_order].push(ws.name)
       end

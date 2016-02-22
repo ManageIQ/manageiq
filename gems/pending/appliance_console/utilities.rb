@@ -1,8 +1,8 @@
 # TODO: add appropriate requires instead of depending on appliance_console.rb.
 # TODO: Further refactor these unrelated methods.
-require "appliance_console/internal_database_configuration"
 require "util/postgres_admin"
 require "awesome_spawn"
+require "appliance_console/logging"
 
 module ApplianceConsole
   module Utilities
