@@ -103,25 +103,10 @@ class ContainerController < ApplicationController
     end
 
     # Build the Explorer screen from scratch
-    @trees   = []
-    @accords = []
-    if role_allows(:feature => "container_accord", :any => true)
-      self.x_active_tree ||= 'containers_tree'
-      self.x_active_accord ||= 'containers'
-      @trees.push(build_containers_tree)
-      @accords.push(:name      => "containers",
-                    :title     => "Relationships",
-                    :container => "containers_accord")
-    end
-
-    if role_allows(:feature => "container_filter_accord", :any => true)
-      self.x_active_tree ||= 'containers_filter_tree'
-      self.x_active_accord ||= 'containers_filter'
-      @trees.push(build_containers_filter_tree)
-      @accords.push(:name      => "containers_filter",
-                    :title     => "All Containers",
-                    :container => "containers_filter_accord")
-    end
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
     if params[:id]  # If a tree node id came in, show in one of the trees
       nodetype, id = params[:id].split("-")
@@ -132,7 +117,6 @@ class ContainerController < ApplicationController
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
-    get_node_info(x_node)
     @in_a_form = false
     render :layout => "application"
   end
@@ -195,6 +179,22 @@ class ContainerController < ApplicationController
   end
 
   private
+
+  def features
+    [{:role     => "container_accord",
+      :role_any => true,
+      :name     => :containers,
+      :title    => N_("Relationships")},
+
+     {:role     => "container_filter_accord",
+      :role_any => true,
+      :name     => :containers_filter,
+      :title    => N_("All Containers")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
+
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
@@ -335,10 +335,6 @@ class ContainerController < ApplicationController
   # Build a Containers explorer tree
   def build_containers_tree
     TreeBuilderContainers.new("containers_tree", "containers", @sb)
-  end
-
-  def build_containers_filter_tree
-    TreeBuilderContainersFilter.new("containers_filter_tree", "containers_filter", @sb)
   end
 
   def show_record(id = nil)

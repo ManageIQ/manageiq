@@ -33,6 +33,13 @@ class TreeBuilder
     when :savedreports     then TreeBuilderReportSavedReports
     when :schedules        then TreeBuilderReportSchedules
     when :widgets          then TreeBuilderReportWidgets
+
+    # containers explorer tree
+    when :containers         then TreeBuilderContainers
+    when :containers_filter  then TreeBuilderContainersFilter
+
+    # automate explorer tree
+    when :ae               then TreeBuilderAeClass
     end
   end
 
