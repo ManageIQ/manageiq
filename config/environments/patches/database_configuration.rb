@@ -14,7 +14,7 @@ Rails::Application::Configuration.module_eval do
         require "erb"
 
         data = yaml.read
-        data = ERB.new(data).result unless Rails.env.production?
+        data = ERB.new(data).result if !Rails.env.production? || ENV['ERB_IN_CONFIG']
 
         begin
           data = YAML.load(data) || {}
