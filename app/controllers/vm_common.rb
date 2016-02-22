@@ -193,8 +193,32 @@ module VmCommon
     if !@explorer && @display != "download_pdf"
       tree_node_id = TreeBuilder.build_node_id(@record)
       session[:exp_parms] = {:display => @display, :refresh => params[:refresh], :id => tree_node_id}
-      redirect_to :controller => controller_for_vm(model_for_vm(@record)),
-                  :action     => "explorer"
+      controller_name = controller_for_vm(model_for_vm(@record))
+      # redirect user back to where they came from if they dont have access to any of vm explorers
+      # or redirect them to the one they have access to
+      case controller_name
+      when "vm_infra"
+        redirect_controller = role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord") ?
+                                "vm_infra" : nil
+      when "vm_cloud"
+        redirect_controller = role_allows(:feature => "instances_accord") || role_allows(:feature => "instances_filter_accord") ?
+                                "vm_cloud" : nil
+      end
+
+      redirect_controller = role_allows(:feature => "vms_instances_filter_accord") ? "vm_or_template" : nil unless redirect_controller
+
+      if redirect_controller
+        action = "explorer"
+      else
+        url = request.env['HTTP_REFERER'].split('/')
+        add_flash(_("User '#{current_userid}' is not authorized to access '#{ui_lookup(:table => controller_name)}'"), :warning)
+        session[:flash_msgs] = @flash_array.dup
+        redirect_controller  = url[3]
+        action               = url[4]
+      end
+
+      redirect_to :controller => redirect_controller,
+                  :action     => action
       return
     end
 
