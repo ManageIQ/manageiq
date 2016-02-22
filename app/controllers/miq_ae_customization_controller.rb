@@ -137,51 +137,13 @@ class MiqAeCustomizationController < ApplicationController
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     @explorer = true
     build_resolve_screen
-    self.x_active_tree ||= 'old_dialogs_tree'
-    self.x_active_accord ||= 'old_dialogs'
-    if x_active_tree == :dialog_edit_tree ||
-       x_active_tree == :automate_tree && x_active_accord == :dialogs
-      self.x_active_accord = 'dialogs'
-      self.x_active_tree   = 'dialogs_tree'
-    end
-    @sb[:active_node] ||= {}
-    @sb[:active_node][:ab_tree] ||= "root"
-    @sb[:active_node][:old_dialogs_tree] ||= "root"
-    @sb[:active_node][:dialogs_tree] ||= "root"
-    @sb[:active_node][:dialog_import_export_tree] ||= "root"
 
-    @trees = []
-    @accords = []
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
-    @trees << old_dialogs_build_tree
-    @accords << {
-      :name      => "old_dialogs",
-      :title     => "Provisioning Dialogs",
-      :container => "old_dialogs_accord"
-    }
-
-    @trees << dialog_build_tree
-    @accords << {
-      :name      => "dialogs",
-      :title     => "Service Dialogs",
-      :container => "dialogs_accord"
-    }
-
-    @trees << ab_build_tree
-    @accords << {
-      :name      => "ab",
-      :title     => "Buttons",
-      :container => "ab_accord"
-    }
-
-    @trees << dialog_import_export_build_tree
-    @accords << {
-      :name      => "dialog_import_export",
-      :title     => "Import/Export",
-      :container => "dialog_import_export_accord"
-    }
-
-    get_node_info
     @collapse_c_cell = true if (x_active_tree == :old_dialogs_tree &&
         x_node == "root") || x_active_tree == :ab_tree
     @lastaction = "automate_button"
@@ -229,6 +191,38 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   private
+
+  def features
+    [{:role     => "old_dialogs_accord",
+      :role_any => true,
+      :name     => :old_dialogs,
+      :title    => N_("Provisioning Dialogs")},
+
+     {:role     => "dialog_accord",
+      :role_any => true,
+      :name     => :dialogs,
+      :title    => N_("Service Dialogs")},
+
+     {:role     => "ab_buttons_accord",
+      :role_any => true,
+      :name     => :ab,
+      :title    => N_("Buttons")},
+
+     {:role     => "miq_ae_class_import_export",
+      :name     => :dialog_import_export,
+      :title    => N_("Import/Export")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
+
+  def set_active_elements(feature)
+    if feature
+      self.x_active_tree ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
+    end
+    get_node_info
+  end
 
   def dialog_import_service
     @dialog_import_service ||= DialogImportService.new
