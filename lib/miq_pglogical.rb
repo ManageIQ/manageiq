@@ -11,7 +11,7 @@ class MiqPglogical
   end
 
   def self.provider?
-    pglogical.enabled? && pglogical.replication_sets.include?(REPLICATION_SET_NAME)
+    pglogical.installed? && pglogical.enabled? && pglogical.replication_sets.include?(REPLICATION_SET_NAME)
   end
 
   def self.create_local_node
