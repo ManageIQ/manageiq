@@ -40,6 +40,13 @@ class TreeBuilder
 
     # automate explorer tree
     when :ae               then TreeBuilderAeClass
+
+    # miq_ae_customization explorer trees
+    when :ab                    then TreeBuilderButtons
+    when :dialogs               then TreeBuilderServiceDialogs
+    when :dialog_import_export  then TreeBuilderAeCustomization
+    when :old_dialogs           then TreeBuilderProvisioningDialogs
+
     end
   end
 
