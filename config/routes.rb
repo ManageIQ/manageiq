@@ -1949,6 +1949,7 @@ Vmdb::Application.routes.draw do
         files
         listnav_search_selected
         panel_control
+        disk_files
         perf_chart_chooser
         protect
         quick_search
