@@ -98,6 +98,7 @@ module Sandbox
     containers_filter
     cs_filter
     customization_templates
+    datastores
     db
     diagnostics
     dialog_import_export
