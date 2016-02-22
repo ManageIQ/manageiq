@@ -8,7 +8,7 @@ module ApplianceConsole
   module Utilities
     def self.rake(task, params)
       result = AwesomeSpawn.run("rake #{task}", :chdir => RAILS_ROOT, :params => params)
-      File.open(LOGFILE, "a") { |f| f.puts result.error } if result.failure?
+      ApplianceConsole::Logging.logger.error(result.error) if result.failure?
       result.success?
     end
 
