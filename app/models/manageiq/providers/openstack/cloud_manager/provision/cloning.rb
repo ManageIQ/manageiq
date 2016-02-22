@@ -4,7 +4,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
       instance = openstack.handled_list(:servers).detect { |s| s.id == clone_task_ref }
       status   = instance.state.downcase.to_sym
 
-      return true if status == :active
+      return true if [:active, :error].include?(status)
       return false, status
     end
   end
