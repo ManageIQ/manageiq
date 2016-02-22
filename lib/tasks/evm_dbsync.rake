@@ -20,6 +20,11 @@ namespace :evm do
       exit if !tables.empty? && $final_rake_task.nil? || $final_rake_task == :destroy_remote_region
     end
 
+    desc "Resync excluded tables"
+    task :resync_excludes => :environment do
+      MiqPglogical.refresh_excludes if MiqPglogical.provider?
+    end
+
     desc "Uninstall Rubyrep triggers and tables locally"
     task :local_uninstall => :environment do
       tables = ARGV[1..-1]
@@ -226,5 +231,12 @@ namespace :evm do
         `#{password} psql #{"-h #{host}" if host} #{"-p #{port}" if port} -U #{username} -w -d #{database} -c \"#{cmd} #{table} #{cmd_dir} '#{file}' WITH BINARY\" #{password_cleanup}`
       end
     end
+  end
+end
+
+# Always run evm:dbsync:resync_excludes after migrations
+namespace :db do
+  task :migrate do
+    Rake::Task['evm:dbsync:resync_excludes'].invoke
   end
 end
