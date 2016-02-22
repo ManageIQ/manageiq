@@ -14,6 +14,19 @@ class WidgetImportService
     import_file_upload.destroy
   end
 
+  def import_widget_from_hash(widget)
+    new_or_existing_widget = MiqWidget.where(:title => widget["title"]).first_or_create
+    new_or_existing_widget.title ||= widget["title"]
+    new_or_existing_widget.content_type ||= "rss"
+    new_or_existing_widget.resource = build_report_contents(widget)
+    new_or_existing_widget.miq_schedule = build_miq_schedule(widget)
+    widget.delete("resource_id")
+
+    log_widget_import_message(new_or_existing_widget)
+
+    new_or_existing_widget.update_attributes(widget)
+  end
+
   def import_widgets(import_file_upload, widgets_to_import)
     unless widgets_to_import.nil?
       widgets = YAML.load(import_file_upload.uploaded_content)
@@ -25,16 +38,7 @@ class WidgetImportService
       raise ParsedNonWidgetYamlError if widgets.empty?
 
       widgets.each do |widget|
-        new_or_existing_widget = MiqWidget.where(:title => widget["MiqWidget"]["title"]).first_or_create
-        new_or_existing_widget.title ||= widget["MiqWidget"]["title"]
-        new_or_existing_widget.content_type ||= "rss"
-        new_or_existing_widget.resource = build_report_contents(widget)
-        new_or_existing_widget.miq_schedule = build_miq_schedule(widget)
-        widget["MiqWidget"].delete("resource_id")
-
-        log_widget_import_message(new_or_existing_widget)
-
-        new_or_existing_widget.update_attributes(widget["MiqWidget"])
+        import_widget_from_hash(widget["MiqWidget"])
       end
     end
 
@@ -61,7 +65,7 @@ class WidgetImportService
   end
 
   def build_report_contents(widget)
-    report_contents = widget["MiqWidget"].delete("MiqReportContent")
+    report_contents = widget.delete("MiqReportContent")
 
     return if report_contents.blank?
 
@@ -88,7 +92,7 @@ class WidgetImportService
   end
 
   def build_miq_schedule(widget)
-    schedule_contents = widget["MiqWidget"].delete("MiqSchedule")
+    schedule_contents = widget.delete("MiqSchedule")
 
     return if schedule_contents.blank?
 
