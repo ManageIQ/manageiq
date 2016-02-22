@@ -12,6 +12,7 @@ describe "MiqAeStateMachineRetry" do
     @root_class      = "TOP_OF_THE_WORLD"
     @root_instance   = "EVEREST"
     @user            = FactoryGirl.create(:user_with_group)
+    @miq_server      = FactoryGirl.create(:miq_server)
     @automate_args   = {:namespace        => @namespace,
                         :class_name       => @root_class,
                         :instance_name    => @root_instance,
@@ -20,6 +21,7 @@ describe "MiqAeStateMachineRetry" do
                         :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
     allow(MiqServer).to receive(:my_zone).and_return('default')
+    allow(MiqServer).to receive(:my_server).and_return(@miq_server)
     clear_domain
   end
 

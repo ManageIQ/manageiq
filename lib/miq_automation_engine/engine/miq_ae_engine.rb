@@ -29,7 +29,7 @@ module MiqAeEngine
       :class_name  => 'MiqAeEngine',
       :method_name => 'deliver',
       :args        => [args],
-      :zone        => MiqServer.my_zone,
+      :zone        => MiqServer.my_server.has_active_role?('automate') ? MiqServer.my_zone : nil,
       :role        => 'automate',
       :msg_timeout => 60.minutes
     }.merge(options)

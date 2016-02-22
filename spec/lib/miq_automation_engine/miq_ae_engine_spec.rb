@@ -156,7 +156,7 @@ module MiqAeEngineSpec
             q = MiqQueue.first
             expect(q.class_name).to eq('MiqAeEngine')
             expect(q.method_name).to eq('deliver')
-            expect(q.zone).to eq(MiqServer.my_zone)
+            expect(q.zone).to be_nil
             expect(q.role).to eq('automate')
             expect(q.msg_timeout).to eq(60.minutes)
 
@@ -175,6 +175,39 @@ module MiqAeEngineSpec
               :ae_state_retries => @ae_state_retries,
             }
             expect(q.args.first).to eq(args)
+          end
+
+          it "with defaults, automate role, valid zone" do
+            allow_any_instance_of(MiqServer).to receive_messages(:has_active_role? => true)
+            object_type = @ems.class.name
+            object_id   = @ems.id
+            expect(call_automate(object_type, object_id)).to eq(@ws)
+
+            expect(MiqQueue.count).to eq(1)
+            expect(MiqQueue.first).to have_attributes(
+              :class_name  => 'MiqAeEngine',
+              :method_name => 'deliver',
+              :zone        => MiqServer.my_zone,
+              :role        => 'automate',
+              :msg_timeout => 60.minutes,
+            )
+          end
+
+          it "with defaults, no automate role, nil zone" do
+            allow_any_instance_of(MiqServer).to receive_messages(:has_active_role? => false)
+            object_type = @ems.class.name
+            object_id   = @ems.id
+            expect(call_automate(object_type, object_id)).to eq(@ws)
+
+            expect(MiqQueue.count).to eq(1)
+
+            expect(MiqQueue.first).to have_attributes(
+              :class_name  => 'MiqAeEngine',
+              :method_name => 'deliver',
+              :zone        => nil,
+              :role        => 'automate',
+              :msg_timeout => 60.minutes,
+            )
           end
         end
       end
