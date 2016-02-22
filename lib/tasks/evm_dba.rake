@@ -181,7 +181,7 @@ namespace :evm do
         # Create the region from our REGION file, initialize a new miq_database row for this region
         AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])
       rescue => err
-        message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.error : err.message
+        message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.result.error : err.message
         STDERR.puts "Encountered issue setting up Database using region #{region}: #{message}\n"
         File.write(region_file, old_region) if old_region
         raise
