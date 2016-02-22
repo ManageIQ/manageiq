@@ -6,7 +6,7 @@ def root_folder(host, data_center)
 end
 
 def set_folder(prov, host, vm)
-  host_dc = host.ems_cluster.v_parent_datacenter
+  host_dc = host.v_owning_datacenter.presence || host.ems_cluster.v_parent_datacenter
   $evm.log("info", "selected datacenter [#{host_dc}]")
   matching_folder = vm.v_owning_blue_folder_path.sub("/#{vm.v_owning_datacenter}/", "/#{host_dc}/")
   folder = prov.eligible_folders.detect { |f| f.folder_path == matching_folder }
