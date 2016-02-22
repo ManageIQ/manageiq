@@ -7,7 +7,8 @@ module ManageIQ::Providers
 
           @storage_service.handled_list(:directories).each do |dir|
             result = process_collection_item(dir, :cloud_object_store_containers) { |c| parse_container(c, dir.project) }
-            process_collection(dir.files, :cloud_object_store_objects) { |o| parse_object(o, result, dir.project) }
+            files = safe_list { dir.files }
+            process_collection(files, :cloud_object_store_objects) { |o| parse_object(o, result, dir.project) }
           end
         end
 
