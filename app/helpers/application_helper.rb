@@ -11,6 +11,7 @@ module ApplicationHelper
   include StiRoutingHelper
   include ToolbarHelper
   include TextualSummaryHelper
+  include NumberHelper
 
   def documentation_link(url = nil, documentation_subject = "")
     if url
