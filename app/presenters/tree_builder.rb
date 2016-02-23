@@ -508,9 +508,7 @@ class TreeBuilder
 
   def self.rbac_has_visible_descendants?(o, type)
     target_ids = o.descendant_ids(:of_type => type).transpose.last
-    return false if target_ids.blank?
-    results, _attrs = Rbac.search(:targets => target_ids, :class => type.constantize)
-    results.length > 0
+    Rbac.filtered(target_ids, :class => type.constantize).present?
   end
   private_class_method :rbac_has_visible_descendants?
 

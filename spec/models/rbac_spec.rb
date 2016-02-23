@@ -32,7 +32,7 @@ describe Rbac do
         it "with :user finds #{klass}" do
           owned_resource = FactoryGirl.create(factory_name, :tenant => owner_tenant)
           _other_resource = FactoryGirl.create(factory_name, :tenant => other_tenant)
-          results = Rbac.search(:class => klass, :results_format => :objects, :user => owner_user).first
+          results = Rbac.filtered(klass, :user => owner_user)
           expect(results).to match_array [owned_resource]
         end
       end
