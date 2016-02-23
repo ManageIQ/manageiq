@@ -159,7 +159,8 @@ module EmsRefresh::VcUpdates
       "summary.capacity",
       "summary.freeSpace",
       "summary.name",
-      "childEntity"
+      "childEntity",
+      "parent"
     ],
 
     :ems_refresh_cluster   => [
@@ -219,6 +220,8 @@ module EmsRefresh::VcUpdates
 
     :ems_refresh_dc        => [
       "MOR",
+      "datastoreFolder",
+      "datastoreFolder.ManagedObjectReference",
       "hostFolder",
       "hostFolder.ManagedObjectReference",
       "name",
