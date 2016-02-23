@@ -100,7 +100,7 @@ module QuadiconHelper
                      item.class.name.underscore
                    elsif item.kind_of?(VmOrTemplate)
                      item.class.base_model.to_s.underscore
-                   elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager) || item.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
+                   elsif item.kind_of?(ManageIQ::Providers::ConfigurationManager)
                      "single_quad"
                    elsif %w(ExtManagementSystem Host).include?(item.class.base_class.name)
                      item.class.base_class.name.underscore
