@@ -129,7 +129,7 @@ module Rbac
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     u_filtered_ids = get_self_service_object_ids(user_or_group, klass)
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
-    m_filtered_ids = get_managed_filter_object_ids(klass, scope, user_filters['managed'])
+    m_filtered_ids = get_managed_filter_object_ids(scope, user_filters['managed'])
     d_filtered_ids = user_filters['ids_via_descendants']
 
     filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
@@ -235,8 +235,8 @@ module Rbac
     get_belongsto_matches(filter, rbac_class(klass)).collect(&:id)
   end
 
-  def self.get_managed_filter_object_ids(klass, scope, filter)
-    return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+  def self.get_managed_filter_object_ids(scope, filter)
+    return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(scope.klass).name) || filter.blank?
     scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
   end
 
