@@ -157,4 +157,18 @@ describe "VM Retirement Management" do
 
     vm.raise_audit_event(event_name, message)
   end
+
+  it "reset retirement state in future" do
+    @vm.update_attributes(:retirement_state => 'retiring')
+    @vm.retire(:date => Time.zone.today + 1.day)
+
+    expect(@vm.reload.retirement_state).to be_nil
+  end
+
+  it "reset retirement state in past" do
+    @vm.update_attributes(:retirement_state => 'retiring')
+    @vm.retire(:date => Time.zone.today - 1.day)
+
+    expect(@vm.reload.retirement_state).to eq('retiring')
+  end
 end
