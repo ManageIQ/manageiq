@@ -79,7 +79,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    if %i(vi svc clo inf cnt con aut opt set).include?(tab)
+    if %i(vi svc clo inf cnt mdl con aut opt set).include?(tab)
       if session[:tab_url].key?(tab) # we remember url for this tab
         if restful_routed_action?(session[:tab_url][tab][:controller], session[:tab_url][tab][:action])
           session[:tab_url][tab].delete(:action)
@@ -106,7 +106,7 @@ class DashboardController < ApplicationController
             end
           end
         end
-      when :clo, :inf, :cnt, :svc
+      when :clo, :inf, :cnt, :mdl, :svc
         tab_features.detect do |f|
           if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
             redirect_to :controller => EXPLORER_FEATURE_LINKS[f], :action => "explorer"
