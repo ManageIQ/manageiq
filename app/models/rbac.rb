@@ -176,7 +176,7 @@ module Rbac
     parent_class = rbac_class(klass)
     filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user_or_group)
 
-    find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
+    find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
   end
 
   def self.total_scope(scope, extra_target_ids, conditions, includes)
@@ -198,14 +198,14 @@ module Rbac
   # @option find_options :conditions [String|Hash|Array] active record where conditions for primary records (e.g. { "vms.archived" => true} )
   # @param filtered_ids [nil|Array<Integer>] ids for the parent class (e.g. [1,2,3] for host)
   # @return [Array<Array<Object>,Integer,Integer] targets, total count, authorized count
-  def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
+  def self.find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
     total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
     if filtered_ids
-      reflection = klass.reflections[parent_class.name.underscore]
+      reflection = scope.reflections[parent_class.name.underscore]
       if reflection
-        ids_clause = ["#{klass.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
+        ids_clause = ["#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
       else
-        ids_clause = ["#{klass.table_name}.resource_type = ? AND #{klass.table_name}.resource_id IN (?)", parent_class.name, filtered_ids]
+        ids_clause = ["#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids]
       end
 
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
