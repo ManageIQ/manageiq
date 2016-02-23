@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     @ems = FactoryGirl.create(:ems_microsoft_with_authentication, :zone => zone,
         :hostname => "scvmm1111.manageiq.com", :ipaddress => "192.168.252.90", :security_protocol => "ssl")
 
-    data_file = File.join(File.dirname(__FILE__), %w(.. .. .. .. .. tools scvmm_data get_inventory_output.yml))
+    data_file = Rails.root.join("spec/tools/scvmm_data/get_inventory_output.yml")
     output    = YAML.load_file(data_file)
     allow(ManageIQ::Providers::Microsoft::InfraManager).to receive(:execute_powershell).and_return(output)
   end
@@ -249,8 +249,8 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
           },
           [EmsFolder, "vm", {:is_datacenter => false}]   => {
             [ManageIQ::Providers::Microsoft::InfraManager::Template, "linux_template"] => {},
-            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "linux2"]    => {},
-            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "vm_linux1"] => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "linux2"]               => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "vm_linux1"]            => {},
           }
         }
       }
