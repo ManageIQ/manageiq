@@ -132,7 +132,8 @@ module Rbac
     u_filtered_ids = get_self_service_object_ids(user, miq_group, klass)
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
     m_filtered_ids = get_managed_filter_object_ids(scope, user_filters['managed'])
-    d_filtered_ids = user_filters['ids_via_descendants']
+    d_filtered_ids = ids_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
+                                         :user => user, :miq_group => miq_group)
 
     filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
     [filtered_ids, u_filtered_ids]
@@ -496,7 +497,7 @@ module Rbac
       end
     end
 
-    user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :user => user, :miq_group => miq_group)
+    user_filters['match_via_descendants'] = options.delete(:match_via_descendants)
 
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
