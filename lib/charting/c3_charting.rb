@@ -84,5 +84,6 @@ class C3Charting < Charting
     ["Pie (2D)",              "Pie"],
     ["Line (2D)",             "Line"],
     ["Area (2D)",             "Area"],
+    ["Area, Stacked (2D)",    "StackedArea"],
   ]
 end

@@ -4,17 +4,19 @@ module ReportFormatter
     include ChartCommon
     renders :c3, :for => ReportRenderer
 
-    CONVERT_TYPES = {
-      "ColumnThreed"         => "Column",
-      "ParallelThreedColumn" => "Column",
-      "StackedThreedColumn"  => "StackedColumn",
-      "PieThreed"            => "Pie"
-    }
     # series handling methods
     def series_class
       C3Series
     end
 
+    CONVERT_TYPES = {
+      "ColumnThreed"         => "Column",
+      "ParallelThreedColumn" => "Column",
+      "StackedThreedColumn"  => "StackedColumn",
+      "PieThreed"            => "Pie",
+      "AreaThreed"           => "Area",
+      "StackedAreaThreed"    => "StackedArea"
+    }
     def add_series(label, data)
       @counter ||= 0
       @counter += 1
