@@ -153,7 +153,7 @@
             = check_box_tag('field_trigger_auto_refresh', '1',
                             @edit[:field_trigger_auto_refresh],
                             'data-miq_observe_checkbox' => {:url => url}.to_json)
-        - if @edit[:field_typ].include?('TextBox')
+        - if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(@edit[:field_typ])
           .form-group
             %label.col-md-2.control-label
               = _('Validator Type')
