@@ -1,0 +1,38 @@
+--- 
+? !str:VimString 
+  str: group-p81
+  "@vimType": :StoragePod
+  "@xsiType": :ManagedObjectReference
+: !map:VimHash 
+  name: !str:VimString 
+    str: TestDatastoreCluster
+    "@vimType": 
+    "@xsiType": :"xsd:string"
+  parent: !str:VimString 
+    str: group-s5
+    "@vimType": :Folder
+    "@xsiType": :ManagedObjectReference
+  MOR: !str:VimString 
+    str: group-p81
+    "@vimType": :Datacenter
+    "@xsiType": :ManagedObjectReference
+  summary: !map:VimHash 
+    name: !str:VimString 
+      str: TestDatastoreCluster
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPString"
+    capacity: !str:VimString 
+      str: "1048508891136"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+    freeSpace: !str:VimString 
+      str: "656626679808"
+      "@vimType": 
+      "@xsiType": :"SOAP::SOAPLong"
+  childEntity: !seq:VimArray 
+    - !str:VimString 
+      str: datastore-12281
+      "@vimType": :Datastore
+      "@xsiType": :ManagedObjectReference
+  __iv__@vimType: 
+  __iv__@xsiType: :ObjectContent
