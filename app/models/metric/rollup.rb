@@ -1,5 +1,6 @@
 module Metric::Rollup
-  ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == "derived" }.compact
+  ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == "derived" }.compact +
+                 [:stat_containergroup_create_rate, :stat_containergroup_delete_rate]
   STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
 
   AGGREGATE_COLS = {
@@ -151,6 +152,7 @@ module Metric::Rollup
 
     new_perf.reverse_merge!(orig_perf)
     new_perf.merge!(Metric::Processing.process_derived_columns(obj, new_perf, hour)) unless DERIVED_COLS_EXCLUDED_CLASSES.include?(obj.class.base_class.name)
+    new_perf.merge!(Metric::Statistic.calculate_stat_columns(obj, hour))
 
     new_perf
   end

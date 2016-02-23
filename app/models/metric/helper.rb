@@ -165,4 +165,13 @@ module Metric::Helper
 
     return start_time, end_time
   end
+
+  def self.get_time_interval(obj, timestamp)
+    timestamp = Time.parse(timestamp).utc if timestamp.kind_of?(String)
+
+    state = obj.vim_performance_state_for_ts(timestamp)
+    start_time = timestamp - state[:capture_interval]
+
+    start_time..timestamp
+  end
 end
