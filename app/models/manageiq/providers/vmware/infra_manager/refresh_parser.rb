@@ -17,7 +17,7 @@ module ManageIQ::Providers
         result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
         result[:vms], uids[:vms] = vm_inv_to_hashes(inv[:vm], inv[:storage], uids[:storages], uids[:hosts], uids[:clusters_by_host], uids[:lans])
 
-        result[:folders], uids[:folders] = folder_and_dc_inv_to_hashes(inv[:folder], inv[:dc])
+        result[:folders], uids[:folders] = folder_dc_sp_inv_to_hashes(inv[:folder], inv[:dc], inv[:storage_pod])
         result[:resource_pools], uids[:resource_pools] = rp_inv_to_hashes(inv[:rp])
 
         result[:customization_specs] = customization_spec_inv_to_hashes(inv[:customization_specs]) if inv.key?(:customization_specs)
@@ -1011,16 +1011,17 @@ module ManageIQ::Providers
         result
       end
 
-      def self.folder_and_dc_inv_to_hashes(folder_inv, dc_inv)
-        folder_result, folder_uids = folder_inv_to_hashes(folder_inv, false)
-        dc_result, dc_uids = folder_inv_to_hashes(dc_inv, true)
+      def self.folder_dc_sp_inv_to_hashes(folder_inv, dc_inv, sp_inv)
+        folder_result, folder_uids = folder_inv_to_hashes(folder_inv, false, EmsFolder.name)
+        dc_result, dc_uids = folder_inv_to_hashes(dc_inv, true, Datacenter.name)
+        sp_result, sp_uids = folder_inv_to_hashes(sp_inv, false, StorageCluster.name)
 
-        result = folder_result + dc_result
-        result_uids = folder_uids.merge(dc_uids)
+        result = folder_result + dc_result + sp_result
+        result_uids = folder_uids.merge(dc_uids).merge(sp_uids)
         return result, result_uids
       end
 
-      def self.folder_inv_to_hashes(inv, is_dc)
+      def self.folder_inv_to_hashes(inv, is_dc, type)
         result = []
         result_uids = {}
         return result, result_uids if inv.nil?
@@ -1029,12 +1030,13 @@ module ManageIQ::Providers
           mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
           child_mors = if is_dc
-                         get_mors(data, 'hostFolder') + get_mors(data, 'vmFolder')
+                         get_mors(data, 'hostFolder') + get_mors(data, 'vmFolder') + get_mors(data, 'datastoreFolder')
                        else
                          get_mors(data, 'childEntity')
                        end
 
           new_result = {
+            :type          => type,
             :ems_ref       => mor,
             :ems_ref_obj   => mor,
             :uid_ems       => mor,
