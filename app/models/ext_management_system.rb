@@ -102,6 +102,8 @@ class ExtManagementSystem < ApplicationRecord
            :ipaddress=,
            :hostname,
            :hostname=,
+           :hostname_with_role,
+           :port_with_role,
            :port,
            :port=,
            :to => :default_endpoint
@@ -260,6 +262,10 @@ class ExtManagementSystem < ApplicationRecord
   def default_endpoint
     default = endpoints.detect { |e| e.role == "default" }
     default || endpoints.build(:role => "default")
+  end
+
+  def hostnames
+    hostnames ||= endpoints.map(&:hostname)
   end
 
   def authentication_check_role

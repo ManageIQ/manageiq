@@ -4,6 +4,14 @@ class Endpoint < ActiveRecord::Base
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
 
+  def hostname_with_role(role)
+    Endpoint.find_by(:resource_id => resource_id, :role => role).hostname
+  end
+
+  def port_with_role(role)
+    Endpoint.find_by(:resource_id => resource_id, :role => role).hostname
+  end
+
   def verify_ssl=(val)
     val = resolve_verify_ssl_value(val)
     super
