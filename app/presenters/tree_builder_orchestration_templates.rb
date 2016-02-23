@@ -5,19 +5,19 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
     children = [
       {:id    => 'otcfn',
        :tree  => "otcfn_tree",
-       :text  => "CloudFormation Templates",
+       :text  => _("CloudFormation Templates"),
        :image => "orchestration_template_cfn",
-       :tip   => "CloudFormation Templates"},
+       :tip   => _("CloudFormation Templates")},
       {:id    => 'othot',
        :tree  => "othot_tree",
-       :text  => "Heat Templates",
+       :text  => _("Heat Templates"),
        :image => "orchestration_template_hot",
-       :tip   => "Heat Templates"},
+       :tip   => _("Heat Templates")},
       {:id    => 'otazu',
        :tree  => "otazu_tree",
-       :text  => "Azure Templates",
+       :text  => _("Azure Templates"),
        :image => "orchestration_template_azure",
-       :tip   => "Azure Templates"}
+       :tip   => _("Azure Templates")}
     ]
     count_only ? children.length : children
   end

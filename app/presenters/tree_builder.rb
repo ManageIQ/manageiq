@@ -52,7 +52,8 @@ class TreeBuilder
         title = _("Enterprise")
         icon  = "enterprise"
       else # FIXME: string CFME below
-        title = "CFME Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]"
+        title = _("CFME Region: %{region_description} [%{region}]") %
+                {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
         icon  = "miq_region"
       end
       [title, title, icon]
@@ -88,9 +89,9 @@ class TreeBuilder
     when :roles_tree                    then
       user = User.current_user
       if user.super_admin_user?
-        title = "All #{ui_lookup(:models => "MiqGroup")}"
+        title = _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
       else
-        title = "My #{ui_lookup(:models => "MiqGroup")}"
+        title = _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
       end
       [title, title, 'miq_group']
     when :sandt_tree                    then [_("All Catalog Items"),            _("All Catalog Items")]

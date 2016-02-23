@@ -46,9 +46,9 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
       [
         {
           :id            => "#{to_cid(object.id.to_s)}",
-          :text          => "Indexes",
+          :text          => _("Indexes"),
           :image         => "folder",
-          :tip           => "Indexes",
+          :tip           => _("Indexes"),
           :load_children => true
         }
       ]

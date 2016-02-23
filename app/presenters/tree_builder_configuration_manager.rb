@@ -16,15 +16,15 @@ class TreeBuilderConfigurationManager < TreeBuilder
     objects = []
     objects.push(:id            => "fr",
                  :tree          => "fr_tree",
-                 :text          => "Foreman Providers",
+                 :text          => _("Foreman Providers"),
                  :image         => "folder",
-                 :tip           => "Foreman Providers",
+                 :tip           => _("Foreman Providers"),
                  :load_children => true)
     objects.push(:id            => "at",
                  :tree          => "at_tree",
-                 :text          => "Ansible Tower Providers",
+                 :text          => _("Ansible Tower Providers"),
                  :image         => "folder",
-                 :tip           => "Ansible Tower Providers",
+                 :tip           => _("Ansible Tower Providers"),
                  :load_children => true)
     count_only_or_objects(count_only, objects, nil)
   end

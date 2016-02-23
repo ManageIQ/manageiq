@@ -21,7 +21,10 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
       items.length + 1
     else
       objects = []
-      objects.push(:id => "xx-system", :text => "Examples (read only)", :image => "folder", :tip => "Examples (read only)")
+      objects.push(:id    => "xx-system",
+                   :text  => _("Examples (read only)"),
+                   :image => "folder",
+                   :tip   => _("Examples (read only)"))
       PxeImageType.all.sort.each do |item, _idx|
         objects.push(:id => "xx-#{to_cid(item.id)}", :text => item.name, :image => "folder", :tip => item.name)
       end
