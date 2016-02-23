@@ -728,6 +728,14 @@
     - :collection
     :methods: *70174834086080
     :klass: MiqRequest
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_show
   :resource_actions:
     :description: Resource Actions
     :options:
