@@ -65,7 +65,7 @@ module VimPropMaps
     :StoragePod             => {
       :baseName => "@storagePods",
       :keyPath  => ["summary", "name"],
-      :props    => ["summary", "childEntity"]
+      :props    => ["summary", "childEntity", "parent"]
     }
   }
 
@@ -332,7 +332,8 @@ module VimPropMaps
         "summary.capacity",
         "summary.freeSpace",
         "summary.name",
-        "childEntity"
+        "childEntity",
+        "parent"
       ]
     }
   }
@@ -444,6 +445,17 @@ module VimPropMaps
         "summary.datastore",
         "summary.freeSpace",
         "summary.uncommitted",
+        "parent"
+      ]
+    },
+    :StoragePod             => {
+      :baseName => "@storagePods",
+      :keyPath  => ["summary", "name"],
+      :props    => [
+        "summary.capacity",
+        "summary.freeSpace",
+        "summary.name",
+        "childEntity",
         "parent"
       ]
     }
