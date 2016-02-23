@@ -25,6 +25,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_ems
     assert_specific_cluster
     assert_specific_storage
+    assert_specific_storage_cluster
     assert_specific_host
     assert_specific_vm
     assert_cpu_layout
@@ -33,7 +34,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
-    expect(EmsFolder.count).to eq(30)
+    expect(Datacenter.count).to eq(3)
+    expect(EmsFolder.count).to eq(31)
     expect(EmsCluster.count).to eq(1)
     expect(Host.count).to eq(4)
     expect(ResourcePool.count).to eq(17)
@@ -56,7 +58,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(Switch.count).to eq(8)
     expect(SystemService.count).to eq(29)
 
-    expect(Relationship.count).to eq(244)
+    expect(Relationship.count).to eq(246)
     expect(MiqQueue.count).to eq(101)
   end
 
@@ -66,7 +68,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :uid_ems     => "EF53782F-6F1A-4471-B338-72B27774AFDD"
     )
 
-    expect(@ems.ems_folders.size).to eq(30)
+    expect(@ems.ems_folders.size).to eq(31)
     expect(@ems.ems_clusters.size).to eq(1)
     expect(@ems.resource_pools.size).to eq(17)
     expect(@ems.storages.size).to eq(47)
@@ -164,6 +166,17 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :directory_hierarchy_supported => true,
       :thin_provisioning_supported   => true,
       :raw_disk_mappings_supported   => true
+    )
+  end
+
+  def assert_specific_storage_cluster
+    @storage_cluster = StorageCluster.find_by_name("TestDatastoreCluster")
+    expect(@storage_cluster).to have_attributes(
+      :ems_ref     => "group-p81",
+      :ems_ref_obj => VimString.new("group-p81", :StorageCluster, :ManagedObjectReference),
+      :uid_ems     => "group-p81",
+      :name        => "TestDatastoreCluster",
+      :type        => "StorageCluster",
     )
   end
 
