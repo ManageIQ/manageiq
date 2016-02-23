@@ -36,6 +36,14 @@ class OrchestrationStack < ApplicationRecord
   virtual_column :total_security_groups, :type => :integer
   virtual_column :total_cloud_networks,  :type => :integer
 
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
+  end
+
   def total_vms
     vms.size
   end

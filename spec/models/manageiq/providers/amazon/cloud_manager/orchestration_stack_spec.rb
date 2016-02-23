@@ -144,4 +144,28 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       end
     end
   end
+
+  context '#tenant_identity' do
+    let(:admin)  { FactoryGirl.create(:user_with_group, :userid => "admin") }
+    let(:tenant) { FactoryGirl.create(:tenant) }
+    before       { admin }
+
+    subject      { @stack.tenant_identity }
+
+    it "has tenant from provider" do
+      @stack = FactoryGirl.create(:orchestration_stack, :ems_id => ems.id)
+
+      expect(subject).to                eq(admin)
+      expect(subject.current_group).to  eq(ems.tenant.default_miq_group)
+      expect(subject.current_tenant).to eq(ems.tenant)
+    end
+
+    it "without a provider, has tenant from root tenant" do
+      @stack = FactoryGirl.create(:orchestration_stack)
+
+      expect(subject).to                eq(admin)
+      expect(subject.current_group).to  eq(Tenant.root_tenant.default_miq_group)
+      expect(subject.current_tenant).to eq(Tenant.root_tenant)
+    end
+  end
 end
