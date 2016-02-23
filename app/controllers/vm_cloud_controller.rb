@@ -11,6 +11,111 @@ class VmCloudController < ApplicationController
     @table_name ||= "vm_cloud"
   end
 
+  def resize
+    assert_privileges("instance_resize")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
+    drop_breadcrumb(
+      :name => _("Resize VM '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/resize"
+    ) unless @explorer
+    @flavors = {}
+    @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+    @edit = {}
+    @edit[:new] ||= {}
+    @edit[:new][:flavor] = @record.flavor.id
+    @edit[:key] = "vm_resize__#{@record.id}"
+    @edit[:vm_id] = @record.id
+    @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
+    session[:edit] = @edit
+    @in_a_form = true
+    @refresh_partial = "vm_common/resize"
+  end
+  alias_method :instance_resize, :resize
+
+  def resize_vm
+    assert_privileges("instance_resize")
+    return unless load_edit("vm_resize__#{params[:id]}")
+    flavor_id = @edit[:new][:flavor]
+    flavor = find_by_id_filtered(Flavor, flavor_id)
+    @record = VmOrTemplate.find_by_id(@edit[:vm_id])
+
+    case params[:button]
+    when "cancel"
+      if @edit[:explorer]
+        add_flash(_("Resize of %{model} \"%{name}\" was cancelled by the user") % {
+          :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+        @record = @sb[:action] = nil
+        replace_right_cell
+      else
+        add_flash(_("Resize of %{model} \"%{name}\" was cancelled by the user") % {
+          :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+        session[:flash_msgs] = @flash_array.dup
+        render :update do |page|
+          page.redirect_to(previous_breadcrumb_url)
+        end
+      end
+    when "save"
+      valid, details = @record.validate_resize
+      if valid
+        begin
+          old_flavor = @record.flavor
+          @record.resize(flavor)
+          add_flash(_("Resizing %{instance} \"%{name}\" from %{old_flavor} %{new_flavor}") % {
+            :instance   => ui_lookup(:table => 'vm_cloud'),
+            :name       => @record.name,
+            :old_flavor => old_flavor.name,
+            :new_flavor => flavor.name})
+        rescue => ex
+          add_flash(_("Unable to resize %{instance} \"%{name}\": %{details}") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name,
+            :details  => ex}, :error)
+        end
+      else
+        add_flash(_("Unable to resize %{instance} \"%{name}\": %{details}") % {
+          :instance => ui_lookup(:table => 'vm_cloud'),
+          :name     => @record.name,
+          :details  => details}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      if @edit[:explorer]
+        @sb[:action] = nil
+        replace_right_cell
+      else
+        session[:flash_msgs] = @flash_array.dup
+        render :update do |page|
+          page.redirect_to(previous_breadcrumb_url)
+        end
+      end
+    when "reset"
+      resize
+      add_flash(_("All changes have been reset"), :warning)
+      session[:flash_msgs] = @flash_array.dup
+      @changed = session[:changed] = false
+      if @edit[:explorer]
+        replace_right_cell
+      else
+        render :update do |page|
+          page.redirect_to(:action => "resize", :controller => "vm", :id => params[:id])
+        end
+      end
+    end
+  end
+
+  def resize_field_changed
+    return unless load_edit("vm_resize__#{params[:id]}")
+    @edit ||= {}
+    @edit[:new] ||= {}
+    @edit[:new][:flavor] = params[:id]
+    render :update do |page| # Use JS to update the display
+      page.replace_html("main_div",
+                        :partial => "vm_common/resize") if %w(allright left right).include?(params[:button])
+      page << javascript_for_miq_button_visibility(true)
+      page << "miqSparkle(false);"
+    end
+  end
+
   private
 
   def features

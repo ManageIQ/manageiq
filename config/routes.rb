@@ -2237,6 +2237,7 @@ Vmdb::Application.routes.draw do
         retire
         show
         tagging_edit
+        resize
       ) +
                compare_get,
       :post => %w(
@@ -2244,6 +2245,8 @@ Vmdb::Application.routes.draw do
         accordion_select
         button
         edit_vm
+        resize_vm
+        resize_field_changed
         event_logs
         explorer
         launch_html5_console

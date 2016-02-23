@@ -4256,6 +4256,10 @@
         :description: Edit Instance Tags
         :feature_type: control
         :identifier: instance_tag
+      - :name: Resize Instance
+        :description: Resize Instance
+        :feature_type: control
+        :identifier: instance_resize
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin
