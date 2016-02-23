@@ -82,21 +82,13 @@ class ServiceController < ApplicationController
     end
 
     # Build the Explorer screen from scratch
-    @trees   = []
-    @accords = []
-    if role_allows(:feature => "service", :any => true)
-      self.x_active_tree ||= 'svcs_tree'
-      self.x_active_accord ||= 'svcs'
-      @trees << build_svcs_tree
-      @accords.push(:name      => "svcs",
-                    :title     => "Services",
-                    :container => "svcs_accord")
-    end
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
-
-    get_node_info(x_node)
     @in_a_form = false
 
     render :layout => "application"
@@ -199,6 +191,16 @@ class ServiceController < ApplicationController
   end
 
   private
+
+  def features
+    [{:role     => "service",
+      :role_any => true,
+      :name     => :svcs,
+      :title    => N_("Services")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 
   def service_set_record_vars(svc)
     svc.name = params[:name] if params[:name]
