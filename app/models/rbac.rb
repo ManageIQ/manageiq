@@ -267,8 +267,8 @@ module Rbac
     end
   end
 
-  def self.find_options_for_tenant(klass, user_or_group, find_options = {})
-    tenant_id_clause = klass.tenant_id_clause(user_or_group)
+  def self.find_options_for_tenant(scope, user_or_group, find_options = {})
+    tenant_id_clause = scope.klass.tenant_id_clause(user_or_group)
 
     find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause) if tenant_id_clause
     find_options
@@ -279,7 +279,7 @@ module Rbac
   end
 
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
-    find_options = find_options_for_tenant(klass, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
+    find_options = find_options_for_tenant(scope, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
 
     return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
     return find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
