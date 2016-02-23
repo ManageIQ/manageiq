@@ -61,58 +61,46 @@ class PxeController < ApplicationController
     @breadcrumbs = []
     @explorer = true
     @sb[:open_tree_nodes] ||= []
-    @trees = []
-    @accords = []
 
-    if role_allows(:feature => "pxe_server_accord", :any => true)
-      self.x_active_tree ||= 'pxe_servers_tree'
-      self.x_active_accord ||= 'pxe_servers'
-      @trees << pxe_server_build_tree
-      @accords.push(:name      => "pxe_servers",
-                    :title     => "PXE Servers",
-                    :container => "pxe_servers_accord",
-                    :image     => "pxeserver")
-    end
-
-    if role_allows(:feature => "customization_template_accord", :any => true)
-      self.x_active_tree ||= 'customization_templates_tree'
-      self.x_active_accord ||= 'customization_templates'
-      @trees << customization_template_build_tree
-      @accords.push(:name      => "customization_templates",
-                    :title     => "Customization Templates",
-                    :container => "customization_templates_accord",
-                    :image     => "customizationtemplate")
-    end
-
-    if role_allows(:feature => "pxe_image_type_accord", :any => true)
-      self.x_active_tree ||= 'pxe_image_types_tree'
-      self.x_active_accord ||= 'pxe_image_types'
-      @trees << pxe_image_type_build_tree
-      @accords.push(:name      => "pxe_image_types",
-                    :title     => "System Image Types",
-                    :container => "pxe_image_types_accord",
-                    :image     => "pxeimagetype")
-    end
-
-    if role_allows(:feature => "iso_datastore_accord", :any => true)
-      self.x_active_tree ||= 'iso_datastores_tree'
-      self.x_active_accord ||= 'iso_datastores'
-      @trees << iso_datastore_build_tree
-      @accords.push(:name      => "iso_datastores",
-                    :title     => "ISO Datastores",
-                    :container => "iso_datastores_accord",
-                    :image     => "isodatastore")
-    end
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
     @right_cell_div ||= "pxe_server_list"
     @right_cell_text ||= "All PXE Servers"
-    get_node_info(x_node)
     @pxe_image_types_count = PxeImageType.count
 
     render :layout => "application"
   end
 
   private
+
+  def features
+    [{:role     => "pxe_server_accord",
+      :role_any => true,
+      :name     => :pxe_servers,
+      :title    => N_("PXE Servers")},
+
+     {:role     => "customization_template_accord",
+      :role_any => true,
+      :name     => :customization_templates,
+      :title    => N_("Customization Templates")},
+
+     {:role     => "pxe_image_type_accord",
+      :role_any => true,
+      :name     => :pxe_image_types,
+      :title    => N_("System Image Types")},
+
+     {:role     => "iso_datastore_accord",
+      :role_any => true,
+      :name     => :iso_datastores,
+      :title    => N_("ISO Datastores")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 
   def get_node_info(node)
     node = valid_active_node(node)

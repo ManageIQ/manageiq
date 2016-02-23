@@ -54,6 +54,12 @@ class TreeBuilder
     when :settings              then TreeBuilderOpsSettings
     when :vmdb                  then TreeBuilderOpsVmdb
 
+    # PXE explorer trees
+    when :customization_templates then TreeBuilderPxeCustomizationTemplates
+    when :iso_datastores          then TreeBuilderIsoDatastores
+    when :pxe_image_types         then TreeBuilderPxeImageTypes
+    when :pxe_servers             then TreeBuilderPxeServers
+
     end
   end
 
