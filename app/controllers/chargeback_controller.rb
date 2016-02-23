@@ -46,35 +46,12 @@ class ChargebackController < ApplicationController
   def explorer
     @breadcrumbs = []
     @explorer    = true
-    @trees       = []
-    @trees = []
-    @accords     = []
 
-    if role_allows(:feature => "chargeback_reports")
-      self.x_active_tree ||= 'cb_reports_tree'
-      self.x_active_accord ||= 'cb_reports'
-      tree = cb_rpts_build_tree
-      cb_rpt_build_folder_nodes if x_node(:cb_reports_tree) == "root"
-      @trees << tree
-      @accords << {:name => "cb_reports", :title => "Reports", :container => "cb_reports_accord"}
-    end
-    if role_allows(:feature => "chargeback_rates")
-      self.x_active_tree ||= 'cb_rates_tree'
-      self.x_active_accord ||= 'cb_rates'
-      @trees << cb_rates_build_tree
-      @accords << {:name => "cb_rates", :title => "Rates", :container => "cb_rates_accord"}
-    end
-    if role_allows(:feature => "chargeback_assignments")
-      self.x_active_tree ||= 'cb_assignments_tree'
-      self.x_active_accord ||= 'cb_assignments'
-      @trees << cb_assignments_build_tree
-      @accords << {:name => "cb_assignments", :title => "Assignments", :container => "cb_assignments_accord"}
-    end
-
-    if params[:accordion]
-      self.x_active_tree   = "#{params[:accordion]}_tree"
-      self.x_active_accord = params[:accordion]
-    end
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
     @sb[:open_tree_nodes] ||= []
 
@@ -83,7 +60,6 @@ class ChargebackController < ApplicationController
                        when :cb_assignments_tree then _("All %s") % "Assignments"
                        when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
                        end
-    get_node_info(x_node)
     set_form_locals
     session[:changed] = false
 
@@ -376,6 +352,23 @@ class ChargebackController < ApplicationController
   end
 
   private ############################
+
+  def features
+    [{:role     => "chargeback_reports",
+      :name     => :cb_reports,
+      :title    => N_("Reports")},
+
+     {:role     => "chargeback_rates",
+      :name     => :cb_rates,
+      :title    => N_("Rates")},
+
+     {:role     => "chargeback_assignments",
+      :name     => :cb_assignments,
+      :title    => N_("Assignments")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 
   # Build a Chargeback Reports explorer tree
   def cb_rpts_build_tree
