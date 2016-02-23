@@ -123,6 +123,16 @@ describe MiqEvent do
         expect(MiqEvent).to receive(:raise_event_for_children).never
         MiqEvent.first.process_evm_event
       end
+
+      it "will do policy for provider events" do
+        event = 'ems_auth_changed'
+        ems = FactoryGirl.create(:ext_management_system)
+        FactoryGirl.create(:miq_event_definition, :name => event)
+        FactoryGirl.create(:miq_event, :event_type => event, :target => ems)
+
+        expect(MiqPolicy).to receive(:enforce_policy).with(ems, event, :type => ems.class.name)
+        MiqEvent.first.process_evm_event
+      end
     end
 
     context ".raise_event_for_children" do
