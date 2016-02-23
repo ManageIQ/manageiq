@@ -38,13 +38,13 @@ module RetirementMixin
   def retires_on=(timestamp)
     return if retires_on == timestamp
 
-    if timestamp.nil? || (timestamp.to_date > Date.today)
+    if timestamp.nil? || (timestamp.to_date > Time.zone.today)
       self.retired = false
-      _log.warn("Resetting retirement state from #{self.retirement_state}") unless self.retirement_state.nil?
+      _log.warn("Resetting retirement state from #{retirement_state}") unless retirement_state.nil?
       self.retirement_state = nil
     end
     self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
-    write_attribute(:retires_on, timestamp)
+    self[:retires_on] = timestamp
     self.retirement_requester = nil
   end
 
