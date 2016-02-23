@@ -69,8 +69,6 @@ module Rbac
     'Vm'                     => :descendant_ids
   }
 
-  NO_SCOPE = :_no_scope_
-
   ########################################################################################
   # RBAC is:
   #   Self-Service CIs OR (ManagedFilters CIs AND BelongsToFilters CIs)
@@ -443,7 +441,7 @@ module Rbac
     # Support for using named_scopes in search. Supports scopes with or without args:
     # Example without args: :named_scope => :in_my_region
     # Example with args:    :named_scope => [in_region, 1]
-    scope             = options.delete(:named_scope) || NO_SCOPE
+    scope             = options.delete(:named_scope)
 
     class_or_name     = options.delete(:class) { Object }
     conditions        = options.delete(:conditions)
@@ -480,6 +478,7 @@ module Rbac
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
 
+    scope = apply_scope(klass, scope)
     attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
     find_options = {:conditions => conditions, :include => include_for_find, :order => options[:order]}
@@ -489,7 +488,6 @@ module Rbac
     _log.debug("Find options: #{find_options.inspect}")
 
     if klass.respond_to?(:find)
-      scope = apply_scope(klass, scope)
       targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user || miq_group)
     else
       total_count = targets.length
@@ -538,8 +536,8 @@ module Rbac
   end
 
   def self.apply_scope(klass, scope)
-    scope_name = scope.to_miq_a.first
-    if scope_name == NO_SCOPE
+    scope_name = Array.wrap(scope).first
+    if scope_name.nil?
       klass
     else
       raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
