@@ -384,6 +384,8 @@ describe MiqReport do
       group    = user.miq_group
       template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
       vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      hardware = FactoryGirl.create(:hardware, :vm => vm)
+      FactoryGirl.create(:disk, :hardware => hardware, :disk_type => "thin")
 
       options = {
         :vm_name        => vm.name,
@@ -406,13 +408,16 @@ describe MiqReport do
       template.miq_provisions_from_template << provision
       template.save
 
+      expect(template.miq_provision_vms.count).to be > 0
+      expect(template.miq_provision_vms.count(&:thin_provisioned)).to be > 0
+
       report = MiqReport.create(
         :name          => "VMs based on Disk Type",
         :title         => "VMs using thin provisioned disks",
         :rpt_group     => "Custom",
         :rpt_type      => "Custom",
-        :db            => "VmOrTemplate",
-        :cols          => ["miq_provision_vms_name"],
+        :db            => "MiqTemplate",
+        :cols          => [],
         :include       => {"miq_provision_vms" => {"columns" => ["name"]}},
         :col_order     => ["miq_provision_vms.name"],
         :headers       => ["Name"],
@@ -420,7 +425,7 @@ describe MiqReport do
         :miq_group_id  => group.id,
         :user_id       => user.userid,
         :conditions    => MiqExpression.new(
-          {"FIND" => {"search" => {"=" => {"field" => "VmOrTemplate.miq_provision_vms-vendor", "value" => "VMware"}}, "checkall" => {"=" => {"field" => "VmOrTemplate.miq_provision_vms-vendor", "value" => "VMware"}}}},
+          {"FIND" => {"search" => {"=" => {"field" => "MiqTemplate.miq_provision_vms-thin_provisioned", "value" => "true"}}, "checkall" => {"=" => {"field" => "MiqTemplate.miq_provision_vms-thin_provisioned", "value" => "true"}}}},
           nil
         )
       )
