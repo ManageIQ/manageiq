@@ -270,6 +270,7 @@ module MiqReport::Generator
       # Basic report
       # Daily and Hourly for: C&U main reports go through here too
       ext_options[:only_cols] += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
+      # NOTE: using search to get user property "managed", otherwise this is overkill
       results, attrs = Rbac.search(
         options.merge(
           :class            => db,

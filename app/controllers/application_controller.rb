@@ -2473,10 +2473,7 @@ class ApplicationController < ActionController::Base
       raise msg
     end
 
-    Rbac.search(:class          => db,
-                :conditions     => ["#{db.table_name}.id = ?", id],
-                :user           => current_user,
-                :results_format => :objects).first.first ||
+    Rbac.filtered(db, :conditions => ["#{db.table_name}.id = ?", id], :user => current_user).first ||
       raise("User '#{current_userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'")
   end
 

@@ -54,8 +54,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
   def prune_rbac(tree)
     vms = extract_vms(tree).uniq
 
-    allowed_vm_ids, _attrs = Rbac.search(:targets => vms, :results_format => :ids)
-    allowed_vm_ids = Set.new(allowed_vm_ids)
+    allowed_vm_ids = Set.new(Rbac.filtered(vms).map(&:id)) # results_format == :ids
 
     prune_filtered_vms(tree, allowed_vm_ids)
     prune_empty_folders(tree)
