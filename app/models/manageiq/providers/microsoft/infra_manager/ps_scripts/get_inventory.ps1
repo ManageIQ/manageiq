@@ -1,78 +1,70 @@
 import-module virtualmachinemanager
 $diskvols = @{}
 
-function get_vms{
- $vms = $args[0]
- $results = @{}
+function get_vms($vms){
+  $results = @{}
 
- $vms | ForEach-Object {
-  $vm_hash = @{}
-  $id = $_.ID
-  
-  $vm_hash["Properties"] = $_
-  if ($_.StatusString -eq "Running"){
-   $networks = Read-SCGuestInfo -VM $_ -Key "NetworkAddressIPv4"
-   if ($networks -ne $null){
-    $vm_hash["Networks"] = $networks.KvpMap["NetworkAddressIPv4"]
-   }
+  $vms | ForEach {
+    $vm_hash = @{}
+    $id = $_.ID
+
+    $vm_hash["Properties"] = $_
+    $vm_hash["Networks"] = $_.VirtualNetworkAdapters.IPv4Addresses
+    $vm_hash["DVDs"] = $_.VirtualDVDDrives | Select -Expand ISO
+    $vm_hash["vmnet"] = $_.VirtualNetworkAdapters | Select VMNetwork
+    $results[$id]= $vm_hash
   }
-  $dvds = Get-SCVirtualDVDDrive -VM $_ | Select-Object -ExpandProperty "ISO"
-  $vm_hash["DVDs"] = $dvds
-  $vmnet = Get-SCVirtualNetworkAdapter -VM $_ | Select-Object VMNetwork
-  $vm_hash["vmnet"] = $vmnet
-  $results[$id]= $vm_hash
- }
- return $results
+
+  return $results
 }
 
-function get_images{
- $ims = $args[0]
- $results = @{}
+function get_images($ims){
+  $results = @{}
 
- $ims | ForEach-Object {
-  $i_hash = @{}
-  $id = $_.ID
-  $i_hash["Properties"] = $_
-  $dvds = Get-SCVirtualDVDDrive -VMTemplate $_ | Select-Object -ExpandProperty "ISO"
-  $i_hash["DVDs"] = $dvds
-  $vmnet = Get-SCVirtualNetworkAdapter -VMTemplate $_ | Select-Object VMNetwork
-  $i_hash["vmnet"] = $vmnet
-  $results[$id]= $i_hash
- }
- return $results
-}
-
-function get_host_inventory {
- $results = @{}
- $hosts = $args[0]
- $hosts | ForEach-Object {
-  $host_hash = @{}
-  $host_hash["NetworkAdapters"] = @(Get-VMHostNetworkAdapter -VMHost $_)
-  $host_hash["VirtualSwitch"] = @(Get-SCVirtualNetwork -VMHost $_)
-  $host_hash["Properties"] = $_
-  $results[$_.ID] = $host_hash
-  $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach-Object {
-    $diskvols[$_.ID]=$_
+  $ims | ForEach {
+    $i_hash = @{}
+    $id = $_.ID
+    $i_hash["Properties"] = $_
+    $i_hash["DVDs"] = $_.VirtualDVDDrives | Select -Expand ISO
+    $i_hash["vmnet"] = $_.VirtualNetworkAdapters | Select VMNetwork
+    $results[$id]= $i_hash
   }
- }
- return $results
+
+  return $results
 }
 
-function get_clusters {
- $results = @{}
+function get_host_inventory($hosts) {
+  $results = @{}
 
- $clusters = $args[0]
- $clusters | ForEach-Object {
-  $cluster_hash = @{}
-  $cluster_hash["Properties"] = $_
-  $results[$_.ID] = $cluster_hash
+  $hosts | ForEach {
+    $h_hash = @{}
+    $h_hash["NetworkAdapters"] = @(Get-VMHostNetworkAdapter -VMHost $_)
+    $h_hash["VirtualSwitch"] = @(Get-SCVirtualNetwork -VMHost $_)
+    $h_hash["Properties"] = $_
+    $results[$_.ID] = $h_hash
+    $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach {
+      $diskvols[$_.ID]=$_
+    }
+  }
 
- }
- return $results
+  return $results
+}
+
+function get_clusters($clusters) {
+  $results = @{}
+
+  $clusters | ForEach {
+    $c_hash = @{}
+    $c_hash["Properties"] = $_
+    $results[$_.ID] = $c_hash
+  }
+
+  return $results
 }
 
 $r = @{}
 $v = Get-SCVirtualMachine -VMMServer "localhost"
+
 $r["vms"] = get_vms($v)
 
 $i = Get-SCVMTemplate -VMMServer "localhost"
@@ -91,7 +83,7 @@ $r["ems"] = $e
 $inFile = [System.IO.Path]::GetTempFileName()
 $outFile = $inFile + '.gz'
 
-$r | Export-CLIXML -Path $inFile -Encoding UTF8
+Export-CLIXML -Input $r -Path $inFile -Encoding UTF8
 
 $in = New-Object System.IO.FileStream $inFile, ([IO.FileMode]::Open), ([IO.FileAccess]::Read), ([IO.FileShare]::Read)
 $buf = New-Object byte[]($in.Length)
