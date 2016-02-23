@@ -139,6 +139,10 @@ class ExtManagementSystem < ApplicationRecord
     joins(:endpoints).where(:endpoints => {:hostname => hostname})
   end
 
+  def self.with_role(role)
+    joins(:endpoints).where(:endpoints => {:role => role})
+  end
+
   def self.with_port(port)
     joins(:endpoints).where(:endpoints => {:port => port})
   end
