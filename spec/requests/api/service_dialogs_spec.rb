@@ -19,12 +19,10 @@ describe ApiController do
   let(:service)    { FactoryGirl.create(:service, :name => "Service1") }
 
   context "Service Dialogs collection" do
-    before do
-      template.resource_actions = [ra1, ra2]
-      api_basic_authorize
-    end
+    before { template.resource_actions = [ra1, ra2] }
 
     it "query only returns href" do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :read, :get)
       run_get service_dialogs_url
 
       expect_query_result(:service_dialogs, Dialog.count, Dialog.count)
@@ -32,6 +30,7 @@ describe ApiController do
     end
 
     it "query with expanded resources to include content" do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :read, :get)
       run_get service_dialogs_url, :expand => "resources"
 
       expect_query_result(:service_dialogs, Dialog.count, Dialog.count)
@@ -39,6 +38,7 @@ describe ApiController do
     end
 
     it "query single dialog to include content" do
+      api_basic_authorize action_identifier(:service_dialogs, :read, :resource_actions, :get)
       run_get service_dialogs_url(dialog1.id)
 
       expect_single_resource_query(
@@ -50,6 +50,8 @@ describe ApiController do
     end
 
     it "query single dialog to exclude content when attributes are asked for" do
+      api_basic_authorize action_identifier(:service_dialogs, :read, :resource_actions, :get)
+
       run_get service_dialogs_url(dialog1.id), :attributes => "id,label"
 
       expect_result_to_have_only_keys(%w(href id label))

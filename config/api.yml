@@ -900,10 +900,16 @@
     :methods: *70174834085860
     :klass: Dialog
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_customization_explorer
       :post:
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_customization_explorer
       :post:
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
