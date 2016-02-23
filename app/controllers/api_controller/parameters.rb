@@ -131,9 +131,11 @@ class ApiController
       orders = String(params['sort_order']).split(",")
       options = String(params['sort_options']).split(",")
       params['sort_by'].split(",").zip(orders).collect do |attr, order|
-        raise BadRequestError,
-              "#{attr} is not a valid attribute for #{klass.name}" if !klass.method_defined?(attr) && attr != "id"
-        sort_directive(attr, order, options)
+        if klass.respond_to?(attr) || klass.attribute_method?(attr) || klass.method_defined?(attr) || attr == "id"
+          sort_directive(attr, order, options)
+        else
+          raise BadRequestError, "#{attr} is not a valid attribute for #{klass.name}"
+        end
       end.compact
     end
 

@@ -280,6 +280,12 @@ describe ApiController do
   describe "Querying vms" do
     before { api_basic_authorize }
 
+    it "and sorted by name succeeeds with unreferenced class" do
+      run_get vms_url, :sort_by => "name", :expand => "resources"
+
+      expect_query_result(:vms, 0, 0)
+    end
+
     it "is supported without expanding resources" do
       create_vms_by_name(%w(aa bb))
 
