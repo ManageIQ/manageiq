@@ -327,6 +327,10 @@ class Host < ApplicationRecord
     nil
   end
 
+  def validate_unsupported(message_prefix)
+    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} Host."}
+  end
+
   def has_active_ems?
     !!ext_management_system
   end
