@@ -6,6 +6,8 @@ module MiqAeMethodService
     expose :cloud_networks,    :association => true
     expose :cloud_subnet,      :association => true
     expose :cloud_subnets,     :association => true
+    expose :network_ports,     :association => true
+    expose :network_routers,   :association => true
     expose :floating_ip,       :association => true
     expose :floating_ips,      :association => true
     expose :security_groups,   :association => true

@@ -31,6 +31,9 @@ module Openstack
           private
 
           # TBD whole nova
+          def setup_quotas
+            # Not supported by nova
+          end
 
           def find_or_create_networks
             # Not supported by nova

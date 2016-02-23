@@ -34,7 +34,7 @@ end
 loop do
   option = ARGV.shift
   case option
-  when '--only-environment'
+  when '--only-environment', '-o'
     argv      = ARGV.shift
     supported = allowed_enviroments
     raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
@@ -65,6 +65,7 @@ def install_environments
     @environment = env_name.to_sym
 
     unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
       next unless @environment == @only_environment
     end
 
@@ -84,7 +85,7 @@ def install_environments
     end
 
     puts "Executing: #{cmd}"
-    ` #{cmd} `
+    puts ` #{cmd} `
   end
 
   puts "---------------------------------------------------------------------------------------------------------------"
