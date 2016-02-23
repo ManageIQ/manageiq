@@ -78,8 +78,8 @@ module AuthenticationMixin
     authentication_component(type, :service_account)
   end
 
-  def required_credential_fields(_type)
-    [:userid]
+  def required_credential_fields(type)
+    type.to_s == "bearer" ? [:auth_key] : [:userid]
   end
 
   def has_credentials?(type = nil)
@@ -256,8 +256,8 @@ module AuthenticationMixin
     options         = args.last.kind_of?(Hash) ? args.last : {}
     save            = options.fetch(:save, true)
     type            = args.first
-    status, details = authentication_check_no_validation(type, options)
     auth            = authentication_best_fit(type)
+    status, details = authentication_check_no_validation(type || auth.authtype, options)
 
     if save
       status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
