@@ -250,55 +250,55 @@ module ActiveRecord
 
   module Associations
     class Preloader
-      def preloaders_for_one_with_virtual(association, records, scope)
-        klass_map = records.compact.group_by(&:class)
+      prepend Module.new {
+        def preloaders_for_one(association, records, scope)
+          klass_map = records.compact.group_by(&:class)
 
-        loaders = klass_map.keys.group_by { |klass| klass.virtual_includes(association) }.flat_map do |virtuals, klasses|
-          subset = klasses.flat_map { |klass| klass_map[klass] }
-          preload subset, virtuals
+          loaders = klass_map.keys.group_by { |klass| klass.virtual_includes(association) }.flat_map do |virtuals, klasses|
+            subset = klasses.flat_map { |klass| klass_map[klass] }
+            preload subset, virtuals
+          end
+
+          records_with_association = klass_map.select { |k, rs| k.reflect_on_association(association) }.flat_map { |k, rs| rs }
+          if records_with_association.any?
+            loaders.concat super(association, records_with_association, scope)
+          end
+
+          loaders
         end
-
-        records_with_association = klass_map.select { |k, rs| k.reflect_on_association(association) }.flat_map { |k, rs| rs }
-        if records_with_association.any?
-          loaders.concat preloaders_for_one_without_virtual(association, records_with_association, scope)
-        end
-
-        loaders
-      end
-      alias_method_chain :preloaders_for_one, :virtual
+      }
     end
   end
 
-  module FinderMethods
+  class Relation
     def without_virtual_includes
-      if includes_values
-        spawn.without_virtual_includes!
+      filtered_includes = includes_values && klass.remove_virtual_fields(includes_values)
+      if filtered_includes != includes_values
+        spawn.tap { |other| other.includes_values = filtered_includes }
       else
         self
       end
     end
 
-    def without_virtual_includes!
-      self.includes_values = klass.remove_virtual_fields(includes_values) if includes_values
-      self
-    end
+    include Module.new {
+      # From ActiveRecord::FinderMethods
+      def find_with_associations
+        real = without_virtual_includes
+        return super if real.equal?(self)
 
-    def find_with_associations_with_virtual
-      recs = without_virtual_includes.send(:find_with_associations_without_virtual)
+        recs = real.find_with_associations
+        MiqPreloader.preload(recs, preload_values + includes_values) if includes_values
 
-      if includes_values
-        MiqPreloader.preload(recs, preload_values + includes_values)
+        recs
       end
 
-      recs
-    end
-    alias_method_chain :find_with_associations, :virtual
-  end
+      # From ActiveRecord::Calculations
+      def calculate(operation, attribute_name)
+        real = without_virtual_includes
+        return super if real.equal?(self)
 
-  module Calculations
-    def calculate_with_virtual(operation, attribute_name)
-      without_virtual_includes.send(:calculate_without_virtual, operation, attribute_name)
-    end
-    alias_method_chain :calculate, :virtual
+        real.calculate(operation, attribute_name)
+      end
+    }
   end
 end
