@@ -705,6 +705,7 @@
     :klass: Dialog
   :service_orders:
     :description: Service Orders
+    :identifier: svc_catalog_provision
     :options:
     - :collection
     :methods: *70174834084700
@@ -712,12 +713,20 @@
     :collection_actions:
       :post:
       - :name: create
+        :identifier: svc_catalog_provision
       - :name: edit
+        :identifier: svc_catalog_provision
       - :name: delete
+        :identifier: svc_catalog_provision
     :resource_actions:
       :post:
       - :name: edit
+        :identifier: svc_catalog_provision
       - :name: delete
+        :identifier: svc_catalog_provision
+      :delete:
+      - :name: delete
+        :identifier: svc_catalog_provision
   :service_requests:
     :description: Service Requests
     :options:
