@@ -114,57 +114,15 @@ class OpsController < ApplicationController
     @timeline = @timeline_filter = true # Load timeline JS modules
     return unless load_edit(params[:edit_key], "explorer") if params[:edit_key]
     @breadcrumbs = []
-    @trees   = []
-    @accords = []
-    if role_allows(:feature => "ops_settings")
-      @accords.push(:name => "settings", :title => "Settings", :container => "settings_accord")
-      self.x_active_accord ||= 'settings'
-      self.x_active_tree ||= 'settings_tree'
-      @sb[:active_tab] ||= "settings_server"
-      @trees << settings_build_tree
-    end
-    if role_allows(:feature => "ops_rbac", :any => true)
-      @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_accord")
-      self.x_active_accord ||= 'rbac'
-      self.x_active_tree ||= 'rbac_tree'
-      @trees << rbac_build_tree
-      x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
-      @sb[:active_tab] ||= "rbac_details"
-    end
-    if role_allows(:feature => "ops_diagnostics")
-      @accords.push(:name => "diagnostics", :title => "Diagnostics", :container => "diagnostics_accord")
-      self.x_active_accord ||= 'diagnostics'
-      self.x_active_tree ||= 'diagnostics_tree'
-      @trees << diagnostics_build_tree
-      x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
-      @sb[:active_tab] ||= "diagnostics_summary"
-    end
-    if get_vmdb_config[:product][:analytics]
-      @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_accord")
-      self.x_active_accord ||= 'analytics'
-      @trees << analytics_build_tree
-      x_node_set("svr-#{to_cid(my_server_id)}", :analytics_tree) unless x_node(:analytics_tree)
-    end
-    if role_allows(:feature => "ops_db")
-      @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_accord")
-      self.x_active_accord ||= 'vmdb'
-      self.x_active_tree ||= 'vmdb_tree'
-      @trees << db_build_tree
-      x_node_set("root", :vmdb_tree) unless x_node(:vmdb_tree)
-      @sb[:active_tab] ||= "db_summary"
-    end
 
-    @sb[:tab_label] ||= ui_lookup(:models => "Zone")
-    @sb[:active_node] ||= {}
-    if MiqServer.my_server(true).logon_status != :ready
-      @sb[:active_tab]   = "diagnostics_audit_log"
-      self.x_active_tree = 'diagnostics_tree'
-    else
-      @sb[:active_tab] ||= "settings_server"
-    end
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
 
     @sb[:rails_log] = $rails_log.filename.to_s.include?("production.log") ? "Production" : "Development"
-    get_node_info(x_node) unless params[:cls_id] # no need to do get_node_info if redirected from show_product_update
+
     if !params[:no_refresh]
       @sb[:good] = nil
       @sb[:buildinfo] = nil
@@ -249,6 +207,76 @@ class OpsController < ApplicationController
   end
 
   private ############################
+
+  def features
+    [{:role     => "ops_settings",
+      :name     => :settings,
+      :title    => N_("Settings")},
+
+     {:role     => "ops_rbac",
+      :role_any => true,
+      :name     => :rbac,
+      :title    => N_("Access Control")},
+
+     {:role     => "ops_diagnostics",
+      :name     => :diagnostics,
+      :title    => N_("Diagnostics")},
+
+     {:role     => "ops_analytics",
+      :name     => :analytics,
+      :title    => N_("Analytics")},
+
+     {:role     => "ops_db",
+      :name     => :vmdb,
+      :title    => N_("Database")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
+
+  def set_active_elements(feature)
+    if feature
+      self.x_active_tree ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
+    end
+    set_active_tab_and_node
+    get_node_info(x_node)
+  end
+
+  def set_active_tab_and_node
+    if x_active_tree == :settings_tree
+      @sb[:active_tab] ||= "settings_server"
+    end
+
+    if x_active_tree == :rbac_tree
+      x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
+      @sb[:active_tab] ||= "rbac_details"
+    end
+
+    if x_active_tree == :diagnostics_tree
+      x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
+      @sb[:active_tab] ||= "diagnostics_summary"
+    end
+
+    if x_active_tree == :analytics_tree
+      x_node_set("svr-#{to_cid(my_server_id)}", :analytics_tree) unless x_node(:analytics_tree)
+    end
+
+    if x_active_tree == :vmdb_tree
+      x_node_set("root", :vmdb_tree) unless x_node(:vmdb_tree)
+      @sb[:active_tab] ||= "db_summary"
+    end
+
+    @sb[:tab_label] ||= ui_lookup(:models => "Zone")
+    @sb[:active_node] ||= {}
+
+    if MiqServer.my_server(true).logon_status != :ready
+      @sb[:active_tab]   = "diagnostics_audit_log"
+      self.x_active_tree = 'diagnostics_tree'
+    else
+      @sb[:active_tab] ||= "settings_server"
+    end
+  end
 
   def edit_changed?
     current = @edit[:current].kind_of?(Hash) ? @edit[:current] : @edit[:current].try(:config)
@@ -416,6 +444,7 @@ class OpsController < ApplicationController
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
+    return if params[:cls_id] # no need to do get_node_info if redirected from show_product_update
     @nodetype = valid_active_node(treenodeid).split("-").first
     if @replace_trees
       @sb[:active_tab] = case x_active_tree
