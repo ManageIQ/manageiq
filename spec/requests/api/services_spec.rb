@@ -13,6 +13,8 @@
 # - Retire service future       /api/services/:id     action "retire"
 # - Retire multiple services    /api/services         action "retire"
 #
+# - Reconfigure service         /api/services/:id     action "reconfigure"
+#
 describe ApiController do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
@@ -193,6 +195,65 @@ describe ApiController do
       expect(svc1.retirement_warn).to eq(3)
       expect(format_retirement_date(svc2.reload.retires_on)).to eq(ret_date)
       expect(svc2.retirement_warn).to eq(5)
+    end
+  end
+
+  describe "Service reconfiguration" do
+    let(:dialog1) { FactoryGirl.create(:dialog, :label => "Dialog1") }
+    let(:tab1)    { FactoryGirl.create(:dialog_tab, :label => "Tab1") }
+    let(:group1)  { FactoryGirl.create(:dialog_group, :label => "Group1") }
+    let(:text1)   { FactoryGirl.create(:dialog_field_text_box, :label => "TextBox1", :name => "text1") }
+    let(:st1)     { FactoryGirl.create(:service_template, :name => "template1") }
+    let(:ra1) do
+      FactoryGirl.create(:resource_action, :action => "Reconfigure", :dialog => dialog1,
+                         :ae_namespace => "namespace", :ae_class => "class", :ae_instance => "instance")
+    end
+
+    it "rejects requests without appropriate role" do
+      api_basic_authorize
+
+      run_post(services_url(100), gen_request(:reconfigure))
+
+      expect_request_forbidden
+    end
+
+    it "does not return reconfigure action for non-reconfigurable services" do
+      api_basic_authorize
+      update_user_role(@role, action_identifier(:services, :retire), action_identifier(:services, :reconfigure))
+
+      run_get services_url(svc1.id)
+
+      expect_request_success
+      expect_result_to_have_keys(%w(actions))
+      expect(action_names(@result)).to match_array(%w(retire))
+    end
+
+    it "returns reconfigure action for reconfigurable services" do
+      api_basic_authorize
+      update_user_role(@role, action_identifier(:services, :retire), action_identifier(:services, :reconfigure))
+
+      st1.resource_actions = [ra1]
+      svc1.service_template_id = st1.id
+      svc1.save
+
+      run_get services_url(svc1.id)
+
+      expect_request_success
+      expect_result_to_have_keys(%w(actions))
+      expect(action_names(@result)).to match_array(%w(retire reconfigure))
+    end
+
+    it "accepts action when service is reconfigurable" do
+      api_basic_authorize
+      update_user_role(@role, action_identifier(:services, :reconfigure))
+
+      st1.resource_actions = [ra1]
+      svc1.service_template_id = st1.id
+      svc1.save
+
+      run_post(services_url(svc1.id), gen_request(:reconfigure, "text1" => "updated_text"))
+
+      expect_single_action_result(:success => true, :message => /reconfiguring/i, :href => services_url(svc1.id))
     end
   end
 end

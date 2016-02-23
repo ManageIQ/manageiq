@@ -473,8 +473,7 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_service(id)
     case id
     when "service_reconfigure"
-      ra = @record.service_template.resource_actions.find_by_action('Reconfigure') if @record.service_template
-      return true if ra.nil? || ra.dialog_id.nil? || ra.fqname.blank?
+      return @record.validate_reconfigure
     end
     false
   end
