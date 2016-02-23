@@ -827,6 +827,10 @@
         :identifier: service_retire
       - :name: set_ownership
         :identifier: service_ownership
+      - :name: reconfigure
+        :identifier: service_reconfigure
+        :options:
+        - :validate_action
       :delete:
       - :name: delete
         :identifier: service_delete

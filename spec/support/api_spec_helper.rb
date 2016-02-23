@@ -202,6 +202,11 @@ module ApiSpecHelper
     value.kind_of?(Symbol) && respond_to?(value) ? public_send(value) : value
   end
 
+  def action_names(result)
+    return [] unless result.present? && result.key?("actions")
+    result["actions"].collect { |aspec| aspec["name"] }
+  end
+
   # Rest API Expects
 
   def expect_request_success
