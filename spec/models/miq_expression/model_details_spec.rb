@@ -82,6 +82,11 @@ describe MiqExpression do
         result = described_class.model_details("Service", :typ => "all", :include_model => false, :include_tags => true)
         expect(result.map(&:first)).to include("My Company Tags : Auto Approve - Max CPU")
       end
+
+      it "Supports classes derived form ActsAsArModel" do
+        result = described_class.model_details("Chargeback", :typ => "all", :include_model => false, :include_tags => true)
+        expect(result.map(&:first)[0]).to eq(" CPU Total Cost")
+      end
     end
   end
 

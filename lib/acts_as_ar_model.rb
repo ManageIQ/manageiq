@@ -117,15 +117,30 @@ class ActsAsArModel
   end
 
   include FakeAttributeStore
-  include VirtualAttributes
+  include VirtualFields
 
   include AttributeBag
+
+  def self.instances_are_derived?
+    true
+  end
+
+  def self.reflect_on_association(name)
+    virtual_reflection(name)
+  end
 
   def initialize(values = {})
     super()
     self.attributes = values
   end
 
+  #
+  # Reflection methods
+  #
+
+  def self.reflections
+    @reflections ||= {}
+  end
 
   #
   # Find routines
