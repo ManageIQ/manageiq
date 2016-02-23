@@ -245,11 +245,11 @@ module Rbac
     find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
 
-  def self.find_targets_with_user_group_rbac(klass, scope, _rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options = {}, user_or_group = nil)
     if user_or_group && user_or_group.self_service?
-      if klass == User && user_or_group.kind_of?(User)
+      if scope.klass == User && user_or_group.kind_of?(User)
         cond = ["id = ?", user_or_group.id]
-      elsif klass == MiqGroup
+      elsif scope.klass == MiqGroup
         group_id = user_or_group.id if user_or_group.kind_of?(MiqGroup)
         group_id ||= user_or_group.current_group_id if user_or_group.kind_of?(User) && user_or_group.current_group
         cond = ["id = ?", group_id] if group_id
@@ -258,7 +258,7 @@ module Rbac
       end
 
       cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.where(cond).includes(incl).references(incl).group(find_options[:group])
+      targets = scope.klass.where(cond).includes(incl).references(incl).group(find_options[:group])
                      .order(find_options[:order]).offset(find_options[:offset]).limit(find_options[:limit]).to_a
 
       [targets, targets.length, targets.length]
@@ -283,7 +283,7 @@ module Rbac
 
     return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
     return find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
-    return find_targets_with_user_group_rbac(klass, scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
+    return find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
     find_targets_without_rbac(scope, find_options)
   end
 
