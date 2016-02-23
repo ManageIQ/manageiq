@@ -283,12 +283,19 @@ module Rbac
   end
 
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options, user_or_group)
-    find_options = find_options_for_tenant(scope, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
+    if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
+      find_options = find_options_for_tenant(scope, user_or_group, find_options)
+    end
 
-    return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
-    return find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
-    return find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
-    find_targets_without_rbac(scope, find_options)
+    if apply_rbac_to_class?(klass)
+      find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)
+    elsif apply_rbac_to_associated_class?(klass)
+      find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)
+    elsif apply_user_group_rbac_to_class?(klass)
+      find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user_or_group)
+    else
+      find_targets_without_rbac(scope, find_options)
+    end
   end
 
   def self.find_targets_without_rbac(scope, find_options)
