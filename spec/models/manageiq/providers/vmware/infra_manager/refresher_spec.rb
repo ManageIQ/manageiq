@@ -469,7 +469,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
-        [EmsFolder, "Dev", {:is_datacenter => true}]            => {
+        [Datacenter, "Dev", {:is_datacenter => true}]            => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [ManageIQ::Providers::Vmware::InfraManager::HostEsx, "vi4esxm3.manageiq.com"] => {
               [ResourcePool, "Default for Host / Node vi4esxm3.manageiq.com", {:is_default => true}] => {
@@ -564,11 +564,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
             [ManageIQ::Providers::Vmware::InfraManager::Vm, "test3"]                                => {}
           }
         },
-        [EmsFolder, "New Datacenter", {:is_datacenter => true}] => {
+        [Datacenter, "New Datacenter", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {},
           [EmsFolder, "vm", {:is_datacenter => false}]   => {}
         },
-        [EmsFolder, "Prod", {:is_datacenter => true}]           => {
+        [Datacenter, "Prod", {:is_datacenter => true}]           => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [EmsCluster, "Testing-Production Cluster"]     => {
               [ResourcePool, "Default for Cluster / Deployment Role Testing-Production Cluster",
