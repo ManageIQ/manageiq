@@ -1504,6 +1504,9 @@
     :methods: *70174834086080
     :klass: Zone
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: zone
       :post:
       - :name: add
         :identifier: zone_new
@@ -1512,6 +1515,9 @@
       - :name: delete
         :identifier: zone_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: zone
       :post:
       - :name: edit
         :identifier: zone_edit
