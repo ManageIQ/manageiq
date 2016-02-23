@@ -263,7 +263,7 @@ module Rbac
 
       [targets, targets.length, targets.length]
     else
-      find_targets_without_rbac(klass, scope, find_options)
+      find_targets_without_rbac(scope, find_options)
     end
   end
 
@@ -284,10 +284,10 @@ module Rbac
     return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
     return find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
     return find_targets_with_user_group_rbac(klass, scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
-    find_targets_without_rbac(klass, scope, find_options)
+    find_targets_without_rbac(scope, find_options)
   end
 
-  def self.find_targets_without_rbac(_klass, scope, find_options = {})
+  def self.find_targets_without_rbac(scope, find_options = {})
     targets     = method_with_scope(scope, find_options)
     total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
