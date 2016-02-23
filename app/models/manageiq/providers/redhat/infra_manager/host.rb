@@ -4,6 +4,14 @@ class ManageIQ::Providers::Redhat::InfraManager::Host < ::Host
     connection.get_resource_by_ems_ref(ems_ref)
   end
 
+  def validate_scan_and_check_compliance_queue
+    validate_unsupported("Scan and Check Compilance Queue")
+  end
+
+  def validate_check_compliance_queue
+    validate_unsupported("Check Compilance Queue")
+  end
+
   def verify_credentials(auth_type = nil, options = {})
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
     if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
