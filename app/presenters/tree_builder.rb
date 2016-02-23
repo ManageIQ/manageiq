@@ -47,6 +47,13 @@ class TreeBuilder
     when :dialog_import_export  then TreeBuilderAeCustomization
     when :old_dialogs           then TreeBuilderProvisioningDialogs
 
+    # OPS explorer trees
+    when :analytics             then TreeBuilderOpsAnalytics
+    when :diagnostics           then TreeBuilderOpsDiagnostics
+    when :rbac                  then TreeBuilderOpsRbac
+    when :settings              then TreeBuilderOpsSettings
+    when :vmdb                  then TreeBuilderOpsVmdb
+
     end
   end
 
