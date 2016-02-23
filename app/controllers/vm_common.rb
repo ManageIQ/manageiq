@@ -1893,6 +1893,10 @@ module VmCommon
       partial = "vm_common/reconfigure"
       header = _("Reconfigure %{table}") % {:table => ui_lookup(:table => table)}
       action = "reconfigure_update"
+    when "resize"
+      partial = "vm_common/resize"
+      header = _("Resizing %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      action = "resize_vm"
     when "retire"
       partial = "shared/views/retire"
       header = _("Set/Remove retirement date for %{table}") % {:table => ui_lookup(:table => table)}
