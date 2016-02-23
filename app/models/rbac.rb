@@ -172,8 +172,8 @@ module Rbac
     filtered_ids
   end
 
-  def self.find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
-    parent_class = rbac_class(klass)
+  def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options = {}, user_or_group = nil)
+    parent_class = rbac_class(scope.klass)
     filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user_or_group)
 
     find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
@@ -282,7 +282,7 @@ module Rbac
     find_options = find_options_for_tenant(klass, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
 
     return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
-    return find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
+    return find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
     return find_targets_with_user_group_rbac(klass, scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
     find_targets_without_rbac(klass, scope, find_options)
   end
