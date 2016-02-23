@@ -1095,8 +1095,8 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqServer"
       case id
       when "collect_logs", "collect_current_logs"
-        return "Cannot collect current logs unless the #{ui_lookup(:table => "miq_servers")} is started" unless @record.started?
-        return "Log collection is already in progress for this #{ui_lookup(:table => "miq_servers")}" if @record.log_collection_active_recently?
+        return "Cannot collect current logs unless the #{ui_lookup(:table => "miq_server")} is started" unless @record.started?
+        return "Log collection is already in progress for this #{ui_lookup(:table => "miq_server")}" if @record.log_collection_active_recently?
         return "Log collection requires the Log Depot settings to be configured" unless @record.log_file_depot
       when "delete_server"
         return "Server #{@record.name} [#{@record.id}] can only be deleted if it is stopped or has not responded for a while" unless @record.is_deleteable?
@@ -1148,9 +1148,9 @@ class ApplicationHelper::ToolbarBuilder
     when "Storage"
       case id
       when "storage_perf"
-        return "No Capacity & Utilization data has been collected for this #{ui_lookup(:table => "storages")}" unless @record.has_perf_data?
+        return "No Capacity & Utilization data has been collected for this #{ui_lookup(:table => "storage")}" unless @record.has_perf_data?
       when "storage_delete"
-        return "Only #{ui_lookup(:table => "storages")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
+        return "Only #{ui_lookup(:table => "storage")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
       when "storage_scan"
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
       end

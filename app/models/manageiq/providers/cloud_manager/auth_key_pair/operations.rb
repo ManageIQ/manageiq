@@ -43,7 +43,7 @@ module ManageIQ::Providers::CloudManager::AuthKeyPair::Operations
       if ext_management_system.nil?
         return {:available => false,
                 :message   => "The Keypair is not connected to an active #{ui_lookup(
-                  :table => "ext_management_systems")}"}
+                  :table => "ext_management_system")}"}
       end
       {:available => true, :message => nil}
     end
