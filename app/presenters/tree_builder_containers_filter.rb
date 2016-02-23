@@ -20,9 +20,9 @@ class TreeBuilderContainersFilter < TreeBuilder
   def x_get_tree_roots(_count_only, _options)
     [
       {:id          => "global",
-       :text        => "Global Filters",
+       :text        => _("Global Filters"),
        :image       => "folder",
-       :tip         => "Global Shared Filters",
+       :tip         => _("Global Shared Filters"),
        :cfmeNoClick => true}
     ]
   end

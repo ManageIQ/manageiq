@@ -32,11 +32,13 @@ class TreeBuilderRegion < TreeBuilder
       objects = []
       if emses.count > 0
         objects.push(:id => "folder_e_xx-#{to_cid(object.id)}", :text => ui_lookup(:tables => "ext_management_systems"),
-                     :image => "folder", :tip => "#{ui_lookup(:tables => "ext_management_systems")} (Click to open)")
+                     :image => "folder", :tip => _("%{tables} (Click to open)") %
+                                                 {:tables => ui_lookup(:tables => "ext_management_systems")})
       end
       if storages.count > 0
         objects.push(:id => "folder_ds_xx-#{to_cid(object.id)}", :text => ui_lookup(:tables => "storages"),
-                     :image => "folder", :tip => "#{ui_lookup(:tables => "storages")} (Click to open)")
+                     :image => "folder", :tip => _("%{tables} (Click to open)") %
+                                                 {:tables => ui_lookup(:tables => "storages")})
       end
       objects
     end
