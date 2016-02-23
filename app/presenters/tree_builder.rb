@@ -60,6 +60,9 @@ class TreeBuilder
     when :pxe_image_types         then TreeBuilderPxeImageTypes
     when :pxe_servers             then TreeBuilderPxeServers
 
+    # Services explorer tree
+    when :svcs                    then TreeBuilderServices
+
     end
   end
 
