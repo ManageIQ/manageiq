@@ -19,11 +19,15 @@ module ApiSpecHelper
   API_STATUS = Rack::Utils::HTTP_STATUS_CODES.merge(0 => "Network Connection Error")
 
   def parse_response
-    @code    = last_response.status
-    @result  = (@code != Rack::Utils.status_code(:no_content)) ? JSON.parse(last_response.body) : {}
-    @success = @code < 400
+    @code    = response.status
+    @result  = case @code
+               when Rack::Utils.status_code(:no_content)   then {}
+               when Rack::Utils.status_code(:unauthorized) then response.body
+               else JSON.parse(response.body)
+               end
+    @success = response.success?
     @status  = API_STATUS[@code] || (@success ? Rack::Utils.status_code(:ok) : Rack::Utils.status_code(:bad_request))
-    @message = @result.fetch_path("error", "message").to_s
+    @message = @result.kind_of?(Hash) ? @result.fetch_path("error", "message").to_s : @result
     @success
   end
 
@@ -34,6 +38,7 @@ module ApiSpecHelper
         headers.delete(k)
       end
     end
+    headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
     headers.merge(DEF_HEADERS)
   end
 
@@ -138,6 +143,10 @@ module ApiSpecHelper
   def api_basic_authorize(identifier = nil)
     update_user_role(@role, identifier) unless identifier.blank?
     basic_authorize api_config(:user), api_config(:password)
+  end
+
+  def basic_authorize(user, password)
+    @http_authorization = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
   end
 
   def update_user_role(role, *identifiers)
