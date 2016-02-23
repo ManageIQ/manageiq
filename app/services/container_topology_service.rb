@@ -6,7 +6,6 @@ class ContainerTopologyService < TopologyService
   end
 
   def build_topology
-    topology = {}
     topo_items = {}
     links = []
 
@@ -54,10 +53,7 @@ class ContainerTopologyService < TopologyService
       }
     end
 
-    topology[:items] = topo_items
-    topology[:relations] = links
-    topology[:kinds] = build_kinds
-    topology
+    populate_topology(topo_items, links, build_kinds)
   end
 
   def entity_display_type(entity)
