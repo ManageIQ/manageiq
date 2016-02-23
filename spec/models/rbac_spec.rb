@@ -1205,7 +1205,7 @@ describe Rbac do
 
     it "works with no filters" do
       all_vms
-      result = Rbac.find_targets_with_direct_rbac(Vm, {}, nil)
+      result = Rbac.find_targets_with_direct_rbac(Vm, {}, {}, nil, nil)
       expect_counts(result, all_vms, all_vms.size, all_vms.size)
     end
 
@@ -1213,7 +1213,7 @@ describe Rbac do
     # including :conditions, :include, :order, :limit
     it "applies find_options[:conditions, :include]" do
       all_vms
-      result = Rbac.find_targets_with_direct_rbac(Vm, {}, host_filter_find_options, nil)
+      result = Rbac.find_targets_with_direct_rbac(Vm, {}, host_filter_find_options, nil, nil)
       expect_counts(result, vms_match, 2, 2)
     end
   end
