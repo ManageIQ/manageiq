@@ -6,6 +6,11 @@ class TreeBuilder
     case type
     when :filter           then raise('Obsolete tree type.')
 
+    # Chargeback explorer trees
+    when :cb_assignments   then TreeBuilderChargebackAssignments
+    when :cb_rates         then TreeBuilderChargebackRates
+    when :cb_reports       then TreeBuilderChargebackReports
+
     when :vandt            then TreeBuilderVandt
     when :vms_filter       then TreeBuilderVmsFilter
     when :templates_filter then TreeBuilderTemplateFilter
