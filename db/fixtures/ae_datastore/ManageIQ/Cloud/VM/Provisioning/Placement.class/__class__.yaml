@@ -171,3 +171,23 @@ object:
       on_error: 
       max_retries: 
       max_time: 
+  - field:
+      aetype: method
+      name: google
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: 
+      substitute: true
+      message: google
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
