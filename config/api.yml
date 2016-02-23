@@ -622,6 +622,14 @@
     - :collection
     :methods: *70174834086080
     :klass: MiqDialog
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_customization_explorer
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_customization_explorer
   :provision_requests:
     :description: Provision Requests
     :identifier: miq_request
