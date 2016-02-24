@@ -57,8 +57,6 @@ class ApplicationController < ActionController::Base
     @toolbars = {}
   end
 
-  ensure_security_headers
-
   # Convert Controller Name to Actual Model
   # Examples:
   #   CimBaseStorageExtentController => CimBaseStorageExtent
