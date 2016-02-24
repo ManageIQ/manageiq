@@ -105,14 +105,13 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
               ]
             },
             # second message raises an exception
-            "Aws::SQS::Errors::ServiceError"
+            "ServiceError"
           ]
         }
       }
       with_aws_stubbed(stubbed_responses) do
         allow(subject).to receive(:find_or_create_queue).and_return(queue_url)
         allow(subject).to receive(:parse_event).and_return(message_body)
-        expect(subject)
         polled_event = nil
         expect do
           subject.poll do |event|
