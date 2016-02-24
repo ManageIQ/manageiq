@@ -1,7 +1,7 @@
 RSpec.describe "service orders API" do
   it "can list all service orders" do
     service_order = FactoryGirl.create(:service_order)
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:service_orders, :read, :get)
 
     run_get service_orders_url
 
@@ -32,7 +32,7 @@ RSpec.describe "service orders API" do
 
   it "can read a service order" do
     service_order = FactoryGirl.create(:service_order)
-    api_basic_authorize
+    api_basic_authorize action_identifier(:service_orders, :read, :resource_actions, :get)
 
     run_get service_orders_url(service_order.id)
 

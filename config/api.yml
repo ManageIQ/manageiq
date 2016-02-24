@@ -921,6 +921,9 @@
     :methods: *70174834084700
     :klass: ServiceOrder
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: svc_catalog_provision
       :post:
       - :name: create
         :identifier: svc_catalog_provision
@@ -929,6 +932,9 @@
       - :name: delete
         :identifier: svc_catalog_provision
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: svc_catalog_provision
       :post:
       - :name: edit
         :identifier: svc_catalog_provision
