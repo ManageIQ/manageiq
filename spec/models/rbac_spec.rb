@@ -305,14 +305,14 @@ describe Rbac do
           it ".search filters out the wrong HostPerformance rows with :match_via_descendants option" do
             @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host2)
             @vm.tag_with(@tags.join(' '), :ns => '*')
-            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => {"VmOrTemplate" => :host})
+            results, attrs = Rbac.search(:targets => HostPerformance, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => {"VmOrTemplate" => :host})
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host2) }
 
-            results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => "Vm")
+            results, attrs = Rbac.search(:targets => HostPerformance, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => "Vm")
             expect(attrs[:user_filters]).to eq(group.filters)
             expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
@@ -786,8 +786,18 @@ describe Rbac do
           expect(results.length).to eq(4)
         end
 
+        it "works when targets is a class" do
+          results = Rbac.search(:targets => Vm, :results_format => :objects).first
+          expect(results.length).to eq(4)
+        end
+
         it "works when passing a named_scope" do
           results = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 4]).first
+          expect(results.length).to eq(1)
+        end
+
+        it "works when targets are a named scope" do
+          results = Rbac.search(:targets => Vm.group_scope(4), :results_format => :objects).first
           expect(results.length).to eq(1)
         end
 
@@ -1108,6 +1118,21 @@ describe Rbac do
     skip "skips rbac on nil targets" do
       all_vms
       expect(Rbac.filtered(nil, :class => Vm)).to match_array(all_vms)
+    end
+
+    it "supports class target" do
+      all_vms
+      expect(Rbac.filtered(Vm)).to match_array(all_vms)
+    end
+
+    it "supports scope all target" do
+      all_vms
+      expect(Rbac.filtered(Vm.all)).to match_array(all_vms)
+    end
+
+    it "supports scope all target" do
+      all_vms
+      expect(Rbac.filtered(Vm.where(:location => "good"))).to match_array(matched_vms)
     end
 
     # it returns objects too
