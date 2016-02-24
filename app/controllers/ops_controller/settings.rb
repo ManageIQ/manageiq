@@ -216,17 +216,6 @@ module OpsController::Settings
     @edit[:new][:description] = params[:region_description] if params[:region_description]
   end
 
-  # Set filters in the user record from the @edit[:new] hash values
-  def user_set_filters(user)
-    @set_filter_values = []
-    @edit[:new][:filters].each do |_key, value|
-      @set_filter_values.push(value)
-    end
-    user_make_subarrays # Need to have category arrays of item arrays for and/or logic
-    user.set_managed_filters(@set_filter_values)
-    user.set_belongsto_filters(@edit[:new][:belongsto].values)  # Set belongs to to hash values
-  end
-
   # Need to make arrays by category containing arrays of items so the filtering logic can apply
   # AND between the categories, but OR between the items within a category
   def user_make_subarrays
