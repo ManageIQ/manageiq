@@ -6,6 +6,17 @@ class TreeBuilder
     case type
     when :filter           then raise('Obsolete tree type.')
 
+    # Catalog explorer trees
+    when :ot               then TreeBuilderOrchestrationTemplates
+    when :sandt            then TreeBuilderCatalogItems
+    when :stcat            then TreeBuilderCatalogs
+    when :svccat           then TreeBuilderServiceCatalog
+
+    # Chargeback explorer trees
+    when :cb_assignments   then TreeBuilderChargebackAssignments
+    when :cb_rates         then TreeBuilderChargebackRates
+    when :cb_reports       then TreeBuilderChargebackReports
+
     when :vandt            then TreeBuilderVandt
     when :vms_filter       then TreeBuilderVmsFilter
     when :templates_filter then TreeBuilderTemplateFilter
@@ -33,6 +44,36 @@ class TreeBuilder
     when :savedreports     then TreeBuilderReportSavedReports
     when :schedules        then TreeBuilderReportSchedules
     when :widgets          then TreeBuilderReportWidgets
+
+    # containers explorer tree
+    when :containers         then TreeBuilderContainers
+    when :containers_filter  then TreeBuilderContainersFilter
+
+    # automate explorer tree
+    when :ae               then TreeBuilderAeClass
+
+    # miq_ae_customization explorer trees
+    when :ab                    then TreeBuilderButtons
+    when :dialogs               then TreeBuilderServiceDialogs
+    when :dialog_import_export  then TreeBuilderAeCustomization
+    when :old_dialogs           then TreeBuilderProvisioningDialogs
+
+    # OPS explorer trees
+    when :analytics             then TreeBuilderOpsAnalytics
+    when :diagnostics           then TreeBuilderOpsDiagnostics
+    when :rbac                  then TreeBuilderOpsRbac
+    when :settings              then TreeBuilderOpsSettings
+    when :vmdb                  then TreeBuilderOpsVmdb
+
+    # PXE explorer trees
+    when :customization_templates then TreeBuilderPxeCustomizationTemplates
+    when :iso_datastores          then TreeBuilderIsoDatastores
+    when :pxe_image_types         then TreeBuilderPxeImageTypes
+    when :pxe_servers             then TreeBuilderPxeServers
+
+    # Services explorer tree
+    when :svcs                    then TreeBuilderServices
+
     end
   end
 

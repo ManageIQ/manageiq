@@ -86,16 +86,10 @@ class MiqAeClassController < ApplicationController
     bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
     drop_breadcrumb(:name => bc_name, :url => "/miq_ae_class/explorer")
     @lastaction = "replace_right_cell"
-    @accords = []
-    self.x_active_tree = :ae_tree
-    tree = build_ae_tree
-    @trees << tree
-    @accords << {:name => "datastores", :title => "Datastore", :container => "ae_accord", :image => "folder"}
-    @sb[:active_accord] = :ae
-    @sb[:active_tab] ||= "namespaces"
-    self.x_node ||= "root"
+
+    build_accordions_and_trees
+
     @right_cell_text ||= "Datastore"
-    get_node_info(x_node)
     render :layout => "application"
   end
 
@@ -1637,6 +1631,14 @@ class MiqAeClassController < ApplicationController
   end
 
   private
+
+  def features
+    [ApplicationController::Feature.new_with_hash(:role        => "miq_ae_class_explorer",
+                                                  :role_any    => true,
+                                                  :name        => :ae,
+                                                  :accord_name => "datastores",
+                                                  :title       => N_("Datastore"))]
+  end
 
   def initial_setup_for_instances_form_vars(ae_inst_id)
     @ae_inst   =  ae_inst_id ? MiqAeInstance.find(ae_inst_id) : MiqAeInstance.new
