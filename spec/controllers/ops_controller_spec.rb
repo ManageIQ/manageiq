@@ -273,9 +273,7 @@ describe OpsController do
   context "#explorer" do
     it "sets analytics active accordion value" do
       controller.instance_variable_set(:@sb, {})
-      allow(controller).to receive(:role_allows).and_return(false)
-      allow(controller).to receive(:get_vmdb_config).and_return(:product => {:analytics => true})
-      allow(controller).to receive(:get_node_info)
+      login_as FactoryGirl.create(:user, :features => "ops_analytics")
       expect(controller).to receive(:render)
       controller.send(:explorer)
       expect(response.status).to eq(200)

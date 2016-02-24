@@ -142,7 +142,7 @@ describe MiqAeCustomizationController do
   end
 
   describe "#explorer" do
-    include_context "valid session"
+    #include_context "valid session"
 
     let(:sandbox_flash_messages) { nil }
 
@@ -154,53 +154,64 @@ describe MiqAeCustomizationController do
     end
 
     it "assigns the sandbox active tree" do
+      login_as FactoryGirl.create(:user, :features => "old_dialogs_accord")
       get :explorer
       expect(assigns(:sb)[:active_tree]).to eq(:old_dialogs_tree)
     end
 
     it "assigns the sandbox active accord" do
+      login_as FactoryGirl.create(:user, :features => "old_dialogs_accord")
       get :explorer
       expect(assigns(:sb)[:active_accord]).to eq(:old_dialogs)
     end
 
     it "assigns the sandbox active node on old dialogs tree to root" do
+      login_as FactoryGirl.create(:user, :features => "old_dialogs_accord")
       get :explorer
-      expect(assigns(:sb)[:active_node][:old_dialogs_tree]).to eq("root")
+      expect(controller.x_node).to eq("root")
     end
 
     it "builds the old dialogs tree" do
+      login_as FactoryGirl.create(:user, :features => "old_dialogs_accord")
       get :explorer
-      assigns(:trees)[0].name == :old_dialogs_tree
+      expect(assigns(:sb)[:trees]).to include(:old_dialogs_tree)
     end
 
     it "assigns the sandbox active node on dialogs tree to root" do
+      login_as FactoryGirl.create(:user, :features => "dialog_accord")
       get :explorer
-      expect(assigns(:sb)[:active_node][:dialogs_tree]).to eq("root")
+      expect(controller.x_node).to eq("root")
     end
 
     it "builds the dialog tree" do
+      login_as FactoryGirl.create(:user, :features => "dialog_accord")
       get :explorer
-      expect(assigns(:trees)[1].name).to eq(:dialogs_tree)
+      expect(assigns(:sb)[:trees]).to include(:dialogs_tree)
     end
 
     it "assigns the sandbox active node on ab tree to root" do
+      login_as FactoryGirl.create(:user, :features => "dialog_accord")
       get :explorer
-      expect(assigns(:sb)[:active_node][:ab_tree]).to eq("root")
+      expect(expect(controller.x_node).to eq("root"))
     end
 
     it "builds the ab tree" do
+      login_as FactoryGirl.create(:user, :features => "ab_buttons_accord")
+      allow(controller).to receive(:get_node_info)
       get :explorer
-      expect(assigns(:trees)[2].name).to eq(:ab_tree)
+      expect(assigns(:sb)[:trees]).to include(:ab_tree)
     end
 
     it "assigns the sandbox active node on import/export tree to root" do
+      login_as FactoryGirl.create(:user, :features => "miq_ae_class_import_export")
       get :explorer
-      expect(assigns(:sb)[:active_node][:dialog_import_export_tree]).to eq("root")
+      expect(expect(controller.x_node).to eq("root"))
     end
 
     it "builds the import/export tree" do
+      login_as FactoryGirl.create(:user, :features => "miq_ae_class_import_export")
       get :explorer
-      expect(assigns(:trees)[3].name).to eq(:dialog_import_export_tree)
+      expect(assigns(:sb)[:trees]).to include(:dialog_import_export_tree)
     end
 
     context "when the sandbox has flash messages" do
