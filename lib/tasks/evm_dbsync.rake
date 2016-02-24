@@ -22,7 +22,8 @@ namespace :evm do
 
     desc "Resync excluded tables"
     task :resync_excludes => :environment do
-      MiqPglogical.refresh_excludes if MiqPglogical.provider?
+      pgl = MiqPglogical.new
+      pgl.refresh_excludes if pgl.provider?
     end
 
     desc "Uninstall Rubyrep triggers and tables locally"
