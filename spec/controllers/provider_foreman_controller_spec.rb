@@ -179,7 +179,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      controller.send(:build_trees_and_accordions)
+      controller.send(:build_accordions_and_trees)
     end
     it "renders right cell text for root node" do
       key = ems_key_for_provider(@provider)
@@ -231,7 +231,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      controller.send(:build_trees_and_accordions)
+      controller.send(:build_accordions_and_trees)
     end
     it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
       controller.instance_variable_set(:@_params, :id => "root")
@@ -394,7 +394,7 @@ describe ProviderForemanController do
                                        :per_page => {:list => 20},
                                        :views    => {:cm_providers          => "grid",
                                                      :cm_configured_systems => "tile"})
-      controller.send(:build_trees_and_accordions)
+      controller.send(:build_accordions_and_trees)
     end
 
     it "fetches list type = 'grid' from settings for Providers accordion" do

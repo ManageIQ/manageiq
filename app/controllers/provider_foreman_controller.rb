@@ -435,8 +435,7 @@ class ProviderForemanController < ApplicationController
       @miq_after_onload = "miqAjax('/#{controller_name}/x_button?pressed=#{params[:button]}');"
     end
 
-    # Build the Explorer screen from scratch
-    build_trees_and_accordions
+    build_accordions_and_trees
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -445,8 +444,6 @@ class ProviderForemanController < ApplicationController
       # if you click on a link to VM on a dashboard widget that will redirect you
       # to explorer with params[:id] and you get into the true branch
       redirected = set_elements_and_redirect_unauthorized_user
-    else
-      set_active_elements
     end
 
     render :layout => "application" unless redirected
@@ -464,34 +461,18 @@ class ProviderForemanController < ApplicationController
 
   private ###########
 
-  def build_trees_and_accordions
-    @trees   = []
-    @accords = []
-
-    x_last_active_tree = x_active_tree if x_active_tree
-    x_last_active_accord = x_active_accord if x_active_accord
-
-    if role_allows(:feature => "providers_accord", :any => true)
-      self.x_active_tree   = 'configuration_manager_providers_tree'
-      self.x_active_accord = 'configuration_manager_providers'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-      @trees << build_configuration_manager_tree(:configuration_manager_providers, :configuration_manager_providers_tree)
-      @accords.push(:name => "configuration_manager_providers", :title => "Providers", :container => "configuration_manager_providers_accord")
+  def features
+    [{:role     => "providers_accord",
+      :role_any => true,
+      :name     => :configuration_manager_providers,
+      :title    => N_("Providers")},
+     {:role     => "configured_systems_filter_accord",
+      :role_any => true,
+      :name     => :cs_filter,
+      :title    => N_("Configured Systems")}
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
     end
-    if role_allows(:feature => "configured_systems_filter_accord", :any => true)
-      self.x_active_tree   = 'cs_filter_tree'
-      self.x_active_accord = 'cs_filter'
-      default_active_tree ||= x_active_tree
-      default_active_accord ||= x_active_accord
-      @trees << build_configuration_manager_tree(:cs_filter, :cs_filter_tree)
-      @accords.push(:name => "cs_filter", :title => "Configured Systems", :container => "cs_filter_accord")
-    end
-    self.x_active_tree = default_active_tree
-    self.x_active_accord = default_active_accord.to_s
-
-    self.x_active_tree = x_last_active_tree if x_last_active_tree
-    self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
   end
 
   def build_configuration_manager_tree(type, name)
@@ -504,19 +485,6 @@ class ProviderForemanController < ApplicationController
     end
     instance_variable_set :"@#{name}", tree.tree_nodes
     tree
-  end
-
-  def set_active_elements
-    # Set active tree and accord to first allowed feature
-    if role_allows(:feature => "providers_accord")
-      self.x_active_tree ||= 'configuration_manager_providers_tree'
-      self.x_active_accord ||= 'configuration_manager_providers'
-    elsif role_allows(:feature => "configured_systems_filter_accord")
-      self.x_active_tree ||= 'cs_filter_tree'
-      self.x_active_accord ||= 'cs_filter'
-    end
-    get_node_info(x_node)
-    @in_a_form = false
   end
 
   def get_node_info(treenodeid)
