@@ -6,7 +6,8 @@ module Menu
       extend Forwardable
 
       delegate [:menu, :tab_features_by_id, :tab_features_by_name, :tab_name,
-                :each_feature_title_with_subitems, :item_in_section?, :item, :section] => :instance
+                :each_feature_title_with_subitems, :item_in_section?, :item, 
+                :section, :section_id_string_to_symbol] => :instance
     end
 
     private
@@ -92,6 +93,20 @@ module Menu
     def preprocess_sections
       @id_to_section   = @menu.index_by(&:id)
       @name_to_section = @menu.index_by(&:name)
+    end
+
+    #
+    # Takes section id as string and returns section id symbol or null.
+    #
+    # Prevent calling to_sym on user input by using this method.
+    #
+    def section_id_string_to_symbol(section_id_string)
+      valid_sections[section_id_string]
+    end
+
+    def valid_sections
+      # format is {"vi" => :vi, "svc" => :svc . . }
+      @valid_sections ||= @menu.each_with_object({}) { |section, acc| acc[section.id.to_s] = section.id }
     end
   end
 end
