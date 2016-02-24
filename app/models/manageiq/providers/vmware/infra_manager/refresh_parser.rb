@@ -1075,16 +1075,18 @@ module ManageIQ::Providers
           mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
           child_mors = get_mors(data, 'childEntity')
+          name       = data.fetch_path('summary', 'name')
 
           new_result = {
             :type          => StorageCluster.name,
             :ems_ref       => mor,
             :ems_ref_obj   => mor,
             :uid_ems       => mor,
-            :name          => data["name"],
+            :name          => name,
             :is_datacenter => false,
             :child_uids    => child_mors
           }
+
           result << new_result
           result_uids[mor] = new_result
         end
@@ -1190,7 +1192,9 @@ module ManageIQ::Providers
       end
 
       def self.link_ems_metadata(data, inv)
-        inv_to_data_types = {:folder => :folders, :dc => :folders, :cluster => :clusters, :rp => :resource_pools, :host => :hosts, :vm => :vms}
+        inv_to_data_types = {:folder => :folders, :dc => :folders, :storage_pod => :folders,
+                             :cluster => :clusters, :rp => :resource_pools,
+                             :storage => :storages, :host => :hosts, :vm => :vms}
 
         [:folders, :clusters, :resource_pools, :hosts].each do |parent_type|
           data[parent_type].each do |parent_data|
@@ -1372,13 +1376,15 @@ module ManageIQ::Providers
       end
 
       VC_MOR_FILTERS = [
-        [:host_res, 'domain'],
-        [:cluster,  'domain'],
-        [:dc,       'datacenter'],
-        [:folder,   'group'],
-        [:rp,       'resgroup'],
-        [:host,     'host'],
-        [:vm,       'vm']
+        [:host_res,    'domain'],
+        [:cluster,     'domain'],
+        [:dc,          'datacenter'],
+        [:folder,      'group'],
+        [:rp,          'resgroup'],
+        [:storage,     'datastore'],
+        [:storage_pod, 'group'],
+        [:host,        'host'],
+        [:vm,          'vm']
       ]
 
       def self.inv_target_by_mor(mor, inv)
