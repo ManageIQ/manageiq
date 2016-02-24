@@ -20,7 +20,7 @@ class EmsFolder < ApplicationRecord
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
 
-  NON_DISPLAY_FOLDERS = ['Datacenters', 'vm', 'host']
+  NON_DISPLAY_FOLDERS = %w(Datacenters vm host datastore).freeze
 
   def hidden?(overrides = {})
     ems = overrides[:ext_management_system] || ext_management_system
@@ -29,9 +29,9 @@ class EmsFolder < ApplicationRecord
     p = overrides[:parent] || parent if NON_DISPLAY_FOLDERS.include?(name)
 
     case name
-    when "Datacenters" then p.kind_of?(ExtManagementSystem)
-    when "vm", "host"  then p.kind_of?(EmsFolder) && p.is_datacenter?
-    else                    false
+    when "Datacenters"              then p.kind_of?(ExtManagementSystem)
+    when "vm", "host", "datastore"  then p.kind_of?(EmsFolder) && p.is_datacenter?
+    else                            false
     end
   end
 
