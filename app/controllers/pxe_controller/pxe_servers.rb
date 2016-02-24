@@ -45,7 +45,7 @@ module PxeController::PxeServers
       if @ps && @ps.id
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeServer"), :name => @ps.name})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "PxeServer"))
+        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "PxeServer")})
       end
       get_node_info(x_node)
       replace_right_cell(x_node)
@@ -134,7 +134,7 @@ module PxeController::PxeServers
       replace_right_cell(x_node, [:pxe_servers])
     else # showing 1 vm
       if params[:id].nil? || PxeServer.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "PxeServer"),
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "PxeServer")},
                   :error)
         pxe_server_list
         @refresh_partial = "layouts/x_gtl"
@@ -293,23 +293,23 @@ module PxeController::PxeServers
 
   def pxe_server_validate_fields
     if @edit[:new][:name].blank?
-      add_flash(_("%s is required") % "Name", :error)
+      add_flash(_("Name is required"), :error)
     end
     if @edit[:new][:uri_prefix].blank?
-      add_flash(_("%s is required") % "Depot Type", :error)
+      add_flash(_("Depot Type is required"), :error)
     end
     if @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-      add_flash(_("%s is required") % "URI", :error)
+      add_flash(_("URI is required"), :error)
     end
     if @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
       if @edit[:new][:uri].blank?
-        add_flash(_("%s is required") % "URI", :error)
+        add_flash(_("URI is required"), :error)
       end
       if @edit[:new][:log_userid].blank?
-        add_flash(_("%s is required") % "Username", :error)
+        add_flash(_("Username is required"), :error)
       end
       if @edit[:new][:log_password].blank?
-        add_flash(_("%s is required") % "Password", :error)
+        add_flash(_("Password is required"), :error)
       elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
         add_flash(_("Password/Verify Password do not match"), :error)
       end
@@ -479,7 +479,7 @@ module PxeController::PxeServers
   def pxe_server_get_node_info(treenodeid)
     if treenodeid == "root"
       pxe_server_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => "PxeServer")
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "PxeServer")}
       @right_cell_div  = "pxe_server_list"
     else
       @right_cell_div = "pxe_server_details"

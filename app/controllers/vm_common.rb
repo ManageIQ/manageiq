@@ -476,7 +476,7 @@ module VmCommon
     @vm = @record = identify_record(x_node.split('-').last, VmOrTemplate)
     if @snap_selected.nil?
       @display = "snapshot_info"
-      add_flash(_("Last selected %s no longer exists") % "Snapshot", :error)
+      add_flash(_("Last selected Snapshot no longer exists"), :error)
     end
     build_snapshot_tree
     @active = @snap_selected.current.to_i == 1 if @snap_selected
@@ -552,7 +552,7 @@ module VmCommon
   def snap_vm
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     if params["cancel"] || params[:button] == "cancel"
-      flash = _("%s was cancelled by the user") % "Snapshot of VM #{@record.name}"
+      flash = _("Snapshot of VM %{name} was cancelled by the user") % {:name => @record.name}
       if session[:edit] && session[:edit][:explorer]
         add_flash(flash)
         @_params[:display] = "snapshot_info"
@@ -564,7 +564,7 @@ module VmCommon
       @name = params[:name]
       @description = params[:description]
       if params[:name].blank?
-        add_flash(_("%s is required") % "Name", :error)
+        add_flash(_("Name is required"), :error)
         @in_a_form = true
         drop_breadcrumb(:name => "Snapshot VM '" + @record.name + "'", :url => "/vm_common/snap")
         if session[:edit] && session[:edit][:explorer]
@@ -586,7 +586,8 @@ module VmCommon
                            :memory      => params[:snap_memory] == "1")
         rescue StandardError => bang
           puts bang.backtrace.join("\n")
-          flash = _("Error during '%s': ") % "Create Snapshot" << bang.message; flash_error = true
+          flash = _("Error during 'Create Snapshot': %{message}") % {:message => bang.message}
+          flash_error = true
         #         AuditEvent.failure(audit.merge(:message=>"[#{@record.name} -- #{@record.location}] Update returned: #{bang}"))
         else
           flash = _("Create Snapshot for %{model} \"%{name}\" was started") % {:model => ui_lookup(:model => "Vm"), :name => @record.name}
@@ -874,7 +875,7 @@ module VmCommon
     evm_relationship_get_form_vars
     case params[:button]
     when "cancel"
-      msg = _("%s was cancelled by the user") % "Edit Management Engine Relationship"
+      msg = _("Edit Management Engine Relationship was cancelled by the user")
       if @edit[:explorer]
         add_flash(msg)
         @sb[:action] = nil
@@ -888,7 +889,7 @@ module VmCommon
       svr = @edit[:new][:server] && @edit[:new][:server] != "" ? MiqServer.find(@edit[:new][:server]) : nil
       @record.miq_server = svr
       @record.save
-      msg = _("%s saved") % "Management Engine Relationship"
+      msg = _("Management Engine Relationship saved")
       if @edit[:explorer]
         add_flash(msg)
         @sb[:action] = nil
@@ -964,7 +965,7 @@ module VmCommon
   def add_vm_to_service
     @record = find_by_id_filtered(Vm, params[:id])
     if params["cancel.x"]
-      flash = _("Add VM \"%s\" to a Service was cancelled by the user") % @record.name
+      flash = _("Add VM \"%{name}\" to a Service was cancelled by the user") % {:name => @record.name}
       redirect_to :action => @lastaction, :id => @record.id, :flash_msg => flash
     else
       chosen = params[:chosen_service].to_i
@@ -972,7 +973,7 @@ module VmCommon
       begin
         @record.add_to_vsc(Service.find(chosen).name)
       rescue StandardError => bang
-        flash = _("Error during '%s': ") % "Add VM to service" << bang
+        flash = _("Error during 'Add VM to service': %{message}") % {:message => bang}
       end
       redirect_to :action => @lastaction, :id => @record.id, :flash_msg => flash
     end
@@ -985,9 +986,9 @@ module VmCommon
       @vervice_name = Service.find_by_name(@record.location).name
       @record.remove_from_vsc(@vervice_name)
     rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "Remove VM from service" + bang.message, :error)
+      add_flash(_("Error during 'Remove VM from service': %{message}") % {:message => bang.message}, :error)
     else
-      add_flash(_("VM successfully removed from service \"%s\"") % @vervice_name)
+      add_flash(_("VM successfully removed from service \"%{name}\"") % {:name => @vervice_name})
     end
   end
 
@@ -1069,7 +1070,8 @@ module VmCommon
           vms.each { |v| @record.remove_child(v) unless kids.include?(v.id) }                                # Remove any VMs no longer in the kids list box
           kids.each_key { |k| @record.set_child(VmOrTemplate.find(k)) }                                             # Add all VMs in kids hash, dups will not be re-added
         rescue StandardError => bang
-          add_flash(_("Error during '%s': ") % "#{@record.class.base_model.name} update" << bang.message, :error)
+          add_flash(_("Error during '%{name} update': %{message}") % {:name    => @record.class.base_model.name,
+                                                                      :message => bang.message}, :error)
           AuditEvent.failure(audit.merge(:message => "[#{@record.name} -- #{@record.location}] Update returned: #{bang}"))
         else
           flash = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => @record.class.base_model.name), :name => @record.name}
@@ -1243,14 +1245,15 @@ module VmCommon
       begin
         ems.validate_remote_console_vmrc_support
       rescue MiqException::RemoteConsoleNotSupportedError => e
-        add_flash(_("Console access failed: %s") % e.message, :error)
+        add_flash(_("Console access failed: %{message}") % {:message => e.message}, :error)
         render :partial => "shared/ajax/flash_msg_replace"
         return
       end
     end
 
     task_id = record.remote_console_acquire_ticket_queue(ticket_type, session[:userid], MiqServer.my_server.id)
-    add_flash(_("Console access failed: %s") % "Task start failed: ID [#{task_id.inspect}]", :error) unless task_id.kind_of?(Fixnum)
+    add_flash(_("Console access failed: Task start failed: ID [%{id}]") %
+                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
 
     if @flash_array
       render :partial => "shared/ajax/flash_msg_replace"
@@ -1263,7 +1266,7 @@ module VmCommon
   def console_after_task(console_type)
     miq_task = MiqTask.find(params[:task_id])
     if miq_task.status == "Error" || miq_task.task_results.blank?
-      add_flash(_("Console access failed: %s") % miq_task.message, :error)
+      add_flash(_("Console access failed: %{message}") % {:message => miq_task.message}, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
       @sb[console_type.to_sym] = miq_task.task_results # html5, VNC?, MKS or VMRC
@@ -1370,7 +1373,11 @@ module VmCommon
         process_show_list(options)  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
-        @right_cell_text = _("All %s") % title ? "#{title}" : "VMs & Templates"
+        @right_cell_text = if title
+                             _("All %{title}") % {:title => title}
+                           else
+                             _("All VMs & Templates")
+                           end
       else
         if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
           options[:where_clause] =
@@ -1386,7 +1393,11 @@ module VmCommon
           end
         elsif TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
           process_show_list(options)  # Get all VMs & Templates
-          @right_cell_text = _("All %s") % model ? "#{ui_lookup(:models => model)}" : "VMs & Templates"
+          @right_cell_text = if model
+                               _("All %{models}") % {:models => ui_lookup(:models => model)}
+                             else
+                               _("All VMs & Templates")
+                             end
         else
           rec = TreeBuilder.get_model_for_prefix(@nodetype).constantize.find(from_cid(id))
           options.merge!({:association => "#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent => rec})
@@ -1417,7 +1428,7 @@ module VmCommon
     # After adding to history, add name filter suffix if showing a list
     unless ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
       unless @search_text.blank?
-        @right_cell_text += _(" (Names with \"%s\")") % @search_text
+        @right_cell_text += _(" (Names with \"%{text}\")") % {:text => @search_text}
       end
     end
   end
@@ -1722,7 +1733,7 @@ module VmCommon
     when "compare", "drift"
       partial = "layouts/#{@sb[:action]}"
       if @sb[:action] == "compare"
-        header = _("Compare %s") % ui_lookup(:model => @sb[:compare_db])
+        header = _("Compare %{model}") % {:model => ui_lookup(:model => @sb[:compare_db])}
       else
         header = _("Drift for %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:model => @sb[:compare_db])}
       end
@@ -1745,7 +1756,7 @@ module VmCommon
       action = "evm_relationship_update"
     # when "miq_request_new"
     # partial = "miq_request/prov_edit"
-    # header = _("Provision %s") % ui_lookup(:models=>"Vm")
+    # header = _("Provision %{models}") % {:models => ui_lookup(:models=>"Vm")}
     # action = "prov_edit"
     when "miq_request_new"
       partial = "miq_request/pre_prov"
@@ -1754,15 +1765,15 @@ module VmCommon
       action = "pre_prov"
     when "pre_prov"
       partial = "miq_request/prov_edit"
-      header = _("Provision %s") % ui_lookup(:tables => table)
+      header = _("Provision %{tables}") % {:tables => ui_lookup(:tables => table)}
       action = "pre_prov_continue"
     when "pre_prov_continue"
       partial = "miq_request/prov_edit"
-      header = _("Provision %s") % ui_lookup(:tables => table)
+      header = _("Provision %{tables}") % {:tables => ui_lookup(:tables => table)}
       action = "prov_edit"
     when "ownership"
       partial = "shared/views/ownership"
-      header = _("Set Ownership for %s") % ui_lookup(:table => table)
+      header = _("Set Ownership for %{table}") % {:table => ui_lookup(:table => table)}
       action = "ownership_update"
     when "performance"
       partial = "layouts/performance"
@@ -1772,24 +1783,24 @@ module VmCommon
     when "policy_sim"
       if params[:action] == "policies"
         partial = "vm_common/policies"
-        header = _("%s Policy Simulation") % ui_lookup(:table => table)
+        header = _("%{table} Policy Simulation") % {:table => ui_lookup(:table => table)}
         action = nil
       else
         partial = "layouts/policy_sim"
-        header = _("%s Policy Simulation") % ui_lookup(:table => table)
+        header = _("%{table} Policy Simulation") % {:table => ui_lookup(:table => table)}
         action = nil
       end
     when "protect"
       partial = "layouts/protect"
-      header = _("%s Policy Assignment") % ui_lookup(:table => table)
+      header = _("%{table} Policy Assignment") % {:table => ui_lookup(:table => table)}
       action = "protect"
     when "reconfigure"
       partial = "vm_common/reconfigure"
-      header = _("Reconfigure %s") % ui_lookup(:table => table)
+      header = _("Reconfigure %{table}") % {:table => ui_lookup(:table => table)}
       action = "reconfigure_update"
     when "retire"
       partial = "shared/views/retire"
-      header = _("Set/Remove retirement date for %s") % ui_lookup(:table => table)
+      header = _("Set/Remove retirement date for %{table}") % {:table => ui_lookup(:table => table)}
       action = "retire"
     when "right_size"
       partial = "vm_common/right_size"
@@ -1797,11 +1808,11 @@ module VmCommon
       action = nil
     when "tag"
       partial = "layouts/tagging"
-      header = _("Edit Tags for %s") % ui_lookup(:table => table)
+      header = _("Edit Tags for %{table}") % {:table => ui_lookup(:table => table)}
       action = "tagging_edit"
     when "snapshot_add"
       partial = "vm_common/snap"
-      header = _("Adding a new %s") % ui_lookup(:model => "Snapshot")
+      header = _("Adding a new %{model}") % {:model => ui_lookup(:model => "Snapshot")}
       action = "snap_vm"
     when "timeline"
       partial = "layouts/tl_show"
@@ -1847,7 +1858,7 @@ module VmCommon
   def get_vm_child_selection
     if params["right.x"] || params[:button] == "right"
       if params[:kids_chosen].nil?
-        add_flash(_("No %s were selected to move right") % "VMs", :error)
+        add_flash(_("No VMs were selected to move right"), :error)
       else
         kids = @edit[:new][:kids].invert
         params[:kids_chosen].each do |kc|
@@ -1859,7 +1870,7 @@ module VmCommon
       end
     elsif params["left.x"] || params[:button] == "left"
       if params[:choices_chosen].nil?
-        add_flash(_("No %s were selected to move left") % "VMs", :error)
+        add_flash(_("No VMs were selected to move left"), :error)
       else
         kids = @edit[:choices].invert
         params[:choices_chosen].each do |cc|

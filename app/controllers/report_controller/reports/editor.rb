@@ -30,7 +30,7 @@ module ReportController::Reports::Editor
     when "cancel"
       @edit[:rpt_id] ?
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqReport"), :name => @edit[:rpt_title]}) :
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqReport"))
+        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "MiqReport")})
       @edit = session[:edit] = nil # clean out the saved info
       replace_right_cell
     when "add", "save"
@@ -879,7 +879,7 @@ module ReportController::Reports::Editor
 
   def move_cols_right
     if !params[:available_fields] || params[:available_fields].length == 0 || params[:available_fields][0] == ""
-      add_flash(_("No %s were selected to move down") % "fields", :error)
+      add_flash(_("No fields were selected to move down"), :error)
     elsif params[:available_fields].length + @edit[:new][:fields].length > MAX_REPORT_COLUMNS
       add_flash(_("Fields not added: Adding the selected %{count} fields will exceed the maximum of %{max} fields") % {:count => params[:available_fields].length + @edit[:new][:fields].length, :max => MAX_REPORT_COLUMNS},
                 :error)
@@ -909,9 +909,9 @@ module ReportController::Reports::Editor
 
   def move_cols_left
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No %s were selected to move up") % "fields", :error)
+      add_flash(_("No fields were selected to move up"), :error)
     elsif display_filter_contains?(params[:selected_fields])
-      add_flash(_("No %s were moved up") % "fields", :error)
+      add_flash(_("No fields were moved up"), :error)
     else
       @edit[:new][:fields].each do |nf|               # Go thru all new fields
         if params[:selected_fields].include?(nf.last) # See if this col was selected to move
@@ -978,7 +978,8 @@ module ReportController::Reports::Editor
     exp = @edit[:new][:display_filter].inspect
     @edit[:new][:fields].each do |f|          # Go thru all of the selected fields
       if fields.include?(f.last)              # Is this field being removed?
-        add_flash(_("%s is currently being used in the Display Filter") % f.first, :error) if exp.include?(f.last)
+        add_flash(_("%{name} is currently being used in the Display Filter") %
+                  {:name => f.first}, :error) if exp.include?(f.last)
       end
     end
     !@flash_array.nil?
@@ -986,12 +987,12 @@ module ReportController::Reports::Editor
 
   def move_cols_up
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No %s were selected to move up") % "fields", :error)
+      add_flash(_("No fields were selected to move up"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move up"), :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse_each do |field|
@@ -1008,12 +1009,12 @@ module ReportController::Reports::Editor
 
   def move_cols_down
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No %s were selected to move down") % "fields", :error)
+      add_flash(_("No fields were selected to move down"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move down"), :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
@@ -1032,12 +1033,12 @@ module ReportController::Reports::Editor
 
   def move_cols_top
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No %s were selected to move to the top") % "fields", :error)
+      add_flash(_("No fields were selected to move to the top"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move to the top") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move to the top"), :error)
     else
       if first_idx > 0
         @edit[:new][:fields][first_idx..last_idx].reverse_each do |field|
@@ -1054,12 +1055,12 @@ module ReportController::Reports::Editor
 
   def move_cols_bottom
     if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No %s were selected to move to the bottom") % "fields", :error)
+      add_flash(_("No fields were selected to move to the bottom"), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive %s to move to the bottom") % "fields", :error)
+      add_flash(_("Select only one or consecutive fields to move to the bottom"), :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
         @edit[:new][:fields][first_idx..last_idx].each do |field|

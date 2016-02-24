@@ -28,7 +28,7 @@ module PxeController::PxeImageTypes
       if @edit[:pxe_id]
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeImageType"), :name => @edit[:current][:name]})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "PxeImageType"))
+        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "PxeImageType")})
       end
       @edit = session[:edit] = nil # clean out the saved info
       get_node_info(x_node)
@@ -107,7 +107,7 @@ module PxeController::PxeImageTypes
       replace_right_cell("root", [:pxe_image_types, :customization_templates])
     else # showing 1 vm
       if params[:id].nil? || PxeImageType.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "PxeImageType"),
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "PxeImageType")},
                   :error)
         pxe_image_type_list
         @refresh_partial = "layouts/x_gtl"
@@ -163,7 +163,7 @@ module PxeController::PxeImageTypes
 
   def pxe_image_type_validate_fields
     if @edit[:new][:name].blank?
-      add_flash(_("%s is required") % "Name", :error)
+      add_flash(_("Name is required"), :error)
     end
   end
 
@@ -213,7 +213,7 @@ module PxeController::PxeImageTypes
   def pxe_image_type_get_node_info(treenodeid)
     if treenodeid == "root"
       pxe_image_type_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => "PxeImageType")
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "PxeImageType")}
       @right_cell_div  = "pxe_image_type_list"
     else
       @right_cell_div = "pxe_image_type_details"

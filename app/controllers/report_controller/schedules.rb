@@ -49,7 +49,7 @@ module ReportController::Schedules
     session[:schedule_sortdir] = @sortdir
 
     @sb[:tree_typ]   = "schedules"
-    @right_cell_text = _("All %s") % ui_lookup(:models => "MiqSchedule")
+    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqSchedule")}
     @right_cell_div  = "schedule_list"
   end
 
@@ -80,13 +80,17 @@ module ReportController::Schedules
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
       else
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqSchedule"), :error)
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
       end
     end
     process_schedules(scheds, "destroy")  unless scheds.empty?
     unless flash_errors?
-      msg_str = scheds.length > 1 ? _("The selected %s were deleted") : _("The selected %s was deleted")
-      add_flash(msg_str % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
+      msg_str = if scheds.length > 1
+                  _("The selected %{schedule} were deleted")
+                else
+                  _("The selected %{schedule} was deleted")
+                end
+      add_flash(msg_str % {:schedule => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :success, true)
     end
     self.x_node = "root"
@@ -105,7 +109,7 @@ module ReportController::Schedules
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
       else
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqSchedule"), :error)
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
       end
     end
     MiqSchedule.where(:id => scheds).order("lower(name)").each do |sched|
@@ -134,22 +138,22 @@ module ReportController::Schedules
   def schedule_toggle(enable)
     assert_privileges("miq_report_schedule_#{enable ? 'enable' : 'disable'}")
     msg1, msg2 = if enable
-                   [_("No %s were selected to be enabled"),
-                    _("The selected %s were enabled")]
+                   [_("No %{schedules} were selected to be enabled"),
+                    _("The selected %{schedules} were enabled")]
                  else
-                   [_("No %s were selected to be disabled"),
-                    _("The selected %s were disabled")]
+                   [_("No %{schedules} were selected to be disabled"),
+                    _("The selected %{schedules} were disabled")]
                  end
     scheds = find_checked_items
     if scheds.empty?
-      add_flash(msg1 % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
+      add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
     schedule_enable_disable(scheds, enable) unless scheds.empty?
-    add_flash(msg2 % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
+    add_flash(msg2 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
               :info, true) unless flash_errors?
     schedule_get_all
     replace_right_cell
@@ -214,7 +218,7 @@ module ReportController::Schedules
     when "cancel"
       @schedule = MiqSchedule.find_by_id(session[:edit][:sched_id]) if session[:edit] && session[:edit][:sched_id]
       if !@schedule || @schedule.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqSchedule"))
+        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "MiqSchedule")})
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqSchedule"), :name => @schedule.name})
       end
@@ -228,7 +232,7 @@ module ReportController::Schedules
       return unless load_edit("schedule_edit__#{id}", "replace_cell__explorer")
       schedule = @edit[:sched_id] ? MiqSchedule.find(@edit[:sched_id]) : MiqSchedule.new(:userid => session[:userid])
       if !@edit[:new][:repfilter] || @edit[:new][:repfilter] == ""
-        add_flash(_("%s must be selected") % "A Report", :error)
+        add_flash(_("A Report must be selected"), :error)
       end
       schedule_set_record_vars(schedule)
       schedule_valid?(schedule)
@@ -292,7 +296,7 @@ module ReportController::Schedules
        sched.sched_action[:options][:email] &&
        sched.sched_action[:options][:email][:to].blank?
       valid = false
-      add_flash(_("At least one %s must be configured") % "To E-mail address",
+      add_flash(_("At least one To E-mail address must be configured"),
                 :error)
     end
     unless flash_errors?
