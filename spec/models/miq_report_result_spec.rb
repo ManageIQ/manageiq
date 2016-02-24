@@ -5,6 +5,29 @@ describe MiqReportResult do
     @user1 = FactoryGirl.create(:user_with_group)
   end
 
+  it "#_async_generate_result" do
+    #user = FactoryGirl.create(:user_with_group)
+    task = FactoryGirl.create(:miq_task)
+    EvmSpecHelper.local_miq_server
+    report = MiqReport.create(
+        :name          => "VMs based on Disk Type",
+        :title         => "VMs using thin provisioned disks",
+        :rpt_group     => "Custom",
+        :rpt_type      => "Custom",
+        :db            => "VmInfra",
+        :cols          => ["name"],
+        :col_order     => ["name"],
+        :headers       => ["Name"],
+        :order         => "Ascending",
+        :template_type => "report"
+    )
+    report.generate_table(:userid => "admin")
+    task.miq_report_result = report.build_create_results({:userid => "admin"}, task.id)
+    task.miq_report_result._async_generate_result(task.id, :txt, :user => @user1)
+    task.reload
+    expect(task.state).to eq MiqTask::STATE_FINISHED
+  end
+
   context "report result created by User 1 with current group 1" do
     before :each do
       @report_1 = FactoryGirl.create(:miq_report)
