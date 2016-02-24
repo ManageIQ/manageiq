@@ -258,6 +258,7 @@ module VimPropMaps
       :baseName => "@datacenters",
       :keyPath  => ['name'],
       :props    => [
+        "datastoreFolder",
         "hostFolder",
         "name",
         "parent",
@@ -415,6 +416,7 @@ module VimPropMaps
       :baseName => "@datacenters",
       :keyPath  => ['name'],
       :props    => [
+        "datastoreFolder",
         "hostFolder",
         "name",
         "parent",
