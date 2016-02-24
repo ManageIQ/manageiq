@@ -7,10 +7,10 @@ gem "bundler",       ">= 1.8.4"
 gem "rake",          "~>10.1"
 gem "iniparse"
 
-gem "activesupport",           "~>5.0.x"
+gem "activesupport",           "~>5.0.0.beta2"
 
 # ActiveRecord is used by appliance_console
-gem "activerecord",            "~>5.0.x"
+gem "activerecord",            "~>5.0.0.beta2"
 
 # Not locally modified and not required
 gem "awesome_spawn",           "~> 1.3",            :require => false
