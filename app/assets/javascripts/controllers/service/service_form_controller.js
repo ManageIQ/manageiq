@@ -24,8 +24,7 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
 
     var serviceEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
-      var url = '/service/service_edit/' + serviceFormId + '?button=' + buttonName;
-
+      var url = '/service/edit/' + serviceFormId + '?button=' + buttonName;
       miqService.miqAjaxButton(url, serializeFields);
     };
 

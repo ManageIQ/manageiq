@@ -6,7 +6,7 @@ class ServiceController < ApplicationController
 
   SERVICE_X_BUTTON_ALLOWED_ACTIONS = {
     'service_delete'      => :service_delete,
-    'service_edit'        => :service_edit,
+    'service_edit'        => :edit,
     'service_ownership'   => :service_ownership,
     'service_tag'         => :service_tag,
     'service_retire'      => :service_retire,
@@ -40,9 +40,12 @@ class ServiceController < ApplicationController
     @sb[:action] = action
 
     performed_action = whitelisted_action(params[:pressed])
-    return if [:service_delete, :service_edit, :service_reconfigure].include?(performed_action)
+    return if [:service_delete, :service_reconfigure].include?(performed_action)
 
-    if @refresh_partial
+    if params[:pressed] == "service_edit"
+      edit_record
+      render_or_redirect_partial("service")
+    elsif @refresh_partial
       replace_right_cell(action)
     else
       add_flash(_("Button not yet implemented %{model_name}:%{action_name}") %
@@ -128,13 +131,14 @@ class ServiceController < ApplicationController
     replace_right_cell
   end
 
-  def service_edit
+  def edit
     assert_privileges("service_edit")
     case params[:button]
     when "cancel"
       service = Service.find_by_id(params[:id])
-      add_flash(_("Edit of Service \"%{name}\" was cancelled by the user") % {:name => service.description})
-      replace_right_cell
+      render :update do |page|
+        page.redirect_to :action => 'explorer', :flash_msg => _("Edit of Service \"%{name}\" was cancelled by the user") % {:name => service.description}
+      end
     when "save", "add"
       service = Service.find_by_id(params[:id])
       service_set_record_vars(service)
@@ -142,17 +146,20 @@ class ServiceController < ApplicationController
       begin
         service.save
       rescue StandardError => bang
-        add_flash(_("Error during 'Service Edit': %{message}") % {:message => bang.message}, :error)
+        msg = _("Error during 'Service Edit': %{message}") % {:message => bang.message}
+        error = true
       else
-        add_flash(_("Service \"%{name}\" was saved") % {:name => service.name})
+        msg = _("Service \"%{name}\" was saved") % {:name => service.name}
       end
-      replace_right_cell(nil, [:svcs])
+      render :update do |page|
+        page.redirect_to :action => 'explorer', :flash_msg => msg, :flash_error => error
+      end
     when "reset", nil # Reset or first time in
       checked = find_checked_items
       checked[0] = params[:id] if checked.blank? && params[:id]
       @service = find_by_id_filtered(Service, checked[0])
       @in_a_form = true
-      replace_right_cell("service_edit")
+      @title = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
       return
     end
   end
@@ -264,10 +271,6 @@ class ServiceController < ApplicationController
       partial = "shared/views/retire"
       header = _("Set/Remove retirement date for %{model}") % {:model => ui_lookup(:model => "Service")}
       action = "retire"
-    when "service_edit"
-      partial = "service_form"
-      header = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
-      action = "service_edit"
     when "tag"
       partial = "layouts/tagging"
       header = _("Edit Tags for %{model}") % {:model => ui_lookup(:model => "Service")}

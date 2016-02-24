@@ -11,7 +11,8 @@ class ApplicationHelper::Toolbar::ServiceCenter < ApplicationHelper::Toolbar::Ba
           :service_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Service'),
-          t),
+          t,
+          :url => "/edit"),
         button(
           :service_delete,
           'pficon pficon-delete fa-lg',

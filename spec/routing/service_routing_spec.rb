@@ -53,9 +53,9 @@ describe 'routes for ServiceController' do
     end
   end
 
-  describe "#service_edit" do
+  describe "#edit" do
     it "routes with POST" do
-      expect(post("/service/service_edit")).to route_to("service#service_edit")
+      expect(post("/service/edit")).to route_to("service#edit")
     end
   end
 
