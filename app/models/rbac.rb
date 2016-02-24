@@ -120,7 +120,7 @@ module Rbac
   # @return [Array<Integer>] object_ids owned by a user or group
   def self.get_self_service_object_ids(user_or_group, klass)
     targets = get_self_service_objects(user_or_group, klass)
-    targets = targets.collect(&:id) if targets.respond_to?(:collect)
+    targets = targets.reorder(nil).collect(&:id) if targets.respond_to?(:collect)
     targets
   end
 
@@ -230,7 +230,7 @@ module Rbac
 
   def self.get_managed_filter_object_ids(klass, scope, filter)
     return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
-    scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).collect(&:id)
+    scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
   end
 
   def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
@@ -426,7 +426,7 @@ module Rbac
     # now:   search(:targets => [],  :class => Vm) searches Vms
     # later: search(:targets => [],  :class => Vm) returns []
     #        search(:targets => nil, :class => Vm) will always search Vms
-    if options.key?(:targets) && options[:targets].empty?
+    if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
       Vmdb::Deprecation.deprecation_warning(":targets => []", "use :targets => nil to search all records",
                                             caller(0)) unless Rails.env.production?
       options[:targets] = nil
@@ -461,7 +461,9 @@ module Rbac
     ids_clause             = nil
     target_ids             = nil
 
-    unless targets.nil? || targets.empty?
+    if targets.nil? || targets.kind_of?(Array) && targets.empty?
+      scope = apply_scope(klass, scope)
+    elsif targets.kind_of?(Array) && !targets.empty?
       if targets.first.kind_of?(Numeric)
         target_ids = targets
       else
@@ -469,8 +471,22 @@ module Rbac
         klass            = targets.first.class.base_class unless klass.respond_to?(:find)
         results_format ||= :objects
       end
+      scope = apply_scope(klass, scope)
 
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
+    else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
+      targets = targets.to_s.constantize if targets.kind_of?(String) || targets.kind_of?(Symbol)
+      targets = targets.all if targets < ActiveRecord::Base
+
+      results_format ||= :objects
+      scope = apply_scope(targets, scope)
+
+      unless klass.respond_to?(:find)
+        klass = targets
+        klass = klass.klass if klass.respond_to?(:klass)
+        # working around MiqAeDomain not being in rbac_class
+        klass = klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+      end
     end
 
     user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :user => user, :miq_group => miq_group)
@@ -478,7 +494,6 @@ module Rbac
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
 
-    scope = apply_scope(klass, scope)
     attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
     find_options = {:conditions => conditions, :include => include_for_find, :order => options[:order]}
@@ -489,9 +504,6 @@ module Rbac
 
     if klass.respond_to?(:find)
       targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user || miq_group)
-    elsif targets.nil? # tmp
-      targets = []
-      total_count = auth_count = 0
     else
       total_count = targets.length
       auth_count  = targets.length

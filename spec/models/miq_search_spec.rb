@@ -53,10 +53,9 @@ describe MiqSearch do
   end
 
   describe "#filtered" do
-    # TODO: return matched_vms
     it "works with models" do
       all_vms
-      expect { vm_location_search.filtered(Vm).first }.to raise_error(NoMethodError)
+      expect(vm_location_search.filtered(Vm)).to match_array(matched_vms)
     end
 
     it "works with scopes" do
