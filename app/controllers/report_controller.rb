@@ -140,11 +140,7 @@ class ReportController < ApplicationController
     end
 
     reports_menu_in_sb
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     self.x_active_tree = x_last_active_tree if x_last_active_tree
     self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
