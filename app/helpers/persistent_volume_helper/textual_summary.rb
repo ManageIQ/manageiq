@@ -28,10 +28,6 @@ module PersistentVolumeHelper::TextualSummary
     @record.name
   end
 
-  def textual_creation_timestamp
-    format_timezone(@record.creation_timestamp)
-  end
-
   def textual_resource_version
     @record.resource_version
   end
