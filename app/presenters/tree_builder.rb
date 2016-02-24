@@ -5,6 +5,9 @@ class TreeBuilder
   def self.class_for_type(type)
     case type
     when :filter           then raise('Obsolete tree type.')
+    # Catalog explorer trees
+    when :configuration_manager_providers then TreeBuilderConfigurationManager
+    when :cs_filter                       then TreeBuilderConfigurationManagerConfiguredSystems
 
     # Catalog explorer trees
     when :ot               then TreeBuilderOrchestrationTemplates
