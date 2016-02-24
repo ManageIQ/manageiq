@@ -29,9 +29,9 @@ class TreeBuilderIsoDatastores < TreeBuilder
         @tree_state.x_tree(@name)[:open_nodes].push("isd_xx-#{to_cid(object.id)}")
         objects.push(
           :id    => "isd_xx-#{to_cid(object.id)}",
-          :text  => "ISO Images",
+          :text  => _("ISO Images"),
           :image => "folder",
-          :tip   => "ISO Images"
+          :tip   => _("ISO Images")
         )
       end
       objects

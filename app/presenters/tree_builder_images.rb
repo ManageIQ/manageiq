@@ -18,8 +18,8 @@ class TreeBuilderImages < TreeBuilder
   def x_get_tree_roots(count_only, _options)
     objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => "TemplateCloud")
     objects += [
-      {:id => "arch", :text => "<Archived>", :image => "currentstate-archived", :tip => "Archived Images"},
-      {:id => "orph", :text => "<Orphaned>", :image => "currentstate-orphaned", :tip => "Orphaned Images"}
+      {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived Images")},
+      {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned Images")}
     ]
     count_only_or_objects(count_only, objects, nil)
   end

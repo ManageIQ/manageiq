@@ -21,10 +21,10 @@ class TreeBuilderReportExport < TreeBuilder
   def x_get_tree_roots(count_only, _options)
     export_children = [
       {:id    => 'exportcustomreports',
-       :text  => 'Custom Reports',
+       :text  => _('Custom Reports'),
        :image => 'report'},
       {:id    => 'exportwidgets',
-       :text  => 'Widgets',
+       :text  => _('Widgets'),
        :image => 'report'}
     ]
     count_only_or_objects(count_only, export_children, nil)

@@ -55,8 +55,8 @@ class WidgetPresenter
                     :title                => _("Remove from Dashboard"),
                     :remote               => true,
                     'data-method'         => :post,
-                    :confirm              => _("Are you sure you want to remove '%s'" \
-                                               "from the Dashboard?") % @widget.title,
+                    :confirm              => _("Are you sure you want to remove '%{title}'" \
+                                               "from the Dashboard?") % {:title => @widget.title},
                     'data-miq_sparkle_on' => true)
     end
   end
