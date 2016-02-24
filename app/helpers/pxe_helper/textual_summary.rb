@@ -5,31 +5,31 @@ module PxeHelper::TextualSummary
   end
 
   def textual_uri_prefix
-    {:label => "URI Prefix", :value => "#{@ps.uri_prefix}"}
+    {:label => _("URI Prefix"), :value => "#{@ps.uri_prefix}"}
   end
 
   def textual_uri
-    {:label => "URI", :value => "#{@ps.uri}"}
+    {:label => _("URI"), :value => "#{@ps.uri}"}
   end
 
   def textual_access_url
-    {:label => "Access URL", :value => "#{@ps.access_url}"}
+    {:label => _("Access URL"), :value => "#{@ps.access_url}"}
   end
 
   def textual_pxe_directory
-    {:label => "PXE Directory", :value => "#{@ps.pxe_directory}"}
+    {:label => _("PXE Directory"), :value => "#{@ps.pxe_directory}"}
   end
 
   def textual_windows_images_directory
-    {:label => "Windows Images Directory", :value => "#{@ps.windows_images_directory}"}
+    {:label => _("Windows Images Directory"), :value => "#{@ps.windows_images_directory}"}
   end
 
   def textual_customization_directory
-    {:label => "Customization Directory", :value => "#{@ps.customization_directory}"}
+    {:label => _("Customization Directory"), :value => "#{@ps.customization_directory}"}
   end
 
   def textual_last_refreshed_on
-    {:label => "Last Refreshed On", :value => "#{@ps.last_refresh_on}"}
+    {:label => _("Last Refreshed On"), :value => "#{@ps.last_refresh_on}"}
   end
 
   def textual_group_pxe_image_menus
@@ -37,7 +37,7 @@ module PxeHelper::TextualSummary
   end
 
   def textual_filename
-    {:label => "Filename", :value => "#{@ps.pxe_menus[0].file_name}"}
+    {:label => _("Filename"), :value => "#{@ps.pxe_menus[0].file_name}"}
   end
 
   def textual_pxe_img_basicinfo
@@ -45,23 +45,23 @@ module PxeHelper::TextualSummary
   end
 
   def textual_pxe_img_name
-    {:label => "Name", :value => "#{@img.name}"}
+    {:label => _("Name"), :value => "#{@img.name}"}
   end
 
   def textual_pxe_img_description
-    {:label => "Description", :value => "#{@img.description}"}
+    {:label => _("Description"), :value => "#{@img.description}"}
   end
 
   def textual_pxe_img_type
-    {:label => "Type", :value => @img.pxe_image_type ? "#{@img.pxe_image_type.name}" : ""}
+    {:label => _("Type"), :value => @img.pxe_image_type ? "#{@img.pxe_image_type.name}" : ""}
   end
 
   def textual_pxe_img_kernel
-    {:label => "Kernel", :value => "#{@img.kernel}"}
+    {:label => _("Kernel"), :value => "#{@img.kernel}"}
   end
 
   def textual_pxe_img_win_boot_env
-    {:label => "Windows Boot Environment", :value => @img.default_for_windows ? "Yes" : ""}
+    {:label => _("Windows Boot Environment"), :value => @img.default_for_windows ? "Yes" : ""}
   end
 
   def textual_win_img_basicinfo
@@ -69,23 +69,23 @@ module PxeHelper::TextualSummary
   end
 
   def textual_win_img_name
-    {:label => "Name", :value => "#{@wimg.name}"}
+    {:label => _("Name"), :value => "#{@wimg.name}"}
   end
 
   def textual_win_img_description
-    {:label => "Description", :value => "#{@wimg.description}"}
+    {:label => _("Description"), :value => "#{@wimg.description}"}
   end
 
   def textual_win_img_type
-    {:label => "Type", :value => @wimg.pxe_image_type ? "#{@wimg.pxe_image_type.name}" : ""}
+    {:label => _("Type"), :value => @wimg.pxe_image_type ? "#{@wimg.pxe_image_type.name}" : ""}
   end
 
   def textual_win_img_path
-    {:label => "Path", :value => @wimg.path}
+    {:label => _("Path"), :value => @wimg.path}
   end
 
   def textual_win_img_index
-    {:label => "Index", :value => @wimg.index}
+    {:label => _("Index"), :value => @wimg.index}
   end
 
   def textual_template_basicinfo
@@ -93,19 +93,19 @@ module PxeHelper::TextualSummary
   end
 
   def textual_template_name
-    {:label => "Name", :value => @ct.name}
+    {:label => _("Name"), :value => @ct.name}
   end
 
   def textual_template_description
-    {:label => "Description", :value => @ct.description}
+    {:label => _("Description"), :value => @ct.description}
   end
 
   def textual_template_img_type
-    {:label => "Image Type", :value => @ct.pxe_image_type ? "#{@ct.pxe_image_type.name}" : ""}
+    {:label => _("Image Type"), :value => @ct.pxe_image_type ? "#{@ct.pxe_image_type.name}" : ""}
   end
 
   def textual_template_type
-    {:label => "Type", :value => @ct.type.sub("CustomizationTemplate", "")}
+    {:label => _("Type"), :value => @ct.type.sub("CustomizationTemplate", "")}
   end
 
   def textual_sysimg_type_basicinfo
@@ -113,11 +113,11 @@ module PxeHelper::TextualSummary
   end
 
   def textual_sysimg_type_name
-    {:label => "Name", :value => @pxe_image_type.name}
+    {:label => _("Name"), :value => @pxe_image_type.name}
   end
 
   def textual_sysimg_type_provision_type
-    {:label => "Provision Type", :value => @pxe_image_type.provision_type}
+    {:label => _("Provision Type"), :value => @pxe_image_type.provision_type}
   end
 
   def textual_iso_datastore_basicinfo
@@ -129,7 +129,7 @@ module PxeHelper::TextualSummary
   end
 
   def textual_iso_datastore_last_refresh_on
-    {:label => "Last Refreshed On", :value => @isd.last_refresh_on}
+    {:label => _("Last Refreshed On"), :value => @isd.last_refresh_on}
   end
 
   def textual_iso_img_info
@@ -137,10 +137,10 @@ module PxeHelper::TextualSummary
   end
 
   def textual_iso_img_info_name
-    {:label => "Name", :value => @img.name}
+    {:label => _("Name"), :value => @img.name}
   end
 
   def textual_iso_img_info_type
-    {:label => "Type", :value => @img.pxe_image_type ? @img.pxe_image_type.name : ""}
+    {:label => _("Type"), :value => @img.pxe_image_type ? @img.pxe_image_type.name : ""}
   end
 end

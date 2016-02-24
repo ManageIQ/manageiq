@@ -44,7 +44,9 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_retirement_date
-    {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
+    {:label => _("Retirement Date"),
+     :image => "retirement",
+     :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.to_time.strftime("%x"))}
   end
 
   def textual_ems_cloud
@@ -57,7 +59,7 @@ module OrchestrationStackHelper::TextualSummary
     label = ui_lookup(:table => "orchestration_template")
     h = {:label => label, :image => "orchestration_template", :value => template.name}
     if role_allows(:feature => "orchestration_templates_view")
-      h[:title] = "Show this Orchestration Template"
+      h[:title] = _("Show this Orchestration Template")
       h[:link] = url_for(:controller => 'catalog', :action => 'ot_show', :id => template.id)
     end
     h
@@ -69,7 +71,7 @@ module OrchestrationStackHelper::TextualSummary
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @orchestration_stack, :display => 'instances')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -95,7 +97,7 @@ module OrchestrationStackHelper::TextualSummary
     h     = {:label => label, :image => "parameter", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -106,7 +108,7 @@ module OrchestrationStackHelper::TextualSummary
     h     = {:label => label, :image => "output", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -117,7 +119,7 @@ module OrchestrationStackHelper::TextualSummary
     h     = {:label => label, :image => "resource", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end

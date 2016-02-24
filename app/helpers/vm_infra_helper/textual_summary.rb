@@ -71,12 +71,16 @@ module VmCloudHelper::TextualSummary
 
   def textual_region
     return nil if @record.region_number == MiqRegion.my_region_number
-    h = {:label => "Region"}
+    h = {:label => _("Region")}
     reg = @record.miq_region
     url = reg.remote_ui_url
     h[:value] = if url
                   # TODO: Why is this link different than the others?
-                  link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
+                  link_to(reg.description, url_for(:host   => url,
+                                                   :action => 'show',
+                                                   :id     => @record),
+                          :title   => _("Connect to this VM in its Region"),
+                          :onclick => "return miqClickAndPop(this);")
                 else
                   reg.description
                 end
@@ -97,36 +101,37 @@ module VmCloudHelper::TextualSummary
 
   def textual_hostname
     hostnames = @record.hostnames
-    {:label => (hostnames.size > 1 ? "Hostname".pluralize : "Hostname"), :value => hostnames.join(", ")}
+    {:label => n_("Hostname", "Hostnames", hostnames.size), :value => hostnames.join(", ")}
   end
 
   def textual_ipaddress
     ips = @record.ipaddresses
-    {:label => (ips.size > 1 ? "IP Address".pluralize : "IP Address"), :value => ips.join(", ")}
+    {:label => n_("IP Address", "IP Addresses", ips.size), :value => ips.join(", ")}
   end
 
   def textual_custom_1
     return nil if @record.custom_1.blank?
-    {:label => "Custom Identifier", :value => @record.custom_1}
+    {:label => _("Custom Identifier"), :value => @record.custom_1}
   end
 
   def textual_host_platform
-    {:label => "Parent #{title_for_host} Platform", :value => (@record.host.nil? ? "N/A" : @record.v_host_vmm_product)}
+    {:label => _("Parent %{title} Platform") % {:title => title_for_host},
+     :value => (@record.host.nil? ? _("N/A") : @record.v_host_vmm_product)}
   end
 
   def textual_tools_status
-    {:label => "Platform Tools", :value => (@record.tools_status.nil? ? "N/A" : @record.tools_status)}
+    {:label => _("Platform Tools"), :value => (@record.tools_status.nil? ? _("N/A") : @record.tools_status)}
   end
 
   def textual_osinfo
-    h = {:label => "Operating System"}
+    h = {:label => _("Operating System")}
     os = @record.operating_system.nil? ? nil : @record.operating_system.product_name
     if os.blank?
-      h[:value] = "Unknown"
+      h[:value] = _("Unknown")
     else
       h[:image] = "os-#{@record.os_image_name.downcase}"
       h[:value] = os
-      h[:title] = "Show OS container information"
+      h[:title] = _("Show OS container information")
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'os_info')
     end
@@ -134,14 +139,14 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_cpu_affinity
-    {:label => "CPU Affinity", :value => @record.cpu_affinity}
+    {:label => _("CPU Affinity"), :value => @record.cpu_affinity}
   end
 
   def textual_snapshots
     num = @record.number_of(:snapshots)
-    h = {:label => "Snapshots", :image => "snapshot", :value => (num == 0 ? "None" : num)}
+    h = {:label => _("Snapshots"), :image => "snapshot", :value => (num == 0 ? _("None") : num)}
     if role_allows(:feature => "vm_snapshot_show_list")
-      h[:title] = "Show the snapshot info for this VM"
+      h[:title] = _("Show the snapshot info for this VM")
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'snapshot_info')
     end
@@ -150,9 +155,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_advanced_settings
     num = @record.number_of(:advanced_settings)
-    h = {:label => "Advanced Settings", :image => "advancedsetting", :value => num}
+    h = {:label => _("Advanced Settings"), :image => "advancedsetting", :value => num}
     if num > 0
-      h[:title] = "Show the advanced settings on this VM"
+      h[:title] = _("Show the advanced settings on this VM")
       h[:explorer] = true
       h[:link]  = url_for(:action => 'advanced_settings', :id => @record, :db => controller.controller_name)
     end
@@ -160,12 +165,12 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_resources
-    {:label => "Resources", :value => "Available", :title => "Show resources of this VM", :explorer => true,
+    {:label => _("Resources"), :value => _("Available"), :title => _("Show resources of this VM"), :explorer => true,
       :link => url_for(:action => 'show', :id => @record, :display => 'resources_info')}
   end
 
   def textual_guid
-    {:label => "Management Engine GUID", :value => @record.guid}
+    {:label => _("Management Engine GUID"), :value => @record.guid}
   end
 
   def textual_ems
@@ -174,9 +179,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_cluster
     cluster = @record.ems_cluster
-    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? _("None") : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
-      h[:title] = "Show this VM's #{title_for_cluster}"
+      h[:title] = _("Show this VM's %{title}") % {:title => title_for_cluster}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
     end
     h
@@ -184,9 +189,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_host
     host = @record.host
-    h = {:label => title_for_host, :image => "host", :value => (host.nil? ? "None" : host.name)}
+    h = {:label => title_for_host, :image => "host", :value => (host.nil? ? _("None") : host.name)}
     if host && role_allows(:feature => "host_show")
-      h[:title] = "Show this VM's #{title_for_host}"
+      h[:title] = _("Show this VM's %{title}") % {:title => title_for_host}
       h[:link]  = url_for(:controller => 'host', :action => 'show', :id => host)
     end
     h
@@ -195,9 +200,9 @@ module VmCloudHelper::TextualSummary
   def textual_resource_pool
     rp = @record.parent_resource_pool
     image = (rp && rp.vapp?) ? "vapp" : "resource_pool"
-    h = {:label => "Resource Pool", :image => image, :value => (rp.nil? ? "None" : rp.name)}
+    h = {:label => _("Resource Pool"), :image => image, :value => (rp.nil? ? _("None") : rp.name)}
     if rp && role_allows(:feature => "resource_pool_show")
-      h[:title] = "Show this VM's Resource Pool"
+      h[:title] = _("Show this VM's Resource Pool")
       h[:link]  = url_for(:controller => 'resource_pool', :action => 'show', :id => rp)
     end
     h
@@ -208,43 +213,46 @@ module VmCloudHelper::TextualSummary
     label = ui_lookup(:tables => "storages")
     h = {:label => label, :image => "storage"}
     if storages.empty?
-      h[:value] = "None"
+      h[:value] = _("None")
     elsif storages.length == 1
       storage = storages.first
       h[:value] = storage.name
-      h[:title] = "Show this #{label}"
+      h[:title] = _("Show this %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'storage', :action => 'show', :id => storage)
     else
       h.delete(:image) # Image will be part of each line item, instead
       main = @record.storage
       h[:value] = storages.sort_by { |s| s.name.downcase }.collect do |s|
-        {:image => "storage", :value => "#{s.name}#{" (main)" if s == main}", :title => "Show this #{label}", :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
+        {:image => "storage",
+         :value => "#{s.name}#{" (main)" if s == main}",
+         :title => _("Show this %{label}") % {:label => label},
+         :link  => url_for(:controller => 'storage', :action => 'show', :id => s)}
       end
     end
     h
   end
 
   def textual_service
-    h = {:label => "Service", :image => "service"}
+    h = {:label => _("Service"), :image => "service"}
     service = @record.service
     if service.nil?
-      h[:value] = "None"
+      h[:value] = _("None")
     else
       h[:value] = service.name
-      h[:title] = "Show this Service"
+      h[:title] = _("Show this Service")
       h[:link]  = url_for(:controller => 'service', :action => 'show', :id => service)
     end
     h
   end
 
   def textual_parent_vm
-    h = {:label => "Parent VM", :image => "vm"}
+    h = {:label => _("Parent VM"), :image => "vm"}
     parent_vm = @record.with_relationship_type("genealogy", &:parent)
     if parent_vm.nil?
-      h[:value] = "None"
+      h[:value] = _("None")
     else
       h[:value] = parent_vm.name
-      h[:title] = "Show this VM's parent"
+      h[:title] = _("Show this VM's parent")
       h[:explorer] = true
       url, action = set_controller_action
       h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
@@ -253,19 +261,26 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_genealogy
-    {:label => "Genealogy", :image => "genealogy", :value => "Show parent and child VMs", :title => "Show virtual machine genealogy",
-      :explorer => true, :link => url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "vmtree_info")}
+    {:label    => _("Genealogy"),
+     :image    => "genealogy",
+     :value    => _("Show parent and child VMs"),
+     :title    => _("Show virtual machine genealogy"),
+     :explorer => true,
+     :link     => url_for(:controller => controller.controller_name,
+                          :action     => 'show',
+                          :id         => @record,
+                          :display    => "vmtree_info")}
   end
 
   def textual_drift
     return nil unless role_allows(:feature => "vm_drift")
-    h = {:label => "Drift History", :image => "drift"}
+    h = {:label => _("Drift History"), :image => "drift"}
     num = @record.number_of(:drift_states)
     if num == 0
-      h[:value] = "None"
+      h[:value] = _("None")
     else
       h[:value] = num
-      h[:title] = "Show virtual machine drift history"
+      h[:title] = _("Show virtual machine drift history")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'drift_history', :id => @record)
     end
@@ -273,13 +288,13 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_scan_history
-    h = {:label => "Analysis History", :image => "scan"}
+    h = {:label => _("Analysis History"), :image => "scan"}
     num = @record.number_of(:scan_histories)
     if num == 0
-      h[:value] = "None"
+      h[:value] = _("None")
     else
       h[:value] = num
-      h[:title] = "Show virtual machine analysis history"
+      h[:title] = _("Show virtual machine analysis history")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'scan_histories', :id => @record)
     end
@@ -288,9 +303,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_users
     num = @record.number_of(:users)
-    h = {:label => "Users", :image => "user", :value => num}
+    h = {:label => _("Users"), :image => "user", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'user')} defined on this VM"
+      h[:title] = n_("Show the User defined on this VM", "Show the Users defined on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:action => 'users', :id => @record, :db => controller.controller_name)
     end
@@ -299,9 +314,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_groups
     num = @record.number_of(:groups)
-    h = {:label => "Groups", :image => "group", :value => num}
+    h = {:label => _("Groups"), :image => "group", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'group')} defined on this VM"
+      h[:title] = n_("Show the Group defined on this VM", "Show the Groups defined on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller.controller_name)
     end
@@ -312,9 +327,9 @@ module VmCloudHelper::TextualSummary
     os = @record.os_image_name.downcase
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:patches)
-    h = {:label => "Patches", :image => "patch", :value => num}
+    h = {:label => _("Patches"), :image => "patch", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Patch')} defined on this VM"
+      h[:title] = n_("Show the Patch defined on this VM", "Show the Patches defined on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
     end
@@ -324,11 +339,11 @@ module VmCloudHelper::TextualSummary
   def textual_guest_applications
     os = @record.os_image_name.downcase
     return nil if os == "unknown"
-    label = (os =~ /linux/) ? "Package" : "Application"
     num = @record.number_of(:guest_applications)
+    label = (os =~ /linux/) ? n_("Package", "Packages", num) : n_("Application", "Applications", num)
     h = {:label => label.pluralize, :image => "guest_application", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, label)} installed on this VM"
+      h[:title] = _("Show the %{label} installed on this VM") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'guest_applications', :id => @record)
     end
@@ -340,9 +355,9 @@ module VmCloudHelper::TextualSummary
     return nil unless os =~ /linux/
     num = @record.number_of(:linux_initprocesses)
     # TODO: Why is this image different than graphical?
-    h = {:label => "Init Processes", :image => "gears", :value => num}
+    h = {:label => _("Init Processes"), :image => "gears", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Init Process')} installed on this VM"
+      h[:title] = n_("Show the Init Process installed on this VM", "Show the Init Processes installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'linux_initprocesses', :id => @record)
     end
@@ -353,9 +368,9 @@ module VmCloudHelper::TextualSummary
     os = @record.os_image_name.downcase
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:win32_services)
-    h = {:label => "Win32 Services", :image => "win32service", :value => num}
+    h = {:label => _("Win32 Services"), :image => "win32service", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Win32 Service')} installed on this VM"
+      h[:title] = n_("Show the Win32 Service installed on this VM", "Show the Win32 Services installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'win32_services', :id => @record)
     end
@@ -367,9 +382,9 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:kernel_drivers)
     # TODO: Why is this image different than graphical?
-    h = {:label => "Kernel Drivers", :image => "gears", :value => num}
+    h = {:label => _("Kernel Drivers"), :image => "gears", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Kernel Driver')} installed on this VM"
+      h[:title] = n_("Show the Kernel Driver installed on this VM", "Show the Kernel Drivers installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'kernel_drivers', :id => @record)
     end
@@ -381,9 +396,10 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:filesystem_drivers)
     # TODO: Why is this image different than graphical?
-    h = {:label => "File System Drivers", :image => "gears", :value => num}
+    h = {:label => _("File System Drivers"), :image => "gears", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'File System Driver')} installed on this VM"
+      h[:title] = n_("Show the File System Driver installed on this VM",
+                     "Show the File System Drivers installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystem_drivers', :id => @record)
     end
@@ -392,9 +408,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_filesystems
     num = @record.number_of(:filesystems)
-    h = {:label => "Files", :image => "filesystems", :value => num}
+    h = {:label => _("Files"), :image => "filesystems", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'File')} installed on this VM"
+      h[:title] = n_("Show the File installed on this VM", "Show the Files installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystems', :id => @record)
     end
@@ -406,9 +422,9 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:registry_items)
     # TODO: Why is this label different from the link title text?
-    h = {:label => "Registry Entries", :image => "registry_item", :value => num}
+    h = {:label => _("Registry Entries"), :image => "registry_item", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Registry Item')} installed on this VM"
+      h[:title] = n_("Show the Registry Item installed on this VM", "Show the Registry Items installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'registry_items', :id => @record)
     end
@@ -417,9 +433,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_disks
     num = @record.hardware.nil? ? 0 : @record.hardware.number_of(:disks)
-    h = {:label => "Number of Disks", :image => "devices", :value => num}
+    h = {:label => _("Number of Disks"), :image => "devices", :value => num}
     if num > 0
-      h[:title] = "Show disks on this VM"
+      h[:title] = _("Show disks on this VM")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "disks")
     end
@@ -431,28 +447,28 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_thin_provisioned
-    {:label => "Thin Provisioning Used", :value => @record.thin_provisioned.to_s.capitalize}
+    {:label => _("Thin Provisioning Used"), :value => @record.thin_provisioned.to_s.capitalize}
   end
 
   def textual_allocated_disks
-    h = {:label => "Disks"}
+    h = {:label => _("Disks")}
     value = @record.allocated_disk_storage
-    h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
-    h[:value] = value.nil? ? "N/A" : number_to_human_size(value, :precision => 2)
+    h[:title] = value.nil? ? _("N/A") : "#{number_with_delimiter(value)} bytes"
+    h[:value] = value.nil? ? _("N/A") : number_to_human_size(value, :precision => 2)
     h
   end
 
   def textual_allocated_memory
-    h = {:label => "Memory"}
+    h = {:label => _("Memory")}
     value = @record.ram_size_in_bytes_by_state
-    h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
-    h[:value] = value.nil? ? "N/A" : number_to_human_size(value, :precision => 2)
+    h[:title] = value.nil? ? _("N/A") : "#{number_with_delimiter(value)} bytes"
+    h[:value] = value.nil? ? _("N/A") : number_to_human_size(value, :precision => 2)
     h
   end
 
   def textual_allocated_total
     h = textual_allocated_disks
-    h[:label] = "Total Allocation"
+    h[:label] = _("Total Allocation")
     h
   end
 
@@ -465,44 +481,46 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_usage_snapshots
-    h = {:label => "Snapshots"}
+    h = {:label => _("Snapshots")}
     value = @record.snapshot_storage
-    h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
-    h[:value] = value.nil? ? "N/A" : number_to_human_size(value, :precision => 2)
+    h[:title] = value.nil? ? _("N/A") : "#{number_with_delimiter(value)} bytes"
+    h[:value] = value.nil? ? _("N/A") : number_to_human_size(value, :precision => 2)
     h
   end
 
   def textual_usage_disk_storage
-    h = {:label => "Total Datastore Used Space"}
+    h = {:label => _("Total Datastore Used Space")}
     value = @record.used_disk_storage
-    h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
-    h[:value] = value.nil? ? "N/A" : number_to_human_size(value, :precision => 2)
+    h[:title] = value.nil? ? _("N/A") : "#{number_with_delimiter(value)} bytes"
+    h[:value] = value.nil? ? _("N/A") : number_to_human_size(value, :precision => 2)
     h
   end
 
   def textual_usage_overcommitted
-    h = {:label => "Unused/Overcommited Allocation"}
+    h = {:label => _("Unused/Overcommited Allocation")}
     value = @record.uncommitted_storage
-    h[:title] = value.nil? ? "N/A" : "#{number_with_delimiter(value)} bytes"
+    h[:title] = value.nil? ? _("N/A") : "#{number_with_delimiter(value)} bytes"
     h[:value] = if value.nil?
-                  "N/A"
+                  _("N/A")
                 else
                   v = number_to_human_size(value.abs, :precision => 2)
-                  v = "(#{v}) * Overallocated" if value < 0
+                  if value < 0
+                    v = _("(%{value}) * Overallocated") % {:value => v}
+                  end
                   v
                 end
     h
   end
 
   def textual_processes
-    h = {:label => "Running Processes", :image => "processes"}
+    h = {:label => _("Running Processes"), :image => "processes"}
     date = last_date(:processes)
     if date.nil?
-      h[:value] = "Not Available"
+      h[:value] = _("Not Available")
     else
       # TODO: Why does this date differ in style from the compliance one?
-      h[:value] = "From #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago"
-      h[:title] = "Show Running Processes on this VM"
+      h[:value] = _("From %{time} Ago") % {:time => time_ago_in_words(date.in_time_zone(Time.zone)).titleize}
+      h[:title] = _("Show Running Processes on this VM")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'processes', :id => @record)
     end
@@ -511,9 +529,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_event_logs
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
-    h = {:label => "Event Logs", :image => "event_logs", :value => (num == 0 ? "Not Available" : "Available")}
+    h = {:label => _("Event Logs"), :image => "event_logs", :value => (num == 0 ? _("Not Available") : _("Available"))}
     if num > 0
-      h[:title] = "Show Event Logs on this VM"
+      h[:title] = _("Show Event Logs on this VM")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'event_logs', :id => @record)
     end
@@ -525,7 +543,7 @@ module VmCloudHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_storage_system")
     h = {:label => label, :image => "ontap_storage_system", :value => num}
     if num > 0 && role_allows(:feature => "ontap_storage_system_show_list")
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_systems")
     end
@@ -537,7 +555,7 @@ module VmCloudHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_storage_volume")
     h = {:label => label, :image => "ontap_storage_volume", :value => num}
     if num > 0 && role_allows(:feature => "ontap_storage_volume_show_list")
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_volumes")
     end
@@ -549,7 +567,7 @@ module VmCloudHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_file_share")
     h = {:label => label, :image => "ontap_file_share", :value => num}
     if num > 0 && role_allows(:feature => "ontap_file_share_show_list")
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_file_shares")
     end
@@ -561,7 +579,7 @@ module VmCloudHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_logical_disk")
     h = {:label => label, :image => "ontap_logical_disk", :value => num}
     if num > 0 && role_allows(:feature => "ontap_logical_disk_show_list")
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_logical_disks")
     end
@@ -570,32 +588,32 @@ module VmCloudHelper::TextualSummary
 
   def textual_vmsafe_enable
     return nil if @record.vmsafe_enable
-    {:label => "Enable", :value => "false"}
+    {:label => _("Enable"), :value => "false"}
   end
 
   def textual_vmsafe_agent_address
     return nil unless @record.vmsafe_enable
-    {:label => "Agent Address", :value => @record.vmsafe_agent_address}
+    {:label => _("Agent Address"), :value => @record.vmsafe_agent_address}
   end
 
   def textual_vmsafe_agent_port
     return nil unless @record.vmsafe_enable
-    {:label => "Agent Port", :value => @record.vmsafe_agent_port}
+    {:label => _("Agent Port"), :value => @record.vmsafe_agent_port}
   end
 
   def textual_vmsafe_fail_open
     return nil unless @record.vmsafe_enable
-    {:label => "Fail Open", :value => @record.vmsafe_fail_open}
+    {:label => _("Fail Open"), :value => @record.vmsafe_fail_open}
   end
 
   def textual_vmsafe_immutable_vm
     return nil unless @record.vmsafe_enable
-    {:label => "Immutable VM", :value => @record.vmsafe_immutable_vm}
+    {:label => _("Immutable VM"), :value => @record.vmsafe_immutable_vm}
   end
 
   def textual_vmsafe_timeout
     return nil unless @record.vmsafe_enable
-    {:label => "Timeout (ms)", :value => @record.vmsafe_timeout_ms}
+    {:label => _("Timeout (ms)"), :value => @record.vmsafe_timeout_ms}
   end
 
   def textual_miq_custom_attributes
@@ -611,13 +629,13 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_compliance_history
-    h = {:label => "History"}
+    h = {:label => _("History")}
     if @record.number_of(:compliances) == 0
-      h[:value] = "Not Available"
+      h[:value] = _("Not Available")
     else
       h[:image] = "compliance"
-      h[:value] = "Available"
-      h[:title] = "Show Compliance History of this VM (Last 10 Checks)"
+      h[:value] = _("Available")
+      h[:title] = _("Show Compliance History of this VM (Last 10 Checks)")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
     end
@@ -627,53 +645,57 @@ module VmCloudHelper::TextualSummary
   def textual_power_state
     state = @record.current_state.downcase
     state = "unknown" if state.blank?
-    h = {:label => "Power State", :value => state}
+    h = {:label => _("Power State"), :value => state}
     h[:image] = "currentstate-#{@record.template? ? (@record.host ? "template" : "template-no-host") : state}"
     h
   end
 
   def textual_boot_time
     date = @record.boot_time
-    {:label => "Last Boot Time", :value => (date.nil? ? "N/A" : format_timezone(date))}
+    {:label => _("Last Boot Time"), :value => (date.nil? ? _("N/A") : format_timezone(date))}
   end
 
   def textual_state_changed_on
     date = @record.state_changed_on
-    {:label => "State Changed On", :value => (date.nil? ? "N/A" : format_timezone(date))}
+    {:label => _("State Changed On"), :value => (date.nil? ? _("N/A") : format_timezone(date))}
   end
 
   def textual_normal_operating_ranges_cpu
-    h = {:label => "CPU", :value => []}
-    [:high, "High", :avg, "Average", :low, "Low"].each_slice(2) do |key, label|
+    h = {:label => _("CPU"), :value => []}
+    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("cpu_usagemhz_rate_average_#{key}_over_time_period")
-      h[:value] << {:label => label, :value => (value.nil? ? "Not Available" : mhz_to_human_size(value))}
+      h[:value] << {:label => label, :value => (value.nil? ? _("Not Available") : mhz_to_human_size(value))}
     end
     h
   end
 
   def textual_normal_operating_ranges_cpu_usage
-    h = {:label => "CPU Usage", :value => []}
-    [:high, "High", :avg, "Average", :low, "Low"].each_slice(2) do |key, label|
+    h = {:label => _("CPU Usage"), :value => []}
+    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("max_cpu_usage_rate_average_#{key}_over_time_period")
-      h[:value] << {:label => label, :value => (value.nil? ? "Not Available" : number_to_percentage(value, :precision => 2))}
+      h[:value] << {:label => label,
+                    :value => (value.nil? ? _("Not Available") : number_to_percentage(value, :precision => 2))}
     end
     h
   end
 
   def textual_normal_operating_ranges_memory
-    h = {:label => "Memory", :value => []}
-    [:high, "High", :avg, "Average", :low, "Low"].each_slice(2) do |key, label|
+    h = {:label => _("Memory"), :value => []}
+    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("derived_memory_used_#{key}_over_time_period")
-      h[:value] << {:label => label, :value => (value.nil? ? "Not Available" : number_to_human_size(value.megabytes, :precision => 2))}
+      h[:value] << {:label => label,
+                    :value => (value.nil? ? _("Not Available") : number_to_human_size(value.megabytes,
+                                                                                      :precision => 2))}
     end
     h
   end
 
   def textual_normal_operating_ranges_memory_usage
-    h = {:label => "Memory Usage", :value => []}
-    [:high, "High", :avg, "Average", :low, "Low"].each_slice(2) do |key, label|
+    h = {:label => _("Memory Usage"), :value => []}
+    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("max_mem_usage_absolute_average_#{key}_over_time_period")
-      h[:value] << {:label => label, :value => (value.nil? ? "Not Available" : number_to_percentage(value, :precision => 2))}
+      h[:value] << {:label => label,
+                    :value => (value.nil? ? _("Not Available") : number_to_percentage(value, :precision => 2))}
     end
     h
   end
