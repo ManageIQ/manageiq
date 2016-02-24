@@ -11,7 +11,7 @@ describe MiqPglogical do
     # make sure the config is seeded
     MiqServer.config_updated
     pglogical.enable
-    subject.create_local_node
+    subject.create_node
     subject.create_replication_set
   end
 

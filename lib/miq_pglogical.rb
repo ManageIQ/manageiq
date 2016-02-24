@@ -27,8 +27,8 @@ class MiqPglogical
     pglogical.installed? && pglogical.enabled? && pglogical.replication_sets.include?(REPLICATION_SET_NAME)
   end
 
-  # Creates a pglogical node on the local server using the rails connection info
-  def create_local_node
+  # Creates a pglogical node using the rails connection
+  def create_node
     pglogical.node_create(connection_node_name, connection_dsn)
   end
 
