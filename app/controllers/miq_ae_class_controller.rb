@@ -1637,14 +1637,11 @@ class MiqAeClassController < ApplicationController
   private
 
   def features
-    [{:role     => "miq_ae_class_explorer",
-      :role_any => true,
-      :name     => :ae,
-      :accord_name => "datastores",
-      :title    => N_("Datastore")},
-    ].map do |hsh|
-      ApplicationController::Feature.new_with_hash(hsh)
-    end
+    [ApplicationController::Feature.new_with_hash(:role        => "miq_ae_class_explorer",
+                                                  :role_any    => true,
+                                                  :name        => :ae,
+                                                  :accord_name => "datastores",
+                                                  :title       => N_("Datastore"))]
   end
 
   def initial_setup_for_instances_form_vars(ae_inst_id)
