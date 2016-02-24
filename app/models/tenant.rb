@@ -300,6 +300,7 @@ class Tenant < ApplicationRecord
   end
 
   def create_tenant_group
+    reload # https://github.com/rails/rails/issues/23844
     update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
     self
   end
