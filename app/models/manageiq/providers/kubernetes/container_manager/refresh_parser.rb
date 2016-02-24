@@ -316,7 +316,7 @@ module ManageIQ::Providers::Kubernetes
       new_result.merge!(parse_volume_source(persistent_volume.spec))
       new_result.merge!(
         :type           => 'PersistentVolume',
-        :parent_type    => 'ManageIQ::Providers::Kubernetes::ContainerManager',
+        :parent_type    => 'ManageIQ::Providers::ContainerManager',
         :capacity       => persistent_volume.spec.capacity.to_h.map { |k, v| "#{k}=#{v}" }.join(','),
         :access_modes   => persistent_volume.spec.accessModes.join(','),
         :reclaim_policy => persistent_volume.spec.persistentVolumeReclaimPolicy,
