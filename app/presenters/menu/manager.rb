@@ -6,7 +6,7 @@ module Menu
       extend Forwardable
 
       delegate [:menu, :tab_features_by_id, :tab_features_by_name, :tab_name,
-                :each_feature_title_with_subitems, :item_in_section?, :item, 
+                :each_feature_title_with_subitems, :item_in_section?, :item,
                 :section, :section_id_string_to_symbol] => :instance
     end
 

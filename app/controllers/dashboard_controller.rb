@@ -99,7 +99,7 @@ class DashboardController < ApplicationController
           end
         end
       end
-    when :clo, :inf, :cnt, :svc
+    when :clo, :inf, :cnt, :svc, :mdl
       tab_features.detect do |f|
         if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
           redirect_to :controller => EXPLORER_FEATURE_LINKS[f], :action => "explorer"
