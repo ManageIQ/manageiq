@@ -37,7 +37,7 @@ module CloudVolumeHelper::TextualSummary
     h = {
       :label => label,
       :image => "availability_zone",
-      :value => (availability_zone.nil? ? "None" : availability_zone.name)
+      :value => (availability_zone.nil? ? _("None") : availability_zone.name)
     }
     if availability_zone && role_allows(:feature => "availability_zone_show")
       h[:title] = _("Show this Volume's %{parent}") % {:parent => label}
@@ -64,7 +64,7 @@ module CloudVolumeHelper::TextualSummary
   def textual_cloud_tenant
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenants")
-    h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? "None" : cloud_tenant.name)}
+    h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
     if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
       h[:title] = _("Show this Volume's %{parent}") % {:parent => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)

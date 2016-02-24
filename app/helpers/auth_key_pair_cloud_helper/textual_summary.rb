@@ -36,7 +36,7 @@ module AuthKeyPairCloudHelper::TextualSummary
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end

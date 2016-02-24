@@ -34,82 +34,88 @@ module OpsHelper::TextualSummary
   #
 
   def textual_vmdb_connection_name
-    {:label => "Name", :value => @record.name}
+    {:label => _("Name"), :value => @record.name}
   end
 
   def textual_vmdb_connection_ipaddress
-    {:label => "IP Address", :value => @record.ipaddress}
+    {:label => _("IP Address"), :value => @record.ipaddress}
   end
 
   def textual_vmdb_connection_vendor
-    {:label => "Vendor", :value => @record.vendor}
+    {:label => _("Vendor"), :value => @record.vendor}
   end
 
   def textual_vmdb_connection_version
-    {:label => "Version", :value => @record.version}
+    {:label => _("Version"), :value => @record.version}
   end
 
   def textual_vmdb_connection_data_directory
-    {:label => "Data Directory", :value => @record.data_directory}
+    {:label => _("Data Directory"), :value => @record.data_directory}
   end
 
   def textual_vmdb_connection_data_disk
-    {:label => "Data Disk", :value => @record.data_disk}
+    {:label => _("Data Disk"), :value => @record.data_disk}
   end
 
   def textual_vmdb_connection_last_start_time
-    {:label => "Last Start Time", :value => format_timezone(@record.last_start_time)}
+    {:label => _("Last Start Time"), :value => format_timezone(@record.last_start_time)}
   end
 
   def textual_vmdb_connection_timestamp
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Last Collection", :value => metrics && format_timezone(metrics.timestamp)}
+    {:label => _("Last Collection"), :value => metrics && format_timezone(metrics.timestamp)}
   end
 
   def textual_vmdb_connection_total_space
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Total Space on Volume", :value => metrics && number_to_human_size(metrics.disk_total_bytes)}
+    {:label => _("Total Space on Volume"), :value => metrics && number_to_human_size(metrics.disk_total_bytes)}
   end
 
   def textual_vmdb_connection_free_space
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Free Space on Volume", :value => metrics && number_to_human_size(metrics.disk_free_bytes)}
+    {:label => _("Free Space on Volume"), :value => metrics && number_to_human_size(metrics.disk_free_bytes)}
   end
 
   def textual_vmdb_connection_used_space
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Used Space on Volume", :value => metrics && number_to_human_size(metrics.disk_used_bytes)}
+    {:label => _("Used Space on Volume"), :value => metrics && number_to_human_size(metrics.disk_used_bytes)}
   end
 
   def textual_vmdb_connection_total_index_nodes
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Total Index Nodes", :value => metrics && number_with_delimiter(metrics.disk_total_inodes)}
+    {:label => _("Total Index Nodes"), :value => metrics && number_with_delimiter(metrics.disk_total_inodes)}
   end
 
   def textual_vmdb_connection_used_index_nodes
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Used Index Nodes", :value => metrics && number_with_delimiter(metrics.disk_used_inodes)}
+    {:label => _("Used Index Nodes"), :value => metrics && number_with_delimiter(metrics.disk_used_inodes)}
   end
 
   def textual_vmdb_connection_free_index_nodes
     metrics = VmdbDatabase.my_database.latest_hourly_metric
-    {:label => "Free Index Nodes", :value => metrics && number_with_delimiter(metrics.disk_free_inodes)}
+    {:label => _("Free Index Nodes"), :value => metrics && number_with_delimiter(metrics.disk_free_inodes)}
   end
 
   def textual_vmdb_tables_most_rows
-    h = {:label => "Tables with the Most Rows", :headers => ["Name", "Rows"], :col_order => ["name", "value"]}
+    h = {:label     => _("Tables with the Most Rows"),
+         :headers   => [_("Name"), _("Rows")],
+         :col_order => %w(name value)}
     h[:value] = vmdb_table_top_rows(:rows, TOP_TABLES_BY_ROWS_COUNT)
     h
   end
 
   def textual_vmdb_tables_largest_size
-    h = {:label => "Largest Tables", :headers => ["Name", "Size"], :col_order => ["name", "value"]}
+    h = {:label     => _("Largest Tables"),
+         :headers   => [_("Name"), _("Size")],
+         :col_order => %w(name value)}
     h[:value] = vmdb_table_top_rows(:size, TOP_TABLES_BY_SIZE_COUNT)
     h
   end
 
   def textual_vmdb_tables_most_wasted_space
-    h = {:label => "Tables with Most Wasted Space", :headers => ["Name", "Wasted"], :col_order => ["name", "value"]}
+    h = {:label     => _("Tables with Most Wasted Space"),
+         :headers   => [_("Name"), _("Wasted")],
+         :col_order => %w(name value)}
     h[:value] = vmdb_table_top_rows(:wasted_bytes, TOP_TABLES_BY_WASTED_SPACE_COUNT)
     h
   end
@@ -129,7 +135,9 @@ module OpsHelper::TextualSummary
   end
 
   def textual_tenant_quota_allocations
-    h = {:label => "Tenant Quota", :headers => ["Name", "Total Quota", "In Use", "Allocated", "Available"], :col_order => ["name", "total", "in_use", "allocated", "available"]}
+    h = {:label     => _("Tenant Quota"),
+         :headers   => [_("Name"), _("Total Quota"), _("In Use"), _("Allocated"), _("Available")],
+         :col_order => %w(name total in_use allocated available)}
     h[:value] = get_tenant_quota_allocations
     h
   end

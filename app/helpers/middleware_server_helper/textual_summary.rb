@@ -29,7 +29,7 @@ module MiddlewareServerHelper::TextualSummary
   end
 
   def textual_bind_addr
-    {:label => 'Bind Address',
+    {:label => _('Bind Address'),
      :value => @record.properties['Bound Address']}
   end
 

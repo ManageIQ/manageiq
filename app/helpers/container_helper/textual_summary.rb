@@ -27,31 +27,31 @@ module ContainerHelper::TextualSummary
   end
 
   def textual_reason
-    {:label => "Reason", :value => @record.reason} if @record.reason
+    {:label => _("Reason"), :value => @record.reason} if @record.reason
   end
 
   def textual_started_at
-    {:label => "Started At", :value => @record.started_at} if @record.started_at
+    {:label => _("Started At"), :value => @record.started_at} if @record.started_at
   end
 
   def textual_finished_at
-    {:label => "Finished At", :value => @record.finished_at} if @record.finished_at
+    {:label => _("Finished At"), :value => @record.finished_at} if @record.finished_at
   end
 
   def textual_exit_code
-    {:label => "Exit Code", :value => @record.exit_code} if @record.exit_code
+    {:label => _("Exit Code"), :value => @record.exit_code} if @record.exit_code
   end
 
   def textual_signal
-    {:label => "Signal", :value => @record.signal} if @record.signal
+    {:label => _("Signal"), :value => @record.signal} if @record.signal
   end
 
   def textual_message
-    {:label => "Message", :value => @record.message} if @record.message
+    {:label => _("Message"), :value => @record.message} if @record.message
   end
 
   def textual_last_state
-    {:label => "Last State", :value => @record.last_state}
+    {:label => _("Last State"), :value => @record.last_state}
   end
 
   def textual_restart_count
@@ -59,51 +59,60 @@ module ContainerHelper::TextualSummary
   end
 
   def textual_backing_ref
-    {:label => "Backing Ref (Container ID)", :value => @record.backing_ref}
+    {:label => _("Backing Ref (Container ID)"), :value => @record.backing_ref}
   end
 
   def textual_command
-    {:label => "Command", :value => @record.container_definition.command} if @record.container_definition.command
+    {:label => _("Command"), :value => @record.container_definition.command} if @record.container_definition.command
   end
 
   def textual_capabilities_add
-    {:label => "Add Capabilities", :value => @record.container_definition.capabilities_add} unless @record.container_definition.capabilities_add.empty?
+    unless @record.container_definition.capabilities_add.empty?
+      {:label => _("Add Capabilities"),
+       :value => @record.container_definition.capabilities_add}
+    end
   end
 
   def textual_capabilities_drop
-    {:label => "Drop Capabilities", :value => @record.container_definition.capabilities_drop} unless @record.container_definition.capabilities_drop.empty?
+    unless @record.container_definition.capabilities_drop.empty?
+      {:label => _("Drop Capabilities"),
+       :value => @record.container_definition.capabilities_drop}
+    end
   end
 
   def textual_privileged
-    {:label => "Privileged", :value => @record.container_definition.privileged} unless @record.container_definition.privileged.nil?
+    {:label => _("Privileged"),
+     :value => @record.container_definition.privileged} unless @record.container_definition.privileged.nil?
   end
 
   def textual_run_as_user
-    {:label => "Run As User", :value => @record.container_definition.run_as_user} if @record.container_definition.run_as_user
+    {:label => _("Run As User"),
+     :value => @record.container_definition.run_as_user} if @record.container_definition.run_as_user
   end
 
   def textual_se_linux_user
     se_linux_user = @record.security_context.try(:se_linux_user)
-    {:label => "SELinux User", :value => se_linux_user} if se_linux_user
+    {:label => _("SELinux User"), :value => se_linux_user} if se_linux_user
   end
 
   def textual_se_linux_role
     se_linux_role = @record.security_context.try(:se_linux_role)
-    {:label => "SELinux Role", :value => se_linux_role} if se_linux_role
+    {:label => _("SELinux Role"), :value => se_linux_role} if se_linux_role
   end
 
   def textual_se_linux_type
     se_linux_type = @record.security_context.try(:se_linux_type)
-    {:label => "SELinux Type", :value => se_linux_type} if se_linux_type
+    {:label => _("SELinux Type"), :value => se_linux_type} if se_linux_type
   end
 
   def textual_se_linux_level
     se_linux_level = @record.security_context.try(:se_linux_level)
-    {:label => "SELinux Level", :value => se_linux_level} if se_linux_level
+    {:label => _("SELinux Level"), :value => se_linux_level} if se_linux_level
   end
 
   def textual_run_as_non_root
-    {:label => "Run As Non Root", :value => @record.container_definition.run_as_non_root} unless @record.container_definition.run_as_non_root.nil?
+    {:label => _("Run As Non Root"),
+     :value => @record.container_definition.run_as_non_root} unless @record.container_definition.run_as_non_root.nil?
   end
 
   def textual_group_env

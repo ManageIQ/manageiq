@@ -33,35 +33,42 @@ module StorageHelper::TextualSummary
   #
 
   def textual_store_type
-    {:label => "#{ui_lookup(:table => "storages")} Type", :value => @record.store_type}
+    {:label => _("%{storage} Type") % {:storage => ui_lookup(:table => "storages")}, :value => @record.store_type}
   end
 
   def textual_free_space
     return nil if @record["free_space"].nil? && @record["total_space"].nil?
     return nil if @record["free_space"].nil?
-    {:label => "Free Space", :value => "#{number_to_human_size(@record["free_space"], :precision => 2)} (#{@record.free_space_percent_of_total}%)"}
+    {:label => _("Free Space"),
+     :value => "#{number_to_human_size(@record["free_space"], :precision => 2)} (#{@record.free_space_percent_of_total}%)"}
   end
 
   def textual_used_space
     return nil if @record["free_space"].nil? && @record["total_space"].nil?
-    {:label => "Used Space", :value => "#{number_to_human_size(@record.used_space, :precision => 2)} (#{@record.used_space_percent_of_total}%)"}
+    {:label => _("Used Space"),
+     :value => "#{number_to_human_size(@record.used_space, :precision => 2)} (#{@record.used_space_percent_of_total}%)"}
   end
 
   def textual_total_space
     return nil if @record["free_space"].nil? && @record["total_space"].nil?
     return nil if @record["total_space"].nil?
-    {:label => "Total Space", :value => "#{number_to_human_size(@record["total_space"], :precision => 2)} (100%)"}
+    {:label => _("Total Space"), :value => "#{number_to_human_size(@record["total_space"], :precision => 2)} (100%)"}
   end
 
   def textual_uncommitted_space
     return nil if @record["total_space"].nil?
-    space = @record["uncommitted"].blank? || @record["uncommitted"] == "" ? "None" : number_to_human_size(@record["uncommitted"], :precision => 2)
-    {:label => "Uncommitted Space", :value => space}
+    space = if @record["uncommitted"].blank? || @record["uncommitted"] == ""
+              _("None")
+            else
+              number_to_human_size(@record["uncommitted"], :precision => 2)
+            end
+    {:label => _("Uncommitted Space"), :value => space}
   end
 
   def textual_used_uncommitted_space
     return nil if @record["total_space"].nil?
-    {:label => "Used + Uncommitted Space", :value => "#{number_to_human_size(@record.v_total_provisioned, :precision => 2)} (#{@record.v_provisioned_percent_of_total}%)"}
+    {:label => _("Used + Uncommitted Space"),
+     :value => "#{number_to_human_size(@record.v_total_provisioned, :precision => 2)} (#{@record.v_provisioned_percent_of_total}%)"}
   end
 
   def textual_hosts
@@ -70,43 +77,43 @@ module StorageHelper::TextualSummary
     h     = {:label => label, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
 
   def textual_managed_vms
-    label = "Managed VMs"
+    label = _("Managed VMs")
     num   = @record.number_of(:all_vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'all_vms')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
 
   def textual_managed_miq_templates
-    label = "Managed #{ui_lookup(:tables => "miq_template")}"
+    label = _("Managed %{tables}") % {:tables => ui_lookup(:tables => "miq_template")}
     num   = @record.number_of(:all_miq_templates)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'all_miq_templates')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
 
   def textual_registered_vms
-    {:label => "Managed/Registered VMs", :image => "vm", :value => @record.total_managed_registered_vms}
+    {:label => _("Managed/Registered VMs"), :image => "vm", :value => @record.total_managed_registered_vms}
   end
 
   def textual_unregistered_vms
-    {:label => "Managed/Unregistered VMs", :image => "vm", :value => @record.total_managed_unregistered_vms}
+    {:label => _("Managed/Unregistered VMs"), :image => "vm", :value => @record.total_managed_unregistered_vms}
   end
 
   def textual_unmanaged_vms
-    {:label => "Unmanaged VMs", :image => "vm", :value => @record.total_unmanaged_vms}
+    {:label => _("Unmanaged VMs"), :image => "vm", :value => @record.total_unmanaged_vms}
   end
 
   def textual_storage_systems
@@ -114,7 +121,7 @@ module StorageHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_storage_system")
     h     = {:label => label, :image => "ontap_storage_system", :value => num}
     if num > 0 && role_allows(:feature => "ontap_storage_system_show_list")
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_systems")
     end
     h
@@ -125,7 +132,7 @@ module StorageHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_storage_volume")
     h     = {:label => label, :image => "ontap_storage_volume", :value => num}
     if num > 0 && role_allows(:feature => "ontap_storage_volume_show_list")
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_volumes")
     end
     h
@@ -134,9 +141,9 @@ module StorageHelper::TextualSummary
   def textual_logical_disk
     ld = @record.logical_disk
     label = ui_lookup(:table => "ontap_logical_disk")
-    h = {:label => label, :image => "ontap_logical_disk", :value => (ld.blank? ? "None" : ld.evm_display_name)}
+    h = {:label => label, :image => "ontap_logical_disk", :value => (ld.blank? ? _("None") : ld.evm_display_name)}
     if !ld.blank? && role_allows(:feature => "ontap_logical_disk_show")
-      h[:title] = "Show this Datastore's #{label}"
+      h[:title] = _("Show this Datastore's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_logical_disk', :action => 'show', :id => ld)
     end
     h
@@ -145,85 +152,103 @@ module StorageHelper::TextualSummary
   def textual_file_share
     fs = @record.file_share
     label = ui_lookup(:table => "ontap_file_share")
-    h = {:label => label, :image => "ontap_file_share", :value => (fs.blank? ? "None" : fs.evm_display_name)}
+    h = {:label => label, :image => "ontap_file_share", :value => (fs.blank? ? _("None") : fs.evm_display_name)}
     if !fs.blank? && role_allows(:feature => "ontap_file_share_show")
-      h[:title] = "Show this Datastore's #{label}"
+      h[:title] = _("Show this Datastore's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_file_share', :action => 'show', :id => fs)
     end
     h
   end
 
   def textual_files
-    label = "All Files"
+    label = _("All Files")
     num   = @record.number_of(:files)
     h     = {:label => label, :image => "storage_files", :value => num}
     if num > 0
-      h[:title] = "Show all files installed on this #{ui_lookup(:table => "storages")}"
+      h[:title] = _("Show all files installed on this %{table}") % {:table => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'files', :id => @record)
     end
     h
   end
 
   def textual_disk_files
-    label = "VM Provisioned Disk Files"
+    label = _("VM Provisioned Disk Files")
     num   = @record.number_of(:disk_files)
     value = num == 0 ? 0 :
-                    "#{number_to_human_size(@record.v_total_disk_size, :precision => 2)} (#{@record.v_disk_percent_of_used}% of Used Space, #{pluralize(@record.number_of(:disk_files), 'files')})"
+                     _("%{number} (%{percentage}% of Used Space, ${files})") %
+                     {:number    => number_to_human_size(@record.v_total_disk_size, :precision => 2),
+                      :percetage => @record.v_disk_percent_of_used,
+                      :files     => pluralize(@record.number_of(:disk_files), 'files')}
+
     h     = {:label => label, :image => "storage_disk_files", :value => value}
     if num > 0
-      h[:title] = "Show VM Provisioned Disk Files installed on this #{ui_lookup(:table => "storages")}"
+      h[:title] = _("Show VM Provisioned Disk Files installed on this %{table}") %
+                  {:table => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'disk_files', :id => @record)
     end
     h
   end
 
   def textual_snapshot_files
-    label = "VM Snapshot Files"
+    label = _("VM Snapshot Files")
     num   = @record.number_of(:snapshot_files)
     value = num == 0 ? 0 :
-                    "#{number_to_human_size(@record.v_total_snapshot_size, :precision => 2)} (#{@record.v_snapshot_percent_of_used}% of Used Space, #{pluralize(@record.number_of(:snapshot_files), 'files')})"
+                    _("%{number} (#{percentage}% of Used Space, %{files})") %
+                    {:number     => number_to_human_size(@record.v_total_snapshot_size, :precision => 2),
+                     :percentage => @record.v_snapshot_percent_of_used,
+                     :files      => pluralize(@record.number_of(:snapshot_files), 'files')}
     h     = {:label => label, :image => "storage_snapshot_files", :value => value}
     if num > 0
-      h[:title] = "Show VM Snapshot Files installed on this #{ui_lookup(:table => "storages")}"
+      h[:title] = _("Show VM Snapshot Files installed on this %{storage}") %
+                  {:storage => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'snapshot_files', :id => @record)
     end
     h
   end
 
   def textual_vm_ram_files
-    label = "VM Memory Files"
+    label = _("VM Memory Files")
     num   = @record.number_of(:vm_ram_files)
     value = num == 0 ? 0 :
-                    "#{number_to_human_size(@record.v_total_memory_size, :precision => 2)} (#{@record.v_memory_percent_of_used}% of Used Space, #{pluralize(@record.number_of(:vm_ram_files), 'files')})"
+                    _("%{number} (%{percentage}% of Used Space, %{files})") %
+                    {:number     => number_to_human_size(@record.v_total_memory_size, :precision => 2),
+                     :percentage => @record.v_memory_percent_of_used,
+                     :files      => pluralize(@record.number_of(:vm_ram_files), 'files')}
     h     = {:label => label, :image => "storage_memory_files", :value => value}
     if num > 0
-      h[:title] = "Show VM Memory Files installed on this #{ui_lookup(:table => "storages")}"
+      h[:title] = _("Show VM Memory Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'vm_ram_files', :id => @record)
     end
     h
   end
 
   def textual_vm_misc_files
-    label = "Other VM Files"
+    label = _("Other VM Files")
     num   = @record.number_of(:vm_misc_files)
     value = num == 0 ? 0 :
-                    "#{number_to_human_size(@record.v_total_vm_misc_size, :precision => 2)} (#{@record.v_vm_misc_percent_of_used}% of Used Space, #{pluralize(@record.number_of(:vm_misc_files), 'files')})"
+                    _("%{number} (%{percentage}% of Used Space, %{files})") %
+                    {:number     => number_to_human_size(@record.v_total_vm_misc_size, :precision => 2),
+                     :percentage => @record.v_vm_misc_percent_of_used,
+                     :files      => pluralize(@record.number_of(:vm_misc_files), 'files')}
     h     = {:label => label, :image => "storage_other_vm_files", :value => value}
     if num > 0
-      h[:title] = "Show Other VM Files installed on this #{ui_lookup(:table => "storages")}"
+      h[:title] = _("Show Other VM Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'vm_misc_files', :id => @record)
     end
     h
   end
 
   def textual_debris_files
-    label = "Non-VM Files"
+    label = _("Non-VM Files")
     num   = @record.number_of(:debris_files)
     value = num == 0 ? 0 :
-                    "#{number_to_human_size(@record.v_total_debris_size, :precision => 2)} (#{@record.v_debris_percent_of_used}% of Used Space, #{pluralize(@record.number_of(:debris_files), 'files')})"
+                    _("%{number} (%{percentage}% of Used Space, %{files})") %
+                    {:number     => number_to_human_size(@record.v_total_debris_size, :precision => 2),
+                     :percentage => @record.v_debris_percent_of_used,
+                     :files      => pluralize(@record.number_of(:debris_files), 'files')}
     h     = {:label => label, :image => "storage_non_vm_files", :value => value}
     if num > 0
-      h[:title] = "Show Non-VM Files installed on this #{ui_lookup(:table => "storages")}"
+      h[:title] = _("Show Non-VM Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'debris_files', :id => @record)
     end
     h
