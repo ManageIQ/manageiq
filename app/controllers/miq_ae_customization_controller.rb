@@ -138,11 +138,7 @@ class MiqAeCustomizationController < ApplicationController
     @explorer = true
     build_resolve_screen
 
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     @collapse_c_cell = true if (x_active_tree == :old_dialogs_tree &&
         x_node == "root") || x_active_tree == :ab_tree

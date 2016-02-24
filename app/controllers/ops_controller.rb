@@ -114,12 +114,7 @@ class OpsController < ApplicationController
     @timeline = @timeline_filter = true # Load timeline JS modules
     return unless load_edit(params[:edit_key], "explorer") if params[:edit_key]
     @breadcrumbs = []
-
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     @sb[:rails_log] = $rails_log.filename.to_s.include?("production.log") ? "Production" : "Development"
 

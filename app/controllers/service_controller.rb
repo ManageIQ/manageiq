@@ -81,11 +81,7 @@ class ServiceController < ApplicationController
       self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
 
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -193,13 +189,10 @@ class ServiceController < ApplicationController
   private
 
   def features
-    [{:role     => "service",
-      :role_any => true,
-      :name     => :svcs,
-      :title    => N_("Services")},
-    ].map do |hsh|
-      ApplicationController::Feature.new_with_hash(hsh)
-    end
+    [ApplicationController::Feature.new_with_hash(:role     => "service",
+                                                  :role_any => true,
+                                                  :name     => :svcs,
+                                                  :title    => N_("Services"))]
   end
 
   def service_set_record_vars(svc)

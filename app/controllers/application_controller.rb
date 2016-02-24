@@ -2663,4 +2663,12 @@ class ApplicationController < ActionController::Base
     end
     get_node_info(x_node)
   end
+
+  def build_accordions_and_trees
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
+  end
 end

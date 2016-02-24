@@ -46,12 +46,7 @@ class ChargebackController < ApplicationController
   def explorer
     @breadcrumbs = []
     @explorer    = true
-
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     @sb[:open_tree_nodes] ||= []
 

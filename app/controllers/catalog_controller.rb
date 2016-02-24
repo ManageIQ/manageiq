@@ -205,11 +205,7 @@ class CatalogController < ApplicationController
       return
     end
 
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     if params[:id]  # If a tree node id came in, show in one of the trees
       @nodetype, id = params[:id].split("_").last.split("-")
