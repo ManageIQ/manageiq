@@ -436,7 +436,7 @@ module Rbac
     # => list if ids - :class is required for this format.
     # => list of objects
     # results are returned in the same format as the targets. for empty targets, the default result format is a list of ids.
-    targets           = options.delete(:targets) || []
+    targets           = options.delete(:targets)
 
     # Support for using named_scopes in search. Supports scopes with or without args:
     # Example without args: :named_scope => :in_my_region
@@ -461,9 +461,9 @@ module Rbac
     ids_clause             = nil
     target_ids             = nil
 
-    unless targets.empty?
+    unless targets.nil? || targets.empty?
       if targets.first.kind_of?(Numeric)
-        target_ids       = targets
+        target_ids = targets
       else
         target_ids       = targets.collect(&:id)
         klass            = targets.first.class.base_class unless klass.respond_to?(:find)
@@ -489,6 +489,9 @@ module Rbac
 
     if klass.respond_to?(:find)
       targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user || miq_group)
+    elsif targets.nil? # tmp
+      targets = []
+      total_count = auth_count = 0
     else
       total_count = targets.length
       auth_count  = targets.length
