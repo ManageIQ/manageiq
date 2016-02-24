@@ -375,7 +375,8 @@ module ManageIQ::Providers::Kubernetes
     def parse_range_items(limit_range)
       new_result_h = create_limits_matrix
 
-      limit_range.spec.limits.each do |item|
+      limits = limit_range.try(:spec).try(:limits) || []
+      limits.each do |item|
         item[:max].to_h.each do |resource_name, limit|
           new_result_h[item[:type].to_sym][resource_name.to_sym][:max] = limit
         end
