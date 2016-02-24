@@ -4,7 +4,7 @@ SecureHeaders::Configuration.default do |config|
   config.x_content_type_options = "nosniff"
   config.x_xss_protection = "1; mode=block"
   config.csp = {
-    :enforce     => true,
+    :report_only => false,
     :default_src => ["'self'"],
     :frame_src   => ["'self'"],
     :connect_src => ["'self'"],

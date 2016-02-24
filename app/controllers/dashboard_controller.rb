@@ -11,10 +11,9 @@ class DashboardController < ApplicationController
     redirect_to :action => 'show'
   end
 
-  skip_before_action :set_csp_header, :only => :iframe # FIXME: only frame-src
-  skip_before_action :set_x_frame_options_header, :only => :iframe
-
   def iframe
+    override_content_security_policy_directives(:frame_src => ['*'])
+    override_x_frame_options('')
     @layout = nil
     if params[:id].present?
       item = Menu::Manager.item(params[:id])

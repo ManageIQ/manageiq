@@ -9,8 +9,6 @@ class VmInfraController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  skip_before_action :set_csp_header, :only => :launch_html5_console
-
   def self.table_name
     @table_name ||= "vm_infra"
   end
