@@ -118,6 +118,17 @@ class EmsFolder < ApplicationRecord
     remove_all_children(:of_type => 'Vm')
   end
 
+  def storages
+    children(:of_type => 'Storage').sort_by { |c| c.name.downcase }
+  end
+
+  alias add_storage set_child
+  alias remove_storage remove_child
+
+  def remove_all_storages
+    remove_all_children(:of_type => 'Storage')
+  end
+
   # Parent relationship methods
   def parent_datacenter
     detect_ancestor(:of_type => "EmsFolder", &:is_datacenter)

@@ -60,6 +60,15 @@ module EmsRefresh::LinkInventory
        proc { |vs| folder.add_vm(instances_with_ids(VmOrTemplate, vs)) }]                      # Bulk connect proc
     end
 
+    # Do the Folders to Storages relationships
+    update_relats(:folders_to_storages, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
+      break if folder.nil?
+      [do_disconnect ? proc { |s| folder.remove_storage(instance_with_id(Storage, s)) } : nil, # Disconnect proc
+       proc { |s| folder.add_storage(instance_with_id(Storage, s)) },                          # Connect proc
+       proc { |ss| folder.add_storage(instances_with_ids(Storage, ss)) }]                      # Bulk connect proc
+    end
+
     # Do the Clusters to ResourcePools relationships
     update_relats(:clusters_to_resource_pools, prev_relats, new_relats) do |c|
       cluster = instance_with_id(EmsCluster, c)

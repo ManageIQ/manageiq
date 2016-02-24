@@ -178,6 +178,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :name        => "TestDatastoreCluster",
       :type        => "StorageCluster",
     )
+
+    @child_storage = Storage.find_by_ems_ref("datastore-12281")
+    expect(@storage_cluster.children).to include(@child_storage)
   end
 
   def assert_specific_host
