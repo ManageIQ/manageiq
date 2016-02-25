@@ -4,7 +4,7 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 # VMDB specific gems
 #
 
-gem "rails",                           "5.0.0.beta2"
+gem "rails",                           "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "master"
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",      "~>0.1.2", :require => false
