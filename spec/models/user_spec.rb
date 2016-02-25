@@ -25,7 +25,6 @@ describe User do
         :email      => "admin@email.com",
         :password   => "smartvm",
         :settings   => {"Setting1"  => 1, "Setting2"  => 2, "Setting3"  => 3},
-        :filters    => {"Filter1"   => 1, "Filter2"   => 2, "Filter3"   => 3},
         :miq_groups => [@miq_group],
         :first_name => "Bob",
         :last_name  => "Smith"
@@ -259,11 +258,6 @@ describe User do
         expect(@user.current_group).to eq(@group3)
       end
 
-      it "sets filters" do
-        expect(@user.filters).to eq(@group3.filters)
-        expect(@user.filters).to eq(@filter1)
-      end
-
       it "when including current group" do
         @user.miq_groups = [@group1, @group2, @group3]
         expect(@user.valid?).to be_truthy
@@ -290,11 +284,6 @@ describe User do
 
       it "sets current_group" do
         expect(@user.current_group).to eq(@group1)
-      end
-
-      it "sets filters" do
-        expect(@user.filters).to eq(@group1.filters)
-        expect(@user.filters).to eq(@filter1)
       end
 
       it "when belongs to miq_groups" do
