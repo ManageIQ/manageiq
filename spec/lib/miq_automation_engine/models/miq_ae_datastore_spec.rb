@@ -98,7 +98,7 @@ describe MiqAeDatastore do
     fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
     import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
     expect { MiqAeDatastore.upload(fd, "dummy.zip") }
-      .to raise_error(/end of central directory signature not found/)
+      .to raise_error(/has zero size. Did you mean to pass the create flag?/)
     expect(File.exist?(import_file)).to be_falsey
   end
 
