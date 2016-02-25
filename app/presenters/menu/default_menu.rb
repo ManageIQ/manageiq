@@ -16,6 +16,7 @@ module Menu
         Menu::Section.new(:svc, N_("Services"), 'fa fa-plus fa-2x', [
           #Menu::Item.new('services',       N_('My Services'), 'service',             {:feature => 'service', :any => true},             '/service/explorer'),
           Menu::Section.new(:svc, N_("Services submenu"), '', [
+          Menu::Section.new(:svc, N_("Services submenu"), 'fa fa-plus', [
             Menu::Item.new('services',       N_('My Services'), 'service',             {:feature => 'service', :any => true},             '/service/explorer'),
             Menu::Item.new('catalogs',       N_('Catalogs'),    'catalog',             {:feature => 'catalog', :any => true},             '/catalog/explorer'),
             Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer_accords', {:feature => 'vm_explorer_accords', :any => true}, '/vm_or_template/explorer'),
