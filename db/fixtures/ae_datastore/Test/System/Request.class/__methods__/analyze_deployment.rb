@@ -13,4 +13,4 @@ def analyze_deployment()
   $evm.log(:info, "deployment type: #{deployment_type}")
 end
 
-analyze_deployment()
+analyze_deployment

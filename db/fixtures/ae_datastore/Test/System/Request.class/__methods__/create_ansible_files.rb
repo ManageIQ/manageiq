@@ -1,6 +1,21 @@
-DEPLOY_BOOK = 'extras/playbooks/deploy_book.yaml'
+DEPLOY_BOOK = 'deploy_book.yaml'
 INVENTORY_FILE = 'to_send_inventory.yaml'
 MASTER_INVENTORY_FILE = 'master_inventory.yaml'
+LOCAL_BOOK = 'local_book.yaml'
+
+def make_local_playbook
+  $evm.log(:info, "installing Ansbile and creating local ansible deploy book")
+  template = "
+---
+- hosts: all
+  tasks:
+  - replace: dest=/etc/ansible/ansible.cfg regexp=\"^#host_key_checking = False\" replace=\"host_key_checking = False\"
+  - replace: dest=/etc/ansible/ansible.cfg regexp=\"^#ssh_args =\" replace=\"ssh_args = -o ForwardAgent=yes\"
+  "
+  File.open(LOCAL_BOOK, 'w') do |f|
+    f.write(template)
+  end
+end
 
 def make_deploy_playbook(user)
   $evm.log(:info, "Creating ansible deploy book")
@@ -9,7 +24,10 @@ def make_deploy_playbook(user)
 ---
 - hosts: master
   remote_user: #{user}
+  sudo: yes
   tasks:
+  - name: add git package
+    yum: name=git state=present
 
   - name: clone git
     git: repo=https://github.com/openshift/openshift-ansible.git dest=/tmp/openshift-ansible
@@ -26,16 +44,19 @@ def make_deploy_playbook(user)
   - name: add pyOpenSSL package
     yum: name=pyOpenSSL state=present
 
+  - name: removing fingerprint
+    replace: dest=/etc/ansible/ansible.cfg regexp=\"^#host_key_checking = False\" replace=\"host_key_checking = False\"
+
+  - name: allowing agent forwarding
+    replace: dest=/etc/ansible/ansible.cfg regexp=\"^#ssh_args =\" replace=\"ssh_args = -o ForwardAgent=yes\"
+
   "
-  # - name: Run playbook
-  # shell: ansible-playbook /tmp/openshift-ansible/playbooks/byo/config.yml -i /tmp/openshift-ansible/to_send_inventory.yaml
-  # "
   File.open(DEPLOY_BOOK, 'w') do |f|
     f.write(template)
   end
 end
 
-def make_ansible_inventory_file(master_ip, slaves_ips, user)
+def make_ansible_inventory_file(master_ip, masters_ips, slaves_ips, user)
   $evm.log(:info, "Creating to_send inv file")
 
   template = "
@@ -56,11 +77,11 @@ deployment_type=origin
 #openshift_use_manageiq=True
 
 [masters]
-#{master_ip} openshift_scheduleable=True
+localhost ansible_connection=local openshift_scheduleable=True
 
 [nodes]
-#{master_ip}
-  #{slaves_ips[1]}
+#{slaves_ips[0]}
+#{slaves_ips[1]}
   "
   File.open(INVENTORY_FILE, 'w') do |f|
     f.write(template)
@@ -87,6 +108,7 @@ deployment_type=origin
   end
 end
 
+
 def verify_ansibe_files_creation(ansible_files)
   ansible_files.each do |f|
     unless File.file?(f)
@@ -98,12 +120,28 @@ end
 
 def create_ansible_files()
   $evm.root['Phase'] = "create_ansible_files"
+  $evm.root['automation_task'].message = "Create_ansible_files"
   $evm.log(:info, "********************** creating ansible files ***************************")
-  # make_deploy_playbook("")
-  # make_ansible_master_inventory_file("", "")
-  # make_ansible_inventory_file("", ["", ""],"")
-  verify_ansibe_files_creation([DEPLOY_BOOK, INVENTORY_FILE, MASTER_INVENTORY_FILE])
+  make_local_playbook
+  master = $evm.root['automation_task'].automation_request.options[:attrs][:connect_through_master_ip]
+  masters = $evm.root['automation_task'].automation_request.options[:attrs][:masters_ips]
+  nodes = $evm.root['automation_task'].automation_request.options[:attrs][:nodes_ips]
+  nodes = replace_connecting_master_ip(nodes, master)
+  user = $evm.root['automation_task'].automation_request.options[:attrs][:user]
+  make_deploy_playbook(user)
+  make_ansible_master_inventory_file( master, user)
+  make_ansible_inventory_file(master, masters, [nodes[0], nodes[1]],user)
+  verify_ansibe_files_creation([DEPLOY_BOOK, INVENTORY_FILE, MASTER_INVENTORY_FILE, LOCAL_BOOK])
   $evm.log(:info, "#{$evm.root['Phase']} : #{$evm.root['ae_result']} : #{$evm.root['Message']}")
+end
+
+def replace_connecting_master_ip(nodes, master_ip)
+  nodes.each_with_index do |cell, index|
+    if cell.include? master_ip
+          nodes[index] = "localhost              ansible_connection=local"
+    end
+  end
+  nodes
 end
 
 create_ansible_files()

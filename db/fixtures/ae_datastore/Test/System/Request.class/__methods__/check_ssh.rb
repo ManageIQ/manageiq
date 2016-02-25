@@ -1,35 +1,40 @@
 require 'rubygems'
 require 'net/ssh'
 
-#test SSH connection to vm
-
-def check_ssh(ipaddress, user)
+def check_ssh(deployment_master_ip, user, deployment_ips)
   $evm.root['Phase'] = "check ssh"
   $evm.log(:info, "**************** #{$evm.root["Phase"]} ****************")
-  $evm.log(:info, "Connecting to IPaddress - #{ipaddress}")
+  $evm.log(:info, "Connecting to deployment master ipaddress - #{deployment_master_ip}")
   begin
-    Net::SSH.start(ipaddress, user, :paranoid => false) do |ssh|
-      $evm.root['ae_result'] = "ok"
-      $evm.root['Message'] = "successful ssh to #{ipaddress}"
+    Net::SSH.start(deployment_master_ip, user, :paranoid => false, :forward_agent => true) do |ssh|
+      permission_problem = false
+      problematic_ips = []
+      deployment_ips.each do |ip|
+        res = ssh.exec! ("ssh root@" + deployment_ips[0] + ' pwd')
+        if res.include?"Permission"
+          permission_problem = true
+          problematic_ips << ip
+        end
+      end
+      if permission_problem
+        $evm.root['ae_result'] = "error"
+        $evm.root['Message'] = "Cannot connect to #{problematic_ips.inspect} via ssh"
+      else
+        $evm.root['ae_result'] = "ok"
+        $evm.root['Message'] = "successful ssh to #{deployment_ips.inspect}"
+      end
+
     end
   rescue
     $evm.root['ae_result'] = "error"
-    $evm.root['Message'] = "Cannot connect to #{ipaddress} via ssh"
+    $evm.root['Message'] = "Cannot connect to #{deployment_master_ip} via ssh"
   end
   $evm.log(:info, "#{$evm.root['Phase']} : #{$evm.root['ae_result']} : #{$evm.root['Message']}")
 end
 
-$evm.log(:info, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-$evm.log(:info, $evm.root['automation_task'].automation_request.inspect)
+master = $evm.root['automation_task'].automation_request.options[:attrs][:connect_through_master_ip]
+masters = $evm.root['automation_task'].automation_request.options[:attrs][:masters_ips]
+nodes = $evm.root['automation_task'].automation_request.options[:attrs][:nodes_ips]
+user = $evm.root['automation_task'].automation_request.options[:attrs][:user]
 
-
-# check ssh to master
-def check_ssh_to_master
-  masters = $evm.root['automation_task'].automation_request.options[:attrs][:masters]
-  $evm.log(:info, "xxxxxxxxxxxxxxxxxxxxxx masters xxxxxxxxxxxxxxxxxxxxxxxx")
-  $evm.log(:info, masters)
-end
-
-
-check_ssh_to_master
-#check ssh to slaves
+check_ssh(master, user, nodes)

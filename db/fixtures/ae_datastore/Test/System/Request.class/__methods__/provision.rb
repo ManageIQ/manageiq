@@ -18,7 +18,7 @@ def create_deployment_provision_request(vm_attr, type)
 # arg4 = requester
   args << vm_attr['requester']
 # arg5 = tags
-  args << {'deployment_provision' => (type + '_' + $evm.root['automation_task'][:id].to_s)}
+  args << nil
 # arg6 = additionalValues (ws_values)
   args << vm_attr['ws_values']
 # arg7 = emsCustomAttributes
@@ -30,6 +30,7 @@ def create_deployment_provision_request(vm_attr, type)
 end
 
 def provision
+  $evm.root['automation_task'].message = "Provisioning"
   $evm.log(:info, "********************** provision ***************************")
 
   provision_started = false
@@ -46,23 +47,28 @@ def provision
     create_deployment_provision_request(master_deployment, "master")
   end
 
-  requests_finished = false
   count = 0
+  fail = false
   if provision_started
     $evm.log(:info, '*********  checking state of machines   ************')
     tasks.each do |prov|
       if prov.request_state.include?('finished') && prov.status.include?('ok')
         count = count + 1
+      elsif prov.request_state.include?('finished') && prov.status.include?('error')
+        fail = true
       end
     end
-
   end
 
-  if count > 1
+  if(count == tasks.count && tasks.count > 0)
+    $evm.log(:info, '*********  Provision finished successfully  ************')
+    $evm.log(:info, tasks.inspect)
     $evm.root['ae_result'] = 'ok'
     #need to get all needed data from the vm's ip, credentials, etc..
+  elsif(fail)
+    $evm.root['ae_result'] = "error"
   else
-    $evm.log(:info, '*********  Provision isnt finished retrying in 1 min   ************')
+    $evm.log(:info, '*********  Provision isnt finished re-trying in 3 min   ************')
     $evm.root['ae_result']         = 'retry'
     $evm.root['ae_retry_interval'] = '3.minute'
   end

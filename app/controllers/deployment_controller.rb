@@ -49,86 +49,90 @@ class DeploymentController < ApplicationController
     #                    params['slave2Ip'])
     #
     # end
-    ansible_deploy(nil,nil,nil,nil,nil)
+    ansible_deploy('root',nil,"",[],['',""])
+    render "start_deployment"
+
   end
 
   # can deploy by the rails server and (commented is on the master vm).
-  def ansible_deploy(master_ssh_user, master_ssh_password, ip_master, ip_slave1, ip_slave2)
-    url = 'http://localhost:3000'
-    query = '/api/automation_requests'
+  def ansible_deploy(master_ssh_user, master_ssh_password, main_master_ip, masters_ips, nodes_ips)
+    Thread.new do
+      url = 'http://localhost:3000'
+      query = '/api/automation_requests'
 
-    post_params = {
-      :version => '1.1',
-      :uri_parts => {
-        :namespace => 'Test/System',
-        :class => 'Request',
-        :instance => 'Deployment'
-      },
-      :requester => {
-        :auto_approve => true
-      },
-      :parameters => {
-        # need to add params
-        :type     => "managed_provision", # managed_existing, managed_provision, not_managed
-        :master   => {
-          :templateFields => {
-            'name'         => 'rhel7_vfio_full',
-            'request_type' => 'template'
-          },
-          :vmFields => {
-            'vm_name'   => 'alon-master',
-            'vlan'      => 'public',
-            'vm_memory' => '1024',
-          },
-          :requester => {
-            'owner_email'      => 'pemcg@bit63.com',
-            'owner_first_name' => 'Peter',
-            'owner_last_name'  => 'McGowan'
-          },
-          :tags => nil,
-          :ws_values => {
-            'disk_size_gb' => '50',
-            'mountpoint' => '/opt',
-            'skip_dialog_load' => true,
-
-          }
+      post_params = {
+        :version => '1.1',
+        :uri_parts => {
+          :namespace => 'Test/System',
+          :class => 'Request',
+          :instance => 'Deployment'
         },
-        :node     => {
-          :templateFields => {
-            'name'         => 'rhel7_vfio_full',
-            'request_type' => 'template'
-          },
-          :vmFields => {
-            'vm_name'   => 'alon-node',
-            'vlan'      => 'public',
-            'vm_memory' => '1024',
-          },
-          :requester => {
-            'owner_email'      => 'pemcg@bit63.com',
-            'owner_first_name' => 'Peter',
-            'owner_last_name'  => 'McGowan'
-          },
-          :tags => nil,
-          :ws_values => {
-            'disk_size_gb' => '50',
-            'mountpoint' => '/opt',
-            'skip_dialog_load' => true,
-          }
-        }
-        # :masters  => [ip_master],
-        # :nodes    => [ip_slave1, ip_slave2],
-        # :user     => master_ssh_user,
-        # :password => master_ssh_password
-      }
-    }.to_json
+        :requester => {
+          :auto_approve => true
+        },
+        :parameters => {
+          # need to add params
+          :type     => "managed_provision", # managed_existing, managed_provision, not_managed
+          :master   => {
+            :templateFields => {
+              'name'         => 'rhel7_vfio_full',
+              'request_type' => 'template'
+            },
+            :vmFields => {
+              'vm_name'   => 'alon-master3',
+              'vlan'      => 'public',
+              'vm_memory' => '1024',
+            },
+            :requester => {
+              'owner_email'      => 'pemcg@bit63.com',
+              'owner_first_name' => 'Peter',
+              'owner_last_name'  => 'McGowan'
+            },
+            :tags => nil,
+            :ws_values => {
+              'disk_size_gb' => '50',
+              'mountpoint' => '/opt',
+              'skip_dialog_load' => true,
 
-    rest_return = RestClient::Request.execute(
-      method: :post,
-      url: url + query,
-      :user => 'admin',
-      :password => 'smartvm',
-      :headers => {:accept => :json},
-      :payload => post_params,
-      verify_ssl: false)
+            }
+          },
+          :node     => {
+            :templateFields => {
+              'name'         => 'rhel7_vfio_full',
+              'request_type' => 'template'
+            },
+            :vmFields => {
+              'vm_name'   => 'alon-node3',
+              'vlan'      => 'public',
+              'vm_memory' => '1024',
+            },
+            :requester => {
+              'owner_email'      => 'pemcg@bit63.com',
+              'owner_first_name' => 'Peter',
+              'owner_last_name'  => 'McGowan'
+            },
+            :tags => nil,
+            :ws_values => {
+              'disk_size_gb' => '50',
+              'mountpoint' => '/opt',
+              'skip_dialog_load' => true,
+            }
+          },
+          # :connect_through_master_ip => main_master_ip,
+          # :masters_ips  => masters_ips,
+          # :nodes_ips    => nodes_ips,
+          # :user     => master_ssh_user,
+          # :password => master_ssh_password
+        }
+      }.to_json
+      rest_return = RestClient::Request.execute(
+        method: :post,
+        url: url + query,
+        :user => 'admin',
+        :password => 'smartvm',
+        :headers => {:accept => :json},
+        :payload => post_params,
+        verify_ssl: false)
+    end
   end
 end
