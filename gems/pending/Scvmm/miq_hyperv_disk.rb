@@ -123,7 +123,6 @@ STAT_EOL
     return nil if start_sector > @lba_end
     number_sectors = @size_in_blocks - start_sector if (start_sector + number_sectors) > @size_in_blocks
     expected_bytes = number_sectors * @block_size
-    retries        = 0
     read_script = <<-READ_EOL
 $file_stream = [System.IO.File]::Open("#{@virtual_disk}", "Open", "Read", "Read")
 $buffer      = New-Object System.Byte[] #{number_sectors * @block_size}
@@ -133,7 +132,7 @@ $file_stream.read($buffer, 0, #{expected_bytes})
 $file_stream.Close()
 READ_EOL
 
-    until retries == BREAD_RETRIES
+    (0...BREAD_RETRIES).each do
       t1           = Time.now.getlocal
       encoded_data = @parser.output_to_attribute(run_correct_powershell(read_script))
       t2           = Time.now.getlocal
@@ -142,7 +141,6 @@ READ_EOL
       @total_copy_from_remote_time += t2 - t1
       @total_read_execution_time += Time.now.getlocal - t1
       return buffer if expected_bytes == buffer.size
-      retries += 1
       $log.debug "#{log_header} expected #{expected_bytes} bytes - got #{buffer.size}"
     end
     raise "#{log_header} expected #{expected_bytes} bytes - got #{buffer.size}"
