@@ -8,7 +8,9 @@
              "data-hover" => "dropdown",
              "data-delay" => "1000",
              :onclick     => 'return miqCheckForChanges()'}
-            %i.fa.fa-dashboard
+            - if menu_section.subsection?
+              = "..."
+            %i{:class => menu_section.icon}
             %span.list-group-item-value
               = h(_(menu_section.name))
 
