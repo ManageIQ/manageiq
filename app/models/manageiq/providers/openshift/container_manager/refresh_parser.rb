@@ -59,7 +59,7 @@ module ManageIQ::Providers
           :path      => route.path
         )
 
-        new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
+        new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name,
                                                       route.metadata["table"][:namespace])
         new_result[:container_service] = @data_index.fetch_path(:container_services, :by_namespace_and_name,
                                                                 new_result[:namespace], get_service_name(route))
@@ -87,7 +87,7 @@ module ManageIQ::Providers
           :output_name                 => build.spec.try(:output).try(:to).try(:name)
         )
 
-        new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
+        new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name,
                                                       build.metadata["table"][:namespace])
         new_result
       end
@@ -105,7 +105,7 @@ module ManageIQ::Providers
           :start_timestamp               => status[:startTimestamp],
           :output_docker_image_reference => status[:outputDockerImageReference],
         )
-        new_result[:build_config] = @data_index.fetch_path(:container_builds, :by_name,
+        new_result[:container_build] = @data_index.fetch_path(:container_builds, :by_name,
                                                            build_pod.status.config.try(:name))
         new_result
       end

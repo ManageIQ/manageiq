@@ -363,7 +363,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
                :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '165339',
-               :project               => nil,
+               :container_project     => nil,
                :container_quota_items => [
                  {
                    :resource       => "cpu",
@@ -391,7 +391,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
                :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '165339',
-               :project               => nil,
+               :container_project     => nil,
                :container_quota_items => [])
     end
 
@@ -413,7 +413,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
                :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '165339',
-               :project               => nil,
+               :container_project     => nil,
                :container_quota_items => [
                  {
                    :resource       => "cpu",
@@ -448,7 +448,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
         :ems_created_on        => '2015-08-17T09:16:46Z',
         :resource_version      => '2',
-        :project               => nil,
+        :container_project     => nil,
         :container_limit_items => [
           {
             :item_type               => "Container",
@@ -486,7 +486,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
                :ems_created_on        => '2015-08-17T09:16:46Z',
                :resource_version      => '2',
-               :project               => nil,
+               :container_project     => nil,
                :container_limit_items => [])
     end
   end
