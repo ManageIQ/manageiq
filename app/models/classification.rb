@@ -502,8 +502,7 @@ class Classification < ApplicationRecord
     tag = Tag.in_my_region.find_by_name(Classification.name2tag(name, parent_id, ns))
     return if tag.nil?
 
-    tag.taggings.delete_all
-    tag.delete
+    tag.destroy
   end
 
   def delete_tags_and_entries
