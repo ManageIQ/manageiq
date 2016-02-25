@@ -469,25 +469,33 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
 
-    it "handles limits without specification" do
-      expect(parser.send(:parse_range,
-                         RecursiveOpenStruct.new(
-                           :metadata => {
-                             :name              => 'test-range',
-                             :namespace         => 'test-namespace',
-                             :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-                             :resourceVersion   => '2',
-                             :creationTimestamp => '2015-08-17T09:16:46Z',
-                           },
-                           :spec     => {
-                             :limits => []
-                           })))
-        .to eq(:name                  => 'test-range',
-               :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-               :ems_created_on        => '2015-08-17T09:16:46Z',
-               :resource_version      => '2',
-               :project               => nil,
-               :container_limit_items => [])
+    it "handles missing limits specification" do
+      metadata = {
+        :name              => 'test-range',
+        :namespace         => 'test-namespace',
+        :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :resourceVersion   => '2',
+        :creationTimestamp => '2015-08-17T09:16:46Z',
+      }
+      ranges = [
+        {:metadata => metadata},
+        {:metadata => metadata, :spec => nil},
+        {:metadata => metadata, :spec => {}},
+        {:metadata => metadata, :spec => {:limits => nil}},
+        {:metadata => metadata, :spec => {:limits => []}}
+      ]
+      parsed = {
+        :name                  => 'test-range',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :ems_created_on        => '2015-08-17T09:16:46Z',
+        :resource_version      => '2',
+        :project               => nil,
+        :container_limit_items => []
+      }
+      ranges.each do |range|
+        expect(parser.send(:parse_range, RecursiveOpenStruct.new(range)))
+          .to eq(parsed)
+      end
     end
   end
 
