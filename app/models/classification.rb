@@ -14,7 +14,7 @@ class Classification < ApplicationRecord
                                             cond.first << " AND id != ?"
                                             cond << c.id
                                           end
-                                          c.class.in_my_region.exists?(cond)
+                                          c.class.in_region(region_id).exists?(cond)
                                         }
   validates_presence_of :name, :description
   validates_length_of :name, :maximum => 50, :message => "must not exceed 50 characters"
@@ -296,13 +296,12 @@ class Classification < ApplicationRecord
   attr_writer :name
 
   def find_entry_by_name(name, region_id = my_region_number)
-    tag = Tag.in_region(region_id).find_by_name(Classification.name2tag(name, id, ns))
-    tag.nil? ? nil : self.class.find_by_tag_id(tag.id)
+    self.class.find_by_name(name, region_id, ns, self)
   end
 
-  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    tag = Tag.find_by_classification_name(name, region_id, ns)
-    tag.nil? ? nil : find_by_tag_id(tag.id)
+  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
+    tag = Tag.find_by_classification_name(name, region_id, ns, parent_id)
+    find_by_tag_id(tag.id) if tag
   end
 
   def tag2ns(tag)
@@ -484,14 +483,11 @@ class Classification < ApplicationRecord
   end
 
   def find_tag
-    Tag.in_my_region.find_by_name(Classification.name2tag(name, parent_id, ns))
+    Tag.find_by_classification_name(name, region_id, ns, parent_id)
   end
 
   def save_tag
-    name = Classification.name2tag(self.name, parent_id, ns)
-    tag = Tag.in_my_region.find_by_name(name)
-    tag ||= Tag.create(:name => name)
-    self.tag_id = tag.id
+    self.tag = Tag.find_or_create_by_classification_name(name, region_id, ns, parent_id)
   end
 
   def delete_all_entries
@@ -499,7 +495,7 @@ class Classification < ApplicationRecord
   end
 
   def delete_tag_and_taggings
-    tag = Tag.in_my_region.find_by_name(Classification.name2tag(name, parent_id, ns))
+    tag = find_tag
     return if tag.nil?
 
     tag.destroy
