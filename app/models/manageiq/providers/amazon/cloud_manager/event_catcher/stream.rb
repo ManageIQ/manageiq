@@ -15,7 +15,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   #
   # @param [ManageIQ::Providers::Amazon::CloudManager] ems
   # @param [String] sns_aws_config_topic_name
-  AWS_CONFIG_TOPIC = "AWSConfig_topic"
+  AWS_CONFIG_TOPIC = "AWSConfig_topic".freeze
   def initialize(ems, sns_aws_config_topic_name = AWS_CONFIG_TOPIC)
     @ems          = ems
     @topic_name   = sns_aws_config_topic_name
