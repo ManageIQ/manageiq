@@ -304,6 +304,13 @@ class Classification < ApplicationRecord
     find_by_tag_id(tag.id) if tag
   end
 
+  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE)
+    tag_names = names.map { |name| Classification.name2tag(name, 0, ns) }
+    # NOTE: tags is a subselect - not an array of ids
+    tags = Tag.in_region(region_id).where(:name => tag_names).select(:id)
+    where(:tag_id => tags)
+  end
+
   def tag2ns(tag)
     unless tag.nil?
       ta = tag.split("/")
