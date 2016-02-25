@@ -206,6 +206,7 @@ describe OpsController do
       :timer_value => ""
     }
 
+    skip "https://github.com/rails/rails/issues/23881" if Gem::Requirement.new('< 5.0.0.beta4') === Rails.gem_version
     expect(response).to be_success
 
     audit_event = AuditEvent.where(:target_id => schedule.id).first
