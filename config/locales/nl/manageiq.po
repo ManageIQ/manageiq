@@ -12093,9 +12093,6 @@ msgstr ""
 msgid "Select a Group:"
 msgstr ""
 
-msgid "No Group"
-msgstr ""
-
 msgid "Affected Items"
 msgstr ""
 
