@@ -126,6 +126,36 @@ class PgLogicalRaw
     typed_exec("SELECT pglogical.alter_subscription_remove_replication_set($1, $2)", name, set_name)
   end
 
+  # Shows status and basic information about a subscription
+  #
+  # @prarm name [String] subscription name
+  # @return a hash with the subscription information
+  #   keys:
+  #     subscription_name
+  #     status
+  #     provider_node
+  #     provider_dsn
+  #     slot_name
+  #     replication_sets
+  #     forward_origins
+  def subscription_show_status(name)
+    res = typed_exec("SELECT * FROM pglogical.show_subscription_status($1)", name).first
+    res["replication_sets"] = res["replication_sets"][1..-2].split(",")
+    res["forward_origins"] = res["forward_origins"][1..-2].split(",")
+    res
+  end
+
+  # Shows the status of all configured subscriptions
+  #
+  # @return Array<Hash> list of results from #subscription_show_status
+  def subscriptions
+    ret = []
+    connection.select_values("SELECT sub_name FROM pglogical.subscription").each do |s|
+      ret << subscription_show_status(s)
+    end
+    ret
+  end
+
   # Replication Sets
   #
 
