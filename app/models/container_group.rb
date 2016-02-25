@@ -61,7 +61,7 @@ class ContainerGroup < ApplicationRecord
     when :ems_events
       # TODO: improve relationship using the id
       ["container_namespace = ? AND container_group_name = ? AND #{events_table_name(assoc)}.ems_id = ?",
-       container_project.name, name, ems_id]
+       container_project.try(:name), name, ems_id]
     when :policy_events
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
@@ -85,8 +85,8 @@ class ContainerGroup < ApplicationRecord
     self.container_services = []
     self.container_replicator_id = nil
     self.container_build_pod_id = nil
+    self.container_project_id = nil
     self.deleted_on = Time.now.utc
-    container_definitions.map(&:disconnect_inv)
     save
   end
 end

@@ -18,6 +18,6 @@ class TreeBuilderContainers < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    count_only_or_objects(count_only, rbac_filtered_objects(Container.all), "name")
+    count_only_or_objects(count_only, rbac_filtered_objects(Container.where(:deleted_on => nil)), "name")
   end
 end

@@ -58,17 +58,17 @@ module EmsRefresh::SaveInventoryHelper
     unless deletes.blank?
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.map(&:disconnect_inv) : association.delete(deletes)
+      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
     end
 
     # Add the new items
     association.push(new_records)
   end
 
-  def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
+  def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [], disconnect = false)
     child = parent.send(type)
     if hash.blank?
-      child.try(:destroy)
+      disconnect ? child.disconnect_inv : child.try(:destroy)
       return
     end
 

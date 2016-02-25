@@ -9,7 +9,7 @@ class ContainerDefinition < ApplicationRecord
   def disconnect_inv
     _log.info "Disconnecting Container definition [#{name}] id [#{id}]"
     self.deleted_on = Time.now.utc
-    container.disconnect_inv
+    self.container_group = nil
     save
   end
 
