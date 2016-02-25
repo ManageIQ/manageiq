@@ -1,6 +1,6 @@
 module Menu
-  Section = Struct.new(:id, :name, :items, :placement, :before, :type, :href) do
-    def initialize(an_id, name, items = [], placement = :default, before = nil, type = :default, href = nil)
+  Section = Struct.new(:id, :name, :icon, :items, :placement, :before, :type, :href) do
+    def initialize(an_id, name, icon, items = [], placement = :default, before = nil, type = :default, href = nil)
       super
     end
 
@@ -14,6 +14,10 @@ module Menu
       auth  = store.can?(id) && User.current_user.role_allows_any?(:identifiers => features)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], main tab [#{id}]")
       auth
+    end
+
+    def subsection?
+      @subsection ||= Array(items).detect { |el| el.kind_of?(Section) }
     end
 
     def url
