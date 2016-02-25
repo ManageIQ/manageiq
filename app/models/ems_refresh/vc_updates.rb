@@ -151,6 +151,16 @@ module EmsRefresh::VcUpdates
       "summary.type",
       "summary.uncommitted",
       "summary.url",
+      "parent"
+    ],
+
+    :ems_refresh_storage_pod => [
+      "MOR",
+      "summary.capacity",
+      "summary.freeSpace",
+      "summary.name",
+      "childEntity",
+      "parent"
     ],
 
     :ems_refresh_cluster   => [
@@ -210,6 +220,8 @@ module EmsRefresh::VcUpdates
 
     :ems_refresh_dc        => [
       "MOR",
+      "datastoreFolder",
+      "datastoreFolder.ManagedObjectReference",
       "hostFolder",
       "hostFolder.ManagedObjectReference",
       "name",

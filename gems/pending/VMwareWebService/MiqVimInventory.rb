@@ -1609,6 +1609,94 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def storagePods_locked
+    raise "storagePods_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@storagePods) if @storagePods
+
+    $vim_log.info "MiqVimInventory.storagePods_locked: loading Datastore cache for #{@connId}"
+    begin
+      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
+
+      ra = getMoPropMulti(inventoryHash_locked['StoragePod'], @propMap[:StoragePod][:props])
+
+      @storagePods      = {}
+      @storagePodsByMor = {}
+      ra.each do |dsObj|
+        addStoragePodObj(dsObj)
+      end
+    ensure
+      @cacheLock.sync_unlock if unlock
+    end
+    $vim_log.info "MiqVimInventory.dataStores_locked: loaded Datastore cache for #{@connId}"
+
+    @storagePods
+  end # def storagePods_locked
+  protected :storagePods_locked
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def storagePodsByMor_locked
+    raise "storagePodsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@storagePodsByMor) if @storagePodsByMor
+    storagePods_locked
+    @storagePodsByMor
+  end # def storagePodsByMor_locked
+  protected :storagePodsByMor_locked
+
+  #
+  # Public accessor
+  #
+  def storagePods(selSpec = nil)
+    sp = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        sp = dupObj(storagePods_locked)
+      else
+        sp = applySelector(storagePods_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    sp
+  end # def storagePods
+
+  #
+  # Public accessor
+  #
+  def storagePodsByMor(selSpec = nil)
+    sp = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        sp = dupObj(storagePodsByMor_locked)
+      else
+        sp = applySelector(storagePodsByMor_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    sp
+  end # def storagePodsByMor
+
+  #
+  # Return a single storagePod object, given its MOR
+  #
+  def storagePodByMor(spMor, selSpec = nil)
+    @cacheLock.synchronize(:SH) do
+      return(dupObj(storagePodsByMor_locked[spMor])) if selSpec.nil?
+      return(applySelector(storagePodsByMor_locked[spMor], selSpec))
+    end
+  end
+
+  def addStoragePodObj(spObj)
+    addObjHash(:StoragePod, spObj)
+  end
+
+  #
   # A hash of managed object references for all the objects we care about.
   #
   # For internal use. Locking handled by caller
