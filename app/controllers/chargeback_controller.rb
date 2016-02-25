@@ -228,7 +228,7 @@ class ChargebackController < ApplicationController
                     detail.chargeback_rate_detail_measure_id = id_measure
                   end
                   # Copy the currency id of the rate detail linking with the rate_detail_currency
-                  unless r[:type_currency].nil?
+                  if r[:type_currency]
                     id_currency = ChargebackRateDetailCurrency.find_by(:name => r[:type_currency]).id
                     detail.chargeback_rate_detail_currency_id = id_currency
                   end
@@ -588,7 +588,7 @@ class ChargebackController < ApplicationController
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
       @edit[:new][:details][i][:per_unit] = params["per_unit_#{i}".to_sym] if params["per_unit_#{i}".to_sym]
       # Add currencies to chargeback_controller.rb
-      @edit[:new][:details][i][:currency] = params["currency".to_sym] if params["currency".to_sym]
+      @edit[:new][:details][i][:currency] = params[:currency] if params[:currency]
     end
   end
 

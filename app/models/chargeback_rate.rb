@@ -58,7 +58,7 @@ class ChargebackRate < ApplicationRecord
     # seeding the measure fixture before seed the chargeback rates fixtures
     seed_chargeback_rate_measure
     # seeding the currencies
-    seed_cb_rate_currency
+    seed_chargeback_rate_detail_currency
     seed_chargeback_rate
   end
 
@@ -84,7 +84,7 @@ class ChargebackRate < ApplicationRecord
     end
   end
 
-  def self.seed_cb_rate_currency
+  def self.seed_chargeback_rate_detail_currency
     # seeding the chargeback_rate_detail_currencies
     # Modified seed method. Now updates chargeback_rate_detail_currencies too
     fixture_file_currency = File.join(FIXTURE_DIR, "chargeback_rate_detail_currencies.yml")
@@ -127,7 +127,7 @@ class ChargebackRate < ApplicationRecord
           unless measure.nil?
             rate_detail[:chargeback_rate_detail_measure_id] = measure.id
           end
-          unless currency.nil?
+          if currency
             rate_detail[:chargeback_rate_detail_currency_id] = currency.id
           end
         end

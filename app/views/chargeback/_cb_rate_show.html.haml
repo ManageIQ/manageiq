@@ -33,7 +33,7 @@
           %td
             = r[:description]
           %td{:align => "right"}
-            = r[:rate] + " " + r.detail_currency.symbol + " [" + r.detail_currency.code + "]"
+            = "#{r[:rate]} #{r.detail_currency.symbol} [#{r.detail_currency.code}]"
           %td
             = r[:per_time]
           %td
