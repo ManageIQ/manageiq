@@ -101,6 +101,7 @@ describe "AR Regions extension" do
       expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 29).region_id).to eq(@base_region + 2)
 
       expect(ManageIQ::Providers::Vmware::InfraManager::Vm.new.region_id).to eq(ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number)
+      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.new(:id => @base_id + 29).regoin_id).to eq(@base_region + 2)
     end
 
     it "#compressed_id" do

@@ -150,8 +150,7 @@ module ArRegion
   end
 
   def region_number
-    return my_region_number if self.new_record?
-    id ? (id / self.class.rails_sequence_factor) : nil
+    id ? (id / self.class.rails_sequence_factor) : my_region_number
   end
   alias_method :region_id, :region_number
 
