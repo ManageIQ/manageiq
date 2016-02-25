@@ -54,7 +54,7 @@ all_timings = Hash.new { |k, v| k[v] = [] }
 vim_collect_timings = {}
 
 MiqLoggerProcessor.new(logfile).each do |line|
-  next unless line =~ /MIQ\((Vm|Host|Storage|EmsCluster|ExtManagementSystem|MiqEnterprise)\.(vim_collect_perf_data|perf_capture|perf_process|perf_rollup)\).+Timings:? (\{.+)$/
+  next unless line =~ /MIQ\((Vm|Host|Storage|EmsCluster|ExtManagementSystem|MiqEnterprise)\.(vim_collect_perf_data|perf_capture_?[a-z]*|perf_process|perf_rollup)\).+Timings:? (\{.+)$/
   target, method, timings = $1, $2, $3
 
   target.downcase!

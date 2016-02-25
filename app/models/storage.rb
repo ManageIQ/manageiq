@@ -688,6 +688,18 @@ class Storage < ApplicationRecord
     [MiqRegion.my_region].compact unless interval_name == 'realtime'
   end
 
+  def perf_capture_realtime(*args)
+    perf_capture('realtime', *args)
+  end
+
+  def perf_capture_hourly(*args)
+    perf_capture('hourly', *args)
+  end
+
+  def perf_capture_historical(*args)
+    perf_capture('historical', *args)
+  end
+
   # TODO: See if we can reuse the main perf_capture method, and only overwrite the perf_collect_metrics method
   def perf_capture(interval_name)
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
