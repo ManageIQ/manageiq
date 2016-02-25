@@ -452,7 +452,7 @@ class MiqWidget < ApplicationRecord
   def self.available_for_user(user)
     user = get_user(user)
     role = user.miq_user_role_name
-    group = user.miq_group_description
+    group = user.current_group.description
 
     # Return all widgets that either has this user's role or is allowed for all roles, or has this user's group
     all.select do |w|

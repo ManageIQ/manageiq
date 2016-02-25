@@ -40,9 +40,6 @@ class User < ApplicationRecord
 
   include ReportableMixin
 
-  include DeprecationMixin
-  deprecate_belongs_to :miq_group, :current_group
-
   @@role_ns  = "/managed/user"
   @@role_cat = "role"
 

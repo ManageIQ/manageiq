@@ -381,7 +381,7 @@ describe MiqReport do
     it "with has_many through" do
       ems      = FactoryGirl.create(:ems_vmware_with_authentication)
       user     = FactoryGirl.create(:user_with_group)
-      group    = user.miq_group
+      group    = user.current_group
       template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
       vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
       hardware = FactoryGirl.create(:hardware, :vm => vm)
