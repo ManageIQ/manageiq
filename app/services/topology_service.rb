@@ -20,19 +20,11 @@ class TopologyService
   end
 
   def entity_id(entity)
-    if entity.kind_of?(ManageIQ::Providers::BaseManager) # any type of provider
-      id = entity.id.to_s
-    elsif entity.kind_of?(Host) || entity.kind_of?(Vm)
-      id = entity.uid_ems
-    else
-      id = entity.ems_ref
-    end
-    id
+    entity_type(entity) + entity.compressed_id.to_s
   end
 
   def build_base_entity_data(entity)
-    {:id     => entity_id(entity),
-     :name   => entity.name,
+    {:name   => entity.name,
      :kind   => entity_type(entity),
      :miq_id => entity.id}
   end
