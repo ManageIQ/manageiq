@@ -92,6 +92,7 @@ module EmsCommon
     [Container, ContainerReplicator, ContainerNode, ContainerGroup,
      ContainerService, ContainerImage, ContainerRoute,
      ContainerProject, ContainerImageRegistry, AvailabilityZone,
+     MiddlewareServer, MiddlewareDeployment,
      CloudTenant, CloudVolume, Flavor, SecurityGroup,].detect do |klass|
       name = klass.name.underscore.pluralize
       [display_name, session_display].include?(name)
