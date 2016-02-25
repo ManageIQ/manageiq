@@ -211,8 +211,8 @@ describe MiqReport do
       vm2 = FactoryGirl.create(:vm_vmware)
       vm2.tag_with("/managed/environment/dev", :ns => "*")
 
-      group = FactoryGirl.create(:miq_group)
-      user  = FactoryGirl.create(:user, :miq_groups => [group])
+      user  = FactoryGirl.create(:user_with_group)
+      group = user.current_group
       allow(User).to receive_messages(:server_timezone => "UTC")
       group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
 
@@ -232,9 +232,8 @@ describe MiqReport do
     end
 
     it "sortby, order, user filters, where sort column is in a sub-table" do
-      group = FactoryGirl.create(:miq_group)
-      user  = FactoryGirl.create(:user, :miq_groups => [group])
-
+      user  = FactoryGirl.create(:user_with_group)
+      group = user.current_group
       vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :storage => FactoryGirl.create(:storage, :name => "SA"))
       vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :storage => FactoryGirl.create(:storage, :name => "SB"))
       tag = "/managed/environment/prod"
@@ -298,8 +297,8 @@ describe MiqReport do
     end
 
     it "expression filtering on a virtual column and user filters" do
-      group = FactoryGirl.create(:miq_group)
-      user  = FactoryGirl.create(:user, :miq_groups => [group])
+      user  = FactoryGirl.create(:user_with_group)
+      group = user.current_group
 
       _vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
       vm2 =  FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
@@ -381,7 +380,7 @@ describe MiqReport do
     it "with has_many through" do
       ems      = FactoryGirl.create(:ems_vmware_with_authentication)
       user     = FactoryGirl.create(:user_with_group)
-      group    = user.miq_group
+      group    = user.current_group
       template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
       vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
       hardware = FactoryGirl.create(:hardware, :vm => vm)
