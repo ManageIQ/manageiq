@@ -1,25 +1,8 @@
+inherit_from:
+- https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop.yml
 #
 # Overrides
 #
-AbcSize:
-  Severity: refactor
-AlignHash:
-  EnforcedHashRocketStyle: table
-  EnforcedColonStyle: table
-BlockNesting:
-  Severity: refactor
-ClassLength:
-  Severity: refactor
-ClassCheck:
-  EnforcedStyle: kind_of?
-CollectionMethods:
-  PreferredMethods:
-    find: detect
-    find_all: select
-    map: collect
-    reduce: inject
-CyclomaticComplexity:
-  Severity: refactor
 GlobalVars:
   AllowedVariables:
   # Loggers
@@ -37,86 +20,13 @@ GlobalVars:
   - $vim_log
   # In Automate methods
   - $evm
-FormatString:
-  EnforcedStyle: percent
-HashSyntax:
-  EnforcedStyle: hash_rockets
-LineLength:
-  Max: 120
-  Severity: refactor
-MethodLength:
-  Max: 25
-  Severity: refactor
-ParameterLists:
-  Severity: refactor
-PerceivedComplexity:
-  Severity: refactor
-RedundantReturn:
-  AllowMultipleReturnValues: true
-SignalException:
-  EnforcedStyle: only_raise
-SingleLineMethods:
-  AllowIfMethodIsEmpty: false
-SpaceInsideHashLiteralBraces:
-  EnforcedStyle: no_space
-TrivialAccessors:
-  AllowPredicates: true
 #
-# Enabled/Disabled
+# Special Exclusions
 #
 AllCops:
   Exclude:
     - config/toolbar_strings.rb
     - gems/pending/VMwareWebService/wsdl41/vimws25MappingRegistry.rb
-ClassAndModuleChildren:
-  Enabled: false
-DefEndAlignment:
-  AutoCorrect: true
-Documentation:
-  Enabled: false
-Encoding:
-  Enabled: false
-EndAlignment:
-  AutoCorrect: true
-ExtraSpacing:
-  AutoCorrect: false # https://github.com/bbatsov/rubocop/issues/2280
-FindEach:
-  Enabled: false
-GuardClause:
-  Enabled: false
-IfUnlessModifier:
-  Enabled: false
-NumericLiterals:
-  AutoCorrect: false
-ParallelAssignment:
-  Enabled: false
-PerlBackrefs:
-  Enabled: false
-Rails:
-  Enabled: true
-ReadWriteAttribute:
-  AutoCorrect: false
-RescueModifier:
-  AutoCorrect: false
-SingleLineBlockParams:
-  Enabled: false
-SpaceBeforeFirstArg:
-  Enabled: false
-SpecialGlobalVars:
-  AutoCorrect: false
-StringLiterals:
-  Enabled: false
-StringLiteralsInInterpolation:
-  Enabled: false
-TrailingCommaInLiteral:
-  Enabled: false
-TrailingCommaInArguments:
-  Enabled: false
-WhileUntilModifier:
-  Enabled: false
-WordArray:
-  AutoCorrect: false
-
 ClassAndModuleCamelCase:
   Exclude:
     - lib/miq_automation_engine/service_models/*.rb
