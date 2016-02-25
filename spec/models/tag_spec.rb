@@ -96,6 +96,11 @@ describe Tag do
       expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent.id).name).to eq(entry_ns)
     end
 
+    it "finds tag by name, ns and parent" do
+      expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent)).not_to be_nil
+      expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent).name).to eq(entry_ns)
+    end
+
     it "finds tag in region" do
       expect(Tag.find_by_classification_name("test_category", my_region_number)).not_to be_nil
     end

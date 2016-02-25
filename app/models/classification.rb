@@ -457,9 +457,8 @@ class Classification < ApplicationRecord
     if parent_id == 0
       File.join(ns, name)
     else
-      c = Classification.find(parent_id)
-      return nil if c.nil?
-      File.join(ns, c.name, name)
+      c = parent_id.kind_of?(Classification) ? parent_id : Classification.find(parent_id)
+      File.join(ns, c.name, name) if c
     end
   end
 
