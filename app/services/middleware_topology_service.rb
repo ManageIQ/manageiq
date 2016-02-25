@@ -1,7 +1,7 @@
-class MiddlewareTopologyService
+class MiddlewareTopologyService < TopologyService
   def initialize(provider_id)
     @provider_id = provider_id
-    @providers = retrieve_providers
+    @providers = retrieve_providers(@provider_id, ManageIQ::Providers::MiddlewareManager)
   end
 
   def build_topology
@@ -10,12 +10,12 @@ class MiddlewareTopologyService
     links = []
 
     @providers.each do |provider|
-      topo_items[provider.id.to_s] = build_entity_data(provider, provider.type.split('::')[2])
+      topo_items[provider.id.to_s] = build_entity_data(provider)
       provider.middleware_servers.each do |n|
-        topo_items[n.ems_ref] = build_entity_data(n, 'MiddlewareServer')
+        topo_items[n.ems_ref] = build_entity_data(n)
         links << build_link(provider.id.to_s, n.ems_ref)
         n.middleware_deployments.each do |cg|
-          topo_items[cg.ems_ref] = build_entity_data(cg, 'MiddlewareDeployment')
+          topo_items[cg.ems_ref] = build_entity_data(cg)
           links << build_link(n.ems_ref, cg.ems_ref)
         end
       end
@@ -27,39 +27,36 @@ class MiddlewareTopologyService
     topology
   end
 
-  def build_entity_data(entity, kind)
-    status = entity_status(entity, kind)
-    id = case kind
-         when 'MiddlewareDeployment', 'MiddlewareServer' then entity.nativeid
-         when 'Hawkular' then entity.id.to_s
-         else entity.ems_ref
-         end
-
-    {:id => id, :name => entity.name, :status => status, :kind => kind, :miq_id => entity.id}
-  end
-
-  def entity_status(_entity, _kind)
-    'Unknown'
-  end
-
-  def build_link(source, target)
-    {:source => source, :target => target}
-  end
-
-  def retrieve_providers
-    if @provider_id
-      ManageIQ::Providers::MiddlewareManager.where(:id => @provider_id)
-    else # provider id is empty when the topology is generated for all the providers together
-      ManageIQ::Providers::MiddlewareManager.all
+  def entity_display_type(entity)
+    if entity.kind_of?(ManageIQ::Providers::MiddlewareManager)
+      entity.type.split('::')[2]
+    else
+      entity.class.name.demodulize
     end
+  end
+
+  def build_entity_data(entity)
+    data = build_base_entity_data(entity)
+    data.merge!(:status => 'Unknown',
+                :display_kind => entity_display_type(entity))
+
+    data.merge!(:id => entity_id(entity)) # temporarily overriding id set in build_base_entity_data
+    data
+  end
+
+  def entity_id(entity) #temporarily overriding entity_id method in base topology service class
+    if entity.kind_of?(ManageIQ::Providers::BaseManager) # any type of provider
+      id = entity.id.to_s
+    elsif entity.kind_of?(MiddlewareDeployment) || entity.kind_of?(MiddlewareServer)
+      id = entity.nativeid
+    else
+      id = entity.ems_ref
+    end
+    id
   end
 
   def build_kinds
-    kinds = {:MiddlewareServer => true, :MiddlewareDeployment => true}
-    if @providers.any? { |instance| instance.kind_of?(ManageIQ::Providers::Hawkular::MiddlewareManager) }
-      kinds.merge!(:Hawkular => true)
-    end
-
-    kinds
+    kinds = [:MiddlewareServer, :MiddlewareDeployment, :MiddlewareManager]
+    build_legend_kinds(kinds)
   end
 end
