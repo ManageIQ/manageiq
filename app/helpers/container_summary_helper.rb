@@ -85,7 +85,7 @@ module ContainerSummaryHelper
 
   def textual_guest_applications
     textual_link(@record.guest_applications, :feature => "container_image_show",
-                                             :label   => "Packages",
+                                             :label   => _("Packages"),
                                              :link    => url_for(:controller => controller.controller_name,
                                                                  :action     => 'guest_applications',
                                                                  :id         => @record,
@@ -122,7 +122,7 @@ module ContainerSummaryHelper
   end
 
   def textual_tags
-    label = "#{session[:customer_name]} Tags"
+    label = _("%{name} Tags") % {:name => session[:customer_name]}
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.present?
@@ -135,7 +135,7 @@ module ContainerSummaryHelper
       end
     else
       h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
+      h[:value] = _("No %{label} have been assigned") % {:label => label}
     end
 
     h
