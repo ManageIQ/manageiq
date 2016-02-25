@@ -7,8 +7,7 @@ class PgLogicalRaw
   end
 
   def installed?
-    connection.exec_query("SELECT EXISTS(SELECT * FROM pg_available_extensions WHERE name = 'pglogical')")
-      .cast_values.first
+    connection.select_value("SELECT EXISTS(SELECT * FROM pg_available_extensions WHERE name = 'pglogical')")
   end
 
   # Returns whether pglogical is currently enabled or not
