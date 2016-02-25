@@ -1,4 +1,5 @@
-module FilterSubst
+module MiqExpression::FilterSubstMixin
+  include ActiveSupport::Concern
   # Build an array of expression symbols by recursively traversing the MiqExpression object
   #   and inserting sequential tokens for each expression part
   def exp_build_table(exp, quick_search = false)
@@ -31,9 +32,9 @@ module FilterSubst
       exp[:token] = @exp_token
       if exp["???"]                             # Found a new expression part
         exp_table.push(["???", @exp_token])
-        @edit[@expkey][:exp_token] = @exp_token         # Save the token value for the view
-        @edit[:edit_exp] = copy_hash(exp)       # Save the exp part for the view
-        exp_set_fields(@edit[:edit_exp])        # Set the fields for a new exp part
+        exp_context[@expkey][:exp_token] = @exp_token         # Save the token value for the view
+        exp_context[:edit_exp] = copy_hash(exp)       # Save the exp part for the view
+        exp_set_fields(exp_context[:edit_exp])        # Set the fields for a new exp part
       else
         if quick_search # Separate out the user input fields if doing a quick search
           human_exp = MiqExpression.to_human(exp)
@@ -111,5 +112,9 @@ module FilterSubst
         acc[token][:count] = first_exp["count"]
       end
     end
+  end
+
+  def exp_context
+    @edit
   end
 end

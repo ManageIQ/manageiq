@@ -1,12 +1,11 @@
 # Filter/search/expression methods included in application.rb
-require_relative '../../helpers/miq_expression/filter_subst'
 module ApplicationController::Filter
   extend ActiveSupport::Concern
   included do
     helper_method :calendar_needed?  # because it is being called inside a render block
   end
 
-  include FilterSubst
+  include MiqExpression::FilterSubstMixin
 
   # Handle buttons pressed in the expression editor
   def exp_button
