@@ -8,7 +8,6 @@ describe "MiqAeStateMachineRetry" do
     @state_class     = 'MY_STATE_MACHINE'
     @state_instance  = 'MY_STATE_INSTANCE'
     @max_retries     = 1
-    @max_time        = 2
     @root_class      = "TOP_OF_THE_WORLD"
     @root_instance   = "EVEREST"
     @user            = FactoryGirl.create(:user_with_group)
@@ -81,12 +80,12 @@ describe "MiqAeStateMachineRetry" do
     RUBY
   end
 
-  def setup_model(method_script)
+  def setup_model(method_script, max_time = nil)
     dom = FactoryGirl.create(:miq_ae_domain, :enabled => true, :name => @domain)
     ns  = FactoryGirl.create(:miq_ae_namespace, :parent_id => dom.id, :name => @namespace)
     @ns_fqname = ns.fqname
     create_retry_class(:namespace => @ns_fqname, :name => @retry_class, :method_script => method_script)
-    create_state_class(:namespace => @ns_fqname, :name => @state_class)
+    create_state_class({:namespace => @ns_fqname, :name => @state_class}, max_time)
     create_root_class(:namespace => @ns_fqname, :name => @root_class)
   end
 
@@ -104,10 +103,10 @@ describe "MiqAeStateMachineRetry" do
                                    'ae_methods'   => ae_methods))
   end
 
-  def create_state_class(attrs = {})
+  def create_state_class(attrs = {}, max_time = nil)
     ae_fields = {'state1' => {:aetype      => 'state',      :datatype => 'string',
                               :max_retries => @max_retries, :message  => 'create',
-                              :max_time    => @max_time}}
+                              :max_time    => max_time}}
     fqname = "/#{@domain}/#{@namespace}/#{@retry_class}/#{@method_instance}"
     ae_instances = {@state_instance => {'state1' => {:value => fqname}}}
 
@@ -200,20 +199,21 @@ describe "MiqAeStateMachineRetry" do
   end
 
   it "check max_time" do
-    setup_model(perpetual_retry_script)
+    max_time = 2
+    setup_model(perpetual_retry_script, max_time)
     send_ae_request_via_queue(@automate_args)
 
     status, _message, ws = deliver_ae_request_from_queue
     expect(status).not_to eq(MiqQueue::STATUS_ERROR)
     expect(ws).to be_truthy
 
-    Timecop.travel(@max_time + 1) do
+    Timecop.travel(max_time + 1) do
       status, _message, ws = deliver_ae_request_from_queue
       expect(status).not_to eq(MiqQueue::STATUS_ERROR)
       expect(ws).to be_truthy
     end
 
-    Timecop.travel(@max_time * 2 + 2) do
+    Timecop.travel(max_time * 2 + 2) do
       status, _message, ws = deliver_ae_request_from_queue
       expect(status).not_to be
     end
