@@ -39,7 +39,19 @@ class C3Charting < Charting
   end
 
   def sample_chart(_options, _report_theme)
-    # TODO: implement sample charts
+    sample = {
+      :data => {
+        :columns => [
+          ['data1', 30, 200, 100, 400, 150, 250],
+          ['data2', 50, 20, 10, 40, 15, 25],
+          ['data3', 10, 25, 10, 250, 10, 30]
+        ],
+      },
+      :miqChart => _options[:graph_type]
+    }
+    sample[:data][:groups] = [['data1','data2', 'data3']] if _options[:graph_type].include? 'Stacked'
+    sample
+
   end
 
   def js_load_statement(delayed = false)
@@ -71,5 +83,7 @@ class C3Charting < Charting
     ["Columns, Stacked (2D)", "StackedColumn"],
     ["Donut (2D)",            "Donut"],
     ["Pie (2D)",              "Pie"],
+    ["Line (2D)",             "Line"],
+    ["Area (2D)",             "Area"],
   ]
 end

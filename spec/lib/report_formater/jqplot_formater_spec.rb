@@ -1,6 +1,10 @@
 include ReportsSpecHelper
 
 describe ReportFormatter::JqplotFormatter do
+  before(:each) do
+    allow(Charting).to receive(:backend).and_return(:jqplot)
+    allow(Charting).to receive(:format).and_return(:jqplot)
+  end
   context '#build_numeric_chart_grouped' do
     [true, false].each do |other|
       it "builds 2d numeric charts from summaries #{other ? 'with' : 'without'} 'other'" do

@@ -1,6 +1,10 @@
 include ReportsSpecHelper
 
 describe ReportFormatter::JqplotFormatter do
+  before(:each) do
+    allow(Charting).to receive(:backend).and_return(:jqplot)
+    allow(Charting).to receive(:format).and_return(:jqplot)
+  end
   context '#build_reporting_chart_dim2' do
     it 'builds a stacked chart' do
       report = MiqReport.new(

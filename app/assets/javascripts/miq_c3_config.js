@@ -52,7 +52,7 @@
   c3mixins.pfDataColorFunction = {
     data: {
       color: function (color, d) {
-        return pfColors[d.index];
+        return pfColors[d.index % pfColors.length];
       }
     }
   };

@@ -20,9 +20,9 @@ EOJ
     content_tag(:div, '', :id => chart_id) +
       javascript_tag(<<-EOJ)
 $.get("#{url}").success(function(data) {
-  var config = ManageIQ.charts.c3config[data.miqChart];
-  var chart = c3.generate(_.defaultsDeep(config, data, { bindto: "##{chart_id}" }));
+  var chart = c3.generate(chartData(data.miqChart, data, { bindto: "##{chart_id}" }));
   ManageIQ.charts.c3["#{chart_id}"] = chart;
+  miqSparkleOff();
 });
 EOJ
   end
@@ -33,8 +33,7 @@ EOJ
     content_tag(:div, '', :id => chart_id) +
       javascript_tag(<<-EOJ)
 var data = #{data.to_json};
-var config = ManageIQ.charts.c3config['#{data[:miqChart]}'];
-var chart = c3.generate(_.defaultsDeep(config, data, { bindto: "##{chart_id}" }));
+var chart = c3.generate(chartMerge('#{data[:miqChart]}', data, { bindto: "##{chart_id}" }));
 ManageIQ.charts.c3["#{chart_id}"] = chart;
 EOJ
   end
