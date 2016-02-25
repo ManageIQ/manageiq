@@ -198,7 +198,7 @@ module VhdxDisk
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
     if dInfo.hyperv_connection
-      @vhdx_file = connect_to_hyperv(dInfo.hyperv_connection)
+      @vhdx_file = connect_to_hyperv(dInfo)
     else
       @vhdx_file = MiqLargeFile.open(@file_name, file_mode)
     end
@@ -518,6 +518,7 @@ module VhdxDisk
   def parent_disk(path)
     @parent_ostruct                   = OpenStruct.new
     @parent_ostruct.fileName          = path
+    @parent_ostruct.driveType         = dInfo.driveType
     @parent_ostruct.hyperv_connection = @hyperv_connection if @hyperv_connection
     parent                            = MiqDisk.getDisk(@parent_ostruct)
     raise "Unable to access parent disk #{path}" if parent.nil?
@@ -614,12 +615,14 @@ module VhdxDisk
     (block_number / @chunk_ratio) * (@chunk_ratio + 1) + @chunk_ratio
   end
 
-  def connect_to_hyperv(hyperv_connection)
-    connection  = @hyperv_connection = hyperv_connection
+  def connect_to_hyperv(disk_info)
+    connection  = @hyperv_connection = disk_info.hyperv_connection
+    @network    = disk_info.driveType == "Network"
     hyperv_disk = MiqHyperVDisk.new(connection[:host],
                                     connection[:user],
                                     connection[:password],
-                                    connection[:port])
+                                    connection[:port],
+                                    @network)
     hyperv_disk.open(@file_name)
     hyperv_disk
   end

@@ -99,6 +99,7 @@ module MSVSDiffDisk
     if locator.key?('fileName')
       @parent_ostruct                   = OpenStruct.new
       @parent_ostruct.fileName          = locator['fileName']
+      @parent_ostruct.driveType         = dInfo.driveType
       @parent_ostruct.hyperv_connection = @hyperv_connection unless @hyperv_connection.nil?
       @parent                           = MiqDisk.getDisk(@parent_ostruct)
     end

@@ -34,7 +34,12 @@ module VhdxDiskProbe
 
   def self.connect_to_hyperv(ostruct)
     connection  = ostruct.hyperv_connection
-    hyperv_disk = MiqHyperVDisk.new(connection[:host], connection[:user], connection[:password], connection[:port])
+    network     = ostruct.driveType == "Network"
+    hyperv_disk = MiqHyperVDisk.new(connection[:host],
+                                    connection[:user],
+                                    connection[:password],
+                                    connection[:port],
+                                    network)
     hyperv_disk.open(ostruct.fileName)
     hyperv_disk
   end

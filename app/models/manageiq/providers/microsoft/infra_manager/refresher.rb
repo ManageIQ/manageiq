@@ -9,7 +9,7 @@ module ManageIQ::Providers::Microsoft
     def post_process_refresh_classes
       # TODO: previously this only looped over VM classes, but, since SCVMM is
       # infra, it should probably include Host, too
-      [::Vm]
+      [::VmOrTemplate, ::Host]
     end
   end
 end

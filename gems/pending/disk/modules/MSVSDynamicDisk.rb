@@ -12,12 +12,12 @@ module MSVSDynamicDisk
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
-    if @dInfo.hyperv_connection
-      @ms_disk_file = MSCommon.connect_to_hyperv(@dInfo)
-    else
-      @ms_disk_file = MiqLargeFile.open(@dInfo.fileName, fileMode)
-    end
-    MSCommon.d_init_common(@dInfo, @ms_disk_file)
+    @ms_disk_file = if dInfo.hyperv_connection
+                      MSCommon.connect_to_hyperv(dInfo)
+                    else
+                      MiqLargeFile.open(dInfo.fileName, fileMode)
+                    end
+    MSCommon.d_init_common(dInfo, @ms_disk_file)
   end
 
   def getBase

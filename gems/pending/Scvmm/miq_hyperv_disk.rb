@@ -12,21 +12,22 @@ class MiqHyperVDisk
   MIN_SECTORS_TO_CACHE = 8
   DEF_BLOCK_CACHE_SIZE = 300
   DEBUG_CACHE_STATS    = false
+  BREAD_RETRIES        = 3
 
   attr_reader :hostname, :virtual_disk, :file_offset, :file_size, :parser, :vm_name, :temp_snapshot_name
 
-  def initialize(hyperv_host, user, pass, port = nil)
+  def initialize(hyperv_host, user, pass, port = nil, network = nil)
     @hostname  = hyperv_host
     @winrm     = MiqWinRM.new
     port ||= 5985
-    options = {:port => port, :user => user, :pass => pass, :hostname => @hostname}
-    @winrm.connect(options)
+    @winrm.connect(:port => port, :user => user, :pass => pass, :hostname => @hostname)
     @parser       = MiqScvmmParsePowershell.new
     @block_size   = 4096
     @file_size    = 0
     @block_cache  = LruHash.new(DEF_BLOCK_CACHE_SIZE)
     @cache_hits   = Hash.new(0)
     @cache_misses = Hash.new(0)
+    @network      = network
     @total_read_execution_time = @total_copy_from_remote_time = 0
   end
 
@@ -36,7 +37,7 @@ class MiqHyperVDisk
     stat_script = <<-STAT_EOL
     (Get-Item "#{@virtual_disk}").length
 STAT_EOL
-    file_size, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(stat_script))
+    file_size, stderr = @parser.parse_single_powershell_value(run_correct_powershell(stat_script))
     raise "Unable to obtain virtual disk size for #{vm_disk}" if stderr.include?("At line:")
     @file_size           = file_size.to_i
     @end_byte_addr       = @file_size - 1
@@ -52,7 +53,6 @@ STAT_EOL
   def close
     hit_or_miss if DEBUG_CACHE_STATS
     @file_offset = 0
-    @winrm.executor.close
     @winrm = nil
   end
 
@@ -118,27 +118,34 @@ STAT_EOL
   end
 
   def bread(start_sector, number_sectors)
-    $log.debug "miq_hyperv_disk.bread(#{start_sector}, #{number_sectors})"
+    log_header = "MIQ(#{self.class.name}.#{__method__}:"
+    $log.debug "#{log_header} (#{start_sector}, #{number_sectors})"
     return nil if start_sector > @lba_end
     number_sectors = @size_in_blocks - start_sector if (start_sector + number_sectors) > @size_in_blocks
+    expected_bytes = number_sectors * @block_size
+    retries        = 0
     read_script = <<-READ_EOL
 $file_stream = [System.IO.File]::Open("#{@virtual_disk}", "Open", "Read", "Read")
 $buffer      = New-Object System.Byte[] #{number_sectors * @block_size}
 $file_stream.seek(#{start_sector * @block_size}, 0)
-$file_stream.read($buffer, 0, #{number_sectors * @block_size})
+$file_stream.read($buffer, 0, #{expected_bytes})
 [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($buffer))
 $file_stream.Close()
 READ_EOL
 
-    # TODO: Error Handling
-    t1           = Time.now.getlocal
-    encoded_data = @parser.output_to_attribute(@winrm.run_powershell_script(read_script))
-    t2           = Time.now.getlocal
-    buffer       = ""
-    Base64.decode64(encoded_data).split(' ').each { |c| buffer += c.to_i.chr }
-    @total_copy_from_remote_time += t2 - t1
-    @total_read_execution_time += Time.now.getlocal - t1
-    buffer
+    until retries == BREAD_RETRIES
+      t1           = Time.now.getlocal
+      encoded_data = @parser.output_to_attribute(run_correct_powershell(read_script))
+      t2           = Time.now.getlocal
+      buffer       = ""
+      Base64.decode64(encoded_data).split(' ').each { |c| buffer += c.to_i.chr }
+      @total_copy_from_remote_time += t2 - t1
+      @total_read_execution_time += Time.now.getlocal - t1
+      return buffer if expected_bytes == buffer.size
+      retries += 1
+      $log.debug "#{log_header} expected #{expected_bytes} bytes - got #{buffer.size}"
+    end
+    raise "#{log_header} expected #{expected_bytes} bytes - got #{buffer.size}"
   end
 
   def snap(vm_name)
@@ -160,6 +167,11 @@ DELETE_SNAP_EOL
   end
 
   private
+
+  def run_correct_powershell(script)
+    return @winrm.run_elevated_powershell_script(script) if @network
+    @winrm.run_powershell_script(script)
+  end
 
   def entry_range(start_sector, number_sectors)
     sectors_to_read = [MIN_SECTORS_TO_CACHE, number_sectors].max
