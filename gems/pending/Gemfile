@@ -39,7 +39,8 @@ gem "ovirt",                   "~>0.7.2",           :require => false
 gem "pg",                      "~>0.18.2",          :require => false
 gem "psych",                   "~>2.0.12"
 gem "rest-client",             "=2.0.0.rc1",        :require => false
-gem "rubyzip",                 "=0.9.5",            :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
+gem "rubyzip",                 "~>1.2.0",           :require => false
+gem "zip-zip",                 "~>0.3.0",           :require => false
 gem "rufus-lru",               "~>1.0.3",           :require => false
 gem "sys-uname",               "~>1.0.1",           :require => false
 gem "trollop",                 "~>2.0",             :require => false
