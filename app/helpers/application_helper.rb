@@ -1016,7 +1016,7 @@ module ApplicationHelper
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
     test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : ""
   end
 
   def primary_nav_class2(nav_id)
@@ -1027,7 +1027,7 @@ module ApplicationHelper
 
     return "dropdown-menu" if big_iframe
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "" : ""
   end
 
   def secondary_nav_class(nav_layout)
