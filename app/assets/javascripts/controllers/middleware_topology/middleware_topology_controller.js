@@ -1,9 +1,10 @@
-miqHttpInject(angular.module('mwTopologyApp', ['kubernetesUI', 'ui.bootstrap']))
+miqHttpInject(angular.module('mwTopologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
     .controller('middlewareTopologyController', MiddlewareTopologyCtrl);
 
-MiddlewareTopologyCtrl.$inject = ['$scope', '$http', '$interval', "$location" ];
+MiddlewareTopologyCtrl.$inject = ['$scope', '$http', '$interval', "$location", 'topologyService'];
 
-function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
+function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologyService) {
+    var self = this;
     $scope.vs = null;
     $scope.refresh = function() {
         var id;
@@ -78,7 +79,8 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
                     return "#bbb";
             }});
         added.append("title");
-        added.on("dblclick", function(d) {return dblclick(d)});
+        added.on("dblclick", function(d) {
+            return self.dblclick(d);});
         added.append("image")
             .attr("xlink:href",function(d) {
                 return "/assets/100/" + class_name(d) + ".png";
@@ -94,11 +96,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
             .style("display", function(d) {if ($scope.checkboxModel.value) {return "block"} else {return "none"}});
 
         added.selectAll("title").text(function(d) {
-            var status = "Name: " + d.item.name + "\nType: " + d.item.display_kind + "\nStatus: " + d.item.status;
-            if (d.item.kind == 'Host' || d.item.kind == 'VM') {
-                    status += "\nProvider: " + d.item.provider;
-            }
-            return status;
+            return topologyService.tooltip(d).join("\n");
         });
         $scope.vs = vertices;
 
@@ -122,18 +120,9 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
         return class_name;
     }
 
-    function dblclick(d) {
-        var entity_url = "";
-        switch (d.item.kind) {
-            case "MiddlewareManager":
-                entity_url = "ems_middleware";
-                break;
-            default :
-                entity_url = class_name(d);
-        }
-        var url = '/' + entity_url + '/show/' + d.item.miq_id;
-        window.location.assign(url);
-    }
+    this.dblclick = function dblclick(d) {
+      window.location.assign(topologyService.geturl(d));
+    };
 
     function getDimensions(d) {
         switch (d.item.kind) {
@@ -156,18 +145,10 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
     }
 
     $scope.searchNode = function() {
-        var svg = getSVG();
-        var query = $scope.search.query;
+      var svg = getSVG();
+      var query = $scope.search.query;
 
-        var nodes = svg.selectAll("g");
-        if (query != "") {
-            var selected = nodes.filter(function (d) {
-                return d.item.name != query;
-            });
-            selected.style("opacity", "0.2");
-            var links = svg.selectAll("line");
-            links.style("opacity", "0.2");
-        }
+      topologyService.searchNode(svg, query);
     };
 
     $scope.resetSearch = function() {
