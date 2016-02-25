@@ -656,13 +656,6 @@ class MiqServer < ApplicationRecord
     "#{name} [#{id}]"
   end
 
-  def permitted_groups
-    groups = miq_groups.order(:sequence).to_a
-    groups = zone.miq_groups.order(:sequence).to_a if groups.empty?
-    groups = MiqGroup.where(:resource => nil).order(:sequence).to_a if groups.empty?
-    groups
-  end
-
   def server_timezone
     get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
   end
