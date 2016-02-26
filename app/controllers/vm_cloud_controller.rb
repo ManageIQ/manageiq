@@ -18,22 +18,22 @@ class VmCloudController < ApplicationController
       ApplicationController::Feature.new_with_hash(
         :role  => "instances_accord",
         :name  => :instances,
-        :title => "Instances by Provider"),
+        :title => _("Instances by Provider")),
 
       ApplicationController::Feature.new_with_hash(
         :role  => "images_accord",
         :name  => :images,
-        :title => "Images by Provider"),
+        :title => _("Images by Provider")),
 
       ApplicationController::Feature.new_with_hash(
         :role  => "instances_filter_accord",
         :name  => :instances_filter,
-        :title => "Instances",),
+        :title => _("Instances"),),
 
       ApplicationController::Feature.new_with_hash(
         :role  => "images_filter_accord",
         :name  => :images_filter,
-        :title => "Images",)
+        :title => _("Images"),)
     ]
   end
 

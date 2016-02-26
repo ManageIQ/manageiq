@@ -70,7 +70,7 @@ module VmCommon
     @timeline = @timeline_filter = true
     @lastaction = "show_timeline"
     tl_build_timeline                       # Create the timeline report
-    drop_breadcrumb(:name => "Timelines", :url => "/#{db}/show_timeline/#{@record.id}?refresh=n")
+    drop_breadcrumb(:name => _("Timelines"), :url => "/#{db}/show_timeline/#{@record.id}?refresh=n")
     if @explorer
       @refresh_partial = "layouts/tl_show"
       if params[:refresh]
@@ -234,27 +234,34 @@ module VmCommon
     @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
     if ["download_pdf", "main", "summary_only"].include?(@display)
       get_tagdata(@record)
-      drop_breadcrumb({:name => "Virtual Machines", :url => "/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb(:name => @record.name + " (Summary)", :url => "/#{rec_cls}/show/#{@record.id}")
+      drop_breadcrumb({:name => _("Virtual Machines"),
+                       :url  => "/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
+      drop_breadcrumb(:name => @record.name + _(" (Summary)"), :url => "/#{rec_cls}/show/#{@record.id}")
       @showtype = "main"
       @button_group = rec_cls
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     elsif @display == "networks"
-      drop_breadcrumb(:name => @record.name + " (Networks)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => @record.name + _(" (Networks)"),
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
     elsif @display == "os_info"
-      drop_breadcrumb(:name => @record.name + " (OS Information)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => @record.name + _(" (OS Information)"),
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
     elsif @display == "hv_info"
-      drop_breadcrumb(:name => @record.name + " (Container)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => @record.name + _(" (Container)"),
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
     elsif @display == "resources_info"
-      drop_breadcrumb(:name => @record.name + " (Resources)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => @record.name + _(" (Resources)"),
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
     elsif @display == "snapshot_info"
-      drop_breadcrumb(:name => @record.name + " (Snapshots)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => @record.name + _(" (Snapshots)"),
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       build_snapshot_tree
       @button_group = "snapshot"
     elsif @display == "vmtree_info"
       @tree_vms = []                     # Capture all VM ids in the tree
       drop_breadcrumb({:name => @record.name, :url => "/#{rec_cls}/show/#{@record.id}"}, true)
-      drop_breadcrumb(:name => @record.name + " (Genealogy)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => @record.name + _(" (Genealogy)"),
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       # session[:base_id] = @record.id
       vmtree_nodes = vmtree(@record)
       @vm_tree = vmtree_nodes.to_json
@@ -267,39 +274,55 @@ module VmCommon
       session[:squash_open] = (count == 1)
       drop_breadcrumb({:name => @record.name, :url => "/#{rec_cls}/show/#{@record.id}"}, true)
       if count == 1
-        drop_breadcrumb(:name => @record.name + " (Latest Compliance Check)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+        drop_breadcrumb(:name => @record.name + _(" (Latest Compliance Check)"),
+                        :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       else
-        drop_breadcrumb(:name => @record.name + " (Compliance History - Last #{count} Checks)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+        drop_breadcrumb(:name => @record.name + _(" (Compliance History - Last %{number} Checks)") % {:number => count},
+                        :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       end
       @showtype = @display
     elsif @display == "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{@record.name} Capacity & Utilization", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}&refresh=n")
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Initialize perf chart options, charts will be generated async
     elsif @display == "disks"
       @showtype = "disks"
       disks
-      drop_breadcrumb(:name => "#{@record.name} (Disks)", :url => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (Disks)") % {:name => @record.name},
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
     elsif @display == "ontap_logical_disks"
-      drop_breadcrumb(:name => @record.name + " (All #{ui_lookup(:tables => "ontap_logical_disk")})", :url => "/#{rec_cls}/show/#{@record.id}?display=ontap_logical_disks")
+      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_logical_disk")},
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_logical_disks")
       @view, @pages = get_view(OntapLogicalDisk, :parent => @record, :parent_method => :logical_disks)  # Get the records (into a view) and the paginator
       @showtype = "ontap_logical_disks"
     elsif @display == "ontap_storage_systems"
-      drop_breadcrumb(:name => @record.name + " (All #{ui_lookup(:tables => "ontap_storage_system")})", :url => "/#{rec_cls}/show/#{@record.id}?display=ontap_storage_systems")
+      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_storage_system")},
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_storage_systems")
       @view, @pages = get_view(OntapStorageSystem, :parent => @record, :parent_method => :storage_systems)  # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_systems"
     elsif @display == "ontap_storage_volumes"
-      drop_breadcrumb(:name => @record.name + " (All #{ui_lookup(:tables => "ontap_storage_volume")})", :url => "/#{rec_cls}/show/#{@record.id}?display=ontap_storage_volumes")
+      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_storage_volume")},
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_storage_volumes")
       @view, @pages = get_view(OntapStorageVolume, :parent => @record, :parent_method => :storage_volumes)  # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_volumes"
     elsif @display == "ontap_file_shares"
-      drop_breadcrumb(:name => @record.name + " (All #{ui_lookup(:tables => "ontap_file_share")})", :url => "/#{rec_cls}/show/#{@record.id}?display=ontap_file_shares")
+      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_file_share")},
+                      :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_file_shares")
       @view, @pages = get_view(OntapFileShare, :parent => @record, :parent_method => :file_shares)  # Get the records (into a view) and the paginator
       @showtype = "ontap_file_shares"
     end
 
     unless @record.hardware.nil?
-      @record_notes = @record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : @record.hardware.annotation
+      @record_notes = if @record.hardware.annotation.nil?
+                        _("<No notes have been entered for this VM>")
+                      else
+                        @record.hardware.annotation
+                      end
     end
     set_config(@record)
     get_host_for_vm(@record)
@@ -331,14 +354,19 @@ module VmCommon
 
     @gtl_url = "/#{@button_group}/show/" << @record.id.to_s << "?"
     get_tagdata(@record)
-    drop_breadcrumb({:name => "Virtual Machines", :url => "/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
-    drop_breadcrumb(:name => @record.name + " (Summary)", :url => "/#{@button_group}/show/#{@record.id}")
+    drop_breadcrumb({:name => _("Virtual Machines"),
+                     :url  => "/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb(:name => @record.name + _(" (Summary)"), :url => "/#{@button_group}/show/#{@record.id}")
     @showtype = "main"
     @report_only = true
     @showtype = "summary_only"
-    @title = @record.name + " (Summary)"
+    @title = @record.name + _(" (Summary)")
     unless @record.hardware.nil?
-      @record_notes = @record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : @record.hardware.annotation
+      @record_notes = if @record.hardware.annotation.nil?
+                        _("<No notes have been entered for this VM>")
+                      else
+                        @record.hardware.annotation
+                      end
     end
     set_config(@record)
     get_host_for_vm(@record)
@@ -402,9 +430,9 @@ module VmCommon
     key = "_v-#{vm.id}"
     title = vm.name
     style = ""
-    tooltip = "VM: #{vm.name} (Click to view)"
+    tooltip = _("VM: %{name} (Click to view)") % {:name => vm.name}
     if session[:base_vm] == "_h-#{vm.id}"
-      title << " (Selected)"
+      title << _(" (Selected)")
       key = session[:base_vm]
       style = "dynatree-cfme-active cfme-no-cursor-node"
       tooltip = ""
@@ -474,10 +502,10 @@ module VmCommon
       node.id,
       node.name,
       "snapshot.png",
-      "Click to select",
+      _("Click to select"),
       :expand => true
     )
-    branch[:title] << " (Active)" if node.current?
+    branch[:title] << _(" (Active)") if node.current?
     branch[:addClass] = "dynatree-cfme-active" if session[:snap_selected].to_s == branch[:key].to_s
     if node.children.count > 0
       kids = []
@@ -567,7 +595,9 @@ module VmCommon
     @name = @description = ""
     @in_a_form = true
     @button_group = "snap"
-    drop_breadcrumb(:name => "Snapshot VM '" + @record.name + "'", :url => "/vm_common/snap", :display => "snapshot_info")
+    drop_breadcrumb(:name    => _("Snapshot VM '%{name}''") % {:name => @record.name},
+                    :url     => "/vm_common/snap",
+                    :display => "snapshot_info")
     if @explorer
       @edit ||= {}
       @edit[:explorer] = true
@@ -594,7 +624,7 @@ module VmCommon
       if params[:name].blank?
         add_flash(_("Name is required"), :error)
         @in_a_form = true
-        drop_breadcrumb(:name => "Snapshot VM '" + @record.name + "'", :url => "/vm_common/snap")
+        drop_breadcrumb(:name => _("Snapshot VM '%{name}'") % {:name => @record.name}, :url => "/vm_common/snap")
         if session[:edit] && session[:edit][:explorer]
           @edit = session[:edit]    # saving it to use in next transaction
           render :partial => "shared/ajax/flash_msg_replace"
@@ -638,7 +668,8 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     @lastaction = "rsop"
     @showtype = "policies"
-    drop_breadcrumb(:name => "Policy Simulation Details for " + @record.name, :url => "/vm/policies/#{@record.id}")
+    drop_breadcrumb(:name => _("Policy Simulation Details for %{name}") % {:name => @record.name},
+                    :url  => "/vm/policies/#{@record.id}")
     @polArr = @record.resolve_profiles(session[:policies].keys).sort_by { |p| p["description"] }
     @policy_options = {}
     @policy_options[:out_of_scope] = true
@@ -688,7 +719,7 @@ module VmCommon
         nil,
         :style_class => "cfme-no-cursor-node"
       )
-      profile_node[:title] = "<b>Policy Profile:</b> #{profile_node[:title]}"
+      profile_node[:title] = "<b>" + _("Policy Profile:") + "</b> #{profile_node[:title]}"
       profile_node[:children] = build_policy_node(profile["policies"]) if profile["policies"].length > 0
 
       if @policy_options[:out_of_scope] == false
@@ -714,7 +745,7 @@ module VmCommon
   def build_policy_node(policies)
     policy_nodes = []
     policies.sort_by { |a| a["description"] }.each do |policy|
-      active_caption = policy["active"] ? "" : " (Inactive)"
+      active_caption = policy["active"] ? "" : _(" (Inactive)")
       if policy["result"] == "allow"
         icon = "checkmark.png"
       elsif policy["result"] == "N/A"
@@ -729,7 +760,8 @@ module VmCommon
         nil,
         :style_class => "cfme-no-cursor-node"
       )
-      policy_node[:title] = "<b>Policy#{active_caption}:</b> #{policy_node[:title]}"
+      policy_node[:title] = "<b>" + _("Policy %{caption}:") % {:caption => active_caption} +
+                            "</b> #{policy_node[:title]}"
       policy_children = []
       policy_children.push(build_scope_or_expression_node(policy["scope"], "scope_#{policy["id"]}_#{policy["name"]}", "Scope")) if policy["scope"]
       policy_children.concat(build_condition_nodes(policy)) if policy["conditions"].length > 0
@@ -769,7 +801,7 @@ module VmCommon
         nil,
         :style_class => "cfme-no-cursor-node"
       )
-      condition_node[:title] = "<b>Condition:</b> #{condition_node[:title]}"
+      condition_node[:title] = "<b>" + _("Condition:") + "</b> #{condition_node[:title]}"
       condition_children = []
       condition_children.push(build_scope_or_expression_node(condition["scope"], "scope_#{condition["id"]}_#{condition["name"]}", "Scope")) if condition["scope"]
       condition_children.push(build_scope_or_expression_node(condition["expression"], "expression_#{condition["id"]}_#{condition["name"]}", "Expression")) if condition["expression"]
@@ -850,7 +882,7 @@ module VmCommon
       end
     end
     if !@explorer && params[:button] != "back"
-      drop_breadcrumb(:name => "Right Size VM '" + @record.name + "'", :url => "/vm/right_size")
+      drop_breadcrumb(:name => _("Right Size VM '%{name}''") % {:name => @record.name}, :url => "/vm/right_size")
       render :action => "show"
     end
   end
@@ -986,7 +1018,7 @@ module VmCommon
     @record = find_by_id_filtered(Vm, params[:id])
     @svcs = {}
     Service.all.each { |s| @svcs[s.name] = s.id }
-    drop_breadcrumb(:name => "Add VM to a Service", :url => "/vm/add_to_service")
+    drop_breadcrumb(:name => _("Add VM to a Service"), :url => "/vm/add_to_service")
     @in_a_form = true
   end
 
@@ -1034,7 +1066,7 @@ module VmCommon
   alias_method :miq_template_edit, :edit
 
   def build_edit_screen
-    drop_breadcrumb(:name => "Edit VM '" + @record.name + "'", :url => "/vm/edit") unless @explorer
+    drop_breadcrumb(:name => _("Edit VM '%{name}''") % {:name => @record.name}, :url => "/vm/edit") unless @explorer
     session[:edit] = @edit
     @in_a_form = true
     @tabs = [["edit", @record.id.to_s], ["edit", "Information"]]
@@ -1170,9 +1202,10 @@ module VmCommon
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
     if @scan_history.nil?
-      drop_breadcrumb(:name => @record.name + " (Analysis History)", :url => "/vm/#{@record.id}")
+      drop_breadcrumb(:name => @record.name + _(" (Analysis History)"), :url => "/vm/#{@record.id}")
     else
-      drop_breadcrumb(:name => @record.name + " (Analysis History)", :url => "/vm/scan_history/#{@scan_history.vm_or_template_id}")
+      drop_breadcrumb(:name => @record.name + _(" (Analysis History)"),
+                      :url  => "/vm/scan_history/#{@scan_history.vm_or_template_id}")
     end
 
     # Came in from outside show_list partial
@@ -1245,7 +1278,8 @@ module VmCommon
       self.x_node = params[:id]
       replace_right_cell
     else
-      add_flash("User is not authorized to view #{ui_lookup(:model => @record.class.base_model.to_s)} \"#{@record.name}\"",
+      add_flash(_("User is not authorized to view %{model} \"%{name}\"") %
+        {:model => ui_lookup(:model => @record.class.base_model.to_s), :name => @record.name},
                 :error) unless flash_errors?
       render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
     end
@@ -1413,11 +1447,19 @@ module VmCommon
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
             process_show_list(options)
-            @right_cell_text = "Orphaned #{model ? ui_lookup(:models => model) : "VMs & Templates"}"
+            @right_cell_text = if model
+                                 _("Orphaned %{models}") % {:models => ui_lookup(:models => model)}
+                               else
+                                 _("Orphaned VMs & Templates")
+                               end
           elsif id == "arch"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ARCHIVED_CONDITIONS)
             process_show_list(options)
-            @right_cell_text = "Archived #{model ? ui_lookup(:models => model) : "VMs & Templates"}"
+            @right_cell_text = if model
+                                 _("Archived %{models}") % {:models => ui_lookup(:models => model)}
+                               else
+                                 _("Archived VMs & Templates")
+                               end
           end
         elsif TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
           process_show_list(options)  # Get all VMs & Templates
