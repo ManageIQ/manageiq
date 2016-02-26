@@ -52,3 +52,5 @@ class MiqPglogical
     ApplicationRecord.id_to_region(@connection.select_value("SELECT last_value FROM miq_databases_id_seq"))
   end
 end
+
+Dir.glob(Pathname.new(__dir__).join("miq_pglogical/*.rb")).each { |f| require f }
