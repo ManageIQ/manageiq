@@ -1,20 +1,20 @@
-require_relative '../../../app/helpers/miq_expression/filter_subst'
 module MiqAeEngine
   class MiqAeExpressionMethod
-    include FilterSubst
+    include MiqExpression::FilterSubstMixin
     def initialize(method_obj, obj, inputs)
       @edit = {}
       @name = method_obj.name
       @workspace = obj.workspace
       @inputs = inputs
+      @attributes = inputs['distinct'] || inputs['attributes']
       @search = MiqSearch.where(:name => method_obj.data).try(:first)
       raise MiqAeException::MethodExpressionNotFound, "Search expression #{method_obj.data} not found" unless @search
       process_filter
     end
 
     def run
-      @search_objects = Rbac.search(:filter => MiqExpression.new(@exp),
-                                    :class  => @search.db,
+      @search_objects = Rbac.search(:filter         => MiqExpression.new(@exp),
+                                    :class          => @search.db,
                                     :results_format => :objects).first
       @search_objects.empty? ? error_handler : set_result
     end
@@ -23,30 +23,35 @@ module MiqAeEngine
 
     def process_filter
       @exp = @search.filter.exp
-      @exp_table = exp_build_table(@exp)
-      @qs_tokens = create_tokens
-      values = get_args(@qs_tokens.keys.length)
-      values.each_with_index { |v, index| @qs_tokens[index+1][:value] = v }
-      exp_replace_qs_tokens(@exp, @qs_tokens)
+      exp_table = exp_build_table(@exp)
+      qs_tokens = create_tokens(exp_table, @exp)
+      values = get_args(qs_tokens.keys.length)
+      values.each_with_index { |v, index| qs_tokens[index + 1][:value] = v }
+      exp_replace_qs_tokens(@exp, qs_tokens)
     end
 
     def result_hash(obj)
-      @inputs['attributes'].each_with_object({}) do |attr, hash| 
+      @attributes.each_with_object({}) do |attr, hash|
         hash[attr] = result_simple(obj, attr)
       end
     end
 
     def result_array
-      @search_objects.collect { |obj| result_simple(obj, @inputs['attributes'].first) }
+      multiple = @attributes.count > 1
+      result = @search_objects.collect do |obj|
+        multiple ? @attributes.collect { |attr| result_simple(obj, attr) } : result_simple(obj, @attributes.first)
+      end
+      @inputs['distinct'].blank? ? result : result.uniq
     end
 
     def result_simple(obj, attr)
-      raise MiqAeException::MethodNotDefined, "Undefined method #{attr} in class #{obj.class}" unless obj.respond_to?(attr.to_sym)
-      obj.send(attr.to_sym);
+      raise MiqAeException::MethodNotDefined,
+            "Undefined method #{attr} in class #{obj.class}" unless obj.respond_to?(attr.to_sym)
+      obj.send(attr.to_sym)
     end
 
     def set_result
-      target_object.attributes[attribute_name] = get_value
+      target_object.attributes[attribute_name] = exp_value
       @workspace.root['ae_result'] = 'ok'
     end
 
@@ -84,17 +89,18 @@ module MiqAeEngine
     end
 
     def attribute_name
-      @inputs['attribute'] || 'method_result'
+      @inputs['result_attr'] || 'method_result'
     end
 
     def target_object
-      @workspace.get_obj_from_path(@inputs['target'] || '.').tap do |obj|
-        raise MiqAeException::MethodExpressionTargetObjectMissing, @inputs['target'] unless obj
+      @workspace.get_obj_from_path(@inputs['result_obj'] || '.').tap do |obj|
+        raise MiqAeException::MethodExpressionTargetObjectMissing, @inputs['result_obj'] unless obj
       end
     end
 
-    def get_value
-      case @inputs['result_type'].downcase.to_sym
+    def exp_value
+      type = @inputs['result_type'] || 'array'
+      case type.downcase.to_sym
       when :hash
         result_hash(@search_objects.first)
       when :array
@@ -108,10 +114,10 @@ module MiqAeEngine
 
     def get_args(num_token)
       params = []
-      for i in 1..num_token
+      (1..num_token).each do |i|
         key = "arg#{i}"
         raise MiqAeException::MethodParameterNotFound, key unless @inputs.key?(key)
-        params[i-1] = @inputs[key]
+        params[i - 1] = @inputs[key]
       end
       params
     end
