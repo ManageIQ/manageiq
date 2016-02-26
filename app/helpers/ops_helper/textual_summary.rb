@@ -142,7 +142,7 @@ module OpsHelper::TextualSummary
     h
   end
 
-  def convert_to_format(format, text_modifier, value)
+  def self.convert_to_format(format, text_modifier, value)
     fmt_value = case format.to_s
                   when "general_number_precision_0"
                     value.to_i
@@ -162,7 +162,7 @@ module OpsHelper::TextualSummary
       return TenantQuota.default_text_for(metric)
     end
 
-    convert_to_format(format, text_modifier, value)
+    OpsHelper::TextualSummary.convert_to_format(format, text_modifier, value)
   end
 
   def get_tenant_quota_allocations
