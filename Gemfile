@@ -12,7 +12,7 @@ gem "activerecord-session_store",      "~>0.1.2", :require => false
 # Local gems
 path "gems/" do
   gem "manageiq_foreman", :require => false
-  gem "provider_amazon"
+  gem "manageiq-providers-amazon"
 end
 
 # Client-side dependencies
