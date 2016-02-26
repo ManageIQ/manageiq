@@ -315,7 +315,7 @@ module ApiSpecHelper
   def expect_result_resources_to_include_keys(collection, keys)
     expect(@result).to have_key(collection)
     results = @result[collection]
-    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_truthy }
+    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_truthy, "resource missing: #{key}" }
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)
