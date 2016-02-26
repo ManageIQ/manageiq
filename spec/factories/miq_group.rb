@@ -7,7 +7,6 @@ FactoryGirl.define do
       role nil
     end
 
-    guid { MiqUUID.new_guid }
     sequence(:sequence)  # don't want to spend time looking these up
     description { |g| g.role ? "EvmGroup-#{g.role}" : generate(:miq_group_description) }
 

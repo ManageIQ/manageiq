@@ -19,7 +19,7 @@ class MiqGroup < ApplicationRecord
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates :description, :guid, :presence => true, :uniqueness => true
+  validates :description, :presence => true, :uniqueness => true
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
@@ -31,7 +31,6 @@ class MiqGroup < ApplicationRecord
 
   acts_as_miq_taggable
   include ReportableMixin
-  include UuidMixin
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
