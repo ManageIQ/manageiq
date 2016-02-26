@@ -58,9 +58,9 @@ module MiqAeExpressionMethodSpec
       vm1
       vm2
       vm3
-      m_params['arg1'] = {'datatype' => 'string',  'default_value' => 'nada'}
-      m_params['default'] = {'datatype' => 'array',  'default_value' => 'nada'}
-      m_params['on_empty'] = {'datatype' => 'string',  'default_value' => 'warn'}
+      m_params['arg1'] = {'datatype' => 'string', 'default_value' => 'nada'}
+      m_params['default'] = {'datatype' => 'array', 'default_value' => 'nada'}
+      m_params['on_empty'] = {'datatype' => 'string', 'default_value' => 'warn'}
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
@@ -90,7 +90,7 @@ module MiqAeExpressionMethodSpec
       vm1
       vm2
       vm3
-      m_params['distinct'] = {'datatype' => 'array',  'default_value' => 'cpu_shares'}
+      m_params['distinct'] = {'datatype' => 'array', 'default_value' => 'cpu_shares'}
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
@@ -103,7 +103,7 @@ module MiqAeExpressionMethodSpec
     it "expression_method undefined function" do
       vm1
       vm2
-      m_params['attributes'] = {'datatype' => 'array',  'default_value' => 'nada'}
+      m_params['attributes'] = {'datatype' => 'array', 'default_value' => 'nada'}
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
@@ -134,7 +134,7 @@ module MiqAeExpressionMethodSpec
       vm1
       vm2
       vm3
-      m_params['result_type'] = {'datatype' => 'string',  'default_value' => 'nada'}
+      m_params['result_type'] = {'datatype' => 'string', 'default_value' => 'nada'}
 
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',

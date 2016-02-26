@@ -64,7 +64,7 @@ module MiqAeEngine
 
       if obj.workspace.readonly?
         $miq_ae_logger.info("Workspace Instantiation is READONLY -- skipping method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
-      elsif ["inline", "builtin", "uri", "expression"].include?(aem.location.downcase.strip)
+      elsif %w(inline builtin uri expression).include?(aem.location.downcase.strip)
         $miq_ae_logger.info("Invoking [#{aem.location}] method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
         return MiqAeEngine::MiqAeMethod.send("invoke_#{aem.location.downcase.strip}", aem, obj, inputs)
       end
