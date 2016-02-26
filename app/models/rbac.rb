@@ -317,11 +317,7 @@ module Rbac
                                             "use [] to get an empty result back. nil will return all records",
                                             caller(0)) unless Rails.env.production?
     end
-    if objects.respond_to?(:all) || objects.present?
-      Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
-    else
-      objects
-    end
+    Rbac.search(options.merge(:targets => objects, :results_format => :objects, :empty_means_empty => true)).first
   end
 
   def self.find_via_descendants(descendants, method_name, klass)
@@ -427,6 +423,8 @@ module Rbac
     # later: search(:targets => [],  :class => Vm) returns []
     #        search(:targets => nil, :class => Vm) will always search Vms
     if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
+      return [], {:total_count => 0} if options[:empty_means_empty]
+
       Vmdb::Deprecation.deprecation_warning(":targets => []", "use :targets => nil to search all records",
                                             caller(0)) unless Rails.env.production?
       options[:targets] = nil

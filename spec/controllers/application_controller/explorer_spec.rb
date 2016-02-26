@@ -43,8 +43,9 @@ describe VmInfraController do
         user.current_group.set_managed_filters([["/managed/service_level/gold"]])
         login_as user
 
-        expect(Rbac).to receive(:search).with(:targets => [ems_folder], :results_format => :objects).and_call_original
-
+        expect(Rbac).to receive(:search).with(:targets           => [ems_folder],
+                                              :empty_means_empty => true,
+                                              :results_format    => :objects).and_call_original
         controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")
       end
     end
