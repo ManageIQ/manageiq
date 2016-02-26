@@ -128,7 +128,7 @@
             - if role_allows(:feature => "cloud_object_store_container_show_list")
               .form-group
                 %label.col-md-3.control-label
-                  = _('Object Store Containers')
+                  = _('Object Store')
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:cloudobjectstorecontainer, @edit[:new][:views][:cloudobjectstorecontainer])
         - if has_any_role?(%w(ems_infra_show_list ems_cluster_show_list host_show_list resource_pool_show_list storage_show_list repository_show_list vandt_accord vms_filter_accord templates_filter_accord))
