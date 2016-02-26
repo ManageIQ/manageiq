@@ -70,6 +70,10 @@ module MiqReport::Generator::Html
             output << "<td#{style_class}>"
             output << ui_lookup(:model => d.data[c])
             output << "</td>"
+          elsif db == "Tenant" && TenantQuota.can_format_field?(c, d.data["tenant_quotas.name"])
+            output << "<td#{style_class} " + 'style="text-align:right">'
+            output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data["tenant_quotas.name"]))
+            output << "</td>"
           elsif db == "VimUsage"                 # Format usage columns
             case c
             when "cpu_usagemhz_rate_average"
