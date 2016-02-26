@@ -11,6 +11,7 @@ class EvmDatabase
     Tenant
     MiqProductFeature
     MiqUserRole
+    UserGroup
     MiqGroup
     User
     MiqReport
