@@ -317,7 +317,7 @@ module Rbac
                                             "use [] to get an empty result back. nil will return all records",
                                             caller(0)) unless Rails.env.production?
     end
-    if objects.present?
+    if objects.respond_to?(:all) || objects.present?
       Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
     else
       objects
