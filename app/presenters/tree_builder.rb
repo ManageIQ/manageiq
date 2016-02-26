@@ -94,11 +94,11 @@ class TreeBuilder
     when :bottlenecks_tree, :utilization_tree then
       if MiqEnterprise.my_enterprise.is_enterprise?
         title = _("Enterprise")
-        icon  = "enterprise"
+        icon  = :enterprise
       else # FIXME: string CFME below
         title = _("CFME Region: %{region_description} [%{region}]") %
                 {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
-        icon  = "miq_region"
+        icon  = :miq_region
       end
       [title, title, icon]
     when :cb_assignments_tree           then [_("Assignments"),                    _("Assignments")]
@@ -113,10 +113,14 @@ class TreeBuilder
     when :db_tree                       then [_("All Dashboards"), _("All Dashboards")]
     when :diagnostics_tree, :rbac_tree, :settings_tree     then
       region = MiqRegion.my_region
-      ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
+      [_("CFME Region: %{region_description} [%{region}]") % {:region_description => region.description,
+                                                              :region             => region.region},
+       _("CFME Region: %{region_description} [%{region}]") % {:region_description => region.description,
+                                                              :region             => region.region},
+       :miq_region]
     when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
     when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
-    when :export_tree                   then [_("Import / Export"),              _("Import / Export"), _("report")]
+    when :export_tree                   then [_("Import / Export"),              _("Import / Export"), :report]
     when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
     when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
     when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]
@@ -137,10 +141,10 @@ class TreeBuilder
       else
         title = _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
       end
-      [title, title, 'miq_group']
+      [title, title, :miq_group]
     when :sandt_tree                    then [_("All Catalog Items"),            _("All Catalog Items")]
     when :savedreports_tree             then [_("All Saved Reports"),            _("All Saved Reports")]
-    when :schedules_tree                then [_("All Schedules"),                _("All Schedules"), "miq_schedule"]
+    when :schedules_tree                then [_("All Schedules"),                _("All Schedules"), :miq_schedule]
     when :stcat_tree                    then [_("All Catalogs"),                 _("All Catalogs")]
     when :svccat_tree                   then [_("All Services"),                 _("All Services")]
     when :svcs_tree                     then [_("All Services"),                 _("All Services")]
@@ -149,7 +153,7 @@ class TreeBuilder
     when :templates_filter_tree         then [_("All Templates"),                _("All of the Templates that I can see")]
     when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
     when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
-    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), "miq_database"]
+    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), :miq_database]
     when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
     end
   end
