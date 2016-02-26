@@ -21,7 +21,7 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/matthewd/jquery-rjs.git", :branch => "rails5" # https://github.com/amatsuda/jquery-rjs/pull/4
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>2.9.0"
+gem "patternfly-sass",                "~>3.1.0"
 gem "sass-rails"
 gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
@@ -128,7 +128,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-angular",                         "~>1.4.3"
   gem "rails-assets-angular-animate",                 "~>1.4.3"
   gem "rails-assets-angular-mocks",                   "~>1.4.3"
-  gem "rails-assets-angular-patternfly",              "~>2.8.0"
+  gem "rails-assets-angular-patternfly-sass",         "~>3.1.0"
   gem "rails-assets-angular-sanitize",                "~>1.4.3"
   gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
   gem "rails-assets-bootstrap-filestyle",             "~>1.2.1"
