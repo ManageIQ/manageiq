@@ -83,15 +83,9 @@ describe CloudTenantController do
       get :show, :id => @tenant.id
     end
 
-    context "respond_with" do
-      it { is_expected.to have_http_status 200 }
-
-      it { is_expected.not_to have_http_status 500 }
-    end
-
     context "render listnav partial" do
       render_views
-
+      it { is_expected.to have_http_status 200 }
       it { is_expected.to render_template(:partial => "layouts/listnav/_cloud_tenant") }
     end
   end
