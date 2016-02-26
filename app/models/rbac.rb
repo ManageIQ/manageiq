@@ -461,9 +461,9 @@ module Rbac
     ids_clause             = nil
     target_ids             = nil
 
-    if targets.nil? || targets.kind_of?(Array) && targets.empty?
+    if targets.nil?
       scope = apply_scope(klass, scope)
-    elsif targets.kind_of?(Array) && !targets.empty?
+    elsif targets.kind_of?(Array)
       if targets.first.kind_of?(Numeric)
         target_ids = targets
       else
