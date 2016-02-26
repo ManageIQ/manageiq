@@ -42,4 +42,28 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
       expect(subject).to eq(8)
     end
   end
+
+  context "#build_config_spec" do
+    let(:options ) { {:vm_memory => '1024', :number_of_cpus => '8', :cores_per_socket => '2'} }
+    subject { vm.build_config_spec(options) }
+
+    it "memoryMB" do
+      expect(subject["memoryMB"]).to eq(1024)
+    end
+
+    it "numCPUs" do
+      expect(subject["numCPUs"]).to eq(8)
+    end
+
+    context "numCoresPerSocket" do
+      it "vm_vmware virtual_hw_version = 07" do
+        expect(subject["extraConfig"]).to eq([{"key" => "cpuid.coresPerSocket", "value" => "2"}])
+      end
+
+      it "vm_vmware virtual_hw_version != 07" do
+        vm.hardware.update_attributes(:virtual_hw_version => "08")
+        expect(subject["numCoresPerSocket"]).to eq(2)
+      end
+    end
+  end
 end
