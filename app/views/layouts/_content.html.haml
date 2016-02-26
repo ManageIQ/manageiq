@@ -11,65 +11,66 @@
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
 
   = render :partial => "layouts/page_header_navbar"
-  .container-fluid.container-pf-alt-nav-pf-vertical-alt.resizable-sidebar{:style => "overflow: hidden !important"}
+  .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
     .row.toolbar-pf#toolbar
       .col-md-12
         .toolbar-pf-actions
           = render_toolbars(calculate_toolbars)
-    #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
-      #main-content.row
-        .col-md-12
-          .row
-            .col-md-7#explorer
-              %h1#explorer_title
-                %span#explorer_title_text
-                  = URI.unescape(@right_cell_text) if @right_cell_text
-                -# Link to clear the current applied filter, will be moved via JS to the right cell header
-                %span#clear_search{:style => "display:none"}
-                  - if route_exists?(:action => 'adv_search_clear')
-                    (
-                    = link_to("clear",
-                              {:action              => "adv_search_clear"},
-                              "data-miq_sparkle_on" => true,
-                              :remote               => true,
-                              "data-method"         => :post,
-                              :title                => "Remove the current filter",
-                              :style                => "text-decoration: underline;")
-                    )
-            .col-md-5
-              %br
-              = yield :search
-          .row
-            .col-md-12
-              = yield
-      .row.toolbar-pf#paging_div
-        - if saved_report_paging?
-          = render(:partial => 'layouts/saved_report_paging_bar',
-                   :locals  => {:pages => @sb[:pages]})
-        - else
-          = render(:partial => 'layouts/x_pagingcontrols')
+    .row.max-height
+      #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
+        #main-content.row
+          .col-md-12
+            .row
+              .col-md-7#explorer
+                %h1#explorer_title
+                  %span#explorer_title_text
+                    = URI.unescape(@right_cell_text) if @right_cell_text
+                  -# Link to clear the current applied filter, will be moved via JS to the right cell header
+                  %span#clear_search{:style => "display:none"}
+                    - if route_exists?(:action => 'adv_search_clear')
+                      (
+                      = link_to("clear",
+                                {:action              => "adv_search_clear"},
+                                "data-miq_sparkle_on" => true,
+                                :remote               => true,
+                                "data-method"         => :post,
+                                :title                => "Remove the current filter",
+                                :style                => "text-decoration: underline;")
+                      )
+              .col-md-5
+                %br
+                = yield :search
+            .row
+              .col-md-12
+                = yield
+        .row.toolbar-pf#paging_div
+          - if saved_report_paging?
+            = render(:partial => 'layouts/saved_report_paging_bar',
+                     :locals  => {:pages => @sb[:pages]})
+          - else
+            = render(:partial => 'layouts/x_pagingcontrols')
 
-      - unless simulate
-        .resizer.hidden-xs
-          .resizer-box
-            .btn-group
-              .btn.btn-default.resize-left
-                %span.fa.fa-angle-left
-              .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
-                %span.fa.fa-angle-right
+        - unless simulate
+          .resizer.hidden-xs
+            .resizer-box
+              .btn-group
+                .btn.btn-default.resize-left
+                  %span.fa.fa-angle-left
+                .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
+                  %span.fa.fa-angle-right
 
-    #left_div.resizable.sidebar-pf.sidebar-pf-left.max-height{:class => sidebar}
-      #default_left_cell
-        - if @accords && @trees
-          = render :partial => "layouts/listnav"
-        = yield :left
-      #custom_left_cell
+      #left_div.resizable.sidebar-pf.sidebar-pf-left.max-height{:class => sidebar}
+        #default_left_cell
+          - if @accords && @trees
+            = render :partial => "layouts/listnav"
+          = yield :left
+        #custom_left_cell
 - else
 
   #center_div{:style => "height: 100%;"}
     - if layout_uses_listnav?
       = render :partial => "layouts/page_header_navbar"
-      .container-fluid.container-pf-alt-nav-pf-vertical-alt{:style => "overflow: hidden !important"}
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary{:style => "overflow: hidden !important"}
         - if !@in_a_form && taskbar_in_header?
           .row.toolbar-pf#toolbar
             .col-md-12
@@ -106,7 +107,7 @@
 
     - elsif dashboard_no_listnav?
       = render :partial => "layouts/page_header_navbar"
-      .container-fluid.container-pf-alt-nav-pf-vertical-alt
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary
         .max-height{:style => "position:relative;z-index: 1 !important"}
           .row.toolbar-pf#toolbar
             .col-md-12
@@ -126,7 +127,7 @@
                   = yield
     - else
       = render :partial => "layouts/page_header_navbar"
-      .container-pf-alt-nav-pf-vertical-alt
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary
         .col-md-12.max-height
           - if !@in_a_form && taskbar_in_header?
             .row.toolbar-pf#toolbar

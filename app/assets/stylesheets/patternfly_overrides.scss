@@ -1,40 +1,7 @@
 // NAVBAR TESTING
 
-.navbar-pf-alt .navbar-brand .navbar-brand-name { height: 20px; margin-top: 10px; }
-.layout-pf-alt-fixed .nav-pf-vertical-alt {overflow: visible !important}
+
 .navbar__user-name { display: inline-block; color: #FFFFFF; margin-left: 1ex; }
-
-.nav-pf-vertical-alt {background: #292e34}
-.nav-pf-vertical-alt .list-group-item, .nav-pf-vertical-alt li {background: #292e34}
-.nav-pf-vertical-alt .list-group-item, .nav-pf-vertical-alt li {border-color: #000}
-
-.nav-pf-vertical-alt li.active.list-group-item {background: #393f44; border-color: #000}
-.nav-pf-vertical-alt li.active.list-group-item a {color: #fff}
-
-.nav-pf-vertical-alt li.list-group-item:hover {background: #393f44; border-color: #000}
-.nav-pf-vertical-alt li.list-group-item a:hover {color: #fff}
-
-.nav-pf-vertical-alt li.list-group-item i{color: #72767b}
-.nav-pf-vertical-alt li.list-group-item a{color: #fff}
-
-.nav-pf-vertical-alt .list-group-item ul.dropdown-menu {border-color: #000; padding: 0; margin-right: 40px; margin-top: -1px}
-.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a{padding-top: 0; height: 30px !important}
-.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a:hover {background-color: #393f44; border-color: #393f44; color: #fff}
-.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown-submenu a.open:hover {background-color: #393f44;}
-
-.nav-pf-vertical-alt .list-group-item ul.dropdown-menu li.dropdown a.open:hover{background-color: #000 !important}
-
-.layout-pf-alt-fixed .nav-pf-vertical-alt .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-}
-
-li.leaf a:before, li.leaf a:after{
-    border-bottom: none;
-    content: none;
-}
 
 /////////////////////////
 
