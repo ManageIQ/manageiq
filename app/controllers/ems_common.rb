@@ -15,17 +15,17 @@ module EmsCommon
 
     if ["download_pdf", "main", "summary_only"].include?(@display)
       get_tagdata(@ems)
-      drop_breadcrumb(:name => @ems.name + " (Summary)", :url => show_link(@ems))
+      drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     elsif @display == "props"
-      drop_breadcrumb(:name => @ems.name + " (Properties)", :url => show_link(@ems, :display  =>  "props"))
+      drop_breadcrumb(:name => @ems.name + _(" (Properties)"), :url => show_link(@ems, :display  =>  "props"))
     elsif @display == "ems_folders"
       if params[:vat]
-        drop_breadcrumb(:name => @ems.name + " (VMs & Templates)",
+        drop_breadcrumb(:name => @ems.name + _(" (VMs & Templates)"),
                         :url  => show_link(@ems, :display => "ems_folder", :vat => "true"))
       else
-        drop_breadcrumb(:name => @ems.name + " (Hosts & Clusters)",
+        drop_breadcrumb(:name => @ems.name + _(" (Hosts & Clusters)"),
                         :url  => show_link(@ems, :display => "ems_folders"))
       end
       @showtype = "config"
@@ -37,27 +37,28 @@ module EmsCommon
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb(:name => "Timelines", :url => show_link(@record, :refresh => "n", :display => "timeline"))
+      drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
     elsif @display == "dashboard"
       @showtype = "dashboard"
       @lastaction = "show_dashboard"
-      drop_breadcrumb(:name => @ems.name + " (Dashboard)", :url => show_link(@ems))
+      drop_breadcrumb(:name => @ems.name + _(" (Dashboard)"), :url => show_link(@ems))
     elsif @display == "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{@record.name} Capacity & Utilization", :url => "/#{@table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
+                      :url  => "/#{@table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Initialize perf chart options, charts will be generated async
     elsif ["instances", "images", "miq_templates", "vms"].include?(@display) || session[:display] == "vms" && params[:display].nil?
       if @display == "instances"
-        title = "Instances"
+        title = _("Instances")
         kls = ManageIQ::Providers::CloudManager::Vm
       elsif @display == "images"
-        title = "Images"
+        title = _("Images")
         kls = ManageIQ::Providers::CloudManager::Template
       elsif @display == "miq_templates"
-        title = "Templates"
+        title = _("Templates")
         kls = MiqTemplate
       elsif @display == "vms"
-        title = "VMs"
+        title = _("VMs")
         kls = Vm
       end
       view_setup_helper(kls, title, title.singularize)
@@ -67,17 +68,17 @@ module EmsCommon
       view_setup_helper(display_class, title, title.singularize)
     elsif @display == "storages" || session[:display] == "storages" && params[:display].nil?
       title = ui_lookup(:tables => "storages")
-      view_setup_helper(Storage, "Managed " + title, title)
+      view_setup_helper(Storage, _("Managed ") + title, title)
     elsif @display == "ems_clusters"
       view_setup_helper(EmsCluster, title_for_clusters, "Cluster")
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
-      title = "Stacks"
+      title = _("Stacks")
       view_setup_helper(OrchestrationStack, title, title.singularize)
     elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
       title = ui_lookup(:tables => "persistent_volumes")
       view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
     else  # Must be Hosts # FIXME !!!
-      view_setup_helper(Host, "Managed Hosts", "Host")
+      view_setup_helper(Host, _("Managed Hosts"), _("Host"))
     end
     @lastaction = "show"
     session[:tl_record_id] = @record.id
@@ -100,7 +101,7 @@ module EmsCommon
   end
 
   def view_setup_helper(kls, title, bottom_msg_name, parent_method = nil)
-    drop_breadcrumb(:name => @ems.name + " (All #{title})",
+    drop_breadcrumb(:name => @ems.name + _(" (All %{title})") % {:title => title},
                     :url  => show_link(@ems, :display => @display))
     opts = {:parent => @ems}
     opts[:parent_method] = parent_method if parent_method
@@ -108,9 +109,10 @@ module EmsCommon
     @showtype = @display
     if @view.extras[:total_count] && @view.extras[:auth_count] &&
        @view.extras[:total_count] > @view.extras[:auth_count]
-      @bottom_msg = "* You are not authorized to view " +
-                    pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{bottom_msg_name}") +
-                    " on this " + ui_lookup(:tables => @table_name)
+      @bottom_msg = _("* You are not authorized to view ") +
+                    pluralize(@view.extras[:total_count] - @view.extras[:auth_count],
+                              _("other %{message}") % {:message => bottom_msg_name}) +
+                    _(" on this ") + ui_lookup(:tables => @table_name)
     end
   end
 
@@ -126,7 +128,8 @@ module EmsCommon
     set_form_vars
     @in_a_form = true
     session[:changed] = nil
-    drop_breadcrumb({:name => "Add New #{ui_lookup(:table => @table_name)}", :url => "/#{@table_name}/new"})
+    drop_breadcrumb(:name => _("Add New %{table}") % {:table => ui_lookup(:table => @table_name)},
+                    :url  => "/#{@table_name}/new")
   end
 
   def create
@@ -161,7 +164,8 @@ module EmsCommon
             add_flash("#{add_ems.class.human_attribute_name(field)} #{msg}", :error)
           end
         end
-        drop_breadcrumb({:name => "Add New #{ui_lookup(:table => @table_name)}", :url => "/#{@table_name}/new"})
+        drop_breadcrumb(:name => _("Add New %{table}") % {:table => ui_lookup(:table => @table_name)},
+                        :url  => "/#{@table_name}/new")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -271,7 +275,8 @@ module EmsCommon
       update_ems.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      drop_breadcrumb(:name => "Edit #{ui_lookup(:table => @table_name)} '#{@ems.name}'",
+      drop_breadcrumb(:name => _("Edit %{table} '%{name}'") % {:table => ui_lookup(:table => @table_name),
+                                                               :name  => @ems.name},
                       :url  => "/#{@table_name}/edit/#{@ems.id}")
       @in_a_form = true
       session[:changed] = changed
@@ -390,7 +395,7 @@ module EmsCommon
         @timeline = @timeline_filter = true
         @lastaction = "show_timeline"
         tl_build_timeline                       # Create the timeline report
-        drop_breadcrumb(:name => "Timelines", :url => show_link(@record, :refresh => "n", :display => "timeline"))
+        drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
         session[:tl_record_id] = @record.id
         render :update do |page|
           page.redirect_to  polymorphic_path(@record, :display => 'timeline')
@@ -526,14 +531,14 @@ module EmsCommon
       @edit[:errors].push(_("Password/Verify Password do not match"))
     end
     if ems.supports_authentication?(:metrics) && @edit[:new][:metrics_password] != @edit[:new][:metrics_verify]
-      @edit[:errors].push("C & U Database Login Password and Verify Password fields do not match")
+      @edit[:errors].push(_("C & U Database Login Password and Verify Password fields do not match"))
     end
     if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
       unless @edit[:new][:host_default_vnc_port_start] =~ /^\d+$/ || @edit[:new][:host_default_vnc_port_start].blank?
-        @edit[:errors].push(_("%s must be numeric") % "Default Host VNC Port Range Start")
+        @edit[:errors].push(_("Default Host VNC Port Range Start must be numeric"))
       end
       unless @edit[:new][:host_default_vnc_port_end] =~ /^\d+$/ || @edit[:new][:host_default_vnc_port_end].blank?
-        @edit[:errors].push(_("%s must be numeric") % "Default Host VNC Port Range End")
+        @edit[:errors].push(_("Default Host VNC Port Range End must be numeric"))
       end
       unless (@edit[:new][:host_default_vnc_port_start].blank? &&
           @edit[:new][:host_default_vnc_port_end].blank?) ||
@@ -798,13 +803,18 @@ module EmsCommon
         {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:tables => @table_name)}"),
          :count_model => pluralize(emss.length, ui_lookup(:table => @table_name))})
       AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
-          :message => "'#{task}' successfully initiated for #{pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")}",
+          :message => _("'%{task}' successfully initiated for %{table}") %
+            {:task => task, :table => pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")},
           :target_class => model.to_s)
     elsif task == "destroy"
       model.where(:id => emss).order("lower(name)").each do |ems|
         id = ems.id
         ems_name = ems.name
-        audit = {:event => "ems_record_delete_initiated", :message => "[#{ems_name}] Record delete initiated", :target_id => id, :target_class => model.to_s, :userid => session[:userid]}
+        audit = {:event        => "ems_record_delete_initiated",
+                 :message      => _("[%{name}] Record delete initiated") % {:name => ems_name},
+                 :target_id    => id,
+                 :target_class => model.to_s,
+                 :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
       model.destroy_queue(emss)
@@ -815,7 +825,10 @@ module EmsCommon
         id = ems.id
         ems_name = ems.name
         if task == "destroy"
-          audit = {:event => "ems_record_delete", :message => "[#{ems_name}] Record deleted", :target_id => id, :target_class => model.to_s, :userid => session[:userid]}
+          audit = {:event     => "ems_record_delete",
+                   :message   => _("[%{name}] Record deleted") % {:name => ems_name},
+                   :target_id => id, :target_class => model.to_s,
+                   :userid    => session[:userid]}
         end
         begin
           ems.send(task.to_sym) if ems.respond_to?(task)    # Run the task
@@ -823,19 +836,20 @@ module EmsCommon
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
             {:model => model.to_s, :name => ems_name, :task => task, :error_message => bang.message}, :error)
           AuditEvent.failure(:userid => session[:userid], :event => "#{@table_name}_#{task}",
-            :message => "#{ems_name}: Error during '" << task << "': " << bang.message,
+            :message      => _("%{name}: Error during '%{task}': %{message}") %
+                          {:name => ems_name, :task => task, :message => bang.message},
             :target_class => model.to_s, :target_id => id)
         else
           if task == "destroy"
             AuditEvent.success(audit)
             add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => model.to_s), :name => ems_name})
             AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
-              :message => "#{ems_name}: Delete successful",
+              :message      => _("%{name}: Delete successful") % {:name => ems_name},
               :target_class => model.to_s, :target_id => id)
           else
             add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => model.to_s, :name => ems_name, :task => task})
             AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
-              :message => "#{ems_name}: '" + task + "' successfully initiated",
+              :message      => _("%{name}: '%{task}' successfully initiated") % {:name => ems_name, :task => task},
               :target_class => model.to_s, :target_id => id)
           end
         end
@@ -850,7 +864,7 @@ module EmsCommon
     if @lastaction == "show_list" # showing a list, scan all selected emss
       emss = find_checked_items
       if emss.empty?
-        add_flash(_("No %s were selected for deletion") % ui_lookup(:table => @table_name), :error)
+        add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "destroy") unless emss.empty?
       add_flash(_("Delete initiated for %{count_model} from the CFME Database") %

@@ -28,35 +28,41 @@ class EmsClusterController < ApplicationController
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@ems_cluster)
-      drop_breadcrumb({:name => "Clusters", :url => "/ems_cluster/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb(:name => @ems_cluster.name + " (Summary)", :url => "/ems_cluster/show/#{@ems_cluster.id}")
+      drop_breadcrumb({:name => _("Clusters"), :url => "/ems_cluster/show_list?page=#{@current_page}&refresh=y"}, true)
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (Summary)"), :url => "/ems_cluster/show/#{@ems_cluster.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "descendant_vms"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All VMs - Tree View)",
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All VMs - Tree View)"),
                       :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
       build_dc_tree
       build_vm_host_array
 
     when "all_vms"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All VMs)", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=all_vms")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All VMs)"),
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=all_vms")
       @view, @pages = get_view(Vm, :parent => @ems_cluster, :association => "all_vms")  # Get the records (into a view) and the paginator
       @showtype = "vms"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other VM") + " in this Cluster"
+        @bottom_msg = _("* You are not authorized to view ") +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], _("other VM")) +
+                      _(" in this Cluster")
       end
 
     when "miq_templates", "vms"
       title, kls = @display == "vms" ? ["VMs", Vm] : ["Templates", MiqTemplate]
-      drop_breadcrumb(:name => @ems_cluster.name + " (Direct #{title})", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (Direct %{title})") % {:title => title},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @ems_cluster)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " in this Cluster"
+        @bottom_msg = _("* You are not authorized to view ") +
+          pluralize(@view.extras[:total_count] - @view.extras[:auth_count], _("other %{title}") %
+            {:title => title.singularize}) + _(" in this Cluster")
       end
 
     when "hosts"
@@ -67,21 +73,25 @@ class EmsClusterController < ApplicationController
       @showtype = "hosts"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other Host") + " in this Cluster"
+        @bottom_msg = _("* You are not authorized to view ") +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], _("other Host")) +
+                      _(" in this Cluster")
       end
 
     when "resource_pools"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All Resource Pools)", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=resource_pools")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All Resource Pools)"),
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=resource_pools")
       @view, @pages = get_view(ResourcePool, :parent => @ems_cluster) # Get the records (into a view) and the paginator
       @showtype = "resource_pools"
 
     when "config_info"
       @showtype = "config"
-      drop_breadcrumb(:name => "Configuration", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("Configuration"), :url => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}")
 
     when "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{@ems_cluster.name} Capacity & Utilization", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}&refresh=n")
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @ems_cluster.name},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Intialize perf chart options, charts will be generated async
 
     when "timeline"
@@ -91,30 +101,40 @@ class EmsClusterController < ApplicationController
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb(:name => "Timelines", :url => "/ems_cluster/show/#{@record.id}?refresh=n&display=timeline")
+      drop_breadcrumb(:name => _("Timelines"), :url => "/ems_cluster/show/#{@record.id}?refresh=n&display=timeline")
 
     when "storage"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All Descendant #{ui_lookup(:table => "storages")}(s))", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=storage")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All Descendant %{table}(s))") %
+        {:table => ui_lookup(:table => "storages")},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=storage")
       @view, @pages = get_view(Storage, :parent => @ems_cluster)  # Get the records (into a view) and the paginator
       @showtype = "storage"
 
     when "storage_extents"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All #{ui_lookup(:tables => "cim_base_storage_extent")})", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=storage_extents")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "cim_base_storage_extent")},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=storage_extents")
       @view, @pages = get_view(CimBaseStorageExtent, :parent => @ems_cluster, :parent_method => :base_storage_extents)  # Get the records (into a view) and the paginator
       @showtype = "storage_extents"
 
     when "storage_systems"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All #{ui_lookup(:tables => "ontap_storage_system")})", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=storage_systems")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_storage_system")},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=storage_systems")
       @view, @pages = get_view(OntapStorageSystem, :parent => @ems_cluster, :parent_method => :storage_systems) # Get the records (into a view) and the paginator
       @showtype = "storage_systems"
 
     when "ontap_storage_volumes"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All #{ui_lookup(:tables => "ontap_storage_volume")})", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=ontap_storage_volumes")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_storage_volume")},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=ontap_storage_volumes")
       @view, @pages = get_view(OntapStorageVolume, :parent => @ems_cluster, :parent_method => :storage_volumes) # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_volumes"
 
     when "ontap_file_shares"
-      drop_breadcrumb(:name => @ems_cluster.name + " (All #{ui_lookup(:tables => "ontap_file_share")})", :url => "/ems_cluster/show/#{@ems_cluster.id}?display=ontap_file_shares")
+      drop_breadcrumb(:name => @ems_cluster.name + _(" (All %{tables})") %
+        {:tables => ui_lookup(:tables => "ontap_file_share")},
+                      :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=ontap_file_shares")
       @view, @pages = get_view(OntapFileShare, :parent => @ems_cluster, :parent_method => :file_shares) # Get the records (into a view) and the paginator
       @showtype = "ontap_file_shares"
     end
@@ -218,7 +238,7 @@ class EmsClusterController < ApplicationController
 
   def hosts_subsets
     condition         = nil
-    label             = _("%s (All %s)" % [@ems_cluster.name, title_for_hosts])
+    label             = _("%{name} (All %{titles})" % {:name => @ems_cluster.name, :titles => title_for_hosts})
     breadcrumb_suffix = ""
 
     host_service_group_name = params[:host_service_group_name]
@@ -226,13 +246,13 @@ class EmsClusterController < ApplicationController
       case params[:status]
       when 'running'
         hosts_filter =  @ems_cluster.host_ids_with_running_service_group(host_service_group_name)
-        label     = _("Hosts with running %s") % host_service_group_name
+        label        = _("Hosts with running %{name}") % {:name => host_service_group_name}
       when 'failed'
         hosts_filter =  @ems_cluster.host_ids_with_failed_service_group(host_service_group_name)
-        label     = _("Hosts with failed %s") % host_service_group_name
+        label        = _("Hosts with failed %{name}") % {:name => host_service_group_name}
       when 'all'
         hosts_filter = @ems_cluster.host_ids_with_service_group(host_service_group_name)
-        label     = _("All %s with %s") % [title_for_hosts, host_service_group_name]
+        label        = _("All %{titles} with %{name}") % {:titles => title_for_hosts, :name => host_service_group_name}
       end
 
       if hosts_filter
@@ -260,7 +280,7 @@ class EmsClusterController < ApplicationController
       "cluster-#{to_cid(@ems_cluster.id)}",
       @ems_cluster.name,
       "cluster.png",
-      "Cluster: #{@ems_cluster.name}",
+      _("Cluster: %{name}") % {:name => @ems_cluster.name},
       :cfme_no_click => true,
       :expand        => true,
       :style_class   => "cfme-no-cursor-node"
@@ -305,7 +325,7 @@ class EmsClusterController < ApplicationController
   end
 
   def get_session_data
-    @title      = "Clusters"
+    @title      = _("Clusters")
     @layout     = "ems_cluster"
     @lastaction = session[:ems_cluster_lastaction]
     @display    = session[:ems_cluster_display]
