@@ -484,5 +484,83 @@ describe MiqReport do
         report.generate_table(:userid => "admin")
       end
     end
+
+    context "Tenant Quota Report" do
+      include QuotaHelper
+
+      let(:child_tenant) { FactoryGirl.create(:tenant, :parent => @tenant) }
+
+      let(:tenant_quota_cpu) { FactoryGirl.create(:tenant_quota_cpu, :tenant => @tenant, :value => 2) }
+      let(:tenant_quota_mem) { FactoryGirl.create(:tenant_quota_mem, :tenant => @tenant, :value => 4_294_967_296) }
+
+      let(:tenant_quota_storage) do
+        FactoryGirl.create(:tenant_quota_storage, :tenant => @tenant, :value => 4_294_967_296)
+      end
+
+      let(:tenant_quota_vms)       { FactoryGirl.create(:tenant_quota_vms, :tenant => @tenant, :value => 4) }
+      let(:tenant_quota_templates) { FactoryGirl.create(:tenant_quota_templates, :tenant => @tenant, :value => 4) }
+
+      let(:report) do
+        include = {"tenant_quotas" => {"columns" => %w(name total used allocated available)}}
+        cols = ["name", "tenant_quotas.name", "tenant_quotas.total", "tenant_quotas.used", "tenant_quotas.allocated",
+                "tenant_quotas.available"]
+        headers = ["Tenant Name", "Quota Name", "Total Quota", "Total Quota", "In Use", "Allocated", "Available"]
+        FactoryGirl.create(:miq_report, :title => "Tenant Quotas", :order => 'Ascending', :rpt_group => "Custom",
+                           :priority => 231, :rpt_type => 'Custom', :db => 'Tenant', :include => include, :cols => cols,
+                           :col_order => cols, :template_type => "report", :headers => headers)
+      end
+
+      def generate_table_cell(formatted_value)
+        "<td style=\"text-align:right\">#{formatted_value}</td>"
+      end
+
+      def generate_html_row(is_even, tenant_name, formatted_values)
+        row = []
+        row << "<tr class='row#{is_even ? '0' : '1'}-nocursor'><td>#{tenant_name}</td>"
+
+        [:name, :total, :used, :allocated, :available].each do |metric|
+          row << generate_table_cell(formatted_values[metric])
+        end
+
+        row << "</tr>"
+        row.join
+      end
+
+      before do
+        setup_model
+        @tenant.tenant_quotas = [tenant_quota_cpu, tenant_quota_mem, tenant_quota_storage, tenant_quota_vms,
+                                 tenant_quota_templates]
+        @expected_html_rows = []
+
+        formatted_values = {:name => "Allocated Virtual CPUs", :total => "2 Count", :used => "0 Count",
+                            :allocated => "0 Count", :available => "2 Count"}
+        @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
+
+        formatted_values = {:name => "Allocated Memory in GB", :total => "4.0 GB", :used => "1.0 GB",
+                            :allocated => "0.0 GB", :available => "3.0 GB"}
+        @expected_html_rows.push(generate_html_row(false, @tenant.name, formatted_values))
+
+        formatted_values = {:name => "Allocated Storage in GB", :total => "4.0 GB",
+                            :used => "#{1_000_000.0 / 1.gigabyte} GB", :allocated => "0.0 GB",
+                            :available => "#{(4.gigabytes - 1_000_000.0) / 1.gigabyte} GB"}
+        @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
+
+        formatted_values = {:name => "Allocated Number of Virtual Machines", :total => "4 Count", :used => "1 Count",
+                            :allocated => "0 Count", :available => "3 Count"}
+        @expected_html_rows.push(generate_html_row(false, @tenant.name, formatted_values))
+
+        formatted_values = {:name => "Allocated Number of Templates", :total => "4 Count", :used => "1 Count",
+                            :allocated => "0 Count", :available => "3 Count"}
+        @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
+      end
+
+      it "returns expected html outputs with formatted values" do
+        report.generate_table
+        rows_array = report.build_html_rows
+        rows_array.each_with_index do |row, index|
+          expect(@expected_html_rows[index]).to eq(row)
+        end
+      end
+    end
   end
 end
