@@ -15,25 +15,17 @@ describe OrchestrationStackController do
       session[:settings] = {
         :views => {:manageiq_providers_cloudmanager_vm => "grid"}
       }
+      get :show, :id => record.id, :display => "instances"
     end
 
-    it 'does not renders compliance check and comparison buttons' do
-      get :show, :params => {:id => record.id, :display => "instances"}
+    it 'does not render compliance check and comparison buttons' do
       expect(response.body).not_to include('instance_check_compliance')
       expect(response.body).not_to include('instance_compare')
     end
 
-    context "respond with" do
-      subject { get :show, :id => record.id, :display => "instances" }
-
-      it { is_expected.to have_http_status 200 }
-      it { is_expected.not_to have_http_status 500 }
-    end
-
-    context "render listnav partial" do
-      subject { get :show, :id => record.id, :display => "instances" }
-
-      it { is_expected.to render_template(:partial => "layouts/listnav/_orchestration_stack") }
+    it "renders the listnav" do
+      expect(response.status).to eq(200)
+      expect(response.status).to render_template(:partial => "layouts/listnav/_orchestration_stack")
     end
   end
 end

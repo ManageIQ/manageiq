@@ -167,21 +167,15 @@ describe HostController do
                               :cpu_sockets          => 2,
                               :cpu_cores_per_socket => 4,
                               :cpu_total_cores      => 8))
+      session[:settings] = {:quadicons => {:host => 'foo'}}
     end
 
     subject { get :show, :id => @host.id }
 
-    context "respond with" do
-      it { is_expected.to have_http_status 200 }
-      it { is_expected.not_to have_http_status 500 }
-    end
-
-    context "render" do
-      it { is_expected.to render_template('host/show') }
-    end
-
-    context "render listnav partial" do
+    context "render listnav and host" do
       render_views
+      it { is_expected.to have_http_status 200 }
+      it { is_expected.to render_template('host/show') }
       it { is_expected.to render_template(:partial => "layouts/listnav/_host") }
     end
   end
