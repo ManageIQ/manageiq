@@ -100,13 +100,13 @@
             - else
               - params = {}
             %span.product.product-group{params}
-              = h(@user.miq_group_description)
+              = h(@user.current_group.description)
           - else
-            = h(@user.miq_group_description)
+            = h(@user.current_group.description)
         - else
           - if disabled
             %p.form-control-static
-              = h(@user.miq_group_description)
+              = h(@user.current_group.description)
           - else
             - options = (@edit[:new][:group] ? [] : [[_("<Choose a Group>"), nil]]) + @edit[:groups]
             = select_tag('chosen_group',
