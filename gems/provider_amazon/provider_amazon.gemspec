@@ -9,14 +9,10 @@ Gem::Specification.new do |s|
   s.version     = ProviderAmazon::VERSION
   s.authors     = ["Marcel Hild"]
   s.email       = ["hild@b4mad.net"]
-  s.homepage    = ""
-  s.summary     = "Summary of ProviderAmazon."
-  s.description = "Description of ProviderAmazon."
+  s.homepage    = "https://github.com/ManageIQ/manageiq"
+  s.summary     = "AWS Provider for ManageIQ"
+  s.description = "AWS Provider for ManageIQ"
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
-
-  s.add_dependency "rails", ">= 5.0.0.beta2", "< 5.1"
-
-  s.add_development_dependency "sqlite3"
+  s.files = Dir["{app,lib}/**/*"]
 end
