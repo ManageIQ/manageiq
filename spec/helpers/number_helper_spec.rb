@@ -1,4 +1,4 @@
-describe ActionView::Helpers::NumberHelper do
+describe NumberHelper do
   context "#number_to_human_size" do
     # Positive cases taken from Rails helper tests for number_to_human_size to
     #   verify that original method's intent was not changed
