@@ -1,9 +1,9 @@
-miqHttpInject(angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap']))
+miqHttpInject(angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
 .controller('containerTopologyController', ContainerTopologyCtrl);
 
-ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location'];
+ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location', 'topologyService'];
 
-function ContainerTopologyCtrl($scope, $http, $interval, $location) {
+function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyService) {
   var self = this;
   $scope.vs = null;
 
@@ -111,13 +111,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
   };
 
   var buildContextMenuOptions = function(popup, data) {
-    addContextMenuOption(popup, "Go to summary page", data, self.dblclick);
-  };
-
-
-  var addContextMenuOption = function(popup, text, data, callback) {
-    popup.append("p").text(text)
-        .on('click' , function() {callback(data);});
+    topologyService.addContextMenuOption(popup, "Go to summary page", data, self.dblclick);
   };
 
   $scope.$on("render", function(ev, vertices, added) {
@@ -207,7 +201,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
       });
 
     added.selectAll("title").text(function(d) {
-      return self.tooltip(d).join("\n");
+      return topologyService.tooltip(d).join("\n");
     });
 
 
@@ -217,36 +211,8 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
     ev.preventDefault();
   });
 
-  this.tooltip = function tooltip(d) {
-    var status = [
-      __("Name: ") + d.item.name,
-      __("Type: ") + d.item.display_kind,
-      __("Status: ") + d.item.status
-    ];
-
-    if (d.item.kind == 'Host' || d.item.kind == 'Vm') {
-      status.push(__("Provider: ") + d.item.provider);
-    }
-
-   return status;
-  };
-
-  this.geturl = function geturl(d) {
-    var entity_url = "";
-    var action = '/show/' + d.item.miq_id;
-    switch (d.item.kind) {
-      case "ContainerManager":
-        entity_url = "ems_container";
-        break;
-      default :
-        entity_url = _.snakeCase(d.item.kind);
-    }
-
-    return '/' + entity_url + action;
-  };
-
   this.dblclick = function dblclick(d) {
-    window.location.assign(self.geturl(d));
+    window.location.assign(topologyService.geturl(d));
   };
 
   this.getIcon = function getIcon(d) {
@@ -316,15 +282,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location) {
     var svg = getSVG();
     var query = $scope.search.query;
 
-    var nodes = svg.selectAll("g");
-    if (query != "") {
-      var selected = nodes.filter(function (d) {
-        return d.item.name != query;
-      });
-      selected.style("opacity", "0.2");
-      var links = svg.selectAll("line");
-      links.style("opacity", "0.2");
-    }
+   topologyService.searchNode(svg, query);
   };
 
   $scope.resetSearch = function() {
