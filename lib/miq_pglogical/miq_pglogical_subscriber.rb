@@ -1,8 +1,17 @@
 class MiqPglogicalSubscriber < MiqPglogical
   def configure_subscriber
+    return if subscriber?
     pglogical.enable
     create_node
     refresh_subscriptions
+  end
+
+  def destroy_subscriber
+    active_subscription_names.each { |name| pglogical.subscription_drop(name) }
+    c = MiqServer.my_server.get_config
+    c.store_path(*SETTINGS_PATH, :subscriptions, [])
+    c.save
+    drop_node
   end
 
   # Lists the subscriptions in the replication configuration
@@ -38,7 +47,7 @@ class MiqPglogicalSubscriber < MiqPglogical
 
   def added_subscription_conf
     configured   = configured_subscriptions
-    active_names = pglogical.subscriptions.collect { |s| s["subscription_name"] }
+    active_names = active_subscription_names
     configured.each_with_object([]) do |config, new_conf|
       new_conf << config unless active_names.include?(config[:name])
     end
@@ -46,10 +55,14 @@ class MiqPglogicalSubscriber < MiqPglogical
 
   def removed_subscription_names
     configured_names = configured_subscriptions.collect { |s| s[:name] }
-    active_names     = pglogical.subscriptions.collect { |s| s["subscription_name"] }
+    active_names     = active_subscription_names
     active_names.each_with_object([]) do |name, removed_names|
       removed_names << name unless configured_names.include?(name)
     end
+  end
+
+  def active_subscription_names
+    pglogical.subscriptions.collect { |s| s["subscription_name"] }
   end
 
   def dsn_from_conf_hash(db_conn_conf)

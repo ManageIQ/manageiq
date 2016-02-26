@@ -17,6 +17,15 @@ describe MiqPglogicalProvider do
     end
   end
 
+  describe "#destroy_provider" do
+    it "removes the provider configuration" do
+      subject.destroy_provider
+      expect(pglogical.nodes.num_tuples).to eq(0)
+      expect(pglogical.replication_sets).not_to include(described_class::REPLICATION_SET_NAME)
+      expect(subject.provider?).to be false
+    end
+  end
+
   describe "#create_replication_set" do
     it "creates the correct initial set" do
       expected_excludes = subject.configured_excludes

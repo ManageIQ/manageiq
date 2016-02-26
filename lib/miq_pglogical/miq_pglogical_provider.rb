@@ -1,8 +1,15 @@
 class MiqPglogicalProvider < MiqPglogical
   def configure_provider
+    return if provider?
     pglogical.enable
     create_node
     create_replication_set
+  end
+
+  def destroy_provider
+    return unless provider?
+    pglogical.replication_set_drop(REPLICATION_SET_NAME)
+    drop_node
   end
 
   # Lists the tables currently being replicated by pglogical
