@@ -247,11 +247,12 @@ module Authenticator
       end
     end
 
+    # TODO: Fix this icky select matching with tenancy
     def match_groups(external_group_names)
       return [] if external_group_names.empty?
       external_group_names = external_group_names.collect(&:downcase)
 
-      internal_groups = MiqServer.my_server.permitted_groups
+      internal_groups = MiqGroup.order(:sequence).to_a
 
       external_group_names.each { |g| _log.debug("External Group: #{g}") }
       internal_groups.each      { |g| _log.debug("Internal Group: #{g.description.downcase}") }

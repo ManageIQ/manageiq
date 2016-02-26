@@ -5,7 +5,6 @@ class MiqGroup < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :miq_user_role
-  belongs_to :resource, :polymorphic => true
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
   has_many   :miq_templates, :dependent => :nullify
