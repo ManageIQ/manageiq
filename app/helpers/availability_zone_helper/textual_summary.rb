@@ -25,7 +25,7 @@ module AvailabilityZoneHelper::TextualSummary
     h     = {:label => label, :image => "cloud_volume", :value => num}
     if num > 0 && role_allows(:feature => "cloud_volume_show_list")
       h[:link]  = url_for(:action => 'show', :id => @availability_zone, :display => 'cloud_volumes')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -40,7 +40,7 @@ module AvailabilityZoneHelper::TextualSummary
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @availability_zone, :display => 'instances')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end

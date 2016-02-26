@@ -30,26 +30,26 @@ module ContainerImageHelper
     end
 
     def textual_id
-      {:label => "Image Id", :value => @record.image_ref}
+      {:label => _("Image Id"), :value => @record.image_ref}
     end
 
     def textual_full_name
-      {:label => "Full Name", :value => @record.full_name}
+      {:label => _("Full Name"), :value => @record.full_name}
     end
 
     def textual_os_distribution
       distribution = @record.operating_system.try(:distribution)
-      {:label => "Operating System Distribution", :value => distribution} if distribution
+      {:label => _("Operating System Distribution"), :value => distribution} if distribution
     end
 
     def textual_product_type
       type = @record.operating_system.try(:product_type)
-      {:label => "Product Type", :value => type} if type
+      {:label => _("Product Type"), :value => type} if type
     end
 
     def textual_product_name
       name = @record.operating_system.try(:product_name)
-      {:label => "Product Name", :value => name} if name
+      {:label => _("Product Name"), :value => name} if name
     end
   end
 end

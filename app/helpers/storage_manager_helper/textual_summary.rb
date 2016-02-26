@@ -12,26 +12,26 @@ module StorageManagerHelper::TextualSummary
   #
 
   def textual_hostname
-    {:label => "Hostname", :value => @record.hostname}
+    {:label => _("Hostname"), :value => @record.hostname}
   end
 
   def textual_ipaddress
-    {:label => "IPAdress", :value => @record.ipaddress}
+    {:label => _("IP Adress"), :value => @record.ipaddress}
   end
 
   def textual_agent_type
-    {:label => "Agent Type", :value => @record.agent_type}
+    {:label => _("Agent Type"), :value => @record.agent_type}
   end
 
   def textual_port
-    {:label => "Port", :value => @record.port}
+    {:label => _("Port"), :value => @record.port}
   end
 
   def textual_zone_name
-    {:label => "Zone", :value => @record.zone_name}
+    {:label => _("Zone"), :value => @record.zone_name}
   end
 
   def textual_last_update_status_str
-    {:label => "Last Update Status", :value => @record.last_update_status_str}
+    {:label => _("Last Update Status"), :value => @record.last_update_status_str}
   end
 end
