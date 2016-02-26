@@ -263,14 +263,26 @@ class ExtManagementSystem < ApplicationRecord
     default || endpoints.build(:role => "default")
   end
 
-  def hostname_with_role(role)
-    endpoint = endpoints.detect { |e| e.role == role }
-    endpoint.try(:hostname)
+  # Takes a hash of connection data
+  # hostname, port, and authentication
+  # if no role is passed in assume is default role
+  def connection_by_role=(options)
+    unless options.key?(:role)
+      options[:role] = "default"
+    end
+    connection = OpenStruct.new(options)
+
+    non_default = endpoints.detect { |e| e.role == connection.role }
+    non_default || endpoints.build(:role => connection.role, :hostname => connection.hostname, :port => connection.port)
+
+    auth = authentications.detect { |a| a.authtype == connection.role }
+    creds = {connection.role => options}
+    auth || update_authentication(creds)
   end
 
-  def hostname_with_role=(params)
-    non_default = endpoints.detect { |e| e.role == params[:role] }
-    non_default || endpoints.build(:role => params[:role], :hostname => params[:hostname])
+  def connection_by_role(role = "default")
+    endpoint = endpoints.detect { |e| e.role == role }
+    endpoint.try(:hostname)
   end
 
   def hostnames
