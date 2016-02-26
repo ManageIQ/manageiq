@@ -1,6 +1,6 @@
 require 'miq_pglogical'
 
-describe MiqPglogical do
+describe MiqPglogicalProvider do
   let(:connection) { ActiveRecord::Base.connection }
   let(:pglogical)  { connection.pglogical }
   subject          { described_class.new(connection) }
@@ -8,14 +8,16 @@ describe MiqPglogical do
   before do
     skip "pglogical must be installed" unless pglogical.installed?
     MiqServer.seed
-    # make sure the config is seeded
-    MiqServer.config_updated
-    pglogical.enable
-    subject.create_node
-    subject.create_replication_set
+    subject.configure_provider
   end
 
-  describe ".create_replication_set" do
+  describe "#provider?" do
+    it "is true when a provider is configured" do
+      expect(subject.provider?).to be true
+    end
+  end
+
+  describe "#create_replication_set" do
     it "creates the correct initial set" do
       expected_excludes = subject.configured_excludes
       actual_excludes = connection.tables - subject.included_tables
@@ -23,7 +25,7 @@ describe MiqPglogical do
     end
   end
 
-  describe ".refresh_excludes" do
+  describe "#refresh_excludes" do
     it "adds a new non excluded table" do
       connection.exec_query(<<-SQL)
         CREATE TABLE test (id INTEGER PRIMARY KEY)
@@ -37,7 +39,7 @@ describe MiqPglogical do
       new_excludes = subject.configured_excludes << table
 
       c = MiqServer.my_server.get_config
-      c.config.store_path(:workers, :worker_base, :replication_worker, :replication, :exclude_tables, new_excludes)
+      c.config.store_path(:replication, :exclude_tables, new_excludes)
       c.save
 
       subject.refresh_excludes
@@ -49,7 +51,7 @@ describe MiqPglogical do
       new_excludes = subject.configured_excludes - [table]
 
       c = MiqServer.my_server.get_config
-      c.config.store_path(:workers, :worker_base, :replication_worker, :replication, :exclude_tables, new_excludes)
+      c.config.store_path(:replication, :exclude_tables, new_excludes)
       c.save
 
       subject.refresh_excludes
