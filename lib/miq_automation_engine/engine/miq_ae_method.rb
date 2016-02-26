@@ -182,10 +182,12 @@ RUBY
     def self.run_ruby_method(body, preamble = nil)
       ActiveRecord::Base.connection_pool.release_connection
       Bundler.with_clean_env do
-        run_method(Gem.ruby) do |stdin|
-          stdin.puts(preamble.to_s)
-          stdin.puts(body)
-          stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
+        ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+          run_method(Gem.ruby) do |stdin|
+            stdin.puts(preamble.to_s)
+            stdin.puts(body)
+            stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
+          end
         end
       end
     end
