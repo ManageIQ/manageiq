@@ -404,49 +404,49 @@ module ApplicationHelper
       title += ": #{title_for_hosts}"
     # Specific titles for certain layouts
     elsif layout == "miq_server"
-      title += ": Servers"
+      title += _(": Servers")
     elsif layout == "usage"
-      title += ": VM Usage"
+      title += _(": VM Usage")
     elsif layout == "scan_profile"
-      title += ": Analysis Profiles"
+      title += _(": Analysis Profiles")
     elsif layout == "miq_policy_rsop"
-      title += ": Policy Simulation"
+      title += _(": Policy Simulation")
     elsif layout == "all_ui_tasks"
-      title += ": All UI Tasks"
+      title += _(": All UI Tasks")
     elsif layout == "my_ui_tasks"
-      title += ": My UI Tasks"
+      title += _(": My UI Tasks")
     elsif layout == "rss"
-      title += ": RSS"
+      title += _(": RSS")
     elsif layout == "storage_manager"
-      title += ": Storage - Storage Managers"
+      title += _(": Storage - Storage Managers")
     elsif layout == "ops"
-      title += ": Configuration"
+      title += _(": Configuration")
     elsif layout == "provider_foreman"
       title += ": #{ui_lookup(:ui_title => "foreman")} #{ui_lookup(:model => "ExtManagementSystem")}"
     elsif layout == "pxe"
-      title += ": PXE"
+      title += _(": PXE")
     elsif layout == "explorer"
       title += ": #{controller_model_name(params[:controller])} Explorer"
     elsif layout == "vm_cloud"
-      title += ": Instances"
+      title += _(": Instances")
     elsif layout == "vm_infra"
-      title += ": Virtual Machines"
+      title += _(": Virtual Machines")
     elsif layout == "vm_or_template"
-      title += ": Workloads"
+      title += _(": Workloads")
     # Specific titles for groups of layouts
     elsif layout.starts_with?("miq_ae_")
-      title += ": Automate"
+      title += _(": Automate")
     elsif layout.starts_with?("miq_policy")
-      title += ": Control"
+      title += _(": Control")
     elsif layout.starts_with?("miq_capacity")
-      title += ": Optimize"
+      title += _(": Optimize")
     elsif layout.starts_with?("miq_request")
-      title += ": Requests"
+      title += _(": Requests")
     elsif layout.starts_with?("cim_",
                               "snia_")
-      title += ": Storage - #{ui_lookup(:tables => layout)}"
+      title += _(": Storage - %{tables}") % {:tables => ui_lookup(:tables => layout)}
     elsif layout == "login"
-      title += ": Login"
+      title += _(": Login")
     # Assume layout is a table name and look up the plural version
     else
       title += ": #{ui_lookup(:tables => layout)}"
@@ -849,7 +849,7 @@ module ApplicationHelper
   end
 
   def model_for_ems(record)
-    raise "Record is not ExtManagementSystem class" unless record.kind_of?(ExtManagementSystem)
+    raise _("Record is not ExtManagementSystem class") unless record.kind_of?(ExtManagementSystem)
     if record.kind_of?(ManageIQ::Providers::CloudManager)
       ManageIQ::Providers::CloudManager
     elsif record.kind_of?(ManageIQ::Providers::ContainerManager)
@@ -860,7 +860,7 @@ module ApplicationHelper
   end
 
   def model_for_vm(record)
-    raise "Record is not VmOrTemplate class" unless record.kind_of?(VmOrTemplate)
+    raise _("Record is not VmOrTemplate class") unless record.kind_of?(VmOrTemplate)
     if record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
       ManageIQ::Providers::CloudManager::Vm
     elsif record.kind_of?(ManageIQ::Providers::InfraManager::Vm)
@@ -964,7 +964,7 @@ module ApplicationHelper
     if args.key?(:tables)
       entity_name = ui_lookup(:tables => args[:tables])
       link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
-      title       = "Show all #{entity_name}"
+      title       = _("Show all %{names}") % {:names => entity_name}
     elsif args.key?(:text)
       count     = args[:count] ? "(#{args[:count]})" : ""
       link_text = "#{args[:text]} #{count}"
@@ -972,7 +972,7 @@ module ApplicationHelper
       entity_name = ui_lookup(:table => args[:table])
       link_text   = args.key?(:link_text) ? args[:link_text] : entity_name
       link_text   = "#{link_text} (#{args[:count]})" if args.key?(:count)
-      title       = "Show #{entity_name}"
+      title       = _("Show %{name}") % {:name => entity_name}
     end
     title = args[:title] if args.key?(:title)
     return link_text, title
