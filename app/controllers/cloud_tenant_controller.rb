@@ -46,39 +46,56 @@ class CloudTenantController < ApplicationController
     return if record_no_longer_exists?(@cloud_tenant)
 
     @gtl_url = "/cloud_tenant/show/" << @cloud_tenant.id.to_s << "?"
-    drop_breadcrumb({:name => "Cloud Tenants", :url => "/cloud_tenant/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb({:name => _("Cloud Tenants"), :url => "/cloud_tenant/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@cloud_tenant)
-      drop_breadcrumb(:name => @cloud_tenant.name + " (Summary)", :url => "/cloud_tenant/show/#{@cloud_tenant.id}")
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @cloud_tenant.name},
+                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     when "ems_cloud"
-      drop_breadcrumb(:name => @cloud_tenant.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=ems_cloud")
+      drop_breadcrumb(:name => "%{name} (%{table}(s))" % {:name  => @cloud_tenant.name,
+                                                          :table => ui_lookup(:table => "ems_cloud")},
+                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=ems_cloud")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
     when "instances", "images"
       table = @display == "instances" ? "vm_cloud" : "template_cloud"
       title = ui_lookup(:tables => table)
       kls   = @display == "instances" ? ManageIQ::Providers::CloudManager::Vm : ManageIQ::Providers::CloudManager::Template
-      drop_breadcrumb(:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All %{titles})") % {:name => @cloud_tenant.name, :titles => title},
+                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => "cloud_tenant")
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this %{tables}") %
+                            {:titles => title.pluralize, :tables => ui_lookup(:tables => "cloud_tenant")}
+                      else
+                        _("* You are not authorized to view other %{title} on this %{tables}") %
+                            {:title => title.singularize, :tables => ui_lookup(:tables => "cloud_tenant")}
+                      end
       end
     when "security_groups"
       table = "security_groups"
       title = ui_lookup(:tables => table)
       kls   = SecurityGroup
-      drop_breadcrumb(:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @cloud_tenant.name,:title => title},
+                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => "cloud_tenant")
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this %{tables}") %
+                            {:titles => title.pluralize, :tables => ui_lookup(:tables => "cloud_tenant")}
+                      else
+                        _("* You are not authorized to view other %{title} on this %{tables}") %
+                            {:title => title.singularize, :tables => ui_lookup(:tables => "cloud_tenant")}
+                      end
       end
     end
 
@@ -112,7 +129,7 @@ class CloudTenantController < ApplicationController
   end
 
   def get_session_data
-    @title      = "Cloud Tenant"
+    @title      = _("Cloud Tenant")
     @layout     = "cloud_tenant"
     @lastaction = session[:cloud_tenant_lastaction]
     @display    = session[:cloud_tenant_display]

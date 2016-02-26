@@ -239,10 +239,10 @@ class DashboardController < ApplicationController
       @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
-                     when "menu"   then ["menu",     "Add this Menu Widget"]
-                     when "rss"    then ["rssfeed",  "Add this RSS Feed Widget"]
-                     when "chart"  then ["piechart", "Add this Chart Widget"]
-                     when "report" then ["report",   "Add this Report Widget"]
+                     when "menu"   then ["menu",     _("Add this Menu Widget")]
+                     when "rss"    then ["rssfeed",  _("Add this RSS Feed Widget")]
+                     when "chart"  then ["piechart", _("Add this Chart Widget")]
+                     when "report" then ["report",   _("Add this Report Widget")]
                      end
         if prev_type && prev_type != w.content_type
           widget_list << {:id => w.content_type, :type => :separator}
@@ -496,7 +496,7 @@ class DashboardController < ApplicationController
       end
     when :fail
       clear_current_user
-      add_flash(validation.flash_msg || "Error: Authentication failed", :error)
+      add_flash(validation.flash_msg || _("Error: Authentication failed"), :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << javascript_show("flash_div")
@@ -515,7 +515,7 @@ class DashboardController < ApplicationController
       build_timeline
       drop_breadcrumb(:name => @title, :url => "/dashboard/timeline/#{params[:id]}")
     else
-      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
+      drop_breadcrumb(:name => _("Timelines"), :url => "/dashboard/timeline")
       session[:last_rpt_id] = nil # Clear out last rpt record id
     end
     build_timeline_listnav
@@ -533,7 +533,7 @@ class DashboardController < ApplicationController
       end
     else
       @report = nil
-      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
+      drop_breadcrumb(:name => _("Timelines"), :url => "/dashboard/timeline")
       @timeline = true
       session[:last_rpt_id] = nil # Clear out last rpt record id
       build_timeline_listnav
@@ -610,10 +610,10 @@ class DashboardController < ApplicationController
 
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
-      tooltip = "Download this Timeline data in #{typ} format"
+      tooltip = _("Download this Timeline data in %{typ} format") % {:typ => typ}
       "ManageIQ.toolbars.enableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     else
-      tooltip = 'No records found for this timeline'
+      tooltip = _('No records found for this timeline')
       "ManageIQ.toolbars.disableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     end
   end
@@ -703,7 +703,10 @@ class DashboardController < ApplicationController
       ws = MiqWidgetSet.new(:name        => db.name,
                             :group_id    => current_group_id,
                             :userid      => current_userid,
-                            :description => "#{db.name} dashboard for user #{current_userid} in group id #{current_group_id}")
+                            :description => _("%{name} dashboard for user %{id} in group id %{current_group_id}") %
+                                              {:name             => db.name,
+                                               :id               => current_userid,
+                                               :current_group_id => current_group_id})
       ws.set_data = db.set_data
       ws.set_data[:last_group_db_updated] = db.updated_on
       ws.save!

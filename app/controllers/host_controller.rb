@@ -31,27 +31,32 @@ class HostController < ApplicationController
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@host)
-      drop_breadcrumb({:name => "Hosts", :url => "/host/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb(:name => @host.name + " (Summary)", :url => "/host/show/#{@host.id}")
+      drop_breadcrumb({:name => _("Hosts"), :url => "/host/show_list?page=#{@current_page}&refresh=y"}, true)
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @host.name }, :url => "/host/show/#{@host.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "devices"
-      drop_breadcrumb(:name => @host.name + " (Devices)", :url => "/host/show/#{@host.id}?display=devices")
+      drop_breadcrumb(:name => _("%{name} (Devices)") % {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=devices")
 
     when "os_info"
-      drop_breadcrumb(:name => @host.name + " (OS Information)", :url => "/host/show/#{@host.id}?display=os_info")
+      drop_breadcrumb(:name => _("%{name} (OS Information)") % {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=os_info")
 
     when "hv_info"
-      drop_breadcrumb(:name => @host.name + " (VM Monitor Information)", :url => "/host/show/#{@host.id}?display=hv_info")
+      drop_breadcrumb(:name => _("%{name} (VM Monitor Information)") % {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=hv_info")
 
     when "network"
-      drop_breadcrumb(:name => @host.name + " (Network)", :url => "/host/show/#{@host.id}?display=network")
+      drop_breadcrumb(:name => _("%{name} (Network)") % {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=network")
       build_network_tree
 
     when "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{@host.name} Capacity & Utilization", :url => "/host/show/#{@host.id}?display=#{@display}&refresh=n")
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Intialize perf chart options, charts will be generated async
 
     when "timeline"
@@ -61,7 +66,7 @@ class HostController < ApplicationController
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb(:name => "Timelines", :url => "/host/show/#{@record.id}?refresh=n&display=timeline")
+      drop_breadcrumb(:name => _("Timelines"), :url => "/host/show/#{@record.id}?refresh=n&display=timeline")
 
     when "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
@@ -70,64 +75,89 @@ class HostController < ApplicationController
       session[:squash_open] = (count == 1)
       drop_breadcrumb({:name => @host.name, :url => "/host/show/#{@host.id}"}, true)
       if count == 1
-        drop_breadcrumb(:name => @host.name + " (Latest Compliance Check)", :url => "/host/show/#{@host.id}?display=#{@display}")
+        drop_breadcrumb(:name => _("%{name} (Latest Compliance Check)") % {:name => @host.name},
+                        :url  => "/host/show/#{@host.id}?display=#{@display}")
       else
-        drop_breadcrumb(:name => @host.name + " (Compliance History - Last #{count} Checks)", :url => "/host/show/#{@host.id}?display=#{@display}")
+        drop_breadcrumb(:name => _("%{name} (Compliance History - Last #{number} Checks)") % {:name => @host.name,:number => count},
+                        :url  => "/host/show/#{@host.id}?display=#{@display}")
       end
       @showtype = @display
 
     when "storage_adapters"
-      drop_breadcrumb(:name => @host.name + " (Storage Adapters)", :url => "/host/show/#{@host.id}?display=storage_adapters")
+      drop_breadcrumb(:name => _("%{name} (Storage Adapters)")% {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=storage_adapters")
       build_sa_tree
 
     when "miq_templates", "vms"
-      title = @display == "vms" ? "VMs" : "Templates"
+      title = @display == "vms" ? _("VMs") : _("Templates")
       kls = @display == "vms" ? Vm : MiqTemplate
-      drop_breadcrumb(:name => @host.name + " (All #{title})", :url => "/host/show/#{@host.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("% {:name => @host.name} (All %{title})") % {:name => @host.name,:title => title},
+                      :url  => "/host/show/#{@host.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this Host"
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this Host") % {:titles => title.pluralize}
+                      else
+                        _("* You are not authorized to view other %{title} on this Host") % {:title => title.singularize}
+                      end
       end
 
     when "cloud_tenants"
-      drop_breadcrumb(:name => _("%s (All cloud tenants present on this host)") % @host.name,
+      drop_breadcrumb(:name => _("%{name} (All cloud tenants present on this host)") % {:name => @host.name},
                       :url  => "/host/show/#{@host.id}?display=cloud_tenants")
       @view, @pages = get_view(CloudTenant, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = "cloud_tenants"
 
     when "resource_pools"
-      drop_breadcrumb(:name => @host.name + " (All Resource Pools)", :url => "/host/show/#{@host.id}?display=resource_pools")
+      drop_breadcrumb(:name => _("%{name} (All Resource Pools)") % {:name => @host.name},
+                      :url  => "/host/show/#{@host.id}?display=resource_pools")
       @view, @pages = get_view(ResourcePool, :parent => @host)  # Get the records (into a view) and the paginator
       @showtype = "resource_pools"
 
     when "storages"
-      drop_breadcrumb(:name => @host.name + " (All #{ui_lookup(:tables => "storages")})", :url => "/host/show/#{@host.id}?display=storages")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,
+                                                               :tables => ui_lookup(:tables => "storages")},
+                      :url  => "/host/show/#{@host.id}?display=storages")
       @view, @pages = get_view(Storage, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = "storages"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other " + ui_lookup(:table => "storages")) + " on this Host"
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{tables} on this Host") %
+                            {:tables => ui_lookup(:tables => "storages")}
+                      else
+                        _("* You are not authorized to view other %{table} on this Host") %
+                            {:table => ui_lookup(:table => "storages")}
+                      end
       end
 
     when "ontap_logical_disks"
-      drop_breadcrumb(:name => @host.name + " (All #{ui_lookup(:tables => "ontap_logical_disk")})", :url => "/host/show/#{@host.id}?display=ontap_logicals_disks")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,
+                                                               :tables => ui_lookup(:tables => "ontap_logical_disk")},
+                      :url  => "/host/show/#{@host.id}?display=ontap_logicals_disks")
       @view, @pages = get_view(OntapLogicalDisk, :parent => @host, :parent_method => :logical_disks)  # Get the records (into a view) and the paginator
       @showtype = "ontap_logicals_disks"
 
     when "ontap_storage_systems"
-      drop_breadcrumb(:name => @host.name + " (All #{ui_lookup(:tables => "ontap_storage_system")})", :url => "/host/show/#{@host.id}?display=ontap_storage_systems")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,
+                                                               :tables => ui_lookup(:tables => "ontap_storage_system")},
+                      :url  => "/host/show/#{@host.id}?display=ontap_storage_systems")
       @view, @pages = get_view(OntapStorageSystem, :parent => @host, :parent_method => :storage_systems)  # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_systems"
 
     when "ontap_storage_volumes"
-      drop_breadcrumb(:name => @host.name + " (All #{ui_lookup(:tables => "ontap_storage_volume")})", :url => "/host/show/#{@host.id}?display=ontap_storage_volumes")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,
+                                                               :tables => ui_lookup(:tables => "ontap_storage_volume")},
+                      :url  => "/host/show/#{@host.id}?display=ontap_storage_volumes")
       @view, @pages = get_view(OntapStorageVolume, :parent => @host, :parent_method => :storage_volumes)  # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_volumes"
 
     when "ontap_file_shares"
-      drop_breadcrumb(:name => @host.name + " (All #{ui_lookup(:tables => "ontap_file_share")})", :url => "/host/show/#{@host.id}?display=ontap_file_shares")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,
+                                                               :tables => ui_lookup(:tables => "ontap_file_share")},
+                      :url  => "/host/show/#{@host.id}?display=ontap_file_shares")
       @view, @pages = get_view(OntapFileShare, :parent => @host, :parent_method => :file_shares)  # Get the records (into a view) and the paginator
       @showtype = "ontap_file_shares"
     end
@@ -147,7 +177,7 @@ class HostController < ApplicationController
     host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
     if host_service_group
       condition = host_service_group.host_service_group_filesystems_condition
-      label     = _("Configuration files of %s") % 'nova service'
+      label     = _("Configuration files of nova service")
     end
 
     # HACK: UI get_view can't do arel relations, so I need to expose conditions
@@ -179,13 +209,13 @@ class HostController < ApplicationController
       case params[:status]
       when 'running'
         condition = host_service_group.running_system_services_condition
-        label     = _("Running system services of %s") % host_service_group.name
+        label     = _("Running system services of %{name}") % {:name => host_service_group.name}
       when 'failed'
         condition =  host_service_group.failed_system_services_condition
-        label     = _("Failed system services of %s") % host_service_group.name
+        label     = _("Failed system services of %{name}") % {:name => host_service_group.name}
       when 'all'
         condition = nil
-        label     = _("All system services of %s") % host_service_group.name
+        label     = _("All system services of %{name}") % {:name => host_service_group.name}
       end
 
       if condition
@@ -208,16 +238,16 @@ class HostController < ApplicationController
   end
 
   def advanced_settings
-    show_association('advanced_settings', 'Advanced Settings', 'advancedsetting', :advanced_settings, AdvancedSetting)
+    show_association('advanced_settings', _('Advanced Settings'), 'advancedsetting', :advanced_settings, AdvancedSetting)
   end
 
   def firewall_rules
     @display = "main"
-    show_association('firewall_rules', 'Firewall Rules', 'firewallrule', :firewall_rules, FirewallRule)
+    show_association('firewall_rules', _('Firewall Rules'), 'firewallrule', :firewall_rules, FirewallRule)
   end
 
   def guest_applications
-    show_association('guest_applications', 'Packages', 'guest_application', :guest_applications, GuestApplication)
+    show_association('guest_applications', _('Packages'), 'guest_application', :guest_applications, GuestApplication)
   end
 
   # Show the main Host list view
@@ -234,7 +264,7 @@ class HostController < ApplicationController
     assert_privileges("host_new")
     @host = Host.new
     @in_a_form = true
-    drop_breadcrumb(:name => "Add New Host", :url => "/host/new")
+    drop_breadcrumb(:name => _("Add New Host"), :url => "/host/new")
   end
 
   def create
@@ -242,7 +272,9 @@ class HostController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %s was cancelled by the user") % ui_lookup(:model => "Host")
+        page.redirect_to :action    => 'show_list',
+                         :flash_msg => _("Add of new %{model} was cancelled by the user") %
+                           {:model => ui_lookup(:model => "Host")}
       end
     when "add"
       @host = Host.new
@@ -263,7 +295,7 @@ class HostController < ApplicationController
         @host.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        drop_breadcrumb(:name => "Add New Host", :url => "/host/new")
+        drop_breadcrumb(:name => _("Add New Host"), :url => "/host/new")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -291,10 +323,10 @@ class HostController < ApplicationController
       @host = find_by_id_filtered(Host, params[:id])
       @in_a_form = true
       session[:changed] = false
-      drop_breadcrumb(:name => "Edit Host '#{@host.name}'", :url => "/host/edit/#{@host.id}")
-      @title = "Info/Settings"
+      drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
+      @title = _("Info/Settings")
     else            # if editing credentials for multi host
-      @title = "Credentials/Settings"
+      @title = _("Credentials/Settings")
       if params[:selected_host]
         @host = find_by_id_filtered(Host, params[:selected_host])
       else
@@ -323,7 +355,8 @@ class HostController < ApplicationController
       flash = "Edit for Host \""
       @breadcrumbs.pop if @breadcrumbs
       if !session[:host_items].nil?
-        flash = _("Edit of credentials for selected %s was cancelled by the user") % ui_lookup(:models => "Host")
+        flash = _("Edit of credentials for selected %{models} was cancelled by the user") %
+          {:models => ui_lookup(:models => "Host")}
         # redirect_to :action => @lastaction, :display=>session[:host_display], :flash_msg=>flash
         render :update do |page|
           page.redirect_to :action => @lastaction, :display => session[:host_display], :flash_msg => flash
@@ -356,7 +389,7 @@ class HostController < ApplicationController
           @host.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
-          drop_breadcrumb(:name => "Edit Host '#{@host.name}'", :url => "/host/edit/#{@host.id}")
+          drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
           @in_a_form = true
           render :update do |page|
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -377,7 +410,7 @@ class HostController < ApplicationController
             page.redirect_to :action => 'show_list', :flash_msg => _("Credentials/Settings saved successfully")
           end
         else
-          drop_breadcrumb(:name => "Edit Host '#{@host.name}'", :url => "/host/edit/#{@host.id}")
+          drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
           @in_a_form = true
           # redirect_to :action => 'edit', :flash_msg=>@error, :flash_error =>true
           render :update do |page|
@@ -424,7 +457,11 @@ class HostController < ApplicationController
 
   def build_saved_audit_hash_angular(old_attributes, new_record, add)
     name  = new_record.respond_to?(:name) ? new_record.name : new_record.description
-    msg   = "[#{name}] Record #{add ? "added" : "updated"} ("
+    msg   = if add
+              _("[%{name}] Record added (") % {:name => name}
+            else
+              _("[%{name}] Record updated (") % {:name => name}
+            end
     event = "#{new_record.class.to_s.downcase}_record_#{add ? "add" : "update"}"
 
     attribute_difference = new_record.attributes.to_a - old_attributes.to_a
@@ -433,7 +470,7 @@ class HostController < ApplicationController
     difference_messages = []
 
     attribute_difference.each do |key, value|
-      difference_messages << "#{key} changed to #{value}"
+      difference_messages << _("%{key} changed to %{value}") % {:key => key, :value => value}
     end
 
     msg = msg + difference_messages.join(", ") + ")"
@@ -604,7 +641,7 @@ class HostController < ApplicationController
       "h_#{@host.id}",
       @host.name,
       "host.png",
-      "Host: #{@host.name}",
+      _("Host: %{name}") % {:name => @host.name},
       :expand => true
     )
     host_node[:children] = add_host_branch if @host.switches.length > 0
@@ -618,7 +655,7 @@ class HostController < ApplicationController
         "s_#{s.id}",
         s.name,
         "switch.png",
-        "Switch: #{s.name}"
+        _("Switch: %{name}") % {:name => s.name}
       )
       switch_node_children = []
       switch_node_children.concat(add_guest_devices(s)) if s.guest_devices.length > 0
@@ -634,7 +671,7 @@ class HostController < ApplicationController
         "n_#{p.id}",
         p.device_name,
         "pnic.png",
-        "Physical NIC: #{p.device_name}"
+        _("Physical NIC: %{name}") % {:name => p.device_name}
       )
     end
   end
@@ -645,7 +682,7 @@ class HostController < ApplicationController
         "l_#{l.id}",
         l.name,
         "lan.png",
-        "Port Group: #{l.name}"
+        _("Port Group: %{name}") % {:name => l.name}
       )
       lan_node[:children] = add_vm_nodes(l) if l.respond_to?("vms_and_templates") &&
                                                l.vms_and_templates.length > 0
@@ -666,7 +703,7 @@ class HostController < ApplicationController
           "v-#{v.id}",
           v.name,
           image,
-          "VM: #{v.name} (Click to view)"
+          _("VM: %{name} (Click to view)") % {:name => v.name}
         )
       end
     end
@@ -678,7 +715,7 @@ class HostController < ApplicationController
       "h_#{@host.id}",
       @host.name,
       "host.png",
-      "Host: #{@host.name}",
+      _("Host: %{name}") % {:name => @host.name},
       :expand      => true,
       :style_class => "cfme-no-cursor-node"
     )
@@ -695,7 +732,8 @@ class HostController < ApplicationController
         "sa_#{storage_adapter.id}",
         storage_adapter.device_name,
         "sa_#{storage_adapter.controller_type.downcase}.png",
-        "#{storage_adapter.controller_type} Storage Adapter: #{storage_adapter.device_name}",
+        _("%{type} Storage Adapter: %{name}") % {:type => storage_adapter.controller_type,
+                                                 :name => storage_adapter.device_name},
         :style_class => "cfme-no-cursor-node"
       )
       storage_adapter_node[:children] =
@@ -706,14 +744,17 @@ class HostController < ApplicationController
 
   def add_miq_scsi_targets_nodes(storage_adapter)
     storage_adapter.miq_scsi_targets.collect do |scsi_target|
-      name = "SCSI Target #{scsi_target.target}"
-      name += " (#{scsi_target.iscsi_name})" unless scsi_target.iscsi_name.blank?
+      name = if scsi_target.iscsi_name.blank?
+               _("SCSI Target %{target}") % {:target => scsi_target.target}
+             else
+               _("SCSI Target %{target} (%{name})") % {:target => scsi_target.target, :name => scsi_target.iscsi_name}
+             end
       target_text = name.blank? ? "[empty]" : name
       target_node = TreeNodeBuilder.generic_tree_node(
         "t_#{scsi_target.id}",
         target_text,
         "target_scsi.png",
-        "Target: #{target_text}",
+        _("Target: %{text}") % {:text => target_text},
         :style_class => "cfme-no-cursor-node"
       )
       target_node[:children] = add_miq_scsi_luns_nodes(scsi_target) if scsi_target.miq_scsi_luns.length > 0
@@ -727,7 +768,7 @@ class HostController < ApplicationController
         "l_#{l.id}",
         l.canonical_name,
         "lun.png",
-        "LUN: #{l.canonical_name}",
+        _("LUN: %{name}") % {:name => l.canonical_name},
         :style_class => "cfme-no-cursor-node"
       )
     end
@@ -738,36 +779,36 @@ class HostController < ApplicationController
     valid = true
     @errors = []
     if !host.authentication_userid.blank? && params[:password] != params[:verify]
-      @errors.push("Default Password and Verify Password fields do not match")
+      @errors.push(_("Default Password and Verify Password fields do not match"))
       valid = false
       @tabnum = "1"
     end
     if host.authentication_userid.blank? && (!host.authentication_userid(:remote).blank? || !host.authentication_userid(:ws).blank?)
-      @errors.push("Default User ID must be entered if a Remote Login or Web Services User ID is entered")
+      @errors.push(_("Default User ID must be entered if a Remote Login or Web Services User ID is entered"))
       valid = false
       @tabnum = "1"
     end
     if !host.authentication_userid(:remote).blank? && params[:remote_password] != params[:remote_verify]
-      @errors.push("Remote Login Password and Verify Password fields do not match")
+      @errors.push(_("Remote Login Password and Verify Password fields do not match"))
       valid = false
       @tabnum ||= "2"
     end
     if !host.authentication_userid(:ws).blank? && params[:ws_password] != params[:ws_verify]
-      @errors.push("Web Services Password and Verify Password fields do not match")
+      @errors.push(_("Web Services Password and Verify Password fields do not match"))
       valid = false
       @tabnum ||= "3"
     end
     if !host.authentication_userid(:ipmi).blank? && params[:ipmi_password] != params[:ipmi_verify]
-      @errors.push("IPMI Password and Verify Password fields do not match")
+      @errors.push(_("IPMI Password and Verify Password fields do not match"))
       valid = false
       @tabnum ||= "4"
     end
     if params[:ws_port] && !(params[:ws_port] =~ /^\d+$/)
-      @errors.push("Web Services Listen Port must be numeric")
+      @errors.push(_("Web Services Listen Port must be numeric"))
       valid = false
     end
     if params[:log_wrapsize] && (!(params[:log_wrapsize] =~ /^\d+$/) || params[:log_wrapsize].to_i == 0)
-      @errors.push("Log Wrap Size must be numeric and greater than zero")
+      @errors.push(_("Log Wrap Size must be numeric and greater than zero"))
       valid = false
     end
     valid
@@ -817,7 +858,7 @@ class HostController < ApplicationController
   end
 
   def get_session_data
-    @title      = "Hosts"
+    @title      = _("Hosts")
     @layout     = "host"
     @drift_db   = "Host"
     @lastaction = session[:host_lastaction]

@@ -51,9 +51,9 @@ class ChargebackController < ApplicationController
     @sb[:open_tree_nodes] ||= []
 
     @right_cell_text = case x_active_tree
-                       when :cb_rates_tree       then _("All %s") % ui_lookup(:models => "ChargebackRate")
-                       when :cb_assignments_tree then _("All %s") % "Assignments"
-                       when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
+                       when :cb_rates_tree       then _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
+                       when :cb_assignments_tree then _("All Assignments")
+                       when :cb_reports_tree     then _("All Saved Chargeback Reports")
                        end
     set_form_locals
     session[:changed] = false
@@ -105,7 +105,8 @@ class ChargebackController < ApplicationController
     assert_privileges(params[:pressed]) if params[:pressed]
     case params[:button]
     when "cancel"
-      add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? _("Add of new %s was cancelled by the user") % ui_lookup(:model => "ChargebackRate") :
+      add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? _("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:model => "ChargebackRate")} :
         _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate].description}}")
       get_node_info(x_node)
       @sb[:rate] = @sb[:rate_details] = nil
@@ -181,7 +182,7 @@ class ChargebackController < ApplicationController
         @sb[:rate_details] = []
         rate = ChargebackRate.find(obj[0])
         @sb[:rate] = ChargebackRate.new
-        @sb[:rate].description = "Copy of " + rate.description
+        @sb[:rate].description = _("Copy of %{description}") % {:description => rate.description}
         @sb[:rate].rate_type = rate.rate_type
         rate_details = rate.chargeback_rate_details
         # Create new rate detail records for copied rate record
@@ -382,7 +383,7 @@ class ChargebackController < ApplicationController
       @report = nil
       return
     end
-    @right_cell_text ||= "Saved Chargeback Report [#{rr.name}]"
+    @right_cell_text ||= _("Saved Chargeback Report [%{name}]") % {:name => rr.name}
     if rr.userid != session[:userid]
       add_flash(_("Report is not authorized for the logged in user"), :error)
       @saved_reports = cb_rpts_get_all_reps(id.split('-')[1])
@@ -434,7 +435,7 @@ class ChargebackController < ApplicationController
     if x_active_tree == :cb_rates_tree
       if node == "root"
         @sb[:rate] = @record = @sb[:selected_rate_details] = nil
-        @right_cell_text = _("All %s") % ui_lookup(:models => "ChargebackRate")
+        @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
       elsif ["xx-Compute", "xx-Storage"].include?(node)
         @sb[:rate] = @record = @sb[:selected_rate_details] = nil
         @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
@@ -450,7 +451,7 @@ class ChargebackController < ApplicationController
         cb_assign_set_form_vars
         @right_cell_text = _("%{typ} %{model}") % {:typ => node.split('-').last, :model => "Rate Assignments"}
       else
-        @right_cell_text = _("All %s") % "Assignments"
+        @right_cell_text = _("All Assignments")
       end
     elsif x_active_tree == :cb_reports_tree
       @nodetype = node.split("-")[0]
@@ -835,7 +836,7 @@ class ChargebackController < ApplicationController
   end
 
   def get_session_data
-    @title        = "Chargeback"
+    @title        = _("Chargeback")
     @layout ||= "chargeback"
     @lastaction   = session[:chargeback_lastaction]
     @display      = session[:chargeback_display]
