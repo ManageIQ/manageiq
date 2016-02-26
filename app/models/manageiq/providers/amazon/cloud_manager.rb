@@ -142,10 +142,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     @s3 ||= connect(:service => "S3")
   end
 
-  def sqs
-    @sqs ||= connect(:service => "SQS")
-  end
-
   def cloud_formation
     @cloud_formation ||= connect(:service => "CloudFormation", :sdk_v2 => true)
   end
