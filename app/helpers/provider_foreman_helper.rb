@@ -124,15 +124,15 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_name
-    {:label => "Name", :value => @record.name}
+    {:label => _("Name"), :value => @record.name}
   end
 
   def textual_configuration_profile_region
-    {:label => "Region", :value => @record.region_description}
+    {:label => _("Region"), :value => @record.region_description}
   end
 
   def textual_configuration_profile_zone
-    {:label => "Zone", :value => @record.my_zone}
+    {:label => _("Zone"), :value => @record.my_zone}
   end
 
   def textual_configuration_profile_group_environment
@@ -142,15 +142,15 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_environment
-    {:label => "Environment", :value => @record.configuration_environment_name}
+    {:label => _("Environment"), :value => @record.configuration_environment_name}
   end
 
   def textual_configuration_profile_domain
-    {:label => "Domain", :value => @record.configuration_domain_name}
+    {:label => _("Domain"), :value => @record.configuration_domain_name}
   end
 
   def textual_configuration_profile_puppet_realm
-    {:label => "Puppet Realm", :value => @record.configuration_realm_name}
+    {:label => _("Puppet Realm"), :value => @record.configuration_realm_name}
   end
 
   def textual_configuration_profile_group_os
