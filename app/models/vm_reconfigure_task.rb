@@ -40,7 +40,7 @@ class VmReconfigureTask < MiqRequestTask
   end
 
   def do_request
-    config = build_config_spec
+    config = vm.build_config_spec(options)
     dumpObj(config, "#{_log.prefix} Config spec: ", $log, :info)
     vm.spec_reconfigure(config)
 
@@ -49,48 +49,6 @@ class VmReconfigureTask < MiqRequestTask
     else
       update_and_notify_parent(:state => 'finished', :message => "#{request_class::TASK_DESCRIPTION} complete")
       #        call_automate_event('vm_provision_postprocessing')
-    end
-  end
-
-  def build_config_spec
-    VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      case vm.hardware.virtual_hw_version
-      when "07"
-        ec =  VimArray.new('ArrayOfOptionValue')
-        ec << VimHash.new('OptionValue') do |ov|
-          ov.key   = "cpuid.coresPerSocket"
-          ov.value = VimString.new(get_option(:cores_per_socket).to_s, nil, "xsd:string")
-        end
-        vmcs.extraConfig = ec
-      else
-        set_spec_option(vmcs, :numCoresPerSocket, :cores_per_socket, nil, :to_i)
-      end
-      set_spec_option(vmcs, :memoryMB, :vm_memory,      nil, :to_i)
-      set_spec_option(vmcs, :numCPUs,  :number_of_cpus, nil, :to_i)
-    end
-  end
-
-  # Set the value if it is not nil
-  def set_spec_option(obj, property, key, default_value = nil, modifier = nil, override_value = nil)
-    if key.nil?
-      value = get_option(nil, override_value)
-    else
-      value = override_value.nil? ? get_option(key) : override_value
-    end
-    value = default_value if value.nil?
-    unless value.nil?
-      # Modifier is a method like :to_s or :to_i
-      value = value.to_s if [true, false].include?(value)
-      value = value.send(modifier) unless modifier.nil?
-      _log.info "#{property} was set to #{value} (#{value.class})"
-      obj.send("#{property}=", value)
-    else
-      value = obj.send("#{property}")
-      if value.nil?
-        _log.info "#{property} was NOT set due to nil"
-      else
-        _log.info "#{property} inheriting value from spec: #{value} (#{value.class})"
-      end
     end
   end
 end
