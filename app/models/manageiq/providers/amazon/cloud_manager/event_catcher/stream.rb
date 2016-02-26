@@ -41,7 +41,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   # :yield: array of Amazon events as hashes
   #
   def poll
-    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+    @ems.with_provider_connection(:service => :SQS) do |sqs|
       queue_poller = Aws::SQS::QueuePoller.new(
         find_or_create_queue,
         :client            => sqs.client,
@@ -82,7 +82,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
 
   def queue_has_policy?(queue_url, topic_arn)
     policy_attribute = 'Policy'
-    policy = @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+    policy = @ems.with_provider_connection(:service => :SQS) do |sqs|
       sqs.client.get_queue_attributes(
         :queue_url       => queue_url,
         :attribute_names => [policy_attribute]
@@ -98,14 +98,14 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def sqs_create_queue(queue_name)
-    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+    @ems.with_provider_connection(:service => :SQS) do |sqs|
       sqs.client.create_queue(:queue_name => queue_name).queue_url
     end
   end
 
   def sqs_get_queue_url(queue_name)
     $aws_log.debug("#{log_header} Looking for Amazon SQS Queue #{queue_name} ...")
-    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+    @ems.with_provider_connection(:service => :SQS) do |sqs|
       sqs.client.get_queue_url(:queue_name => queue_name).queue_url
     end
   end
@@ -113,7 +113,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   # @return [Aws::SNS::Topic] the found topic
   # @raise [ProviderUnreachable] in case the topic is not found
   def sns_topic
-    @ems.with_provider_connection(:service => :SNS, :sdk_v2 => true) do |sns|
+    @ems.with_provider_connection(:service => :SNS) do |sns|
       sns.topics.detect { |t| t.arn.split(/:/)[-1] == @topic_name }
     end || begin
       $aws_log.warn("#{log_header} Unable to find the AWS Config Topic '#{@topic_name}'. " \
@@ -135,7 +135,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     queue_arn = queue_url_to_arn(queue_url)
     policy    = queue_policy(queue_arn, topic_arn)
 
-    @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+    @ems.with_provider_connection(:service => :SQS) do |sqs|
       sqs.client.set_queue_attributes(
         :queue_url  => queue_url,
         :attributes => {'Policy' => policy}
@@ -147,7 +147,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     @queue_url_to_arn ||= {}
     @queue_url_to_arn[queue_url] ||= begin
       arn_attribute = "QueueArn"
-      @ems.with_provider_connection(:service => :SQS, :sdk_v2 => true) do |sqs|
+      @ems.with_provider_connection(:service => :SQS) do |sqs|
         sqs.client.get_queue_attributes(
           :queue_url       => queue_url,
           :attribute_names => [arn_attribute]

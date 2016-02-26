@@ -55,7 +55,7 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
   end
 
   def start_clone(clone_options)
-    source.with_provider_connection(:service => :EC2, :sdk_v2 => true) do |ec2|
+    source.with_provider_connection(:service => :EC2) do |ec2|
       instances = ec2.create_instances(clone_options)
       return instances.first.id
     end
