@@ -10,7 +10,8 @@ class MiqPglogicalSubscriber < MiqPglogical
   #   This hash should contain the keys:
   #     :dbname, :user, :password, :host, :port
   def configured_subscriptions
-    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :subscriptions)
+    name_configured_subscriptions
+    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :subscriptions) || []
   end
 
   def refresh_subscriptions
@@ -20,31 +21,35 @@ class MiqPglogicalSubscriber < MiqPglogical
 
   private
 
+  def name_configured_subscriptions
+    c = MiqServer.my_server.get_config
+    return unless (subscriptions = c.config.fetch_path(*SETTINGS_PATH, :subscriptions))
+    subscriptions.each do |s|
+      next if s[:name]
+      s[:name] = "subscription_#{s[:host].gsub(/\.|-/, "_")}"
+    end
+    c.config.store_path(*SETTINGS_PATH, :subscriptions, subscriptions)
+    c.save
+  end
+
   def create_subscription(conf)
-    name = "subscription_#{conf[:host].gsub(/\.|-/, "_")}"
-    pglogical.subscription_create(name, dsn_from_conf_hash(conf), [REPLICATION_SET_NAME], false)
+    pglogical.subscription_create(conf[:name], dsn_from_conf_hash(conf), [REPLICATION_SET_NAME], false)
   end
 
   def added_subscription_conf
     configured   = configured_subscriptions
     active_names = pglogical.subscriptions.collect { |s| s["subscription_name"] }
-    new_conf = []
-    configured.each do |config|
-      if config[:name].nil? || !active_names.include?(config[:name])
-        new_conf << config
-      end
+    configured.each_with_object([]) do |config, new_conf|
+      new_conf << config unless active_names.include?(config[:name])
     end
-    new_conf
   end
 
   def removed_subscription_names
     configured_names = configured_subscriptions.collect { |s| s[:name] }
     active_names     = pglogical.subscriptions.collect { |s| s["subscription_name"] }
-    removed_names = []
-    active_names.each do |name|
+    active_names.each_with_object([]) do |name, removed_names|
       removed_names << name unless configured_names.include?(name)
     end
-    removed_names
   end
 
   def dsn_from_conf_hash(db_conn_conf)
