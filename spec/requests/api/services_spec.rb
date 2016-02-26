@@ -224,8 +224,7 @@ describe ApiController do
       run_get services_url(svc1.id)
 
       expect_request_success
-      expect_result_to_have_keys(%w(actions))
-      expect(action_names(@result)).to match_array(%w(retire))
+      expect(@result).to declare_actions("retire")
     end
 
     it "returns reconfigure action for reconfigurable services" do
@@ -239,8 +238,7 @@ describe ApiController do
       run_get services_url(svc1.id)
 
       expect_request_success
-      expect_result_to_have_keys(%w(actions))
-      expect(action_names(@result)).to match_array(%w(retire reconfigure))
+      expect(@result).to declare_actions("retire", "reconfigure")
     end
 
     it "accepts action when service is reconfigurable" do
