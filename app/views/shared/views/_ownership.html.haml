@@ -49,5 +49,5 @@
         %td
           - if @ownershipitems
             - @embedded = true
-            - @gtl_type = @settings[:views][:tagging]
+            - @gtl_type = settings(:views, :tagging)
             = render :partial => "layouts/gtl"

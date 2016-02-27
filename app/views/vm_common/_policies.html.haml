@@ -22,7 +22,7 @@
     :locals => {:tree_id           => "#{session[:tree_name]}box",
       :tree_name                   => session[:tree_name],
       :json_tree                   => session[:policy_tree],
-      :icon_size                   => @settings[:views][:treesize].to_i,
+      :icon_size                   => settings(:views, :treesize).to_i,
       :base_id                     => "h_#{@record.name}",
       :cfme_no_click               => true,
       :tree_state                  => true,

@@ -99,7 +99,7 @@
           %td
             - if session[:host_items]
               - @embedded = true
-              - @gtl_type = @settings[:views][:host]
+              - @gtl_type = settings(:views, :host)
               = render :partial => 'layouts/gtl'
 
 :javascript

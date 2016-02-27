@@ -13,6 +13,11 @@ module ApplicationHelper
   include TextualSummaryHelper
   include NumberHelper
 
+  def settings(*path)
+    @settings ||= {}
+    @settings.fetch_path(*path)
+  end
+
   def documentation_link(url = nil, documentation_subject = "")
     if url
       link_to(_("For more information, visit the %{subject} documentation.") % {:subject => documentation_subject},

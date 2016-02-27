@@ -45,7 +45,6 @@ describe VmCloudController do
 
   context "with rendered views" do
     before do
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
       get :explorer
     end

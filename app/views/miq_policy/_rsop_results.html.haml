@@ -45,7 +45,7 @@
         :locals         => {:tree_id => "rsop_treebox",
           :tree_name                 => "rsop_tree",
           :json_tree                 => session[:rsop_tree] || "[]",
-          :icon_size                 => @settings[:views][:treesize].to_i,
+          :icon_size                 => settings(:views, :treesize).to_i,
           :exp_tree                  => @sb[:rsop][:open],
           :cursor_style              => true,
           :no_base_exp               => true,

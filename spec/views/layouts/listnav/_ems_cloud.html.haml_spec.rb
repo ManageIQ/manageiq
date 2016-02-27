@@ -4,7 +4,6 @@ describe "layouts/listnav/_ems_cloud.html.haml" do
   before :each do
     set_controller_for_view("ems_cloud")
     assign(:panels, "ems_cloud_prop" => true, "ems_cloud_rel" => true)
-    @settings = {:quadicons => {:ems => true}}
     allow(view).to receive(:truncate_length).and_return(23)
     allow(view).to receive(:role_allows).and_return(true)
   end

@@ -159,7 +159,6 @@ describe EmsInfraController do
 
   describe "#show" do
     before(:each) do
-      session[:settings] = {:views => {}}
       set_user_privileges
       get :show, :params => {:id => ems.id}.merge(url_params)
     end
@@ -180,7 +179,6 @@ describe EmsInfraController do
 
   describe "#show_list" do
     before(:each) do
-      session[:settings] = {:views => {}}
       set_user_privileges
       FactoryGirl.create(:ems_vmware)
       get :show_list
@@ -220,7 +218,6 @@ describe EmsInfraController do
     before do
       set_user_privileges
       EvmSpecHelper.create_guid_miq_server_zone
-      session[:settings] = {:views => {}}
     end
     context "when previous breadcrumbs path contained 'Cloud Providers'" do
       it "shows 'Infrastructure Providers -> (Summary)' breadcrumb path" do
