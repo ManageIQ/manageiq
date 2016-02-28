@@ -1,26 +1,7 @@
 .container_topology{'data-ng-app' => "topologyApp", 'ng-controller' => "containerTopologyController"}
   .row.toolbar-pf
     .col-md-12
-      .toolbar-pf-actions
-        .form-group.text
-          %label.checkbox-inline
-            %input#box{'ng-change' => "show_hide_names(checkboxModel.value)",  'ng-model' => "checkboxModel.value", :type => "checkbox", 'ng-true-value' => 'true', 'ng-false-value' => 'false'}
-            = _("Display Names")
-        .form-group
-          %button.btn.btn-default{'ng-click' => "refresh()"}
-            %i{:class => "fa fa-refresh fa-lg"}
-            = _("Refresh")
-        %form.search-pf.has-button{:role => "form"}
-          .form-group.has-clear
-            .search-pf-input-group
-              %label.sr-only{:for => "search"} Search
-              %input#search.form-control{'placeholder' => "Search", 'type' => "search", "ng-model" => "search.query"}
-                %button.clear{"aria-hidden" => "true", :type => "button", "ng-click" => "resetSearch()"}
-                  %span.pficon.pficon-close
-          .form-group.search-button
-            %button.btn.btn-default.search-topology-button{:type => "button",  "ng-click" => "searchNode()"}
-              %span.fa.fa-search
-
+      = render :partial => "shared/topology_header"
   .legend
     %label#selected
     %div{'ng-if' => "kinds"}
@@ -87,9 +68,3 @@
     %span.pficon.pficon-info
     %strong  Click on the legend to show/hide entities, and double click/right click the entities in the graph to navigate to their summary pages.
   %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}
-:javascript
-  $(function($) {
-    $(document).ready(function() {
-      miqHideSearchClearButton();
-    });
-  });
