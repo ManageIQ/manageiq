@@ -31,6 +31,13 @@ ManageIQ.angular.app.service('topologyService', function() {
     }
   };
 
+  this.resetSearch = function(d3) {
+    // Display all topology nodes and links
+    d3.selectAll("g, line").transition()
+      .duration(2000)
+      .style("opacity", 1);
+  };
+
   this.geturl = function(d) {
     var entity_url = "";
     var action = '/show/' + d.item.miq_id;
@@ -47,5 +54,16 @@ ManageIQ.angular.app.service('topologyService', function() {
 
       return '/' + entity_url + action;
   };
+
+  this.getSVG = function(d3) {
+    var graph = d3.select("kubernetes-topology-graph");
+    var svg = graph.select('svg');
+    return svg;
+  };
+
+  this.defaultElementDimensions = function() {
+    return { x: 0, y: 9, r: 17 };
+  };
+
 
 });

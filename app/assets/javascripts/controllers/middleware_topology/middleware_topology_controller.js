@@ -6,6 +6,8 @@ MiddlewareTopologyCtrl.$inject = ['$scope', '$http', '$interval', "$location", '
 function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologyService) {
     var self = this;
     $scope.vs = null;
+    var d3 = window.d3;
+
     $scope.refresh = function() {
         var id;
         if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
@@ -138,24 +140,15 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
 
     }
 
-    function getSVG() {
-        var graph = d3.select("kubernetes-topology-graph");
-        var svg = graph.select('svg');
-        return svg;
-    }
-
     $scope.searchNode = function() {
-      var svg = getSVG();
+      var svg = topologyService.getSVG(d3);
       var query = $scope.search.query;
 
       topologyService.searchNode(svg, query);
     };
 
     $scope.resetSearch = function() {
-        // Display all topology nodes and links
-        d3.selectAll("g, line").transition()
-            .duration(2000)
-            .style("opacity", 1);
+        topologyService.resetSearch(d3);
 
         // Reset the search term in search input
         $scope.search.query = "";
