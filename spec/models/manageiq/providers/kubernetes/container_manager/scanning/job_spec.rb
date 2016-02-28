@@ -103,9 +103,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
     end
 
+    it "should start at waiting" do
+      expect(@job.state).to eq 'waiting_to_start'
+    end
+
     it 'should report success' do
       VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
         expect(@job.state).to eq 'waiting_to_start'
+        expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, inputs|
+          expect(target).to eq(@image)
+          expect(raw_event).to eq("containerimage_scan_complete")
+          expect(inputs).to eq({})
+        end
         @job.signal(:start)
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'ok'

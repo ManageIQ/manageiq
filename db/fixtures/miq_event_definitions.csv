@@ -159,3 +159,8 @@ request_service_start,Service Start Request,Default,service_process
 service_started,Service Started,Default,service_process
 request_service_stop,Service Stop Request,Default,service_process
 service_stopped,Service Stopped,Default,service_process
+
+#
+# Container Operations
+#
+containerimage_scan_complete,Container Image Analysis Complete,Default,container_operations

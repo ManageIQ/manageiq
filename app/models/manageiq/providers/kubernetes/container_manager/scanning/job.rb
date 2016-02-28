@@ -164,6 +164,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def cleanup(*args)
+    image = target_entity
+    if image
+      # TODO: check job success / failure
+      MiqEvent.raise_evm_job_event(image, :type => "scan", :suffix => "complete")
+    end
     client = kubernetes_client
 
     begin

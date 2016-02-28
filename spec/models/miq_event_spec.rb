@@ -9,6 +9,18 @@ describe MiqEvent do
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
 
+      it "container_image" do
+        obj = FactoryGirl.create(:container_image)
+        expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
+          target == obj && raw_event == "container_image_scan_complete"
+        end
+        MiqEvent.raise_evm_job_event(
+          obj,
+          {:type => "container_image_scan", :suffix => "complete"},
+          :container_image => obj
+        )
+      end
+
       it "host" do
         obj = FactoryGirl.create(:host_vmware)
         expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|

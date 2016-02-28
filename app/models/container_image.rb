@@ -1,4 +1,5 @@
 class ContainerImage < ApplicationRecord
+  include MiqPolicyMixin
   include ReportableMixin
   include ScanningMixin
 
@@ -61,5 +62,9 @@ class ContainerImage < ApplicationRecord
     scan_via_miq_vm(miq_cnt_group, ost)
   end
 
+  def tenant_identity
+    User.super_admin
+  end
+
   alias_method :perform_metadata_sync, :sync_stashed_metadata
-end
+  end
