@@ -58,7 +58,7 @@ class ContainerTopologyService < TopologyService
 
   def entity_display_type(entity)
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
-      entity.type.split('::')[2]
+      entity.class.short_token
     elsif entity.kind_of?(ContainerGroup)
       "Pod"
     else

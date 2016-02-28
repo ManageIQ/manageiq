@@ -29,7 +29,7 @@ class MiddlewareTopologyService < TopologyService
 
   def entity_display_type(entity)
     if entity.kind_of?(ManageIQ::Providers::MiddlewareManager)
-      entity.type.split('::')[2]
+      entity.class.short_token
     else
       entity.class.name.demodulize
     end
