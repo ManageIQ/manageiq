@@ -21,7 +21,7 @@ describe Authenticator::Ldap do
       @fqusername  = "#{@username}@#{@user_suffix}"
 
       init_ldap_setup
-      allow(@ldap).to receive_messages(:fqusername => @fqusername)
+      allow(@miq_ldap).to receive_messages(:fqusername => @fqusername)
     end
 
     it "initial status" do
@@ -58,7 +58,7 @@ describe Authenticator::Ldap do
     end
 
     it "ldap bind fails" do
-      allow(@login_ldap).to receive_messages(:bind => false)
+      allow(@miq_ldap).to receive_messages(:bind => false)
 
       expect(AuditEvent).to receive(:failure)
       expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -106,9 +106,9 @@ describe Authenticator::Ldap do
   end
 
   def init_ldap_setup
-    @login_ldap = double('login_ldap')
-    allow(@login_ldap).to receive_messages(:bind => true)
-    allow(MiqLdap).to receive(:new).and_return(@login_ldap)
+    @miq_ldap = double('miq_ldap')
+    allow(@miq_ldap).to receive_messages(:bind => true)
+    allow(MiqLdap).to receive(:new).and_return(@miq_ldap)
 
     @ldap = double('ldap')
     allow(@auth).to receive_messages(:ldap => @ldap)
@@ -127,7 +127,7 @@ describe Authenticator::Ldap do
   end
 
   def setup_to_get_fqdn
-    allow(@ldap).to receive_messages(:fqusername => "some FQDN")
-    allow(@ldap).to receive_messages(:normalize => "some normalized name")
+    allow(@miq_ldap).to receive_messages(:fqusername => "some FQDN")
+    allow(@miq_ldap).to receive_messages(:normalize => "some normalized name")
   end
 end
