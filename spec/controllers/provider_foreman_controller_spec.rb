@@ -119,6 +119,19 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  context "#save_provider_foreman" do
+    it "will not save with a duplicate name" do
+      ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman",
+                                                    :url => "10.8.96.103", :zone => @zone)
+      provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman",
+                                                             :url => "10.8.96.103", :zone => @zone)
+      controller.instance_variable_set(:@provider_cfgmgmt, provider2)
+      expect(controller).to receive(:replace_right_cell).once
+      controller.save_provider_foreman
+      expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
+    end
+  end
+
   context "#edit" do
     before do
       set_user_privileges
