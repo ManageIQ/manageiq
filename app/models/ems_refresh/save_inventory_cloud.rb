@@ -7,8 +7,6 @@
 #   - key_pairs
 #   - orchestration_templates
 #   - orchestration_stacks
-#   - cloud_networks
-#     - cloud_subnets
 #   - security_groups
 #     - firewall_rules
 #   - cloud_volumes
@@ -22,7 +20,6 @@
 #       - guest_devices
 #     - custom_attributes
 #     - snapshots
-#   - floating_ips
 #   - cloud_object_store_containers
 #     - cloud_object_store_objects
 #
@@ -51,13 +48,13 @@ module EmsRefresh::SaveInventoryCloud
       :key_pairs,
       :orchestration_templates,
       :orchestration_stacks,
+      # TODO(lsmola) NetworkManager, once all providers are converted :cloud_networks and :security_groups will go away
       :cloud_networks,
       :security_groups,
       :cloud_volumes,
       :cloud_volume_snapshots,
       :vms,
-      :network_routers,
-      :network_ports,
+      # TODO(lsmola) NetworkManager, once all providers are converted :floating_ips will go away
       :floating_ips,
       :cloud_resource_quotas,
       :cloud_object_store_containers,
@@ -69,8 +66,6 @@ module EmsRefresh::SaveInventoryCloud
     save_child_inventory(ems, hashes, child_keys, target)
 
     link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
-    link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
-    link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
 
     ems.save!
     hashes[:id] = ems.id

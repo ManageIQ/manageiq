@@ -5,6 +5,7 @@ module EmsRefresh::SaveInventory
     when EmsInfra                                  then save_ems_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager then save_configuration_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ContainerManager     then save_ems_container_inventory(ems, hashes, target)
+    when ManageIQ::Providers::NetworkManager       then save_ems_network_inventory(ems, hashes, target)
     when ManageIQ::Providers::MiddlewareManager    then save_ems_middleware_inventory(ems, hashes, target)
     end
   end
@@ -101,7 +102,11 @@ module EmsRefresh::SaveInventory
         found.raw_power_state = key_backup[:raw_power_state]
 
         link_habtm(found, key_backup[:storages], :storages, Storage)
-        link_habtm(found, key_backup[:security_groups], :security_groups, SecurityGroup)
+        # TODO(lsmola) NetworkManager, once all providers are converted, security groups relation of Vm will go away,
+        # being moved to NetworkPort, we will ignore here through associations
+        if found.try(:security_groups).try(:proxy_association).try(:reflection).try(:options).try(:[], :through) != :network_ports
+          link_habtm(found, key_backup[:security_groups], :security_groups, SecurityGroup)
+        end
         link_habtm(found, key_backup[:key_pairs], :key_pairs, ManageIQ::Providers::CloudManager::AuthKeyPair)
         save_child_inventory(found, key_backup, child_keys)
 
