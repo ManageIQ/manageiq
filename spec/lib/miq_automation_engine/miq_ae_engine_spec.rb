@@ -621,34 +621,6 @@ module MiqAeEngineSpec
       expect(roots.length).to eq(1)
     end
 
-    it "properly processes inheritance" do
-      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
-
-      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test1", @user)
-      expect(ws).not_to be_nil
-      roots = ws.roots
-      expect(roots).not_to be_nil
-      expect(roots).to be_a_kind_of(Array)
-      expect(roots.length).to eq(1)
-
-      obj = roots.first
-      ["attr1", "foo"].each { |a| expect(obj.attributes).to have_key(a) }
-      expect(obj.attributes["attr1"]).to eq("frank")
-      expect(obj.attributes["foo"]).to eq("bar")
-
-      ws = MiqAeEngine.instantiate("/EVM/MY_AUTOMATE/test2", @user)
-      expect(ws).not_to be_nil
-      roots = ws.roots
-      expect(roots).not_to be_nil
-      expect(roots).to be_a_kind_of(Array)
-      expect(roots.length).to eq(1)
-
-      obj = roots.first
-      ["attr1", "foo"].each { |a| assert obj.attributes.key?(a) }
-      expect(obj.attributes["attr1"]).to eq("miqaedb:/EVM/AUTOMATE/test1")
-      expect(obj.attributes["foo"]).to eq("bar")
-    end
-
     it "properly processes .missing_instance" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "relation"), @domain)
 
