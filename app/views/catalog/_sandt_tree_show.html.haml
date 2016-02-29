@@ -3,7 +3,7 @@
   %ul.nav.nav-tabs
     = miq_tab_header('basic') do
       = _('Basic Info')
-    - if @record.display && @record.prov_type != "generic_orchestration"
+    - if @record.display
       = miq_tab_header('details') do
         = _('Details')
     - if @record.composite?
@@ -99,7 +99,7 @@
             .col-md-6
               = submit_tag(_("Upload"), :id => "upload", :class => "upload btn btn-default")
               = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
-    - if @record.display && @record.prov_type != "generic_orchestration"
+    - if @record.display
       = miq_tab_content('details') do
         %h3
           = _('Basic Information')
