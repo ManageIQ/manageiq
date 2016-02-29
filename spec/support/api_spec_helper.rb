@@ -193,6 +193,10 @@ module ApiSpecHelper
     value.kind_of?(Symbol) && respond_to?(value) ? public_send(value) : value
   end
 
+  def declare_actions(*names)
+    include("actions" => a_collection_containing_exactly(*names.map { |name| a_hash_including("name" => name) }))
+  end
+
   # Rest API Expects
 
   def expect_request_success
