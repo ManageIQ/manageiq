@@ -259,7 +259,7 @@ module VMDB
       config.store_path(keys, value)
     end
 
-    def save(save_db_file = true)
+    def save
       raise "configuration invalid, see errors for details" unless validate
 
       begin
@@ -272,10 +272,10 @@ module VMDB
       case configuration_source
       when :database
         @db_record = Configuration.create_or_update(svr, @config, @name)
-        save_file(@cfile_db) if save_db_file
+        save_file(@cfile_db) unless Rails.env.test?
         _log.info("Saved Config [#{@name}] from database in file: [#{@cfile_db}]")
       when :filesystem
-        save_file(@cfile_db) if save_db_file
+        save_file(@cfile_db) unless Rails.env.test?
         _log.info("Saved Config [#{@name}] in file: [#{@cfile_db}]")
       end
       update_cache_metadata
