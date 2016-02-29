@@ -137,6 +137,22 @@ class MiqRegion < ApplicationRecord
     end
   end
 
+  def self.destroy_region(conn, region, tables = nil)
+    tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^ar_internal_metadata|^rr/ }.sort
+    tables.each do |t|
+      pk = conn.primary_key(t)
+      if pk
+        conditions = sanitize_conditions(region_to_conditions(region, pk))
+      else
+        id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
+        conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(" OR ")
+      end
+
+      rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
+      _log.info "Cleared [#{rows}] rows from table [#{t}]"
+    end
+  end
+
   def self.sync_region_to_file(region)
     File.open(File.join(Rails.root, "REGION"), "w") { |f| f.write region }
   end
