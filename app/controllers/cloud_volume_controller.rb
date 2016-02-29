@@ -25,12 +25,12 @@ class CloudVolumeController < ApplicationController
     return if record_no_longer_exists?(@volume)
 
     @gtl_url = "/cloud_volume/show/" << @volume.id.to_s << "?"
-    drop_breadcrumb({:name => "Cloud Volumes", :url => "/cloud_volume/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb({:name => _("Cloud Volumes"), :url => "/cloud_volume/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@volume)
-      drop_breadcrumb(:name => @volume.name.to_s + " (Summary)", :url => "/cloud_volume/show/#{@volume.id}")
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @volume.name.to_s}, :url => "/cloud_volume/show/#{@volume.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     when "cloud_volume_snapshots"
