@@ -179,8 +179,8 @@ class ProviderForemanController < ApplicationController
         @in_a_form = false
         @sb[:action] = nil
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        replace_right_cell
       end
+      replace_right_cell
     end
   end
 
