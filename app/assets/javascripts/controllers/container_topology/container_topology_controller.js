@@ -55,7 +55,6 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     $interval.cancel(promise);
   });
 
-
   var contextMenuShowing = false;
 
   d3.select("body").on('click', function() {
@@ -249,47 +248,36 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
   };
 
   this.getDimensions = function getDimensions(d) {
-    var defaultX = 0;
-    var defaultY = 9;
-    var defaultR = 17;
+    var defaultDimensions = topologyService.defaultElementDimensions();
     switch (d.item.kind) {
       case "ContainerManager":
-        return { x: defaultX, y: 16, r: 28 };
+        return { x: defaultDimensions.x, y: 16, r: 28 };
       case "Container":
         return { x: 1, y: 5, r: 13 };
       case "ContainerGroup":
-        return { x: 1, y: 6, r: defaultR };
+        return { x: 1, y: 6, r: defaultDimensions.r };
       case "ContainerService":
-        return { x: -2, y: defaultY, r: defaultR };
+        return { x: -2, y: defaultDimensions.y, r: defaultDimensions.r };
       case "ContainerReplicator":
-        return { x: -1, y: 8, r: defaultR };
+        return { x: -1, y: 8, r: defaultDimensions.r };
       case "ContainerNode":
       case "Vm":
       case "Host":
-        return { x: defaultX, y: defaultY, r: 21 };
+        return { x: defaultDimensions.x, y: defaultDimensions.y, r: 21 };
       default:
-        return { x: defaultX, y: defaultY, r: defaultR };
+        return defaultDimensions;
     }
   };
 
-  function getSVG() {
-    var graph = d3.select("kubernetes-topology-graph");
-    var svg = graph.select('svg');
-    return svg;
-  }
-
   $scope.searchNode = function() {
-    var svg = getSVG();
+    var svg = topologyService.getSVG(d3);
     var query = $scope.search.query;
 
    topologyService.searchNode(svg, query);
   };
 
   $scope.resetSearch = function() {
-    // Display all topology nodes and links
-    d3.selectAll("g, line").transition()
-        .duration(2000)
-        .style("opacity", 1);
+    topologyService.resetSearch(d3);
 
     // Reset the search term in search input
     $scope.search.query = "";
