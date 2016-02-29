@@ -127,9 +127,7 @@ describe ApiController do
     it "hides them from configuration hashes" do
       api_basic_authorize
 
-      password_field = ::Vmdb::ConfigurationEncoder::PASSWORD_FIELDS.last.to_s
-      config = {:authentication => {:userid => "admin", password_field.to_sym => "super_password"}}
-
+      config = {:authentication => {:userid => "admin", :password => "super_password"}}
       Configuration.create_or_update(miq_server, config, "authentications")
 
       run_get(servers_url(miq_server.id), :attributes => "configurations")
