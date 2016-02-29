@@ -39,10 +39,6 @@ module OpsController::Settings::Common
       end
     when 'settings_advanced'                                # Advanced yaml edit
       @changed = (@edit[:new] != @edit[:current])
-      if params[:file_name]                                 # If new file was selected
-        @refresh_div     = 'settings_advanced'              # Replace main area
-        @refresh_partial = 'settings_advanced_tab'
-      end
     end
 
     render :update do |page|                    # Use JS to update the display
@@ -72,11 +68,6 @@ module OpsController::Settings::Common
         else
           page << javascript_hide_if_exists("server_options_off")
           page << javascript_show_if_exists("server_options_on")
-        end
-      when 'settings_advanced'
-        if @changed || @login_text_changed
-          page << javascript_show("message_on")
-          page << javascript_hide("message_off")
         end
       when 'settings_authentication'
         if @authmode_changed
@@ -324,14 +315,14 @@ module OpsController::Settings::Common
       @changed = (@edit[:new] != @edit[:current].config)
       @update = VMDB::Config.new("vmdb")                    # Get the settings object to update it
     when "settings_advanced"                                          # Advanced manual yaml editor tab
-      result = VMDB::Config.save_file(session[:config_file_name], @edit[:new][:file_data])  # Save the config file
+      result = VMDB::Config.save_file(@edit[:new][:file_data])  # Save the config file
       if result != true                                         # Result contains errors?
         result.each do |field, msg|
           add_flash("#{field.to_s.titleize}: #{msg}", :error)
         end
         @changed = (@edit[:new] != @edit[:current])
       else
-        add_flash(_("%{name} file saved") % {:name => AVAILABLE_CONFIG_NAMES[session[:config_file_name]]})
+        add_flash(_("Configuration changes saved"))
         @changed = false
       end
       #     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
@@ -756,10 +747,7 @@ module OpsController::Settings::Common
       agent_log[:wrap_size] = params[:agent_log_wrapsize] if params[:agent_log_wrapsize]
       agent_log[:wrap_time] = @sb[:form_vars][:agent_log_wraptime_days].to_i * 3600 * 24 + @sb[:form_vars][:agent_log_wraptime_hours].to_i * 3600 if params[:agent_log_wraptime_days] || params[:agent_log_wraptime_hours]
     when "settings_advanced"                                        # Advanced tab
-      if params[:file_name] && params[:file_name] != session[:config_file_name] # If new file name was selected
-        session[:config_file_name] = params[:file_name]
-        settings_set_form_vars
-      elsif params[:file_data]                        # If save sent in the file data
+      if params[:file_data]                        # If save sent in the file data
         new[:file_data] = params[:file_data]          # Put into @edit[:new] hash
       else
         new[:file_data] += "..."                      # Update the new data to simulate a change
@@ -969,9 +957,8 @@ module OpsController::Settings::Common
       @login_logo_file = @@login_logo_file
       @in_a_form = true
     when "settings_advanced"                                  # Advanced yaml editor
-      session[:config_file_name] ||= AVAILABLE_CONFIG_NAMES_FOR_SELECT.first.last # Start with first config file name
       @edit = {}
-      @edit[:current] = {:file_data => VMDB::Config.get_file(session[:config_file_name])}
+      @edit[:current] = {:file_data => VMDB::Config.get_file}
       @edit[:new] = copy_hash(@edit[:current])
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       @in_a_form = true

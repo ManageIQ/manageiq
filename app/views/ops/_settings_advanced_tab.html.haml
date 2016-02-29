@@ -8,34 +8,7 @@
         %span.pficon.pficon-error-exclamation
       %strong
         = _("Caution: Manual changes to configuration files can disable the Server!")
-    %h3
-      = _("Configuration File to Edit")
-    .form-horizontal
-      .form-group
-        %label.col-md-2.control-label
-          = _("File")
-        .col-md-8
-          - message = _("Configuration File selection can not be changed until changes are saved or reset.")
-          - message_on_style = @changed ? "" : "display:none"
-          #message_on{:style => "#{message_on_style}"}
-            = message
-          - message_off_style = @changed ? "display:none" : ""
-          #message_off{:style => "#{message_off_style}"}
-            = select_tag('file_name',
-                          options_for_select(AVAILABLE_CONFIG_NAMES_FOR_SELECT, session[:config_file_name]),
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          :class    => "selectpicker")
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent('file_name', "#{url}")
-    %hr/
-    %h3
-      = _("Editing %s File") % AVAILABLE_CONFIG_NAMES[session[:config_file_name]]
-      %font{:color => "red"} *
-    = text_area_tag("file_data",
-      @edit[:new][:file_data],
-      :style => "display:none;")
+    = text_area_tag("file_data", @edit[:new][:file_data], :style => "display:none;")
   - if params[:action] != "explorer"
     = render :partial => "/layouts/my_code_mirror",
       :locals  => {:text_area_id => "file_data",
