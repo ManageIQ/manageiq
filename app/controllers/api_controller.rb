@@ -102,7 +102,7 @@ class ApiController < ApplicationController
     :resource  => %w(image_href),
     :encrypted => %w(password) |
                   ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
-                  ::Vmdb::ConfigurationEncoder::PASSWORD_FIELDS
+                  ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
   }
 
   #

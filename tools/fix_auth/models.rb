@@ -2,7 +2,6 @@ require 'active_support/all'
 require 'active_record'
 require 'securerandom'
 require 'util/extensions/miq-deep'
-require 'vmdb/configuration_encoder'
 
 module FixAuth
   class FixAuthentication < ActiveRecord::Base
@@ -51,7 +50,7 @@ module FixAuth
   class FixConfiguration < ActiveRecord::Base
     include FixAuth::AuthConfigModel
     self.password_columns = %w(settings)
-    self.password_fields = Vmdb::ConfigurationEncoder::PASSWORD_FIELDS
+    self.password_fields = Vmdb::Settings::PASSWORD_FIELDS
     self.table_name = "configurations"
 
     def self.display_record(r)

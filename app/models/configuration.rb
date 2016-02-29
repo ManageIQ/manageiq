@@ -1,6 +1,6 @@
 class Configuration < ApplicationRecord
   belongs_to                :miq_server, :foreign_key => "miq_server_id"
-  serialize                 :settings,   Vmdb::ConfigurationEncoder
+  serialize                 :settings,   Hash
 
   def self.create_or_update(miq_server, settings_hash, typ)
     db_record  = miq_server.configurations.find_by_typ(typ)
