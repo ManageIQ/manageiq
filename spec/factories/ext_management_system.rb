@@ -21,6 +21,12 @@ FactoryGirl.define do
           :parent  => :ext_management_system do
   end
 
+  factory :ems_network,
+          :aliases => ["manageiq/providers/network_manager"],
+          :class   => "ManageIQ::Providers::NetworkManager",
+          :parent  => :ext_management_system do
+  end
+
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
           :class   => "ManageIQ::Providers::ContainerManager",
@@ -143,6 +149,12 @@ FactoryGirl.define do
       x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
       x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
     end
+  end
+
+  factory :ems_openstack_network,
+          :aliases => ["manageiq/providers/openstack/network_manager"],
+          :class   => "ManageIQ::Providers::Openstack::NetworkManager",
+          :parent  => :ems_network do
   end
 
   factory :ems_google,
