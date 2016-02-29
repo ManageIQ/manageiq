@@ -31,6 +31,7 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
            :authentication_status_ok?,
            :authentications,
            :authentication_for_summary,
+           :zone,
            :openstack_handle,
            :connect,
            :verify_credentials,
