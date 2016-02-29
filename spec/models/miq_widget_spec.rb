@@ -224,7 +224,7 @@ describe MiqWidget do
 
       role1 = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-support')
       group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup-support", :miq_user_role => role1)
-      user1  = FactoryGirl.create(:user, :userid => 'user1', :miq_groups => [group1])
+      user1  = FactoryGirl.create(:user, :miq_groups => [group1])
 
       @user2  = FactoryGirl.create(:user_admin)
       @group2 = @user2.current_group
