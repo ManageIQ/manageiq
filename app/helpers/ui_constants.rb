@@ -572,15 +572,6 @@ module UiConstants
 
   MIQ_AE_COPY_ACTIONS = %w(miq_ae_class_copy miq_ae_instance_copy miq_ae_method_copy)
 
-  AVAILABLE_CONFIG_NAMES = {
-    # First name includes space so it is first in UI select box
-    "vmdb"                     => _(" EVM Server Main Configuration"),
-    "event_handling"           => _("Event Handler Configuration"),
-    "broker_notify_properties" => _("EVM Vim Broker Notification Properties"),
-    "capacity"                 => _("EVM Capacity Management Configuration")
-  }.freeze
-  AVAILABLE_CONFIG_NAMES_FOR_SELECT = AVAILABLE_CONFIG_NAMES.invert.sort.freeze
-
   UTF_16BE_BOM = [254, 255].freeze
   UTF_16LE_BOM = [255, 254].freeze
 end
