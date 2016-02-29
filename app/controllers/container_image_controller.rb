@@ -7,7 +7,7 @@ class ContainerImageController < ApplicationController
   after_action :set_session_data
 
   def guest_applications
-    show_association('guest_applications', 'Packages', 'guest_application', :guest_applications, GuestApplication)
+    show_association('guest_applications', _('Packages'), 'guest_application', :guest_applications, GuestApplication)
   end
 
 end

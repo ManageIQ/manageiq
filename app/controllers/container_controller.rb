@@ -46,7 +46,9 @@ class ContainerController < ApplicationController
     if @refresh_partial
       replace_right_cell(action)
     else
-      add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
+      unless @flash_array
+        add_flash(_("Button not yet implemented %{model}: %{action}") % {:model => model, :action => action}, :error)
+      end
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -201,7 +203,7 @@ class ContainerController < ApplicationController
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
       typ = "Container"
       process_show_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => typ)
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
     else
       show_record(from_cid(id))
       @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @record.name,
@@ -218,7 +220,7 @@ class ContainerController < ApplicationController
 
     # After adding to history, add name filter suffix if showing a list
     unless @search_text.blank?
-      @right_cell_text += _(" (Names with \"%s\")") % @search_text
+      @right_cell_text += _(" (Names with \"%{text}\")") % {:text => @search_text}
     end
   end
 
@@ -232,7 +234,7 @@ class ContainerController < ApplicationController
       action = "container_edit"
     when "tag"
       partial = "layouts/tagging"
-      header = _("Edit Tags for %s") % ui_lookup(:model => "Container")
+      header = _("Edit Tags for %{model}") % {:model => ui_lookup(:model => "Container")}
       action = "container_tag"
     else
       action = nil
