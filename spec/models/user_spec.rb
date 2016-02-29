@@ -1,73 +1,5 @@
 describe User do
-  context "id set as Administrator" do
-    before(:each) do
-      # create User Role record...
-      miq_user_role = FactoryGirl.create(
-        :miq_user_role,
-        :name      => "EvmRole-super_administrator",
-        :read_only => true,
-        :settings  => nil
-      )
-
-      # create Miq Group record...
-      @miq_group = FactoryGirl.create(
-        :miq_group,
-        :description   => "EvmGroup-super_administrator",
-        :group_type    => "system",
-        :miq_user_role => miq_user_role
-      )
-
-      @miq_server = EvmSpecHelper.local_miq_server
-
-      # create User record...
-      @user = FactoryGirl.create(
-        :user_admin,
-        :email      => "admin@email.com",
-        :password   => "smartvm",
-        :settings   => {"Setting1"  => 1, "Setting2"  => 2, "Setting3"  => 3},
-        :miq_groups => [@miq_group],
-        :first_name => "Bob",
-        :last_name  => "Smith"
-      )
-
-      @self_service_role = FactoryGirl.create(
-        :miq_user_role,
-        :name     => "ss_role",
-        :settings => {:restrictions => {:vms => :user_or_group}}
-      )
-
-      @self_service_group = FactoryGirl.create(
-        :miq_group,
-        :description   => "EvmGroup-self_service",
-        :miq_user_role => @self_service_role
-      )
-
-      @limited_self_service_role = FactoryGirl.create(
-        :miq_user_role,
-        :name     => "lss_role",
-        :settings => {:restrictions => {:vms => :user}}
-      )
-
-      @limited_self_service_group = FactoryGirl.create(
-        :miq_group,
-        :description   => "EvmGroup-limited_self_service",
-        :miq_user_role => @limited_self_service_role
-      )
-
-      @miq_admin_role = FactoryGirl.create(
-        :miq_user_role,
-        :name      => "EvmRole-administrator",
-        :read_only => true,
-        :settings  => nil
-      )
-
-      @admin_group = FactoryGirl.create(
-        :miq_group,
-        :description   => "EvmGroup-administrator",
-        :miq_user_role => @miq_admin_role
-      )
-    end
-
+  context "validations" do
     it "should ensure presence of name" do
       expect(FactoryGirl.build(:user, :name => nil)).not_to be_valid
     end
@@ -87,93 +19,194 @@ describe User do
     it "should save proper email address" do
       expect(FactoryGirl.build(:user, :email => "that.guy@manageiq.com")).to be_valid
     end
+
     it "should reject invalid characters in email address" do
       expect(FactoryGirl.build(:user, :email => "{{that.guy}}@manageiq.com")).not_to be_valid
     end
+  end
+
+  describe "#change_password" do
+    let(:user) { FactoryGirl.create(:user, :first_name => "Bob", :last_name => "Smith", :password => "smartvm") }
 
     it "should change user password" do
-      password    = @user.password
+      password    = user.password
       newpassword = "newpassword"
-      @user.change_password(password, newpassword)
-      expect(@user.password).to eq(newpassword)
+      user.change_password(password, newpassword)
+      expect(user.password).to eq(newpassword)
     end
 
     it "should raise an error when asked to change user password" do
       password    = "wrongpwd"
       newpassword = "newpassword"
 
-      expect { @user.change_password(password, newpassword) }
+      expect { user.change_password(password, newpassword) }
         .to raise_error(MiqException::MiqEVMLoginError)
     end
+  end
 
-    it "should check for and get Managed and Belongs-to filters" do
-      mfilters = {"managed"   => "m"}
-      bfilters = {"belongsto" => "b"}
-      @miq_group.set_managed_filters(mfilters)
-      @miq_group.set_belongsto_filters(bfilters)
-      @miq_group.save
+  context "filter methods" do
+    let(:user) do
+      FactoryGirl.create(:user,
+                         :first_name => "Bob",
+                         :last_name  => "Smith",
+                         :miq_groups => [miq_group])
+    end
+    let(:mfilters) { {"managed"   => "m"} }
+    let(:bfilters) { {"belongsto" => "b"} }
+    let(:miq_group) { FactoryGirl.create(:miq_group) }
 
-      @user.reload
-
-      expect(@user.has_filters?).to be_truthy
-      expect(@user.get_managed_filters).to eq(mfilters)
-      expect(@user.get_belongsto_filters).to eq(bfilters)
+    before do
+      miq_group.set_managed_filters(mfilters)
+      miq_group.set_belongsto_filters(bfilters)
+      miq_group.save
+      user.reload
     end
 
-    it "should check Self Service Roles" do
-      @user.current_group = @self_service_group
-      expect(@user.self_service?).to be_truthy
-
-      @user.current_group = @limited_self_service_group
-      expect(@user.self_service?).to be_truthy
-
-      @miq_group.miq_user_role = nil
-      @user.current_group = @miq_group
-      expect(@user.self_service?).to be_falsey
-
-      @user.current_group = nil
-      expect(@user.self_service?).to be_falsey
+    it "should check for and get Managed and Belongs-to filters from the group" do
+      expect(user.has_filters?).to be_truthy
+      expect(user.get_managed_filters).to eq(mfilters)
+      expect(user.get_belongsto_filters).to eq(bfilters)
     end
+  end
 
-    it "should check Limited Self Service Roles" do
-      @user.current_group = @limited_self_service_group
-      expect(@user.limited_self_service?).to be_truthy
-
-      @user.current_group = nil
-      @user.current_group = @miq_group
-      expect(@user.limited_self_service?).to be_falsey
-    end
-
-    it "should check Super Admin Roles" do
-      expect(@user.super_admin_user?).to be_truthy
-
-      @user.current_group = @admin_group
-      expect(@user.super_admin_user?).to be_falsey
-
-      @user.current_group = @limited_self_service_group
-      expect(@user.super_admin_user?).to be_falsey
-    end
-
-    it "should check Admin Roles" do
-      expect(@user.admin_user?).to be_truthy
-
-      @user.current_group = @admin_group
-      expect(@user.admin_user?).to be_truthy
-
-      @user.current_group = @limited_self_service_group
-      expect(@user.admin_user?).to be_falsey
-    end
-
-    it "should get Server time zone setting" do
-      expect(@user.get_timezone).to eq("UTC")
-    end
-
-    it "with_my_timezone sets the user's zone in a block" do
-      @user.settings.store_path(:display, :timezone, "Hawaii")
-      @user.with_my_timezone do
-        expect(Time.zone.to_s).to eq("(GMT-10:00) Hawaii")
+  describe "role methods" do
+    context "id set as Administrator" do
+      let(:miq_user_role) do
+        FactoryGirl.create(
+          :miq_user_role,
+          :name      => "EvmRole-super_administrator",
+          :read_only => true,
+          :settings  => nil
+        )
       end
-      expect(Time.zone.to_s).to eq("(GMT+00:00) UTC")
+
+      let(:miq_group) do
+        FactoryGirl.create(
+          :miq_group,
+          :description   => "EvmGroup-super_administrator",
+          :group_type    => "system",
+          :miq_user_role => miq_user_role
+        )
+      end
+
+      let!(:miq_server) { EvmSpecHelper.local_miq_server }
+
+      let(:user) do
+        FactoryGirl.create(
+          :user_admin,
+          :email      => "admin@email.com",
+          :password   => "smartvm",
+          :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+          :miq_groups => [miq_group],
+          :first_name => "Bob",
+          :last_name  => "Smith"
+        )
+      end
+
+      let(:self_service_role) do
+        FactoryGirl.create(
+          :miq_user_role,
+          :name     => "ss_role",
+          :settings => {:restrictions => {:vms => :user_or_group}}
+        )
+      end
+
+      let(:self_service_group) do
+        FactoryGirl.create(
+          :miq_group,
+          :description   => "EvmGroup-self_service",
+          :miq_user_role => self_service_role
+        )
+      end
+
+      let(:limited_self_service_role) do
+        FactoryGirl.create(
+          :miq_user_role,
+          :name     => "lss_role",
+          :settings => {:restrictions => {:vms => :user}}
+        )
+      end
+
+      let(:limited_self_service_group) do
+        FactoryGirl.create(
+          :miq_group,
+          :description   => "EvmGroup-limited_self_service",
+          :miq_user_role => limited_self_service_role
+        )
+      end
+
+      let(:miq_admin_role) do
+        FactoryGirl.create(
+          :miq_user_role,
+          :name      => "EvmRole-administrator",
+          :read_only => true,
+          :settings  => nil
+        )
+      end
+
+      let(:admin_group) do
+        FactoryGirl.create(
+          :miq_group,
+          :description   => "EvmGroup-administrator",
+          :miq_user_role => miq_admin_role
+        )
+      end
+
+      it "should check Self Service Roles" do
+        user.current_group = self_service_group
+        expect(user.self_service?).to be_truthy
+
+        user.current_group = limited_self_service_group
+        expect(user.self_service?).to be_truthy
+
+        miq_group.miq_user_role = nil
+        user.current_group = miq_group
+        expect(user.self_service?).to be_falsey
+
+        user.current_group = nil
+        expect(user.self_service?).to be_falsey
+      end
+
+      it "should check Limited Self Service Roles" do
+        user.current_group = limited_self_service_group
+        expect(user.limited_self_service?).to be_truthy
+
+        user.current_group = nil
+        user.current_group = miq_group
+        expect(user.limited_self_service?).to be_falsey
+      end
+
+      it "should check Super Admin Roles" do
+        expect(user.super_admin_user?).to be_truthy
+
+        user.current_group = admin_group
+        expect(user.super_admin_user?).to be_falsey
+
+        user.current_group = limited_self_service_group
+        expect(user.super_admin_user?).to be_falsey
+      end
+
+      it "should check Admin Roles" do
+        expect(user.admin_user?).to be_truthy
+
+        user.current_group = admin_group
+        expect(user.admin_user?).to be_truthy
+
+        user.current_group = limited_self_service_group
+        expect(user.admin_user?).to be_falsey
+      end
+
+      it "should get Server time zone setting" do
+        expect(user.get_timezone).to eq("UTC")
+      end
+
+      it "with_my_timezone sets the user's zone in a block" do
+        user.settings.store_path(:display, :timezone, "Hawaii")
+        user.with_my_timezone do
+          expect(Time.zone.to_s).to eq("(GMT-10:00) Hawaii")
+        end
+        expect(Time.zone.to_s).to eq("(GMT+00:00) UTC")
+      end
     end
   end
 
