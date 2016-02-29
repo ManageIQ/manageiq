@@ -637,4 +637,68 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       })
     end
   end
+
+  describe "parse_persistent_volume" do
+    it "tests parent type" do
+      expect(parser.send(
+        :parse_persistent_volume,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-volume',
+            :uid               => '66213621-80a1-11e5-b907-28d2447dcefe',
+            :resourceVersion   => '448015',
+            :creationTimestamp => '2015-12-06T11:10:21Z'
+          },
+          :spec     => {
+            :capacity    => {
+              :storage => '10Gi'
+            },
+            :hostPath    => {
+              :path => '/tmp/data01'
+            },
+            :accessModes => ['ReadWriteOnce'],
+          },
+          :status   => {
+            :phase => 'Available'
+          }
+        )
+      )).to eq(
+        {
+          :name                    => 'test-volume',
+          :ems_ref                 => '66213621-80a1-11e5-b907-28d2447dcefe',
+          :ems_created_on          => '2015-12-06T11:10:21Z',
+          :namespace               => nil,
+          :resource_version        => '448015',
+          :type                    => 'PersistentVolume',
+          :status_phase            => 'Available',
+          :access_modes            => 'ReadWriteOnce',
+          :capacity                => 'storage=10Gi',
+          :claim_name              => nil,
+          :common_fs_type          => nil,
+          :common_partition        => nil,
+          :common_path             => '/tmp/data01',
+          :common_read_only        => nil,
+          :common_secret           => nil,
+          :common_volume_id        => nil,
+          :empty_dir_medium_type   => nil,
+          :gce_pd_name             => nil,
+          :git_repository          => nil,
+          :git_revision            => nil,
+          :glusterfs_endpoint_name => nil,
+          :iscsi_iqn               => nil,
+          :iscsi_lun               => nil,
+          :iscsi_target_portal     => nil,
+          :nfs_server              => nil,
+          :parent_type             => 'ManageIQ::Providers::ContainerManager',
+          :rbd_ceph_monitors       => '',
+          :rbd_image               => nil,
+          :rbd_keyring             => nil,
+          :rbd_pool                => nil,
+          :rbd_rados_user          => nil,
+          :reclaim_policy          => nil,
+          :status_message          => nil,
+          :status_reason           => nil
+        })
+    end
+  end
 end
