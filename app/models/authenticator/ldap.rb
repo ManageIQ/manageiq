@@ -16,8 +16,8 @@ module Authenticator
     end
 
     # Unbound LDAP handle
-    def miqldap
-      @miqldap ||= MiqLdap.new(:auth => config)
+    def miq_ldap
+      @miq_ldap ||= MiqLdap.new(:auth => config)
     end
 
     def ldap_bind(username, password)
@@ -26,7 +26,7 @@ module Authenticator
     end
 
     def find_or_create_by_ldap(username)
-      username = miqldap.fqusername(username)
+      username = miq_ldap.fqusername(username)
       user = User.find_by_userid(username)
       return user unless user.nil?
 
@@ -63,7 +63,7 @@ module Authenticator
     end
 
     def normalize_username(username)
-      miqldap.normalize(miqldap.fqusername(username))
+      miq_ldap.normalize(miq_ldap.fqusername(username))
     end
 
     def _authenticate(username, password, _request)
