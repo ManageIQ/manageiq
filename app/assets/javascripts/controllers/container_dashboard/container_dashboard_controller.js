@@ -16,6 +16,8 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
         routes:     dashboardUtilsFactory.createRoutesStatus()
       };
 
+      $scope.loadingDone = false;
+
       // Heatmaps init
       $scope.nodeCpuUsage = {
         title: __('CPU'),
@@ -52,12 +54,6 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
         chartId: 'memoryDonutChart',
         thresholds: {'warning':'60','error':'90'}
       };
-
-      $scope.nodeCpuUsage.loadingDone = false;
-      $scope.nodeMemoryUsage.loadingDone = false;
-
-      // Network
-      $scope.networkUtilizationLoadingDone = false;
 
       $scope.refresh = function() {
         var id;
@@ -112,7 +108,6 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           $scope.memoryUsageData = chartsMixin.processUtilizationData(data.ems_utilization.mem,
                                                                       "dates",
                                                                       $scope.memoryUsageConfig.units);
-          $scope.utilizationLoadingDone = true;
 
           // Heatmaps
           $scope.nodeCpuUsage = chartsMixin.processHeatmapData($scope.nodeCpuUsage, data.heatmaps.nodeCpuUsage);
@@ -123,25 +118,32 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           $scope.nodeMemoryUsage.loadingDone = true;
 
           // Network metrics
-          $scope.networkUtilizationHourlyConfig = chartsMixin.chartConfig.hourlyNetworkUsageConfig;
           $scope.networkUtilizationDailyConfig = chartsMixin.chartConfig.dailyNetworkUsageConfig;
-
-          if (data.hourly_network_metrics != undefined) {
-           data.hourly_network_metrics.xData = data.hourly_network_metrics.xData.map(function (date) {
-              return dashboardUtilsFactory.parseDate(date)
-            });
-          }
-
-          $scope.hourlyNetworkUtilization =
-            chartsMixin.processUtilizationData(data.hourly_network_metrics,
-                                               "dates",
-                                               $scope.networkUtilizationHourlyConfig.units)
 
           $scope.dailyNetworkUtilization =
             chartsMixin.processUtilizationData(data.daily_network_metrics,
                                                "dates",
                                                $scope.networkUtilizationDailyConfig.units);
-          $scope.networkUtilizationLoadingDone = true;
+
+          // Pod metrics
+          $scope.podEntityTrendDailyConfig = chartsMixin.chartConfig.dailyPodUsageConfig;
+
+          $scope.dailyPodEntityTrend =
+              chartsMixin.processPodUtilizationData(data.daily_pod_metrics,
+                  "dates",
+                  $scope.podEntityTrendDailyConfig.createdLabel,
+                  $scope.podEntityTrendDailyConfig.deletedLabel);
+
+          // Image metrics
+          $scope.imageEntityTrendDailyConfig = chartsMixin.chartConfig.dailyImageUsageConfig;
+
+          $scope.dailyImageEntityTrend =
+              chartsMixin.processUtilizationData(data.daily_image_metrics,
+                  "dates",
+                  $scope.imageEntityTrendDailyConfig.createdLabel);
+
+          // Trend lines data
+          $scope.loadingDone = true;
         });
       };
       $scope.refresh();

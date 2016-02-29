@@ -104,12 +104,28 @@
         2431
       ]
     },
-    "hourly_network_metrics" : {
+    "daily_pod_metrics" : {
       "xData": [
-        "2015-12-21T11:00:00.000Z"
+        "2015-12-07",
+        "2015-12-08"
+      ],
+      "yCreated": [
+        8,
+        87
+      ],
+      "yDeleted": [
+        38,
+        42
+      ]
+    },
+    "daily_image_metrics" : {
+      "xData": [
+        "2015-12-07",
+        "2015-12-08"
       ],
       "yData": [
-        1599
+        23,
+        45
       ]
     }
   }
