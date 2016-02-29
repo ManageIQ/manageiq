@@ -220,6 +220,19 @@ describe MiqPolicyController do
       controller.send(:replace_right_cell, 'root', [:action], presenter)
       expect(presenter[:set_visible_elements][:toolbar]).to be_truthy
     end
+
+    it 'should change header' do
+      allow(controller).to receive(:params).and_return(:action => 'whatever')
+      controller.instance_eval { @sb = {:active_tree => :alert_profile_tree} }
+      allow(controller).to receive(:render).and_return(nil)
+      presenter = ExplorerPresenter.new(:active_tree => :alert_profile_tree)
+      controller.send(:get_node_info, 'ap_xx-Storage')
+      presenter[:right_cell_text] = 'foo'
+      controller.send(:replace_right_cell, 'xx', [:alert_profile], presenter)
+
+      expect(presenter[:right_cell_text]).not_to equal('foo')
+      expect(presenter[:right_cell_text]).to_not be_nil
+    end
   end
 
   describe 'x_button' do

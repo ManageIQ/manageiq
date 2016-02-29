@@ -617,6 +617,8 @@ class MiqPolicyController < ApplicationController
           right_cell_text = _("%{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => 'MiqPolicy')}
           r[:partial => 'policy_folders']
         elsif @alert_profiles
+          right_cell_text = _("All %{typ} %{model}") % {:typ   => ui_lookup(:model => @sb[:folder]),
+                                                        :model => ui_lookup(:models => 'MiqAlertSet')}
           r[:partial => 'alert_profile_list']
         end
       )
