@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :user do
     transient do
-      # e.g. "super_administrtor"
+      # e.g. "super_administrator"
       role nil
       # e.g.: "miq_request_approval"
       features nil
