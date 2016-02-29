@@ -236,37 +236,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "nil worker_settings values" do
-          before do
-            allow(@schedule_worker).to receive(:worker_settings).and_return({})
-            expect($log).to receive(:error).never
-          end
-
-          it "#schedules_for_all_roles" do
-            @schedule_worker.schedules_for_all_roles
-          end
-
-          it "#schedules_for_scheduler_role" do
-            @schedule_worker.instance_variable_set(:@active_roles, ['scheduler'])
-            @schedule_worker.schedules_for_scheduler_role
-          end
-
-          it "#schedules_for_event_role" do
-            @schedule_worker.instance_variable_set(:@active_roles, ['event'])
-            @schedule_worker.schedules_for_event_role
-          end
-
-          it "#schedules_for_ems_metrics_coordinator_role" do
-            @schedule_worker.instance_variable_set(:@active_roles, ['ems_metrics_coordinator'])
-            @schedule_worker.schedules_for_ems_metrics_coordinator_role
-          end
-
-          it "#schedules_for_ldap_synchronization_role" do
-            @schedule_worker.instance_variable_set(:@active_roles, ['ldap_synchronization'])
-            @schedule_worker.schedules_for_ldap_synchronization_role
-          end
-        end
-
         context "LDAP synchronization role" do
           before(:each) do
             stub_server_configuration(Hash.new(5.minutes))

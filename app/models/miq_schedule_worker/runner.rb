@@ -64,16 +64,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   end
 
   def worker_setting_or_default(keys, default = nil)
-    keys    = [keys] unless keys.kind_of?(Array)
-    value   = worker_settings.fetch_path(keys)
-    value ||= begin
-      fq_keys = @worker.class.config_settings_path + keys
-      v = VMDB::Config.new("vmdb").template_configuration.fetch_path(fq_keys)
-      v = v.to_i_with_method if v.number_with_method?
-      v
-    end
-    value ||= default
-    value
+    worker_settings.fetch_path(keys) || default
   end
 
   def system_schedule_every(*args, &block)
