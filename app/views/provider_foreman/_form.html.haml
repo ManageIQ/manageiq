@@ -22,7 +22,7 @@
         %span.help-block{"ng-show" => "angularForm.name.$error.required"}
           = _("Required")
 
-    .form-group{"ng-class" => "{'has-error': angularForm.type.$invalid}"}
+    .form-group{"ng-class" => "{'has-error': angularForm.provtype.$invalid}"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Type')
       .col-md-8
