@@ -31,7 +31,6 @@ end
 # NOTE: Models that are not needed in dump can be commented directly in list.
 MODELS = [
   AssignedServerRole,
-  Configuration,
   Job,
   MiqEnterprise,
   MiqQueue,
