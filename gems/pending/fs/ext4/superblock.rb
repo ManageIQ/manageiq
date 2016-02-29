@@ -63,7 +63,7 @@ module Ext4
     'a16',  'hash_seed',        # HTREE hash seed. This is actually L4 (__u32 s_hash_seed[4])
     'C',  'hash_ver',           # Default hash version.
     'C',  'unused2',
-    'S',  'unused3',
+    'S',  'group_desc_size',    # Group descriptor size.
     'L',  'mount_opts',         # Default mount options.
     'L',  'first_meta_blk_grp', # First metablock block group.
     'a360', 'reserved'          # Unused.
@@ -72,7 +72,7 @@ module Ext4
   SUPERBLOCK_SIG = 0xef53
   SUPERBLOCK_OFFSET = 1024
   SUPERBLOCK_SIZE = 1024
-  GDE_SIZE = 32
+  GDE_SIZE = 32  		            # default group descriptor size.
   INODE_SIZE = 128              # Default inode size.
 
   # ////////////////////////////////////////////////////////////////////////////
@@ -223,6 +223,14 @@ module Ext4
       isDynamic? ? @sb['inode_size'] : INODE_SIZE
     end
 
+    def isEnabled64Bit?
+      gotBit?(@sb['incompat_flags'], ICF_64BIT)
+    end
+
+    def groupDescriptorSize
+      isEnabled64Bit? ? @sb['group_desc_size'] : GDE_SIZE 
+    end
+
     def freeBytes
       @sb['unallocated_blocks'] * @blockSize
     end
@@ -247,7 +255,7 @@ module Ext4
 
     def blockToAddress(block)
       address  = block * @blockSize
-      address += (SUPERBLOCK_SIZE + GDE_SIZE * @numGroups)  if address == SUPERBLOCK_OFFSET
+      address += (SUPERBLOCK_SIZE + groupDescriptorSize * @numGroups)  if address == SUPERBLOCK_OFFSET
       address
     end
 
@@ -376,6 +384,7 @@ module Ext4
       out << "Major version         : #{@sb['ver_major']}\n"
       out << "UID can use res blocks: #{@sb['uid_res_blocks']}\n"
       out << "GID can use res blocks: #{@sb['gid_res_blocks']}\n"
+      out << "Group descriptor size : #{@sb['group_desc_size']}\n"
       if isDynamic?
         out << "First non-res inode   : #{@sb['first_inode']}\n"
         out << "Size of inode         : #{@sb['inode_size']}\n"
