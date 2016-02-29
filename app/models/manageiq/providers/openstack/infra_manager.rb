@@ -1,22 +1,16 @@
 class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   require_nested :AuthKeyPair
-  require_nested :CloudNetwork
-  require_nested :CloudSubnet
   require_nested :EmsCluster
   require_nested :EventCatcher
   require_nested :EventParser
-  require_nested :FloatingIp
   require_nested :Host
   require_nested :HostServiceGroup
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
-  require_nested :NetworkPort
-  require_nested :NetworkRouter
   require_nested :OrchestrationStack
   require_nested :Refresher
   require_nested :RefreshParser
   require_nested :RefreshWorker
-  require_nested :SecurityGroup
   require_nested :Template
 
   include ManageIQ::Providers::Openstack::ManagerMixin

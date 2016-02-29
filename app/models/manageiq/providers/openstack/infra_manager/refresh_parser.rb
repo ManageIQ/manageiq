@@ -6,7 +6,6 @@ module ManageIQ
       include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
-      include ManageIQ::Providers::Openstack::RefreshParserCommon::Networks
       include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -27,7 +26,6 @@ module ManageIQ
         @compute_service            = @connection # for consistency
         @baremetal_service          = @os_handle.detect_baremetal_service
         @identity_service           = @os_handle.identity_service
-        @network_service            = @os_handle.detect_network_service
         @orchestration_service      = @os_handle.detect_orchestration_service
         @image_service              = @os_handle.detect_image_service
         @storage_service            = @os_handle.detect_storage_service
@@ -63,7 +61,6 @@ module ManageIQ
         # get_quotas # Not needed in infra
         # get_key_pairs # Not needed in infra
         get_images
-        get_security_groups
 
         get_object_store
         # get_object_store needs to run before load hosts
@@ -72,12 +69,6 @@ module ManageIQ
         load_orchestration_stacks
         # Cluster processing needs to run after host and stacks processing
         get_clusters
-        get_all_networks
-        get_network_routers # We don't have any in Infra yet
-        get_floating_ips # We don't have any in Infra yet
-        get_network_ports
-
-        link_network_ports_associations
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -140,14 +131,6 @@ module ManageIQ
           end
         end
         hosts_attributes
-      end
-
-      def get_all_networks
-        # Get networks from neutron
-        get_networks
-
-        # Get other networks from the heat parameters definition
-        # TODO(lsmola) all the other virtual netwroks should be hopefully exposed in neutron
       end
 
       def load_hosts
@@ -376,30 +359,6 @@ module ManageIQ
         obj.body
       end
 
-      def self.security_group_type
-        'ManageIQ::Providers::Openstack::InfraManager::SecurityGroup'
-      end
-
-      def self.network_router_type
-        "ManageIQ::Providers::Openstack::InfraManager::NetworkRouter"
-      end
-
-      def self.cloud_network_type
-        "ManageIQ::Providers::Openstack::InfraManager::CloudNetwork"
-      end
-
-      def self.cloud_subnet_type
-        "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
-      end
-
-      def self.floating_ip_type
-        "ManageIQ::Providers::Openstack::InfraManager::FloatingIp"
-      end
-
-      def self.network_port_type
-        "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
-      end
-
       def self.miq_template_type
         "ManageIQ::Providers::Openstack::InfraManager::Template"
       end
@@ -408,9 +367,6 @@ module ManageIQ
       # Helper methods
       #
 
-      def find_device_connected_to_network_port(device_id)
-        @data.fetch_path(:hosts).detect { |x| x[:ems_ref_obj] == device_id }
-      end
 
       def process_collection(collection, key)
         @data[key] ||= []

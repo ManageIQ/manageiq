@@ -9,7 +9,6 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :Flavor
-  require_nested :FloatingIp
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :OrchestrationServiceOptionConverter
@@ -19,17 +18,11 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   require_nested :Refresher
   require_nested :RefreshParser
   require_nested :RefreshWorker
-  require_nested :SecurityGroup
   require_nested :Template
   require_nested :Vm
-  require_nested :CloudNetwork
-
-  has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
-           :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public"
-  has_many :private_networks, :foreign_key => :ems_id, :dependent => :destroy,
-           :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private"
 
   include ManageIQ::Providers::Openstack::ManagerMixin
+  include HasManyCloudNetworksMixin
 
   def self.ems_type
     @ems_type ||= "openstack".freeze

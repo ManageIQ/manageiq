@@ -4,7 +4,6 @@ module ManageIQ::Providers
   class Openstack::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
     include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
-    include ManageIQ::Providers::Openstack::RefreshParserCommon::Networks
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
     include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
@@ -23,6 +22,7 @@ module ManageIQ::Providers
 
       @os_handle                  = ems.openstack_handle
       @compute_service            = @connection # for consistency
+      # TODO(lsmola) delete network_service once everything is moved under NetworkManager
       @network_service            = @os_handle.detect_network_service
       @image_service              = @os_handle.detect_image_service
       @volume_service             = @os_handle.detect_volume_service
@@ -57,21 +57,15 @@ module ManageIQ::Providers
       get_quotas
       get_key_pairs
       load_orchestration_stacks
-      get_security_groups
-      get_networks
-      get_network_routers
       # get_hosts
       get_images
       get_servers
       get_volumes
       get_snapshots
       get_object_store
-      get_floating_ips
-      get_network_ports
 
       $fog_log.info("#{log_header}...Complete")
 
-      link_network_ports_associations
       link_vm_genealogy
       link_storage_associations
       filter_unused_disabled_flavors
@@ -80,6 +74,12 @@ module ManageIQ::Providers
     end
 
     private
+
+    def child_manager_fetch_path(collection, ems_ref)
+      @child_manager_data ||= {}
+      return @child_manager_data.fetch_path(collection, ems_ref) if @child_manager_data.has_key_path?(collection, ems_ref)
+      @child_manager_data.store_path(collection, ems_ref, @ems.public_send(collection).try(:where, :ems_ref => ems_ref).try(:first))
+    end
 
     def servers
       @servers ||= @connection.handled_list(:servers)
@@ -127,6 +127,7 @@ module ManageIQ::Providers
     def get_quotas
       quotas = @compute_service.quotas_for_accessible_tenants
       quotas.concat(@volume_service.quotas_for_accessible_tenants)  if @volume_service.name == :cinder
+      # TODO(lsmola) can this somehow be moved under NetworkManager
       quotas.concat(@network_service.quotas_for_accessible_tenants) if @network_service.name == :neutron
 
       process_collection(flatten_quotas(quotas), :cloud_resource_quotas) { |quota| parse_quota(quota) }
@@ -273,30 +274,6 @@ module ManageIQ::Providers
       'ManageIQ::Providers::Openstack::CloudManager::AuthKeyPair'
     end
 
-    def self.security_group_type
-      'ManageIQ::Providers::Openstack::CloudManager::SecurityGroup'
-    end
-
-    def self.network_router_type
-      "ManageIQ::Providers::Openstack::CloudManager::NetworkRouter"
-    end
-
-    def self.cloud_network_type
-      "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork"
-    end
-
-    def self.cloud_subnet_type
-      "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet"
-    end
-
-    def self.floating_ip_type
-      "ManageIQ::Providers::Openstack::CloudManager::FloatingIp"
-    end
-
-    def self.network_port_type
-      "ManageIQ::Providers::Openstack::CloudManager::NetworkPort"
-    end
-
     def self.miq_template_type
       "ManageIQ::Providers::Openstack::CloudManager::Template"
     end
@@ -440,7 +417,9 @@ module ManageIQ::Providers
         :flavor              => flavor,
         :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone || "null_az"),
         :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
-        :security_groups     => server.security_groups.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
+        # TODO(lsmola) moving this under has_many :security_groups, :through => :network_port will require changing
+        # saving code and refresh of all providers
+        :security_groups     => server.security_groups.collect { |sg| child_manager_fetch_path(:security_groups, sg.id) }.compact,
         :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, server.tenant_id),
         :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
       }
@@ -469,13 +448,6 @@ module ManageIQ::Providers
     #
     # Helper methods
     #
-    def find_device_connected_to_network_port(device_id)
-      @data_index.fetch_path(:vms, device_id)
-    end
-
-    def data_security_groups_by_name
-      @data_security_groups_by_name ||= @data[:security_groups].index_by { |sg| sg[:name] }
-    end
 
     def clean_up_extra_flavor_keys
       @data[:flavors].each do |f|
