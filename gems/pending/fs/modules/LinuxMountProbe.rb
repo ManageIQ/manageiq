@@ -7,7 +7,7 @@ module LinuxMountProbe
 
   def self.probe(fs)
     unless LINUX_FS_TYPES.include?(fs.fsType)
-      $log.debug "LinuxMountProbe << FALSE because file system (#{fs.fsType}) is not supported" if $log
+      $log.error "LinuxMountProbe << FALSE because file system (#{fs.fsType}) is not supported" if $log
       return false
     end
 
@@ -18,7 +18,7 @@ module LinuxMountProbe
 
     LINUX_ROOT_FILES.each do |f|
       unless fs.fileExists?(f)
-        $log.debug "LinuxMountProbe << FALSE because file #{f} does not exist" if $log
+        $log.error "LinuxMountProbe << FALSE because file #{f} does not exist" if $log
         return false
       end
     end

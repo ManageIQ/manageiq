@@ -8,18 +8,19 @@ module Ext4
 
       # Read all the group descriptor entries.
       @gdt = []
+      $log.info "Ext4::GroupDescriptorTable.initialize: group_desc_size=#{sb.groupDescriptorSize}" if $log
       sb.stream.seek(sb.blockToAddress(sb.blockSize == 1024 ? 2 : 1))
-      buf = sb.stream.read(SIZEOF_GDE * sb.numGroups)
+      buf = sb.stream.read(sb.groupDescriptorSize * sb.numGroups)
       offset = 0
       sb.numGroups.times do
-        gde = GroupDescriptorEntry.new(buf[offset, SIZEOF_GDE])
+        gde = GroupDescriptorEntry.new(buf[offset, sb.groupDescriptorSize])
 
         # Construct allocation bitmaps for blocks & inodes.
         gde.blockAllocBmp = getAllocBitmap(sb, gde.blockBmp, sb.blockSize)
         gde.inodeAllocBmp = getAllocBitmap(sb, gde.inodeBmp, sb.inodesPerGroup / 8)
 
         @gdt << gde
-        offset += SIZEOF_GDE
+        offset += sb.groupDescriptorSize 
       end
     end
 

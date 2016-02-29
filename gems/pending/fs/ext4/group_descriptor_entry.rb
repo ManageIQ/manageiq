@@ -13,7 +13,11 @@ module Ext4
     'S',  'num_dirs',       # Number of directories in group.
     'a14',  'unused1',      # Unused.
   ])
-  SIZEOF_GDE = GDE.size
+
+  #SIZEOF_GDE = GDE.size
+  # if sb.isEnabled64Bit?, the size of GDE will be 64 with extra information. 
+  # Because the current GDE structure has all the information we need, we'll
+  # continue to use it unless we have to expand it to 64.
 
   # ////////////////////////////////////////////////////////////////////////////
   # // Class.
