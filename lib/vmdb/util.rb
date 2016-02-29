@@ -112,7 +112,7 @@ module VMDB
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
-            entry, mtime = add_zip_entry(zip, file)
+            entry, mtime = add_zip_entry(zip, file, zfile)
             _log.info "Adding file: [#{entry}], size: [#{File.size(file)}], mtime: [#{mtime}]"
           end
         end
@@ -126,11 +126,16 @@ module VMDB
     private
 
     # TODO: Make a class out of this so we don't have to pass around the zip.
-    def self.add_zip_entry(zip, file_path)
+    def self.add_zip_entry(zip, file_path, zfile)
       entry = zip_entry_from_path(file_path)
       mtime = File.mtime(file_path)
-      File.directory?(file_path) ? zip.mkdir(entry) : zip.add(entry, file_path)
-      zip.file.utime(mtime, entry)
+      ztime = Zip::DOSTime.at(mtime.to_i)
+      if File.directory?(file_path)
+        zip.mkdir(entry)
+      else
+        zip_entry = Zip::Entry.new(zfile, entry, nil, nil, nil, nil, nil, nil, ztime)
+        zip.add(zip_entry, file_path)
+      end
       return entry, mtime
     end
 
