@@ -278,8 +278,6 @@ describe User do
 
     context "#miq_groups=" do
       before(:each) do
-        @filter1        = "this is filter 1"
-        @group3.filters = @filter1
         @user = FactoryGirl.create(:user, :miq_groups => [@group3])
       end
 
@@ -310,8 +308,6 @@ describe User do
 
     context "#current_group=" do
       before(:each) do
-        @filter1            = "this is filter 1"
-        @group1.filters     = @filter1
         @user = FactoryGirl.create(:user, :miq_groups => [@group1, @group2])
       end
 
