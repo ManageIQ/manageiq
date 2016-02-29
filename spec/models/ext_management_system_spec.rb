@@ -22,7 +22,7 @@ describe ExtManagementSystem do
       "openshift_enterprise"        => "OpenShift Enterprise",
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
-      "openstack_network"             => "OpenStack Network",
+      "openstack_network"           => "OpenStack Network",
       "rhevm"                       => "Red Hat Enterprise Virtualization Manager",
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
@@ -203,7 +203,7 @@ describe ExtManagementSystem do
 
       described_class.leaf_subclasses.collect do |ems|
         t = ems.name.underscore
-         # TODO(lsmola) NetworkManager, test this when we have a standalone NetworkManager
+        # TODO(lsmola) NetworkManager, test this when we have a standalone NetworkManager
         next if ems == ManageIQ::Providers::Openstack::NetworkManager
 
         context t do

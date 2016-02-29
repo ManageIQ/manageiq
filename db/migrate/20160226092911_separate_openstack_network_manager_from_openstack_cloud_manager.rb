@@ -35,9 +35,9 @@ class SeparateOpenstackNetworkManagerFromOpenstackCloudManager < ActiveRecord::M
     # Separate NetworkManager from CloudManager and move network models under NetworkManager
     ExtManagementSystem
       .joins('left join ext_management_systems as network_manager on network_manager.parent_ems_id = ext_management_systems.id')
-      .where(:ext_management_systems => {:type          => ['ManageIQ::Providers::Openstack::CloudManager', 'ManageIQ::Providers::Openstack::InfraManager']},
+      .where(:ext_management_systems => {:type          => ['ManageIQ::Providers::Openstack::CloudManager',
+                                                            'ManageIQ::Providers::Openstack::InfraManager']},
              :network_manager        => {:parent_ems_id => nil}).each do |cloud_manager|
-
       network_manager = ExtManagementSystem.create!(
         :type          => 'ManageIQ::Providers::Openstack::NetworkManager',
         :name          => "#{cloud_manager.name} Network Manager",
@@ -59,7 +59,6 @@ class SeparateOpenstackNetworkManagerFromOpenstackCloudManager < ActiveRecord::M
       .where(:ext_management_systems => {:type => 'ManageIQ::Providers::Openstack::CloudManager'}).each do |cloud_manager|
 
       network_manager = ExtManagementSystem.where(:parent_ems_id => cloud_manager.id).first
-
       affected_classes.each do |network_model_class|
         network_model_class
           .where(:ems_id => network_manager.id)
@@ -73,7 +72,6 @@ class SeparateOpenstackNetworkManagerFromOpenstackCloudManager < ActiveRecord::M
     ExtManagementSystem
       .joins('join ext_management_systems as network_manager on network_manager.parent_ems_id = ext_management_systems.id')
       .where(:ext_management_systems => {:type => 'ManageIQ::Providers::Openstack::InfraManager'}).each do |cloud_manager|
-
       network_manager = ExtManagementSystem.where(:parent_ems_id => cloud_manager.id).first
 
       affected_classes.each do |network_model_class|

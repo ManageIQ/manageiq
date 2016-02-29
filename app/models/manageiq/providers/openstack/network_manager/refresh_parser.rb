@@ -209,7 +209,7 @@ module ManageIQ::Providers
       # There can be multiple fixed_ips on the port, but only under one subnet
       subnet_id       = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
       device          = find_device_object(network_port, subnet_id)
-      security_groups = network_port.security_groups.blank? ? [] :network_port.security_groups.map do |x|
+      security_groups = network_port.security_groups.blank? ? [] : network_port.security_groups.map do |x|
         @data_index.fetch_path(:security_groups, x)
       end
 
@@ -340,28 +340,31 @@ module ManageIQ::Providers
       end
     end
 
-    def self.security_group_type
-      'ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup'
-    end
+    class << self
+      private
+      def security_group_type
+        'ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup'
+      end
 
-    def self.network_router_type
-      "ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter"
-    end
+      def network_router_type
+        "ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter"
+      end
 
-    def self.cloud_network_type
-      "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork"
-    end
+      def cloud_network_type
+        "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork"
+      end
 
-    def self.cloud_subnet_type
-      "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
-    end
+      def cloud_subnet_type
+        "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
+      end
 
-    def self.floating_ip_type
-      "ManageIQ::Providers::Openstack::NetworkManager::FloatingIp"
-    end
+      def floating_ip_type
+        "ManageIQ::Providers::Openstack::NetworkManager::FloatingIp"
+      end
 
-    def self.network_port_type
-      "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort"
+      def network_port_type
+        "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort"
+      end
     end
 
     #

@@ -53,7 +53,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.cloud_networks.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -94,7 +94,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.security_groups.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -128,7 +128,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.floating_ips.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -149,16 +149,16 @@ module EmsRefresh::SaveInventoryNetwork
 
     find_key =
       case mode
-        when :refresh
-          # Leaves out the source_security_group_id, as we will set that later
-          #   after all security_groups have been saved and ids obtained.
-          if parent.kind_of?(ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup)
-            [:ems_ref]
-          else
-            [:direction, :host_protocol, :port, :end_port, :source_ip_range]
-          end
-        when :scan
-          [:name]
+      when :refresh
+        # Leaves out the source_security_group_id, as we will set that later
+        #   after all security_groups have been saved and ids obtained.
+        if parent.kind_of?(ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup)
+          [:ems_ref]
+        else
+          [:direction, :host_protocol, :port, :end_port, :source_ip_range]
+        end
+      when :scan
+        [:name]
       end
 
     save_inventory_multi(parent.firewall_rules, hashes, :use_association, find_key, nil, [:source_security_group])
@@ -171,7 +171,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.network_routers.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -195,7 +195,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.network_ports.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []

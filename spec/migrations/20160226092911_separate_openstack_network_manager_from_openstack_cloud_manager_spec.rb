@@ -35,21 +35,21 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
     case order
     when :in
       expect(x[name].reload).to have_attributes(
-                                  :type          => x[:type_in],
-                                  name_key(name) => x[:name],
-                                  :ems_id        => x[:ems_in][:ems].id,
-                                )
+        :type          => x[:type_in],
+        name_key(name) => x[:name],
+        :ems_id        => x[:ems_in][:ems].id,
+      )
     when :out
       expect(x[name].reload).to have_attributes(
-                                  :type          => x[:type_out],
-                                  name_key(name) => x[:name],
-                                )
+        :type          => x[:type_out],
+        name_key(name) => x[:name],
+      )
       if x[:ems_out].include?("new_ems")
-        expect(ems_row_entries.select{ |x| x[:ems_in] }.include?(x[name].ems_id)).to be false
+        expect(ems_row_entries.select { |e| e[:ems_in] }.include?(x[name].ems_id)).to be false
       else
         expect(x[name]).to have_attributes(
-                             :ems_id => x[:ems_out][:ems].id,
-                           )
+          :ems_id => x[:ems_out][:ems].id,
+        )
       end
     end
   end
@@ -87,7 +87,17 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
     ]
   end
 
-  let(:all_model_names) {[:cloud_network, :cloud_subnet, :network_port, :network_router, :floating_ip, :security_group]}
+  let(:all_model_names) do
+    [
+      :cloud_network,
+      :cloud_subnet,
+      :network_port,
+      :network_router,
+      :floating_ip,
+      :security_group
+    ]
+  end
+
 
   let(:ext_management_system_stub) { migration_stub(:ExtManagementSystem) }
   let(:cloud_network_stub) { migration_stub(:CloudNetwork) }
@@ -97,12 +107,12 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
   let(:floating_ip_stub) { migration_stub(:FloatingIp) }
   let(:security_group_stub) { migration_stub(:SecurityGroup) }
 
-  let(:cloud_networks) { build_mock_data("CloudNetwork")}
-  let(:cloud_subnets) { build_mock_data("CloudSubnet")}
-  let(:network_ports) { build_mock_data("NetworkPort")}
-  let(:network_routers) { build_mock_data("NetworkRouter")}
-  let(:floating_ips) { build_mock_data("FloatingIp")}
-  let(:security_groups) { build_mock_data("SecurityGroup")}
+  let(:cloud_networks) { build_mock_data("CloudNetwork") }
+  let(:cloud_subnets) { build_mock_data("CloudSubnet") }
+  let(:network_ports) { build_mock_data("NetworkPort") }
+  let(:network_routers) { build_mock_data("NetworkRouter") }
+  let(:floating_ips) { build_mock_data("FloatingIp") }
+  let(:security_groups) { build_mock_data("SecurityGroup") }
 
   let(:ems_row_entries) do
     [
@@ -120,7 +130,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       end
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| create_record(x, :in, model_name)}
+        send("#{model_name}s").each { |x| create_record(x, :in, model_name) }
       end
 
       expect(ExtManagementSystem.count).to eq 4
@@ -128,7 +138,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       migrate
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| verify_record(x, :out, model_name)}
+        send("#{model_name}s").each { |x| verify_record(x, :out, model_name) }
       end
 
       expect(ExtManagementSystem.count).to eq 6
@@ -152,7 +162,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         :parent_ems_id => ems_row_entries[1][:ems].id)
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| create_record(x, :out, model_name, network_manager, network_manager_infra)}
+        send("#{model_name}s").each { |x| create_record(x, :out, model_name, network_manager, network_manager_infra) }
       end
 
       expect(ExtManagementSystem.count).to eq 6
@@ -160,7 +170,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       migrate
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| verify_record(x, :in, model_name)}
+        send("#{model_name}s").each { |x| verify_record(x, :in, model_name) }
       end
 
       expect(ExtManagementSystem.count).to eq 4
