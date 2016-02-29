@@ -102,20 +102,20 @@ describe VMDB::Util do
   end
 
   it ".add_zip_entry" do
+    require 'zip/zipfilesystem'
     file  = "/var/log/messages.log"
     entry = "ROOT/var/log/messages.log"
     mtime = Time.parse("2013-09-24 09:00:45 -0400")
     expect(File).to receive(:mtime).with(file).and_return(mtime)
-    expect(File).to receive(:directory?).with(file).and_return(false)
     expect(described_class).to receive(:zip_entry_from_path).with(file).and_return(entry)
 
-    zip = double
-    expect(zip).to receive(:add).with(entry, file)
+    zip       = double
+    ztime     = Zip::DOSTime.at(mtime.to_i)
+    zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
+    expect(zip).to receive(:add).with(zip_entry, file)
     zip_file = double
-    expect(zip_file).to receive(:utime).with(mtime, entry)
-    expect(zip).to receive(:file).and_return(zip_file)
 
-    expect(described_class.add_zip_entry(zip, file)).to eq([entry, mtime])
+    expect(described_class.add_zip_entry(zip, file, zip_file)).to eq([entry, mtime])
   end
 
   it ".get_evm_log_for_date" do
