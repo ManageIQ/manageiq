@@ -1,4 +1,5 @@
 require 'logger'
+require 'active_support/core_ext/object/try'
 
 class VMDBLogger < Logger
   def initialize(*args)
@@ -88,12 +89,12 @@ class VMDBLogger < Logger
 
   def self.log_hashes(logger, h, options = {})
     level  = options[:log_level] || :info
-    filter = [options[:filter]].flatten.compact << "password"
+    filter = [options[:filter]].flatten.compact.map(&:to_s) << "password"
     filter.uniq!
 
     YAML.dump(h).split("\n").each do |l|
       next if l[0...3] == '---'
-      logger.send(level, "  #{l}") unless filter.any? { |f| l.include?(f.to_s) }
+      logger.send(level, "  #{l}") unless filter.any? { |f| l.include?(f) }
     end
   end
 
