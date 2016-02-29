@@ -155,6 +155,20 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       described_class.new({}, admin.userid)
     end
 
+    context "Without a Template" do
+      let(:workflow) do
+        stub_dialog
+        allow_any_instance_of(described_class).to receive(:update_field_visibility)
+        described_class.new({}, admin.userid)
+      end
+
+      it "#allowed_instance_types" do
+        provider.flavors << FactoryGirl.create(:flavor_openstack)
+
+        expect(workflow.allowed_instance_types).to eq({})
+      end
+    end
+
     context "With a Valid Template" do
       let(:workflow) do
         stub_dialog
