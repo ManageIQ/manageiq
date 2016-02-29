@@ -477,7 +477,7 @@ module Rbac
 
     user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :user => user, :miq_group => miq_group)
 
-    exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) unless search_filter.nil? || klass.respond_to?(:instances_are_derived?)
+    exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
 
     attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
@@ -496,7 +496,7 @@ module Rbac
       auth_count  = targets.length
     end
 
-    unless search_filter.nil?
+    if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
       rejects     = targets.reject { |obj| self.matches_search_filters?(obj, search_filter, tz) }
       auth_count -= rejects.length
       targets -= rejects
