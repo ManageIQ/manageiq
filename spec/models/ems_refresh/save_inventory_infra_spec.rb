@@ -26,11 +26,11 @@ describe EmsRefresh::SaveInventoryInfra do
       expect(refresher.find_host({:ems_ref => "some_ems_ref_2", :name => "name"}, 1)).to   eq(host_with_ems_id)
     end
 
-    it "with ems_ref, hostname and ipaddress" do
+    it "with hostname and ipaddress" do
       FactoryGirl.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1")
       expected_host = FactoryGirl.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2")
 
-      expect(refresher.find_host(expected_host.slice(:ems_ref, :hostname, :ipaddress), nil)).to eq(expected_host)
+      expect(refresher.find_host(expected_host.slice(:hostname, :ipaddress), nil)).to eq(expected_host)
     end
   end
 end
