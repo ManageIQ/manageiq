@@ -124,23 +124,6 @@ describe ApiController do
       expect(authentication.key?("password")).to be_falsey
     end
 
-    it "hides them from configuration hashes" do
-      api_basic_authorize
-
-      config = {:authentication => {:userid => "admin", :password => "super_password"}}
-      Configuration.create_or_update(miq_server, config, "authentications")
-
-      run_get(servers_url(miq_server.id), :attributes => "configurations")
-
-      expect_request_success
-      expect_result_to_have_keys(%w(configurations))
-      configuration = response_hash["configurations"].first
-      authentication = configuration.fetch_path("settings", "authentication")
-      expect(authentication).to_not be_nil
-      expect(authentication["userid"]).to eq("admin")
-      expect(authentication.key?(password_field)).to be_falsey
-    end
-
     it "hides them from provisioning hashes" do
       api_basic_authorize
 
