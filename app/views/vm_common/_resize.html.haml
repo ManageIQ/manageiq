@@ -4,13 +4,13 @@
   = render :partial => "layouts/flash_msg"
 
   %h3
-    = _('Resize Instance')
+    = _('Reconfigure Instance')
   .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Current Flavor')
       .col-md-8
-        = @record.flavor.name
+        = @record.flavor.name_with_details
     .form-group
       %label.col-md-2.control-label
         = _('Choose Flavor')
@@ -18,6 +18,5 @@
         = select_tag('flavor',
             options_for_select(@flavors.sort),
             :multiple              => false,
-            :size                  => 15,
             :id                    => "flavor",
             "data-miq_observe"     => {:interval => '.5', :url => url}.to_json)

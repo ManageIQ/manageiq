@@ -15,11 +15,12 @@ class VmCloudController < ApplicationController
     assert_privileges("instance_resize")
     @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
     drop_breadcrumb(
-      :name => _("Resize VM '%{name}'") % {:name => @record.name},
+      :name => _("Reconfigure Instance '%{name}'") % {:name => @record.name},
       :url  => "/vm_cloud/resize"
     ) unless @explorer
     @flavors = {}
-    @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+    @record.ext_management_system.flavors.each { |f| @flavors[f.name_with_details] = f.id unless f == @record.flavor }
+
     @edit = {}
     @edit[:new] ||= {}
     @edit[:new][:flavor] = @record.flavor.id
@@ -42,37 +43,37 @@ class VmCloudController < ApplicationController
     case params[:button]
     when "cancel"
       if @edit[:explorer]
-        add_flash(_("Resize of %{model} \"%{name}\" was cancelled by the user") % {
+        add_flash(_("Reconfigure of %{model} \"%{name}\" was cancelled by the user") % {
           :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
         @record = @sb[:action] = nil
         replace_right_cell
       else
-        add_flash(_("Resize of %{model} \"%{name}\" was cancelled by the user") % {
+        add_flash(_("Reconfigure of %{model} \"%{name}\" was cancelled by the user") % {
           :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
         session[:flash_msgs] = @flash_array.dup
         render :update do |page|
           page.redirect_to(previous_breadcrumb_url)
         end
       end
-    when "save"
+    when "submit"
       valid, details = @record.validate_resize
       if valid
         begin
           old_flavor = @record.flavor
           @record.resize(flavor)
-          add_flash(_("Resizing %{instance} \"%{name}\" from %{old_flavor} %{new_flavor}") % {
+          add_flash(_("Reconfiguring %{instance} \"%{name}\" from %{old_flavor} %{new_flavor}") % {
             :instance   => ui_lookup(:table => 'vm_cloud'),
             :name       => @record.name,
             :old_flavor => old_flavor.name,
             :new_flavor => flavor.name})
         rescue => ex
-          add_flash(_("Unable to resize %{instance} \"%{name}\": %{details}") % {
+          add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
             :details  => ex}, :error)
         end
       else
-        add_flash(_("Unable to resize %{instance} \"%{name}\": %{details}") % {
+        add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
           :details  => details}, :error)
@@ -86,18 +87,6 @@ class VmCloudController < ApplicationController
         session[:flash_msgs] = @flash_array.dup
         render :update do |page|
           page.redirect_to(previous_breadcrumb_url)
-        end
-      end
-    when "reset"
-      resize
-      add_flash(_("All changes have been reset"), :warning)
-      session[:flash_msgs] = @flash_array.dup
-      @changed = session[:changed] = false
-      if @edit[:explorer]
-        replace_right_cell
-      else
-        render :update do |page|
-          page.redirect_to(:action => "resize", :controller => "vm", :id => params[:id])
         end
       end
     end

@@ -27,7 +27,7 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
         button(
           :instance_resize,
           'pficon pficon-edit fa-lg',
-          t = N_('Resize Instance'),
+          t = N_('Reconfigure this Instance'),
           t),
         button(
           :instance_ownership,

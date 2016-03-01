@@ -4256,8 +4256,8 @@
         :description: Edit Instance Tags
         :feature_type: control
         :identifier: instance_tag
-      - :name: Resize Instance
-        :description: Resize Instance
+      - :name: Reconfigure Instance
+        :description: Reconfigure Instance
         :feature_type: control
         :identifier: instance_resize
     - :name: Modify
