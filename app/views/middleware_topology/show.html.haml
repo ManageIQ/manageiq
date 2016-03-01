@@ -1,3 +1,4 @@
+- tooltipOptions = {"tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
 .container_topology{'data-ng-app' => "mwTopologyApp", 'ng-controller' => "middlewareTopologyController"}
   .row.toolbar-pf
     .col-md-12
@@ -5,13 +6,13 @@
   .legend
     %label#selected
     %div{'ng-if' => "kinds"}
-      %kubernetes-topology-icon{:kind => "MiddlewareServer", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+      %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareServer"}
         %svg.kube-topology
           %g.MiddlewareServer{:transform => "translate(21, 21)"}
             %circle{:r => "17"}
             %image{:height => "20", :width => "20", :x => "-9", "xlink:href" => "/assets/100/middleware_server.png", :y => "-9"}
         %label Middleware Servers
-      %kubernetes-topology-icon{:kind => "MiddlewareDeployment", "tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+      %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareDeployment"}
         %svg.kube-topology
           %g.MiddlewareDeployment{:transform => "translate(21, 21)"}
             %circle{:r => "17"}
