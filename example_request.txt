@@ -1,0 +1,92 @@
+      url = 'http://localhost:3000'
+      query = '/api/automation_requests'
+
+      post_params = {
+        :version => '1.1',
+        :uri_parts => {
+          :namespace => 'Deployment/System',
+          :class => 'Request',
+          :instance => 'Deployment'
+        },
+        :requester => {
+          :auto_approve => true
+        },
+        :parameters => {
+          :deployment_type     => "managed_provision", # managed_existing, managed_provision, not_managed
+
+          #only for provision
+          :masters_provision   => {
+            :templateFields => {
+             "guid"=>"4a902314-ddf6-11e5-b2e8-68f7284cf48e",
+                "name"=>
+                 "CentOS Linux 7 x86_64 HVM EBS 20150928_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-69327e0c.2"
+            },
+            :vmFields => {
+            "placement_auto"=>false,
+              'vm_name'   => 'maste123',
+              'vlan'      => 'public',
+              "instance_type"=>56,
+              "vm_auto_start"=>true,
+              "monitoring"=>"basic",
+              "addr_mode"=>"dhcp"
+            },
+            :requester => {
+              'owner_email'      => 'pemcg@bit63.com',
+              'owner_first_name' => 'Peter',
+              'owner_last_name'  => 'McGowan'
+            },
+            :tags => nil,
+            :ws_values => {
+              'disk_size_gb' => '50',
+              'mountpoint' => '/opt'
+            },
+            :number_of_vms => '1'
+          },
+          #only for provision
+          :nodes_provision   => {
+            :number_of_vms => '2',
+            :templateFields => {
+              "guid"=>"4a902314-ddf6-11e5-b2e8-68f7284cf48e",
+                 "name"=>
+                  "CentOS Linux 7 x86_64 HVM EBS 20150928_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-69327e0c.2"
+            },
+            :vmFields => {
+            "placement_auto"=>false,
+              'vm_name'   => "nod123",
+              'vlan'      => 'public',
+              "instance_type"=>56,
+              "monitoring"=>"basic",
+              "addr_mode"=>"dhcp"
+            },
+            :requester => {
+              'owner_email'      => 'pemcg@bit63.com',
+              'owner_first_name' => 'Peter',
+              'owner_last_name'  => 'McGowan'
+            },
+            :tags => nil,
+            :ws_values => {
+              'disk_size_gb' => '50',
+              'mountpoint' => '/opt'
+            }
+          },
+          #fill in
+           :deployment_master => "",
+           :masters  => [],
+           :nodes    => [],
+           :username => "",
+           :password => "",
+           :ssh_key_path => "",
+           :topology => "",
+           :provider_type => "",
+           :provider_id => ""
+
+        }
+      }.to_json
+      rest_return = RestClient::Request.execute(
+        method: :post,
+        url: url + query,
+        :user => 'admin',
+        :password => 'smartvm',
+        :headers => {:accept => :json},
+        :payload => post_params,
+        verify_ssl: false)
