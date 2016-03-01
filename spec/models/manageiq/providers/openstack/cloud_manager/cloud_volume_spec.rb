@@ -56,6 +56,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
         expect(volume.cloud_tenant).to eq tenant
       end
 
+      it "raises an error when the ems is missing" do
+        expect { CloudVolume.create_volume(nil) }.to raise_error(ArgumentError)
+      end
+
       it "validates the volume create operation" do
         validation = CloudVolume.validate_create_volume(ems)
         expect(validation[:available]).to be true
