@@ -32,7 +32,7 @@ module ApplianceConsole
     def self.db_host_database_region
       result = AwesomeSpawn.run(
         "bin/rails runner",
-        :params => ["puts MiqDbConfig.current.options.values_at(:host, :database), ActiveRecord::Base.my_region_number"],
+        :params => ["puts MiqDbConfig.current.options.values_at(:host, :database), ApplicationRecord.my_region_number"],
         :chdir  => RAILS_ROOT
       )
 
