@@ -131,7 +131,10 @@ describe ContainerTopologyService do
         # cross provider correlations
         {:source => "Vm" + vm_rhev.compressed_id.to_s, :target => "Host" + host.compressed_id.to_s},
         {:source => "ContainerNode" + container_node.compressed_id.to_s, :target => "Vm" + vm_rhev.compressed_id.to_s},
-        {:source => "ContainerManager" + ems_kube.compressed_id.to_s, :target =>  "ContainerNode" + container_node.compressed_id.to_s}
+        {:source => "ContainerNode" + container_node.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s},
+        {:source => "ContainerManager" + ems_kube.compressed_id.to_s, :target => "ContainerNode" + container_node.compressed_id.to_s},
+        {:source => "ContainerGroup" + container_group.compressed_id.to_s, :target => "Container" + container.compressed_id.to_s},
+        {:source => "ContainerService" + container_service.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s}
       )
     end
 
