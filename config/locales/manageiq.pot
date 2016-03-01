@@ -26086,10 +26086,6 @@ msgstr ""
 msgid "To E-mail Address"
 msgstr ""
 
-#: ../../app/views/chargeback/_chargeback_instructions.html.haml:3
-msgid "To Generate a Chargeback Report"
-msgstr ""
-
 #: ../../app/controllers/ems_common.rb:541
 msgid "To configure the Host Default VNC Port Range, both start and end ports are required"
 msgstr ""
