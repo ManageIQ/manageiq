@@ -41,7 +41,7 @@ class OpsController
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{feature_title}",
           :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
           :title   => feature_title,
-          :tooltip => feature_title + " Main Tab"
+          :tooltip => _("%{title} Main Tab") % {:title => feature_title}
         }
 
         subitems.each do |f| # Go thru the features of this tab

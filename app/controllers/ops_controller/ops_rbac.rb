@@ -424,7 +424,7 @@ module OpsController::OpsRbac
         get_node_info(x_node)
         replace_right_cell(x_node)
       else
-        drop_breadcrumb(:name => "Edit User Group Sequence", :url => "/configuration/ldap_seq_edit")
+        drop_breadcrumb(:name => _("Edit User Group Sequence"), :url => "/configuration/ldap_seq_edit")
         @in_a_form = true
         replace_right_cell("group_seq")
       end
@@ -449,7 +449,7 @@ module OpsController::OpsRbac
     end
     @edit[:key] = "rbac_group_edit__seq"
     @edit[:current] = copy_hash(@edit[:new])
-    @right_cell_text = "Editing Sequence of User Groups"
+    @right_cell_text = _("Editing Sequence of User Groups")
     @tabs = [["ldap_seq_edit", "Edit Sequence of User Groups"], ["ldap_seq_edit", "Edit Sequence of User Groups"]]
     session[:edit] = @edit
     session[:changed] = false
@@ -571,7 +571,7 @@ module OpsController::OpsRbac
   private ############################
 
   def tenant_type_title_string(divisible)
-    divisible ? ui_lookup(:model => "Tenant") : "Project"
+    divisible ? ui_lookup(:model => "Tenant") : _("Project")
   end
 
   def rbac_user_delete_restriction?(user)
@@ -852,7 +852,7 @@ module OpsController::OpsRbac
   end
 
   def process_tenants(tenants, task)
-    process_elements(tenants, Tenant, task, "Tenant", "name")
+    process_elements(tenants, Tenant, task, _("Tenant"), "name")
   end
 
   # Build the main Access Control tree
