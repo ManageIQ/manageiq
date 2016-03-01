@@ -222,6 +222,11 @@ module ApplicationController::TreeSupport
         end
       end
 
+    # Handle folder named "datastore" under a Datacenter
+    elsif folder.kind_of?(EmsFolder) && folder.name == "datastore" &&
+          folder.parent.kind_of?(EmsFolder) && folder.parent.is_datacenter
+    # Skip showing the datastore folder and sub-folders
+
     # Handle folder named "Discovered Virtual Machine"
     # elsif folder.kind_of?(EmsFolder) && folder.name == "Discovered Virtual Machine"
     # Commented this out to handle like any other blue folder, for now
