@@ -61,8 +61,7 @@ describe Host do
   it "emits cluster policy event when the cluster changes" do
     # New host added to a cluster
     cluster1 = FactoryGirl.create(:ems_cluster)
-    host = FactoryGirl.create(:host_vmware)
-    host.ems_cluster = cluster1
+    host = FactoryGirl.build(:host_vmware, :ems_cluster => cluster1)
     expect(MiqEvent).to receive(:raise_evm_event).with(host, "host_add_to_cluster", anything)
     host.save
 
@@ -179,33 +178,15 @@ describe Host do
   end
 
   context "quick statistics retrieval" do
-    before(:each) do
-      @host = FactoryGirl.create(:host)
-    end
+    subject { FactoryGirl.build(:host) }
 
-    it "#current_memory_usage" do
-      mem_usage = @host.current_memory_usage
-      expect(mem_usage).to be_an(Integer)
-
-      expect { @host.current_memory_usage }.not_to raise_error
-    end
-
-    it "#current_cpu_usage" do
-      cpu_usage = @host.current_cpu_usage
-      expect(cpu_usage).to be_an(Integer)
-
-      expect { @host.current_cpu_usage }.not_to raise_error
-    end
+    it("#current_memory_usage") { expect(subject.current_memory_usage).to be_kind_of(Integer) }
+    it("#current_cpu_usage")    { expect(subject.current_cpu_usage).to    be_kind_of(Integer) }
   end
 
   context "#vmm_vendor_display" do
-    it "with known host type" do
-      expect(FactoryGirl.create(:host_vmware_esx).vmm_vendor_display).to eq("VMware")
-    end
-
-    it "with nil vendor" do
-      expect(FactoryGirl.create(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown")
-    end
+    it("known vendor") { expect(FactoryGirl.build(:host_vmware_esx).vmm_vendor_display).to          eq("VMware") }
+    it("nil vendor")   { expect(FactoryGirl.build(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown") }
   end
 
   it ".host_discovery_types" do
@@ -290,71 +271,45 @@ describe Host do
   end
 
   context "#get_ports" do
+    let(:os) { FactoryGirl.create(:operating_system) }
+    subject  { FactoryGirl.create(:host, :operating_system => os) }
+
     before do
-      @host = FactoryGirl.create(:host_vmware)
-      os = FactoryGirl.create(:operating_system, :name => 'XUNIL')
-      @host.operating_system = os
-      fr1 = FactoryGirl.create(:firewall_rule, :name => 'fr1', :host_protocol => 'udp',
-                               :direction => "in", :enabled => true, :port => 1001)
-      fr2 = FactoryGirl.create(:firewall_rule, :name => 'fr2', :host_protocol => 'udp',
-                               :direction => "out", :enabled => true, :port => 1002)
-      fr3 = FactoryGirl.create(:firewall_rule, :name => 'fr3', :host_protocol => 'tcp',
-                               :direction => "in", :enabled => true, :port => 1003)
-      [fr1, fr2, fr3].each do |fr|
-        fr.update_attributes(:resource_type => os.class.name, :resource_id => os.id)
-      end
+      FactoryGirl.create(:firewall_rule, :host_protocol => 'udp', :direction => "in", :enabled => true, :port => 1001, :resource => os)
+      FactoryGirl.create(:firewall_rule, :host_protocol => 'udp', :direction => "out", :enabled => true, :port => 1002, :resource => os)
+      FactoryGirl.create(:firewall_rule, :host_protocol => 'tcp', :direction => "in", :enabled => true, :port => 1003, :resource => os)
     end
 
-    it "#enabled_udp_outbound_ports" do
-      expect(@host.enabled_udp_outbound_ports).to match_array([1002])
-    end
-
-    it "#enabled_inbound_ports" do
-      expect(@host.enabled_inbound_ports).to match_array([1003, 1001])
-    end
+    it("#enabled_udp_outbound_ports") { expect(subject.enabled_udp_outbound_ports).to match_array([1002]) }
+    it("#enabled_inbound_ports")      { expect(subject.enabled_inbound_ports).to      match_array([1003, 1001]) }
   end
 
-  context "#node_types" do
-    before(:each) do
-      @ems1 = FactoryGirl.create(:ems_vmware)
-      @ems2 = FactoryGirl.create(:ems_openstack_infra)
-    end
-
+  context ".node_types" do
     it "returns :mixed_hosts when there are both openstack & non-openstack hosts in db" do
-      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
-      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))
+      FactoryGirl.create(:host_vmware_esx,      :ext_management_system => FactoryGirl.create(:ems_vmware))
 
-      result = Host.node_types
-      expect(result).to eq(:mixed_hosts)
+      expect(Host.node_types).to eq(:mixed_hosts)
     end
 
     it "returns :openstack when there are only openstack hosts in db" do
-      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
-      result = Host.node_types
-      expect(result).to eq(:openstack)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))
+
+      expect(Host.node_types).to eq(:openstack)
     end
 
     it "returns :non_openstack when there are non-openstack hosts in db" do
-      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
-      result = Host.node_types
-      expect(result).to eq(:non_openstack)
+      FactoryGirl.create(:host_vmware_esx, :ext_management_system => FactoryGirl.create(:ems_vmware))
+
+      expect(Host.node_types).to eq(:non_openstack)
     end
   end
 
   context "#openstack_host?" do
-    it "returns true for openstack host" do
-      ems = FactoryGirl.create(:ems_openstack_infra)
-      host = FactoryGirl.create(:host_redhat, :ems_id => ems.id)
+    it("false") { expect(FactoryGirl.build(:host).openstack_host?).to be false }
 
-      result = host.openstack_host?
-      expect(result).to be_truthy
-    end
-
-    it "returns false for non-openstack host" do
-      ems = FactoryGirl.create(:ems_vmware)
-      host = FactoryGirl.create(:host_vmware_esx, :ems_id => ems.id)
-      result = host.openstack_host?
-      expect(result).to be_falsey
+    it "true" do
+      expect(FactoryGirl.build(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))).to be_openstack_host
     end
   end
 

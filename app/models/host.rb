@@ -1858,22 +1858,22 @@ class Host < ApplicationRecord
     !plist.blank?
   end
 
-  def self.node_types
+  def self.node_types # TODO: This doesn't belong here
     return :non_openstack unless openstack_hosts_exists?
     non_openstack_hosts_exists? ? :mixed_hosts : :openstack
   end
 
-  def self.openstack_hosts_exists?
+  def self.openstack_hosts_exists? # TODO: This doesn't belong here
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     ems.empty? ? false : Host.where(:ems_id => ems).exists?
   end
 
-  def self.non_openstack_hosts_exists?
+  def self.non_openstack_hosts_exists? # TODO: This doesn't belong here
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     Host.where.not(:ems_id => ems).exists?
   end
 
-  def openstack_host?
+  def openstack_host? # TODO: This doesn't belong here
     ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
 
