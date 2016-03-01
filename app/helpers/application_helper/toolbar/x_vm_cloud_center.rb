@@ -25,11 +25,6 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           t = N_('Edit this Instance'),
           t),
         button(
-          :instance_resize,
-          'pficon pficon-edit fa-lg',
-          t = N_('Reconfigure this Instance'),
-          t),
-        button(
           :instance_ownership,
           'pficon pficon-user fa-lg',
           N_('Set Ownership for this Instance'),
@@ -47,6 +42,11 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           t = N_('Edit Management Engine Relationship'),
           t),
         separator,
+        button(
+          :instance_resize,
+          'pficon pficon-edit fa-lg',
+          t = N_('Reconfigure this Instance'),
+          t)
       ]
     ),
   ])
