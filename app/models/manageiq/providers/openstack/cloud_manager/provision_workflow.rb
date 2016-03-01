@@ -2,6 +2,7 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
   def allowed_instance_types(_options = {})
     source                  = load_ar_obj(get_source_vm)
     flavors                 = get_targets_for_ems(source, :cloud_filter, Flavor, 'flavors')
+    return {} if flavors.blank?
     minimum_disk_required   = [source.hardware.size_on_disk, source.hardware.disk_size_minimum.to_i].max
     minimum_memory_required = source.hardware.memory_mb_minimum.to_i * 1.megabyte
     flavors.each_with_object({}) do |flavor, h|
