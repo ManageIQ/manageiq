@@ -10,44 +10,44 @@ class ContainerTopologyService < TopologyService
     links = []
 
     @providers.each do |provider|
-      topo_items[key = entity_id(provider)] = build_entity_data(provider)
+      topo_items[provider_id = entity_id(provider)] = build_entity_data(provider)
       provider.container_nodes.each { |n|
-        topo_items[entity_id(n)] = build_entity_data(n)
-        links << build_link(key, entity_id(n))
+        topo_items[node_id = entity_id(n)] = build_entity_data(n)
+        links << build_link(provider_id, node_id)
         n.container_groups.each do |cg|
-          topo_items[key = entity_id(cg)] = build_entity_data(cg)
-          links << build_link(entity_id(n), key)
+          topo_items[cg_id = entity_id(cg)] = build_entity_data(cg)
+          links << build_link(node_id, cg_id)
           cg.containers.each do |c|
-            topo_items[key = entity_id(c)] = build_entity_data(c)
-            links << build_link(entity_id(cg), key)
+            topo_items[container_id = entity_id(c)] = build_entity_data(c)
+            links << build_link(cg_id, container_id)
           end
           if cg.container_replicator
             cr = cg.container_replicator
-            topo_items[key = entity_id(cr)] = build_entity_data(cr)
-            links << build_link(key, entity_id(cg))
+            topo_items[cr_id = entity_id(cr)] = build_entity_data(cr)
+            links << build_link(cr_id, cg_id)
           end
         end
 
         if n.lives_on
-          topo_items[key = entity_id(n.lives_on)] = build_entity_data(n.lives_on)
-          links << build_link(entity_id(n), key)
+          topo_items[lives_on_id = entity_id(n.lives_on)] = build_entity_data(n.lives_on)
+          links << build_link(node_id, lives_on_id)
           if n.lives_on.kind_of?(Vm) # add link to Host
             host = n.lives_on.host
             if host
-              topo_items[key = entity_id(host)] = build_entity_data(host)
-              links << build_link(entity_id(n.lives_on), key)
+              topo_items[host_id = entity_id(host)] = build_entity_data(host)
+              links << build_link(lives_on_id, host_id)
             end
           end
         end
       }
 
       provider.container_services.each { |s|
-        topo_items[key = entity_id(s)] = build_entity_data(s)
-        s.container_groups.each { |cg| links << build_link(key, entity_id(cg)) } if s.container_groups.size > 0
-        if s.container_routes.size > 0
+        topo_items[service_id = entity_id(s)] = build_entity_data(s)
+        s.container_groups.each { |cg| links << build_link(service_id, entity_id(cg)) } unless s.container_groups.empty?
+        unless s.container_routes.empty?
           s.container_routes.each { |r|
-            topo_items[key = entity_id(r)] = build_entity_data(r)
-            links << build_link(entity_id(s), key)
+            topo_items[route_id = entity_id(r)] = build_entity_data(r)
+            links << build_link(service_id, route_id)
           }
         end
       }
