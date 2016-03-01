@@ -280,7 +280,8 @@ class MiqLdap
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
     when "samaccountname"
-      return "#{@domain_prefix}\\#{username}"
+      return "#{@domain_prefix}\\#{username}" unless @domain_prefix.blank?
+      return username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
       return username if username =~ /^.+@.+$/ # already qualified with user@domain
