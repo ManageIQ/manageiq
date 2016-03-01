@@ -302,8 +302,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    registry = @ems_configs.fetch_path(:ems_kubernetes, :image_inspector_registry)
-    return "#{registry}/openshift/image-inspector:v1.0.z" unless registry.empty?
-    return 'openshift/image-inspector:v1.0.z'
+    image = 'image-inspector:v1.0.z'
+    registry_repo = @ems_configs.fetch_path(:ems_kubernetes, :image_inspector_registry_repo)
+    return "#{registry_repo}/#{image}" unless registry_repo.blank?
+    image
   end
 end
