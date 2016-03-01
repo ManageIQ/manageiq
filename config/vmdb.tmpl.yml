@@ -72,6 +72,8 @@ ems_refresh:
     get_shared_images: true
     get_public_images: false
     ignore_terminated_instances: true
+  ansible_tower_configuration:
+    :refresh_interval: 15.minutes
   foreman_configuration:
     :refresh_interval: 15.minutes
   foreman_provisioning:
@@ -384,6 +386,7 @@ workers:
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
         :ems_refresh_worker_amazon: {}
+        :ems_refresh_worker_ansible_tower_configuration: {}
         :ems_refresh_worker_azure: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
