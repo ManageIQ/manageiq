@@ -9,10 +9,11 @@ module FilterableMixin
       options[:include] = get_include_for_find(options[:include]) unless options.delete(:eager_loading) == false
       if mfilters.blank?
         # do normal find if no filters
-        result = find(number, :conditions => options[:conditions],
-          :order => options[:order_by] || options[:order],
-          :joins => options[:join] || options[:joins], :include => options[:include],
-          :select => options[:select])
+        result = where(options[:conditions])
+                   .order(options[:order])
+                   .joins(options[:join] || options[:joins])
+                   .includes(options[:include])
+                   .select(options[:select])
         total_count = result.length
       else
         # get count of results unfiltered
