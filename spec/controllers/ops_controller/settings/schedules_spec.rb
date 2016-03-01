@@ -15,7 +15,7 @@ describe OpsController do
       let(:filter_type) { "vm" }
 
       before do
-        allow(Vm).to receive(:find).with(:all, {}).and_return([vm])
+        allow(Vm).to receive(:where).with({}).and_return([vm])
         post :schedule_form_filter_type_field_changed, :params => params, :session => session
       end
 
@@ -30,7 +30,7 @@ describe OpsController do
       let(:filter_type) { "ems" }
 
       before do
-        allow(ExtManagementSystem).to receive(:find).with(:all, {}).and_return([ext_management_system])
+        allow(ExtManagementSystem).to receive(:where).with({}).and_return([ext_management_system])
         post :schedule_form_filter_type_field_changed, :params => params, :session => session
       end
 
@@ -53,7 +53,7 @@ describe OpsController do
 
       before do
         bypass_rescue
-        allow(EmsCluster).to receive(:find).with(:all, {}).and_return([cluster])
+        allow(EmsCluster).to receive(:where).with({}).and_return([cluster])
         post :schedule_form_filter_type_field_changed, :params => params, :session => session
       end
 
@@ -68,7 +68,7 @@ describe OpsController do
       let(:filter_type) { "host" }
 
       before do
-        allow(Host).to receive(:find).with(:all, {}).and_return([host])
+        allow(Host).to receive(:where).with({}).and_return([host])
         post :schedule_form_filter_type_field_changed, :params => params, :session => session
       end
 
