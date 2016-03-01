@@ -5,7 +5,7 @@ class MiqGroup < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :miq_user_role
-  has_and_belongs_to_many :users
+  belongs_to :user_group
   has_many   :vms,         :dependent => :nullify
   has_many   :miq_templates, :dependent => :nullify
   has_many   :miq_reports, :dependent => :nullify

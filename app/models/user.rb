@@ -18,7 +18,7 @@ class User < ApplicationRecord
   has_many   :miq_reports, :dependent => :nullify
   has_many   :service_orders, :dependent => :nullify
   belongs_to :current_group, :class_name => "MiqGroup"
-  has_and_belongs_to_many :miq_groups
+  has_and_belongs_to_many :user_groups
   scope      :admin, -> { where(:userid => "admin") }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
