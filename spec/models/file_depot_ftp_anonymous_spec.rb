@@ -1,13 +1,6 @@
 describe FileDepotFtpAnonymous do
-  before :each do
-    @ftpAnonymous = FileDepotFtpAnonymous.new
-  end
-
-
-  it "should require credentials with account anonymous" do
+  it "should require credentials for anonymous" do
     expect(FileDepotFtpAnonymous.requires_credentials?).to eq true
-    ss = FileDepotFtpAnonymous.new.login_credentials
-    expect(ss[0]).to eq "anonymous"
+    expect(FileDepotFtpAnonymous.new.login_credentials[0]).to eq "anonymous"
   end
-
 end
