@@ -11,7 +11,7 @@ class MiddlewareTopologyController < ApplicationController
     if params[:id].nil?
       @breadcrumbs.clear
     end
-    drop_breadcrumb(:name => 'Topology', :url => '')
+    drop_breadcrumb(:name => _('Topology'), :url => '')
   end
 
   def index
