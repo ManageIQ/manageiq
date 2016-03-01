@@ -21,20 +21,33 @@ class StorageController < ApplicationController
     case @display
     when "all_miq_templates", "all_vms"
       title, kls = (@display == "all_vms" ? ["VMs", Vm] : ["Templates", MiqTemplate])
-      drop_breadcrumb(:name => @storage.name + " (All Registered #{title})", :url => "/storage/show/#{@storage.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All Registered %{title})") % {:name => @storage.name, :title => title},
+                      :url  => "/storage/show/#{@storage.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @storage, :association => @display)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this Host"
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{items} on this Host") % {:items => title}
+                      else
+                        _("* You are not authorized to view other %{item} on this Host") % {:item => title.singularize}
+                      end
+
       end
     when "hosts"
       @view, @pages = get_view(Host, :parent => @storage) # Get the records (into a view) and the paginator
-      drop_breadcrumb(:name => @storage.name + " (All Registered Hosts)", :url => "/storage/show/#{@storage.id}?display=hosts")
+      drop_breadcrumb(:name => _("%{name} (All Registered Hosts)") % {:name => @storage.name},
+                      :url  => "/storage/show/#{@storage.id}?display=hosts")
       @showtype = "hosts"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other Host") + " on this " + ui_lookup(:table => "storages")
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count]
+                        _("* You are not authorized to view other Hosts on this %{table}") %
+                          {:table => ui_lookup(:table => "storages")}
+                      else
+                        _("* You are not authorized to view other Host on this %{table}") %
+                          {:table => ui_lookup(:table => "storages")}
+                      end
       end
 
     when "download_pdf", "main", "summary_only"
@@ -42,32 +55,42 @@ class StorageController < ApplicationController
       session[:vm_summary_cool] = (@settings[:views][:vm_summary_cool] == "summary")
       @summary_view = session[:vm_summary_cool]
       drop_breadcrumb({:name => ui_lookup(:tables => "storages"), :url => "/storage/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb(:name => @storage.name + " (Summary)", :url => "/storage/show/#{@storage.id}?display=main")
+      drop_breadcrumb(:name => "%{name} (Summary)" % {:name => @storage.name},
+                      :url  => "/storage/show/#{@storage.id}?display=main")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{@storage.name} Capacity & Utilization", :url => "/storage/show/#{@storage.id}?display=#{@display}&refresh=n")
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @storage.name},
+                      :url  => "/storage/show/#{@storage.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Intialize perf chart options, charts will be generated async
 
     when "storage_extents"
-      drop_breadcrumb(:name => @storage.name + " (All #{ui_lookup(:tables => "cim_base_storage_extent")})", :url => "/storage/show/#{@storage.id}?display=storage_extents")
+      drop_breadcrumb(:name => _(" (All %{tables})") % {:name   => @storage.name,
+                                                        :tables => ui_lookup(:tables => "cim_base_storage_extent")},
+                      :url  => "/storage/show/#{@storage.id}?display=storage_extents")
       @view, @pages = get_view(CimBaseStorageExtent, :parent => @storage, :parent_method => :base_storage_extents)  # Get the records (into a view) and the paginator
       @showtype = "storage_extents"
 
     when "ontap_storage_systems"
-      drop_breadcrumb(:name => @storage.name + " (All #{ui_lookup(:tables => "ontap_storage_system")})", :url => "/storage/show/#{@storage.id}?display=ontap_storage_systems")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @storage.name,
+                                                               :tables => ui_lookup(:tables => "ontap_storage_system")},
+                      :url  => "/storage/show/#{@storage.id}?display=ontap_storage_systems")
       @view, @pages = get_view(OntapStorageSystem, :parent => @storage, :parent_method => :storage_systems) # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_systems"
 
     when "ontap_storage_volumes"
-      drop_breadcrumb(:name => @storage.name + " (All #{ui_lookup(:tables => "ontap_storage_volume")})", :url => "/storage/show/#{@storage.id}?display=ontap_storage_volumes")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @storage.name,
+                                                               :tables => ui_lookup(:tables => "ontap_storage_volume")},
+                      :url  => "/storage/show/#{@storage.id}?display=ontap_storage_volumes")
       @view, @pages = get_view(OntapStorageVolume, :parent => @storage, :parent_method => :storage_volumes) # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_volumes"
 
     when "ontap_file_shares"
-      drop_breadcrumb(:name => @storage.name + " (All #{ui_lookup(:tables => "ontap_file_share")})", :url => "/storage/show/#{@storage.id}?display=ontap_file_shares")
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @storage.name,
+                                                               :tables => ui_lookup(:tables => "ontap_file_share")},
+                      :url  => "/storage/show/#{@storage.id}?display=ontap_file_shares")
       @view, @pages = get_view(OntapFileShare, :parent => @storage, :parent_method => :file_shares) # Get the records (into a view) and the paginator
       @showtype = "ontap_file_shares"
     end
@@ -160,27 +183,49 @@ class StorageController < ApplicationController
   end
 
   def files
-    show_association('files', 'All Files', 'storage_files', :storage_files, StorageFile, 'files')
+    show_association('files', _('All Files'), 'storage_files', :storage_files, StorageFile, 'files')
   end
 
   def disk_files
-    show_association('disk_files', 'VM Provisioned Disk Files', 'storage_disk_files', :storage_files, StorageFile, 'disk_files')
+    show_association('disk_files',
+                     _('VM Provisioned Disk Files'),
+                     'storage_disk_files',
+                     :storage_files,
+                     StorageFile,
+                     'disk_files')
   end
 
   def snapshot_files
-    show_association('snapshot_files', 'VM Snapshot Files', 'storage_snapshot_files', :storage_files, StorageFile, 'snapshot_files')
+    show_association('snapshot_files',
+                     _('VM Snapshot Files'),
+                     'storage_snapshot_files',
+                     :storage_files,
+                     StorageFile,
+                     'snapshot_files')
   end
 
   def vm_ram_files
-    show_association('vm_ram_files', 'VM Memory Files', 'storage_memory_files', :storage_files, StorageFile, 'vm_ram_files')
+    show_association('vm_ram_files',
+                     _('VM Memory Files'),
+                     'storage_memory_files',
+                     :storage_files, StorageFile,
+                     'vm_ram_files')
   end
 
   def vm_misc_files
-    show_association('vm_misc_files', 'Other VM Files', 'storage_other_vm_files', :storage_files, StorageFile, 'vm_misc_files')
+    show_association('vm_misc_files',
+                     _('Other VM Files'),
+                     'storage_other_vm_files',
+                     :storage_files, StorageFile,
+                     'vm_misc_files')
   end
 
   def debris_files
-    show_association('debris_files', 'Non-VM Files', 'storage_non_vm_files', :storage_files, StorageFile, 'debris_files')
+    show_association('debris_files',
+                     _('Non-VM Files'),
+                     'storage_non_vm_files',
+                     :storage_files, StorageFile,
+                     'debris_files')
   end
 
   private ############################
@@ -212,7 +257,7 @@ class StorageController < ApplicationController
   # end
 
   def get_session_data
-    @title      = "Storage"
+    @title      = _("Storage")
     @layout     = "storage"
     @lastaction = session[:storage_lastaction]
     @display    = session[:storage_display]
