@@ -151,7 +151,7 @@ module OpsController::Settings::Common
         if @edit[:new].config[:workers][:worker_base][:ui_worker][:count] != @edit[:current].config[:workers][:worker_base][:ui_worker][:count]
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
-        page.replace_html('pwd_note', @edit[:default_verify_status] ? '' : "* Passwords don't match.")
+        page.replace_html('pwd_note', @edit[:default_verify_status] ? '' : _("* Passwords don't match."))
       when 'settings_database'
         # database tab
         @changed = (@edit[:new] != @edit[:current])
@@ -1216,7 +1216,10 @@ module OpsController::Settings::Common
   def build_smartproxy_affinity_tree(zone)
     zone.miq_servers.select(&:is_a_proxy?).sort_by { |s| [s.name, s.id] }.collect do |s|
       title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name} [#{s.id}]"
-      title = "<b class='cfme-bold-node'>#{title} (current)</title>".html_safe if @sb[:my_server_id] == s.id
+      if @sb[:my_server_id] == s.id
+        title = "<b class='cfme-bold-node'>'" + _("%{title} (current)") % {:title => title} + "</title>"
+        title = title.html_safe
+      end
       {
         :key      => s.id.to_s,
         :icon     => ActionController::Base.helpers.image_path('100/evm_server.png'),

@@ -16,7 +16,11 @@ module OpsController::Settings::Tags
   def category_delete
     category = Classification.find(params[:id])
     c_name = category.name
-    audit = {:event => "category_record_delete", :message => "[#{c_name}] Record deleted", :target_id => category.id, :target_class => "Classification", :userid => session[:userid]}
+    audit = {:event        => "category_record_delete",
+             :message      => _("[%{name}] Record deleted") % {:name => c_name},
+             :target_id    => category.id,
+             :target_class => "Classification",
+             :userid       => session[:userid]}
     if category.destroy
       AuditEvent.success(audit)
       add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "Classification"), :name => c_name})
@@ -74,7 +78,7 @@ module OpsController::Settings::Tags
                                           :example_text => @edit[:new][:example_text],
                                           :show         => @edit[:new][:show])
         rescue StandardError => bang
-          add_flash(_("Error during '%s': ") % "add" << bang.message, :error)
+          add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
           render :update do |page|
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
@@ -215,7 +219,12 @@ module OpsController::Settings::Tags
   def ce_delete
     ce_get_form_vars
     entry = @cat.entries.find(params[:id])
-    audit = {:event => "classification_entry_delete", :message => "Category #{@cat.description} [#{entry.name}] record deleted", :target_id => entry.id, :target_class => "Classification", :userid => session[:userid]}
+    audit = {:event        => "classification_entry_delete",
+             :message      => _("Category %{description} [%{name}] record deleted") % {:description => @cat.description,
+                                                                                       :name        => entry.name},
+             :target_id    => entry.id,
+             :target_class => "Classification",
+             :userid       => session[:userid]}
     if entry.destroy
       AuditEvent.success(audit)
       ce_build_screen                               # Build the Classification Edit screen
@@ -249,7 +258,8 @@ module OpsController::Settings::Tags
 
   # Build the audit object when a record is created, including all of the new fields
   def ce_created_audit(entry)
-    msg = "Category #{@cat.description} [#{entry.name}] record created ("
+    msg = _("Category %{description} [%{name}] record created (") % {:description => @cat.description,
+                                                                     :name        => entry.name}
     event = "classification_entry_add"
     i = 0
     params["entry"].each_key do |k|
@@ -263,17 +273,19 @@ module OpsController::Settings::Tags
 
   # Build the audit object when a record is saved, including all of the changed fields
   def ce_saved_audit(entry)
-    msg = "Category #{@cat.description} [#{entry.name}] record updated ("
+    msg = _("Category %{description} [%{name}] record updated (") % {:description => @cat.description,
+                                                                     :name        => entry.name}
     event = "classification_entry_update"
     i = 0
     if entry.name != session[:entry].name
       i += 1
-      msg = msg + "name:[" + session[:entry].name + "] to [" + entry.name + "]"
+      msg += _("name:[%{session}] to [%{name}]") % {:session => session[:entry].name, :name => entry.name}
     end
     if entry.description != session[:entry].description
       msg += ", " if i > 0
       i += 1
-      msg = msg + "description:[" + session[:entry].description + "] to [" + entry.description + "]"
+      msg += _("description:[%{session}] to [%{name}]") % {:session => session[:entry].description,
+                                                           :name    => entry.description}
     end
     msg += ")"
     audit = {:event => event, :target_id => entry.id, :target_class => entry.class.base_class.name, :userid => session[:userid], :message => msg}

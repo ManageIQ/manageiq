@@ -51,7 +51,11 @@ module OpsController::Settings::RHN
   end
 
   def rhn_account_info_string
-    "Enter your Red Hat#{@edit[:new][:register_to] == "sm_hosted" ? "" : " Network Satellite"} account information"
+    if @edit[:new][:register_to] == "sm_hosted"
+      _("Enter your Red Hat account information")
+    else
+      _("Enter your Red Hat Network Satellite account information")
+    end
   end
 
   def rhn_default_enabled
@@ -200,11 +204,11 @@ module OpsController::Settings::RHN
   end
 
   RHN_OBLIGATORY_FIELD_NAMES = {
-    :customer_userid   => 'RHN Login',
-    :customer_password => 'RHN Password',
-    :server_url        => 'Server Address',
-    :repo_name         => 'Repository Name',
-    :proxy_address     => 'HTTP Proxy Address',
+    :customer_userid   => _('RHN Login'),
+    :customer_password => _('RHN Password'),
+    :server_url        => _('Server Address'),
+    :repo_name         => _('Repository Name'),
+    :proxy_address     => _('HTTP Proxy Address'),
   }.freeze
 
   # FIXME: once we have a way to separately allow 'Save' and 'Reset' buttons
