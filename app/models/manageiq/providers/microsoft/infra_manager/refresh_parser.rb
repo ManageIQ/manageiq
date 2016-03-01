@@ -1,7 +1,8 @@
 module ManageIQ::Providers::Microsoft
   class InfraManager::RefreshParser < EmsRefresh::Parsers::Infra
-    INVENTORY_SCRIPT = File.join(File.dirname(__FILE__), 'ps_scripts/get_inventory.ps1')
-    DRIVE_LETTER     = /\A[a-z][:]/i
+    INVENTORY_SCRIPT           = File.join(File.dirname(__FILE__), 'ps_scripts/get_inventory.ps1')
+    DRIVE_LETTER               = /\A[a-z][:]/i
+    UNSUPPORTED_HOST_PLATFORMS = %w(vmwareesx)
 
     def self.ems_inv_to_hashes(ems, options = nil)
       new(ems, options).ems_inv_to_hashes
@@ -100,13 +101,20 @@ module ManageIQ::Providers::Microsoft
       }
       set_relationship_on_hosts(new_result, nodes)
 
-      return uid, new_result
+      # ignore clusters that are left without any hosts after hosts were filtered for UNSUPPORTED_HOST_PLATFORMS
+      return uid, new_result if @data[:hosts].any? { |host| host[:ems_cluster] == new_result }
     end
 
     def parse_host(host)
       p          = host[:Properties][:Props]
       uid        = p[:ID]
       host_name  = p[:Name]
+
+      host_platform = p[:VirtualizationPlatform][:ToString].downcase
+      if UNSUPPORTED_HOST_PLATFORMS.include? host_platform
+        $scvmm_log.warn("#{host_platform} servers are not supported, skipping #{host_name}")
+        return
+      end
 
       new_result = {
         :name             => host_name,
@@ -481,7 +489,7 @@ module ManageIQ::Providers::Microsoft
     def set_relationship_on_hosts(cluster, nodes)
       nodes.each do |host|
         host = @data_index.fetch_path(:hosts, host[:Props][:ID])
-        host[:ems_cluster] = cluster
+        host[:ems_cluster] = cluster unless host.nil?
       end
     end
 
@@ -599,6 +607,7 @@ module ManageIQ::Providers::Microsoft
 
       collection.each do |item|
         uid, new_result = yield(item[1])
+        next if new_result.nil?
 
         @data[key] << new_result
         @data_index.store_path(key, uid, new_result)

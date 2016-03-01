@@ -26,6 +26,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       assert_ems
       # assert_specific_cluster
       assert_specific_host
+      assert_esx_host
       assert_specific_vm
       assert_specific_storage
       assert_relationship_tree
@@ -38,23 +39,23 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     expect(EmsCluster.count).to eq(0)
     expect(Host.count).to eq(2)
     expect(ResourcePool.count).to eq(0)
-    expect(Vm.count).to eq(2)
-    expect(VmOrTemplate.count).to eq(3)
+    expect(Vm.count).to eq(3)
+    expect(VmOrTemplate.count).to eq(4)
     expect(CustomAttribute.count).to eq(0)
     expect(CustomizationSpec.count).to eq(0)
-    expect(Disk.count).to eq(3)
+    expect(Disk.count).to eq(4)
     expect(GuestDevice.count).to eq(14)
-    expect(Hardware.count).to eq(5)
+    expect(Hardware.count).to eq(6)
     expect(Lan.count).to eq(2)
     expect(MiqScsiLun.count).to eq(0)
     expect(MiqScsiTarget.count).to eq(0)
-    expect(Network.count).to eq(2)
-    expect(OperatingSystem.count).to eq(5)
+    expect(Network.count).to eq(3)
+    expect(OperatingSystem.count).to eq(6)
     expect(Snapshot.count).to eq(1)
     expect(Switch.count).to eq(2)
     expect(SystemService.count).to eq(0)
-    expect(Relationship.count).to eq(10)
-    expect(MiqQueue.count).to eq(3)
+    expect(Relationship.count).to eq(11)
+    expect(MiqQueue.count).to eq(4)
     expect(Storage.count).to eq(2)
   end
 
@@ -70,8 +71,8 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
     expect(@ems.storages.size).to eq(2)
     expect(@ems.hosts.size).to eq(2)
-    expect(@ems.vms_and_templates.size).to eq(3)
-    expect(@ems.vms.size).to eq(2)
+    expect(@ems.vms_and_templates.size).to eq(4)
+    expect(@ems.vms.size).to eq(3)
     expect(@ems.miq_templates.size).to eq(1)
     expect(@ems.customization_specs.size).to eq(0)
   end
@@ -84,7 +85,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :name                        => storage_name,
       :store_type                  => nil,
       :total_space                 => 499_738_734_592,
-      :free_space                  => 467_535_630_336,
+      :free_space                  => 463_193_792_512,
       :multiplehostaccess          => 1,
       :location                    => "1c00651a-ca2a-4676-976b-55875305a89f",
       :thin_provisioning_supported => true
@@ -150,6 +151,11 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
     # @host2 = Host.find_by_name("SFBronagh.manageiq.com")
     # expect(@host2.ems_cluster).to eq(@cluster)
+  end
+
+  def assert_esx_host
+    esx = Host.find_by_vmm_product("VMWareESX")
+    expect(esx).to eq(nil)
   end
 
   def assert_specific_vm
@@ -222,15 +228,6 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :start_connected => true,
     )
 
-    # v = Vm.find_by_name("linux2")
-    # expect(v.hardware.networks.size).to eq(1)
-    # network = v.hardware.networks.first
-    # puts "Network #{network.inspect}"
-    # expect(network).to have_attributes(
-    #   :hostname  => "SCVMM1111.manageiq.com",
-    #   :ipaddress => "192.168.252.90"
-    # )
-
     v = Vm.find_by_name("vm_linux1")
     dvd = v.hardware.guest_devices.first
     expect(dvd).to have_attributes(
@@ -251,6 +248,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
             [ManageIQ::Providers::Microsoft::InfraManager::Template, "linux_template"] => {},
             [ManageIQ::Providers::Microsoft::InfraManager::Vm, "linux2"]               => {},
             [ManageIQ::Providers::Microsoft::InfraManager::Vm, "vm_linux1"]            => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "testing_provisioning"] => {},
           }
         }
       }
