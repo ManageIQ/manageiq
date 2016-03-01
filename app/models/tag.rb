@@ -4,6 +4,8 @@ class Tag < ApplicationRecord
   virtual_has_one :category,       :class_name => "Classification"
   virtual_has_one :categorization, :class_name => "Hash"
 
+  before_destroy :remove_from_managed_filters
+
   def self.to_tag(name, options = {})
     File.join(Tag.get_namespace(options), name)
   end
@@ -142,6 +144,10 @@ class Tag < ApplicationRecord
   end
 
   private
+
+  def remove_from_managed_filters
+    MiqGroup.remove_tag_from_all_managed_filters(name)
+  end
 
   def name_path
     @name_path ||= name.sub(%r{^/[^/]*/}, "")
