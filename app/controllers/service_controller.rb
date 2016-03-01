@@ -395,7 +395,7 @@ class ServiceController < ApplicationController
   end
 
   def get_session_data
-    @title      = "My Services"
+    @title      = _("My Services")
     @layout     = "services"
     @lastaction = session[:svc_lastaction]
     @options    = session[:prov_options]

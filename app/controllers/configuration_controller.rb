@@ -293,7 +293,7 @@ class ConfigurationController < ApplicationController
       @timeprofiles = TimeProfile.in_my_region.for_user(session[:userid]).ordered_by_desc
     end
     timeprofile_set_days_hours
-    drop_breadcrumb(:name => "Time Profiles", :url => "/configuration/change_tab/?tab=4")
+    drop_breadcrumb(:name => _("Time Profiles"), :url => "/configuration/change_tab/?tab=4")
   end
 
   def timeprofile_set_days_hours(_timeprofile = @timeprofile)
@@ -344,7 +344,7 @@ class ConfigurationController < ApplicationController
     set_form_vars
     @in_a_form = true
     @breadcrumbs = []
-    drop_breadcrumb(:name => "Add new Time Profile", :url => "/configuration/timeprofile_edit")
+    drop_breadcrumb(:name => _("Add new Time Profile"), :url => "/configuration/timeprofile_edit")
     render :action => "timeprofile_edit"
   end
 
@@ -353,11 +353,13 @@ class ConfigurationController < ApplicationController
     @timeprofile = TimeProfile.find(params[:id])
     set_form_vars
     @tp_restricted = true if @timeprofile.profile_type == "global" && !admin_user?
-    title = (@timeprofile.profile_type == "global" && !admin_user?) ? "Time Profile" : "Edit"
+    title = (@timeprofile.profile_type == "global" && !admin_user?) ? _("Time Profile") : _("Edit")
     add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
     session[:changed] = false
     @in_a_form = true
-    drop_breadcrumb(:name => "#{title} '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
+    drop_breadcrumb(:name => _("%{title} '%{description}'") % {:title       => title,
+                                                               :description => @timeprofile.description},
+                    :url  => "/configuration/timeprofile_edit")
   end
 
   # Delete all selected or single displayed VM(s)
@@ -457,7 +459,7 @@ class ConfigurationController < ApplicationController
     @in_a_form = true
     timeprofile = TimeProfile.find(params[:id])
     @timeprofile = TimeProfile.new
-    @timeprofile.description = "Copy of " + timeprofile.description
+    @timeprofile.description = _("Copy of %{description}") % {:description => timeprofile.description}
     @timeprofile.profile_type = "user"
     @timeprofile.profile_key = timeprofile.profile_key
     unless timeprofile.profile.nil?
@@ -468,7 +470,8 @@ class ConfigurationController < ApplicationController
     end
     set_form_vars
     session[:changed] = false
-    drop_breadcrumb(:name => "Adding copy of '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
+    drop_breadcrumb(:name => _("Adding copy of '%{description}'") % {:description => @timeprofile.description},
+                    :url  => "/configuration/timeprofile_edit")
     render :action => "timeprofile_edit"
   end
 
@@ -497,7 +500,7 @@ class ConfigurationController < ApplicationController
         add_flash(_("At least one Hour must be selected"), :error)
       end
       unless @flash_array.nil?
-        drop_breadcrumb(:name => "Add New Time Profile", :url => "/configuration/timeprofile_edit")
+        drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -509,7 +512,7 @@ class ConfigurationController < ApplicationController
       rescue StandardError => bang
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
-        drop_breadcrumb(:name => "Add New Time Profile", :url => "/configuration/timeprofile_edit")
+        drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -539,7 +542,8 @@ class ConfigurationController < ApplicationController
       params[:id] = @timeprofile.id
       add_flash(_("All changes have been reset"), :warning)
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      drop_breadcrumb(:name => "Edit '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
+      drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
+                      :url  => "/configuration/timeprofile_edit")
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
         page.redirect_to :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
@@ -556,7 +560,8 @@ class ConfigurationController < ApplicationController
       end
       unless @flash_array.nil?
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        drop_breadcrumb(:name => "Edit '#{@timeprofile.description}'", :url => "/configuration/timeprofile_edit")
+        drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
+                        :url  => "/configuration/timeprofile_edit")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -567,10 +572,11 @@ class ConfigurationController < ApplicationController
       begin
         timeprofile.save!
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during 'save': %{error_message}") %
-          {:model => "TimeProfile", :name => timeprofile.description, :error_message => bang.message}, :error)
+        add_flash(_("TimeProfile \"%{name}\": Error during 'save': %{error_message}") %
+          {:name => timeprofile.description, :error_message => bang.message}, :error)
         @in_a_form = true
-        drop_breadcrumb(:name => "Edit '#{timeprofile.description}'", :url => "/configuration/timeprofile_edit")
+        drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => timeprofile.description},
+                        :url  => "/configuration/timeprofile_edit")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -615,7 +621,9 @@ class ConfigurationController < ApplicationController
     case @config_tab
     when "ui"
       @tabs = []
-      drop_breadcrumb({:name => "User Interface Configuration", :url => "/configuration/edit"}, true) if @tabform != "ui_4"
+      if @tabform != "ui_4"
+        drop_breadcrumb({:name => _("User Interface Configuration"), :url => "/configuration/edit"}, true)
+      end
       case @tabform
       when "ui_1"
         @tabs[0] = ["1", ""]  # Start with first tab array entry set to tab 1 as active
@@ -837,7 +845,7 @@ class ConfigurationController < ApplicationController
   end
 
   def get_session_data
-    @title        = session[:config_title] ? "Configuration" : session[:config_title]
+    @title        = session[:config_title] ? _("Configuration") : session[:config_title]
     @layout       = "configuration"
     @config_tab   = session[:config_tab]        if session[:config_tab]
     @tabform      = session[:config_tabform]    if session[:config_tabform]

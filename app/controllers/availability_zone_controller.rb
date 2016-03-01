@@ -18,38 +18,50 @@ class AvailabilityZoneController < ApplicationController
     return if record_no_longer_exists?(@availability_zone)
 
     @gtl_url = "/availability_zone/show/" << @availability_zone.id.to_s << "?"
-    drop_breadcrumb({:name => "Availabilty Zones", :url => "/availability_zones/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb({:name => _("Availabilty Zones"),
+                     :url  => "/availability_zones/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@availability_zone)
-      drop_breadcrumb(:name => @availability_zone.name + " (Summary)", :url => "/availability_zone/show/#{@availability_zone.id}")
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @availability_zone.name},
+                      :url  => "/availability_zone/show/#{@availability_zone.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{@availability_zone.name} Capacity & Utilization", :url => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}&refresh=n")
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @availability_zone.name},
+                      :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Intialize perf chart options, charts will be generated async
 
     when "ems_cloud"
-      drop_breadcrumb(:name => @availability_zone.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/availability_zone/show/#{@availability_zone.id}?display=ems_cloud")
+      drop_breadcrumb(:name => _("%{name} (%{table}(s))") % {:name  => @availability_zone.name,
+                                                             :table => ui_lookup(:table => "ems_cloud")},
+                      :url  => "/availability_zone/show/#{@availability_zone.id}?display=ems_cloud")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @availability_zone)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
 
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
-      drop_breadcrumb(:name => @availability_zone.name + " (All #{title})", :url => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @availability_zone.name, :title => title},
+                      :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @availability_zone)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => "availability_zone")
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this %{tables}") %
+                          {:titles => title.pluralize, :tables => ui_lookup(:tables => "availability_zone")}
+                      else
+                        _("* You are not authorized to view other %{title} on this %{tables}") %
+                          {:title => title.singularize, :tables => ui_lookup(:tables => "availability_zone")}
+                      end
       end
 
     when "cloud_volumes"
       title = ui_lookup(:tables => "cloud_volumes")
       drop_breadcrumb(
-        :name => @availability_zone.name + " (All #{title})",
+        :name => "%{name} (All %{title})" % {:name => @availability_zone.name, :title => title},
         :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}"
       )
       # Get the records (into a view) and the paginator
@@ -57,9 +69,13 @@ class AvailabilityZoneController < ApplicationController
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " +
-                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
-                      " on this " + ui_lookup(:tables => "availability_zone")
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this %{tables}") %
+                          {:title => title.pluralize, :tables => ui_lookup(:tables => "availability_zone")}
+                      else
+                        _("* You are not authorized to view other %{title} on this %{tables}") %
+                          {:title => title.singularize, :tables => ui_lookup(:tables => "availability_zone")}
+                      end
       end
 
     when "timeline"
@@ -69,7 +85,8 @@ class AvailabilityZoneController < ApplicationController
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb(:name => "Timelines", :url => "/availability_zone/show/#{@record.id}?refresh=n&display=timeline")
+      drop_breadcrumb(:name => _("Timelines"),
+                      :url  => "/availability_zone/show/#{@record.id}?refresh=n&display=timeline")
     end
 
     # Came in from outside show_list partial
@@ -148,7 +165,7 @@ class AvailabilityZoneController < ApplicationController
   private ############################
 
   def get_session_data
-    @title      = "Availability Zone"
+    @title      = _("Availability Zone")
     @layout     = "availability_zone"
     @lastaction = session[:availability_zone_lastaction]
     @display    = session[:availability_zone_display]
