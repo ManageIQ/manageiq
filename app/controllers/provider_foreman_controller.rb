@@ -197,18 +197,13 @@ class ProviderForemanController < ApplicationController
   def provider_foreman_form_fields
     assert_privileges("provider_foreman_edit_provider")
     config_mgr = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
-    if config_mgr[:type] == "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-      provider = ManageIQ::Providers::AnsibleTower::Provider.find(config_mgr.provider_id)
-    else
-      provider = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
-    end
-    authentications = Authentication.where(:resource_id => provider[:id], :resource_type => "Provider")
+    provider   = config_mgr.provider
 
     render :json => {:provtype   => model_to_name(config_mgr.type),
                      :name       => provider.name,
                      :url        => provider.url,
                      :verify_ssl => provider.verify_ssl,
-                     :log_userid => authentications[0].userid}
+                     :log_userid => provider.authentications.first.userid}
   end
 
   def authentication_validate
