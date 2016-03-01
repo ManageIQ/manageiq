@@ -17,6 +17,7 @@ env:
   - GEM=pending
   - TEST_SUITE=javascript
   - GEM=manageiq_foreman
+  - TEST_SUITE=manageiq-providers-amazon
 matrix:
   fast_finish: true
 addons:
