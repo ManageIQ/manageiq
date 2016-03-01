@@ -179,33 +179,15 @@ describe Host do
   end
 
   context "quick statistics retrieval" do
-    before(:each) do
-      @host = FactoryGirl.create(:host)
-    end
+    subject { FactoryGirl.build(:host) }
 
-    it "#current_memory_usage" do
-      mem_usage = @host.current_memory_usage
-      expect(mem_usage).to be_an(Integer)
-
-      expect { @host.current_memory_usage }.not_to raise_error
-    end
-
-    it "#current_cpu_usage" do
-      cpu_usage = @host.current_cpu_usage
-      expect(cpu_usage).to be_an(Integer)
-
-      expect { @host.current_cpu_usage }.not_to raise_error
-    end
+    it("#current_memory_usage") { expect(subject.current_memory_usage).to be_kind_of(Integer) }
+    it("#current_cpu_usage")    { expect(subject.current_cpu_usage).to    be_kind_of(Integer) }
   end
 
   context "#vmm_vendor_display" do
-    it "with known host type" do
-      expect(FactoryGirl.create(:host_vmware_esx).vmm_vendor_display).to eq("VMware")
-    end
-
-    it "with nil vendor" do
-      expect(FactoryGirl.create(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown")
-    end
+    it("known vendor") { expect(FactoryGirl.build(:host_vmware_esx).vmm_vendor_display).to          eq("VMware") }
+    it("nil vendor")   { expect(FactoryGirl.build(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown") }
   end
 
   it ".host_discovery_types" do
