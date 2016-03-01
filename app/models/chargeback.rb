@@ -233,10 +233,6 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  def self.default_rates
-    ChargebackRate.where(:default => true).flat_map(&:chargeback_rate_details)
-  end
-
   def self.get_report_time_range(options, interval, tz)
     return [options[:start_time], options[:end_time]] if options[:start_time]
 

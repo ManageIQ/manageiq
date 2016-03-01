@@ -330,23 +330,4 @@ describe Chargeback do
       end
     end
   end
-
-  describe ".default_rates" do
-    it "works" do
-      expect(Chargeback.default_rates.map(&:description)).to match_array([
-        "Used CPU",
-        "Allocated CPU Count",
-        "Used Memory",
-        "Allocated Memory",
-        "Used Network I/O",
-        "Used Disk I/O",
-        "Fixed Compute Cost 1",
-        "Fixed Compute Cost 2",
-        "Allocated Disk Storage",
-        "Used Disk Storage",
-        "Fixed Storage Cost 1",
-        "Fixed Storage Cost 2",
-      ])
-    end
-  end
 end
