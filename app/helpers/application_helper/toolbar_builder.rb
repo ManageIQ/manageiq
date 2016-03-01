@@ -838,7 +838,8 @@ class ApplicationHelper::ToolbarBuilder
         return true if @record.host && @record.host.vmm_product.downcase == "workstation"
       when "miq_template_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "miq_template_scan"
+      when "miq_template_scan", "image_scan"
+        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
         return true unless @record.has_proxy?
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -1244,7 +1245,8 @@ class ApplicationHelper::ToolbarBuilder
         return "No Compliance Policies assigned to this #{ui_lookup(:model => model_for_vm(@record).to_s)}" unless @record.has_compliance_policies?
       when "miq_template_perf"
         return "No Capacity & Utilization data has been collected for this Template" unless @record.has_perf_data?
-      when "miq_template_scan"
+      when "miq_template_scan", "image_scan"
+        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "miq_template_timeline"
         return "No Timeline data has been collected for this Template" unless @record.has_events? || @record.has_events?(:policy_events)

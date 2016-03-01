@@ -3,4 +3,8 @@ class ManageIQ::Providers::Google::CloudManager::Template < ManageIQ::Providers:
     connection ||= ext_management_system.connect
     connection.images[ems_ref]
   end
+
+  def validate_smartstate_analysis
+    validate_unsupported("Smartstate Analysis")
+  end
 end
