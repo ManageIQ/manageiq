@@ -446,6 +446,18 @@ describe VmOrTemplate do
     end
   end
 
+  context "#is_available? for evacuate" do
+    it "returns false for vmware VM" do
+      vm =  FactoryGirl.create(:vm_vmware)
+      expect(vm.is_available?(:evacuate)).to eq(false)
+    end
+
+    it "returns false for SCVMM VM" do
+      vm =  FactoryGirl.create(:vm_microsoft)
+      expect(vm.is_available?(:evacuate)).to eq(false)
+    end
+  end
+
   context "#is_available? for Smartstate Analysis" do
     it "returns true for VMware VM" do
       vm =  FactoryGirl.create(:vm_vmware)
