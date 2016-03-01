@@ -43,13 +43,13 @@ module ApplicationController::Explorer
     'shelve'           => :s1, 'shelve_offload'            => :s1,
 
     # group 2
-    'clone'     => :s2, 'compare'          => :s2, 'drift'           => :s2,
-    'edit'      => :s2, 'evm_relationship' => :s2, 'migrate'         => :s2,
-    'ownership' => :s2, 'policy_sim'       => :s2, 'protect'         => :s2,
-    'publish'   => :s2, 'reconfigure'      => :s2, 'miq_request_new' => :s2,
-    'retire'    => :s2, 'right_size'       => :s2, 'snapshot_add'    => :s2,
-    'tag'       => :s2, 'timeline'         => :s2, 'resize'          => :s2,
-
+    'clone'        => :s2, 'compare'          => :s2, 'drift'           => :s2,
+    'edit'         => :s2, 'evm_relationship' => :s2, 'migrate'         => :s2,
+    'ownership'    => :s2, 'policy_sim'       => :s2, 'protect'         => :s2,
+    'publish'      => :s2, 'reconfigure'      => :s2, 'miq_request_new' => :s2,
+    'retire'       => :s2, 'right_size'       => :s2, 'snapshot_add'    => :s2,
+    'tag'          => :s2, 'timeline'         => :s2, 'resize'          => :s2,
+    'live_migrate' => :s2,
     # specials
     'perf'         => :show,
     'download_pdf' => :show,
@@ -78,7 +78,7 @@ module ApplicationController::Explorer
     elsif X_BUTTON_ALLOWED_ACTIONS[action] == :s2
       # don't need to set params[:id] and do find_checked_items for methods
       # like ownership, the code in those methods handle it
-      if %w(edit right_size resize).include?(action)
+      if %w(edit right_size resize live_migrate).include?(action)
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)

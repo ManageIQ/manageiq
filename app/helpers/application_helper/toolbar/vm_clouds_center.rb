@@ -148,7 +148,7 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :enabled   => false,
           :onwhen    => "1+"),
         button(
-          :instance_migrate,
+          :instance_live_migrate,
           'product product-migrate fa-lg',
           t = N_('Migrate selected Instance'),
           t,

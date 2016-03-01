@@ -1,0 +1,66 @@
+%form#form_div{:name => "angularForm", 'ng-controller' => "vmCloudLiveMigrateFormController"}
+  = render :partial => "layouts/flash_msg"
+  %h3
+    = _('Migrate Instance')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Auto-select Host?')
+      .col-md-8
+        = check_box_tag("auto_select_host",
+                        '1',
+                        @edit[:auto_select_host],
+                        'ng-model'     => "vmCloudModel.auto_select_host",
+                        :miqrequired   => true,
+                        :checkchange   => true)
+    .form-group
+      %label.col-md-2.control-label
+        = _('Block Migration')
+      .col-md-8
+        = check_box_tag("block_migration",
+                        '1',
+                        @edit[:block_migration],
+                        'ng-model'     => "vmCloudModel.block_migration",
+                        :miqrequired   => true,
+                        :checkchange   => true)
+    .form-group
+      %label.col-md-2.control-label
+        = _('Disk Over Commit')
+      .col-md-8
+        = check_box_tag("disk_over_commit",
+                        '1',
+                        @edit[:disk_over_commit],
+                        'ng-model'     => "vmCloudModel.disk_over_commit",
+                        :miqrequired   => true,
+                        :checkchange   => true)
+  #live-migrate-select-destination-host{'ng-hide' => 'vmCloudModel.auto_select_host'}
+    %h3
+      = _('Select Destination Host')
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Cluster')
+        .col-md-8
+          %select{:name => 'cluster_id', 'ng-model' => 'vmCloudModel.cluster', 'ng-options' => 'cluster as cluster.name for cluster in clusters'}
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Destination Host')
+        .col-md-8
+          %select{:name => 'destination_host_id', 'ng-model' => 'vmCloudModel.host', 'ng-options' => 'host.id as host.name for host in hosts | filter : {cluster_id: vmCloudModel.cluster.id}'}
+
+  %table{:width => '100%'}
+    %tr
+      %td{:align => 'right'}
+        #buttons_on
+          = button_tag("Submit",
+                       :class        => "btn btn-primary",
+                       "ng-click"    => "submitClicked()",
+                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+                       "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+        = button_tag("Cancel",
+                      :class     => "btn btn-default",
+                      "ng-click" => "cancelClicked()")
+:javascript
+  ManageIQ.angular.app.value('vmCloudLiveMigrateFormId', '#{@record.id}');
+  miq_bootstrap('#form_div');

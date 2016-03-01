@@ -4317,7 +4317,7 @@
       - :name: Migrate Instance
         :description: Migrate Instance
         :feature_type: control
-        :identifier: instance_migrate
+        :identifier: instance_live_migrate
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin

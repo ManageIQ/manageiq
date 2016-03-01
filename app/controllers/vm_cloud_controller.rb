@@ -92,6 +92,98 @@ class VmCloudController < ApplicationController
     end
   end
 
+  def live_migrate
+    assert_privileges("instance_live_migrate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
+    drop_breadcrumb(
+      :name => _("Live Migrate Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/live_migrate"
+    ) unless @explorer
+
+    @edit = {}
+    @edit[:key] = "vm_migrate__#{@record.id}"
+    @edit[:vm_id] = @record.id
+    @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
+    session[:edit] = @edit
+    @in_a_form = true
+    @refresh_partial = "vm_common/live_migrate"
+  end
+  alias_method :instance_live_migrate, :live_migrate
+
+  def live_migrate_form_fields
+    assert_privileges("instance_live_migrate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    clusters = []
+    hosts = []
+    @record.ext_management_system.ems_clusters.each { |c| clusters << {:id => c.id, :name => c.name} }
+    @record.ext_management_system.hosts.each do |h|
+      hosts << {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
+    end
+    clusters.sort
+    hosts.sort
+    render :json => {
+      :clusters => clusters,
+      :hosts    => hosts
+    }
+  end
+
+  def live_migrate_vm
+    assert_privileges("instance_live_migrate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+
+    case params[:button]
+    when "cancel"
+      if @edit[:explorer]
+        add_flash(_("Live Migration of %{model} \"%{name}\" was cancelled by the user") % {
+          :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+        @record = @sb[:action] = nil
+        replace_right_cell
+      else
+        add_flash(_("Live Migration of %{model} \"%{name}\" was cancelled by the user") % {
+          :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+        session[:flash_msgs] = @flash_array.dup
+        render :update do |page|
+          page.redirect_to(previous_breadcrumb_url)
+        end
+      end
+    when "submit"
+      valid, details = @record.validate_live_migrate
+      if valid
+        if params['auto_select_host'] == '1'
+          hostname = nil
+        else
+          hostname = find_by_filtered_id(Host, params[:destination_host_id]).hostname
+          block_migration = @params[:block_migration]
+          disk_over_commit = @params[:disk_over_commit]
+        end
+        begin
+          @record.live_migrate(
+            :hostname         => hostname,
+            :block_migration  => block_migration == '1',
+            :disk_over_commit => disk_over_commit == '1'
+          )
+          add_flash(_("Live Migrating %{instance} \"%{name}\"") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name})
+        rescue => ex
+          add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name,
+            :details  => ex}, :error)
+        end
+      else
+        add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
+          :instance => ui_lookup(:table => 'vm_cloud'),
+          :name     => @record.name,
+          :details  => details}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+      replace_right_cell
+    end
+  end
+
   private
 
   def features

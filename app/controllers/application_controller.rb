@@ -1941,7 +1941,6 @@ class ApplicationController < ActionController::Base
     prov_redirect("migrate")
   end
   alias_method :miq_template_migrate, :vm_migrate
-  alias_method :instance_migrate, :vm_migrate
 
   def vm_publish
     prov_redirect("publish")
