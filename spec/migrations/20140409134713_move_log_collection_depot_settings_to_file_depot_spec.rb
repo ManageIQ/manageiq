@@ -1,7 +1,9 @@
 require_migration
 
 describe MoveLogCollectionDepotSettingsToFileDepot do
+  let(:authentication_stub) { migration_stub(:Authentication) }
   let(:configuration_stub) { migration_stub(:Configuration) }
+  let(:file_depot_stub) { migration_stub(:FileDepot) }
   let(:zone_stub) { migration_stub(:Zone) }
 
   migration_context :up do
@@ -27,13 +29,13 @@ describe MoveLogCollectionDepotSettingsToFileDepot do
 
       migrate
 
-      expect(Authentication.count).to eq(2)
-      expect(Configuration.count).to  eq(1)
-      expect(FileDepot.count).to      eq(2)
-      expect(Zone.count).to           eq(1)
+      expect(authentication_stub.count).to eq(2)
+      expect(configuration_stub.count).to  eq(1)
+      expect(file_depot_stub.count).to     eq(2)
+      expect(zone_stub.count).to           eq(1)
 
-      expect(Configuration.first.settings).to be_blank
-      expect(Zone.first.settings).to          be_blank
+      expect(configuration_stub.first.settings).to be_blank
+      expect(zone_stub.first.settings).to          be_blank
     end
   end
 end
