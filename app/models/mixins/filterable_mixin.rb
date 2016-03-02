@@ -10,10 +10,10 @@ module FilterableMixin
       if mfilters.blank?
         # do normal find if no filters
         result = where(options[:conditions])
-                   .order(options[:order])
-                   .joins(options[:join] || options[:joins])
-                   .includes(options[:include])
-                   .select(options[:select])
+                 .order(options[:order])
+                 .joins(options[:join] || options[:joins])
+                 .includes(options[:include])
+                 .select(options[:select])
         total_count = result.length
       else
         # get count of results unfiltered
