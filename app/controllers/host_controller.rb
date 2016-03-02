@@ -91,7 +91,7 @@ class HostController < ApplicationController
     when "miq_templates", "vms"
       title = @display == "vms" ? _("VMs") : _("Templates")
       kls = @display == "vms" ? Vm : MiqTemplate
-      drop_breadcrumb(:name => _("% {:name => @host.name} (All %{title})") % {:name => @host.name,:title => title},
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @host.name, :title => title},
                       :url  => "/host/show/#{@host.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = @display
