@@ -1,0 +1,37 @@
+.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'openstack'"}
+  %label.col-md-2.control-label{"for" => "textInput-markup"}
+    = _('Hostname (or IPv4 or IPv6 address)')
+  .col-md-8
+    %input.form-control{"type"        => "text",
+                        "id"          => "textInput-markup",
+                        "name"        => "#{prefix}_hostname",
+                        "ng-model"    => "#{ng_model}.#{prefix}_hostname",
+                        "maxlength"   => "#{MAX_NAME_LEN}",
+                        "required"    => "",
+                        "checkchange" => ""}
+    %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
+      = _("Required")
+
+.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'rhevm'"}
+  %label.col-md-2.control-label{"for" => "textInput-markup"}
+    = _('API Port')
+  .col-md-8
+    %input.form-control{"type"        => "text",
+                        "id"          => "textInput-markup",
+                        "name"        => "#{prefix}_api_port",
+                        "ng-model"    => "#{ng_model}.#{prefix}_api_port",
+                        "maxlength"   => 15,
+                        "required"    => "",
+                        "checkchange" => ""}
+    %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.required"}
+      = _("Required")
+
+.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
+  %label.col-md-2.control-label{"for" => "textInput-markup"}
+    = _('Security Protocol')
+  .col-md-8
+    = select_tag('security_protocol',
+                  options_for_select(@openstack_security_protocols),
+                  "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
+                  "checkchange"                 => "",
+                  "selectpicker-for-select-tag" => "")
