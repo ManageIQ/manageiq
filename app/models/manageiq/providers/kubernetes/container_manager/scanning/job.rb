@@ -4,6 +4,7 @@ require 'kubeclient'
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
   INSPECTOR_NAMESPACE = 'management-infra'
+  INSPECTOR_IMAGE = 'image-inspector:v1.0.z'
   INSPECTOR_PORT = 8080
   DOCKER_SOCKET = '/var/run/docker.sock'
   SCAN_CATEGORIES = %w(system software)
@@ -302,9 +303,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    image = 'image-inspector:v1.0.z'
     registry_repo = @ems_configs.fetch_path(:ems_kubernetes, :image_inspector_registry_repo)
-    return "#{registry_repo}/#{image}" unless registry_repo.blank?
-    image
+    return "#{registry_repo}/#{INSPECTOR_IMAGE}" unless registry_repo.blank?
+    INSPECTOR_IMAGE
   end
 end
