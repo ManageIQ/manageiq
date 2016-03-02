@@ -143,7 +143,7 @@ module Ext4
     # /////////////////////////////////////////////////////////////////////////
     # // initialize
     attr_reader :numGroups, :fsId, :stream, :numBlocks, :numInodes, :fsId, :volName
-    attr_reader :sectorSize, :blockSize
+    attr_reader :sectorSize, :blockSize, :groupDescriptorSize
 
     @@track_inodes = false
 
@@ -223,12 +223,12 @@ module Ext4
       isDynamic? ? @sb['inode_size'] : INODE_SIZE
     end
 
-    def isEnabled64Bit?
-      gotBit?(@sb['incompat_flags'], ICF_64BIT)
+    def is_enabled_64_bit?
+      @is_enabled_64_bit ||= gotBit?(@sb['incompat_flags'], ICF_64BIT)
     end
 
     def groupDescriptorSize
-      isEnabled64Bit? ? @sb['group_desc_size'] : GDE_SIZE 
+      @groupDescriptorSize ||= is_enabled_64_bit? ? @sb['group_desc_size'] : GDE_SIZE 
     end
 
     def freeBytes
