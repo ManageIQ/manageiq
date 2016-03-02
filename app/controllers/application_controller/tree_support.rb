@@ -171,7 +171,7 @@ module ApplicationController::TreeSupport
         kids += get_dc_node(f, pid, vat)
       end
     # Handle Datacenter folders
-    elsif folder.kind_of?(EmsFolder) && folder.is_datacenter
+    elsif folder.kind_of?(Datacenter)
       # Build the datacenter node
       node = TreeNodeBuilder.generic_tree_node(
         "#{pid}_dc-#{to_cid(folder.id)}",
@@ -197,7 +197,7 @@ module ApplicationController::TreeSupport
 
     # Handle folder named "host" under a Datacenter
     elsif folder.kind_of?(EmsFolder) && folder.name == "host" &&
-          folder.parent.kind_of?(EmsFolder) && folder.parent.is_datacenter
+          folder.parent.kind_of?(Datacenter)
       unless vat                          # Skip if doing VMs & Templates
         folder.folders_only.each do |f|           # Get all the folder children
           kids += get_dc_node(f, pid, vat)
@@ -212,7 +212,7 @@ module ApplicationController::TreeSupport
 
     # Handle folder named "vm" under a Datacenter
     elsif folder.kind_of?(EmsFolder) && folder.name == "vm" &&
-          folder.parent.kind_of?(EmsFolder) && folder.parent.is_datacenter
+          folder.parent.kind_of?(Datacenter)
       if vat                              # Only if doing VMs & Templates
         folder.folders_only.each do |f|           # Get all the folder children
           kids += get_dc_node(f, pid, vat)
@@ -224,7 +224,7 @@ module ApplicationController::TreeSupport
 
     # Handle folder named "datastore" under a Datacenter
     elsif folder.kind_of?(EmsFolder) && folder.name == "datastore" &&
-          folder.parent.kind_of?(EmsFolder) && folder.parent.is_datacenter
+          folder.parent.kind_of?(Datacenter)
     # Skip showing the datastore folder and sub-folders
 
     # Handle folder named "Discovered Virtual Machine"
@@ -418,7 +418,7 @@ module ApplicationController::TreeSupport
     t_kids = []                          # Array to hold node children
     case nodes[0]
     when "dc" # Datacenter
-      if folder.kind_of?(EmsFolder) && folder.is_datacenter
+      if folder.kind_of?(Datacenter)
         folder.folders.each do |f|                # Get folders
           n_node = get_dc_node(f, id, vat)
           t_kids += n_node
@@ -565,7 +565,7 @@ module ApplicationController::TreeSupport
       end
 
     # Handle Datacenter folders
-    elsif folder.kind_of?(EmsFolder) && folder.is_datacenter
+    elsif folder.kind_of?(Datacenter)
       node[:tooltip] = _("Datacenter: %{name}") % {:name => folder.name}
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       node[:icon] = ActionController::Base.helpers.image_path("100/datacenter.png")
@@ -595,7 +595,7 @@ module ApplicationController::TreeSupport
 
     # Handle folder named "host" under a Datacenter
     elsif folder.kind_of?(EmsFolder) && folder.name == "host" &&
-          folder.parent.kind_of?(EmsFolder) && folder.parent.is_datacenter
+          folder.parent.kind_of?(Datacenter)
       unless @vat                                 # Skip if doing VMs & Templates
         folder.folders_only.each do |f|           # Get all the folder children
           kid_node, kid_checked = user_get_tree_node(f, pid)
@@ -616,7 +616,7 @@ module ApplicationController::TreeSupport
 
     # Handle folder named "vm" under a Datacenter
     elsif folder.kind_of?(EmsFolder) && folder.name == "vm" &&
-          folder.parent.kind_of?(EmsFolder) && folder.parent.is_datacenter
+          folder.parent.kind_of?(Datacenter)
       if @vat                                     # Only if doing VMs & Templates
         folder.folders_only.each do |f|           # Get all the folder children
           kid_node, kid_checked = user_get_tree_node(f, pid, true)
