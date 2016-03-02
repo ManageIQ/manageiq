@@ -137,8 +137,20 @@ module Mixins
       else
         zone = @ems.my_zone
       end
+      amqp_userid = ""
+      amqp_hostname = ""
+      amqp_port = ""
 
-      amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+      if @ems.connection_configurations.amqp.try(:endpoint)
+        amqp_hostname = @ems.connection_configurations.amqp.endpoint.hostname
+        amqp_port = @ems.connection_configurations.amqp.endpoint.port
+      end
+      if @ems.has_authentication_type?(:amqp)
+        amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+        # fixed in PR #7157
+        # amqp_security_protocol =
+        # @ems.connections.amqp.endpoint.security_protocol ? @ems.connections.amqp.endpoint.security_protocol : 'ssl'
+      end
 
       if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
         azure_tenant_id = @ems.azure_tenant_id
@@ -151,9 +163,16 @@ module Mixins
                        :zone                            => zone,
                        :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
                        :hostname                        => @ems.hostname,
-                       :api_port                        => @ems.port,
+                       :default_hostname                => @ems.connection_configurations.default.endpoint.hostname,
+                       :amqp_hostname                   => amqp_hostname,
+                       :default_api_port                => @ems.connection_configurations.default.endpoint.port,
+                       :amqp_api_port                   => amqp_port,
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
                        :security_protocol               => @ems.security_protocol ? @ems.security_protocol : 'ssl',
+                       # TODO: (Julian) Seperate Security Protocals fixed in PR #7157
+                       # :default_security_protocol       =>
+                       #  @ems.default_endpoint.security_protocol ? @ems.default_endpoint.security_protocol : 'ssl',
+                       # :amqp_security_protocol          => amqp_security_protocol
                        :provider_region                 => @ems.provider_region,
                        :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0,
                        :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
@@ -176,13 +195,24 @@ module Mixins
     end
 
     def set_ems_record_vars(ems, mode = nil)
-      ems.name            = params[:name].strip if params[:name]
-      ems.provider_region = params[:provider_region]
-      ems.hostname        = params[:hostname].strip if params[:hostname]
-      ems.port            = params[:api_port].strip if params[:api_port]
-      ems.api_version     = params[:api_version].strip if params[:api_version]
-      ems.provider_id     = params[:provider_id]
-      ems.zone            = Zone.find_by_name(params[:zone])
+      ems.name              = params[:name].strip if params[:name]
+      ems.provider_region   = params[:provider_region]
+      ems.api_version       = params[:api_version].strip if params[:api_version]
+      ems.provider_id       = params[:provider_id]
+      ems.zone              = Zone.find_by_name(params[:zone])
+      ems.security_protocol = params[:security_protocol].strip if params[:security_protocol]
+
+      hostname = params[:default_hostname].strip if params[:default_hostname]
+      port = params[:default_api_port].strip if params[:default_api_port]
+      amqp_hostname = params[:amqp_hostname].strip if params[:amqp_hostname]
+      amqp_port = params[:amqp_api_port].strip if params[:amqp_api_port]
+      default_endpoint = {}
+      amqp_endpoint = {}
+
+      if ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager)
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port}
+        amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port}
+      end
 
       if ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
         ems.project = params[:project]
@@ -203,7 +233,22 @@ module Mixins
 
       ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
 
-      ems.update_authentication(build_credentials(ems), :save => (mode != :validate))
+      build_connection(ems, default_endpoint, amqp_endpoint)
+    end
+
+    def build_connection(ems, default_endpoint, amqp_endpoint)
+      authentications = build_credentials(ems)
+      default_authentication = authentications.delete(:default)
+      default_authentication[:role] = :default
+      amqp_authentication = {}
+
+      if authentications[:amqp]
+        amqp_authentication = authentications.delete(:amqp)
+        amqp_authentication[:role] = :amqp
+      end
+
+      ems.connection_configurations=([{:endpoint => default_endpoint, :authentication => default_authentication},
+                                      {:endpoint => amqp_endpoint, :authentication => amqp_authentication}])
     end
 
     def build_credentials(ems)

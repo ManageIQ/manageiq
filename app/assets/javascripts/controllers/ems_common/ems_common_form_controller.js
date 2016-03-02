@@ -7,10 +7,14 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       provider_id: '',
       zone: '',
       hostname: '',
+      default_hostname: '',
+      amqp_hostname: '',
       project: '',
-      api_port: '',
+      default_api_port: '',
+      amqp_api_port: '',
       api_version: '',
-      security_protocol: '',
+      default_security_protocol: '',
+      amqp_security_protocol: '',
       provider_region: '',
       default_userid: '',
       default_password: '',
@@ -48,9 +52,11 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.zone                            = data.zone;
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
-        $scope.emsCommonModel.api_port                        = 5000;
+        $scope.emsCommonModel.default_api_port                = 5000;
+        $scope.emsCommonModel.amqp_api_port                   = 5000;
         $scope.emsCommonModel.api_version                     = 'v2';
-        $scope.emsCommonModel.security_protocol               = 'ssl';
+        $scope.emsCommonModel.default_security_protocol       = 'ssl';
+        $scope.emsCommonModel.amqp_security_protocol          = 'ssl';
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -65,14 +71,18 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.emstype                         = data.emstype;
         $scope.emsCommonModel.zone                            = data.zone;
         $scope.emsCommonModel.hostname                        = data.hostname;
+        $scope.emsCommonModel.default_hostname                = data.default_hostname;
+        $scope.emsCommonModel.amqp_hostname                   = data.amqp_hostname;
         $scope.emsCommonModel.project                         = data.project;
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.provider_id                     = data.provider_id.toString();
 
-        $scope.emsCommonModel.api_port                        = data.api_port;
+        $scope.emsCommonModel.default_api_port                = data.default_api_port;
+        $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) ? data.amqp_api_port : '5000';
         $scope.emsCommonModel.api_version                     = data.api_version;
-        $scope.emsCommonModel.security_protocol               = data.security_protocol;
+        $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
+        $scope.emsCommonModel.amqp_security_protocol          = angular.isDefined(data.amqp_security_protocol) ? data.amqp_security_protocol : 'ssl';
         $scope.emsCommonModel.provider_region                 = data.provider_region;
 
         $scope.emsCommonModel.default_userid                  = data.default_userid;
@@ -119,13 +129,13 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   $scope.isBasicInfoValid = function() {
     if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype != "azure") &&
-      ($scope.emsCommonModel.emstype == "ec2" || ($scope.emsCommonModel.emstype == "openstack" && $scope.emsCommonModel.hostname)) &&
+      ($scope.emsCommonModel.emstype == "ec2" || ($scope.emsCommonModel.emstype == "openstack" && $scope.emsCommonModel.default_hostname)) &&
       ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "amqp") &&
-      ($scope.emsCommonModel.hostname) &&
+      ($scope.emsCommonModel.amqp_hostname) &&
       ($scope.emsCommonModel.amqp_userid != '' && $scope.angularForm.amqp_userid.$valid &&
        $scope.emsCommonModel.amqp_password != '' && $scope.angularForm.amqp_password.$valid &&
        $scope.emsCommonModel.amqp_verify != '' && $scope.angularForm.amqp_verify.$valid)) {

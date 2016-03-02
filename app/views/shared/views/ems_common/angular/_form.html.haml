@@ -85,33 +85,6 @@
         %span.help-block{"ng-show" => "angularForm.project.$error.required"}
           = _("Required")
 
-    .form-group{"ng-class" => "{'has-error': angularForm.security_protocol.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
-        = _('Security Protocol')
-      .col-md-8
-        = select_tag('security_protocol',
-                         options_for_select(@openstack_security_protocols),
-                         "ng-model"                    => "emsCommonModel.security_protocol",
-                         "checkchange"                 => "",
-                         "selectpicker-for-select-tag" => "")
-
-    .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}",
-      "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'openstack'"}
-
-    .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'openstack'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
-        = _('Hostname (or IPv4 or IPv6 address)')
-      .col-md-8
-        %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
-                            "name"        => "hostname",
-                            "ng-model"    => "emsCommonModel.hostname",
-                            "maxlength"   => "#{MAX_NAME_LEN}",
-                            "required"    => "",
-                            "checkchange" => ""}
-        %span.help-block{"ng-show" => "angularForm.hostname.$error.required"}
-          = _("Required")
-
     .form-group{"ng-class" => "{'has-error': angularForm.azure_tenant_id.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Tenant ID')
@@ -123,20 +96,6 @@
                             "required"    => "",
                             "checkchange" => ""}
         %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
-          = _("Required")
-
-    .form-group{"ng-class" => "{'has-error': angularForm.api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'rhevm'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
-        = _('API Port')
-      .col-md-8
-        %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
-                            "name"        => "api_port",
-                            "ng-model"    => "emsCommonModel.api_port",
-                            "maxlength"   => 15,
-                            "required"    => "",
-                            "checkchange" => ""}
-        %span.help-block{"ng-show" => "angularForm.api_port.$error.required"}
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
