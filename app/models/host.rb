@@ -702,11 +702,11 @@ class Host < ApplicationRecord
   end
 
   def owning_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.is_datacenter && !["host", "vm"].include?(a.name) }
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !["host", "vm"].include?(a.name) }
   end
 
   def parent_datacenter
-    detect_ancestor(:of_type => "EmsFolder", &:is_datacenter)
+    detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
   alias_method :owning_datacenter, :parent_datacenter
 

@@ -231,11 +231,11 @@ class EmsCluster < ApplicationRecord
 
   # Parent relationship methods
   def parent_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.is_datacenter && !["host", "vm"].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !["host", "vm"].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   def parent_datacenter
-    detect_ancestor(:of_type => 'EmsFolder', &:is_datacenter)
+    detect_ancestor(:of_type => 'EmsFolder') { |a| a.kind_of?(Datacenter) }
   end
 
   def base_storage_extents

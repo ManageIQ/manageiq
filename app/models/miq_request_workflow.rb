@@ -894,7 +894,7 @@ class MiqRequestWorkflow
   def get_ems_folders(folder, dh = {}, full_path = "")
     if folder.evm_object_class == :EmsFolder && !EmsFolder::NON_DISPLAY_FOLDERS.include?(folder.name)
       full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
-      dh[folder.id] = full_path unless folder.is_datacenter?
+      dh[folder.id] = full_path unless folder.kind_of?(Datacenter)
     end
 
     # Process child folders
@@ -945,7 +945,7 @@ class MiqRequestWorkflow
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
       ci = node.attributes[:object]
-      if node.name == klass_name && (datacenter == false || datacenter == true && ci.is_datacenter?)
+      if node.name == klass_name && (datacenter == false || datacenter == true && ci.kind_of?(Datacenter))
         result = ci
         break
       end
@@ -1022,7 +1022,7 @@ class MiqRequestWorkflow
   end
 
   def ems_folder_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name, :is_datacenter?])
+    build_ci_hash_struct(ci, [:name, :type])
   end
 
   def storage_to_hash_struct(ci)
