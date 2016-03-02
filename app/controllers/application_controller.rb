@@ -951,7 +951,7 @@ class ApplicationController < ActionController::Base
 
   def reports_group_title
     tenant_name = current_tenant.name
-    if @sb[:grp_title] = current_user.admin_user?
+    if current_user.admin_user?
       _("%{tenant_name} (All %{groups})") % {:tenant_name => tenant_name, :groups => ui_lookup(:models => "MiqGroup")}
     else
       _("%{tenant_name} (%{group}): %{group_description}") %
@@ -966,7 +966,7 @@ class ApplicationController < ActionController::Base
     reports = []
     folders = []
     user = current_user
-    reports_group_title
+    @sb[:grp_title] = reports_group_title
     @data = []
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       # array of all reports if menu not configured
