@@ -379,28 +379,14 @@ module ApplicationController::CiProcessing
         end
       end
     when "submit"
-      if @flash_array
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-        return
-      end
-
-      options = {
-        :src_ids => session[:reconfigure_items]
-      }
-      # Convert memory to MB before passing on to model, don't multiply by 1024, if value is not numeric
-      # TO DO - send data to model
-      valid = VmReconfigureRequest.validate_request(options)
-      if valid
-        valid.each do |v|
-          add_flash(v, :error)
-        end
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-        return
-      end
+      options = {:src_ids => session[:reconfigure_items]}
+      options[:cb_memory] = params[:cb_memory] == "1" if params[:cb_memory]
+      options[:cb_cpu] = params[:cb_cpu] == "1" if params[:cb_cpu]
+      options[:mem_typ] = params[:mem_typ] if params[:mem_typ]
+      options[:memory] = params[:memory] if params[:memory]
+      options[:socket_count] = params[:socket_count] if params[:socket_count]
+      options[:cores_per_socket_count] = params[:cores_per_socket_count] if params[:cores_per_socket_count]
+      options[:total_cpus] = params[:total_cpus] if params[:total_cpus]
 
       if VmReconfigureRequest.make_request(session[:req_id], options, current_user)
         flash = _("VM Reconfigure Request was saved")
@@ -415,7 +401,14 @@ module ApplicationController::CiProcessing
           end
         end
       else
-        # TODO - is request ever nil? ?? - need to find other ways to flag/handle errors
+        # TODO - is request ever nil? ??
+        add_flash(_("Error adding VM Reconfigure Request"))
+      end
+      if @flash_array
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+        return
       end
     end
   end
@@ -1097,10 +1090,12 @@ module ApplicationController::CiProcessing
 
   # Build the reconfigure data hash
   def build_reconfigure_hash
+    @req = nil
+    @reconfig_values = {}
     if !session[:req_id]
       @reconfig_values = get_reconfig_info
     else
-      @req = MiqRequest.find(session[:req_id])
+      @req = MiqRequest.find_by_id(session[:req_id])
       @reconfig_values[:memory] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
       @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
       @reconfig_values[:socket_count] = @req.options[:number_of_sockets] if @req.options[:number_of_sockets]

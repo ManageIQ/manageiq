@@ -3,22 +3,39 @@ describe('reconfigureFormController', function() {
 
   beforeEach(module('ManageIQ'));
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, _miqService_) {
+  beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
     miqService = _miqService_;
-    spyOn(miqService, 'showButtons');
-    spyOn(miqService, 'hideButtons');
+    spyOn(miqService, 'miqFlash');
     spyOn(miqService, 'miqAjaxButton');
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
     $scope = $rootScope.$new();
-
+    $scope.reconfigureModel = {cb_memory:              false,
+                               memory:                 0,
+                               memory_type:            '',
+                               cb_cpu:                 false,
+                               socket_count:           1,
+                               socket_options:         [],
+                               cores_per_socket_count: 1,
+                               total_cpus:             1 };
     $httpBackend = _$httpBackend_;
-    $httpBackend.whenGET('/provider_foreman/provider_foreman_form_fields/new').respond();
     $controller = _$controller_('reconfigureFormController', {
       $scope: $scope,
       reconfigureFormId: 'new',
+      objectIds: [1000000000001],
       miqService: miqService
     });
+  }));
+
+  beforeEach(inject(function(_$controller_) {
+    var reconfigureFormResponse = {cb_memory:             'on',
+                                  memory:                 4196,
+                                  memory_type:            'MB',
+                                  cb_cpu:                 'on',
+                                  socket_count:           2,
+                                  cores_per_socket_count: 3};
+    $httpBackend.whenGET('reconfigure_form_fields/1000000000001').respond(reconfigureFormResponse);
+    $httpBackend.flush();
   }));
 
   afterEach(function() {
@@ -27,123 +44,29 @@ describe('reconfigureFormController', function() {
   });
 
   describe('initialization', function() {
-    describe('when the reconfigureFormId is new', function() {
-    var reconfigureFormResponse = {
-      name: '',
-      url: '',
-      verify_ssl: false,
-      log_userid: ''
-    };
+    it('sets the reconfigure memory value to the value returned with http request', function() {
+      expect($scope.reconfigureModel.memory).toEqual(4196);
+    });
 
-    beforeEach(inject(function(_$controller_) {
-      $httpBackend.whenGET('/reconfigure_form_fields').respond(reconfigureFormResponse);
-      $controller = _$controller_('reconfigureFormController',
-        {
-          $scope: $scope,
-          miqService: miqService
-        });
-    }));
-    it('sets the name to blank', function () {
-      expect($scope.reconfigureModel.name).toEqual('');
+    it('sets the reconfigure socket count to the value returned with http request', function() {
+      expect($scope.reconfigureModel.socket_count).toEqual(2);
     });
-    it('sets the url to blank', function () {
-      expect($scope.reconfigureModel.url).toEqual('');
+
+    it('sets the reconfigure cores per socket count to the value returned with http request', function() {
+      expect($scope.reconfigureModel.cores_per_socket_count).toEqual(3);
     });
-    it('sets the verify_ssl to blank', function () {
-      expect($scope.reconfigureModel.verify_ssl).toBeFalsy();
-    });
-    it('sets the log_userid to blank', function () {
-      expect($scope.reconfigureModel.log_userid).toEqual('');
-    });
-    it('sets the log_password to blank', function () {
-      expect($scope.reconfigureModel.log_password).toEqual('');
-    });
-    it('sets the log_verify to blank', function () {
-      expect($scope.reconfigureModel.log_verify).toEqual('');
+
+    it('sets the total socket count to the value calculated from the http request data', function() {
+      expect($scope.reconfigureModel.total_cpus).toEqual(6);
     });
   });
 
-    describe('when the reconfigureFormId is an Id', function() {
-      var reconfigureFormResponse = {
-        name: 'Reconfigure Request',
-        url: '10.10.10.10',
-        verify_ssl: true,
-        log_userid: 'admin'
-      };
-
-      beforeEach(inject(function(_$controller_) {
-        $httpBackend.whenGET('/provider_foreman/provider_foreman_form_fields/12345').respond(reconfigureFormResponse);
-        $controller = _$controller_('reconfigureFormController',
-          {
-            $scope: $scope,
-            reconfigureFormId: '12345',
-            miqService: miqService
-          });
-        $httpBackend.flush();
-      }));
-
-      it('sets the name to the value returned from http request', function () {
-        expect($scope.reconfigureModel.name).toEqual('Reconfigure request');
-      });
-      it('sets the url to the value returned from http request', function () {
-        expect($scope.reconfigureModel.url).toEqual('10.10.10.10');
-      });
-      it('sets the verify_ssl to the value returned from http request', function () {
-        expect($scope.reconfigureModel.verify_ssl).toBeTruthy();
-      });
-      it('sets the log_userid to the value returned from http request', function () {
-        expect($scope.reconfigureModel.log_userid).toEqual('admin');
-      });
-      it('sets the log_password to the value returned from http request', function () {
-        expect($scope.reconfigureModel.log_password).toEqual(miqService.storedPasswordPlaceholder);
-      });
-      it('sets the log_verify to the value returned from http request', function () {
-        expect($scope.reconfigureModel.log_verify).toEqual(miqService.storedPasswordPlaceholder);
-      });
-    });
-  });
-
-  describe('#resetClicked', function() {
+  describe('#cancelClicked', function() {
     beforeEach(function() {
       $scope.angularForm = {
-        $setPristine: function (value){},
-        $setUntouched: function (value){},
+        $setPristine: function(value) {}
       };
-      $scope.resetClicked();
-    });
-
-    it('does not turn the spinner on', function() {
-      expect(miqService.sparkleOn.calls.count()).toBe(0);
-    });
-  });
-
-  describe('#saveClicked', function() {
-    beforeEach(function() {
-      $scope.angularForm = {
-        $setPristine: function (value){}
-      };
-      $scope.saveClicked();
-    });
-
-    it('turns the spinner on via the miqService', function() {
-      expect(miqService.sparkleOn).toHaveBeenCalled();
-    });
-
-    it('turns the spinner on once', function() {
-      expect(miqService.sparkleOn.calls.count()).toBe(1);
-    });
-
-    it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/provider_foreman/edit/new?button=save', true);
-    });
-  });
-
-  describe('#addClicked', function() {
-    beforeEach(function() {
-      $scope.angularForm = {
-        $setPristine: function (value){}
-      };
-      $scope.addClicked();
+      $scope.cancelClicked();
     });
 
     it('turns the spinner on via the miqService', function() {
@@ -151,13 +74,31 @@ describe('reconfigureFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure/edit/new?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure_update?button=cancel');
     });
   });
 
-  describe('Checks for validateClicked in the scope', function() {
-    it('contains validateClicked in the scope', function() {
-      expect($scope.validateClicked).toBeDefined();
+  describe('#submitClicked', function() {
+    beforeEach(function() {
+      $scope.angularForm = {
+        $setPristine: function (value){}
+      };
+      $scope.submitClicked();
+    });
+
+    it('turns the spinner on via the miqService', function() {
+      expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('delegates to miqService.miqAjaxButton', function() {
+      var submitContent = {cb_memory:              $scope.reconfigureModel.cb_memory,
+                           memory:                 $scope.reconfigureModel.memory,
+                           memory_type:            $scope.reconfigureModel.memory_type,
+                           cb_cpu:                 $scope.reconfigureModel.memory_type,
+                           socket_count:           $scope.reconfigureModel.cb_cpu,
+                           cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count};
+
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure_update?button=submit', submitContent);
     });
   });
 });

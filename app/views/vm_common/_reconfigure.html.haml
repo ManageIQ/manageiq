@@ -24,11 +24,10 @@
                             "ng-if"       => "reconfigureModel.cb_memory",
                             "maxlength"   => "#{MAX_NAME_LEN}",
                             "ng-pattern"  => "/^[-+]?[0-9]+$/",
-                            "maxvalue"    => "#{@reconfig_limits[:max__vm_memory]}",
-                            "minvalue"    => "#{@reconfig_limits[:min__vm_memory]}",
                             "miqrequired" => "",
                             "checkchange" => "",
-                            "auto-focus"  => ""}
+                            "auto-focus"  => "",
+                            :ismultiple   => true}
         %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$invalid"}
           = _(" Valid memory value required ")
       .col-md-2
@@ -67,37 +66,39 @@
                         options_for_select([["<#{_('Choose>')}", nil]] + @socket_options),
                         "ng-model"                    => "reconfigureModel.socket_count",
                         "checkchange"                 => "",
+                        "ng-change"                   => "processorValueChanged()",
                         "ng-required"                 => "reconfigureModel.socket_count",
                         "selectpicker-for-select-tag" => "")
         %div{"ng-if" => @socket_options.length <= 1}
           @socket_options[0]
-      .form-group{"ng-class" => "{'has-error': angularForm.cores_per_socket_count.$invalid}"}
-        %label.col-sm-2.control-label
-          = _('Cores Per Socket')
-        %div{"ng-if" => @cores_options.length > 1}
-          .col-md-2
-          = select_tag('socket_count',
-                        options_for_select([["<#{_('Choose>')}", nil]] + @cores_options),
-                        "ng-model"                    => "reconfigureModel.cores_per_socket_count",
-                        "checkchange"                 => "",
-                        "ng-required"                 => "reconfigureModel.cores_per_socket_count",
-                        "selectpicker-for-select-tag" => "")
-          %div{"ng-if" => @cores_options.length <= 1}
-            @cores_options[0]
-      .form-group
-        %div{"ng-if" => @cores_options.length <= 1}
-        %label.col-md-2.control-label
-          = _('Total Processors')
-        .col-md-4
-          %input.form-control{"type"        => "text",
-                              "id"          => "textInput-markup",
-                              "name"        => "total_cpu",
-                              "ng-model"    => "reconfigureModel.total_cpu",
-                              "checkchange" => "",
-                              :readonly     => '',
-                              "auto-focus"  => ""}
-          %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpu.$invalid"}
-            = _(" Total memory value not valid ")
+      -  if @socket_options.length > 1
+        .form-group{"ng-class" => "{'has-error': angularForm.cores_per_socket_count.$invalid}"}
+          %label.col-sm-2.control-label
+            = _('Cores Per Socket')
+          %div{"ng-if" => @cores_options.length > 1}
+            .col-md-2
+            = select_tag('socket_count',
+                          options_for_select([["<#{_('Choose>')}", nil]] + @cores_options),
+                          "ng-model"                    => "reconfigureModel.cores_per_socket_count",
+                          "checkchange"                 => "",
+                          "ng-change"                   => "processorValueChanged()",
+                          "ng-required"                 => "reconfigureModel.cores_per_socket_count",
+                          "selectpicker-for-select-tag" => "")
+            %div{"ng-if" => @cores_options.length <= 1}
+              @cores_options[0]
+        .form-group
+          %label.col-md-2.control-label
+            = _('Total Processors')
+          .col-md-4
+            %input.form-control{"type"        => "text",
+                                "id"          => "textInput-markup",
+                                "name"        => "total_cpu",
+                                "ng-model"    => "reconfigureModel.total_cpus",
+                                "checkchange" => "",
+                                :readonly     => '',
+                                "auto-focus"  => ""}
+            %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpu.$invalid"}
+              = _(" Total memory value not valid ")
 
   %hr
   %hr
