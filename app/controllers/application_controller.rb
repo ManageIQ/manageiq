@@ -203,7 +203,7 @@ class ApplicationController < ActionController::Base
   # Send the current report in text format
   def render_txt
     @report = report_for_rendering
-    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = filename_timestamp(@report.title)
     disable_client_cache
     send_data(@report.to_text,
               :filename => "#{filename}.txt")
@@ -212,7 +212,7 @@ class ApplicationController < ActionController::Base
   # Send the current report in csv format
   def render_csv
     @report = report_for_rendering
-    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = filename_timestamp(@report.title)
     disable_client_cache
     send_data(@report.to_csv,
               :filename => "#{filename}.csv")
@@ -231,7 +231,7 @@ class ApplicationController < ActionController::Base
     # Use report_result_id in session, if present
     rr ||= MiqReportResult.find(session[:report_result_id]) if session[:report_result_id]
 
-    filename = rr.report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = filename_timestamp(rr.report.title)
     disable_client_cache
     send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
@@ -281,7 +281,7 @@ class ApplicationController < ActionController::Base
   def send_report_data
     if @sb[:render_rr_id]
       rr = MiqReportResult.find(@sb[:render_rr_id])
-      filename = rr.report.title + "_" + format_timezone(Time.zone.now, Time.zone, "export_filename")
+      filename = filename_timestamp(rr.report.title, 'export_filename')
       disable_client_cache
       generated_result = rr.get_generated_result(@sb[:render_type])
       rr.destroy
@@ -297,7 +297,7 @@ class ApplicationController < ActionController::Base
     options = session[:paged_view_search_options].merge(:page => nil, :per_page => nil) # Get all pages
     @view.table, _attrs = @view.paged_view_search(options) # Get the records
 
-    @filename = @view.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @filename = filename_timestamp(@view.title)
     case params[:download_type]
     when "pdf"
       download_pdf(@view)
@@ -615,6 +615,10 @@ class ApplicationController < ActionController::Base
     tree
   end
 
+  def filename_timestamp(basename, format = 'fname')
+    basename + '_' + format_timezone(Time.zone.now, Time.zone, format)
+  end
+
   def set_summary_pdf_data
     @report_only = true
     @showtype    = @display
@@ -648,7 +652,7 @@ class ApplicationController < ActionController::Base
       pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
       send_data(pdf_data,
                 :type     => "application/pdf",
-                :filename => "#{klass}_#{@record.name}_summary_#{format_timezone(run_time, Time.zone, "fname")}.pdf"
+                :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
                )
     end
   end
