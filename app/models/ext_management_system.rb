@@ -77,9 +77,6 @@ class ExtManagementSystem < ApplicationRecord
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
 
-  # attr_accessor :userid
-  # attr_accessor :password
-
   acts_as_miq_taggable
 
   include FilterableMixin
