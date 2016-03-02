@@ -74,11 +74,6 @@ class MiqDbConfig
     end
   end
 
-  def self.raw_config
-    # TODO: We must stringify since ConfigurationEncoder will symbolize on load and stringify on save.
-    Vmdb::ConfigurationEncoder.stringify(database_configuration)
-  end
-
   def save
     valid = self.valid?(:from_save => true)
     return @errors unless valid == true
