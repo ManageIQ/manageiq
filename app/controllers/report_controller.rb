@@ -17,7 +17,7 @@ class ReportController < ApplicationController
   layout 'application', :except => [:render_txt, :render_csv, :render_pdf]
 
   def index
-    @title = "Reports"
+    @title = _("Reports")
     redirect_to :action => "show"
   end
 
@@ -376,14 +376,14 @@ class ReportController < ApplicationController
     when :export_tree
       @export = true
       get_export_reports unless x_node == "root"
-      @right_cell_text ||= "Import / Export"
+      @right_cell_text ||= _("Import / Export")
       @help_topic        = request.parameters["controller"] + "-import_export"
     when :roles_tree
       menu_get_all
       @changed = session[:changed] = false
       @help_topic = request.parameters["controller"] + "-menus_editor"
     when :reports_tree
-      @right_cell_text ||= "All Reports"
+      @right_cell_text ||= _("All Reports")
     when :savedreports_tree
       get_all_saved_reports
     when :schedules_tree
@@ -430,7 +430,7 @@ class ReportController < ApplicationController
   end
 
   def export_get_node_info
-    @right_cell_text = "Import / Export"
+    @right_cell_text = _("Import / Export")
     if x_node.split('-').last == "exportcustomreports"
       get_export_reports
       @right_cell_div = "export_custom_reports"
