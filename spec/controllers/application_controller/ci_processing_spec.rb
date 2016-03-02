@@ -63,60 +63,6 @@ describe ApplicationController do
     end
   end
 
-  context "Verify memory format for reconfiguring VMs" do
-    it "set_memory_mb should set old values to default when both vms have differnt memory/cpu values" do
-      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1))
-      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 512, :cpu_total_cores => 2))
-      edit = {}
-      edit[:new] = {}
-      controller.instance_variable_set(:@reconfigureitems, [vm1, vm2])
-      controller.instance_variable_set(:@edit, edit)
-      controller.send(:set_memory_mb)
-      edit_new = assigns(:edit)[:new]
-      expect(edit_new[:old_memory]).to eq("")
-      expect(edit_new[:old_mem_typ]).to eq("MB")
-      edit_new[:old_socket_count] == 1
-    end
-
-    it "set_memory_mb should use vms value to set old values when both vms have same memory/cpu values" do
-      vm1 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :cpu_total_cores => 2))
-      vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 2048, :cpu_total_cores => 2))
-      edit = {}
-      edit[:new] = {}
-      controller.instance_variable_set(:@reconfigureitems, [vm1, vm2])
-      controller.instance_variable_set(:@edit, edit)
-      controller.send(:set_memory_mb)
-      edit_new = assigns(:edit)[:new]
-      expect(edit_new[:old_memory]).to eq("2")
-      expect(edit_new[:old_mem_typ]).to eq("GB")
-      edit_new[:old_socket_count] == 2
-    end
-
-    it "check reconfigure_calculations returns memory in string format" do
-      memory, format = controller.send(:reconfigure_calculations, 1024)
-      expect(memory).to be_a_kind_of(String)
-    end
-
-    it "VM reconfigure memory validation should not show value must be integer error" do
-      vm = FactoryGirl.create(:vm_vmware)
-      edit = {}
-      edit[:key] = "reconfigure__new"
-      edit[:new] = {}
-      edit[:new][:memory] = "4"
-      edit[:new][:mem_typ] = "MB"
-      edit[:new][:cb_memory] = true
-      edit[:errors] = []
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
-      controller.instance_variable_set(:@_params, :button => "submit")
-      controller.instance_variable_set(:@breadcrumbs, ["test", :url => "test/show"])
-      expect(controller).to receive(:render)
-      allow(VmReconfigureRequest).to receive(:create_request)
-      controller.send(:reconfigure_update)
-      expect(controller.send(:flash_errors?)).not_to be_truthy
-    end
-  end
-
   context "Verify the reconfigurable flag for VMs" do
     it "Reconfigure VM action should be allowed only for a VM marked as reconfigurable" do
       vm = FactoryGirl.create(:vm_vmware)
@@ -141,56 +87,6 @@ describe ApplicationController do
         expect(controller.send(:flash_errors?)).to be_truthy
         expect(assigns(:flash_array).first[:message]).to include("does not apply")
       end
-    end
-  end
-
-  context "Verify cores-per_socket for reconfiguring VMs" do
-    it "VM reconfigure for VMWare total CPU should not exceed the max_total CPU value" do
-      vm = FactoryGirl.create(:vm_vmware)
-      edit = {}
-      edit[:key] = "reconfigure__new"
-      edit[:new] = Hash.new
-      edit[:new][:new_socket_count] = "4"
-      edit[:new][:new_cores_per_socket_count] = "4"
-      edit[:new][:cb_cpu] = true
-      edit[:errors] = []
-      controller.instance_variable_set(:@_params, :id => vm.id)
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
-      controller.instance_variable_set(:@_params, :button => "submit")
-      controller.instance_variable_set(:@breadcrumbs, ["test", {:url => "test/show"}])
-      expect(controller).to receive(:render)
-      allow(VmReconfigureRequest).to receive(:create_request)
-      controller.send(:reconfigure_update)
-      expect(controller.send(:flash_errors?)).to be_truthy
-    end
-
-    it "VM reconfigure for RHEV total CPU should not exceed the max_total CPU value" do
-      vm = FactoryGirl.create(:vm_vmware)
-      edit = {}
-      edit[:key] = "reconfigure__new"
-      edit[:new] = Hash.new
-      edit[:new][:new_socket_count] = "15"
-      edit[:new][:new_cores_per_socket_count] = "15"
-      edit[:new][:cb_cpu] = true
-      edit[:errors] = []
-      controller.instance_variable_set(:@_params, :id => vm.id)
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
-      controller.instance_variable_set(:@_params, :button => "submit")
-      controller.instance_variable_set(:@breadcrumbs, ["test", :url => "test/show"])
-      expect(controller).to receive(:render)
-      allow(VmReconfigureRequest).to receive(:create_request)
-      controller.send(:reconfigure_update)
-      expect(controller.send(:flash_errors?)).to be_truthy
-    end
-
-    it "does not display the drop list if max_cores_per-socket is one" do
-      vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_total_cores => 1, :virtual_hw_version => '04'))
-      edit = {}
-      edit[:new] = {}
-      controller.instance_variable_set(:@_params, :id => vm.id)
-      controller.instance_variable_set(:@edit, edit)
     end
   end
 
