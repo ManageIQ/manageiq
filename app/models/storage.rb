@@ -44,6 +44,7 @@ class Storage < ApplicationRecord
   include StorageMixin
   include AsyncDeleteMixin
   include WebServiceAttributeMixin
+  include AvailabilityMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -838,25 +839,6 @@ class Storage < ApplicationRecord
 
   def vm_scan_affinity
     with_relationship_type("vm_scan_storage_affinity") { parents }
-  end
-
-  # is_available?
-  # Returns:  true or false
-  #
-  # The UI calls this method to determine if a feature is supported for this Storage
-  # and determines if a button should be displayed.  This method should return true
-  # even if a function is not 'currently' available due to some condition that is not
-  # being met.
-  def is_available?(request_type)
-    send("validate_#{request_type}")[:available]
-  end
-
-  # is_available_now_error_message
-  # Returns an error message string if there is an error.
-  # Returns nil to indicate no errors.
-  # This method is used by the UI along with the is_available? methods.
-  def is_available_now_error_message(request_type)
-    send("validate_#{request_type}")[:message]
   end
 
   def self.batch_operation_supported?(operation, ids)
