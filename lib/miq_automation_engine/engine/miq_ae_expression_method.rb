@@ -6,7 +6,7 @@ module MiqAeEngine
       @name = method_obj.name
       @workspace = obj.workspace
       @inputs = inputs
-      @attributes = inputs['distinct'] || inputs['attributes']
+      @attributes = inputs['distinct'] || inputs['attributes'] || %w(name)
       @search = MiqSearch.where(:name => method_obj.data).try(:first)
       raise MiqAeException::MethodExpressionNotFound, "Search expression #{method_obj.data} not found" unless @search
       process_filter
@@ -42,6 +42,13 @@ module MiqAeEngine
         multiple ? @attributes.collect { |attr| result_simple(obj, attr) } : result_simple(obj, @attributes.first)
       end
       @inputs['distinct'].blank? ? result : result.uniq
+    end
+
+    def result_dialog_hash
+      key = @inputs['key'] || 'id'
+      @search_objects.each_with_object({}) do |obj, hash|
+        hash[result_simple(obj, key)] = result_simple(obj, @attributes.first)
+      end
     end
 
     def result_simple(obj, attr)
@@ -89,7 +96,7 @@ module MiqAeEngine
     end
 
     def attribute_name
-      @inputs['result_attr'] || 'method_result'
+      @inputs['result_attr'] || 'values'
     end
 
     def target_object
@@ -99,16 +106,18 @@ module MiqAeEngine
     end
 
     def exp_value
-      type = @inputs['result_type'] || 'array'
+      type = @inputs['result_type'] || 'dialog_hash'
       case type.downcase.to_sym
       when :hash
         result_hash(@search_objects.first)
+      when :dialog_hash
+        result_dialog_hash
       when :array
         result_array
       when :simple
         result_simple(@search_objects.first, @inputs['attributes'].first)
       else
-        raise MiqAeException::MethodExpressionResultTypeInvalid, "Invalid Result type, should be hash, array or simple"
+        raise MiqAeException::MethodExpressionResultTypeInvalid, "Invalid Result type, should be hash, array or dialog_hash"
       end
     end
 

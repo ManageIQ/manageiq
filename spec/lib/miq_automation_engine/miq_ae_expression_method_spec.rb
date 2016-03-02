@@ -30,13 +30,30 @@ module MiqAeExpressionMethodSpec
       vm1
       vm2
       vm3
+      m_params['result_type'] = {'datatype' => 'string', 'default_value' => 'array'}
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
-      expect(ws.root.attributes['method_result']).to match_array(%w(cfme_2.1 cfme_3.1))
+
+      expect(ws.root.attributes['values']).to match_array(%w(cfme_2.1 cfme_3.1))
+    end
+
+    it "expression_method dialog_hash" do
+      vm1
+      vm2
+      vm3
+      create_ae_model_with_method(:ae_namespace => 'GAULS',
+                                  :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
+                                  :method_name => 'OBELIX', :method_params => m_params,
+                                  :method_loc  => 'expression',
+                                  :method_script => vm_search.name)
+      ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
+
+      expect(ws.root.attributes['values'].keys).to match_array([vm1.id, vm2.id])
+      expect(ws.root.attributes['values'].values).to match_array([vm1.name, vm2.name])
     end
 
     it "expression_method no result" do
@@ -49,8 +66,8 @@ module MiqAeExpressionMethodSpec
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
-
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
+
       expect(ws.root.attributes['ae_result']).to eq('error')
     end
 
@@ -66,10 +83,10 @@ module MiqAeExpressionMethodSpec
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
-
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
+
       expect(ws.root.attributes['ae_result']).to eq('warn')
-      expect(ws.root.attributes['method_result']).to match_array(%w(nada))
+      expect(ws.root.attributes['values']).to match_array(%w(nada))
     end
 
     it "expression_method result attr" do
@@ -77,12 +94,14 @@ module MiqAeExpressionMethodSpec
       vm2
       vm3
       m_params['result_attr'] = {'datatype' => 'string', 'default_value' => 'vitalstatistix'}
+      m_params['result_type'] = {'datatype' => 'string', 'default_value' => 'array'}
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
+
       expect(ws.root.attributes['vitalstatistix']).to match_array(%w(cfme_2.1 cfme_3.1))
     end
 
@@ -91,13 +110,15 @@ module MiqAeExpressionMethodSpec
       vm2
       vm3
       m_params['distinct'] = {'datatype' => 'array', 'default_value' => 'cpu_shares'}
+      m_params['result_type'] = {'datatype' => 'string', 'default_value' => 'array'}
       create_ae_model_with_method(:ae_namespace => 'GAULS',
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
-      expect(ws.root.attributes['method_result']).to match_array([400])
+
+      expect(ws.root.attributes['values']).to match_array([400])
     end
 
     it "expression_method undefined function" do
@@ -109,6 +130,7 @@ module MiqAeExpressionMethodSpec
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
+
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
       end.to raise_error(MiqAeException::MethodNotDefined)
@@ -152,6 +174,7 @@ module MiqAeExpressionMethodSpec
                                   :method_name => 'OBELIX', :method_params => {},
                                   :method_loc  => 'expression',
                                   :method_script => vm_search.name)
+
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
       end.to raise_error(MiqAeException::MethodParameterNotFound)
@@ -163,6 +186,7 @@ module MiqAeExpressionMethodSpec
                                   :method_name => 'OBELIX', :method_params => {},
                                   :method_loc  => 'expression',
                                   :method_script => "nada")
+
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
       end.to raise_error(MiqAeException::MethodExpressionNotFound)
