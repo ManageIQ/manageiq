@@ -6,7 +6,7 @@ describe ApplicationController, "#Timezone" do
   context "#get_timezone_offset" do
     context "for a server" do
       it "with a system default" do
-        stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+        stub_settings(:server => {:timezone => "Eastern Time (US & Canada)"})
 
         Timecop.freeze(Time.utc(2013, 1, 1)) do
           expect(subject.get_timezone_offset).to eq(-5.hours)
@@ -14,7 +14,7 @@ describe ApplicationController, "#Timezone" do
       end
 
       it "without a system default" do
-        stub_server_configuration({})
+        stub_settings({})
         expect(subject.get_timezone_offset).to eq(0.hours)
       end
     end
@@ -34,7 +34,7 @@ describe ApplicationController, "#Timezone" do
       context "without a timezone" do
         it "with a system default" do
           user = FactoryGirl.create(:user)
-          stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+          stub_settings(:server => {:timezone => "Eastern Time (US & Canada)"})
 
           Timecop.freeze(Time.utc(2013, 1, 1)) do
             expect(subject.get_timezone_offset(user)).to eq(-5.hours)
@@ -42,7 +42,7 @@ describe ApplicationController, "#Timezone" do
         end
 
         it "with a system default and nil user" do
-          stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+          stub_settings(:server => {:timezone => "Eastern Time (US & Canada)"})
           Timecop.freeze(Time.utc(2013, 1, 1)) do
             expect(subject.get_timezone_offset(nil)).to eq(-5.hours)
           end
@@ -50,7 +50,7 @@ describe ApplicationController, "#Timezone" do
 
         it "without a system default" do
           user = FactoryGirl.create(:user)
-          stub_server_configuration({})
+          stub_settings({})
 
           expect(subject.get_timezone_offset(user)).to eq(0.hours)
         end

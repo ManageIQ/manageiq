@@ -1,7 +1,7 @@
 describe MiqReportResult do
   context "::Purging" do
-    before(:each) do
-      @vmdb_config = {
+    let(:settings) do
+      {
         :reporting => {
           :history => {
             :keep_reports      => "6.months",
@@ -9,7 +9,10 @@ describe MiqReportResult do
           }
         }
       }
-      stub_server_configuration(@vmdb_config)
+    end
+
+    before(:each) do
+      stub_settings(settings)
 
       @rr1 = [
         FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),
@@ -27,35 +30,40 @@ describe MiqReportResult do
 
     context "#purge_mode_and_value" do
       it "with missing config value" do
-        @vmdb_config.delete_path(:reporting, :history, :keep_reports)
+        settings.delete_path(:reporting, :history, :keep_reports)
+        stub_settings(settings)
         Timecop.freeze(Time.now) do
           expect(described_class.purge_mode_and_value).to eq([:date, 6.months.to_i.seconds.ago.utc])
         end
       end
 
       it "with date" do
-        @vmdb_config.store_path(:reporting, :history, :keep_reports, "1.day")
+        settings.store_path(:reporting, :history, :keep_reports, "1.day")
+        stub_settings(settings)
         Timecop.freeze(Time.now) do
           expect(described_class.purge_mode_and_value).to eq([:date, 1.day.to_i.seconds.ago.utc])
         end
       end
 
       it "with count" do
-        @vmdb_config.store_path(:reporting, :history, :keep_reports, 50)
+        settings.store_path(:reporting, :history, :keep_reports, 50)
+        stub_settings(settings)
         expect(described_class.purge_mode_and_value).to eq([:remaining, 50])
       end
     end
 
     context "#purge_window_size" do
       it "with missing config value" do
-        @vmdb_config.delete_path(:reporting, :history, :purge_window_size)
+        settings.delete_path(:reporting, :history, :purge_window_size)
+        stub_settings(settings)
         Timecop.freeze(Time.now) do
           expect(described_class.purge_window_size).to eq(100)
         end
       end
 
       it "with value" do
-        @vmdb_config.store_path(:reporting, :history, :purge_window_size, 1000)
+        settings.store_path(:reporting, :history, :purge_window_size, 1000)
+        stub_settings(settings)
         Timecop.freeze(Time.now) do
           expect(described_class.purge_window_size).to eq(1000)
         end

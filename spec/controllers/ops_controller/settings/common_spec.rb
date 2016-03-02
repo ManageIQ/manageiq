@@ -236,7 +236,7 @@ describe OpsController do
         miq_server = FactoryGirl.create(:miq_server)
 
         path = %i(workers worker_base replication_worker replication destination password)
-        stub_server_configuration({}.tap { |h| h.store_path(path, "pa$$w0rd") })
+        stub_settings({}.tap { |h| h.store_path(path, "pa$$w0rd") })
 
         controller.instance_variable_set(:@edit, :new => VMDB::Config.new("vmdb"))
         controller.instance_variable_set(:@sb, :selected_server_id => miq_server.id)
