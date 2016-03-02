@@ -118,13 +118,13 @@ class MiqRegion < ApplicationRecord
     end
   end
 
-  def self.sync_with_db_region(config = false)
+  def self.sync_with_db_region(config)
+    config = config.deep_stringify_keys
+
     # Establish a connection to a different database so that we can sync with the new DB's region
-    if config
-      raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.key?(Rails.env)
-      _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
-      MiqDatabase.establish_connection(config[Rails.env])
-    end
+    raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.key?(Rails.env)
+    _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
+    MiqDatabase.establish_connection(config[Rails.env])
 
     db = MiqDatabase.first
     return if db.nil?
