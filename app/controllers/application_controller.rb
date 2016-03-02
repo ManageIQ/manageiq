@@ -205,7 +205,7 @@ class ApplicationController < ActionController::Base
     if session[:rpt_task_id]
       miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
       @report = miq_task.task_results
-    elsif session[:rpt_task_id].nil? && session[:report_result_id]
+    elsif session[:report_result_id]
       rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
       @report = rr.report_results
       @report.report_run_time = rr.last_run_on
@@ -221,7 +221,7 @@ class ApplicationController < ActionController::Base
     if session[:rpt_task_id]
       miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
       @report = miq_task.task_results
-    elsif session[:rpt_task_id].nil? && session[:report_result_id]
+    elsif session[:report_result_id]
       rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
       @report = rr.report_results
     end
