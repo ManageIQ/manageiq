@@ -17,38 +17,40 @@ class OrchestrationStackController < ApplicationController
     return if record_no_longer_exists?(@orchestration_stack)
 
     @gtl_url = "/orchestration_stack/show/" << @orchestration_stack.id.to_s << "?"
-    drop_breadcrumb({:name => "Orchestration Stacks",
+    drop_breadcrumb({:name => _("Orchestration Stacks"),
                      :url  => "/orchestration_stack/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@orchestration_stack)
-      drop_breadcrumb(:name => "#{@orchestration_stack.name} (Summary)",
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @orchestration_stack.name},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
-      drop_breadcrumb(:name => "#{@orchestration_stack.name} (All #{title})",
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @orchestration_stack)
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
         count_text = pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
-        @bottom_msg = "* You are not authorized to view #{count_text} on this #{ui_lookup(:tables => 'orchestration_stack')}"
+        @bottom_msg = _("* You are not authorized to view %{items} on this %{tables}") %
+                        {:items => count_text, :tables => ui_lookup(:tables => 'orchestration_stack')}
       end
     when "security_groups"
       table = "security_groups"
       title = ui_lookup(:tables => table)
       kls   = SecurityGroup
-      drop_breadcrumb(:name => "#{@orchestration_stack.name} (All #{title})",
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @orchestration_stack)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
         count_text = pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
-        @bottom_msg = "* You are not authorized to view #{count_text} on this #{ui_lookup(:tables => 'orchestration_stack')}"
+        @bottom_msg = _("* You are not authorized to view %{items} on this %{tables}") %
+                        {:items => count_text, :tables => ui_lookup(:tables => 'orchestration_stack')}
       end
     end
 
@@ -63,19 +65,19 @@ class OrchestrationStackController < ApplicationController
   end
 
   def cloud_networks
-    show_association('cloud_networks', 'Cloud Networks', 'cloud_network', :cloud_networks, CloudNetwork)
+    show_association('cloud_networks', _('Cloud Networks'), 'cloud_network', :cloud_networks, CloudNetwork)
   end
 
   def outputs
-    show_association('outputs', 'Outputs', 'output', :outputs, OrchestrationStackOutput)
+    show_association('outputs', _('Outputs'), 'output', :outputs, OrchestrationStackOutput)
   end
 
   def parameters
-    show_association('parameters', 'Parameters', 'parameter', :parameters, OrchestrationStackParameter)
+    show_association('parameters', _('Parameters'), 'parameter', :parameters, OrchestrationStackParameter)
   end
 
   def resources
-    show_association('resources', 'Resources', 'resource', :resources, OrchestrationStackResource)
+    show_association('resources', _('Resources'), 'resource', :resources, OrchestrationStackResource)
   end
 
   # handle buttons pressed on the button bar
@@ -148,7 +150,7 @@ class OrchestrationStackController < ApplicationController
   private ############################
 
   def get_session_data
-    @title      = "Stack"
+    @title      = _("Stack")
     @layout     = "orchestration_stack"
     @lastaction = session[:orchestration_stack_lastaction]
     @display    = session[:orchestration_stack_display]

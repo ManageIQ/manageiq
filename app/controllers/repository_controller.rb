@@ -14,24 +14,32 @@ class RepositoryController < ApplicationController
     @repo = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@repo)
 
-    drop_breadcrumb({:name => "Repositories", :url => "/repository/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb({:name => _("Repositories"), :url => "/repository/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
     when "miq_templates", "vms"
       title, kls = (@display == "vms" ? ["VMs", Vm] : ["Templates", MiqTemplate])
-      drop_breadcrumb(:name => @repo.name + " (All #{title})", :url => "/repository/show/#{@repo.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name}  (All %{title})") % {:name => @repo.name, :title => title},
+                      :url  => "/repository/show/#{@repo.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @repo) # Get the records (into a view) and the paginator
       @showtype = @display
       @gtl_url = "/repository/show/" << @repo.id.to_s << "?"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this Repository"
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this Repository") %
+                          {:titles => title.pluralize}
+                      else
+                        _("* You are not authorized to view other %{title} on this Repository") %
+                          {:title => title.singularize}
+                      end
       end
 
     when "download_pdf", "main", "summary_only"
       get_tagdata(@repo)
       session[:vm_summary_cool] = (@settings[:views][:vm_summary_cool] == "summary")
       @summary_view = session[:vm_summary_cool]
-      drop_breadcrumb(:name => @repo.name + " (Summary)", :url => "/repository/show/#{@repo.id}?display=main")
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @repo.name},
+                      :url  => "/repository/show/#{@repo.id}?display=main")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     end
@@ -52,7 +60,7 @@ class RepositoryController < ApplicationController
     assert_privileges("repository_new")
     @repo = Repository.new
     @in_a_form = true
-    drop_breadcrumb(:name => "Add New Repository", :url => "/repository/new")
+    drop_breadcrumb(:name => _("Add New Repository"), :url => "/repository/new")
   end
 
   def create
@@ -83,7 +91,7 @@ class RepositoryController < ApplicationController
         @repo = Repository.new
       end
       @in_a_form = true
-      drop_breadcrumb(:name => "Add New Repository", :url => "/repository/new")
+      drop_breadcrumb(:name => _("Add New Repository"), :url => "/repository/new")
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -104,7 +112,8 @@ class RepositoryController < ApplicationController
     @repo = find_by_id_filtered(Repository, params[:id])
     session[:changed] = false
     @in_a_form = true
-    drop_breadcrumb(:name => "Edit Repository '#{@repo.name}'", :url => "/repository/edit/#{@repo.id}")
+    drop_breadcrumb(:name => _("Edit Repository '%{name}'") % {:name => @repo.name},
+                    :url  => "/repository/edit/#{@repo.id}")
   end
 
   def update
@@ -131,7 +140,8 @@ class RepositoryController < ApplicationController
           @repo.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
-          drop_breadcrumb(:name => "Edit Repository '#{@repo.name}'", :url => "/repository/edit/#{@repo.id}")
+          drop_breadcrumb(:name => _("Edit Repository '%{name}'") % {:name => @repo.name},
+                          :url  => "/repository/edit/#{@repo.id}")
           @in_a_form = true
           render :update do |page|
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -139,7 +149,8 @@ class RepositoryController < ApplicationController
         end
       else
         add_flash(_("Path must be a valid reference to a UNC location"), :error)
-        drop_breadcrumb(:name => "Edit Repository '#{@repo.name}'", :url => "/repository/edit/#{@repo.id}")
+        drop_breadcrumb(:name => _("Edit Repository '%{name}'") % {:name => @repo.name},
+                        :url  => "/repository/edit/#{@repo.id}")
         @in_a_form = true
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -251,16 +262,24 @@ class RepositoryController < ApplicationController
       Repository.where(:id => repos).order("lower(name)").each do |repo|
         id = repo.id
         repo_name = repo.name
-        audit = {:event => "repo_record_delete_initiated", :message => "[#{repo_name}] Record delete initiated", :target_id => id, :target_class => "Repository", :userid => session[:userid]}
+        audit = {:event => "repo_record_delete_initiated", :message => _("[%{name}] Record delete initiated") %
+          {:name => repo_name}, :target_id => id, :target_class => "Repository", :userid => session[:userid]}
         AuditEvent.success(audit)
       end
       Repository.destroy_queue(repos)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Delete", :count_model => pluralize(repos.length, "Repository")})
+      add_flash(_("%Delete initiated for %{count_model} from the CFME Database") %
+                  {:count_model => pluralize(repos.length, "Repository")})
     else
       Repository.where(:id => repos).order("lower(name)").each do |repo|
         id = repo.id
         repo_name = repo.name
-        audit = {:event => "repository_record_delete", :message => "[#{repo_name}] Record deleted", :target_id => id, :target_class => "Repository", :userid => session[:userid]} if task == "destroy"
+        audit = if task == "destroy"
+                  {:event        => "repository_record_delete",
+                   :message      => _("[%{name}] Record deleted") % {:name => repo_name},
+                   :target_id    => id,
+                   :target_class => "Repository",
+                   :userid       => session[:userid]}
+                end
         begin
           if task == "refresh"
             sp.scan_repository(repo)              # Run the scan off of the configured SmartProxy
@@ -351,7 +370,7 @@ class RepositoryController < ApplicationController
   end
 
   def get_session_data
-    @title      = "Repositories"
+    @title      = _("Repositories")
     @layout     = "repository"
     @lastaction = session[:repo_lastaction]
     @display    = session[:repo_display]
