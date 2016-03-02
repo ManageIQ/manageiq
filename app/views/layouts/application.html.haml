@@ -1,6 +1,6 @@
 = render :partial => 'layouts/doctype'
 - if @report_only
-  %html{:class => "layout-pf layout-pf-fixed",:lang => I18n.locale.to_s.sub('-', '_')}
+  %html{:class => "layout-pf layout-pf-fixed transitions",:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
       = favicon_link_tag
@@ -13,7 +13,7 @@
       = yield
 - else
   <!--[if IE 9]><html class="ie9"><![endif]-->
-  %html{:class => "layout-pf layout-pf-fixed",:lang => I18n.locale.to_s.sub('-', '_')}
+  %html{:class => "layout-pf layout-pf-fixed transitions",:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title= h(title_from_layout(@layout))
 

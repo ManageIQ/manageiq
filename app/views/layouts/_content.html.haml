@@ -66,10 +66,9 @@
           = yield :left
         #custom_left_cell
 - else
-
+  = render :partial => "layouts/page_header_navbar"
   #center_div{:style => "height: 100%;"}
     - if layout_uses_listnav?
-      = render :partial => "layouts/page_header_navbar"
       .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary{:style => "overflow: hidden !important"}
         - if !@in_a_form && taskbar_in_header?
           .row.toolbar-pf#toolbar
