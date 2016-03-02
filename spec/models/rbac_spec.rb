@@ -404,7 +404,7 @@ describe Rbac do
 
           root            = FactoryGirl.create(:ems_folder, :name => "Datacenters")
           root.parent     = @ems
-          dc              = FactoryGirl.create(:ems_folder, :name => "Datacenter1", :is_datacenter => true)
+          dc              = FactoryGirl.create(:datacenter, :name => "Datacenter1")
           dc.parent       = root
           hfolder         = FactoryGirl.create(:ems_folder, :name => "host")
           hfolder.parent  = dc
@@ -546,7 +546,7 @@ describe Rbac do
           @ems_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}"
           @root = FactoryGirl.create(:ems_folder, :name => "Datacenters")
           @root.parent = @ems
-          @mtc = FactoryGirl.create(:ems_folder, :name => "MTC", :is_datacenter => true)
+          @mtc = FactoryGirl.create(:datacenter, :name => "MTC")
           @mtc.parent = @root
           @mtc_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{@root.name}/EmsFolder|#{@mtc.name}"
 

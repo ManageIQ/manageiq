@@ -50,7 +50,7 @@ describe OpsController do
       let(:filter_type) { "cluster" }
 
       before do
-        cluster.parent = FactoryGirl.create(:ems_folder, :name => "datacenter", :is_datacenter => true)
+        cluster.parent = FactoryGirl.create(:datacenter, :name => "datacenter")
         bypass_rescue
         allow(EmsCluster).to receive(:find).with(:all, {}).and_return([cluster])
         post :schedule_form_filter_type_field_changed, :params => params, :session => session
