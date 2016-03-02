@@ -473,7 +473,7 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_service(id)
     case id
     when "service_reconfigure"
-      return @record.validate_reconfigure
+      return true unless @record.validate_reconfigure
     end
     false
   end
