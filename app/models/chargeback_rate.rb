@@ -111,9 +111,6 @@ class ChargebackRate < ApplicationRecord
   def self.seed_chargeback_rate
     # seeding the rates fixtures
     fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
-    fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
-    fixture_file_currency = File.join(FIXTURE_DIR, "chargeback_rate_detail_currencies.yml")
-
     if File.exist?(fixture_file)
       fixture = YAML.load_file(fixture_file)
       fix_mtime = File.mtime(fixture_file).utc
