@@ -85,4 +85,24 @@ describe StorageController do
       end
     end
   end
+
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @user = FactoryGirl.create(:user)
+      login_as @user
+      session[:settings] = {:views => {:vm_summary_cool => "summary"}}
+      @storage = FactoryGirl.create(:storage)
+    end
+
+    subject { get :show, :id => @storage.id }
+
+    context "render" do
+      render_views
+      it "listnav" do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_storage")
+      end
+    end
+  end
 end
