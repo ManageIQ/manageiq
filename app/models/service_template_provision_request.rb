@@ -36,11 +36,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def provision_dialog
-    st = service_template
-    return {} if st.blank?
-    ra = st.resource_actions.find_by_action("Provision")
-    dialog = ResourceActionWorkflow.new(options[:dialog], get_user, ra, {}).dialog
-    DialogSerializer.new.serialize(Array[dialog]).first
+    request_dialog("Provision")
   end
 
   def requested_task_idx
