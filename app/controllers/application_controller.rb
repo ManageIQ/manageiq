@@ -220,10 +220,10 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in pdf format
   def render_pdf(report = nil)
-    @report = report_for_rendering
-    if report || @report
+    report ||= report_for_rendering
+    if report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
-      rr =  (report || @report).build_create_results(:userid => userid) # Create rr from the report object
+      rr = report.build_create_results(:userid => userid)
     end
 
     # Use rr frorm paging, if present
