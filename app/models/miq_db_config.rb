@@ -80,7 +80,7 @@ class MiqDbConfig
 
     _log.info("Validation was successful, saving new settings: #{options.merge(@@pwd_mask).inspect}")
     vmdb_config = save_without_verify
-    MiqRegion.sync_with_db_region(Vmdb::ConfigurationEncoder.stringify(vmdb_config.config))
+    MiqRegion.sync_with_db_region(vmdb_config.config)
     true
   end
 

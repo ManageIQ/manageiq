@@ -1,6 +1,7 @@
 describe Vmdb::ConfigurationEncoder do
   let(:password) { "pa$$word" }
   let(:enc_pass) { MiqPassword.encrypt("pa$$word") }
+
   context ".dump" do
     it "stringifies keys" do
       hash = {:one => {:two => nil}}
@@ -161,22 +162,6 @@ describe Vmdb::ConfigurationEncoder do
       end
 
       include_examples ".load"
-    end
-  end
-
-  context ".stringify" do
-    subject { described_class.stringify(@config) }
-
-    it "should not change original hash" do
-      @config = {:one => {:two => :three}}
-
-      expect(subject).to eq({"one" => {"two" => :three}})
-      expect(@config).to eq({:one => {:two => :three}})
-    end
-
-    it "should handle two layers deep hash" do
-      @config = {:one => {:two => {:three => :four}}}
-      expect(subject).to eq({"one" => {"two" => {:three => :four}}})
     end
   end
 
