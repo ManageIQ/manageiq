@@ -18,6 +18,7 @@ GlobalVars:
   - $kube_log
   - $scvmm_log
   - $vim_log
+  - $websocket_log
   # In Automate methods
   - $evm
 #

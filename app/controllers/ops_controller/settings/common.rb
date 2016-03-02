@@ -310,6 +310,9 @@ module OpsController::Settings::Common
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :count, w[:count].to_i)
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
 
+      w = wb[:websocket_worker]
+      @edit[:new].set_worker_setting!(:MiqWebsocketWorker, :count, w[:count].to_i)
+
       @update = MiqServer.find(@sb[:selected_server_id]).get_config
     when "settings_custom_logos"                                      # Custom Logo tab
       @changed = (@edit[:new] != @edit[:current].config)
@@ -726,6 +729,9 @@ module OpsController::Settings::Common
       w[:count] = params[:web_service_worker_count].to_i if params[:web_service_worker_count]
       w[:memory_threshold] = params[:web_service_worker_threshold] if params[:web_service_worker_threshold]
 
+      w = wb[:websocket_worker]
+      w[:count] = params[:websocket_worker_count].to_i if params[:websocket_worker_count]
+
       restore_password if params[:restore_password]
       set_workers_verify_status
     when "settings_custom_logos"                                            # Custom Logo tab
@@ -943,6 +949,9 @@ module OpsController::Settings::Common
       w[:memory_threshold] = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqWebServiceWorker, :memory_threshold)) || rails_method_to_human_size(400.megabytes)
       @sb[:web_service_threshold] = []
       @sb[:web_service_threshold] = copy_array(@sb[:threshold])
+
+      w = (wb[:websocket_worker] ||= {})
+      w[:count] = @edit[:current].get_raw_worker_setting(:MiqWebsocketWorker, :count) || 2
 
       @edit[:new].config = copy_hash(@edit[:current].config)
       session[:log_depot_default_verify_status] = true

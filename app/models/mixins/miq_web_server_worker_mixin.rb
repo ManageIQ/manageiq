@@ -89,7 +89,7 @@ module MiqWebServerWorkerMixin
         end
       end
 
-      modify_apache_ports(ports_hash) if MiqEnvironment::Command.supports_apache?
+      modify_apache_ports(ports_hash, self::PROTOCOL) if MiqEnvironment::Command.supports_apache?
 
       result
     end
@@ -109,13 +109,14 @@ module MiqWebServerWorkerMixin
         :method         => self::LB_METHOD,
         :redirects      => self::REDIRECTS,
         :cluster        => self::CLUSTER,
+        :protocol       => self::PROTOCOL
       }
 
       _log.info("[#{options.inspect}")
       MiqApache::Conf.install_default_config(options)
     end
 
-    def self.modify_apache_ports(ports_hash)
+    def self.modify_apache_ports(ports_hash, protocol)
       return unless MiqEnvironment::Command.supports_apache?
       adds    = Array(ports_hash[:adds])
       deletes = Array(ports_hash[:deletes])
@@ -129,12 +130,12 @@ module MiqWebServerWorkerMixin
 
       unless adds.empty?
         _log.info("Adding port(s) #{adds.inspect}")
-        conf.add_ports(adds)
+        conf.add_ports(adds, protocol)
       end
 
       unless deletes.empty?
         _log.info("Removing port(s) #{deletes.inspect}")
-        conf.remove_ports(deletes)
+        conf.remove_ports(deletes, protocol)
       end
 
       saved = conf.save
@@ -165,7 +166,7 @@ module MiqWebServerWorkerMixin
       params = {
         :Host        => self.class.binding_address,
         :environment => Rails.env.to_s,
-        :app         => Rails.application
+        :app         => defined?(self.class::RACK_APPLICATION) ? self.class::RACK_APPLICATION.new : Rails.application
       }
 
       params[:Port] = port.kind_of?(Numeric) ? port : 3000

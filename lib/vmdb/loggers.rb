@@ -55,6 +55,7 @@ module Vmdb
         $kube_log      = MirroredLogger.new(path_dir.join("kubernetes.log"), "<KUBERNETES> ")
         $scvmm_log     = MirroredLogger.new(path_dir.join("scvmm.log"),      "<SCVMM> ")
         $api_log       = MirroredLogger.new(path_dir.join("api.log"),        "<API> ")
+        $websocket_log = MirroredLogger.new(path_dir.join("websocket.log"),  "<WEBSOCKET> ")
         $miq_ae_logger = MirroredLogger.new(path_dir.join("automation.log"), "<AutomationEngine> ")
         $miq_ae_logger.mirror_level = VMDBLogger::INFO
       end

@@ -207,6 +207,7 @@ module MiqApache
       opts[:redirects].to_miq_a.each_with_object("") do |redirect, content|
         if redirect == "/"
           content << "RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts)) /self_service/index.html [L]\n"
+          content << "RewriteCond \%{REQUEST_URI} !^/ws\n"
           content << "RewriteCond \%{REQUEST_URI} !^/proxy_pages\n"
           content << "RewriteCond \%{REQUEST_URI} !^/saml2\n"
           content << "RewriteCond \%{REQUEST_URI} !^/api\n"
@@ -262,22 +263,22 @@ module MiqApache
       @raw_lines.delete_if { |line| line !~ RE_BLOCK_DIRECTIVE_START }
     end
 
-    def add_ports(ports)
+    def add_ports(ports, protocol)
       index = @raw_lines.index { |line| line =~ RE_BLOCK_DIRECTIVE_START && $1 == 'Proxy' && $2 =~ /^balancer:\/\/evmcluster[^\s]*\// }
 
       raise "Proxy section not found in file: #{@fname}" if index.nil?
 
       ports = Array(ports).sort.reverse
       ports.each do |port|
-        @raw_lines.insert(index + 1, "BalancerMember http://0.0.0.0:#{port}\n")
+        @raw_lines.insert(index + 1, "BalancerMember #{protocol}://0.0.0.0:#{port}\n")
       end
       ports
     end
 
-    def remove_ports(ports)
+    def remove_ports(ports, protocol)
       ports = Array(ports)
       ports.each do |port|
-        @raw_lines.delete_if { |line| line =~ /BalancerMember\s+http:\/\/0\.0\.0\.0:#{port}$/ }
+        @raw_lines.delete_if { |line| line =~ /BalancerMember\s+#{protocol}:\/\/0\.0\.0\.0:#{port}$/ }
       end
       ports
     end

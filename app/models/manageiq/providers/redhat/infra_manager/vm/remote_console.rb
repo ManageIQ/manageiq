@@ -20,37 +20,27 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
             "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
     end
 
-    def remote_console_acquire_ticket(console_type, _proxy_miq_server = nil)
+    def remote_console_acquire_ticket(userid, console_type)
       validate_remote_console_acquire_ticket(console_type)
 
       parsed_ticket = Nokogiri::XML(provider_object.ticket)
       display = provider_object.attributes[:display]
 
-      host_address = display[:address]
-      host_port    = display[:secure_port] || display[:port]
-      ssl          = display[:secure_port].present?
-      protocol     = display[:type]
-
-      proxy_address = proxy_port = nil
-      password = parsed_ticket.xpath('action/ticket/value')[0].text
-
-      SystemConsole.where(:vm_id => id).each { |c| c.destroy }
-      c = SystemConsole.new(
-        :user_id    => userid, # User.find # :userid => userid
+      SystemConsole.where(:vm_id => id).each(&:destroy)
+      # TODO: non-blocking SSL support in the proxy
+      SystemConsole.create!(
+        :user       => User.find_by(:userid => userid),
         :vm_id      => id,
-        :host_name  => host_address,
-        :port       => host_port,
-        :ssl        => ssl,
-        :protocol   => protocol,
-        :secret     => password,
+        :host_name  => display[:address],
+        :port       => display[:secure_port] || display[:port],
+        :ssl        => display[:secure_port].present?,
+        :protocol   => display[:type],
+        :secret     => parsed_ticket.xpath('action/ticket/value')[0].text,
         :url_secret => SecureRandom.hex
-      )
-      c.save!
-
-      return password, host_address, host_port, proxy_address, proxy_port, protocol, ssl
+      ).connection_params
     end
 
-    def remote_console_acquire_ticket_queue(protocol, userid, proxy_miq_server = nil)
+    def remote_console_acquire_ticket_queue(protocol, userid)
       task_opts = {
         :action => "acquiring Vm #{name} #{protocol.to_s.upcase} remote console ticket for user #{userid}",
         :userid => userid
@@ -63,7 +53,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => 'ems_operations',
         :zone        => my_zone,
-        :args        => [protocol, proxy_miq_server]
+        :args        => [userid, protocol]
       }
 
       MiqTask.generic_action_with_callback(task_opts, queue_opts)

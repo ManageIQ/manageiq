@@ -90,45 +90,52 @@ describe MiqApache::Conf do
       @conf = MiqApache::Conf.new(@conf_file)
     end
 
+    context "with other protocol than http" do
+      it "add_ports should add the port with the given protocol" do
+        @conf.add_ports(3000, "ws")
+        expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember ws://0.0.0.0:3000\n", "</Proxy>\n"])
+      end
+    end
+
     it "add_ports should add the first port line" do
-      @conf.add_ports(3000)
+      @conf.add_ports(3000, "http")
       expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "</Proxy>\n"])
     end
 
     it "add_ports should add the first two port lines" do
-      @conf.add_ports([3000, 3001])
+      @conf.add_ports([3000, 3001], "http")
       expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "BalancerMember http://0.0.0.0:3001\n", "</Proxy>\n"])
     end
 
     it "add_ports should add a single port line to existing lines" do
       @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "BalancerMember http://0.0.0.0:3001\n", "</Proxy>\n"]
-      @conf.add_ports(3002)
+      @conf.add_ports(3002, "http")
       expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3002\n", "BalancerMember http://0.0.0.0:3000\n", "BalancerMember http://0.0.0.0:3001\n", "</Proxy>\n"])
     end
 
     it "remove_ports should do nothing with no BalancerMember lines" do
       before = @conf.raw_lines.dup
-      @conf.remove_ports(3000)
+      @conf.remove_ports(3000, "http")
       expect(@conf.raw_lines).to eq(before)
     end
 
     it "remove_ports should remove the only port line" do
       before = @conf.raw_lines.dup
       @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "</Proxy>\n"]
-      @conf.remove_ports(3000)
+      @conf.remove_ports(3000, "http")
       expect(@conf.raw_lines).to eq(before)
     end
 
     it "remove_ports should remove the only two port lines" do
       before = @conf.raw_lines.dup
       @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "BalancerMember http://0.0.0.0:3001\n", "</Proxy>\n"]
-      @conf.remove_ports([3000, 3001])
+      @conf.remove_ports([3000, 3001], "http")
       expect(@conf.raw_lines).to eq(before)
     end
 
     it "remove_ports should remove one port line, leaving one" do
       @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "BalancerMember http://0.0.0.0:3001\n", "</Proxy>\n"]
-      @conf.remove_ports(3001)
+      @conf.remove_ports(3001, "http")
       expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "</Proxy>\n"])
     end
 
@@ -137,7 +144,7 @@ describe MiqApache::Conf do
       backup = "#{@conf_file}_old"
       FileUtils.cp(@conf_file, backup)
       begin
-        @conf.add_ports(3000)
+        @conf.add_ports(3000, "http")
         expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "</Proxy>\n"])
         @conf.save
 

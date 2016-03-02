@@ -6,6 +6,7 @@ class MiqWebServiceWorker < MiqWorker
   BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ws.conf'
   REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ws'
   STARTING_PORT              = 4000
+  PROTOCOL                   = 'http'
   LB_METHOD                  = :busy
   REDIRECTS                  = ['/api']
   CLUSTER                    = 'evmcluster_ws'

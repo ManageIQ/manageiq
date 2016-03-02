@@ -1,4 +1,3 @@
-- record_name = (@record.name rescue '')
 = render :partial => 'layouts/doctype'
 %html{:lang => I18n.locale.to_s.sub('-', '_')}
   %head
@@ -6,14 +5,14 @@
       = _('SPICE Console')
     = favicon_link_tag
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'application', 'spice-html5-bower/spiceHTML5/spicearraybuffer', 'spice-html5-bower'
+    = javascript_include_tag 'jquery', 'spice-html5-bower/spiceHTML5/spicearraybuffer', 'spice-html5-bower'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
-    #spice-area{'data-port' => proxy_port, 'data-password' => password, 'data-encrypt' => encrypt}
+    #spice-area
       .console-status
-        #spice-status.label{'data-host' => record_name}
-          = _("Connecting (unencrypted) to: %s") % record_name
+        #spice-status.label{'data-host' => @url}
+          = _("Connecting (unencrypted) to: %s") % @url
 
       #spice-screen.console-screen
 
@@ -22,27 +21,27 @@
         var encrypt;
 
         $(function () {
-          var host         = window.location.hostname;
-          var element      = $('#spice-area');
-          var port         = element.data('port');
-          var password     = element.data('password');
-          var encrypt_attr = element.attr('data-encrypt');
-          encrypt = (encrypt_attr !== undefined) && (encrypt_attr !== 'false');
-          var scheme   = (encrypt ? "wss://" : "ws://"), uri;
+          var host = window.location.hostname;
+          var encrypt = window.location.protocol == 'https';
+          var port = encrypt ? 443 : 80;
+          if (window.location.port) port = window.location.port;
 
-          if (!host || !port || !password) {
-            spice_error(__("must set host, port and password"));
+          var secret = "#{j(@secret)}";
+          var url = "#{j(@url)}";
+
+          if (!host || !port || !secret) {
+            spice_error(__("must set host, port and secret"));
             return;
           }
 
           spice_connecting();
 
-          uri = scheme + host + ":" + port;
+          uri = (encrypt ? "wss://" : "ws://") + host + ":" + port + '/' + url;
 
           sc = new SpiceMainConn({
             uri:       uri,
             screen_id: "spice-screen",
-            password:  password,
+            password:  secret,
             onerror:   spice_error,
             onsuccess: spice_success
           });

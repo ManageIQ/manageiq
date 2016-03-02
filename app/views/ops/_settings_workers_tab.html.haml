@@ -313,3 +313,17 @@
                 :locals => {:validate_url => "validate_replcation_worker", :valtype => "default",
                 :verify_title_off => _("Matching password fields are needed to perform verification of credentials"),
                 :verify_title_on => _("Validate the credentials"), :record_id => "#{@sb[:active_tab].split('_').last}"}
+      %fieldset
+        %h3
+          = _("Websocket Workers")
+        .form-horizontal
+          .form-group
+            %label.col-md-2.control-label
+              = _("Count")
+            .col-md-8
+              = select_tag('websocket_worker_count',
+                          options_for_select((0..9).to_a,
+                                            @edit[:new].config[:workers][:worker_base][:websocket_worker][:count].to_i),
+                            :class    => "selectpicker")
+            :javascript
+              miqSelectPickerEvent('websocket_worker_count', "#{url}")

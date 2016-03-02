@@ -127,34 +127,23 @@ module VmCommon
   private :websocket_use_ssl?
 
   def launch_html5_console
-    # Since the virtual console opens multiple ports, we need to specify * here!
-    # After the WebSocket proxying/multiplexing is done on port 443, use the following line as an override:
-    # override_content_security_policy_directives(:connect_src => ["'self'", "wss://#{request.env['SERVER_NAME']}"]
-    override_content_security_policy_directives(:connect_src => ['*'], :img_src => %w(data: 'self'))
-    password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
+    proto = request.ssl? ? 'wss' : 'ws'
+    override_content_security_policy_directives(
+      :connect_src => ["'self'", "#{proto}://#{request.env['HTTP_HOST']}"],
+      :img_src     => %w(data: 'self')
+    )
+    %i(proto secret url).each { |p| params.require(p) }
+    @secret = j(params[:secret])
+    @url = j(params[:url])
 
-    case protocol
+    case params[:proto]
     when 'spice'     # spice, vnc - from rhevm
-      view = "vm_common/console_spice"
+      render(:template => 'vm_common/console_spice', :layout => false)
     when nil, 'vnc'  # nil - from vmware
-      view = "vm_common/console_vnc"
+      render(:template => 'vm_common/console_vnc', :layout => false)
     when 'novnc_url' # from OpenStack
       redirect_to host_address
-      return
     end
-
-    proxy_options = WsProxy.start(
-      :host       => host_address,
-      :host_port  => host_port,
-      :password   => password,
-      :ssl_target => ssl,               # ssl on provider side
-      :encrypt    => websocket_use_ssl? # ssl on web client side
-    )
-    raise _("Console access failed: proxy errror") if proxy_options.nil?
-
-    render :template => view,
-           :layout   => false,
-           :locals   => proxy_options
   end
 
   # VM clicked on in the explorer right cell
@@ -1334,7 +1323,7 @@ module VmCommon
       end
     end
 
-    task_id = record.remote_console_acquire_ticket_queue(ticket_type, session[:userid], MiqServer.my_server.id)
+    task_id = record.remote_console_acquire_ticket_queue(ticket_type, session[:userid])
     add_flash(_("Console access failed: Task start failed: ID [%{id}]") %
                 {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
 
@@ -1352,7 +1341,6 @@ module VmCommon
       add_flash(_("Console access failed: %{message}") % {:message => miq_task.message}, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
-      @sb[console_type.to_sym] = miq_task.task_results # html5, VNC?, MKS or VMRC
     end
     render :update do |page|
       if @flash_array
@@ -1361,7 +1349,7 @@ module VmCommon
       else # open a window to show a VNC or VMWare console
         console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
         page << "miqSparkle(false);"
-        page << "window.open('#{url_for :controller => controller_name, :action => console_action, :id => @record.id}');"
+        page << "window.open('#{url_for(miq_task.task_results.merge(:controller => controller_name, :action => console_action, :id => @record.id))}');"
       end
     end
   end
