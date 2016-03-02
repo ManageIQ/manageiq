@@ -651,11 +651,8 @@ class ReportController < ApplicationController
 
     trees                = {}
     rebuild              = @in_a_form ? false : rebuild_trees
-    if replace_trees.include?(:reports) || rebuild
-      reports_menu_in_sb
-      trees[:reports] = TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
-    end
-    trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules)
+    trees[:reports]      = build_reports_tree      if replace_trees.include?(:reports) || rebuild
+    trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules) || rebuild
     trees[:savedreports] = build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
     trees[:db]           = build_db_tree           if replace_trees.include?(:db) || rebuild
     trees[:widgets]      = build_widgets_tree      if replace_trees.include?(:widgets) || rebuild
