@@ -90,13 +90,13 @@ class ChargebackRate < ApplicationRecord
     fixture_file_currency = File.join(FIXTURE_DIR, "chargeback_rate_detail_currencies.yml")
     if File.exist?(fixture_file_currency)
       fixture = YAML.load_file(fixture_file_currency)
+      fixture_mtime_currency = File.mtime(fixture_file_currency).utc
       fixture.each do |cbr|
         rec = ChargebackRateDetailCurrency.find_by_name(cbr[:name])
         if rec.nil?
           _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]!!!!")
           rec = ChargebackRateDetailCurrency.create(cbr)
         else
-          fixture_mtime_currency = File.mtime(fixture_file_currency).utc
           if fixture_mtime_currency > rec.created_at
             _log.info("Updating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
             rec.update_attributes(cbr)
@@ -116,6 +116,7 @@ class ChargebackRate < ApplicationRecord
 
     if File.exist?(fixture_file)
       fixture = YAML.load_file(fixture_file)
+      fix_mtime = File.mtime(fixture_file).utc
       fixture.each do |cbr|
         rec = find_by_guid(cbr[:guid])
         rates = cbr.delete(:rates)
@@ -136,10 +137,7 @@ class ChargebackRate < ApplicationRecord
           rec = create(cbr)
           rec.chargeback_rate_details.create(rates)
         else
-          fix_mtime = File.mtime(fixture_file).utc
-          fix_mtime_measure = File.mtime(fixture_file_measure).utc
-          fix_mtime_currency = File.mtime(fixture_file_currency).utc
-          if fix_mtime > rec.created_on || fix_mtime_measure > rec.created_on || fix_mtime_currency > rec.created_on
+          if fix_mtime > rec.created_on
             _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
             rec.update_attributes(cbr)
             rec.chargeback_rate_details.clear
