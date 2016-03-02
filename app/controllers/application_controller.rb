@@ -224,6 +224,7 @@ class ApplicationController < ActionController::Base
     elsif session[:report_result_id]
       rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
       @report = rr.report_results
+      @report.report_run_time = rr.last_run_on
     end
     filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
     disable_client_cache
@@ -239,6 +240,7 @@ class ApplicationController < ActionController::Base
     elsif session[:report_result_id]
       rr = MiqReportResult.find(session[:report_result_id])
       @report = rr.report_results
+      @report.report_run_time = rr.last_run_on
     end
     if report || @report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
