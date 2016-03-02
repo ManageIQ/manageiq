@@ -8,42 +8,47 @@
       %span.pficon
     %strong.message
 
+// screen 1
 .import-or-export
-  %h3
-    = _('Import Datastore classes (*.zip)')
-  = form_tag({:action => "upload_import_file"},
-             :target    => "upload_target",
-             :multipart => true,
-             :method    => :post) do
-    .form-horizontal
+  %div.--import
+    %h3
+      = _('Import Datastore classes (*.zip)')
+    %form.form-horizontal{:action    => url_for(:action => "upload_import_file"),
+          :target    => "upload_target",
+          :multipart => true,
+          :method    => :post}
       .form-group
         .col-md-4
           = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
           :javascript
             $(":file").filestyle({icon: false, placeholder: "No file chosen"});
         .col-md-6
-          = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload btn btn-default")
+          %input.upload.btn.btn-default#upload-datastore-import{:type  => 'submit',
+                                                                :value => _("Upload")}
   %hr
-  %h3
-    = _('Export')
-  = form_tag({:action => "export_datastore"},
-             :method => :get) do
-    = image_submit_tag(image_path('toolbars/export.png'),
-                       :alt   => t = _("Export all classes and instances"),
-                       :title => t)
-    = _('Export all classes and instances to a file')
+
+  %div.--export
+    %h3
+      = (t = _('Export all classes and instances to a file'))
+    %a.btn.btn-primary{:href   => url_for(:action => "export_datastore"),
+                       :target => '_blank',
+                       :title  => t}
+      = _('Export')
 
   %hr
-  %h3
-    = (t = _('Reset all Datastore custom classes and instances to default'))
-  = link_to(image_tag(image_path('toolbars/reset.png'),
-                      :alt => t),
-            {:action              => 'reset_datastore'},
-            "data-miq_sparkle_on" => true,
-            :confirm              => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
-            :remote               => true,
-            "data-method"         => :post,
-            :title                => t)
+
+  %div.--reset
+    %h3
+      = (t = _('Reset all Datastore custom classes and instances to default'))
+    %a.btn.btn-danger{:href                 => url_for(:action => 'reset_datastore'),
+                      "data-confirm"        => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
+                      "data-miq_sparkle_on" => true,
+                      "data-remote"         => true,
+                      "data-method"         => :post,
+                      :title                => t}
+      = _('Reset')
+
+// screen 2
 .import-data
   %form#import-form
     %h3
