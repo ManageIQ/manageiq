@@ -24,7 +24,6 @@ describe "Vmware_best_fit_least_utilized" do
   context "Auto placement #set_folder" do
     it "host with a cluster" do
       host = FactoryGirl.create(:host_vmware, :storage, :ems_cluster => ems_cluster, :ext_management_system => ems)
-      MiqServer.seed
 
       datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(ems_cluster) }
       datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(vm_folder) }
@@ -33,6 +32,7 @@ describe "Vmware_best_fit_least_utilized" do
       host_struct = [MiqHashStruct.new(:id => host.id, :evm_object_class => host.class.base_class.name.to_sym)]
       allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
       allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_folders).and_return([datacenter, vm_folder])
+      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(host.storages)
 
       ws.root
 
@@ -41,7 +41,6 @@ describe "Vmware_best_fit_least_utilized" do
 
     it "host without a cluster" do
       host = FactoryGirl.create(:host_vmware, :storage, :ext_management_system => ems)
-      MiqServer.seed
 
       datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(host) }
       datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(vm_folder) }
@@ -50,6 +49,7 @@ describe "Vmware_best_fit_least_utilized" do
       host_struct = [MiqHashStruct.new(:id => host.id, :evm_object_class => host.class.base_class.name.to_sym)]
       allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
       allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_folders).and_return([datacenter, vm_folder])
+      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(host.storages)
 
       ws.root
 
