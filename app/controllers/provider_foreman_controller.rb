@@ -129,20 +129,12 @@ class ProviderForemanController < ApplicationController
 
       end
     else
-      if params[:provtype] == 'Ansible Tower'
-        config_mgr = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find(params[:id])
-        @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.find(config_mgr.provider_id)
-        @provider_cfgmgmt.update_attributes(:name       => params[:name],
-                                            :url        => params[:url],
-                                            :verify_ssl => params[:verify_ssl].eql?("on"))
-      else
-        config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find(params[:id])
-        @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
-        @provider_cfgmgmt.update_attributes(:name       => params[:name],
-                                            :url        => params[:url],
-                                            :verify_ssl => params[:verify_ssl].eql?("on"))
-
-      end
+      @provider_cfgmgmt = find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
+      @provider_cfgmgmt.update_attributes(
+        :name       => params[:name],
+        :url        => params[:url],
+        :verify_ssl => params[:verify_ssl].eql?("on")
+      )
     end
     update_authentication_provider(:save)
   end
@@ -197,41 +189,33 @@ class ProviderForemanController < ApplicationController
   def provider_foreman_form_fields
     assert_privileges("provider_foreman_edit_provider")
     config_mgr = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
-    if config_mgr[:type] == "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-      provider = ManageIQ::Providers::AnsibleTower::Provider.find(config_mgr.provider_id)
-    else
-      provider = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
-    end
-    authentications = Authentication.where(:resource_id => provider[:id], :resource_type => "Provider")
+    provider   = config_mgr.provider
 
     render :json => {:provtype   => model_to_name(config_mgr.type),
                      :name       => provider.name,
                      :url        => provider.url,
                      :verify_ssl => provider.verify_ssl,
-                     :log_userid => authentications[0].userid}
+                     :log_userid => provider.authentications.first.userid}
   end
 
   def authentication_validate
-    if params[:log_password]
+    @provider_cfgmgmt = if params[:log_password]
       if params[:provtype] == 'Ansible Tower'
-        @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
-                                                                            :url        => params[:url],
-                                                                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                            :verify_ssl => params[:verify_ssl].eql?("on"))
+        ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
+                                                        :url        => params[:url],
+                                                        :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                        :verify_ssl => params[:verify_ssl].eql?("on"))
 
       else
-        @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                                       :url        => params[:url],
-                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+        ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                   :url        => params[:url],
+                                                   :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                   :verify_ssl => params[:verify_ssl].eql?("on"))
       end
     else
-      if params[:provtype] == 'Ansible Tower'
-        @provider_cfgmgmt = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id]).provider
-      else
-        @provider_cfgmgmt = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
-      end
+      find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
     end
+
     update_authentication_provider
 
     begin
@@ -372,27 +356,23 @@ class ProviderForemanController < ApplicationController
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then rec = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "root" then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "e"    then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "cp"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     when "xx" then
       case nodes.second
-      when "fr" then rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
-      when "at" then rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
-      when "csf" then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-      when "csa" then  rec = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+      when "at", "fr"   then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+      when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
       end
-    when "e"    then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-    when "cp"   then  rec = find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     end
-    rec
   end
 
   def cs_filter_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root", "xx" then rec = find_record(ConfiguredSystem, params[:id])
-    when "ms" then rec = find_record(ConfiguredSystem, from_cid(params[:id]))
+    when "root", "xx" then find_record(ConfiguredSystem, params[:id])
+    when "ms"         then find_record(ConfiguredSystem, from_cid(params[:id]))
     end
-    rec
   end
 
   def show_record(_id = nil)
