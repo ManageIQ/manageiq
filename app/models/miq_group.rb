@@ -19,7 +19,6 @@ class MiqGroup < ApplicationRecord
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates :description, :presence => true, :uniqueness => true
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
@@ -37,10 +36,6 @@ class MiqGroup < ApplicationRecord
   include TenancyMixin
 
   alias_method :current_tenant, :tenant
-
-  def name
-    description
-  end
 
   def self.next_sequence
     maximum(:sequence).to_i + 1
@@ -202,10 +197,6 @@ class MiqGroup < ApplicationRecord
     users.count
   end
 
-  def description=(val)
-    super(val.to_s.strip)
-  end
-
   def ordered_widget_sets
     if settings && settings[:dashboard_order]
       MiqWidgetSet.find_with_same_order(settings[:dashboard_order]).to_a
@@ -214,6 +205,7 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  # TODO Fix description here
   def self.create_tenant_group(tenant)
     tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
 
@@ -222,10 +214,6 @@ class MiqGroup < ApplicationRecord
       :group_type          => TENANT_GROUP,
       :default_tenant_role => MiqUserRole.default_tenant_role
     ).find_or_create_by!(:tenant_id => tenant.id)
-  end
-
-  def self.sort_by_desc
-    all.sort_by { |g| g.description.downcase }
   end
 
   def self.tenant_groups

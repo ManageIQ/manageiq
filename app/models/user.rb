@@ -77,7 +77,7 @@ class User < ApplicationRecord
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
   # FIXME: amazon_group too?
-  virtual_column :miq_group_description, :type => :string, :uses => :current_group
+  virtual_column :user_group_description, :type => :string, :uses => :current_group
   virtual_column :miq_user_role_name, :type => :string, :uses => {:current_group => :miq_user_role}
 
   def validate
@@ -90,8 +90,8 @@ class User < ApplicationRecord
 
   def current_group_by_description=(group_description)
     if group_description
-      desired_group = miq_groups.detect { |g| g.description == group_description }
-      desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
+      desired_group = user_groups.detect { |g| g.description == group_description }
+      desired_group ||= UserGroup.find_by_description(group_description) if super_admin_user?
       self.current_group = desired_group if desired_group
     end
   end
@@ -119,7 +119,7 @@ class User < ApplicationRecord
   def ldap_group
     current_group.try(:description)
   end
-  alias_method :miq_group_description, :ldap_group
+  alias_method :user_group_description, :ldap_group
 
   def role_allows?(options = {})
     return false if miq_user_role.nil?
@@ -239,7 +239,7 @@ class User < ApplicationRecord
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 
       group_description = user_attributes.delete(:group)
-      group = MiqGroup.in_my_region.find_by_description(group_description)
+      group = UserGroup.in_my_region.find_by_description(group_description)
 
       _log.info("Creating #{user_id} user...")
       user = create(user_attributes)
