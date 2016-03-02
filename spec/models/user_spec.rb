@@ -484,20 +484,6 @@ describe User do
     end
   end
 
-  describe ".all_users_of_group" do
-    it "finds users" do
-      g  = FactoryGirl.create(:miq_group)
-      g2 = FactoryGirl.create(:miq_group)
-
-      FactoryGirl.create(:user)
-      u_one  = FactoryGirl.create(:user, :miq_groups => [g])
-      u_two  = FactoryGirl.create(:user, :miq_groups => [g, g2], :current_group => g)
-
-      expect(described_class.all_users_of_group(g)).to match_array([u_one, u_two])
-      expect(described_class.all_users_of_group(g2)).to match_array([u_two])
-    end
-  end
-
   describe "#current_group_by_description=" do
     subject { FactoryGirl.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
     let(:g1) { FactoryGirl.create(:miq_group) }
