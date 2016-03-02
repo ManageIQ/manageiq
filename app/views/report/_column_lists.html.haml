@@ -26,11 +26,9 @@
             %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
               %i.fa.fa-lg{:class => icon}
           - else
-            // button has attribute onclick='return false;' to not send a form
             %button.btn.btn-default{:title           => t,
                                     :alt             => t,
                                     :remote          => true,
-                                    :onclick         => 'return false;',
                                     "data-submit"    => 'column_lists',
                                     "data-method"    => :post,
                                     "data-click_url" => {:url => url_for(:action => 'form_field_changed',
@@ -62,11 +60,9 @@
               %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
                 %i.fa.fa-lg{:class => icon}
             - else
-              // button has attribute onclick='return false;' to not send a form
               %button.btn.btn-default{:title           => t,
                                       :alt             => t,
                                       :remote          => true,
-                                      :onclick         => 'return false;',
                                       "data-submit"    => 'column_lists',
                                       "data-method"    => :post,
                                       "data-click_url" => {:url => url_for(:action => 'form_field_changed',
