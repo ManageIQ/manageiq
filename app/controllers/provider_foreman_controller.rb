@@ -129,20 +129,12 @@ class ProviderForemanController < ApplicationController
 
       end
     else
-      if params[:provtype] == 'Ansible Tower'
-        config_mgr = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find(params[:id])
-        @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.find(config_mgr.provider_id)
-        @provider_cfgmgmt.update_attributes(:name       => params[:name],
-                                            :url        => params[:url],
-                                            :verify_ssl => params[:verify_ssl].eql?("on"))
-      else
-        config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find(params[:id])
-        @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
-        @provider_cfgmgmt.update_attributes(:name       => params[:name],
-                                            :url        => params[:url],
-                                            :verify_ssl => params[:verify_ssl].eql?("on"))
-
-      end
+      @provider_cfgmgmt = find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
+      @provider_cfgmgmt.update_attributes(
+        :name       => params[:name],
+        :url        => params[:url],
+        :verify_ssl => params[:verify_ssl].eql?("on")
+      )
     end
     update_authentication_provider(:save)
   end
@@ -207,26 +199,23 @@ class ProviderForemanController < ApplicationController
   end
 
   def authentication_validate
-    if params[:log_password]
+    @provider_cfgmgmt = if params[:log_password]
       if params[:provtype] == 'Ansible Tower'
-        @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
-                                                                            :url        => params[:url],
-                                                                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                            :verify_ssl => params[:verify_ssl].eql?("on"))
+        ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
+                                                        :url        => params[:url],
+                                                        :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                        :verify_ssl => params[:verify_ssl].eql?("on"))
 
       else
-        @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                                       :url        => params[:url],
-                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+        ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                   :url        => params[:url],
+                                                   :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                   :verify_ssl => params[:verify_ssl].eql?("on"))
       end
     else
-      if params[:provtype] == 'Ansible Tower'
-        @provider_cfgmgmt = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id]).provider
-      else
-        @provider_cfgmgmt = find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id]).provider
-      end
+      find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
     end
+
     update_authentication_provider
 
     begin
