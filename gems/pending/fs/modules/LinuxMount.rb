@@ -70,7 +70,7 @@ module LinuxMount
         lvName = v.dInfo.lvObj.lvName
         vgName = v.dInfo.lvObj.vgObj.vgName
         fsSpecHash["/dev/#{vgName}/#{lvName}"] = fs
-        fsSpecHash["/dev/mapper/#{vgName}-#{lvName}"] = fs
+        fsSpecHash["/dev/mapper/#{vgName.gsub('-','--')}-#{lvName.gsub('-','--')}"] = fs
         fsSpecHash["UUID=#{v.dInfo.lvObj.lvId}"] = fs
         $log.debug "LinuxMount: Volume = #{v.dInfo.localDev}, partition = #{v.partNum} is a logical volume" if $log.debug?
         next
