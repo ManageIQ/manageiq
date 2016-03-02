@@ -1,14 +1,10 @@
 angular.module('miq.util').factory('chartsMixin', function() {
   'use strict';
 
-  var hourlyTimeTooltip = function(d) {
-    var theMoment = moment(d[0].x);
-    return _.template('<table class="c3-tooltip">' +
-    '  <tbody>' +
-    '    <td class="value"><%- col1 %></td>' +
-    '    <td class="value text-nowrap"><%- col2 %></td>' +
-    '  </tbody>' +
-    '</table>')({col1: theMoment.format('h:mm A'), col2: d[0].value + ' ' + d[0].name});
+  var hourlyTimeTooltip = function (data) {
+    var theMoment = moment(data[0].x);
+    return _.template('<div class="tooltip-inner"><%- col1 %>: <%- col2 %></div>')
+      ({col1: theMoment.format('h:mm A'), col2: data[0].value + ' ' + data[0].name});
   };
 
   var chartConfig = {
