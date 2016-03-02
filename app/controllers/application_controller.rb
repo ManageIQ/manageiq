@@ -202,14 +202,7 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in text format
   def render_txt
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
-      @report = miq_task.task_results
-    elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
-      @report = rr.report_results
-      @report.report_run_time = rr.last_run_on
-    end
+    @report = report_for_rendering
     filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
     disable_client_cache
     send_data(@report.to_text,
@@ -218,14 +211,7 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in csv format
   def render_csv
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
-      @report = miq_task.task_results
-    elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
-      @report = rr.report_results
-      @report.report_run_time = rr.last_run_on
-    end
+    @report = report_for_rendering
     filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
     disable_client_cache
     send_data(@report.to_csv,
@@ -234,14 +220,7 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in pdf format
   def render_pdf(report = nil)
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])
-      @report = miq_task.task_results
-    elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id])
-      @report = rr.report_results
-      @report.report_run_time = rr.last_run_on
-    end
+    @report = report_for_rendering
     if report || @report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
       rr =  (report || @report).build_create_results(:userid => userid) # Create rr from the report object
@@ -960,6 +939,18 @@ class ApplicationController < ActionController::Base
         {:tenant_name       => tenant_name,
          :group             => ui_lookup(:model => "MiqGroup"),
          :group_description => current_user.current_group.description}
+    end
+  end
+
+  def report_for_rendering
+    if session[:rpt_task_id]
+      miq_task = MiqTask.find(session[:rpt_task_id])
+      miq_task.task_results
+    elsif session[:report_result_id]
+      rr = MiqReportResult.find(session[:report_result_id])
+      report = rr.report_results
+      report.report_run_time = rr.last_run_on
+      report
     end
   end
 
