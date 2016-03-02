@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_reports, :dependent => :nullify
   has_many   :service_orders, :dependent => :nullify
-  belongs_to :current_group, :class_name => "MiqGroup"
+  belongs_to :current_group, :class_name => "UserGroup"
   has_and_belongs_to_many :user_groups
   scope      :admin, -> { where(:userid => "admin") }
 
@@ -32,7 +32,7 @@ class User < ApplicationRecord
   validates_uniqueness_of :userid, :scope => :region
   validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
     :allow_nil => true, :message => "must be a valid email address"
-  validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
+  validates_inclusion_of  :current_group, :in => proc { |u| u.user_groups }, :allow_nil => true
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
   # with the class method of the same name (User.authenticate)
@@ -190,7 +190,7 @@ class User < ApplicationRecord
     settings.fetch_path(:display, :timezone) || self.class.server_timezone
   end
 
-  def miq_groups=(groups)
+  def user_groups=(groups)
     super
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
   end
@@ -211,7 +211,7 @@ class User < ApplicationRecord
     if limited_self_service?
       vms
     elsif self_service?
-      (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
+      (vms + user_groups.includes(:vms).collect(&:vms).flatten).uniq
     else
       Vm.all
     end
@@ -242,9 +242,9 @@ class User < ApplicationRecord
       group = UserGroup.in_my_region.find_by_description(group_description)
 
       _log.info("Creating #{user_id} user...")
-      user = create(user_attributes)
-      user.miq_groups = [group] if group
-      user.save
+      user = create!(user_attributes)
+      user.user_groups = [group] if group
+      user.save!
       _log.info("Creating #{user_id} user... Complete")
     end
   end
@@ -280,6 +280,6 @@ class User < ApplicationRecord
   end
 
   def self.with_current_user_groups
-    current_user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
+    current_user.admin_user? ? all : includes(:user_groups).where(:user_groups => {:id => current_user.user_group_ids})
   end
 end
