@@ -1284,4 +1284,23 @@ describe ReportController do
       end
     end
   end
+
+  describe "#reports_menu_in_sb" do
+    let(:user) { FactoryGirl.create(:user_with_group) }
+    subject! { FactoryGirl.create(:miq_report, :rpt_type => "Custom", :miq_group => user.current_group) }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      login_as user
+    end
+
+    it "it returns corrent name for custom folder" do
+      controller.instance_variable_set(:@_params, :controller => "report", :action => "explorer")
+      controller.instance_variable_set(:@sb, {})
+      allow(controller).to receive(:get_node_info)
+      controller.send(:reports_menu_in_sb)
+      rpt_menu = controller.instance_variable_get(:@sb)[:rpt_menu]
+      expect(rpt_menu.first.first).to eq("#{user.current_tenant.name} (EVM Group): #{user.current_group.name}")
+    end
+  end
 end
