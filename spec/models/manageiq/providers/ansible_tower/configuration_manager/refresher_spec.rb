@@ -23,15 +23,16 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
 
       assert_counts
       assert_configured_system
-      assert_configuration_script
+      assert_configuration_script_with_nil_survey_spec
+      assert_configuration_script_with_survey_spec
     end
   end
 
   def assert_counts
     expect(Provider.count).to                                    eq(1)
     expect(configuration_manager).to                             have_attributes(:api_version => "2.4.2")
-    expect(configuration_manager.configured_systems.count).to    eq(58)
-    expect(configuration_manager.configuration_scripts.count).to eq(5)
+    expect(configuration_manager.configured_systems.count).to    eq(75)
+    expect(configuration_manager.configuration_scripts.count).to eq(7)
   end
 
   def assert_configured_system
@@ -44,14 +45,27 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
     )
   end
 
-  def assert_configuration_script
+  def assert_configuration_script_with_nil_survey_spec
     system = configuration_manager.configuration_scripts.where(:name => "Ansible-JobTemplate").first
-
     expect(system).to have_attributes(
       :name        => "Ansible-JobTemplate",
       :description => "Ansible-JobTemplate-Description",
       :manager_ref => "149",
       :variables   => "{\n \"abc\": 123\n}",
+      :survey_spec => nil
     )
+  end
+
+  def assert_configuration_script_with_survey_spec
+    system = configuration_manager.configuration_scripts.where(:name => "Ansible-JobTemplate-Survey").first
+    expect(system).to have_attributes(
+      :name        => "Ansible-JobTemplate-Survey",
+      :description => "Ansible-JobTemplate-Description",
+      :manager_ref => "155",
+      :variables   => "{\n \"abc\": 123\n}"
+    )
+    survey = JSON.parse(system.survey_spec)
+    expect(survey).to be_a Hash
+    expect(survey['spec'].first['index']).to eq 0
   end
 end
