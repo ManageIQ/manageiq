@@ -372,7 +372,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
       :uid_ems       => "45b5a710-eccd-11e1-bc2c-005056a217db",
       :name          => "Default",
-      :is_datacenter => true,
+      :type          => "Datacenter",
 
       :folder_path   => "Datacenters/Default"
     )
@@ -382,7 +382,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
       :name          => "Datacenters",
-      :is_datacenter => false,
+      :type          => nil,
 
       :folder_path   => "Datacenters"
     )
@@ -392,7 +392,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => nil,
       :uid_ems       => "45b5a710-eccd-11e1-bc2c-005056a217db_vm",
       :name          => "vm",
-      :is_datacenter => false,
+      :type          => nil,
 
       :folder_path   => "Datacenters/Default/vm"
     )
@@ -518,7 +518,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
       :uid_ems       => "45b5a710-eccd-11e1-bc2c-005056a217db",
       :name          => "Default",
-      :is_datacenter => true,
+      :type          => "Datacenter",
 
       :folder_path   => "Datacenters/Default"
     )
@@ -528,7 +528,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
       :name          => "Datacenters",
-      :is_datacenter => false,
+      :type          => nil,
 
       :folder_path   => "Datacenters"
     )
@@ -538,7 +538,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => nil,
       :uid_ems       => "45b5a710-eccd-11e1-bc2c-005056a217db_vm",
       :name          => "vm",
-      :is_datacenter => false,
+      :type          => nil,
 
       :folder_path   => "Datacenters/Default/vm"
     )
@@ -621,7 +621,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
       :uid_ems       => "45b5a710-eccd-11e1-bc2c-005056a217db",
       :name          => "Default",
-      :is_datacenter => true,
+      :type          => "Datacenter",
 
       :folder_path   => "Datacenters/Default"
     )
@@ -631,7 +631,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
       :name          => "Datacenters",
-      :is_datacenter => false,
+      :type          => nil,
 
       :folder_path   => "Datacenters"
     )
@@ -641,7 +641,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :ems_ref_obj   => nil,
       :uid_ems       => "45b5a710-eccd-11e1-bc2c-005056a217db_vm",
       :name          => "vm",
-      :is_datacenter => false,
+      :type          => nil,
 
       :folder_path   => "Datacenters/Default/vm"
     )
@@ -650,7 +650,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters"] => {
-        [EmsFolder, "Default"] => {
+        [Datacenter, "Default"] => {
           [EmsFolder, "host"] => {
             [EmsCluster, "iSCSI"] => {
               [ResourcePool, "Default for Cluster iSCSI"] => {
@@ -709,7 +709,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test1"]                     => {},
           }
         },
-        [EmsFolder, "NFS"]     => {
+        [Datacenter, "NFS"]     => {
           [EmsFolder, "host"] => {
             [EmsCluster, "NFS"] => {
               [ResourcePool, "Default for Cluster NFS"] => {
