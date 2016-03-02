@@ -11,6 +11,7 @@
 .loadpath
 .project
 .redcar/
+.rubocop-*
 .ruby-version
 .sass-cache/
 .tags
