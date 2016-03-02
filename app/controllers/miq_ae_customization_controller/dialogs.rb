@@ -902,7 +902,7 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_dynamic] = key[:dynamic] = false
         @edit[:field_read_only] = key[:read_only] = false
 
-        if params[:field_typ].include?("TextBox")
+        if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(params[:field_typ])
           @edit[:field_protected]      = key[:protected] = false
           @edit[:field_validator_type] = key[:validator_type] = nil
           @edit[:field_validator_rule] = key[:validator_rule] = nil
@@ -947,7 +947,7 @@ module MiqAeCustomizationController::Dialogs
         end
       end
 
-      if @edit[:field_typ].include?('TextBox')
+      if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(@edit[:field_typ])
         if params[:field_protected]
           @edit[:field_protected] = key[:protected] = (params[:field_protected] == "true")
         else
@@ -1039,7 +1039,7 @@ module MiqAeCustomizationController::Dialogs
         :field_trigger_auto_refresh => field[:trigger_auto_refresh]
       )
 
-      if field[:typ].include?('TextBox')
+      if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(field[:typ])
         @edit[:field_protected]      = field[:protected]
         @edit[:field_validator_type] = field[:validator_type]
         @edit[:field_validator_rule] = field[:validator_rule]
@@ -1183,7 +1183,7 @@ module MiqAeCustomizationController::Dialogs
               fld[:required] = !!f.required
 
             elsif f.type.include?("Text")
-              if f.type.include?('TextBox')
+              if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(f.type)
                 fld[:protected]      = f.protected?
                 fld[:validator_type] = f.validator_type
                 fld[:validator_rule] = f.validator_rule
@@ -1282,7 +1282,7 @@ module MiqAeCustomizationController::Dialogs
                     fld[:required] = field[:required]
 
                   elsif field[:typ] =~ /Text/
-                    if field[:typ].include?('TextBox')
+                    if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(field[:typ])
                       fld[:protected]      = field[:protected]
                       fld[:validator_type] = field[:validator_type]
                       fld[:validator_rule] = field[:validator_rule]
