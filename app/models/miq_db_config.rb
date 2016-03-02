@@ -74,18 +74,13 @@ class MiqDbConfig
     end
   end
 
-  def self.raw_config
-    # TODO: We must stringify since ConfigurationEncoder will symbolize on load and stringify on save.
-    Vmdb::ConfigurationEncoder.stringify(database_configuration)
-  end
-
   def save
     valid = self.valid?(:from_save => true)
     return @errors unless valid == true
 
     _log.info("Validation was successful, saving new settings: #{options.merge(@@pwd_mask).inspect}")
     vmdb_config = save_without_verify
-    MiqRegion.sync_with_db_region(Vmdb::ConfigurationEncoder.stringify(vmdb_config.config))
+    MiqRegion.sync_with_db_region(vmdb_config.config)
     true
   end
 
