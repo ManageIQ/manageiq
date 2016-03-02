@@ -1,5 +1,7 @@
 def stub_settings(hash)
-  stub_const("Settings", Config::Options.new.merge!(hash))
+  settings = Config::Options.new.merge!(hash)
+  stub_const("Settings", settings)
+  allow(Vmdb::Settings).to receive(:for_resource) { settings }
 end
 
 def stub_server_configuration(config, config_name = "vmdb")

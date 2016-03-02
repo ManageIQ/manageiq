@@ -407,7 +407,7 @@ describe MiqWidget do
     end
 
     it "with report_sync" do
-      stub_server_configuration(:product => {:report_sync => true})
+      stub_settings(:product => {:report_sync => true})
 
       user_est =  FactoryGirl.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")

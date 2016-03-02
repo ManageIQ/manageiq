@@ -21,7 +21,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
 
   context "when configured with skips" do
     before(:each) do
-      stub_server_configuration(
+      stub_settings(
         :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
       )
     end

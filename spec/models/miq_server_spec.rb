@@ -339,12 +339,12 @@ describe MiqServer do
 
       context "#server_timezone" do
         it "utc with no system default" do
-          stub_server_configuration(:server => {:timezone => nil})
+          stub_settings(:server => {:timezone => nil})
           expect(@miq_server.server_timezone).to eq("UTC")
         end
 
         it "uses system default" do
-          stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+          stub_settings(:server => {:timezone => "Eastern Time (US & Canada)"})
           expect(@miq_server.server_timezone).to eq("Eastern Time (US & Canada)")
         end
       end
