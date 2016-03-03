@@ -17,8 +17,8 @@ class OpsController
       root_node = {
         :key      => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
         :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
-        :title    => root[:name],
-        :tooltip  => root[:description] || root[:name],
+        :title    => _(root[:name]),
+        :tooltip  => _(root[:description]) || _(root[:name]),
         :addClass => "cfme-cursor-default",
         :expand   => true,
         :select   => @role_features.include?(root_feature)
@@ -40,7 +40,7 @@ class OpsController
         t_node = {
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{feature_title}",
           :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
-          :title   => feature_title,
+          :title   => _(feature_title),
           :tooltip => _("%{title} Main Tab") % {:title => feature_title}
         }
 
@@ -83,8 +83,8 @@ class OpsController
         f_node = {
           :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
           :icon    => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
-          :title   => details[:name],
-          :tooltip => details[:description] || details[:name]
+          :title   => _(details[:name]),
+          :tooltip => _(details[:description]) || _(details[:name])
         }
         f_node[:hideCheckbox] = true if details[:protected]
 
