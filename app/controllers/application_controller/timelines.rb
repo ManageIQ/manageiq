@@ -347,6 +347,7 @@ module ApplicationController::Timelines
       when "Hourly"
         tl_rpt = @tl_options[:tl_show] == "timeline" ? "tl_events_hourly" : "tl_policy_events_hourly"
         @report = tl_get_rpt(tl_rpt)
+        @report.headers.map! { |header| _(header) }
         mm, dd, yy = @tl_options[:hourly_date].split("/")
         from_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 00:00:00", session[:user_tz]) # Get tz 12am in user's time zone
         to_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 23:59:59", session[:user_tz])   # Get tz 11pm in user's time zone
@@ -367,6 +368,7 @@ module ApplicationController::Timelines
       when "Daily"
         tl_rpt = @tl_options[:tl_show] == "timeline" ? "tl_events_daily" : "tl_policy_events_daily"
         @report = tl_get_rpt(tl_rpt)
+        @report.headers.map! { |header| _(header) }
         from = Date.parse(@tl_options[:daily_date]) - @tl_options[:days].to_i
         from_dt = create_time_in_utc("#{from.year}-#{from.month}-#{from.day} 00:00:00", session[:user_tz])  # Get tz 12am in user's time zone
         mm, dd, yy = @tl_options[:daily_date].split("/")
