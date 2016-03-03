@@ -13,8 +13,8 @@ FactoryGirl.define do
 
     after(:build) do |user, evaluator|
       if evaluator.role.present?
-        system_roles = YAML.load_file(MiqUserRole::FIXTURE_YAML)
-        seeded_role = system_roles.detect { |role| role[:name] == "EvmRole-#{evaluator.role}" }
+        @system_roles ||= YAML.load_file(MiqUserRole::FIXTURE_YAML)
+        seeded_role = @system_roles.detect { |role| role[:name] == "EvmRole-#{evaluator.role}" }
 
         if seeded_role.present?
           user.read_only = seeded_role[:read_only]
