@@ -71,7 +71,7 @@
                         "selectpicker-for-select-tag" => "")
         %div{"ng-if" => @socket_options.length <= 1}
           @socket_options[0]
-      -  if @socket_options.length > 1
+      -  if @cores_options.length > 1
         .form-group{"ng-class" => "{'has-error': angularForm.cores_per_socket_count.$invalid}"}
           %label.col-sm-2.control-label
             = _('Cores Per Socket')
