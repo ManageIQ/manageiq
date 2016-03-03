@@ -140,73 +140,71 @@ describe User do
     end
   end
 
-  context "miq_groups" do
+  context "#authorize_ldap" do
+    before(:each) do
+      @fq_user = "thin1@manageiq.com"
+      @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
+      @auth_config =
+        {:authentication => {:ldapport => "389",
+                             :basedn => "dc=manageiq,dc=com",
+                             :follow_referrals => false,
+                             :get_direct_groups => true,
+                             :bind_dn => "evm_demo@manageiq.com",
+                             :mode => "ldap", :user_proxies => [{}],
+                             :user_type => "userprincipalname",
+                             :bind_pwd => "blah",
+                             :ldap_role => true,
+                             :user_suffix => "manageiq.com",
+                             :group_memberships_max_depth => 2,
+                             :ldaphost => ["192.168.254.15"]}
+        }
+      stub_server_configuration(@auth_config)
+      @miq_ldap = double('miq_ldap')
+      allow(@miq_ldap).to receive_messages(:bind => false)
+    end
+
+    it "will fail task if user object not found in ldap" do
+      allow(@miq_ldap).to receive_messages(:get_user_object => nil)
+
+      expect(AuditEvent).to receive(:failure).once
+      authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
+      allow(authenticate).to receive_messages(:ldap => @miq_ldap)
+
+      expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
+
+      @task.reload
+      expect(@task.state).to eq("Finished")
+      expect(@task.status).to eq("Error")
+      expect(@task.message).to match(/unable to find user object/)
+    end
+
+    it "will fail task if user group doesn't match an EVM role" do
+      allow(@miq_ldap).to receive_messages(:get_user_object => "user object")
+      allow(@miq_ldap).to receive_messages(:get_attr => nil)
+      allow(@miq_ldap).to receive_messages(:normalize => "a-username")
+
+      authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
+      allow(authenticate).to receive_messages(:ldap => @miq_ldap)
+      allow(authenticate).to receive_messages(:groups_for => [])
+
+      expect(AuditEvent).to receive(:failure).once
+      expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
+
+      @task.reload
+      expect(@task.state).to eq("Finished")
+      expect(@task.status).to eq("Error")
+      expect(@task.message).to match(/unable to match user's group membership/)
+    end
+  end
+
+  context "group assignment" do
     before(:each) do
       @group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup 1")
       @group2 = FactoryGirl.create(:miq_group, :description => "EvmGroup 2")
       @group3 = FactoryGirl.create(:miq_group, :description => "EvmGroup 3")
     end
 
-    context "#authorize_ldap" do
-      before(:each) do
-        @fq_user = "thin1@manageiq.com"
-        @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
-        @auth_config =
-          {:authentication =>
-            {:ldapport => "389",
-              :basedn => "dc=manageiq,dc=com",
-              :follow_referrals => false,
-              :get_direct_groups => true,
-              :bind_dn => "evm_demo@manageiq.com",
-              :mode => "ldap", :user_proxies => [{}],
-              :user_type => "userprincipalname",
-              :bind_pwd => "blah",
-              :ldap_role => true,
-              :user_suffix => "manageiq.com",
-              :group_memberships_max_depth => 2,
-              :ldaphost => ["192.168.254.15"]
-            }
-          }
-        stub_server_configuration(@auth_config)
-        @miq_ldap = double('miq_ldap')
-        allow(@miq_ldap).to receive_messages(:bind => false)
-      end
-
-      it "will fail task if user object not found in ldap" do
-        allow(@miq_ldap).to receive_messages(:get_user_object => nil)
-
-        expect(AuditEvent).to receive(:failure).once
-        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
-        allow(authenticate).to receive_messages(:ldap => @miq_ldap)
-
-        expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
-
-        @task.reload
-        expect(@task.state).to eq("Finished")
-        expect(@task.status).to eq("Error")
-        expect(@task.message).to match(/unable to find user object/)
-      end
-
-      it "will fail task if user group doesn't match an EVM role" do
-        allow(@miq_ldap).to receive_messages(:get_user_object => "user object")
-        allow(@miq_ldap).to receive_messages(:get_attr => nil)
-        allow(@miq_ldap).to receive_messages(:normalize => "a-username")
-
-        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
-        allow(authenticate).to receive_messages(:ldap => @miq_ldap)
-        allow(authenticate).to receive_messages(:groups_for => [])
-
-        expect(AuditEvent).to receive(:failure).once
-        expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
-
-        @task.reload
-        expect(@task.state).to eq("Finished")
-        expect(@task.status).to eq("Error")
-        expect(@task.message).to match(/unable to match user's group membership/)
-      end
-    end
-
-    context "#miq_groups=" do
+    describe "#miq_groups=" do
       before(:each) do
         @user = FactoryGirl.create(:user, :miq_groups => [@group3])
       end
@@ -236,7 +234,7 @@ describe User do
       end
     end
 
-    context "#current_group=" do
+    describe "#current_group=" do
       before(:each) do
         @user = FactoryGirl.create(:user, :miq_groups => [@group1, @group2])
       end
