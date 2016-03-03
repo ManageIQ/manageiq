@@ -158,7 +158,7 @@ class ResourcePool < ApplicationRecord
   end
 
   def parent_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !["host", "vm"].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   # Overridden from AggregationMixin to provide hosts related to this RP

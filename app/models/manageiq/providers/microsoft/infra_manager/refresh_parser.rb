@@ -500,33 +500,33 @@ module ManageIQ::Providers::Microsoft
       # was designed specifically for a VMware hierarchy.
 
       host_folder = {
-        :name          => 'host',
-        :type          => 'EmsFolder',
-        :uid_ems       => "host_folder",
-        :ems_ref       => "host_folder",
-        :ems_children  => set_host_folder_children
+        :name         => 'host',
+        :type         => 'EmsFolder',
+        :uid_ems      => "host_folder",
+        :ems_ref      => "host_folder",
+        :ems_children => set_host_folder_children
 
       }
       vm_folder = {
-        :name          => 'vm',
-        :type          => 'EmsFolder',
-        :uid_ems       => "vm_folder",
-        :ems_ref       => "vm_folder",
-        :ems_children  => {:vms => @data[:vms]}
+        :name         => 'vm',
+        :type         => 'EmsFolder',
+        :uid_ems      => "vm_folder",
+        :ems_ref      => "vm_folder",
+        :ems_children => {:vms => @data[:vms]}
       }
       scvmm_folder = {
-        :name          => 'SCVMM',
-        :type          => 'Datacenter',
-        :uid_ems       => "scvmm",
-        :ems_ref       => "scvmm",
-        :ems_children  => {:folders => [host_folder, vm_folder]}
+        :name         => 'SCVMM',
+        :type         => 'Datacenter',
+        :uid_ems      => "scvmm",
+        :ems_ref      => "scvmm",
+        :ems_children => {:folders => [host_folder, vm_folder]}
       }
       dc_folder = {
-        :name          => 'Datacenters',
-        :type          => 'EmsFolder',
-        :uid_ems       => 'root_dc',
-        :ems_ref       => 'root_dc',
-        :ems_children  => {:folders => [scvmm_folder]}
+        :name         => 'Datacenters',
+        :type         => 'EmsFolder',
+        :uid_ems      => 'root_dc',
+        :ems_ref      => 'root_dc',
+        :ems_children => {:folders => [scvmm_folder]}
       }
       @data[:folders]  = [dc_folder, scvmm_folder, host_folder, vm_folder]
       @data[:ems_root] = dc_folder

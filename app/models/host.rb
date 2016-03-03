@@ -702,7 +702,7 @@ class Host < ApplicationRecord
   end
 
   def owning_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !["host", "vm"].include?(a.name) }
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) }
   end
 
   def parent_datacenter

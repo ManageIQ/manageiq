@@ -339,33 +339,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     # nic.network.should == network # TODO: Hook up this connection
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
-      :name          => "Default",
-      :type          => "Datacenter",
+      :ems_ref     => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :ems_ref_obj => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085",
+      :name        => "Default",
+      :type        => "Datacenter",
 
-      :folder_path   => "Datacenters/Default"
+      :folder_path => "Datacenters/Default"
     )
 
     expect(v.parent_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "root_dc",
-      :name          => "Datacenters",
-      :type          => nil,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "root_dc",
+      :name        => "Datacenters",
+      :type        => nil,
 
-      :folder_path   => "Datacenters"
+      :folder_path => "Datacenters"
     )
 
     expect(v.parent_blue_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
-      :name          => "vm",
-      :type          => nil,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
+      :name        => "vm",
+      :type        => nil,
 
-      :folder_path   => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/Default/vm"
     )
   end
 
@@ -494,33 +494,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(v.hardware.networks.size).to eq(0)
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
-      :name          => "Default",
-      :type          => "Datacenter",
+      :ems_ref     => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :ems_ref_obj => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085",
+      :name        => "Default",
+      :type        => "Datacenter",
 
-      :folder_path   => "Datacenters/Default"
+      :folder_path => "Datacenters/Default"
     )
 
     expect(v.parent_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "root_dc",
-      :name          => "Datacenters",
-      :type          => nil,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "root_dc",
+      :name        => "Datacenters",
+      :type        => nil,
 
-      :folder_path   => "Datacenters"
+      :folder_path => "Datacenters"
     )
 
     expect(v.parent_blue_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
-      :name          => "vm",
-      :type          => nil,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
+      :name        => "vm",
+      :type        => nil,
 
-      :folder_path   => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/Default/vm"
     )
   end
 
@@ -597,33 +597,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(v.hardware.networks.size).to eq(0)
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
-      :name          => "Default",
-      :type          => "Datacenter",
+      :ems_ref     => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :ems_ref_obj => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085",
+      :name        => "Default",
+      :type        => "Datacenter",
 
-      :folder_path   => "Datacenters/Default"
+      :folder_path => "Datacenters/Default"
     )
 
     expect(v.parent_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "root_dc",
-      :name          => "Datacenters",
-      :type          => nil,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "root_dc",
+      :name        => "Datacenters",
+      :type        => nil,
 
-      :folder_path   => "Datacenters"
+      :folder_path => "Datacenters"
     )
 
     expect(v.parent_blue_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
-      :name          => "vm",
-      :type          => nil,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
+      :name        => "vm",
+      :type        => nil,
 
-      :folder_path   => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/Default/vm"
     )
   end
 
