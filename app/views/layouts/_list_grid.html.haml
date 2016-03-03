@@ -49,7 +49,7 @@
           - if h[:sort]
             %a{:href => '#',
                :onclick => "miqGridSort(#{h[:col_idx] + 1})"}
-              = h[:text]
+              = _(h[:text])
           - else
             = h[:text]
 
