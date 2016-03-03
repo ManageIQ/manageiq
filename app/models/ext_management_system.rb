@@ -301,16 +301,20 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def endpoint_builder(options)
-    endpoint = endpoints.detect { |e| e.role == options[:role] }
-    endpoint || endpoints.build(options)
+    endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
+    # update or create
+    unless endpoint.nil?
+      endpoint.update(options)
+    else
+      endpoints.build(options)
+    end
   end
 
   def authentication_builder(options)
-    auth = authentications.detect { |a| a.authtype == options[:role] }
     role = options.delete(:role)
     creds = {}
     creds[role] = options
-    auth || update_authentication(creds)
+    update_authentication(creds)
   end
 
   def connection_by_role(role = "default")
