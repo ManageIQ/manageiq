@@ -96,6 +96,8 @@ RSpec.configure do |config|
     ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
 
+  config.before(:each, :rest_api => true) { init_api_spec_env }
+
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end
