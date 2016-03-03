@@ -4,14 +4,16 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
   let(:connection) do
     double(:connection,
            :api => double(:api,
-                          :hosts         => double(:hosts, :all => all_hosts),
+                          :hosts         => double(:hosts,         :all => all_hosts),
+                          :inventories   => double(:inventories,   :all => all_inventories),
                           :job_templates => double(:job_templates, :all => all_job_templates)
                          )
           )
   end
   let(:parser)            { described_class.new(manager) }
   let(:manager)           { FactoryGirl.create(:configuration_manager_ansible_tower, :provider) }
-  let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new("id" => i, "name" => "h#{i}") } }
+  let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new("id" => i, "name" => "host#{i}", "inventory" => i) } }
+  let(:all_inventories)   { (1..2).collect { |i| AnsibleTowerClient::Inventory.new("id" => i, "name" => "inventory#{i}") } }
   let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new("id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload") } }
 
   it "#configuration_manager_inv_to_hashes" do
@@ -22,9 +24,10 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
 
     expect(parser.instance_variable_get(:@data)[:configured_systems].count).to eq(2)
     expect(parser.instance_variable_get(:@data)[:configured_systems].first).to eq(
-      :manager_ref => "1",
-      :hostname    => "h1",
-      :type        => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem"
+      :manager_ref          => "1",
+      :hostname             => "host1",
+      :inventory_root_group => {:ems_ref => "1", :name => "inventory1", :type => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup"},
+      :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem"
     )
 
     expect(parser.instance_variable_get(:@data)[:configuration_scripts].count).to eq(2)
@@ -34,6 +37,13 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
       :description => "description1",
       :variables   => "some_json_payload",
       :survey_spec => "some_hash_payload"
+    )
+
+    expect(parser.instance_variable_get(:@data)[:ems_folders].count).to eq(2)
+    expect(parser.instance_variable_get(:@data)[:ems_folders].first).to eq(
+      :ems_ref => "1",
+      :name    => "inventory1",
+      :type    => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup"
     )
   end
 end
