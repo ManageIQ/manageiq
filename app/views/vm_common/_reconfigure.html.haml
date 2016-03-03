@@ -22,7 +22,7 @@
                             "name"        => "memory",
                             "ng-model"    => "reconfigureModel.memory",
                             "ng-if"       => "reconfigureModel.cb_memory",
-                            "maxlength"   => "#{MAX_NAME_LEN}",
+                            "maxlength"   => "50",
                             "ng-pattern"  => "/^[-+]?[0-9]+$/",
                             "miqrequired" => "",
                             "checkchange" => "",
@@ -33,9 +33,9 @@
       .col-md-2
         = select_tag('mem_type',
                      options_for_select(%w(MB GB)),
-                     "ng-if"                       => "reconfigureModel.cb_memory",
-                     "ng-model"                    => "reconfigureModel.mem_type",
+                     "ng-model"                    => "reconfigureModel.memory_type",
                      "ng-change"                   => "memtypeChanged()",
+                     "maxlength"                   => "20",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
@@ -57,48 +57,49 @@
       %hr
       %h3
         = _('Processor Options')
-      .form-group{"ng-class" => "{'has-error': angularForm.socket_count.$invalid}"}
-        %label.col-sm-2.control-label
-          = _('Sockets')
-        %div{"ng-if" => @socket_options.length > 1}
-          .col-md-2
-          = select_tag('cores_per_socket_count',
-                        options_for_select([["<#{_('Choose>')}", nil]] + @socket_options),
+      - if @socket_options.length > 1
+        .form-group{"ng-class" => "{'has-error': angularForm.socket_count.$invalid}"}
+          %label.col-sm-2.control-label
+            = _('Sockets')
+          .col-md-1
+            = select_tag('cores_per_socket_count',
+                        options_for_select(@socket_options),
                         "ng-model"                    => "reconfigureModel.socket_count",
-                        "checkchange"                 => "",
                         "ng-change"                   => "processorValueChanged()",
-                        "ng-required"                 => "reconfigureModel.socket_count",
+                        "required"                    => "",
+                        "maxlength"                   => "50",
                         "selectpicker-for-select-tag" => "")
-        %div{"ng-if" => @socket_options.length <= 1}
-          @socket_options[0]
+            - if @socket_options.length <= 1
+              @socket_options[0]
       -  if @cores_options.length > 1
         .form-group{"ng-class" => "{'has-error': angularForm.cores_per_socket_count.$invalid}"}
           %label.col-sm-2.control-label
             = _('Cores Per Socket')
-          %div{"ng-if" => @cores_options.length > 1}
-            .col-md-2
+          .col-md-1
             = select_tag('socket_count',
-                          options_for_select([["<#{_('Choose>')}", nil]] + @cores_options),
+                          options_for_select(@cores_options),
                           "ng-model"                    => "reconfigureModel.cores_per_socket_count",
-                          "checkchange"                 => "",
                           "ng-change"                   => "processorValueChanged()",
-                          "ng-required"                 => "reconfigureModel.cores_per_socket_count",
+                          "required"                    => "",
+                          "maxlength"                   => "50",
                           "selectpicker-for-select-tag" => "")
-            %div{"ng-if" => @cores_options.length <= 1}
+            - if @cores_options.length <= 1
               @cores_options[0]
-        .form-group
-          %label.col-md-2.control-label
+        .form-group{"ng-class" => "{'has-error': angularForm.total_cpus.$invalid}"}
+          %label.col-sm-2.control-label
             = _('Total Processors')
-          .col-md-4
+          .col-md-1
             %input.form-control{"type"        => "text",
                                 "id"          => "textInput-markup",
-                                "name"        => "total_cpu",
+                                "name"        => "total_cpus",
                                 "ng-model"    => "reconfigureModel.total_cpus",
                                 "checkchange" => "",
+                                :ng_max       => "reconfigureModel.max__total_vcpus",
                                 :readonly     => '',
+                                "maxlength"   => "20",
                                 "auto-focus"  => ""}
-            %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpu.$invalid"}
-              = _(" Total memory value not valid ")
+            %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
+              = _(" Total memory value larger than the maximum allowed")
 
   %hr
   %hr
@@ -112,7 +113,7 @@
             - @gtl_type = "list"
             = render :partial => "layouts/gtl"
 
-  %table{:width => "100%"}
+  %table{:width => "100%", :align => "bottom"}
     %tr
       %td#buttons_on{:align => "right"}
         = button_tag(_("Submit"),
@@ -121,6 +122,14 @@
                      "ng-click"    => "submitClicked()",
                      "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
                      "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+        = button_tag("Reset",
+             :class        => "btn btn-default btn-disabled",
+             :alt          => "Reset changes",
+             :title        => "Reset changes",
+             "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
+             "ng-click"    => "resetClicked()",
+             "ng-disabled" => "angularForm.$pristine",
+             "ng-hide"     => "newRecord")
         = button_tag(_("Cancel"),
                      :class     => "btn btn-default",
                      :alt          => _("Cancel"),
