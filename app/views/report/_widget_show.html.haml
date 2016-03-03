@@ -57,13 +57,13 @@
     %hr
   - case @sb[:wtype]
   - when "r"
-    - title = "Report Options"
+    - title = _("Report Options")
   - when "c"
-    - title = "Chart Report"
+    - title = _("Chart Report")
   - when "rf"
-    - title = "RSS Feed Options"
+    - title = _("RSS Feed Options")
   - when "m"
-    - title = "Menu Shortcuts"
+    - title = _("Menu Shortcuts")
   %h3= title
   .form-horizontal.static
     - if @sb[:wtype] == "r"
