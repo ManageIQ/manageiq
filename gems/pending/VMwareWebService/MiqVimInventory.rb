@@ -1647,12 +1647,6 @@ class MiqVimInventory < MiqVimClientBase
       ra.each do |netObj|
         addNetworkObj(netObj)
       end
-
-      ra = getMoPropMulti(inventoryHash_locked['DistributedVirtualPortgroup'], @propMap[:DistributedVirtualPortgroup][:props])
-      ra.each do |dvsObj|
-        addDvsObj(dvsObj)
-      end
-
     ensure
       @cacheLock.sync_unlock if unlock
     end
@@ -1721,8 +1715,92 @@ class MiqVimInventory < MiqVimClientBase
     addObjHash(:Network, netObj)
   end
 
-  def addDvsObj(netObj)
-    addObjHash(:DistributedVirtualPortgroup, netObj)
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def dvPortgroups_locked
+    raise "dvPortgroups_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@dvPortgroups) if @dvPortgroups
+
+    $vim_log.info "MiqVimInventory.dvPortgroups_locked: loading DV Portgroup cache for #{@connId}"
+    begin
+      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
+
+      ra = getMoPropMulti(inventoryHash_locked['DistributedVirtualPortgroup'], @propMap[:DistributedVirtualPortgroup][:props])
+
+      @dvPortgroups      = {}
+      @dvPortGroupsByMor = {}
+      ra.each do |dvpObj|
+        addDVPObj(dvpObj)
+      end
+    ensure
+      @cacheLock.sync_unlock if unlock
+    end
+    $vim_log.info "MiqVimInventory.dvPortgroups_locked: loaded DV Portgroup cache for #{@connId}"
+
+    @dvPortgroups
+  end # def dvPortgroups_locked
+  protected :dvPortgroups_locked
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def dvPortgroupsByMor_locked
+    raise "dvPortgroupsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@dvPortgroupsByMor) if @dvPortgroupsByMor
+    dvPortgroups_locked
+    @dvPortgroupsByMor
+  end # def dvPortgroupsByMor_locked
+  protected :dvPortgroupsByMor_locked
+
+  #
+  # Public accessor
+  #
+  def dvPortgroups(selSpec = nil)
+    dvp = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        dvp = dupObj(dvPortgroups_locked)
+      else
+        dvp = applySelector(dvPortgroups_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    dvp
+  end # def dvPortgroups
+
+  #
+  # Public accessor
+  #
+  def dvPortgroupsByMor(selSpec = nil)
+    dvp = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        dvp = dupObj(dvPortgroupsByMor_locked)
+      else
+        dvp = applySelector(dvPortgroupsByMor_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    dvp
+  end # def dvPortgroupsByMor
+
+  #
+  # Return a single storagePod object, given its MOR
+  #
+  def dvPortgroupByMor(dvpMor, selSpec = nil)
+    @cacheLock.synchronize(:SH) do
+      return(dupObj(dvPortgroupsByMor_locked[dvpMor])) if selSpec.nil?
+      return(applySelector(dvPortgroupsByMor_locked[dvpMor], selSpec))
+    end
+  end
+
+  def addDVPObj(dvpObj)
+    addObjHash(:DistributedVirtualPortgroup, dvpObj)
   end
 
   #

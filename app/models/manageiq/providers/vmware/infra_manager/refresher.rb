@@ -156,6 +156,7 @@ module ManageIQ::Providers
         [:dataStoresByMor,              :storage],
         [:storagePodsByMor,             :storage_pod],
         [:networksByMor,                :network],
+        [:dvPortgroupsByMor,            :dvportgroup],
         [:hostSystemsByMor,             :host],
         [:virtualMachinesByMor,         :vm],
         [:datacentersByMor,             :dc],

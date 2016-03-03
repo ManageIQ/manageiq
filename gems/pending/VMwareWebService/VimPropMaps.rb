@@ -73,11 +73,20 @@ module VimPropMaps
       :props    => ['summary', 'host', 'vm']
     },
     :DistributedVirtualPortgroup => {
-      :baseName => "@networks",
+      :baseName => "@dvPortgroups",
       :keyPath  => ['summary', 'name'],
       :props    => [
         'summary',
         'config'
+      ]
+    },
+    :VmwareDistributedVirtualSwitch => {
+      :baseName => "@dvSwitches",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'config',
+        'summary',
+        'uuid'
       ]
     }
   }
@@ -360,11 +369,20 @@ module VimPropMaps
       ]
     },
     :DistributedVirtualPortgroup => {
-      :baseName => "@networks",
+      :baseName => "@dvPortgroups",
       :keyPath  => ['summary', 'name'],
       :props    => [
         'summary',
         'config'
+      ]
+    },
+    :VmwareDistributedVirtualSwitch => {
+      :baseName => "@dvSwitches",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'config',
+        'summary',
+        'uuid'
       ]
     }
   }
@@ -501,11 +519,20 @@ module VimPropMaps
       ]
     },
     :DistributedVirtualPortgroup => {
-      :baseName => "@networks",
+      :baseName => "@dvPortgroups",
       :keyPath  => ['summary', 'name'],
       :props    => [
         'summary',
         'config'
+      ]
+    },
+    :VmwareDistributedVirtualSwitch => {
+      :baseName => "@dvSwitches",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'config',
+        'summary',
+        'uuid'
       ]
     }
   }
