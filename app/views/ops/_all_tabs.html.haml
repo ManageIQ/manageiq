@@ -23,11 +23,8 @@
         = miq_tab_header("settings_workers", @sb[:active_tab]) do
           = _("Workers")
         - if cur_svr_id == my_server_id
-          = miq_tab_header("settings_database", @sb[:active_tab]) do
-            = _("Database")
           = miq_tab_header("settings_custom_logos", @sb[:active_tab]) do
             = _("Custom Logos")
-        - if cur_svr_id == my_server_id
           = miq_tab_header("settings_advanced", @sb[:active_tab]) do
             = _("Advanced")
       .tab-content
@@ -38,11 +35,8 @@
         = miq_tab_content("settings_workers", @sb[:active_tab]) do
           = render :partial => "settings_workers_tab"
         - if cur_svr_id == my_server_id
-          = miq_tab_content("settings_database", @sb[:active_tab]) do
-            = render :partial => "settings_database_tab"
           = miq_tab_content("settings_custom_logos", @sb[:active_tab]) do
             = render :partial => "settings_custom_logos_tab"
-        - if cur_svr_id == my_server_id
           = miq_tab_content("settings_advanced", @sb[:active_tab]) do
             = render :partial => "settings_advanced_tab"
     - else

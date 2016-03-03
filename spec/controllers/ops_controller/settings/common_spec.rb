@@ -233,16 +233,21 @@ describe OpsController do
 
     context "#restore_password" do
       it "populates the password from the record if params[:restore_password] exists" do
-        db_opts = {:username => "username", :password => "password"}
-        allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(db_opts)
-        edit = {:new => {}}
-        controller.instance_variable_set(:@edit, edit)
+        miq_server = FactoryGirl.create(:miq_server)
+
+        path = %i(workers worker_base replication_worker replication destination password)
+        stub_server_configuration({}.tap { |h| h.store_path(path, "pa$$w0rd") })
+
+        controller.instance_variable_set(:@edit, :new => VMDB::Config.new("vmdb"))
+        controller.instance_variable_set(:@sb, :selected_server_id => miq_server.id)
         controller.instance_variable_set(:@_params,
-                                         :restore_password    => true,
-                                         :production_password => "[FILTERED]",
-                                         :production_verify   => "[FILTERED]")
+          :restore_password            => true,
+          :replication_worker_password => "blahblah",
+          :replication_worker_verify   => "blahblah"
+        )
+
         controller.send(:restore_password)
-        expect(assigns(:edit)[:new][:password]).to eq(MiqDbConfig.current.options[:password])
+        expect(assigns(:edit)[:new].config.fetch_path(path)).to eq "pa$$w0rd"
       end
     end
   end

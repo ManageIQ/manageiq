@@ -409,10 +409,6 @@ class OpsController < ApplicationController
         record_id = @sb[:active_tab].split("settings_").last
         locals[:no_cancel] = true
         locals[:serialize] = true if @sb[:active_tab] == "settings_advanced"
-        if @sb[:active_tab] == "settings_database"
-          locals[:save_text] = "Save changes and restart the Server"
-          locals[:save_confirm_text] = "Server will be restarted immediately after the changes are saved, are you sure you want to proceed?"
-        end
       end
     elsif x_active_tree == :rbac_tree
       if %w(rbac_user_add rbac_user_copy rbac_user_edit).include?(@sb[:action])
