@@ -167,7 +167,7 @@ module ApplianceConsole
 
     def block_until_postgres_accepts_connections
       loop do
-        break if run_as_postgres("psql -c 'select 1';").exit_status == 0
+        break if AwesomeSpawn.run("psql -U postgres -c 'select 1'").success?
       end
     end
 
@@ -178,12 +178,8 @@ module ApplianceConsole
     end
 
     def create_postgres_database
-      run_as_postgres("createdb -E utf8 -O #{username} #{database}")
-    end
-
-    # some overlap with PostgresAdmin
-    def run_as_postgres(cmd)
-      AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{PostgresAdmin.scl_enable_prefix} \"#{cmd}\""})
+      conn = PG.connect(:user => "postgres", :dbname => "postgres")
+      conn.exec("CREATE DATABASE #{database} OWNER #{username} ENCODING 'utf8'")
     end
 
     def relabel_postgresql_dir
