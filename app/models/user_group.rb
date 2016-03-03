@@ -63,4 +63,9 @@ class UserGroup < ApplicationRecord
   def name
     description
   end
+
+  def method_missing(method, *args)
+    return miq_group.send(method, *args) if miq_group.respond_to?(method)
+    super
+  end
 end
