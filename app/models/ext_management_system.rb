@@ -267,9 +267,9 @@ class ExtManagementSystem < ApplicationRecord
   # endpoints, authentications, and works out what's what.
   def connections=(options)
     options.each do |option|
-      endpoint_builder(option[:endpoint])
+      endpoint = endpoint_builder(option[:endpoint])
       authentication_builder(option[:authentication])
-      #   connection_by_role=(option)
+        # connection_by_role=(option)
     end
   end
 
@@ -300,20 +300,24 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def endpoint_builder(options)
-    endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
-    # update or create
-    unless endpoint.nil?
-      endpoint.update(options)
-    else
-      endpoints.build(options)
+    unless options.empty?
+      endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
+      # update or create
+      unless endpoint.nil?
+        endpoint.update(options)
+      else
+        endpoints.build(options)
+      end
     end
   end
 
   def authentication_builder(options)
-    role = options.delete(:role)
-    creds = {}
-    creds[role] = options
-    update_authentication(creds)
+    unless options.empty?
+      role = options.delete(:role)
+      creds = {}
+      creds[role] = options
+      update_authentication(creds)
+    end
   end
 
   def connection_by_role(role = "default")
