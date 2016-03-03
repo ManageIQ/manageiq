@@ -112,14 +112,17 @@
           - if field == :owner_email
             - fh = wf.get_field(:owner_load_ldap, dialog)
             - if @edit && field_hash[:display] == :edit && fh[:display] == :show && !@edit[:stamp_typ]
-              = button_tag(_('Lookup'),
-                           :class   => "btn btn-primary",
-                           :alt     => t = _("LDAP Group Lookup"),
-                           :title   => t,
-                           :onclick => "miqAjaxButton('#{url_for(:controller => 'miq_request',
-                                                                 :action     => 'retrieve_email',
-                                                                 :field      => fh[:pressed][:method],
-                                                                 :button     => 'submit')}');")
+              #lookup_button_off{:style => "#{options[field].blank? ? '' : 'display:none'}"}
+                = button_tag(_("Lookup"), :class => "btn btn-default btn-disabled")
+              #lookup_button_on{:style => "#{options[field].blank? ? 'display:none' : ''}"}
+                = button_tag(_('Lookup'),
+                             :class   => "btn btn-primary",
+                             :alt     => t = _("LDAP Group Lookup"),
+                             :title   => t,
+                             :onclick => "miqAjaxButton('#{url_for(:controller => 'miq_request',
+                                                                   :action     => 'retrieve_email',
+                                                                   :field      => fh[:pressed][:method],
+                                                                   :button     => 'submit')}');")
       - elsif [:vm_prefix].include?(field)
         -# text field for vm prefix/suffix
         .col-md-8
