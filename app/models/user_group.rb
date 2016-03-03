@@ -2,6 +2,7 @@ class UserGroup < ApplicationRecord
   has_and_belongs_to_many :users
   has_one :miq_group
 
+  validates :miq_group, :presence => true
   validates :description, :presence => true, :uniqueness => true
 
   def self.sort_by_desc
