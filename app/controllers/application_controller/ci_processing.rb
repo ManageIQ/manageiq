@@ -380,14 +380,15 @@ module ApplicationController::CiProcessing
       end
     when "submit"
       options = {:src_ids => session[:reconfigure_items]}
-      options[:cb_memory] = params[:cb_memory] == "1" if params[:cb_memory]
-      options[:cb_cpu] = params[:cb_cpu] == "1" if params[:cb_cpu]
-      options[:mem_typ] = params[:mem_typ] if params[:mem_typ]
-      options[:memory] = params[:memory] if params[:memory]
-      options[:socket_count] = params[:socket_count] if params[:socket_count]
-      options[:cores_per_socket_count] = params[:cores_per_socket_count] if params[:cores_per_socket_count]
-      options[:total_cpus] = params[:total_cpus] if params[:total_cpus]
 
+      options[:vm_memory] = params[:mem_typ] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024) if params[:cb_memory] == 'true'
+      if params[:cb_cpu] == 'true'
+        options[:cores_per_socket]  = params[:cores_per_socket_count].nil? ? 1 : params[:cores_per_socket_count].to_i
+        options[:number_of_sockets] = params[:socket_count].nil? ? 1 : params[:socket_count].to_i
+        vccores = params[:cores_per_socket_count] == 0 ? 1 : params[:cores_per_socket_count]
+        vsockets = params[:socket_count] == 0 ? 1 : params[:socket_count]
+        options[:number_of_cpus]    = vccores.to_i * vsockets.to_i
+      end
       if VmReconfigureRequest.make_request(session[:req_id], options, current_user)
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
@@ -1096,7 +1097,7 @@ module ApplicationController::CiProcessing
       @reconfig_values = get_reconfig_info
     else
       @req = MiqRequest.find_by_id(session[:req_id])
-      @reconfig_values[:memory] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
+      @reconfig_values[:memory], @reconfig_values[:memory_type] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
       @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
       @reconfig_values[:socket_count] = @req.options[:number_of_sockets] if @req.options[:number_of_sockets]
     end

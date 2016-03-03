@@ -72,12 +72,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       if (serializeFields === undefined) {
         miqService.miqAjaxButton(url);
       } else {
-        miqService.miqAjaxButton(url, {cb_memory:
-                                       $scope.reconfigureModel.cb_memory,
+        miqService.miqAjaxButton(url, {cb_memory:              $scope.reconfigureModel.cb_memory,
                                        memory:                 $scope.reconfigureModel.memory,
                                        memory_type:            $scope.reconfigureModel.memory_type,
-                                       cb_cpu:                 $scope.reconfigureModel.memory_type,
-                                       socket_count:           $scope.reconfigureModel.cb_cpu,
+                                       cb_cpu:                 $scope.reconfigureModel.cb_cpu,
+                                       socket_count:           $scope.reconfigureModel.socket_count,
                                        cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count});
       }
     };

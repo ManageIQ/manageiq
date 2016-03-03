@@ -94,8 +94,8 @@ describe('reconfigureFormController', function() {
       var submitContent = {cb_memory:              $scope.reconfigureModel.cb_memory,
                            memory:                 $scope.reconfigureModel.memory,
                            memory_type:            $scope.reconfigureModel.memory_type,
-                           cb_cpu:                 $scope.reconfigureModel.memory_type,
-                           socket_count:           $scope.reconfigureModel.cb_cpu,
+                           cb_cpu:                 $scope.reconfigureModel.cb_cpu,
+                           socket_count:           $scope.reconfigureModel.socket_count,
                            cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count};
 
       expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure_update?button=submit', submitContent);
