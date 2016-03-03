@@ -15,9 +15,10 @@
       %h3
         = _('Import Datastore classes (*.zip)')
       %form.form-horizontal{:action    => url_for(:action => "upload_import_file"),
-            :target    => "upload_target",
-            :multipart => true,
-            :method    => :post}
+                            :target    => "upload_target",
+                            :enctype   => "multipart/form-data",
+                            'data-remote' => true,
+                            :method    => :post}
         .form-group
           .col-md-4
             = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
@@ -25,7 +26,8 @@
               $(":file").filestyle({icon: false, placeholder: "No file chosen"});
           .col-md-6
             %input.upload.btn.btn-default#upload-datastore-import{:type  => 'submit',
-                                                                  :value => _("Upload")}
+                                                                  :value => _("Upload"),
+                                                                  'data-miq_sparkle_on' => true}
     %hr
 
     %div.--export
@@ -90,12 +92,5 @@
 
 :javascript
   $(function() {
-    $('#upload-datastore-import').click(function() {
-      miqSparkleOn();
-    });
-
-    ImportSetup.listenForPostMessages(Automate.getAndRenderAutomateJson);
-    Automate.setUpAutomateImportClickHandlers();
-
     miq_bootstrap('miq-ae-tools-import-export');
   });

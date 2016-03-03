@@ -1,3 +1,8 @@
+//= require import
+// ^^ TODO: still needed?
+
+var MAGIC = {};
+
 (function() {
   "use strict";
 
@@ -14,6 +19,9 @@
       controller: ImportExportCtrl,
       controllerAs: 'vm',
       bindToController: true,
+      link: function(scope, elem, attrs, ctrl) {
+        ctrl.init();
+      },
       // template
     };
   }
@@ -25,7 +33,12 @@
     var vm = this;
 
     vm.import_uploaded = false;
+    vm.init = function() {
+      AutomateImportSetup.listenForPostMessages(Automate.getAndRenderAutomateJson);
+      Automate.setUpAutomateImportClickHandlers();
+    };
 
+    MAGIC.vm = vm;
   }
 
 })();
@@ -33,7 +46,34 @@
 
 
 
-//= require import
+
+var AutomateImportSetup = {
+  listenForPostMessages: function(getAndRenderJsonCallback) {
+    window.addEventListener('message', function(event) {
+      AutomateImportSetup.respondToPostMessages(event, getAndRenderJsonCallback);
+    });
+  },
+
+  respondToPostMessages: function(event, getAndRenderJsonCallback) {
+    miqSparkleOff();
+    clearMessages();
+
+    var importFileUploadId = event.data.import_file_upload_id;
+
+    if (importFileUploadId) {
+      getAndRenderJsonCallback(importFileUploadId, event.data.message);
+    } else {
+      var unencodedMessage = event.data.message.replace(/&quot;/g, '"');
+      var messageData = JSON.parse(unencodedMessage);
+
+      if (messageData.level == 'warning') {
+        showWarningMessage(messageData.message);
+      } else {
+        showErrorMessage(messageData.message);
+      }
+    }
+  }
+};
 
 var Automate = {
   getAndRenderAutomateJson: function(importFileUploadId, message) {
@@ -49,8 +89,8 @@ var Automate = {
       });
 
       $('#import_file_upload_id').val(importFileUploadId);
-      $('.import-data').show();
-      $('.import-or-export').hide();
+      MAGIC.vm.import_uploaded = true;
+
       showSuccessMessage(JSON.parse(message).message);
     })
     .fail(function(failedMessage) {
@@ -136,8 +176,7 @@ var Automate = {
         var flashMessage = JSON.parse(data)[0];
         showSuccessMessage(flashMessage.message);
 
-        $('.import-or-export').show();
-        $('.import-data').hide();
+        MAGIC.vm.import_uploaded = false;
         miqSparkleOff();
       });
     });
