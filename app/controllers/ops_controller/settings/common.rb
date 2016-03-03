@@ -162,7 +162,6 @@ module OpsController::Settings::Common
     when 'verify'        then settings_update_ldap_verify
     when 'amazon_verify' then settings_update_amazon_verify
     when 'email_verify'  then settings_update_email_verify
-    when 'db_verify'     then settings_update_db_verify
     when 'save'          then settings_update_save
     when 'reset'         then settings_update_reset
     when 'cancel'        then settings_update_cancel
@@ -238,23 +237,6 @@ module OpsController::Settings::Common
     else
       add_flash(_("The test email is being delivered, check \"%{email}\" to verify it was successful") %
                   {:email => @sb[:new_to]})
-    end
-    render :update do |page|
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
-  end
-
-  def settings_update_db_verify
-    settings_get_form_vars
-    return unless @edit
-    db_config = MiqDbConfig.new(@edit[:new])
-    result = db_config.valid?
-    if result == true
-      add_flash(_("CFME Database settings validation was successful"))
-    else
-      db_config.errors.each do |field, msg|
-        add_flash("#{field.to_s.capitalize} #{msg}", :error)
-      end
     end
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -1080,7 +1062,7 @@ module OpsController::Settings::Common
       #     @sb[:selected_server] = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
       @selected_server = MiqServer.find(from_cid(nodes.last))
       @sb[:selected_server_id] = @selected_server.id
-      settings_set_form_vars if params[:button] != "db_verify"
+      settings_set_form_vars
     when "msc"
       @record = @selected_schedule = MiqSchedule.find(from_cid(nodes.last))
       @right_cell_text = _("Settings %{model} \"%{name}\"") % {:name  => @selected_schedule.name,
