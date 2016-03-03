@@ -28,7 +28,11 @@ module OpsController::Diagnostics
     rescue StandardError => bang
       add_flash(_("Error during 'Appliance restart': %{message}") % {:message => bang.message}, :error)
     else
-      audit = {:event => "restart_server", :message => "Server '#{svr.name}' restarted", :target_id => svr.id, :target_class => "MiqServer", :userid => session[:userid]}
+      audit = {:event        => "restart_server",
+               :message      => _("Server '%{name}' restarted") % {:name => svr.name},
+               :target_id    => svr.id,
+               :target_class => "MiqServer",
+               :userid       => session[:userid]}
       AuditEvent.success(audit)
       add_flash(_("CFME Appliance restart initiated successfully"))
     end
@@ -64,7 +68,11 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(_("Error during 'workers restart': %{message}") % {:message => bang.message}, :error)
       else
-        audit = {:event => "restart_workers", :message => "Worker on Server '#{svr.name}' restarted", :target_id => svr.id, :target_class => "MiqWorker", :userid => session[:userid]}
+        audit = {:event        => "restart_workers",
+                 :message      => _("Worker on Server '%{name}' restarted") % {:name => svr.name},
+                 :target_id    => svr.id,
+                 :target_class => "MiqWorker",
+                 :userid       => session[:userid]}
         AuditEvent.success(audit)
         add_flash(_("'%{type}' Worker restart initiated successfully") % {:type => wtype})
       end
@@ -166,7 +174,7 @@ module OpsController::Diagnostics
     disable_client_cache
     send_data($log.contents(nil, nil),
               :filename => "evm.log")
-    AuditEvent.success(:userid => session[:userid], :event => "download_evm_log", :message => "EVM log downloaded")
+    AuditEvent.success(:userid => session[:userid], :event => "download_evm_log", :message => _("EVM log downloaded"))
   end
 
   # Send the audit log in text format
@@ -175,7 +183,9 @@ module OpsController::Diagnostics
     disable_client_cache
     send_data($audit_log.contents(nil, nil),
               :filename => "audit.log")
-    AuditEvent.success(:userid => session[:userid], :event => "download_audit_log", :message => "Audit log downloaded")
+    AuditEvent.success(:userid  => session[:userid],
+                       :event   => "download_audit_log",
+                       :message => _("Audit log downloaded"))
   end
 
   # Send the production log in text format
@@ -184,7 +194,9 @@ module OpsController::Diagnostics
     disable_client_cache
     send_data($rails_log.contents(nil, nil),
               :filename => "#{@sb[:rails_log].downcase}.log")
-    AuditEvent.success(:userid => session[:userid], :event => "download_#{@sb[:rails_log].downcase}_log", :message => "#{@sb[:rails_log]} log downloaded")
+    AuditEvent.success(:userid  => session[:userid],
+                       :event   => "download_#{@sb[:rails_log].downcase}_log",
+                       :message => _("%{log_description} log downloaded") % {:log_description => @sb[:rails_log]})
   end
 
   def refresh_log
@@ -310,7 +322,7 @@ module OpsController::Diagnostics
       @schedule.adhoc = true
       @schedule.enabled = false
       @schedule.name = "__adhoc_dbbackup_#{Time.now}__"
-      @schedule.description = "Adhoc DB Backup at #{Time.now}"
+      @schedule.description = _("Adhoc DB Backup at %{time}") % {:time => Time.now}
       @schedule.run_at ||= {}
       run_at = create_time_in_utc("00:00:00")
       @schedule.run_at[:start_time] = "#{run_at} Z"
@@ -423,7 +435,11 @@ module OpsController::Diagnostics
       page << "miqSparkle(false);"
     end
   else
-    audit = {:event => "orphaned_record_delete", :message => "Orphaned Records deleted for userid [#{params[:userid]}]", :target_id => params[:userid], :target_class => "MiqReport", :userid => session[:userid]}
+    audit = {:event        => "orphaned_record_delete",
+             :message      => _("Orphaned Records deleted for userid [%{number}]") % {:number => params[:userid]},
+             :target_id    => params[:userid],
+             :target_class => "MiqReport",
+             :userid       => session[:userid]}
     AuditEvent.success(audit)
     add_flash(_("Orphaned Records for userid %{id} were successfully deleted") % {:id => params[:userid]})
     orphaned_records_get
@@ -594,7 +610,11 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(_("Error during 'Clear Connection Broker cache': %{message}") % {:message => bang.message}, :error)
       else
-        audit = {:event => "reset_broker", :message => "Connection Broker cache cleared successfully", :target_id => ms.id, :target_class => "ExtManagementSystem", :userid => session[:userid]}
+        audit = {:event        => "reset_broker",
+                 :message      => _("Connection Broker cache cleared successfully"),
+                 :target_id    => ms.id,
+                 :target_class => "ExtManagementSystem",
+                 :userid       => session[:userid]}
         AuditEvent.success(audit)
         add_flash(_("Connection Broker cache cleared successfully"))
       end
@@ -710,7 +730,7 @@ module OpsController::Diagnostics
   else
     AuditEvent.success(
       :event        => "svr_record_delete",
-      :message      => "[#{server.name}] Record deleted",
+      :message      => _("[%{name}] Record deleted") % {:name => server.name},
       :target_id    => server.id,
       :target_class => "MiqServer",
       :userid       => session[:userid]
@@ -869,13 +889,13 @@ module OpsController::Diagnostics
         if @sb[:active_tab] == "diagnostics_evm_log"
           @log = $log.contents(120, 1000)
           add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
-          @msg_title = "CFME"
+          @msg_title = _("CFME")
           @refresh_action = "refresh_log"
           @download_action = "fetch_log"
         elsif @sb[:active_tab] == "diagnostics_audit_log"
           @log = $audit_log.contents(nil, 1000)
           add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
-          @msg_title = "Audit"
+          @msg_title = _("Audit")
           @refresh_action = "refresh_audit_log"
           @download_action = "fetch_audit_log"
         elsif @sb[:active_tab] == "diagnostics_production_log"
@@ -1022,7 +1042,7 @@ module OpsController::Diagnostics
               end
             end
           end
-          role_node[:title] = "Role: #{r.description} (#{status})"
+          role_node[:title] = _("Role: %{description} (%{status})") % {:description => r.description, :status => status}
           role_node[:icon] = ActionController::Base.helpers.image_path("100/role-#{r.name}.png")
           role_node[:expand] = true
           tree_kids.push(role_node)
@@ -1066,14 +1086,15 @@ module OpsController::Diagnostics
     node[:addClass] = "dynatree-title"
     if asr.active? && asr.miq_server.started?
       node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
-      node[:title] += " (#{priority}active, PID=#{asr.miq_server.pid})"
+      node[:title] += _(" (%{priority}active, PID=%{number})") % {:priority => priority, :number => asr.miq_server.pid}
     else
       if asr.miq_server.started?
         node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
-        node[:title] += " (#{priority}available, PID=#{asr.miq_server.pid})"
+        node[:title] += _(" (%{priority}available, PID=%{number})") % {:priority => priority,
+                                                                       :number   => asr.miq_server.pid}
       else
         node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
-        node[:title] += " (#{priority}unavailable)"
+        node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
       end
       node[:addClass] = "cfme-red-node" if asr.priority == 1
     end

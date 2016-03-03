@@ -317,7 +317,7 @@ module OpsController::Settings::CapAndU
         temp = {}
         temp[:key] = "Cluster_" + c[:id].to_s + ":Host_" + h.id.to_s
         temp[:title] = h.name
-        temp[:tooltip] = "Host: #{h.name}"
+        temp[:tooltip] = _("Host: %{name}") % {:name => h.name}
         temp[:style] = "cursor:default"      # No cursor pointer
         temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
         temp[:select] = enabled_host_ids.include?(h.id.to_i) ? true : false
@@ -342,8 +342,8 @@ module OpsController::Settings::CapAndU
     unless @edit[:current][:non_cl_hosts].blank?
       h_node = {}                       # Build the ems node
       h_node[:key] = "NonCluster_0"
-      h_node[:title] = "Non-clustered Hosts"
-      h_node[:tooltip] = "Non-clustered Hosts"
+      h_node[:title] = _("Non-clustered Hosts")
+      h_node[:tooltip] = _("Non-clustered Hosts")
       h_node[:style] = "cursor:default"      # No cursor pointer
       h_node[:icon] = ActionController::Base.helpers.image_path("100/host.png")
       count = non_cl_host_capture_state
@@ -359,7 +359,7 @@ module OpsController::Settings::CapAndU
         temp = {}
         temp[:key] = "NonCluster_0" + ":Host_" + h[:id].to_s
         temp[:title] = h[:name]
-        temp[:tooltip] = "Host: #{h[:name]}"
+        temp[:tooltip] = _("Host: %{name}") % {:name => h[:name]}
         temp[:style] = "cursor:default"      # No cursor pointer
         temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
         temp[:select] = h[:capture] ? true : false
