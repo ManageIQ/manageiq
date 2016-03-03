@@ -38,17 +38,6 @@ FactoryGirl.define do
     user_groups { FactoryGirl.create_list(:user_group, 1) }
   end
 
-  factory :user_with_entitlement, :parent => :user_with_group do
-    transient do
-      entitlement { FactoryGirl.create(:miq_group) }
-    end
-
-    after :build do |user, evaluator|
-      user.user_groups.first.miq_group = evaluator.entitlement
-      user.save!
-    end
-  end
-
   factory :user_admin, :parent => :user do
     role "super_administrator"
   end

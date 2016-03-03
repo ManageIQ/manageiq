@@ -198,63 +198,48 @@ describe User do
   end
 
   context "group assignment" do
-    before(:each) do
-      @group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup 1")
-      @group2 = FactoryGirl.create(:miq_group, :description => "EvmGroup 2")
-      @group3 = FactoryGirl.create(:miq_group, :description => "EvmGroup 3")
-    end
+    let(:group1) { FactoryGirl.create(:user_group, :description => "EvmGroup 1") }
+    let(:group2) { FactoryGirl.create(:user_group, :description => "EvmGroup 2") }
+    let(:group3) { FactoryGirl.create(:user_group, :description => "EvmGroup 3") }
 
-    describe "#miq_groups=" do
-      before(:each) do
-        @user = FactoryGirl.create(:user, :miq_groups => [@group3])
-      end
+    describe "#user_groups=" do
+      subject(:user) { FactoryGirl.create(:user, :user_groups => [group3]) }
 
-      it "sets miq_groups" do
-        expect(@user.miq_groups).to match_array [@group3]
+      it "sets user_groups" do
+        expect(subject.user_groups).to match_array [group3]
       end
 
       it "sets current_group" do
-        expect(@user.current_group).to eq(@group3)
+        expect(subject.current_group).to eq(group3)
       end
 
       it "when including current group" do
-        @user.miq_groups = [@group1, @group2, @group3]
-        expect(@user.valid?).to be_truthy
-        expect(@user.current_group).to eq(@group3)
+        subject.user_groups = [group1, group2, group3]
+        expect(subject.valid?).to be_truthy
+        expect(subject.current_group).to eq(group3)
       end
 
       it "when not including currrent group" do
-        @user.miq_groups = [@group1, @group2]
-        expect(@user.valid?).to be_truthy
-        expect(@user.current_group).to eq(@group1)
+        subject.user_groups = [group1, group2]
+        expect(subject.valid?).to be_truthy
+        expect(subject.current_group).to eq(group1)
       end
 
       it "when nil" do
-        expect { @user.miq_groups = nil }.to raise_error(NoMethodError)
+        expect { subject.user_groups = nil }.to raise_error(NoMethodError)
       end
     end
 
     describe "#current_group=" do
-      before(:each) do
-        @user = FactoryGirl.create(:user, :miq_groups => [@group1, @group2])
-      end
+      subject(:user) { FactoryGirl.create(:user, :user_groups => [group1, group2]) }
 
       it "sets current_group" do
-        expect(@user.current_group).to eq(@group1)
+        expect(user.current_group).to eq(group1)
       end
 
-      it "when belongs to miq_groups" do
-        expect(@user.valid?).to be_truthy
-      end
-
-      it "when not belongs to miq_groups" do
-        @user.miq_groups = [@group2, @group3]
-        expect(@user.current_group).to eq(@group2)
-      end
-
-      it "when nil" do
-        @user.current_group = nil
-        expect(@user.valid?).to be_truthy
+      it "is still valid when nil" do
+        user.current_group = nil
+        expect(user.valid?).to be_truthy
       end
     end
   end
@@ -265,8 +250,7 @@ describe User do
       @disk_size = 1_000_000
       @num_cpu = 2
 
-      group = FactoryGirl.create(:miq_group)
-      @user = FactoryGirl.create(:user, :miq_groups => [group])
+      @user = FactoryGirl.create(:user)
       @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
       @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
 
@@ -329,11 +313,7 @@ describe User do
   end
 
   it 'should invalidate email address that contains "\n"' do
-    group = FactoryGirl.create(:miq_group)
-    user = FactoryGirl.create(:user,
-                              :email      => "admin@email.com",
-                              :miq_groups => [group]
-                             )
+    user = FactoryGirl.create(:user, :email      => "admin@email.com")
     expect(user).to be_valid
 
     user.email = "admin@email.com

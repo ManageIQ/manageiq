@@ -2,6 +2,8 @@ FactoryGirl.define do
   sequence(:user_group_description) { |n| "Test Group #{seq_padded_for_sorting(n)}" }
 
   factory :user_group do
+    association :miq_group
+
     transient do
       # e.g. "super_administrator"
       role nil
