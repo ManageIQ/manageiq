@@ -103,7 +103,6 @@ class ExtManagementSystem < ApplicationRecord
            :ipaddress=,
            :hostname,
            :hostname=,
-           :port_with_role,
            :port,
            :port=,
            :to => :default_endpoint
