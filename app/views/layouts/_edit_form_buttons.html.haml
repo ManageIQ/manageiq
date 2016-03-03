@@ -1,6 +1,5 @@
 - save_text ||= _("Save Changes")
 - save_confirm_text ||= nil
-- show_validate_button ||= nil
 - action_url           ||= "update"
 - record_id            ||= nil
 - noreset              ||= nil
@@ -26,14 +25,6 @@
                                                                :id     => record_id,
                                                                :button => "save")}', true);")
           - else
-            - if show_validate_button
-              = button_tag(_("Validate"),
-                           :class   => 'btn btn-primary',
-                           :alt     => t = _("Validate"),
-                           :title   => t,
-                           :onclick => "miqAjaxButton('#{url_for(:action => action_url,
-                                                                 :id     => record_id,
-                                                                 :button => "db_verify")}');")
             - if !save_confirm_text
               - if continue_button
                 = button_tag(_("Continue"),
@@ -131,8 +122,6 @@
                       :title  => t,
                       :method => :post)
       #buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
-        - if show_validate_button
-          = button_tag(_("Validate"), :class => "btn btn-primary btn-disabled")
         - if continue_button
           = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
         - else
