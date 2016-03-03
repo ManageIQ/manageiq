@@ -7,10 +7,11 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :configuration_manager, :class_name => 'ManageIQ::Providers::ConfigurationManager'
   belongs_to :configuration_organization
   belongs_to :configuration_profile
-  has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
-  belongs_to :customization_script_ptable
   belongs_to :customization_script_medium
+  belongs_to :customization_script_ptable
+  belongs_to :inventory_root_group, :class_name => "EmsFolder"
   belongs_to :operating_system_flavor
+  has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   has_and_belongs_to_many :configuration_tags
 
   alias_attribute :name,    :hostname
