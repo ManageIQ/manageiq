@@ -26,7 +26,7 @@ describe User do
   end
 
   describe "#change_password" do
-    let(:user) { FactoryGirl.create(:user, :first_name => "Bob", :last_name => "Smith", :password => "smartvm") }
+    let(:user) { FactoryGirl.create(:user, :password => "smartvm") }
 
     it "should change user password" do
       password    = user.password
@@ -45,12 +45,7 @@ describe User do
   end
 
   context "filter methods" do
-    let(:user) do
-      FactoryGirl.create(:user,
-                         :first_name => "Bob",
-                         :last_name  => "Smith",
-                         :miq_groups => [miq_group])
-    end
+    let(:user) { FactoryGirl.create(:user, :miq_groups => [miq_group]) }
     let(:mfilters) { {"managed"   => "m"} }
     let(:bfilters) { {"belongsto" => "b"} }
     let(:miq_group) { FactoryGirl.create(:miq_group) }
@@ -69,138 +64,18 @@ describe User do
     end
   end
 
-  describe "role methods" do
-    context "id set as Administrator" do
-      let(:miq_user_role) do
-        FactoryGirl.create(
-          :miq_user_role,
-          :name      => "EvmRole-super_administrator",
-          :read_only => true,
-          :settings  => nil
-        )
-      end
+  context "timezone methods" do
+    let!(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:user) { FactoryGirl.create(:user) }
 
-      let(:miq_group) do
-        FactoryGirl.create(
-          :miq_group,
-          :description   => "EvmGroup-super_administrator",
-          :group_type    => "system",
-          :miq_user_role => miq_user_role
-        )
-      end
-
-      let!(:miq_server) { EvmSpecHelper.local_miq_server }
-
-      let(:user) do
-        FactoryGirl.create(
-          :user_admin,
-          :email      => "admin@email.com",
-          :password   => "smartvm",
-          :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
-          :miq_groups => [miq_group],
-          :first_name => "Bob",
-          :last_name  => "Smith"
-        )
-      end
-
-      let(:self_service_role) do
-        FactoryGirl.create(
-          :miq_user_role,
-          :name     => "ss_role",
-          :settings => {:restrictions => {:vms => :user_or_group}}
-        )
-      end
-
-      let(:self_service_group) do
-        FactoryGirl.create(
-          :miq_group,
-          :description   => "EvmGroup-self_service",
-          :miq_user_role => self_service_role
-        )
-      end
-
-      let(:limited_self_service_role) do
-        FactoryGirl.create(
-          :miq_user_role,
-          :name     => "lss_role",
-          :settings => {:restrictions => {:vms => :user}}
-        )
-      end
-
-      let(:limited_self_service_group) do
-        FactoryGirl.create(
-          :miq_group,
-          :description   => "EvmGroup-limited_self_service",
-          :miq_user_role => limited_self_service_role
-        )
-      end
-
-      let(:miq_admin_role) do
-        FactoryGirl.create(
-          :miq_user_role,
-          :name      => "EvmRole-administrator",
-          :read_only => true,
-          :settings  => nil
-        )
-      end
-
-      let(:admin_group) do
-        FactoryGirl.create(
-          :miq_group,
-          :description   => "EvmGroup-administrator",
-          :miq_user_role => miq_admin_role
-        )
-      end
-
-      it "should check Self Service Roles" do
-        user.current_group = self_service_group
-        expect(user.self_service?).to be_truthy
-
-        user.current_group = limited_self_service_group
-        expect(user.self_service?).to be_truthy
-
-        miq_group.miq_user_role = nil
-        user.current_group = miq_group
-        expect(user.self_service?).to be_falsey
-
-        user.current_group = nil
-        expect(user.self_service?).to be_falsey
-      end
-
-      it "should check Limited Self Service Roles" do
-        user.current_group = limited_self_service_group
-        expect(user.limited_self_service?).to be_truthy
-
-        user.current_group = nil
-        user.current_group = miq_group
-        expect(user.limited_self_service?).to be_falsey
-      end
-
-      it "should check Super Admin Roles" do
-        expect(user.super_admin_user?).to be_truthy
-
-        user.current_group = admin_group
-        expect(user.super_admin_user?).to be_falsey
-
-        user.current_group = limited_self_service_group
-        expect(user.super_admin_user?).to be_falsey
-      end
-
-      it "should check Admin Roles" do
-        expect(user.admin_user?).to be_truthy
-
-        user.current_group = admin_group
-        expect(user.admin_user?).to be_truthy
-
-        user.current_group = limited_self_service_group
-        expect(user.admin_user?).to be_falsey
-      end
-
-      it "should get Server time zone setting" do
+    describe "#get_timezone" do
+      it "gets Server time zone setting" do
         expect(user.get_timezone).to eq("UTC")
       end
+    end
 
-      it "with_my_timezone sets the user's zone in a block" do
+    describe "#with_my_timezone" do
+      it "sets the user's zone in a block" do
         user.settings.store_path(:display, :timezone, "Hawaii")
         user.with_my_timezone do
           expect(Time.zone.to_s).to eq("(GMT-10:00) Hawaii")
@@ -210,73 +85,126 @@ describe User do
     end
   end
 
-  context "miq_groups" do
+  describe "role methods" do
+    let(:user) do
+      FactoryGirl.create(:user,
+                         :settings => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+                         :role     => role_name)
+    end
+
+    describe "#self_service?" do
+      let(:role_name) { "user_self_service" }
+
+      it "checks Self Service roles" do
+        expect(user.self_service?).to be_truthy
+        expect(user.super_admin_user?).to be_falsey
+
+        user.current_group = nil
+        expect(user.self_service?).to be_falsey
+      end
+    end
+
+    describe "#limited_self_service?" do
+      let(:role_name) { "user_limited_self_service" }
+
+      it "checks Self Service roles" do
+        expect(user.limited_self_service?).to be_truthy
+        expect(user.super_admin_user?).to be_falsey
+
+        user.current_group = nil
+        expect(user.limited_self_service?).to be_falsey
+      end
+    end
+
+    describe "#super_admin_user?" do
+      let(:role_name) { "super_administrator" }
+
+      it "checks Super Admin roles" do
+        expect(user.super_admin_user?).to be_truthy
+
+        user.current_group = nil
+        expect(user.super_admin_user?).to be_falsey
+      end
+    end
+
+    describe "#admin_user?" do
+      let(:role_name) { "administrator" }
+
+      it "should check Admin Roles" do
+        expect(user.admin_user?).to be_truthy
+        expect(user.super_admin_user?).to be_falsey
+
+        user.current_group = nil
+        expect(user.admin_user?).to be_falsey
+      end
+    end
+  end
+
+  context "#authorize_ldap" do
+    before(:each) do
+      @fq_user = "thin1@manageiq.com"
+      @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
+      @auth_config =
+        {:authentication => {:ldapport => "389",
+                             :basedn => "dc=manageiq,dc=com",
+                             :follow_referrals => false,
+                             :get_direct_groups => true,
+                             :bind_dn => "evm_demo@manageiq.com",
+                             :mode => "ldap", :user_proxies => [{}],
+                             :user_type => "userprincipalname",
+                             :bind_pwd => "blah",
+                             :ldap_role => true,
+                             :user_suffix => "manageiq.com",
+                             :group_memberships_max_depth => 2,
+                             :ldaphost => ["192.168.254.15"]}
+        }
+      stub_server_configuration(@auth_config)
+      @miq_ldap = double('miq_ldap')
+      allow(@miq_ldap).to receive_messages(:bind => false)
+    end
+
+    it "will fail task if user object not found in ldap" do
+      allow(@miq_ldap).to receive_messages(:get_user_object => nil)
+
+      expect(AuditEvent).to receive(:failure).once
+      authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
+      allow(authenticate).to receive_messages(:ldap => @miq_ldap)
+
+      expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
+
+      @task.reload
+      expect(@task.state).to eq("Finished")
+      expect(@task.status).to eq("Error")
+      expect(@task.message).to match(/unable to find user object/)
+    end
+
+    it "will fail task if user group doesn't match an EVM role" do
+      allow(@miq_ldap).to receive_messages(:get_user_object => "user object")
+      allow(@miq_ldap).to receive_messages(:get_attr => nil)
+      allow(@miq_ldap).to receive_messages(:normalize => "a-username")
+
+      authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
+      allow(authenticate).to receive_messages(:ldap => @miq_ldap)
+      allow(authenticate).to receive_messages(:groups_for => [])
+
+      expect(AuditEvent).to receive(:failure).once
+      expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
+
+      @task.reload
+      expect(@task.state).to eq("Finished")
+      expect(@task.status).to eq("Error")
+      expect(@task.message).to match(/unable to match user's group membership/)
+    end
+  end
+
+  context "group assignment" do
     before(:each) do
       @group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup 1")
       @group2 = FactoryGirl.create(:miq_group, :description => "EvmGroup 2")
       @group3 = FactoryGirl.create(:miq_group, :description => "EvmGroup 3")
     end
 
-    context "#authorize_ldap" do
-      before(:each) do
-        @fq_user = "thin1@manageiq.com"
-        @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
-        @auth_config =
-          {:authentication =>
-            {:ldapport => "389",
-              :basedn => "dc=manageiq,dc=com",
-              :follow_referrals => false,
-              :get_direct_groups => true,
-              :bind_dn => "evm_demo@manageiq.com",
-              :mode => "ldap", :user_proxies => [{}],
-              :user_type => "userprincipalname",
-              :bind_pwd => "blah",
-              :ldap_role => true,
-              :user_suffix => "manageiq.com",
-              :group_memberships_max_depth => 2,
-              :ldaphost => ["192.168.254.15"]
-            }
-          }
-        stub_server_configuration(@auth_config)
-        @miq_ldap = double('miq_ldap')
-        allow(@miq_ldap).to receive_messages(:bind => false)
-      end
-
-      it "will fail task if user object not found in ldap" do
-        allow(@miq_ldap).to receive_messages(:get_user_object => nil)
-
-        expect(AuditEvent).to receive(:failure).once
-        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
-        allow(authenticate).to receive_messages(:ldap => @miq_ldap)
-
-        expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
-
-        @task.reload
-        expect(@task.state).to eq("Finished")
-        expect(@task.status).to eq("Error")
-        expect(@task.message).to match(/unable to find user object/)
-      end
-
-      it "will fail task if user group doesn't match an EVM role" do
-        allow(@miq_ldap).to receive_messages(:get_user_object => "user object")
-        allow(@miq_ldap).to receive_messages(:get_attr => nil)
-        allow(@miq_ldap).to receive_messages(:normalize => "a-username")
-
-        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
-        allow(authenticate).to receive_messages(:ldap => @miq_ldap)
-        allow(authenticate).to receive_messages(:groups_for => [])
-
-        expect(AuditEvent).to receive(:failure).once
-        expect(authenticate.authorize(@task.id, @fq_user)).to be_nil
-
-        @task.reload
-        expect(@task.state).to eq("Finished")
-        expect(@task.status).to eq("Error")
-        expect(@task.message).to match(/unable to match user's group membership/)
-      end
-    end
-
-    context "#miq_groups=" do
+    describe "#miq_groups=" do
       before(:each) do
         @user = FactoryGirl.create(:user, :miq_groups => [@group3])
       end
@@ -306,7 +234,7 @@ describe User do
       end
     end
 
-    context "#current_group=" do
+    describe "#current_group=" do
       before(:each) do
         @user = FactoryGirl.create(:user, :miq_groups => [@group1, @group2])
       end
