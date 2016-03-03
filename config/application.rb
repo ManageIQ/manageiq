@@ -92,6 +92,10 @@ module Vmdb
     config.logger = Vmdb.rails_logger
     config.colorize_logging = false
 
+    initializer :prepare_productization, :after => :append_asset_paths do
+      Vmdb::Productization.new.prepare
+    end
+
     config.before_initialize do
       require_relative 'environments/patches/database_configuration'
 
