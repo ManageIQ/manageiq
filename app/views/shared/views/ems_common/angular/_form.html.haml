@@ -139,12 +139,12 @@
         %span.help-block{"ng-show" => "angularForm.api_port.$error.required"}
           = _("Required")
 
-    .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
+    .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'rhevm'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _("API Version")
       .col-md-8
         = select_tag('api_version',
-                     options_for_select(@openstack_api_versions),
+                     options_for_select(@emsCommonModel.emstype == 'rhevm' ? @ovirt_api_versions : @openstack_api_versions),
                      "ng-model"                    => "emsCommonModel.api_version",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
