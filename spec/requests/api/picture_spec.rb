@@ -26,9 +26,9 @@ describe ApiController do
   before { api_basic_authorize }
 
   def expect_result_to_include_picture_href(source_id)
-    expect_result_to_match_hash(@result, "id" => source_id)
+    expect_result_to_match_hash(result, "id" => source_id)
     expect_result_to_have_keys(%w(id href picture))
-    expect_result_to_match_hash(@result["picture"],
+    expect_result_to_match_hash(result["picture"],
                                 "id"          => picture.id,
                                 "resource_id" => template.id,
                                 "image_href"  => /^http:.*#{picture.image_href}$/)
