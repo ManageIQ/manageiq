@@ -35,7 +35,7 @@ describe VmOrTemplateController do
     pre_prov_continue
     provision
     reconfigure
-    reconfigure_field_changed
+    reconfigure_form_fields
     reconfigure_update
     retire
     right_size
