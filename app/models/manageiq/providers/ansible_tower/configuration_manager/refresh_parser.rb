@@ -19,6 +19,7 @@ module ManageIQ::Providers
         log_header = "Collecting data for ConfigurationManager : [#{@ems.name}] id: [#{@ems.id}]"
 
         _log.info("#{log_header}...")
+        get_inventories
         get_hosts
         get_job_templates
         _log.info("#{log_header}...Complete")
@@ -30,7 +31,12 @@ module ManageIQ::Providers
 
       def get_hosts
         hosts = @connection.api.hosts.all
-        process_collection(hosts, :configured_systems) { |host| parse_hosts(host) }
+        process_collection(hosts, :configured_systems) { |host| parse_host(host) }
+      end
+
+      def get_inventories
+        inventories = @connection.api.inventories.all
+        process_collection(inventories, :ems_folders) { |inventory| parse_inventory(inventory) }
       end
 
       def get_job_templates
@@ -50,13 +56,27 @@ module ManageIQ::Providers
         end
       end
 
-      def parse_hosts(host)
+      def parse_host(host)
+        inventory_root_group = @data_index.fetch_path(:ems_folders, host.inventory_id)
         name = uid = host.name
 
         new_result = {
-          :type        => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
-          :manager_ref => host.id.to_s,
-          :hostname    => name,
+          :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
+          :manager_ref          => host.id.to_s,
+          :hostname             => name,
+          :inventory_root_group => inventory_root_group,
+        }
+
+        return uid, new_result
+      end
+
+      def parse_inventory(inventory)
+        uid = inventory.id
+
+        new_result = {
+          :type    => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup",
+          :ems_ref => inventory.id.to_s,
+          :name    => inventory.name,
         }
 
         return uid, new_result
