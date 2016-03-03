@@ -14,11 +14,11 @@
     %div.--import
       %h3
         = _('Import Datastore classes (*.zip)')
-      %form.form-horizontal{:action    => url_for(:action => "upload_import_file"),
-                            :target    => "upload_target",
-                            :enctype   => "multipart/form-data",
-                            'data-remote' => true,
-                            :method    => :post}
+      %form.form-horizontal{:action     => url_for(:action => "upload_import_file"),
+                            :target     => "upload_target",
+                            :enctype    => "multipart/form-data",
+                            :method     => :post,
+                            'ng-submit' => "vm.submit()"}
         .form-group
           .col-md-4
             = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")

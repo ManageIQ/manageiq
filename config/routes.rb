@@ -1450,7 +1450,7 @@ Vmdb::Application.routes.draw do
         log
         resolve
         review_import
-      ),
+      ),  #TODO remove review_import
       :post => %w(
         button
         cancel_import

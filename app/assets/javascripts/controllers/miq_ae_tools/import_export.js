@@ -38,12 +38,19 @@ var MAGIC = {};
       Automate.setUpAutomateImportClickHandlers();
     };
 
+    vm.submit = function() {
+      // TODO
+    };
+
     MAGIC.vm = vm;
   }
 
 })();
 
 
+// TODO - now missing authenticity_token - sending via $http should fix it
+// also, response is a 302 to
+// http://localhost:3000/miq_ae_tools/review_import?import_file_upload_id=10000000000015&message=%7B%22message%22%3A%22Import+file+was+uploaded+successfully%22%2C%22level%22%3A%22success%22%7D
 
 
 
