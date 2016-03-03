@@ -36,7 +36,7 @@ RSpec.describe "service orders API" do
 
     run_get service_orders_url(service_order.id)
 
-    expect_result_to_match_hash(@result, "name" => service_order.name, "state" => service_order.state)
+    expect_result_to_match_hash(result, "name" => service_order.name, "state" => service_order.state)
     expect_request_success
   end
 
@@ -46,7 +46,7 @@ RSpec.describe "service orders API" do
 
     run_post service_orders_url(service_order.id), :action => "edit", :resource => {:name => "new name"}
 
-    expect_result_to_match_hash(@result, "name" => "new name")
+    expect_result_to_match_hash(result, "name" => "new name")
     expect_request_success
   end
 
