@@ -77,11 +77,7 @@ class ApiController
     end
 
     def resource_search_by_criteria(criteria, search_val, klass)
-      Rbac.search(
-        :targets        => Array(klass.send("find_by_#{criteria}", search_val)),
-        :user           => @auth_user_obj,
-        :results_format => :objects
-      ).first.first
+      Rbac.filtered(klass.where(criteria => search_val), :user => @auth_user_obj).first
     end
   end
 end

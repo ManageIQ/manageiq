@@ -80,7 +80,7 @@ module VimPerformanceAnalysis
         elsif topts[:compute_tags]
           search_options[:tag_filters] = {"managed" => topts[:compute_tags]}
         end
-        @compute, _attrs = Rbac.search(search_options)
+        @compute = Rbac.filtered(nil, search_options)
 
         MiqPreloader.preload(@compute, :storages)
         stores = @compute.collect { |c| storages_for_compute_target(c) }.flatten.uniq

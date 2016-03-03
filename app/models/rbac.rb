@@ -69,8 +69,6 @@ module Rbac
     'Vm'                     => :descendant_ids
   }
 
-  NO_SCOPE = :_no_scope_
-
   ########################################################################################
   # RBAC is:
   #   Self-Service CIs OR (ManagedFilters CIs AND BelongsToFilters CIs)
@@ -122,7 +120,7 @@ module Rbac
   # @return [Array<Integer>] object_ids owned by a user or group
   def self.get_self_service_object_ids(user_or_group, klass)
     targets = get_self_service_objects(user_or_group, klass)
-    targets = targets.collect(&:id) if targets.respond_to?(:collect)
+    targets = targets.reorder(nil).collect(&:id) if targets.respond_to?(:collect)
     targets
   end
 
@@ -232,7 +230,7 @@ module Rbac
 
   def self.get_managed_filter_object_ids(klass, scope, filter)
     return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
-    scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).collect(&:id)
+    scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
   end
 
   def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
@@ -319,11 +317,7 @@ module Rbac
                                             "use [] to get an empty result back. nil will return all records",
                                             caller(0)) unless Rails.env.production?
     end
-    if objects.present?
-      Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
-    else
-      objects
-    end
+    Rbac.search(options.merge(:targets => objects, :results_format => :objects, :empty_means_empty => true)).first
   end
 
   def self.find_via_descendants(descendants, method_name, klass)
@@ -428,7 +422,9 @@ module Rbac
     # now:   search(:targets => [],  :class => Vm) searches Vms
     # later: search(:targets => [],  :class => Vm) returns []
     #        search(:targets => nil, :class => Vm) will always search Vms
-    if options.key?(:targets) && options[:targets].empty?
+    if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
+      return [], {:total_count => 0} if options[:empty_means_empty]
+
       Vmdb::Deprecation.deprecation_warning(":targets => []", "use :targets => nil to search all records",
                                             caller(0)) unless Rails.env.production?
       options[:targets] = nil
@@ -438,12 +434,12 @@ module Rbac
     # => list if ids - :class is required for this format.
     # => list of objects
     # results are returned in the same format as the targets. for empty targets, the default result format is a list of ids.
-    targets           = options.delete(:targets) || []
+    targets           = options.delete(:targets)
 
     # Support for using named_scopes in search. Supports scopes with or without args:
     # Example without args: :named_scope => :in_my_region
     # Example with args:    :named_scope => [in_region, 1]
-    scope             = options.delete(:named_scope) || NO_SCOPE
+    scope             = options.delete(:named_scope)
 
     class_or_name     = options.delete(:class) { Object }
     conditions        = options.delete(:conditions)
@@ -463,16 +459,32 @@ module Rbac
     ids_clause             = nil
     target_ids             = nil
 
-    unless targets.empty?
+    if targets.nil?
+      scope = apply_scope(klass, scope)
+    elsif targets.kind_of?(Array)
       if targets.first.kind_of?(Numeric)
-        target_ids       = targets
+        target_ids = targets
       else
         target_ids       = targets.collect(&:id)
         klass            = targets.first.class.base_class unless klass.respond_to?(:find)
         results_format ||= :objects
       end
+      scope = apply_scope(klass, scope)
 
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
+    else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
+      targets = targets.to_s.constantize if targets.kind_of?(String) || targets.kind_of?(Symbol)
+      targets = targets.all if targets < ActiveRecord::Base
+
+      results_format ||= :objects
+      scope = apply_scope(targets, scope)
+
+      unless klass.respond_to?(:find)
+        klass = targets
+        klass = klass.klass if klass.respond_to?(:klass)
+        # working around MiqAeDomain not being in rbac_class
+        klass = klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+      end
     end
 
     user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :user => user, :miq_group => miq_group)
@@ -489,7 +501,6 @@ module Rbac
     _log.debug("Find options: #{find_options.inspect}")
 
     if klass.respond_to?(:find)
-      scope = apply_scope(klass, scope)
       targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user || miq_group)
     else
       total_count = targets.length
@@ -538,8 +549,8 @@ module Rbac
   end
 
   def self.apply_scope(klass, scope)
-    scope_name = scope.to_miq_a.first
-    if scope_name == NO_SCOPE
+    scope_name = Array.wrap(scope).first
+    if scope_name.nil?
       klass
     else
       raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
