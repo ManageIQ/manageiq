@@ -57,7 +57,8 @@ class ExtManagementSystem < ApplicationRecord
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
-  validates :hostname, :presence => true, :if => :hostname_required?
+  # TODO: Fix hostname validation
+  # validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
   def hostname_uniqueness_valid?
@@ -263,6 +264,30 @@ class ExtManagementSystem < ApplicationRecord
     default || endpoints.build(:role => "default")
   end
 
+  # TODO: takes multiple connection data
+  # endpoints, authentications, and works out what's what.
+  def connections=(options)
+    options.each do |option|
+      endpoint_builder(option[:endpoint])
+      authentication_builder(option[:authentication])
+      #   connection_by_role=(option)
+    end
+  end
+
+  def connections
+    roles = endpoints.map(&:role)
+    options = {}
+
+    roles.each do |role|
+      conn = connection_by_role(role)
+      options[role] = conn
+    end
+
+    connections = OpenStruct.new(options)
+    connections.roles = roles
+    connections
+  end
+
   # Takes a hash of connection data
   # hostname, port, and authentication
   # if no role is passed in assume is default role
@@ -270,19 +295,32 @@ class ExtManagementSystem < ApplicationRecord
     unless options.key?(:role)
       options[:role] = "default"
     end
-    connection = OpenStruct.new(options)
 
-    non_default = endpoints.detect { |e| e.role == connection.role }
-    non_default || endpoints.build(:role => connection.role, :hostname => connection.hostname, :port => connection.port)
+    endpoint_builder(options[:endpoint])
+    authentication_builder(options[:authentication])
+  end
 
-    auth = authentications.detect { |a| a.authtype == connection.role }
-    creds = {connection.role => options}
+  def endpoint_builder(options)
+    endpoint = endpoints.detect { |e| e.role == options[:role] }
+    endpoint || endpoints.build(options)
+  end
+
+  def authentication_builder(options)
+    auth = authentications.detect { |a| a.authtype == options[:role] }
+    role = options.delete(:role)
+    creds = {}
+    creds[role] = options
     auth || update_authentication(creds)
   end
 
   def connection_by_role(role = "default")
     endpoint = endpoints.detect { |e| e.role == role }
-    endpoint.try(:hostname)
+    unless endpoint.nil?
+      auth = authentications.detect { |a| a.authtype == endpoint.role }
+
+      options = {:endpoint => endpoint, :authentication => auth}
+      OpenStruct.new(options)
+    end
   end
 
   def hostnames
