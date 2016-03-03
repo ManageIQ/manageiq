@@ -29,16 +29,17 @@ describe MiqApache::Conf do
     end
   end
 
-  context "building redirects config" do
-    before do
-      @default_options = {:cluster => 'evmcluster_ui', :redirects => ['/api/', '/']}
+  describe "#create_redirects_config" do
+    it "sets non root balancer correctly" do
+      default_options = {:cluster => 'evmcluster_ws', :redirects => %w(/api)}
+      output = MiqApache::Conf.create_redirects_config(default_options).lines.to_a
+      expect(output).to include("ProxyPass /api balancer://evmcluster_ws/api\n")
+      expect(output).to include("ProxyPassReverse /api balancer://evmcluster_ws/api\n")
+      expect(output).not_to include("RewriteCond \%{REQUEST_URI} !^/proxy_pages\n")
     end
-
-    it "sets balancer correctly" do
-      output = MiqApache::Conf.create_redirects_config(@default_options).lines.to_a
-      expect(output).to include("ProxyPass /api/ balancer://evmcluster_ui/api/\n")
-      expect(output).to include("ProxyPassReverse /api/ balancer://evmcluster_ui/api/\n")
-
+    it "sets root balancer correctly" do
+      default_options = {:cluster => 'evmcluster_ui', :redirects => %w(/)}
+      output = MiqApache::Conf.create_redirects_config(default_options).lines.to_a
       expect(output).to include("RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts)) /self_service/index.html [L]\n")
       expect(output).to include("RewriteCond \%{REQUEST_URI} !^/proxy_pages\n")
       expect(output).to include("RewriteCond \%{DOCUMENT_ROOT}/\%{REQUEST_FILENAME} !-f\n")
