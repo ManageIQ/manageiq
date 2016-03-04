@@ -29,7 +29,7 @@ module MiqServer::EnvironmentManagement
         options.shift # remove the "minimal" from the front of the array
 
         # Special case where Netbeans is handling the UI worker for debugging
-        options.collect { |o| o.downcase == "netbeans" ? %w(schedule reporting noui) : o }.flatten
+        options.collect { |o| o.downcase == "netbeans" ? %w(schedule reporting no_ui) : o }.flatten
       end
     end
 
