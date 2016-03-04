@@ -290,8 +290,8 @@ class ExtManagementSystem < ApplicationRecord
   # hostname, port, and authentication
   # if no role is passed in assume is default role
   def connection_by_role=(options)
-    unless options.key?(:role)
-      options[:role] = "default"
+    unless options[:endpoint].key?(:role)
+      options[:endpoint][:role] = "default"
     end
 
     endpoint_builder(options[:endpoint])
@@ -299,7 +299,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def endpoint_builder(options)
-    unless options.empty?
+    unless options.blank?
       endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
       # update or create
       unless endpoint.nil?
@@ -311,7 +311,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def authentication_builder(options)
-    unless options.empty?
+    unless options.blank?
       role = options.delete(:role)
       creds = {}
       creds[role] = options
@@ -321,6 +321,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def connection_by_role(role = "default")
     endpoint = endpoints.detect { |e| e.role == role }
+    puts "YOLO: endpoint #{endpoint}"
     unless endpoint.nil?
       auth = authentications.detect { |a| a.authtype == endpoint.role }
 
