@@ -27,9 +27,15 @@
                             "miqrequired" => "",
                             "checkchange" => "",
                             "auto-focus"  => "",
-                            :ismultiple   => true}
+                            :validatemultiple => "4",
+                            :miqmultiple  => "4",
+                            :miqmin       => '#{@reconfig_limits[:min__vm_memory]}',
+                            :miqmax       => '#{@reconfig_limits[:max__vm_memory]}',
+                            :memtype      => "reconfigureModel.memory_type"}
         %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$invalid"}
-          = _(" Valid memory value required ")
+          = _(" Memory value not in range or not a multiple of 4")
+        %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$required"}
+          = _(" Valid memory value required")
       .col-md-2
         = select_tag('mem_type',
                      options_for_select(%w(MB GB)),
@@ -58,11 +64,11 @@
       %h3
         = _('Processor Options')
       - if @socket_options.length > 1
-        .form-group{"ng-class" => "{'has-error': angularForm.socket_count.$invalid}"}
+        .form-group{"ng-class" => "{'has-error': angularForm.total_cpus.$invalid}"}
           %label.col-sm-2.control-label
             = _('Sockets')
           .col-md-1
-            = select_tag('cores_per_socket_count',
+            = select_tag('socket_count',
                         options_for_select(@socket_options),
                         "ng-model"                    => "reconfigureModel.socket_count",
                         "ng-change"                   => "processorValueChanged()",
@@ -76,7 +82,7 @@
           %label.col-sm-2.control-label
             = _('Cores Per Socket')
           .col-md-1
-            = select_tag('socket_count',
+            = select_tag('cores_per_socket_count',
                           options_for_select(@cores_options),
                           "ng-model"                    => "reconfigureModel.cores_per_socket_count",
                           "ng-change"                   => "processorValueChanged()",
@@ -90,13 +96,13 @@
             = _('Total Processors')
           .col-md-1
             %input.form-control{"type"        => "text",
-                                "id"          => "textInput-markup",
+                                "id"          => "total_cpus",
                                 "name"        => "total_cpus",
                                 "ng-model"    => "reconfigureModel.total_cpus",
                                 "checkchange" => "",
-                                :ng_max       => "reconfigureModel.max__total_vcpus",
                                 :readonly     => '',
-                                "maxlength"   => "20",
+                                "maxlength"   => "50",
+                                "validate"    => "",
                                 "auto-focus"  => ""}
             %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
               = _(" Total memory value larger than the maximum allowed")

@@ -1,15 +1,13 @@
 ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope', 'reconfigureFormId', 'objectIds', 'miqService', function($http, $scope, reconfigureFormId, objectIds, miqService) {
     var init = function() {
       $scope.reconfigureModel = {
-        objectIds:               [],
         cb_memory:               false,
-        memory:                  0,
+        memory:                  '0',
         memory_type:             '',
         cb_cpu:                  false,
-        socket_count:            1,
-        socket_options:          [],
-        cores_per_socket_count:  1,
-        total_cpus:              1
+        socket_count:            '1',
+        cores_per_socket_count:  '1',
+        total_cpus:              '1'
       };
       $scope.reconfigureFormId = reconfigureFormId;
       $scope.afterGet = false;
@@ -22,24 +20,22 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
       miqService.sparkleOn();
       $http.get('reconfigure_form_fields/'+ objectIds[0]).success(function(data) {
-        $scope.reconfigureModel.objectIds              = data.objectIds;
         $scope.reconfigureModel.cb_memory              = data.cb_memory;
         $scope.reconfigureModel.memory                 = data.memory;
         $scope.reconfigureModel.memory_type            = data.memory_type;
         $scope.reconfigureModel.cb_cpu                 = data.cb_cpu;
         $scope.reconfigureModel.socket_count           = data.socket_count;
-        $scope.reconfigureModel.socket_options         = data.socket_options;
         $scope.reconfigureModel.cores_per_socket_count = data.cores_per_socket_count;
-        if ( data.socket_count && data.cores_per_socket_count )
-          $scope.reconfigureModel.total_cpus = parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10);
 
+        if ( data.socket_count && data.cores_per_socket_count )
+          $scope.reconfigureModel.total_cpus = (parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10)).toString();
         $scope.afterGet = true;
         $scope.modelCopy = angular.copy( $scope.reconfigureModel );
 
         miqService.sparkleOff();
       });
 
-      $scope.$watch("reconfigureModel.objectIds", function() {
+      $scope.$watch("reconfigureModel.name", function() {
         $scope.form = $scope.angularForm;
       });
     };
@@ -63,7 +59,12 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.processorValueChanged = function() {
-      $scope.reconfigureModel.total_cpus = parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10);
+      var vtotal_cpus = parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10);
+      $scope.reconfigureModel.total_cpus = vtotal_cpus.toString();
+      if(vtotal_cpus > 8)
+        $scope.angularForm.total_cpus.$setValidity('validatemax', false);
+      else
+        $scope.angularForm.total_cpus.$setValidity('validatemax', true);
     };
 
     var reconfigureEditButtonClicked = function(buttonName, serializeFields) {
@@ -82,8 +83,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.cancelClicked = function() {
-      reconfigureEditButtonClicked('cancel');
-      $scope.angularForm.$setPristine(true);
+      miqService.sparkleOn();
+      miqService.miqAjaxButton('reconfigure_update?button=cancel');
     };
 
     $scope.resetClicked = function() {

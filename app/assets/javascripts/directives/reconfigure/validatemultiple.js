@@ -1,4 +1,4 @@
-ManageIQ.angular.app.directive('ismultiple', function() {
+ManageIQ.angular.app.directive('validatemultiple', function() {
   return {
     require: 'ngModel',
     link: function(scope, elm, attrs, ctrl) {
