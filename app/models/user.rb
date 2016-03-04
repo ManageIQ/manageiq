@@ -40,11 +40,6 @@ class User < ApplicationRecord
 
   include ReportableMixin
 
-  @@role_ns  = "/managed/user"
-  @@role_cat = "role"
-
-  @role_changed = false
-
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
