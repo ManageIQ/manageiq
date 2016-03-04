@@ -1,11 +1,9 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Oracle::InfraManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'oraclevm'
+    expect(described_class.ems_type).to eq('oraclevm')
   end
 
   it ".description" do
-    described_class.description.should == 'Oracle Virtualization Manager'
+    expect(described_class.description).to eq('Oracle Virtualization Manager')
   end
 end

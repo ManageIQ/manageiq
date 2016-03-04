@@ -84,8 +84,7 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def authentications_to_validate
-    at = [:default]
-    at
+    [:default]
   end
 
   def verify_credentials(auth_type = nil, options = {})

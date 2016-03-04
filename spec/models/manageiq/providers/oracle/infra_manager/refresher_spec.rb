@@ -1,10 +1,12 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_oracle, :zone => zone, :hostname => '172.16.95.57', :ipaddress => '172.16.95.57', :port => 7002)
     @ems.update_authentication(:default => {:userid => 'admin', :password => 'password'})
+  end
+
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:oraclevm)
   end
 
   it "will perform a full refresh" do
@@ -25,54 +27,54 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should == 1
-    EmsFolder.count.should == 4
-    EmsCluster.count.should == 1
-    Host.count.should == 1
-    ResourcePool.count.should == 1
-    VmOrTemplate.count.should == 5
-    Vm.count.should == 4
-    MiqTemplate.count.should == 1
-    Storage.count.should == 1
+    expect(ExtManagementSystem.count).to eq(1)
+    expect(EmsFolder.count).to eq(4)
+    expect(EmsCluster.count).to eq(1)
+    expect(Host.count).to eq(1)
+    expect(ResourcePool.count).to eq(1)
+    expect(VmOrTemplate.count).to eq(5)
+    expect(Vm.count).to eq(4)
+    expect(MiqTemplate.count).to eq(1)
+    expect(Storage.count).to eq(1)
 
-    CustomAttribute.count.should == 0
-    CustomizationSpec.count.should == 0
-    Disk.count.should == 5
-    GuestDevice.count.should == 7
-    Hardware.count.should == 6
-    Lan.count.should == 1
-    MiqScsiLun.count.should == 0
-    MiqScsiTarget.count.should == 0
-    Network.count.should == 1
-    OperatingSystem.count.should == 6
-    Snapshot.count.should == 0
-    Switch.count.should == 1
-    SystemService.count.should == 0
+    expect(CustomAttribute.count).to eq(0)
+    expect(CustomizationSpec.count).to eq(0)
+    expect(Disk.count).to eq(5)
+    expect(GuestDevice.count).to eq(7)
+    expect(Hardware.count).to eq(6)
+    expect(Lan.count).to eq(1)
+    expect(MiqScsiLun.count).to eq(0)
+    expect(MiqScsiTarget.count).to eq(0)
+    expect(Network.count).to eq(1)
+    expect(OperatingSystem.count).to eq(6)
+    expect(Snapshot.count).to eq(0)
+    expect(Switch.count).to eq(1)
+    expect(SystemService.count).to eq(0)
 
-    Relationship.count.should == 16
+    expect(Relationship.count).to eq(16)
   end
 
   def assert_ems
-    @ems.should have_attributes(
+    expect(@ems).to have_attributes(
       :api_version => "3.3.3.1085",
       :uid_ems     => nil
     )
 
-    @ems.ems_folders.size.should == 4
-    @ems.ems_clusters.size.should == 1
-    @ems.resource_pools.size.should == 1
-    @ems.storages.size.should == 0
-    @ems.hosts.size.should == 1
-    @ems.vms_and_templates.size.should == 5
-    @ems.vms.size.should == 4
-    @ems.miq_templates.size.should == 1
+    expect(@ems.ems_folders.size).to eq(4)
+    expect(@ems.ems_clusters.size).to eq(1)
+    expect(@ems.resource_pools.size).to eq(1)
+    expect(@ems.storages.size).to eq(0)
+    expect(@ems.hosts.size).to eq(1)
+    expect(@ems.vms_and_templates.size).to eq(5)
+    expect(@ems.vms.size).to eq(4)
+    expect(@ems.miq_templates.size).to eq(1)
 
-    @ems.customization_specs.size.should == 0
+    expect(@ems.customization_specs.size).to eq(0)
   end
 
   def assert_specific_cluster
     @cluster = EmsCluster.find_by_name("test-pool Cluster")
-    @cluster.should have_attributes(
+    expect(@cluster).to have_attributes(
       :uid_ems                 => "0004fb0000020000b5995e9c15a0a4a5_cluster",
       :name                    => "test-pool Cluster",
       :ha_enabled              => nil,
@@ -83,9 +85,9 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :drs_migration_threshold => nil
     )
 
-    @cluster.all_resource_pools_with_default.size.should == 1
+    expect(@cluster.all_resource_pools_with_default.size).to eq(1)
     @default_rp = @cluster.default_resource_pool
-    @default_rp.should have_attributes(
+    expect(@default_rp).to have_attributes(
       :ems_ref               => nil,
       :ems_ref_obj           => nil,
       :uid_ems               => "0004fb0000020000b5995e9c15a0a4a5",
@@ -107,7 +109,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
 
   def assert_specific_storage
     @storage = Storage.find_by_name("test-pool")
-    @storage.should have_attributes(
+    expect(@storage).to have_attributes(
       :ems_ref                       => "/Repository/0004fb00000300003076225fcb290271",
       :ems_ref_obj                   => "/Repository/0004fb00000300003076225fcb290271",
       :name                          => "test-pool",
@@ -125,14 +127,14 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
 
   def assert_specific_host
     @host = ManageIQ::Providers::Oracle::InfraManager::Host.find_by_name("oracle-vm-server")
-    @host.should have_attributes(
+    expect(@host).to have_attributes(
       :ems_ref          => "/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09",
       :ems_ref_obj      => "/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09",
       :name             => "oracle-vm-server",
       :hostname         => "oracle-vm-server",
       :ipaddress        => "172.16.92.64",
       :uid_ems          => "03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09",
-      :vmm_vendor       => "Oracle",
+      :vmm_vendor       => "oracle",
       :vmm_version      => "3.3.3",
       :vmm_product      => "oraclevm",
       :vmm_buildnumber  => "1085",
@@ -140,10 +142,10 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :connection_state => "connected"
     )
 
-    @host.ems_cluster.should == @cluster
-    @host.storages.size.should == 0
+    expect(@host.ems_cluster).to eq(@cluster)
+    expect(@host.storages.size).to eq(0)
 
-    @host.operating_system.should have_attributes(
+    expect(@host.operating_system).to have_attributes(
       :name         => "oracle-vm-server",
       :product_name => "linux",
       :version      => nil,
@@ -151,11 +153,11 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :product_type => nil
     )
 
-    @host.system_services.size.should == 0
+    expect(@host.system_services.size).to eq(0)
 
-    @host.switches.size.should == 1
+    expect(@host.switches.size).to eq(1)
     switch = @host.switches.find_by_name("172.16.0.0")
-    switch.should have_attributes(
+    expect(switch).to have_attributes(
       :uid_ems           => "ac100000",
       :name              => "172.16.0.0",
       :ports             => nil,
@@ -164,9 +166,9 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :mac_changes       => nil
     )
 
-    switch.lans.size.should == 1
+    expect(switch.lans.size).to eq(1)
     @lan = switch.lans.find_by_name("172.16.0.0")
-    @lan.should have_attributes(
+    expect(@lan).to have_attributes(
       :uid_ems                    => "ac100000",
       :name                       => "172.16.0.0",
       :tag                        => nil,
@@ -178,7 +180,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :computed_mac_changes       => nil
     )
 
-    @host.hardware.should have_attributes(
+    expect(@host.hardware).to have_attributes(
       :cpu_speed            => 0,
       :cpu_type             => "Intel(R) Core(TM) i7-4790 CPU @ 3.60GHz",
       :manufacturer         => "GenuineIntel",
@@ -196,21 +198,21 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :memory_usage         => nil
     )
 
-    @host.hardware.networks.size.should == 1
+    expect(@host.hardware.networks.size).to eq(1)
     network = @host.hardware.networks.find_by_description("bond0 on oracle-vm-server")
-    network.should have_attributes(
+    expect(network).to have_attributes(
       :description  => "bond0 on oracle-vm-server",
       :dhcp_enabled => nil,
       :ipaddress    => "172.16.92.64",
       :subnet_mask  => "255.255.0.0"
     )
 
-    @host.hardware.guest_devices.size.should == 2
+    expect(@host.hardware.guest_devices.size).to eq(2)
 
-    @host.hardware.nics.size.should == 2
+    expect(@host.hardware.nics.size).to eq(2)
 
     nic1 = @host.hardware.nics.find_by_device_name("bond0 on oracle-vm-server")
-    nic1.should have_attributes(
+    expect(nic1).to have_attributes(
       :uid_ems         => "0004fb0000200000a0cc6d2cfde52f39",
       :device_name     => "bond0 on oracle-vm-server",
       :device_type     => "ethernet",
@@ -218,11 +220,11 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :present         => true,
       :controller_type => "ethernet"
     )
-    nic1.switch.should == switch
-    nic1.network.should == network
+    expect(nic1.switch).to eq(switch)
+    expect(nic1.network).to eq(network)
 
     nic2 = @host.hardware.nics.find_by_device_name("eth0 on oracle-vm-server")
-    nic2.should have_attributes(
+    expect(nic2).to have_attributes(
       :uid_ems         => "0004fb0000200000bd65b4a15a3af1c8",
       :device_name     => "eth0 on oracle-vm-server",
       :device_type     => "ethernet",
@@ -230,15 +232,15 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :present         => true,
       :controller_type => "ethernet"
     )
-    nic2.switch.should be_nil
-    nic2.network.should be_nil
+    expect(nic2.switch).to be_nil
+    expect(nic2.network).to be_nil
 
-    @host.hardware.storage_adapters.size.should == 0
+    expect(@host.hardware.storage_adapters.size).to eq(0)
   end
 
   def assert_specific_vm_powered_on
     v = ManageIQ::Providers::Oracle::InfraManager::Vm.find_by_name("test")
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/Vm/0004fb00000600002d441b5e6431b729",
       :ems_ref_obj           => "/Vm/0004fb00000600002d441b5e6431b729",
@@ -264,22 +266,22 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should == @ems
-    v.ems_cluster.should == @cluster
-    v.parent_resource_pool.should == @default_rp
-    v.host.should.nil?
-    v.storages.should == [@storage]
-    v.storage.should == @storage
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.ems_cluster).to eq(@cluster)
+    expect(v.parent_resource_pool).to eq(@default_rp)
+    expect(v.host).to eq(@host)
+    expect(v.storages).to eq([@storage])
+    expect(v.storage).to eq(@storage)
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "Other Linux"
     )
 
-    v.custom_attributes.size.should == 0
+    expect(v.custom_attributes.size).to eq(0)
 
-    v.snapshots.size.should == 0
+    expect(v.snapshots.size).to eq(0)
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os           => "Other Linux",
       :guest_os_full_name => nil,
       :bios               => nil,
@@ -288,9 +290,9 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :memory_mb          => 1024
     )
 
-    v.hardware.disks.size.should == 1
+    expect(v.hardware.disks.size).to eq(1)
     disk = v.hardware.disks.find_by_device_name("test")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "test",
       :device_type     => "disk",
       :controller_type => "Block",
@@ -302,12 +304,12 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :disk_type       => "thick",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    expect(disk.storage).to eq(@storage)
 
-    v.hardware.guest_devices.size.should == 1
-    v.hardware.nics.size.should == 1
+    expect(v.hardware.guest_devices.size).to eq(1)
+    expect(v.hardware.nics.size).to eq(1)
     nic = v.hardware.nics.find_by_device_name("00:21:f6:3a:60:bc")
-    nic.should have_attributes(
+    expect(nic).to have_attributes(
       :uid_ems         => "0004fb0000070000f35dc14d694dadc9",
       :device_name     => "00:21:f6:3a:60:bc",
       :device_type     => "ethernet",
@@ -316,13 +318,13 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :start_connected => true,
       :address         => "00:21:f6:3a:60:bc"
     )
-    nic.lan.should == @lan
+    expect(nic.lan).to eq(@lan)
 
-    v.hardware.networks.size.should == 0
+    expect(v.hardware.networks.size).to eq(0)
     network = v.hardware.networks.first
-    network.should be_nil
+    expect(network).to be_nil
 
-    v.parent_datacenter.should have_attributes(
+    expect(v.parent_datacenter).to have_attributes(
       :uid_ems       => "default_dc",
       :name          => "Default",
       :is_datacenter => true,
@@ -330,7 +332,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :folder_path   => "Datacenters/Default"
     )
 
-    v.parent_folder.should have_attributes(
+    expect(v.parent_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
@@ -340,7 +342,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :folder_path   => "Datacenters"
     )
 
-    v.parent_blue_folder.should have_attributes(
+    expect(v.parent_blue_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "default_dc_vm",
@@ -353,7 +355,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
 
   def assert_specific_vm_powered_off
     v = ManageIQ::Providers::Oracle::InfraManager::Vm.find_by_name("Test3.0")
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/Vm/0004fb00000600006f8e65a5d245ea0c",
       :ems_ref_obj           => "/Vm/0004fb00000600006f8e65a5d245ea0c",
@@ -379,22 +381,22 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should == @ems
-    v.ems_cluster.should == @cluster
-    v.parent_resource_pool.should == @default_rp
-    v.host.should == @host
-    v.storages.should == [@storage]
-    v.storage.should == @storage
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.ems_cluster).to eq(@cluster)
+    expect(v.parent_resource_pool).to eq(@default_rp)
+    expect(v.host).to eq(@host)
+    expect(v.storages).to eq([@storage])
+    expect(v.storage).to eq(@storage)
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "Other Linux"
     )
 
-    v.custom_attributes.size.should == 0
+    expect(v.custom_attributes.size).to eq(0)
 
-    v.snapshots.size.should == 0
+    expect(v.snapshots.size).to eq(0)
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os           => "Other Linux",
       :guest_os_full_name => nil,
       :bios               => nil,
@@ -403,9 +405,9 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :memory_mb          => 512
     )
 
-    v.hardware.disks.size.should == 1
+    expect(v.hardware.disks.size).to eq(1)
     disk = v.hardware.disks.find_by_device_name("Test3disk")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "Test3disk",
       :device_type     => "disk",
       :controller_type => "Block",
@@ -417,12 +419,12 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :disk_type       => "thick",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    expect(disk.storage).to eq(@storage)
 
-    v.hardware.guest_devices.size.should == 1
-    v.hardware.nics.size.should == 1
+    expect(v.hardware.guest_devices.size).to eq(1)
+    expect(v.hardware.nics.size).to eq(1)
     nic = v.hardware.nics.find_by_device_name("00:21:f6:0f:d6:2c")
-    nic.should have_attributes(
+    expect(nic).to have_attributes(
       :uid_ems         => "0004fb0000070000d1272c5187d1bef0",
       :device_name     => "00:21:f6:0f:d6:2c",
       :device_type     => "ethernet",
@@ -431,12 +433,12 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :start_connected => true,
       :address         => "00:21:f6:0f:d6:2c"
     )
-    nic.lan.should == @lan
-    nic.network.should be_nil
+    expect(nic.lan).to eq(@lan)
+    expect(nic.network).to be_nil
 
-    v.hardware.networks.size.should == 0
+    expect(v.hardware.networks.size).to eq(0)
 
-    v.parent_datacenter.should have_attributes(
+    expect(v.parent_datacenter).to have_attributes(
       :uid_ems       => "default_dc",
       :name          => "Default",
       :is_datacenter => true,
@@ -444,7 +446,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :folder_path   => "Datacenters/Default"
     )
 
-    v.parent_folder.should have_attributes(
+    expect(v.parent_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "root_dc",
@@ -454,7 +456,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :folder_path   => "Datacenters"
     )
 
-    v.parent_blue_folder.should have_attributes(
+    expect(v.parent_blue_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "default_dc_vm",
@@ -467,7 +469,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
 
   def assert_specific_template
     v = ManageIQ::Providers::Oracle::InfraManager::Template.find_by_name("centos-7-template.0")
-    v.should have_attributes(
+    expect(v).to have_attributes(
       :template              => true,
       :ems_ref               => "/Vm/0004fb0000060000bc56cffe6e9aba7a",
       :ems_ref_obj           => "/Vm/0004fb0000060000bc56cffe6e9aba7a",
@@ -492,21 +494,21 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should == @ems
-    v.ems_cluster.should be_nil
-    v.parent_resource_pool.should be_nil
-    v.host.should be_nil
-    v.storages.should == [@storage]
-    v.storage.should == @storage
+    expect(v.ext_management_system).to eq(@ems)
+    expect(v.ems_cluster).to be_nil
+    expect(v.parent_resource_pool).to be_nil
+    expect(v.host).to be_nil
+    expect(v.storages).to eq([@storage])
+    expect(v.storage).to eq(@storage)
 
-    v.operating_system.should have_attributes(
+    expect(v.operating_system).to have_attributes(
       :product_name => "Other Linux"
     )
 
-    v.custom_attributes.size.should == 0
-    v.snapshots.size.should == 0
+    expect(v.custom_attributes.size).to eq(0)
+    expect(v.snapshots.size).to eq(0)
 
-    v.hardware.should have_attributes(
+    expect(v.hardware).to have_attributes(
       :guest_os             => "Other Linux",
       :guest_os_full_name   => nil,
       :bios                 => nil,
@@ -517,9 +519,9 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :memory_mb            => 1024
     )
 
-    v.hardware.disks.size.should == 1
+    expect(v.hardware.disks.size).to eq(1)
     disk = v.hardware.disks.find_by_device_name("test (2)")
-    disk.should have_attributes(
+    expect(disk).to have_attributes(
       :device_name     => "test (2)",
       :device_type     => "disk",
       :controller_type => "Block",
@@ -531,17 +533,17 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
       :disk_type       => "thick",
       :start_connected => true
     )
-    disk.storage.should == @storage
+    expect(disk.storage).to eq(@storage)
 
-    v.hardware.guest_devices.size.should == 1
-    v.hardware.nics.size.should == 1
-    v.hardware.networks.size.should == 0
+    expect(v.hardware.guest_devices.size).to eq(1)
+    expect(v.hardware.nics.size).to eq(1)
+    expect(v.hardware.networks.size).to eq(0)
 
     # Oracle template does not have server_pool_id and therefore no cluster
-    v.parent_datacenter.should be_nil
-    v.parent_folder.should be_nil
+    expect(v.parent_datacenter).to be_nil
+    expect(v.parent_folder).to be_nil
 
-    v.parent_blue_folder.should have_attributes(
+    expect(v.parent_blue_folder).to have_attributes(
       :ems_ref       => nil,
       :ems_ref_obj   => nil,
       :uid_ems       => "default_dc_vm",
@@ -553,7 +555,7 @@ describe ManageIQ::Providers::Oracle::InfraManager::Refresher do
   end
 
   def assert_relationship_tree
-    @ems.descendants_arranged.should match_relationship_tree(
+    expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
         [EmsFolder, "Default", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
