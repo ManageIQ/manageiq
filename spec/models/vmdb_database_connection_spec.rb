@@ -120,4 +120,49 @@ describe VmdbDatabaseConnection do
       expect(setting).to respond_to(field)
     end
   end
+
+  describe ".log_statistics" do
+    before do
+      @buffer = StringIO.new
+      class << @buffer
+        alias_method :info, :write
+        alias_method :warn, :write
+      end
+    end
+
+    it "normal" do
+      described_class.log_statistics(@buffer)
+      lines = @buffer.string.lines
+      expect(lines.shift).to eq "MIQ(VmdbDatabaseConnection.log_statistics) <<-ACTIVITY_STATS_CSV\n"
+      expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
+
+      header, *rows = CSV.parse lines.join
+      expect(header).to eq %w(
+        session_id
+        xact_start
+        last_request_start_time
+        command
+        task_state
+        login
+        application
+        request_id
+        net_address
+        host_name
+        client_port
+        wait_time_ms
+        blocked_by
+      )
+
+      expect(rows.length).to be > 0
+      rows.each do |row|
+        expect(row.first).to be_truthy
+      end
+    end
+
+    it "exception" do
+      allow(described_class).to receive(:all).and_raise("FAILURE")
+      described_class.log_statistics(@buffer)
+      expect(@buffer.string.lines.first).to eq("MIQ(VmdbDatabaseConnection.log_statistics) Unable to log stats, 'FAILURE'")
+    end
+  end
 end
