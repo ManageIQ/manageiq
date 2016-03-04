@@ -9,8 +9,7 @@ class MiqWinRM
   end
 
   def build_uri
-    uri = URI::HTTP.build(:port => @port, :path => "/wsman", :host => @hostname)
-    uri.to_s
+    URI::HTTP.build(:port => @port, :path => "/wsman", :host => @hostname).to_s
   end
 
   def connect(options = {})
