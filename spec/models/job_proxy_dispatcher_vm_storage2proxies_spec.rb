@@ -28,7 +28,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
             @repo_host.save
 
             @vm.host = @host
-            @vm.vendor = "RedHat"
+            @vm.vendor = "redhat"
             @vm.save
             allow(@vm).to receive_messages(:miq_server_proxies => [])
           end

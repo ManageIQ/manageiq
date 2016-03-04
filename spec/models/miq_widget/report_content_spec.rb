@@ -8,7 +8,7 @@ describe MiqWidget, "::ReportContent" do
     options:
       :col_order:
         - name
-        - vendor
+        - vendor_display
       :row_count: #{vm_count}
     visibility:
       :roles:

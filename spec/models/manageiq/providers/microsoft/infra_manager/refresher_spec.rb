@@ -164,7 +164,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     expect(v).to have_attributes(
       :template         => false,
       :ems_ref          => "c4425913-7043-4d2a-a229-75f051a8127b",
-      :vendor           => "Microsoft",
+      :vendor           => "microsoft",
       :power_state      => "on",
       :location         => "\\ProgramData\\Microsoft\\Windows\\Hyper-V\\linux2\\Virtual Machines\\95412AD4-2CBF-4FAF-AE4B-0C56C30D1B84.xml",
       :tools_status     => "OS shutdown: true, Time synchronization: true, Data exchange: true, Heartbeat: true, Backup: true",

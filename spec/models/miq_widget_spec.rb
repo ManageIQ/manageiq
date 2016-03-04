@@ -25,7 +25,7 @@ describe MiqWidget do
         options:
           :col_order:
             - name
-            - vendor
+            - vendor_display
           :row_count: 10
         visibility:
           :roles:
