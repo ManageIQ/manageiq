@@ -801,7 +801,6 @@ class ApplicationController < ActionController::Base
       params[:id] == 'new' ? 'show_list' : lastaction
     end
   end
-  private :calculate_lastaction
 
   def report_edit_aborted(lastaction)
     add_flash(_("Edit aborted!  CFME does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."), :error)
@@ -820,7 +819,6 @@ class ApplicationController < ActionController::Base
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end
   end
-  private :report_edit_aborted
 
   def load_edit(key, lastaction = @lastaction)
     lastaction = calculate_lastaction(lastaction)
@@ -1160,7 +1158,6 @@ class ApplicationController < ActionController::Base
       klass.find(id)    # Read the record from the db
     end
   end
-  private :listicon_item
 
   # Return the icon classname for the list view icon of a db,id pair
   # this always supersedes listicon_image if not nil
@@ -1631,7 +1628,6 @@ class ApplicationController < ActionController::Base
     gtl_type ||= 'list' # return a sane default
     gtl_type
   end
-  private :get_view_calculate_gtl_type
 
   def get_view_process_search_text(view)
     # Check for new search by name text entered
@@ -1671,12 +1667,10 @@ class ApplicationController < ActionController::Base
     end
     sub_filter
   end
-  private :get_view_process_search_text
 
   def perpage_key(dbname)
     %w(job miqtask).include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
   end
-  private :perpage_key
 
   # Create view and paginator for a DB records with/without tags
   def get_view(db, options = {})
@@ -1823,7 +1817,6 @@ class ApplicationController < ActionController::Base
       default_where_clause
     end
   end
-  private :get_view_where_clause
 
   def get_view_filter(default_filter)
     # Get the advanced search filter
@@ -1836,7 +1829,6 @@ class ApplicationController < ActionController::Base
     # show_list, can't be used with advanced search or other list view screens
     filter || default_filter
   end
-  private :get_view_filter
 
   def get_view_pages_perpage(dbname)
     perpage = 10 # return a sane default
@@ -1847,7 +1839,6 @@ class ApplicationController < ActionController::Base
 
     perpage
   end
-  private :get_view_pages_perpage
 
   # Create the pages hash and return with the view
   def get_view_pages(dbname, view)
@@ -1859,7 +1850,6 @@ class ApplicationController < ActionController::Base
     pages[:total] = (pages[:items] + pages[:perpage] - 1) / pages[:perpage]
     pages
   end
-  private :get_view_pages
 
   def get_db_view(db, options = {})
     view_yaml = view_yaml_filename(db, options)

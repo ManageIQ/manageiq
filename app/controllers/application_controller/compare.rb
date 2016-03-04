@@ -2097,8 +2097,6 @@ module ApplicationController::Compare
       (@sb[:miq_drift_params] == "different" && !@same)
   end
 
-  private
-
   def collapsed_state(id)
     s = session[:compare_state] || []
     !s.include?(id)

@@ -230,7 +230,6 @@ module ApplicationController::Tags
   else
     add_flash(_("Tag edits were successfully saved"))
   end
-  private :tagging_save_tags
 
   # Build the tagging assignment screen
   def tagging_build_screen

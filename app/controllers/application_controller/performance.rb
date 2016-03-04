@@ -1617,5 +1617,4 @@ module ApplicationController::Performance
       end.join("\r") unless trendcol.nil?
     end
   end
-  private :process_chart_trends
 end

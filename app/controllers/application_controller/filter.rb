@@ -1521,7 +1521,6 @@ module ApplicationController::Filter
     global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
     @edit[@expkey][:exp_search_expressions] = global_expressions + user_expressions
   end
-  private :adv_search_build_lists
 
   # Build a string from an array of expression symbols by recursively traversing the MiqExpression object
   #   and inserting sequential tokens for each expression part
@@ -1657,7 +1656,6 @@ module ApplicationController::Filter
       end
     end
   end
-  private :process_datetime_expression_field
 
   def process_datetime_selector(param_key_suffix, exp_key = nil)
     param_date_key  = "miq_date_#{param_key_suffix}".to_sym
@@ -1680,7 +1678,6 @@ module ApplicationController::Filter
 
     exp[exp_value_key][exp_value_index] = "#{date}#{time}"
   end
-  private :process_datetime_selector
 
   ENABLE_CALENDAR = "miqBuildCalendar();".freeze
   def calendar_needed?
