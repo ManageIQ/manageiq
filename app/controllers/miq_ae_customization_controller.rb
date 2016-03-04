@@ -192,21 +192,21 @@ class MiqAeCustomizationController < ApplicationController
     [{:role     => "old_dialogs_accord",
       :role_any => true,
       :name     => :old_dialogs,
-      :title    => N_("Provisioning Dialogs")},
+      :title    => _("Provisioning Dialogs")},
 
      {:role     => "dialog_accord",
       :role_any => true,
       :name     => :dialogs,
-      :title    => N_("Service Dialogs")},
+      :title    => _("Service Dialogs")},
 
      {:role     => "ab_buttons_accord",
       :role_any => true,
       :name     => :ab,
-      :title    => N_("Buttons")},
+      :title    => _("Buttons")},
 
      {:role     => "miq_ae_class_import_export",
       :name     => :dialog_import_export,
-      :title    => N_("Import/Export")},
+      :title    => _("Import/Export")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
