@@ -192,7 +192,7 @@ class ServiceController < ApplicationController
     [ApplicationController::Feature.new_with_hash(:role     => "service",
                                                   :role_any => true,
                                                   :name     => :svcs,
-                                                  :title    => N_("Services"))]
+                                                  :title    => _("Services"))]
   end
 
   def service_set_record_vars(svc)

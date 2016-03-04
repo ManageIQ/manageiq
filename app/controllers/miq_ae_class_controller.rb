@@ -1637,7 +1637,7 @@ class MiqAeClassController < ApplicationController
                                                   :role_any    => true,
                                                   :name        => :ae,
                                                   :accord_name => "datastores",
-                                                  :title       => N_("Datastore"))]
+                                                  :title       => _("Datastore"))]
   end
 
   def initial_setup_for_instances_form_vars(ae_inst_id)

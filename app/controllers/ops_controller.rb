@@ -207,24 +207,24 @@ class OpsController < ApplicationController
   def features
     [{:role     => "ops_settings",
       :name     => :settings,
-      :title    => N_("Settings")},
+      :title    => _("Settings")},
 
      {:role     => "ops_rbac",
       :role_any => true,
       :name     => :rbac,
-      :title    => N_("Access Control")},
+      :title    => _("Access Control")},
 
      {:role     => "ops_diagnostics",
       :name     => :diagnostics,
-      :title    => N_("Diagnostics")},
+      :title    => _("Diagnostics")},
 
      {:role     => "ops_analytics",
       :name     => :analytics,
-      :title    => N_("Analytics")},
+      :title    => _("Analytics")},
 
      {:role     => "ops_db",
       :name     => :vmdb,
-      :title    => N_("Database")},
+      :title    => _("Database")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end

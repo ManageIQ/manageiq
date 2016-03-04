@@ -445,11 +445,11 @@ class ProviderForemanController < ApplicationController
     [{:role     => "providers_accord",
       :role_any => true,
       :name     => :configuration_manager_providers,
-      :title    => N_("Providers")},
+      :title    => _("Providers")},
      {:role     => "configured_systems_filter_accord",
       :role_any => true,
       :name     => :cs_filter,
-      :title    => N_("Configured Systems")}
+      :title    => _("Configured Systems")}
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end

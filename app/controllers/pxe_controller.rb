@@ -77,22 +77,22 @@ class PxeController < ApplicationController
     [{:role     => "pxe_server_accord",
       :role_any => true,
       :name     => :pxe_servers,
-      :title    => N_("PXE Servers")},
+      :title    => _("PXE Servers")},
 
      {:role     => "customization_template_accord",
       :role_any => true,
       :name     => :customization_templates,
-      :title    => N_("Customization Templates")},
+      :title    => _("Customization Templates")},
 
      {:role     => "pxe_image_type_accord",
       :role_any => true,
       :name     => :pxe_image_types,
-      :title    => N_("System Image Types")},
+      :title    => _("System Image Types")},
 
      {:role     => "iso_datastore_accord",
       :role_any => true,
       :name     => :iso_datastores,
-      :title    => N_("ISO Datastores")},
+      :title    => _("ISO Datastores")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
