@@ -532,7 +532,7 @@ class ProviderForemanController < ApplicationController
     return provider_node(id, model) unless id.nil?
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => model_to_name(model))
+      @right_cell_text = _("All %{title} Providers") % {:title => ui_lookup(:ui_title => model_to_name(model))}
       process_show_list(options)
     end
   end
@@ -574,7 +574,7 @@ class ProviderForemanController < ApplicationController
     @listicon = "configured_system"
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => model_to_name(model))
+      @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => model_to_name(model))}
       process_show_list(options)
     end
   end
@@ -597,7 +597,7 @@ class ProviderForemanController < ApplicationController
   def miq_search_node
     options = {:model => "ConfiguredSystem"}
     process_show_list(options)
-    @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => "foreman")
+    @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => "foreman")}
   end
 
   def default_node
@@ -605,7 +605,7 @@ class ProviderForemanController < ApplicationController
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "ManageIQ::Providers::ConfigurationManager"}
       process_show_list(options)
-      @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => "Configuration Management")
+      @right_cell_text = _("All %{title} Providers") % {:title => ui_lookup(:ui_title => "Configuration Management")}
     elsif self.x_active_tree == :cs_filter_tree
       options = {:model => "ConfiguredSystem"}
       process_show_list(options)
@@ -659,9 +659,10 @@ class ProviderForemanController < ApplicationController
 
   def update_title(presenter)
     if action_name == "new"
-      @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "Configuration Management")
+      @right_cell_text = _("Add a new %{title} Provider") %
+                           {:title => ui_lookup(:ui_title => "Configuration Management")}
     elsif action_name == "edit"
-      @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "configuration manager")
+      @right_cell_text = _("Edit %{title} Provider") % {:title => ui_lookup(:ui_title => "configuration manager")}
     end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -756,10 +757,10 @@ class ProviderForemanController < ApplicationController
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_add_provider"
-        @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "Configuration Manager")
+        @right_cell_text = _("Add a new %{title} Provider") % {title => ui_lookup(:ui_title => "Configuration Manager")}
       elsif @sb[:action] == "provider_foreman_edit_provider"
         # set the title based on the configuration manager provider type
-        @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "Configuration Manager")
+        @right_cell_text = _("Edit %{title} Provider") % {:title => ui_lookup(:ui_title => "Configuration Manager")}
       end
       partial = 'form'
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
@@ -977,7 +978,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def find_record(model, id)
-    raise "Invalid input" unless is_integer?(from_cid(id))
+    raise _("Invalid input") unless is_integer?(from_cid(id))
     begin
       record = model.where(:id => from_cid(id)).first
     rescue ActiveRecord::RecordNotFound, StandardError => ex
@@ -996,7 +997,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def get_session_data
-    @title  = "Providers"
+    @title  = _("Providers")
     @layout = controller_name
   end
 

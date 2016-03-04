@@ -42,7 +42,7 @@ class AuthKeyPairCloudController < ApplicationController
 
     @gtl_url = "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?"
     drop_breadcrumb(
-      {:name => "Key Pairs", :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
+      {:name => _("Key Pairs"), :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
       true
     )
 
@@ -60,7 +60,7 @@ class AuthKeyPairCloudController < ApplicationController
       title = ui_lookup(:tables => table)
       kls   = ManageIQ::Providers::CloudManager::Vm
       drop_breadcrumb(
-        :name => @auth_key_pair_cloud.name + " (All #{title})",
+        :name => _(":{name} (All %{title})") % {:name => @auth_key_pair_cloud.name, :title => title},
         :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?display=instances"
       )
       @view, @pages = get_view(kls, :parent => @auth_key_pair_cloud) # Get the records (into a view) and the paginator
