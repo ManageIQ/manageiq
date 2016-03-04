@@ -95,8 +95,6 @@ class Host < ApplicationRecord
 
   include SerializedEmsRefObjMixin
   include ProviderObjectMixin
-
-  include WebServiceAttributeMixin
   include EventMixin
 
   include CustomAttributeMixin

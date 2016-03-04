@@ -23,7 +23,6 @@ class VmOrTemplate < ApplicationRecord
   include ComplianceMixin
   include OwnershipMixin
   include CustomAttributeMixin
-  include WebServiceAttributeMixin
 
   include EventMixin
   include ProcessTasksMixin
