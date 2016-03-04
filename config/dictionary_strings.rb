@@ -1275,6 +1275,10 @@ _("Storage - Extents")
 _("Category")
 # TRANSLATORS: en.yml key: dictionary.model.Classification (plural form)
 _("Categories")
+# TRANSLATORS: en.yml key: dictionary.model.CloudTenant
+_("Cloud Tenant")
+# TRANSLATORS: en.yml key: dictionary.model.CloudTenant (plural form)
+_("Cloud Tenants")
 # TRANSLATORS: en.yml key: dictionary.model.Compliance
 _("Compliance History")
 # TRANSLATORS: en.yml key: dictionary.model.Compliance (plural form)
@@ -1445,6 +1449,10 @@ _("Virtual Machines")
 _("Template")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template (plural form)
 _("Templates")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager
+_("Middleware Manager")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager (plural form)
+_("Middleware Managers")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager
 _("Infrastructure Provider (Openstack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager (plural form)
@@ -1489,6 +1497,14 @@ _("Container Providers (Openshift)")
 _("Container Provider (Openshift Enterprise)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OpenshiftEnterprise::ContainerManager (plural form)
 _("Container Providers (Openshift Enterprise)")
+# TRANSLATORS: en.yml key: dictionary.model.MiddlewareDeployment
+_("Middleware Deployment")
+# TRANSLATORS: en.yml key: dictionary.model.MiddlewareDeployment (plural form)
+_("Middleware Deployments")
+# TRANSLATORS: en.yml key: dictionary.model.MiddlewareServer
+_("Middleware Server")
+# TRANSLATORS: en.yml key: dictionary.model.MiddlewareServer (plural form)
+_("Middleware Servers")
 # TRANSLATORS: en.yml key: dictionary.model.MiqAction
 _("Action")
 # TRANSLATORS: en.yml key: dictionary.model.MiqAction (plural form)
@@ -1753,6 +1769,14 @@ _("Key Pairs")
 _("Availability Zone")
 # TRANSLATORS: en.yml key: dictionary.table.availability_zone (plural form)
 _("Availability Zones")
+# TRANSLATORS: en.yml key: dictionary.table.base_snapshot
+_("Base Snapshot")
+# TRANSLATORS: en.yml key: dictionary.table.base_snapshot (plural form)
+_("Base Snapshots")
+# TRANSLATORS: en.yml key: dictionary.table.based_volumes
+_("Cloud Volumes Based on Snapshot")
+# TRANSLATORS: en.yml key: dictionary.table.based_volumes (plural form)
+_("Cloud Volumes Based on Snapshots")
 # TRANSLATORS: en.yml key: dictionary.table.cdroms
 _("CD/DVD Drives")
 # TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
@@ -1763,6 +1787,12 @@ _("Cloud Volume")
 _("Cloud Volumes")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volumes
 _("Cloud Volumes")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshot
+_("Cloud Volume Snapshot")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshot (plural form)
+_("Cloud Volume Snapshots")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshots
+_("Cloud Volume Snapshots")
 # TRANSLATORS: en.yml key: dictionary.table.compliance_details
 _("Details")
 # TRANSLATORS: en.yml key: dictionary.table.compliances
