@@ -59,6 +59,36 @@ module AncestryParentMixin
       SQL
       # #{"ORDER BY path" if order}
     end
+
+    def arrange_nodes(nodes)
+      index, root_id = index_nodes(nodes)
+      index[root_id]
+    end
+
+    # @param nodes [Array<Object>]
+    # @return [Array<Hash<Nil|Numeric,Array<Object>],(Nul,Numeric)]
+    # index is keyed off of node id, and it links to all children
+    #
+    # to view all root objects, index[root_id].keys
+    def index_nodes(nodes)
+      index = Hash.new { |h, k| h[k] = ActiveSupport::OrderedHash.new }
+      parent_ids = Hash.new
+
+      nodes.each do |node|
+        index[node.send(get_ancestry_parent_column)][node] = index[node.id]
+        parent_ids[node.id] = node.send(get_ancestry_parent_column)
+      end
+
+      return [{}, nil] if parent_ids.empty?
+
+      # pick a random id, traverse up until hit top level
+      # NOTE: root_id of nil is possibly valid
+      root_id = parent_ids.first.first
+      while root_id && (index[possible_id = parent_ids[root_id]]).present?
+        root_id = possible_id
+      end
+      [index, root_id]
+    end
   end
 
   module InstanceMethods

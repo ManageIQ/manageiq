@@ -312,6 +312,32 @@ describe Service do
     end
   end
 
+  describe ".index_nodex" do
+    it "indexes nodes from root node" do
+      create_deep_tree
+      index, root_id = Service.index_nodes(@service.ancestors)
+      expect(root_id).to eq(nil)
+      expect(index[nil].keys.map(&:id)).to eq([@service.id])
+      expect(index[@service.id].keys.map(&:id)).to match_array([@service_c1.id, @service_c2.id])
+      expect(index[@service_c1.id].keys.map(&:id)).to match_array([@service_c11.id, @service_c12.id])
+      expect(index[@service_c12.id].keys.map(&:id)).to match_array([@service_c121.id])
+      expect(index[@service_c2.id].keys.map(&:id)).to be_blank
+      expect(index[@service_c11.id].keys.map(&:id)).to be_blank
+      expect(index[@service_c121.id].keys.map(&:id)).to be_blank
+    end
+
+    it "indexes nodes with multiple roots and not at base" do
+      create_deep_tree
+      index, root_id = Service.index_nodes(@service.descendants)
+      expect(index[root_id].keys.map(&:id)).to match_array([@service_c1.id, @service_c2.id])
+      expect(index[@service_c1.id].keys.map(&:id)).to match_array([@service_c11.id, @service_c12.id])
+      expect(index[@service_c12.id].keys.map(&:id)).to match_array([@service_c121.id])
+      expect(index[@service_c2.id].keys.map(&:id)).to be_blank
+      expect(index[@service_c11.id].keys.map(&:id)).to be_blank
+      expect(index[@service_c121.id].keys.map(&:id)).to be_blank
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)
