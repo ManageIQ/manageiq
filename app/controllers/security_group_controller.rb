@@ -25,23 +25,33 @@ class SecurityGroupController < ApplicationController
     when "download_pdf", "main", "summary_only"
       get_tagdata(@security_group)
       drop_breadcrumb({:name => "security_groups", :url => "/security_group/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb(:name => @security_group.name + " (Summary)", :url => "/security_group/show/#{@security_group.id}")
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @security_group.name},
+                      :url  => "/security_group/show/#{@security_group.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "ems_cloud"
-      drop_breadcrumb(:name => @security_group.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/security_group/show/#{@security_group.id}?display=ems_cloud")
+      drop_breadcrumb(:name => _("%{name} (%{table}(s))") % {:name  => @security_group.name,
+                                                             :table => ui_lookup(:table => "ems_cloud")},
+                      :url  => "/security_group/show/#{@security_group.id}?display=ems_cloud")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @security_group)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
 
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
-      drop_breadcrumb(:name => @security_group.name + " (All #{title})", :url => "/security_group/show/#{@security_group.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @security_group.name, :title => title},
+                      :url  => "/security_group/show/#{@security_group.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @security_group)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => "security_group")
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
+                        _("* You are not authorized to view other %{titles} on this %{tables}") %
+                          {:titles => title.pluralize, :tables => ui_lookup(:tables => "security_group")}
+                      else
+                        _("* You are not authorized to view other %{title} on this %{tables}") %
+                          {:title => title.singularize, :tables => ui_lookup(:tables => "security_group")}
+                      end
       end
     end
 
@@ -99,7 +109,7 @@ class SecurityGroupController < ApplicationController
   private ############################
 
   def get_session_data
-    @title      = "Security Group"
+    @title      = _("Security Group")
     @layout     = "security_group"
     @lastaction = session[:security_group_lastaction]
     @display    = session[:security_group_display]
