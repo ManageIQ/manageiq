@@ -32,7 +32,7 @@
               - (1..4).each do |i|
                 - if view.headers.length > i
                   %dt
-                    = "#{h(view.headers[i])}: "
+                    = "#{h(_(view.headers[i]))}: "
                   %dd
                     - col = view.col_order[i]
                     - if row[col].kind_of?(Time) && !row[col].nil? && row[col] != ""

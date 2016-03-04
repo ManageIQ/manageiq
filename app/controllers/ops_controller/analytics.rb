@@ -50,6 +50,7 @@ module OpsController::Analytics
     typ, id = get_rtype_rid
     fname = "analytics.yaml"
     @sb[:analytics_rpt] = MiqReport.new(YAML.load(File.open("#{OPS_REPORTS_FOLDER}/#{fname}")))
+    @sb[:analytics_rpt].headers.map! { |header| _(header) }
     @sb[:analytics_rpt].title = @sb[:analytics_rpt].name = @sb[:rpt_title]
     @sb[:analytics_rpt].db_options = {:options => {:resource_type => typ, :resource_id => id}, :rpt_type => "analytics"}
     # @sb[:analytics_rpt].generate_table
