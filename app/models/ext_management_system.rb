@@ -321,7 +321,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def connection_by_role(role = "default")
     endpoint = endpoints.detect { |e| e.role == role }
-    puts "YOLO: endpoint #{endpoint}"
+
     unless endpoint.nil?
       auth = authentications.detect { |a| a.authtype == endpoint.role }
 
