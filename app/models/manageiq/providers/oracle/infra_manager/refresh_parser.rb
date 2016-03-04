@@ -33,31 +33,24 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
 
       fs = repository_inv.file_system
 
-      location = fs.path
-
-      free        = fs.free_size
-      total       = fs.size
-      used        = total - free
-      committed   = used
-      uncommitted = free
-
       new_result = {
         :ems_ref             => uri_to_ref(repository_inv.uri),
         :ems_ref_obj         => uri_to_ref(repository_inv.uri),
         :name                => repository_inv.name,
         :store_type          => 'ISCSI',
-        :total_space         => total,
-        :free_space          => free,
-        :uncommitted         => uncommitted,
+        :total_space         => fs.size,
+        :free_space          => fs.free_size,
+        :uncommitted         => fs.free_size,
         :multiplehostaccess  => true,
-        :location            => location
+        :location            => fs.path
       }
 
       result << new_result
       result_uids[mor] = new_result
       result_uids[:storage_id][repository_inv.key] = new_result
     end
-    return result, result_uids
+
+    result, result_uids
   end
 
   def self.server_inv_to_hashes(inv, cluster_uids)
@@ -130,7 +123,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
 
-    return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
+    result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
   end
 
   def self.server_inv_to_hardware_hash(inv)
@@ -142,7 +135,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
 
     cpu = cpus[0]
 
-    return {
+    {
       :cpu_type             => cpu.model_name,
       :manufacturer         => cpu.vendor_id,
       :model                => cpu.model_name,
@@ -180,7 +173,8 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result << new_result
       result_uids[network_id] = new_result
     end
-    return result, result_uids, lan_uids
+
+    result, result_uids, lan_uids
   end
 
   def self.server_inv_to_guest_device_hashes(inv, switch_uids)
@@ -216,7 +210,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[:pnic][port.key] = new_result
     end
 
-    return result, result_uids
+    result, result_uids
   end
 
   def self.server_inv_to_network_hashes(inv, guest_device_uids)
@@ -244,6 +238,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result << new_result
       guest_device[:network] = new_result unless guest_device.nil?
     end
+
     result
   end
 
@@ -332,7 +327,8 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result << new_result
       result_uids[mor] = new_result
     end
-    return result, result_uids
+
+    result, result_uids
   end
 
   def self.vm_inv_to_hardware_hash(inv)
@@ -378,7 +374,8 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result << new_result
       result_uids[uid] = new_result
     end
-    return result, result_uids
+
+    result, result_uids
   end
 
   def self.vm_inv_to_network_hashes(inv)
@@ -470,7 +467,8 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result << new_result
       result_uids[mor] = new_result
     end
-    return result, result_uids, result_res_pools
+
+    result, result_uids, result_res_pools
   end
 
   def self.datacenter_inv_to_hashes(cluster_uids, vm_uids, storage_uids, host_uids)

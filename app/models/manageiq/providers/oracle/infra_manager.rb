@@ -92,7 +92,7 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
 
     case auth_type.to_s
     when 'default' then verify_credentials_for_oraclevm(options)
-    else;          raise "Invalid Authentication Type: #{auth_type.inspect}"
+    else           raise "Invalid Authentication Type: #{auth_type.inspect}"
     end
   end
 end
