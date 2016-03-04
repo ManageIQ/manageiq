@@ -387,7 +387,7 @@ module ApplicationController::CiProcessing
         options[:number_of_sockets] = params[:socket_count].nil? ? 1 : params[:socket_count].to_i
         vccores = params[:cores_per_socket_count] == 0 ? 1 : params[:cores_per_socket_count]
         vsockets = params[:socket_count] == 0 ? 1 : params[:socket_count]
-        options[:number_of_cpus]    = vccores.to_i * vsockets.to_i
+        options[:number_of_cpus] = vccores.to_i * vsockets.to_i
       end
       if VmReconfigureRequest.make_request(session[:req_id], options, current_user)
         flash = _("VM Reconfigure Request was saved")
@@ -1066,8 +1066,9 @@ module ApplicationController::CiProcessing
 
     cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
     cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
+    memory, memory_type = reconfigure_calculations(memory)
 
-    { :memory => reconfigure_calculations(memory), :socket_count => socket_count, :cores_per_socket_count =>cores_per_socket}
+    { :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s}
   end
 
   def get_reconfig_limits
@@ -1098,8 +1099,8 @@ module ApplicationController::CiProcessing
     else
       @req = MiqRequest.find_by_id(session[:req_id])
       @reconfig_values[:memory], @reconfig_values[:memory_type] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
-      @reconfig_values[:socket_count] = @req.options[:number_of_sockets] if @req.options[:number_of_sockets]
+      @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket].to_s if @req.options[:cores_per_socket]
+      @reconfig_values[:socket_count] = @req.options[:number_of_sockets].to_s if @req.options[:number_of_sockets]
     end
 
     @reconfig_values[:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request

@@ -11,13 +11,13 @@ describe('reconfigureFormController', function() {
     spyOn(miqService, 'sparkleOff');
     $scope = $rootScope.$new();
     $scope.reconfigureModel = {cb_memory:              false,
-                               memory:                 0,
+                               memory:                 '0',
                                memory_type:            '',
                                cb_cpu:                 false,
-                               socket_count:           1,
+                               socket_count:           '1',
                                socket_options:         [],
-                               cores_per_socket_count: 1,
-                               total_cpus:             1 };
+                               cores_per_socket_count: '1',
+                               total_cpus:             '1'};
     $httpBackend = _$httpBackend_;
     $controller = _$controller_('reconfigureFormController', {
       $scope: $scope,
@@ -29,11 +29,11 @@ describe('reconfigureFormController', function() {
 
   beforeEach(inject(function(_$controller_) {
     var reconfigureFormResponse = {cb_memory:             'on',
-                                  memory:                 4196,
+                                  memory:                 '4196',
                                   memory_type:            'MB',
                                   cb_cpu:                 'on',
-                                  socket_count:           2,
-                                  cores_per_socket_count: 3};
+                                  socket_count:           '2',
+                                  cores_per_socket_count: '3'};
     $httpBackend.whenGET('reconfigure_form_fields/1000000000001').respond(reconfigureFormResponse);
     $httpBackend.flush();
   }));
@@ -45,19 +45,19 @@ describe('reconfigureFormController', function() {
 
   describe('initialization', function() {
     it('sets the reconfigure memory value to the value returned with http request', function() {
-      expect($scope.reconfigureModel.memory).toEqual(4196);
+      expect($scope.reconfigureModel.memory).toEqual('4196');
     });
 
     it('sets the reconfigure socket count to the value returned with http request', function() {
-      expect($scope.reconfigureModel.socket_count).toEqual(2);
+      expect($scope.reconfigureModel.socket_count).toEqual('2');
     });
 
     it('sets the reconfigure cores per socket count to the value returned with http request', function() {
-      expect($scope.reconfigureModel.cores_per_socket_count).toEqual(3);
+      expect($scope.reconfigureModel.cores_per_socket_count).toEqual('3');
     });
 
     it('sets the total socket count to the value calculated from the http request data', function() {
-      expect($scope.reconfigureModel.total_cpus).toEqual(6);
+      expect($scope.reconfigureModel.total_cpus).toEqual('6');
     });
   });
 
