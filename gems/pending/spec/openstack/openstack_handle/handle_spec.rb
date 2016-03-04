@@ -11,6 +11,10 @@ describe OpenstackHandle::Handle do
     $fog_log = @original_log
   end
 
+  it ".url" do
+    expect(described_class.url("::1")).to eq "http://[::1]:5000"
+  end
+
   context "errors from services" do
     before do
       @openstack_svc = double('network_service')

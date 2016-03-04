@@ -91,10 +91,7 @@ module OpenstackHandle
     end
 
     def self.url(address, port = 5000, scheme = "http", path = "")
-      port = port.to_i
-      uri = URI::Generic.build(:scheme => scheme, :port => port, :path => path)
-      uri.hostname = address
-      uri.to_s
+      URI::Generic.build(:scheme => scheme, :host => address, :port => port.to_i, :path => path).to_s
     end
 
     class << self
