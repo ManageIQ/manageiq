@@ -13,7 +13,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       default_api_port: '',
       amqp_api_port: '',
       api_version: '',
-      default_security_protocol: '',
+      security_protocol: '',
       amqp_security_protocol: '',
       provider_region: '',
       default_userid: '',
@@ -55,7 +55,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_api_port                = 5000;
         $scope.emsCommonModel.amqp_api_port                   = 5000;
         $scope.emsCommonModel.api_version                     = 'v2';
-        $scope.emsCommonModel.default_security_protocol       = 'ssl';
+        $scope.emsCommonModel.security_protocol               = 'ssl';
         $scope.emsCommonModel.amqp_security_protocol          = 'ssl';
         miqService.sparkleOff();
       });
@@ -81,7 +81,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_api_port                = data.default_api_port;
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) ? data.amqp_api_port : '5000';
         $scope.emsCommonModel.api_version                     = data.api_version;
-        $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
+        $scope.emsCommonModel.security_protocol               = data.security_protocol;
         $scope.emsCommonModel.amqp_security_protocol          = angular.isDefined(data.amqp_security_protocol) ? data.amqp_security_protocol : 'ssl';
         $scope.emsCommonModel.provider_region                 = data.provider_region;
 
@@ -147,7 +147,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
     } else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
-      ($scope.currentTab == "default" || 
+      ($scope.currentTab == "default" ||
       ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
     }
@@ -216,4 +216,3 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   init();
 }]);
-
