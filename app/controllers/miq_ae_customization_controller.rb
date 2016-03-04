@@ -37,8 +37,9 @@ class MiqAeCustomizationController < ApplicationController
   def x_button
     @sb[:action] = action = params[:pressed]
 
-    raise ActionController::RoutingError.new('invalid button action') unless
-      AE_CUSTOM_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    unless AE_CUSTOM_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
 
     send(AE_CUSTOM_X_BUTTON_ALLOWED_ACTIONS[action])
   end
@@ -47,7 +48,7 @@ class MiqAeCustomizationController < ApplicationController
     redirect_options = {:action => :review_import}
 
     if params[:upload].nil? || params[:upload][:file].blank?
-      add_flash("Use the browse button to locate an import file", :warning)
+      add_flash(_("Use the browse button to locate an import file"), :warning)
     else
       begin
         import_file_upload_id = dialog_import_service.store_for_import(params[:upload][:file].read)
@@ -284,7 +285,7 @@ class MiqAeCustomizationController < ApplicationController
     elsif x_active_tree == :dialog_import_export_tree
       name_sorted_dialogs = Dialog.all.sort_by { |dialog| dialog.name.downcase }
       @dialog_exports = name_sorted_dialogs.collect { |dialog| [dialog.name, dialog.id] }
-      @right_cell_text = "Service Dialog Import / Export"
+      @right_cell_text = _("Service Dialog Import / Export")
     else
       old_dialogs_get_node_info(node)
     end
@@ -336,13 +337,13 @@ class MiqAeCustomizationController < ApplicationController
       if x_active_tree == :dialog_edit_tree && @in_a_form
         nodes = x_node.split('_')
         if nodes.length == 1 && @sb[:node_typ].blank?
-          @sb[:txt] = "Dialog"
+          @sb[:txt] = _("Dialog")
         elsif (nodes.length == 2 && @sb[:node_typ] != "box") || (nodes.length == 1 && @sb[:node_typ] == "tab")
-          @sb[:txt] = "Tab"
+          @sb[:txt] = _("Tab")
         elsif (nodes.length == 3 && @sb[:node_typ] != "element") || (nodes.length == 2 && @sb[:node_typ] == "box")
-          @sb[:txt] = "Box"
+          @sb[:txt] = _("Box")
         elsif nodes.length == 4 || (nodes.length == 3 && @sb[:node_typ] == "element")
-          @sb[:txt] = "Element"
+          @sb[:txt] = _("Element")
         end
         c_tb = build_toolbar(center_toolbar_filename)
       end
@@ -399,15 +400,21 @@ class MiqAeCustomizationController < ApplicationController
   def setup_presenter_for_ab_tree(nodetype, presenter)
     case nodetype
     when 'button_edit'
-      @right_cell_text = @custom_button && @custom_button.id ?
-        _("Editing %{model} \"%{name}\"") % {:name => @custom_button.name, :model => ui_lookup(:model => "CustomButton")} :
-        _("Adding a new %s") % ui_lookup(:model => "CustomButton")
+      @right_cell_text = if @custom_button && @custom_button.id
+                           _("Editing %{model} \"%{name}\"") % {:name  => @custom_button.name,
+                                                                :model => ui_lookup(:model => "CustomButton")}
+                         else
+                           _("Adding a new %{model}") % {:model => ui_lookup(:model => "CustomButton")}
+                         end
     when 'group_edit'
-      @right_cell_text = @custom_button_set && @custom_button_set.id ?
-        _("Editing %{model} \"%{name}\"") % {:name => @custom_button_set.name, :model => ui_lookup(:model => "CustomButtonSet")} :
-        _("Adding a new %s") % ui_lookup(:model => "CustomButtonSet")
+      @right_cell_text = if @custom_button_set && @custom_button_set.id
+                           _("Editing %{model} \"%{name}\"") % {:name  => @custom_button_set.name,
+                                                                :model => ui_lookup(:model => "CustomButtonSet")}
+                         else
+                           _("Adding a new %{model}") % {:model => ui_lookup(:model => "CustomButtonSet")}
+                         end
     when 'group_reorder'
-      @right_cell_text = _("%s Group Reorder") % ui_lookup(:models => "CustomButton")
+      @right_cell_text = _("%{models} Group Reorder") % {:models => ui_lookup(:models => "CustomButton")}
     end
 
     # Replace right side with based on selected tree node type
@@ -419,10 +426,13 @@ class MiqAeCustomizationController < ApplicationController
     presenter.update(:main_div, render_proc[:partial => "dialog_form"])
     presenter[:cell_a_view] = 'custom'
 
-    @right_cell_text = @record.id.blank? ?
-      _("Adding a new %s") % ui_lookup(:model => "Dialog") :
-      _("Editing %{model} \"%{name}\"") % {:name => @record.label.to_s, :model => "#{ui_lookup(:model => "Dialog")}"}
-    @right_cell_text << " [#{@sb[:txt]} Information]"
+    @right_cell_text = if @record.id.blank?
+                         _("Adding a new %{model}") % {:model => ui_lookup(:model => "Dialog")}
+                       else
+                         _("Editing %{model} \"%{name}\"") % {:name  => @record.label.to_s,
+                                                              :model => ui_lookup(:model => "Dialog")}
+                       end
+    @right_cell_text << _(" [%{text} Information]") % {:text => @sb[:txt]}
 
     # url to be used in url in miqDropComplete method
     presenter[:miq_widget_dd_url] = 'miq_ae_customization/dialog_res_reorder'
@@ -457,9 +467,17 @@ class MiqAeCustomizationController < ApplicationController
     else
       presenter.update(:main_div, render_proc[:partial => 'old_dialogs_details'])
       if @dialog.id.blank? && !@dialog.dialog_type
-        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqDialog")
+        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqDialog")}
       else
-        title = @edit ? (params[:typ] == "copy" ? "Copy " : "Editing ") : ""
+        title = if @edit
+                  if params[:typ] == "copy"
+                    _("Copy ")
+                  else
+                    _("Editing ")
+                  end
+                else
+                  ""
+                end
         @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @dialog.description.gsub(/'/, "\\'"), :model => "#{title} #{ui_lookup(:model => "MiqDialog")}"}
       end
 
@@ -487,7 +505,7 @@ class MiqAeCustomizationController < ApplicationController
   def group_button_add_save(typ)
     # override for AE Customization Buttons - the label doesn't say Description
     if @edit[:new][:description].blank?
-      render_flash(_("%s is required") % "Button Group Hover Text", :error)
+      render_flash(_("Button Group Hover Text is required"), :error)
       return
     end
 
