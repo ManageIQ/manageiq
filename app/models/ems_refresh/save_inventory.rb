@@ -104,7 +104,8 @@ module EmsRefresh::SaveInventory
         link_habtm(found, key_backup[:storages], :storages, Storage)
         # TODO(lsmola) NetworkManager, once all providers are converted, security groups relation of Vm will go away,
         # being moved to NetworkPort, we will ignore here through associations
-        if found.try(:security_groups).try(:proxy_association).try(:reflection).try(:options).try(:[], :through) != :network_ports
+        security_groups_association = found && found.class.reflect_on_association(:security_groups)
+        if security_groups_association && security_groups_association.options[:through] != :network_ports
           link_habtm(found, key_backup[:security_groups], :security_groups, SecurityGroup)
         end
         link_habtm(found, key_backup[:key_pairs], :key_pairs, ManageIQ::Providers::CloudManager::AuthKeyPair)
