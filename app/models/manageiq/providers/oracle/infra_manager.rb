@@ -1,3 +1,5 @@
+require 'uri'
+
 class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraManager
   require_nested :RefreshWorker
   require_nested :RefreshParser
@@ -33,7 +35,7 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
   def self.raw_connect(server, port, username, password)
     require 'fog/oracle'
 
-    url = "https://#{server}:#{port}"
+    url = URI::HTTPS.build(:host => server, :port => port).to_s
 
     params = {
       :oracle_username => username,
@@ -49,7 +51,7 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     server   = options[:ip] || address
     port     = options[:port] || self.port
@@ -77,7 +79,7 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
   def verify_credentials_for_oraclevm(options = {})
     connect(options).login
   rescue URI::InvalidURIError
-    raise "Invalid URI specified for Oracle server."
+    raise MiqException::MiqHostError, "Invalid URI specified for Oracle server."
   rescue => err
     err = err.to_s.split('<html>').first.strip.chomp(':')
     raise MiqException::MiqEVMLoginError, err
@@ -92,7 +94,8 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
 
     case auth_type.to_s
     when 'default' then verify_credentials_for_oraclevm(options)
-    else           raise "Invalid Authentication Type: #{auth_type.inspect}"
+    else
+      raise MiqException::MiqHostError, "Invalid Authentication Type: #{auth_type.inspect}"
     end
   end
 end
