@@ -32,6 +32,6 @@
   .col-md-8
     = select_tag('security_protocol',
                   options_for_select(@openstack_security_protocols),
-                  "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
+                  "ng-model"                    => "#{ng_model}.security_protocol",
                   "checkchange"                 => "",
                   "selectpicker-for-select-tag" => "")
