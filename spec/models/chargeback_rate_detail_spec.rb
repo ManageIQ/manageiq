@@ -144,4 +144,42 @@ describe ChargebackRateDetail do
                                       )
     expect(cbd_bytes.cost(100)).to eq(cbd_gigabytes.cost(100))
   end
+
+  it "#show_rates" do
+    cbm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    cbc = ChargebackRateDetailCurrency.create(:code        => "USD",
+                                              :name        => "Dollars",
+                                              :full_name   => "United States Dollars",
+                                              :symbol      => "$",
+                                              :unicode_hex => "36"
+                                             )
+
+    cbd = FactoryGirl.create(:chargeback_rate_detail,
+                             :group                              => 'fixed',
+                             :per_time                           => 'daily',
+                             :rate                               => '0.0',
+                             :chargeback_rate_detail_measure_id  => cbm.id,
+                             :chargeback_rate_detail_currency_id => cbc.id
+                             )
+    expect(cbd.show_rates).to eq("USD")
+
+    cbd = FactoryGirl.create(:chargeback_rate_detail,
+                             :group                              => 'fixed',
+                             :per_time                           => 'daily',
+                             :rate                               => '1.47',
+                             :chargeback_rate_detail_measure_id  => cbm.id,
+                             :chargeback_rate_detail_currency_id => cbc.id
+                             )
+    expect(cbd.show_rates).to eq("USD / Day")
+
+    cbd = FactoryGirl.create(:chargeback_rate_detail,
+                             :per_unit                           => 'gigabytes',
+                             :metric                             => 'derived_memory_available',
+                             :per_time                           => 'daily',
+                             :rate                               => '1.47',
+                             :chargeback_rate_detail_measure_id  => cbm.id,
+                             :chargeback_rate_detail_currency_id => cbc.id
+                             )
+    expect(cbd.show_rates).to eq("USD / Day / GB")
+  end
 end

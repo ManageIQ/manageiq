@@ -6,6 +6,14 @@ class ChargebackRateDetail < ApplicationRecord
   validates :rate, :numericality => true
   validates :group, :source, :presence => true
 
+  PER_TIME_MAP = {
+    :hourly  => "Hour",
+    :daily   => "Day",
+    :weekly  => "Week",
+    :monthly => "Month",
+    :yearly  => "Year"
+  }
+
   def cost(value)
     return 0.0 unless self.enabled?
     value = 1 if group == 'fixed'
@@ -97,17 +105,10 @@ class ChargebackRateDetail < ApplicationRecord
   def show_rates
     rate = self.rate.to_s
     return detail_currency.code if rate.to_f.zero?
-    hr = case per_time
-         when "hourly"  then "Hour"
-         when "daily"   then "Day"
-         when "weekly"  then "Week"
-         when "monthly" then "Month"
-         when "yearly"  then "Year"
-         else raise "rate time unit of '#{per_time}' not supported"
-         end
 
-    rate_display = detail_currency.code + '/' + hr
-    rate_display_unit = rate_display + '/' + per_unit_display
+    hr = ChargebackRateDetail::PER_TIME_MAP[per_time.to_sym]
+    rate_display = "#{detail_currency.code} / #{hr}"
+    rate_display_unit = "#{rate_display} / #{per_unit_display}"
     per_unit.nil? ? rate_display : rate_display_unit
   end
 end
