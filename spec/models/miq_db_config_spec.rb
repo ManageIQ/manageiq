@@ -1,49 +1,4 @@
 describe MiqDbConfig do
-  CSV_HEADER = %w( session_id
-                   xact_start
-                   last_request_start_time
-                   command
-                   task_state
-                   login
-                   application
-                   request_id
-                   net_address
-                   host_name
-                   client_port
-                   wait_time_ms
-                   blocked_by )
-
-  context ".log_activity_statistics" do
-    before do
-      @buffer = StringIO.new
-      class << @buffer
-        alias_method :info, :write
-        alias_method :warn, :write
-      end
-    end
-
-    it "normal" do
-      MiqDbConfig.log_activity_statistics(@buffer)
-      lines = @buffer.string.lines
-      expect(lines.shift).to eq "MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n"
-      expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
-
-      header, *rows = CSV.parse lines.join
-      expect(header).to eq(CSV_HEADER)
-
-      expect(rows.length).to be > 0
-      rows.each do |row|
-        expect(row.first).to be_truthy
-      end
-    end
-
-    it "exception" do
-      allow(VmdbDatabaseConnection).to receive(:all).and_raise("FAILURE")
-      MiqDbConfig.log_activity_statistics(@buffer)
-      expect(@buffer.string.lines.first).to eq("MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'")
-    end
-  end
-
   it ".get_db_types" do
     expected = {
       "internal"     => "Internal Database on this CFME Appliance",

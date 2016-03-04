@@ -16,8 +16,8 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name  => "MiqWorker", :method_name => "log_status_all", :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
-  def miq_db_config_log_statistics
-    queue_work(:class_name  => "MiqDbConfig", :method_name => "log_statistics", :server_guid => MiqServer.my_guid)
+  def vmdb_database_connection_log_statistics
+    queue_work(:class_name  => "VmdbDatabaseConnection", :method_name => "log_statistics", :server_guid => MiqServer.my_guid)
   end
 
   def miq_server_queue_update_registration_status

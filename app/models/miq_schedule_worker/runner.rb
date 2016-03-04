@@ -123,7 +123,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       interval,
       :first_in => 1.minute,
       :tags     => [:log_statistics, schedule_category]
-    ) { enqueue :miq_db_config_log_statistics }
+    ) { enqueue :vmdb_database_connection_log_statistics }
 
     # Schedule - Periodic check for updates on appliances only
     if MiqEnvironment::Command.is_appliance?
