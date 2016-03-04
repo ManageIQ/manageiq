@@ -50,7 +50,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[:storage_id][repository_inv.key] = new_result
     end
 
-    result, result_uids
+    return result, result_uids
   end
 
   def self.server_inv_to_hashes(inv, cluster_uids)
@@ -123,7 +123,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
 
-    result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
+    return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
   end
 
   def self.server_inv_to_hardware_hash(inv)
@@ -174,7 +174,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[network_id] = new_result
     end
 
-    result, result_uids, lan_uids
+    return result, result_uids, lan_uids
   end
 
   def self.server_inv_to_guest_device_hashes(inv, switch_uids)
@@ -210,7 +210,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[:pnic][port.key] = new_result
     end
 
-    result, result_uids
+    return result, result_uids
   end
 
   def self.server_inv_to_network_hashes(inv, guest_device_uids)
@@ -328,7 +328,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
 
-    result, result_uids
+    return result, result_uids
   end
 
   def self.vm_inv_to_hardware_hash(inv)
@@ -375,7 +375,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[uid] = new_result
     end
 
-    result, result_uids
+    return result, result_uids
   end
 
   def self.vm_inv_to_network_hashes(inv)
@@ -468,7 +468,7 @@ module ManageIQ::Providers::Oracle::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
 
-    result, result_uids, result_res_pools
+    return result, result_uids, result_res_pools
   end
 
   def self.datacenter_inv_to_hashes(cluster_uids, vm_uids, storage_uids, host_uids)
