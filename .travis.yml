@@ -9,7 +9,13 @@ env:
   - RUBY_GC_HEAP_INIT_SLOTS=600000
   - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
   matrix:
-  - TEST_SUITE=vmdb
+  - TEST_SUITE=vmdb_controllers
+  - TEST_SUITE=vmdb_ui
+  - TEST_SUITE=vmdb_lib
+  - TEST_SUITE=vmdb_models
+  - TEST_SUITE=vmdb_providers
+  - TEST_SUITE=vmdb_others
+  - TEST_SUITE=vmdb_routing
   - TEST_SUITE=automation
   - TEST_SUITE=migrations
   - TEST_SUITE=brakeman
