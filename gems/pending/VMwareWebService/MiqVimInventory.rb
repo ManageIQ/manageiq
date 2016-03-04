@@ -1731,7 +1731,7 @@ class MiqVimInventory < MiqVimClientBase
       ra = getMoPropMulti(inventoryHash_locked['DistributedVirtualPortgroup'], @propMap[:DistributedVirtualPortgroup][:props])
 
       @dvPortgroups      = {}
-      @dvPortGroupsByMor = {}
+      @dvPortgroupsByMor = {}
       ra.each do |dvpObj|
         addDVPObj(dvpObj)
       end
@@ -1803,6 +1803,93 @@ class MiqVimInventory < MiqVimClientBase
     addObjHash(:DistributedVirtualPortgroup, dvpObj)
   end
 
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def dvSwitches_locked
+    raise "dvSwitches_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@dvSwithces) if @dvSwitches
+
+    $vim_log.info "MiqVimInventory.dvSwitches_locked: loading DV Switch cache for #{@connId}"
+    begin
+      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
+
+      ra = getMoPropMulti(inventoryHash_locked['VmwareDistributedVirtualSwitch'], @propMap[:VmwareDistributedVirtualSwitch][:props])
+
+      @dvSwitches      = {}
+      @dvSwitchesByMor = {}
+      ra.each do |dvsObj|
+        addDVSObj(dvsObj)
+      end
+    ensure
+      @cacheLock.sync_unlock if unlock
+    end
+    $vim_log.info "MiqVimInventory.dvSwitches_locked: loaded DV Switch cache for #{@connId}"
+
+    @dvSwitches
+  end # def dvSwitches_locked
+  protected :dvSwitches_locked
+
+  #
+  # For internal use.
+  # Must be called with cache lock held
+  # Returns with the cache lock held - must be unlocked by caller.
+  #
+  def dvSwitchesByMor_locked
+    raise "dvSwitchesByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return(@dvSwitchesByMor) if @dvSwitchesByMor
+    dvSwitches_locked
+    @dvSwitchesByMor
+  end # def dvSwitchesByMor_locked
+  protected :dvSwitchesByMor_locked
+
+  #
+  # Public accessor
+  #
+  def dvSwitches(selSpec = nil)
+    dvs = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        dvs = dupObj(dvSwitches_locked)
+      else
+        dvs = applySelector(dvSwitches_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    dvs
+  end # def dvSwitches
+
+  #
+  # Public accessor
+  #
+  def dvSwitchesByMor(selSpec = nil)
+    dvs = nil
+    @cacheLock.synchronize(:SH) do
+      if selSpec.nil?
+        dvs = dupObj(dvSwitchesByMor_locked)
+      else
+        dvs = applySelector(dvSwitchesByMor_locked, selSpec)
+      end
+    end
+    assert_no_locks
+    dvs
+  end # def dvSwitchesByMor
+
+  #
+  # Return a single DV Switch object, given its MOR
+  #
+  def dvSwitchByMor(dvsMor, selSpec = nil)
+    @cacheLock.synchronize(:SH) do
+      return(dupObj(dvSwitchesByMor_locked[dvsMor])) if selSpec.nil?
+      return(applySelector(dvSwitchesByMor_locked[dvsMor], selSpec))
+    end
+  end
+
+  def addDVSObj(dvsObj)
+    addObjHash(:VmwareDistributedVirtualSwitch, dvsObj)
+  end
   #
   # For internal use.
   # Must be called with cache lock held

@@ -179,6 +179,14 @@ module EmsRefresh::VcUpdates
       "summary.name"
     ],
 
+    :ems_refresh_dvswitch   => [
+      "MOR",
+      "host",
+      "config",
+      "vm",
+      "summary.name"
+    ],
+
     :ems_refresh_cluster   => [
       "MOR",
       "configuration.dasConfig.admissionControlEnabled",
