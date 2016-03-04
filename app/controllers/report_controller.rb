@@ -274,33 +274,33 @@ class ReportController < ApplicationController
     [{:role     => "miq_report_saved_reports",
       :role_any => true,
       :name     => :savedreports,
-      :title    => N_("Saved Reports")},
+      :title    => _("Saved Reports")},
 
      {:role     => "miq_report_reports",
       :role_any => true,
       :name     => :reports,
-      :title    => N_("Reports")},
+      :title    => _("Reports")},
 
      {:role     => "miq_report_schedules",
       :role_any => true,
       :name     => :schedules,
-      :title    => N_("Schedules")},
+      :title    => _("Schedules")},
 
      {:role  => "miq_report_dashboard_editor",
       :name  => :db,
-      :title => N_("Dashboards")},
+      :title => _("Dashboards")},
 
      {:role  => "miq_report_widget_editor",
       :name  => :widgets,
-      :title => N_("Dashboard Widgets")},
+      :title => _("Dashboard Widgets")},
 
      {:role  => "miq_report_menu_editor",
       :name  => :roles,
-      :title => N_("Edit Report Menus")},
+      :title => _("Edit Report Menus")},
 
      {:role  => "miq_report_export",
       :name  => :export,
-      :title => N_("Import/Export")},
+      :title => _("Import/Export")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end

@@ -827,22 +827,22 @@ class CatalogController < ApplicationController
     [{:role     => "svc_catalog_accord",
       :role_any => true,
       :name     => :svccat,
-      :title    => N_("Service Catalogs")},
+      :title    => _("Service Catalogs")},
 
      {:role     => "catalog_items_accord",
       :role_any => true,
       :name     => :sandt,
-      :title    => N_("Catalog Items")},
+      :title    => _("Catalog Items")},
 
      {:role     => "orchestration_templates_accord",
       :role_any => true,
       :name     => :ot,
-      :title    => N_("Orchestration Templates")},
+      :title    => _("Orchestration Templates")},
 
      {:role     => "st_catalog_accord",
       :role_any => true,
       :name     => :stcat,
-      :title    => N_("Catalogs")},
+      :title    => _("Catalogs")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
