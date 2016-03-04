@@ -58,11 +58,6 @@ describe "Server Environment Management" do
       expect(MiqServer.minimal_env_options).to eq(%w(foo bar))
     end
 
-    it "when spartan_mode starts with 'minimal' and has various roles, including netbeans" do
-      allow(MiqServer).to receive(:spartan_mode).and_return("minimal:foo:netbeans:bar")
-      expect(MiqServer.minimal_env_options).to eq(%w(foo schedule reporting no_ui bar))
-    end
-
     it "when spartan_mode does not start with 'minimal'" do
       allow(MiqServer).to receive(:spartan_mode).and_return("foo:bar")
       expect(MiqServer.minimal_env_options).to eq([])

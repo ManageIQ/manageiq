@@ -25,11 +25,7 @@ module MiqServer::EnvironmentManagement
     MIQ_SPARTAN_ROLE_SEPARATOR = ":"
     def minimal_env_options
       @minimal_env_options ||= begin
-        options = self.minimal_env? ? spartan_mode.split(MIQ_SPARTAN_ROLE_SEPARATOR) : []
-        options.shift # remove the "minimal" from the front of the array
-
-        # Special case where Netbeans is handling the UI worker for debugging
-        options.collect { |o| o.downcase == "netbeans" ? %w(schedule reporting no_ui) : o }.flatten
+        minimal_env? ? spartan_mode.split(MIQ_SPARTAN_ROLE_SEPARATOR)[1..-1] : []
       end
     end
 
