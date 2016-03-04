@@ -3,7 +3,6 @@ USE_BROKER = true
 require_relative '../../bundler_setup'
 require 'VMwareWebService/MiqVimBroker'
 require 'VMwareWebService/MiqVim'
-require 'util/miq-memory-profiler'
 require 'util/extensions/miq-hash'
 require 'util/vmdb-logger'
 
@@ -19,8 +18,6 @@ VC_ACCESSORS = [
   [:computeResourcesByMor, :host_res],
   [:resourcePoolsByMor, :rp],
 ]
-
-mem_prof = MiqMemoryProfiler.new
 
 $vim_log = VMDBLogger.new("./ems_refresh_test.log") unless USE_BROKER
 
@@ -71,7 +68,6 @@ begin
 
     puts "Pretending to do work with the data"
     puts
-    mem_prof.profile
     sleep 0.5
   end
 
