@@ -14,7 +14,6 @@ module OpsController::Settings::Common
       return
     end
 
-    @prev_selected_dbtype = session[:edit][:new][:name] if @sb[:active_tab] == "settings_database"
     settings_get_form_vars
     return unless @edit
     @assigned_filters = []
@@ -152,18 +151,6 @@ module OpsController::Settings::Common
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         page.replace_html('pwd_note', @edit[:default_verify_status] ? '' : _("* Passwords don't match."))
-      when 'settings_database'
-        # database tab
-        @changed = (@edit[:new] != @edit[:current])
-        # only disable validate button if passwords don't match
-        if @edit[:new][:password] == @edit[:new][:verify]
-          page << javascript_hide("validate_button_off")
-          page << javascript_show("validate_button_on")
-        else
-          page << javascript_hide("validate_button_on")
-          page << javascript_show("validate_button_off")
-        end
-        page.replace_html("settings_database", :partial => "settings_database_tab") if @prev_selected_dbtype != @edit[:new][:name]
       end
 
       page << javascript_for_miq_button_visibility(@changed || @login_text_changed)
@@ -175,7 +162,6 @@ module OpsController::Settings::Common
     when 'verify'        then settings_update_ldap_verify
     when 'amazon_verify' then settings_update_amazon_verify
     when 'email_verify'  then settings_update_email_verify
-    when 'db_verify'     then settings_update_db_verify
     when 'save'          then settings_update_save
     when 'reset'         then settings_update_reset
     when 'cancel'        then settings_update_cancel
@@ -251,23 +237,6 @@ module OpsController::Settings::Common
     else
       add_flash(_("The test email is being delivered, check \"%{email}\" to verify it was successful") %
                   {:email => @sb[:new_to]})
-    end
-    render :update do |page|
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
-  end
-
-  def settings_update_db_verify
-    settings_get_form_vars
-    return unless @edit
-    db_config = MiqDbConfig.new(@edit[:new])
-    result = db_config.valid?
-    if result == true
-      add_flash(_("CFME Database settings validation was successful"))
-    else
-      db_config.errors.each do |field, msg|
-        add_flash("#{field.to_s.capitalize} #{msg}", :error)
-      end
     end
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -351,26 +320,6 @@ module OpsController::Settings::Common
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
 
       @update = MiqServer.find(@sb[:selected_server_id]).get_config
-    when "settings_database"                                      # Database tab
-      db_config = MiqDbConfig.new(@edit[:new])
-      result = db_config.save
-      if result == true
-        add_flash(_("Database settings successfully saved, they will take effect upon CFME Server restart"))
-        @changed = false
-        begin
-          MiqServer.my_server(true).restart_queue
-        rescue StandardError => bang
-          # Push msg and error flag
-          add_flash(_("Error during Server restart: %{message}") % {:message => bang.message}, :error)
-        else
-          add_flash(_("%{model}: Restart successfully initiated") % {:model => ui_lookup(:table => "evm_server")})
-        end
-      else
-        db_config.errors.each do |field, msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-        @changed = (@edit[:new] != @edit[:current])
-      end
     when "settings_custom_logos"                                      # Custom Logo tab
       @changed = (@edit[:new] != @edit[:current].config)
       @update = VMDB::Config.new("vmdb")                    # Get the settings object to update it
@@ -390,7 +339,7 @@ module OpsController::Settings::Common
       replace_right_cell(@nodetype)
       return
     end
-    if !%w(settings_advanced settings_database settings_rhn_edit settings_workers).include?(@sb[:active_tab]) &&
+    if !%w(settings_advanced settings_rhn_edit settings_workers).include?(@sb[:active_tab]) &&
        x_node.split("-").first != "z"
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
@@ -786,14 +735,6 @@ module OpsController::Settings::Common
 
       restore_password if params[:restore_password]
       set_workers_verify_status
-    when "settings_database"                                        # database tab
-      new[:name] = params[:production_dbtype]  if params[:production_dbtype]
-      @options = MiqDbConfig.get_db_type_options(new[:name])
-      @options.each do |option|
-        new[option[:name]] = params["production_#{option[:name]}".to_sym]  if params["production_#{option[:name]}".to_sym]
-      end
-      new[:verify] = params[:production_verify]  if params[:production_verify]
-      restore_password if params[:restore_password]
     when "settings_custom_logos"                                            # Custom Logo tab
       new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
       new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
@@ -826,7 +767,7 @@ module OpsController::Settings::Common
     end
 
     # This section scoops up the config second level keys changed in the UI
-    unless %w(settings_advanced settings_database settings_rhn_edit settings_smartproxy_affinity).include?(@sb[:active_tab])
+    unless %w(settings_advanced settings_rhn_edit settings_smartproxy_affinity).include?(@sb[:active_tab])
       @edit[:current].config.each_key do |category|
         @edit[:current].config[category].symbolize_keys.each_key do |key|
           if category == :smtp && key == :enable_starttls_auto  # Checkbox is handled differently
@@ -850,8 +791,7 @@ module OpsController::Settings::Common
       return unless load_edit("#{@sb[:active_tab]}__#{params[:id]}", "replace_cell__explorer")
     else
       if %w(settings_server settings_authentication settings_workers
-            settings_database settings_custom_logos
-            settings_advanced).include?(@sb[:active_tab])
+            settings_custom_logos settings_advanced).include?(@sb[:active_tab])
         return unless load_edit("settings_#{params[:id]}_edit__#{@sb[:selected_server_id]}", "replace_cell__explorer")
       end
     end
@@ -1016,16 +956,6 @@ module OpsController::Settings::Common
       session[:log_depot_default_verify_status] = true
       set_workers_verify_status
       @in_a_form = true
-    when "settings_database"                                  # Database tab
-      @edit = {}
-      @edit[:new] = {}
-      @edit[:current] = {}
-      @edit[:current] = MiqDbConfig.current.options
-      @edit[:current][:verify] = @edit[:current][:password] if @edit[:current][:password]
-      @edit[:new] = copy_hash(@edit[:current])
-      @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
-      @options = MiqDbConfig.get_db_type_options(@edit[:new][:name])
-      @in_a_form = true
     when "settings_custom_logos"                                  # Custom Logo tab
       @edit = {}
       @edit[:new] = {}
@@ -1132,7 +1062,7 @@ module OpsController::Settings::Common
       #     @sb[:selected_server] = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
       @selected_server = MiqServer.find(from_cid(nodes.last))
       @sb[:selected_server_id] = @selected_server.id
-      settings_set_form_vars if params[:button] != "db_verify"
+      settings_set_form_vars
     when "msc"
       @record = @selected_schedule = MiqSchedule.find(from_cid(nodes.last))
       @right_cell_text = _("Settings %{model} \"%{name}\"") % {:name  => @selected_schedule.name,
@@ -1232,9 +1162,6 @@ module OpsController::Settings::Common
   end
 
   def restore_password
-    if params[:production_password]
-      @edit[:new][:password] = @edit[:new][:verify] = MiqDbConfig.current.options[:password]
-    end
     if params[:replication_worker_password]
       @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:password] =
         @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:verify] =

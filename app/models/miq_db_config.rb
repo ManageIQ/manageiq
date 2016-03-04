@@ -51,10 +51,6 @@ class MiqDbConfig
     end
   end
 
-  def self.get_db_type_options(_name)
-    @@common_options
-  end
-
   def self.database_configuration
     VMDB::Config.new("database").config
   end
