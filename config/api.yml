@@ -737,6 +737,10 @@
     :subcollections:
     - :request_tasks
     - :tasks
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_show_list
   :service_templates:
     :description: Service Templates
     :options:
