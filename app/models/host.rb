@@ -21,6 +21,7 @@ class Host < ApplicationRecord
     "redhat"          => "RedHat",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",
+    "oracle"          => "Oracle",
     "unknown"         => "Unknown",
     nil               => "Unknown",
   }

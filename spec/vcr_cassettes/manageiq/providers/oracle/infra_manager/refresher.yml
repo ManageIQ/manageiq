@@ -1,0 +1,2274 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Manager
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=6yw9qKqWlP-MAhnt6pjR-nKztPfTZDm8qHjCtIPGvEMZ3D9AAt3_!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=W9JxWEmtFXL-W-w3iQuH; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b825d
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '[{"id":{"type":"com.oracle.ovm.mgr.ws.model.Manager","value":"0004fb000001000078b1f88e034c8105","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Manager/0004fb000001000078b1f88e034c8105","name":"OVM
+        Manager"},"name":"OVM Manager","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"managerUuid":"0004fb000001000078b1f88e034c8105","managerVersion":"3.3.3.1085","managerRunState":"RUNNING","managerTime":1457028377254}]'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=zZQ9qKrpEDA65uI5caPn0RYiC6pbkAF7oKXUSBk8WjLZDKQIIVu6!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=D-KGbJ6d6BaD.YyU3Czd; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b825e
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '[{"id":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"name":"test-pool","description":"","locked":false,"readOnly":false,"generation":17,"userData":[],"resourceGroupIds":[],"virtualDiskIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb000012000083f79193eb5f331e.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img","name":"test"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200006b0be3e9eece06c8.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img","name":"test
+        (2)"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000bd2532803aa551fe.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img","name":"test
+        (3)"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000be8645e8d8b9bf65.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img","name":"Test3disk"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200009da84520b0d03dd5.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img","name":"Test4.0"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000371dba26e69f20f6.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso","name":"CentOS-7-x86_64-Minimal-1503-01.iso"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000d4103fe39b16ac7a.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000d4103fe39b16ac7a.iso","name":"ubuntu-14.04.3-server-amd64.iso"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000b57ac11b9bf3970e.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000b57ac11b9bf3970e.iso","name":"OracleLinux-R6-U7-Server-x86_64-dvd.iso"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001500009d25437163f7d3fb.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001500009d25437163f7d3fb.iso","name":"OracleLinux-R7-U1-Server-x86_64-dvd.iso"}],"vmIds":[{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000bc56cffe6e9aba7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000bc56cffe6e9aba7a","name":"centos-7-template.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"}],"assemblyIds":[],"presentedServerIds":[{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}],"fileSystemId":{"type":"com.oracle.ovm.mgr.ws.model.FileSystem","value":"0004fb00000500003a887e2393804ccb","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileSystem/0004fb00000500003a887e2393804ccb","name":null},"managerUuid":"0004fb000001000078b1f88e034c8105","refreshed":true,"sharePath":""}]'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/FileSystem/0004fb00000500003a887e2393804ccb
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=3O89qKspi2Vnjx130kYOXU10S6nZxiUUvKO5taTVlk-iKUWtRDve!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=ozgf7n55P1hRzBJdlEFt; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b825f
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.FileSystem","value":"0004fb00000500003a887e2393804ccb","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileSystem/0004fb00000500003a887e2393804ccb","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":19,"userData":[],"resourceGroupIds":[],"fileServerIds":[{"type":"com.oracle.ovm.mgr.ws.model.FileServer","value":"0004fb0000090000b2906e6e2750ffc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileServer/0004fb0000090000b2906e6e2750ffc9","name":"Local
+        FS oracle-vm-server"}],"fileSystemMountIds":[{"type":"com.oracle.ovm.mgr.ws.model.FileSystemMount","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09_mount_/OVS/Repositories/0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileSystemMount/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09_mount_%2FOVS%2FRepositories%2F0004fb00000300003076225fcb290271","name":"oracle-vm-server_/OVS/Repositories/0004fb00000300003076225fcb290271"}],"repositoryIds":[{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"}],"storageElementId":{"type":"com.oracle.ovm.mgr.ws.model.StorageElement","value":"0004fb0000180000a2a5409294f4eb35","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageElement/0004fb0000180000a2a5409294f4eb35","name":"OVM_SYS_REPO_PART_35002538da0269d57"},"clusterId":null,"clusterHeartbeatDeviceId":null,"path":"/dev/mapper/OVM_SYS_REPO_PART_35002538da0269d57","size":187709784064,"freeSize":169837854720,"refreshed":true,"accessGroupId":null,"shared":false}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=qHo9qKtg3DlQwlnBAvftX08GgbTlAZ80bR-qzGy1UH3cF4m5kOOr!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=jO5TrIb2vFJohkDormLB; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8260
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '[{"id":{"type":"com.oracle.ovm.mgr.ws.model.ServerPool","value":"0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool/0004fb0000020000b5995e9c15a0a4a5","name":"test-pool"},"name":"test-pool","description":"","locked":false,"readOnly":false,"generation":9,"userData":[],"resourceGroupIds":[],"serverIds":[{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}],"masterServerId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"affinityGroupIds":[],"vmIds":[{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"}],"unassignedVmIds":[],"clusterId":null,"virtualIp":"172.16.92.65","keymap":"en-us","secureVmMigrate":false,"serverPoolPolicyId":{"type":"com.oracle.ovm.mgr.ws.model.ServerPoolPolicy","value":"balancer_0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPoolPolicy/balancer_0004fb0000020000b5995e9c15a0a4a5","name":null},"zoneId":null,"vmStartPolicy":"BEST_SERVER","serverUpdateConfigurationId":null}]'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Server
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=-bg9qKuVgwok_B2GS6qbBq_znMAf0hnGoY5_Q8BJwG9jteZ03ifG!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=NaP.Pkq5LNA1bFLIC6H.; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8261
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '[{"id":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"name":"oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":182,"userData":[],"resourceGroupIds":[],"serverRunState":"RUNNING","ipAddress":"172.16.92.64","serverRoles":["UTILITY","VM"],"maintenanceMode":false,"agentLogin":"oracle","statisticInterval":20,"ntpServers":["172.16.95.57"],"biosVendor":"American
+        Megatrends Inc.","biosVersion":"F7","biosReleaseDate":"01/17/2014","processorType":"X86_64","processorSpeed":3591797.0,"populatedProcessorSockets":1,"threadsPerCore":2,"coresPerProcessorSocket":4,"totalProcessorCores":4,"enabledProcessorCores":1,"memory":16264,"usableMemory":9084,"noExecuteFlag":true,"ovmVersion":"3.3.3-1085","hostname":"oracle-vm-server","managerUuid":"0004fb000001000078b1f88e034c8105","manufacturer":"Gigabyte
+        Technology Co., Ltd.","productName":"To be filled by O.E.M.","serialNumber":"To
+        be filled by O.E.M.","controlDomainIds":[{"type":"com.oracle.ovm.mgr.ws.model.ControlDomain","value":"0004fb0000210000e7c92f6882593287","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ControlDomain/0004fb0000210000e7c92f6882593287","name":"Control
+        Domain"}],"cpuIds":[{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (1) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(1)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (2) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(2)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (3) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(3)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (4) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(4)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (5) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(5)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (6) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(6)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (7) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(7)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (8) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(8)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null}],"hypervisor":{"capabilities":["XEN_3_0_PVM_x86_64","XEN_3_0_PVM_x86_32","XEN_3_0_HVM_x86_32","XEN_3_0_HVM_x86_32_PAE","XEN_3_0_HVM_x86_64"],"version":"4.3.1OVM","type":"XEN"},"serverControllerId":null,"cpuCompatibilityGroupId":{"type":"com.oracle.ovm.mgr.ws.model.CpuCompatibilityGroup","value":"Default_Intel_F6_M60","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/CpuCompatibilityGroup/Default_Intel_F6_M60","name":"Default_Intel_Family:6_Model:60"},"repositoryExportIds":[],"vmIds":[{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"}],"serverPoolId":{"type":"com.oracle.ovm.mgr.ws.model.ServerPool","value":"0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool/0004fb0000020000b5995e9c15a0a4a5","name":"test-pool"},"ethernetPortIds":[{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"}],"clusterId":null,"networkIds":[],"fileSystemMountIds":[{"type":"com.oracle.ovm.mgr.ws.model.FileSystemMount","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09_mount_/OVS/Repositories/0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileSystemMount/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09_mount_%2FOVS%2FRepositories%2F0004fb00000300003076225fcb290271","name":"oracle-vm-server_/OVS/Repositories/0004fb00000300003076225fcb290271"}],"fileServerPluginIds":[{"type":"com.oracle.ovm.mgr.ws.model.FileServerPlugin","value":"oracle.generic.NFSPlugin.GenericNFSPlugin
+        (1.1.0)","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileServerPlugin/oracle.generic.NFSPlugin.GenericNFSPlugin%20(1.1.0)","name":"Oracle
+        Generic Network File System"},{"type":"com.oracle.ovm.mgr.ws.model.FileServerPlugin","value":"oracle.ocfs2.OCFS2.OCFS2Plugin
+        (0.1.0-42.1)","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileServerPlugin/oracle.ocfs2.OCFS2.OCFS2Plugin%20(0.1.0-42.1)","name":"Oracle
+        OCFS2 File system"}],"storageArrayPluginIds":[{"type":"com.oracle.ovm.mgr.ws.model.StorageArrayPlugin","value":"oracle.generic.SCSIPlugin.GenericPlugin
+        (1.1.0)","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageArrayPlugin/oracle.generic.SCSIPlugin.GenericPlugin%20(1.1.0)","name":"Oracle
+        Generic SCSI Plugin"}],"localStorageArrayId":{"type":"com.oracle.ovm.mgr.ws.model.StorageArray","value":"0004fb000009000022fbc1cfc5f3deaf","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageArray/0004fb000009000022fbc1cfc5f3deaf","name":"Generic
+        Local Storage Array @ oracle-vm-server"},"storageInitiatorIds":[{"type":"com.oracle.ovm.mgr.ws.model.StorageInitiator","value":"iqn.1988-12.com.oracle:3bd917bbbc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageInitiator/iqn.1988-12.com.oracle:3bd917bbbc1","name":"iqn.1988-12.com.oracle:3bd917bbbc1"},{"type":"com.oracle.ovm.mgr.ws.model.StorageInitiator","value":"storage.LocalStorageInitiator
+        in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageInitiator/storage.LocalStorageInitiator%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"storage.LocalStorageInitiator
+        in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09"}],"storageElementIds":[{"type":"com.oracle.ovm.mgr.ws.model.StorageElement","value":"0004fb00001800003ca68d467de2fe48","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageElement/0004fb00001800003ca68d467de2fe48","name":"350014ee65ae7247a"},{"type":"com.oracle.ovm.mgr.ws.model.StorageElement","value":"0004fb0000180000a2a5409294f4eb35","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/StorageElement/0004fb0000180000a2a5409294f4eb35","name":"OVM_SYS_REPO_PART_35002538da0269d57"}],"refreshFileServerIds":[],"accessGroupIds":[],"localFileServerId":{"type":"com.oracle.ovm.mgr.ws.model.FileServer","value":"0004fb0000090000b2906e6e2750ffc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/FileServer/0004fb0000090000b2906e6e2750ffc9","name":"Local
+        FS oracle-vm-server"},"serverAbilities":{"cluster":true,"nfs":true,"fibreChannel":true,"highAvailability":true,"vmSuspend":true,"perVmCpuOverSubscribe":true,"allVmCpuOverSubscribe":true,"bondModeActiveBackup":true,"bondModeLinkAggregation":true,"bondModeAdaptiveLoadBalancing":true,"mtuConfiguration":true,"localStorageElement":true,"vmMemoryAlignment":1048576,"vncConsole":true,"serialConsole":true,"migrationSetup":false,"hvmMaxVnics":8,"serverPackageUpdate":true,"powerOnWOL":true,"repositoryOnSharedDisk":true,"repositoryOnLocalDisk":true,"clusterFsOnPhysicalDisk":true,"vmEmptyCdrom":true,"iScsi":true},"serverUpToDate":true,"rebootOnUpgrade":true,"protected":false}]'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=FDw9qKvpYZOVt2kN_Lp5Jm8Qa27twN1O7sET7aSP0KDqIu9WtIkS!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=VPo7DiEwlGw8rzjhHWxz; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8262
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},"name":"bond0 on oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"bondMode":"ACTIVE_PASSIVE","interfaceName":"bond0","macAddress":"fc:aa:14:e3:f5:de","mtu":1500,"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"},"physicalPortIds":[{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"}],"bondPortId":null,"portType":"BOND","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"vlanInterfaceIds":[],"portState":"PORT_UP","virtualSwitchId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualSwitch","value":"0004fb0000300000260eb4696557f882","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualSwitch/0004fb0000300000260eb4696557f882","name":null},"ipaddresses":[{"address":"172.16.92.64","netmask":"255.255.0.0","type":"IPV4","configType":"STATIC"}]}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=DPI9qKwp90o_z_-NgKWzbnq80eu4YnWes1BVR-roUA0-qh82KsJi!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=QC9cWPUuT5m2K51lN251; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8263
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"},"name":"eth0 on oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"bondMode":null,"interfaceName":"eth0","macAddress":"fc:aa:14:e3:f5:de","mtu":1500,"networkId":null,"physicalPortIds":null,"bondPortId":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},"portType":"PHYSICAL","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"vlanInterfaceIds":[],"portState":"PORT_UP","virtualSwitchId":null,"ipaddresses":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=vfg9qKxbEWEf7PS8PiC_SUJwC_aBOmXP0ChcbFqLrilTQlwiUdlE!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=xU5jo.A6KD70YlWLkVhO; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8264
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"},"name":"172.16.0.0","description":"","locked":false,"readOnly":false,"generation":12,"userData":[],"resourceGroupIds":[],"roles":["MANAGEMENT","CLUSTER_HEARTBEAT","LIVE_MIGRATE","VIRTUAL_MACHINE","STORAGE"],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000f35dc14d694dadc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9","name":"00:21:f6:3a:60:bc"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000bcfbd74f6571fc9d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d","name":"Template
+        Vnic"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000aaf69e494353ebb9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9","name":"00:21:f6:4b:c7:1d"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000d1272c5187d1bef0","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0","name":"00:21:f6:0f:d6:2c"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000db41c339b6242c51","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51","name":"00:21:f6:26:2d:d2"}],"ethernetPortIds":[{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"}],"vlanInterfaceIds":[],"serverLocal":false,"mtu":0,"serverId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(1)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=oJQ9qKyVU87lIGQ2u8tkpOV3b0SLi6RpR88tUUFlhlvsKh_9xIHl!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=uC39MJ7nJzk4TqMsYU2L; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8265
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (1) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(1)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":1,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(2)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=8a09qKzDBws0Gj6YL-wqQUiLsCWfr9jzWHybsXZQSD8F-Bey21bG!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Y1SaOHs.ric-ytgNfREE; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8266
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (2) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(2)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":2,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(3)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=tH89qKz0MFPvhRb9k3Ajs0Tigh39aseiKzd5C2JPLRoTsRuur_lp!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=TNzkuDaBj3uuG7p5HBeR; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8267
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (3) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(3)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":3,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(4)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=FWQ9qK0nfdnpfGkAJnOVaVVC0f__7g8-URauIKmpYFRPLepdhOym!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=EHCcHDCZUA5ULUxM2WvU; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8268
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (4) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(4)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":4,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(5)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=Kl89qK1fL_cR_LY8CFs05W3Wh7FZVHZ_lqixrg_exv9ivSszSMpW!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=5sIzaOcR2HF5iNkqTtwQ; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8269
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (5) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(5)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":5,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:17 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(6)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:17 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=HKc9qK2P76YX9OlIdpa-BdRFkBZu6613Fp5wMX5d5QKVOSj_sKyM!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=jR7ycOBGHhXBelS2GWZp; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b826a
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (6) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(6)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":6,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(7)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=NF09qK3E-rcfThmFGur8U_f441RHGy60dA5o1dNj_rWEVcT2o00G!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Npl5rKev4to.fTRPkovE; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b826b
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (7) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(7)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":7,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(8)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=yiY9qK3znzw9Nf8paZDAiDXB9JT-XaQz0CEKTUMd4dAlHC-yqZH2!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=vAUhaIV22d3sIAjgPdOu; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b826c
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Cpu","value":"Processor
+        (8) in 03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Cpu/Processor%20(8)%20in%2003:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":null},"name":"","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"cpuNumber":8,"levelTwoCacheSize":8192,"flags":"fpu
+        de tsc msr pae mce cx8 apic sep mca cmov pat clflush acpi mmx fxsr sse sse2
+        ss ht syscall nx lm constant_tsc rep_good nopl nonstop_tsc eagerfpu pni pclmulqdq
+        monitor est ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes
+        xsave avx f16c rdrand hypervisor lahf_lm abm ida arat xsaveopt pln pts dtherm
+        fsgsbase bmi1 hle avx2 bmi2 erms rtm","modelName":"Intel(R) Core(TM) i7-4790
+        CPU @ 3.60GHz","virtualCpuNumber":-1,"vendorId":"GenuineIntel","cpuFamily":6,"cpuModel":60,"serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=YFc9qK4f5jQc7BSk4_31tJKt9A5OKMq_XyQvQVZRTTTiXPdsmMq3!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=U9vqAtZZHcRJjsmzTFQa; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b826d
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},"name":"bond0 on oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"bondMode":"ACTIVE_PASSIVE","interfaceName":"bond0","macAddress":"fc:aa:14:e3:f5:de","mtu":1500,"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"},"physicalPortIds":[{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"}],"bondPortId":null,"portType":"BOND","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"vlanInterfaceIds":[],"portState":"PORT_UP","virtualSwitchId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualSwitch","value":"0004fb0000300000260eb4696557f882","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualSwitch/0004fb0000300000260eb4696557f882","name":null},"ipaddresses":[{"address":"172.16.92.64","netmask":"255.255.0.0","type":"IPV4","configType":"STATIC"}]}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=ozU9qK5ScccpNYy0-rqYT3kPF9E-UKbEYdKkdMXwRJL1ejJBHAXc!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=r8Ckf0QSUDVUDZl0BzHl; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b826e
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"},"name":"eth0 on oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"bondMode":null,"interfaceName":"eth0","macAddress":"fc:aa:14:e3:f5:de","mtu":1500,"networkId":null,"physicalPortIds":null,"bondPortId":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},"portType":"PHYSICAL","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"vlanInterfaceIds":[],"portState":"PORT_UP","virtualSwitchId":null,"ipaddresses":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=kzY9qK6CGIISkaUiXh9JpvxJM1FXybYd-zxOcZIKvL68gyRgYZTs!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Ohx62rLBVCd.QLTBXahu; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b826f
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"},"name":"172.16.0.0","description":"","locked":false,"readOnly":false,"generation":12,"userData":[],"resourceGroupIds":[],"roles":["MANAGEMENT","CLUSTER_HEARTBEAT","LIVE_MIGRATE","VIRTUAL_MACHINE","STORAGE"],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000f35dc14d694dadc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9","name":"00:21:f6:3a:60:bc"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000bcfbd74f6571fc9d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d","name":"Template
+        Vnic"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000aaf69e494353ebb9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9","name":"00:21:f6:4b:c7:1d"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000d1272c5187d1bef0","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0","name":"00:21:f6:0f:d6:2c"},{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000db41c339b6242c51","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51","name":"00:21:f6:26:2d:d2"}],"ethernetPortIds":[{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"}],"vlanInterfaceIds":[],"serverLocal":false,"mtu":0,"serverId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=QLI9qK6vAJI7bPrGSGOBEpT7WSf3wo2Ze-6Me5nZMvrTEu7q6kvx!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=5RQiYV.RJnNXhd58bsHu; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8270
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},"name":"bond0 on oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"bondMode":"ACTIVE_PASSIVE","interfaceName":"bond0","macAddress":"fc:aa:14:e3:f5:de","mtu":1500,"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"},"physicalPortIds":[{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"}],"bondPortId":null,"portType":"BOND","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"vlanInterfaceIds":[],"portState":"PORT_UP","virtualSwitchId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualSwitch","value":"0004fb0000300000260eb4696557f882","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualSwitch/0004fb0000300000260eb4696557f882","name":null},"ipaddresses":[{"address":"172.16.92.64","netmask":"255.255.0.0","type":"IPV4","configType":"STATIC"}]}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=45k9qK7lsxHrpzzOdH-oHzHQOFbCWjiRUfx3oHehzqD7i7PjCuOJ!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=9nyLMPrJfT9K9VyXvV3s; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8271
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000bd65b4a15a3af1c8","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000bd65b4a15a3af1c8","name":"eth0
+        on oracle-vm-server"},"name":"eth0 on oracle-vm-server","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"bondMode":null,"interfaceName":"eth0","macAddress":"fc:aa:14:e3:f5:de","mtu":1500,"networkId":null,"physicalPortIds":null,"bondPortId":{"type":"com.oracle.ovm.mgr.ws.model.EthernetPort","value":"0004fb0000200000a0cc6d2cfde52f39","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/EthernetPort/0004fb0000200000a0cc6d2cfde52f39","name":"bond0
+        on oracle-vm-server"},"portType":"PHYSICAL","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"vlanInterfaceIds":[],"portState":"PORT_UP","virtualSwitchId":null,"ipaddresses":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=Yv89qK8cDk2KF20O69FpCZzAVakinSl2ruhAv8wWkR8_srb2qcer!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Sywu1UGemtKN.UjFcuBD; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8272
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '[{"id":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},"name":"Test3.0","description":"","locked":false,"readOnly":false,"generation":24,"userData":[],"resourceGroupIds":[],"vmRunState":"STOPPED","cpuPriority":50,"memory":512,"memoryLimit":512,"hugePagesEnabled":false,"cpuCount":1,"cpuCountLimit":1,"cpuUtilizationCap":100,"highAvailability":false,"bootOrder":["CDROM","DISK"],"vmMouseType":"OS_DEFAULT","osType":"Other
+        Linux","vmDomainType":"XEN_HVM","diskLimit":4,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000030d92b2d5d22870d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d","name":"Mapping
+        for disk Id (0004fb0000120000be8645e8d8b9bf65.img)"}],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000d1272c5187d1bef0","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0","name":"00:21:f6:0f:d6:2c"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"serverPoolId":{"type":"com.oracle.ovm.mgr.ws.model.ServerPool","value":"0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool/0004fb0000020000b5995e9c15a0a4a5","name":"test-pool"},"networkInstallPath":"","vmCloneDefinitionIds":[],"origin":"","keymapName":"en-us","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"sslVncPort":null,"sslTtyPort":null,"affinityGroupIds":[],"osVersion":null,"kernelVersion":null,"guestDriverVersion":null,"vmApiVersion":null,"vmStartPolicy":"BEST_SERVER","currentMemory":0,"currentCpuCount":0,"currentDomainId":-1,"architecture":null,"restartActionOnCrash":"RESTART","restartActionOnPowerOff":"STOP","restartActionOnRestart":"RESTART"},{"id":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000bc56cffe6e9aba7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000bc56cffe6e9aba7a","name":"centos-7-template.0"},"name":"centos-7-template.0","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"vmRunState":"TEMPLATE","cpuPriority":50,"memory":1024,"memoryLimit":1024,"hugePagesEnabled":false,"cpuCount":1,"cpuCountLimit":1,"cpuUtilizationCap":100,"highAvailability":false,"bootOrder":["DISK","CDROM"],"vmMouseType":"OS_DEFAULT","osType":"Other
+        Linux","vmDomainType":"XEN_HVM","diskLimit":4,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb00001300007ec4ddf43e6c59ff","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff","name":"Mapping
+        for disk Id (0004fb00001200006b0be3e9eece06c8.img)"}],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000bcfbd74f6571fc9d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d","name":"Template
+        Vnic"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"serverPoolId":null,"networkInstallPath":"","vmCloneDefinitionIds":[],"origin":"","keymapName":"en-us","serverId":null,"sslVncPort":null,"sslTtyPort":null,"affinityGroupIds":null,"osVersion":null,"kernelVersion":null,"guestDriverVersion":null,"vmApiVersion":null,"vmStartPolicy":null,"currentMemory":-1,"currentCpuCount":-1,"currentDomainId":-1,"architecture":null,"restartActionOnCrash":"RESTART","restartActionOnPowerOff":"STOP","restartActionOnRestart":"RESTART"},{"id":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"name":"test","description":"","locked":false,"readOnly":false,"generation":13,"userData":[],"resourceGroupIds":[],"vmRunState":"RUNNING","cpuPriority":50,"memory":1024,"memoryLimit":1024,"hugePagesEnabled":false,"cpuCount":1,"cpuCountLimit":1,"cpuUtilizationCap":100,"highAvailability":false,"bootOrder":["DISK","CDROM"],"vmMouseType":"OS_DEFAULT","osType":"Other
+        Linux","vmDomainType":"XEN_HVM","diskLimit":4,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000505334a03f0e1e7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"},{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000f79077fbb602029e","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e","name":"Mapping
+        for disk Id (0004fb000012000083f79193eb5f331e.img)"}],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000f35dc14d694dadc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9","name":"00:21:f6:3a:60:bc"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"serverPoolId":{"type":"com.oracle.ovm.mgr.ws.model.ServerPool","value":"0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool/0004fb0000020000b5995e9c15a0a4a5","name":"test-pool"},"networkInstallPath":"","vmCloneDefinitionIds":[],"origin":"","keymapName":"en-us","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"sslVncPort":"6900","sslTtyPort":"10001","affinityGroupIds":[],"osVersion":null,"kernelVersion":null,"guestDriverVersion":null,"vmApiVersion":null,"vmStartPolicy":"BEST_SERVER","currentMemory":1030,"currentCpuCount":1,"currentDomainId":2,"architecture":null,"restartActionOnCrash":"RESTART","restartActionOnPowerOff":"STOP","restartActionOnRestart":"RESTART"},{"id":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},"name":"test2.0","description":"","locked":false,"readOnly":false,"generation":5,"userData":[],"resourceGroupIds":[],"vmRunState":"RUNNING","cpuPriority":50,"memory":1024,"memoryLimit":1024,"hugePagesEnabled":false,"cpuCount":1,"cpuCountLimit":1,"cpuUtilizationCap":100,"highAvailability":false,"bootOrder":["DISK","CDROM"],"vmMouseType":"OS_DEFAULT","osType":"Other
+        Linux","vmDomainType":"XEN_HVM","diskLimit":4,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000034e2ae0bc056f1dd","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd","name":"Mapping
+        for disk Id (0004fb0000120000bd2532803aa551fe.img)"}],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000aaf69e494353ebb9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9","name":"00:21:f6:4b:c7:1d"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"serverPoolId":{"type":"com.oracle.ovm.mgr.ws.model.ServerPool","value":"0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool/0004fb0000020000b5995e9c15a0a4a5","name":"test-pool"},"networkInstallPath":"","vmCloneDefinitionIds":[],"origin":"","keymapName":"en-us","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"sslVncPort":"6901","sslTtyPort":"10003","affinityGroupIds":[],"osVersion":null,"kernelVersion":null,"guestDriverVersion":null,"vmApiVersion":null,"vmStartPolicy":"USE_POOL_POLICY","currentMemory":1027,"currentCpuCount":1,"currentDomainId":3,"architecture":null,"restartActionOnCrash":"RESTART","restartActionOnPowerOff":"STOP","restartActionOnRestart":"RESTART"},{"id":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"name":"Test4.0","description":"","locked":false,"readOnly":false,"generation":35,"userData":[],"resourceGroupIds":[],"vmRunState":"RUNNING","cpuPriority":50,"memory":4096,"memoryLimit":4096,"hugePagesEnabled":false,"cpuCount":2,"cpuCountLimit":2,"cpuUtilizationCap":100,"highAvailability":false,"bootOrder":["DISK","CDROM"],"vmMouseType":"OS_DEFAULT","osType":"Red
+        Hat Enterprise Linux 7","vmDomainType":"XEN_HVM","diskLimit":4,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000065273ee6acff3715","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715","name":"Mapping
+        for disk Id (0004fb00001200009da84520b0d03dd5.img)"},{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000066c06003eb4b125","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"}],"virtualNicIds":[{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000db41c339b6242c51","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51","name":"00:21:f6:26:2d:d2"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"serverPoolId":{"type":"com.oracle.ovm.mgr.ws.model.ServerPool","value":"0004fb0000020000b5995e9c15a0a4a5","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/ServerPool/0004fb0000020000b5995e9c15a0a4a5","name":"test-pool"},"networkInstallPath":"","vmCloneDefinitionIds":[],"origin":"","keymapName":"en-us","serverId":{"type":"com.oracle.ovm.mgr.ws.model.Server","value":"03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Server/03:aa:02:fc:04:14:05:e3:f5:06:de:07:00:08:00:09","name":"oracle-vm-server"},"sslVncPort":"6903","sslTtyPort":"10006","affinityGroupIds":[],"osVersion":null,"kernelVersion":null,"guestDriverVersion":null,"vmApiVersion":null,"vmStartPolicy":"BEST_SERVER","currentMemory":3843,"currentCpuCount":2,"currentDomainId":13,"architecture":null,"restartActionOnCrash":"RESTART","restartActionOnPowerOff":"STOP","restartActionOnRestart":"RESTART"}]'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=SBc9qK-jtiP2ZeE4J_rzI0z50Y4xxG_aATK1nV1u1S2ZcJSOkaTB!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=2AlJ04ztIUF.1fz.7M6f; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8273
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000030d92b2d5d22870d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d","name":"Mapping
+        for disk Id (0004fb0000120000be8645e8d8b9bf65.img)"},"name":"Mapping for disk
+        Id (0004fb0000120000be8645e8d8b9bf65.img)","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000be8645e8d8b9bf65.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img","name":"Test3disk"},"storageElementId":null,"diskTarget":0,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=wxA9qK_YRaExYUFdKBWi7eNxPHhLkt6Y4lh3GnBxJyfyrrtBnwu-!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=z769mMxFotQS6fBJdVzK; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8274
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000be8645e8d8b9bf65.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img","name":"Test3disk"},"name":"Test3disk","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":7516192768,"onDiskSize":0,"path":"/VirtualDisks/0004fb0000120000be8645e8d8b9bf65.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000030d92b2d5d22870d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d","name":"Mapping
+        for disk Id (0004fb0000120000be8645e8d8b9bf65.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=VK09qLAQ_xvkjBJ06HOgI9G5q44c_YG3em5qT3B_m_uZVvlQBcH_!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=8sOrzQ3Hz2ChLys4JxhZ; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8275
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000030d92b2d5d22870d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d","name":"Mapping
+        for disk Id (0004fb0000120000be8645e8d8b9bf65.img)"},"name":"Mapping for disk
+        Id (0004fb0000120000be8645e8d8b9bf65.img)","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000be8645e8d8b9bf65.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img","name":"Test3disk"},"storageElementId":null,"diskTarget":0,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=Qac9qLBDDnfDVxZKyxMV85yBi1nERuwUkCaTxyUaJA18jqJc7kQw!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Mc17pIVi8tzRCBRnqf31; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8276
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000be8645e8d8b9bf65.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000be8645e8d8b9bf65.img","name":"Test3disk"},"name":"Test3disk","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":7516192768,"onDiskSize":0,"path":"/VirtualDisks/0004fb0000120000be8645e8d8b9bf65.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000030d92b2d5d22870d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000030d92b2d5d22870d","name":"Mapping
+        for disk Id (0004fb0000120000be8645e8d8b9bf65.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=Tis9qLB1V9PgJzqpO3uA7hKewcJMpq8D91CTVQVj2qDU-5PhhNS5!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=vPTVmwaSbZ0JcUBPHKto; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8277
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000d1272c5187d1bef0","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0","name":"00:21:f6:0f:d6:2c"},"name":"00:21:f6:0f:d6:2c","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:0f:d6:2c","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=tx49qLClrxFp7UxeOMVeZrU73JVN8gRaORsFUXzqtTBF_lo5TnS2!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=1v39eJX1cUFRFG1GcLsM; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8278
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000d1272c5187d1bef0","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000d1272c5187d1bef0","name":"00:21:f6:0f:d6:2c"},"name":"00:21:f6:0f:d6:2c","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:0f:d6:2c","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600006f8e65a5d245ea0c","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600006f8e65a5d245ea0c","name":"Test3.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=HxM9qLDTRGhSMUq_D7jetv6Cbak8_uI1PLtLmtwDSGzKxHiYhrrT!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=xCUismDHQTCXJLXDdVyQ; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8279
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb00001300007ec4ddf43e6c59ff","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff","name":"Mapping
+        for disk Id (0004fb00001200006b0be3e9eece06c8.img)"},"name":"Mapping for disk
+        Id (0004fb00001200006b0be3e9eece06c8.img)","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000bc56cffe6e9aba7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000bc56cffe6e9aba7a","name":"centos-7-template.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200006b0be3e9eece06c8.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img","name":"test
+        (2)"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=mTY9qLEDFWd-j3_kmAtDSmxII7tDM9HjptTNROqXtbFvsra8sG4Q!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=L.eS5.7f1d.3W6HxMr7y; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b827a
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200006b0be3e9eece06c8.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img","name":"test
+        (2)"},"name":"test (2)","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":10737418240,"onDiskSize":1041235968,"path":"/VirtualDisks/0004fb00001200006b0be3e9eece06c8.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb00001300007ec4ddf43e6c59ff","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff","name":"Mapping
+        for disk Id (0004fb00001200006b0be3e9eece06c8.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=UjA9qLEu0jfE1WY9OZJrsAry4Jqn5eP1jeDqPrb-7a0CQ6E4l3pl!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=DiWUKOKxwc4c5M8T75oY; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b827b
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb00001300007ec4ddf43e6c59ff","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff","name":"Mapping
+        for disk Id (0004fb00001200006b0be3e9eece06c8.img)"},"name":"Mapping for disk
+        Id (0004fb00001200006b0be3e9eece06c8.img)","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000bc56cffe6e9aba7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000bc56cffe6e9aba7a","name":"centos-7-template.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200006b0be3e9eece06c8.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img","name":"test
+        (2)"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:18 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:18 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=v5U9qLFbKABtnDb088WDvHeqYrWVM4GR1Szy343uAbsBa65d-z9K!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=GrOfVhcelkY73KH8XWqB; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b827c
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200006b0be3e9eece06c8.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200006b0be3e9eece06c8.img","name":"test
+        (2)"},"name":"test (2)","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":10737418240,"onDiskSize":1041235968,"path":"/VirtualDisks/0004fb00001200006b0be3e9eece06c8.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb00001300007ec4ddf43e6c59ff","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb00001300007ec4ddf43e6c59ff","name":"Mapping
+        for disk Id (0004fb00001200006b0be3e9eece06c8.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=P-89qLGJE6m5cgJP9DEi6tRnZrhvKYGc5VjF4uJ3DHtVEes9CYjt!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=L56vqJ075a-hjufW3NgL; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b827d
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000bcfbd74f6571fc9d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d","name":"Template
+        Vnic"},"name":"Template Vnic","description":"A dummy vnic used only for templates","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"macAddress":null,"ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000bc56cffe6e9aba7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000bc56cffe6e9aba7a","name":"centos-7-template.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=qzo9qLG12sm6lutaZJuz_Q53ykFRld5Z0NUEhIa7s6hRp3BrVXD-!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=yzlWaLLwBoA.2UttWj0O; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b827e
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000bcfbd74f6571fc9d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000bcfbd74f6571fc9d","name":"Template
+        Vnic"},"name":"Template Vnic","description":"A dummy vnic used only for templates","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"macAddress":null,"ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000bc56cffe6e9aba7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000bc56cffe6e9aba7a","name":"centos-7-template.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=OHk9qLHmipH3iprBkyi29PuSRYGkCMV0rJvLd1Ug9kadzqNWYZ-x!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=bDQkNqVB3QablqK7o.xy; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b827f
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000505334a03f0e1e7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"},"name":"Mapping for disk
+        Id (0004fb0000150000371dba26e69f20f6.iso)","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000371dba26e69f20f6.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso","name":"CentOS-7-x86_64-Minimal-1503-01.iso"},"storageElementId":null,"diskTarget":0,"emulatedBlockDevice":false,"diskWriteMode":"READ_ONLY"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=SMQ9qLIajxgm6c4prSFyO_9VQGlOUdQUzfigk8Bb-XWo7I8o9VjI!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=8PYyNWLjJbTYZgp3XEl6; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8280
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000f79077fbb602029e","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e","name":"Mapping
+        for disk Id (0004fb000012000083f79193eb5f331e.img)"},"name":"Mapping for disk
+        Id (0004fb000012000083f79193eb5f331e.img)","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb000012000083f79193eb5f331e.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img","name":"test"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=O-k9qLJKA82pVsNUtQu4gSX7Rj6rHF05_8I42JcEkdfLvT4ynb_S!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=XaI8578AOpVRK2Tt61m7; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8281
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000371dba26e69f20f6.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso","name":"CentOS-7-x86_64-Minimal-1503-01.iso"},"name":"CentOS-7-x86_64-Minimal-1503-01.iso","description":"Import
+        URL: http://ftp.arnes.si/pub/mirrors/centos.org/7.1.1503/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_CDROM","size":666894336,"onDiskSize":666894336,"path":"/ISOs/0004fb0000150000371dba26e69f20f6.iso","shareable":true,"importFileName":"CentOS-7-x86_64-Minimal-1503-01.iso","vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000505334a03f0e1e7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=kkU9qLJ7EDkqrktZDurtFD-fvA-LPxdjnM1-YlDXIED_MiCPjQzP!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=4imDuX8-OvTtzh4wASHE; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8282
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb000012000083f79193eb5f331e.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img","name":"test"},"name":"test","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":10737418240,"onDiskSize":0,"path":"/VirtualDisks/0004fb000012000083f79193eb5f331e.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000f79077fbb602029e","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e","name":"Mapping
+        for disk Id (0004fb000012000083f79193eb5f331e.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=PnA9qLKvL-bd_Y5QvcUn8aDn1eUYE-eXOYrwlIJQxYey-ror2GpU!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=j08BTsf0j-1C4KCJR.Xd; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8283
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000505334a03f0e1e7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"},"name":"Mapping for disk
+        Id (0004fb0000150000371dba26e69f20f6.iso)","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000371dba26e69f20f6.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso","name":"CentOS-7-x86_64-Minimal-1503-01.iso"},"storageElementId":null,"diskTarget":0,"emulatedBlockDevice":false,"diskWriteMode":"READ_ONLY"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=RH49qLLiS-WdVsdgE82kS1iF9I6TQTQHTuzaHomZ65BmH_y-jthD!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=JSE8Sue0vftkeH3xlaBK; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8284
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000f79077fbb602029e","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e","name":"Mapping
+        for disk Id (0004fb000012000083f79193eb5f331e.img)"},"name":"Mapping for disk
+        Id (0004fb000012000083f79193eb5f331e.img)","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb000012000083f79193eb5f331e.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img","name":"test"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=pco9qLMQCamkUl72GD0rVuVDqz8BFFj36MF-Ei6kOSY3P6bqOh18!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=6CkSF69vCz8JOhevC80y; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8285
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000150000371dba26e69f20f6.iso","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000150000371dba26e69f20f6.iso","name":"CentOS-7-x86_64-Minimal-1503-01.iso"},"name":"CentOS-7-x86_64-Minimal-1503-01.iso","description":"Import
+        URL: http://ftp.arnes.si/pub/mirrors/centos.org/7.1.1503/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_CDROM","size":666894336,"onDiskSize":666894336,"path":"/ISOs/0004fb0000150000371dba26e69f20f6.iso","shareable":true,"importFileName":"CentOS-7-x86_64-Minimal-1503-01.iso","vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000505334a03f0e1e7a","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000505334a03f0e1e7a","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=6Os9qLNDsePdtgL74XFXTfiEQFX3DJrAl2fFN0Rx6G5OYZc4rKiP!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=rnNjoJli613lN1C-2Ns2; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8286
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb000012000083f79193eb5f331e.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb000012000083f79193eb5f331e.img","name":"test"},"name":"test","description":"","locked":false,"readOnly":false,"generation":2,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":10737418240,"onDiskSize":0,"path":"/VirtualDisks/0004fb000012000083f79193eb5f331e.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000f79077fbb602029e","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000f79077fbb602029e","name":"Mapping
+        for disk Id (0004fb000012000083f79193eb5f331e.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=j2Y9qLN12XCvWDhc632AQ8EZq38qCCbRiVa2uR06vmwhLjMyujo4!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=GMWO5wke.W-.e2-J295Q; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8287
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000f35dc14d694dadc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9","name":"00:21:f6:3a:60:bc"},"name":"00:21:f6:3a:60:bc","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:3a:60:bc","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=dYg9qLOmTHWAClHpNxpn6eDc4ORbQaVaU57U8KLowZ8wWb-UpRLZ!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=lFH2J2A8e91oBAAKkp8G; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8288
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000f35dc14d694dadc9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000f35dc14d694dadc9","name":"00:21:f6:3a:60:bc"},"name":"00:21:f6:3a:60:bc","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:3a:60:bc","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb00000600002d441b5e6431b729","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb00000600002d441b5e6431b729","name":"test"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=kmI9qLPUlk6SBxTgY7cqRJf3GuXpFSKhdbeMEMC20AJJh2-yik6n!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=CFe1VW999tPFDgLBOPmE; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8289
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000034e2ae0bc056f1dd","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd","name":"Mapping
+        for disk Id (0004fb0000120000bd2532803aa551fe.img)"},"name":"Mapping for disk
+        Id (0004fb0000120000bd2532803aa551fe.img)","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000bd2532803aa551fe.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img","name":"test
+        (3)"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=IX09qLQG72MK-Q5iSx_ULBcfP0Ebr5duEKrHmceOVjOXkKihvj0o!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=ZOqYAFfixuisEZPP1EYX; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b828a
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000bd2532803aa551fe.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img","name":"test
+        (3)"},"name":"test (3)","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":10737418240,"onDiskSize":1041235968,"path":"/VirtualDisks/0004fb0000120000bd2532803aa551fe.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000034e2ae0bc056f1dd","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd","name":"Mapping
+        for disk Id (0004fb0000120000bd2532803aa551fe.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=L0M9qLQ3PSyk_kSbuiDvi4n4Y5eVFlsJ5FAqlVWsLeVN6ZLlgEwg!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=vUMlhyIMIGE6X5xq2HUq; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b828b
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000034e2ae0bc056f1dd","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd","name":"Mapping
+        for disk Id (0004fb0000120000bd2532803aa551fe.img)"},"name":"Mapping for disk
+        Id (0004fb0000120000bd2532803aa551fe.img)","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000bd2532803aa551fe.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img","name":"test
+        (3)"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=8MM9qLRixSQhUmMXIcjAlGzLRRzgJrerhqqeT1QcH6Vus316c1Bf!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=--S.4JrPMP8wfQWO9WVS; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b828c
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb0000120000bd2532803aa551fe.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb0000120000bd2532803aa551fe.img","name":"test
+        (3)"},"name":"test (3)","description":"","locked":false,"readOnly":false,"generation":0,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":10737418240,"onDiskSize":1041235968,"path":"/VirtualDisks/0004fb0000120000bd2532803aa551fe.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000034e2ae0bc056f1dd","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000034e2ae0bc056f1dd","name":"Mapping
+        for disk Id (0004fb0000120000bd2532803aa551fe.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=S7Y9qLSXU-qla9XpcT_NLkMzIrOLATQUVWh3XbhnRmkY_-ylyatk!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=OMX8aCP7d8kKYEXlk.uE; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b828d
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000aaf69e494353ebb9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9","name":"00:21:f6:4b:c7:1d"},"name":"00:21:f6:4b:c7:1d","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:4b:c7:1d","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=IUU9qLTFyHxTocDRRm8VsG6OIsw-tkYlCMjrBfRobQ3puKFB5mrT!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=WOkXvxxnpSKH6k3SO.jk; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b828e
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000aaf69e494353ebb9","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000aaf69e494353ebb9","name":"00:21:f6:4b:c7:1d"},"name":"00:21:f6:4b:c7:1d","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:4b:c7:1d","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000fae47dddca76434d","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000fae47dddca76434d","name":"test2.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=wVE9qLT1gmZ20TJs87Uxo5I_TLuyBLTEwSClJHDBn1BKSeNXvZ9d!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=P1D-V5dDuc3Tn0rVGxxE; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b828f
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000065273ee6acff3715","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715","name":"Mapping
+        for disk Id (0004fb00001200009da84520b0d03dd5.img)"},"name":"Mapping for disk
+        Id (0004fb00001200009da84520b0d03dd5.img)","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200009da84520b0d03dd5.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img","name":"Test4.0"},"storageElementId":null,"diskTarget":0,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=jhk9qLUkEJiYgLlYgSkBwm0N-XjwsjCLp7Co1Hr822P78ZcW78OP!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=c8nFovmlBGigoQxR6w-Q; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8290
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000066c06003eb4b125","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"},"name":"Mapping for disk
+        Id (0004fb0000150000371dba26e69f20f6.iso)","description":"","locked":false,"readOnly":false,"generation":4,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"EMPTY_CDROM","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/EMPTY_CDROM","name":"Empty
+        CDROM"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_ONLY"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:19 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:19 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=XTo9qLVV14MbHdbNpIfjKFmGZiKYFxcukTQZ_QM1nozXDQH_3KME!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Y6al34Na4Mh8Qdfd.cVm; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8291
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200009da84520b0d03dd5.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img","name":"Test4.0"},"name":"Test4.0","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":21474836480,"onDiskSize":0,"path":"/VirtualDisks/0004fb00001200009da84520b0d03dd5.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000065273ee6acff3715","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715","name":"Mapping
+        for disk Id (0004fb00001200009da84520b0d03dd5.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/EMPTY_CDROM
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=G_w9qLWD77DXJYJLjN-p-B-m1oeo1grkYjFy4qir7UpXCV9HIgNn!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Yh.aiZeqULgot6VScHoJ; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8292
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"EMPTY_CDROM","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/EMPTY_CDROM","name":"Empty
+        CDROM"},"name":"Empty CDROM","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_CDROM","size":0,"onDiskSize":0,"path":null,"shareable":true,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000066c06003eb4b125","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"}],"repositoryId":null,"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=FSg9qLWzcyatjmjzkB9Ta29rVTCpsNQpY9Gmw5ZHRgh3qkPlnJxF!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=Nq3qmkJtrWGjuQzL-DYG; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8293
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000065273ee6acff3715","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715","name":"Mapping
+        for disk Id (0004fb00001200009da84520b0d03dd5.img)"},"name":"Mapping for disk
+        Id (0004fb00001200009da84520b0d03dd5.img)","description":"","locked":false,"readOnly":false,"generation":3,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200009da84520b0d03dd5.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img","name":"Test4.0"},"storageElementId":null,"diskTarget":0,"emulatedBlockDevice":false,"diskWriteMode":"READ_WRITE"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=oXU9qLXhE4lMxq7p7lltZtNGxML6Zhgetghncx_G1sqCFz3LauYW!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=QELD.j9oeUM3bpGC25M1; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8294
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000066c06003eb4b125","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"},"name":"Mapping for disk
+        Id (0004fb0000150000371dba26e69f20f6.iso)","description":"","locked":false,"readOnly":false,"generation":4,"userData":[],"resourceGroupIds":[],"vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"virtualDiskId":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"EMPTY_CDROM","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/EMPTY_CDROM","name":"Empty
+        CDROM"},"storageElementId":null,"diskTarget":1,"emulatedBlockDevice":false,"diskWriteMode":"READ_ONLY"}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=o9M9qLYQKC5N177vkQy9vKC84oEiCtZFp1GRBy1L1gW_1Yo8tXz7!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=7DCL7iMuOvUmyonDIpPJ; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8295
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"0004fb00001200009da84520b0d03dd5.img","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/0004fb00001200009da84520b0d03dd5.img","name":"Test4.0"},"name":"Test4.0","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_DISK","size":21474836480,"onDiskSize":0,"path":"/VirtualDisks/0004fb00001200009da84520b0d03dd5.img","shareable":false,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb000013000065273ee6acff3715","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb000013000065273ee6acff3715","name":"Mapping
+        for disk Id (0004fb00001200009da84520b0d03dd5.img)"}],"repositoryId":{"type":"com.oracle.ovm.mgr.ws.model.Repository","value":"0004fb00000300003076225fcb290271","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Repository/0004fb00000300003076225fcb290271","name":"test-pool"},"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/EMPTY_CDROM
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=86Q9qLY-LUUkUvDps3vtiBvnE8q9MGfyjOZoRRbCnZUqdtbUcWzS!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=5G8BQMNA7H1OTUqEG6r9; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8296
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualDisk","value":"EMPTY_CDROM","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualDisk/EMPTY_CDROM","name":"Empty
+        CDROM"},"name":"Empty CDROM","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"diskType":"VIRTUAL_CDROM","size":0,"onDiskSize":0,"path":null,"shareable":true,"importFileName":null,"vmDiskMappingIds":[{"type":"com.oracle.ovm.mgr.ws.model.VmDiskMapping","value":"0004fb0000130000066c06003eb4b125","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VmDiskMapping/0004fb0000130000066c06003eb4b125","name":"Mapping
+        for disk Id (0004fb0000150000371dba26e69f20f6.iso)"}],"repositoryId":null,"assemblyVirtualDiskId":null}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=kPE9qLZ0P0LTN78ZmGYDP7DcZCE4bLp9CvQlv6caFh56-Bj68VmO!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=neso-MiNO7kBCdnUvEKb; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8297
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000db41c339b6242c51","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51","name":"00:21:f6:26:2d:d2"},"name":"00:21:f6:26:2d:d2","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:26:2d:d2","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+- request:
+    method: get
+    uri: https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog-core/1.32.1
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Thu, 03 Mar 2016 18:06:20 GMT
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - JSESSIONID=CT89qLargj2jLFLSHD-zJCtAH5CM18ClEixJUZ28N0acDWBO5Blv!217889995;
+        path=/; HttpOnly, _WL_AUTHCOOKIE_JSESSIONID=H-0uu55tmuserVdCptLb; path=/;
+        secure; HttpOnly
+      X-Oracle-Dms-Ecid:
+      - 27199c1a-3d65-4e5f-9096-7975b950bea3-001b8298
+      X-Powered-By:
+      - Servlet/3.0 JSP/2.2
+    body:
+      encoding: UTF-8
+      string: '{"id":{"type":"com.oracle.ovm.mgr.ws.model.VirtualNic","value":"0004fb0000070000db41c339b6242c51","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/VirtualNic/0004fb0000070000db41c339b6242c51","name":"00:21:f6:26:2d:d2"},"name":"00:21:f6:26:2d:d2","description":"","locked":false,"readOnly":false,"generation":1,"userData":[],"resourceGroupIds":[],"macAddress":"00:21:f6:26:2d:d2","ipAddresses":[],"interfaceName":"","vmId":{"type":"com.oracle.ovm.mgr.ws.model.Vm","value":"0004fb0000060000048aa9b21a891dc1","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Vm/0004fb0000060000048aa9b21a891dc1","name":"Test4.0"},"networkId":{"type":"com.oracle.ovm.mgr.ws.model.Network","value":"ac100000","uri":"https://172.16.95.57:7002/ovm/core/wsapi/rest/Network/ac100000","name":"172.16.0.0"}}'
+    http_version: 
+  recorded_at: Thu, 03 Mar 2016 18:06:20 GMT
+recorded_with: VCR 2.9.3

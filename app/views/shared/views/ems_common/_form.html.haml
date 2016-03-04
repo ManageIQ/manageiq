@@ -28,7 +28,7 @@
         - else
           = h(@edit[:ems_types][@edit[:new][:emstype]])
     = render(:partial => "form_fields", :locals => {:url => url})
-    - if @edit[:new][:emstype] && %w(rhevm openstack_infra).include?(@edit[:new][:emstype])
+    - if @edit[:new][:emstype] && %w(rhevm openstack_infra oraclevm).include?(@edit[:new][:emstype])
       .form-group#port_tr
         %label.control-label.col-md-2
           = _('API Port')

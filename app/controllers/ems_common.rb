@@ -200,11 +200,11 @@ module EmsCommon
           # Hide/show C&U credentials tab
           page << "$('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
         end
-        if ["openstack", "openstack_infra"].include?(params[:server_emstype])
+        if ["openstack", "openstack_infra", "oraclevm"].include?(params[:server_emstype])
           page << "$('#port').val(#{j_str(@edit[:new][:port].to_s)});"
         end
         # Hide/show port field
-        page << "$('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
+        page << "$('#port_tr').#{%w(openstack openstack_infra rhevm oraclevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
       page << javascript_for_miq_button_visibility(changed)
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
