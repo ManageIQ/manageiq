@@ -3,7 +3,7 @@ module CloudTenantHelper::TextualSummary
   # Groups
   #
   def textual_group_relationships
-    %i(ems_cloud security_groups instances images)
+    %i(ems_cloud security_groups instances images cloud_volumes cloud_volume_snapshots)
   end
 
   def textual_group_tags
@@ -58,5 +58,27 @@ module CloudTenantHelper::TextualSummary
 
   def quota_label(service_name, quota_name)
     "#{service_name.titleize} - #{quota_name.titleize}"
+  end
+
+  def textual_cloud_volumes
+    label = ui_lookup(:tables => "cloud_volumes")
+    num   = @record.number_of(:cloud_volumes)
+    h     = {:label => label, :image => "cloud_volume", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_volume_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => "cloud_volumes")
+    end
+    h
+  end
+
+  def textual_cloud_volume_snapshots
+    label = ui_lookup(:tables => "cloud_volume_snapshots")
+    num   = @record.number_of(:cloud_volume_snapshots)
+    h     = {:label => label, :image => "cloud_volume_snapshot", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_volume_snapshot_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => "cloud_volume_snapshots")
+    end
+    h
   end
 end
