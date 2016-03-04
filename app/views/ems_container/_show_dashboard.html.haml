@@ -59,7 +59,7 @@
 
   .row.row-tile-pf
     .col-xs-6.col-sm-6.col-md-6
-      %div{"head-title"   => "Aggregated Node Utilization",
+      %div{"head-title"   => _("Aggregated Node Utilization"),
            :hidetopborder => "true",
            "pf-card"      => ""}
 
@@ -74,7 +74,7 @@
                    "pf-utilization-chart" => "",
                    "sparkline-config"     => "cpuUsageSparklineConfig"}
             %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !cpuUsageData }"}
-              Last 30 Days
+              = _("Last 30 Days")
 
           .col-xs-6.col-sm-6.col-md-6
             %div{"ng-if" => "memoryUsageData"}
@@ -84,7 +84,7 @@
                    "pf-utilization-chart" => "",
                    "sparkline-config"     => "memoryUsageSparklineConfig"}
             %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !memoryUsageData }"}
-              Last 30 Days
+              = _("Last 30 Days")
 
     .col-xs-6.col-sm-6.col-md-6
       %div{"column-sizing-class"          => "col-xs-8 col-sm-6 col-md-6",
@@ -93,7 +93,7 @@
            :heatmaps                      => "heatmaps",
            "heatmaps-card"                => "",
            :hidetopborder                 => "true",
-           :title                         => "Node Utilization"}
+           :title                         => _("Node Utilization")}
 
   .row.row-tile-pf.row-tile-pf-last
     .col-md-6
