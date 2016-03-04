@@ -11,18 +11,21 @@
           %g.MiddlewareServer{:transform => "translate(21, 21)"}
             %circle{:r => "17"}
             %image{:height => "20", :width => "20", :x => "-9", "xlink:href" => "/assets/100/middleware_server.png", :y => "-9"}
-        %label Middleware Servers
+        %label
+          = _("Middleware Servers")
       %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareDeployment"}
         %svg.kube-topology
           %g.MiddlewareDeployment{:transform => "translate(21, 21)"}
             %circle{:r => "17"}
             %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/assets/100/middleware_deployment.png", :y => "-9"}
-        %label Middleware Deployments
+        %label
+          = _("Middleware Deployments")
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
       %span.pficon.pficon-close
     %span.pficon.pficon-info
-    %strong  Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages.
+    %strong
+      = _("Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages.")
   %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}
 
