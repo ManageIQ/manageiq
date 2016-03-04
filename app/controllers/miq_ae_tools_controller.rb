@@ -49,7 +49,9 @@ class MiqAeToolsController < ApplicationController
     @log = $miq_ae_logger.contents if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("main_div", :partial => "layouts/log_viewer", :locals => {:legend_text => "Last 1000 lines from the Automation log"})
+      page.replace_html("main_div",
+                        :partial => "layouts/log_viewer",
+                        :locals  => {:legend_text => _("Last 1000 lines from the Automation log")})
     end
   end
 
@@ -59,7 +61,9 @@ class MiqAeToolsController < ApplicationController
     disable_client_cache
     send_data($miq_ae_logger.contents(nil, nil),
               :filename => "automation.log") if $miq_ae_logger
-    AuditEvent.success(:userid => session[:userid], :event => "download_automation_log", :message => "Automation log downloaded")
+    AuditEvent.success(:userid  => session[:userid],
+                       :event   => "download_automation_log",
+                       :message => _("Automation log downloaded"))
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
@@ -86,7 +90,7 @@ class MiqAeToolsController < ApplicationController
   def import_export
     @in_a_form = true
     @breadcrumbs = []
-    drop_breadcrumb(:name => "Import / Export", :url => "/miq_ae_tools/import_export")
+    drop_breadcrumb(:name => _("Import / Export"), :url => "/miq_ae_tools/import_export")
     @lastaction = "import_export"
     @layout = "miq_ae_export"
     @importable_domain_options = []
@@ -107,7 +111,7 @@ class MiqAeToolsController < ApplicationController
     begin
       automate_json = automate_import_json_serializer.serialize(ImportFileUpload.find(params[:import_file_upload_id]))
     rescue StandardError => e
-      add_flash("Error: import processing failed: #{e.message}", :error)
+      add_flash(_("Error: import processing failed: %{message}") % {:message => e.message}, :error)
     end
 
     respond_to do |format|
@@ -166,7 +170,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
     upload_file = params.fetch_path(:upload, :file)
 
     if upload_file.blank?
-      add_flash("Use the browse button to locate an import file", :warning)
+      add_flash(_("Use the browse button to locate an import file"), :warning)
     else
       import_file_upload_id = automate_import_service.store_for_import(upload_file.read)
       add_flash(_("Import file was uploaded successfully"), :success)
@@ -195,7 +199,7 @@ Instances updated/added: %{instance_stats}
 Methods updated/added: %{method_stats}") % stat_options)
         redirect_to :action => 'import_export', :flash_msg => @flash_array[0][:message]         # redirect to build the retire screen
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
+        add_flash(_("Error during 'upload': %{message}") % {:message => bang.message}, :error)
         redirect_to :action => 'import_export', :flash_msg => @flash_array[0][:message], :flash_error => true         # redirect to build the retire screen
       end
     else
@@ -224,7 +228,8 @@ Methods updated/added: %{method_stats}") % stat_options)
     session[:ae_task_id] = params[:task_id]
 
     if miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(_("Error during %{task}: Status [%{status}] Message [%{message}]") % {:task => "reset", :status => miq_task.status, :message => miq_task.message}, :error)
+      add_flash(_("Error during reset: Status [%{status}] Message [%{message}]") %
+                  {:status => miq_task.status, :message => miq_task.message}, :error)
     else
       self.x_node = "root" if x_active_tree == :ae_tree && x_tree
       add_flash(_("All custom classes and instances have been reset to default"))
@@ -353,9 +358,11 @@ Methods updated/added: %{method_stats}") % stat_options)
   end
 
   def valid_resolve_object?
-    add_flash(_("%s must be selected") % "Starting Class", :error) if @resolve[:new][:starting_object].blank?
-    add_flash(_("%s is required") % "Starting Process", :error) if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
-    add_flash(_("%s is required") % "Request", :error) if @resolve[:new][:object_request].blank?
+    add_flash(_("Starting Class must be selected"), :error) if @resolve[:new][:starting_object].blank?
+    if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
+      add_flash(_("Starting Process is required"), :error)
+    end
+    add_flash(_("Request is required"), :error) if @resolve[:new][:object_request].blank?
     AE_MAX_RESOLUTION_FIELDS.times do |i|
       f = ("attribute_" + (i + 1).to_s)
       v = ("value_" + (i + 1).to_s)

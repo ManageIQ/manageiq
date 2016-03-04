@@ -19,7 +19,7 @@ class MiqTemplateController < ApplicationController
   private
 
   def get_session_data
-    @title          = "Templates"
+    @title          = _("Templates")
     @layout         = session[:miq_template_type] ? session[:miq_template_type] : "miq_template"
     @lastaction     = session[:miq_template_lastaction]
     @showtype       = session[:miq_template_showtype]
