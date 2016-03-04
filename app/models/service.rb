@@ -1,5 +1,9 @@
 class Service < ApplicationRecord
+  include AncestryParentMixin
+
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
+
+  acts_as_recursive_tree :parent_id => :service_id
 
   belongs_to :tenant
   belongs_to :service_template               # Template this service was cloned from
@@ -56,6 +60,10 @@ class Service < ApplicationRecord
     service
   end
 
+  def parent
+    service
+  end
+
   def has_parent?
     service_id ? true : false
   end
@@ -77,17 +85,6 @@ class Service < ApplicationRecord
     result
   end
 
-  def ancestors
-    result = []
-    node = self
-
-    while (node = node.parent_service)
-      result << node
-    end
-
-    result
-  end
-
   def direct_service_children
     services
   end
@@ -96,16 +93,8 @@ class Service < ApplicationRecord
     direct_service_children.collect { |s| s.direct_service_children + s.indirect_service_children }.flatten.compact
   end
 
-  def descendants
-    all_service_children
-  end
-
-  def subtree
-    all_service_children + [self]
-  end
-
   def all_service_children
-    direct_service_children + indirect_service_children
+    descendants
   end
 
   def indirect_vms
@@ -117,7 +106,7 @@ class Service < ApplicationRecord
   end
 
   def all_vms
-    direct_vms + indirect_vms
+    VmOrTemplate.joins(:service_resources).where("service_resources.service_id in (#{Service.subtree_conditions(self)})")
   end
 
   def vms
@@ -235,6 +224,7 @@ class Service < ApplicationRecord
     MiqEvent.raise_evm_event(self, :service_provisioned)
   end
 
+  # NOTE: since we also seem to traverse these vms often, this is counting an in memory array
   def v_total_vms
     vms.size
   end
