@@ -998,7 +998,7 @@ class VmOrTemplate < ApplicationRecord
       hosts = [myhost] if hosts.empty?
 
       # VMware needs a VMware host to resolve datastore names
-      if vendor == 'VMware'
+      if vendor == 'vmware'
         hosts.delete_if { |h| !h.is_vmware? }
       end
     end
@@ -1050,11 +1050,11 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def miq_server_proxies
-    case vm_vendor = vendor.to_s
-    when 'VMware'
+    case vendor
+    when 'vmware'
       # VM cannot be scanned by server if they are on a repository
       return [] if storage_id.blank? || self.repository_vm?
-    when 'Microsoft'
+    when 'microsoft'
       return [] if storage_id.blank?
     else
       _log.debug "else"
@@ -1081,7 +1081,7 @@ class VmOrTemplate < ApplicationRecord
 
     miq_servers.select! do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
-      result &&= svr.is_vix_disk? if vm_vendor == 'VMware'
+      result &&= svr.is_vix_disk? if vendor == 'vmware'
       result
     end
     _log.debug "miq_servers2.length = #{miq_servers.length}"

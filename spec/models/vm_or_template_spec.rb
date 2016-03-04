@@ -205,7 +205,7 @@ describe VmOrTemplate do
         @vm = FactoryGirl.create(:vm_vmware,
                                  :host     => @host1,
                                  :name     => 'vm',
-                                 :vendor   => 'VMware',
+                                 :vendor   => 'vmware',
                                  :storage  => @storage1,
                                  :storages => [@storage1, @storage2])
         @zone = FactoryGirl.create(:zone, :name => 'zone')
@@ -262,7 +262,7 @@ describe VmOrTemplate do
         @vm = FactoryGirl.create(:vm_redhat,
                                  :host     => @host1,
                                  :name     => 'vm',
-                                 :vendor   => 'RedHat',
+                                 :vendor   => 'redhat',
                                  :storage  => @storage1,
                                  :storages => [@storage1])
 

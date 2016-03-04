@@ -1527,11 +1527,11 @@ class ApplicationController < ActionController::Base
                     :description => db_record.vmm_buildnumber) unless db_record.vmm_buildnumber.nil?
     end
 
-    if db_record.respond_to?("vendor") # For Vm table, this will pull the vendor and notes fields
+    if db_record.respond_to?("vendor_display") # For Vm table, this will pull the vendor and notes fields
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
       @vmminfo.push(:vmminfo     => "Vendor",
-                    :description => db_record.vendor) unless db_record.vendor.nil?
+                    :description => db_record.vendor_display)
       @vmminfo.push(:vmminfo     => "Format",
                     :description => db_record.format) unless db_record.format.nil?
       @vmminfo.push(:vmminfo     => "Version",

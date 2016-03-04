@@ -1357,7 +1357,7 @@ module ApplicationHelper
       end
     elsif %(Vm VmOrTemplate).include?(db)
       vm = @targets_hash[from_cid(@id)]
-      vendor = vm ? vm.vendor.downcase : "unknown"
+      vendor = vm ? vm.vendor : "unknown"
       image = "vendor-#{vendor}"
     elsif db == "Host"
       host = @targets_hash[@id] if @targets_hash
