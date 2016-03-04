@@ -52,6 +52,7 @@ class MiqExpression
     StoragePerformance
     ManageIQ::Providers::CloudManager::Template
     ManageIQ::Providers::InfraManager::Template
+    Tenant
     User
     VimPerformanceTrend
     Vm
@@ -144,6 +145,7 @@ class MiqExpression
     storage_adapters
     storage_files
     switches
+    tenant_quotas
     users
     vms
     volumes
