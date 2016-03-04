@@ -84,6 +84,11 @@
   :url: /cloud_volume_snapshot/show_list
   :rbac_feature_name: cloud_volume_snapshot_show_list
   :startup: true
+- :name: cloud_resource_quotas
+  :description: Clouds / Resource Quotas
+  :url: /cloud_resource_quota/show_list
+  :rbac_feature_name: cloud_resource_quota_show_list
+  :startup: true
 - :name: vm_cloud_instances_accord
   :description: Clouds / Instances / Instances By Providers
   :url: /vm_cloud/explorer?accordion=instances

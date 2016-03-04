@@ -60,3 +60,8 @@
             :record        => @record,
             :display       => 'orchestration_stacks',
             :tables        => 'orchestration_stack')
+        - if role_allows(:feature => "cloud_resource_quota_show_list")
+          = li_link(:count => @record.number_of(:cloud_resource_quotas),
+            :record        => @record,
+            :display       => 'cloud_resource_quotas',
+            :tables        => 'cloud_resource_quotas')

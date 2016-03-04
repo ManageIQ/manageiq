@@ -190,6 +190,7 @@ module UiConstants
       :persistentvolume                         => "list",
       :cimbasestorageextent                     => "list",
       :cimstorageextent                         => "list",
+      :cloudresourcequota                       => "list",
       :cloudtenant                              => "list",
       :cloudvolume                              => "list",
       :cloudvolumesnapshot                      => "list",
