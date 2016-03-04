@@ -172,6 +172,7 @@ class Host < ApplicationRecord
   include AsyncDeleteMixin
   include ComplianceMixin
   include VimConnectMixin
+  include AvailabilityMixin
 
   before_create :make_smart
   after_save    :process_events
@@ -224,30 +225,6 @@ class Host < ApplicationRecord
     end
   end
   private :raise_cluster_event
-
-  # is_available?
-  # Returns:  true or false
-  #
-  # The UI calls this method to determine if a feature is supported for this Host
-  # and determines if a button should be displayed.  This method should return true
-  # even if a function is not 'currently' available due to some condition that is not
-  # being met.
-  def is_available?(request_type)
-    send("validate_#{request_type}")[:available]
-  end
-
-  # is_available_now_error_message
-  # Returns an error message string if there is an error.
-  # Returns nil to indicate no errors.
-  # This method is used by the UI along with the is_available? methods.
-  def is_available_now_error_message(request_type)
-    send("validate_#{request_type}")[:message]
-  end
-
-  def raise_is_available_now_error_message(request_type)
-    msg = send("validate_#{request_type}")[:message]
-    raise MiqException::MiqVmError, msg unless msg.nil?
-  end
 
   def validate_reboot
     validate_esx_host_connected_to_vc_with_power_state('on')
