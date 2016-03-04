@@ -195,7 +195,7 @@ module OpsController::Db
         @force_no_grid_xml = true
         db_list
       end
-      @tab_text = "Tables"
+      @tab_text = _("Tables")
     else
       # If table is selected
       if @sb[:active_tab] == "db_indexes" || params[:action] == "x_show"
@@ -204,7 +204,7 @@ module OpsController::Db
           tb = VmdbTableEvm.find_by_id(from_cid(nodes.last))
           @indexes = get_indexes(tb)
           @right_cell_text = _("Indexes for %{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbTable"), :name => tb.name}
-          @tab_text = "#{tb.name}: Indexes"
+          @tab_text = "%{table_name} Indexes" % {:table_name => tb.name}
         else
           @vmdb_index = VmdbIndex.find_by_id(from_cid(nodes.last))
           @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbIndex"), :name => @vmdb_index.name}
