@@ -69,11 +69,9 @@ module MiqReport::Generator::Html
           if c == "resource_type"                     # Lookup models in resource_type col
             output << "<td#{style_class}>"
             output << ui_lookup(:model => d.data[c])
-            output << "</td>"
           elsif db == "Tenant" && TenantQuota.can_format_field?(c, d.data["tenant_quotas.name"])
             output << "<td#{style_class} " + 'style="text-align:right">'
             output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data["tenant_quotas.name"]))
-            output << "</td>"
           elsif db == "VimUsage"                 # Format usage columns
             case c
             when "cpu_usagemhz_rate_average"
@@ -106,11 +104,9 @@ module MiqReport::Generator::Html
               output << "<td#{style_class}>"
               output << d.data[c].to_s
             end
-            output << "</td>"
           elsif ["<compare>", "<drift>"].include?(db.to_s)
             output << "<td#{style_class}>"
             output << CGI.escapeHTML(d.data[c].to_s)
-            output << "</td>"
           else
             if d.data[c].kind_of?(Time)
               output << "<td#{style_class} " + 'style="text-align:center">'
@@ -123,8 +119,8 @@ module MiqReport::Generator::Html
                                             d.data[c],
                                             :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_,
                                             :tz     => tz))
-            output << "</td>"
           end
+          output << "</td>"
         end
 
         output << "</tr>"
