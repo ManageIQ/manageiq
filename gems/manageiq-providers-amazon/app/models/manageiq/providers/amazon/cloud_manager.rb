@@ -20,6 +20,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Template
   require_nested :Vm
 
+  OrchestrationTemplateCfn.register_eligible_manager(self)
+
   def self.ems_type
     @ems_type ||= "ec2".freeze
   end
