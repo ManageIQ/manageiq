@@ -41,7 +41,7 @@ class TreeBuilderChargebackReports < TreeBuilder
     objects = MiqReportResult.auto_generated.where(
       :miq_report_id => from_cid(object[:id].split('-').first),
       :userid        => User.current_user.userid
-    ).order("created_on DESC").select("id, miq_report_id, name, last_run_on")
+    ).order("created_on DESC").select("id, miq_report_id, name, last_run_on, miq_task_id")
 
     count_only_or_objects(count_only, objects, "name")
   end
