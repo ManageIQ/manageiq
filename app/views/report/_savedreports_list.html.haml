@@ -12,7 +12,8 @@
   - elsif x_node.split('-').length == 2 && @view
     - if @view.table.data.empty?
       %br
-      %strong * No Reports available.
+      %strong
+        = _("* No Reports available.")
     - else
       = render :partial => 'layouts/x_gtl'
   - else
