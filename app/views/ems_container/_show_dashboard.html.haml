@@ -4,7 +4,7 @@
     .col-xs-6.col-sm-4.col-md-2
       .col-xs-12.provider-card{"pf-card"         => "",
                                "show-top-border" => "true"}
-        %span.provider-icon-large{:class => "{{providerTypeIconClass}}"}
+        %span.provider-icon-large{"ng-class" => "providerTypeIconClass"}
 
     .col-xs-12.col-sm-12.col-md-10
       .row
@@ -83,11 +83,11 @@
                    "donut-config"         => "memoryUsageDonutConfig",
                    "pf-utilization-chart" => "",
                    "sparkline-config"     => "memoryUsageSparklineConfig"}
-            %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !cpuUsageData }"}
+            %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !memoryUsageData }"}
               Last 30 Days
 
     .col-xs-6.col-sm-6.col-md-6
-      %div{:columnSizingClass             => "col-xs-8 col-sm-6 col-md-6",
+      %div{"column-sizing-class"          => "col-xs-8 col-sm-6 col-md-6",
            "heat-map-usage-legend-labels" => "nodeHeatMapUsageLegendLabels",
            "heatmap-chart-height"         => "dashboardHeatmapChartHeight",
            :heatmaps                      => "heatmaps",
