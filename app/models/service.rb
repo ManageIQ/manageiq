@@ -75,12 +75,31 @@ class Service < ApplicationRecord
     result
   end
 
+  def ancestors
+    result = []
+    node = self
+
+    while (node = node.parent_service)
+      result << node
+    end
+
+    result
+  end
+
   def direct_service_children
     services
   end
 
   def indirect_service_children
     direct_service_children.collect { |s| s.direct_service_children + s.indirect_service_children }.flatten.compact
+  end
+
+  def descendants
+    all_service_children
+  end
+
+  def subtree
+    all_service_children + [self]
   end
 
   def all_service_children

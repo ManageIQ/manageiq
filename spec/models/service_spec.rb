@@ -261,8 +261,8 @@ describe Service do
       end
 
       it "#remove_resource" do
-        expect(@service.vms.length).to eq(2)
         @service.save
+        expect(@service.vms.length).to eq(2)
 
         sr = @service.remove_resource(Vm.first)
         expect(sr).to be_kind_of(ServiceResource)
@@ -271,5 +271,53 @@ describe Service do
         expect(@service.vms.length).to eq(1)
       end
     end
+  end
+
+  describe "#descendants" do
+    it "returns all descendants" do
+      create_deep_tree
+      expect(@service.descendants).to match_array([@service_c1, @service_c11, @service_c12, @service_c121, @service_c2])
+    end
+
+    it "returns middle of tree descendants" do
+      create_deep_tree
+      expect(@service_c1.descendants).to match_array([@service_c11, @service_c12, @service_c121])
+    end
+  end
+
+  describe "#subtree" do
+    it "returns sub tree" do
+      create_deep_tree
+      expected_objects = [@service, @service_c1, @service_c11, @service_c12, @service_c121, @service_c2]
+      expect(@service.subtree).to match_array(expected_objects)
+    end
+
+    it "returns sub tree of middle node" do
+      create_deep_tree
+      expected_objects = [@service_c1, @service_c11, @service_c12, @service_c121]
+      expect(@service_c1.subtree).to match_array(expected_objects)
+    end
+  end
+
+  describe "#ancestors" do
+    it "returns middle of the tree ancestors" do
+      create_deep_tree
+      expected_objects = [@service_c12, @service_c1, @service]
+      expect(@service_c121.ancestors).to match_array(expected_objects)
+    end
+
+    it "returns top level ancestors" do
+      create_deep_tree
+      expect(@service.ancestors).to be_empty
+    end
+  end
+
+  def create_deep_tree
+    @service      = FactoryGirl.create(:service)
+    @service_c1   = FactoryGirl.create(:service, :service => @service)
+    @service_c11  = FactoryGirl.create(:service, :service => @service_c1)
+    @service_c12  = FactoryGirl.create(:service, :service => @service_c1)
+    @service_c121 = FactoryGirl.create(:service, :service => @service_c12)
+    @service_c2   = FactoryGirl.create(:service, :service => @service)
   end
 end
