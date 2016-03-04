@@ -60,7 +60,7 @@ class ManageIQ::Providers::Oracle::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def oraclevm_service
-    @oraclevm_service ||= connect()
+    @oraclevm_service ||= connect
   end
 
   def with_provider_connection(options = {})
