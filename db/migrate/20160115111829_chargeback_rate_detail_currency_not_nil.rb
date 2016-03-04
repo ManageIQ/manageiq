@@ -4,19 +4,21 @@ class ChargebackRateDetailCurrencyNotNil < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
+  class ChargebackRateDetailCurrency < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
   def up
-    currency = ChargebackRateDetailCurrency.find_by_name("Dollars")
-    if currency
-      currency_id = currency.id
-    else
-      cbc = ChargebackRateDetailCurrency.create(:code        => "USD",
-                                                :name        => "Dollars",
-                                                :full_name   => "United States Dollars",
-                                                :symbol      => "$",
-                                                :unicode_hex => "36"
-                                               )
-      currency_id = cbc.id
+    chargeback_rate_details = ChargebackRateDetail.where(:chargeback_rate_detail_currency_id => nil)
+    if !chargeback_rate_details.count.zero?
+      currency = ChargebackRateDetailCurrency.find_by_name("Dollars") ||
+                 ChargebackRateDetailCurrency.create(:code        => "USD",
+                                                     :name        => "Dollars",
+                                                     :full_name   => "United States Dollars",
+                                                     :symbol      => "$",
+                                                     :unicode_hex => "36"
+      )
+      chargeback_rate_details.update_all(:chargeback_rate_detail_currency_id => currency.id)
     end
-    ChargebackRateDetail.where(:chargeback_rate_detail_currency_id => nil).update_all(:chargeback_rate_detail_currency_id => currency_id)
   end
 end
