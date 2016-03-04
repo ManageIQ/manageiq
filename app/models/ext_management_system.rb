@@ -57,8 +57,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
-  # TODO: Fix hostname validation
-  # validates :hostname, :presence => true, :if => :hostname_required?
+  validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
   def hostname_uniqueness_valid?
