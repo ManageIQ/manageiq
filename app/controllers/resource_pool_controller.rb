@@ -17,54 +17,67 @@ class ResourcePoolController < ApplicationController
     return if record_no_longer_exists?(@record)
 
     @gtl_url = "/resource_pool/show/" << @record.id.to_s << "?"
-    drop_breadcrumb({:name => "Resource Pools", :url => "/resource_pool/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb({:name => _("Resource Pools"),
+                     :url  => "/resource_pool/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@record)
-      txt = @record.vapp ? " (vApp)" : ""
-      drop_breadcrumb(:name => @record.name + txt + " (Summary)", :url => "/resource_pool/show/#{@record.id}")
+      txt = @record.vapp ? _("(vApp)") : ""
+      drop_breadcrumb(:name => _("%{name} %{text} (Summary)") % {:name => @record.name, :text => txt},
+                      :url  => "/resource_pool/show/#{@record.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "vms"
-      drop_breadcrumb(:name => @record.name + " (Direct VMs)", :url => "/resource_pool/show/#{@record.id}?display=vms")
+      drop_breadcrumb(:name => _("%{name} (Direct VMs)") % {:name => @record.name},
+                      :url  => "/resource_pool/show/#{@record.id}?display=vms")
       @view, @pages = get_view(Vm, :parent => @record)  # Get the records (into a view) and the paginator
       @showtype = "vms"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other VM") + " in this Resource Pool"
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count]
+                        _("* You are not authorized to view other VMs in this Resource Pool")
+                      else
+                        _("* You are not authorized to view other VM in this Resource Pool")
+                      end
       end
 
     when "descendant_vms"
-      drop_breadcrumb(:name => @record.name + " (All VMs - Tree View)",
+      drop_breadcrumb(:name => _("%{name} (All VMs - Tree View)") % {:name => @record.name},
                       :url  => "/resource_pool/show/#{@record.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
       build_dc_tree
 
     when "all_vms"
-      drop_breadcrumb(:name => @record.name + " (All VMs)", :url => "/resource_pool/show/#{@record.id}?display=all_vms")
+      drop_breadcrumb(:name => "%{name} (All VMs)" % {:name => @record.name},
+                      :url  => "/resource_pool/show/#{@record.id}?display=all_vms")
       @view, @pages = get_view(Vm, :parent => @record, :association => "all_vms") # Get the records (into a view) and the paginator
       @showtype = "vms"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other VM") + " in this Resource Pool"
+        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count]
+                        _("* You are not authorized to view other VMs in this Resource Pool")
+                      else
+                        _("* You are not authorized to view other VM in this Resource Pool")
+                      end
       end
 
     when "clusters"
-      drop_breadcrumb(:name => "#{@record.name} (All #{title_for_clusters})",
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title_for_clusters},
                       :url  => "/resource_pool/show/#{@record.id}?display=clusters")
       @view, @pages = get_view(EmsCluster, :parent => @record)  # Get the records (into a view) and the paginator
       @showtype = "clusters"
 
     when "resource_pools"
-      drop_breadcrumb(:name => @record.name + " (All Resource Pools)", :url => "/resource_pool/show/#{@record.id}?display=resource_pools")
+      drop_breadcrumb(:name => _("%{name} (All Resource Pools)") % {:name => @record.name},
+                      :url  => "/resource_pool/show/#{@record.id}?display=resource_pools")
       @view, @pages = get_view(ResourcePool, :parent => @record)  # Get the records (into a view) and the paginator
       @showtype = "resource_pools"
 
     when"config_info"
       @showtype = "config"
-      drop_breadcrumb(:name => "Configuration", :url => "/resource_pool/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("Configuration"), :url => "/resource_pool/show/#{@record.id}?display=#{@display}")
     end
 
     set_config(@record)
@@ -185,7 +198,7 @@ class ResourcePoolController < ApplicationController
       "resource_pool-#{to_cid(@record.id)}",
       @record.name,
       @record.vapp ? "vapp.png" : "resource_pool.png",
-      "Resource Pool: #{@record.name}",
+      _("Resource Pool: %{name}") % {:name => @record.name},
       :cfme_no_click => true,
       :expand        => true,
       :style_class   => "cfme-no-cursor-node"
@@ -213,7 +226,7 @@ class ResourcePoolController < ApplicationController
   end
 
   def get_session_data
-    @title        = "Resource Pools"
+    @title        = _("Resource Pools")
     @layout       = "resource_pool"
     @display      = session[:resource_pool_display]
     @filters      = session[:resource_pool_filters]

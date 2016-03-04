@@ -32,7 +32,7 @@ class SupportController < ApplicationController
   end
 
   def get_session_data
-    @title  = "Support"
+    @title  = _("Support")
     @layout = get_layout
   end
 
