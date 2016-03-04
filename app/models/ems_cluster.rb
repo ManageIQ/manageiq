@@ -58,7 +58,6 @@ class EmsCluster < ApplicationRecord
   include Metric::CiMixin
   include MiqPolicyMixin
   include AsyncDeleteMixin
-  include WebServiceAttributeMixin
 
   def tenant_identity
     if ext_management_system
