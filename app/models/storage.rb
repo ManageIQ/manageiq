@@ -43,7 +43,6 @@ class Storage < ApplicationRecord
   include Metric::CiMixin
   include StorageMixin
   include AsyncDeleteMixin
-  include WebServiceAttributeMixin
   include AvailabilityMixin
 
   virtual_column :v_used_space,                   :type => :integer

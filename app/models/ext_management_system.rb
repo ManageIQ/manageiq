@@ -71,7 +71,6 @@ class ExtManagementSystem < ApplicationRecord
 
   include NewWithTypeStiMixin
   include UuidMixin
-  include WebServiceAttributeMixin
   include EmsRefresh::Manager
   include TenancyMixin
 
