@@ -1,4 +1,5 @@
 class RepositoryController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -23,16 +24,7 @@ class RepositoryController < ApplicationController
       @view, @pages = get_view(kls, :parent => @repo) # Get the records (into a view) and the paginator
       @showtype = @display
       @gtl_url = "/repository/show/" << @repo.id.to_s << "?"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
-                        _("* You are not authorized to view other %{titles} on this Repository") %
-                          {:titles => title.pluralize}
-                      else
-                        _("* You are not authorized to view other %{title} on this Repository") %
-                          {:title => title.singularize}
-                      end
-      end
+      notify_about_unauthorized_items(title, _('Repository'))
 
     when "download_pdf", "main", "summary_only"
       get_tagdata(@repo)

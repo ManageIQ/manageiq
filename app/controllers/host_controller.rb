@@ -1,4 +1,5 @@
 class HostController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
 
@@ -95,14 +96,7 @@ class HostController < ApplicationController
                       :url  => "/host/show/#{@host.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
-                        _("* You are not authorized to view other %{titles} on this Host") % {:titles => title.pluralize}
-                      else
-                        _("* You are not authorized to view other %{title} on this Host") % {:title => title.singularize}
-                      end
-      end
+      notify_about_unauthorized_items(title, _('Host'))
 
     when "cloud_tenants"
       drop_breadcrumb(:name => _("%{name} (All cloud tenants present on this host)") % {:name => @host.name},
@@ -122,16 +116,7 @@ class HostController < ApplicationController
                       :url  => "/host/show/#{@host.id}?display=storages")
       @view, @pages = get_view(Storage, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = "storages"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
-                        _("* You are not authorized to view other %{tables} on this Host") %
-                            {:tables => ui_lookup(:tables => "storages")}
-                      else
-                        _("* You are not authorized to view other %{table} on this Host") %
-                            {:table => ui_lookup(:table => "storages")}
-                      end
-      end
+      notify_about_unauthorized_items(ui_lookup(:tables => "storages"), _('Host'))
 
     when "ontap_logical_disks"
       drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,

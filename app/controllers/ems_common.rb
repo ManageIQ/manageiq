@@ -1,5 +1,6 @@
 module EmsCommon
   extend ActiveSupport::Concern
+  include AuthorizationMessagesMixin
 
   def show
     @display = params[:display] || "main" unless control_selected?
@@ -107,13 +108,7 @@ module EmsCommon
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
     @showtype = @display
-    if @view.extras[:total_count] && @view.extras[:auth_count] &&
-       @view.extras[:total_count] > @view.extras[:auth_count]
-      @bottom_msg = _("* You are not authorized to view ") +
-                    pluralize(@view.extras[:total_count] - @view.extras[:auth_count],
-                              _("other %{message}") % {:message => bottom_msg_name}) +
-                    _(" on this ") + ui_lookup(:tables => @table_name)
-    end
+    notify_about_unauthorized_items(bottom_msg_name, ui_lookup(:tables => @table_name))
   end
 
   # Show the main MS list view
