@@ -155,7 +155,7 @@ module MiqReport::Formatting
   end
 
   def format_mhz_to_human_size(val, options = {})
-    val = ActionView::Base.new.mhz_to_human_size(val, options[:precision])
+    val = NumberHelper.instance_method(:mhz_to_human_size).bind(self).call(val, options[:precision])
     apply_prefix_and_suffix(val, options)
   end
 
