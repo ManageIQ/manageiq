@@ -1,4 +1,5 @@
 class EmsClusterController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
 
@@ -45,12 +46,7 @@ class EmsClusterController < ApplicationController
                       :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=all_vms")
       @view, @pages = get_view(Vm, :parent => @ems_cluster, :association => "all_vms")  # Get the records (into a view) and the paginator
       @showtype = "vms"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view ") +
-                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], _("other VM")) +
-                      _(" in this Cluster")
-      end
+      notify_about_unauthorized_items(_('VM'), _('Cluster'))
 
     when "miq_templates", "vms"
       title, kls = @display == "vms" ? ["VMs", Vm] : ["Templates", MiqTemplate]
@@ -58,12 +54,7 @@ class EmsClusterController < ApplicationController
                       :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @ems_cluster)  # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view ") +
-          pluralize(@view.extras[:total_count] - @view.extras[:auth_count], _("other %{title}") %
-            {:title => title.singularize}) + _(" in this Cluster")
-      end
+      notify_about_unauthorized_items(title, _('Cluster'))
 
     when "hosts"
       label, condition, breadcrumb_suffix = hosts_subsets
@@ -71,12 +62,7 @@ class EmsClusterController < ApplicationController
       drop_breadcrumb(:name => label, :url => "/ems_cluster/show/#{@ems_cluster.id}?display=hosts#{breadcrumb_suffix}")
       @view, @pages = get_view(Host, :parent => @ems_cluster, :conditions => condition) # Get the records (into a view) and the paginator
       @showtype = "hosts"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view ") +
-                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], _("other Host")) +
-                      _(" in this Cluster")
-      end
+      notify_about_unauthorized_items(_('Host'), _('Cluster'))
 
     when "resource_pools"
       drop_breadcrumb(:name => @ems_cluster.name + _(" (All Resource Pools)"),

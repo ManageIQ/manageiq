@@ -1,4 +1,5 @@
 class CloudVolumeController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -42,14 +43,7 @@ class CloudVolumeController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @volume, :association => :cloud_volume_snapshots)
       @showtype = "cloud_volume_snapshots"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
-          :children => pluralize(unauthorized_count, "other #{title.singularize}"),
-          :model    => ui_lookup(:tables => "cloud_volume")
-        }
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_volume"))
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       kls   = ManageIQ::Providers::CloudManager::Vm
@@ -59,14 +53,7 @@ class CloudVolumeController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @volume) # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
-          :children => pluralize(unauthorized_count, title),
-          :model    => ui_lookup(:table => "cloud_volume")
-        }
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_volume"))
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

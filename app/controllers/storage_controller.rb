@@ -1,4 +1,6 @@
 class StorageController < ApplicationController
+  include AuthorizationMessagesMixin
+
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -25,30 +27,14 @@ class StorageController < ApplicationController
                       :url  => "/storage/show/#{@storage.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @storage, :association => @display)  # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
-                        _("* You are not authorized to view other %{items} on this Host") % {:items => title}
-                      else
-                        _("* You are not authorized to view other %{item} on this Host") % {:item => title.singularize}
-                      end
+      notify_about_unauthorized_items(title, _('Host'))
 
-      end
     when "hosts"
       @view, @pages = get_view(Host, :parent => @storage) # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => _("%{name} (All Registered Hosts)") % {:name => @storage.name},
                       :url  => "/storage/show/#{@storage.id}?display=hosts")
       @showtype = "hosts"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count]
-                        _("* You are not authorized to view other Hosts on this %{table}") %
-                          {:table => ui_lookup(:table => "storages")}
-                      else
-                        _("* You are not authorized to view other Host on this %{table}") %
-                          {:table => ui_lookup(:table => "storages")}
-                      end
-      end
+      notify_about_unauthorized_items(_('Hosts'), ui_lookup(:table => "storages"))
 
     when "download_pdf", "main", "summary_only"
       get_tagdata(@storage)

@@ -1,4 +1,5 @@
 class AuthKeyPairCloudController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -64,14 +65,7 @@ class AuthKeyPairCloudController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @auth_key_pair_cloud) # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        count = @view.extras[:total_count] - @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
-          :children => pluralize(count, "other #{title.singularize}"),
-          :model    => ui_lookup(:tables => "auth_key_pair_cloud")
-        }
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "auth_key_pair_cloud"))
     end
 
     # Came in from outside show_list partial

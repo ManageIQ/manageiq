@@ -1,4 +1,5 @@
 class CloudVolumeSnapshotController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -55,14 +56,7 @@ class CloudVolumeSnapshotController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @snapshot, :association => :based_volumes)
       @showtype = "based_volumes"
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
-          :children => pluralize(unauthorized_count, "other #{title.singularize}"),
-          :model    => ui_lookup(:tables => "cloud_volume_snapshot")
-        }
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_volume_snapshot"))
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

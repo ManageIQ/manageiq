@@ -1,4 +1,5 @@
 class OrchestrationStackController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -32,12 +33,7 @@ class OrchestrationStackController < ApplicationController
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @orchestration_stack)
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        count_text = pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
-        @bottom_msg = _("* You are not authorized to view %{items} on this %{tables}") %
-                        {:items => count_text, :tables => ui_lookup(:tables => 'orchestration_stack')}
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
     when "security_groups"
       table = "security_groups"
       title = ui_lookup(:tables => table)
@@ -46,12 +42,7 @@ class OrchestrationStackController < ApplicationController
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @orchestration_stack)  # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        count_text = pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
-        @bottom_msg = _("* You are not authorized to view %{items} on this %{tables}") %
-                        {:items => count_text, :tables => ui_lookup(:tables => 'orchestration_stack')}
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
     end
 
     # Came in from outside show_list partial

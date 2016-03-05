@@ -1,4 +1,5 @@
 class AvailabilityZoneController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -47,16 +48,7 @@ class AvailabilityZoneController < ApplicationController
                       :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @availability_zone)  # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
-                        _("* You are not authorized to view other %{titles} on this %{tables}") %
-                          {:titles => title.pluralize, :tables => ui_lookup(:tables => "availability_zone")}
-                      else
-                        _("* You are not authorized to view other %{title} on this %{tables}") %
-                          {:title => title.singularize, :tables => ui_lookup(:tables => "availability_zone")}
-                      end
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "availability_zone"))
 
     when "cloud_volumes"
       title = ui_lookup(:tables => "cloud_volumes")
@@ -67,16 +59,7 @@ class AvailabilityZoneController < ApplicationController
       # Get the records (into a view) and the paginator
       @view, @pages = get_view(CloudVolume, :parent => @availability_zone)
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = if @view.extras[:total_count] - @view.extras[:auth_count] > 1
-                        _("* You are not authorized to view other %{titles} on this %{tables}") %
-                          {:title => title.pluralize, :tables => ui_lookup(:tables => "availability_zone")}
-                      else
-                        _("* You are not authorized to view other %{title} on this %{tables}") %
-                          {:title => title.singularize, :tables => ui_lookup(:tables => "availability_zone")}
-                      end
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "availability_zone"))
 
     when "timeline"
       @showtype = "timeline"

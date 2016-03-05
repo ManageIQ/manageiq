@@ -1,5 +1,6 @@
 module ContainersCommonMixin
   extend ActiveSupport::Concern
+  include AuthorizationMessagesMixin
 
   def index
     redirect_to :action => 'show_list'
@@ -131,14 +132,7 @@ module ContainersCommonMixin
                     :url  => "/#{alt_controller_name || controller_name}/show/#{record.id}?display=#{@display}")
     @view, @pages = get_view(clazz, :parent => record)  # Get the records (into a view) and the paginator
     @showtype = @display
-
-    total_count = @view.extras.fetch(:total_count, 0)
-    auth_count = @view.extras.fetch(:auth_count, 0)
-    if total_count > auth_count
-      @bottom_msg = "* You are not authorized to view " +
-                    pluralize(total_count - auth_count, "other #{title.singularize}") +
-                    " on this #{ui_lookup(:tables => @table_name)}"
-    end
+    notify_about_unauthorized_items(title, ui_lookup(:tables => @table_name))
   end
 
   # Scan all selected or single displayed image(s)
