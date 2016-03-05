@@ -48,8 +48,6 @@
                                     :valtype           => "log",
                                     :basic_info_needed => true}
 
-  = render :partial => "layouts/angular/x_edit_buttons_angular"
-
 :javascript
   ManageIQ.angular.app.value('serverId', '#{@record.id || "new"}');
   miq_bootstrap('#form_div');

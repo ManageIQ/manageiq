@@ -507,7 +507,7 @@ class OpsController < ApplicationController
 
     replace_explorer_trees(replace_trees, presenter)
     rebuild_toolbars(presenter)
-    handle_bottom_cell(nodetype, presenter, r, locals)
+    handle_bottom_cell(presenter, r, locals)
     x_active_tree_replace_cell(nodetype, presenter, r)
     extra_js_commands(presenter)
     # Render the JS responses to update the explorer screen
@@ -741,21 +741,21 @@ class OpsController < ApplicationController
     presenter[:record_id] = determine_record_id_for_presenter
   end
 
-  def handle_bottom_cell(nodetype, presenter, r, locals)
+  def handle_bottom_cell(presenter, r, locals)
     # Handle bottom cell
-    if nodetype == "log_depot_edit"
-      presenter.hide(:form_buttons_div, :pc_div_1)
-    elsif @pages || @in_a_form
+    if @pages || @in_a_form
       if @pages
-        presenter.hide(:form_buttons_div).show(:pc_div_1)
-        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
+        presenter[:set_visible_elements][:form_buttons_div] = false
+        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       elsif @in_a_form
-        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
-        presenter.show(:form_buttons_div).hide(:pc_div_1)
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter.show(:paging_div)
+      presenter[:set_visible_elements][:paging_div] = true
     else
-      presenter.hide(:paging_div)
+      presenter[:set_visible_elements][:paging_div] = false
     end
   end
 
