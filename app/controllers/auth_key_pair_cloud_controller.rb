@@ -57,11 +57,10 @@ class AuthKeyPairCloudController < ApplicationController
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     when "instances"
-      table = @display == "vm_cloud"
-      title = ui_lookup(:tables => table)
+      title = ui_lookup(:tables => 'vm_cloud')
       kls   = ManageIQ::Providers::CloudManager::Vm
       drop_breadcrumb(
-        :name => _(":{name} (All %{title})") % {:name => @auth_key_pair_cloud.name, :title => title},
+        :name => _("%{name} (All %{title})") % {:name => @auth_key_pair_cloud.name, :title => title},
         :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?display=instances"
       )
       @view, @pages = get_view(kls, :parent => @auth_key_pair_cloud) # Get the records (into a view) and the paginator
