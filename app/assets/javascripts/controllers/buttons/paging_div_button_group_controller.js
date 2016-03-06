@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'miqService', '$compile', function($scope, miqService, $compile) {
+ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'miqService', '$compile', '$attrs', function($scope, miqService, $compile, $attrs) {
   var init = function() {
     saveButton();
     resetButton();
@@ -20,11 +20,11 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     var compiledEnabledSave = $compile(enabledSaveHtml)($scope);
 
     if (angular.element(document.getElementById('save_disabled')).length == 0) {
-      angular.element(document.getElementById('angular_paging_div_buttons')).append(compiledDisabledSave);
+      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledDisabledSave);
     }
 
     if (angular.element(document.getElementById('save_enabled')).length == 0) {
-      angular.element(document.getElementById('angular_paging_div_buttons')).append(compiledEnabledSave);
+      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
     }
   }
 
@@ -36,7 +36,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     var compiledReset = $compile(resetHtml)($scope);
 
     if (angular.element(document.getElementById('reset_enabled_diabled')).length == 0) {
-      angular.element(document.getElementById('angular_paging_div_buttons')).append(compiledReset);
+      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledReset);
     }
   }
 
@@ -46,7 +46,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     var compiledCancel = $compile(cancelHtml)($scope);
 
     if (angular.element(document.getElementById('cancel_enabled')).length == 0) {
-      angular.element(document.getElementById('angular_paging_div_buttons')).append(compiledCancel);
+      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledCancel);
     }
   }
   init();
