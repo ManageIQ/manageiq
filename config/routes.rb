@@ -526,6 +526,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         guest_applications
+        protect
         openscap_rule_results
         openscap_html
       ),
@@ -544,6 +545,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         guest_applications
+        protect
         openscap_rule_results
       ) + adv_search_post + exp_post + save_post
     },

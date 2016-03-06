@@ -14,6 +14,7 @@ class MiqExpression
     ManageIQ::Providers::ConfigurationManager
     Container
     ContainerGroup
+    ContainerImages
     ContainerNode
     ContainerProject
     ContainerService
@@ -118,6 +119,8 @@ class MiqExpression
     ontap_raid_group_extents
     ontap_storage_systems
     ontap_storage_volumes
+    openscap_results
+    openscap_rule_results
     orchestration_stack_outputs
     orchestration_stack_parameters
     orchestration_stack_resources
@@ -218,6 +221,7 @@ class MiqExpression
     capacity_profile_2_vcpu_per_vm_with_min_max
     chain_id
     guid
+    openscap_id
   )
 
   TAG_CLASSES = {

@@ -186,7 +186,7 @@ module MiqPolicyController::Policies
     @edit[:new][:description] = @policy.description
     @edit[:new][:active] = @policy.active.nil? ? true : @policy.active                    # Set active, default to true
     @edit[:new][:notes] = @policy.notes
-    @edit[:new][:towhat] = @policy.id ? @policy.towhat : @sb[:folder].split('-').last.titleize                    # Set the towhat model
+    @edit[:new][:towhat] = @policy.id ? @policy.towhat : @sb[:folder].split('-').last.camelize # Set the towhat model
 
     case @edit[:typ]  # Build fields based on what is being edited
     when "conditions" # Editing condition assignments
@@ -225,7 +225,7 @@ module MiqPolicyController::Policies
 
   def policy_get_all_folders(parent = nil)
     if !parent.nil?
-      @folders = ["Host", "Vm"]
+      @folders = ["Host", "Vm", "ContainerImage"]
       @right_cell_text = _("%{typ} %{model}") % {:typ => parent, :model => ui_lookup(:models => "MiqPolicy")}
       @right_cell_div = "policy_folders"
     else

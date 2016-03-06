@@ -6,6 +6,9 @@ describe Compliance do
     let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host1, :ext_management_system => ems_vmware) }
     let(:zone)       { FactoryGirl.build(:zone) }
 
+    let(:ems_kubernetes_container) { FactoryGirl.create(:ems_kubernetes, :zone => zone) }
+    let(:container_image) { FactoryGirl.create(:container_image, :ext_management_system => ems_kubernetes_container) }
+
     before { allow(MiqServer).to receive(:my_zone).and_return(zone) }
 
     context(".check_compliance_queue") do
@@ -33,8 +36,18 @@ describe Compliance do
         host1.check_compliance_queue
       end
 
+      it "for single container image" do
+        create_check_compliance_queue_expections(container_image)
+        Compliance.check_compliance_queue(container_image)
+      end
+
+      it "for single container image via vm method" do
+        create_check_compliance_queue_expections(container_image)
+        container_image.check_compliance_queue
+      end
+
       it "for multiple objects" do
-        subject = [vm1, host1]
+        subject = [vm1, host1, container_image]
         create_check_compliance_queue_expections(*subject)
 
         Compliance.check_compliance_queue(subject)
@@ -42,7 +55,7 @@ describe Compliance do
 
       it "for multiple objects with inputs" do
         inputs = {:foo => 'bar'}
-        subject = [vm1, host1]
+        subject = [vm1, host1, container_image]
         create_check_compliance_queue_expections(*subject, inputs)
 
         Compliance.check_compliance_queue(subject, inputs)
@@ -56,6 +69,12 @@ describe Compliance do
         host1.scan_and_check_compliance_queue
       end
 
+      it "should queue single container image for scan_and_check_compliance via container image method" do
+        create_scan_and_check_compliance_queue_expections(container_image)
+
+        container_image.scan_and_check_compliance_queue
+      end
+
       it "should queue multiple objects for scan_and_check_compliance" do
         create_scan_and_check_compliance_queue_expections(host1, host2)
 
@@ -64,9 +83,9 @@ describe Compliance do
 
       it "should queue multiple objects for scan_and_check_compliance with inputs" do
         inputs = {:foo => 'bar'}
-        create_scan_and_check_compliance_queue_expections(host1, host2, inputs)
+        create_scan_and_check_compliance_queue_expections(host1, host2, container_image, inputs)
 
-        Compliance.scan_and_check_compliance_queue([vm1, host1, host2], inputs)
+        Compliance.scan_and_check_compliance_queue([vm1, host1, host2, container_image], inputs)
       end
     end
 
@@ -74,6 +93,8 @@ describe Compliance do
       it "should raise event request_host_scan" do
         expect(MiqEvent).to receive(:raise_evm_event).with(host1, "request_host_scan", {}, {})
         Compliance.scan_and_check_compliance([host1.class.name, host1.id])
+        expect(MiqEvent).to receive(:raise_evm_event).with(container_image, "request_containerimage_scan", {}, {})
+        Compliance.scan_and_check_compliance([container_image.class.name, container_image.id])
       end
     end
 
@@ -82,6 +103,10 @@ describe Compliance do
         let(:policy)     { FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true) }
         let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
         let(:template)   { FactoryGirl.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
+
+        let(:container_policy) do
+          FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Container Image', :active => true)
+        end
 
         before do
           policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])

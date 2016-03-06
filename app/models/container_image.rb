@@ -1,4 +1,5 @@
 class ContainerImage < ApplicationRecord
+  include ComplianceMixin
   include MiqPolicyMixin
   include ReportableMixin
   include ScanningMixin
@@ -64,6 +65,11 @@ class ContainerImage < ApplicationRecord
 
   def tenant_identity
     User.super_admin
+  end
+
+  def has_compliance_policies?
+    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "containerimage_compliance_check")
+    !plist.blank?
   end
 
   alias_method :perform_metadata_sync, :sync_stashed_metadata

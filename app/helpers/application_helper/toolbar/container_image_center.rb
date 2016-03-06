@@ -27,6 +27,11 @@ class ApplicationHelper::Toolbar::ContainerImageCenter < ApplicationHelper::Tool
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"container_image")}'),
           N_('Edit Tags')),
+        button(
+          :container_image_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_image")}'),
+          N_('Manage Policies'))
       ]
     ),
   ])

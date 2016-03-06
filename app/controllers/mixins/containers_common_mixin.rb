@@ -26,6 +26,7 @@ module ContainersCommonMixin
     # Handle Toolbar Policy Tag Button
     @refresh_div = "main_div" # Default div for button.rjs to refresh
     tag(self.class.model) if params[:pressed] == "#{params[:controller]}_tag"
+    assign_policies(ContainerImage) if params[:pressed] == "container_image_protect"
     return if ["#{params[:controller]}_tag"].include?(params[:pressed]) && @flash_array.nil? # Tag screen showing
 
     # Handle scan
