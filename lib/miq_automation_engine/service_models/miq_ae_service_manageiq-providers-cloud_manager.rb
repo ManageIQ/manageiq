@@ -1,5 +1,5 @@
 module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_CloudManager < MiqAeServiceExtManagementSystem
+  class MiqAeServiceManageIQ_Providers_CloudManager < MiqAeServiceManageIQ_Providers_BaseManager
     expose :availability_zones,     :association => true
     expose :cloud_networks,         :association => true
     expose :public_networks,        :association => true
