@@ -186,10 +186,9 @@ module ApplicationController::PolicySupport
       end
     end
   end
-  alias_method :image_protect, :assign_policies
-  alias_method :instance_protect, :assign_policies
-  alias_method :vm_protect, :assign_policies
-  alias_method :miq_template_protect, :assign_policies
+  %w(image instance vm miq_template container_image ems_container).each do |old_name|
+    alias_method "#{old_name}_protect".to_sym, :assign_policies
+  end
 
   # Build the policy assignment screen
   def protect_build_screen

@@ -943,7 +943,9 @@ class MiqPolicyController < ApplicationController
     @sb[:folder] = nodeid.nil? ? nodetype.split("-").last : nodeid
     if x_active_tree == :policy_tree
       if nodeid.nil? && ["compliance", "control"].include?(nodetype.split('-').last)
-        @folders = ["Host #{nodetype.split('-').last.titleize}", "Vm #{nodetype.split('-').last.titleize}"]
+        @folders = MiqPolicy::UI_FOLDERS.collect do |model|
+          "#{model.name.titleize} #{nodetype.split('-').last.titleize}"
+        end
         @right_cell_text = _("%{typ} %{model}") % {:typ => nodetype.split('-').last.titleize, :model => ui_lookup(:models => "MiqPolicy")}
       else
         @sb[:mode] = nodeid.split("-")[1]

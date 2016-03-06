@@ -165,3 +165,6 @@ service_stopped,Service Stopped,Default,service_process
 #
 containerimage_scan_complete,Container Image Analysis Complete,Default,container_operations
 containerimage_created,New Container Image created,Default,container_operations
+containerimage_compliance_check,Container Image Compliance Check,Default,compliance
+containerimage_compliance_passed,Container Image Compliance Passed,Default,compliance
+containerimage_compliance_failed,Container Image Compliance Failed,Default,compliance
