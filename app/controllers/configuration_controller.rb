@@ -663,7 +663,6 @@ class ConfigurationController < ApplicationController
     end
     settings
   end
-  private :merge_in_user_settings
 
   # * start with DEFAULT_SETTINGS
   # * merge in current session changes
@@ -671,7 +670,6 @@ class ConfigurationController < ApplicationController
   def init_settings
     merge_in_user_settings(copy_hash(DEFAULT_SETTINGS))
   end
-  private :init_settings
 
   def set_form_vars
     case @tabform
