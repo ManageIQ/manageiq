@@ -101,14 +101,14 @@ module EmsCommon
     end
   end
 
-  def view_setup_helper(kls, title, bottom_msg_name, parent_method = nil)
+  def view_setup_helper(kls, title, view_item_name, parent_method = nil)
     drop_breadcrumb(:name => @ems.name + _(" (All %{title})") % {:title => title},
                     :url  => show_link(@ems, :display => @display))
     opts = {:parent => @ems}
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
     @showtype = @display
-    notify_about_unauthorized_items(bottom_msg_name, ui_lookup(:tables => @table_name))
+    notify_about_unauthorized_items(view_item_name, ui_lookup(:tables => @table_name))
   end
 
   # Show the main MS list view
