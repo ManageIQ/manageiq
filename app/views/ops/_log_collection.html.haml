@@ -48,6 +48,8 @@
                                     :valtype           => "log",
                                     :basic_info_needed => true}
 
+  %div_for_paging{'ng-controller' => "pagingDivButtonGroupController"}
+
 :javascript
   ManageIQ.angular.app.value('serverId', '#{@record.id || "new"}');
   miq_bootstrap('#form_div');

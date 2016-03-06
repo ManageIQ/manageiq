@@ -749,7 +749,7 @@ class OpsController < ApplicationController
         presenter[:set_visible_elements][:pc_div_1] = true
         presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       elsif @in_a_form
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/angular/paging_div_buttons", :locals => locals]
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
       end
