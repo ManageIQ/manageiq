@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_MiddlewareManager < MiqAeServiceManageIQ_Providers_BaseManager
+  end
+end
