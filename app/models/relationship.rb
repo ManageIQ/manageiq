@@ -155,35 +155,4 @@ class Relationship < ApplicationRecord
     end
     fields.join(options[:record_delimiter])
   end
-
-  module BackwardCompatability
-    # Gets the entire tree in as few queries as possible, though it may end up
-    #   pulling back many more objects than necessary.
-    #   NOTE: Will only populate .children cache.
-    def get_tree(root, rel_type = nil, options = {})
-      return if root.nil?
-
-      # Build a tree of children manually, starting at the root
-      descendants = root.with_relationship_type(rel_type) { root.descendants_arranged(options) }
-      build_tree(root, descendants)
-    end
-
-    def tree_to_a(node, oftype)
-      node.subtree(:of_type => oftype)
-    end
-
-    Vmdb::Deprecation.deprecate_methods(self,
-      :get_tree   => "use subtree_arranged or descendants_arranged instead",
-      :tree_to_a  => "use subtree or descendants instead",
-    ) unless Rails.env.production?
-  end
-  extend BackwardCompatability
-
-  # Recursive helper method for get_tree
-  def self.build_tree(root, descendants)
-    child_objs = descendants.collect { |obj, children| build_tree(obj, children) }
-    root.instance_variable_set(:@_memoized_children, [] => child_objs)
-    root
-  end
-  private_class_method :build_tree
 end
