@@ -173,7 +173,7 @@ module Rbac
     filtered_ids
   end
 
-  def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)
     parent_class = rbac_class(scope)
     filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user_or_group)
 
@@ -242,12 +242,12 @@ module Rbac
     scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
   end
 
-  def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)
     filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user_or_group)
     find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
 
-  def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user_or_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     if user_or_group && user_or_group.self_service?
       if klass == User && user_or_group.kind_of?(User)
@@ -270,7 +270,7 @@ module Rbac
     end
   end
 
-  def self.find_options_for_tenant(scope, user_or_group, find_options = {})
+  def self.find_options_for_tenant(scope, user_or_group, find_options)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     tenant_id_clause = klass.tenant_id_clause(user_or_group)
 
@@ -282,7 +282,7 @@ module Rbac
     TENANT_ACCESS_STRATEGY[klass.base_model.to_s]
   end
 
-  def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options, user_or_group)
     find_options = find_options_for_tenant(scope, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
 
     return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
@@ -291,7 +291,7 @@ module Rbac
     find_targets_without_rbac(scope, find_options)
   end
 
-  def self.find_targets_without_rbac(scope, find_options = {})
+  def self.find_targets_without_rbac(scope, find_options)
     targets     = method_with_scope(scope, find_options)
     total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
@@ -341,17 +341,17 @@ module Rbac
     matches
   end
 
-  def self.find_descendants(descendant_klass, options = {})
+  def self.find_descendants(descendant_klass, options)
     search(options.merge(:class => descendant_klass, :results_format => :objects)).first
   end
 
-  def self.ids_via_descendants(klass, descendant_types, options = {})
+  def self.ids_via_descendants(klass, descendant_types, options)
     objects = matches_via_descendants(klass, descendant_types, options)
     return nil if objects.blank?
     objects.collect(&:id)
   end
 
-  def self.matches_via_descendants(klass, descendant_types, options = {})
+  def self.matches_via_descendants(klass, descendant_types, options)
     return nil if descendant_types.nil?
 
     matches = []
