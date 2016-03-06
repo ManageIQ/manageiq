@@ -172,12 +172,12 @@ module Rbac
   end
 
   def self.compute_total_count(klass, scope, extra_target_ids, conditions, includes = nil)
-    if conditions && extra_target_ids
+    if conditions.present? && extra_target_ids.present?
       scope = scope.where(conditions).or(scope.where(:id => extra_target_ids))
-    elsif conditions
+    elsif conditions.present?
       scope = scope.where(conditions)
     elsif extra_target_ids
-      scope = scope.where(:id => extra_target_ids)
+      return extra_target_ids.size
     end
 
     scope.includes(includes).references(includes).count
