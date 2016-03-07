@@ -219,4 +219,47 @@ describe CustomButton do
       expect(new_vm_button).to be_valid
     end
   end
+
+  describe "#expanded_serializable_hash" do
+    let(:test_button) { described_class.new(:resource_action => resource_action) }
+    let(:expected_hash) do
+      {
+        "id"                => nil,
+        "guid"              => nil,
+        "description"       => nil,
+        "applies_to_class"  => nil,
+        "applies_to_exp"    => nil,
+        "options"           => nil,
+        "userid"            => nil,
+        "wait_for_complete" => nil,
+        "created_on"        => nil,
+        "updated_on"        => nil,
+        "name"              => nil,
+        "visibility"        => nil,
+        "applies_to_id"     => nil
+      }
+    end
+
+    context "when a resource action exists" do
+      let(:resource_action) { ResourceAction.new }
+
+      before do
+        allow(resource_action).to receive(:serializable_hash).and_return("resource_action_hash")
+      end
+
+      it "returns the button as a serializable hash with the resource action serialized hash" do
+        expect(test_button.expanded_serializable_hash).to eq(
+          expected_hash.merge(:resource_action => "resource_action_hash")
+        )
+      end
+    end
+
+    context "when a resource action does not exist" do
+      let(:resource_action) { nil }
+
+      it "returns the button as a serializable hash" do
+        expect(test_button.expanded_serializable_hash).to eq(expected_hash)
+      end
+    end
+  end
 end

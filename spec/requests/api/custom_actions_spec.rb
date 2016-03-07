@@ -189,9 +189,8 @@ describe ApiController do
       button = @result["custom_actions"]["buttons"].first
       expect_hash_to_have_keys(button, %w(id resource_action))
       ra = button["resource_action"]
-      expect_hash_to_have_keys(ra, %w(id dialog_id dialog))
+      expect_hash_to_have_keys(ra, %w(id dialog_id))
       expect_result_to_match_hash(ra, "id" => ra2.id, "dialog_id" => ra2.dialog_id)
-      expect(ra["dialog"]["label"]).to eq(dialog2.label)
     end
   end
 end
