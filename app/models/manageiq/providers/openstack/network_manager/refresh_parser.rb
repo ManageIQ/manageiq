@@ -341,7 +341,6 @@ module ManageIQ::Providers
     end
 
     class << self
-      private
       def security_group_type
         'ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup'
       end
