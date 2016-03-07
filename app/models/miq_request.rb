@@ -18,6 +18,7 @@ class MiqRequest < ApplicationRecord
   default_value_for :request_state, 'pending'
   default_value_for(:request_type)  { |r| r.request_types.first }
   default_value_for :status,        'Ok'
+  default_value_for :process,       true
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
@@ -478,6 +479,10 @@ class MiqRequest < ApplicationRecord
 
   def event_name(mode)
     "#{self.class.name.underscore}_#{mode}"
+  end
+
+  def process_on_create?
+    true
   end
 
   def request_pending_approval?
