@@ -1,6 +1,7 @@
 ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope', 'reconfigureFormId', 'objectIds', 'miqService', function($http, $scope, reconfigureFormId, objectIds, miqService) {
     var init = function() {
       $scope.reconfigureModel = {
+        objectIds:               [],
         cb_memory:               false,
         memory:                  '0',
         memory_type:             '',
@@ -35,7 +36,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         miqService.sparkleOff();
       });
 
-      $scope.$watch("reconfigureModel.name", function() {
+      $scope.$watch("reconfigureModel.objectIds", function() {
         $scope.form = $scope.angularForm;
       });
     };
@@ -61,10 +62,10 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     $scope.processorValueChanged = function() {
       var vtotal_cpus = parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10);
       $scope.reconfigureModel.total_cpus = vtotal_cpus.toString();
-      if(vtotal_cpus > 8)
-        $scope.angularForm.total_cpus.$setValidity('validatemax', false);
-      else
-        $scope.angularForm.total_cpus.$setValidity('validatemax', true);
+    };
+
+    $scope.memtypeChanged = function() {
+      $scope.angularForm.memory.$validate();
     };
 
     var reconfigureEditButtonClicked = function(buttonName, serializeFields) {

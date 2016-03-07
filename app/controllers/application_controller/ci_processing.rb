@@ -1003,8 +1003,7 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     @edit = {}
     @edit[:key] = "reconfigure__new"
-    @edit[:current] = {}
-    @edit[:new] = {}
+    session[:req_id] = nil
     # check to see if coming from show_list or drilled into vms from another CI
     rec_cls = "vm"
     recs = []
@@ -1039,7 +1038,6 @@ module ApplicationController::CiProcessing
     end
     if @explorer
       reconfigure
-      @edit[:explorer] = true
       session[:changed] = true  # need to enable submit button when screen loads
       @refresh_partial = "vm_common/reconfigure"
     else
