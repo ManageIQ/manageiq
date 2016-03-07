@@ -48,8 +48,9 @@
                                     :valtype           => "log",
                                     :basic_info_needed => true}
 
-  %div_for_paging{'ng-controller'         => "pagingDivButtonGroupController",
-                  'paging_div_buttons_id' => "angular_paging_div_buttons"}
+  %div_for_paging{'ng-controller'           => "pagingDivButtonGroupController",
+                  'paging_div_buttons_id'   => "angular_paging_div_buttons",
+                  'paging_div_buttons_type' => "Save"}
 
 :javascript
   ManageIQ.angular.app.value('serverId', '#{@record.id || "new"}');

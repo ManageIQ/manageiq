@@ -1,22 +1,35 @@
 ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'miqService', '$compile', '$attrs', function($scope, miqService, $compile, $attrs) {
   var init = function() {
-    saveButton();
-    resetButton();
-    cancelButton();
+    if ($attrs.pagingDivButtonsType == "Submit") {
+      saveButton('Submit');
+      cancelButton();
+    } else {
+      saveButton();
+      resetButton();
+      cancelButton();
+    }
 
     $scope.saveable = miqService.saveable;
     $scope.disabledClick = miqService.disabledClick;
   }
 
-  var saveButton = function() {
+  var saveButton = function(type) {
+    altText =  __("Save changes");
+    btnText = __("Save");
+
+    if(type == "Submit") {
+      altText =  __("Submit changes");
+      btnText = __("Submit");
+    }
+
     var disabledSaveHtml = sprintf('<button name="button" id="save_disabled" type="submit" class="btn btn-primary btn-disabled" ' +
       'alt=%s title=%s ng-click="disabledClick($event)" style="cursor:not-allowed" ' +
-      'ng-show="!newRecord && !saveable(angularForm)">%s</button>', __("Save changes"), __("Save changes"), __("Save"));
+      'ng-show="!newRecord && !saveable(angularForm)">%s</button>', altText, altText, btnText);
     var compiledDisabledSave = $compile(disabledSaveHtml)($scope);
 
     var enabledSaveHtml = sprintf('<button name="button" id="save_enabled" type="submit" class="btn btn-primary ng-hide" ' +
       'alt=%s title=%s ng-click="saveClicked($event, true)" ' +
-      'ng-show="!newRecord && saveable(angularForm)">%s</button>', __("Save changes"), __("Save changes"), __("Save"));
+      'ng-show="!newRecord && saveable(angularForm)">%s</button>', altText, altText, btnText);
     var compiledEnabledSave = $compile(enabledSaveHtml)($scope);
 
     if (angular.element(document.getElementById('save_disabled')).length == 0) {
