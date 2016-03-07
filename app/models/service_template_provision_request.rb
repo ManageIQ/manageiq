@@ -13,6 +13,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
+  default_value_for :process,      false
 
   def user
     get_user
@@ -50,5 +51,9 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   def my_records
     "#{self.class::SOURCE_CLASS_NAME}:#{get_option(:src_id)}"
+  end
+
+  def process_on_create?
+    false
   end
 end

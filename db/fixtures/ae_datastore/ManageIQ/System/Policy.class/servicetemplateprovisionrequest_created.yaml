@@ -8,6 +8,8 @@ object:
     inherits: 
     description: 
   fields:
+  - guard:
+      value: "${/#miq_request.process}"
   - rel5:
       value: "/${/#miq_request.resource.ci_type}/Provisioning/Profile/${/#user.normalized_ldap_group}#get_auto_approval_state_machine"
   - rel6:
