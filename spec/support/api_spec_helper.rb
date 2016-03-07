@@ -16,12 +16,8 @@ module ApiSpecHelper
     "Accept"       => "application/json"
   }
 
-  def result
-    case response.status
-    when Rack::Utils.status_code(:no_content)   then {}
-    when Rack::Utils.status_code(:unauthorized) then response.body
-    else JSON.parse(response.body)
-    end
+  def response_hash
+    JSON.parse(response.body)
   end
 
   def update_headers(headers)
@@ -208,8 +204,8 @@ module ApiSpecHelper
     expect(response).to have_http_status(:bad_request)
     return if error_message.blank?
 
-    expect(result).to have_key("error")
-    expect(result["error"]["message"]).to match(error_message)
+    expect(response_hash).to have_key("error")
+    expect(response_hash["error"]["message"]).to match(error_message)
   end
 
   def expect_user_unauthorized
@@ -225,28 +221,28 @@ module ApiSpecHelper
   end
 
   def expect_result_resources_to_include_data(collection, data)
-    expect(result).to have_key(collection)
+    expect(response_hash).to have_key(collection)
     fetch_value(data).each do |key, value|
       value_list = fetch_value(value)
-      expect(result[collection].size).to eq(value_list.size)
-      expect(result[collection].collect { |r| r[key] }).to match_array(value_list)
+      expect(response_hash[collection].size).to eq(value_list.size)
+      expect(response_hash[collection].collect { |r| r[key] }).to match_array(value_list)
     end
   end
 
   def expect_result_resources_to_include_hrefs(collection, hrefs)
-    expect(result).to have_key(collection)
+    expect(response_hash).to have_key(collection)
     href_list = fetch_value(hrefs)
-    expect(result[collection].size).to eq(href_list.size)
+    expect(response_hash[collection].size).to eq(href_list.size)
     href_list.each do |href|
-      expect(resources_include_suffix?(result[collection], "href", href)).to be_truthy
+      expect(resources_include_suffix?(response_hash[collection], "href", href)).to be_truthy
     end
   end
 
   def expect_result_resources_to_match_key_data(collection, key, values)
     value_list = fetch_value(values)
-    expect(result).to have_key(collection)
-    expect(result[collection].size).to eq(value_list.size)
-    value_list.zip(result[collection]) do |value, hash|
+    expect(response_hash).to have_key(collection)
+    expect(response_hash[collection].size).to eq(value_list.size)
+    value_list.zip(response_hash[collection]) do |value, hash|
       expect(hash).to have_key(key)
       expect(hash[key]).to match(value)
     end
@@ -254,12 +250,12 @@ module ApiSpecHelper
 
   def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
     pattern = fetch_value(pattern)
-    expect(result).to have_key(collection)
-    expect(result[collection].all? { |result| result[key].match(pattern) }).to be_truthy
+    expect(response_hash).to have_key(collection)
+    expect(response_hash[collection].all? { |result| result[key].match(pattern) }).to be_truthy
   end
 
   def expect_result_to_have_keys(keys)
-    expect_hash_to_have_keys(result, keys)
+    expect_hash_to_have_keys(response_hash, keys)
   end
 
   def expect_hash_to_have_keys(hash, keys)
@@ -267,7 +263,7 @@ module ApiSpecHelper
   end
 
   def expect_result_to_have_only_keys(keys)
-    expect_hash_to_have_only_keys(result, keys)
+    expect_hash_to_have_only_keys(response_hash, keys)
   end
 
   def expect_hash_to_have_only_keys(hash, keys)
@@ -284,8 +280,8 @@ module ApiSpecHelper
   end
 
   def expect_results_to_match_hash(collection, result_hash)
-    expect(result).to have_key(collection)
-    fetch_value(result_hash).zip(result[collection]) do |expected, actual|
+    expect(response_hash).to have_key(collection)
+    fetch_value(result_hash).zip(response_hash[collection]) do |expected, actual|
       expect_result_to_match_hash(actual, expected)
     end
   end
@@ -295,26 +291,26 @@ module ApiSpecHelper
   end
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
-    expect(result).to have_key(collection)
-    expect(result[collection].all? { |result| result[key].kind_of?(klass) }).to be_truthy
+    expect(response_hash).to have_key(collection)
+    expect(response_hash[collection].all? { |result| result[key].kind_of?(klass) }).to be_truthy
   end
 
   def expect_result_resources_to_include_keys(collection, keys)
-    expect(result).to have_key(collection)
-    results = result[collection]
+    expect(response_hash).to have_key(collection)
+    results = response_hash[collection]
     fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_truthy, "resource missing: #{key}" }
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)
     key_list = fetch_value(keys).sort
-    expect(result).to have_key(collection)
-    expect(result[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
+    expect(response_hash).to have_key(collection)
+    expect(response_hash[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
   def expect_results_match_key_pattern(collection, key, value)
     pattern = fetch_value(value)
-    expect(result).to have_key(collection)
-    expect(result[collection].all? { |result| result[key].match(pattern) }).to be_truthy
+    expect(response_hash).to have_key(collection)
+    expect(response_hash[collection].all? { |result| result[key].match(pattern) }).to be_truthy
   end
 
   def expect_result_to_represent_task(result)
@@ -326,33 +322,33 @@ module ApiSpecHelper
 
   def expect_empty_query_result(collection)
     expect_request_success
-    expect(result).to include("name" => collection.to_s, "resources" => [])
+    expect(response_hash).to include("name" => collection.to_s, "resources" => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
     expect_request_success
-    expect(result).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
-    expect(result["resources"].size).to eq(fetch_value(subcount))
-    expect(result["count"]).to eq(fetch_value(count)) if count.present?
+    expect(response_hash).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
+    expect(response_hash["resources"].size).to eq(fetch_value(subcount))
+    expect(response_hash["count"]).to eq(fetch_value(count)) if count.present?
   end
 
   def expect_single_resource_query(attr_hash = {})
     expect_request_success
-    expect_result_to_match_hash(result, fetch_value(attr_hash))
+    expect_result_to_match_hash(response_hash, fetch_value(attr_hash))
   end
 
   def expect_single_action_result(options = {})
     expect_request_success
-    expect(result).to include("success" => options[:success]) if options.key?(:success)
-    expect(result).to include("message" => a_string_matching(options[:message])) if options[:message]
-    expect(result).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
-    expect_result_to_represent_task(result) if options[:task]
+    expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
+    expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
+    expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
+    expect_result_to_represent_task(response_hash) if options[:task]
   end
 
   def expect_multiple_action_result(count, options = {})
     expect_request_success
-    expect(result).to have_key("results")
-    results = result["results"]
+    expect(response_hash).to have_key("results")
+    results = response_hash["results"]
     expect(results.size).to eq(count)
     expect(results.all? { |r| r["success"] }).to be_truthy
 
@@ -362,8 +358,8 @@ module ApiSpecHelper
   def expect_tagging_result(tagging_results)
     expect_request_success
     tag_results = fetch_value(tagging_results)
-    expect(result).to have_key("results")
-    results = result["results"]
+    expect(response_hash).to have_key("results")
+    results = response_hash["results"]
     expect(results.size).to eq(tag_results.size)
     tag_results.zip(results) do |tag_result, result|
       expect(result).to include(

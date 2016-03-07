@@ -13,7 +13,7 @@ RSpec.describe "reports API" do
         reports_url(report_2.id)
       ]
     )
-    expect_result_to_match_hash(result, "count" => 2, "name" => "reports")
+    expect_result_to_match_hash(response_hash, "count" => 2, "name" => "reports")
     expect_request_success
   end
 
@@ -24,7 +24,7 @@ RSpec.describe "reports API" do
     run_get reports_url(report.id)
 
     expect_result_to_match_hash(
-      result,
+      response_hash,
       "href"  => reports_url(report.id),
       "id"    => report.id,
       "name"  => report.name,
@@ -46,7 +46,7 @@ RSpec.describe "reports API" do
         "#{reports_url(report.id)}/results/#{report_result.to_param}"
       ]
     )
-    expect(result["resources"]).not_to be_any { |resource| resource.key?("result_set") }
+    expect(response_hash["resources"]).not_to be_any { |resource| resource.key?("result_set") }
     expect_request_success
   end
 
@@ -63,7 +63,7 @@ RSpec.describe "reports API" do
     api_basic_authorize
     run_get "#{reports_url(report.id)}/results/#{report_result.to_param}"
 
-    expect_result_to_match_hash(result, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
+    expect_result_to_match_hash(response_hash, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
     expect_request_success
   end
 
@@ -96,7 +96,7 @@ RSpec.describe "reports API" do
     api_basic_authorize
     run_get results_url(report_result.id)
 
-    expect_result_to_match_hash(result, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
+    expect_result_to_match_hash(response_hash, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
     expect_request_success
   end
 
@@ -107,7 +107,7 @@ RSpec.describe "reports API" do
     api_basic_authorize
     run_get "#{reports_url(report.id)}/results/#{report_result.id}"
 
-    expect_result_to_match_hash(result, "result_set" => [])
+    expect_result_to_match_hash(response_hash, "result_set" => [])
     expect_request_success
   end
 
@@ -145,7 +145,7 @@ RSpec.describe "reports API" do
         run_post reports_url, gen_request(:import, :report => serialized_report, :options => options)
       end.to change(MiqReport, :count).by(1)
       expect_result_to_match_hash(
-        result["results"].first["result"],
+        response_hash["results"].first["result"],
         "name"      => "Test Report",
         "title"     => "Test Report",
         "rpt_group" => "Custom",
@@ -155,7 +155,7 @@ RSpec.describe "reports API" do
         "col_order" => %w(foo bar baz),
       )
       expect_result_to_match_hash(
-        result["results"].first,
+        response_hash["results"].first,
         "message" => "Imported Report: [Test Report]",
         "success" => true
       )

@@ -61,7 +61,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash])
 
-      task_id = result["results"].first["id"]
+      task_id = response_hash["results"].first["id"]
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
@@ -75,7 +75,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash])
 
-      task_id = result["results"].first["id"]
+      task_id = response_hash["results"].first["id"]
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
@@ -89,7 +89,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
-      task_id1, task_id2 = result["results"].collect { |r| r["id"] }
+      task_id1, task_id2 = response_hash["results"].collect { |r| r["id"] }
       expect(MiqProvisionRequest.exists?(task_id1)).to be_truthy
       expect(MiqProvisionRequest.exists?(task_id2)).to be_truthy
     end
