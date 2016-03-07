@@ -265,7 +265,8 @@ describe MiqQueue do
         :args        => ['rq_message', 1, ["A", "B", "C"], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
         :zone        => @zone.name,
         :role        => 'automate',
-        :msg_timeout => 60.minutes
+        :msg_timeout => 60.minutes,
+        :no_such_key => 'Does not exist'
       }
 
       @msg.update_attributes!(:state => 'error')
