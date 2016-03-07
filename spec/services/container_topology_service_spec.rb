@@ -5,7 +5,6 @@ describe ContainerTopologyService do
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
-      allow(container_topology_service).to receive(:retrieve_providers).and_return([FactoryGirl.create(:ems_kubernetes)])
       expect(container_topology_service.build_kinds.keys).to match_array([:Container, :Host, :ContainerManager, :ContainerNode, :ContainerGroup, :ContainerReplicator, :ContainerRoute, :ContainerService, :Vm])
     end
   end
