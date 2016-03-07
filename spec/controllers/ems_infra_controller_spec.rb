@@ -66,8 +66,9 @@ describe EmsInfraController do
     end
 
     it "when Host Analyze then Check Compliance is pressed" do
+      ems_infra = FactoryGirl.create(:ems_vmware)
       expect(controller).to receive(:analyze_check_compliance_hosts)
-      post :button, :params => { :pressed => "host_analyze_check_compliance", :format => :js }
+      post :button, :params => {:pressed => "host_analyze_check_compliance", :id => ems_infra.id, :format => :js}
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
