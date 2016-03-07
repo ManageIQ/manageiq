@@ -65,6 +65,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.memtypeChanged = function() {
+      $scope.reconfigureModel.memory = 0;
       $scope.angularForm.memory.$validate();
     };
 

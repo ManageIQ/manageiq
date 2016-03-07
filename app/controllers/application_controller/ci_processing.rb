@@ -365,7 +365,7 @@ module ApplicationController::CiProcessing
   end
 
   def reconfigure_update
-    return unless load_edit("reconfigure__new")
+    # return unless load_edit("reconfigure__new")
     case params[:button]
     when "cancel"
       add_flash(_("VM Reconfigure Request was cancelled by the user"))
