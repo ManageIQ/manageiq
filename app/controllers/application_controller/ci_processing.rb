@@ -351,7 +351,7 @@ module ApplicationController::CiProcessing
 
   # Assign/unassign ownership to a set of objects
   def reconfigure
-    @edit = session[:edit] unless @explorer
+    @sb[:explorer] = true if @explorer
     @in_a_form = @reconfigure = true
     drop_breadcrumb(:name => "Reconfigure", :url => "/vm_common/reconfigure")
     @reconfigitems = Vm.find(session[:reconfigure_items]).sort_by(&:name) # Get the db records
@@ -365,11 +365,10 @@ module ApplicationController::CiProcessing
   end
 
   def reconfigure_update
-    # return unless load_edit("reconfigure__new")
     case params[:button]
     when "cancel"
       add_flash(_("VM Reconfigure Request was cancelled by the user"))
-      if @edit[:explorer]
+      if @sb[:explorer]
         @sb[:action] = nil
         replace_right_cell
       else
@@ -1001,8 +1000,6 @@ module ApplicationController::CiProcessing
   # Reconfigure selected VMs
   def reconfigurevms
     assert_privileges(params[:pressed])
-    @edit = {}
-    @edit[:key] = "reconfigure__new"
     session[:req_id] = nil
     # check to see if coming from show_list or drilled into vms from another CI
     rec_cls = "vm"
