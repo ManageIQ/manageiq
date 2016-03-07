@@ -47,7 +47,7 @@ describe ApiController do
 
         expect { run_post tags_url, options }.to change(Tag, :count).by(1)
 
-        tag = Tag.find(result["results"].first["id"])
+        tag = Tag.find(response_hash["results"].first["id"])
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -62,7 +62,7 @@ describe ApiController do
           run_post tags_url, :name => "test_tag", :description => "Test Tag", :category => {:id => category.id}
         end.to change(Tag, :count).by(1)
 
-        tag = Tag.find(result["results"].first["id"])
+        tag = Tag.find(response_hash["results"].first["id"])
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -77,7 +77,7 @@ describe ApiController do
           run_post tags_url, :name => "test_tag", :description => "Test Tag", :category => {:name => category.name}
         end.to change(Tag, :count).by(1)
 
-        tag = Tag.find(result["results"].first["id"])
+        tag = Tag.find(response_hash["results"].first["id"])
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -91,7 +91,7 @@ describe ApiController do
         expect do
           run_post "#{categories_url(category.id)}/tags", :name => "test_tag", :description => "Test Tag"
         end.to change(Tag, :count).by(1)
-        tag = Tag.find(result["results"].first["id"])
+        tag = Tag.find(response_hash["results"].first["id"])
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -115,7 +115,7 @@ describe ApiController do
         expect do
           run_post tags_url(tag.id), gen_request(:edit, :name => "new_name")
         end.to change { classification.reload.tag.name }.to("#{category.tag.name}/new_name")
-        expect(result["name"]).to eq("#{category.tag.name}/new_name")
+        expect(response_hash["name"]).to eq("#{category.tag.name}/new_name")
         expect_request_success
       end
 
@@ -188,7 +188,7 @@ describe ApiController do
         expect { classification1.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { classification2.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect_result_to_match_hash(
-          result,
+          response_hash,
           "results" => [
             {"success" => true, "message" => "tags id: #{tag1.id} deleting"},
             {"success" => true, "message" => "tags id: #{tag2.id} deleting"}
@@ -212,7 +212,7 @@ describe ApiController do
         expect { classification1.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { classification2.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect_result_to_match_hash(
-          result,
+          response_hash,
           "results" => [
             {"success" => true, "message" => "tags id: #{tag1.id} deleting"},
             {"success" => true, "message" => "tags id: #{tag2.id} deleting"}

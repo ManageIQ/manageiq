@@ -32,7 +32,7 @@ RSpec.describe "tenants API" do
     run_get tenants_url(tenant.id)
 
     expect_result_to_match_hash(
-      result,
+      response_hash,
       "href"        => tenants_url(tenant.id),
       "id"          => tenant.id,
       "name"        => "Test Tenant",

@@ -27,7 +27,7 @@ describe ApiController do
 
   def expect_result_to_have_provision_dialog
     expect_result_to_have_keys(%w(id href provision_dialog))
-    provision_dialog = result["provision_dialog"]
+    provision_dialog = response_hash["provision_dialog"]
     expect(provision_dialog).to be_kind_of(Hash)
     expect(provision_dialog).to have_key("label")
     expect(provision_dialog).to have_key("dialog_tabs")
@@ -37,7 +37,7 @@ describe ApiController do
   def expect_result_to_have_user_email(email)
     expect_request_success
     expect_result_to_have_keys(%w(id href user))
-    expect(result["user"]["email"]).to eq(email)
+    expect(response_hash["user"]["email"]).to eq(email)
   end
 
   describe "Service Requests query" do

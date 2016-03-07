@@ -58,7 +58,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
-      sc_id = result["results"].first["id"]
+      sc_id = response_hash["results"].first["id"]
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
@@ -72,7 +72,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
-      sc_id = result["results"].first["id"]
+      sc_id = response_hash["results"].first["id"]
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
@@ -86,7 +86,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sc1"}, {"name" => "sc2"}])
 
-      results = result["results"]
+      results = response_hash["results"]
       sc_id1, sc_id2 = results.first["id"], results.second["id"]
       expect(ServiceTemplateCatalog.find(sc_id1)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id2)).to be_truthy
@@ -109,7 +109,7 @@ describe ApiController do
       expect_request_success
       expect_results_to_match_hash("results", [{"name" => "sc", "description" => "sc description"}])
 
-      sc_id = result["results"].first["id"]
+      sc_id = response_hash["results"].first["id"]
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id).service_templates.pluck(:id)).to match_array([st1.id, st2.id])
@@ -389,8 +389,8 @@ describe ApiController do
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
 
       expect_single_action_result(:success => true, :message => /refreshing dialog fields/i)
-      expect_hash_to_have_keys(result, %w(success href service_template_id service_template_href result))
-      expect_hash_to_have_keys(result["result"], %w(text1))
+      expect_hash_to_have_keys(response_hash, %w(success href service_template_id service_template_href result))
+      expect_hash_to_have_keys(response_hash["result"], %w(text1))
     end
   end
 end

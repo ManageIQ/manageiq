@@ -39,7 +39,7 @@ RSpec.describe "categories API" do
 
     run_get categories_url(category.id)
     expect_result_to_match_hash(
-      result,
+      response_hash,
       "description" => category.description,
       "href"        => categories_url(category.id),
       "id"          => category.id
@@ -87,7 +87,7 @@ RSpec.describe "categories API" do
       run_post categories_url, options
 
       expect_result_to_match_hash(
-        result["results"].first,
+        response_hash["results"].first,
         "read_only"    => true,
         "show"         => true,
         "single_value" => true
@@ -98,7 +98,7 @@ RSpec.describe "categories API" do
       api_basic_authorize collection_action_identifier(:categories, :create)
 
       run_post categories_url, :name => "test", :description => "Test"
-      category = Category.find(result["results"].first["id"])
+      category = Category.find(response_hash["results"].first["id"])
 
       expect(category.tag.name).to eq("/managed/test")
     end
