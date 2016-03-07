@@ -93,6 +93,7 @@ gem "ovirt_metrics",                  :git => "git://github.com/matthewd/ovirt_m
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
+gem "rugged",                         "~>0.23.0",  :require => false
 gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
