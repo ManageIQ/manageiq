@@ -111,20 +111,21 @@ module Rbac
   end
 
   def self.get_self_service_objects(user, miq_group, klass)
-    user_or_group = user || miq_group
-    return nil if user_or_group.nil? || !user_or_group.self_service? || !(klass < OwnershipMixin)
+    return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
+
+    # for limited_self_service, use user's resources, not user.current_group's resources
+    # for reports (user = nil), still use miq_group
+    miq_group = nil if user && miq_group.limited_self_service?
 
     # Get the list of objects that are owned by the user or their LDAP group
-    cond = user_or_group.limited_self_service? ? klass.conditions_for_owned(user_or_group) : klass.conditions_for_owned_or_group_owned(user_or_group)
-    klass.select(minimum_columns_for(klass)).where(cond)
+    klass.user_or_group_owned(user, miq_group).select(minimum_columns_for(klass))
   end
 
   # @return nil if no objects are owned by self service or user not a selfservice user
-  # @return [Array<Integer>] object_ids owned by a user or group
+  # @return [Array<Integer>, nil] object_ids owned by a user or group
   def self.get_self_service_object_ids(user, miq_group, klass)
     targets = get_self_service_objects(user, miq_group, klass)
-    targets = targets.reorder(nil).collect(&:id) if targets.respond_to?(:collect)
-    targets
+    targets.reorder(nil).pluck(:id) if targets
   end
 
   def self.calc_filtered_ids(scope, user_filters, user, miq_group)

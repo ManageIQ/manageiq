@@ -268,7 +268,7 @@ describe Rbac do
 
       context "with self-service user" do
         before(:each) do
-          allow_any_instance_of(User).to receive_messages(:self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
         end
 
         it "returns only the current user" do
@@ -460,7 +460,7 @@ describe Rbac do
         end
 
         it "search on VMs and Templates should return no objects if self-service user" do
-          allow_any_instance_of(User).to receive_messages(:self_service? => true)
+          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
           User.with_user(user) do
             results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects)
             objects = results.first
@@ -667,7 +667,7 @@ describe Rbac do
 
         context "with self-service user" do
           before(:each) do
-            allow_any_instance_of(User).to receive_messages(:self_service? => true)
+            allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -688,8 +688,8 @@ describe Rbac do
 
         context "with limited self-service user" do
           before(:each) do
-            allow_any_instance_of(User).to receive_messages(:self_service? => true)
-            allow_any_instance_of(User).to receive_messages(:limited_self_service? => true)
+            allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+            allow_any_instance_of(MiqGroup).to receive_messages(:limited_self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -749,7 +749,7 @@ describe Rbac do
 
         context "with self-service user" do
           before(:each) do
-            allow_any_instance_of(User).to receive_messages(:self_service? => true)
+            allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -777,8 +777,8 @@ describe Rbac do
 
         context "with limited self-service user" do
           before(:each) do
-            allow_any_instance_of(User).to receive_messages(:self_service? => true)
-            allow_any_instance_of(User).to receive_messages(:limited_self_service? => true)
+            allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+            allow_any_instance_of(MiqGroup).to receive_messages(:limited_self_service? => true)
           end
 
           it "works when targets are empty" do
@@ -1082,7 +1082,10 @@ describe Rbac do
             value: connected
             field: MiqGroup.vms-connection_state
         '
-        results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :results_format => :objects)
+        results, attrs = described_class.search(:class          => "MiqGroup",
+                                                :filter         => filter,
+                                                :miq_group      => group,
+                                                :results_format => :objects)
 
         expect(results.length).to eq(2)
         expect(attrs[:total_count]).to eq(2)
@@ -1096,8 +1099,10 @@ describe Rbac do
             value: false
             field: MiqGroup.vms-disconnected
         '
-        results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :results_format => :objects)
-
+        results, attrs = described_class.search(:class          => "MiqGroup",
+                                                :filter         => filter,
+                                                :miq_group      => group,
+                                                :results_format => :objects)
         expect(results.length).to eq(2)
         expect(attrs[:total_count]).to eq(2)
       end
