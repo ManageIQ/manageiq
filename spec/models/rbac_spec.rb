@@ -1186,8 +1186,9 @@ describe Rbac do
   end
 
   it ".apply_user_group_rbac_to_class?" do
-    expect(Rbac.apply_user_group_rbac_to_class?(User)).to be_truthy
-    expect(Rbac.apply_user_group_rbac_to_class?(Vm)).not_to be
+    expect(Rbac.apply_user_group_rbac_to_class?(User, double("MiqGroup", :self_service? => true))).to be_truthy
+    expect(Rbac.apply_user_group_rbac_to_class?(User, double("MiqGroup", :self_service? => false))).not_to be_truthy
+    expect(Rbac.apply_user_group_rbac_to_class?(Vm, double("MiqGroup", :self_service? => true))).not_to be_truthy
   end
 
   # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)

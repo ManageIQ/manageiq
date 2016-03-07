@@ -77,8 +77,8 @@ module Rbac
   #     BelongsToFilters is: BelongsToFilters.any? { |f| matched_filter(f) }
   ########################################################################################
 
-  def self.apply_user_group_rbac_to_class?(klass)
-    [User, MiqGroup].include?(klass)
+  def self.apply_user_group_rbac_to_class?(klass, miq_group)
+    [User, MiqGroup].include?(klass) && miq_group.try!(:self_service?)
   end
 
   def self.safe_base_class(klass)
@@ -249,25 +249,21 @@ module Rbac
 
   def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user_or_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
-    if user_or_group && user_or_group.self_service?
-      if klass == User && user_or_group.kind_of?(User)
-        cond = ["id = ?", user_or_group.id]
-      elsif klass == MiqGroup
-        group_id = user_or_group.id if user_or_group.kind_of?(MiqGroup)
-        group_id ||= user_or_group.current_group_id if user_or_group.kind_of?(User) && user_or_group.current_group
-        cond = ["id = ?", group_id] if group_id
-      else
-        cond = nil
-      end
-
-      cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.where(cond).includes(incl).references(incl).group(find_options[:group])
-                     .order(find_options[:order]).offset(find_options[:offset]).limit(find_options[:limit]).to_a
-
-      [targets, targets.length, targets.length]
+    if klass == User && user_or_group.kind_of?(User)
+      cond = ["id = ?", user_or_group.id]
+    elsif klass == MiqGroup
+      group_id = user_or_group.id if user_or_group.kind_of?(MiqGroup)
+      group_id ||= user_or_group.current_group_id if user_or_group.kind_of?(User) && user_or_group.current_group
+      cond = ["id = ?", group_id] if group_id
     else
-      find_targets_without_rbac(scope, find_options)
+      cond = nil
     end
+
+    cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
+    targets = klass.where(cond).includes(incl).references(incl).group(find_options[:group])
+                   .order(find_options[:order]).offset(find_options[:offset]).limit(find_options[:limit]).to_a
+
+    [targets, targets.length, targets.length]
   end
 
   def self.find_options_for_tenant(scope, user_or_group, find_options)
@@ -291,7 +287,7 @@ module Rbac
       find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)
     elsif apply_rbac_to_associated_class?(klass)
       find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)
-    elsif apply_user_group_rbac_to_class?(klass)
+    elsif apply_user_group_rbac_to_class?(klass, user_or_group)
       find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user_or_group)
     else
       find_targets_without_rbac(scope, find_options)
