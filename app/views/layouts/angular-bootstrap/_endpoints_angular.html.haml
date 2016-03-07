@@ -1,3 +1,5 @@
+- return if controller_name != "ems_cloud"
+
 .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'openstack'"}
   %label.col-md-2.control-label{"for" => "textInput-markup"}
     = _('Hostname (or IPv4 or IPv6 address)')
