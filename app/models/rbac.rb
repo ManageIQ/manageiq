@@ -255,8 +255,7 @@ module Rbac
     if klass == User && user
       cond = ["id = ?", user.id]
     elsif klass == MiqGroup
-      group_id = miq_group.try!(:id) || user.try!(:current_group_id)
-      cond = ["id = ?", group_id] if group_id
+      cond = ["id = ?", miq_group.id]
     end
 
     cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
