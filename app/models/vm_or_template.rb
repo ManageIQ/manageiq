@@ -50,7 +50,7 @@ class VmOrTemplate < ApplicationRecord
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
 
   validates_presence_of     :name, :location
-  validates_inclusion_of    :vendor, :in => VENDOR_TYPES.values
+  validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
   has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
 
@@ -580,17 +580,8 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
-  def vendor
-    v = read_attribute(:vendor)
-    VENDOR_TYPES[v]
-  end
-
-  def vendor=(v)
-    unless VENDOR_TYPES.key?(v)
-      v = VENDOR_TYPES.key(v)
-      raise "vendor must be one of VENDOR_TYPES" unless VENDOR_TYPES.key?(v)
-    end
-    write_attribute(:vendor, v)
+  def vendor_display
+    VENDOR_TYPES[vendor]
   end
 
   #
