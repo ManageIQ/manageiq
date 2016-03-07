@@ -32,11 +32,14 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     ManageIQ::Providers::Azure::Regions.find_by_name(provider_region)[:description]
   end
 
-  def self.raw_connect(clientid, clientkey, azuretenantid)
+  def self.raw_connect(clientid, clientkey, azuretenantid, proxy_uri = nil)
+    proxy_uri ||= VMDB::Util.http_proxy_uri
+
     ::Azure::Armrest::ArmrestService.configure(
       :client_id  => clientid,
       :client_key => clientkey,
-      :tenant_id  => azuretenantid
+      :tenant_id  => azuretenantid,
+      :proxy      => proxy_uri.to_s
     )
   end
 
@@ -45,7 +48,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
     clientid  = options[:user] || authentication_userid(options[:auth_type])
     clientkey = options[:pass] || authentication_password(options[:auth_type])
-    self.class.raw_connect(clientid, clientkey, azure_tenant_id)
+    self.class.raw_connect(clientid, clientkey, azure_tenant_id, options[:proxy_uri])
   end
 
   def verify_credentials(_auth_type = nil, options = {})
