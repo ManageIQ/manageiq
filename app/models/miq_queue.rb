@@ -30,6 +30,7 @@ class MiqQueue < ApplicationRecord
 
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
+  WHITE_LIST      = MiqQueue.column_names.map(&:to_sym) - [:id]
 
   def self.priority(which, dir = nil, by = 0)
     raise ArgumentError, "which must be an Integer or one of #{PRIORITY_WHICH.join(", ")}" unless which.kind_of?(Integer) || PRIORITY_WHICH.include?(which)
@@ -415,7 +416,7 @@ class MiqQueue < ApplicationRecord
   end
 
   def requeue(options = {})
-    options.reverse_merge!(attributes.symbolize_keys)
+    options.reverse_merge!(attributes.symbolize_keys.slice(*WHITE_LIST))
     options.delete(:id)
     MiqQueue.put(options)
   end

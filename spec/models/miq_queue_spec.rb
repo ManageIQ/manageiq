@@ -268,6 +268,7 @@ describe MiqQueue do
         :msg_timeout => 60.minutes
       }
 
+      @msg.update_attributes!(:state => 'error')
       @old_msg_id = @msg.id
 
       @new_msg = @msg.requeue(options)
