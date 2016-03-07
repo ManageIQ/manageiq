@@ -1008,7 +1008,7 @@ module ApplicationController::CiProcessing
     rescue ActiveRecord::RecordNotFound
     rescue => @bang
       # TODO(lsmola) NetworkManager, Remove this when we have a full representation of the NetworkManager
-      record = ManageIQ::Providers::NetworkManager.where(:id => id).first
+      record = ManageIQ::Providers::NetworkManager.find_by(:id => id)
       if @explorer && record.blank?
         self.x_node = "root"
         add_flash(@bang.message, :error, true)
