@@ -77,6 +77,22 @@ module FixAuth
     end
   end
 
+  class FixSettingsChange < ActiveRecord::Base
+    include FixAuth::AuthModel
+    self.table_name = "settings_changes"
+    self.password_columns = %w(value)
+
+    serialize :value
+
+    def self.contenders
+      query = Vmdb::Settings::PASSWORD_FIELDS.collect do |field|
+        "(key LIKE '%/#{field}')"
+      end.join(" OR ")
+
+      super.where(query)
+    end
+  end
+
   class FixDatabaseYml
     attr_accessor :id
     attr_accessor :yaml

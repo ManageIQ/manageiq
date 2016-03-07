@@ -162,4 +162,26 @@ describe FixAuth::AuthModel do
       expect(v1.reload.value).to be_encrypted_version(2)
     end
   end
+
+  context "#settings_change" do
+    subject { FixAuth::FixSettingsChange }
+    let(:v1)  { subject.create(:key => "/v1/password", :value => enc_v1) }
+    let(:v2)  { subject.create(:key => "/v2/password", :value => enc_v2) }
+    let(:bad) { subject.create(:key => "/bad/password", :value => bad_v2) }
+
+    it "with hardcode" do
+      subject.fix_passwords(v1, :hardcode => pass)
+      expect(v1.value).to eq(enc_v2)
+    end
+
+    it "with invalid" do
+      subject.fix_passwords(bad, :invalid => pass)
+      expect(bad.value).to eq(enc_v2)
+    end
+
+    it "upgrades" do
+      expect(subject.fix_passwords(v1).value).to eq(enc_v2)
+      expect(subject.fix_passwords(v2).value).to eq(enc_v2)
+    end
+  end
 end
