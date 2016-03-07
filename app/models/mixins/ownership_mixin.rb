@@ -66,8 +66,14 @@ module OwnershipMixin
       end
     end
 
-    def user_or_group_owned(user = nil)
-      where(conditions_for_owned_or_group_owned(user)).to_a
+    def user_or_group_owned(user, miq_group)
+      if user && miq_group
+        where("evm_owner_id" => user.id).or(where("miq_group_id" => miq_group.id))
+      elsif user
+        where("evm_owner_id" => user.id)
+      elsif miq_group
+        where("miq_group_id" => miq_group.id)
+      end
     end
   end
 
