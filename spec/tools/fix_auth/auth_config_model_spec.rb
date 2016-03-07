@@ -18,56 +18,6 @@ describe FixAuth::AuthConfigModel do
     MiqPassword.clear_keys
   end
 
-  context "#configurations" do
-    subject { FixAuth::FixConfiguration }
-    let(:contenders) { subject.contenders }
-
-    let(:config_with_v1_key) do
-      subject.create(:typ => 'vmdb', :settings => YAML.dump(:production => {:password => enc_v1}))
-    end
-
-    let(:config_with_bad_password) do
-      subject.create(:typ => 'vmdb', :settings => YAML.dump(:production => {:password => bad_v2}))
-    end
-
-    let(:config_with_non_vmdb) do
-      subject.create(:typ => 'event_handling', :settings => YAML.dump(:production => {:password => enc_v1}))
-    end
-
-    it "should only find vmdb records" do
-      config_with_v1_key
-      config_with_non_vmdb
-      expect(contenders).to include(config_with_v1_key)
-      expect(contenders).not_to include(config_with_non_vmdb)
-    end
-
-    it "should upgrade" do
-      subject.fix_passwords(config_with_v1_key)
-      expect(config_with_v1_key).to be_settings_changed
-      new_settings = YAML.load(config_with_v1_key.settings)
-      expect(new_settings['production']['password']).to be_encrypted_version(2)
-      expect(new_settings['production']['password']).to be_encrypted(pass)
-    end
-
-    it "hardcodes entry" do
-      subject.fix_passwords(config_with_v1_key, :hardcode => "otherpass")
-      expect(config_with_v1_key).to be_settings_changed
-      new_settings = YAML.load(config_with_v1_key.settings)
-      expect(new_settings['production']['password']).to be_encrypted_version(2)
-      expect(new_settings['production']['password']).to be_encrypted("otherpass")
-    end
-
-    it "should fail on bad passwords" do
-      expect { subject.fix_passwords(config_with_bad_password) }.to raise_error(MiqPassword::MiqPasswordError)
-    end
-
-    it "should replace bad passwords" do
-      subject.fix_passwords(config_with_bad_password, :invalid => "replacement")
-      new_settings = YAML.load(config_with_bad_password.settings)
-      expect(new_settings['production']['password']).to be_encrypted("replacement")
-    end
-  end
-
   context "#requests" do
     subject { FixAuth::FixMiqRequest }
     let(:request) do
@@ -100,7 +50,7 @@ describe FixAuth::AuthConfigModel do
     end
   end
 
-  context "#requests" do
+  context "#request_tasks" do
     subject { FixAuth::FixMiqRequestTask }
     let(:request) do
       subject.create(

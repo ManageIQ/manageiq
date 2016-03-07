@@ -47,22 +47,6 @@ module FixAuth
     end
   end
 
-  class FixConfiguration < ActiveRecord::Base
-    include FixAuth::AuthConfigModel
-    self.password_columns = %w(settings)
-    self.password_fields = Vmdb::Settings::PASSWORD_FIELDS
-    self.table_name = "configurations"
-
-    def self.display_record(r)
-      puts "  #{r.id} (#{r.typ}.yml):"
-    end
-
-    # only bring back rows that store passwords
-    def self.contenders
-      where("typ = 'vmdb'")
-    end
-  end
-
   class FixMiqRequest < ActiveRecord::Base
     include FixAuth::AuthConfigModel
     # don't want to leverage STI

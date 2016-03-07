@@ -34,7 +34,7 @@ module FixAuth
     end
 
     def models
-      [FixAuthentication, FixMiqDatabase, FixMiqAeValue, FixMiqAeField, FixConfiguration,
+      [FixAuthentication, FixMiqDatabase, FixMiqAeValue, FixMiqAeField,
        FixMiqRequest, FixMiqRequestTask]
     end
 
