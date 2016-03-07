@@ -13,7 +13,7 @@ module EmsRefresh
   module SaveInventoryConfiguration
     def save_configuration_manager_inventory(manager, hashes, target = nil)
       return if hashes.nil?
-      save_child_inventory(manager, hashes, [:configuration_profiles, :configured_systems, :configuration_scripts], target)
+      save_child_inventory(manager, hashes, [:ems_folders, :configuration_profiles, :configured_systems, :configuration_scripts], target)
       manager.save
     end
 
@@ -30,14 +30,19 @@ module EmsRefresh
       # get the id out and store in this record
       hashes.each do |hash|
         hash[:configuration_profile_id] = hash.fetch_path(:configuration_profile, :id)
+        hash[:inventory_root_group_id]  = hash.fetch_path(:inventory_root_group, :id)
       end
-      save_inventory_assoc(manager.configured_systems, hashes, delete_missing_records, [:manager_ref], nil,
-                           [:configuration_profile])
+      save_inventory_assoc(manager.configured_systems, hashes, delete_missing_records, [:manager_ref], nil, [:configuration_profile, :inventory_root_group])
     end
 
     def save_configuration_scripts_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
       save_inventory_assoc(manager.configuration_scripts, hashes, delete_missing_records, [:manager_ref], nil, [:configuration_script])
+    end
+
+    def save_ems_folders_inventory(manager, hashes, target)
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(manager.inventory_groups, hashes, delete_missing_records, [:ems_ref], nil, [:ems_folder])
     end
   end
 end
