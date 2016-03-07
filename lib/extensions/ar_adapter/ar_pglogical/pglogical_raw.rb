@@ -14,7 +14,7 @@ class PgLogicalRaw
   #
   # @return [Boolean]
   def enabled?
-    connection.extension_enabled?("pglogical") && connection.extension_enabled?("pglogical_origin")
+    installed? && connection.extension_enabled?("pglogical") && connection.extension_enabled?("pglogical_origin")
   end
 
   # Enables pglogical postgres extensions
