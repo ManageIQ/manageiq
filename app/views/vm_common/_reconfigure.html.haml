@@ -27,11 +27,10 @@
                             "miqrequired" => "",
                             "checkchange" => "",
                             "auto-focus"  => "",
-                            :validatemultiple => "4",
-                            :miqmultiple  => "4",
-                            :miqmin       => '#{@reconfig_limits[:min__vm_memory]}',
-                            :miqmax       => '#{@reconfig_limits[:max__vm_memory]}',
-                            :memtype      => "reconfigureModel.memory_type"}
+                            "validate-multiple" => "4",
+                            :miqmin       => "#{@reconfig_limits[:min__vm_memory]}",
+                            :miqmax       => "#{@reconfig_limits[:max__vm_memory]}",
+                            :memtype      => "{{reconfigureModel.memory_type}}"}
         %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$invalid"}
           = _(" Memory value not in range or not a multiple of 4")
         %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$required"}
@@ -102,7 +101,8 @@
                                 "checkchange" => "",
                                 :readonly     => '',
                                 "maxlength"   => "50",
-                                "validate"    => "",
+                                "validate_total"  => "",
+                                "miqmax"      => "#{@reconfig_limits[:max__total_vcpus]}",
                                 "auto-focus"  => ""}
             %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
               = _(" Total memory value larger than the maximum allowed")
