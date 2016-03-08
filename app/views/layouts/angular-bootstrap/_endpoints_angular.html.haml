@@ -32,8 +32,8 @@
   %label.col-md-2.control-label{"for" => "textInput-markup"}
     = _('Security Protocol')
   .col-md-8
-    = select_tag('security_protocol',
+    = select_tag("#{prefix}_security_protocol",
                   options_for_select(@openstack_security_protocols),
-                  "ng-model"                    => "#{ng_model}.security_protocol",
+                  "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                   "checkchange"                 => "",
                   "selectpicker-for-select-tag" => "")

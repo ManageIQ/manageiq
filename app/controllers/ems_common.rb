@@ -142,7 +142,7 @@ module EmsCommon
         add_flash(_("Type is required"), :error)
       end
 
-      if @edit[:new][:emstype] == "scvmm" && @edit[:new][:security_protocol] == "kerberos" && @edit[:new][:realm].blank?
+      if @edit[:new][:emstype] == "scvmm" && @edit[:new][:default_security_protocol] == "kerberos" && @edit[:new][:realm].blank?
         add_flash(_("Realm is required"), :error)
       end
 
@@ -196,10 +196,10 @@ module EmsCommon
     changed = edit_changed?
     render :update do |page|
       page << javascript_prologue
-      if params[:server_emstype] || params[:security_protocol]   # Server/protocol type changed
+      if params[:server_emstype] || params[:default_security_protocol] # Server/protocol type changed
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
       end
-      if params[:server_emstype]              # Server type changed
+      if params[:server_emstype] # Server type changed
         unless @ems.kind_of?(ManageIQ::Providers::CloudManager)
           # Hide/show C&U credentials tab
           page << "$('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
@@ -596,13 +596,13 @@ module EmsCommon
     if @ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) ||
        @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
       # Special behaviour for OpenStack while keeping it backwards compatible for the rest
-      @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+      @edit[:new][:default_security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
     else
       if @ems.id
         # for existing provider before this fix, set default to ssl
-        @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+        @edit[:new][:default_security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
       else
-        @edit[:new][:security_protocol] = 'kerberos'
+        @edit[:new][:default_security_protocol] = 'kerberos'
       end
     end
 
@@ -704,7 +704,7 @@ module EmsCommon
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
         @edit[:new][:api_version] = @ems.api_version ? @ems.api_version : 'v2'
-        @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+        @edit[:new][:default_security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
       elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager::DEFAULT_PORT
       elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type
@@ -727,7 +727,6 @@ module EmsCommon
     end
     @edit[:new][:port] = params[:port] if params[:port]
     @edit[:new][:api_version] = params[:api_version] if params[:api_version]
-    @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
     @edit[:new][:provider_id] = params[:provider_id] if params[:provider_id]
     @edit[:new][:zone] = params[:server_zone] if params[:server_zone]
 
@@ -753,8 +752,11 @@ module EmsCommon
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_regions('Amazon') if @edit[:new][:emstype] == "ec2"
     @edit[:google_regions] = get_regions('Google') if @edit[:new][:emstype] == "gce"
-    @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
-    @edit[:new][:realm] = nil if params[:security_protocol]
+    @edit[:new][:default_security_protocol] = params[:default_security_protocol] if params[:default_security_protocol]
+    # TODO: (julian) Silly hack until we move Infra over to Angular to be consistant with Cloud
+    @edit[:new][:default_security_protocol] = params[:security_protocol] if params[:security_protocol]
+    @edit[:new][:amqp_security_protocol] = params[:amqp_security_protocol] if params[:amqp_security_protocol]
+    @edit[:new][:realm] = nil if params[:default_security_protocol]
     @edit[:new][:realm] = params[:realm] if params[:realm]
     restore_password if params[:restore_password]
     set_verify_status
@@ -767,13 +769,14 @@ module EmsCommon
     ems.hostname = @edit[:new][:hostname].strip unless @edit[:new][:hostname].nil?
     ems.port = @edit[:new][:port] if ems.supports_port?
     ems.api_version = @edit[:new][:api_version] if ems.supports_api_version?
-    ems.security_protocol = @edit[:new][:security_protocol] if ems.supports_security_protocol?
+    ems.security_protocol = @edit[:new][:default_security_protocol] if ems.supports_security_protocol?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
     if ems.kind_of?(ManageIQ::Providers::Microsoft::InfraManager)
       # TODO should be refactored to support methods, although there seems to be no UI for Microsoft provider
-      ems.security_protocol = @edit[:new][:security_protocol]
+      # TODO: (julian) Silly hack until we move Infra over to Angular to be consistant with Cloud
+      ems.security_protocol = @edit[:new][:default_security_protocol]
       ems.realm = @edit[:new][:realm]
     end
 

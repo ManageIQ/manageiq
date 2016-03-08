@@ -17,7 +17,8 @@ class Provider < ApplicationRecord
            :verify_ssl?,
            :to => :default_endpoint
 
-  virtual_column :verify_ssl, :type => :integer
+  virtual_column :verify_ssl,        :type => :integer
+  virtual_column :security_protocol, :type => :string
 
   def self.leaf_subclasses
     descendants.select { |d| d.subclasses.empty? }

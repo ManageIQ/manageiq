@@ -16,12 +16,12 @@
       .col-md-8
         = select_tag("security_protocol",
                      options_for_select(@edit[:protocols],
-                     @edit[:new][:security_protocol]),
+                     @edit[:new][:default_security_protocol]),
                      :class => "selectpicker")
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("security_protocol", "#{url}");
-    - if @edit[:new][:security_protocol] == "kerberos"
+    - if @edit[:new][:default_security_protocol] == "kerberos"
       .form-group
         %label.control-label.col-md-2
           = _('Realm')
