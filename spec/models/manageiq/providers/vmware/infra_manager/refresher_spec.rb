@@ -346,7 +346,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :ems_ref               => "vm-11342",
       :ems_ref_obj           => VimString.new("vm-11342", :VirtualMachine, :ManagedObjectReference),
       :uid_ems               => "422f5d16-c048-19e6-3212-e588fbebf7e0",
-      :vendor                => "VMware",
+      :vendor                => "vmware",
       :power_state           => "off",
       :location              => "JoeF 4.0.1/JoeF 4.0.1.vmx",
       :tools_status          => "toolsNotRunning",

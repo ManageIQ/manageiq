@@ -201,7 +201,7 @@ describe Vm do
       :id                  => vm.id,
       :location            => vm.location,
       :name                => vm.name,
-      :vendor              => "VMware",
+      :vendor              => "vmware",
 
       :files               => [],
       :filesystem_drivers  => [],

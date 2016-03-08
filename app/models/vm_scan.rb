@@ -207,7 +207,7 @@ class VmScan < Job
       options[:categories] = vm.scan_profile_categories(scan_args["vmScanProfiles"])
 
       # If the host supports VixDisk Lib then we need to validate that the host has the required credentials set.
-      if vm.vendor.to_s == 'VMware'
+      if vm.vendor == 'vmware'
         scan_ci_type = ems_list['connect_to']
         if host.is_vix_disk? && ems_list[scan_ci_type] && (ems_list[scan_ci_type][:username].nil? || ems_list[scan_ci_type][:password].nil?)
           context[:snapshot_mor] = nil unless options[:snapshot] == :created
@@ -246,7 +246,7 @@ class VmScan < Job
 
     # Disable connecting to EMS for COS SmartProxy.  Embedded Proxy will
     # enable this if needed in the scan_sync_vm method in server_smart_proxy.rb.
-    ems_list['connect'] = false if vm.vendor.to_s == 'RedHat'
+    ems_list['connect'] = false if vm.vendor == 'redhat'
     ems_list
   end
 
@@ -256,7 +256,7 @@ class VmScan < Job
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
     scan_args["vmScanProfiles"] = options[:scan_profiles] || vm.scan_profile_list
     scan_args['snapshot']['forceFleeceDefault'] = false if vm.scan_via_ems? && vm.template?
-    scan_args['permissions'] = {'group' => 36} if vm.vendor.to_s == 'RedHat'
+    scan_args['permissions'] = {'group' => 36} if vm.vendor == 'redhat'
     scan_args
   end
 
@@ -474,7 +474,7 @@ class VmScan < Job
   end
 
   def start_user_event_message(vm, send = true)
-    return if vm.vendor == "Amazon"
+    return if vm.vendor == "amazon"
 
     user_event = "EVM SmartState Analysis Initiated for VM [#{vm.name}]"
     log_user_event(user_event, vm) if send
@@ -482,7 +482,7 @@ class VmScan < Job
   end
 
   def end_user_event_message(vm, send = true)
-    return if vm.vendor == "Amazon"
+    return if vm.vendor == "amazon"
 
     user_event = "EVM SmartState Analysis completed for VM [#{vm.name}]"
     unless options[:end_message_sent]
