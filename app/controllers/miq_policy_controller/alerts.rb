@@ -214,8 +214,8 @@ module MiqPolicyController::Alerts
     @edit[:current] = {}
 
     if params[:copy]  # If copying, create a new alert based on the original
-      a = MiqAlert.find(params[:id])
-      @alert = MiqAlert.new(a.attributes)
+      # skip record id when copying attributes
+      @alert = MiqAlert.find(params[:id]).dup
     else
       @alert = params[:id] ? MiqAlert.find(params[:id]) : MiqAlert.new  # Get existing or new record
       @alert.enabled = true unless @alert.id            # Default enabled to true if new record
