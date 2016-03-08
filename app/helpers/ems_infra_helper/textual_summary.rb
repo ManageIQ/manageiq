@@ -28,7 +28,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_ipaddress
-    {:label => "Discovered IP Address", :value => @ems.ipaddress}
+    {:label => _("Discovered IP Address"), :value => @ems.ipaddress}
   end
 
   def textual_type
@@ -36,50 +36,51 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => "API Port", :value => @ems.port} : nil
+    @ems.supports_port? ? {:label => _("API Port"), :value => @ems.port} : nil
   end
 
   def textual_cpu_resources
-    {:label => "Aggregate #{title_for_host} CPU Resources", :value => mhz_to_human_size(@ems.aggregate_cpu_speed)}
+    {:label => _("Aggregate %{title} CPU Resources") % {:title => title_for_host},
+     :value => mhz_to_human_size(@ems.aggregate_cpu_speed)}
   end
 
   def textual_memory_resources
-    {:label => "Aggregate #{title_for_host} Memory",
+    {:label => _("Aggregate %{title} Memory") % {:title => title_for_host},
      :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte, :precision => 0)}
   end
 
   def textual_cpus
-    {:label => "Aggregate #{title_for_host} CPUs", :value => @ems.aggregate_physical_cpus}
+    {:label => _("Aggregate %{title} CPUs") % {:title => title_for_host}, :value => @ems.aggregate_physical_cpus}
   end
 
   def textual_cpu_cores
-    {:label => "Aggregate #{title_for_host} CPU Cores", :value => @ems.aggregate_cpu_total_cores}
+    {:label => _("Aggregate %{title} CPU Cores") % {:title => title_for_host}, :value => @ems.aggregate_cpu_total_cores}
   end
 
   def textual_guid
-    {:label => "Management Engine GUID", :value => @ems.guid}
+    {:label => _("Management Engine GUID"), :value => @ems.guid}
   end
 
   def textual_infrastructure_folders
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
     label     = "#{title_for_hosts} & #{title_for_clusters}"
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
-    h         = {:label => label, :image => "hosts_and_clusters", :value => available ? "Available" : "N/A"}
+    h         = {:label => label, :image => "hosts_and_clusters", :value => available ? _("Available") : _("N/A")}
     if available
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'ems_folders')
-      h[:title] = "Show #{label}"
+      h[:title] = _("Show %{label}") % {:label => label}
     end
     h
   end
 
   def textual_folders
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
-    label     = "VMs & Templates"
+    label     = _("VMs & Templates")
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
-    h         = {:label => label, :image => "vms_and_templates", :value => available ? "Available" : "N/A"}
+    h         = {:label => label, :image => "vms_and_templates", :value => available ? _("Available") : _("N/A")}
     if available
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'ems_folders', :vat => true)
-      h[:title] = "Show Virtual Machines & Templates"
+      h[:title] = _("Show Virtual Machines & Templates")
     end
     h
   end
@@ -90,7 +91,7 @@ module EmsInfraHelper::TextualSummary
     h     = {:label => label, :image => "cluster", :value => num}
     if num > 0 && role_allows(:feature => "ems_cluster_show_list")
       h[:link] = url_for(:action => 'show', :id => @ems, :display => 'ems_clusters')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -101,7 +102,7 @@ module EmsInfraHelper::TextualSummary
     h     = {:label => label, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'hosts')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -142,25 +143,27 @@ module EmsInfraHelper::TextualSummary
 
   def textual_authentications
     authentications = @ems.authentication_userid_passwords
-    return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
+    return [{:label => _("Default Authentication"), :title => _("None"), :value => _("None")}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default" then "Default"
-        when "metrics" then "C & U Database"
-        when "amqp" then    "AMQP"
-        else;           "<Unknown>"
+        when "default" then _("Default")
+        when "metrics" then _("C & U Database")
+        when "amqp" then    _("AMQP")
+        else;               _("<Unknown>")
         end
 
-      {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
+      {:label => _("%{label} Credentials") % {:label => label},
+       :value => auth.status || _("None"),
+       :title => auth.status_details}
     end
   end
 
   def textual_orchestration_stacks_status
     return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
 
-    label         = "States of Root Orchestration Stacks"
+    label         = _("States of Root Orchestration Stacks")
     stacks_states = @ems.direct_orchestration_stacks.collect { |x| "#{x.name} status: #{x.status}" }.join(", ")
 
     {:label => label, :value => stacks_states}
@@ -179,7 +182,7 @@ module EmsInfraHelper::TextualSummary
       last_refresh_status << " - #{last_refresh_date} Ago"
     end
     {
-      :label => "Last Refresh",
+      :label => _("Last Refresh"),
       :value => [{:value => last_refresh_status},
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
@@ -187,7 +190,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
   end
 
   def textual_host_default_vnc_port_range
@@ -195,6 +198,6 @@ module EmsInfraHelper::TextualSummary
     value = @ems.host_default_vnc_port_start.blank? ?
         "" :
         "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
-    {:label => "#{title_for_host} Default VNC Port Range", :value => value}
+    {:label => _("%{title} Default VNC Port Range") % {:title => title_for_host}, :value => value}
   end
 end

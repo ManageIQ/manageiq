@@ -70,6 +70,7 @@ module ManageIQ::Providers
           :name        => job_template.name,
           :description => job_template.description,
           :variables   => job_template.extra_vars,
+          :survey_spec => job_template.survey_spec
         }
 
         return uid, new_result

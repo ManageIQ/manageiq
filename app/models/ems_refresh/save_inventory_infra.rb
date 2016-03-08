@@ -58,6 +58,9 @@ module EmsRefresh::SaveInventoryInfra
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
 
+    link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
+    link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
+
     ems.save!
     hashes[:id] = ems.id
 
@@ -125,24 +128,7 @@ module EmsRefresh::SaveInventoryInfra
       begin
         raise MiqException::MiqIncompleteData if h[:invalid]
 
-        # Find this host record
-        found = nil
-        if h[:ems_ref]
-          _log.debug "#{log_header} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems.id}]"
-          found = Host.find_by(:ems_ref => h[:ems_ref], :ems_id => ems.id)
-        end
-
-        if found.nil?
-          if h[:hostname].nil? && h[:ipaddress].nil?
-            _log.debug "#{log_header} Host database lookup - name [#{h[:name]}]"
-            found = ems.hosts.detect { |e| e.name.downcase == h[:name].downcase }
-          elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
-            # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
-            # allow a deleted EMS to be re-added an pick up old orphaned hosts
-            _log.debug "#{log_header} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
-            found = Host.lookUpHost(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
-          end
-        end
+        found = find_host(h, ems.id)
 
         if found.nil?
           _log.info("#{log_header} Creating Host [#{h[:name]}] hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
@@ -305,5 +291,44 @@ module EmsRefresh::SaveInventoryInfra
   def save_storage_files_inventory(storage, hashes)
     deletes = storage.storage_files(true).dup
     save_inventory_multi(storage.storage_files, hashes, deletes, [:name])
+  end
+
+  def find_host(h, ems_id)
+    found = nil
+    if h[:ems_ref]
+      _log.debug "EMS ID: #{ems_id} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems_id}]"
+      found = Host.find_by(:ems_ref => h[:ems_ref], :ems_id => ems_id)
+    end
+
+    if found.nil?
+      if h[:hostname].nil? && h[:ipaddress].nil?
+        _log.debug "EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]"
+        found = Host.where(:ems_id => ems_id).detect { |e| e.name.downcase == h[:name].downcase }
+      elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
+        # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
+        # allow a deleted EMS to be re-added an pick up old orphaned hosts
+        _log.debug "EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
+        found = look_up_host(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
+      end
+    end
+
+    found
+  end
+
+  def look_up_host(hostname, ipaddr, opts = {})
+    h   = Host.where("lower(hostname) = ?", hostname.downcase).find_by(:ipaddress => ipaddr) if hostname && ipaddr
+    h ||= Host.find_by("lower(hostname) = ?", hostname.downcase)                             if hostname
+    h ||= Host.find_by(:ipaddress => ipaddr)                                                 if ipaddr
+    h ||= Host.find_by("lower(hostname) LIKE ?", "#{hostname.downcase}.%")                   if hostname
+
+    # If we're given an ems_ref or ems_id then ensure that the host
+    # we looked-up does not have a different ems_ref and is not
+    # owned by another provider, this would cause us to overwrite
+    # a different host record
+    if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id != opts[:ems_id])
+      h = nil
+    end unless h.nil?
+
+    h
   end
 end

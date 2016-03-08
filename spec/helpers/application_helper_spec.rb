@@ -1347,73 +1347,51 @@ describe ApplicationHelper do
   end
 
   context "#title_for_hosts" do
-    before(:each) do
-      @ems1 = FactoryGirl.create(:ems_vmware)
-      @ems2 = FactoryGirl.create(:ems_openstack_infra)
-    end
-
     it "returns 'Hosts / Nodes' when there are both openstack & non-openstack hosts" do
-      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
-      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      FactoryGirl.create(:host_vmware_esx, :ext_management_system => FactoryGirl.create(:ems_vmware))
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))
 
-      result = helper.title_for_hosts
-      expect(result).to eq("Hosts / Nodes")
+      expect(helper.title_for_hosts).to eq("Hosts / Nodes")
     end
 
     it "returns 'Hosts' when there are only non-openstack hosts" do
-      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      FactoryGirl.create(:host_vmware_esx, :ext_management_system => FactoryGirl.create(:ems_vmware))
 
-      result = helper.title_for_hosts
-      expect(result).to eq("Hosts")
+      expect(helper.title_for_hosts).to eq("Hosts")
     end
 
     it "returns 'Nodes' when there are only openstack hosts" do
-      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))
 
-      result = helper.title_for_hosts
-      expect(result).to eq("Nodes")
+      expect(helper.title_for_hosts).to eq("Nodes")
     end
   end
 
   context "#title_for_host" do
-    before(:each) do
-      @ems1 = FactoryGirl.create(:ems_vmware)
-      @ems2 = FactoryGirl.create(:ems_openstack_infra)
-    end
-
     it "returns 'Host' for non-openstack host" do
-      FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
+      FactoryGirl.create(:host_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware))
 
-      result = helper.title_for_host
-      expect(result).to eq("Host")
+      expect(helper.title_for_host).to eq("Host")
     end
 
     it "returns 'Node' for openstack host" do
-      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))
 
-      result = helper.title_for_host
-      expect(result).to eq("Node")
+      expect(helper.title_for_host).to eq("Node")
     end
   end
 
   context "#title_for_host_record" do
-    before(:each) do
-      @ems1 = FactoryGirl.create(:ems_vmware)
-      @ems2 = FactoryGirl.create(:ems_openstack_infra)
-    end
-
     it "returns 'Host' for non-openstack host" do
-      host = FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
+      host = FactoryGirl.create(:host_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware))
 
-      result = helper.title_for_host_record(host)
-      expect(result).to eq("Host")
+      expect(helper.title_for_host_record(host)).to eq("Host")
     end
 
     it "returns 'Node' for openstack host" do
-      host = FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => FactoryGirl.create(:ems_openstack_infra))
 
-      result = helper.title_for_host_record(host)
-      expect(result).to eq("Node")
+      expect(helper.title_for_host_record(host)).to eq("Node")
     end
   end
 

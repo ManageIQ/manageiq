@@ -1,49 +1,4 @@
 describe MiqDbConfig do
-  CSV_HEADER = %w( session_id
-                   xact_start
-                   last_request_start_time
-                   command
-                   task_state
-                   login
-                   application
-                   request_id
-                   net_address
-                   host_name
-                   client_port
-                   wait_time_ms
-                   blocked_by )
-
-  context ".log_activity_statistics" do
-    before do
-      @buffer = StringIO.new
-      class << @buffer
-        alias_method :info, :write
-        alias_method :warn, :write
-      end
-    end
-
-    it "normal" do
-      MiqDbConfig.log_activity_statistics(@buffer)
-      lines = @buffer.string.lines
-      expect(lines.shift).to eq "MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n"
-      expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
-
-      header, *rows = CSV.parse lines.join
-      expect(header).to eq(CSV_HEADER)
-
-      expect(rows.length).to be > 0
-      rows.each do |row|
-        expect(row.first).to be_truthy
-      end
-    end
-
-    it "exception" do
-      allow(VmdbDatabaseConnection).to receive(:all).and_raise("FAILURE")
-      MiqDbConfig.log_activity_statistics(@buffer)
-      expect(@buffer.string.lines.first).to eq("MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'")
-    end
-  end
-
   it ".get_db_types" do
     expected = {
       "internal"     => "Internal Database on this CFME Appliance",
@@ -52,37 +7,6 @@ describe MiqDbConfig do
     }
 
     expect(MiqDbConfig.get_db_types).to eq(expected)
-  end
-
-  context ".raw_config" do
-    let(:password) { "pa$$word" }
-    let(:enc_pass) { MiqPassword.encrypt(password) }
-
-    before do
-      yaml = <<-EOF
----
-production:
-  host: localhost
-  username: root
-  password: <%= MiqPassword.decrypt(\"#{enc_pass}\")%>
-EOF
-      allow(IO).to receive_messages(:read => yaml)
-    end
-
-    it "production" do
-      allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
-      expect(ERB).not_to receive(:new)
-
-      expected = {"host" => "localhost", "username" => "root", "password" => "<%= MiqPassword.decrypt(\"#{enc_pass}\")%>"}
-      expect(MiqDbConfig.raw_config["production"]).to eq(expected)
-    end
-
-    it "non-production" do
-      expect(ERB).to receive(:new).and_call_original
-
-      expected = {"host" => "localhost", "username" => "root", "password" => password}
-      expect(MiqDbConfig.raw_config["production"]).to eq(expected)
-    end
   end
 
   context ".current" do
@@ -198,13 +122,13 @@ EOF
       allow(described_class).to receive(:backup_file)
       expect_any_instance_of(VMDB::Config).to receive(:save_file)
       subject
-      expect(described_class.raw_config.fetch_path('production')).to eq(
-        "adapter"      => "postgresql",
-        "database"     => "vmdb_production",
-        "username"     => "root",
-        "encoding"     => "utf8",
-        "pool"         => 5,
-        "wait_timeout" => 5
+      expect(described_class.database_configuration[:production]).to eq(
+        :adapter      => "postgresql",
+        :database     => "vmdb_production",
+        :username     => "root",
+        :encoding     => "utf8",
+        :pool         => 5,
+        :wait_timeout => 5
       )
     end
 
@@ -215,15 +139,15 @@ EOF
         allow(described_class).to receive(:backup_file)
         expect_any_instance_of(VMDB::Config).to receive(:save_file)
         subject
-        expect(described_class.raw_config.fetch_path('production')).to eq(
-          "adapter"      => "postgresql",
-          "host"         => "localhost",
-          "database"     => "vmdb_production",
-          "username"     => "root",
-          "password"     => "x",
-          "encoding"     => "utf8",
-          "pool"         => 5,
-          "wait_timeout" => 5
+        expect(described_class.database_configuration[:production]).to eq(
+          :adapter      => "postgresql",
+          :host         => "localhost",
+          :database     => "vmdb_production",
+          :username     => "root",
+          :password     => "x",
+          :encoding     => "utf8",
+          :pool         => 5,
+          :wait_timeout => 5
         )
       end
     end
@@ -243,7 +167,7 @@ EOF
     end
 
     it "resets cache" do
-      expect(described_class.raw_config.fetch_path('production', 'host')).to eq("abc")
+      expect(described_class.database_configuration.fetch_path(:production, :host)).to eq("abc")
     end
   end
 

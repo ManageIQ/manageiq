@@ -11,10 +11,9 @@ class DashboardController < ApplicationController
     redirect_to :action => 'show'
   end
 
-  skip_before_action :set_csp_header, :only => :iframe # FIXME: only frame-src
-  skip_before_action :set_x_frame_options_header, :only => :iframe
-
   def iframe
+    override_content_security_policy_directives(:frame_src => ['*'])
+    override_x_frame_options('')
     @layout = nil
     if params[:id].present?
       item = Menu::Manager.item(params[:id])
@@ -54,11 +53,6 @@ class DashboardController < ApplicationController
     render :nothing => true # No response required
   end
 
-  VALID_TABS = ->(x) { Hash[x.map(&:to_s).zip(x)] }[[
-    :vi, :svc, :clo, :inf, :cnt, :mdl, :con, :aut, :opt, :set, # normal tabs
-    :sto                                                  # hidden tabs
-  ]] # format is {"vi" => :vi, "svc" => :svc . . }
-
   EXPLORER_FEATURE_LINKS = {
     "catalog"             => "catalog",
     "containers"          => "containers",
@@ -72,99 +66,89 @@ class DashboardController < ApplicationController
   # A main tab was pressed
   def maintab
     @breadcrumbs.clear
-    tab = VALID_TABS[params[:tab]]
+    tab = Menu::Manager.section_id_string_to_symbol(params[:tab])
 
-    unless tab # no tab name or invalid tab name was passed in
+    unless tab.present? # no tab name or invalid tab name was passed in
       render :action => "login"
       return
     end
 
-    if %i(vi svc clo inf cnt con aut opt set).include?(tab)
-      if session[:tab_url].key?(tab) # we remember url for this tab
-        if restful_routed_action?(session[:tab_url][tab][:controller], session[:tab_url][tab][:action])
-          session[:tab_url][tab].delete(:action)
-          redirect_to(polymorphic_path(session[:tab_url][tab][:controller],
-                                       session[:tab_url][tab]))
-        else
-          redirect_to(session[:tab_url][tab].merge(:only_path => true))
-        end
-        return
-      end
-
-      tab_features = Menu::Manager.tab_features_by_id(tab)
-      case tab
-      when :vi
-        tab_features.detect do |f|
-          if f == "dashboard" && role_allows(:feature => "dashboard_view")
-            redirect_to :action => "show"
-          elsif role_allows(:feature => f)
-            case f
-            when "miq_report" then redirect_to(:controller => "report",    :action => "explorer")
-            when "chargeback" then redirect_to(:controller => f,           :action => f)
-            when "timeline"   then redirect_to(:controller => "dashboard", :action => f)
-            when "rss"        then redirect_to(:controller => "alert",     :action => "show_list")
-            end
-          end
-        end
-      when :clo, :inf, :cnt, :svc
-        tab_features.detect do |f|
-          if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
-            redirect_to :controller => EXPLORER_FEATURE_LINKS[f], :action => "explorer"
-          elsif role_allows(:feature => "#{f}_show_list")
-            redirect_to :controller => f, :action => "show_list"
-          end
-        end
-      when :con
-        tab_features.detect do |f|
-          if f == "control_explorer" && role_allows(:feature => "control_explorer_view")
-            redirect_to :controller => "miq_policy", :action => "explorer"
-          elsif role_allows(:feature => f)
-            case f
-            when "policy_simulation"    then redirect_to(:controller => "miq_policy", :action => "rsop")
-            when "policy_import_export" then redirect_to(:controller => "miq_policy", :action => "export")
-            when "policy_log"           then redirect_to(:controller => "miq_policy", :action => "log")
-            end
-          end
-        end
-      when :aut
-        tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
-          case f
-          when "miq_ae_class_explorer"      then redirect_to(:controller => "miq_ae_class", :action => "explorer")
-          when "miq_ae_class_simulation"    then redirect_to(:controller => "miq_ae_tools", :action => "resolve")
-          when "miq_ae_class_import_export" then redirect_to(:controller => "miq_ae_tools", :action => "import_export")
-          when "miq_ae_class_log"           then redirect_to(:controller => "miq_ae_tools", :action => "log")
-          end
-        end
-      when :opt
-        tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
-          redirect_to(:controller => "miq_capacity", :action => f) if f
-        end
-      when :set
-        tab_features.detect do |f|
-          if f == "my_settings" && role_allows(:feature => f, :any => true)
-            redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
-          elsif role_allows(:feature => f, :any => true)
-            case f
-            when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
-            when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
-            when "about"        then redirect_to(:controller => "support",   :action => "index", :support_tab => "about")
-            end
-          end
-        end
-      end
-    else
-      tab_features = Menu::Manager.tab_features_by_id(tab)
-      if Array(session[:tab_bc][tab]).empty? # no saved breadcrumbs for this tab
-        if tab == :sto
-          feature = tab_features.detect { |f| role_allows(:feature => "#{f}_show_list") }
-          redirect_to(:controller => feature) if feature
-        end
+    if session[:tab_url].key?(tab) # we remember url for this tab
+      if restful_routed_action?(session[:tab_url][tab][:controller], session[:tab_url][tab][:action])
+        session[:tab_url][tab].delete(:action)
+        redirect_to(polymorphic_path(session[:tab_url][tab][:controller],
+                                     session[:tab_url][tab]))
       else
-        @breadcrumbs = session[:tab_bc][tab]
-        redirect_to @breadcrumbs.last[:url]
+        redirect_to(session[:tab_url][tab].merge(:only_path => true))
+      end
+      return
+    end
+
+    tab_features = Menu::Manager.tab_features_by_id(tab)
+    case tab
+    when :vi
+      tab_features.detect do |f|
+        if f == "dashboard" && role_allows(:feature => "dashboard_view")
+          redirect_to :action => "show"
+        elsif role_allows(:feature => f)
+          case f
+          when "miq_report" then redirect_to(:controller => "report",    :action => "explorer")
+          when "chargeback" then redirect_to(:controller => f,           :action => f)
+          when "timeline"   then redirect_to(:controller => "dashboard", :action => f)
+          when "rss"        then redirect_to(:controller => "alert",     :action => "show_list")
+          end
+        end
+      end
+    when :clo, :inf, :cnt, :svc, :mdl
+      tab_features.detect do |f|
+        if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
+          redirect_to :controller => EXPLORER_FEATURE_LINKS[f], :action => "explorer"
+        elsif role_allows(:feature => "#{f}_show_list")
+          redirect_to :controller => f, :action => "show_list"
+        end
+      end
+    when :con
+      tab_features.detect do |f|
+        if f == "control_explorer" && role_allows(:feature => "control_explorer_view")
+          redirect_to :controller => "miq_policy", :action => "explorer"
+        elsif role_allows(:feature => f)
+          case f
+          when "policy_simulation"    then redirect_to(:controller => "miq_policy", :action => "rsop")
+          when "policy_import_export" then redirect_to(:controller => "miq_policy", :action => "export")
+          when "policy_log"           then redirect_to(:controller => "miq_policy", :action => "log")
+          end
+        end
+      end
+    when :aut
+      tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
+        case f
+        when "miq_ae_class_explorer"      then redirect_to(:controller => "miq_ae_class", :action => "explorer")
+        when "miq_ae_class_simulation"    then redirect_to(:controller => "miq_ae_tools", :action => "resolve")
+        when "miq_ae_class_import_export" then redirect_to(:controller => "miq_ae_tools", :action => "import_export")
+        when "miq_ae_class_log"           then redirect_to(:controller => "miq_ae_tools", :action => "log")
+        end
+      end
+    when :opt
+      tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
+        redirect_to(:controller => "miq_capacity", :action => f) if f
+      end
+    when :set
+      tab_features.detect do |f|
+        if f == "my_settings" && role_allows(:feature => f, :any => true)
+          redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
+        elsif role_allows(:feature => f, :any => true)
+          case f
+          when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
+          when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
+          when "about"        then redirect_to(:controller => "support",   :action => "index", :support_tab => "about")
+          end
+        end
+      end
+    when :sto
+      tab_features.detect { |f| role_allows(:feature => "#{f}_show_list") }.tap do |f|
+        redirect_to(:controller => f) if f
       end
     end
-    # FIXME: what if we get here?
   end
 
   # New tab was pressed
@@ -255,10 +239,10 @@ class DashboardController < ApplicationController
       @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
-                     when "menu"   then ["menu",     "Add this Menu Widget"]
-                     when "rss"    then ["rssfeed",  "Add this RSS Feed Widget"]
-                     when "chart"  then ["piechart", "Add this Chart Widget"]
-                     when "report" then ["report",   "Add this Report Widget"]
+                     when "menu"   then ["menu",     _("Add this Menu Widget")]
+                     when "rss"    then ["rssfeed",  _("Add this RSS Feed Widget")]
+                     when "chart"  then ["piechart", _("Add this Chart Widget")]
+                     when "report" then ["report",   _("Add this Report Widget")]
                      end
         if prev_type && prev_type != w.content_type
           widget_list << {:id => w.content_type, :type => :separator}
@@ -512,7 +496,7 @@ class DashboardController < ApplicationController
       end
     when :fail
       clear_current_user
-      add_flash(validation.flash_msg || "Error: Authentication failed", :error)
+      add_flash(validation.flash_msg || _("Error: Authentication failed"), :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << javascript_show("flash_div")
@@ -531,7 +515,7 @@ class DashboardController < ApplicationController
       build_timeline
       drop_breadcrumb(:name => @title, :url => "/dashboard/timeline/#{params[:id]}")
     else
-      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
+      drop_breadcrumb(:name => _("Timelines"), :url => "/dashboard/timeline")
       session[:last_rpt_id] = nil # Clear out last rpt record id
     end
     build_timeline_listnav
@@ -549,7 +533,7 @@ class DashboardController < ApplicationController
       end
     else
       @report = nil
-      drop_breadcrumb(:name => "Timelines", :url => "/dashboard/timeline")
+      drop_breadcrumb(:name => _("Timelines"), :url => "/dashboard/timeline")
       @timeline = true
       session[:last_rpt_id] = nil # Clear out last rpt record id
       build_timeline_listnav
@@ -626,10 +610,10 @@ class DashboardController < ApplicationController
 
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
-      tooltip = "Download this Timeline data in #{typ} format"
+      tooltip = _("Download this Timeline data in %{typ} format") % {:typ => typ}
       "ManageIQ.toolbars.enableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     else
-      tooltip = 'No records found for this timeline'
+      tooltip = _('No records found for this timeline')
       "ManageIQ.toolbars.disableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     end
   end
@@ -719,7 +703,10 @@ class DashboardController < ApplicationController
       ws = MiqWidgetSet.new(:name        => db.name,
                             :group_id    => current_group_id,
                             :userid      => current_userid,
-                            :description => "#{db.name} dashboard for user #{current_userid} in group id #{current_group_id}")
+                            :description => _("%{name} dashboard for user %{id} in group id %{current_group_id}") %
+                                              {:name             => db.name,
+                                               :id               => current_userid,
+                                               :current_group_id => current_group_id})
       ws.set_data = db.set_data
       ws.set_data[:last_group_db_updated] = db.updated_on
       ws.save!

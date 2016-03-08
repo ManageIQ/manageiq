@@ -48,44 +48,15 @@ class ChargebackController < ApplicationController
   def explorer
     @breadcrumbs = []
     @explorer    = true
-    @trees       = []
-    @trees = []
-    @accords     = []
-
-    if role_allows(:feature => "chargeback_reports")
-      self.x_active_tree ||= 'cb_reports_tree'
-      self.x_active_accord ||= 'cb_reports'
-      tree = cb_rpts_build_tree
-      cb_rpt_build_folder_nodes if x_node(:cb_reports_tree) == "root"
-      @trees << tree
-      @accords << {:name => "cb_reports", :title => "Reports", :container => "cb_reports_accord"}
-    end
-    if role_allows(:feature => "chargeback_rates")
-      self.x_active_tree ||= 'cb_rates_tree'
-      self.x_active_accord ||= 'cb_rates'
-      @trees << cb_rates_build_tree
-      @accords << {:name => "cb_rates", :title => "Rates", :container => "cb_rates_accord"}
-    end
-    if role_allows(:feature => "chargeback_assignments")
-      self.x_active_tree ||= 'cb_assignments_tree'
-      self.x_active_accord ||= 'cb_assignments'
-      @trees << cb_assignments_build_tree
-      @accords << {:name => "cb_assignments", :title => "Assignments", :container => "cb_assignments_accord"}
-    end
-
-    if params[:accordion]
-      self.x_active_tree   = "#{params[:accordion]}_tree"
-      self.x_active_accord = params[:accordion]
-    end
+    build_accordions_and_trees
 
     @sb[:open_tree_nodes] ||= []
 
     @right_cell_text = case x_active_tree
-                       when :cb_rates_tree       then _("All %s") % ui_lookup(:models => "ChargebackRate")
-                       when :cb_assignments_tree then _("All %s") % "Assignments"
-                       when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
+                       when :cb_rates_tree       then _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
+                       when :cb_assignments_tree then _("All Assignments")
+                       when :cb_reports_tree     then _("All Saved Chargeback Reports")
                        end
-    get_node_info(x_node)
     set_form_locals
     session[:changed] = false
 
@@ -127,7 +98,8 @@ class ChargebackController < ApplicationController
     assert_privileges(params[:pressed]) if params[:pressed]
     case params[:button]
     when "cancel"
-      add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? _("Add of new %s was cancelled by the user") % ui_lookup(:model => "ChargebackRate") :
+      add_flash("#{!@sb[:rate] || @sb[:rate].id.blank? ? _("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:model => "ChargebackRate")} :
         _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @sb[:rate].description}}")
       get_node_info(x_node)
       # We create the rate compute and the rate storage.
@@ -215,6 +187,7 @@ class ChargebackController < ApplicationController
       if params[:typ] == "copy" # if tab was not changed
         session[:changed] = true
         @sb[:rate_details] = []
+<<<<<<< HEAD
 
         rate_compute = ChargebackRate.find(obj[0])
         # the storage_rate has id = compute_storage_id + 1 by convention
@@ -242,6 +215,7 @@ class ChargebackController < ApplicationController
           detail.per_unit = r[:per_unit]
           detail.metric = r[:metric]
           detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
+          detail.chargeback_rate_detail_currency_id = r[:chargeback_rate_detail_currency_id]
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else
@@ -277,6 +251,11 @@ class ChargebackController < ApplicationController
                   # Copy the measure id of the rate_detail linkig with the rate_detail_measure
                   id_measure = ChargebackRateDetailMeasure.find_by(:name => r[:measure]).id
                   detail.chargeback_rate_detail_measure_id = id_measure
+                end
+                # Copy the currency id of the rate detail linking with the rate_detail_currency
+                if r[:type_currency]
+                  id_currency = ChargebackRateDetailCurrency.find_by(:name => r[:type_currency]).id
+                  detail.chargeback_rate_detail_currency_id = id_currency
                 end
                 if cbr[:rate_type] == "Compute"
                   detail.chargeback_rate = @sb[:rate_compute]
@@ -529,6 +508,23 @@ class ChargebackController < ApplicationController
 
   private ############################
 
+  def features
+    [{:role  => "chargeback_reports",
+      :name  => :cb_reports,
+      :title => _("Reports")},
+
+     {:role  => "chargeback_rates",
+      :name  => :cb_rates,
+      :title => _("Rates")},
+
+     {:role  => "chargeback_assignments",
+      :name  => :cb_assignments,
+      :title => _("Assignments")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
+
   # Build a Chargeback Reports explorer tree
   def cb_rpts_build_tree
     TreeBuilderChargebackReports.new("cb_reports_tree", "cb_reports", @sb)
@@ -546,7 +542,7 @@ class ChargebackController < ApplicationController
       @report = nil
       return
     end
-    @right_cell_text ||= "Saved Chargeback Report [#{rr.name}]"
+    @right_cell_text ||= _("Saved Chargeback Report [%{name}]") % {:name => rr.name}
     if rr.userid != session[:userid]
       add_flash(_("Report is not authorized for the logged in user"), :error)
       @saved_reports = cb_rpts_get_all_reps(id.split('-')[1])
@@ -598,7 +594,7 @@ class ChargebackController < ApplicationController
     if x_active_tree == :cb_rates_tree
       if node == "root"
         @sb[:rate] = @record = @sb[:selected_rate_details] = nil
-        @right_cell_text = _("All %s") % ui_lookup(:models => "ChargebackRate")
+        @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
         cb_rates_list
       else
         # record has now two rates (Compute, Storage)
@@ -613,7 +609,7 @@ class ChargebackController < ApplicationController
         cb_assign_set_form_vars
         @right_cell_text = _("%{typ} %{model}") % {:typ => node.split('-').last, :model => "Rate Assignments"}
       else
-        @right_cell_text = _("All %s") % "Assignments"
+        @right_cell_text = _("All Assignments")
       end
     elsif x_active_tree == :cb_reports_tree
       @nodetype = node.split("-")[0]
@@ -715,6 +711,8 @@ class ChargebackController < ApplicationController
 
     @edit[:new][:description] = @sb[:rate_compute].description
     @edit[:new][:details] = []
+    # Select the currency of the first chargeback_rate_detail. All the chargeback_rate_details have the same currency
+    @edit[:new][:currency] = @sb[:rate_details][0].chargeback_rate_detail_currency_id
 
     @sb[:rate_details].select { |k| k.rate != "0" }.each do |r|
       temp = {}
@@ -723,6 +721,7 @@ class ChargebackController < ApplicationController
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
       temp[:per_unit] = r.per_unit
       temp[:detail_measure] = r.detail_measure
+      temp[:currency] = r.detail_currency.id
       @edit[:new][:details].push(temp)
     end
 
@@ -775,6 +774,8 @@ class ChargebackController < ApplicationController
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
       @edit[:new][:details][i][:per_unit] = params["per_unit_#{i}".to_sym] if params["per_unit_#{i}".to_sym]
+      # Add currencies to chargeback_controller.rb
+      @edit[:new][:details][i][:currency] = params[:currency] if params[:currency]
     end
   end
 
@@ -785,8 +786,10 @@ class ChargebackController < ApplicationController
       sb_temp[i].rate               = @edit[:new][:details][i][:rate]
       sb_temp[i].per_time           = @edit[:new][:details][i][:per_time]
       sb_temp[i].per_unit           = @edit[:new][:details][i][:per_unit]
+      # C: Record the currency selected in the edit view, in my chargeback_rate_details table
+      sb_temp[i].chargeback_rate_detail_currency_id = @edit[:new][:details][i][:currency]
     end
-    @sb[:rate_details] = (sb_temp + @sb[:rate_details].select { |k| k.rate == "0" }).uniq
+    @sb[:rate_details] = (sb_temp + @sb[:rate_details]).uniq
   end
 
   # Set record vars for save
@@ -1043,7 +1046,7 @@ class ChargebackController < ApplicationController
   end
 
   def get_session_data
-    @title        = "Chargeback"
+    @title        = _("Chargeback")
     @layout ||= "chargeback"
     @lastaction   = session[:chargeback_lastaction]
     @display      = session[:chargeback_display]

@@ -111,7 +111,7 @@ class MiqSchedule < ApplicationRecord
     # Let RBAC evaluate the filter's MiqExpression, and return the first value (the target ids)
     my_filter = get_filter
     return [] if my_filter.nil?
-    Rbac.search(:class => towhat, :filter => my_filter).first
+    Rbac.filtered(towhat, :filter => my_filter)
   end
 
   def get_targets
@@ -124,8 +124,7 @@ class MiqSchedule < ApplicationRecord
       return []
     end
 
-    targets, attrs = Rbac.search(:class => towhat, :filter => my_filter, :results_format => :objects)
-    targets
+    Rbac.filtered(towhat, :filter => my_filter)
   end
 
   def get_filter

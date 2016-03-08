@@ -25,7 +25,7 @@ module EmsCloudHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    {:label => "Region", :value => @ems.description}
+    {:label => _("Region"), :value => @ems.description}
   end
 
   def textual_hostname
@@ -34,7 +34,7 @@ module EmsCloudHelper::TextualSummary
 
   def textual_ipaddress
     return nil if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    {:label => "Discovered IP Address", :value => @ems.ipaddress}
+    {:label => _("Discovered IP Address"), :value => @ems.ipaddress}
   end
 
   def textual_type
@@ -42,11 +42,11 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => "API Port", :value => @ems.port} : nil
+    @ems.supports_port? ? {:label => _("API Port"), :value => @ems.port} : nil
   end
 
   def textual_guid
-    {:label => "Management Engine GUID", :value => @ems.guid}
+    {:label => _("Management Engine GUID"), :value => @ems.guid}
   end
 
   def textual_instances
@@ -55,7 +55,7 @@ module EmsCloudHelper::TextualSummary
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = ems_cloud_path(@ems.id, :display => 'instances')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -66,7 +66,7 @@ module EmsCloudHelper::TextualSummary
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
       h[:link] = ems_cloud_path(@ems.id, :display => 'images')
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
@@ -101,18 +101,20 @@ module EmsCloudHelper::TextualSummary
 
   def textual_authentications
     authentications = @ems.authentication_for_summary
-    return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
+    return [{:label => _("Default Authentication"), :title => _("None"), :value => _("None")}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
         case auth[:authtype]
-        when "default" then "Default"
-        when "metrics" then "C & U Database"
-        when "amqp"    then "AMQP"
-        else;           "<Unknown>"
+        when "default" then _("Default")
+        when "metrics" then _("C & U Database")
+        when "amqp"    then _("AMQP")
+        else;               _("<Unknown>")
         end
 
-      {:label => "#{label} Credentials", :value => auth[:status] || "None", :title => auth[:status_details]}
+      {:label => _("%{label} Credentials") % {:label => label},
+       :value => auth[:status] || _("None"),
+       :title => auth[:status_details]}
     end
   end
 
@@ -123,7 +125,7 @@ module EmsCloudHelper::TextualSummary
       last_refresh_status << " - #{last_refresh_date} Ago"
     end
     {
-      :label => "Last Refresh",
+      :label => _("Last Refresh"),
       :value => [{:value => last_refresh_status},
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
@@ -131,6 +133,6 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
   end
 end

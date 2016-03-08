@@ -51,10 +51,6 @@ class MiqDbConfig
     end
   end
 
-  def self.get_db_type_options(_name)
-    @@common_options
-  end
-
   def self.database_configuration
     VMDB::Config.new("database").config
   end
@@ -74,18 +70,13 @@ class MiqDbConfig
     end
   end
 
-  def self.raw_config
-    # TODO: We must stringify since ConfigurationEncoder will symbolize on load and stringify on save.
-    Vmdb::ConfigurationEncoder.stringify(database_configuration)
-  end
-
   def save
     valid = self.valid?(:from_save => true)
     return @errors unless valid == true
 
     _log.info("Validation was successful, saving new settings: #{options.merge(@@pwd_mask).inspect}")
     vmdb_config = save_without_verify
-    MiqRegion.sync_with_db_region(Vmdb::ConfigurationEncoder.stringify(vmdb_config.config))
+    MiqRegion.sync_with_db_region(vmdb_config.config)
     true
   end
 
@@ -205,32 +196,6 @@ class MiqDbConfig
     _log.error("Error: #{err}")
     @errors.add(:configuration, err.message)
     false
-  end
-
-  def self.log_statistics
-    log_activity_statistics
-  end
-
-  def self.log_activity_statistics(output = $log)
-    require 'csv'
-
-    begin
-      stats = VmdbDatabaseConnection.all.map(&:to_csv_hash)
-
-      keys = stats.first.keys
-
-      csv = CSV.generate do |rows|
-        rows << keys
-        stats.each do |s|
-          vals = s.values_at(*keys)
-          rows << vals
-        end
-      end
-
-      output.info("MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n#{csv}ACTIVITY_STATS_CSV")
-    rescue => err
-      output.warn("MIQ(DbConfig.log_activity_statistics) Unable to log stats, '#{err.message}'")
-    end
   end
 
   private

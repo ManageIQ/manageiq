@@ -18,7 +18,6 @@ class ResourcePool < ApplicationRecord
 
   include MiqPolicyMixin
   include AsyncDeleteMixin
-  include WebServiceAttributeMixin
 
   virtual_column :v_parent_cluster,        :type => :string,  :uses => :all_relationships
   virtual_column :v_parent_host,           :type => :string,  :uses => :all_relationships

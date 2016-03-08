@@ -11,7 +11,7 @@
  *= require dialog_fields
  *= require angular
  *= require miq_timeline
- *= require angular-patternfly
+ *= require angular-patternfly-sass/angular-patternfly
  *= require schedule_editor
  *= require miq_dynatree
  *= require codemirror

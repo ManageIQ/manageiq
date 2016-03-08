@@ -2,9 +2,10 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
-                              :ipaddress => "192.0.2.1", :port => 5000)
+                              :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
+                              :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "6022c3e7c3243d49609523d0911467df578b0f97"})
+      :default => {:userid => "admin", :password => "c51a4689e1df2153987f8a42f04185430d462186"})
   end
 
   it "will perform a full refresh" do
@@ -68,8 +69,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
   def assert_ems
     expect(@ems).to have_attributes(
-      :api_version => nil,
-      :uid_ems     => nil
+      :api_version       => 'v2',
+      :security_protocol => 'no-ssl',
+      :uid_ems           => nil
     )
 
     expect(@ems.ems_clusters.size).to                be > 0
@@ -115,21 +117,21 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
     expect(@host.hardware).to have_attributes(
       :cpu_speed            => 2000,
-      :cpu_type             => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
+      :cpu_type             => "RHEL 7.2.0 PC (i440FX + PIIX, 1996)",
       :manufacturer         => "Red Hat",
       :model                => "KVM",
       :memory_mb            => 8192,
       :memory_console       => nil,
       :disk_capacity        => 40,
-      :cpu_sockets          => 2,
-      :cpu_total_cores      => 2,
+      :cpu_sockets          => 4,
+      :cpu_total_cores      => 4,
       :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
       :cpu_usage            => nil,
       :memory_usage         => nil,
       :number_of_nics       => 1,
-      :bios                 => "seabios-1.7.5-8.el7"
+      :bios                 => "seabios-1.7.5-11.el7"
     )
 
     assert_specific_disk(@host.hardware.disks.first)

@@ -15,6 +15,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
   let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new("id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload") } }
 
   it "#configuration_manager_inv_to_hashes" do
+    allow_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:survey_spec).and_return('some_hash_payload')
     expect(manager.provider).to receive(:connect).and_return(connection)
 
     parser.configuration_manager_inv_to_hashes
@@ -31,7 +32,8 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
       :manager_ref => "1",
       :name        => "template1",
       :description => "description1",
-      :variables   => "some_json_payload"
+      :variables   => "some_json_payload",
+      :survey_spec => "some_hash_payload"
     )
   end
 end

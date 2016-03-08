@@ -17,6 +17,32 @@ describe MiqRequestController do
     end
   end
 
+  describe "#get_view" do
+    let(:parent_tenant)      { FactoryGirl.create(:tenant) }
+    let(:child_tenant)       { FactoryGirl.create(:tenant, :parent=> parent_tenant) }
+    let(:user_child_tenant)  { FactoryGirl.create(:user_with_group, :tenant => child_tenant) }
+    let(:user_parent_tenant) { FactoryGirl.create(:user_with_group, :tenant => parent_tenant) }
+
+    let(:template)     { FactoryGirl.create(:template_amazon) }
+    let(:request_body) { {:requester => user_child_tenant, :source_type => 'VmOrTemplate', :source_id => template.id} }
+
+    before :each do
+      EvmSpecHelper.local_miq_server
+
+      login_as user_child_tenant
+      FactoryGirl.create(:miq_provision_request, request_body)
+    end
+
+    it "displays miq_request for parent_tenant, when request was added by child_parent" do
+      login_as user_parent_tenant
+      controller.instance_variable_set(:@settings, {})
+      allow_any_instance_of(MiqRequestController).to receive(:listicon_image)
+
+      view, _pages = controller.send(:get_view, MiqRequest, {})
+      expect(view.table.data.count).to eq(1)
+    end
+  end
+
   context "#prov_condition builds correct MiqExpression hash" do
     let(:user) { FactoryGirl.create(:user_admin) }
     before { login_as user }

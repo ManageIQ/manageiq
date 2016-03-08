@@ -1,4 +1,6 @@
 class EmsFolder < ApplicationRecord
+  include NewWithTypeStiMixin
+
   belongs_to :ext_management_system, :foreign_key => "ems_id"
 
   include ReportableMixin
@@ -18,7 +20,7 @@ class EmsFolder < ApplicationRecord
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
 
-  NON_DISPLAY_FOLDERS = ['Datacenters', 'vm', 'host']
+  NON_DISPLAY_FOLDERS = %w(Datacenters vm host datastore).freeze
 
   def hidden?(overrides = {})
     ems = overrides[:ext_management_system] || ext_management_system
@@ -27,9 +29,9 @@ class EmsFolder < ApplicationRecord
     p = overrides[:parent] || parent if NON_DISPLAY_FOLDERS.include?(name)
 
     case name
-    when "Datacenters" then p.kind_of?(ExtManagementSystem)
-    when "vm", "host"  then p.kind_of?(EmsFolder) && p.is_datacenter?
-    else                    false
+    when "Datacenters"              then p.kind_of?(ExtManagementSystem)
+    when "vm", "host", "datastore"  then p.kind_of?(EmsFolder) && p.is_datacenter?
+    else                            false
     end
   end
 
@@ -114,6 +116,17 @@ class EmsFolder < ApplicationRecord
 
   def remove_all_vms
     remove_all_children(:of_type => 'Vm')
+  end
+
+  def storages
+    children(:of_type => 'Storage').sort_by { |c| c.name.downcase }
+  end
+
+  alias add_storage set_child
+  alias remove_storage remove_child
+
+  def remove_all_storages
+    remove_all_children(:of_type => 'Storage')
   end
 
   # Parent relationship methods

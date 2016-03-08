@@ -1,0 +1,42 @@
+--- 
+title: "Tenant Quotas"
+order: Ascending
+menu_name: "Tenant Quotas"
+rpt_group: Custom
+priority: 231
+rpt_type: Custom
+db: Tenant
+include:
+  tenant_quotas:
+    columns:
+    - name
+    - total
+    - used
+    - allocated
+    - available
+cols:
+- name
+- tenant_quotas.name
+- tenant_quotas.total
+- tenant_quotas.used
+- tenant_quotas.allocated
+- tenant_quotas.available
+col_order:
+- name
+- tenant_quotas.name
+- tenant_quotas.total
+- tenant_quotas.used
+- tenant_quotas.allocated
+- tenant_quotas.available
+template_type: report
+group: y
+sortby: 
+- name
+headers:
+- Tenant Name
+- Quota Name
+- Total Quota
+- In Use
+- Allocated
+- Available
+

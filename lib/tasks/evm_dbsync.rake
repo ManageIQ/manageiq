@@ -20,6 +20,21 @@ namespace :evm do
       exit if !tables.empty? && $final_rake_task.nil? || $final_rake_task == :destroy_remote_region
     end
 
+    desc "Remove remote region data from local database"
+    task :destroy_local_region => :environment do
+      region_number = ARGV[1].to_i
+
+      if region_number == MiqRegion.my_region_number
+        puts "Refusing to destroy local region #{MiqRegion.my_region_number}"
+      else
+        puts "Destroying region #{region_number} ..."
+        MiqRegion.destroy_region(ApplicationRecord.connection, region_number)
+        puts "Destroying region #{region_number} ... Complete"
+      end
+
+      exit if $final_rake_task.nil? || $final_rake_task == :destroy_local_region
+    end
+
     desc "Uninstall Rubyrep triggers and tables locally"
     task :local_uninstall => :environment do
       tables = ARGV[1..-1]

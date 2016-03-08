@@ -315,7 +315,6 @@ module ApplicationController::Buttons
     ab_get_node_info(x_node) if x_active_tree == :ab_tree
     replace_right_cell(x_node)
   end
-  private :group_button_cancel
 
   def group_button_add_save(typ)
     assert_privileges(params[:button] == "add" ? "ab_group_new" : "ab_group_edit")
@@ -399,7 +398,6 @@ module ApplicationController::Buttons
       end
     end
   end
-  private :group_button_add_save
 
   def group_button_reset
     group_set_form_vars
@@ -410,7 +408,6 @@ module ApplicationController::Buttons
     @layout     = "miq_ae_automate_button"
     replace_right_cell("button_edit")
   end
-  private :group_button_reset
 
   def group_create_update(typ)
     @edit = session[:edit]

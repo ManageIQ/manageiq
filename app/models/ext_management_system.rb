@@ -71,14 +71,10 @@ class ExtManagementSystem < ApplicationRecord
 
   include NewWithTypeStiMixin
   include UuidMixin
-  include WebServiceAttributeMixin
   include EmsRefresh::Manager
   include TenancyMixin
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
-
-  # attr_accessor :userid
-  # attr_accessor :password
 
   acts_as_miq_taggable
 

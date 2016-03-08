@@ -1,4 +1,5 @@
 class AuthKeyPairCloudController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -42,7 +43,7 @@ class AuthKeyPairCloudController < ApplicationController
 
     @gtl_url = "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?"
     drop_breadcrumb(
-      {:name => "Key Pairs", :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
+      {:name => _("Key Pairs"), :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
       true
     )
 
@@ -56,23 +57,15 @@ class AuthKeyPairCloudController < ApplicationController
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     when "instances"
-      table = @display == "vm_cloud"
-      title = ui_lookup(:tables => table)
+      title = ui_lookup(:tables => 'vm_cloud')
       kls   = ManageIQ::Providers::CloudManager::Vm
       drop_breadcrumb(
-        :name => @auth_key_pair_cloud.name + " (All #{title})",
+        :name => _("%{name} (All %{title})") % {:name => @auth_key_pair_cloud.name, :title => title},
         :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?display=instances"
       )
       @view, @pages = get_view(kls, :parent => @auth_key_pair_cloud) # Get the records (into a view) and the paginator
       @showtype = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        count = @view.extras[:total_count] - @view.extras[:auth_count]
-        @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
-          :children => pluralize(count, "other #{title.singularize}"),
-          :model    => ui_lookup(:tables => "auth_key_pair_cloud")
-        }
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "auth_key_pair_cloud"))
     end
 
     # Came in from outside show_list partial

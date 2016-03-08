@@ -158,7 +158,7 @@ module OpsController::Settings::AnalysisProfiles
 
   # Build the audit object when a record is created, including all of the new fields
   def ap_build_created_audit_set(scanitemset)
-    msg = "[#{scanitemset.name}] Record created ("
+    msg = _("[%{name}] Record created (") % {:name => scanitemset.name}
     event = "scanitemset_record_add"
     i = 0
     @edit[:new].each_key do |k|
@@ -176,7 +176,7 @@ module OpsController::Settings::AnalysisProfiles
 
   # Build the audit object when a record is saved, including all of the changed fields
   def ap_build_saved_audit(scanitemset)
-    msg = "[#{scanitemset.name}] Record updated ("
+    msg = _("[%{name}] Record updated (") % {:name => scanitemset.name}
     event = "scanitemset_record_update"
     i = 0
     @edit[:new].each_key do |k|
@@ -259,7 +259,7 @@ module OpsController::Settings::AnalysisProfiles
               # scanitemset.add_member()
             rescue StandardError => bang
               title = params[:button] == "add" ? "add" : "update"
-              add_flash(_("Error during '%s': ") % title << bang.message, :error)
+              add_flash(_("Error during '%{title}': %{message}") % {:title => title, :message => bang.message}, :error)
             end
             if params[:button] == "save"
               AuditEvent.success(ap_build_saved_audit(scanitemset))
@@ -724,19 +724,27 @@ module OpsController::Settings::AnalysisProfiles
       ap_get_form_vars_category if @sb[:ap_active_tab] == "category"
       if @edit[:new]["category"]
         @edit[:new]["category"][:name]        = "#{params[:name]}_category"             if params[:name]
-        @edit[:new]["category"][:description] = "#{params[:description]} category Scan" if params[:description]
+        if params[:description]
+          @edit[:new]["category"][:description] = _("%{description} category Scan") %
+                                                  {:description => params[:description]}
+        end
       end
 
       ap_get_form_vars_file if @sb[:ap_active_tab] == "file" && params[:item] && params[:item]["type1"]
       if @edit[:new]["file"]
         @edit[:new]["file"][:name]        = "#{params[:name]}_file"             if params[:name]
-        @edit[:new]["file"][:description] = "#{params[:description]} file Scan" if params[:description]
+        if params[:description]
+          @edit[:new]["file"][:description] = "%{description} file Scan" % {:description => params[:description]}
+        end
       end
 
       ap_get_form_vars_registry if @sb[:ap_active_tab] == "registry"
       if @edit[:new]["registry"]
         @edit[:new]["registry"][:name]        = "#{params[:name]}_registry"             if params[:name]
-        @edit[:new]["registry"][:description] = "#{params[:description]} registry Scan" if params[:description]
+        if params[:description]
+          @edit[:new]["registry"][:description] = _("%{description} registry Scan") %
+                                                  {:description => params[:description]}
+        end
       end
 
       ap_get_form_vars_event_log if @sb[:ap_active_tab] == "event_log"

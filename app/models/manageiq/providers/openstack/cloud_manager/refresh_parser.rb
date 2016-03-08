@@ -71,7 +71,7 @@ module ManageIQ::Providers
 
       $fog_log.info("#{log_header}...Complete")
 
-      link_network_ports_association
+      link_network_ports_associations
       link_vm_genealogy
       link_storage_associations
       filter_unused_disabled_flavors

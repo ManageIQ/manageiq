@@ -26,6 +26,6 @@ class MiddlewareDeploymentController < ApplicationController
   private ############################
 
   def display_name
-    "Middleware Deployments"
+    _("Middleware Deployments")
   end
 end

@@ -6,9 +6,9 @@ class MiqUiWorker < MiqWorker
   self.check_for_minimal_role = false
   self.workers = lambda do
     if MiqServer.minimal_env?
-      # Force 1 UI worker in minimal mode, unless 'noui' is an option, which is
+      # Force 1 UI worker in minimal mode, unless 'no_ui' is an option, which is
       # done when the UI worker is debugged externally, such as in Netbeans.
-      MiqServer.minimal_env_options.include?("noui") ? 0 : 1
+      MiqServer.minimal_env_options.include?("no_ui") ? 0 : 1
     else
       worker_settings[:count]
     end

@@ -8,7 +8,7 @@ module ApplianceConsole
   module Utilities
     def self.rake(task, params)
       result = AwesomeSpawn.run("rake #{task}", :chdir => RAILS_ROOT, :params => params)
-      File.open(LOGFILE, "a") { |f| f.puts result.error } if result.failure?
+      ApplianceConsole::Logging.logger.error(result.error) if result.failure?
       result.success?
     end
 
@@ -32,7 +32,7 @@ module ApplianceConsole
     def self.db_host_database_region
       result = AwesomeSpawn.run(
         "bin/rails runner",
-        :params => ["puts MiqDbConfig.current.options.values_at(:host, :database), ActiveRecord::Base.my_region_number"],
+        :params => ["puts MiqDbConfig.current.options.values_at(:host, :database), ApplicationRecord.my_region_number"],
         :chdir  => RAILS_ROOT
       )
 

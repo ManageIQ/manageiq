@@ -21,7 +21,6 @@ class MiqServer < ApplicationRecord
   belongs_to              :vm, :inverse_of => :miq_server
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
-  has_many                :miq_groups, :as => :resource
   has_many                :miq_events, :as => :target, :dependent => :destroy
 
   cattr_accessor          :my_guid_cache
@@ -655,13 +654,6 @@ class MiqServer < ApplicationRecord
 
   def display_name
     "#{name} [#{id}]"
-  end
-
-  def permitted_groups
-    groups = miq_groups.order(:sequence).to_a
-    groups = zone.miq_groups.order(:sequence).to_a if groups.empty?
-    groups = MiqGroup.where(:resource => nil).order(:sequence).to_a if groups.empty?
-    groups
   end
 
   def server_timezone

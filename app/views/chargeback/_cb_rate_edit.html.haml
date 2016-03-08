@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate_compute].id || "new"}")
 #flash_msg_div
+=======
+- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
+- currency = ChargebackRateDetailCurrency.currencies_for_select
+>>>>>>> master
 #form_div
   %h3
     = _('Basic Info')
@@ -13,6 +18,17 @@
                         :class => "form-control")
         = javascript_tag(javascript_focus('description'))
   %hr
+  /Add a new selector for the currencies
+  %h3
+    = _('Currencies')
+  .form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Select currency: ')
+      .col-md-8
+        = select_tag("currency",
+          options_for_select(currency, @edit[:new][:currency]),
+          "data-miq_observe" => {:url => url}.to_json)
   %h3= _('Add Rate Details')
   .col-md-8
     - if @edit[:new][:show_form]
@@ -31,7 +47,7 @@
         %strong
           = h("No rate details for add")
 .col-md-12
-  %br
+  %h3= _('Add Rate Details')
   .panel.panel-default
     .panel-heading{:style => "text-align: right;"}
       = button_tag("<span class=\"pficon-delete\">#{t = _(" Remove selected rate details")}</span>".html_safe,

@@ -29,7 +29,7 @@ module OpsController::Analytics
     @sb[:active_tab] = "analytics_details"
     if x_node.split('-').first == "z"
       zone = Zone.find_by_id(from_cid(x_node.split('-').last))
-      @sb[:rpt_title] = "Analytics Report for '#{zone.description}'"
+      @sb[:rpt_title] = _("Analytics Report for '%{description}'") % {:description => zone.description}
       msg = zone.name ? _("%{typ} %{model} \"%{name}\" (current)") : _("%{typ} %{model} \"%{name}\"")
       @right_cell_text = my_zone_name == msg %
                                          {:typ => "Diagnostics", :model => ui_lookup(:model => zone.class.to_s), :name => zone.description}
@@ -40,8 +40,8 @@ module OpsController::Analytics
       @right_cell_text = my_server_id == msg %
                                          {:typ => "Diagnostics", :model => ui_lookup(:model => svr.class.to_s), :name => "#{svr.name} [#{svr.id}]"}
     else
-      @right_cell_text = _("%{model} \"%{name}\"") % {:name => "Enterprise", :model => "Analytics"}
-      @sb[:rpt_title] = "Analytics Report for Enterprise"
+      @right_cell_text = _("%{model} \"Enterprise\"") % {:model => "Analytics"}
+      @sb[:rpt_title] = _("Analytics Report for Enterprise")
     end
     analytics_gen_report
   end
@@ -50,6 +50,7 @@ module OpsController::Analytics
     typ, id = get_rtype_rid
     fname = "analytics.yaml"
     @sb[:analytics_rpt] = MiqReport.new(YAML.load(File.open("#{OPS_REPORTS_FOLDER}/#{fname}")))
+    @sb[:analytics_rpt].headers.map! { |header| _(header) }
     @sb[:analytics_rpt].title = @sb[:analytics_rpt].name = @sb[:rpt_title]
     @sb[:analytics_rpt].db_options = {:options => {:resource_type => typ, :resource_id => id}, :rpt_type => "analytics"}
     # @sb[:analytics_rpt].generate_table

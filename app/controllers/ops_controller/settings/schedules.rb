@@ -169,7 +169,8 @@ module OpsController::Settings::Schedules
     if !params[:id] # showing a list
       schedules = find_checked_items
       if schedules.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "miq_schedule"), :task => "deletion"}, :error)
+        add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "miq_schedule")},
+                  :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -249,7 +250,11 @@ module OpsController::Settings::Schedules
 
   def build_saved_audit_hash(old_schedule_attributes, new_schedule, add)
     name  = new_schedule.respond_to?(:name) ? new_schedule.name : new_schedule.description
-    msg   = "[#{name}] Record #{add ? "added" : "updated"} ("
+    msg   = if add
+              _("[%{name}] Record added (") % {:name => name}
+            else
+              _("[%{name}] Record updated (") % {:name => name}
+            end
     event = "#{new_schedule.class.to_s.downcase}_record_#{add ? "add" : "update"}"
 
     attribute_difference = new_schedule.attributes.to_a - old_schedule_attributes.to_a
@@ -258,7 +263,7 @@ module OpsController::Settings::Schedules
     difference_messages = []
 
     attribute_difference.each do |key, value|
-      difference_messages << "#{key} changed to #{value}"
+      difference_messages << _("%{key} changed to %{value}") % {:key => key, :value => value}
     end
 
     msg = msg + difference_messages.join(", ") + ")"
@@ -536,61 +541,65 @@ module OpsController::Settings::Schedules
 
   def build_schedule_options_for_select
     @action_type_options_for_select = [
-      ["VM Analysis", "vm"],
-      ["Template Analysis", "miq_template"],
-      ["Host Analysis", "host"],
-      ["#{ui_lookup(:model => 'EmsCluster')} Analysis", "emscluster"],
-      ["#{ui_lookup(:model => 'Storage')} Analysis", "storage"]
+      [_("VM Analysis"), "vm"],
+      [_("Template Analysis"), "miq_template"],
+      [_("Host Analysis"), "host"],
+      [_("%{model} Analysis") % {:model => ui_lookup(:model => 'EmsCluster')}, "emscluster"],
+      [_("%{model} Analysis") % {:model => ui_lookup(:model => 'Storage')}, "storage"]
     ]
-    @action_type_options_for_select.push(["VM Compliance Check", "vm_check_compliance"]) if role_allows(:feature => "vm_check_compliance")
-    @action_type_options_for_select.push(["Host Compliance Check", "host_check_compliance"]) if role_allows(:feature => "host_check_compliance")
-    @action_type_options_for_select.push(["Database Backup", "db_backup"]) if DatabaseBackup.backup_supported?
+    if role_allows(:feature => "vm_check_compliance")
+      @action_type_options_for_select.push([_("VM Compliance Check"), "vm_check_compliance"])
+    end
+    if role_allows(:feature => "host_check_compliance")
+      @action_type_options_for_select.push([_("Host Compliance Check"), "host_check_compliance"])
+    end
+    @action_type_options_for_select.push([_("Database Backup"), "db_backup"]) if DatabaseBackup.backup_supported?
 
     @vm_options_for_select = [
-      ["All VMs", "all"],
-      ["All VMs for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
-      ["All VMs for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
-      ["All VMs for Host", "host"],
-      ["A single VM", "vm"]
+      [_("All VMs"), "all"],
+      [_("All VMs for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All VMs for %{table}") % {:table => ui_lookup(:table => "ems_clusters")}, "cluster"],
+      [_("All VMs for Host"), "host"],
+      [_("A single VM"), "vm"]
     ] +
-                             (@vm_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-                             (@vm_my_filters.empty? ? [] : [["My Filters", "my"]])
+                             (@vm_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
+                             (@vm_my_filters.empty? ? [] : [[_("My Filters"), "my"]])
 
     @template_options_for_select = [
-      ["All Templates", "all"],
-      ["All Templates for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
-      ["All Templates for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
-      ["All Templates for Host", "host"],
-      ["A single Template", "miq_template"]
+      [_("All Templates"), "all"],
+      [_("All Templates for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Templates for %{table}") % {:table => ui_lookup(:table => "ems_clusters")}, "cluster"],
+      [_("All Templates for Host"), "host"],
+      [_("A single Template"), "miq_template"]
     ] +
-                                   (@miq_template_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-                                   (@miq_template_my_filters.empty? ? [] : [["My Filters", "my"]])
+                                   (@miq_template_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
+                                   (@miq_template_my_filters.empty? ? [] : [[_("My Filters"), "my"]])
 
     @host_options_for_select = [
-      ["All Hosts", "all"],
-      ["All Hosts for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
-      ["All Hosts for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
-      ["A single Host", "host"]
+      [_("All Hosts"), "all"],
+      [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ems_clusters")}, "cluster"],
+      [_("A single Host"), "host"]
     ] +
-                               (@host_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-                               (@host_my_filters.empty? ? [] : [["My Filters", "my"]])
+                               (@host_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
+                               (@host_my_filters.empty? ? [] : [[_("My Filters"), "my"]])
 
     @cluster_options_for_select = [
-      ["All Clusters", "all"],
-      ["All Clusters for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
-      ["A single Cluster", "cluster"]
+      [_("All Clusters"), "all"],
+      [_("All Clusters for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("A single Cluster"), "cluster"]
     ] +
-                                  (@cluster_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-                                  (@cluster_my_filters.empty? ? [] : [["My Filters", "my"]])
+                                  (@cluster_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
+                                  (@cluster_my_filters.empty? ? [] : [[_("My Filters"), "my"]])
 
     @storage_options_for_select = [
-      ["All Datastores", "all"],
-      ["All Datastores for Host", "host"],
-      ["All Datastores for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
-      ["A single Datastore", "storage"]
+      [_("All Datastores"), "all"],
+      [_("All Datastores for Host"), "host"],
+      [_("All Datastores for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("A single Datastore"), "storage"]
     ] +
-                                  (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
-                                  (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
+                                  (@storage_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
+                                  (@storage_my_filters.empty? ? [] : [[_("My Filters"), "my"]])
 
     build_db_options_for_select
   end

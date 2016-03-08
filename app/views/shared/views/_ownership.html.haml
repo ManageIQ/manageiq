@@ -27,10 +27,9 @@
         = _('Select a Group:')
       .col-md-8
         - if @edit[:ownership_items].length > 1
-          - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Group')}>", nil]]
+          - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER]] + @groups.sort
         - else
-          - opts = [["<#{_("No Group")}>", nil]]
-        - opts += @groups.sort
+          - opts = @groups.sort
         = select_tag("group_name",
                       options_for_select(opts, @edit[:new][:group]),
                       "data-miq_sparkle_on"  => true,

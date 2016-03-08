@@ -20,7 +20,8 @@ module ReportController::SavedReports
       @report = nil
       return
     end
-    @right_cell_text ||= _("%{model} \"%{name}\"") % {:name => "#{rr.name} - #{format_timezone(rr.created_on, Time.zone, "gt")}", :model => "Saved Report"}
+    @right_cell_text ||= _("Saved Report \"%{name}\"") %
+                         {:name => "#{rr.name} - #{format_timezone(rr.created_on, Time.zone, "gt")}"}
     if admin_user? || current_user.miq_group_ids.include?(rr.miq_group_id)
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
@@ -29,7 +30,8 @@ module ReportController::SavedReports
         @report = rr.report_results
         session[:rpt_task_id] = nil
         if @report.blank?
-          add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(rr.created_on, Time.zone, "gtl"),
+          add_flash(_("Saved Report \"%{time}\" not found, Schedule may have failed") %
+                    {:time => format_timezone(rr.created_on, Time.zone, "gtl")},
                     :error)
           get_all_reps(rr.miq_report_id.to_s)
           if x_active_tree == :savedreports_tree
@@ -91,14 +93,14 @@ module ReportController::SavedReports
     savedreports = find_checked_items
     if savedreports.empty? && params[:id].present? && !MiqReportResult.exists?(params[:id].to_i)
       # saved report is being viewed in report accordion
-      add_flash(_("%s no longer exists") % "Saved Report", :error)
+      add_flash(_("Saved Report no longer exists"), :error)
     else
       savedreports.push(params[:id]) if savedreports.blank?
       @report = nil
       r = MiqReportResult.find(savedreports[0])
       @sb[:miq_report_id] = r.miq_report_id
       process_saved_reports(savedreports, "destroy")  unless savedreports.empty?
-      add_flash(_("The selected %s was deleted") % "Saved Report") if @flash_array.nil?
+      add_flash(_("The selected Saved Report was deleted")) if @flash_array.nil?
     end
     self.x_node = "xx-#{to_cid(@sb[:miq_report_id])}" if x_active_tree == :savedreports_tree &&
                                                          x_node.split('-').first == "rr"
@@ -127,7 +129,7 @@ module ReportController::SavedReports
     # build_savedreports_tree
     @sb[:saved_reports] = nil
     @right_cell_div     = "savedreports_list"
-    @right_cell_text    = _("All %s") % "Saved Reports"
+    @right_cell_text    = _("All Saved Reports")
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
     session["#{x_active_tree}_sortcol".to_sym] = @sortcol

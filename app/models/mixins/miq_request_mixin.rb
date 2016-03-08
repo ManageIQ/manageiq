@@ -147,4 +147,13 @@ module MiqRequestMixin
   def workflow(request_options = options, flags = {})
     workflow_class.new(request_options, get_user, flags) if workflow_class
   end
+
+  def request_dialog(action_name)
+    st = service_template
+    return {} if st.blank?
+    ra = st.resource_actions.find_by_action(action_name)
+    values = options[:dialog]
+    dialog = ResourceActionWorkflow.new(values, get_user, ra, {}).dialog
+    DialogSerializer.new.serialize(Array[dialog]).first
+  end
 end

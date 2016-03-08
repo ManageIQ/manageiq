@@ -682,6 +682,7 @@ en:
       ChargebackRate:           Chargeback Rate
       CimStorageExtent:         Storage - Extent
       Classification:           Category
+      CloudTenant:              Cloud Tenant
       Compliance:               Compliance History
       Compliances:              Compliance History
       Condition:                Condition
@@ -729,6 +730,7 @@ en:
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
       ManageIQ::Providers::InfraManager::Template:                          Template
+      ManageIQ::Providers::MiddlewareManager:                               Middleware Manager
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (Openstack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Redhat)
@@ -740,6 +742,8 @@ en:
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
       ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
+      MiddlewareDeployment:     Middleware Deployment
+      MiddlewareServer:         Middleware Server
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain

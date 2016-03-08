@@ -5,7 +5,7 @@
 //= require patternfly
 //= require jquery-ujs
 //= require angular
-//= require angular-patternfly
+//= require angular-patternfly-sass/angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize

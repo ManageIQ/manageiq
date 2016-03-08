@@ -11,7 +11,8 @@ class ApplicationController < ActionController::Base
   include Vmdb::Logging
 
   if Vmdb::Application.config.action_controller.allow_forgery_protection
-    protect_from_forgery :secret =>  MiqDatabase.connected? ? MiqDatabase.first.csrf_secret_token : SecureRandom.hex(64), :except => :csp_report, :with => :exception
+    db = MiqDatabase.connected? ? MiqDatabase.first : nil
+    protect_from_forgery :secret => db ? db.csrf_secret_token : SecureRandom.hex(64), :except => :csp_report, :with => :exception
   end
 
   helper ChartingHelper
@@ -24,6 +25,7 @@ class ApplicationController < ActionController::Base
   include JsHelper
   helper ToolbarHelper
   helper JsHelper
+  helper QuadiconHelper
 
   helper CloudResourceQuotaHelper
 
@@ -55,8 +57,6 @@ class ApplicationController < ActionController::Base
   def reset_toolbar
     @toolbars = {}
   end
-
-  ensure_security_headers
 
   # Convert Controller Name to Actual Model
   # Examples:
@@ -816,7 +816,6 @@ class ApplicationController < ActionController::Base
       params[:id] == 'new' ? 'show_list' : lastaction
     end
   end
-  private :calculate_lastaction
 
   def report_edit_aborted(lastaction)
     add_flash(_("Edit aborted!  CFME does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."), :error)
@@ -835,7 +834,6 @@ class ApplicationController < ActionController::Base
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end
   end
-  private :report_edit_aborted
 
   def load_edit(key, lastaction = @lastaction)
     lastaction = calculate_lastaction(lastaction)
@@ -951,7 +949,7 @@ class ApplicationController < ActionController::Base
 
   def reports_group_title
     tenant_name = current_tenant.name
-    if @sb[:grp_title] = current_user.admin_user?
+    if current_user.admin_user?
       _("%{tenant_name} (All %{groups})") % {:tenant_name => tenant_name, :groups => ui_lookup(:models => "MiqGroup")}
     else
       _("%{tenant_name} (%{group}): %{group_description}") %
@@ -966,7 +964,7 @@ class ApplicationController < ActionController::Base
     reports = []
     folders = []
     user = current_user
-    reports_group_title
+    @sb[:grp_title] = reports_group_title
     @data = []
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       # array of all reports if menu not configured
@@ -1163,7 +1161,6 @@ class ApplicationController < ActionController::Base
       klass.find(id)    # Read the record from the db
     end
   end
-  private :listicon_item
 
   # Return the icon classname for the list view icon of a db,id pair
   # this always supersedes listicon_image if not nil
@@ -1634,7 +1631,6 @@ class ApplicationController < ActionController::Base
     gtl_type ||= 'list' # return a sane default
     gtl_type
   end
-  private :get_view_calculate_gtl_type
 
   def get_view_process_search_text(view)
     # Check for new search by name text entered
@@ -1674,12 +1670,10 @@ class ApplicationController < ActionController::Base
     end
     sub_filter
   end
-  private :get_view_process_search_text
 
   def perpage_key(dbname)
     %w(job miqtask).include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
   end
-  private :perpage_key
 
   # Create view and paginator for a DB records with/without tags
   def get_view(db, options = {})
@@ -1821,7 +1815,6 @@ class ApplicationController < ActionController::Base
       default_where_clause
     end
   end
-  private :get_view_where_clause
 
   def get_view_filter(default_filter)
     # Get the advanced search filter
@@ -1834,7 +1827,6 @@ class ApplicationController < ActionController::Base
     # show_list, can't be used with advanced search or other list view screens
     filter || default_filter
   end
-  private :get_view_filter
 
   def get_view_pages_perpage(dbname)
     perpage = 10 # return a sane default
@@ -1845,7 +1837,6 @@ class ApplicationController < ActionController::Base
 
     perpage
   end
-  private :get_view_pages_perpage
 
   # Create the pages hash and return with the view
   def get_view_pages(dbname, view)
@@ -1857,7 +1848,6 @@ class ApplicationController < ActionController::Base
     pages[:total] = (pages[:items] + pages[:perpage] - 1) / pages[:perpage]
     pages
   end
-  private :get_view_pages
 
   def get_db_view(db, options = {})
     view_yaml = view_yaml_filename(db, options)
@@ -2474,10 +2464,7 @@ class ApplicationController < ActionController::Base
       raise msg
     end
 
-    Rbac.search(:class          => db,
-                :conditions     => ["#{db.table_name}.id = ?", id],
-                :user           => current_user,
-                :results_format => :objects).first.first ||
+    Rbac.filtered(db, :conditions => ["#{db.table_name}.id = ?", id], :user => current_user).first ||
       raise("User '#{current_userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'")
   end
 
@@ -2655,5 +2642,21 @@ class ApplicationController < ActionController::Base
     else
       @record.try!(:id)
     end
+  end
+
+  def set_active_elements(feature)
+    if feature
+      self.x_active_tree ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
+    end
+    get_node_info(x_node)
+  end
+
+  def build_accordions_and_trees
+    # Build the Explorer screen from scratch
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
+    @accords = allowed_features.map(&:accord_hash)
+    set_active_elements(allowed_features.first)
   end
 end

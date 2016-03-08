@@ -30,6 +30,7 @@ module QuotaHelper
     @ram_size = 1024
     @disk_size = 1_000_000
     @num_cpu = 0
+
     @hw1 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
     @hw2 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
     @hw3 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
@@ -49,6 +50,7 @@ module QuotaHelper
     @tenant.tenant_quotas.create(:name => :vms_allocated, :value => 4)
     @tenant.tenant_quotas.create(:name => :storage_allocated, :value => 4096)
     @tenant.tenant_quotas.create(:name => :cpu_allocated, :value => 2)
+    @tenant.tenant_quotas.create(:name => :templates_allocated, :value => 4)
   end
 
   def create_vms

@@ -1,3 +1,5 @@
+include QuadiconHelper
+
 describe "layouts/listnav/_availability_zone.html.haml" do
   before :each do
     set_controller_for_view("availability_zone")

@@ -5,6 +5,20 @@ class TreeBuilder
   def self.class_for_type(type)
     case type
     when :filter           then raise('Obsolete tree type.')
+    # Catalog explorer trees
+    when :configuration_manager_providers then TreeBuilderConfigurationManager
+    when :cs_filter                       then TreeBuilderConfigurationManagerConfiguredSystems
+
+    # Catalog explorer trees
+    when :ot               then TreeBuilderOrchestrationTemplates
+    when :sandt            then TreeBuilderCatalogItems
+    when :stcat            then TreeBuilderCatalogs
+    when :svccat           then TreeBuilderServiceCatalog
+
+    # Chargeback explorer trees
+    when :cb_assignments   then TreeBuilderChargebackAssignments
+    when :cb_rates         then TreeBuilderChargebackRates
+    when :cb_reports       then TreeBuilderChargebackReports
 
     when :vandt            then TreeBuilderVandt
     when :vms_filter       then TreeBuilderVmsFilter
@@ -33,6 +47,36 @@ class TreeBuilder
     when :savedreports     then TreeBuilderReportSavedReports
     when :schedules        then TreeBuilderReportSchedules
     when :widgets          then TreeBuilderReportWidgets
+
+    # containers explorer tree
+    when :containers         then TreeBuilderContainers
+    when :containers_filter  then TreeBuilderContainersFilter
+
+    # automate explorer tree
+    when :ae               then TreeBuilderAeClass
+
+    # miq_ae_customization explorer trees
+    when :ab                    then TreeBuilderButtons
+    when :dialogs               then TreeBuilderServiceDialogs
+    when :dialog_import_export  then TreeBuilderAeCustomization
+    when :old_dialogs           then TreeBuilderProvisioningDialogs
+
+    # OPS explorer trees
+    when :analytics             then TreeBuilderOpsAnalytics
+    when :diagnostics           then TreeBuilderOpsDiagnostics
+    when :rbac                  then TreeBuilderOpsRbac
+    when :settings              then TreeBuilderOpsSettings
+    when :vmdb                  then TreeBuilderOpsVmdb
+
+    # PXE explorer trees
+    when :customization_templates then TreeBuilderPxeCustomizationTemplates
+    when :iso_datastores          then TreeBuilderIsoDatastores
+    when :pxe_image_types         then TreeBuilderPxeImageTypes
+    when :pxe_servers             then TreeBuilderPxeServers
+
+    # Services explorer tree
+    when :svcs                    then TreeBuilderServices
+
     end
   end
 
@@ -50,10 +94,11 @@ class TreeBuilder
     when :bottlenecks_tree, :utilization_tree then
       if MiqEnterprise.my_enterprise.is_enterprise?
         title = _("Enterprise")
-        icon  = "enterprise"
+        icon  = :enterprise
       else # FIXME: string CFME below
-        title = "CFME Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]"
-        icon  = "miq_region"
+        title = _("CFME Region: %{region_description} [%{region}]") %
+                {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
+        icon  = :miq_region
       end
       [title, title, icon]
     when :cb_assignments_tree           then [_("Assignments"),                    _("Assignments")]
@@ -68,10 +113,14 @@ class TreeBuilder
     when :db_tree                       then [_("All Dashboards"), _("All Dashboards")]
     when :diagnostics_tree, :rbac_tree, :settings_tree     then
       region = MiqRegion.my_region
-      ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
+      [_("CFME Region: %{region_description} [%{region}]") % {:region_description => region.description,
+                                                              :region             => region.region},
+       _("CFME Region: %{region_description} [%{region}]") % {:region_description => region.description,
+                                                              :region             => region.region},
+       :miq_region]
     when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
     when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
-    when :export_tree                   then [_("Import / Export"),              _("Import / Export"), _("report")]
+    when :export_tree                   then [_("Import / Export"),              _("Import / Export"), :report]
     when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
     when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
     when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]
@@ -88,14 +137,14 @@ class TreeBuilder
     when :roles_tree                    then
       user = User.current_user
       if user.super_admin_user?
-        title = "All #{ui_lookup(:models => "MiqGroup")}"
+        title = _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
       else
-        title = "My #{ui_lookup(:models => "MiqGroup")}"
+        title = _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
       end
-      [title, title, 'miq_group']
+      [title, title, :miq_group]
     when :sandt_tree                    then [_("All Catalog Items"),            _("All Catalog Items")]
     when :savedreports_tree             then [_("All Saved Reports"),            _("All Saved Reports")]
-    when :schedules_tree                then [_("All Schedules"),                _("All Schedules"), "miq_schedule"]
+    when :schedules_tree                then [_("All Schedules"),                _("All Schedules"), :miq_schedule]
     when :stcat_tree                    then [_("All Catalogs"),                 _("All Catalogs")]
     when :svccat_tree                   then [_("All Services"),                 _("All Services")]
     when :svcs_tree                     then [_("All Services"),                 _("All Services")]
@@ -104,7 +153,7 @@ class TreeBuilder
     when :templates_filter_tree         then [_("All Templates"),                _("All of the Templates that I can see")]
     when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
     when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
-    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), "miq_database"]
+    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), :miq_database]
     when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
     end
   end
@@ -459,9 +508,7 @@ class TreeBuilder
 
   def self.rbac_has_visible_descendants?(o, type)
     target_ids = o.descendant_ids(:of_type => type).transpose.last
-    return false if target_ids.blank?
-    results, _attrs = Rbac.search(:targets => target_ids, :class => type.constantize)
-    results.length > 0
+    !target_ids.nil? && Rbac.filtered(target_ids, :class => type.constantize).present?
   end
   private_class_method :rbac_has_visible_descendants?
 

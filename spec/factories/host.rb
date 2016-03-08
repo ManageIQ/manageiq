@@ -60,4 +60,8 @@ FactoryGirl.define do
     vmm_vendor  "microsoft"
     vmm_product "Hyper-V"
   end
+
+  trait :storage do
+    after(:create) { |h| h.storages << FactoryGirl.create(:storage) }
+  end
 end

@@ -4,7 +4,7 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 # VMDB specific gems
 #
 
-gem "rails",                           "~>5.0.x"
+gem "rails",                           "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "master"
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",      "~>0.1.2", :require => false
@@ -12,6 +12,7 @@ gem "activerecord-session_store",      "~>0.1.2", :require => false
 # Local gems
 path "gems/" do
   gem "manageiq_foreman", :require => false
+  gem "manageiq-providers-amazon"
 end
 
 # Client-side dependencies
@@ -21,7 +22,7 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/matthewd/jquery-rjs.git", :branch => "rails5" # https://github.com/amatsuda/jquery-rjs/pull/4
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>2.9.0"
+gem "patternfly-sass",                "~>3.2.0"
 gem "sass-rails"
 gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
@@ -33,7 +34,7 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 gem "net-ldap",                       "~>0.7.0",   :require => false
 gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/matthewd/rubyrep.git", :branch => "rails5"
 gem "simple-rss",                     "~>1.3.1",   :require => false
-gem "winrm",                          "~>1.7.0",   :require => false
+gem "winrm",                          "~>1.7.2",   :require => false
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
 
 # Not vendored, but required
@@ -45,7 +46,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "azure-armrest",                  "~>0.1.0"
+gem "azure-armrest",                  "~>0.1.2"
 gem "color",                          "~>1.8"
 gem "default_value_for",              "~>3.0.1", :git => "git://github.com/matthewd/default_value_for.git", :branch => "rails-50" # https://github.com/FooBarWidget/default_value_for/pull/57
 gem "draper",                         "~>2.1.0", :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712
@@ -57,7 +58,7 @@ gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                           "~>2.13"
 gem "recursive-open-struct",          "~>0.6.1"
 gem "responders",                     "~>2.0"
-gem "secure_headers",                 "~>2.5.2"
+gem "secure_headers",                 "~>3.0.0"
 gem "spice-html5-rails"
 #gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
@@ -74,8 +75,7 @@ gem "ruby-dbus"
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "ansible_tower_client",           "~>0.0.1",   :require => false, :git => "git://github.com/ManageIQ/ansible_tower_client.git", :branch => "master"
-gem "aws-sdk-v1",                     "~>1.56.0",  :require => false
-gem "aws-sdk",                        "~> 2",      :require => false
+gem "aws-sdk",                        "~>2.2.19",  :require => false
 gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "google-api-client",              "~>0.8.0",   :require => false
@@ -128,7 +128,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-angular",                         "~>1.4.3"
   gem "rails-assets-angular-animate",                 "~>1.4.3"
   gem "rails-assets-angular-mocks",                   "~>1.4.3"
-  gem "rails-assets-angular-patternfly",              "~>2.8.0"
+  gem "rails-assets-angular-patternfly-sass",         "~>3.2.0"
   gem "rails-assets-angular-sanitize",                "~>1.4.3"
   gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
   gem "rails-assets-bootstrap-filestyle",             "~>1.2.1"

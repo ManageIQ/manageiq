@@ -48,19 +48,6 @@ describe('containerTopologyController', function() {
       });
     });
 
-    describe('the dbl click gets correct navigation url', function() {
-      it('to entity pages', function() {
-        var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
-        expect($controller.geturl(d)).toEqual("/ems_container/show/37");
-        d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30"}};
-        expect($controller.geturl(d)).toEqual("/container_group/show/30");
-        d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
-        expect($controller.geturl(d)).toEqual("/vm/show/25");
-        expect($controller.geturl(replicator)).toEqual("/container_replicator/show/10");
-
-      });
-    });
-
     describe('dimensions are returned correctly', function() {
       it('of all objects', function() {
         var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
@@ -70,17 +57,6 @@ describe('containerTopologyController', function() {
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
         expect($controller.getDimensions(d)).toEqual({ x: 0, y: 9, r: 21 });
         expect($controller.getDimensions(replicator)).toEqual({ x: -1, y: 8, r: 17 });
-      });
-    });
-
-    describe('tooltips have correct content', function() {
-      it('of all objects', function() {
-        var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37", status: "Unreachable", name:"molecule"}};
-        expect($controller.tooltip(d)).toEqual([ 'Name: molecule', 'Type: Openshift', 'Status: Unreachable' ] );
-        d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30", status: "Running", name:"mypod"}};
-        expect($controller.tooltip(d)).toEqual([ 'Name: mypod', 'Type: Pod', 'Status: Running' ] );
-        d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25", status: "On", name:"vm123", provider: "myrhevprovider"}};
-        expect($controller.tooltip(d)).toEqual([ 'Name: vm123', 'Type: VM', 'Status: On', 'Provider: myrhevprovider' ]);
       });
     });
     

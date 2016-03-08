@@ -52,6 +52,7 @@ class MiqExpression
     StoragePerformance
     ManageIQ::Providers::CloudManager::Template
     ManageIQ::Providers::InfraManager::Template
+    Tenant
     User
     VimPerformanceTrend
     Vm
@@ -144,6 +145,7 @@ class MiqExpression
     storage_adapters
     storage_files
     switches
+    tenant_quotas
     users
     vms
     volumes
@@ -872,11 +874,7 @@ class MiqExpression
   end
 
   def includes_for_sql
-    result = {}
-    col_details.each_value do |v|
-      self.class.deep_merge_hash(result, v[:include])
-    end
-    result
+    col_details.values.each_with_object({}) { |v, result| result.deep_merge!(v[:include]) }
   end
 
   def columns_for_sql(exp = nil, result = nil)
@@ -901,17 +899,6 @@ class MiqExpression
     end
 
     result.compact.uniq
-  end
-
-  def self.deep_merge_hash(hash1, hash2)
-    return hash1 if hash2.nil?
-    hash2.each_key do |k1|
-      if hash1.key?(k1)
-        deep_merge_hash(hash1[k1], hash2[k1])
-      else
-        hash1[k1] = hash2[k1]
-      end
-    end
   end
 
   def self.merge_where_clauses_and_includes(where_clauses, includes)
@@ -945,11 +932,7 @@ class MiqExpression
 
   def self.merge_includes(*incl_list)
     return nil if incl_list.blank?
-    result = {}
-    incl_list.each do |i|
-      deep_merge_hash(result, i)
-    end
-    result
+    incl_list.compact.each_with_object({}) { |i, result| result.deep_merge!(i) }
   end
 
   def self.get_cols_from_expression(exp, options = {})

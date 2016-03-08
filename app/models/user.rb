@@ -37,17 +37,8 @@ class User < ApplicationRecord
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
   # with the class method of the same name (User.authenticate)
   alias_method :authenticate_bcrypt, :authenticate
-  serialize :filters
 
   include ReportableMixin
-
-  include DeprecationMixin
-  deprecate_belongs_to :miq_group, :current_group
-
-  @@role_ns  = "/managed/user"
-  @@role_cat = "role"
-
-  @role_changed = false
 
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
@@ -194,26 +185,9 @@ class User < ApplicationRecord
     settings.fetch_path(:display, :timezone) || self.class.server_timezone
   end
 
-  def current_group=(group)
-    log_prefix = "User: [#{userid}]"
-    super
-
-    if group
-      self.filters = group.filters
-      _log.info("#{log_prefix} Assigning Role: [#{group.miq_user_role_name}] from Group: [#{group.description}]")
-    else
-      self.filters = nil
-      _log.info("#{log_prefix} Removing Role: [#{miq_user_role_name}] and Group: [#{miq_group_description}]")
-    end
-  end
-
   def miq_groups=(groups)
     super
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
-  end
-
-  def self.all_users_of_group(group)
-    User.includes(:miq_groups).select { |u| u.miq_groups.include?(group) }
   end
 
   def admin?

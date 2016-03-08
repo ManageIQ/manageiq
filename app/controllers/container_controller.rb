@@ -46,7 +46,9 @@ class ContainerController < ApplicationController
     if @refresh_partial
       replace_right_cell(action)
     else
-      add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
+      unless @flash_array
+        add_flash(_("Button not yet implemented %{model}: %{action}") % {:model => model, :action => action}, :error)
+      end
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -102,26 +104,7 @@ class ContainerController < ApplicationController
       return
     end
 
-    # Build the Explorer screen from scratch
-    @trees   = []
-    @accords = []
-    if role_allows(:feature => "container_accord", :any => true)
-      self.x_active_tree ||= 'containers_tree'
-      self.x_active_accord ||= 'containers'
-      @trees.push(build_containers_tree)
-      @accords.push(:name      => "containers",
-                    :title     => "Relationships",
-                    :container => "containers_accord")
-    end
-
-    if role_allows(:feature => "container_filter_accord", :any => true)
-      self.x_active_tree ||= 'containers_filter_tree'
-      self.x_active_accord ||= 'containers_filter'
-      @trees.push(build_containers_filter_tree)
-      @accords.push(:name      => "containers_filter",
-                    :title     => "All Containers",
-                    :container => "containers_filter_accord")
-    end
+    build_accordions_and_trees
 
     if params[:id]  # If a tree node id came in, show in one of the trees
       nodetype, id = params[:id].split("-")
@@ -132,7 +115,6 @@ class ContainerController < ApplicationController
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
-    get_node_info(x_node)
     @in_a_form = false
     render :layout => "application"
   end
@@ -196,6 +178,22 @@ class ContainerController < ApplicationController
 
   private
 
+  def features
+    [{:role     => "container_accord",
+      :role_any => true,
+      :name     => :containers,
+      :title    => _("Relationships")},
+
+     {:role     => "container_filter_accord",
+      :role_any => true,
+      :name     => :containers_filter,
+      :title    => _("All Containers")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
+
+
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     @show_adv_search = true
@@ -205,7 +203,7 @@ class ContainerController < ApplicationController
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
       typ = "Container"
       process_show_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => typ)
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
     else
       show_record(from_cid(id))
       @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @record.name,
@@ -222,7 +220,7 @@ class ContainerController < ApplicationController
 
     # After adding to history, add name filter suffix if showing a list
     unless @search_text.blank?
-      @right_cell_text += _(" (Names with \"%s\")") % @search_text
+      @right_cell_text += _(" (Names with \"%{text}\")") % {:text => @search_text}
     end
   end
 
@@ -236,7 +234,7 @@ class ContainerController < ApplicationController
       action = "container_edit"
     when "tag"
       partial = "layouts/tagging"
-      header = _("Edit Tags for %s") % ui_lookup(:model => "Container")
+      header = _("Edit Tags for %{model}") % {:model => ui_lookup(:model => "Container")}
       action = "container_tag"
     else
       action = nil
@@ -335,10 +333,6 @@ class ContainerController < ApplicationController
   # Build a Containers explorer tree
   def build_containers_tree
     TreeBuilderContainers.new("containers_tree", "containers", @sb)
-  end
-
-  def build_containers_filter_tree
-    TreeBuilderContainersFilter.new("containers_filter_tree", "containers_filter", @sb)
   end
 
   def show_record(id = nil)

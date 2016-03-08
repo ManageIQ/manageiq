@@ -119,6 +119,19 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  context "#save_provider_foreman" do
+    it "will not save with a duplicate name" do
+      ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman",
+                                                    :url => "10.8.96.103", :zone => @zone)
+      provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman",
+                                                             :url => "10.8.96.103", :zone => @zone)
+      controller.instance_variable_set(:@provider_cfgmgmt, provider2)
+      expect(controller).to receive(:replace_right_cell).once
+      controller.save_provider_foreman
+      expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
+    end
+  end
+
   context "#edit" do
     before do
       set_user_privileges
@@ -142,6 +155,26 @@ describe ProviderForemanController do
     end
   end
 
+  context "#refresh" do
+    before do
+      set_user_privileges
+      allow(controller).to receive(:x_node).and_return("root")
+      allow(controller).to receive(:rebuild_toolbars).and_return("true")
+    end
+
+    it "renders the refresh flash message for Ansible Tower" do
+      post :refresh, :miq_grid_checks => @config_ans.id
+      expect(response.status).to eq(200)
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Ansible Tower)")
+    end
+
+    it "renders the refresh flash message for Foreman" do
+      post :refresh, :miq_grid_checks => @config_mgr.id
+      expect(response.status).to eq(200)
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Foreman)")
+    end
+  end
+
   context "renders right cell text" do
     before do
       right_cell_text = nil
@@ -159,7 +192,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      controller.send(:build_trees_and_accordions)
+      controller.send(:build_accordions_and_trees)
     end
     it "renders right cell text for root node" do
       key = ems_key_for_provider(@provider)
@@ -211,7 +244,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
-      controller.send(:build_trees_and_accordions)
+      controller.send(:build_accordions_and_trees)
     end
     it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
       controller.instance_variable_set(:@_params, :id => "root")
@@ -374,7 +407,7 @@ describe ProviderForemanController do
                                        :per_page => {:list => 20},
                                        :views    => {:cm_providers          => "grid",
                                                      :cm_configured_systems => "tile"})
-      controller.send(:build_trees_and_accordions)
+      controller.send(:build_accordions_and_trees)
     end
 
     it "fetches list type = 'grid' from settings for Providers accordion" do

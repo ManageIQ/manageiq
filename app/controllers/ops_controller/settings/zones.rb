@@ -61,7 +61,6 @@ module OpsController::Settings::Zones
     assert_privileges("zone_delete")
     zone = Zone.find(params[:id])
     zonename = zone.name
-    audit = {:event => "zone_record_delete", :message => "[#{zone.name}] Record deleted", :target_id => zone.id, :target_class => "Zone", :userid => session[:userid]}
     begin
       zone.destroy
     rescue StandardError => bang
@@ -122,11 +121,11 @@ module OpsController::Settings::Zones
     valid = true
     @edit[:errors] = []
     if !zone.authentication_password.blank? && zone.authentication_userid.blank?
-      @edit[:errors].push("Username must be entered if Password is entered")
+      @edit[:errors].push(_("Username must be entered if Password is entered"))
       valid = false
     end
     if @edit[:new][:password] != @edit[:new][:verify]
-      @edit[:errors].push("Password and Verify Password fields do not match")
+      @edit[:errors].push(_("Password and Verify Password fields do not match"))
       valid = false
     end
     valid

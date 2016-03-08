@@ -77,6 +77,8 @@ module ManageIQ
         get_floating_ips # We don't have any in Infra yet
         get_network_ports
 
+        link_network_ports_associations
+
         $fog_log.info("#{log_header}...Complete")
         @data
       end

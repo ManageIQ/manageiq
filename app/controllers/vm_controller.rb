@@ -17,7 +17,7 @@ class VmController < ApplicationController
   private ####
 
   def get_session_data
-    @title          = "Virtual Machines"
+    @title          = _("Virtual Machines")
     @layout         = "vm"
     @lastaction     = session[:vm_lastaction]
     @showtype       = session[:vm_showtype]

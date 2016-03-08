@@ -22,17 +22,17 @@
                         :class   => "list-grid-checkbox",
                         :onclick => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
                   %td
-                    = render :partial => "layouts/quadicon", :locals  => {:mode => :icon, :item => item}
+                    = render_quadicon(item, :mode => :icon)
                 %tr
                   %td{:colspan => "2", :style => "padding-top: 0px; margin-top: 0px;"}
-                    = render :partial => "layouts/quadicon", :locals  => {:mode => :text, :row => row, :item => item}
+                    = render_quadicon(item, :mode => :text, :row => row)
           %td{:valign => "top"}
             - reset_cycle
             %dl.dl-horizontal.tile
               - (1..4).each do |i|
                 - if view.headers.length > i
                   %dt
-                    = "#{h(view.headers[i])}: "
+                    = "#{h(_(view.headers[i]))}: "
                   %dd
                     - col = view.col_order[i]
                     - if row[col].kind_of?(Time) && !row[col].nil? && row[col] != ""

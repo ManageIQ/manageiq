@@ -33,7 +33,7 @@ module MiqWebServerRunnerMixin
     def start_rails_server(options)
       require "rails/commands/server"
 
-      _log.info("With options: #{options.inspect}")
+      _log.info("With options: #{options.except(:app).inspect}")
       Rails::Server.new(options).tap do |server|
         Dir.chdir(Vmdb::Application.root)
         server.start

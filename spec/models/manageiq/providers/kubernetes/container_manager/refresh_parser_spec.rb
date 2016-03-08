@@ -469,25 +469,33 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
 
-    it "handles limits without specification" do
-      expect(parser.send(:parse_range,
-                         RecursiveOpenStruct.new(
-                           :metadata => {
-                             :name              => 'test-range',
-                             :namespace         => 'test-namespace',
-                             :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-                             :resourceVersion   => '2',
-                             :creationTimestamp => '2015-08-17T09:16:46Z',
-                           },
-                           :spec     => {
-                             :limits => []
-                           })))
-        .to eq(:name                  => 'test-range',
-               :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-               :ems_created_on        => '2015-08-17T09:16:46Z',
-               :resource_version      => '2',
-               :project               => nil,
-               :container_limit_items => [])
+    it "handles missing limits specification" do
+      metadata = {
+        :name              => 'test-range',
+        :namespace         => 'test-namespace',
+        :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :resourceVersion   => '2',
+        :creationTimestamp => '2015-08-17T09:16:46Z',
+      }
+      ranges = [
+        {:metadata => metadata},
+        {:metadata => metadata, :spec => nil},
+        {:metadata => metadata, :spec => {}},
+        {:metadata => metadata, :spec => {:limits => nil}},
+        {:metadata => metadata, :spec => {:limits => []}}
+      ]
+      parsed = {
+        :name                  => 'test-range',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :ems_created_on        => '2015-08-17T09:16:46Z',
+        :resource_version      => '2',
+        :project               => nil,
+        :container_limit_items => []
+      }
+      ranges.each do |range|
+        expect(parser.send(:parse_range, RecursiveOpenStruct.new(range)))
+          .to eq(parsed)
+      end
     end
   end
 
@@ -627,6 +635,114 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :resource_version           => '3691041',
         :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
       })
+    end
+
+    it "handles node without nodeInfo" do
+      expect(parser.send(
+        :parse_node,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-node',
+            :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+            :resourceVersion   => '369104',
+            :creationTimestamp => '2016-01-01T11:10:21Z'
+          },
+          :spec     => {
+            :externalID => '10.35.17.99'
+          },
+          :status   => {
+            :capacity => {}
+          }
+        )
+      )).to eq(
+        {
+          :name                 => 'test-node',
+          :ems_ref              => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+          :ems_created_on       => '2016-01-01T11:10:21Z',
+          :container_conditions => [],
+          :identity_infra       => '10.35.17.99',
+          :labels               => [],
+          :lives_on_id          => nil,
+          :lives_on_type        => nil,
+          :max_container_groups => nil,
+          :computer_system      => {
+            :hardware         => {
+              :cpu_total_cores => nil,
+              :memory_mb       => nil
+            },
+            :operating_system => {
+              :distribution   => nil,
+              :kernel_version => nil
+            }
+          },
+          :namespace            => nil,
+          :resource_version     => '369104',
+          :type                 => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+        })
+    end
+  end
+
+  describe "parse_persistent_volume" do
+    it "tests parent type" do
+      expect(parser.send(
+        :parse_persistent_volume,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-volume',
+            :uid               => '66213621-80a1-11e5-b907-28d2447dcefe',
+            :resourceVersion   => '448015',
+            :creationTimestamp => '2015-12-06T11:10:21Z'
+          },
+          :spec     => {
+            :capacity    => {
+              :storage => '10Gi'
+            },
+            :hostPath    => {
+              :path => '/tmp/data01'
+            },
+            :accessModes => ['ReadWriteOnce'],
+          },
+          :status   => {
+            :phase => 'Available'
+          }
+        )
+      )).to eq(
+        {
+          :name                    => 'test-volume',
+          :ems_ref                 => '66213621-80a1-11e5-b907-28d2447dcefe',
+          :ems_created_on          => '2015-12-06T11:10:21Z',
+          :namespace               => nil,
+          :resource_version        => '448015',
+          :type                    => 'PersistentVolume',
+          :status_phase            => 'Available',
+          :access_modes            => 'ReadWriteOnce',
+          :capacity                => 'storage=10Gi',
+          :claim_name              => nil,
+          :common_fs_type          => nil,
+          :common_partition        => nil,
+          :common_path             => '/tmp/data01',
+          :common_read_only        => nil,
+          :common_secret           => nil,
+          :common_volume_id        => nil,
+          :empty_dir_medium_type   => nil,
+          :gce_pd_name             => nil,
+          :git_repository          => nil,
+          :git_revision            => nil,
+          :glusterfs_endpoint_name => nil,
+          :iscsi_iqn               => nil,
+          :iscsi_lun               => nil,
+          :iscsi_target_portal     => nil,
+          :nfs_server              => nil,
+          :parent_type             => 'ManageIQ::Providers::ContainerManager',
+          :rbd_ceph_monitors       => '',
+          :rbd_image               => nil,
+          :rbd_keyring             => nil,
+          :rbd_pool                => nil,
+          :rbd_rados_user          => nil,
+          :reclaim_policy          => nil,
+          :status_message          => nil,
+          :status_reason           => nil
+        })
     end
   end
 end

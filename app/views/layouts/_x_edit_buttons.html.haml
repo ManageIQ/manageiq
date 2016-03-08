@@ -103,7 +103,7 @@
             :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
 
       - unless no_reset
-        = button_tag('Reset',
+        = button_tag(_('Reset'),
           :class   => "btn btn-default",
           :alt     => t = _("Reset Changes"),
           :title   => t,

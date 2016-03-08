@@ -283,7 +283,7 @@ describe ApplicationController do
       controller.instance_variable_set(:@edit, @edit)
       controller.ownership_build_screen
       groups = controller.instance_variable_get(:@groups)
-      expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
+      expect(groups.count).to eq(MiqGroup.count)
     end
 
     it "lists all users when (admin user is logged)" do

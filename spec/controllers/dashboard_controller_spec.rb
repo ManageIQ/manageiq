@@ -8,6 +8,17 @@ describe DashboardController do
       FactoryGirl.create(:user, :role => "random")
     end
 
+    it "has secure headers" do
+      get :index
+      expect do
+        if SecureHeaders.respond_to?(:header_hash_for)
+          SecureHeaders.header_hash_for(@request) # secure headers 3.0
+        else
+          SecureHeaders.header_hash(@request) # secure headers 2.x
+        end
+      end.not_to raise_error
+    end
+
     it "validates user" do
       skip_data_checks
       post :authenticate, :params => { :user_name => user_with_role.userid, :user_password => 'dummy' }

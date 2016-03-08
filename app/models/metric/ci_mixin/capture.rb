@@ -64,17 +64,17 @@ module Metric::CiMixin::Capture
     queue_item = {
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => 'perf_capture',
       :role        => 'ems_metrics_collector',
       :queue_name  => queue_name_for_metrics_collection,
       :zone        => my_zone,
       :state       => ['ready', 'dequeue'],
     }
 
-    items.each do |item|
-      MiqQueue.put_or_update(
-        queue_item.merge(:args => item)
-      ) do |msg, qi|
+    items.each do |item_interval, *start_and_end_time|
+      # Should both interval name and args (dates) be part of uniqueness query?
+      queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
+      queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
+      MiqQueue.put_or_update(queue_item_options) do |msg, qi|
         if msg.nil?
           qi[:priority] = priority
           qi.delete(:state)
@@ -90,12 +90,25 @@ module Metric::CiMixin::Capture
           end
           qi
         else
-          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{qi[:args].inspect} is still running"
+          interval = qi[:method_name].sub("perf_capture_", "")
+          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running"
           # NOTE: do not update the message queue
           nil
         end
       end
     end
+  end
+
+  def perf_capture_realtime(*args)
+    perf_capture('realtime', *args)
+  end
+
+  def perf_capture_hourly(*args)
+    perf_capture('hourly', *args)
+  end
+
+  def perf_capture_historical(*args)
+    perf_capture('historical', *args)
   end
 
   def perf_capture(interval_name, start_time = nil, end_time = nil)

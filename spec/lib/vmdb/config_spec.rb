@@ -35,7 +35,7 @@ describe VMDB::Config do
     server        = EvmSpecHelper.create_guid_miq_server_zone[1]
     config        = VMDB::Config.new("vmdb")
     config.config = {:log_depot => {:uri => "smb://server/share", :username => "user", :password => password}}
-    config.save(false)
+    config.save
 
     expect(VMDB::Config.get_file("vmdb")).to eq(
       "---\nlog_depot:\n  uri: smb://server/share\n  username: user\n  password: #{enc_pass}\n"
@@ -47,7 +47,7 @@ describe VMDB::Config do
       EvmSpecHelper.create_guid_miq_server_zone
       config = VMDB::Config.new("vmdb")
       config.config = {:one => {:two => :three}}
-      config.save(false)
+      config.save
       expect(Configuration.count).to eq(1)
       expect(Configuration.first).to have_attributes(:typ => 'vmdb', :settings => {:one => {:two => :three}})
     end

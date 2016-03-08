@@ -61,58 +61,42 @@ class PxeController < ApplicationController
     @breadcrumbs = []
     @explorer = true
     @sb[:open_tree_nodes] ||= []
-    @trees = []
-    @accords = []
 
-    if role_allows(:feature => "pxe_server_accord", :any => true)
-      self.x_active_tree ||= 'pxe_servers_tree'
-      self.x_active_accord ||= 'pxe_servers'
-      @trees << pxe_server_build_tree
-      @accords.push(:name      => "pxe_servers",
-                    :title     => "PXE Servers",
-                    :container => "pxe_servers_accord",
-                    :image     => "pxeserver")
-    end
-
-    if role_allows(:feature => "customization_template_accord", :any => true)
-      self.x_active_tree ||= 'customization_templates_tree'
-      self.x_active_accord ||= 'customization_templates'
-      @trees << customization_template_build_tree
-      @accords.push(:name      => "customization_templates",
-                    :title     => "Customization Templates",
-                    :container => "customization_templates_accord",
-                    :image     => "customizationtemplate")
-    end
-
-    if role_allows(:feature => "pxe_image_type_accord", :any => true)
-      self.x_active_tree ||= 'pxe_image_types_tree'
-      self.x_active_accord ||= 'pxe_image_types'
-      @trees << pxe_image_type_build_tree
-      @accords.push(:name      => "pxe_image_types",
-                    :title     => "System Image Types",
-                    :container => "pxe_image_types_accord",
-                    :image     => "pxeimagetype")
-    end
-
-    if role_allows(:feature => "iso_datastore_accord", :any => true)
-      self.x_active_tree ||= 'iso_datastores_tree'
-      self.x_active_accord ||= 'iso_datastores'
-      @trees << iso_datastore_build_tree
-      @accords.push(:name      => "iso_datastores",
-                    :title     => "ISO Datastores",
-                    :container => "iso_datastores_accord",
-                    :image     => "isodatastore")
-    end
+    build_accordions_and_trees
 
     @right_cell_div ||= "pxe_server_list"
-    @right_cell_text ||= "All PXE Servers"
-    get_node_info(x_node)
+    @right_cell_text ||= _("All PXE Servers")
     @pxe_image_types_count = PxeImageType.count
 
     render :layout => "application"
   end
 
   private
+
+  def features
+    [{:role     => "pxe_server_accord",
+      :role_any => true,
+      :name     => :pxe_servers,
+      :title    => _("PXE Servers")},
+
+     {:role     => "customization_template_accord",
+      :role_any => true,
+      :name     => :customization_templates,
+      :title    => _("Customization Templates")},
+
+     {:role     => "pxe_image_type_accord",
+      :role_any => true,
+      :name     => :pxe_image_types,
+      :title    => _("System Image Types")},
+
+     {:role     => "iso_datastore_accord",
+      :role_any => true,
+      :name     => :iso_datastores,
+      :title    => _("ISO Datastores")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 
   def get_node_info(node)
     node = valid_active_node(node)
@@ -159,12 +143,12 @@ class PxeController < ApplicationController
     when :pxe_servers_tree
       presenter.update(:main_div, r[:partial => "pxe_server_list"])
       if nodetype == "root"
-        right_cell_text = _("All %s") % ui_lookup(:models => "PxeServer")
+        right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "PxeServer")}
       else
         right_cell_text = case nodetype
                           when 'ps'
                             if @ps.id.blank?
-                              _("Adding a new %s") % ui_lookup(:model => "PxeServer")
+                              _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeServer")}
                             else
                               temp = _("%{model} \"%{name}\"") % {:name  => @ps.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeServer")}
                               @edit ? "Editing #{temp}" : temp
@@ -179,10 +163,10 @@ class PxeController < ApplicationController
       presenter.update(:main_div, r[:partial => "pxe_image_type_list"])
       right_cell_text = case nodetype
                         when 'root'
-                          _("All %s") % ui_lookup(:models => "PxeImageType")
+                          _("All %{models}") % {:models => ui_lookup(:models => "PxeImageType")}
                         when 'pit'
                           if @pxe_image_type.id.blank?
-                            _("Adding a new %s") % ui_lookup(:model => "PxeImageType")
+                            _("Adding a new %{models}") % {:models => ui_lookup(:model => "PxeImageType")}
                           else
                             temp = _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
                             @edit ? "Editing #{temp}" : temp
@@ -196,7 +180,7 @@ class PxeController < ApplicationController
       if @in_a_form
         right_cell_text =
           if @ct.id.blank?
-            _("Adding a new %s") % ui_lookup(:model => "PxeCustomizationTemplate")
+            _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeCustomizationTemplate")}
           else
             @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
                     _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
@@ -211,8 +195,8 @@ class PxeController < ApplicationController
       presenter.update(:main_div, r[:partial => "iso_datastore_list"])
       right_cell_text =
         case nodetype
-        when 'root' then _("All %s") % ui_lookup(:models => "IsoDatastore")
-        when 'isd'  then _("Adding a new %s") % ui_lookup(:model  => "IsoDatastore")
+        when 'root' then _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
+        when 'isd'  then _("Adding a new %{models}") % {:models => ui_lookup(:model => "IsoDatastore")}
         when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "IsoImage")}
         end
     end

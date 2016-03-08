@@ -4,12 +4,14 @@ class NetworkPort < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :cloud_tenant
-  belongs_to :cloud_network
   belongs_to :cloud_subnet
   belongs_to :device, :polymorphic => true
 
   has_and_belongs_to_many :security_groups
 
+  has_one :network_router, :through => :cloud_subnet
+  has_one :floating_ip
+  # TODO(lsmola) can this really happen? If not remove it
   has_many :floating_ips
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API

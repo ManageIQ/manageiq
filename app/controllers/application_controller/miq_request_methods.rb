@@ -42,6 +42,13 @@ module ApplicationController::MiqRequestMethods
           page << "ManageIQ.calendar.calDateFrom = new Date(#{@timezone_offset});"
           page << "miqBuildCalendar();"
         end
+        if @edit.fetch_path(:new, :owner_email).blank?
+          page << javascript_hide("lookup_button_on")
+          page << javascript_show("lookup_button_off")
+        else
+          page << javascript_hide("lookup_button_off")
+          page << javascript_show("lookup_button_on")
+        end
         if changed != session[:changed]
           session[:changed] = changed
           page << javascript_for_miq_button_visibility(changed)

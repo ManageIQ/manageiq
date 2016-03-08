@@ -10,7 +10,6 @@ class Zone < ApplicationRecord
 
   has_many :miq_servers
   has_many :ext_management_systems
-  has_many :miq_groups, :as => :resource
   has_many :miq_schedules, :dependent => :destroy
   has_many :storage_managers
   has_many :ldap_regions

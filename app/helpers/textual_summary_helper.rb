@@ -40,12 +40,12 @@ module TextualSummaryHelper
   end
 
   def textual_tags
-    label = "#{session[:customer_name]} Tags"
+    label = _("%{name} Tags") % {:name => session[:customer_name]}
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.blank?
       h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
+      h[:value] = _("No %{label} have been assigned") % {:label => label}
     else
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }
                   .collect do |category, assigned|
@@ -85,7 +85,7 @@ module TextualSummaryHelper
                            :action     => 'show',
                            :id         => object)
       end
-      h[:title] = "Show #{label} '#{value}'"
+      h[:title] = _("Show %{label} '%{value}'") % {:label => label, :value => value}
     end
 
     h
@@ -129,7 +129,7 @@ module TextualSummaryHelper
         h[:link] = url_for(:controller => controller_collection,
                            :action     => 'list')
       end
-      h[:title] = "Show all #{label}"
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true if explorer
     end
 

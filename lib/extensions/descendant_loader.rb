@@ -198,10 +198,14 @@ class DescendantLoader
   end
 
   module Mapper
+    def descendants_paths
+      @descendants_paths ||= [Rails.root.join("app/models")]
+    end
+
     def class_inheritance_relationships
       @class_inheritance_relationships ||= begin
         children = Hash.new { |h, k| h[k] = [] }
-        Dir.glob(Rails.root.join("app/models/**/*.rb")) do |file|
+        Dir.glob(descendants_paths.map{|path| Pathname.new(path).join('**/*.rb')}) do |file|
           classes_in(file).each do |search_scopes, define_scopes, name, sklass|
             possible_names = scoped_name(name, define_scopes)
             possible_superklasses = scoped_name(sklass, search_scopes)

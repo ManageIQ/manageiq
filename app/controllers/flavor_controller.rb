@@ -1,4 +1,5 @@
 class FlavorController < ApplicationController
+  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -20,27 +21,25 @@ class FlavorController < ApplicationController
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@flavor)
-      drop_breadcrumb({:name => "Flavors", :url => "/flavor/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb(:name => @flavor.name + " (Summary)", :url => "/flavor/show/#{@flavor.id}")
+      drop_breadcrumb({:name => _("Flavors"), :url => "/flavor/show_list?page=#{@current_page}&refresh=y"}, true)
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @flavor.name}, :url => "/flavor/show/#{@flavor.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
 
     when "ems_cloud"
-      drop_breadcrumb(:name => @flavor.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/flavor/show/#{@flavor.id}?display=ems_cloud")
+      drop_breadcrumb(:name => _("%{name} (%{table}(s))") % {:name  => @flavor.name,
+                                                             :table => ui_lookup(:table => "ems_cloud")},
+                      :url  => "/flavor/show/#{@flavor.id}?display=ems_cloud")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @flavor)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
 
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
-      drop_breadcrumb(:name => @flavor.name + " (All #{title})", :url => "/flavor/show/#{@flavor.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @flavor.name, :title => title},
+                      :url  => "/flavor/show/#{@flavor.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @flavor) # Get the records (into a view) and the paginator
       @showtype   = @display
-      if @view.extras[:total_count] && @view.extras[:auth_count] &&
-         @view.extras[:total_count] > @view.extras[:auth_count]
-        @bottom_msg = "* You are not authorized to view " +
-                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
-                      " on this " + ui_lookup(:tables => "flavor")
-      end
+      notify_about_unauthorized_items(title, ui_lookup(:tables => "flavor"))
     end
 
     # Came in from outside show_list partial
@@ -99,7 +98,7 @@ class FlavorController < ApplicationController
   private ############################
 
   def get_session_data
-    @title      = "Flavor"
+    @title      = _("Flavor")
     @layout     = "flavor"
     @lastaction = session[:flavor_lastaction]
     @display    = session[:flavor_display]

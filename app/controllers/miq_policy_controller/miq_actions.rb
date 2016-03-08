@@ -435,11 +435,10 @@ module MiqPolicyController::MiqActions
     end
 
     if %w(inherit_parent_tags remove_tags).include?(@action.action_type)
-      tag = Tag.find_by_classification_name(@action.options[:cats])
-      if tag.present?
-        cats = Classification.where(:tag_id => tag.id).pluck(:description)
-        @cats = cats.sort_by(&:downcase).join(" | ")
-      end
+      @cats = @action.options[:cats].map do |cat|
+        tag = Tag.find_by_classification_name(cat)
+        Classification.where(:tag_id => tag.id).pluck(:description)
+      end.flatten.sort_by(&:downcase).join(" | ")
     end
   end
 end

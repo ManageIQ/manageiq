@@ -95,8 +95,6 @@ class Host < ApplicationRecord
 
   include SerializedEmsRefObjMixin
   include ProviderObjectMixin
-
-  include WebServiceAttributeMixin
   include EventMixin
 
   include CustomAttributeMixin
@@ -172,6 +170,7 @@ class Host < ApplicationRecord
   include AsyncDeleteMixin
   include ComplianceMixin
   include VimConnectMixin
+  include AvailabilityMixin
 
   before_create :make_smart
   after_save    :process_events
@@ -224,30 +223,6 @@ class Host < ApplicationRecord
     end
   end
   private :raise_cluster_event
-
-  # is_available?
-  # Returns:  true or false
-  #
-  # The UI calls this method to determine if a feature is supported for this Host
-  # and determines if a button should be displayed.  This method should return true
-  # even if a function is not 'currently' available due to some condition that is not
-  # being met.
-  def is_available?(request_type)
-    send("validate_#{request_type}")[:available]
-  end
-
-  # is_available_now_error_message
-  # Returns an error message string if there is an error.
-  # Returns nil to indicate no errors.
-  # This method is used by the UI along with the is_available? methods.
-  def is_available_now_error_message(request_type)
-    send("validate_#{request_type}")[:message]
-  end
-
-  def raise_is_available_now_error_message(request_type)
-    msg = send("validate_#{request_type}")[:message]
-    raise MiqException::MiqVmError, msg unless msg.nil?
-  end
 
   def validate_reboot
     validate_esx_host_connected_to_vc_with_power_state('on')
@@ -325,6 +300,10 @@ class Host < ApplicationRecord
     return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"} unless has_active_ems?
     return {:available => false, :message => "The Host is not VMware ESX"} unless is_vmware_esx?
     nil
+  end
+
+  def validate_unsupported(message_prefix)
+    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} Host."}
   end
 
   def has_active_ems?
@@ -631,23 +610,6 @@ class Host < ApplicationRecord
   def is_vmware_esxi?
     product = vmm_product.to_s.strip.downcase
     is_vmware? && product.starts_with?('esx') && product.ends_with?('i')
-  end
-
-  def self.lookUpHost(hostname, ipaddr, opts = {})
-    h   = Host.where("lower(hostname) = ?", hostname.downcase).find_by(:ipaddress => ipaddr) if hostname && ipaddr
-    h ||= Host.find_by("lower(hostname) = ?", hostname.downcase)                             if hostname
-    h ||= Host.find_by(:ipaddress => ipaddr)                                                 if ipaddr
-    h ||= Host.find_by("lower(hostname) LIKE ?", "#{hostname.downcase}.%")                   if hostname
-
-    # If we're given an ems_ref or ems_id then ensure that the host
-    # we looked-up does not have a different ems_ref and is not
-    # owned by another provider, this would cause us to overwrite
-    # a different host record
-    if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id != opts[:ems_id])
-      h = nil
-    end unless h.nil?
-
-    h
   end
 
   def vmm_vendor_display
@@ -1871,22 +1833,22 @@ class Host < ApplicationRecord
     !plist.blank?
   end
 
-  def self.node_types
+  def self.node_types # TODO: This doesn't belong here
     return :non_openstack unless openstack_hosts_exists?
     non_openstack_hosts_exists? ? :mixed_hosts : :openstack
   end
 
-  def self.openstack_hosts_exists?
+  def self.openstack_hosts_exists? # TODO: This doesn't belong here
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     ems.empty? ? false : Host.where(:ems_id => ems).exists?
   end
 
-  def self.non_openstack_hosts_exists?
+  def self.non_openstack_hosts_exists? # TODO: This doesn't belong here
     ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     Host.where.not(:ems_id => ems).exists?
   end
 
-  def openstack_host?
+  def openstack_host? # TODO: This doesn't belong here
     ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
 

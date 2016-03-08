@@ -66,7 +66,7 @@ class StorageManagerController < ApplicationController
     set_form_vars
     @in_a_form = true
     session[:changed] = nil
-    drop_breadcrumb(:name => "Add New Storage Manager", :url => "/storage_manager/new")
+    drop_breadcrumb(:name => _("Add New Storage Manager"), :url => "/storage_manager/new")
   end
 
   def create
@@ -76,18 +76,19 @@ class StorageManagerController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %s was cancelled by the user") % ui_lookup(:table => "StorageManager")
+        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
+          {:model => ui_lookup(:table => "StorageManager")}
       end
     when "add"
       if @edit[:new][:sm_type].nil?
-        add_flash(_("%s is required") % "Type", :error)
+        add_flash(_("Type is required"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
       if @edit[:new][:sm_type].nil? || @edit[:new][:sm_type] == ""
-        add_flash(_("%s is required") % "Type", :error)
+        add_flash(_("Type is required"), :error)
       end
       unless @flash_array
         add_sm = StorageManager.new_of_type(@edit[:new][:sm_type])
@@ -108,7 +109,7 @@ class StorageManagerController < ApplicationController
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
         end
-        drop_breadcrumb(:name => "Add New Storage Manager", :url => "/storage_manager/new")
+        drop_breadcrumb(:name => _("Add New Storage Manager"), :url => "/storage_manager/new")
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -116,7 +117,7 @@ class StorageManagerController < ApplicationController
     when "validate"
       # Need to pass in smtype so the proper mixins are loaded.
       if @edit[:new][:sm_type].blank?
-        add_flash(_("%s is required") % "Type", :error)
+        add_flash(_("Type is required"), :error)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -144,7 +145,8 @@ class StorageManagerController < ApplicationController
     set_form_vars
     @in_a_form = true
     session[:changed] = false
-    drop_breadcrumb(:name => "Edit Storage Manager '#{@sm.name}'", :url => "/storage_manager/edit/#{@sm.id}")
+    drop_breadcrumb(:name => _("Edit Storage Manager '%{name}'") % {:name => @sm.name},
+                    :url  => "/storage_manager/edit/#{@sm.id}")
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
@@ -197,7 +199,8 @@ class StorageManagerController < ApplicationController
         update_sm.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        drop_breadcrumb(:name => "Edit Storage Manager '#{@sm.name}'", :url => "/storage_manager/edit/#{@sm.id}")
+        drop_breadcrumb(:name => _("Edit Storage Manager '%{name}'") % {:name => @sm.name},
+                        :url  => "/storage_manager/edit/#{@sm.id}")
         @in_a_form = true
         session[:changed] = changed
         @changed = true
@@ -246,7 +249,7 @@ class StorageManagerController < ApplicationController
 
     if ["download_pdf", "main", "summary_only"].include?(@display)
       # get_tagdata(StorageManager)
-      drop_breadcrumb(:name => @sm.name + " (Summary)", :url => "/storage_manager/show/#{@sm.id}")
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @sm.name}, :url => "/storage_manager/show/#{@sm.id}")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     end
@@ -271,11 +274,11 @@ class StorageManagerController < ApplicationController
     valid = true
     @edit[:errors] = []
     if !sm.authentication_password.blank? && sm.authentication_userid.blank?
-      @edit[:errors].push("Username must be entered if Password is entered")
+      @edit[:errors].push(_("Username must be entered if Password is entered"))
       valid = false
     end
     if @edit[:new][:password] != @edit[:new][:verify]
-      @edit[:errors].push("Password and Verify Password fields do not match")
+      @edit[:errors].push(_("Password and Verify Password fields do not match"))
       valid = false
     end
     valid
@@ -393,13 +396,13 @@ class StorageManagerController < ApplicationController
   # Refresh inventory for selected or single Storage Manager
   def refresh_inventory
     assert_privileges("storage_manager_refresh_inventory")
-    sm_button_operation('refresh_inventory', 'Refresh Inventory')
+    sm_button_operation('refresh_inventory', _('Refresh Inventory'))
   end
 
   # Refresh status for selected or single Storage Manager
   def refresh_status_sm
     assert_privileges("storage_manager_refresh_status")
-    sm_button_operation('request_status_update', 'Refresh Status')
+    sm_button_operation('request_status_update', _('Refresh Status'))
   end
 
   # Common Storage Manager button handler routines
@@ -422,7 +425,7 @@ class StorageManagerController < ApplicationController
 
     else # showing 1 Storage Manager
       if params[:id].nil? || StorageManager.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:model => "StorageManager"), :error)
+        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "StorageManager")}, :error)
         show_list
         @refresh_partial = "layouts/gtl"
       else
@@ -445,16 +448,17 @@ class StorageManagerController < ApplicationController
       begin
         StorageManager.refresh_inventory(sms, true)
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % task << bang.message,
+        add_flash(_("Error during '%{task}': %{message}") % {:task => task, :message => bang.message},
                   :error)
         AuditEvent.failure(:userid => session[:userid], :event => "storage_manager_#{task}",
-          :message => "Error during '" << task << "': " << bang.message,
+          :message => _("Error during '%{task} ': %{message}") % {:task => task, :message => bang.message},
           :target_class => "StorageManager", :target_id => id)
       else
         add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
           {:task => task_name(task), :count_model => pluralize(sms.length, "Storage Manager")})
         AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
-            :message => "'#{task}' successfully initiated for #{pluralize(sms.length, "Storage Manager")}",
+            :message => _("'%{task}' successfully initiated for %{items}") %
+              {:task => task, :items => pluralize(sms.length, "Storage Manager")},
             :target_class => "StorageManager")
       end
     else
@@ -462,27 +466,36 @@ class StorageManagerController < ApplicationController
         id = sm.id
         sm_name = sm.name
         if task == "destroy"
-          audit = {:event => "sm_record_delete", :message => "[#{sm_name}] Record deleted", :target_id => id, :target_class => "StorageManager", :userid => session[:userid]}
+          audit = {:event        => "sm_record_delete",
+                   :message      => _("[%{name}] Record deleted") % {:name => sm_name},
+                   :target_id    => id,
+                   :target_class => "StorageManager",
+                   :userid       => session[:userid]}
         end
         begin
           sm.send(task.to_sym) if sm.respond_to?(task)    # Run the task
         rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "StorageManager"), :name => sm_name, :task => task} << bang.message,
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
+                      {:model   => ui_lookup(:model => "StorageManager"),
+                       :name    => sm_name, :task => task,
+                       :message => bang.message},
                     :error)
           AuditEvent.failure(:userid => session[:userid], :event => "storage_manager_#{task}",
-            :message => "#{sm_name}: Error during '" << task << "': " << bang.message,
+            :message => _("%{name}: Error during '%{task}': %{message}") % {:name    => sm_name,
+                                                                            :task    => task,
+                                                                            :message => bang.message},
             :target_class => "StorageManager", :target_id => id)
         else
           if task == "destroy"
             AuditEvent.success(audit)
             add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "StorageManager"), :name => sm_name})
             AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
-              :message => "#{sm_name}: Delete successful",
+              :message => _("%{name}: Delete successful") % {:name => sm_name},
               :target_class => "StorageManager", :target_id => id)
           else
             add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "StorageManager"), :name => sm_name, :task => task})
             AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
-               :message => "#{sm_name}: '" + task + "' successfully initiated",
+               :message => _("%{name}: '%{task}' successfully initiated") % {:name => sm_name, :task => task},
                :target_class => "StorageManager", :target_id => id)
           end
         end
@@ -503,7 +516,7 @@ class StorageManagerController < ApplicationController
   end
 
   def get_session_data
-    @title      = "Storage Managers"
+    @title      = _("Storage Managers")
     @layout     = "storage_manager"
     @lastaction = session[:sm_lastaction]
     @display    = session[:sm_display]

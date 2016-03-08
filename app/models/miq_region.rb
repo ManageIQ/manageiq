@@ -118,13 +118,13 @@ class MiqRegion < ApplicationRecord
     end
   end
 
-  def self.sync_with_db_region(config = false)
+  def self.sync_with_db_region(config)
+    config = config.deep_stringify_keys
+
     # Establish a connection to a different database so that we can sync with the new DB's region
-    if config
-      raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.key?(Rails.env)
-      _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
-      MiqDatabase.establish_connection(config[Rails.env])
-    end
+    raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.key?(Rails.env)
+    _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
+    MiqDatabase.establish_connection(config[Rails.env])
 
     db = MiqDatabase.first
     return if db.nil?
@@ -134,6 +134,22 @@ class MiqRegion < ApplicationRecord
     if region != my_region
       _log.info("Changing region file from: [#{my_region}] to: [#{region}]... restart to use new region")
       MiqRegion.sync_region_to_file(region)
+    end
+  end
+
+  def self.destroy_region(conn, region, tables = nil)
+    tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^ar_internal_metadata|^rr/ }.sort
+    tables.each do |t|
+      pk = conn.primary_key(t)
+      if pk
+        conditions = sanitize_conditions(region_to_conditions(region, pk))
+      else
+        id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
+        conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(" OR ")
+      end
+
+      rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
+      _log.info "Cleared [#{rows}] rows from table [#{t}]"
     end
   end
 

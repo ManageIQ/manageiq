@@ -473,8 +473,7 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_service(id)
     case id
     when "service_reconfigure"
-      ra = @record.service_template.resource_actions.find_by_action('Reconfigure') if @record.service_template
-      return true if ra.nil? || ra.dialog_id.nil? || ra.fqname.blank?
+      return true unless @record.validate_reconfigure
     end
     false
   end
@@ -834,7 +833,8 @@ class ApplicationHelper::ToolbarBuilder
         return true if @record.host && @record.host.vmm_product.downcase == "workstation"
       when "miq_template_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "miq_template_scan"
+      when "miq_template_scan", "image_scan"
+        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
         return true unless @record.has_proxy?
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -1093,8 +1093,8 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqServer"
       case id
       when "collect_logs", "collect_current_logs"
-        return "Cannot collect current logs unless the #{ui_lookup(:table => "miq_servers")} is started" unless @record.started?
-        return "Log collection is already in progress for this #{ui_lookup(:table => "miq_servers")}" if @record.log_collection_active_recently?
+        return "Cannot collect current logs unless the #{ui_lookup(:table => "miq_server")} is started" unless @record.started?
+        return "Log collection is already in progress for this #{ui_lookup(:table => "miq_server")}" if @record.log_collection_active_recently?
         return "Log collection requires the Log Depot settings to be configured" unless @record.log_file_depot
       when "delete_server"
         return "Server #{@record.name} [#{@record.id}] can only be deleted if it is stopped or has not responded for a while" unless @record.is_deleteable?
@@ -1146,9 +1146,9 @@ class ApplicationHelper::ToolbarBuilder
     when "Storage"
       case id
       when "storage_perf"
-        return "No Capacity & Utilization data has been collected for this #{ui_lookup(:table => "storages")}" unless @record.has_perf_data?
+        return "No Capacity & Utilization data has been collected for this #{ui_lookup(:table => "storage")}" unless @record.has_perf_data?
       when "storage_delete"
-        return "Only #{ui_lookup(:table => "storages")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
+        return "Only #{ui_lookup(:table => "storage")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
       when "storage_scan"
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
       end
@@ -1240,7 +1240,8 @@ class ApplicationHelper::ToolbarBuilder
         return "No Compliance Policies assigned to this #{ui_lookup(:model => model_for_vm(@record).to_s)}" unless @record.has_compliance_policies?
       when "miq_template_perf"
         return "No Capacity & Utilization data has been collected for this Template" unless @record.has_perf_data?
-      when "miq_template_scan"
+      when "miq_template_scan", "image_scan"
+        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "miq_template_timeline"
         return "No Timeline data has been collected for this Template" unless @record.has_events? || @record.has_events?(:policy_events)

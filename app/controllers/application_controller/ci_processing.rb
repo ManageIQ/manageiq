@@ -86,7 +86,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @edit[:ownership_items].length == 1
     @edit[:new][:group] = group ? group.id.to_s : nil
-    MiqGroup.non_tenant_groups.with_current_user_groups.each { |g| @groups[g.description] = g.id.to_s }
+    MiqGroup.with_current_user_groups.each { |g| @groups[g.description] = g.id.to_s }
 
     @edit[:new][:user] = @edit[:new][:group] = DONT_CHANGE_OWNER if @edit[:ownership_items].length > 1
 
@@ -1052,7 +1052,7 @@ module ApplicationController::CiProcessing
   end
 
   def breadcrumb_name(_model)
-    ui_lookup_for_model(self.class.model.name).pluralize
+    ui_lookup(:models => self.class.model.name)
   end
 
   # Reconfigure selected VMs
@@ -1298,7 +1298,7 @@ module ApplicationController::CiProcessing
     else
       items = find_checked_items
       if items.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'foreman'),
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'providers'),
                                                                 :task  => display_name}, :error)
       else
         process_cfgmgr(items, method) unless items.empty? && !flash_errors?
@@ -1316,10 +1316,10 @@ module ApplicationController::CiProcessing
   rescue => err
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
-    add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
-                {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'configuration manager')}"),
-                 :controller  => ui_lookup(:ui_title => 'foreman'),
-                 :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
+    add_flash(_("%{task} initiated for %{count_model} (%{controller})") %
+                {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'provider')}"),
+                 :controller  => ui_lookup(:ui_title => ProviderForemanController.model_to_name(kls.to_s)),
+                 :count_model => pluralize(providers.length, _("provider"))})
   end
 
   # Delete all selected or single displayed VM(s)

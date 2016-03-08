@@ -7,11 +7,13 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     :class_name => 'ManageIQ::Providers::Openstack::InfraManager::HostServiceGroup'
 
   has_many :network_ports, :as => :device
-  has_many :cloud_networks, :through => :network_ports
+  has_many :network_routers, :through => :cloud_subnets
+  has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
-  has_many :cloud_subnets, :through => :network_ports
-  has_many :network_routers, :through => :cloud_networks
-  has_many :public_networks, :through => :cloud_networks
+  has_many :cloud_subnets, :through    => :network_ports,
+                           :class_name => "ManageIQ::Providers::Openstack::InfraManager::CloudSubnet"
+  has_many :public_networks, :through => :cloud_subnets
+
   has_many :floating_ips
 
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
@@ -83,15 +85,14 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def update_ssh_auth_status!
-    unless (auth = authentication_type(:ssh_keypair))
-      # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
-      # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
-      auth = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
-        :name          => "#{self.class.name} #{name}",
-        :authtype      => :ssh_keypair,
-        :resource_id   => id,
-        :resource_type => 'Host')
-    end
+    # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
+    # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
+    auth = authentication_type(:ssh_keypair) ||
+           ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
+             :name          => "#{self.class.name} #{name}",
+             :authtype      => :ssh_keypair,
+             :resource_id   => id,
+             :resource_type => 'Host')
 
     # If authentication is defined per host, use that
     best_fit_auth = authentication_best_fit

@@ -175,6 +175,15 @@ class Service < ApplicationRecord
     st.picture
   end
 
+  def validate_reconfigure
+    ra = reconfigure_resource_action
+    ra && ra.dialog_id && ra.fqname.present?
+  end
+
+  def reconfigure_resource_action
+    service_template.resource_actions.find_by_action('Reconfigure') if service_template
+  end
+
   def raise_final_process_event(action)
     case action.to_s
     when "start" then raise_started_event

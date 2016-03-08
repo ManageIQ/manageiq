@@ -91,6 +91,16 @@ describe ApiController do
       expect_query_result(:vms, 3, 3)
       expect_result_resources_to_match_hash([{"name" => "a"}, {"name" => "B"}, {"name" => "c"}])
     end
+
+    it "supports sorting with physical attributes" do
+      FactoryGirl.create(:vm_vmware, :vendor => "vmware", :name => "vmware_vm")
+      FactoryGirl.create(:vm_redhat, :vendor => "redhat", :name => "redhat_vm")
+
+      run_get vms_url, :sort_by => "vendor", :sort_order => "asc", :expand => "resources"
+
+      expect_query_result(:vms, 2, 2)
+      expect_result_resources_to_match_hash([{"name" => "redhat_vm"}, {"name" => "vmware_vm"}])
+    end
   end
 
   describe "Filtering vms" do
@@ -269,6 +279,18 @@ describe ApiController do
 
   describe "Querying vms" do
     before { api_basic_authorize }
+
+    it "and sorted by name succeeeds with unreferenced class" do
+      run_get vms_url, :sort_by => "name", :expand => "resources"
+
+      expect_query_result(:vms, 0, 0)
+    end
+
+    it "by invalid attribute" do
+      run_get vms_url, :sort_by => "bad_attribute", :expand => "resources"
+
+      expect_bad_request("bad_attribute is not a valid attribute")
+    end
 
     it "is supported without expanding resources" do
       create_vms_by_name(%w(aa bb))

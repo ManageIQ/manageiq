@@ -7,6 +7,7 @@ require 'active_support/core_ext/class/subclasses'
 
 class OpenstackEventMonitor
   DEFAULT_AMQP_PORT = 5672
+  DEFAULT_AMQP_HEARTBEAT = 30
 
   def self.new(options = {})
     # plugin initializer

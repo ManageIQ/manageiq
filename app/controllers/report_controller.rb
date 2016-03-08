@@ -17,7 +17,7 @@ class ReportController < ApplicationController
   layout 'application', :except => [:render_txt, :render_csv, :render_pdf]
 
   def index
-    @title = "Reports"
+    @title = _("Reports")
     redirect_to :action => "show"
   end
 
@@ -77,7 +77,7 @@ class ReportController < ApplicationController
       begin
         reps, mri = MiqReport.import(params[:upload][:file], :save => true, :overwrite => @sb[:overwrite], :userid => session[:userid])
       rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
+        add_flash(_("Error during 'upload': %{message}") % {:message => bang.message}, :error)
         @sb[:flash_msg] = @flash_array
         redirect_to :action => 'explorer'
       else
@@ -140,11 +140,7 @@ class ReportController < ApplicationController
     end
 
     reports_menu_in_sb
-    # Build the Explorer screen from scratch
-    allowed_features = ApplicationController::Feature.allowed_features(features)
-    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
-    @accords = allowed_features.map(&:accord_hash)
-    set_active_elements(allowed_features.first)
+    build_accordions_and_trees
 
     self.x_active_tree = x_last_active_tree if x_last_active_tree
     self.x_active_accord = x_last_active_accord.to_s if x_last_active_accord
@@ -154,7 +150,7 @@ class ReportController < ApplicationController
     x_node_set("root", :roles_tree) if params[:load_edit_err]
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     get_node_info
-    @right_cell_text ||= _("All %s") % ui_lookup(:models => "MiqReport")
+    @right_cell_text ||= _("All %{models}") % ui_lookup(:models => "MiqReport")
     @sb[:rep_tree_build_time] = Time.now.utc
     @sb[:active_tab] = "report_info"
     @right_cell_text.gsub!(/'/, "&apos;")      # Need to escape single quote in title to load in right cell
@@ -218,7 +214,7 @@ class ReportController < ApplicationController
       timestamp = format_timezone(Time.current, Time.zone, "export_filename")
       send_data(widget_yaml, :filename => "widget_export_#{timestamp}.yml")
     else
-      add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num => 1, :model => "item", :action => "export"}, :error)
+      add_flash(_("At least 1 item must be selected for export"), :error)
       @sb[:flash_msg] = @flash_array
       redirect_to :action => :explorer
     end
@@ -278,33 +274,33 @@ class ReportController < ApplicationController
     [{:role     => "miq_report_saved_reports",
       :role_any => true,
       :name     => :savedreports,
-      :title    => N_("Saved Reports")},
+      :title    => _("Saved Reports")},
 
      {:role     => "miq_report_reports",
       :role_any => true,
       :name     => :reports,
-      :title    => N_("Reports")},
+      :title    => _("Reports")},
 
      {:role     => "miq_report_schedules",
       :role_any => true,
       :name     => :schedules,
-      :title    => N_("Schedules")},
+      :title    => _("Schedules")},
 
      {:role  => "miq_report_dashboard_editor",
       :name  => :db,
-      :title => N_("Dashboards")},
+      :title => _("Dashboards")},
 
      {:role  => "miq_report_widget_editor",
       :name  => :widgets,
-      :title => N_("Dashboard Widgets")},
+      :title => _("Dashboard Widgets")},
 
      {:role  => "miq_report_menu_editor",
       :name  => :roles,
-      :title => N_("Edit Report Menus")},
+      :title => _("Edit Report Menus")},
 
      {:role  => "miq_report_export",
       :name  => :export,
-      :title => N_("Import/Export")},
+      :title => _("Import/Export")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
@@ -380,14 +376,14 @@ class ReportController < ApplicationController
     when :export_tree
       @export = true
       get_export_reports unless x_node == "root"
-      @right_cell_text ||= "Import / Export"
+      @right_cell_text ||= _("Import / Export")
       @help_topic        = request.parameters["controller"] + "-import_export"
     when :roles_tree
       menu_get_all
       @changed = session[:changed] = false
       @help_topic = request.parameters["controller"] + "-menus_editor"
     when :reports_tree
-      @right_cell_text ||= "All Reports"
+      @right_cell_text ||= _("All Reports")
     when :savedreports_tree
       get_all_saved_reports
     when :schedules_tree
@@ -434,7 +430,7 @@ class ReportController < ApplicationController
   end
 
   def export_get_node_info
-    @right_cell_text = "Import / Export"
+    @right_cell_text = _("Import / Export")
     if x_node.split('-').last == "exportcustomreports"
       get_export_reports
       @right_cell_div = "export_custom_reports"
@@ -498,7 +494,7 @@ class ReportController < ApplicationController
     end
 
     @right_cell_div ||= "report_list"
-    @right_cell_text ||= _("All %s") % ui_lookup(:models => "MiqReport")
+    @right_cell_text ||= _("All %{models}") % {:models => ui_lookup(:models => "MiqReport")}
   end
 
   # Get all info for the node about to be displayed
@@ -655,11 +651,8 @@ class ReportController < ApplicationController
 
     trees                = {}
     rebuild              = @in_a_form ? false : rebuild_trees
-    if replace_trees.include?(:reports) || rebuild
-      reports_menu_in_sb
-      trees[:reports] = TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
-    end
-    trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules)
+    trees[:reports]      = build_reports_tree      if replace_trees.include?(:reports) || rebuild
+    trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules) || rebuild
     trees[:savedreports] = build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
     trees[:db]           = build_db_tree           if replace_trees.include?(:db) || rebuild
     trees[:widgets]      = build_widgets_tree      if replace_trees.include?(:widgets) || rebuild
@@ -696,10 +689,10 @@ class ReportController < ApplicationController
       when :db_tree
         if @in_a_form
           if @edit[:new][:dashboard_order]
-            @right_cell_text = _("Editing %{model} sequence for \"%{name}\"") % {:name => @sb[:group_desc], :model => "Dashboard"}
+            @right_cell_text = _("Editing Dashboard sequence for \"%{name}\"") % {:name => @sb[:group_desc]}
           else
             @right_cell_text = @db.id ?
-                _("Editing %{model} \"%{name}\"") % {:name => @db.name, :model => "Dashboard"} : _("Adding a new %s") % "dashboard"
+                _("Editing Dashboard \"%{name}\"") % {:name => @db.name} : _("Adding a new dashboard")
           end
           # URL to be used in miqDropComplete method
           presenter[:miq_widget_dd_url] = "report/db_widget_dd_done"
@@ -713,12 +706,16 @@ class ReportController < ApplicationController
             presenter[:build_calendar] = true
             @right_cell_text = @schedule.id ?
                 _("Editing %{model} \"%{name}\"") % {:name => @schedule.name, :model => ui_lookup(:model => "MiqSchedule")} :
-                _("Adding a new %s") % ui_lookup(:model => "MiqSchedule")
+                _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqSchedule")}
           end
         else
           if @in_a_form
-            @right_cell_text = @rpt.id ?
-                _("Editing %{model} \"%{name}\"") % {:name => @rpt.name, :model => ui_lookup(:model => "MiqReport")} : _("Adding a new %s") % ui_lookup(:model => "MiqReport")
+            @right_cell_text = if @rpt.id
+                                 _("Editing %{model} \"%{name}\"") % {:name  => @rpt.name,
+                                                                      :model => ui_lookup(:model => "MiqReport")}
+                               else
+                                 _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqReport")}
+                               end
           end
         end
       when :schedules_tree
@@ -726,7 +723,7 @@ class ReportController < ApplicationController
           presenter[:build_calendar] = true
           @right_cell_text = @schedule.id ?
               _("Editing %{model} \"%{name}\"") % {:name => @schedule.name, :model => ui_lookup(:model => 'MiqSchedule')} :
-              _("Adding a new %s") % ui_lookup(:model => 'MiqSchedule')
+              _("Adding a new %{model}") % {:model => ui_lookup(:model => 'MiqSchedule')}
         end
       when :widgets_tree
         if @in_a_form
@@ -741,7 +738,7 @@ class ReportController < ApplicationController
           end
           @right_cell_text = @widget.id ?
               _("Editing %{model} \"%{name}\"") % {:name => @widget.name, :model => ui_lookup(:model => 'MiqWidget')} :
-              _("Adding a new %s") % ui_lookup(:model => 'MiqWidget')
+              _("Adding a new %{model}") % {:model => ui_lookup(:model => 'MiqWidget')}
         end
       end
     elsif nodetype == "g"

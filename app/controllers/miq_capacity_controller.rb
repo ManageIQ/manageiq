@@ -684,6 +684,7 @@ class MiqCapacityController < ApplicationController
       bottleneck_tl_to_xml
     else
       @sb[:bottlenecks][:report] = MiqReport.new(YAML.load(File.open("#{TIMELINES_FOLDER}/miq_reports/tl_bottleneck_events.yaml")))
+      @sb[:bottlenecks][:report].headers.map! { |header| _(header) }
       @sb[:bottlenecks][:report].tz = @sb[:bottlenecks][:tl_options][:tz] # Set the new timezone
       @title = @sb[:bottlenecks][:report].title
 

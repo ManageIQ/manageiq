@@ -1,10 +1,13 @@
-miqHttpInject(angular.module('mwTopologyApp', ['kubernetesUI', 'ui.bootstrap']))
+miqHttpInject(angular.module('mwTopologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
     .controller('middlewareTopologyController', MiddlewareTopologyCtrl);
 
-MiddlewareTopologyCtrl.$inject = ['$scope', '$http', '$interval', "$location" ];
+MiddlewareTopologyCtrl.$inject = ['$scope', '$http', '$interval', "$location", 'topologyService'];
 
-function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
+function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologyService) {
+    var self = this;
     $scope.vs = null;
+    var d3 = window.d3;
+
     $scope.refresh = function() {
         var id;
         if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
@@ -78,7 +81,8 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
                     return "#bbb";
             }});
         added.append("title");
-        added.on("dblclick", function(d) {return dblclick(d)});
+        added.on("dblclick", function(d) {
+            return self.dblclick(d);});
         added.append("image")
             .attr("xlink:href",function(d) {
                 return "/assets/100/" + class_name(d) + ".png";
@@ -94,11 +98,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
             .style("display", function(d) {if ($scope.checkboxModel.value) {return "block"} else {return "none"}});
 
         added.selectAll("title").text(function(d) {
-            var status = "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status;
-            if (d.item.kind == 'Host' || d.item.kind == 'VM') {
-                    status += "\nProvider: " + d.item.provider;
-            }
-            return status;
+            return topologyService.tooltip(d).join("\n");
         });
         $scope.vs = vertices;
 
@@ -115,29 +115,20 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
             case "MiddlewareServer":
                 class_name = "middleware_server";
                 break;
-            case "Hawkular":
+            case "MiddlewareManager":
                 class_name = "vendor-hawkular";
                 break;
         }
         return class_name;
     }
 
-    function dblclick(d) {
-        var entity_url = "";
-        switch (d.item.kind) {
-            case "Hawkular":
-                entity_url = "ems_middleware";
-                break;
-            default :
-                entity_url = class_name(d);
-        }
-        var url = '/' + entity_url + '/show/' + d.item.miq_id;
-        window.location.assign(url);
-    }
+    this.dblclick = function dblclick(d) {
+      window.location.assign(topologyService.geturl(d));
+    };
 
     function getDimensions(d) {
         switch (d.item.kind) {
-            case "Hawkular":
+            case "MiddlewareManager":
                 return { x: -20, y: -20, height: 40, width: 40, r: 28};
             case "Container" :
                 return { x: -7, y: -7,height: 14, width: 14, r: 13};
@@ -148,5 +139,19 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location) {
         }
 
     }
+
+    $scope.searchNode = function() {
+      var svg = topologyService.getSVG(d3);
+      var query = $scope.search.query;
+
+      topologyService.searchNode(svg, query);
+    };
+
+    $scope.resetSearch = function() {
+        topologyService.resetSearch(d3);
+
+        // Reset the search term in search input
+        $scope.search.query = "";
+    };
 
 }
