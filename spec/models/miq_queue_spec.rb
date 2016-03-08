@@ -275,6 +275,7 @@ describe MiqQueue do
       @new_msg = @msg.requeue(options)
       @new_msg_id = @new_msg.id
 
+      expect(@new_msg.attributes.keys.exclude?('no_such_key')).to be_truthy
       expect(@msg.id).not_to eq(@msg.requeue(options).id)
     end
 
