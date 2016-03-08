@@ -1,0 +1,63 @@
+---
+? &1 !ruby/string:VimString
+  str: dvs-119
+  xsiType: :ManagedObjectReference
+  vimType: :VmwareDistributedVirtualSwitch
+: !ruby/hash-with-ivars:VimHash
+  elements:
+    MOR: *1
+    config: !ruby/hash-with-ivars:VimHash
+      elements:
+        uplinkPortgroup: !ruby/array:VimArray
+          internal:
+          - !ruby/string:VimString
+            str: dvportgroup-120
+            xsiType: :ManagedObjectReference
+            vimType: :DistributedVirtualPortgroup
+          ivars:
+            :@xsiType: :ArrayOfManagedObjectReference
+            :@vimType: 
+      ivars:
+        :@xsiType: :VMwareDVSConfigInfo
+        :@vimType: 
+    summary: !ruby/hash-with-ivars:VimHash
+      elements:
+        name: !ruby/string:VimString
+          str: DC1_DVS
+          xsiType: :SOAP::SOAPString
+          vimType: 
+        uuid: !ruby/string:VimString
+          str: 1a 0a 34 50 30 8b 4d fc-cd 1b 3f 3b b6 00 a8 16
+          xsiType: :SOAP::SOAPString
+          vimType: 
+        hostMember: !ruby/array:VimArray
+          internal:
+          - !ruby/string:VimString
+            str: host-891
+            xsiType: :ManagedObjectReference
+            vimType: :HostSystem
+          - !ruby/string:VimString
+            str: host-9
+            xsiType: :ManagedObjectReference
+            vimType: :HostSystem
+          - !ruby/string:VimString
+            str: host-12629
+            xsiType: :ManagedObjectReference
+            vimType: :HostSystem
+          - !ruby/string:VimString
+            str: host-648
+            xsiType: :ManagedObjectReference
+            vimType: :HostSystem
+          ivars:
+            :@xsiType: :ArrayOfManagedObjectReference
+            :@vimType: 
+      ivars:
+        :@xsiType: :DVSSummary
+        :@vimType: 
+    parent: !ruby/string:VimString
+      str: group-n117
+      xsiType: :ManagedObjectReference
+      vimType: :Folder
+  ivars:
+    :@xsiType: :ObjectContent
+    :@vimType: 
