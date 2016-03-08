@@ -51,7 +51,7 @@
   .panel.panel-default
     .panel-heading{:style => "text-align: right;"}
       = button_tag("<span class=\"pficon-delete\">#{t = _(" Remove selected rate details")}</span>".html_safe,
-                   :class   => "btn btn-primary btn-sm",
+                   :class   => "btn btn-default btn-sm",
                    :id      => "btm-remove_rd",
                    :alt     => t,
                    :disabled => "disabled",
@@ -109,7 +109,7 @@
                   = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
             %td
               = button_tag("<span class=\"pficon-delete\"></span>".html_safe,
-                            :class   => "btn btn-primary btn-xs",
+                            :class   => "btn btn-default btn-xs",
                             :alt     => t,
                             :type    => "submit",
                             :onclick => "miqAjaxButton('#{url_for(:action => "cb_remove_rd", :button => "remove_single", :index => "#{i}")}');")
