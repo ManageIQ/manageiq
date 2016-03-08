@@ -7,6 +7,7 @@ class Tenant < ApplicationRecord
 
   include ReportableMixin
   include ActiveVmAggregationMixin
+
   acts_as_miq_taggable
 
   default_value_for :name,        "My Company"
@@ -65,6 +66,27 @@ class Tenant < ApplicationRecord
   before_save :nil_blanks
   after_create :create_tenant_group
   before_destroy :ensure_can_be_destroyed
+
+  def self.scope_by_tenant?
+    true
+  end
+
+  def self.with_current_tenant
+    current_tenant = User.current_user.current_tenant
+    where(:id => current_tenant.id)
+  end
+
+  def self.tenant_id_clause(user_or_group)
+    strategy = Rbac.accessible_tenant_ids_strategy(self)
+    tenant = user_or_group.try(:current_tenant)
+    return [] if tenant.root?
+
+    tenant_ids = tenant.accessible_tenant_ids(strategy)
+
+    return if tenant_ids.empty?
+
+    {table_name => {:id => tenant_ids}}
+  end
 
   def all_subtenants
     self.class.descendants_of(self).where(:divisible => true)
