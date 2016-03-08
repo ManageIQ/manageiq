@@ -745,17 +745,15 @@ class OpsController < ApplicationController
     # Handle bottom cell
     if @pages || @in_a_form
       if @pages
-        presenter[:set_visible_elements][:form_buttons_div] = false
-        presenter[:set_visible_elements][:pc_div_1] = true
-        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
+        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
       elsif @in_a_form
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/angular/paging_div_buttons", :locals => locals]
-        presenter[:set_visible_elements][:form_buttons_div] = true
-        presenter[:set_visible_elements][:pc_div_1] = false
+        presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
+        presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
-      presenter[:set_visible_elements][:paging_div] = true
+      presenter.show(:paging_div)
     else
-      presenter[:set_visible_elements][:paging_div] = false
+      presenter.hide(:paging_div)
     end
   end
 
