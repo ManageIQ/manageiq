@@ -130,7 +130,7 @@ module VmCommon
     # Since the virtual console opens multiple ports, we need to specify * here!
     # After the WebSocket proxying/multiplexing is done on port 443, use the following line as an override:
     # override_content_security_policy_directives(:connect_src => ["'self'", "wss://#{request.env['SERVER_NAME']}"]
-    override_content_security_policy_directives(:connect_src => ['*'])
+    override_content_security_policy_directives(:connect_src => ['*'], :img_src => %w(data: 'self'))
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
 
     case protocol
