@@ -160,7 +160,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :template              => true,
       :publicly_available    => is_public,
       :ems_ref_obj           => nil,
-      :vendor                => "OpenStack",
+      :vendor                => "openstack",
       :power_state           => "never",
       :location              => "unknown",
       :tools_status          => nil,

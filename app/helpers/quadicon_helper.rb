@@ -72,7 +72,7 @@ module QuadiconHelper
   end
 
   def img_for_vendor(item)
-    "100/vendor-#{h(item.vendor.downcase)}.png"
+    "100/vendor-#{h(item.vendor)}.png"
   end
 
   def img_for_auth_status(item)

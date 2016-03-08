@@ -561,7 +561,7 @@ module Openstack
           :template              => true,
           #:publicly_available    => is_public, # is not exposed now
           :ems_ref_obj           => nil,
-          :vendor                => "OpenStack",
+          :vendor                => "openstack",
           :power_state           => "never",
           :location              => "unknown",
           :tools_status          => nil,
@@ -636,7 +636,7 @@ module Openstack
         :template              => false,
         :cloud                 => true,
         :ems_ref_obj           => nil,
-        :vendor                => "OpenStack",
+        :vendor                => "openstack",
         :power_state           => "on",
         :location              => "unknown",
         :tools_status          => nil,

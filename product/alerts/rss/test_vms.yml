@@ -7,7 +7,7 @@ feed_link: "/alert/rss?feed=test_vms"
 # Item metadata
 item_title: |-
     <script>
-        if rec.host != nil 
+        if rec.host != nil
           "#{rec.name} on Host #{rec.host.name}"
         elsif ! rec.repositories.empty?
           "#{rec.name} in Repository #{rec.repositories[0].name}"
@@ -17,7 +17,7 @@ item_title: |-
           "#{rec.name} - location unknown"
         end
     </script>
-item_description: "#{rec.name} is a #{rec.vendor} VM located at \\\"#{rec.location}\\\""
+item_description: "#{rec.name} is a #{rec.vendor_display} VM located at \\\"#{rec.location}\\\""
 item_link: "/vm/show/#{rec.id}"
 item_class: Vm
 
@@ -26,9 +26,9 @@ item_class: Vm
 #   Custom method is called the following way:
 #     <item_class>.method(<search_method>).<name>, <options>)
 #   A nil value or a value of "find" use the default class find method
-search_method: 
-limit_to_time: 
-limit_to_count: 
+search_method:
+limit_to_time:
+limit_to_count:
 orderby: "created_on DESC"
 
 # Included tables and columns for query performance
@@ -41,5 +41,3 @@ include:
 tag_ns: "/managed/environment"
 tags_include: any
 tags: "test"
-    
- 
