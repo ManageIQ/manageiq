@@ -66,7 +66,7 @@ describe VmInfraController do
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
+    post :x_button, :params => { :pressed => 'vm_reconfigure', :rec_ids => vm.id }
     expect(response.status).to eq(200)
   end
 

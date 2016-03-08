@@ -21,7 +21,6 @@
                             "id"          => "textInput-markup",
                             "name"        => "memory",
                             "ng-model"    => "reconfigureModel.memory",
-                            "ng-if"       => "reconfigureModel.cb_memory",
                             "maxlength"   => "50",
                             "ng-pattern"  => "/^[-+]?[0-9]+$/",
                             "miqrequired" => "",
@@ -66,7 +65,7 @@
         .form-group{"ng-class" => "{'has-error': angularForm.total_cpus.$invalid}"}
           %label.col-sm-2.control-label
             = _('Sockets')
-          .col-md-1
+          .col-md-2
             = select_tag('socket_count',
                         options_for_select(@socket_options),
                         "ng-model"                    => "reconfigureModel.socket_count",
@@ -80,7 +79,7 @@
         .form-group{"ng-class" => "{'has-error': angularForm.cores_per_socket_count.$invalid}"}
           %label.col-sm-2.control-label
             = _('Cores Per Socket')
-          .col-md-1
+          .col-md-2
             = select_tag('cores_per_socket_count',
                           options_for_select(@cores_options),
                           "ng-model"                    => "reconfigureModel.cores_per_socket_count",
@@ -142,6 +141,6 @@
                      "ng-click" => "cancelClicked()")
 
 :javascript
-  ManageIQ.angular.app.value('reconfigureFormId', '#{@req ? @req.id : "new"}');
+  ManageIQ.angular.app.value('reconfigureFormId', '#{@request_id || "new"}');
   ManageIQ.angular.app.value('objectIds', #{ @reconfigitems.collect(&:id) });
   miq_bootstrap('#form_div');

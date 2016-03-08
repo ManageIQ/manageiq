@@ -10,7 +10,7 @@ describe('reconfigureFormController', function() {
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
     $scope = $rootScope.$new();
-    $scope.reconfigureModel = {cb_memory:              false,
+    $scope.reconfigureModel = {cb_memory:             false,
                                memory:                 '0',
                                memory_type:            '',
                                cb_cpu:                 false,
@@ -21,20 +21,20 @@ describe('reconfigureFormController', function() {
     $httpBackend = _$httpBackend_;
     $controller = _$controller_('reconfigureFormController', {
       $scope: $scope,
-      reconfigureFormId: 'new',
-      objectIds: [1000000000001],
+      reconfigureFormId: '1000000000003',
+      objectIds: [1000000000001,1000000000002],
       miqService: miqService
     });
   }));
 
   beforeEach(inject(function(_$controller_) {
-    var reconfigureFormResponse = {cb_memory:             'on',
-                                  memory:                 '4196',
-                                  memory_type:            'MB',
-                                  cb_cpu:                 'on',
-                                  socket_count:           '2',
-                                  cores_per_socket_count: '3'};
-    $httpBackend.whenGET('reconfigure_form_fields/1000000000001').respond(reconfigureFormResponse);
+    var reconfigureFormResponse = {cb_memory:              'on',
+                                   memory:                 '4196',
+                                   memory_type:            'MB',
+                                   cb_cpu:                 'on',
+                                   socket_count:           '2',
+                                   cores_per_socket_count: '3'};
+    $httpBackend.whenGET('reconfigure_form_fields/1000000000003,1000000000001,1000000000002').respond(reconfigureFormResponse);
     $httpBackend.flush();
   }));
 
@@ -91,7 +91,8 @@ describe('reconfigureFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      var submitContent = {cb_memory:              $scope.reconfigureModel.cb_memory,
+      var submitContent = {objectIds:              $scope.objectIds,
+                           cb_memory:              $scope.reconfigureModel.cb_memory,
                            memory:                 $scope.reconfigureModel.memory,
                            memory_type:            $scope.reconfigureModel.memory_type,
                            cb_cpu:                 $scope.reconfigureModel.cb_cpu,

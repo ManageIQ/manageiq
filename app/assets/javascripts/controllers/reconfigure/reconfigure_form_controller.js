@@ -1,7 +1,6 @@
 ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope', 'reconfigureFormId', 'objectIds', 'miqService', function($http, $scope, reconfigureFormId, objectIds, miqService) {
     var init = function() {
       $scope.reconfigureModel = {
-        objectIds:               [],
         cb_memory:               false,
         memory:                  '0',
         memory_type:             '',
@@ -20,7 +19,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       ManageIQ.angular.scope = $scope;
 
       miqService.sparkleOn();
-      $http.get('reconfigure_form_fields/'+ objectIds[0]).success(function(data) {
+      $http.get('reconfigure_form_fields/'+ reconfigureFormId + ',' + $scope.objectIds).success(function(data) {
         $scope.reconfigureModel.cb_memory              = data.cb_memory;
         $scope.reconfigureModel.memory                 = data.memory;
         $scope.reconfigureModel.memory_type            = data.memory_type;
@@ -28,7 +27,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.reconfigureModel.socket_count           = data.socket_count;
         $scope.reconfigureModel.cores_per_socket_count = data.cores_per_socket_count;
 
-        if ( data.socket_count && data.cores_per_socket_count )
+        if(data.socket_count && data.cores_per_socket_count)
           $scope.reconfigureModel.total_cpus = (parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10)).toString();
         $scope.afterGet = true;
         $scope.modelCopy = angular.copy( $scope.reconfigureModel );
@@ -36,7 +35,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         miqService.sparkleOff();
       });
 
-      $scope.$watch("reconfigureModel.objectIds", function() {
+      $scope.$watch("reconfigureModel.cb_memory", function() {
         $scope.form = $scope.angularForm;
       });
     };
@@ -46,7 +45,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         return true;
       else
         return false;
-    }
+    };
 
     $scope.isBasicInfoValid = function() {
       if($scope.angularForm.memory.$valid &&
@@ -65,7 +64,10 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.memtypeChanged = function() {
-      $scope.reconfigureModel.memory = 0;
+      if($scope.reconfigureModel.memory_type == "GB")
+        $scope.reconfigureModel.memory = ~~(parseInt($scope.reconfigureModel.memory, 10) / 1024);
+      else
+        $scope.reconfigureModel.memory =  ~~(parseInt($scope.reconfigureModel.memory, 10) * 1024);
       $scope.angularForm.memory.$validate();
     };
 
@@ -75,7 +77,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       if (serializeFields === undefined) {
         miqService.miqAjaxButton(url);
       } else {
-        miqService.miqAjaxButton(url, {cb_memory:              $scope.reconfigureModel.cb_memory,
+        miqService.miqAjaxButton(url, {objectIds:              $scope.objectIds,
+                                       cb_memory:              $scope.reconfigureModel.cb_memory,
                                        memory:                 $scope.reconfigureModel.memory,
                                        memory_type:            $scope.reconfigureModel.memory_type,
                                        cb_cpu:                 $scope.reconfigureModel.cb_cpu,

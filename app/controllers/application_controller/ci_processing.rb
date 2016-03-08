@@ -352,12 +352,19 @@ module ApplicationController::CiProcessing
   # Assign/unassign ownership to a set of objects
   def reconfigure
     @sb[:explorer] = true if @explorer
+    @request_id = nil
     @in_a_form = @reconfigure = true
     drop_breadcrumb(:name => "Reconfigure", :url => "/vm_common/reconfigure")
-    @reconfigitems = Vm.find(session[:reconfigure_items]).sort_by(&:name) # Get the db records
+    if params[:rec_ids]
+      @reconfigure_items = params[:rec_ids]
+    end
+    if params[:req_id]
+      @request_id = params[:req_id]
+    end
+    @reconfigitems = Vm.find(@reconfigure_items).sort_by(&:name) # Get the db records
     build_targets_hash(@reconfigitems)
     @force_no_grid_xml   = true
-    @view, @pages = get_view(Vm, :view_suffix => "VmReconfigureRequest", :where_clause => ["vms.id IN (?)", session[:reconfigure_items]])  # Get the records (into a view) and the paginator
+    @view, @pages = get_view(Vm, :view_suffix => "VmReconfigureRequest", :where_clause => ["vms.id IN (?)", @reconfigure_items])  # Get the records (into a view) and the paginator
     get_reconfig_limits
     unless @explorer
       render :action => "show"
@@ -378,7 +385,7 @@ module ApplicationController::CiProcessing
         end
       end
     when "submit"
-      options = {:src_ids => session[:reconfigure_items]}
+      options = {:src_ids => params[:objectIds]}
 
       options[:vm_memory] = params[:mem_typ] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024) if params[:cb_memory] == 'true'
       if params[:cb_cpu] == 'true'
@@ -388,7 +395,7 @@ module ApplicationController::CiProcessing
         vsockets = params[:socket_count] == 0 ? 1 : params[:socket_count]
         options[:number_of_cpus] = vccores.to_i * vsockets.to_i
       end
-      if VmReconfigureRequest.make_request(session[:req_id], options, current_user)
+      if VmReconfigureRequest.make_request(@request_id, options, current_user)
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
           render :update do |page|
@@ -414,6 +421,9 @@ module ApplicationController::CiProcessing
   end
 
   def reconfigure_form_fields
+    request_data = ''
+    @request_id, request_data = params[:id].split(/\s*,\s*/, 2)
+    @reconfigure_items = request_data.split(/\s*,\s*/)
     request_hash = build_reconfigure_hash
     render :json => request_hash
   end
@@ -1000,13 +1010,13 @@ module ApplicationController::CiProcessing
   # Reconfigure selected VMs
   def reconfigurevms
     assert_privileges(params[:pressed])
-    session[:req_id] = nil
+    @request_id = nil
     # check to see if coming from show_list or drilled into vms from another CI
     rec_cls = "vm"
     recs = []
     # if coming in to edit from miq_request list view
     if !session[:checked_items].nil? && (@lastaction == "set_checked_items" || params[:pressed] == "miq_request_edit")
-      session[:req_id] = params[:id]
+      @request_id = params[:id]
       recs = session[:checked_items]
     elsif !params[:id] || params[:pressed] == 'vm_reconfigure'
       recs = find_checked_items
@@ -1031,7 +1041,7 @@ module ApplicationController::CiProcessing
         render_flash_and_scroll
         return
       end
-      session[:reconfigure_items] = recs.collect(&:to_i)
+      @reconfigure_items = recs.collect(&:to_i)
     end
     if @explorer
       reconfigure
@@ -1040,7 +1050,7 @@ module ApplicationController::CiProcessing
     else
       render :update do |page|
         if role_allows(:feature => "vm_reconfigure")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'reconfigure'              # redirect to build the ownership screen
+          page.redirect_to :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false         # redirect to build the ownership screen
         end
       end
     end
@@ -1051,7 +1061,7 @@ module ApplicationController::CiProcessing
   alias_method :miq_template_reconfigure, :reconfigurevms
 
   def get_reconfig_info
-    @reconfigureitems = Vm.find(session[:reconfigure_items]).sort_by(&:name)
+    @reconfigureitems = Vm.find(@reconfigure_items).sort_by(&:name)
     # set memory to nil if multiple items were selected with different mem_cpu values
     memory = @reconfigureitems.first.mem_cpu
     memory = nil unless @reconfigureitems.all? { |vm| vm.mem_cpu == memory }
@@ -1063,11 +1073,11 @@ module ApplicationController::CiProcessing
     cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
     memory, memory_type = reconfigure_calculations(memory)
 
-    { :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s}
+    { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s}
   end
 
   def get_reconfig_limits
-    @reconfig_limits = VmReconfigureRequest.request_limits(:src_ids => session[:reconfigure_items])
+    @reconfig_limits = VmReconfigureRequest.request_limits(:src_ids => @reconfigure_items)
     mem1, fmt1 = reconfigure_calculations(@reconfig_limits[:min__vm_memory])
     mem2, fmt2 = reconfigure_calculations(@reconfig_limits[:max__vm_memory])
     @reconfig_memory_note = "Between #{mem1}#{fmt1} and #{mem2}#{fmt2}"
@@ -1089,10 +1099,11 @@ module ApplicationController::CiProcessing
   def build_reconfigure_hash
     @req = nil
     @reconfig_values = {}
-    if !session[:req_id]
+    if @request_id == 'new'
       @reconfig_values = get_reconfig_info
     else
-      @req = MiqRequest.find_by_id(session[:req_id])
+      @req = MiqRequest.find_by_id(@request_id)
+      @reconfig_values[:src_ids] = @req.options[:src_ids]
       @reconfig_values[:memory], @reconfig_values[:memory_type] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
       @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket].to_s if @req.options[:cores_per_socket]
       @reconfig_values[:socket_count] = @req.options[:number_of_sockets].to_s if @req.options[:number_of_sockets]
