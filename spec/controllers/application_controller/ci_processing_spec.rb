@@ -226,7 +226,7 @@ describe ApplicationController do
       allow(controller).to receive(:drop_breadcrumb)
       controller.send(:discover)
       expect(response.status).to eq(200)
-      expect(controller.instance_variable_get(:@discover_type)).to eq([["Azure", "azure"], ["Amazon", "amazon"]])
+      expect(controller.instance_variable_get(:@discover_type)).to include(["Azure", "azure"], ["Amazon", "amazon"])
     end
   end
 

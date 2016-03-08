@@ -131,17 +131,6 @@ class ExtManagementSystem < ApplicationRecord
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
 
-  EMS_INFRA_DISCOVERY_TYPES = {
-    'vmware'    => 'virtualcenter',
-    'microsoft' => 'scvmm',
-    'redhat'    => 'rhevm',
-  }
-
-  EMS_CLOUD_DISCOVERY_TYPES = {
-    'azure'  => 'azure',
-    'amazon' => 'ec2',
-  }
-
   def self.with_ipaddress(ipaddress)
     joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
   end
@@ -313,11 +302,15 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_infra_discovery_types
-    EMS_INFRA_DISCOVERY_TYPES.values
+    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+  end
+
+  def self.register_cloud_discovery_type(type_hash)
+    ems_cloud_discovery_types.merge!(type_hash)
   end
 
   def self.ems_cloud_discovery_types
-    EMS_CLOUD_DISCOVERY_TYPES
+    @ems_cloud_discovery_types ||= {}
   end
 
   def disconnect_inv
