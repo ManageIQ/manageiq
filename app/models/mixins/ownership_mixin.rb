@@ -47,6 +47,8 @@ module OwnershipMixin
         where("evm_owner_id" => user.id)
       elsif miq_group
         where("miq_group_id" => miq_group.id)
+      else
+        none
       end
     end
   end
