@@ -9,7 +9,7 @@ describe OrchestrationStackController do
   render_views
 
   describe '#show' do
-    let(:record) { FactoryGirl.create(:orchestration_stack) }
+    let(:record) { FactoryGirl.create(:orchestration_stack_cloud) }
 
     before do
       session[:settings] = {

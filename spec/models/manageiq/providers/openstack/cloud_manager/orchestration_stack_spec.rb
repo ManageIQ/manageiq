@@ -39,7 +39,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
         allow(the_new_stack).to receive(:[]).with("id").and_return('new_id')
         expect(the_new_stack).to receive(:save).and_return(the_new_stack)
 
-        stack = OrchestrationStack.create_stack(ems, 'mystack', template, stack_option)
+        stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, 'mystack', template, stack_option)
         expect(stack.class).to eq(described_class)
         expect(stack.name).to eq('mystack')
         expect(stack.ems_ref).to eq('new_id')
@@ -49,7 +49,9 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
       it 'catches errors from provider' do
         expect(the_new_stack).to receive(:save).and_throw('bad request')
 
-        expect { OrchestrationStack.create_stack(ems, 'mystack', template, stack_option) }.to raise_error(MiqException::MiqOrchestrationProvisionError)
+        expect do
+          ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, 'mystack', template, stack_option)
+        end.to raise_error(MiqException::MiqOrchestrationProvisionError)
       end
     end
 

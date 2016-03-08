@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
           }
         }
         with_aws_stubbed(stubbed_responses) do
-          stack = OrchestrationStack.create_stack(ems, "mystack", template)
+          stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, "mystack", template)
           expect(stack.class).to eq(described_class)
           expect(stack.name).to eq("mystack")
           expect(stack.ems_ref).to eq("stack_id")
@@ -43,7 +43,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
         }
         with_aws_stubbed(stubbed_responses) do
           expect do
-            OrchestrationStack.create_stack(ems, "mystack", template)
+            ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, "mystack", template)
           end.to raise_error(MiqException::MiqOrchestrationProvisionError)
         end
       end
@@ -153,7 +153,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
     subject      { @stack.tenant_identity }
 
     it "has tenant from provider" do
-      @stack = FactoryGirl.create(:orchestration_stack, :ems_id => ems.id)
+      @stack = FactoryGirl.create(:orchestration_stack_amazon, :ems_id => ems.id)
 
       expect(subject).to                eq(admin)
       expect(subject.current_group).to  eq(ems.tenant.default_miq_group)
@@ -161,7 +161,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
     end
 
     it "without a provider, has tenant from root tenant" do
-      @stack = FactoryGirl.create(:orchestration_stack)
+      @stack = FactoryGirl.create(:orchestration_stack_amazon)
 
       expect(subject).to                eq(admin)
       expect(subject.current_group).to  eq(Tenant.root_tenant.default_miq_group)

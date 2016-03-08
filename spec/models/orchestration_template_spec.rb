@@ -79,7 +79,9 @@ describe OrchestrationTemplate do
 
   describe "#eligible_managers" do
     before do
-      allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types => [ManageIQ::Providers::Amazon::CloudManager, ManageIQ::Providers::Openstack::CloudManager])
+      allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types =>
+                                                         [ManageIQ::Providers::Amazon::CloudManager,
+                                                          ManageIQ::Providers::Openstack::CloudManager])
       @template = FactoryGirl.create(:orchestration_template)
       @aws = FactoryGirl.create(:ems_amazon)
       @openstack = FactoryGirl.create(:ems_openstack)
@@ -245,7 +247,7 @@ describe OrchestrationTemplate do
 
       context "when conflicts with existing discovered template" do
         let!(:stack) do
-          FactoryGirl.create(:orchestration_stack, :orchestration_template => existing_discovered_template)
+          FactoryGirl.create(:orchestration_stack_cloud, :orchestration_template => existing_discovered_template)
         end
 
         it "updates the stacks from the discovered template to use the working template" do
