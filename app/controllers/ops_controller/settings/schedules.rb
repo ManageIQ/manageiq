@@ -387,12 +387,7 @@ module OpsController::Settings::Schedules
     @sortcol = session[:schedule_sortcol].nil? ? 0 : session[:schedule_sortcol].to_i
     @sortdir = session[:schedule_sortdir].nil? ? "ASC" : session[:schedule_sortdir]
 
-    # don't include db_backup records if backup not supported
-    if !DatabaseBackup.backup_supported?
-      @view, @pages = get_view(MiqSchedule, :conditions => ["towhat!=? And (prod_default!=? or prod_default IS NULL) And adhoc IS NULL", "DatabaseBackup", "system"]) # Get the records (into a view) and the paginator
-    else
-      @view, @pages = get_view(MiqSchedule, :conditions => ["prod_default!=? or prod_default IS NULL And adhoc IS NULL", "system"]) # Get the records (into a view) and the paginator
-    end
+    @view, @pages = get_view(MiqSchedule, :conditions => ["prod_default!=? or prod_default IS NULL And adhoc IS NULL", "system"]) # Get the records (into a view) and the paginator
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
     session[:schedule_sortcol] = @sortcol
@@ -553,7 +548,7 @@ module OpsController::Settings::Schedules
     if role_allows(:feature => "host_check_compliance")
       @action_type_options_for_select.push([_("Host Compliance Check"), "host_check_compliance"])
     end
-    @action_type_options_for_select.push([_("Database Backup"), "db_backup"]) if DatabaseBackup.backup_supported?
+    @action_type_options_for_select.push([_("Database Backup"), "db_backup"])
 
     @vm_options_for_select = [
       [_("All VMs"), "all"],

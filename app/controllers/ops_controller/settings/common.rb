@@ -1116,7 +1116,6 @@ module OpsController::Settings::Common
       @zones = Zone.in_my_region
       @ldap_regions = LdapRegion.in_my_region
       @miq_schedules = MiqSchedule.where("(prod_default != 'system' or prod_default is null) and adhoc IS NULL")
-                       .select { |s| s.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported? }
                        .sort_by { |s| s.name.downcase }
     end
   end
