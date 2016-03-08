@@ -53,11 +53,11 @@ module MiqPolicyController::Rsop
       @accords = [{:name => "rsop", :title => "Options", :container => "rsop_options_div"}]
       session[:changed] = false
       @sb[:rsop] ||= {}   # Leave exising values
-      rsop_put_objects_in_sb(find_filtered(ExtManagementSystem, :all), :emss)
-      rsop_put_objects_in_sb(find_filtered(EmsCluster, :all), :clusters)
-      rsop_put_objects_in_sb(find_filtered(Host, :all), :hosts)
-      rsop_put_objects_in_sb(find_filtered(Vm, :all), :vms)
-      rsop_put_objects_in_sb(find_filtered(Storage, :all), :datastores)
+      rsop_put_objects_in_sb(find_filtered(ExtManagementSystem), :emss)
+      rsop_put_objects_in_sb(find_filtered(EmsCluster), :clusters)
+      rsop_put_objects_in_sb(find_filtered(Host), :hosts)
+      rsop_put_objects_in_sb(find_filtered(Vm), :vms)
+      rsop_put_objects_in_sb(find_filtered(Storage), :datastores)
       @rsop_events = MiqEventDefinitionSet.all.collect { |e| [e.description, e.id.to_s] }.sort
       @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect { |e| [e.description, e.id.to_s] }.sort unless @sb[:rsop][:event].nil?
       render :layout => "application"
