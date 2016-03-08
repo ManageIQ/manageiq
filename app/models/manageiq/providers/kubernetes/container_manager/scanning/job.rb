@@ -11,6 +11,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   IMAGES_GUEST_OS = 'Linux'
   INSPECTOR_HEALTH_PATH = '/healthz'
   ERRCODE_POD_NOTFOUND = 404
+  IMAGE_INSPECTOR_SA = 'inspector-admin'
+  INSPECTOR_ADMIN_SECRET_PATH = '/var/run/secrets/kubernetes.io/inspector-admin-secret-'
 
   def load_transitions
     self.state ||= 'initializing'
@@ -270,8 +272,21 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     "#{options[:pod_namespace]}/#{options[:pod_name]}"
   end
 
+  def inspector_admin_secret
+    kubeclient = kubernetes_client
+    begin
+      inspector_sa = kubeclient.get_service_account(IMAGE_INSPECTOR_SA, INSPECTOR_NAMESPACE)
+      # TODO: support multiple imagePullSecrets. This depends on image-inspector support
+      return inspector_sa.try(:imagePullSecrets).to_a[0].try(:name)
+    rescue KubeException => e
+      raise e unless e.error_code == 404
+      _log.warn("Service Account #{IMAGE_INSPECTOR_SA} does not exist.")
+    end
+    return nil
+  end
+
   def pod_definition
-    Kubeclient::Pod.new(
+    pod_def = {
       :apiVersion => "v1",
       :kind       => "Pod",
       :metadata   => {
@@ -316,10 +331,27 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
           }
         ]
       }
-    )
+    }
+
+    inspector_admin_secret_name = inspector_admin_secret
+    add_secret_to_pod_def(pod_def, inspector_admin_secret_name) unless inspector_admin_secret_name.blank?
+
+    Kubeclient::Pod.new(pod_def)
+  end
+
+  def add_secret_to_pod_def(pod_def, inspector_admin_secret_name)
+    pod_def[:spec][:containers][0][:command].append("--dockercfg=" + INSPECTOR_ADMIN_SECRET_PATH +
+                                                    inspector_admin_secret_name + "/.dockercfg")
+    pod_def[:spec][:containers][0][:volumeMounts].append(
+      :name      => "inspector-admin-secret",
+      :mountPath => INSPECTOR_ADMIN_SECRET_PATH + inspector_admin_secret_name,
+      :readOnly  => true)
+    pod_def[:spec][:volumes].append(
+      :name   => "inspector-admin-secret",
+      :secret => {:secretName => inspector_admin_secret_name})
   end
 
   def inspector_image
-    'docker.io/openshift/image-inspector:v1.0.z'
+    'docker.io/openshift/image-inspector:v2.0.z'
   end
 end
