@@ -6,10 +6,6 @@ module MiqAeMethodService
     expose :parameters,             :association => true
     expose :resources,              :association => true
     expose :outputs,                :association => true
-    expose :vms,                    :association => true
-    expose :security_groups,        :association => true
-    expose :cloud_networks,         :association => true
-    expose :orchestration_template, :association => true
     expose :ext_management_system,  :association => true
     expose :ems_ref
     expose :raw_delete_stack

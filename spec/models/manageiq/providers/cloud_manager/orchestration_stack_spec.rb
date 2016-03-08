@@ -1,8 +1,8 @@
-describe OrchestrationStack do
+describe ManageIQ::Providers::CloudManager::OrchestrationStack do
   describe 'direct_<resource> methods' do
     let(:root_stack) do
-      stack1 = FactoryGirl.create(:orchestration_stack)
-      stack2 = FactoryGirl.create(:orchestration_stack, :parent => stack1)
+      stack1 = FactoryGirl.create(:orchestration_stack_cloud)
+      stack2 = FactoryGirl.create(:orchestration_stack_cloud, :parent => stack1)
 
       FactoryGirl.create(:vm_cloud, :orchestration_stack => stack1)
       FactoryGirl.create(:cloud_network, :orchestration_stack => stack1)
