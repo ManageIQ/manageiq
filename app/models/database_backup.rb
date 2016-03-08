@@ -4,16 +4,6 @@ class DatabaseBackup < ApplicationRecord
     'nfs' => 'Network File System'
   }.freeze
 
-  def self.backup_supported?
-    return @backup_supported unless @backup_supported.nil?
-    db_config = Rails.configuration.database_configuration[Rails.env]
-    @backup_supported = db_config["adapter"] == "postgresql"
-  end
-
-  class << self
-    alias_method :gc_supported?, :backup_supported?
-  end
-
   def self.supported_depots
     SUPPORTED_DEPOTS
   end
@@ -24,7 +14,6 @@ class DatabaseBackup < ApplicationRecord
 
   def backup(options)
     # TODO: Create a real exception out of this
-    raise "Unsupported database" unless self.class.backup_supported?
     raise "Missing or Invalid task: #{options[:task_id]}, depot id: #{options[:file_depot_id]}" unless options[:task_id].kind_of?(Integer) && options[:file_depot_id].kind_of?(Integer)
 
     task = MiqTask.find(options[:task_id])
@@ -56,7 +45,6 @@ class DatabaseBackup < ApplicationRecord
   end
 
   def self.gc(options)
-    raise "Unsupported database" unless self.gc_supported?
     raise "Missing or Invalid task: #{options[:task_id]}" unless options[:task_id].kind_of?(Integer)
 
     task = MiqTask.find(options[:task_id])

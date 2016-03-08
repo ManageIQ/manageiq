@@ -495,10 +495,8 @@ describe MiqSchedule do
         expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").count).to eq(1)
       end
 
-      context "deliver DatabaseBackup.gc message and gc is supported" do
+      context "deliver DatabaseBackup.gc message" do
         before(:each) do
-          allow(DatabaseBackup).to receive(:gc_supported?).and_return(true)
-
           # stub out the actual backup behavior
           allow(DatabaseBackup).to receive(:_gc)
 
@@ -509,23 +507,6 @@ describe MiqSchedule do
         it "should have queue message ok, and task is Ok and Finished" do
           expect(@status).to eq("ok")
           expect(MiqTask.where(:state => "Finished", :status => "Ok").count).to eq(1)
-        end
-      end
-
-      context "deliver DatabaseBackup.gc message and backup is unsupported" do
-        before(:each) do
-          allow(DatabaseBackup).to receive(:gc_supported?).and_return(false)
-
-          # stub out the actual backup behavior
-          allow(DatabaseBackup).to receive(:_gc)
-
-          @status, message, result = @gc_message.deliver
-          @gc_message.delivered(@status, message, result)
-        end
-
-        it "should have queue message in error, and task is Error and Finished" do
-          expect(@status).to eq("error")
-          expect(MiqTask.where(:state => "Finished", :status => "Error").count).to eq(1)
         end
       end
     end
@@ -602,28 +583,8 @@ describe MiqSchedule do
             expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count).to eq(1)
           end
 
-          context "deliver DatabaseBackup.backup message and backup is unsupported" do
+          context "_backup is stubbed" do
             before(:each) do
-              allow(DatabaseBackup).to receive(:backup_supported?).and_return(false)
-
-              # stub out the actual backup behavior
-              allow_any_instance_of(DatabaseBackup).to receive(:_backup)
-
-              @status, message, result = @backup_message.deliver
-              @backup_message.delivered(@status, message, result)
-            end
-
-            it "should create 1 database backup, queue message is in error, and task is Error and Finished" do
-              expect(@status).to eq("error")
-              expect(@region.database_backups.count).to eq(1)
-              expect(MiqTask.where(:state => "Finished", :status => "Error").count).to eq(1)
-            end
-          end
-
-          context "Backup is supported and _backup is stubbed" do
-            before(:each) do
-              allow(DatabaseBackup).to receive(:backup_supported?).and_return(true)
-
               # stub out the actual backup behavior
               allow_any_instance_of(DatabaseBackup).to receive(:_backup)
             end

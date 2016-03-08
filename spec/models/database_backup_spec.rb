@@ -1,24 +1,4 @@
 describe DatabaseBackup do
-  context ".backup_supported?" do
-    before do
-      DatabaseBackup.instance_variable_set(:@backup_supported, nil)
-    end
-
-    it "should support backup with postgresql" do
-      allow(Rails).to receive_message_chain(
-        :configuration, :database_configuration => {"test" => {"adapter" => "postgresql"}}
-      )
-      expect(DatabaseBackup.backup_supported?).to be true
-    end
-
-    it "should not support backup with mysql" do
-      allow(Rails).to receive_message_chain(
-        :configuration, :database_configuration => {"test" => {"adapter" => "mysql"}}
-      )
-      expect(DatabaseBackup.backup_supported?).to be false
-    end
-  end
-
   context "region" do
     before(:each) do
       @region = FactoryGirl.create(:miq_region, :region => 3)
