@@ -12,7 +12,6 @@ describe "Vmware_best_fit_least_utilized" do
                        :status       => 'Ok')
   end
   let(:user)        { FactoryGirl.create(:user_with_group) }
-  let(:vm_folder)   { FactoryGirl.create(:ems_folder, :ext_management_system => ems) }
   let(:vm_template) { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
   let(:ws) do
     MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
@@ -21,39 +20,53 @@ describe "Vmware_best_fit_least_utilized" do
                             "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
 
-  context "Auto placement #set_folder" do
-    it "host with a cluster" do
-      host = FactoryGirl.create(:host_vmware, :storage, :ems_cluster => ems_cluster, :ext_management_system => ems)
+  context "Auto placement" do
+    let(:storages) { 4.times.collect { |r| FactoryGirl.create(:storage, :free_space => 1000 * (r + 1)) } }
 
-      datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(ems_cluster) }
-      datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(vm_folder) }
-      vm_folder.with_relationship_type("ems_metadata")  { vm_folder.add_child(vm_template) }
+    let(:vms) { 5.times.collect { FactoryGirl.create(:vm_vmware) } }
 
-      host_struct = [MiqHashStruct.new(:id => host.id, :evm_object_class => host.class.base_class.name.to_sym)]
-      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
-      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_folders).and_return([datacenter, vm_folder])
-      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(host.storages)
+    # host1 has two small  storages and 2 vms
+    # host2 has two larger storages and 3 vms
+    let(:host1) { FactoryGirl.create(:host_vmware, :storages => storages[0..1], :vms => vms[2..3], :ext_management_system => ems) }
+    let(:host2) { FactoryGirl.create(:host_vmware, :storages => storages[0..1], :vms => vms[2..4], :ext_management_system => ems) }
 
-      ws.root
-
-      expect(miq_provision.reload.options[:placement_folder_name]).to eq([vm_folder.id, vm_folder.name])
+    let(:host_struct) do
+      [MiqHashStruct.new(:id => host1.id, :evm_object_class => host1.class.base_class.name.to_sym),
+       MiqHashStruct.new(:id => host2.id, :evm_object_class => host2.class.base_class.name.to_sym)]
     end
 
-    it "host without a cluster" do
-      host = FactoryGirl.create(:host_vmware, :storage, :ext_management_system => ems)
+    context "hosts with a cluster" do
+      before do
+        host1.ems_cluster = ems_cluster
+        host2.ems_cluster = ems_cluster
+        datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(ems_cluster) }
+      end
 
-      datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(host) }
-      datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(vm_folder) }
-      vm_folder.with_relationship_type("ems_metadata")  { vm_folder.add_child(vm_template) }
+      it "selects a host with fewer vms and a storage with more free space" do
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(storages)
 
-      host_struct = [MiqHashStruct.new(:id => host.id, :evm_object_class => host.class.base_class.name.to_sym)]
-      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
-      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_folders).and_return([datacenter, vm_folder])
-      allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(host.storages)
+        ws.root
+        miq_provision.reload
+        expect(miq_provision.options[:placement_host_name]).to eq([host1.id, host1.name])
+        expect(miq_provision.options[:placement_ds_name]).to   eq([host1.storages[1].id, host1.storages[1].name])
+      end
+    end
 
-      ws.root
+    context "hosts without a cluster" do
+      before do
+        datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(host1); datacenter.add_child(host2) }
+      end
 
-      expect(miq_provision.reload.options[:placement_folder_name]).to eq([vm_folder.id, vm_folder.name])
+      it "selects a host with fewer vms and a storage with more free space" do
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(storages)
+
+        ws.root
+        miq_provision.reload
+        expect(miq_provision.options[:placement_host_name]).to eq([host1.id, host1.name])
+        expect(miq_provision.options[:placement_ds_name]).to   eq([host1.storages[1].id, host1.storages[1].name])
+      end
     end
   end
 end

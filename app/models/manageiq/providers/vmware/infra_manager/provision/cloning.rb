@@ -30,14 +30,14 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
 
     clone_options = {
-      :name      => dest_name,
-      :host      => dest_host,
-      :datastore => dest_datastore,
+      :name          => dest_name,
+      :host          => dest_host,
+      :datastore     => dest_datastore,
+      :folder        => dest_folder,
+      :config        => build_config_spec,
+      :customization => build_customization_spec,
+      :transform     => build_transform_spec
     }
-
-    # Destination folder
-    folder_id = get_option(:placement_folder_name)
-    clone_options[:folder] = folder_id.blank? ? source.parent_blue_folder : EmsFolder.find_by_id(folder_id)
 
     # Find destination resource pool
     respool_id = get_option(:placement_rp_name)
@@ -47,10 +47,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
       cluster ? cluster.default_resource_pool : dest_host.default_resource_pool
     end
 
-    clone_options[:config]        = build_config_spec
-    clone_options[:customization] = build_customization_spec
-    clone_options[:transform]     = build_transform_spec
-
     # Determine if we are doing a linked-clone provision
     clone_options[:linked_clone] = get_option(:linked_clone).to_s == 'true'
     clone_options[:snapshot]     = get_selected_snapshot if clone_options[:linked_clone]
@@ -58,6 +54,23 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     validate_customization_spec(clone_options[:customization])
 
     clone_options
+  end
+
+  def dest_folder
+    folder_id = get_option(:placement_folder_name)
+    return EmsFolder.find_by(:id => folder_id) if folder_id
+
+    host_dc = dest_host.parent_datacenter || dest_host.ems_cluster.parent_datacenter
+
+    # Pick 'Discovered virtual machine' or its parent folder in the destination datacenter
+    vm_folder = "Datacenters/#{host_dc.name}/vm"
+    find_folder("#{vm_folder}/Discovered virtual machine", host_dc) || find_folder(vm_folder, host_dc)
+  end
+
+  def find_folder(folder_path, datacenter)
+    EmsFolder.where(:name => File.basename(folder_path)).detect do |f|
+      f.folder_path == folder_path && f.parent_datacenter == datacenter
+    end
   end
 
   def log_clone_options(clone_options)
