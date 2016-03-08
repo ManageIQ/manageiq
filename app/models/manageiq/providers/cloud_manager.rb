@@ -8,6 +8,8 @@ module ManageIQ::Providers
     require_nested :Vm
     require_nested :OrchestrationStack
 
+    include AvailabilityMixin
+
     class << model_name
       define_method(:route_key) { "ems_clouds" }
       define_method(:singular_route_key) { "ems_cloud" }
@@ -37,6 +39,10 @@ module ManageIQ::Providers
       raise NotImplementedError unless Rails.env.development?
       require 'util/miq-system'
       MiqSystem.open_browser(browser_url)
+    end
+
+    def validate_timeline
+      {:available => true, :message => nil}
     end
   end
 end
