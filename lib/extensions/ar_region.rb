@@ -124,16 +124,20 @@ module ArRegion
       ids.partition { |id| self.id_in_current_region?(id) }
     end
 
+    def region_number_from_sequence
+      id_to_region(connection.select_value("SELECT last_value FROM miq_databases_id_seq"))
+    rescue ActiveRecord::StatementInvalid # sequence does not exist yet
+      nil
+    end
+
     private
 
     def discover_my_region_number
       region_file = File.join(Rails.root, "REGION")
       region_num = File.read(region_file) if File.exist?(region_file)
       region_num ||= ENV.fetch("REGION", nil)
-      region_num ||= id_to_region(connection.select_value("select last_value from miq_databases_id_seq"))
+      region_num ||= region_number_from_sequence
       region_num.to_i
-    rescue ActiveRecord::StatementInvalid # sequence does not exist yet
-      0
     end
   end
 
