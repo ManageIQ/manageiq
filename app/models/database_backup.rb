@@ -5,9 +5,9 @@ class DatabaseBackup < ApplicationRecord
   }.freeze
 
   def self.backup_supported?
-    # We currently only support Postgres via internal/external db
     return @backup_supported unless @backup_supported.nil?
-    @backup_supported = MiqDbConfig.current.options[:name] =~ /[in|ex]ternal|postgresql/ ? true : false
+    db_config = Rails.configuration.database_configuration[Rails.env]
+    @backup_supported = db_config["adapter"] == "postgresql"
   end
 
   class << self
@@ -50,11 +50,9 @@ class DatabaseBackup < ApplicationRecord
   def _backup(options)
     # add the metadata about this backup to this instance: (region, source hostname, db version, md5, status, etc.)
 
-    current = MiqDbConfig.current.options
-    db_opts = {:hostname => current[:host], :dbname => current[:database], :username => current[:username], :password => current[:password]}
-    connect_opts = {:uri => options[:uri], :username => options[:username], :password => options[:password]}
+    connect_opts = options.slice(:uri, :username, :password)
     connect_opts[:remote_file_name] = options[:remote_file_name] if options[:remote_file_name]
-    EvmDatabaseOps.backup(db_opts, connect_opts)
+    EvmDatabaseOps.backup(current_db_opts, connect_opts)
   end
 
   def self.gc(options)
@@ -72,10 +70,7 @@ class DatabaseBackup < ApplicationRecord
   end
 
   def self._gc(options)
-    current = MiqDbConfig.current.options
-    db_opts = {:hostname => current[:host], :dbname => current[:database], :username => current[:username], :password => current[:password]}
-
-    EvmDatabaseOps.gc(db_opts.merge(options))
+    EvmDatabaseOps.gc(current_db_opts.merge(options))
   end
 
   def restore(_options)
@@ -98,5 +93,17 @@ class DatabaseBackup < ApplicationRecord
 
   def backup_file_name
     File.join(region_name, schedule_name, "#{region_name}_#{Time.now.utc.strftime("%Y%m%d_%H%M%S")}.backup")
+  end
+
+  private
+
+  def current_db_opts
+    current = Rails.configuration.database_configuration[Rails.env]
+    {
+      :hostname => current["host"],
+      :dbname   => current["database"],
+      :username => current["username"],
+      :password => current["password"]
+    }
   end
 end

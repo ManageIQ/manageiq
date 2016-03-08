@@ -1,32 +1,21 @@
 describe DatabaseBackup do
-  context "with basic db settings" do
-    before(:each) do
+  context ".backup_supported?" do
+    before do
       DatabaseBackup.instance_variable_set(:@backup_supported, nil)
-      @db_opts = {:username => "root", :password => "smartvm", :name => "postgresl", :host => "localhost", :database => "vmdb"}
     end
 
-    it "should support backup with internal pg" do
-      @db_opts[:name] = "internal"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).to be_truthy
-    end
-
-    it "should support backup with pg" do
-      @db_opts[:name] = "postgresql"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).to be_truthy
-    end
-
-    it "should support backup with external pg" do
-      @db_opts[:name] = "external_evm"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).to be_truthy
+    it "should support backup with postgresql" do
+      allow(Rails).to receive_message_chain(
+        :configuration, :database_configuration => {"test" => {"adapter" => "postgresql"}}
+      )
+      expect(DatabaseBackup.backup_supported?).to be true
     end
 
     it "should not support backup with mysql" do
-      @db_opts[:name] = "mysql"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).not_to be_truthy
+      allow(Rails).to receive_message_chain(
+        :configuration, :database_configuration => {"test" => {"adapter" => "mysql"}}
+      )
+      expect(DatabaseBackup.backup_supported?).to be false
     end
   end
 

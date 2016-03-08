@@ -13,25 +13,25 @@
       = _("Type")
     .col-md-8
       %p.form-control-static
-        = h(@database[:display_name])
+        = h(@database_display_name)
   .form-group
     %label.col-md-2.control-label
       = _("Hostname")
     .col-md-8
       %p.form-control-static
-        = h(@database[:host])
+        = h(@database_details["host"])
   .form-group
     %label.col-md-2.control-label
       = _("Database Name")
     .col-md-8
       %p.form-control-static
-        = h(@database[:database])
+        = h(@database_details["database"])
   .form-group
     %label.col-md-2.control-label
       = _("Username")
     .col-md-8
       %p.form-control-static
-        = h(@database[:username])
+        = h(@database_details["username"])
 
   - if DatabaseBackup.backup_supported?
     %hr/

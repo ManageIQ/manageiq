@@ -118,25 +118,6 @@ class MiqRegion < ApplicationRecord
     end
   end
 
-  def self.sync_with_db_region(config)
-    config = config.deep_stringify_keys
-
-    # Establish a connection to a different database so that we can sync with the new DB's region
-    raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.key?(Rails.env)
-    _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
-    MiqDatabase.establish_connection(config[Rails.env])
-
-    db = MiqDatabase.first
-    return if db.nil?
-
-    my_region = my_region_number(true)
-    region = db.region_id
-    if region != my_region
-      _log.info("Changing region file from: [#{my_region}] to: [#{region}]... restart to use new region")
-      MiqRegion.sync_region_to_file(region)
-    end
-  end
-
   def self.destroy_region(conn, region, tables = nil)
     tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^ar_internal_metadata|^rr/ }.sort
     tables.each do |t|
@@ -151,10 +132,6 @@ class MiqRegion < ApplicationRecord
       rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
       _log.info "Cleared [#{rows}] rows from table [#{t}]"
     end
-  end
-
-  def self.sync_region_to_file(region)
-    File.open(File.join(Rails.root, "REGION"), "w") { |f| f.write region }
   end
 
   def ems_clouds
