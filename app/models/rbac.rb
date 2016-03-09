@@ -172,12 +172,12 @@ module Rbac
 
   def self.find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
     parent_class = rbac_class(klass)
-    filtered_ids = calc_filtered_ids(parent_class, parent_class, rbac_filters, user_or_group).first
+    filtered_ids, _ = calc_filtered_ids(parent_class, parent_class, rbac_filters, user_or_group)
 
     find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
   end
 
-  def self.total_scope(klass, scope, extra_target_ids, conditions, includes)
+  def self.total_scope(scope, extra_target_ids, conditions, includes)
     if conditions && extra_target_ids
       scope = scope.where(conditions).or(scope.where(:id => extra_target_ids))
     elsif conditions
@@ -216,7 +216,7 @@ module Rbac
   end
 
   def self.find_targets_filtered_by_ids(klass, scope, find_options, u_filtered_ids, filtered_ids)
-    total_count  = total_scope(klass, scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count
+    total_count  = total_scope(scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count
     if filtered_ids
       ids_clause  = ["#{klass.table_name}.id IN (?)", filtered_ids]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
