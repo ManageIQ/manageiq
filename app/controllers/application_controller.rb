@@ -195,7 +195,6 @@ class ApplicationController < ActionController::Base
       response.headers["Cache-Control"] = "cache, must-revalidate"
       response.headers["Pragma"] = "public"
     end
-
     rpt.to_chart(@settings[:display][:reporttheme], true, MiqReport.graph_options(params[:width], params[:height]))
     render Charting.render_format => rpt.chart
   end
