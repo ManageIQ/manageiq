@@ -102,29 +102,6 @@ module ScanningOperationsMixin
     true
   end
 
-  # TODO: still needed?
-  def save_hostmetadata(hostId, xmlFile, type)
-    begin
-      Timeout.timeout(WS_TIMEOUT) do
-        _log.info "for host [#{hostId}]"
-        host = Host.find_by_guid(hostId)
-        MiqQueue.put(
-          :target_id   => host.id,
-          :class_name  => "Host",
-          :method_name => "save_metadata",
-          :data        => [xmlFile, type],
-          :priority    => MiqQueue::HIGH_PRIORITY
-        )
-        _log.info "for host [#{hostId}] host queued"
-      end
-    rescue Exception => err
-      _log.log_backtrace(err)
-      ScanningOperations.reconnect_to_db
-      return false
-    end
-    true
-  end
-
   def status_update_op(vmId, vmStatus)
     begin
       Timeout.timeout(WS_TIMEOUT) do
@@ -141,116 +118,7 @@ module ScanningOperationsMixin
     true
   end
 
-  def register_vm(nm, loc, vndr)
-    Timeout.timeout(WS_TIMEOUT) do
-      vm = VmOrTemplate.new(:name => nm, :location => loc, :vendor => vndr)
-      vm.save!
-      return(@vm.id)
-    end
-  rescue Exception => err
-    _log.log_backtrace(err)
-    ScanningOperations.reconnect_to_db
-  end
-
-  def test_statemachine(jobId, signal, data = nil)
-    begin
-      _log.info "job [#{jobId}], signal [#{signal}]"
-      job = Job.find_by_guid(jobId)
-      _log.info "job [#{jobId}] found job object id [#{job.id}]"
-      if !data.nil?
-        job.signal(signal.to_sym, data)
-        # job.signal_process(signal.to_sym, data)
-      else
-        job.signal(signal.to_sym)
-        # job.signal_process(signal.to_sym)
-      end
-    rescue => err
-      _log.log_backtrace(err)
-      return false
-    end
-    true
-  end
-
-  def policy_check_vm(vmId, _xmlFile)
-    _log.info "VmId:[#{vmId}]"
-    ret, reason = false, "unknown"
-    begin
-      Timeout.timeout(WS_TIMEOUT) do
-        begin
-          vm = VmOrTemplate.find_by_guid(vmId)
-          # Policy check is so outdated it doesn't even exist in the Vm model anymore.
-          # TODO: Re-implement based on new policy routines if still viable.
-          # ret, reason = vm.policy_check(xmlFile)
-          ret, reason = true, "OK"
-        rescue
-          ret, reason = false, $!.to_s
-        end
-      end
-    rescue Exception => err
-      _log.log_backtrace(err)
-      ScanningOperations.reconnect_to_db
-      false
-    ensure
-      return [ret, reason].inspect
-    end
-
-    # If we get here return false
-    [false, reason].inspect
-  end
-
-  def start_service(service, userid, time)
-    Timeout.timeout(WS_TIMEOUT) do
-      _log.info("Audit: req: <start_service>, user: <#{userid}>, service: <#{service}>, when: <#{time}>")
-      svc = Service.find_by_name(service)
-      return false if svc.nil?
-
-      MiqQueue.put(:target_id => svc.id, :class_name => "Service", :method_name => "msg_handler", :data => "service")
-
-      return true
-    end
-  rescue Exception => err
-    _log.log_backtrace(err)
-    ScanningOperations.reconnect_to_db
-    return false
-  end
-
-  def save_xmldata(hostId, xmlFile)
-    begin
-      Timeout.timeout(WS_TIMEOUT) do
-        _log.info "request received from host id: #{hostId}"
-        doc = MiqXml.decode(xmlFile)
-        _log.debug "doc:\n#{doc}"
-        doctype = doc.root.name.downcase
-        _log.info "recieved document: #{doctype}"
-        if XmlData.respond_to?(doctype)
-          XmlData.send(doctype, hostId, doc.to_s)
-        else
-          raise "\"#{doctype}\" is not supported by this web service."
-        end
-      end
-    rescue Exception => err
-      _log.log_backtrace(err)
-      ScanningOperations.reconnect_to_db
-      return false
-    end
-    true
-  end
-
-  def queue_async_response(queue_parms, data)
-    queue_parms = YAML.load(MIQEncode.decode(queue_parms))
-    queue_parms.merge!(:args => [BinaryBlob.create(:binary => MIQEncode.decode(data)).id])
-    MiqQueue.put(queue_parms)
-    true
-  end
-
-  def miq_ping(data)
-    _log.info "enter"
-    t0 = Time.now
-    _log.info "data: #{data}"
-    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
-    true
-  end
-
+  # TODO: Use this method above, remove ScanningOperations' version
   def self.reconnect_to_db
     _log.info("Reconnecting to database after error...")
     ActiveRecord::Base.connection.reconnect!

@@ -1,6 +1,5 @@
 class MiqservicesClient
-  include ScanningOperations # FIXME: This is code from the Rails app since it uses the models
-
+  # TODO: Remove remaining users of this client in MiqVerbs/SharedOps/VmdbOps/WebSvcOps
   def method_missing(m, *args)
     meth = m.to_s.underscore
     return send(meth, *args) if self.respond_to?(meth)

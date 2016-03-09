@@ -5,6 +5,8 @@ require 'yaml'
 module ScanningOperations
   include Vmdb::Logging
 
+  # TODO: Remove this method, ScanningOperationsMixin's copy of this method
+  # should be used by methods in that module
   def self.reconnect_to_db
     _log.info("Reconnecting to database after error...")
     ActiveRecord::Base.connection.reconnect!
