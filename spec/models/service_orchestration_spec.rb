@@ -158,15 +158,17 @@ describe ServiceOrchestration do
 
   context '#all_vms' do
     it 'returns all vms from a deployed stack' do
-      vm1 = double
-      vm2 = double
-      allow(deployed_stack).to receive(:vms).and_return([vm1, vm2])
-      allow(deployed_stack).to receive(:direct_vms).and_return([vm1])
+      vm1 = FactoryGirl.create(:vm_amazon)
+      vm2 = FactoryGirl.create(:vm_amazon)
 
-      expect(service_with_deployed_stack.all_vms).to eq([vm1, vm2])
-      expect(service_with_deployed_stack.direct_vms).to eq([vm1])
-      expect(service_with_deployed_stack.indirect_vms).to eq([vm2])
-      expect(service_with_deployed_stack.vms).to eq([vm1, vm2])
+      child_stack = FactoryGirl.create(:orchestration_stack_amazon, :parent => deployed_stack)
+      deployed_stack.direct_vms << vm1
+      child_stack.direct_vms << vm2
+
+      expect(service_with_deployed_stack.all_vms.map(&:id)).to match_array([vm1, vm2].map(&:id))
+      expect(service_with_deployed_stack.direct_vms.map(&:id)).to match_array([vm1].map(&:id))
+      expect(service_with_deployed_stack.indirect_vms.map(&:id)).to match_array([vm2].map(&:id))
+      expect(service_with_deployed_stack.vms.map(&:id)).to match_array([vm1, vm2].map(&:id))
     end
 
     it 'returns no vm if no stack is deployed' do

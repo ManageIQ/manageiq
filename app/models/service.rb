@@ -98,7 +98,10 @@ class Service < ApplicationRecord
   def all_vms
     direct_vms + indirect_vms
   end
-  alias_method :vms, :all_vms
+
+  def vms
+    all_vms
+  end
 
   def start
     raise_request_start_event

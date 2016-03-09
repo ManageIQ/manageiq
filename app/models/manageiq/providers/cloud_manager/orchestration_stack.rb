@@ -19,6 +19,10 @@ class ManageIQ::Providers::CloudManager::OrchestrationStack < ::OrchestrationSta
     vms.size
   end
 
+  def indirect_vms
+    MiqPreloader.preload_and_map(children, :direct_vms)
+  end
+
   def total_security_groups
     security_groups.size
   end

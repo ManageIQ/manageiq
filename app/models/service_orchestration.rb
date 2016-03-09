@@ -76,7 +76,7 @@ class ServiceOrchestration < Service
   end
 
   def indirect_vms
-    all_vms - direct_vms
+    orchestration_stack.try(:indirect_vms) || []
   end
 
   def direct_vms
