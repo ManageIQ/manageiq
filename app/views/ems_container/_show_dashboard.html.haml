@@ -1,0 +1,119 @@
+.container-fluid.container-tiles-pf.single-provider-containers-dashboard.miq-dashboard-view{"ng-app"        => "containerDashboard",
+                                                                                            "ng-controller" => "containerDashboardController as dashboard"}
+  .row.row-tile-pf
+    .col-xs-6.col-sm-4.col-md-2
+      .col-xs-12.provider-card{"pf-card"         => "",
+                               "show-top-border" => "true"}
+        %span.provider-icon-large{"ng-class" => "providerTypeIconClass"}
+
+    .col-xs-12.col-sm-12.col-md-10
+      .row
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.nodes",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.containers",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.registries",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.projects",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.pods",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.services",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.images",
+               :url                       => "navigation"}
+        .col-xs-6.col-sm-6.col-md-3
+          %div{:layout                    => "mini",
+               "pf-aggregate-status-card" => "",
+               "show-top-border"          => "true",
+               :status                    => "objectStatus.routes",
+               :url                       => "navigation"}
+
+  .row.row-tile-pf
+    .col-xs-6.col-sm-6.col-md-6
+      %div{"head-title"   => _("Aggregated Node Utilization"),
+           :hidetopborder => "true",
+           "pf-card"      => ""}
+
+        .spinner.spinner-lg.loading{"ng-if" => "!utilizationLoadingDone"}
+        .row{"ng-if" => "utilizationLoadingDone"}
+
+          .col-xs-6.col-sm-6.col-md-6
+            %div{"ng-if" => "cpuUsageData"}
+              %div{"chart-data"           => "cpuUsageData",
+                   :config                => "cpuUsageConfig",
+                   "donut-config"         => "cpuUsageDonutConfig",
+                   "pf-utilization-chart" => "",
+                   "sparkline-config"     => "cpuUsageSparklineConfig"}
+            %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !cpuUsageData }"}
+              = _("Last 30 Days")
+
+          .col-xs-6.col-sm-6.col-md-6
+            %div{"ng-if" => "memoryUsageData"}
+              %div{"chart-data"           => "memoryUsageData",
+                   :config                => "memoryUsageConfig",
+                   "donut-config"         => "memoryUsageDonutConfig",
+                   "pf-utilization-chart" => "",
+                   "sparkline-config"     => "memoryUsageSparklineConfig"}
+            %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !memoryUsageData }"}
+              = _("Last 30 Days")
+
+    .col-xs-6.col-sm-6.col-md-6
+      %div{"column-sizing-class"          => "col-xs-8 col-sm-6 col-md-6",
+           "heat-map-usage-legend-labels" => "nodeHeatMapUsageLegendLabels",
+           "heatmap-chart-height"         => "dashboardHeatmapChartHeight",
+           :heatmaps                      => "heatmaps",
+           "heatmaps-card"                => "",
+           :hidetopborder                 => "true",
+           :title                         => _("Node Utilization")}
+
+  .row.row-tile-pf.row-tile-pf-last
+    .col-md-6
+      %div{"head-title" => "{{networkUtilizationHourlyConfig.headTitle}}",
+           "pf-card"    => ""}
+
+        .spinner.spinner-lg.loading{"ng-if" => "!networkUtilizationLoadingDone"}
+        %div{"chart-data"      => "hourlyNetworkUtilization",
+             "chart-height"    => "chartHeight",
+             :config           => "networkUtilizationHourlyConfig",
+             "ng-if"           => "networkUtilizationLoadingDone",
+             "pf-trends-chart" => ""}
+
+    .col-md-6
+      %div{"head-title" => "{{networkUtilizationDailyConfig.headTitle}}",
+           "pf-card"    => ""}
+
+        .spinner.spinner-lg.loading{"ng-if" => "!networkUtilizationLoadingDone"}
+        %div{"chart-data"      => "dailyNetworkUtilization",
+             "chart-height"    => "chartHeight",
+             :config           => "networkUtilizationDailyConfig",
+             "ng-if"           => "networkUtilizationLoadingDone",
+             "pf-trends-chart" => ""}
