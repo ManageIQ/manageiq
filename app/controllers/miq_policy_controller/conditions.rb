@@ -107,7 +107,8 @@ module MiqPolicyController::Conditions
                        :target_id    => policy.id,
                        :target_class => "MiqPolicy",
                        :userid       => session[:userid],
-                       :message      => "Condition record ID #{params[:id]} was removed from Policy ID #{policy.id}")
+                       :message      => _("Condition record ID %{param_id} was removed from Policy ID %{policy_id}")) %
+                                          {:param_id => params[:id], :policy_id => policy.id}
     add_flash(_("Condition \"%{cond_name}\" has been removed from Policy \"%{pol_name}\"") % {:cond_name => cdesc, :pol_name => policy.description})
     policy_get_info(policy)
     @nodetype = "p"

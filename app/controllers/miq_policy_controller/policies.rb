@@ -105,7 +105,8 @@ module MiqPolicyController::Policies
                          :target_id    => new_pol.id,
                          :target_class => "MiqPolicy",
                          :userid       => session[:userid],
-                         :message      => "New Policy ID #{new_pol.id} was copied from Policy ID #{policy.id}")
+                         :message      => _("New Policy ID %{new_id} was copied from Policy ID %{old_id}")) %
+                                            {:new_id => new_pol.id, :old_id => policy.id}
       add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc})
       @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.downcase}_p-#{to_cid(policy.id)}"
       get_node_info(@new_policy_node)
