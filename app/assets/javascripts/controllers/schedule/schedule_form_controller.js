@@ -197,7 +197,9 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
   $scope.filterTypeChanged = function() {
     if ($scope.scheduleModel.filter_typ != 'all') {
       miqService.sparkleOn();
-      $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.scheduleModel.filter_typ}).success(function(data) {
+      $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId,
+        {filter_type: $scope.scheduleModel.filter_typ,
+         action_type: $scope.scheduleModel.action_typ}).success(function(data) {
         buildFilterList(data);
         $scope.filterValuesEmpty = false;
         miqService.sparkleOff();

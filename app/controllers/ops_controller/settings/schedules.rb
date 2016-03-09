@@ -132,7 +132,7 @@ module OpsController::Settings::Schedules
     end
 
     filter_type, filter_value = determine_filter_type_and_value(schedule)
-    filtered_item_list = build_filtered_item_list(filter_type)
+    filtered_item_list = build_filtered_item_list(action_type, filter_type)
     run_at = schedule.run_at[:start_time].in_time_zone(schedule.run_at[:tz])
 
     render :json => {
@@ -158,7 +158,7 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_form_filter_type_field_changed
-    filtered_item_list = build_filtered_item_list(params[:filter_type])
+    filtered_item_list = build_filtered_item_list(params[:action_type], params[:filter_type])
 
     render :json => {:filtered_item_list => filtered_item_list}
   end
@@ -303,7 +303,7 @@ module OpsController::Settings::Schedules
     end
   end
 
-  def build_filtered_item_list(filter_type)
+  def build_filtered_item_list(action_type, filter_type)
     case filter_type
     when "vm"
       filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
@@ -319,7 +319,12 @@ module OpsController::Settings::Schedules
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
       end.sort_by { |cluster| cluster.first.downcase }.uniq
     when "global"
-      build_listnav_search_list("Vm")
+      if action_type == "miq_template"
+        action_type = action_type.camelize
+      else
+        action_type = action_type.split("_").first.capitalize
+      end
+      build_listnav_search_list(action_type)
       filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
     when "my"
       build_listnav_search_list("Vm")
