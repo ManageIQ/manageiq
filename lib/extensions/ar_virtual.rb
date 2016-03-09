@@ -39,7 +39,6 @@ module VirtualAttributes
     end
   end
 
-  ActiveRecord::Type.register(:datetime, ActiveRecord::Type::DateTime) # Correct spelling is ":date_time"
   ActiveRecord::Type.register(:numeric_set, Type::NumericSet)
   ActiveRecord::Type.register(:string_set, Type::StringSet)
   ActiveRecord::Type.register(:symbol, Type::Symbol)
