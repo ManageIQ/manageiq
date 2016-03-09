@@ -253,26 +253,28 @@ class AuthKeyPairCloudController < ApplicationController
       @refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "auth_key_pair_cloud"
       @single_delete = true unless flash_errors?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:table => "auth_key_pair_cloud")) if @flash_array.nil?
+      add_flash(_("The selected %{model} was deleted") % {
+        :model => ui_lookup(:table => "auth_key_pair_cloud")
+      }) if @flash_array.nil?
     end
   end
 
   def process_deletions(key_pairs)
     return if key_pairs.empty?
 
-    ManageIQ::Providers::CloudManager::AuthKeyPair.find_all_by_id(key_pairs, :order => "lower(name)").each do |kp|
+    ManageIQ::Providers::CloudManager::AuthKeyPair.where(id: key_pairs).order('lower(name)').each do |kp|
       audit = {
         :event        => "auth_key_pair_cloud_record_delete_initiateed",
-        :message      => "[#{key_pair.name}] Record delete initiated",
+        :message      => "[#{kp.name}] Record delete initiated",
         :target_id    => kp.id,
         :target_class => "ManageIQ::Providers::CloudManager::AuthKeyPair",
         :userid       => session[:userid]
       }
       AuditEvent.success(audit)
-      kp.delete_auth_key_pair
+      kp.delete_key_pair
     end
     add_flash(_("Delete initiated for %{models}") % {
-      :models => pluralize(valid_deletions, ui_lookup(:table => 'auth_key_pair_cloud'))
+      :models => pluralize(key_pairs.length, ui_lookup(:table => 'auth_key_pair_cloud'))
     })
   end
 
