@@ -39,7 +39,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       MiqSchedule.where("prod_default != 'system' or prod_default is null").to_a.sort do |a, b|
         a.name.downcase <=> b.name.downcase
       end.each do |z|
-        objects.push(z) if z.adhoc.nil? && (z.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported?)
+        objects.push(z) if z.adhoc.nil?
       end
       count_only_or_objects(count_only, objects, nil)
     when "sis"
