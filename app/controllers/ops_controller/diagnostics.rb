@@ -965,9 +965,13 @@ module OpsController::Diagnostics
   end
 
   def database_details
-    @database = MiqDbConfig.current.options
-    db_types = MiqDbConfig.get_db_types
-    @database[:display_name] = db_types[@database[:name]]
+    @database_details = Rails.configuration.database_configuration[Rails.env]
+    @database_display_name =
+      if @database_details["host"].in?([nil, "", "localhost", "127.0.0.1"])
+        _("Internal Database")
+      else
+        _("External Database")
+      end
   end
 
   def orphaned_records_get
