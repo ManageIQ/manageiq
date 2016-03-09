@@ -177,7 +177,7 @@ module Rbac
     find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
   end
 
-  def self.compute_total_count(klass, scope, extra_target_ids, conditions, includes = nil)
+  def self.total_scope(klass, scope, extra_target_ids, conditions, includes)
     if conditions && extra_target_ids
       scope = scope.where(conditions).or(scope.where(:id => extra_target_ids))
     elsif conditions
@@ -186,7 +186,7 @@ module Rbac
       scope = scope.where(:id => extra_target_ids)
     end
 
-    scope.includes(includes).references(includes).count
+    scope.includes(includes).references(includes)
   end
 
   # @param parent_class [Class] Class of parent (e.g. Host)
@@ -198,7 +198,7 @@ module Rbac
   # @return [Array<Array<Object>,Integer,Integer] targets, total count, authorized count
   def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
     total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
-    if filtered_ids.kind_of?(Array)
+    if filtered_ids
       reflection = klass.reflections[parent_class.name.underscore]
       if reflection
         ids_clause = ["#{klass.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
@@ -216,8 +216,8 @@ module Rbac
   end
 
   def self.find_targets_filtered_by_ids(klass, scope, find_options, u_filtered_ids, filtered_ids)
-    total_count  = compute_total_count(klass, scope, u_filtered_ids, find_options[:conditions], find_options[:include])
-    if filtered_ids.kind_of?(Array)
+    total_count  = total_scope(klass, scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count
+    if filtered_ids
       ids_clause  = ["#{klass.table_name}.id IN (?)", filtered_ids]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       _log.debug("New Find options: #{find_options.inspect}")
