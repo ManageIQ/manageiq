@@ -10,7 +10,7 @@ module AncestryParentMixin
       extend AncestryParentMixin::ClassMethods
 
       cattr_accessor :ancestry_parent_column
-      self.ancestry_parent_column = options[:parent_id] || "parent_id"
+      self.ancestry_parent_column = options[:parent_id] || :parent_id
 
       # Save self as base class (for STI)
       cattr_accessor :ancestry_base_class

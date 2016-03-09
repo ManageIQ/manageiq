@@ -98,7 +98,7 @@ class Service < ApplicationRecord
   end
 
   def indirect_vms
-    all_service_children.collect(&:direct_vms).flatten.compact
+    Preloader.preload_and_map(all_service_children, :direct_vms)
   end
 
   def direct_vms
