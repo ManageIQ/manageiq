@@ -17,9 +17,7 @@ ManageIQ.angular.app.directive('updateDropdownForFilter', ['$timeout', function(
             if (scope[scope['form_' + ctrl.$name + '_ngHide']] == "NO-OP" ||
                 scope[scope['form_' + ctrl.$name + '_ngHide']] == false) {
 
-              $timeout(function(){
-                angular.element(scope['form_' + ctrl.$name]).selectpicker('render');
-              }, 0);
+              selectListElement(scope, $timeout, ctrl, true);
             }
           }
         });
