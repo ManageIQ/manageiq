@@ -9,7 +9,6 @@ module ProviderObjectMixin
 
   def with_provider_object(options = {})
     raise "no block given" unless block_given?
-
     connection_source(options).with_provider_connection(options) do |connection|
       begin
         handle = provider_object(connection)
@@ -27,8 +26,12 @@ module ProviderObjectMixin
   private
 
   def connection_source(options = {})
-    source = options[:connection_source] || ext_management_system
+    source = options[:connection_source] || connection_manager
     raise "no connection source available" if source.nil?
     source
+  end
+
+  def connection_manager
+    try(:ext_management_system) || manager
   end
 end
