@@ -30,7 +30,10 @@ class MiqQueue < ApplicationRecord
 
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
-  COLUMNS_FOR_REQUEUE = MiqQueue.column_names.map(&:to_sym) - [:id]
+
+  def self.columns_for_requeue
+    @requeue_columns ||= MiqQueue.column_names.map(&:to_sym) - [:id]
+  end
 
   def self.priority(which, dir = nil, by = 0)
     raise ArgumentError, "which must be an Integer or one of #{PRIORITY_WHICH.join(", ")}" unless which.kind_of?(Integer) || PRIORITY_WHICH.include?(which)
@@ -417,7 +420,7 @@ class MiqQueue < ApplicationRecord
 
   def requeue(options = {})
     options.reverse_merge!(attributes.symbolize_keys)
-    MiqQueue.put(options.slice(*COLUMNS_FOR_REQUEUE))
+    MiqQueue.put(options.slice(*MiqQueue.columns_for_requeue))
   end
 
   def check_for_timeout(log_prefix = "MIQ(MiqQueue.check_for_timeout)", grace = 10.seconds, timeout = msg_timeout.seconds)
