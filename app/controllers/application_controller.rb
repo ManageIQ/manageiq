@@ -202,15 +202,8 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in text format
   def render_txt
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
-      @report = miq_task.task_results
-    elsif session[:rpt_task_id].nil? && session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
-      @report = rr.report_results
-      @report.report_run_time = rr.last_run_on
-    end
-    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @report = report_for_rendering
+    filename = filename_timestamp(@report.title)
     disable_client_cache
     send_data(@report.to_text,
               :filename => "#{filename}.txt")
@@ -218,14 +211,8 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in csv format
   def render_csv
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
-      @report = miq_task.task_results
-    elsif session[:rpt_task_id].nil? && session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
-      @report = rr.report_results
-    end
-    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @report = report_for_rendering
+    filename = filename_timestamp(@report.title)
     disable_client_cache
     send_data(@report.to_csv,
               :filename => "#{filename}.csv")
@@ -233,16 +220,10 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in pdf format
   def render_pdf(report = nil)
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])
-      @report = miq_task.task_results
-    elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id])
-      @report = rr.report_results
-    end
-    if report || @report
+    report ||= report_for_rendering
+    if report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
-      rr =  (report || @report).build_create_results(:userid => userid) # Create rr from the report object
+      rr = report.build_create_results(:userid => userid)
     end
 
     # Use rr frorm paging, if present
@@ -250,7 +231,7 @@ class ApplicationController < ActionController::Base
     # Use report_result_id in session, if present
     rr ||= MiqReportResult.find(session[:report_result_id]) if session[:report_result_id]
 
-    filename = rr.report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = filename_timestamp(rr.report.title)
     disable_client_cache
     send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
@@ -300,7 +281,7 @@ class ApplicationController < ActionController::Base
   def send_report_data
     if @sb[:render_rr_id]
       rr = MiqReportResult.find(@sb[:render_rr_id])
-      filename = rr.report.title + "_" + format_timezone(Time.zone.now, Time.zone, "export_filename")
+      filename = filename_timestamp(rr.report.title, 'export_filename')
       disable_client_cache
       generated_result = rr.get_generated_result(@sb[:render_type])
       rr.destroy
@@ -316,7 +297,7 @@ class ApplicationController < ActionController::Base
     options = session[:paged_view_search_options].merge(:page => nil, :per_page => nil) # Get all pages
     @view.table, _attrs = @view.paged_view_search(options) # Get the records
 
-    @filename = @view.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @filename = filename_timestamp(@view.title)
     case params[:download_type]
     when "pdf"
       download_pdf(@view)
@@ -634,6 +615,10 @@ class ApplicationController < ActionController::Base
     tree
   end
 
+  def filename_timestamp(basename, format = 'fname')
+    basename + '_' + format_timezone(Time.zone.now, Time.zone, format)
+  end
+
   def set_summary_pdf_data
     @report_only = true
     @showtype    = @display
@@ -667,7 +652,7 @@ class ApplicationController < ActionController::Base
       pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
       send_data(pdf_data,
                 :type     => "application/pdf",
-                :filename => "#{klass}_#{@record.name}_summary_#{format_timezone(run_time, Time.zone, "fname")}.pdf"
+                :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
                )
     end
   end
@@ -956,6 +941,18 @@ class ApplicationController < ActionController::Base
         {:tenant_name       => tenant_name,
          :group             => ui_lookup(:model => "MiqGroup"),
          :group_description => current_user.current_group.description}
+    end
+  end
+
+  def report_for_rendering
+    if session[:rpt_task_id]
+      miq_task = MiqTask.find(session[:rpt_task_id])
+      miq_task.task_results
+    elsif session[:report_result_id]
+      rr = MiqReportResult.find(session[:report_result_id])
+      report = rr.report_results
+      report.report_run_time = rr.last_run_on
+      report
     end
   end
 
