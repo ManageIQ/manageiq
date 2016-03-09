@@ -159,14 +159,6 @@ module MiqReport::Formatting
     apply_prefix_and_suffix(val, options)
   end
 
-  def format_datetime(val, options)
-    return val unless val.kind_of?(Time) || val.kind_of?(Date)
-
-    val = val.in_time_zone(options[:tz]) if val.kind_of?(Time) && options[:tz]
-    return val if options[:format].nil?
-    val.strftime(options[:format])
-  end
-
   def format_elapsed_time_human(val, _options)
     val = val.to_i
 
