@@ -122,7 +122,7 @@ module MiqAeCustomizationController::Dialogs
 
     @record = identify_record(params[:id], Dialog) if params[:id]
     dialog_set_form_vars
-    @edit[:new][:label] = "Copy of #{@record.label}"
+    @edit[:new][:label] = _("Copy of %{label}") % {:label => @record.label}
     @edit[:dialog] = @record = Dialog.new
     @edit[:rec_id] = @record.id ? @record.id : nil
     @edit[:key] = "dialog_edit__#{@record.id || "new"}"
@@ -194,7 +194,7 @@ module MiqAeCustomizationController::Dialogs
         dialog_label = session[:edit][:current][:label]
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Dialog"), :name => dialog_label})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "Dialog"))
+        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "Dialog")})
       end
       @edit = session[:edit] = nil # clean out the saved info
       self.x_active_tree = :dialogs_tree
@@ -714,9 +714,9 @@ module MiqAeCustomizationController::Dialogs
     Array(@edit[:new][:tabs]).each_with_index do |tab, i|
       tab_node = TreeNodeBuilder.generic_tree_node(
         "root_#{tab[:id]}-#{i}",
-        tab[:label] || '[New Tab]',
+        tab[:label] || _('[New Tab]'),
         "dialog_tab.png",
-        tab[:label] || '[New Tab]',
+        tab[:label] || _('[New Tab]'),
         :expand => true
       )
       self.x_node = "root_#{tab[:id]}-#{i}" unless tab[:label]
@@ -727,7 +727,7 @@ module MiqAeCustomizationController::Dialogs
         tab[:groups].each_with_index do |group, j|
           group_node = TreeNodeBuilder.generic_tree_node(
             "#{tab_node[:key]}_#{group[:id]}-#{j}",
-            group[:label] || '[New Box]',
+            group[:label] || _('[New Box]'),
             "dialog_group.png",
             group[:description] || group[:label],
             :expand => true
@@ -746,7 +746,7 @@ module MiqAeCustomizationController::Dialogs
               end
               field_node = TreeNodeBuilder.generic_tree_node(
                 "#{group_node[:key]}_#{field[:id]}-#{k}",
-                field[:label] || '[New Element]',
+                field[:label] || _('[New Element]'),
                 "dialog_field.png",
                 field_tooltip
               )
@@ -765,7 +765,7 @@ module MiqAeCustomizationController::Dialogs
 
     base_node = TreeNodeBuilder.generic_tree_node(
       "root",
-      "#{@edit[:new][:label] || '[New Dialog]'}",
+      "#{@edit[:new][:label] || _('[New Dialog]')}",
       "dialog.png",
       @edit[:new][:description] || @edit[:new][:label],
       :expand => true
@@ -1363,7 +1363,7 @@ module MiqAeCustomizationController::Dialogs
   def dialog_get_node_info(treenodeid)
     if treenodeid == "root"
       dialog_list
-      @right_cell_text = _("All %s") % ui_lookup(:models => "Dialog")
+      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Dialog")}
     else
       @sb[:active_tab] = "sample_tab" unless params[:tab_id]     # reset active tab if not coming in from change_tab
       @record = Dialog.find_by_id(from_cid(treenodeid.split('-').last))

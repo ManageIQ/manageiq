@@ -434,7 +434,7 @@ module MiqPolicyController::Alerts
 
     # :time_thresholds
     @sb[:alert][:time_thresholds] ||= {
-      5.minutes.to_i => "5 Minutes", 10.minutes.to_i => "10 Minutes", 15.minutes.to_i => "15 Minutes", 30.minutes.to_i => "30 Minutes",
+      5.minutes.to_i => _("5 Minutes"), 10.minutes.to_i => _("10 Minutes"), 15.minutes.to_i => "15 Minutes", 30.minutes.to_i => "30 Minutes",
       1.hour.to_i => "1 Hour", 2.hours.to_i => "2 Hours", 3.hours.to_i => "3 Hours", 4.hours.to_i => "4 Hours", 6.hours.to_i => "6 Hours", 12.hours.to_i => "12 Hours",
       1.day.to_i => "1 Day"
       # Stopping this at 1 day for now - Sprint 53
@@ -578,10 +578,10 @@ module MiqPolicyController::Alerts
     @record = @alert = alert
     @email_to = []
     if @alert.responds_to_events == "_hourly_timer_"
-      @event = "Hourly Timer"
+      @event = _("Hourly Timer")
     else
       e = MiqEventDefinition.find_by_name(@alert.responds_to_events)
-      @event = e.nil? ? "<No Event configured>" : e.etype.description + ": " + e.description
+      @event = e.nil? ? _("<No Event configured>") : e.etype.description + ": " + e.description
     end
     if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:email] && @alert.options[:notifications][:email][:to]
       @alert.options[:notifications][:email][:to].each do |to|
