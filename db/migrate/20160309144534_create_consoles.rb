@@ -6,8 +6,8 @@ class CreateConsoles < ActiveRecord::Migration[5.0]
       t.integer :port
       t.boolean :ssl
       t.string :secret
-      t.references :vm,   :foreign_key => true
-      t.references :user, :foreign_key => true
+      t.belongs_to :vm,   :type => :bigint
+      t.belongs_to :user, :type => :bigint
       t.string :url_secret
 
       t.timestamps
