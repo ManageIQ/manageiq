@@ -159,34 +159,6 @@ module MiqReport::Formatting
     apply_prefix_and_suffix(val, options)
   end
 
-  def format_elapsed_time_human(val, _options)
-    val = val.to_i
-
-    names = %w(day hour minute second)
-    arr = []
-
-    days    = (val / 86400)
-    hours   = (val / 3600) - (days * 24)
-    minutes = (val / 60) - (hours * 60) - (days * 1440)
-    seconds = (val % 60)
-
-    arr = [days, hours, minutes, seconds]
-    return if arr.all? { |a| a == 0 }
-
-    sidx = arr.index { |a| a > 0 }
-    values = arr[sidx..(sidx + 1)]
-    result = ''
-    sep    = ''
-    values.each_index do |i|
-      sfx = names[sidx + i]
-      sfx += "s" if values[i] > 1 || values[i] == 0
-      result = result + sep + "#{values[i]} #{sfx}"
-      sep = ", "
-    end
-
-    result
-  end
-
   def format_string_truncate(val, options = {})
     result = val.to_s
     result.length > options[:length] ? result[0..(options[:length] - 1)] + "..." : val
