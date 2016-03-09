@@ -46,6 +46,7 @@ class ApplicationController < ActionController::Base
   include_concern 'Timezone'
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
+  include_concern 'ReportDownloads'
 
   before_action :reset_toolbar
   before_action :set_session_tenant, :except => [:window_sizes]
@@ -197,42 +198,6 @@ class ApplicationController < ActionController::Base
     end
     rpt.to_chart(@settings[:display][:reporttheme], true, MiqReport.graph_options(params[:width], params[:height]))
     render Charting.render_format => rpt.chart
-  end
-
-  # Send the current report in text format
-  def render_txt
-    @report = report_for_rendering
-    filename = filename_timestamp(@report.title)
-    disable_client_cache
-    send_data(@report.to_text,
-              :filename => "#{filename}.txt")
-  end
-
-  # Send the current report in csv format
-  def render_csv
-    @report = report_for_rendering
-    filename = filename_timestamp(@report.title)
-    disable_client_cache
-    send_data(@report.to_csv,
-              :filename => "#{filename}.csv")
-  end
-
-  # Send the current report in pdf format
-  def render_pdf(report = nil)
-    report ||= report_for_rendering
-    if report
-      userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
-      rr = report.build_create_results(:userid => userid)
-    end
-
-    # Use rr frorm paging, if present
-    rr ||= MiqReportResult.find(@sb[:pages][:rr_id]) if @sb[:pages]
-    # Use report_result_id in session, if present
-    rr ||= MiqReportResult.find(session[:report_result_id]) if session[:report_result_id]
-
-    filename = filename_timestamp(rr.report.title)
-    disable_client_cache
-    send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
 
   RENDER_TYPES = {'txt' => :txt, 'csv' => :csv, 'pdf' => :pdf}
@@ -614,10 +579,6 @@ class ApplicationController < ActionController::Base
     tree
   end
 
-  def filename_timestamp(basename, format = 'fname')
-    basename + '_' + format_timezone(Time.zone.now, Time.zone, format)
-  end
-
   def set_summary_pdf_data
     @report_only = true
     @showtype    = @display
@@ -940,18 +901,6 @@ class ApplicationController < ActionController::Base
         {:tenant_name       => tenant_name,
          :group             => ui_lookup(:model => "MiqGroup"),
          :group_description => current_user.current_group.description}
-    end
-  end
-
-  def report_for_rendering
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])
-      miq_task.task_results
-    elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id])
-      report = rr.report_results
-      report.report_run_time = rr.last_run_on
-      report
     end
   end
 
