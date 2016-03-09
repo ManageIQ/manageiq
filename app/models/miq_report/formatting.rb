@@ -159,11 +159,6 @@ module MiqReport::Formatting
     apply_prefix_and_suffix(val, options)
   end
 
-  def format_string_truncate(val, options = {})
-    result = val.to_s
-    result.length > options[:length] ? result[0..(options[:length] - 1)] + "..." : val
-  end
-
   def format_large_number_to_exponential_form(val, _options = {})
     return val if val.to_f < 1.0e+15
     val.to_f.to_s
