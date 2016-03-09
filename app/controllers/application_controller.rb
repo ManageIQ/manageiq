@@ -106,9 +106,9 @@ class ApplicationController < ActionController::Base
 
     msg = case e
           when ::ActionController::RoutingError
-            "Action not implemented"
+            _("Action not implemented")
           when ::AbstractController::ActionNotFound # Prevent Rails showing all known controller actions
-            "Unknown Action"
+            _("Unknown Action")
           else
             e.message
           end
@@ -208,7 +208,7 @@ class ApplicationController < ActionController::Base
   ###########################################################################
   def wait_for_task
     @edit = session[:edit]  # If in edit, need to preserve @edit object
-    raise Forbidden, 'Invalid input for "wait_for_task".' unless params[:task_id]
+    raise Forbidden, _('Invalid input for "wait_for_task".') unless params[:task_id]
 
     @edit = session[:edit]  # If in edit, need to preserve @edit object
     session[:async] ||= {}
@@ -253,7 +253,7 @@ class ApplicationController < ActionController::Base
 
     @lastaction = "event_logs"
     obj = @record.kind_of?(Vm) ? "vm" : "host"
-    bc_text = @record.kind_of?(Vm) ? "Event Logs" : "ESX Logs"
+    bc_text = @record.kind_of?(Vm) ? _("Event Logs") : _("ESX Logs")
     @sb[:action] = params[:action]
     @explorer = true if @record.kind_of?(VmOrTemplate)
     if !params[:show].nil? || !params[:x_show].nil?
@@ -335,7 +335,7 @@ class ApplicationController < ActionController::Base
 
     # Need to use paged_view_search code, once the relationship is working. Following is workaround for the demo
     @stats = @record.derived_metrics
-    drop_breadcrumb(:name => "Utilization", :url => "/#{db}/show_statistics/#{@record.id}?refresh=n")
+    drop_breadcrumb(:name => _("Utilization"), :url => "/#{db}/show_statistics/#{@record.id}?refresh=n")
     render :action => "show"
 
     #   generate the grid/tile/list url to come back here when gtl buttons are pressed
@@ -381,10 +381,10 @@ class ApplicationController < ActionController::Base
 
     begin
       if pfx == "pxe"
-        msg = 'PXE Credentials successfuly validated'
+        msg = _('PXE Credentials successfuly validated')
         PxeServer.verify_depot_settings(settings)
       else
-        msg = 'Depot Settings successfuly validated'
+        msg = _('Depot Settings successfuly validated')
         MiqSchedule.new.verify_file_depot(settings)
       end
     rescue StandardError => bang
@@ -438,10 +438,10 @@ class ApplicationController < ActionController::Base
     sort_fields = direction == "right" ? "fields" : "available_fields"
     if !params[flds.to_sym] || params[flds.to_sym].length == 0 || params[flds.to_sym][0] == ""
       lr_messages = {
-        "left"  => _("No %s were selected to move left"),
-        "right" => _("No %s were selected to move right")
+        "left"  => _("No fields were selected to move left"),
+        "right" => _("No fields were selected to move right")
       }
-      add_flash(lr_messages[direction] % "fields", :error)
+      add_flash(lr_messages[direction], :error)
     else
       @edit[:new][edit_fields.to_sym].each do |af|                 # Go thru all available columns
         if params[flds.to_sym].include?(af[1].to_s)        # See if this column was selected to move
@@ -923,7 +923,7 @@ class ApplicationController < ActionController::Base
       if has_listicon
         item = listicon_item(view, row['id'])
 
-        new_row[:cells] << {:title => 'View this item',
+        new_row[:cells] << {:title => _('View this item'),
                             :image => listicon_image(item, view),
                             :icon  => listicon_icon(item)}
       end
@@ -1182,18 +1182,18 @@ class ApplicationController < ActionController::Base
             ""
           end
 
-        @devices.push(:device      => "Processors",
+        @devices.push(:device      => _("Processors"),
                       :description => "#{db_record.hardware.cpu_total_cores}#{cpu_details}",
                       :icon        => "processor")
       end
 
-      @devices.push(:device      => "CPU Type",
+      @devices.push(:device      => _("CPU Type"),
                     :description => db_record.hardware.cpu_type,
                     :icon        => "processor") if db_record.hardware.cpu_type
-      @devices.push(:device      => "CPU Speed",
+      @devices.push(:device      => _("CPU Speed"),
                     :description => "#{db_record.hardware.cpu_speed} MHz",
                     :icon        => "processor") if db_record.hardware.cpu_speed
-      @devices.push(:device      => "Memory",
+      @devices.push(:device      => _("Memory"),
                     :description => "#{db_record.hardware.memory_mb} MB",
                     :icon        => "memory") if db_record.hardware.memory_mb
 
@@ -1204,45 +1204,68 @@ class ApplicationController < ActionController::Base
           dev = disk.controller_type ? disk.controller_type << " " << loc : ""  # default device is controller_type
           desc = disk.filename                              # default description is filename
           icon = disk.device_name                       # default icon prefix is device_name
-          conn = disk.start_connected ? ", Connect at Power On = Yes" : ", Connect at Power On = No"
+          conn = disk.start_connected ? _(", Connect at Power On = Yes") : _(", Connect at Power On = No")
           # Customize disk entries by type
           if disk.device_type == "cdrom-raw"
-            dev = "CD-ROM (IDE " << loc << ")" << conn
+            dev = _("CD-ROM (IDE %{location})%{connection}") % {:location => loc, :connection => conn}
             icon = "cdrom"
           elsif disk.device_type == "atapi-cdrom"
-            dev = "ATAPI CD-ROM (IDE " << loc << ")" << conn
+            dev = _("ATAPI CD-ROM (IDE %{location})%{connection}") % {:location => loc, :connection => conn}
             icon = "cdrom"
           elsif disk.device_type == "cdrom-image"
-            dev = "CD-ROM Image (IDE " << loc << ")" << conn
+            dev = _("CD-ROM Image (IDE %{location})%{connection}") % {:location => loc, :connection => conn}
             icon = "cdrom"
           elsif disk.device_type == "disk"
             icon = "disk"
             if disk.controller_type == "ide"
-              dev = "Hard Disk (IDE " << loc << ")"
+              dev = _("Hard Disk (IDE %{location})") % {:location => loc}
             elsif disk.controller_type == "scsi"
-              dev = "Hard Disk (SCSI " << loc << ")"
+              dev = _("Hard Disk (SCSI %{location})") % {:location => loc}
               icon = "scsi"
             end
-            dev << ", Size: " + number_to_human_size(disk.size, :precision => 2) unless disk.size.nil?
-            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk, :precision => 2) unless disk.size_on_disk.nil?
-            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" unless disk.used_percent_of_provisioned.nil?
-            desc << ", Mode: " + disk.mode unless disk.mode.nil?
+            unless disk.size.nil?
+              dev += _(", Size: %{number}") % {:number => number_to_human_size(disk.size, :precision => 2)}
+            end
+            unless disk.size_on_disk.nil?
+              dev += _(", Size on disk: %{number}") % {:number => number_to_human_size(disk.size_on_disk,
+                                                                                       :precision => 2)}
+            end
+            unless disk.used_percent_of_provisioned.nil?
+              dev += _(", Percent Used Provisioned Space: %{number}%") %
+                {:number => disk.used_percent_of_provisioned.to_s}
+            end
+            desc += _(", Mode: %{mode}") % {:mode => disk.mode} unless disk.mode.nil?
           elsif disk.device_type == "ide"
-            dev = "Hard Disk (IDE " << loc << ")"
-            dev << ", Size: " + number_to_human_size(disk.size, :precision => 2) unless disk.size.nil?
-            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk, :precision => 2) unless disk.size_on_disk.nil?
-            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" unless disk.used_percent_of_provisioned.nil?
-            desc << ", Mode: " + disk.mode unless disk.mode.nil?
+            dev = _("Hard Disk (IDE %{location})") % {:location => loc}
+            unless disk.size.nil?
+              dev += _(", Size: %{number}") % {:number => number_to_human_size(disk.size, :precision => 2)}
+            end
+            unless disk.size_on_disk.nil?
+              dev += _(", Size on disk: %{number}") % {:number => number_to_human_size(disk.size_on_disk, :precision => 2)}
+            end
+            unless disk.used_percent_of_provisioned.nil?
+              dev += _(", Percent Used Provisioned Space: %{number}%") %
+                {:number => disk.used_percent_of_provisioned.to_s}
+            end
+            desc += _(", Mode: %{mode}") % {:mode => disk.mode} unless disk.mode.nil?
             icon = "disk"
           elsif ["scsi", "scsi-hardDisk"].include?(disk.device_type)
-            dev = "Hard Disk (SCSI " << loc << ")"
-            dev << ", Size: " + number_to_human_size(disk.size, :precision => 2) unless disk.size.nil?
-            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk, :precision => 2) unless disk.size_on_disk.nil?
-            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" unless disk.used_percent_of_provisioned.nil?
-            desc << ", Mode: " + disk.mode unless disk.mode.nil?
+            dev = _("Hard Disk (SCSI %{location})") % {:location => loc}
+            unless disk.size.nil?
+              dev += _(", Size: %{number}") % {:number => number_to_human_size(disk.size, :precision => 2)}
+            end
+            unless disk.size_on_disk.nil?
+              dev += _(", Size on disk: %{number}") % {:number => number_to_human_size(disk.size_on_disk,
+                                                                                       :precision => 2)}
+            end
+            unless disk.used_percent_of_provisioned.nil?
+              dev += _(", Percent Used Provisioned Space: %{number}%") %
+                {:number => disk.used_percent_of_provisioned.to_s}
+            end
+            desc += _(", Mode: %{mode}") % {:mode => disk.mode} unless disk.mode.nil?
             icon = "scsi"
           elsif disk.device_type == "scsi-passthru"
-            dev = "Generic SCSI (" << loc << ")"
+            dev = _("Generic SCSI (%{location})") % {:location => loc}
             icon = "scsi"
           elsif disk.device_type == "floppy"
             dev += conn
@@ -1269,7 +1292,7 @@ class ApplicationController < ActionController::Base
           # Customize port entries by type
           if port.device_type == "sound"
             dev = "Audio"
-            desc = port.auto_detect.nil? ? "" : "Default Adapter"
+            desc = port.auto_detect.nil? ? "" : _("Default Adapter")
           end
           # uppercase the first character of the device name and description
           dev = dev[0..0].upcase + dev[1..-1]
@@ -1285,62 +1308,66 @@ class ApplicationController < ActionController::Base
       @osinfo = []   # This will be an array of hashes to allow the rhtml to pull out each field by name
       @account_policy = []   # This will be an array of hashes to allow the rhtml to pull out each field by name for account policy
       # add OS entry to the array
-      @osinfo.push(:osinfo      => "Operating System",
+      @osinfo.push(:osinfo      => _("Operating System"),
                    :description => db_record.operating_system.product_name) unless db_record.operating_system.product_name.nil?
-      @osinfo.push(:osinfo      => "Service Pack",
+      @osinfo.push(:osinfo      => _("Service Pack"),
                    :description => db_record.operating_system.service_pack) unless db_record.operating_system.service_pack.nil?
-      @osinfo.push(:osinfo      => "Product ID",
+      @osinfo.push(:osinfo      => _("Product ID"),
                    :description => db_record.operating_system.productid) unless db_record.operating_system.productid.nil?
-      @osinfo.push(:osinfo      => "Version",
+      @osinfo.push(:osinfo      => _("Version"),
                    :description => db_record.operating_system.version) unless db_record.operating_system.version.nil?
-      @osinfo.push(:osinfo      => "Build Number",
+      @osinfo.push(:osinfo      => _("Build Number"),
                    :description => db_record.operating_system.build_number) unless db_record.operating_system.build_number.nil?
-      @osinfo.push(:osinfo      => "System Type",
+      @osinfo.push(:osinfo      => _("System Type"),
                    :description => db_record.operating_system.bitness.to_s + "-bit OS") unless db_record.operating_system.bitness.nil?
-      @account_policy.push(:field       => "Password History",
+      @account_policy.push(:field       => _("Password History"),
                            :description => db_record.operating_system.pw_hist) unless db_record.operating_system.pw_hist.nil?
-      @account_policy.push(:field       => "Max Password Age",
+      @account_policy.push(:field       => _("Max Password Age"),
                            :description => db_record.operating_system.max_pw_age) unless db_record.operating_system.max_pw_age.nil?
-      @account_policy.push(:field       => "Min Password Age",
+      @account_policy.push(:field       => _("Min Password Age"),
                            :description => db_record.operating_system.min_pw_age) unless db_record.operating_system.min_pw_age.nil?
-      @account_policy.push(:field       => "Min Password Length",
+      @account_policy.push(:field       => _("Min Password Length"),
                            :description => db_record.operating_system.min_pw_len) unless db_record.operating_system.min_pw_len.nil?
-      @account_policy.push(:field       => "Password Complex",
+      @account_policy.push(:field       => _("Password Complex"),
                            :description => db_record.operating_system.pw_complex) unless db_record.operating_system.pw_complex.nil?
-      @account_policy.push(:field       => "Password Encrypt",
+      @account_policy.push(:field       => _("Password Encrypt"),
                            :description => db_record.operating_system.pw_encrypt) unless db_record.operating_system.pw_encrypt.nil?
-      @account_policy.push(:field       => "Lockout Threshold",
+      @account_policy.push(:field       => _("Lockout Threshold"),
                            :description => db_record.operating_system.lockout_threshold) unless db_record.operating_system.lockout_threshold.nil?
-      @account_policy.push(:field       => "Lockout Duration",
+      @account_policy.push(:field       => _("Lockout Duration"),
                            :description => db_record.operating_system.lockout_duration) unless db_record.operating_system.lockout_duration.nil?
-      @account_policy.push(:field       => "Reset Lockout Counter",
+      @account_policy.push(:field       => _("Reset Lockout Counter"),
                            :description => db_record.operating_system.reset_lockout_counter) unless db_record.operating_system.reset_lockout_counter.nil?
     end
     if db_record.respond_to?("vmm_vendor_display") # For Host table, this will pull the VMM fields
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
-      @vmminfo.push(:vmminfo     => "Vendor",
+      @vmminfo.push(:vmminfo     => _("Vendor"),
                     :description => db_record.vmm_vendor_display)
-      @vmminfo.push(:vmminfo     => "Product",
+      @vmminfo.push(:vmminfo     => _("Product"),
                     :description => db_record.vmm_product) unless db_record.vmm_product.nil?
-      @vmminfo.push(:vmminfo     => "Version",
+      @vmminfo.push(:vmminfo     => _("Version"),
                     :description => db_record.vmm_version) unless db_record.vmm_version.nil?
-      @vmminfo.push(:vmminfo     => "Build Number",
+      @vmminfo.push(:vmminfo     => _("Build Number"),
                     :description => db_record.vmm_buildnumber) unless db_record.vmm_buildnumber.nil?
     end
 
     if db_record.respond_to?("vendor_display") # For Vm table, this will pull the vendor and notes fields
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
-      @vmminfo.push(:vmminfo     => "Vendor",
+      @vmminfo.push(:vmminfo     => _("Vendor"),
                     :description => db_record.vendor_display)
-      @vmminfo.push(:vmminfo     => "Format",
+      @vmminfo.push(:vmminfo     => _("Format"),
                     :description => db_record.format) unless db_record.format.nil?
-      @vmminfo.push(:vmminfo     => "Version",
+      @vmminfo.push(:vmminfo     => _("Version"),
                     :description => db_record.version) unless db_record.version.nil?
       unless db_record.hardware.nil?
-        notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
-        @vmminfo.push(:vmminfo     => "Notes",
+        notes = if db_record.hardware.annotation.nil?
+                  _("<No notes have been entered for this VM>")
+                else
+                  db_record.hardware.annotation
+                end
+        @vmminfo.push(:vmminfo     => _("Notes"),
                       :description => notes)
       end
     end
@@ -2262,7 +2289,7 @@ class ApplicationController < ActionController::Base
 
   # Following 3 methods moved here to ensure they are loaded at the right time and will be available to all controllers
   def find_by_id_filtered(db, id)
-    raise "Invalid input" unless is_integer?(id)
+    raise _("Invalid input") unless is_integer?(id)
 
     unless db.where(:id => from_cid(id)).exists?
       msg = _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => db.to_s)}
@@ -2270,7 +2297,10 @@ class ApplicationController < ActionController::Base
     end
 
     Rbac.filtered(db, :conditions => ["#{db.table_name}.id = ?", id], :user => current_user).first ||
-      raise("User '#{current_userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'")
+      raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
+              {:user_id   => current_userid,
+               :record_id => id,
+               :model     => ui_lookup(:model => db.to_s)})
   end
 
   def find_filtered(db, count, options = {})
