@@ -215,6 +215,10 @@ FactoryGirl.define do
     after(:create) { |x| x.create_provider }
   end
 
+  trait(:configuration_script) do
+    after(:create) { |x| x.configuration_scripts << FactoryGirl.create(:configuration_script) }
+  end
+
   factory :configuration_manager_foreman_with_authentication,
           :parent => :configuration_manager_foreman do
     after :create do |x|
