@@ -490,6 +490,8 @@ describe MiqReport do
 
       let(:child_tenant) { FactoryGirl.create(:tenant, :parent => @tenant) }
 
+      let!(:tenant_without_quotas) { FactoryGirl.create(:tenant, :name=>"tenant_without_quotas") }
+
       let(:tenant_quota_cpu) { FactoryGirl.create(:tenant_quota_cpu, :tenant => @tenant, :value => 2) }
       let(:tenant_quota_mem) { FactoryGirl.create(:tenant_quota_mem, :tenant => @tenant, :value => 4_294_967_296) }
 
@@ -500,14 +502,24 @@ describe MiqReport do
       let(:tenant_quota_vms)       { FactoryGirl.create(:tenant_quota_vms, :tenant => @tenant, :value => 4) }
       let(:tenant_quota_templates) { FactoryGirl.create(:tenant_quota_templates, :tenant => @tenant, :value => 4) }
 
+      let(:skip_condition) do
+        YAML.load '--- !ruby/object:MiqExpression
+                       exp:
+                         ">":
+                           count: tenants.tenant_quotas
+                           value: 0'
+      end
+
       let(:report) do
         include = {"tenant_quotas" => {"columns" => %w(name total used allocated available)}}
         cols = ["name", "tenant_quotas.name", "tenant_quotas.total", "tenant_quotas.used", "tenant_quotas.allocated",
                 "tenant_quotas.available"]
         headers = ["Tenant Name", "Quota Name", "Total Quota", "Total Quota", "In Use", "Allocated", "Available"]
+
         FactoryGirl.create(:miq_report, :title => "Tenant Quotas", :order => 'Ascending', :rpt_group => "Custom",
                            :priority => 231, :rpt_type => 'Custom', :db => 'Tenant', :include => include, :cols => cols,
-                           :col_order => cols, :template_type => "report", :headers => headers)
+                           :col_order => cols, :template_type => "report", :headers => headers,
+                           :conditions => skip_condition)
       end
 
       let(:user_admin) { FactoryGirl.create(:user, :role => "super_administrator") }
@@ -555,16 +567,23 @@ describe MiqReport do
                             :allocated => "0 Count", :available => "3 Count"}
         @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
 
-        EvmSpecHelper.local_miq_server
         User.current_user = user_admin
       end
 
       it "returns expected html outputs with formatted values" do
+        allow(User).to receive(:server_timezone).and_return("UTC")
         report.generate_table
         rows_array = report.build_html_rows
         rows_array.each_with_index do |row, index|
           expect(@expected_html_rows[index]).to eq(row)
         end
+      end
+
+      it "returns only rows for tenant with any tenant_quotas" do
+        allow(User).to receive(:server_timezone).and_return("UTC")
+        report.generate_table
+        # 6th row would be for tenant_without_quotas, but skipped now because of skip_condition, so we expecting 5
+        expect(report.table.data.count).to eq(5)
       end
     end
   end
