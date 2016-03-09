@@ -167,12 +167,6 @@ module MiqReport::Formatting
     val.strftime(options[:format])
   end
 
-  def format_set(val, options)
-    return val unless val.kind_of?(Array)
-    options[:delimiter] ||= ", "
-    val.join(options[:delimiter])
-  end
-
   def format_datetime_ordinal(val, options)
     val = format_datetime(val, options)
     format_number_ordinal(val, options)
