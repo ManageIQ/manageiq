@@ -167,15 +167,6 @@ module MiqReport::Formatting
     val.strftime(options[:format])
   end
 
-  def format_datetime_ordinal(val, options)
-    val = format_datetime(val, options)
-    format_number_ordinal(val, options)
-  end
-
-  def format_number_ordinal(val, _options)
-    val.to_i.ordinalize
-  end
-
   def format_elapsed_time_human(val, _options)
     val = val.to_i
 
