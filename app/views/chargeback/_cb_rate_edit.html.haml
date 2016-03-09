@@ -67,4 +67,4 @@
                 = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
           /Show the code of the currency selected by the user
           %td{:id => "column_currency_#{i}"}
-            = r.detail_currency.code
+            = r[:currency]
