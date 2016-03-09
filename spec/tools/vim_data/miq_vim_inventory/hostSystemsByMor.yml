@@ -149,6 +149,9 @@
       __iv__@vimType: 
       __iv__@xsiType: :HostServiceInfo
     network: !map:VimHash 
+      consoleVnic: !map:VimArray
+        __iv__@vimType:
+        __iv__@xsiType: :ArrayOfHostVirtualNic
       dnsConfig: !map:VimHash 
         domainName: !str:VimString 
           str: manageiq.com
@@ -940,6 +943,9 @@
       __iv__@vimType: 
       __iv__@xsiType: :HostServiceInfo
     network: !map:VimHash 
+      consoleVnic: !map:VimArray
+        __iv__@vimType:
+        __iv__@xsiType: :ArrayOfHostVirtualNic
       dnsConfig: !map:VimHash 
         domainName: !str:VimString 
           str: manageiq.com
@@ -1765,6 +1771,9 @@
       __iv__@vimType: 
       __iv__@xsiType: :HostServiceInfo
     network: !map:VimHash 
+      consoleVnic: !map:VimArray
+        __iv__@vimType:
+        __iv__@xsiType: :ArrayOfHostVirtualNic
       dnsConfig: !map:VimHash 
         domainName: !str:VimString 
           str: ""
