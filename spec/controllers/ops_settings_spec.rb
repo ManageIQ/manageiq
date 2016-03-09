@@ -135,38 +135,34 @@ describe OpsController do
   end
 
   render_views
-  context "OpsSettings::Zones" do
+  context "OpsController::Settings" do
     let(:user) { FactoryGirl.create(:user, :features => %w(zone_edit zone_new)) }
     before do
       login_as user
     end
 
     context "zone additon" do
-      before(:each) do
+      it "#does not allow duplicate names when adding" do
+        miq_server = EvmSpecHelper.local_miq_server
+        MiqRegion.seed
         EvmSpecHelper.create_guid_miq_server_zone
         expect(controller).to receive(:render)
-        @zone = FactoryGirl.create(:zone, :name =>'zoneName')
-        @params = {
-          :action      => "zone_edit",
-          :button      => "add",
-          :description => "description01",
-          :settings    => {:proxy_server_ip => "",
-                           :concurrent_vm_scans => ""}
-        }
+        @zone = FactoryGirl.create(:zone, :name => 'zoneName', :description => "description1")
         allow(controller).to receive(:assert_privileges)
-      end
 
-      after(:each) do
-        expect(response.status).to eq(200)
-      end
-
-      it "#does not allow duplicate names when adding" do
-        @params[:id] = "new"
-        @params[:name] = @zone.name
-        @params[:description] = 'Description 2'
-        allow(controller).to receive(:load_edit)
+        @params = {:id => 'new',
+                   :action      => "zone_edit",
+                   :button      => "add"
+        }
+        edit = {:new => {:name        => @zone.name,
+                         :description => "description02",
+                         :ntp => {}}}
+        controller.instance_variable_set(:@edit, edit)
         controller.instance_variable_set(:@_params, @params)
+        controller.instance_variable_set(:@sb, {:x_active_tree => :settings_tree, :active_tab =>"settings_evm_servers"})
+        allow(controller).to receive(:load_edit).and_return(true)
         controller.send(:zone_edit)
+
         expect(controller.send(:flash_errors?)).to be_truthy
         expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
       end
@@ -184,7 +180,7 @@ describe OpsController do
       controller.instance_variable_set(:@sb,
                                        :trees         => {:settings_tree => {:open_nodes => []}},
                                        :active_accord => 'active_accord',
-                                       :active_tab    => 'settings_list',
+                                       :active_tab    => 'settings_server',
                                        :active_tree   => :settings_tree)
       expect(controller).to receive(:x_active_tree_replace_cell)
       expect(controller).to receive(:replace_explorer_trees)
