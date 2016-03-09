@@ -4,6 +4,10 @@ class CloudObjectStoreContainerController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  def breadcrumb_name(_model)
+    ui_lookup(:tables => "cloud_object_stores")
+  end
+
   def index
     redirect_to :action => 'show_list'
   end
@@ -26,7 +30,7 @@ class CloudObjectStoreContainerController < ApplicationController
     @gtl_url = "/cloud_object_store_container/show/#{@record.id}?"
     drop_breadcrumb(
       {
-        :name => ui_lookup(:tables => "cloud_object_store_container"),
+        :name => ui_lookup(:tables => "cloud_object_stores"),
         :url  => "/cloud_object_store_container/show_list?page=#{@current_page}&refresh=y"
       },
       true
@@ -42,7 +46,7 @@ class CloudObjectStoreContainerController < ApplicationController
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     when "cloud_object_store_objects"
-      title = ui_lookup(:tables => 'cloud_object_store_object')
+      title = ui_lookup(:tables => 'cloud_objects')
       kls   = CloudObjectStoreObject
       drop_breadcrumb(
         :name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},
@@ -55,7 +59,7 @@ class CloudObjectStoreContainerController < ApplicationController
         unauthorized_count = @view.extras[:total_count] - @view.extras[:auth_count]
         @bottom_msg = _("* You are not authorized to view %{children} on this %{model}") % {
           :children => pluralize(unauthorized_count, "#{title}"),
-          :model    => ui_lookup(:table => "cloud_object_store_container")
+          :model    => ui_lookup(:table => "cloud_object_store")
         }
       end
     end
@@ -73,7 +77,7 @@ class CloudObjectStoreContainerController < ApplicationController
   private
 
   def get_session_data
-    @title      = ui_lookup(:tables => "cloud_object_store_container")
+    @title      = _("Cloud Object Stores")
     @layout     = "cloud_object_store_container"
     @lastaction = session[:cloud_object_store_container_lastaction]
     @display    = session[:cloud_object_store_container_display]

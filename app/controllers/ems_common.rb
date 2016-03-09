@@ -80,7 +80,7 @@ module EmsCommon
       view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
     elsif @display == "cloud_object_store_containers" ||
           (session[:display] == "cloud_object_store_containers" && params[:display].nil?)
-      title = ui_lookup(:tables => 'cloud_object_store_containers')
+      title = ui_lookup(:tables => 'cloud_object_stores')
       view_setup_helper(CloudObjectStoreContainer, title, title.singularize)
     else  # Must be Hosts # FIXME !!!
       view_setup_helper(Host, _("Managed Hosts"), _("Host"))

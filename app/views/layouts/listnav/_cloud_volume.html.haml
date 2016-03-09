@@ -14,7 +14,7 @@
           %li
             = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
               ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show this #{ui_lookup(:table => 'cloud_object_store_container')}'s parent %s") % ui_lookup(:table => "ems_cloud"))
+              :title => _("Show this #{ui_lookup(:table => 'cloud_object_store')}'s parent %s") % ui_lookup(:table => "ems_cloud"))
         - if role_allows(:feature => "cloud_tenant_show") && @record.cloud_tenant
           %li
             = link_to("#{ui_lookup(:table => "cloud_tenant")}: #{@record.cloud_tenant.name}",

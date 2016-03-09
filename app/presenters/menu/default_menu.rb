@@ -33,7 +33,7 @@ module Menu
           Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack'),
           Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),           'auth_key_pair_cloud',       {:feature => 'auth_key_pair_cloud_show_list'},           '/auth_key_pair_cloud'),
           Menu::Item.new('cloud_object_store_container',
-                         N_('Object Store'),
+                         N_('Object Stores'),
                          'cloud_object_store_container',
                          {:feature => 'cloud_object_store_container_show_list'},
                          '/cloud_object_store_container')

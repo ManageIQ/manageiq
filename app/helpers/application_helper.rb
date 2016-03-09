@@ -1022,6 +1022,7 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
     test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
+    test_layout = 'cloud_object_store_container' if @layout == 'cloud_object_store_object'
 
     Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
   end
@@ -1031,6 +1032,7 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
     test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
+    test_layout = 'cloud_object_store_container' if @layout == 'cloud_object_store_object'
 
     return "dropdown-menu" if big_iframe
 
@@ -1042,6 +1044,8 @@ module ApplicationHelper
       nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
     elsif nav_layout == 'cloud_volume' && @layout == 'cloud_volume_snapshot'
       nav_layout = 'cloud_volume_snapshot'
+    elsif nav_layout == 'cloud_object_store_container' && @layout == 'cloud_object_store_object'
+      nav_layout = 'cloud_object_store_object'
     end
     nav_layout == @layout ? "active" : ""
   end

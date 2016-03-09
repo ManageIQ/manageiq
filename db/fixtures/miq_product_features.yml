@@ -419,8 +419,8 @@
       :identifier: availability_zone_tag
 
 # CloudObjectStoreContainer
-- :name: Cloud Object Store Containers
-  :description: Everything under Cloud Object Store Containers
+- :name: Cloud Object Stores
+  :description: Everything under Cloud Object Stores
   :feature_type: node
   :identifier: cloud_object_store_container
   :children:
@@ -448,8 +448,8 @@
       :identifier: cloud_object_store_container_tag
 
 # CloudObjectStoreObject
-- :name: Cloud Object Store Objects
-  :description: Everything under Cloud Object Store Objects
+- :name: Cloud Objects
+  :description: Everything under Cloud Objects
   :feature_type: node
   :identifier: cloud_object_store_object
   :children:
@@ -475,7 +475,7 @@
       :description: Edit Tags of Objects
       :feature_type: control
       :identifier: cloud_object_store_object_tag
-        
+
 # CloudTenant
 - :name: Cloud Tenants
   :description: Everything under Cloud Tenants

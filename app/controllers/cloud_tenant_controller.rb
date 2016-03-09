@@ -99,7 +99,7 @@ class CloudTenantController < ApplicationController
       @showtype = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
     when "cloud_object_store_containers"
-      table = "cloud_object_store_containers"
+      table = "cloud_object_stores"
       title = ui_lookup(:tables => table)
       kls   = CloudObjectStoreContainer
       drop_breadcrumb(

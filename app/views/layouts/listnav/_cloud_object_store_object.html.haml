@@ -1,11 +1,7 @@
 - if @record.try(:key)
   #accordion.panel-group
     = miq_accordion_panel(truncate(@record.key, :length => truncate_length), true, "icon") do
-      = render(:partial  => "layouts/quadicon",
-               :locals   => {:mode => :icon,
-               :item     => @record,
-               :size     => 72,
-               :typ      => :listnav})
+      = render_quadicon(@record, :mode => :icon, :size => 72, :typ => :listnav)
 
     = miq_accordion_panel(_("Properties"), false, "cloud_object_store_object_prop") do
       %ul.nav.nav-pills.nav-stacked
@@ -18,14 +14,9 @@
           %li
             = link_to(_("%{table}: %{name}") % {:table => ui_lookup(:table => "ext_management_system"), :name => @record.ext_management_system.name},
               ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show this Cloud Object Store Object's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_tenant")})
-        - if role_allows(:feature => "cloud_tenant_show") && @record.cloud_tenant
-          %li
-            = link_to(_("%{table}: %{name}") % {:table => ui_lookup(:table => "cloud_tenant"), :name => @record.cloud_tenant.name},
-              {:action => 'show', :id => @record.cloud_tenant.id, :controller => 'cloud_tenant'},
-              :title => _("Show this Cloud Object Store Object's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_tenant")})
+              :title => _("Show this Cloud Object's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_tenant")})
         - if role_allows(:feature => "cloud_object_store_container_show") && @record.cloud_object_store_container
           %li
-            = link_to("#{ui_lookup(:table => "cloud_object_store_container")}: #{@record.cloud_object_store_container.key}",
+            = link_to("#{ui_lookup(:table => "cloud_object_store")}: #{@record.cloud_object_store_container.key}",
               {:action => 'show', :id => @record.cloud_object_store_container.id, :controller => 'cloud_object_store_container'},
-              :title => _("Show this Cloud Object Store Object's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_object_store_container")})
+              :title => _("Show this Cloud Object's parent %{parent}") % {:parent => ui_lookup(:table => "cloud_object_store")})

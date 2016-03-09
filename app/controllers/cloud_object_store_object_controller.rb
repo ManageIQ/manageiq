@@ -4,6 +4,10 @@ class CloudObjectStoreObjectController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  def breadcrumb_name(_model)
+    ui_lookup(:tables => "cloud_objects")
+  end
+
   def index
     redirect_to :action => 'show_list'
   end
@@ -24,7 +28,7 @@ class CloudObjectStoreObjectController < ApplicationController
     @gtl_url = "/cloud_object_store_object/show#{@object_store_object.id}?"
     drop_breadcrumb(
       {
-        :name => ui_lookup(:tables => "cloud_object_store_object"),
+        :name => ui_lookup(:tables => "cloud_objects"),
         :url  => "/cloud_object_store_object/show_list?page=#{@current_page}&refresh=y"
       },
       true
@@ -50,7 +54,7 @@ class CloudObjectStoreObjectController < ApplicationController
   end
 
   def get_session_data
-    @title      = ui_lookup(:tables => "cloud_object_store_object")
+    @title      = _("Cloud Objects")
     @layout     = "cloud_object_store_object"
     @lastaction = session[:cloud_object_store_object_lastaction]
     @display    = session[:cloud_object_store_object_display]

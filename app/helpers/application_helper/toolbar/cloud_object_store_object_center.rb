@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::CloudObjectStoreObjectCenter < ApplicationHelp
         button(
           :cloud_object_store_object_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit tags for this #{ui_lookup(:table=>"cloud_object_store_object")}'),
+          N_('Edit tags for this #{ui_lookup(:table=>"cloud_object")}'),
           N_('Edit Tags'))
       ]
     )

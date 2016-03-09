@@ -9,7 +9,7 @@
 #
 
 # Report title
-title: Cloud Object Store Container
+title: Cloud Object Store
 
 # Menu name
 name: CloudObjectStoreContainer
@@ -47,7 +47,7 @@ col_order:
 # Column titles, in order
 headers:
 - Key
-- Bytes
+- Size (bytes)
 - Object Count
 - Cloud Tenant
 - Cloud Provider
