@@ -159,24 +159,6 @@ module MiqReport::Formatting
     apply_prefix_and_suffix(val, options)
   end
 
-  def format_boolean(val, options = {})
-    return val.to_s.titleize if options.blank?
-    return val.to_s.titleize unless val.kind_of?(TrueClass) || val.kind_of?(FalseClass)
-
-    case options[:format]
-    when "yes_no"
-      return val == true ? "Yes" : "No"
-    when "y_n"
-      return val == true ? "Y" : "N"
-    when "t_f"
-      return val == true ? "T" : "F"
-    when "pass_fail"
-      return val == true ? "Pass" : "Fail"
-    else
-      return val.to_s.titleize
-    end
-  end
-
   def format_datetime(val, options)
     return val unless val.kind_of?(Time) || val.kind_of?(Date)
 
