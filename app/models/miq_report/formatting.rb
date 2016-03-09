@@ -167,28 +167,6 @@ module MiqReport::Formatting
     val.strftime(options[:format])
   end
 
-  def format_datetime_range(val, options)
-    return val if options[:format].nil?
-    return val unless val.kind_of?(Time) || stime.kind_of?(Date)
-
-    col = options[:column]
-    col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
-
-    val = val.in_time_zone(get_time_zone("UTC"))
-    if val.respond_to?("beginning_of_#{sfx}")
-      stime = val.send("beginning_of_#{sfx}")
-      etime = val.send("end_of_#{sfx}")
-    else
-      stime = etime = val
-    end
-
-    if options[:description].to_s.include?("Start")
-      return stime.strftime(options[:format])
-    else
-      return "(#{stime.strftime(options[:format])} - #{etime.strftime(options[:format])})"
-    end
-  end
-
   def format_set(val, options)
     return val unless val.kind_of?(Array)
     options[:delimiter] ||= ", "
