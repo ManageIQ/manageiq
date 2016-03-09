@@ -158,9 +158,4 @@ module MiqReport::Formatting
     val = ActionView::Base.new.mhz_to_human_size(val, options[:precision])
     apply_prefix_and_suffix(val, options)
   end
-
-  def format_large_number_to_exponential_form(val, _options = {})
-    return val if val.to_f < 1.0e+15
-    val.to_f.to_s
-  end
 end
