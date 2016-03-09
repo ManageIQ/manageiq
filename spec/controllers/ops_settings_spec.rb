@@ -134,6 +134,45 @@ describe OpsController do
     end
   end
 
+  render_views
+  context "OpsSettings::Zones" do
+    let(:user) { FactoryGirl.create(:user, :features => %w(zone_edit zone_new)) }
+    before do
+      login_as user
+    end
+
+    context "zone additon" do
+      before(:each) do
+        EvmSpecHelper.create_guid_miq_server_zone
+        expect(controller).to receive(:render)
+        @zone = FactoryGirl.create(:zone, :name =>'zoneName')
+        @params = {
+          :action      => "zone_edit",
+          :button      => "add",
+          :description => "description01",
+          :settings    => {:proxy_server_ip => "",
+                           :concurrent_vm_scans => ""}
+        }
+        allow(controller).to receive(:assert_privileges)
+      end
+
+      after(:each) do
+        expect(response.status).to eq(200)
+      end
+
+      it "#does not allow duplicate names when adding" do
+        @params[:id] = "new"
+        @params[:name] = @zone.name
+        @params[:description] = 'Description 2'
+        allow(controller).to receive(:load_edit)
+        controller.instance_variable_set(:@_params, @params)
+        controller.send(:zone_edit)
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
+      end
+    end
+  end
+
   context "replace_right_cell" do
     before do
       miq_server = EvmSpecHelper.local_miq_server
@@ -145,7 +184,7 @@ describe OpsController do
       controller.instance_variable_set(:@sb,
                                        :trees         => {:settings_tree => {:open_nodes => []}},
                                        :active_accord => 'active_accord',
-                                       :active_tab    => 'settings_server',
+                                       :active_tab    => 'settings_list',
                                        :active_tree   => :settings_tree)
       expect(controller).to receive(:x_active_tree_replace_cell)
       expect(controller).to receive(:replace_explorer_trees)
