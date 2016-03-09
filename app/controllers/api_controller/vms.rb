@@ -199,6 +199,27 @@ class ApiController
       end
     end
 
+    def request_console_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for requesting a console for a #{type} resource" unless id
+
+      # NOTE:
+      # for Future ?:
+      #   data ||= {}
+      #   protocol = data["protocol"] || "mks"
+      # However, there are different entitlements for the different protocol as per miq_product_feature,
+      # so we may go for different action, i.e. request_console_vnc
+      protocol = "mks"
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Requesting Console #{vm_ident(vm)}")
+
+        result = validate_vm_for_remote_console(vm, protocol)
+        result = request_console_vm(vm) if result[:success]
+        result
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -208,6 +229,14 @@ class ApiController
     def validate_vm_for_action(vm, action)
       validation = vm.send("validate_#{action}")
       action_result(validation[:available], validation[:message].to_s)
+    end
+
+    def validate_vm_for_remote_console(vm, protocol = nil)
+      protocol ||= "mks"
+      vm.validate_remote_console_acquire_ticket(protocol)
+      action_result(true, "")
+    rescue MiqException::RemoteConsoleNotSupportedError => err
+      action_result(false, err.message)
     end
 
     def start_vm(vm)
@@ -347,6 +376,21 @@ class ApiController
     def reboot_guest_vm(vm)
       desc = "#{vm_ident(vm)} rebooting"
       task_id = queue_object_action(vm, desc, :method_name => "reboot_guest", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def request_console_vm(vm)
+      desc = "#{vm_ident(vm)} requesting console"
+      task_id = queue_object_action(vm, desc,
+                                    :method_name => "remote_console_mks_acquire_ticket",
+                                    :role        => "ems_operations")
+      # NOTE:
+      # we are queuing the :remote_console_mks_acquire_ticket and returning the task id and href.
+      #
+      # The remote console ticket/info can be stashed in the task's context_data by the *_acquire_ticket method
+      # context_data is returned as part of the task i.e. GET /api/tasks/:id
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
