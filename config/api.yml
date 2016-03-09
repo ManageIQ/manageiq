@@ -1072,6 +1072,8 @@
         :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
+      - :name: request_console
+        :identifier: vm_console
       - :name: reset
         :identifier: vm_reset
       - :name: retire
@@ -1111,6 +1113,8 @@
         :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
+      - :name: request_console
+        :identifier: vm_console
       - :name: reset
         :identifier: vm_reset
       - :name: retire
