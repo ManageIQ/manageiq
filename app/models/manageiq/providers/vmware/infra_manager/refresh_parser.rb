@@ -483,7 +483,7 @@ module ManageIQ::Providers
         result = []
         return result if inv.nil?
 
-        vnics = inv['consoleVnic'] || inv['vnic']
+        vnics = inv['consoleVnic'].to_miq_a + inv['vnic'].to_miq_a
         vnics.to_miq_a.each do |vnic|
           # Find the pnic to which this service console is connected
           port_key = vnic['port']
