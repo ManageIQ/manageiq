@@ -510,6 +510,8 @@ describe MiqReport do
                            :col_order => cols, :template_type => "report", :headers => headers)
       end
 
+      let(:user_admin) { FactoryGirl.create(:user, :role => "super_administrator") }
+
       def generate_table_cell(formatted_value)
         "<td style=\"text-align:right\">#{formatted_value}</td>"
       end
@@ -552,6 +554,9 @@ describe MiqReport do
         formatted_values = {:name => "Allocated Number of Templates", :total => "4 Count", :used => "1 Count",
                             :allocated => "0 Count", :available => "3 Count"}
         @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
+
+        EvmSpecHelper.local_miq_server
+        User.current_user = user_admin
       end
 
       it "returns expected html outputs with formatted values" do
