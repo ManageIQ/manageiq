@@ -53,7 +53,6 @@ module MiqLinux
     end
 
     def parse_service(file)
-      return if @fs.fileSymLink?(file)
       debug "Parsing service unit: #{file}"
 
       unit        = @fs.fileBasename(file)
