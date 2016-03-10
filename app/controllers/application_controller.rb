@@ -130,7 +130,7 @@ class ApplicationController < ActionController::Base
         response.status = 500
         render(:template => "layouts/exception", :locals => {:message => msg})
       end
-      format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
+      format.any { head :not_found }  # Anything else, just send 404
     end
   end
   private :render_exception
@@ -1266,7 +1266,7 @@ class ApplicationController < ActionController::Base
       end
 
       format.json do
-        render :nothing => true, :status => :unauthorized
+        head :unauthorized
       end
 
       format.js do

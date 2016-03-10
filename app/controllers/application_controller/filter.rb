@@ -874,7 +874,7 @@ module ApplicationController::Filter
         end
         redirect_to(:action => "show_list")
       end
-      format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
+      format.any { head :not_found }  # Anything else, just send 404
     end
   end
 

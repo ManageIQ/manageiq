@@ -42,7 +42,7 @@ describe OpsController do
                                      :active_tab  => 'db_connections',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
     session[:settings] = {:views => {}, :perpage => {:list => 10}}
-    expect(controller).to receive(:render)
+    expect(controller).to receive(:head)
     post :change_tab, :params => { :tab_id => 'db_connections', :format => :json }
     expect(response.status).to eq(200)
   end

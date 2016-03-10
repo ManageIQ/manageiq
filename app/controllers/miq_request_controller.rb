@@ -412,7 +412,7 @@ class MiqRequestController < ApplicationController
 
   def post_install_callback
     MiqRequestTask.post_install_callback(params["task_id"]) if params["task_id"]
-    render :nothing => true
+    head :ok
   end
 
   private ############################
