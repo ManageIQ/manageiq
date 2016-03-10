@@ -493,7 +493,7 @@ class MiqCapacityController < ApplicationController
     presenter = ExplorerPresenter.new(:active_tree => x_active_tree)
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:util][:chart_data].to_json + ';'
+    presenter.load_chart(@sb[:util][:chart_data])
 
     # clearing out any selection in tree if active node has been reset to "" upon returning to screen or when first time in
     presenter[:clear_selection] = x_node == ''
@@ -508,9 +508,6 @@ class MiqCapacityController < ApplicationController
       :date_to   => @sb[:util][:options][:edate],
       :skip_days => @sb[:util][:options][:skip_days],
     }
-
-    # FIXME: handle or verify the IE/non-IE branch for the flash charts
-    presenter[:extra_js] << Charting.js_load_statement(true)
 
     render :js => presenter.to_html
   end
@@ -605,7 +602,7 @@ class MiqCapacityController < ApplicationController
     presenter = ExplorerPresenter.new(:active_tree => @sb[:active_tree])
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
+    presenter.load_chart(@sb[:planning][:chart_data])
 
     presenter.reload_toolbars(:view => v_tb)
     presenter.set_visibility(@sb[:active_tab] == 'report', :toolbar)
@@ -616,7 +613,6 @@ class MiqCapacityController < ApplicationController
                                     else
                                       _("Best Fit Clusters")
                                     end
-    presenter[:extra_js] << Charting.js_load_statement(true)
 
     render :js => presenter.to_html
   end

@@ -57,7 +57,12 @@ class ExplorerPresenter
       :exp                  => {},
       :osf_node             => '',
       :show_miq_buttons     => false,
+      :load_chart           => nil
     ).update(options)
+  end
+
+  def load_chart(chart_data)
+    @options[:load_chart] = chart_data
   end
 
   def show_miq_buttons(show = true)
@@ -202,6 +207,11 @@ class ExplorerPresenter
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
 
     @out << @options[:extra_js].join("\n")
+
+    if @options[:load_chart]
+      @out << 'ManageIQ.charts.chartData = ' + @options[:load_chart].to_json + ';'
+      @out << Charting.js_load_statement(true)
+    end
 
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
     # always replace content partial to adjust height of content div
