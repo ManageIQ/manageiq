@@ -1336,7 +1336,7 @@ class ApplicationController < ActionController::Base
       # we need to make sure we have the referer in the session for future requests
       session['referer'] = request.base_url + '/' unless session['referer'].present?
     else
-      render :status => :forbidden, :text => ''
+      head :forbidden
       return
     end
 
