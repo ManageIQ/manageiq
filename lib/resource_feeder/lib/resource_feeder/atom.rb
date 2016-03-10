@@ -6,7 +6,7 @@ module ResourceFeeder
     extend self
 
     def render_atom_feed_for(resources, options = {})
-      render :text => atom_feed_for(resources, options), :content_type => Mime::ATOM
+      render :body => atom_feed_for(resources, options), :content_type => Mime[:atom]
     end
 
     def atom_feed_for(resources, options = {})
