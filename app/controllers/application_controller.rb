@@ -2464,7 +2464,7 @@ class ApplicationController < ActionController::Base
       raise("User '#{current_userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'")
   end
 
-  def find_filtered(db, count, options = {})
+  def find_filtered(db, options = {})
     user     = current_user
     mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
@@ -2472,7 +2472,7 @@ class ApplicationController < ActionController::Base
     if db.respond_to?(:find_filtered) && !mfilters.empty?
       result = db.find_tags_by_grouping(mfilters, :conditions => options[:conditions], :ns => "*")
     else
-      result = db.find(count, options)
+      result = db.all
     end
 
     result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:find_filtered) && result
