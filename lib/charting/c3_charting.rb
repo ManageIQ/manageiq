@@ -54,7 +54,7 @@ class C3Charting < Charting
   end
 
   def js_load_statement(delayed = false)
-    delayed ? 'setTimeout(function(){ load_jqplot_charts(); }, 100);' : 'load_jqplot_charts();'
+    delayed ? 'setTimeout(function(){ load_c3_charts(); }, 100);' : 'load_c3_charts();'
   end
 
   # list of available chart types - in options_for_select format

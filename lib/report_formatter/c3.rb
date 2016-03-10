@@ -68,7 +68,7 @@ module ReportFormatter
     end
 
     def chart_is_2d?
-      %w(Bar Column StackedBar StackedColumn).include?(mri.graph[:type])
+      true
     end
 
     def chart_is_stacked?
