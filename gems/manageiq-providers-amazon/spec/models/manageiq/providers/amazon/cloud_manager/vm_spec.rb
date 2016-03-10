@@ -1,7 +1,10 @@
+require_relative '../aws_helper'
+
 describe ManageIQ::Providers::Amazon::CloudManager::Vm do
+  let(:ems)                   { FactoryGirl.create(:ems_amazon_with_authentication) }
+  let(:vm)                    { FactoryGirl.create(:vm_perf_amazon, :ext_management_system => ems) }
+
   context "#is_available?" do
-    let(:ems)                   { FactoryGirl.create(:ems_amazon) }
-    let(:vm)                    { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
     let(:power_state_on)        { "running" }
     let(:power_state_suspended) { "pending" }
 
@@ -43,6 +46,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Vm do
     context("with :reset") do
       let(:state) { :reset }
       include_examples "Vm operation is not available"
+    end
+  end
+
+  describe "#set_custom_field" do
+    it "updates a tag on an instance" do
+      stubbed_responses = {
+        :ec2 => {
+          :describe_instances =>
+            { :reservations => [{instances: [:instance_id => vm.ems_ref]}] }
+        }
+      }
+      with_aws_stubbed(stubbed_responses) do
+        expect(vm.set_custom_field('tag_key', 'tag_value')).to be_truthy
+      end
     end
   end
 end
