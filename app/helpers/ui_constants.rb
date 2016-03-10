@@ -475,7 +475,7 @@ module UiConstants
     "ext_management_system" => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ext_management_systems")},
     "ems_cluster"           => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ems_cluster")},
     "vm-tags"               => _("Tagged %{tables}") % {:tables => ui_lookup(:tables => "vm")},
-    "tenants"      => _("Tenants")
+    "tenants"     	    => _("Tenants")
   }
 
   EXP_COUNT_TYPE = [_("Count of"), "count"].freeze  # Selection for count based filters

@@ -731,7 +731,7 @@ class ChargebackController < ApplicationController
     elsif @edit[:new][:cbshow_typ] == "tenants"
       Tenant.all.each do |cl|
         @edit[:cb_assign][:cis][cl.id] = cl.name
-      end      
+      end
     end
   end
 
