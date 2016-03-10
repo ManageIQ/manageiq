@@ -6,7 +6,7 @@ class Service < ApplicationRecord
   belongs_to :service                        # Parent Service
   has_many :services, :dependent => :destroy # Child services
 
-  has_many :dialogs, -> { uniq }, :through => :service_template
+  has_many :dialogs, -> { distinct }, :through => :service_template
 
   has_one :miq_request_task, :dependent => :nullify, :as => :destination
   has_one :miq_request, :through => :miq_request_task
