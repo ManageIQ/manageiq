@@ -14,15 +14,7 @@ module QuadiconHelper
     options[:db] ||= db_from_item(item)
 
     if options[:mode] == :text # Rendering the text link, not the quadicon
-      return render(
-               :partial => "layouts/quadicon/quadicon_text",
-               :locals  => {
-                 :db              => options[:db],
-                 :truncate_length => 13,
-                 :row             => options[:row],
-                 :item            => item
-               }
-      )
+      return render_quadicon_text(item, options[:db], options[:row])
     end
 
     if options[:typ] == :listnav
@@ -90,6 +82,92 @@ module QuadiconHelper
   end
 
   private
+
+  def render_quadicon_text(item, db, row)
+    if @embedded && !@showlinks
+      column = case db
+                 when "MiqCimInstance"   then 'evm_display_name'
+                 when "ConfiguredSystem" then 'hostname'
+                 else 'name'
+                 end
+      content_tag(:span, :title => h(row[column])) do
+        truncate_for_quad(h(row[column]))
+      end
+    else
+      if !@listicon.nil? && (@vm || @host || @storage)
+        # if sub-item is being shown
+        if @listicon == "scan_history"
+          href_link = url_for_item_quad_text(@vm, @id, @listicon.pluralize)
+          content_tag(:a, truncate_for_quad(row['started_on'].to_s),
+                      :href => href_link, :title => h(row['started_on']))
+        else
+          href_link = if @vm
+                        url_for_item_quad_text(@vm, @id, @listicon.pluralize)
+                      elsif @host
+                        url_for_item_quad_text(@host, @id, @listicon.pluralize)
+                      elsif @storage
+                        url_for_item_quad_text(@storage, @id, params[:action])
+                      end
+          content_tag(:a, truncate_for_quad(row['name'] ? row['name'] : row['display_name']),
+                      :href => href_link, :title => h(row['name']))
+        end
+
+      elsif @policy_sim && session[:policies].length > 0
+        # Policy sim (VMs only, for now)
+        content_tag(:a, truncate_for_quad(row['name']),
+                    :href => url_for_db(db), :title => _("Show policy details for %s") % row['name'])
+      elsif db == "EmsCluster"
+        content_tag(:a, truncate_for_quad(row['v_qualified_desc']),
+                    :href => url_for_db("ems_cluster", "show"), :title => h(row['v_qualified_desc']))
+      elsif db == "StorageManager"
+        content_tag(:a, truncate_for_quad(row['name']),
+                    :href => url_for_db("storage_manager", "show"), :title => h(row['name']))
+      else
+        if @explorer
+          column = case db
+                   when "ServiceResource"      then 'resource_name'
+                   when "ConfiguredSystem"     then 'hostname'
+                   when "ConfigurationProfile" then 'description'
+                   else 'name'
+                   end
+          name = row[column]
+
+          if request.parameters[:controller] == "service" && @view.db == "Vm"
+            attributes = vm_quad_link_attributes(item)
+            if attributes[:link]
+              link_to(
+                truncate_for_quad(name),
+                {:controller => attributes[:controller], :action => attributes[:action], :id => attributes[:id]},
+                :title                 => name,
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true
+              )
+            else
+              content_tag(:a, truncate_for_quad(name), :title => h(name))
+            end
+          else
+            link_to(
+              truncate_for_quad(name),
+              {:action => 'x_show', :id => controller.send(:list_row_id, row)},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :title                 => name,
+              "data-method"          => :post,
+              :remote                => true
+            )
+          end
+        else
+          if row['evm_display_name']
+            content_tag(:a, truncate_for_quad(row['evm_display_name']), :href => url_for_db(db, "show"), :title => h(row['evm_display_name']))
+          elsif row['key']
+            content_tag(:a, truncate_for_quad(row['key']), :href => url_for_db(db), :title => h(row['key']))
+          else
+            content_tag(:a, truncate_for_quad(row['name']), :href => url_for_db(db, "show", item), :title => h(row['name']))
+          end
+        end
+      end
+    end
+  end
 
   def db_from_item(item)
     item.kind_of?(ExtManagementSystem) ? item.class.db_name : item.class.base_model.name
