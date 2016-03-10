@@ -155,7 +155,6 @@
             :method: :allowed_cloud_networks
           :description: Virtual Private Cloud
           :auto_select_single: false
-          :default: nil
           :required: true
           :display: :edit
           :data_type: :integer
