@@ -148,6 +148,7 @@
             :method: :allowed_resource_groups
           :description: Resource Groups
           :required: true
+          :required_method: :validate_placement
           :display: :edit
           :data_type: :integer
         :cloud_network:
@@ -156,6 +157,7 @@
           :description: Virtual Private Cloud
           :auto_select_single: false
           :required: true
+          :required_method: :validate_placement
           :display: :edit
           :data_type: :integer
         :cloud_subnet:
