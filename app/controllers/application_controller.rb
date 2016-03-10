@@ -2478,7 +2478,7 @@ class ApplicationController < ActionController::Base
     if db.respond_to?(:find_filtered) && !mfilters.empty?
       result = db.find_tags_by_grouping(mfilters, :conditions => options[:conditions], :ns => "*")
     else
-      result = db.where(options)
+      result = db.apply_legacy_finder_options(options)
     end
 
     result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:find_filtered) && result
