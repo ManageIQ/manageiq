@@ -78,7 +78,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   # Find all in use and read-only templates
   def self.in_use
-    joins(:stacks).uniq
+    joins(:stacks).distinct
   end
 
   # Find all not in use thus editable templates
