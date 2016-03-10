@@ -13,10 +13,6 @@ module QuadiconHelper
     options.reverse_merge! :size => 72
     options[:db] ||= db_from_item(item)
 
-    if options[:mode] == :text # Rendering the text link, not the quadicon
-      return render_quadicon_text(item, options[:db], options[:row])
-    end
-
     if options[:typ] == :listnav
       id = ""
       options[:height] ||= 80
@@ -83,7 +79,10 @@ module QuadiconHelper
 
   private
 
-  def render_quadicon_text(item, db, row)
+  def render_quadicon_text(item, row)
+    return unless item
+    db = db_from_item(item)
+
     if @embedded && !@showlinks
       column = case db
                  when "MiqCimInstance"   then 'evm_display_name'
