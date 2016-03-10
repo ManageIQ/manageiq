@@ -1200,11 +1200,20 @@ class ApplicationController < ActionController::Base
       # Add disks to the device array
       unless db_record.hardware.disks.nil?
         db_record.hardware.disks.each do |disk|
-          loc = disk.location.nil? ? "" : disk.location
-          dev = disk.controller_type ? disk.controller_type << " " << loc : ""  # default device is controller_type
-          desc = disk.filename                              # default description is filename
-          icon = disk.device_name                       # default icon prefix is device_name
+          # relying on to_s to force nils into ""
+          loc = disk.location.to_s
+
+          # default device is controller_type
+          dev = disk.controller_type ? "#{disk.controller_type} #{loc}" : ""
+
+          # default description is filename
+          desc = disk.filename.to_s
+
+          # default icon prefix is device_name
+          icon = disk.device_name.to_s
+
           conn = disk.start_connected ? _(", Connect at Power On = Yes") : _(", Connect at Power On = No")
+
           # Customize disk entries by type
           if disk.device_type == "cdrom-raw"
             dev = _("CD-ROM (IDE %{location})%{connection}") % {:location => loc, :connection => conn}
@@ -1272,7 +1281,7 @@ class ApplicationController < ActionController::Base
             icon = "floppy"
           end
           # uppercase the first character of the device name and description
-          dev = dev[0..0].upcase + dev[1..-1]
+          dev = dev[0..0].upcase + dev[1..-1].to_s
           desc = desc.nil? ? "" : desc[0..0].upcase + desc[1..-1].to_s
 
           @devices.push(:device      => dev,
