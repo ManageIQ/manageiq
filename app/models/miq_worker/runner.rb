@@ -7,7 +7,8 @@ class MiqWorker::Runner
 
   include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
-  attr_reader   :vmdb_config, :active_roles, :server
+  attr_reader   :active_roles, :server
+  attr_writer   :vmdb_config
 
   INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
@@ -19,6 +20,10 @@ class MiqWorker::Runner
 
   def self.start_worker(*args)
     new(*args).start
+  end
+
+  def vmdb_config
+    @vmdb_config ||= VMDB::Config.new("vmdb")
   end
 
   def poll_method
@@ -274,7 +279,7 @@ class MiqWorker::Runner
   end
 
   def sync_config(config = nil)
-    @vmdb_config = config || VMDB::Config.new("vmdb")
+    self.vmdb_config = config
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
@@ -288,11 +293,11 @@ class MiqWorker::Runner
   end
 
   def sync_log_level
-    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
+    Vmdb::Loggers.apply_config(vmdb_config.config[:log])
   end
 
   def sync_worker_settings
-    @worker_settings = self.class.corresponding_model.worker_settings(:config => @vmdb_config)
+    @worker_settings = self.class.corresponding_model.worker_settings(:config => vmdb_config)
     @poll = @worker_settings[:poll]
     poll_method
   end
