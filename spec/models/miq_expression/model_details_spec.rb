@@ -112,7 +112,7 @@ describe MiqExpression do
     end
 
     it "OrchestrationStack" do
-      result = described_class.build_relats("OrchestrationStack")
+      result = described_class.build_relats("ManageIQ::Providers::CloudManager::OrchestrationStack")
       expect(result.fetch_path(:reflections, :vms, :parent, :class_path).split(".").last).to eq("manageiq_providers_cloud_manager_vms")
       expect(result.fetch_path(:reflections, :vms, :parent, :assoc_path).split(".").last).to eq("vms")
     end
@@ -138,7 +138,7 @@ describe MiqExpression do
       end
 
       it "one_to_many relation" do
-        @ref = OrchestrationStack.reflections_with_virtual[:vms]
+        @ref = ManageIQ::Providers::CloudManager::OrchestrationStack.reflections_with_virtual[:vms]
         expect(subject).to eq(@ref.klass.model_name.plural)
       end
     end

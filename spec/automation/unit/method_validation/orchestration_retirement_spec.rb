@@ -8,7 +8,7 @@ describe "Orchestration retirement state machine Methods Validation" do
   end
 
   let(:stack) do
-    FactoryGirl.create(:orchestration_stack)
+    FactoryGirl.create(:orchestration_stack_cloud)
   end
 
   let(:stack_in_provider) { true }
