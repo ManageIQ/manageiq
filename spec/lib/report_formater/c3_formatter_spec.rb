@@ -1,9 +1,9 @@
 include ReportsSpecHelper
 
-describe ReportFormatter::JqplotFormatter do
+describe ReportFormatter::C3Formatter do
   before(:each) do
-    allow(Charting).to receive(:backend).and_return(:jqplot)
-    allow(Charting).to receive(:format).and_return(:jqplot)
+    allow(Charting).to receive(:backend).and_return(:c3)
+    allow(Charting).to receive(:format).and_return(:c3)
   end
   context '#build_numeric_chart_grouped' do
     [true, false].each do |other|
@@ -12,10 +12,27 @@ describe ReportFormatter::JqplotFormatter do
 
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped).once.and_call_original
         render_report(report)
-        expect(report.chart[:data][0][0]).to eq(4.0)
-        expect(report.chart[:options][:axes][:xaxis][:ticks][0]).to eq('blah')
-        expect(report.chart[:data][0][-1]).to eq(4) if other
+        expect(report.chart[:data][:columns][0][1]).to eq(4.0)
+        expect(report.chart[:data][:columns][0][-1]).to eq(4) if other
       end
+    end
+  end
+
+  context '#build_numeric_chart_simple' do
+    let(:report) { numeric_chart_simple }
+
+    it "report chart have right data in ascending order" do
+      report.col_formats = [nil, :general_number_precision_0]
+      render_report(report)
+      expect(report.chart[:data][:columns][0].count).to eq(report.table.data.count + 1)
+      expect(report.chart[:data][:columns][0][1]).to eq(2024)
+    end
+
+    it "handles null data in chart column" do
+      report = null_data_chart
+
+      expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
+      render_report(report)
     end
   end
 
@@ -26,9 +43,8 @@ describe ReportFormatter::JqplotFormatter do
 
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
         render_report(report)
-        expect(report.chart[:data][0][0]).to eq(15)
-        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq("bar")
-        expect(report.chart[:data][0][-1]).to eq(1) if other
+        expect(report.chart[:data][:columns][0][1]).to eq(15)
+        expect(report.chart[:data][:columns][0][-1]).to eq(1) if other
       end
     end
 
@@ -47,11 +63,10 @@ describe ReportFormatter::JqplotFormatter do
 
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped_2dim).once.and_call_original
         render_report(report)
-        expect(report.chart[:data][0][0]).to eq(6_656)
-        expect(report.chart[:data][0][1]).to eq(4_096)
-        expect(report.chart[:data][1][1]).to eq(3_072)
-        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq('MTC-RHEVM-3.0')
-        expect(report.chart[:data][0][-1]).to eq(1_024) if other
+        expect(report.chart[:data][:columns][0][1]).to eq(6_656)
+        expect(report.chart[:data][:columns][0][2]).to eq(4_096)
+        expect(report.chart[:data][:columns][1][1]).to eq(1_024)
+        expect(report.chart[:data][:columns][0][-1]).to eq(1_024) if other
       end
     end
 
@@ -60,21 +75,6 @@ describe ReportFormatter::JqplotFormatter do
 
       expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped_2dim).once.and_call_original
       render_report(report)
-    end
-  end
-
-  context '#build_numeric_chart_simple' do
-    let(:report) { numeric_chart_simple }
-
-    it "uses correct formating function for axis with given column format" do
-      report.col_formats = [nil, :general_number_precision_0]
-      render_report(report)
-      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.number_with_delimiter.jqplot({})")
-    end
-
-    it "uses correct formating function for axis with implicit column format" do
-      render_report(report)
-      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.mbytes_to_human_size.jqplot({})")
     end
   end
 end
