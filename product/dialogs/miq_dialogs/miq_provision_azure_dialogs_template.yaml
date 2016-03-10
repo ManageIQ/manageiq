@@ -148,6 +148,7 @@
             :method: :allowed_resource_groups
           :description: Resource Groups
           :required: true
+          :required_method: :validate_placement
           :display: :edit
           :data_type: :integer
         :cloud_network:
@@ -157,6 +158,7 @@
           :auto_select_single: false
           :default: nil
           :required: true
+          :required_method: :validate_placement
           :display: :edit
           :data_type: :integer
         :cloud_subnet:
