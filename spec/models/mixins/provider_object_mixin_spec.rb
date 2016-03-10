@@ -47,4 +47,10 @@ describe ProviderObjectMixin do
       expect { TestClass.new.with_provider_object {} }.to raise_error(NotImplementedError)
     end
   end
+
+  context "when no ems or manager is available" do
+    it "#connection_source" do
+      expect { TestClass.new.send(:connection_source) }.to raise_error(RuntimeError)
+    end
+  end
 end
