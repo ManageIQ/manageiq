@@ -32,6 +32,6 @@ module ProviderObjectMixin
   end
 
   def connection_manager
-    try(:ext_management_system) || manager
+    try(:ext_management_system) || try(:manager)
   end
 end
