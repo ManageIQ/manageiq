@@ -44,27 +44,27 @@ module ApiSpecHelper
 
   def run_get(url, options = {})
     headers = options.delete(:headers) || {}
-    get url, options.stringify_keys, update_headers(headers)
+    get url, :params => options.stringify_keys, :headers => update_headers(headers)
     parse_response
   end
 
   def run_post(url, body = {}, headers = {})
-    post url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    post url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
     parse_response
   end
 
   def run_put(url, body = {}, headers = {})
-    put url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    put url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
     parse_response
   end
 
   def run_patch(url, body = {}, headers = {})
-    patch url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    patch url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
     parse_response
   end
 
   def run_delete(url, headers = {})
-    delete url, {}, update_headers(headers)
+    delete url, :headers => update_headers(headers)
     parse_response
   end
 
