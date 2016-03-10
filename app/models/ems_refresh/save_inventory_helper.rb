@@ -34,7 +34,15 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [])
-    deletes = deletes.to_a # make sure to load the association if it's an association
+    association.reset
+
+    if deletes == :use_association
+      deletes = association
+    elsif deletes.respond_to?(:reload) && deletes.loaded?
+      deletes.reload
+    end
+    deletes = deletes.to_a
+
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
 
@@ -139,6 +147,6 @@ module EmsRefresh::SaveInventoryHelper
     # if this association isn't the definitive source
     top_level = association.proxy_association.options[:dependent] == :destroy
 
-    top_level && (target == true || target.nil? || parent == target) ? association.to_a.dup : []
+    top_level && (target == true || target.nil? || parent == target) ? :use_association : []
   end
 end
