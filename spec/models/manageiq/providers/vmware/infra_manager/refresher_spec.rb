@@ -3,7 +3,12 @@ require Rails.root.join('spec/tools/vim_data/vim_data_test_helper')
 describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone, :name => "VC41Test-Prod", :hostname => "VC41Test-Prod.MIQTEST.LOCAL", :ipaddress => "192.168.252.14")
+    @ems = FactoryGirl.create(
+      :ems_vmware_with_authentication,
+      :zone => zone, :name => "VC41Test-Prod",
+      :hostname => "VC41Test-Prod.MIQTEST.LOCAL",
+      :ipaddress => "192.168.252.14"
+    )
 
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager)
       .to receive(:connect).and_return(FakeMiqVimHandle.new)
@@ -32,6 +37,118 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_relationship_tree
   end
 
+  it 'handles switch deletion' do
+    EmsRefresh.refresh(@ems)
+    @ems.reload
+    switches_count = Switch.count
+    host_switches_count = HostSwitch.count
+    lans_count = Lan.count
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    inventory[:host]['host-891']['config']['network']['vswitch'].delete_if { |s| s['name'] == 'vSwitch0' }
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    expect(Switch.count).to eq(switches_count - 1)
+    expect(HostSwitch.count).to eq(host_switches_count - 1)
+    expect(Lan.count).to eq(lans_count - 3)
+  end
+
+  it 'handles in-place switch attribute update' do
+    EmsRefresh.refresh(@ems)
+    @ems.reload
+    switch = Host.find_by(:ems_ref => 'host-891').switches.find_by_name('vSwitch0')
+    switch_id = switch.id
+    updated_forged_transmits = !switch.forged_transmits # flip it
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    hash = inventory.fetch_path(:host, 'host-891', 'config', 'network', 'vswitch').find { |s| s['name'] == 'vSwitch0' }
+    hash.fetch_path('spec', 'policy', 'security')['forgedTransmits'] = updated_forged_transmits ? 'true' : 'false'
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    switch = Host.find_by(:ems_ref => 'host-891').switches.find_by_name('vSwitch0')
+    expect(switch.id).to eq(switch_id)
+    expect(switch.forged_transmits).to eq(updated_forged_transmits)
+  end
+
+  it 'handles portgroup deletion' do
+    EmsRefresh.refresh(@ems)
+    @ems.reload
+    switches_count = Switch.count
+    host_switches_count = HostSwitch.count
+    lans_count = Lan.count
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    inventory[:host]['host-891']['config']['network']['portgroup'].pop
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    expect(Switch.count).to eq(switches_count)
+    expect(HostSwitch.count).to eq(host_switches_count)
+    expect(Lan.count).to eq(lans_count - 1)
+  end
+
+  it 'handles dvswitch deletion' do
+    EmsRefresh.refresh(@ems)
+    @ems.reload
+    switches_count = Switch.count
+    host_switches_count = HostSwitch.count
+    lans_count = Lan.count
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    inventory[:dvswitch] = inventory[:dvportgroup] = {}
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    expect(Switch.count).to eq(switches_count - 1)
+    expect(HostSwitch.count).to eq(host_switches_count - 4)
+    expect(Lan.count).to eq(lans_count - 2)
+  end
+
+  it 'handles in-place dvswitch attribute update' do
+    EmsRefresh.refresh(@ems)
+    @ems.reload
+    uid_ems = 'dvs-119'
+    switch = Switch.find_by(:uid_ems => uid_ems)
+    switch_id = switch.id
+    switch_name = switch.name
+    updated_switch_name = "changed#{switch_name}"
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    expect(inventory.fetch_path(:dvswitch, uid_ems, 'summary', 'name')).to eq(switch_name)
+    inventory.fetch_path(:dvswitch, uid_ems, 'summary')['name'] = updated_switch_name
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    switch = Switch.find_by(:uid_ems => uid_ems)
+    expect(switch.name).to eq(updated_switch_name)
+    expect(switch.id).to eq(switch_id)
+  end
+
+  it 'handles dvportgroup deletion' do
+    EmsRefresh.refresh(@ems)
+    @ems.reload
+    switches_count = Switch.count
+    host_switches_count = HostSwitch.count
+    lans_count = Lan.count
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    inventory[:dvportgroup].delete('dvportgroup-121')
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    expect(Switch.count).to eq(switches_count)
+    expect(HostSwitch.count).to eq(host_switches_count)
+    expect(Lan.count).to eq(lans_count - 1)
+  end
+
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
     expect(Datacenter.count).to eq(3)
@@ -49,13 +166,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(Disk.count).to eq(421)
     expect(GuestDevice.count).to eq(135)
     expect(Hardware.count).to eq(105)
-    expect(Lan.count).to eq(14)
+    expect(Lan.count).to eq(16)
     expect(MiqScsiLun.count).to eq(73)
     expect(MiqScsiTarget.count).to eq(73)
     expect(Network.count).to eq(75)
     expect(OperatingSystem.count).to eq(105)
     expect(Snapshot.count).to eq(29)
-    expect(Switch.count).to eq(8)
+    expect(Switch.count).to eq(9)
     expect(SystemService.count).to eq(29)
 
     expect(Relationship.count).to eq(246)
@@ -235,7 +352,34 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :running      => true
     )
 
-    expect(@host.switches.size).to eq(2)
+    expect(@host.switches.size).to eq(3)
+
+    dvswitch = @host.switches.find_by_name("DC1_DVS")
+    expect(dvswitch).to have_attributes(
+      :uid_ems           => 'dvs-119',
+      :name              => 'DC1_DVS',
+      :ports             => 0,
+      :allow_promiscuous => nil,
+      :forged_transmits  => nil,
+      :mac_changes       => nil,
+      :shared            => true,
+      :switch_uuid       => '1a 0a 34 50 30 8b 4d fc-cd 1b 3f 3b b6 00 a8 16'
+    )
+    expect(dvswitch.lans.size).to eq(2)
+
+    dvslan = dvswitch.lans.find_by_name("DC1_DVPG0")
+    expect(dvslan).to have_attributes(
+      :uid_ems                    => 'dvportgroup-121',
+      :name                       => 'DC1_DVPG0',
+      :tag                        => '',
+      :allow_promiscuous          => false,
+      :forged_transmits           => false,
+      :mac_changes                => false,
+      :computed_allow_promiscuous => nil,
+      :computed_forged_transmits  => nil,
+      :computed_mac_changes       => nil
+    )
+
     switch = @host.switches.find_by_name("vSwitch0")
     expect(switch).to have_attributes(
       :uid_ems           => "vSwitch0",
@@ -243,10 +387,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :ports             => 128,
       :allow_promiscuous => false,
       :forged_transmits  => true,
-      :mac_changes       => true
+      :mac_changes       => true,
+      :shared            => nil,
+      :switch_uuid       => nil
     )
 
     expect(switch.lans.size).to eq(3)
+
     @lan = switch.lans.find_by_name("NetApp PG")
     expect(@lan).to have_attributes(
       :uid_ems                    => "NetApp PG",
