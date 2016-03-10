@@ -815,6 +815,8 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:shelve_offload)
       when "instance_pause"
         return true unless @record.is_available?(:pause)
+      when "instance_terminate"
+        return true unless @record.is_available?(:terminate)
       when "vm_policy_sim", "vm_protect"
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
       when "vm_refresh"

@@ -302,6 +302,10 @@ class VmOrTemplate < ApplicationRecord
     connection_state == 'connected'
   end
 
+  def terminated?
+    current_state == 'terminated'
+  end
+
   def raw_set_custom_field(attribute, value)
     raise "VM has no EMS, unable to set custom attribute" unless ext_management_system
     run_command_via_parent(:vm_set_custom_field, :attribute => attribute, :value => value)

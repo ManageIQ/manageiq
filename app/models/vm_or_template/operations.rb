@@ -82,10 +82,16 @@ module VmOrTemplate::Operations
     # Check the basic require to interact with a VM.
     return [false, 'The VM is retired'] if self.retired?
     return [false, 'The VM is a template'] if self.template?
+    return [false, 'The VM is terminated'] if self.terminated?
     return [true,  'The VM is not connected to a Host'] unless self.has_required_host?
     return [true,  'The VM does not have a valid connection state'] if !connection_state.nil? && !self.connected_to_ems?
     return [true,  "The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"] unless self.has_active_ems?
     nil
+  end
+
+  def validate_terminate
+    return {:available => false, :message => 'The VM is terminated'} if self.terminated?
+    {:available => true, :message => nil}
   end
 
   def validate_vm_control_powered_on
