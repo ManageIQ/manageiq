@@ -29,6 +29,9 @@ include:
   cloud_object_store_container:
     columns:
     - key
+  cloud_tenant:
+    columns:
+    - name
   ext_management_system:
     columns:
     - name
@@ -43,6 +46,7 @@ col_order:
 - last_modified
 - etag
 - cloud_object_store_container.key
+- cloud_tenant.name
 - ext_management_system.name
 
 # Column titles, in order
@@ -52,6 +56,7 @@ headers:
 - Last Modified
 - ETag
 - Cloud Object Store
+- Cloud Tenant
 - Cloud Provider
 
 # Condition(s) string for the SQL query
