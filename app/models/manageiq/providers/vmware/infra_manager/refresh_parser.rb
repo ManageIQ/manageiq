@@ -8,6 +8,7 @@ module ManageIQ::Providers
       #
 
       def self.ems_inv_to_hashes(inv)
+
         uids = {}
         result = {:uid_lookup => uids}
 
@@ -71,6 +72,29 @@ module ManageIQ::Providers
         return result, result_uids
       end
 
+      def self.group_dvswitch_portgroup_by_host(dvswitch_inv, dvportgroup_inv)
+        dvswitch_inv.each do |_, data|
+          hosts = data.fetch_path('config', 'host') || []
+          hosts.each do |host_data|
+            host_mor = host_data.fetch_path('config', 'host')
+            dvswitch_by_host[host_mor] = [] unless dvswitch_by_host.key?(host_mor)
+            dvswitch_by_host[host_mor] << data
+          end
+        end
+
+        dvportgroup_inv.each do |_, data|
+          switch_mor = data.fetch_path('config', 'distributedVirtualSwitch')
+          switch = dvswitch_inv[switch_mor]
+          hosts = switch.fetch_path('config', 'host') || []
+          hosts.each do |host_data|
+            host_mor = host_data.fetch_path('config', 'host')
+            dvportgroup_by_host[host_mor] = [] unless dvportgroup_by_host.key?(host_mor)
+            dvportgroup_by_host[host_mor] << data
+          end
+        end
+        return dvswitch_by_host, dvportgroup_by_host
+      end
+
       def self.host_inv_to_hashes(inv, ems_inv, storage_uids, cluster_uids)
         result = []
         result_uids = {}
@@ -80,6 +104,8 @@ module ManageIQ::Providers
         guest_device_uids = {}
         scsi_lun_uids = {}
         return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids if inv.nil?
+
+        dvswitch_by_host, dvportgroup_by_host = group_dvswitch_portgroup_by_host(ems_inv[:dvswitch], ems_inv[:dvportgroup])
 
         inv.each do |mor, host_inv|
           mor = host_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
@@ -140,8 +166,9 @@ module ManageIQ::Providers
           product_name = product["name"].nil? ? nil : product["name"].to_s.gsub(/^VMware\s*/i, "")
 
           # Collect the hardware, networking, and scsi inventories
-          switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv)
-          lans, lan_uids[mor] = host_inv_to_lan_hashes(host_inv, switch_uids[mor])
+
+          switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv, dvswitch_by_host[mor])
+          lans, lan_uids[mor] = host_inv_to_lan_hashes(host_inv, switch_uids[mor], dvportgroup_by_host[mor])
 
           hardware = host_inv_to_hardware_hash(host_inv)
           hardware[:guest_devices], guest_device_uids[mor] = host_inv_to_guest_device_hashes(host_inv, switch_uids[mor])
@@ -332,76 +359,131 @@ module ManageIQ::Providers
         result
       end
 
-      def self.host_inv_to_switch_hashes(inv)
+      def self.host_inv_to_switch_hashes(inv, dvswitch_inv)
         inv = inv.fetch_path('config', 'network')
 
         result = []
         result_uids = {:pnic_id => {}}
-        return result, result_uids if inv.nil?
 
-        inv['vswitch'].to_miq_a.each do |data|
-          name = uid = data['name']
-          pnics = data['pnic'].to_miq_a
+        unless inv.nil?
+          inv['vswitch'].to_miq_a.each do |data|
 
-          security_policy = data.fetch_path('spec', 'policy', 'security') || {}
+            name = uid = data['name']
+            pnics = data['pnic'].to_miq_a
 
-          new_result = {
-            :uid_ems           => uid,
-            :name              => name,
-            :ports             => data['numPorts'],
+            security_policy = data.fetch_path('spec', 'policy', 'security') || {}
 
-            :allow_promiscuous => security_policy['allowPromiscuous'].nil? ? nil : security_policy['allowPromiscuous'].to_s.downcase == 'true',
-            :forged_transmits  => security_policy['forgedTransmits'].nil? ? nil : security_policy['forgedTransmits'].to_s.downcase == 'true',
-            :mac_changes       => security_policy['macChanges'].nil? ? nil : security_policy['macChanges'].to_s.downcase == 'true',
+            new_result = {
+              :uid_ems           => uid,
+              :name              => name,
+              :ports             => data['numPorts'],
 
-            :lans              => []
-          }
+              :allow_promiscuous => security_policy['allowPromiscuous'].nil? ? nil : security_policy['allowPromiscuous'].to_s.downcase == 'true',
+              :forged_transmits  => security_policy['forgedTransmits'].nil? ? nil : security_policy['forgedTransmits'].to_s.downcase == 'true',
+              :mac_changes       => security_policy['macChanges'].nil? ? nil : security_policy['macChanges'].to_s.downcase == 'true',
 
-          result << new_result
-          result_uids[uid] = new_result
+              :lans              => []
+            }
 
-          pnics.each { |pnic| result_uids[:pnic_id][pnic] = new_result unless pnic.blank? }
+            result << new_result
+            result_uids[uid] = new_result
+
+            pnics.each { |pnic| result_uids[:pnic_id][pnic] = new_result unless pnic.blank? }
+          end
+        end
+
+        unless dvswitch_inv.nil?
+          dvswitch_inv.each do |data|
+            config = data.fetch('config', {})
+            uid = data['MOR']
+            name = config.fetch('name', '')
+            security_policy = config.fetch('defaultPortConfig', {}).fetch('securityPolicy', {})
+
+            new_result = {
+                :uid_ems           => uid,
+                :name              => name,
+                :ports             => config.fetch('numPorts', '0'),
+
+                :allow_promiscuous => security_policy['allowPromiscuous'].nil? ? nil : security_policy['allowPromiscuous']['value'].to_s.downcase == 'true',
+                :forged_transmits  => security_policy['forgedTransmits'].nil? ? nil : security_policy['forgedTransmits']['value'].to_s.downcase == 'true',
+                :mac_changes       => security_policy['macChanges'].nil? ? nil : security_policy['macChanges']['value'].to_s.downcase == 'true',
+
+                :lans              => []
+            }
+
+            result << new_result
+            result_uids[uid] = new_result
+          end
         end
         return result, result_uids
       end
 
-      def self.host_inv_to_lan_hashes(inv, switch_uids)
+      def self.host_inv_to_lan_hashes(inv, switch_uids, dvportgroup_inv)
         inv = inv.fetch_path('config', 'network')
 
         result = []
         result_uids = {}
-        return result, result_uids if inv.nil?
 
-        inv['portgroup'].to_miq_a.each do |data|
-          spec = data['spec']
-          next if spec.nil?
+        unless inv.nil?
+          inv['portgroup'].to_miq_a.each do |data|
+            spec = data['spec']
+            next if spec.nil?
 
-          # Find the switch to which this lan is connected
-          switch = switch_uids[spec['vswitchName']]
-          next if switch.nil?
+            # Find the switch to which this lan is connected
+            switch = switch_uids[spec['vswitchName']]
+            next if switch.nil?
 
-          name = uid = spec['name']
+            name = uid = spec['name']
 
-          security_policy = data.fetch_path('spec', 'policy', 'security') || {}
-          computed_security_policy = data.fetch_path('computedPolicy', 'security') || {}
+            security_policy = data.fetch_path('spec', 'policy', 'security') || {}
+            computed_security_policy = data.fetch_path('computedPolicy', 'security') || {}
 
-          new_result = {
-            :uid_ems                    => uid,
-            :name                       => name,
-            :tag                        => spec['vlanId'].to_s,
+            new_result = {
+              :uid_ems                    => uid,
+              :name                       => name,
+              :tag                        => spec['vlanId'].to_s,
 
-            :allow_promiscuous          => security_policy['allowPromiscuous'].nil? ? nil : security_policy['allowPromiscuous'].to_s.downcase == 'true',
-            :forged_transmits           => security_policy['forgedTransmits'].nil? ? nil : security_policy['forgedTransmits'].to_s.downcase == 'true',
-            :mac_changes                => security_policy['macChanges'].nil? ? nil : security_policy['macChanges'].to_s.downcase == 'true',
+              :allow_promiscuous          => security_policy['allowPromiscuous'].nil? ? nil : security_policy['allowPromiscuous'].to_s.downcase == 'true',
+              :forged_transmits           => security_policy['forgedTransmits'].nil? ? nil : security_policy['forgedTransmits'].to_s.downcase == 'true',
+              :mac_changes                => security_policy['macChanges'].nil? ? nil : security_policy['macChanges'].to_s.downcase == 'true',
 
-            :computed_allow_promiscuous => computed_security_policy['allowPromiscuous'].nil? ? nil : computed_security_policy['allowPromiscuous'].to_s.downcase == 'true',
-            :computed_forged_transmits  => computed_security_policy['forgedTransmits'].nil? ? nil : computed_security_policy['forgedTransmits'].to_s.downcase == 'true',
-            :computed_mac_changes       => computed_security_policy['macChanges'].nil? ? nil : computed_security_policy['macChanges'].to_s.downcase == 'true',
-          }
-          result << new_result
-          result_uids[uid] = new_result
-          switch[:lans] << new_result
+              :computed_allow_promiscuous => computed_security_policy['allowPromiscuous'].nil? ? nil : computed_security_policy['allowPromiscuous'].to_s.downcase == 'true',
+              :computed_forged_transmits  => computed_security_policy['forgedTransmits'].nil? ? nil : computed_security_policy['forgedTransmits'].to_s.downcase == 'true',
+              :computed_mac_changes       => computed_security_policy['macChanges'].nil? ? nil : computed_security_policy['macChanges'].to_s.downcase == 'true',
+            }
+            result << new_result
+            result_uids[uid] = new_result
+            switch[:lans] << new_result
+          end
         end
+
+        unless dvportgroup_inv.nil?
+          dvportgroup_inv.to_miq_a.each do |data|
+            spec = data['config']
+            next if spec.nil?
+
+            # Find the switch to which this lan is connected
+            switch = switch_uids[spec['distributedVirtualSwitch']]
+            next if switch.nil?
+
+            uid = data['MOR']
+            security_policy = spec.fetch_path('defaultPortConfig', 'securityPolicy') || {}
+
+            new_result = {
+                :uid_ems => uid,
+                :name => spec['name'],
+                :tag => spec.fetch_path('defaultPortConfig', 'vlan', 'vlanId').to_s,
+
+                :allow_promiscuous => security_policy.fetch_path('allowPromiscuous', 'value').to_s.downcase == 'true',
+                :forged_transmits => security_policy.fetch_path('forgedTransmits', 'value').to_s.downcase == 'true',
+                :mac_changes => security_policy.fetch_path('macChanges', 'value').to_s.downcase == 'true',
+            }
+            result << new_result
+            result_uids[uid] = new_result
+            switch[:lans] << new_result
+          end
+        end
+
         return result, result_uids
       end
 
