@@ -12,9 +12,9 @@ class MiqRubyrep
   end
 
   def self.prepare_configuration(config)
-    db_conf  = VMDB::Config.new("database").config[Rails.env.to_sym]
+    db_conf = Rails.configuration.database_configuration[Rails.env].symbolize_keys
 
-    rp_conf  = MiqReplicationWorker.worker_settings[:replication]
+    rp_conf = MiqReplicationWorker.worker_settings[:replication]
     raise "Replication configuration missing" if rp_conf.blank?
     if db_conf.slice(:host, :port, :database) == rp_conf.slice(:host, :port, :database)
       raise "Replication configuration source must not point to destination"
