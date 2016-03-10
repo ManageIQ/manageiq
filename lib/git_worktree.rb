@@ -32,6 +32,26 @@ class GitWorktree
     true
   end
 
+  def branches
+    @repo.branches.each.collect(&:name)
+  end
+
+  def branch=(name)
+    branch = @repo.branches.each.detect { |b| b.name.casecmp(name) == 0 }
+    raise GitWorktreeException::BranchMissing, name unless branch
+    @commit_sha = branch.target.oid
+  end
+
+  def tags
+    @repo.tags.each.collect(&:name)
+  end
+
+  def tag=(name)
+    tag = @repo.tags.each.detect { |t| t.name.casecmp(name) == 0 }
+    raise GitWorktreeException::TagMissing, name unless tag
+    @commit_sha = tag.target.oid
+  end
+
   def add(path, data, default_entry_keys = {})
     entry = {}
     entry[:path] = path

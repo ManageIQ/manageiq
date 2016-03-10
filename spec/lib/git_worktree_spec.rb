@@ -27,7 +27,8 @@ describe GitWorktree do
 
     def add_files_to_bare_repo(flist)
       flist.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
-      @ae_db.send(:commit, "files_added").tap { |cid| @ae_db.send(:merge, cid) }
+      @ae_db.save_changes("files added")
+      @ae_db.instance_variable_get('@repo').head.target.oid
     end
 
     def clone(url)
@@ -104,7 +105,7 @@ describe GitWorktree do
     it "#nodes" do
       node = @ae_db.nodes("A").first
       expect(node[:full_name]).to eq("#{@git_db}/A/File1.YamL")
-      expect(node[:rel_path]).to  eq("A/File1.YamL")
+      expect(node[:rel_path]).to eq("A/File1.YamL")
     end
 
     it "rename directory" do
@@ -234,6 +235,44 @@ describe GitWorktree do
       c_repo.send(:pull)
       expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
+    end
+  end
+
+  context "branches" do
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
+    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
+
+    it "get list of branches" do
+      expect(test_repo.branches).to match_array(%w(master branch1 branch2))
+    end
+
+    it "get list of files in a branch" do
+      test_repo.branch = 'branch2'
+
+      expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+    end
+
+    it "non existent branch" do
+      expect { test_repo.branch = 'nada' }.to raise_exception(GitWorktreeException::BranchMissing)
+    end
+  end
+
+  context "tags" do
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
+    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
+
+    it "get list of tags" do
+      expect(test_repo.tags).to match_array(%w(tag1 tag2))
+    end
+
+    it "get list of files in a tag" do
+      test_repo.tag = 'tag2'
+
+      expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+    end
+
+    it "non existent tag" do
+      expect { test_repo.tag = 'nada' }.to raise_exception(GitWorktreeException::TagMissing)
     end
   end
 end
