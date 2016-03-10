@@ -6,7 +6,7 @@ module ResourceFeeder
     extend self
 
     def render_rss_feed_for(resources, options = {})
-      render :text => rss_feed_for(resources, options), :content_type => Mime::RSS
+      render :body => rss_feed_for(resources, options), :content_type => Mime[:rss]
     end
 
     def rss_feed_for(resources, options = {})
