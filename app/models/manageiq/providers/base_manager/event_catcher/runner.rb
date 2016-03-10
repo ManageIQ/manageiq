@@ -1,5 +1,5 @@
 require 'thread'
-require 'active_support/concurrency/latch'
+require 'concurrent/atomic/event'
 
 class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
   class EventCatcherHandledException < StandardError
@@ -89,13 +89,13 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
   end
 
   def event_monitor_running
-    @thread_start_latch.release
+    @monitor_started.set
   end
 
   def start_event_monitor
     @log_prefix = nil
     @exit_requested = false
-    @thread_start_latch = ActiveSupport::Concurrency::Latch.new
+    @monitor_started = Concurrent::Event.new
 
     begin
       _log.info("#{log_prefix} Validating Connection/Credentials")
@@ -119,11 +119,11 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
         _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       ensure
-        @thread_start_latch.release
+        @monitor_started.set
       end
     end
 
-    @thread_start_latch.await
+    @monitor_started.wait
     _log.info("#{log_prefix} Started Event Monitor Thread")
 
     tid
