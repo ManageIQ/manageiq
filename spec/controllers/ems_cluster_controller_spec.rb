@@ -70,7 +70,7 @@ describe EmsClusterController do
     end
 
     subject do
-      get :show, :id => @cluster.id
+      get :show, :params => {:id => @cluster.id}
     end
 
     context "render listnav partial" do

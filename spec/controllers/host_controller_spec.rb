@@ -170,7 +170,7 @@ describe HostController do
       session[:settings] = {:quadicons => {:host => 'foo'}}
     end
 
-    subject { get :show, :id => @host.id }
+    subject { get :show, :params => {:id => @host.id} }
 
     context "render listnav and host" do
       render_views

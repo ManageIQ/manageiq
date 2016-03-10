@@ -8,7 +8,7 @@ describe AvailabilityZoneController do
     end
 
     subject do
-      get :show, :id => @zone.id
+      get :show, :params => {:id => @zone.id}
     end
 
     context "render listnav partial" do
