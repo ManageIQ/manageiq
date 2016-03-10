@@ -371,10 +371,8 @@ class MiqAeClassController < ApplicationController
     end
 
     presenter[:record_id] = determine_record_id_for_presenter
-
     presenter[:osf_node] = x_node
-
-    presenter[:extra_js] << "miqButtons('#{@changed ? 'show' : 'hide'}');"
+    presenter.show_miq_buttons if @changed
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

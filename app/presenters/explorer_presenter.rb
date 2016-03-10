@@ -55,8 +55,13 @@ class ExplorerPresenter
       :extra_js             => [],
       :object_tree_json     => '',
       :exp                  => {},
-      :osf_node             => ''
+      :osf_node             => '',
+      :show_miq_buttons     => false,
     ).update(options)
+  end
+
+  def show_miq_buttons(show = true)
+    @options[show_miq_buttons] = show
   end
 
   def set_visibility(value, *elements)
@@ -115,7 +120,7 @@ class ExplorerPresenter
     end
 
     # Turn off form buttons when replacing explorer right cell
-    @out << javascript_for_miq_button_visibility(false).html_safe
+    @out << javascript_for_miq_button_visibility(@options[:show_miq_buttons]).html_safe
 
     @out << "miqDeleteDynatreeCookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
 
