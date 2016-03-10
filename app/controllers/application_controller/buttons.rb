@@ -71,7 +71,7 @@ module ApplicationController::Buttons
         page << javascript_for_miq_button_visibility_changed(@changed)
       end
     else
-      add_flash("No Button Group was selected!", :error)
+      add_flash(_("No Button Group was selected!"), :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -316,15 +316,15 @@ module ApplicationController::Buttons
   def group_button_add_save(typ)
     assert_privileges(params[:button] == "add" ? "ab_group_new" : "ab_group_edit")
     if @edit[:new][:name].blank?
-      render_flash(_("%s is required") % "Name", :error)
+      render_flash(_("Name is required"), :error)
       return
     end
     if @edit[:new][:description].blank?
-      render_flash(_("%s is required") % "Description", :error)
+      render_flash(_("Description is required"), :error)
       return
     end
     if @edit[:new][:button_image].blank? || @edit[:new][:button_image] == 0
-      render_flash(_("%s must be selected") % "Button Image", :error)
+      render_flash(_("Button Image must be selected"), :error)
       return
     end
     group_set_record_vars(@custom_button_set)
@@ -438,7 +438,7 @@ module ApplicationController::Buttons
       name = @edit[:new][:instance_name].blank? ? @edit[:new][:other_name] : @edit[:new][:instance_name]
       if !button_valid?
         @breadcrumbs = []
-        drop_breadcrumb(:name => "Edit of Button", :url => "/miq_ae_customization/button_edit")
+        drop_breadcrumb(:name => _("Edit of Button"), :url => "/miq_ae_customization/button_edit")
         @lastaction = "automate_button"
         @layout = "miq_ae_automate_button"
         render :update do |page|
@@ -512,7 +512,7 @@ module ApplicationController::Buttons
       button_set_record_vars(@custom_button)
       if !button_valid?
         @breadcrumbs = []
-        drop_breadcrumb(:name => "Edit of Button", :url => "/miq_ae_customization/button_edit")
+        drop_breadcrumb(:name => _("Edit of Button"), :url => "/miq_ae_customization/button_edit")
         @lastaction = "automate_button"
         @layout = "miq_ae_automate_button"
         render :update do |page|
@@ -545,7 +545,7 @@ module ApplicationController::Buttons
       add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       @breadcrumbs = []
-      drop_breadcrumb(:name => "Edit of Button", :url => "/miq_ae_customization/button_edit")
+      drop_breadcrumb(:name => _("Edit of Button"), :url => "/miq_ae_customization/button_edit")
       @lastaction = "automate_button"
       @layout = "miq_ae_automate_button"
       replace_right_cell("button_edit")
@@ -610,7 +610,11 @@ module ApplicationController::Buttons
     @in_a_form = true
     session[:changed] = false
     @breadcrumbs = []
-    title = typ == "new" ? "Add Button" : "Edit of '#{@custom_button.description}' Button"
+    title = if typ == "new"
+              _("Add Button")
+            else
+              _("Edit of '%{description}' Button") % {:description => @custom_button.description}
+            end
     drop_breadcrumb(:name => title, :url => "/miq_ae_customization/button_new")
     @lastaction = "automate_button"
     @layout = "miq_ae_automate_button"
@@ -911,7 +915,7 @@ module ApplicationController::Buttons
       record = ServiceTemplate.find_by_id(nodetype[2].split('-').last)
       # saving id of catalogitem to use it in view to build id for right cell
       @sb[:rec_id] = record.id
-      @right_cell_text = _("%{model} for \"%{record}\"") % {:model => "Buttons", :record => record.name.split("|").first}
+      @right_cell_text = _("Buttons for \"%{record}\"") % {:record => record.name.split("|").first}
       @sb[:applies_to_class] = "ServiceTemplate"
       asets = CustomButtonSet.find_all_by_class_name("ServiceTemplate", record.id)
       @sb[:button_groups] = []
@@ -939,7 +943,7 @@ module ApplicationController::Buttons
       @record = CustomButtonSet.find(from_cid(nodetype[3].split('-').last))
       # saving id of catalogitem to use it in view to build id for right cell
       @sb[:rec_id] = @record.id
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Button Group", :name => @record.name.split("|").first}
+      @right_cell_text = _("Button Group \"%{name}\"") % {:name => @record.name.split("|").first}
       @sb[:buttons] = []
       button_order = @record[:set_data] && @record[:set_data][:button_order] ? @record[:set_data][:button_order] : nil
       if button_order     # show assigned buttons in order they were saved
@@ -980,8 +984,8 @@ module ApplicationController::Buttons
       #       @sb[:user_roles].sort!
       @resolve[:new][:target_class] = @sb[:target_classes].invert["ServiceTemplate"]
       dialog_id = @custom_button.resource_action.dialog_id
-      @sb[:dialog_label] = dialog_id ? Dialog.find_by_id(dialog_id).label : "No Dialog"
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Button", :name => @custom_button.name}
+      @sb[:dialog_label] = dialog_id ? Dialog.find_by_id(dialog_id).label : _("No Dialog")
+      @right_cell_text = _("Button \"%{name}\"") % {:name => @custom_button.name}
     end
     @right_cell_div  = "ab_list"
   end

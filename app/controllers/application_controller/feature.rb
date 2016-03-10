@@ -24,7 +24,7 @@ class ApplicationController
 
     def build_tree(sandbox)
       builder = TreeBuilder.class_for_type(name)
-      raise "No TreeBuilder found for feature '#{name}'" unless builder
+      raise _("No TreeBuilder found for feature '%{name}'") % {:name => name} unless builder
       builder.new(tree_name, name, sandbox)
     end
 

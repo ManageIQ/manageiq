@@ -178,7 +178,8 @@ module ApplicationController::Explorer
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
-    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
+    @right_cell_text = _("Editing %{model} Tags for \"%{name}\"") % {:name  => ui_lookup(:models => @tagging),
+                                                                     :model => current_tenant.name}
     replace_right_cell(@sb[:action])
   end
 
@@ -228,7 +229,7 @@ module ApplicationController::Explorer
   def valid_active_node(treenodeid)
     modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)
     return treenodeid if ["root", ""].include?(nodetype) # incase node is root or doesn't have a prefix
-    raise _("No Class found for explorer tree node id '%s'") % treenodeid if modelname.nil?
+    raise _("No Class found for explorer tree node id '%{number}'") % {:number => treenodeid} if modelname.nil?
     kls = modelname.constantize
     return treenodeid if kls == Hash
 

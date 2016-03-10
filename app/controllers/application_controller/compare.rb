@@ -47,7 +47,7 @@ module ApplicationController::Compare
     else
       session[:db_title] = "VMs"
     end
-    drop_breadcrumb(:name => "Compare #{ui_lookup(:model => @sb[:compare_db])}",
+    drop_breadcrumb(:name => _("Compare %{name}") % {:name => ui_lookup(:model => @sb[:compare_db])},
                     :url  => "/#{session[:db_title].singularize.downcase}/compare_miq")
     @lastaction = "compare_miq"
     if params[:ppsetting]                                 # User selected new per page value
@@ -101,7 +101,8 @@ module ApplicationController::Compare
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
     @compare.remove_id(params[:id].to_i) if @lastaction == "compare_remove"
-    drop_breadcrumb(:name => "Compare #{session[:db_title]}", :url => "/#{session[:db_title].singularize.downcase}/compare_miq")
+    drop_breadcrumb(:name => _("Compare %{name}") % {:name => session[:db_title]},
+                    :url  => "/#{session[:db_title].singularize.downcase}/compare_miq")
     @lastaction = "compare_miq"
     if params[:ppsetting]                                 # User selected new per page value
       @items_per_page = params[:ppsetting].to_i           # Set the new per page value
@@ -411,10 +412,12 @@ module ApplicationController::Compare
 
     if mode == :compare
       rpt.db = "<compare>"            # Set special db setting for report formatter
-      rpt.title = "#{ui_lookup(:model => @sb[:compare_db])} Compare Report (* = Value does not match base)"
+      rpt.title = _("%{name} Compare Report (* = Value does not match base)") %
+                    {:name => ui_lookup(:model => @sb[:compare_db])}
     else
       rpt.db = "<drift>"            # Set special db setting for report formatter
-      rpt.title = "#{ui_lookup(:model => @sb[:compare_db])} '" + @sb[:miq_vm_name] + "' Drift Report"
+      rpt.title = _("${name} '%{vm_name}' Drift Report") % {:name    => ui_lookup(:model => @sb[:compare_db]),
+                                                            :vm_name => @sb[:miq_vm_name]}
     end
 
     rpt
@@ -551,7 +554,8 @@ module ApplicationController::Compare
     @compare = create_drift_view
     build_sections_tree
     drift_to_json(@compare)
-    drop_breadcrumb(:name => "'#{@drift_obj.name}' Drift Analysis", :url => "/#{@sb[:compare_db].downcase}/drift")
+    drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @drift_obj.name},
+                    :url  => "/#{@sb[:compare_db].downcase}/drift")
     @sb[:miq_vm_name] = @drift_obj.name
     if params[:ppsetting]                     # Came in from per page setting
       render :update do |page|                    # Use RJS to update the display
@@ -581,7 +585,8 @@ module ApplicationController::Compare
     identify_obj
 
     drift_to_json(@compare)
-    drop_breadcrumb(:name => "'#{@sb[:miq_vm_name]}' Drift Analysis", :url => "/#{@sb[:compare_db].downcase}/drift")
+    drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @sb[:miq_vm_name]},
+                    :url  => "/#{@sb[:compare_db].downcase}/drift")
     @lastaction = "drift"
     @showtype = "drift"
     render :update do |page|                    # Use RJS to update the display
@@ -738,7 +743,7 @@ module ApplicationController::Compare
     @timestamps = @drift_obj.drift_state_timestamps
     session[:timestamps] = @timestamps
     @showtype = "drift_history"
-    drop_breadcrumb({:name => "Drift History", :url => "/#{controller_name}/drift_history/#{@drift_obj.id}"})
+    drop_breadcrumb(:name => _("Drift History"), :url => "/#{controller_name}/drift_history/#{@drift_obj.id}")
     @lastaction = "drift_history"
     @display = "main"
     @button_group = "common_drift"
@@ -852,11 +857,11 @@ module ApplicationController::Compare
 
     case request.parameters["controller"].downcase
     when "ems_cluster"
-      title = "Clusters"
+      title = _("Clusters")
     when "vm"
-      title = "Virtual Machines"
+      title = _("Virtual Machines")
     when "miq_template"
-      title = "VM Templates"
+      title = _("VM Templates")
     else
       title = request.parameters["controller"].pluralize.titleize
     end
@@ -1051,18 +1056,18 @@ module ApplicationController::Compare
   # Build the total row of the compare grid xml
   def drift_add_total(view)
     row = {
-      :col0  => "<span class='cell-effort-driven cell-plain'>All Sections</span>",
+      :col0  => "<span class='cell-effort-driven cell-plain'>" + _("All Sections") + "</span>",
       :id    => "id_#{@rows.length}",
       :total => true
     }
     view.ids.each_with_index do |_id, idx|
       if idx == 0
-        row.merge!(drift_add_same_image(idx, "Same as previous"))
+        row.merge!(drift_add_same_image(idx, _("Same as previous")))
       else
         if view.results[view.ids[idx]][:_match_] == 100
-          row.merge!(drift_add_same_image(idx, "Same as previous"))
+          row.merge!(drift_add_same_image(idx, _("Same as previous")))
         else
-          row.merge!(drift_add_diff_image(idx, "Changed from previous"))
+          row.merge!(drift_add_diff_image(idx, _("Changed from previous")))
         end
       end
     end
@@ -1095,15 +1100,15 @@ module ApplicationController::Compare
     row = {}
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row.merge!(drift_add_same_image(idx, "Starting values"))
+        row.merge!(drift_add_same_image(idx, _("Starting values")))
       else
         match_condition = view.results[id][section[:name]][:_match_]
         match_condition = view.results[id][section[:name]][:_match_exists_] if @exists_mode
 
         if match_condition == 100
-          row.merge!(drift_add_same_image(idx, "Same as previous"))
+          row.merge!(drift_add_same_image(idx, _("Same as previous")))
         else
-          row.merge!(drift_add_diff_image(idx, "Changed from previous"))
+          row.merge!(drift_add_diff_image(idx, _("Changed from previous")))
         end
       end
     end
@@ -1367,7 +1372,7 @@ module ApplicationController::Compare
           row.merge!(drift_add_diff_image(idx, val))
         end
       else
-        val = "No Value Found"
+        val = _("No Value Found")
         row.merge!(drift_add_diff_image(idx, val))
       end
     end
@@ -1529,11 +1534,11 @@ module ApplicationController::Compare
         </a>"
     end
     if i == 0
-      html_text << "<a title='#{h[:name]} is the base'> #{txt.truncate(16)}</a>"
+      html_text << "<a title='" + _("%{name} is the base") % {:name => h[:name]} + "'> #{txt.truncate(16)}</a>"
     else
       url = "/#{controller_name}/compare_choose_base/#{view.ids[i]}"
       html_text <<
-        "<a title = 'Make #{h[:name]} the base'
+        "<a title = '" + _("Make %{name} the base") % {:name => h[:name]} + "'
             onclick = \"miqJqueryRequest('#{url}',
                       {beforeSend: true, complete: true});\" href='#'>"
       html_text << "  #{txt.truncate(16)}"
@@ -1564,7 +1569,7 @@ module ApplicationController::Compare
       view.ids.each_with_index do |_id, idx|
         if idx != 0
           url = "/#{controller_name}/compare_remove/#{view.records[idx].id}"
-          title = "Remove this #{session[:db_title].singularize} from the comparison"
+          title = _("Remove this %{title} from the comparison") % {:title => session[:db_title].singularize}
           html_text = "<a onclick=\"miqJqueryRequest('#{url}', {beforeSend: true, complete: true}); return false;\"
                        title=\"#{title}\" href=\"#\">
                          <img src=\"#{ActionController::Base.helpers.image_path('toolbars/delete.png')}\"
@@ -1613,13 +1618,13 @@ module ApplicationController::Compare
   # Build the total row of the compare grid xml
   def comp_add_total(view)
     row = {
-      :col0  => "<span class='cell-effort-driven cell-plain'>Total Matches</span>",
+      :col0  => "<span class='cell-effort-driven cell-plain'>" + _("Total Matches") + "</span>",
       :id    => "id_#{@rows.length}",
       :total => true
     }
     view.ids.each_with_index do |_id, idx|
       if idx == 0
-        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
+        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : _("% Matched:"), _("% Matched")))
       else
         key = @exists_mode ? :_match_exists_ : :_match_
         pct_match = view.results[view.ids[idx]][key]
@@ -1657,7 +1662,7 @@ module ApplicationController::Compare
     row = {}
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : "% Matched:", "% Matched"))
+        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : _("% Matched:"), _("% Matched")))
       else
         key = @exists_mode && !records.nil? ? :_match_exists_ : :_match_
         pct_match = view.results[id][section[:name]][key]
@@ -1740,7 +1745,7 @@ module ApplicationController::Compare
   def comp_record_data_nonexistsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row.merge!(compare_add_txt_col(idx, "%:", "% Matched"))
+      row.merge!(compare_add_txt_col(idx, "%:", _("% Matched")))
     else
       if val == "Found"         # This object has the record
         if basval == "Found"    # Base has the record
@@ -1954,10 +1959,10 @@ module ApplicationController::Compare
     base_fld = base_rec.nil? ? nil : base_rec[field[:name]]
 
     if idx == 0
-      row.merge!(compare_add_txt_col(idx, "(missing)"))
+      row.merge!(compare_add_txt_col(idx, _("(missing)")))
     else
       style = "color:#{base_fld.nil? ? passed_text_color : failed_text_color};"
-      row.merge!(compare_add_txt_col(idx, "(missing)", "", "", style))
+      row.merge!(compare_add_txt_col(idx, _("(missing)"), "", "", style))
     end
     row
   end
@@ -1991,7 +1996,7 @@ module ApplicationController::Compare
       val = fld[:_value_] unless fld.nil?
 
       if fld.nil?
-        row.merge!(compare_add_diff_image(idx, "No Value Found"))
+        row.merge!(compare_add_diff_image(idx, _("No Value Found")))
       elsif idx == 0      # On base object
         row.merge!(compare_add_same_image(idx, val, "cell-stripe"))
       else

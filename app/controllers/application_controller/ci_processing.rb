@@ -63,7 +63,7 @@ module ApplicationController::CiProcessing
     ownership_build_screen
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
-    drop_breadcrumb(:name => "Set Ownership", :url => "/vm_common/ownership")
+    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
     @in_a_form = @ownershipedit = true
     build_targets_hash(@ownershipitems)
     if @edit[:explorer]
@@ -217,7 +217,8 @@ module ApplicationController::CiProcessing
     if @explorer
       retire
     else
-      drop_breadcrumb(:name => "Retire #{rec_cls.to_s.pluralize}", :url => "/#{session[:controller]}/retire")
+      drop_breadcrumb(:name => _("Retire %{name}") % {:name => rec_cls.to_s.pluralize},
+                      :url  => "/#{session[:controller]}/retire")
       render :update do |page|
         page.redirect_to :controller => rec_cls, :action => 'retire'      # redirect to build the retire screen
       end
@@ -263,7 +264,7 @@ module ApplicationController::CiProcessing
           end
     if params[:button]
       if params[:button] == "cancel"
-        flash = "Set/remove retirement date was cancelled by the user"
+        flash = _("Set/remove retirement date was cancelled by the user")
         @sb[:action] = nil
       elsif params[:button] == "save"
         if params[:retire_date].blank?
@@ -278,9 +279,9 @@ module ApplicationController::CiProcessing
           t = "#{params[:retire_date]} 00:00:00 Z"
           w = params[:retire_warn].to_i
           if session[:retire_items].length == 1
-            flash = _("Retirement date set to %s") % params[:retire_date]
+            flash = _("Retirement date set to %{date}") % {:date => params[:retire_date]}
           else
-            flash = _("Retirement dates set to %s") % params[:retire_date]
+            flash = _("Retirement dates set to %{date}") % {:date => params[:retire_date]}
           end
         end
         kls.retire(session[:retire_items], :date => t, :warn => w) # Call the model to retire the VM(s)
@@ -298,7 +299,8 @@ module ApplicationController::CiProcessing
       return
     end
     session[:changed] = @changed = false
-    drop_breadcrumb(:name => "Retire #{kls.to_s.pluralize}", :url => "/#{session[:controller]}/retire")
+    drop_breadcrumb(:name => _("Retire %{name}") % {:name => kls.to_s.pluralize},
+                    :url  => "/#{session[:controller]}/retire")
     session[:cat] = nil                 # Clear current category
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
     build_targets_hash(@retireitems)
@@ -354,7 +356,7 @@ module ApplicationController::CiProcessing
     @sb[:explorer] = true if @explorer
     @request_id = nil
     @in_a_form = @reconfigure = true
-    drop_breadcrumb(:name => "Reconfigure", :url => "/vm_common/reconfigure")
+    drop_breadcrumb(:name => _("Reconfigure"), :url => "/vm_common/reconfigure")
     if params[:rec_ids]
       @reconfigure_items = params[:rec_ids]
     end
@@ -580,7 +582,9 @@ module ApplicationController::CiProcessing
 
       table_name = "cim_base_storage_extents"
       model_name = table_name.classify.constantize
-      drop_breadcrumb(:name => @record.evm_display_name + " (All #{ui_lookup(:tables => @display.singularize)})", :url => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
+      drop_breadcrumb(:name => _("%{name} (All ${tables})") % {:name   => @record.evm_display_name,
+                                                               :tables => ui_lookup(:tables => @display.singularize)},
+                      :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
       @view, @pages = get_view(model_name, :parent => @record, :parent_method => :base_storage_extents)  # Get the records (into a view) and the paginator
       render :action => 'show'
     end
@@ -610,9 +614,11 @@ module ApplicationController::CiProcessing
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.guest_applications.find(from_cid(id))
       if Regexp.new(/linux/).match(@record.os_image_name.downcase)
-        drop_breadcrumb(:name => @record.name + " (Packages)", :url => "/#{@db}/guest_applications/#{@record.id}?page=#{@current_page}")
+        drop_breadcrumb(:name => _("%{name} (Packages)") % {:name => @record.name},
+                        :url  => "/#{@db}/guest_applications/#{@record.id}?page=#{@current_page}")
       else
-        drop_breadcrumb(:name => @record.name + " (Applications)", :url => "/#{@db}/guest_applications/#{@record.id}?page=#{@current_page}")
+        drop_breadcrumb(:name => _("%{name} (Applications)") % {:name => @record.name},
+                        :url  => "/#{@db}/guest_applications/#{@record.id}?page=#{@current_page}")
       end
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
       @view = get_db_view(GuestApplication)         # Instantiate the MIQ Report view object
@@ -620,9 +626,11 @@ module ApplicationController::CiProcessing
     else
       drop_breadcrumb({:name => @record.name, :url => "/#{@db}/show/#{@record.id}"}, true)
       if Regexp.new(/linux/).match(@record.os_image_name.downcase)
-        drop_breadcrumb(:name => @record.name + " (Packages)", :url => "/#{@db}/guest_applications/#{@record.id}")
+        drop_breadcrumb(:name => _("%{name} (Packages)") % {:name => @record.name},
+                        :url  => "/#{@db}/guest_applications/#{@record.id}")
       else
-        drop_breadcrumb(:name => @record.name + " (Applications)", :url => "/#{@db}/guest_applications/#{@record.id}")
+        drop_breadcrumb(:name => _("%{name} (Applications)") % {:name => @record.name},
+                        :url  => "/#{@db}/guest_applications/#{@record.id}")
       end
       @listicon = "guest_application"
       show_details(GuestApplication)
@@ -642,12 +650,14 @@ module ApplicationController::CiProcessing
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.patches.find(from_cid(id))
-      drop_breadcrumb(:name => @record.name + " (Patches)", :url => "/#{@db}/patches/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => _("%{name} (Patches)") % {:name => @record.name},
+                      :url  => "/#{@db}/patches/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/patches/#{@record.id}?show=#{@item.id}")
       @view = get_db_view(Patch)
       show_item
     else
-      drop_breadcrumb(:name => @record.name + " (Patches)", :url => "/#{@db}/patches/#{@record.id}")
+      drop_breadcrumb(:name => _("%{name} (Patches)") % {:name => @record.name},
+                      :url  => "/#{@db}/patches/#{@record.id}")
       @listicon = "patch"
       show_details(Patch)
     end
@@ -666,13 +676,15 @@ module ApplicationController::CiProcessing
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.groups.find(from_cid(id))
-      drop_breadcrumb(:name => @record.name + " (Groups)", :url => "/#{@db}/groups/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => _("%{name} (Groups)") % {:name => @record.name},
+                      :url  => "/#{@db}/groups/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb({:name => @item.name, :url => "/#{@db}/groups/#{@record.id}?show=#{@item.id}"})
       @user_names = @item.users
       @view = get_db_view(Account, :association => "groups")
       show_item
     else
-      drop_breadcrumb({:name => @record.name + " (Groups)", :url => "/#{@db}/groups/#{@record.id}"})
+      drop_breadcrumb(:name => _("%{name} (Groups)") % {:name => @record.name},
+                      :url  => "/#{@db}/groups/#{@record.id}")
       @listicon = "group"
       show_details(Account, :association => "groups")
     end
@@ -691,13 +703,15 @@ module ApplicationController::CiProcessing
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.users.find(from_cid(id))
-      drop_breadcrumb(:name => @record.name + " (Users)", :url => "/#{@db}/users/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => _("%{name} (Users)") % {:name => @record.name},
+                      :url  => "/#{@db}/users/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
       @group_names = @item.groups
       @view = get_db_view(Account, :association => "users")
       show_item
     else
-      drop_breadcrumb(:name => @record.name + " (Users)", :url => "/#{@db}/users/#{@record.id}")
+      drop_breadcrumb(:name => _("%{name} (Users)") % {:name => @record.name},
+                      :url  => "/#{@db}/users/#{@record.id}")
       @listicon = "user"
       show_details(Account, :association => "users")
     end
@@ -709,7 +723,8 @@ module ApplicationController::CiProcessing
     session[:type] = params[:discover_type] if params[:discover_type]
     title = set_discover_title(session[:type], request.parameters[:controller])
     if params["cancel"]
-      redirect_to :action => 'show_list', :flash_msg => _("%s was cancelled by the user") % "#{title} Discovery"
+      redirect_to :action    => 'show_list',
+                  :flash_msg => _("%{title} Discovery was cancelled by the user") % {:title => title}
     end
     @userid = ""
     @password = ""
@@ -766,7 +781,7 @@ module ApplicationController::CiProcessing
         @to[:fourth] = params[:to_fourth]
       end
       @in_a_form = true
-      drop_breadcrumb(:name => "#{title} Discovery", :url => "/host/discover")
+      drop_breadcrumb(:name => _("%{title} Discovery") % {:title => title}, :url => "/host/discover")
       @discover_type_selected = params[:discover_type_selected]
 
       if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
@@ -827,13 +842,14 @@ module ApplicationController::CiProcessing
           return
         else
           AuditEvent.success(audit.merge(:message => "#{title} discovery initiated (from_ip:[#{from_ip}], to_ip:[#{to_ip}])"))
-          redirect_to :action => 'show_list', :flash_msg => _("%{model}: %{task} successfully initiated") % {:model => title, :task => "Discovery"}
+          redirect_to :action    => 'show_list',
+                      :flash_msg => _("%{model}: Discovery successfully initiated") % {:model => title}
         end
       end
     end
     # Fell through, must be first time
     @in_a_form = true
-    @title = "#{title} Discovery"
+    @title = _("%{title} Discovery") % {:title => title}
     @from = {:first => "", :second => "", :third => "", :fourth => ""}
     @to = {:first => "", :second => "", :third => "", :fourth => ""}
   end
@@ -1257,7 +1273,7 @@ module ApplicationController::CiProcessing
     kls = ManageIQ::Providers::ConfigurationManager.find_by_id(providers.first).class
     kls.process_tasks(options)
   rescue => err
-    add_flash(_("Error during '%s': ") % task << err.message, :error)
+    add_flash(_("Error during '%{task}': %{message}") % {:task => task, :message => err.message}, :error)
   else
     add_flash(_("%{task} initiated for %{count_model} (%{controller})") %
                 {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'provider')}"),
@@ -1479,7 +1495,7 @@ module ApplicationController::CiProcessing
 
   # Common Cluster button handler routines
   def process_clusters(clusters, task)
-    clusters, _clusters_out_region = filter_ids_in_region(clusters, "Cluster")
+    clusters, _clusters_out_region = filter_ids_in_region(clusters, _("Cluster"))
     return if clusters.empty?
 
     if task == "destroy"
@@ -1585,7 +1601,7 @@ module ApplicationController::CiProcessing
   # Scan all selected or single displayed cluster(s)
   def scanclusters
     assert_privileges("ems_cluster_scan")
-    cluster_button_operation('scan', 'Analysis')
+    cluster_button_operation('scan', _('Analysis'))
   end
 
   def each_host(host_ids, task_name)
@@ -1606,7 +1622,7 @@ module ApplicationController::CiProcessing
 
   # Common Host button handler routines
   def process_hosts(hosts, task, display_name = nil)
-    hosts, _hosts_out_region = filter_ids_in_region(hosts, "Host")
+    hosts, _hosts_out_region = filter_ids_in_region(hosts, _("Host"))
     return if hosts.empty?
     task_name = (display_name || task)
 
@@ -1669,33 +1685,33 @@ module ApplicationController::CiProcessing
   # Refresh all selected or single displayed host(s)
   def refreshhosts
     assert_privileges("host_refresh")
-    host_button_operation('refresh_ems', 'Refresh')
+    host_button_operation('refresh_ems', _('Refresh'))
   end
 
   # Scan all selected or single displayed host(s)
   def scanhosts
     assert_privileges("host_scan")
-    host_button_operation('scan', 'Analysis')
+    host_button_operation('scan', _('Analysis'))
   end
 
   def check_compliance_hosts
     assert_privileges("host_check_compliance")
-    host_button_operation('check_compliance_queue', 'Compliance Check')
+    host_button_operation('check_compliance_queue', _('Compliance Check'))
   end
 
   def analyze_check_compliance_hosts
     assert_privileges("host_analyze_check_compliance")
-    host_button_operation('scan_and_check_compliance_queue', 'Analyze and Compliance Check')
+    host_button_operation('scan_and_check_compliance_queue', _('Analyze and Compliance Check'))
   end
 
   # Handle the Host power buttons
   POWER_BUTTON_NAMES = {
-    "reboot"           => "Restart",
-    "start"            => "Power On",
-    "stop"             => "Power Off",
-    "enter_maint_mode" => "Enter Maintenance Mode",
-    "exit_maint_mode"  => "Exit Maintenance Mode",
-    "standby"          => "Shutdown to Standby Mode"
+    "reboot"           => _("Restart"),
+    "start"            => _("Power On"),
+    "stop"             => _("Power Off"),
+    "enter_maint_mode" => _("Enter Maintenance Mode"),
+    "exit_maint_mode"  => _("Exit Maintenance Mode"),
+    "standby"          => _("Shutdown to Standby Mode")
   }
   def powerbutton_hosts(method)
     assert_privileges(params[:pressed])
@@ -1746,7 +1762,7 @@ module ApplicationController::CiProcessing
   end
 
   def process_storage(storages, task)
-    storages, _storages_out_region = filter_ids_in_region(storages, "Datastore")
+    storages, _storages_out_region = filter_ids_in_region(storages, _("Datastore"))
     return if storages.empty?
 
     if task == "destroy"
@@ -1793,7 +1809,7 @@ module ApplicationController::CiProcessing
       storages = find_checked_items
 
       if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
-        render_flash_not_applicable_to_model('Smartstate Analysis', ui_lookup(:tables => "storage"))
+        render_flash_not_applicable_to_model(_('Smartstate Analysis'), ui_lookup(:tables => "storage"))
         return
       end
       if storages.empty?
@@ -1830,13 +1846,13 @@ module ApplicationController::CiProcessing
   # Refresh all selected or single displayed Datastore(s)
   def refreshstorage
     assert_privileges("storage_refresh")
-    storage_button_operation('refresh_ems', 'Refresh')
+    storage_button_operation('refresh_ems', _('Refresh'))
   end
 
   # Scan all selected or single displayed storage(s)
   def scanstorage
     assert_privileges("storage_scan")
-    storage_button_operation('scan', 'Analysis')
+    storage_button_operation('scan', _('Analysis'))
   end
 
   # Delete all selected or single displayed host(s)
