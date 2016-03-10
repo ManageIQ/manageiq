@@ -655,8 +655,6 @@ class OpsController < ApplicationController
 
   def rbac_replace_right_cell(nodetype, presenter, r)
     @sb[:tab_label] = @tagging ? _("Tagging") : rbac_set_tab_label
-    # Make sure the double_click var is there
-    presenter[:extra_js] << "var miq_double_click = false;"
     if %w(accordion_select change_tab tree_select).include?(params[:action])
       presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "group_seq"
