@@ -1,7 +1,8 @@
 - @angular_form = true
 
 %form#form_div.form-horizontal{"name"          => "angularForm",
-                               "ng-controller" => "reconfigureFormController"}
+                               "ng-controller" => "reconfigureFormController",
+                               "ng-show"       => "afterGet"}
   = render :partial => "layouts/flash_msg"
   %h3= _('Options')
   .form-group{"ng-class" => "{'has-error': angularForm.memory.$invalid}"}
@@ -11,11 +12,11 @@
       %input{"bs-switch"       => "",
              "type"            => "checkbox",
              "name"            => "cb_memory",
-             "ng-model"        => "reconfigureModel.cb_memory",
+             "ng-model"        => "cb_memory",
+             "ng-change"       => "cbChange()",
              "switch-on-text"  => "Yes",
-             "switch-off-text" => "No",
-             "checkchange" => ""}
-    #memory_div{"ng-if" => "reconfigureModel.cb_memory"}
+             "switch-off-text" => "No"}
+    #memory_div{"ng-if" => "cb_memory"}
       .col-md-4
         %input.form-control{"type"        => "text",
                             "id"          => "textInput-markup",
@@ -41,7 +42,6 @@
                      "ng-change"                   => "memtypeChanged()",
                      "maxlength"                   => "20",
                      "required"                    => "",
-                     "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
         = (@reconfig_memory_note)
   .form-group
@@ -51,41 +51,43 @@
       %input{"bs-switch"       => "",
          "type"            => "checkbox",
          "name"            => "cb_cpu",
-         "ng-model"        => "reconfigureModel.cb_cpu",
+         "ng-model"        => "cb_cpu",
+         "ng-change"       => "cbChange()",
          "switch-on-text"  => "Yes",
-         "switch-off-text" => "No",
-         "checkchange" => ""}
+         "switch-off-text" => "No"}
 
-    #cpu_div{"ng-if" => "reconfigureModel.cb_cpu"}
+    #cpu_div{"ng-if" => "cb_cpu"}
 
       %hr
       %h3
         = _('Processor Options')
       - if @socket_options.length > 1
         .form-group{"ng-class" => "{'has-error': angularForm.total_cpus.$invalid}"}
-          %label.col-sm-2.control-label
+          %label.col-md-2.control-label
             = _('Sockets')
           .col-md-2
             = select_tag('socket_count',
-                        options_for_select(@socket_options),
+                        options_for_select([["<#{_('Choose')}>", '']] + @socket_options, disabled: ["<#{_('Choose')}>", nil]),
                         "ng-model"                    => "reconfigureModel.socket_count",
                         "ng-change"                   => "processorValueChanged()",
                         "required"                    => "",
-                        "maxlength"                   => "50",
+                        "maxlength"                   => "100",
+                        "checkchange"                 => "",
                         "selectpicker-for-select-tag" => "")
             - if @socket_options.length <= 1
               @socket_options[0]
       -  if @cores_options.length > 1
         .form-group{"ng-class" => "{'has-error': angularForm.cores_per_socket_count.$invalid}"}
-          %label.col-sm-2.control-label
+          %label.col-md-2.control-label
             = _('Cores Per Socket')
           .col-md-2
             = select_tag('cores_per_socket_count',
-                          options_for_select(@cores_options),
+                          options_for_select([["<#{_('Choose')}>", '']] + @cores_options, disabled: ["<#{_('Choose')}>", nil]),
                           "ng-model"                    => "reconfigureModel.cores_per_socket_count",
                           "ng-change"                   => "processorValueChanged()",
                           "required"                    => "",
-                          "maxlength"                   => "50",
+                          "maxlength"                   => "100",
+                          "checkchange"                 => "",
                           "selectpicker-for-select-tag" => "")
             - if @cores_options.length <= 1
               @cores_options[0]
@@ -97,7 +99,6 @@
                                 "id"          => "total_cpus",
                                 "name"        => "total_cpus",
                                 "ng-model"    => "reconfigureModel.total_cpus",
-                                "checkchange" => "",
                                 :readonly     => '',
                                 "maxlength"   => "50",
                                 "validate_total"  => "",
@@ -125,7 +126,7 @@
                      :class        => "btn btn-primary",
                      :alt          => _("Submit"),
                      "ng-click"    => "submitClicked()",
-                     "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+                     "ng-disabled" => "angularForm.$pristine || angularForm.$invalid || (!cb_memory && !cb_cpu)",
                      "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
         = button_tag("Reset",
              :class        => "btn btn-default btn-disabled",

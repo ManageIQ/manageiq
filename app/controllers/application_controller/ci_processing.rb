@@ -386,8 +386,9 @@ module ApplicationController::CiProcessing
       end
     when "submit"
       options = {:src_ids => params[:objectIds]}
-
-      options[:vm_memory] = params[:mem_typ] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024) if params[:cb_memory] == 'true'
+      if params[:cb_memory] == 'true'
+        options[:vm_memory] = params[:memory_type] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024)
+      end
       if params[:cb_cpu] == 'true'
         options[:cores_per_socket]  = params[:cores_per_socket_count].nil? ? 1 : params[:cores_per_socket_count].to_i
         options[:number_of_sockets] = params[:socket_count].nil? ? 1 : params[:socket_count].to_i
@@ -1104,9 +1105,9 @@ module ApplicationController::CiProcessing
     else
       @req = MiqRequest.find_by_id(@request_id)
       @reconfig_values[:src_ids] = @req.options[:src_ids]
-      @reconfig_values[:memory], @reconfig_values[:memory_type] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket].to_s if @req.options[:cores_per_socket]
-      @reconfig_values[:socket_count] = @req.options[:number_of_sockets].to_s if @req.options[:number_of_sockets]
+      @reconfig_values[:memory], @reconfig_values[:memory_type] = @req.options[:vm_memory] ? reconfigure_calculations(@req.options[:vm_memory]) : ['','']
+      @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket] ? @req.options[:cores_per_socket].to_s : ''
+      @reconfig_values[:socket_count] = @req.options[:number_of_sockets] ? @req.options[:number_of_sockets].to_s : ''
     end
 
     @reconfig_values[:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request

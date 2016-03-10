@@ -10,10 +10,8 @@ describe('reconfigureFormController', function() {
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
     $scope = $rootScope.$new();
-    $scope.reconfigureModel = {cb_memory:             false,
-                               memory:                 '0',
+    $scope.reconfigureModel = {memory:                 '0',
                                memory_type:            '',
-                               cb_cpu:                 false,
                                socket_count:           '1',
                                socket_options:         [],
                                cores_per_socket_count: '1',
@@ -22,6 +20,8 @@ describe('reconfigureFormController', function() {
     $controller = _$controller_('reconfigureFormController', {
       $scope: $scope,
       reconfigureFormId: '1000000000003',
+      cb_memory:              false,
+      cb_cpu:                 false,
       objectIds: [1000000000001,1000000000002],
       miqService: miqService
     });
@@ -92,10 +92,10 @@ describe('reconfigureFormController', function() {
 
     it('delegates to miqService.miqAjaxButton', function() {
       var submitContent = {objectIds:              $scope.objectIds,
-                           cb_memory:              $scope.reconfigureModel.cb_memory,
+                           cb_memory:              $scope.cb_memory,
+                           cb_cpu:                 $scope.cb_cpu,
                            memory:                 $scope.reconfigureModel.memory,
                            memory_type:            $scope.reconfigureModel.memory_type,
-                           cb_cpu:                 $scope.reconfigureModel.cb_cpu,
                            socket_count:           $scope.reconfigureModel.socket_count,
                            cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count};
 
