@@ -1,18 +1,14 @@
 require 'config'
-require_relative 'settings/database_source'
-require_relative 'settings/hash_differ'
+require_dependency 'patches/config_patch'
+require_dependency 'vmdb/settings/database_source'
+require_dependency 'vmdb/settings/hash_differ'
 
 module Vmdb
   class Settings
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
 
     def self.init
-      reset_settings_constant(build_settings)
-      reload!
-    end
-
-    def self.reload!(settings = ::Settings)
-      decrypt_passwords!(settings.reload!)
+      reset_settings_constant(build_settings).load!
     end
 
     def self.walk(settings = ::Settings, path = [], &block)
@@ -54,7 +50,7 @@ module Vmdb
     end
 
     def self.for_resource(resource)
-      reload!(build_settings(resource))
+      build_settings(resource).load!
     end
 
     def self.template_settings
