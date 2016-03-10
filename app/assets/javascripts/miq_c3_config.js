@@ -196,6 +196,52 @@
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
+    ),
+
+    Line: _.defaultsDeep({
+        data: {
+          type: 'line'
+        },
+        line: {
+          label: {
+            format: percentLabelFormat
+          },
+          expand: false
+        }
+      },
+      c3mixins.pfColorPattern,
+      c3mixins.legendOnRightSide,
+      c3mixins.noTooltip
+    ),
+    Area: _.defaultsDeep({
+        data: {
+          type: 'area'
+        },
+        area: {
+          label: {
+            format: percentLabelFormat
+          },
+          expand: false
+        }
+      },
+      c3mixins.pfColorPattern,
+      c3mixins.legendOnRightSide,
+      c3mixins.noTooltip
+    ),
+    StackedArea: _.defaultsDeep({
+        data: {
+          type: 'area'
+        },
+        area: {
+          label: {
+            format: percentLabelFormat
+          },
+          expand: false
+        }
+      },
+      c3mixins.pfColorPattern,
+      c3mixins.legendOnRightSide,
+      c3mixins.noTooltip
     )
   };
 })(ManageIQ);

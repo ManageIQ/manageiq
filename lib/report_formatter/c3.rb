@@ -13,7 +13,9 @@ module ReportFormatter
       "ColumnThreed"         => "Column",
       "ParallelThreedColumn" => "Column",
       "StackedThreedColumn"  => "StackedColumn",
-      "PieThreed"            => "Pie"
+      "PieThreed"            => "Pie",
+      "AreaThreed"           => "Area",
+      "StackedAreaThreed"    => "StackedArea"
     }
     def add_series(label, data)
       @counter ||= 0

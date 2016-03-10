@@ -51,7 +51,6 @@ class C3Charting < Charting
     }
     sample[:data][:groups] = [['data1','data2', 'data3']] if _options[:graph_type].include? 'Stacked'
     sample
-
   end
 
   def js_load_statement(delayed = false)
@@ -85,5 +84,6 @@ class C3Charting < Charting
     ["Pie (2D)",              "Pie"],
     ["Line (2D)",             "Line"],
     ["Area (2D)",             "Area"],
+    ["Area, Stacked (2D)",    "StackedArea"],
   ]
 end
