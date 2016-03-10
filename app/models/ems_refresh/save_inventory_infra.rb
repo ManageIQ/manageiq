@@ -76,6 +76,7 @@ module EmsRefresh::SaveInventoryInfra
 
     new_relats = hashes_relats(hashes)
     link_ems_inventory(ems, target, prev_relats, new_relats)
+    remove_obsolete_switches
 
     ems
   end
@@ -296,7 +297,11 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_switches_inventory(host, hashes)
-    save_inventory_multi(host.switches, hashes, :use_association, [:uid_ems], :lans)
+    already_saved, not_yet_saved = hashes.partition { |h| h[:id] }
+    save_inventory_multi(host.switches, not_yet_saved, [], [:uid_ems], :lans)
+    host_switches_hash = already_saved.collect { |switch| {:host_id => host.id, :switch_id => switch[:id]} }
+    save_inventory_multi(host.host_switches, host_switches_hash, [], [:host_id, :switch_id])
+    host.switches(true)
 
     host.save!
 
@@ -311,6 +316,17 @@ module EmsRefresh::SaveInventoryInfra
         lh[:id] = lan.id
       end
     end
+
+    # handle deletes here instead of inside #save_inventory_multi
+    switch_ids = Set.new(hashes.collect { |s| s[:id] })
+    deletes = host.switches.select { |s| !switch_ids.include?(s.id) }
+    host.switches.delete(deletes)
+  end
+
+  def remove_obsolete_switches
+    # delete from switches as s where s.shared is NULL and s.id not in (select switch_id from host_switches)
+    # delete from switches as s where s.shared = 't' and s.id not in (select switch_id from host_switches)
+    Switch.where.not(:id => HostSwitch.all.collect(&:switch).uniq).destroy_all
   end
 
   def save_lans_inventory(switch, hashes)
