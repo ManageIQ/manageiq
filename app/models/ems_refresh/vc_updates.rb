@@ -1,6 +1,6 @@
 module EmsRefresh::VcUpdates
   VIM_SELECTOR_SPEC = {
-    :ems_refresh_host      => [
+    :ems_refresh_host        => [
       "MOR",
       "config.adminDisabled",
       "config.consoleReservation.serviceConsoleReserved",
@@ -71,7 +71,7 @@ module EmsRefresh::VcUpdates
       "summary.runtime.inMaintenanceMode",
     ],
 
-    :ems_refresh_vm        => [
+    :ems_refresh_vm          => [
       "MOR",
       "availableField[*].key",
       "availableField[*].name",
@@ -138,7 +138,7 @@ module EmsRefresh::VcUpdates
       "summary.storage.committed"
     ],
 
-    :ems_refresh_storage   => [
+    :ems_refresh_storage     => [
       "MOR",
       "capability.directoryHierarchySupported",
       "capability.perFileThinProvisioningSupported",
@@ -163,7 +163,26 @@ module EmsRefresh::VcUpdates
       "parent"
     ],
 
-    :ems_refresh_cluster   => [
+    :ems_refresh_dvportgroup => [
+      "MOR",
+      "host",
+      "config.key",
+      "summary.name",
+      "parent",
+      "tag"
+    ],
+
+    :ems_refresh_dvswitch    => [
+      "MOR",
+      "config.uplinkPortgroup",
+      "summary.name",
+      "summary.uuid",
+      "summary.host",
+      "summary.hostMember",
+      "parent"
+    ],
+
+    :ems_refresh_cluster     => [
       "MOR",
       "configuration.dasConfig.admissionControlEnabled",
       "configuration.dasConfig.admissionControlPolicy",
@@ -182,7 +201,7 @@ module EmsRefresh::VcUpdates
       "summary.effectiveMemory",
     ],
 
-    :ems_refresh_host_res  => [
+    :ems_refresh_host_res    => [
       "host",
       "host.ManagedObjectReference",
       "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
@@ -190,7 +209,7 @@ module EmsRefresh::VcUpdates
       "resourcePool.ManagedObjectReference",
     ],
 
-    :ems_refresh_rp        => [
+    :ems_refresh_rp          => [
       "MOR",
       "name",
       "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
@@ -210,7 +229,7 @@ module EmsRefresh::VcUpdates
       "vm.ManagedObjectReference",
     ],
 
-    :ems_refresh_folder    => [
+    :ems_refresh_folder      => [
       "MOR",
       "childEntity",
       "childEntity.ManagedObjectReference",
@@ -218,7 +237,7 @@ module EmsRefresh::VcUpdates
       "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
     ],
 
-    :ems_refresh_dc        => [
+    :ems_refresh_dc          => [
       "MOR",
       "datastoreFolder",
       "datastoreFolder.ManagedObjectReference",
@@ -230,7 +249,7 @@ module EmsRefresh::VcUpdates
       "vmFolder.ManagedObjectReference",
     ],
 
-    :ems_refresh_host_scsi => [
+    :ems_refresh_host_scsi   => [
       "config.storageDevice.hostBusAdapter[*].authenticationProperties.chapAuthEnabled",
       "config.storageDevice.hostBusAdapter[*].device",
       "config.storageDevice.hostBusAdapter[*].iScsiAlias",

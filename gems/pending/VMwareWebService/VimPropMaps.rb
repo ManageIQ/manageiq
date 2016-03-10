@@ -1,37 +1,37 @@
 module VimPropMaps
   FullPropMap = {
-    :VirtualMachine         => {
+    :VirtualMachine              => {
       :baseName => "@virtualMachines",
       :keyPath  => ['summary', 'config', 'vmPathName'],
       :keyPath2 => ['summary', 'config', 'vmLocalPathName'],
       :props    => ["summary", "config", "guest", "resourceConfig", "parent", "snapshot", "datastore", "resourcePool", "availableField"]
     },
-    :ComputeResource        => {
+    :ComputeResource             => {
       :baseName => "@computeResources",
       :keyPath  => ['name'],
       :props    => ["name", "summary", "parent", "host", "resourcePool"]
     },
-    :ClusterComputeResource => {
+    :ClusterComputeResource      => {
       :baseName => "@clusterComputeResources",
       :keyPath  => ['name'],
       :props    => ["name", "summary", "parent", "host", "resourcePool", "configuration"]
     },
-    :ResourcePool           => {
+    :ResourcePool                => {
       :baseName => "@resourcePools",
       :keyPath  => nil, # by mor only
       :props    => ["name", "summary.config", "resourcePool", "owner", "parent", "vm"] # childConfiguration currently has a problem updating.  See FB3269
     },
-    :Folder                 => {
+    :Folder                      => {
       :baseName => "@folders",
       :keyPath  => ['name'],
       :props    => nil
     },
-    :Datacenter             => {
+    :Datacenter                  => {
       :baseName => "@datacenters",
       :keyPath  => ['name'],
       :props    => nil
     },
-    :HostSystem             => {
+    :HostSystem                  => {
       :baseName => "@hostSystems",
       :keyPath  => ['summary', 'config', 'name'],
       :props    => [
@@ -57,15 +57,35 @@ module VimPropMaps
         "runtime.inMaintenanceMode"
       ]
     },
-    :Datastore              => {
+    :Datastore                   => {
       :baseName => "@dataStores",
       :keyPath  => ['summary', 'name'],
       :props    => ["summary", "info", "capability", "parent"]
     },
-    :StoragePod             => {
+    :StoragePod                  => {
       :baseName => "@storagePods",
       :keyPath  => ["summary", "name"],
       :props    => ["summary", "childEntity", "parent"]
+    },
+    :DistributedVirtualPortgroup => {
+      :baseName => "@dvPortgroups",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary',
+        'config',
+        'parent',
+        'host',
+        'tag'
+      ]
+    },
+    :DistributedVirtualSwitch    => {
+      :baseName => "@dvSwitches",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'config',
+        'summary',
+        'parent'
+      ]
     }
   }
 
@@ -149,7 +169,7 @@ module VimPropMaps
   ]
 
   EmsRefreshPropMap = {
-    :VirtualMachine         => {
+    :VirtualMachine              => {
       :baseName => "@virtualMachines",
       :keyPath  => ['summary', 'config', 'vmPathName'],
       :keyPath2 => ['summary', 'config', 'vmLocalPathName'],
@@ -196,7 +216,7 @@ module VimPropMaps
         "summary.storage.committed"
       ]
     },
-    :ComputeResource        => {
+    :ComputeResource             => {
       :baseName => "@computeResources",
       :keyPath  => ['name'],
       :props    => [
@@ -206,7 +226,7 @@ module VimPropMaps
         "resourcePool"
       ]
     },
-    :ClusterComputeResource => {
+    :ClusterComputeResource      => {
       :baseName => "@clusterComputeResources",
       :keyPath  => ['name'],
       :props    => [
@@ -225,7 +245,7 @@ module VimPropMaps
         "resourcePool"
       ]
     },
-    :ResourcePool           => {
+    :ResourcePool                => {
       :baseName => "@resourcePools",
       :keyPath  => nil, # by mor only
       :props    => [
@@ -245,7 +265,7 @@ module VimPropMaps
         "vm"
       ] # childConfiguration currently has a problem updating.  See FB3269
     },
-    :Folder                 => {
+    :Folder                      => {
       :baseName => "@folders",
       :keyPath  => ['name'],
       :props    => [
@@ -254,7 +274,7 @@ module VimPropMaps
         "parent"
       ]
     },
-    :Datacenter             => {
+    :Datacenter                  => {
       :baseName => "@datacenters",
       :keyPath  => ['name'],
       :props    => [
@@ -265,7 +285,7 @@ module VimPropMaps
         "vmFolder"
       ]
     },
-    :HostSystem             => {
+    :HostSystem                  => {
       :baseName => "@hostSystems",
       :keyPath  => ['summary', 'config', 'name'],
       :props    => [
@@ -306,7 +326,7 @@ module VimPropMaps
         "summary.runtime.inMaintenanceMode"
       ]
     },
-    :Datastore              => {
+    :Datastore                   => {
       :baseName => "@dataStores",
       :keyPath  => ['summary', 'name'],
       :props    => [
@@ -326,7 +346,7 @@ module VimPropMaps
         "parent"
       ]
     },
-    :StoragePod             => {
+    :StoragePod                  => {
       :baseName => "@storagePods",
       :keyPath  => ["summary", "name"],
       :props    => [
@@ -336,11 +356,34 @@ module VimPropMaps
         "childEntity",
         "parent"
       ]
+    },
+    :DistributedVirtualPortgroup => {
+      :baseName => "@dvPortgroups",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary.name',
+        'config.key',
+        'parent',
+        'host',
+        'tag'
+      ]
+    },
+    :DistributedVirtualSwitch    => {
+      :baseName => "@dvSwitches",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'config.uplinkPortgroup',
+        'summary.name',
+        'summary.uuid',
+        'summary.host',
+        'summary.hostMember',
+        'parent'
+      ]
     }
   }
 
   CorePropMap = {
-    :VirtualMachine         => {
+    :VirtualMachine              => {
       :baseName => "@virtualMachines",
       :keyPath  => ['summary', 'config', 'vmPathName'],
       :keyPath2 => ['summary', 'config', 'vmLocalPathName'],
@@ -357,7 +400,7 @@ module VimPropMaps
         "summary.customValue"
       ]
     },
-    :ComputeResource        => {
+    :ComputeResource             => {
       :baseName => "@computeResources",
       :keyPath  => ['name'],
       :props    => [
@@ -367,7 +410,7 @@ module VimPropMaps
         "resourcePool"
       ]
     },
-    :ClusterComputeResource => {
+    :ClusterComputeResource      => {
       :baseName => "@clusterComputeResources",
       :keyPath  => ['name'],
       :props    => [
@@ -383,7 +426,7 @@ module VimPropMaps
         "resourcePool"
       ]
     },
-    :ResourcePool           => {
+    :ResourcePool                => {
       :baseName => "@resourcePools",
       :keyPath  => nil, # by mor only
       :props    => [
@@ -403,7 +446,7 @@ module VimPropMaps
         "vm"
       ] # childConfiguration currently has a problem updating.  See FB3269
     },
-    :Folder                 => {
+    :Folder                      => {
       :baseName => "@folders",
       :keyPath  => ['name'],
       :props    => [
@@ -412,7 +455,7 @@ module VimPropMaps
         "parent"
       ]
     },
-    :Datacenter             => {
+    :Datacenter                  => {
       :baseName => "@datacenters",
       :keyPath  => ['name'],
       :props    => [
@@ -423,7 +466,7 @@ module VimPropMaps
         "vmFolder"
       ]
     },
-    :HostSystem             => {
+    :HostSystem                  => {
       :baseName => "@hostSystems",
       :keyPath  => ['summary', 'config', 'name'],
       :props    => [
@@ -433,7 +476,7 @@ module VimPropMaps
         "config.datastorePrincipal"
       ]
     },
-    :Datastore              => {
+    :Datastore                   => {
       :baseName => "@dataStores",
       :keyPath  => ['summary', 'name'],
       :props    => [
@@ -450,7 +493,7 @@ module VimPropMaps
         "parent"
       ]
     },
-    :StoragePod             => {
+    :StoragePod                  => {
       :baseName => "@storagePods",
       :keyPath  => ["summary", "name"],
       :props    => [
@@ -459,6 +502,29 @@ module VimPropMaps
         "summary.name",
         "childEntity",
         "parent"
+      ]
+    },
+    :DistributedVirtualPortgroup => {
+      :baseName => "@dvPortgroups",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'summary.name',
+        'config.key',
+        'parent',
+        'host',
+        'tag'
+      ]
+    },
+    :DistributedVirtualSwitch    => {
+      :baseName => "@dvSwitches",
+      :keyPath  => ['summary', 'name'],
+      :props    => [
+        'config.uplinkPortgroup',
+        'summary.name',
+        'summary.uuid',
+        'summary.host',
+        'summary.hostMember',
+        'parent'
       ]
     }
   }
