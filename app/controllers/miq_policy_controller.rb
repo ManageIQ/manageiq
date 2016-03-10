@@ -198,7 +198,7 @@ class MiqPolicyController < ApplicationController
         page << "miqSparkle(false);"
       end
     elsif params[:commit] == "cancel"
-      miq_policy_import_service.cancel_import(params[:import_file_upload_id])
+      miq_policy_import_service.cancel_import(@import_file_upload_id)
 
       render :update do |page|
         page.redirect_to :action => 'export', :flash_msg => _("Import cancelled by user")
@@ -206,6 +206,7 @@ class MiqPolicyController < ApplicationController
 
     # init import
     else
+      @import = iterate_status(ImportFileUpload.find(@import_file_upload_id).policy_import_data)
       if @sb[:conflict]
         add_flash(_("Import not available due to conflicts"), :error)
       else
@@ -358,26 +359,18 @@ class MiqPolicyController < ApplicationController
     iterate_status(yaml_array) if yaml_array
   end
 
-  def iterate_status(items = nil, result = [], parent_id = nil, indent = nil)
+  def iterate_status(items = nil, result = [], parent_id = nil)
     items.each do |item|
-      entry = {"id"          => result.count.to_s,
-               "title"       => "<b>#{ui_lookup(:model => item[:class])}:</b> #{item[:description]}",
-               "parent"      => parent_id,
-               "status_icon" => get_status_icon(item[:status]),
-               "indent"      => (indent.nil? ? 0 : indent + 1)}
-
-      entry["_collapsed"] = false if item[:children]
+      entry = {
+        :id     => result.count.to_s,
+        :type   => ui_lookup(:model => item[:class]),
+        :title  => item[:description],
+        :parent => parent_id,
+        :icon   => get_status_icon(item[:status])
+      }
 
       if item[:messages]
-        entry["msg"] = ""
-        messages = item[:messages]
-
-        if messages.count > 1
-          messages.each { |msg| entry["msg"] += msg + ', ' }
-        else
-          messages.each { |msg| entry["msg"] += msg }
-        end
-
+        entry['msg'] = item[:messages].join(', ')
         @sb[:conflict] = true
       end
 
@@ -385,21 +378,19 @@ class MiqPolicyController < ApplicationController
 
       # recursive call if item have the childrens
       if item[:children]
-        iterate_status(item[:children], result, result.count - 1, result.last["indent"])
+        iterate_status(item[:children], result, result.count - 1)
       end
     end
 
-    result.to_json
+    result
   end
 
   def get_status_icon(status)
-    icon = case status
-           when :update then "checkmark"
-           when :add then "equal-green"
-           when :conflict then "x"
-           end
-
-    ActionController::Base.helpers.image_path("16/#{icon}.png")
+    case status
+    when :update then "fa-check icon-green"
+    when :add then "fa-plus icon-green"
+    when :conflict then "fa-times icon-red"
+    end
   end
 
   def miq_policy_import_service
