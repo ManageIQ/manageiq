@@ -509,9 +509,6 @@ class MiqCapacityController < ApplicationController
       :skip_days => @sb[:util][:options][:skip_days],
     }
 
-    # FIXME: where is curTab declared?
-    presenter[:extra_js] << "curTab = $('#utilization_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
-    presenter[:extra_js] << "tab = curTab.prop('id');"
     # FIXME: handle or verify the IE/non-IE branch for the flash charts
     presenter[:extra_js] << Charting.js_load_statement(true)
 
@@ -619,9 +616,6 @@ class MiqCapacityController < ApplicationController
                                     else
                                       _("Best Fit Clusters")
                                     end
-
-    presenter[:extra_js] << "curTab = $('#planning_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
-    presenter[:extra_js] << "tab = curTab.prop('id');"
     presenter[:extra_js] << Charting.js_load_statement(true)
 
     render :js => presenter.to_html
@@ -635,9 +629,6 @@ class MiqCapacityController < ApplicationController
     presenter.update(:main_div, r[:partial => 'bottlenecks_tabs'])
     presenter[:build_calendar] = true
     presenter[:right_cell_text] = @right_cell_text
-
-    presenter[:extra_js] << "curTab = $('#bottlenecks_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
-    presenter[:extra_js] << "tab = curTab.prop('id');"
 
     render :js => presenter.to_html
   end
