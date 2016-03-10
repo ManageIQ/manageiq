@@ -6,7 +6,7 @@ describe FlavorController do
       login_as @user
       @flavor = FactoryGirl.create(:flavor)
     end
-    subject { get :show, :id => @flavor.id }
+    subject { get :show, :params => {:id => @flavor.id} }
 
     context "render listnav partial" do
       render_views

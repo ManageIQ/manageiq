@@ -163,13 +163,13 @@ describe ProviderForemanController do
     end
 
     it "renders the refresh flash message for Ansible Tower" do
-      post :refresh, :miq_grid_checks => @config_ans.id
+      post :refresh, :params => {:miq_grid_checks => @config_ans.id}
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Ansible Tower)")
     end
 
     it "renders the refresh flash message for Foreman" do
-      post :refresh, :miq_grid_checks => @config_mgr.id
+      post :refresh, :params => {:miq_grid_checks => @config_mgr.id}
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Foreman)")
     end
