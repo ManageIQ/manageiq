@@ -15,6 +15,6 @@ class PictureController < ApplicationController
     response.headers['Cache-Control'] = "public"
     response.headers['Content-Type'] = "image/#{picture.extension}"
     response.headers['Content-Disposition'] = "inline"
-    render :text => picture.content
+    render :body => picture.content
   end
 end
