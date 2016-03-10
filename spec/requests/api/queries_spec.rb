@@ -117,9 +117,9 @@ describe ApiController do
       run_get(providers_url(provider.id), :attributes => "authentications")
 
       expect_request_success
-      expect_result_to_match_hash(@result, "name" => "sample")
+      expect_result_to_match_hash(response_hash, "name" => "sample")
       expect_result_to_have_keys(%w(authentications))
-      authentication = @result["authentications"].first
+      authentication = response_hash["authentications"].first
       expect(authentication["userid"]).to eq("admin")
       expect(authentication.key?("password")).to be_falsey
     end
@@ -136,7 +136,7 @@ describe ApiController do
 
       expect_request_success
       expect_result_to_have_keys(%w(configurations))
-      configuration = @result["configurations"].first
+      configuration = response_hash["configurations"].first
       authentication = configuration.fetch_path("settings", "authentication")
       expect(authentication).to_not be_nil
       expect(authentication["userid"]).to eq("admin")
@@ -159,8 +159,8 @@ describe ApiController do
       run_get provision_requests_url(request.id)
 
       expect_request_success
-      expect_result_to_match_hash(@result, "description" => "sample provision")
-      provision_attrs = @result.fetch_path("options", "attrs")
+      expect_result_to_match_hash(response_hash, "description" => "sample provision")
+      provision_attrs = response_hash.fetch_path("options", "attrs")
       expect(provision_attrs).to_not be_nil
       expect(provision_attrs["userid"]).to eq("admin")
       expect(provision_attrs.key?(password_field)).to be_falsey
