@@ -79,8 +79,12 @@ module Vmdb
     def self.build_settings(resource = nil)
       ::Config::Options.new.tap do |settings|
         settings.add_source!(Rails.root.join("config/settings.yml").to_s)
+        settings.add_source!(Rails.root.join("config/settings/#{Rails.env}.yml").to_s)
+        settings.add_source!(Rails.root.join("config/environments/#{Rails.env}.yml").to_s)
         settings.add_source!(DatabaseSource.new(resource))
         settings.add_source!(Rails.root.join("config/settings.local.yml").to_s)
+        settings.add_source!(Rails.root.join("config/settings/#{Rails.env}.local.yml").to_s)
+        settings.add_source!(Rails.root.join("config/environments/#{Rails.env}.local.yml").to_s)
       end
     end
 
