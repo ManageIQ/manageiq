@@ -3,12 +3,10 @@ module Vmdb
     class DatabaseSource
       include Vmdb::Logging
 
-      def initialize(resource = nil)
-        @resource = resource
-      end
+      attr_reader :resource
 
-      def resource
-        @resource ||= find_resource
+      def initialize(resource)
+        @resource = resource
       end
 
       def load
@@ -21,20 +19,6 @@ module Vmdb
         _log.error("#{err.class}: #{err}")
         _log.error(err.backtrace.join("\n"))
         raise
-      end
-
-      private
-
-      # Since `#load` occurs very early in the boot process, we must ensure that
-      # we do not fail in cases where the database is not yet created, not yet
-      # available, or has not yet been seeded.
-      def find_resource
-        database_connectivity? && MiqServer.table_exists? && SettingsChange.table_exists? ? MiqServer.my_server(true) : nil
-      end
-
-      def database_connectivity?
-        conn = ActiveRecord::Base.connection rescue nil
-        conn && ActiveRecord::Base.connected?
       end
     end
   end

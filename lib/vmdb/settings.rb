@@ -8,7 +8,7 @@ module Vmdb
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
 
     def self.init
-      reset_settings_constant(build_settings).load!
+      reset_settings_constant(for_resource(my_server))
     end
 
     def self.walk(settings = ::Settings, path = [], &block)
@@ -50,7 +50,7 @@ module Vmdb
     end
 
     def self.for_resource(resource)
-      build_settings(resource).load!
+      build(resource).load!
     end
 
     def self.template_settings
@@ -72,7 +72,7 @@ module Vmdb
 
     private
 
-    def self.build_settings(resource = nil)
+    def self.build(resource)
       ::Config::Options.new.tap do |settings|
         settings.add_source!(Rails.root.join("config/settings.yml").to_s)
         settings.add_source!(Rails.root.join("config/settings/#{Rails.env}.yml").to_s)
@@ -114,5 +114,22 @@ module Vmdb
         resource.settings_changes.destroy(index.values)
       end
     end
+
+    # Since `#load` occurs very early in the boot process, we must ensure that
+    # we do not fail in cases where the database is not yet created, not yet
+    # available, or has not yet been seeded.
+    def self.my_server
+      resource_queryable? ? MiqServer.my_server(true) : nil
+    end
+
+    def self.resource_queryable?
+      database_connectivity? && SettingsChange.table_exists?
+    end
+
+    def self.database_connectivity?
+      conn = ActiveRecord::Base.connection rescue nil
+      conn && ActiveRecord::Base.connected?
+    end
+
   end
 end
