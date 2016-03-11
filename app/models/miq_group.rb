@@ -5,7 +5,7 @@ class MiqGroup < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :miq_user_role
-  has_and_belongs_to_many :users
+  belongs_to :user_group
   has_many   :vms,         :dependent => :nullify
   has_many   :miq_templates, :dependent => :nullify
   has_many   :miq_reports, :dependent => :nullify
@@ -19,7 +19,6 @@ class MiqGroup < ApplicationRecord
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates :description, :presence => true, :uniqueness => true
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
@@ -38,41 +37,12 @@ class MiqGroup < ApplicationRecord
 
   alias_method :current_tenant, :tenant
 
-  def name
-    description
-  end
-
   def self.next_sequence
     maximum(:sequence).to_i + 1
   end
 
   def self.seed
-    role_map_file = FIXTURE_DIR.join("role_map.yaml")
-    role_map = YAML.load_file(role_map_file) if role_map_file.exist?
-    return unless role_map
-
-    filter_map_file = FIXTURE_DIR.join("filter_map.yaml")
-    ldap_to_filters = filter_map_file.exist? ? YAML.load_file(filter_map_file) : {}
-    root_tenant = Tenant.root_tenant
-
-    role_map.each_with_index do |(group_name, role_name), index|
-      group = find_by_description(group_name) || new(:description => group_name)
-      user_role = MiqUserRole.find_by_name("EvmRole-#{role_name}")
-      if user_role.nil?
-        raise StandardError, "Unable to find user_role 'EvmRole-#{role_name}' for group '#{group_name}'"
-      end
-      group.miq_user_role = user_role
-      group.sequence      = index + 1
-      group.filters       = ldap_to_filters[group_name]
-      group.group_type    = SYSTEM_GROUP
-      group.tenant        = root_tenant
-
-      if group.changed?
-        mode = group.new_record? ? "Created" : "Updated"
-        group.save!
-        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-      end
-    end
+    # MiqGroups are primarily seeded in UserGroup::seed
 
     # find any default tenant groups that do not have a role
     tenant_role = MiqUserRole.default_tenant_role
@@ -202,10 +172,6 @@ class MiqGroup < ApplicationRecord
     users.count
   end
 
-  def description=(val)
-    super(val.to_s.strip)
-  end
-
   def ordered_widget_sets
     if settings && settings[:dashboard_order]
       MiqWidgetSet.find_with_same_order(settings[:dashboard_order]).to_a
@@ -214,6 +180,7 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  # TODO Fix description here
   def self.create_tenant_group(tenant)
     tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
 
@@ -222,10 +189,6 @@ class MiqGroup < ApplicationRecord
       :group_type          => TENANT_GROUP,
       :default_tenant_role => MiqUserRole.default_tenant_role
     ).find_or_create_by!(:tenant_id => tenant.id)
-  end
-
-  def self.sort_by_desc
-    all.sort_by { |g| g.description.downcase }
   end
 
   def self.tenant_groups

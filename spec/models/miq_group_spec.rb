@@ -287,30 +287,12 @@ describe MiqGroup do
   end
 
   context "#seed" do
-    it "adds new groups after initial seed" do
-      [Tenant, MiqUserRole, MiqGroup].each(&:seed)
-
-      role_map_path = ApplicationRecord::FIXTURE_DIR.join("role_map.yaml")
-      role_map = YAML.load_file(role_map_path)
-      role_map = {'EvmRole-test_role' => 'tenant_quota_administrator'}.merge(role_map)
-      filter_map_path = ApplicationRecord::FIXTURE_DIR.join("filter_map.yaml")
-
-      allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
-      allow(YAML).to receive(:load_file).with(filter_map_path).and_call_original
-
-      expect {
-        MiqGroup.seed
-      }.to change { MiqGroup.count }
-      expect(MiqGroup.last.name).to eql('EvmRole-test_role')
-      expect(MiqGroup.last.sequence).to eql(1)
-    end
+    let(:tenant) { Tenant.seed }
 
     it "assigns roles to tenant_groups" do
-      tenant = Tenant.seed
-      expect(tenant.reload.default_miq_group.miq_user_role).not_to be
-      MiqUserRole.seed
-      MiqGroup.seed
-      expect(tenant.reload.default_miq_group.miq_user_role).to be_truthy
+      expect(tenant.reload.default_miq_group.miq_user_role).not_to be_present
+      [MiqUserRole, UserGroup, MiqGroup].map(&:seed)
+      expect(tenant.reload.default_miq_group.miq_user_role).to be_present
     end
   end
 
