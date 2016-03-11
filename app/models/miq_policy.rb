@@ -156,7 +156,7 @@ class MiqPolicy < ApplicationRecord
     profiles, plist = get_policies_for_target(target, mode, erec, inputs)
     return result if plist.blank?
 
-    failed, succeeded = evaluate_conditions(plist, target, mode, inputs, result)
+    succeeded, failed = evaluate_conditions(plist, target, mode, inputs, result)
 
     # inject policy results into errors attribute of "target" object
     target.errors.clear
