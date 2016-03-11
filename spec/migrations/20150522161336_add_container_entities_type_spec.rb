@@ -27,9 +27,9 @@ describe AddContainerEntitiesType do
 
       migrate
 
-      expect(ContainerNode.find(container_node.id)).not_to respond_to(:type)
-      expect(Container.find(container.id)).not_to respond_to(:type)
-      expect(ContainerGroup.find(container_group.id)).not_to respond_to(:type)
+      expect(container_node_stub.find(container_node.id)).not_to respond_to(:type)
+      expect(container_stub.find(container.id)).not_to respond_to(:type)
+      expect(container_group_stub.find(container_group.id)).not_to respond_to(:type)
     end
   end
 end
