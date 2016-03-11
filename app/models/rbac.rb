@@ -216,15 +216,15 @@ module Rbac
     return targets, total_count, auth_count
   end
 
-  def self.find_targets_filtered_by_ids(klass, scope, find_options, u_filtered_ids, filtered_ids)
+  def self.find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
     total_count  = total_scope(scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count
     if filtered_ids
-      ids_clause  = ["#{klass.table_name}.id IN (?)", filtered_ids]
+      ids_clause  = ["#{scope.table_name}.id IN (?)", filtered_ids]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       _log.debug("New Find options: #{find_options.inspect}")
     end
     targets     = method_with_scope(scope, find_options)
-    auth_count  = klass.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
+    auth_count  = targets.except(:offset, :limit, :order).count(:all)
 
     return targets, total_count, auth_count
   end
@@ -241,7 +241,7 @@ module Rbac
 
   def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
     filtered_ids, u_filtered_ids = calc_filtered_ids(klass, scope, rbac_filters, user_or_group)
-    find_targets_filtered_by_ids(klass, scope, find_options, u_filtered_ids, filtered_ids)
+    find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
 
   def self.find_targets_with_user_group_rbac(klass, scope, _rbac_filters, find_options = {}, user_or_group = nil)
