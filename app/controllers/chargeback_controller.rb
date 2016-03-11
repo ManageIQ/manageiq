@@ -713,14 +713,14 @@ class ChargebackController < ApplicationController
 
   def get_cis_all
     @edit[:cb_assign][:cis] = {}
-    classtype=
+    classtype =
       if @edit[:new][:cbshow_typ] == "enterprise"
         MiqEnterprise
       else
         @edit[:new][:cbshow_typ].classify.constantize
       end
     classtype.all.each do |instance|
-        @edit[:cb_assign][:cis][instance.id] = instance.name
+      @edit[:cb_assign][:cis][instance.id] = instance.name
     end
   end
 
