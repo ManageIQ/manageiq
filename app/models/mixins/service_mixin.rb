@@ -22,7 +22,7 @@ module ServiceMixin
     if sr.nil?
       if options.kind_of?(ServiceResource)
         nh = options.attributes.dup
-        %w(id created_at updated_at service_template_id service_id).each { |key| nh.delete(key) }
+        %w(id created_at updated_at service_template_id ancestry).each { |key| nh.delete(key) }
       else
         nh = options
       end

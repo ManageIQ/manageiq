@@ -1,10 +1,12 @@
+require 'ancestry'
+
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
+  has_ancestry :orphan_strategy => :destroy
+
   belongs_to :tenant
   belongs_to :service_template               # Template this service was cloned from
-  belongs_to :service                        # Parent Service
-  has_many :services, :dependent => :destroy # Child services
 
   has_many :dialogs, -> { distinct }, :through => :service_template
 
@@ -52,12 +54,11 @@ class Service < ApplicationRecord
   end
   alias_method :<<, :add_resource
 
-  def parent_service
-    service
-  end
+  alias_method :parent_service, :parent
+  alias_attribute :service, :parent
 
   def has_parent?
-    service_id ? true : false
+    !root?
   end
   alias_method :has_parent, :has_parent?
 
@@ -69,55 +70,28 @@ class Service < ApplicationRecord
     'service_reconfigure'
   end
 
-  def root_service
-    result = self
-    until result.parent_service.nil?
-      result = result.parent_service
-    end
-    result
-  end
-
-  def ancestors
-    result = []
-    node = self
-
-    while (node = node.parent_service)
-      result << node
-    end
-
-    result
-  end
-
-  def direct_service_children
-    services
-  end
+  alias_method :root_service, :root
+  alias_method :services, :children
+  alias_method :direct_service_children, :children
 
   def indirect_service_children
-    direct_service_children.collect { |s| s.direct_service_children + s.indirect_service_children }.flatten.compact
+    descendants(:from_depth => 2)
   end
+  Vmdb::Deprecation.deprecate_methods(self, :indirect_service_children)
 
-  def descendants
-    all_service_children
-  end
-
-  def subtree
-    all_service_children + [self]
-  end
-
-  def all_service_children
-    direct_service_children + indirect_service_children
-  end
+  alias_method :all_service_children, :descendants
 
   def indirect_vms
-    all_service_children.collect(&:direct_vms).flatten.compact
+    MiqPreloader.preload_and_map(indirect_service_children, :direct_vms)
   end
+  Vmdb::Deprecation.deprecate_methods(self, :indirect_vms)
 
   def direct_vms
-    service_resources.collect { |sr| sr.resource.kind_of?(VmOrTemplate) ? sr.resource : nil }.flatten.compact
+    service_resources.where(:resource_type => 'VmOrTemplate').collect(&:resource)
   end
 
   def all_vms
-    direct_vms + indirect_vms
+    MiqPreloader.preload_and_map(subtree, :direct_vms)
   end
 
   def vms

@@ -18,7 +18,7 @@ class TreeBuilderServices < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    count_only_or_objects(count_only, rbac_filtered_objects(Service.where(:service_id => nil)), "name")
+    count_only_or_objects(count_only, rbac_filtered_objects(Service.where(:ancestry => nil)), "name")
   end
 
   def x_get_tree_service_kids(object, count_only)
