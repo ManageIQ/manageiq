@@ -184,7 +184,7 @@ class ChargebackController < ApplicationController
         @sb[:rate] = ChargebackRate.new
         @sb[:rate].description = _("Copy of %{description}") % {:description => rate.description}
         @sb[:rate].rate_type = rate.rate_type
-        rate_details = rate.chargeback_rate_details
+        rate_details = rate.includes(:chargeback_rate_details => :detail_currency)
         # Create new rate detail records for copied rate record
         rate_details.each do |r|
           detail = ChargebackRateDetail.new
@@ -197,6 +197,7 @@ class ChargebackController < ApplicationController
           detail.metric = r[:metric]
           detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
           detail.chargeback_rate_detail_currency_id = r[:chargeback_rate_detail_currency_id]
+          @sb[:rate_details][:currency] = r.detail_currency.code
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else
@@ -255,8 +256,22 @@ class ChargebackController < ApplicationController
     cb_rate_get_form_vars
     render :update do |page|                    # Use JS to update the display
       changed = (@edit[:new] != @edit[:current])
+      # Update the new column with the code of the currency selected by the user
+      first_new_detail = @edit[:new][:details].first
+      new_rate_detail_currency = ChargebackRateDetailCurrency.find_by(:id => first_new_detail[:currency])
+      @edit[:new][:details].each_with_index do |_detail, i|
+        new_rate_details = @edit[:new][:details][i]
+        current_rate_details = @edit[:current][:details][i]
+        next if new_rate_details[:currency] == current_rate_details[:currency]
+
+        current_rate_details[:currency] = new_rate_details[:currency]
+        params[:code_currency] = new_rate_detail_currency.code
+        params[:id_column] = i
+        page.replace("column_currency_#{i}", :partial => "cb_new_currency_column")
+      end
       page << javascript_for_miq_button_visibility(changed)
     end
+    cb_rate_get_form_vars
   end
 
   def cb_rate_show
