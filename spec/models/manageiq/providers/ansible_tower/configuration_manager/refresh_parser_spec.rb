@@ -12,9 +12,10 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
   end
   let(:parser)            { described_class.new(manager) }
   let(:manager)           { FactoryGirl.create(:configuration_manager_ansible_tower, :provider) }
-  let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new("id" => i, "name" => "host#{i}", "inventory" => i) } }
-  let(:all_inventories)   { (1..2).collect { |i| AnsibleTowerClient::Inventory.new("id" => i, "name" => "inventory#{i}") } }
-  let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new("id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload") } }
+  let(:mock_api)          { double("AnsibleTowerClient::Api") }
+  let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new(mock_api, "id" => i, "name" => "host#{i}", "inventory" => i) } }
+  let(:all_inventories)   { (1..2).collect { |i| AnsibleTowerClient::Inventory.new(mock_api, "id" => i, "name" => "inventory#{i}") } }
+  let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new(mock_api, "id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload") } }
 
   it "#configuration_manager_inv_to_hashes" do
     allow_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:survey_spec).and_return('some_hash_payload')

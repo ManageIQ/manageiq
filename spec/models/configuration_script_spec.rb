@@ -13,7 +13,8 @@ describe ConfigurationScript do
           )
   end
   let(:manager)      { FactoryGirl.create(:configuration_manager_ansible_tower, :provider, :configuration_script) }
-  let(:job_template) { AnsibleTowerClient::JobTemplate.new("id" => 1, "name" => "template", "description" => "description", "extra_vars" => "{\n \"instance_ids\": [\"i-3434\"]}") }
+  let(:mock_api)     { AnsibleTowerClient::Api.new(faraday_connection) }
+  let(:job_template) { AnsibleTowerClient::JobTemplate.new(mock_api, "id" => 1, "name" => "template", "description" => "description", "extra_vars" => "{\n \"instance_ids\": [\"i-3434\"]}") }
 
   it "belongs_to the Ansible Tower manager" do
     expect(manager.configuration_scripts.size).to eq 1
@@ -23,7 +24,6 @@ describe ConfigurationScript do
 
   context "#run" do
     before do
-      AnsibleTowerClient::Api.instance_variable_set(:@instance, faraday_connection)
       allow_any_instance_of(Provider).to receive_messages(:connect => connection)
       allow_any_instance_of(ManageIQ::Providers::ConfigurationManager).to receive_messages(:provider => manager.provider)
     end
@@ -38,10 +38,6 @@ describe ConfigurationScript do
       expect(manager.configuration_scripts.first.run(added_extras)).to be_a AnsibleTowerClient::Job
       expect_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:launch).with(added_extras)
       manager.configuration_scripts.first.run(added_extras)
-    end
-
-    after do
-      AnsibleTowerClient::Api.remove_instance_variable(:@instance)
     end
   end
 end
