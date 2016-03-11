@@ -1749,6 +1749,10 @@ class ApplicationController < ActionController::Base
           page << javascript_prologue
           page.redirect_to edit_ems_cloud_path(params[:id])
         end
+      elsif params[:pressed] == "ems_infra_edit" && params[:id]
+        render :update do |page|
+          page.redirect_to edit_ems_infra_path(params[:id])
+        end
       else
         render :update do |page|
           page << javascript_prologue

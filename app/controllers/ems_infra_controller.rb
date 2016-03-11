@@ -104,6 +104,10 @@ class EmsInfraController < ApplicationController
   private
 
   ############################
+  def show_link(ems, options = {})
+    ems_infra_path(ems.id, options)
+  end
+
   def log_and_flash_message(message)
     add_flash(message, :error)
     $log.error(message)
