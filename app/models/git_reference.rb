@@ -1,0 +1,2 @@
+class GitReference < ApplicationRecord
+end
