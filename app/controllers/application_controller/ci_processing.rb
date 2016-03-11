@@ -31,7 +31,8 @@ module ApplicationController::CiProcessing
       recs = [params[:id].to_i]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to %{task}") % {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize, :task => "Set Ownership"}, :error)
+      add_flash(_("One or more %{model} must be selected to Set Ownership") % {
+        :model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return
@@ -1077,7 +1078,7 @@ module ApplicationController::CiProcessing
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Reconfigure") %
-        {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize}, :error)
+        {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
       render_flash_and_scroll
       return
     else
