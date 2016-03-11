@@ -13,6 +13,7 @@ class AssignedServerRole < ApplicationRecord
 
   def massage_active_field
     self.active = false if active.nil?
+    nil
   end
 
   delegate :name, :to => :server_role
