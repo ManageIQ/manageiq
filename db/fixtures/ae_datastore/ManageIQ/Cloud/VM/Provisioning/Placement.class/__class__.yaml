@@ -191,3 +191,23 @@ object:
       on_error: 
       max_retries: 
       max_time: 
+  - field:
+      aetype: method
+      name: azure
+      display_name: 
+      datatype: string
+      priority: 10
+      owner: 
+      default_value: 
+      substitute: true
+      message: azure
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
