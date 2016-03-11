@@ -92,7 +92,7 @@ module EmsCommon
 
   def calculate_display_class(display_name, session_display)
     [Container, ContainerReplicator, ContainerNode, ContainerGroup,
-     ContainerService, ContainerImage, ContainerRoute,
+     ContainerService, ContainerImage, ContainerRoute, ContainerBuild,
      ContainerProject, ContainerImageRegistry, AvailabilityZone,
      MiddlewareServer, MiddlewareDeployment,
      CloudTenant, CloudVolume, Flavor, SecurityGroup,].detect do |klass|

@@ -94,6 +94,8 @@ module Menu
           Menu::Item.new('container_node', N_('Container Nodes'), 'container_node', {:feature => 'container_node_show_list'}, '/container_node'),
           Menu::Item.new('persistent_volume', N_('Volumes'), 'persistent_volume',
                          {:feature => 'persistent_volume_show_list', :any => true}, '/persistent_volume'),
+          Menu::Item.new('container_build', N_('Container Builds'), 'container_build',
+                         {:feature => 'container_build_show_list'}, '/container_build'),
           Menu::Item.new('container_image_registry',
                          deferred_ui_lookup(:tables => 'container_image_registry'),
                          'container_image_registry',

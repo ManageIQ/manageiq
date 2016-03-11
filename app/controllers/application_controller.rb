@@ -1778,12 +1778,17 @@ class ApplicationController < ActionController::Base
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
-       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
+    if grid_hash_conditions(view)
       @grid_hash = view_to_hash(view)
     end
 
     [view, get_view_pages(dbname, view)]
+  end
+
+  def grid_hash_conditions(view)
+    !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
+      !(view.db.ends_with?("Build") && view.db != "ContainerBuild") &&
+      !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
   end
 
   def get_view_where_clause(default_where_clause)
@@ -2192,7 +2197,8 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
            "container_route", "container_project", "container_replicator", "persistent_volume",
-           "container_image_registry", "container_image", "container_topology", "container_dashboard"
+           "container_image_registry", "container_image", "container_topology", "container_dashboard",
+           "container_build"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
         session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
