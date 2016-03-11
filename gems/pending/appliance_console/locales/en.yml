@@ -8,6 +8,7 @@ en:
     - static
     - testnet
     - hostname
+    - timezone
     - datetime
     - dbrestore
     - dbregion_setup
@@ -24,7 +25,8 @@ en:
     static: Set Static Network Configuration
     testnet: Test Network Configuration
     hostname: Set Hostname
-    datetime: Set Timezone, Date, and Time
+    timezone: Set Timezone
+    datetime: Set Date and Time
     dbrestore: Restore Database From Backup
     dbregion_setup: Setup Database Region
     db_config: Configure Database

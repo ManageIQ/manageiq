@@ -242,22 +242,6 @@ describe ApplianceConsole::Prompts do
     end
   end
 
-  it "should prompt for a date" do
-    error = "Please provide in the specified format"
-
-    say %w(x 2011-11-11)
-    expect(subject.ask_for_date("prompt")).to eq("2011-11-11")
-    expect_heard ["Enter the prompt: ", error, prompt]
-  end
-
-  it "should prompt for a time" do
-    error = "Please provide in the specified format"
-
-    say %w(x 11:30:00)
-    expect(subject.ask_for_time("prompt")).to eq("11:30:00")
-    expect_heard ["Enter the prompt: ", error, prompt]
-  end
-
   context "#ask_for_disk" do
     context "with nodisks" do
       before do

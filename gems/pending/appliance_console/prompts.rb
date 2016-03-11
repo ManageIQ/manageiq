@@ -1,10 +1,10 @@
 module ApplianceConsole
+  CANCEL = 'Cancel'.freeze
+
   module Prompts
     CLEAR_CODE    = `clear`
     IP_REGEXP     = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
     DOMAIN_REGEXP = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,13})?$/
-    DATE_REGEXP   = /^(2[0-9]{3})-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])/
-    TIME_REGEXP   = /^(0?[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/
     INT_REGEXP    = /^[0-9]+$/
     HOSTNAME_REGEXP = /^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$/
 
@@ -103,14 +103,6 @@ module ApplianceConsole
     def ask_for_password_or_none(prompt, default = nil)
       prompt += " ('none' for no value)" if default && !prompt.include?('none')
       ask_for_password(prompt, default).gsub(/^'?NONE'?$/i, "")
-    end
-
-    def ask_for_date(prompt)
-      just_ask(prompt, nil, DATE_REGEXP)
-    end
-
-    def ask_for_time(prompt)
-      just_ask(prompt, nil, TIME_REGEXP)
     end
 
     def ask_for_string(prompt, default = nil)
