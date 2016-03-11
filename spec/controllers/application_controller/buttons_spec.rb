@@ -2,8 +2,9 @@ describe ApplicationController do
   context "#custom_buttons" do
     let(:resource_action) { FactoryGirl.create(:resource_action, :dialog_id => 1) }
     let(:button)          { FactoryGirl.create(:custom_button, :name => "My Button", :applies_to_class => "Vm", :resource_action => resource_action) }
-    let(:template)        { FactoryGirl.create(:template_vmware, :name => "My Template") }
+    let(:host)            { FactoryGirl.create(:host_vmware) }
     let(:vm)              { FactoryGirl.create(:vm_vmware, :name => "My VM") }
+    let(:service)         { FactoryGirl.create(:service) }
 
     context "with a resource_action dialog" do
       it "Vm button" do
@@ -16,22 +17,30 @@ describe ApplicationController do
 
         controller.send(:custom_buttons)
         expect(assigns(:right_cell_text)).to include(vm.name)
+        expect(controller.instance_variable_get(:@explorer)).to be_truthy
       end
 
-      it "MiqTemplate button" do
-        # TODO: change to update_attribute once CustomButton is fixed:  https://github.com/ManageIQ/cfme/issues/335
-        button.update_attributes(:applies_to_class => "MiqTemplate")
-        controller.instance_variable_set(:@_params, :id => template.id, :button_id => button.id)
+      it "Host button" do
+        button.applies_to = host
+        button.save
+        controller.instance_variable_set(:@_params, :id => host.id, :button_id => button.id)
 
         expect(controller).to receive(:dialog_initialize) do |action, options|
           expect(action).to eq(resource_action)
-          expect(options[:target_id]).to eq(template.id)
-          expect(options[:target_kls]).to eq(template.class.name)
+          expect(options[:target_id]).to eq(host.id)
+          expect(options[:target_kls]).to eq(host.class.name)
         end
 
         controller.send(:custom_buttons)
-        expect(assigns(:right_cell_text)).to include(template.name)
+        expect(assigns(:right_cell_text)).to include(host.name)
+        expect(controller.instance_variable_get(:@explorer)).to be_falsy
       end
+    end
+
+    it "Host button with a subclass, not base_class in applies_to_class" do
+      button.update_attributes(:applies_to_class => host.class.name)
+      controller.instance_variable_set(:@_params, :id => host.id, :button_id => button.id)
+      expect { controller.send(:custom_buttons) }.to raise_error(ArgumentError)
     end
 
     context "without a resource_action dialog" do
@@ -46,15 +55,29 @@ describe ApplicationController do
 
         controller.send(:custom_buttons)
         expect(assigns(:right_cell_text)).to include(vm.name)
+        expect(controller.instance_variable_get(:@explorer)).to be_truthy
       end
 
-      it "MiqTemplate" do
-        button.update_attributes(:applies_to_class => "MiqTemplate")
-        controller.instance_variable_set(:@_params, :id => template.id, :button_id => button.id)
-        expect_any_instance_of(CustomButton).to receive(:invoke).with(template)
+      it "Host button" do
+        button.applies_to = host
+        button.save
+        controller.instance_variable_set(:@_params, :id => host.id, :button_id => button.id)
+        expect_any_instance_of(CustomButton).to receive(:invoke).with(host)
 
         controller.send(:custom_buttons)
-        expect(assigns(:right_cell_text)).to include(template.name)
+        expect(assigns(:right_cell_text)).to include(host.name)
+        expect(controller.instance_variable_get(:@explorer)).to be_falsy
+      end
+
+      it "ServiceTemplate button" do
+        button.applies_to = ServiceTemplate
+        button.save
+        controller.instance_variable_set(:@_params, :id => service.id, :button_id => button.id)
+        expect_any_instance_of(CustomButton).to receive(:invoke).with(service)
+
+        controller.send(:custom_buttons)
+        expect(assigns(:right_cell_text)).to include(service.name)
+        expect(controller.instance_variable_get(:@explorer)).to be_truthy
       end
     end
 
