@@ -48,7 +48,7 @@ module MiqReport::Search
         else
           sql_col = [db_class.table_name, c].join(".")
         end
-        sql_col = "LOWER(#{sql_col})" if [:string, :text].include?(info[:data_type])
+        sql_col = "LOWER(#{sql_col})" if [:string, :text, :citext].include?(info[:data_type])
         sql_col
       end.join(",")
 
