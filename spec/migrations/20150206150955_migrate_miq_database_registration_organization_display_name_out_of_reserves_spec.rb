@@ -18,8 +18,8 @@ describe MigrateMiqDatabaseRegistrationOrganizationDisplayNameOutOfReserves do
       migrate
 
       # Expect counts
-      expect(Reserve.count).to     eq(0)
-      expect(MiqDatabase.count).to eq(1)
+      expect(reserve_stub.count).to eq(0)
+      expect(db_stub.count).to      eq(1)
 
       # Expect data
       expect(db.reload.registration_organization_display_name).to eq("abc")
@@ -33,13 +33,13 @@ describe MigrateMiqDatabaseRegistrationOrganizationDisplayNameOutOfReserves do
       migrate
 
       # Expect counts
-      expect(Reserve.count).to     eq(1)
-      expect(MiqDatabase.count).to eq(1)
+      expect(reserve_stub.count).to eq(1)
+      expect(db_stub.count).to      eq(1)
 
       # Expect data
-      expect(Reserve.first.resource_id).to   eq(db.id)
-      expect(Reserve.first.resource_type).to eq("MiqDatabase")
-      expect(Reserve.first.reserved).to      eq(:registration_organization_display_name => "abc")
+      expect(reserve_stub.first.resource_id).to   eq(db.id)
+      expect(reserve_stub.first.resource_type).to eq("MiqDatabase")
+      expect(reserve_stub.first.reserved).to      eq(:registration_organization_display_name => "abc")
     end
   end
 end
