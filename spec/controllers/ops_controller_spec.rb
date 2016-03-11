@@ -31,7 +31,6 @@ describe OpsController do
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_settings',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
-    session[:settings] = {:perpage => {:list => 10}}
     post :change_tab, :params => { :tab_id => 'db_settings', :format => :json }
   end
 
