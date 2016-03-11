@@ -66,6 +66,7 @@ module Rbac
     'ServiceTemplateCatalog' => :ancestor_ids,
     'ServiceTemplate'        => :ancestor_ids,
     'Service'                => :descendant_ids,
+    'Tenant'                 => :descendant_ids,
     'Vm'                     => :descendant_ids
   }
 
