@@ -98,49 +98,28 @@ class ApiController
         action_result(true, "Service Template #{st.id} is not currently assigned to a Service Catalog")
       end
     rescue => err
-      action_result(false, err)
+      action_result(false, err.to_s)
     end
 
-    def refresh_dialog_fields_service_template(_object, st, data = {})
+    def refresh_dialog_fields_service_template(_object, st, data)
+      data ||= {}
       dialog_fields = Hash(data["dialog_fields"])
       refresh_fields = data["fields"]
       return action_result(false, "Must specify fields to refresh") if refresh_fields.blank?
 
-      ra = fetch_resource_action(st, data["resource_action"])
-      return action_result(false, "Service Template resource action was not found") unless ra.present?
-
-      dialog = define_service_template_dialog(st, ra, dialog_fields)
+      dialog = define_service_template_dialog(st, dialog_fields)
       return action_result(false, "Service Template has no provision dialog defined") unless dialog
 
-      refresh_dialog_fields_action(st, dialog, refresh_fields)
+      refresh_dialog_fields_action(dialog, refresh_fields, service_template_ident(st))
     rescue => err
-      action_result(false, err)
+      action_result(false, err.to_s)
     end
 
-    def define_service_template_dialog(st, ra, dialog_fields)
-      workflow = ResourceActionWorkflow.new({}, @auth_user_obj, ra, :target => st)
+    def define_service_template_dialog(st, dialog_fields)
+      resource_action = st.resource_actions.find_by_action("Provision")
+      workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => st)
       dialog_fields.each { |key, value| workflow.set_value(key, value) }
       workflow.dialog
-    end
-
-    def fetch_resource_action(st, data)
-      data ||= {}
-      return st.resource_actions.find_by_id(data["id"]) if data["id"].present?
-      ra_action = data["action"] || "Provision"
-      st.resource_actions.find_by_action(ra_action)
-    end
-
-    def refresh_dialog_fields_action(st, dialog, refresh_fields)
-      result = {}
-      refresh_fields.each do |field|
-        dynamic_field = dialog.field(field)
-        return action_result(false, "Unknown dialog field #{field} specified") unless dynamic_field
-        unless dynamic_field.respond_to?(:update_and_serialize_values)
-          return action_result(false, "Dialog field #{field} specified cannot be refreshed")
-        end
-        result[field] = dynamic_field.update_and_serialize_values
-      end
-      action_result(true, "Refreshing dialog fields for #{service_template_ident(st)}", :result => result)
     end
   end
 end

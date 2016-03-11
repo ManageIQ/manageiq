@@ -727,8 +727,16 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: Dialog
+    :collection_actions:
+      :post:
+      - :name: refresh_dialog_fields
+        :identifier: svc_catalog_provision
+    :resource_actions:
+      :post:
+      - :name: refresh_dialog_fields
+        :identifier: svc_catalog_provision
   :service_orders:
     :description: Service Orders
     :identifier: svc_catalog_provision
