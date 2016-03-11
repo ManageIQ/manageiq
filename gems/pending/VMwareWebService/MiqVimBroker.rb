@@ -115,11 +115,6 @@ class MiqVimBroker
   end
 
   # Can be overridden by BrokerSyncDebug.
-  def sync_for_lock_hash(_key)
-    Sync.new
-  end
-
-  # Can be overridden by BrokerSyncDebug.
   def sync_for_drb_drbconn
     Sync.new
   end
