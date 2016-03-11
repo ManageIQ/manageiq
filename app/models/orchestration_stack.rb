@@ -31,10 +31,7 @@ class OrchestrationStack < ApplicationRecord
   end
 
   def directs_and_indirects(direct_attrs)
-    return send(direct_attrs) if descendants.blank?
-
-    indirects = descendants.inject([]) { |arr, child| arr << child.send(direct_attrs) }
-    (indirects << send(direct_attrs)).flatten
+    MiqPreloader.preload_and_map(subtree, direct_attrs)
   end
   private :directs_and_indirects
 
