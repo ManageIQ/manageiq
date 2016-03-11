@@ -15,9 +15,9 @@ class ProviderForemanController < ApplicationController
 
   def self.model_to_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
-      return "Ansible Tower"
+      return ui_lookup(:ui_title => 'ansible_tower')
     elsif provmodel.include?("ManageIQ::Providers::Foreman")
-      return "Foreman"
+      return ui_lookup(:ui_title => 'foreman')
     end
   end
 
@@ -158,7 +158,7 @@ class ProviderForemanController < ApplicationController
       AuditEvent.success(build_created_audit(@provider_cfgmgmt, @edit))
       @in_a_form = false
       @sb[:action] = nil
-      model = "#{ui_lookup(:ui_title => "#{model_to_name(@provider_cfgmgmt.type)}")} #{ui_lookup(:model => 'ExtManagementSystem')}"
+      model = "#{model_to_name(@provider_cfgmgmt.type)} #{ui_lookup(:model => 'ExtManagementSystem')}"
       if params[:id] == "new"
         add_flash(_("%{model} \"%{name}\" was added") % {:model => model,
                                                          :name  => @provider_cfgmgmt.name})
@@ -183,11 +183,12 @@ class ProviderForemanController < ApplicationController
   def cancel_provider_foreman
     @in_a_form = false
     @sb[:action] = nil
-    model = "#{ui_lookup(:ui_title => 'Configuration Manager')} #{ui_lookup(:model => 'ExtManagementSystem')}"
     if params[:id] == "new"
-      add_flash(_("Add of %{model} was cancelled by the user") % {:model  => model})
+      add_flash(_("Add of Configuration Manager %{provider} was cancelled by the user") %
+        {:provider  => ui_lookup(:model => 'ExtManagementSystem')})
     else
-      add_flash(_("Edit of %{model} was cancelled by the user") % {:model  => model})
+      add_flash(_("Edit of Configuration Manager %{provider} was cancelled by the user") %
+        {:provider  => ui_lookup(:model => 'ExtManagementSystem')})
     end
     replace_right_cell
   end
@@ -538,7 +539,7 @@ class ProviderForemanController < ApplicationController
     return provider_node(id, model) unless id.nil?
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %{title} Providers") % {:title => ui_lookup(:ui_title => model_to_name(model))}
+      @right_cell_text = _("All %{title} Providers") % {:title => model_to_name(model)}
       process_show_list(options)
     end
   end
@@ -580,7 +581,7 @@ class ProviderForemanController < ApplicationController
     @listicon = "configured_system"
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => model_to_name(model))}
+      @right_cell_text = _("All %{title} Configured Systems") % {:title => model_to_name(model)}
       process_show_list(options)
     end
   end
@@ -611,7 +612,7 @@ class ProviderForemanController < ApplicationController
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "ManageIQ::Providers::ConfigurationManager"}
       process_show_list(options)
-      @right_cell_text = _("All %{title} Providers") % {:title => ui_lookup(:ui_title => "Configuration Management")}
+      @right_cell_text = _("All Configuration Management Providers")
     elsif self.x_active_tree == :cs_filter_tree
       options = {:model => "ConfiguredSystem"}
       process_show_list(options)
@@ -665,10 +666,9 @@ class ProviderForemanController < ApplicationController
 
   def update_title(presenter)
     if action_name == "new"
-      @right_cell_text = _("Add a new %{title} Provider") %
-                           {:title => ui_lookup(:ui_title => "Configuration Management")}
+      @right_cell_text = _("Add a new Configuration Management Provider")
     elsif action_name == "edit"
-      @right_cell_text = _("Edit %{title} Provider") % {:title => ui_lookup(:ui_title => "configuration manager")}
+      @right_cell_text = _("Edit Configuration Manager Provider")
     end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -763,10 +763,10 @@ class ProviderForemanController < ApplicationController
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_add_provider"
-        @right_cell_text = _("Add a new %{title} Provider") % {title => ui_lookup(:ui_title => "Configuration Manager")}
+        @right_cell_text = _("Add a new Configuration Manager Provider")
       elsif @sb[:action] == "provider_foreman_edit_provider"
         # set the title based on the configuration manager provider type
-        @right_cell_text = _("Edit %{title} Provider") % {:title => ui_lookup(:ui_title => "Configuration Manager")}
+        @right_cell_text = _("Edit Configuration Manager Provider")
       end
       partial = 'form'
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])

@@ -1241,8 +1241,7 @@ module ApplicationController::CiProcessing
     else
       items = find_checked_items
       if items.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'providers'),
-                                                                :task  => display_name}, :error)
+        add_flash(_("No providers were selected for %{task}") % {:task  => display_name}, :error)
       else
         process_cfgmgr(items, method) unless items.empty? && !flash_errors?
       end
@@ -1260,8 +1259,8 @@ module ApplicationController::CiProcessing
     add_flash(_("Error during '%s': ") % task << err.message, :error)
   else
     add_flash(_("%{task} initiated for %{count_model} (%{controller})") %
-                {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:ui_title => 'provider')}"),
-                 :controller  => ui_lookup(:ui_title => ProviderForemanController.model_to_name(kls.to_s)),
+                {:task        => task_name(task),
+                 :controller  => ProviderForemanController.model_to_name(kls.to_s),
                  :count_model => pluralize(providers.length, _("provider"))})
   end
 

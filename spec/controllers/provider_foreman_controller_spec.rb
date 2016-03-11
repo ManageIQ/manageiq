@@ -193,7 +193,7 @@ describe ProviderForemanController do
       key = ems_key_for_provider(@provider)
       controller.send(:get_node_info, "root")
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("All #{ui_lookup(:ui_title => "configuration management")} Providers")
+      expect(right_cell_text).to eq("All Configuration Management Providers")
     end
 
     it "renders right cell text for ConfigurationManagerForeman node" do
