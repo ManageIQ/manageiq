@@ -59,7 +59,7 @@ module ApplicationController::Timelines
        (@tl_options[:filter1].nil? || @tl_options[:filter1] == "") &&
        (@tl_options[:filter2].nil? || @tl_options[:filter2] == "") &&
        (@tl_options[:filter3].nil? || @tl_options[:filter3] == "")
-      add_flash(_("At least one %s must be selected") % "filter", :warning)
+      add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options[:tl_show] == "policy_timeline"
       flg = true
       @tl_options[:events].sort.each_with_index do |_e, i|
@@ -69,7 +69,7 @@ module ApplicationController::Timelines
           break
         end
       end
-      add_flash(_("At least one %s must be selected") % "filter", :warning) if flg
+      add_flash(_("At least one filter must be selected"), :warning) if flg
     else
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline
@@ -156,7 +156,7 @@ module ApplicationController::Timelines
                   "p__#{rec}",
                   rec,
                   "folder.png",
-                  "Group: #{rec}",
+                  _("Group: %{name}") % {:name => rec},
                   :style_class   => "cfme-no-cursor-node",
                 )
               else
@@ -197,7 +197,7 @@ module ApplicationController::Timelines
         "#{rpt.id}__#{rpt.name}",
         rpt.name,
         "link_internal.gif",
-        "Report: #{rpt.name}",
+        _("Report: %{name}") % {:name => rpt.name},
         :style_class => "cfme-no-cursor-node ws-wrap",
         :style       => "background-color:#{node_color};padding-left: 0px;"     # No cursor pointer
       )
