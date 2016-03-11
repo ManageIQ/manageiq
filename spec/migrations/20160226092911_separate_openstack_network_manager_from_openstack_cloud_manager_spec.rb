@@ -133,7 +133,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         send("#{model_name}s").each { |x| create_record(x, :in, model_name) }
       end
 
-      expect(ExtManagementSystem.count).to eq 4
+      expect(ext_management_system_stub.count).to eq 4
 
       migrate
 
@@ -141,7 +141,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         send("#{model_name}s").each { |x| verify_record(x, :out, model_name) }
       end
 
-      expect(ExtManagementSystem.count).to eq 6
+      expect(ext_management_system_stub.count).to eq 6
     end
   end
 
@@ -165,7 +165,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         send("#{model_name}s").each { |x| create_record(x, :out, model_name, network_manager, network_manager_infra) }
       end
 
-      expect(ExtManagementSystem.count).to eq 6
+      expect(ext_management_system_stub.count).to eq 6
 
       migrate
 
@@ -173,7 +173,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         send("#{model_name}s").each { |x| verify_record(x, :in, model_name) }
       end
 
-      expect(ExtManagementSystem.count).to eq 4
+      expect(ext_management_system_stub.count).to eq 4
     end
   end
 end
