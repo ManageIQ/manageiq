@@ -1,6 +1,10 @@
 require 'ostruct'
 
 describe ApplicationController do
+  example ".model" do
+    expect(CimBaseStorageExtentController.model).to eq CimBaseStorageExtent
+  end
+
   context "Service Templates" do
     before :each do
       EvmSpecHelper.local_miq_server
