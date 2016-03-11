@@ -75,7 +75,7 @@ class ProviderForemanController < ApplicationController
         provider.destroy_queue
       end
 
-      add_flash(_("%{task} initiated for %{count_model}") % {:task => "Delete", :count_model => pluralize(providers.length, "provider")})
+      add_flash(_("Delete initiated for %{count_model}") % {:count_model => pluralize(providers.length, "provider")})
     end
     replace_right_cell
   end
@@ -83,7 +83,7 @@ class ProviderForemanController < ApplicationController
   def refresh
     assert_privileges("provider_foreman_refresh_provider")
     @explorer = true
-    foreman_button_operation('refresh_ems', 'Refresh')
+    foreman_button_operation('refresh_ems', _('Refresh'))
     replace_right_cell
   end
 
@@ -159,9 +159,13 @@ class ProviderForemanController < ApplicationController
       @in_a_form = false
       @sb[:action] = nil
       model = "#{ui_lookup(:ui_title => "#{model_to_name(@provider_cfgmgmt.type)}")} #{ui_lookup(:model => 'ExtManagementSystem')}"
-      add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => model,
-                                                           :name   => @provider_cfgmgmt.name,
-                                                           :action => params[:id] == "new" ? "added" : "updated"})
+      if params[:id] == "new"
+        add_flash(_("%{model} \"%{name}\" was added") % {:model => model,
+                                                         :name  => @provider_cfgmgmt.name})
+      else
+        add_flash(_("%{model} \"%{name}\" was updated") % {:model => model,
+                                                           :name  => @provider_cfgmgmt.name})
+      end
       if params[:id] == "new"
         process_cfgmgr([@provider_cfgmgmt.configuration_manager.id], "refresh_ems")
       end
@@ -180,9 +184,11 @@ class ProviderForemanController < ApplicationController
     @in_a_form = false
     @sb[:action] = nil
     model = "#{ui_lookup(:ui_title => 'Configuration Manager')} #{ui_lookup(:model => 'ExtManagementSystem')}"
-    add_flash(_("%{action} %{model} was cancelled by the user") %
-                  {:model  => model,
-                   :action => params[:id] == "new" ? "Add of" : "Edit of"})
+    if params[:id] == "new"
+      add_flash(_("Add of %{model} was cancelled by the user") % {:model  => model})
+    else
+      add_flash(_("Edit of %{model} was cancelled by the user") % {:model  => model})
+    end
     replace_right_cell
   end
 
@@ -928,15 +934,13 @@ class ProviderForemanController < ApplicationController
     record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_configuration_profile_record?(@configuration_profile_record)
-      @right_cell_text =
-        _("%{model} \"%{name}\"") %
-        {:name  => @configuration_profile_record.name,
-         :model => "#{ui_lookup(:tables => "configured_system")} under #{record_model}"}
+      @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
+        {:model        => ui_lookup(:tables => "configured_system"),
+         :record_model => record_model,
+         :name         => @configuration_profile_record.name}
     else
-      name  = _("Unassigned Profiles Group")
-      @right_cell_text =
-        _("%{model}") %
-        {:model => "#{ui_lookup(:tables => "configured_system")} under \"#{name}\""}
+      @right_cell_text = _("%{model} under Unassigned Profiles Group") %
+        {:model => ui_lookup(:tables => "configured_system")}
     end
   end
 
