@@ -85,7 +85,7 @@ module Vmdb
     end
 
     def ui_lookup_for_title(text)
-      Dictionary.gettext(text, :type => :ui_title, :notfound => :titleize)
+      Dictionary.gettext(text, :type => :ui_title)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
