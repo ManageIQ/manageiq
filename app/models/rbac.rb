@@ -240,7 +240,7 @@ module Rbac
     scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
   end
 
-  def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options = {}, user_or_group = nil)
     filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user_or_group)
     find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
@@ -281,7 +281,7 @@ module Rbac
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
     find_options = find_options_for_tenant(klass, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
 
-    return find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
+    return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
     return find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
     return find_targets_with_user_group_rbac(klass, scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
     find_targets_without_rbac(klass, scope, find_options)
