@@ -175,8 +175,17 @@ class ExtManagementSystem < ApplicationRecord
       )
 
       _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
-      AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem",
-                         :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
+      AuditEvent.success(
+        :event        => "ems_created",
+        :target_id    => ems.id,
+        :target_class => "ExtManagementSystem",
+        :message      => "%{provider_type} %{provider_name} created" % {
+          :provider_type => Dictionary.gettext("ext_management_systems",
+                                               :type      => :table,
+                                               :notfound  => :titleize,
+                                               :plural    => false,
+                                               :translate => false),
+          :provider_name => ems.name})
     end
   end
 
