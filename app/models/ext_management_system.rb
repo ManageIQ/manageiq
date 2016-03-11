@@ -59,6 +59,7 @@ class ExtManagementSystem < ApplicationRecord
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :if => :hostname_required?
+  validate :require_valid_credentials
 
   def hostname_uniqueness_valid?
     return unless hostname_required?
@@ -551,5 +552,9 @@ class ExtManagementSystem < ApplicationRecord
   def clear_association_cache
     @storages = nil
     super
+  end
+
+  def require_valid_credentials
+    errors.add(:authentications, 'You must enter credentials.') if @passed_authentications && missing_credentials?
   end
 end

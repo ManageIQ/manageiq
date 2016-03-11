@@ -235,7 +235,10 @@ class EmsCloudController < ApplicationController
 
     ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
 
-    ems.update_authentication(build_credentials(ems), :save => (mode != :validate))
+    credentials = build_credentials(ems)
+    # TODO(maufart): dirty, suggest a better solution..
+    ems.instance_variable_set :@passed_authentications, credentials.any?
+    ems.update_authentication(credentials, :save => (mode != :validate))
   end
 
   def build_credentials(ems)
