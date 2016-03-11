@@ -937,11 +937,7 @@ Vmdb::Application.routes.draw do
         dialog_load
         discover
         download_data
-        edit
-        index
-        new
         protect
-        show
         show_list
         tagging_edit
         scaling
@@ -2533,7 +2529,7 @@ Vmdb::Application.routes.draw do
 
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
-    unless controller_name == :ems_cloud
+    unless [:ems_cloud, :ems_infra].include?(controller_name)
       match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
     end
 
@@ -2564,5 +2560,6 @@ Vmdb::Application.routes.draw do
   get '/ping' => 'ping#index'
 
   resources :ems_cloud, :as => :ems_clouds
+  resources :ems_infra, :as => :ems_infras
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 end
