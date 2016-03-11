@@ -125,7 +125,8 @@ module Rbac
     targets
   end
 
-  def self.calc_filtered_ids(klass, scope, user_filters, user_or_group = nil)
+  def self.calc_filtered_ids(scope, user_filters, user_or_group = nil)
+    klass = scope.respond_to?(:klass) ? scope.klass : scope
     u_filtered_ids = get_self_service_object_ids(user_or_group, klass)
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
     m_filtered_ids = get_managed_filter_object_ids(klass, scope, user_filters['managed'])
@@ -173,7 +174,7 @@ module Rbac
 
   def self.find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
     parent_class = rbac_class(klass)
-    filtered_ids, _ = calc_filtered_ids(parent_class, parent_class, rbac_filters, user_or_group)
+    filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user_or_group)
 
     find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
   end
@@ -240,7 +241,7 @@ module Rbac
   end
 
   def self.find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
-    filtered_ids, u_filtered_ids = calc_filtered_ids(klass, scope, rbac_filters, user_or_group)
+    filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user_or_group)
     find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
 
