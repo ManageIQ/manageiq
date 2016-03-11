@@ -256,6 +256,15 @@ describe MiqPolicy do
         expected_condition = conds[0].attributes.except('created_on').except('updated_on').except('expression')
         expect(res[:details][0]['conditions'][0]).to include(expected_condition.merge('result' => 'deny'))
       end
+
+      it 'acts on successful policy' do
+        succeeded = []
+        failed    = [policies[0]]
+        allow(target).to receive(:get_policies).and_return(profiles)
+
+        expect(MiqAction).to receive(:invoke_actions).with(target, {:event => events[0]}, succeeded, failed)
+        described_class.enforce_policy(target, events[0].name)
+      end
     end
   end
 
