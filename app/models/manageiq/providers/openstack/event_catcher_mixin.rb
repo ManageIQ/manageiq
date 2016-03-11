@@ -14,6 +14,7 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
       options[:duration]  = worker_settings[:duration]
       options[:capacity]  = worker_settings[:capacity]
       options[:heartbeat] = worker_settings[:amqp_heartbeat]
+      options[:ems]       = @ems
 
       options[:client_ip] = server.ipaddress
       @event_monitor_handle = OpenstackEventMonitor.new(options)

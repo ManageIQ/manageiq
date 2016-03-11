@@ -4,6 +4,9 @@ require 'bunny'
 require 'thread'
 
 class OpenstackRabbitEventMonitor < OpenstackEventMonitor
+  DEFAULT_AMQP_PORT = 5672
+  DEFAULT_AMQP_HEARTBEAT = 30
+
   # The rabbit event monitor is available if a connection can be established.
   # This ensures that the amqp server is indeed rabbit (and not another amqp
   # implementation).
@@ -12,7 +15,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def self.plugin_priority
-    1
+    2
   end
 
   # Why not inline this?
@@ -84,14 +87,6 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
 
   def connection
     @connection ||= OpenstackRabbitEventMonitor.connect(@options)
-  end
-
-  def amqp_event(_delivery_info, metadata, payload)
-    OpenstackAmqpEvent.new(payload,
-                           :user_id      => payload["user_id"],
-                           :priority     => metadata["priority"],
-                           :content_type => metadata["content_type"],
-                          )
   end
 
   def initialize_queues(channel)

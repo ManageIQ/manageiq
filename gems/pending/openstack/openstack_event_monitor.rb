@@ -6,9 +6,6 @@ require 'util/extensions/miq-module'
 require 'active_support/core_ext/class/subclasses'
 
 class OpenstackEventMonitor
-  DEFAULT_AMQP_PORT = 5672
-  DEFAULT_AMQP_HEARTBEAT = 30
-
   def self.new(options = {})
     # plugin initializer
     self == OpenstackEventMonitor ? event_monitor(options) : super
@@ -102,6 +99,14 @@ class OpenstackEventMonitor
     options.values_at(:hostname, :username, :password)
   end
   private_class_method :event_monitor_key
+
+  def amqp_event(_delivery_info, metadata, payload)
+    OpenstackAmqpEvent.new(payload,
+                           :user_id      => payload["user_id"],
+                           :priority     => metadata["priority"],
+                           :content_type => metadata["content_type"],
+                          )
+  end
 end
 
 # Dynamically load all event monitor plugins

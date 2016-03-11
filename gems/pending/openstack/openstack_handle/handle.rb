@@ -241,6 +241,15 @@ module OpenstackHandle
       detect_service("Storage", tenant_name)
     end
 
+    def metering_service(tenant_name = nil)
+      connect(:service => "Metering", :tenant_name => tenant_name)
+    end
+    alias_method :connect_metering, :metering_service
+
+    def detect_metering_service(tenant_name = nil)
+      detect_service("Metering", tenant_name)
+    end
+
     def detect_service(service, tenant_name = nil)
       connect(:service => service, :tenant_name => tenant_name)
     rescue MiqException::ServiceNotAvailable
