@@ -62,9 +62,11 @@ describe MiqPolicyController do
       end
     end
     describe "#action_get_info" do
+      let(:cat1) { FactoryGirl.create(:classification, :description => res.first) }
+      let(:cat2) { FactoryGirl.create(:classification, :description => res.second) }
+
       before do
-        FactoryGirl.create(:classification, :description => res.first)
-        FactoryGirl.create(:classification, :description => res.second)
+        cat1 ; cat2
         controller.instance_variable_set(:@sb, :active_tree => :action_tree)
       end
 
@@ -72,11 +74,10 @@ describe MiqPolicyController do
       let(:action) do
         FactoryGirl.create(:miq_action,
                            :action_type => 'inherit_parent_tags',
-                           :options     => {:cats => %w(category_0000000000001 category_0000000000002)})
+                           :options     => {:cats => [cat1.name, cat2.name]})
       end
 
       it "joins classification tags" do
-        skip "This doesn't do what we think it does. Should be reviewed again. Skipping to make suite pass for other features."
         controller.send(:action_get_info, action)
         expect(controller.instance_variable_get(:@cats)).to eq(res.join(' | '))
       end
