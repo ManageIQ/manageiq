@@ -389,8 +389,8 @@ module MiqPolicyController::MiqActions
       add_flash(_("Attribute Name is required"), :error)
     end
     edit[:attrs].each do |k, v|
-      add_flash(_("%{val} missing for %{field}") % {:val => "Attribute", :field => v}, :error) if k.blank? && !v.blank?
-      add_flash(_("%{val} missing for %{field}") % {:val => "Value", :field => k}, :error) if !k.blank? && v.blank?
+      add_flash(_("Attribute missing for %{field}") % {:field => v}, :error) if k.blank? && !v.blank?
+      add_flash(_("Value missing for %{field}") % {:field => k}, :error) if !k.blank? && v.blank?
     end
     if edit[:action_type] == "evaluate_alerts" && edit[:alerts].empty?
       add_flash(_("At least one Alert must be selected"), :error)
