@@ -1068,10 +1068,10 @@ module ApplicationController::CiProcessing
     memory = nil unless @reconfigureitems.all? { |vm| vm.mem_cpu == memory }
 
     socket_count = @reconfigureitems.first.num_cpu
-    socket_count = nil unless @reconfigureitems.all? { |vm| vm.num_cpu == socket_count }
+    socket_count = '' unless @reconfigureitems.all? { |vm| vm.num_cpu == socket_count }
 
     cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
-    cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
+    cores_per_socket = '' unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
     memory, memory_type = reconfigure_calculations(memory)
 
     { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s}

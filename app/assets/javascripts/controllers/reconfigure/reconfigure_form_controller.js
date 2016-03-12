@@ -74,7 +74,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       if( $scope.cb_cpu && (($scope.reconfigureModel.socket_count != $scope.modelCopy.socket_count)) ||
         ($scope.reconfigureModel.cores_per_socket_count != $scope.modelCopy.cores_per_socket_count))
         return;
-      $scope.angularForm.$setPristine(true);
+      $scope.angularForm.$setValidity(false);
     };
 
     $scope.processorValueChanged = function() {
