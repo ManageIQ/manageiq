@@ -41,10 +41,15 @@ class ApiController
 
       params['filter'].select(&:present?).each do |filter|
         parsed_filter = parse_filter(filter, operators)
-        unless klass.column_names.include?(parsed_filter[:attr]) || klass.virtual_attribute?(parsed_filter[:attr])
-          raise BadRequestError, "attribute #{parsed_filter[:attr]} does not exist"
-        end
-        field = "#{klass.name}-#{parsed_filter[:attr]}"
+        parts = parsed_filter[:attr].split(".")
+        field = if parts.one?
+                  unless klass.column_names.include?(parsed_filter[:attr]) || klass.virtual_attribute?(parsed_filter[:attr])
+                    raise BadRequestError, "attribute #{parsed_filter[:attr]} does not exist"
+                  end
+                  "#{klass.name}-#{parsed_filter[:attr]}"
+                else
+                  "#{klass.name}.#{parts[0..-2].join(".")}-#{parts.last}"
+                end
         target = parsed_filter[:logical_or] ? or_expressions : and_expressions
         target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
       end

@@ -247,6 +247,19 @@ describe ApiController do
                                              {"name" => vm3.name, "guid" => vm3.guid}])
     end
 
+    it "supports filtering by attributes of associations" do
+      host1 = FactoryGirl.create(:host, :name => "foo")
+      host2 = FactoryGirl.create(:host, :name => "bar")
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "baz", :host => host1)
+      _vm2 = FactoryGirl.create(:vm_vmware, :name => "qux", :host => host2)
+
+      run_get vms_url, :expand => "resources",
+                       :filter => ["host.name='foo'"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
     it "supports filtering by virtual string attributes" do
       host_a = FactoryGirl.create(:host, :name => "aa")
       host_b = FactoryGirl.create(:host, :name => "bb")
