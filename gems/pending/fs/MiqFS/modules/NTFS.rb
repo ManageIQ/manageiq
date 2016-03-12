@@ -147,11 +147,6 @@ module NTFS
 
   # A FileObject is basically just :din, :data
 
-  def fs_fileSize_obj(fobj)
-    return 0 if fobj.data.nil?
-    fobj.data.length
-  end
-
   # Returns a Ruby Time object.
   def fs_fileAtime_obj(fobj)
     fobj.din.afn.aTime
