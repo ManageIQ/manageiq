@@ -500,44 +500,6 @@ class ApplicationController < ActionController::Base
     tree
   end
 
-  def set_summary_pdf_data
-    @report_only = true
-    @showtype    = @display
-    run_time     = Time.now
-    klass        = ui_lookup(:model => "#{@record.class}")
-
-    @options = {
-      :page_layout => "portrait",
-      :page_size   => "us-letter",
-      :run_date    => run_time.strftime("%m/%d/%y %l:%m %p %z"),
-      :title       => "#{klass} \"#{@record.name}\"".html_safe,
-    }
-
-    if @display == "download_pdf"
-      @display = "main"
-      case @record
-      when Vm
-        if @record.hardware.present?
-          @record_notes = @record.hardware.annotation || "<No notes have been entered for this VM>"
-        end
-        get_host_for_vm(@record)
-        set_config(@record)
-      when ResourcePool
-        # FIXME: check if this can be put before the test (can we have other
-        # records than Vm and ResourcePool?)
-        set_config(@record)
-      end
-
-      disable_client_cache
-      html_string = render_to_string(:template => "/layouts/show_pdf", :layout => false)
-      pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
-      send_data(pdf_data,
-                :type     => "application/pdf",
-                :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
-               )
-    end
-  end
-
   # moved this method here so it can be accessed from pxe_server controller as well
   def log_depot_set_verify_status
     if (@edit[:new][:log_password] == @edit[:new][:log_verify]) && @edit[:new][:uri_prefix] != "nfs" &&
