@@ -250,27 +250,20 @@ module ApplicationHelper
   end
 
   def view_to_association(view, parent)
-    association = view.scoped_association
-    # Handle other sub-items of a VM or Host
     case view.db
-    when "AdvancedSetting"  then association = "advanced_settings"
-    when "CloudNetwork"     then association = "cloud_networks"
-    when "OrchestrationStackOutput" then association = "outputs"
-    when "OrchestrationStackParameter" then association = "parameters"
-    when "OrchestrationStackResource"  then association = "resources"
-    when "Filesystem"       then association = "filesystems"
-    when "FirewallRule"     then association = "firewall_rules"
-    when "GuestApplication" then association = "guest_applications"
-    when "Patch"            then association = "patches"
-    when "RegistryItem"     then association = "registry_items"
-    when "ScanHistory"      then association = "scan_histories"
+    when "OrchestrationStackOutput"    then "outputs"
+    when "OrchestrationStackParameter" then "parameters"
+    when "OrchestrationStackResource"  then "resources"
+    when 'AdvancedSetting', 'CloudNetwork', 'Filesystem', 'FirewallRule', 'GuestApplication', 'Patch', 'RegistryItem',
+         'ScanHistory'
+                                       then view.db.tableize
     when "SystemService"
       case parent.class.base_class.to_s.downcase
-      when "host" then association = "host_services"
-      when "vm"   then association = @lastaction
+      when "host" then "host_services"
+      when "vm"   then @lastaction
       end
+    else view.scoped_association
     end
-    association
   end
 
   # Convert a db name to a controller name and an action
