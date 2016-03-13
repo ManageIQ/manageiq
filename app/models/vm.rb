@@ -1,6 +1,6 @@
 class Vm < VmOrTemplate
   default_scope { where(:template => false) }
-
+  belongs_to :container_node_deployment
   include_concern 'Operations'
 
   def self.base_model

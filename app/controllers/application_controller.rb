@@ -2198,7 +2198,7 @@ class ApplicationController < ActionController::Base
       when "container", "container_group", "container_node", "container_service", "ems_container",
            "container_route", "container_project", "container_replicator", "persistent_volume",
            "container_image_registry", "container_image", "container_topology", "container_dashboard",
-           "container_build"
+           "container_build", "openshift_deployment"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
         session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)

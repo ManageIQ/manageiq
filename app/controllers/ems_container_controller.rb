@@ -17,4 +17,8 @@ class EmsContainerController < ApplicationController
   def index
     redirect_to :action => 'show_list'
   end
+
+  def deployment
+    redirect_to :action => 'new', :controller => :openshift_deployment
+  end
 end

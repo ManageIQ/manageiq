@@ -1,5 +1,6 @@
 class AutomationTask < MiqRequestTask
   alias_attribute :automation_request, :miq_request
+  has_one :deployment
 
   AUTOMATE_DRIVES = false
 

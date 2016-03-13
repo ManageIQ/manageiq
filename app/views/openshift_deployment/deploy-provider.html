@@ -1,0 +1,35 @@
+<div ng-controller="containers.deployProviderController">
+  <div miq-wizard class="miq-deploy-provider-wizard" on-finish="finishedWizard()" on-cancel="cancelWizard()" content-height="455px">
+    <div miq-wizard-step step-title="Deployment Details" substeps="true">
+      <div miq-wizard-substep step-title="General">
+        <div ng-include="'modules/containers/providers/deploy-provider-details-general.html'"></div>
+      </div>
+      <div miq-wizard-substep step-title="Masters & Nodes">
+        <div ng-if="data.provisionOn == 'existingVms'" ng-include="'modules/containers/providers/deploy-provider-details-existing-vms.html'"></div>
+        <div ng-if="data.provisionOn == 'newVms'">
+          You chose Create new VMs on provider.
+        </div>
+        <div ng-if="data.provisionOn == 'noProvider'">
+          You chose Specify a list of machnines to deploy on / No existing provider.
+        </div>
+        <div ng-if="data.provisionOn == 'cdnSatelliteRepo'">
+          You chose CDN/Satellite repo.
+        </div>
+      </div>
+    </div>
+    <div miq-wizard-step step-title="Continuing" substeps="true">
+      <div miq-wizard-substep step-title="First">
+        <p>You have continued to the first substep!</p>
+      </div>
+      <div miq-wizard-substep step-title="Second">
+        <p>You have continued to the second substep!</p>
+      </div>
+      <div miq-wizard-substep step-title="Third">
+        <p>You have continued to the third substep!</p>
+      </div>
+    </div>
+    <div miq-wizard-step step-title="More steps">
+      <p>Even more steps!!</p>
+    </div>
+  </div>
+</div>

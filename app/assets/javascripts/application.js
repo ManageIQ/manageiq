@@ -74,3 +74,4 @@
 //= require miq_toolbar
 //= require resizable_sidebar
 //= require xml_display
+//= require controllers/openshift_deployment/deploy-provider-controller.js

@@ -1,0 +1,53 @@
+<form class="form-horizontal">
+  <div pf-form-group pf-label="Name" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+    <input id="name" name="name" ng-model="data.providerName" type="text" required/>
+  </div>
+  <div pf-form-group pf-label="Type" required pf-label-class="miq-input-label-class" pf-input-class="miq-radio-input-class">
+    <label class="radio">
+      <input type="radio" ng-model="data.providerType" value="atomic">Atomic</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.providerType" value="openshift">OpenShift</input>
+    </label>
+  </div>
+</form>
+<h3>Provider to provision on</h3>
+<form class="form-horizontal">
+  <label class="radio">
+    <input type="radio" ng-model="data.provisionOn" value="existingVms">Use existing VMs from an existing provider</input>
+  </label>
+  <div class="form-group  sub-group">
+    <select pf-select ng-model="data.existingProviderType" id="exitingProviderType" ng-disabled="data.provisionOn != 'existingVms'">
+      <option value="rhev">Existing Provider 1</option>
+      <option value="apple">Existing Provider 2</option>
+      <option value="banana">Existing Provider 3</option>
+    </select>
+  </div>
+  <label class="radio">
+    <input type="radio" ng-model="data.provisionOn" value="newVms">Create new VMs on provider</input>
+  </label>
+  <div class="form-group sub-group">
+    <select pf-select ng-model="data.newProviderType" id="newProviderType" ng-disabled="data.provisionOn != 'newVms'">
+      <option value="rhev">Existing Provider 1</option>
+      <option value="apple">Existing Provider 2</option>
+      <option value="banana">Existing Provider 3</option>
+    </select>
+    <a ng-class="{disabled: data.provisionOn != 'newVms'}">+ Create new provider</a>
+  </div>
+  <label class="radio">
+    <input type="radio" ng-model="data.provisionOn" value="noProvider">Specify a list of machines to deploy on / No existing provider</input>
+  </label>
+  <label class="radio">
+    <input type="radio" ng-model="data.provisionOn" value="cdnSatelliteRepo">CDN/Satellite repo</input>
+  </label>
+  <div class="sub-group">
+    <form class="form-horizontal">
+      <div pf-form-group pf-label="Username" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+        <input id="repo-user-name" name="name" ng-model="data.repoUsername" type="text" required ng-disabled="data.provisionOn != 'cdnSatelliteRepo'"/>
+      </div>
+      <div pf-form-group pf-label="Password" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+        <input id="repo-password" name="name" ng-model="data.repoPassword" type="password" required ng-disabled="data.provisionOn != 'cdnSatelliteRepo'"/>
+      </div>
+    </form>
+  </div>
+</form>
