@@ -1604,7 +1604,7 @@ module ReportController::Reports::Editor
     unless @edit[:models] # Only create once
       @edit[:models] = []
       MiqReport.reportable_models.each do |m|
-        @edit[:models].push([Dictionary.gettext(m, :type => :model, :notfound => :titleize).pluralize, m])
+        @edit[:models].push([Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m])
       end
     end
 

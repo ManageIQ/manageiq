@@ -341,7 +341,7 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown"
     num = @record.number_of(:guest_applications)
     label = (os =~ /linux/) ? n_("Package", "Packages", num) : n_("Application", "Applications", num)
-    h = {:label => label.pluralize, :image => "guest_application", :value => num}
+    h = {:label => label, :image => "guest_application", :value => num}
     if num > 0
       h[:title] = _("Show the %{label} installed on this VM") % {:label => label}
       h[:explorer] = true
