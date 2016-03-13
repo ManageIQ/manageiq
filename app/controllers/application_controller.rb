@@ -374,13 +374,6 @@ class ApplicationController < ActionController::Base
     @tree_vms   = Vm.where(:id => (@sb[:tree_vms_hash] || {}).keys)
   end
 
-  # Show the current widget report in pdf format
-  def widget_to_pdf
-    @report = nil   # setting report to nil in case full screen mode was opened first, to make sure the one in report_result is used for download
-    session[:report_result_id] = params[:rr_id]
-    render_pdf
-  end
-
   # Common method to show a standalone report
   def report_only
     @report_only = true                 # Indicate stand alone report for views

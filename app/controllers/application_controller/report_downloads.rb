@@ -37,6 +37,13 @@ module ApplicationController::ReportDownloads
     send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
 
+  # Show the current widget report in pdf format
+  def widget_to_pdf
+    @report = nil   # setting report to nil in case full screen mode was opened first, to make sure the one in report_result is used for download
+    session[:report_result_id] = params[:rr_id]
+    render_pdf
+  end
+
   private
 
   def report_for_rendering
