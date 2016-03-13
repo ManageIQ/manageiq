@@ -97,9 +97,41 @@ module ApplicationController::ReportDownloads
     end
   end
 
+  # Download currently displayed view
+  def download_data
+    @view = session[:view].dup if session[:view] # Copy session view, if it exists
+    options = session[:paged_view_search_options].merge(:page => nil, :per_page => nil) # Get all pages
+    @view.table, _attrs = @view.paged_view_search(options) # Get the records
+
+    @filename = filename_timestamp(@view.title)
+    case params[:download_type]
+    when "pdf"
+      download_pdf(@view)
+    when "text"
+      download_txt(@view)
+    when "csv"
+      download_csv(@view)
+    end
+  end
+
   private
 
   RENDER_TYPES = {'txt' => :txt, 'csv' => :csv, 'pdf' => :pdf}
+
+  def download_txt(view)
+    disable_client_cache
+    send_data(view.to_text, :filename => "#{@filename}.txt")
+  end
+
+  def download_csv(view)
+    disable_client_cache
+    send_data(view.to_csv, :filename => "#{@filename}.csv")
+  end
+
+  # Send the current report in pdf format
+  def download_pdf(view)
+    render_pdf(view)
+  end
 
   def report_for_rendering
     if session[:rpt_task_id]
