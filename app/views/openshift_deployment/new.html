@@ -1,0 +1,33 @@
+<div ng-app="openshiftDeployment" ng-controller="openshiftDeploymentController" class="container-fluid container-tiles-pf containers-dashboard miq-dashboard-view">
+    <div class="row row-tile-pf" >
+        <div class="col-xs-12 col-sm-12 col-md-10">
+            <div class="row">
+                <div name="myForm">
+                    <label for="deployment_type_slection"> Type: </label><br>
+                    <select id="deployment_type_slection" ng-model="deployment_type">
+                        <option ng-repeat="type in types">
+                            {{ type }}
+                        </option>
+                    </select>
+                    <br/>
+
+                    <label for="deployment_option"> Type: </label><br>
+                    <select id="deployment_option" ng-model="deployment_option">
+                        <option ng-repeat="deployment_option in deployment_options">
+                            {{ deployment_option }}
+                        </option>
+                    </select>
+                    <br/>
+
+                    <label for="provider_selection"> Select Provider: </label><br>
+                    <select id="provider_selection" ng-show="{{deployment_option}}.localeCompare('Managed Provision')" ng-model="provider">
+                        <option ng-repeat="provider in providers">
+                            {{ provider.provider.name }}
+                        </option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -3140,6 +3140,10 @@
     :feature_type: admin
     :identifier: ems_container_admin
     :children:
+    - :name: Deploy
+      :description: Deploy a new Containers Provider
+      :feature_type: admin
+      :identifier: ems_container_deployment
     - :name: Remove
       :description: Remove Containers Providers from the VMDB
       :feature_type: admin

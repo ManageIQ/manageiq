@@ -31,6 +31,7 @@
 //= require automate_import_export
 //= require dialog_field_refresh
 //= require excanvas
+//= require controllers/openshift_deployment/openshift_deployment_controller
 //= require jquery.jqplot
 //= require jqplot-plugins/jqplot.pieRenderer
 //= require jqplot-plugins/jqplot.donutRenderer
