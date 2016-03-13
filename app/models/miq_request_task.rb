@@ -36,10 +36,10 @@ class MiqRequestTask < ApplicationRecord
 
   def update_and_notify_parent(upd_attr)
     upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.key?(:message)
-    self.update_attributes!(upd_attr)
+    update_attributes! upd_attr
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request
-    parent = miq_request_task.nil? ? miq_request(true) : miq_request_task(true)
+    parent = miq_request_task || miq_request
     parent.update_request_status
   end
 

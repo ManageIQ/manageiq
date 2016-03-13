@@ -83,9 +83,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_flavors_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.flavors(true)
+    ems.flavors.reset
     deletes = if (target == ems)
-                ems.flavors.dup
+                :use_association
               else
                 []
               end
@@ -97,9 +97,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_availability_zones_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.availability_zones(true)
+    ems.availability_zones.reset
     deletes = if (target == ems)
-                ems.availability_zones.dup
+                :use_association
               else
                 []
               end
@@ -111,9 +111,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_tenants_inventory(ems, hashes, target = nil)
     target ||= ems
 
-    ems.cloud_tenants(true)
+    ems.cloud_tenants.reset
     deletes = if (target == ems)
-                ems.cloud_tenants.dup
+                :use_association
               else
                 []
               end
@@ -125,9 +125,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_resource_quotas_inventory(ems, hashes, target = nil)
     target ||= ems
 
-    ems.cloud_resource_quotas(true)
+    ems.cloud_resource_quotas.reset
     deletes = if (target == ems)
-                ems.cloud_resource_quotas.dup
+                :use_association
               else
                 []
               end
@@ -143,9 +143,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_key_pairs_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.key_pairs(true)
+    ems.key_pairs.reset
     deletes = if (target == ems)
-                ems.key_pairs.dup
+                :use_association
               else
                 []
               end
@@ -157,9 +157,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_volumes_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.cloud_volumes(true)
+    ems.cloud_volumes.reset
     deletes = if (target == ems)
-                ems.cloud_volumes.dup
+                :use_association
               else
                 []
               end
@@ -178,9 +178,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.cloud_volume_snapshots(true)
+    ems.cloud_volume_snapshots.reset
     deletes = if (target == ems)
-                ems.cloud_volume_snapshots.dup
+                :use_association
               else
                 []
               end
@@ -209,9 +209,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.cloud_object_store_containers(true)
+    ems.cloud_object_store_containers.reset
     deletes = if (target == ems)
-                ems.cloud_object_store_containers.dup
+                :use_association
               else
                 []
               end
@@ -228,9 +228,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.cloud_object_store_objects(true)
+    ems.cloud_object_store_objects.reset
     deletes = if (target == ems)
-                ems.cloud_object_store_objects.dup
+                :use_association
               else
                 []
               end
@@ -248,9 +248,9 @@ module EmsRefresh::SaveInventoryCloud
   def save_resource_groups_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.resource_groups(true)
+    ems.resource_groups.reset
     deletes = if (target == ems)
-                ems.resource_groups.dup
+                :use_association
               else
                 []
               end

@@ -18,7 +18,7 @@ module EmsRefresh::SaveInventoryMiddleware
 
     ems.middleware_servers(true)
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.middleware_servers.dup
+                :use_association
               else
                 []
               end
@@ -33,7 +33,7 @@ module EmsRefresh::SaveInventoryMiddleware
 
     ems.middleware_deployments(true)
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.middleware_deployments.dup
+                :use_association
               else
                 []
               end

@@ -135,11 +135,11 @@ describe MiqEmsRefreshCoreWorker::Runner do
         end
 
         def should_not_have_network_changes
-          expect(@hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq(@expected_addresses)
+          expect(@hw.nics.reload.sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq(@expected_addresses)
         end
 
         def should_have_network_changes(expected)
-          expect(@hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq(expected)
+          expect(@hw.nics.reload.sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq(expected)
         end
       end
     end

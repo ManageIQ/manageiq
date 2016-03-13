@@ -19,7 +19,7 @@ module EmsRefresh::SaveInventory
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
-                    target.vms_and_templates(true).to_a.dup
+                    target.vms_and_templates.reload.to_a
                   elsif target.kind_of?(Vm)
                     [target.ruby_clone]
                   else
@@ -194,7 +194,7 @@ module EmsRefresh::SaveInventory
       end
     end
 
-    deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"]).to_a.dup
+    deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"])
     save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
     store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
   end
@@ -208,8 +208,7 @@ module EmsRefresh::SaveInventory
       h[:backing_id] = h.fetch_path(:backing, :id)
     end
 
-    deletes = hardware.disks(true).dup
-    save_inventory_multi(hardware.disks, hashes, deletes, [:controller_type, :location], nil, [:storage, :backing])
+    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing])
   end
 
   def save_network_inventory(guest_device, hash)
@@ -224,17 +223,17 @@ module EmsRefresh::SaveInventory
   def save_networks_inventory(hardware, hashes, mode = :refresh)
     return if hashes.nil?
 
-    deletes = hardware.networks(true).to_a.dup
-
     case mode
     when :refresh
+      deletes = hardware.networks.reload.to_a
+
       # Remove networks that were already saved via guest devices
       saved_hashes, new_hashes = hashes.partition { |h| h[:id] }
       saved_hashes.each { |h| deletes.delete_if { |d| d.id == h[:id] } } unless deletes.empty? || saved_hashes.empty?
 
       save_inventory_multi(hardware.networks, new_hashes, deletes, [:ipaddress], nil, :guest_device)
     when :scan
-      save_inventory_multi(hardware.networks, hashes, deletes, [:description, :guid])
+      save_inventory_multi(hardware.networks, hashes, :use_association, [:description, :guid])
     end
   end
 
@@ -243,30 +242,26 @@ module EmsRefresh::SaveInventory
 
     deletes = case mode
               when :refresh then nil
-              when :scan    then parent.system_services(true).dup
+              when :scan    then :use_association
               end
 
     save_inventory_multi(parent.system_services, hashes, deletes, [:typename, :name])
   end
 
   def save_guest_applications_inventory(parent, hashes)
-    deletes = parent.guest_applications(true).dup
-    save_inventory_multi(parent.guest_applications, hashes, deletes, [:arch, :typename, :name, :version])
+    save_inventory_multi(parent.guest_applications, hashes, :use_association, [:arch, :typename, :name, :version])
   end
 
   def save_advanced_settings_inventory(parent, hashes)
-    deletes = parent.advanced_settings(true).dup
-    save_inventory_multi(parent.advanced_settings, hashes, deletes, [:name])
+    save_inventory_multi(parent.advanced_settings, hashes, :use_association, [:name])
   end
 
   def save_patches_inventory(parent, hashes)
-    deletes = parent.patches(true).dup
-    save_inventory_multi(parent.patches, hashes, deletes, [:name])
+    save_inventory_multi(parent.patches, hashes, :use_association, [:name])
   end
 
   def save_os_processes_inventory(os, hashes)
-    deletes = os.processes(true).dup
-    save_inventory_multi(os.processes, hashes, deletes, [:pid])
+    save_inventory_multi(os.processes, hashes, :use_association, [:pid])
   end
 
   def save_custom_attributes_inventory(parent, hashes, mode = :refresh)
@@ -274,7 +269,7 @@ module EmsRefresh::SaveInventory
 
     deletes = case mode
               when :refresh then nil
-              when :scan    then parent.custom_attributes(true).dup
+              when :scan    then :use_association
               end
 
     save_inventory_multi(parent.custom_attributes, hashes, deletes, [:name, :section])
@@ -282,13 +277,11 @@ module EmsRefresh::SaveInventory
 
   def save_ems_custom_attributes_inventory(parent, hashes)
     return if hashes.nil?
-    deletes = parent.ems_custom_attributes(true).dup
-    save_inventory_multi(parent.ems_custom_attributes, hashes, deletes, [:section, :name])
+    save_inventory_multi(parent.ems_custom_attributes, hashes, :use_association, [:section, :name])
   end
 
   def save_filesystems_inventory(parent, hashes)
-    deletes = parent.filesystems(true).dup
-    save_inventory_multi(parent.filesystems, hashes, deletes, [:name])
+    save_inventory_multi(parent.filesystems, hashes, :use_association, [:name])
   end
 
   def save_snapshots_inventory(vm, hashes)
@@ -296,8 +289,7 @@ module EmsRefresh::SaveInventory
 
     hashes.each { |h| h[:parent_id] = nil } # Delink all snapshots
 
-    deletes = vm.snapshots(true).dup
-    save_inventory_multi(vm.snapshots, hashes, deletes, [:uid])
+    save_inventory_multi(vm.snapshots, hashes, :use_association, [:uid])
 
     # Reset the relationship tree for the snapshots
     vm.snapshots.each do |s|
@@ -309,7 +301,6 @@ module EmsRefresh::SaveInventory
   end
 
   def save_event_logs_inventory(os, hashes)
-    deletes = os.event_logs(true).dup
-    save_inventory_multi(os.event_logs, hashes, deletes, [:uid])
+    save_inventory_multi(os.event_logs, hashes, :use_association, [:uid])
   end
 end

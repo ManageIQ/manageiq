@@ -126,7 +126,7 @@ describe "MiqWorker Monitor" do
         it "on worker destroy, will no longer associate the 'ready' message with the worker" do
           @worker.destroy
           expect(MiqQueue.where(:state => 'ready').count).to eq(1)
-          expect(@worker.messages(true).size).to eq(0)
+          expect(@worker.messages.reload.size).to eq(0)
 
           m = @messages.first.reload
           expect(m.handler_type).to be_nil
