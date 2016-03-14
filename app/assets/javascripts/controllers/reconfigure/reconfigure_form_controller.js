@@ -69,12 +69,29 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.cbChange = function() {
-      if( $scope.cb_memory && ($scope.reconfigureModel.memory != $scope.modelCopy.memory))
+      var memUnchanged = false;
+      var cpuUnchanged = false;
+
+      $scope.angularForm.$setValidity("unchanged", true);
+      if($scope.cb_memory && ($scope.reconfigureModel.memory == $scope.modelCopy.memory))
+        memUnchanged = true;
+
+      if($scope.cb_cpu && (($scope.reconfigureModel.socket_count == $scope.modelCopy.socket_count)) &&
+        ($scope.reconfigureModel.cores_per_socket_count == $scope.modelCopy.cores_per_socket_count))
+        cpuUnchanged = true;
+
+      if(($scope.cb_memory && !memUnchanged) || ($scope.cb_cpu && !cpuUnchanged))
         return;
-      if( $scope.cb_cpu && (($scope.reconfigureModel.socket_count != $scope.modelCopy.socket_count)) ||
-        ($scope.reconfigureModel.cores_per_socket_count != $scope.modelCopy.cores_per_socket_count))
-        return;
-      $scope.angularForm.$setValidity(false);
+
+      if($scope.cb_memory && !$scope.cb_cpu && memUnchanged)
+        $scope.angularForm.$setValidity("unchanged", false);
+
+      if($scope.cb_cpu && !$scope.cb_memory && cpuUnchanged)
+        $scope.angularForm.$setValidity("unchanged", false);
+
+      if($scope.cb_memory && $scope.cb_cpu && memUnchanged && cpuUnchanged) {
+        $scope.angularForm.$setValidity("unchanged", false);
+      }
     };
 
     $scope.processorValueChanged = function() {
@@ -82,6 +99,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         var vtotal_cpus = parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10);
         $scope.reconfigureModel.total_cpus = vtotal_cpus.toString();
       }
+      $scope.cbChange();
     };
 
     $scope.memtypeChanged = function() {
@@ -90,7 +108,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       else if($scope.reconfigureModel.memory_type == "MB" && $scope.mem_type_prev == "GB")
         $scope.reconfigureModel.memory =  ~~(parseInt($scope.reconfigureModel.memory, 10) * 1024);
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
-      $scope.angularForm.memory.$validate();
+      $scope.angularForm['memory'].$validate();
+      $scope.cbChange();
     };
 
     var reconfigureEditButtonClicked = function(buttonName, serializeFields) {

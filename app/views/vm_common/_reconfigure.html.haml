@@ -22,6 +22,7 @@
                             "id"          => "textInput-markup",
                             "name"        => "memory",
                             "ng-model"    => "reconfigureModel.memory",
+                            "ng-chnge"    => "cb_change()",
                             "maxlength"   => "50",
                             "ng-pattern"  => "/^[-+]?[0-9]+$/",
                             "miqrequired" => "",
@@ -85,7 +86,8 @@
                           options_for_select([["<#{_('Choose')}>", '']] + @cores_options, disabled: ["<#{_('Choose')}>", nil]),
                           "ng-model"                    => "reconfigureModel.cores_per_socket_count",
                           "ng-change"                   => "processorValueChanged()",
-                          "required"                    => "",
+                          "ng-pattern"                  => "/^[-+]?[0-9]+$/",
+                          "miqrequired"                 => "",
                           "maxlength"                   => "100",
                           "checkchange"                 => "",
                           "selectpicker-for-select-tag" => "")
