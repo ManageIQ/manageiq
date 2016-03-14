@@ -184,7 +184,7 @@ class ChargebackController < ApplicationController
         @sb[:rate] = ChargebackRate.new
         @sb[:rate].description = _("Copy of %{description}") % {:description => rate.description}
         @sb[:rate].rate_type = rate.rate_type
-        rate_details = rate.includes(:chargeback_rate_details => :detail_currency)
+        rate_details = rate.chargeback_rate_details
         # Create new rate detail records for copied rate record
         rate_details.each do |r|
           detail = ChargebackRateDetail.new
@@ -197,7 +197,6 @@ class ChargebackController < ApplicationController
           detail.metric = r[:metric]
           detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
           detail.chargeback_rate_detail_currency_id = r[:chargeback_rate_detail_currency_id]
-          @sb[:rate_details][:currency] = r.detail_currency.code
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else

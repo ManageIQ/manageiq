@@ -38,6 +38,7 @@
         %th= _('Per Unit')
         %th= _('Currency')
     %tbody
+      - code_currency = @sb[:rate_details][0].detail_currency.code
       - @sb[:rate_details].each_with_index do |r, i|
         - @cur_group = r[:group] if @cur_group.nil?
         - if @cur_group != r[:group]
@@ -67,4 +68,4 @@
                 = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
           /Show the code of the currency selected by the user
           %td{:id => "column_currency_#{i}"}
-            = r[:currency]
+            = code_currency
