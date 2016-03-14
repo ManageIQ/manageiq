@@ -223,10 +223,6 @@ module MiqReport::Generator
     elsif !db_options.blank? && db_options[:interval] == 'daily' && klass <= MetricRollup
       # Ad-hoc daily performance reports
       #   Daily for: Performance - Clusters...
-      associations = includes.kind_of?(Hash) ? includes.keys : Array(includes)
-
-      results = []
-
       unless conditions.nil?
         conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
         exp_sql, exp_includes = conditions.to_sql
@@ -236,7 +232,7 @@ module MiqReport::Generator
 
       start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
       results = VimPerformanceDaily
-                .find_entries(ext_options.merge(:reflections => associations, :class => klass))
+                .find_entries(ext_options.merge(:class => klass))
                 .where(where_clause)
                 .where(:timestamp => start_time..end_time)
                 .includes(includes)
