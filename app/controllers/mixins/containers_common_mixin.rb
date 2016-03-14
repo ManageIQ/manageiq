@@ -81,6 +81,20 @@ module ContainersCommonMixin
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?display=#{@display}&refresh=n")
       perf_gen_init_options # Intialize options, charts are generated async
+    elsif @display == "compliance_history"
+      count = params[:count] ? params[:count].to_i : 10
+      session[:ch_tree] = compliance_history_tree(record, count).to_json
+      session[:tree_name] = "ch_tree"
+      session[:squash_open] = (count == 1)
+      if count == 1
+        drop_breadcrumb(:name => _("%{name} (Latest Compliance Check)") % {:name => record.name},
+                        :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}&refresh=n")
+      else
+        drop_breadcrumb(:name => _("%{name} (Compliance History - Last %{number} Checks)") %
+                          {:name => record.name, :number => count},
+                        :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}&refresh=n")
+      end
+      @showtype = @display
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       show_container_display(record, "container_groups", ContainerGroup)
     elsif @display == "containers"

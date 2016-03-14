@@ -2,7 +2,7 @@ module ApplicationController::TreeSupport
   extend ActiveSupport::Concern
 
   def squash_toggle
-    @record = identify_record(params[:id], controller_name == "host" ? Host : VmOrTemplate)
+    @record = find_record
     item = "h_#{@record.name}"
     render :update do |page|
       if session[:squash_open] == false
@@ -18,6 +18,11 @@ module ApplicationController::TreeSupport
         session[:squash_open] = false
       end
     end
+  end
+
+  def find_record
+    identify_record(params[:id], controller_name.camelize) if %w(container_image host).include? controller_name
+    identify_record(params[:id], VmOrTemplate)
   end
 
   def tree_autoload_dynatree

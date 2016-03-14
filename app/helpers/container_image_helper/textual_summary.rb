@@ -8,6 +8,10 @@ module ContainerImageHelper
       %i(name tag id full_name os_distribution product_type product_name)
     end
 
+    def textual_group_compliance
+      %i(compliance_status compliance_history)
+    end
+
     def textual_group_relationships
       %i(ems container_image_registry container_projects container_groups containers container_nodes)
     end
@@ -50,6 +54,51 @@ module ContainerImageHelper
     def textual_product_name
       name = @record.operating_system.try(:product_name)
       {:label => _("Product Name"), :value => name} if name
+    end
+
+    def textual_compliance_status
+      h = {:label => _("Status")}
+      if @record.number_of(:compliances) == 0
+        h[:value] = _("Never Verified")
+      else
+        compliant = @record.last_compliance_status
+        date      = @record.last_compliance_timestamp
+        h[:image] = compliant ? "check" : "x"
+        h[:value] = if !compliant
+                      _("Non-Compliant as of %{time} Ago") %
+                      {:time => time_ago_in_words(date.in_time_zone(Time.zone)).titleize}
+                    else
+                      _("Compliant as of %{time} Ago") %
+                      {:time => time_ago_in_words(date.in_time_zone(Time.zone)).titleize}
+                    end
+        h[:title] = _("Show Details of Compliance Check on #{format_timezone(date)}")
+        h[:explorer] = true
+        h[:link]  = url_for(
+          :controller => controller.controller_name,
+          :action     => 'show',
+          :id         => @record,
+          :display    => 'compliance_history',
+          :count      => 1)
+      end
+      h
+    end
+
+    def textual_compliance_history
+      h = {:label => _("History")}
+      if @record.number_of(:compliances) == 0
+        h[:value] = _("Not Available")
+      else
+        h[:image] = "compliance"
+        h[:value] = _("Available")
+        h[:title] = _("Show Compliance History of this Container Image (Last 10 Checks)")
+        h[:explorer] = true
+        h[:link] = url_for(
+          :controller => controller.controller_name,
+          :action     => 'show',
+          :id         => @record,
+          :display    => 'compliance_history')
+      end
+      h
     end
   end
 end

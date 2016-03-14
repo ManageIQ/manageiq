@@ -529,6 +529,7 @@ Vmdb::Application.routes.draw do
         protect
         openscap_rule_results
         openscap_html
+        squash_toggle
       ),
       :post => %w(
         button
@@ -547,6 +548,7 @@ Vmdb::Application.routes.draw do
         guest_applications
         protect
         openscap_rule_results
+        squash_toggle
       ) + adv_search_post + exp_post + save_post
     },
 
