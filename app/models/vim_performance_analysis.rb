@@ -496,14 +496,19 @@ module VimPerformanceAnalysis
     #   :end_date    => Ending date
     #   :conditions  => ActiveRecord find conditions
 
+    klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    rel = if interval_name == "daily"
+            VimPerformanceDaily.find_entries(options[:ext_options])
+          else
+            klass.where(:capture_interval_name => interval_name)
+          end
+
     start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
     end_time   = options[:end_date].utc
-    klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     user_cond = nil
     user_cond = klass.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
     cond =  klass.send(:sanitize_sql_for_conditions, ["(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc])
-    cond += klass.send(:sanitize_sql_for_conditions, [" AND capture_interval_name = ?", interval_name]) unless interval_name == "daily"
     cond =  "(#{user_cond}) AND (#{cond})" if user_cond
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
@@ -525,12 +530,7 @@ module VimPerformanceAnalysis
     end
 
     # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
-
-    if interval_name == "daily"
-      VimPerformanceDaily.find_entries(options[:ext_options]).where(cond).select(options[:select])
-    else
-      klass.where(cond).select(options[:select]).to_a
-    end
+    rel.where(cond).select(options[:select]).to_a
   end
 
   def self.child_tags_over_time_period(obj, interval_name, options = {})
