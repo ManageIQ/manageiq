@@ -98,9 +98,10 @@ class UserValidationService
     # Call the authentication, use wait_for_task if a task is spawned
     begin
       user_or_taskid = User.authenticate(user[:name], user[:password], request)
-    rescue MiqException::MiqEVMLoginError
+    rescue MiqException::MiqEVMLoginError => err
       user[:name] = nil
-      return ValidateResult.new(:fail, _("Sorry, the username or password you entered is incorrect."))
+      err_message = err.message.present? ? err.message : _("Sorry, the username or password you entered is incorrect.")
+      return ValidateResult.new(:fail, err_message)
     end
 
     if user_or_taskid.kind_of?(User)
