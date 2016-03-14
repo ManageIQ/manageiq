@@ -3730,6 +3730,10 @@
       :description: Perform SmartState Analysis on Containers
       :feature_type: control
       :identifier: container_image_scan
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: container_image_check_compliance
 
 # ContainerImageRegistry
 - :name: Registries
