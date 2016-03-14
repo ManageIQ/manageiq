@@ -124,7 +124,6 @@ RSpec.describe "reports API" do
         :success => true,
         :message => "running report #{report.id}"
       )
-      expect_request_success
     end
 
     it "can import a report" do

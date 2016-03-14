@@ -25,7 +25,6 @@ RSpec.describe "Instances API" do
 
       expect_query_result(:instances, 1, 1)
       expect_result_resources_to_include_hrefs("resources", [instances_url(instance.id)])
-      expect_request_success
     end
   end
 
