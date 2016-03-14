@@ -388,7 +388,7 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.policy_for_event?(policy, event)
-    event.name == 'rsop' || policy.events.include?(event)
+    event && event.name == 'rsop' || policy.events.include?(event)
   end
   private_class_method :policy_for_event?
 
