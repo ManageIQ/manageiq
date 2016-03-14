@@ -312,6 +312,8 @@ module OpsController::Settings::Schedules
         find_filtered(MiqTemplate, :all).sort_by { |miq_template| miq_template.name.downcase }.collect(&:name).uniq
     when "host"
       filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+    when "container_image"
+      filtered_item_list = find_filtered(ContainerImage, :all).sort_by { |ci| ci.name.downcase }.collect(&:name).uniq
     when "ems"
       filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "cluster"
@@ -484,6 +486,11 @@ module OpsController::Settings::Schedules
       when "host" then {"=" => {"field" => "Host-name", "value" => params[:filter_value]}}
       else             {"IS NOT NULL" => {"field" => "Host-name"}}
       end
+    when "container_image"
+      case params[:filter_typ]
+      when "ems" then {"=" => {"field" => "ContainerImage.ext_management_system-name", "value" => params[:filter_value]}}
+      when "container_image" then {"=" => {"field" => "ContainerImage-name", "value" => params[:filter_value]}}
+      end
     when "emscluster"
       case params[:filter_typ]
       when "cluster"
@@ -520,10 +527,11 @@ module OpsController::Settings::Schedules
             {"=" => {"field" => "#{model}-v_owning_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
           ]}
         end
-      when "ems"          then {"=" => {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}}
-      when "host"         then {"=" => {"field" => "#{model}.host-name", "value" => params[:filter_value]}}
-      when "miq_template" then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
-      when "vm"           then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
+      when "ems"             then {"=" => {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}}
+      when "host"            then {"=" => {"field" => "#{model}.host-name", "value" => params[:filter_value]}}
+      when "miq_template"    then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
+      when "vm"              then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
+      when "container_image" then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
       else                     {"IS NOT NULL" => {"field" => "#{model}-name"}}
       end
     end
@@ -539,6 +547,7 @@ module OpsController::Settings::Schedules
       [_("VM Analysis"), "vm"],
       [_("Template Analysis"), "miq_template"],
       [_("Host Analysis"), "host"],
+      [_("Container Image Analysis"), "container_image"],
       [_("%{model} Analysis") % {:model => ui_lookup(:model => 'EmsCluster')}, "emscluster"],
       [_("%{model} Analysis") % {:model => ui_lookup(:model => 'Storage')}, "storage"]
     ]
@@ -578,6 +587,13 @@ module OpsController::Settings::Schedules
     ] +
                                (@host_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
                                (@host_my_filters.empty? ? [] : [[_("My Filters"), "my"]])
+
+    # to do, add scheduling by project
+    @container_image_options_for_select = [
+      [_("All Container Images"), "all"],
+      [_("All Container Images for Containers Provider"), "ems"],
+      [_("A single Container Image"), "container_image"]
+    ]
 
     @cluster_options_for_select = [
       [_("All Clusters"), "all"],

@@ -39,6 +39,12 @@
               "ng-change"      => "filterTypeChanged()",
               "checkchange"    => "",
               "selectpicker-for-select-tag"   => "")
+            = select_tag('filter_typ', options_for_select(@container_image_options_for_select),
+              "ng-switch-when" => "container_image",
+              "ng-model"       => "$parent.scheduleModel.filter_typ",
+              "ng-change"      => "filterTypeChanged()",
+              "checkchange"    => "",
+              "selectpicker-for-select-tag"   => "")
             = select_tag('filter_typ', options_for_select(@cluster_options_for_select),
               "ng-switch-when" => "emscluster",
               "ng-model"       => "$parent.scheduleModel.filter_typ",
