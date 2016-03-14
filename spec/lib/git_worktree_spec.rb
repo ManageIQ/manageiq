@@ -246,6 +246,14 @@ describe GitWorktree do
       expect(test_repo.branches).to match_array(%w(master branch1 branch2))
     end
 
+    it "get list of local branches" do
+      expect(test_repo.branches(:local)).to match_array(%w(master branch1 branch2))
+    end
+
+    it "get list of remote branches" do
+      expect(test_repo.branches(:remote)).to be_empty
+    end
+
     it "get list of files in a branch" do
       test_repo.branch = 'branch2'
 
