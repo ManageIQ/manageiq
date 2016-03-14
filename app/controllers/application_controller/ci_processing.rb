@@ -960,15 +960,20 @@ module ApplicationController::CiProcessing
     model_name  = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
     record_name = get_record_display_name(element)
 
-    element.destroy
-
-    if element.destroyed?
-      AuditEvent.success(audit)
-      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => record_name})
-    else
-      error_msg = element.errors.collect { |_attr, msg| msg }.join(';')
+    begin
+      element.destroy
+    rescue => bang
       add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
-               {:model => model_name, :name => record_name, :error_msg => error_msg}, :error)
+               {:model => model_name, :name => record_name, :error_msg => bang.message}, :error)
+    else
+      if element.destroyed?
+        AuditEvent.success(audit)
+        add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => record_name})
+      else
+        error_msg = element.errors.collect { |_attr, msg| msg }.join(';')
+        add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
+                 {:model => model_name, :name => record_name, :error_msg => error_msg}, :error)
+      end
     end
   end
 
