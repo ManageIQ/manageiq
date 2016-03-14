@@ -28,8 +28,6 @@ module MiqReport::Generator::Trend
       results = []
 
       includes = include.blank? ? [] : include.keys
-      associations = includes.kind_of?(Hash) ? includes.keys : Array(includes)
-      only_cols = [db_options[:limit_col], db_options[:trend_col]].compact
 
       start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
       trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
