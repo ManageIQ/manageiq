@@ -79,7 +79,7 @@ class HostController < ApplicationController
         drop_breadcrumb(:name => _("%{name} (Latest Compliance Check)") % {:name => @host.name},
                         :url  => "/host/show/#{@host.id}?display=#{@display}")
       else
-        drop_breadcrumb(:name => _("%{name} (Compliance History - Last #{number} Checks)") % {:name => @host.name,:number => count},
+        drop_breadcrumb(:name => _("%{name} (Compliance History - Last %{number} Checks)") % {:name => @host.name,:number => count},
                         :url  => "/host/show/#{@host.id}?display=#{@display}")
       end
       @showtype = @display
