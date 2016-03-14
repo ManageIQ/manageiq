@@ -70,6 +70,11 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"ems_container")}'),
           N_('Edit Tags')),
+        button(
+          :ems_container_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Manage Policies')),
       ]
     ),
   ])

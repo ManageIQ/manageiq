@@ -185,7 +185,8 @@ module ApplicationController::PolicySupport
       end
     end
   end
-  [:image_protect, :instance_protect, :vm_protect, :miq_template_protect, :container_image_protect].each do |old_name|
+  [:image_protect, :instance_protect, :vm_protect, :miq_template_protect, :container_image_protect,
+   :ems_container_protect].each do |old_name|
     alias_method old_name, :assign_policies
   end
 

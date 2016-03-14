@@ -924,6 +924,7 @@ Vmdb::Application.routes.draw do
         index
         new
         perf_top_chart
+        protect
         show
         show_list
         tagging_edit
@@ -937,6 +938,7 @@ Vmdb::Application.routes.draw do
         form_field_changed
         listnav_search_selected
         panel_control
+        protect
         quick_search
         sections_field_changed
         show
