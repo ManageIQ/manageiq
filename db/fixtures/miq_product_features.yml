@@ -3177,6 +3177,10 @@
       :description: Edit Tags of Containers Providers
       :feature_type: control
       :identifier: ems_container_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Containers Providers
+      :feature_type: control
+      :identifier: ems_container_protect
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
