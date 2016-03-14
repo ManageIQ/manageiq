@@ -129,27 +129,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
         return self.getDimensions(d).r;
       })
       .attr('class' , function(d) {
-        switch (d.item.status) {
-          case "OK":
-          case "On":
-          case "Ready":
-          case "Running":
-          case "Succeeded":
-          case "Valid":
-            return "Success";
-          case "NotReady":
-          case "Failed":
-          case "Error":
-          case "Unreachable":
-            return "Error";
-          case 'Warning':
-          case 'Waiting':
-          case 'Pending':
-            return "Warning";
-          case 'Unknown':
-          case 'Terminated':
-            return "Unknown";
-        }
+        return topologyService.getItemStatusClass(d);
       })
     .on("contextmenu", function(d){
           self.contextMenu(this, d);
