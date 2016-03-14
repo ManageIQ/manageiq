@@ -35,13 +35,13 @@
             :title         => _("Show all Images"))
         - if role_allows(:feature => "cloud_volume_show_list")
           = li_link(:count => @record.number_of(:cloud_volumes),
-            :text          => _("Cloud Volumes"),
+            :text          => _("Volumes"),
             :record_id     => @record.id,
             :display       => 'cloud_volumes',
-            :title         => _("Show all Cloud Volumes"))
+            :title         => _("Show all Volumes"))
         - if role_allows(:feature => "cloud_volume_snapshot_show_list")
           = li_link(:count => @record.number_of(:cloud_volume_snapshots),
-            :text          => _("Cloud Volume Snapshots"),
+            :text          => _("Volume Snapshots"),
             :record_id     => @record.id,
             :display       => 'cloud_volume_snapshots',
-            :title         => _("Show all Cloud Volume Snapshots"))
+            :title         => _("Show all Volume Snapshots"))

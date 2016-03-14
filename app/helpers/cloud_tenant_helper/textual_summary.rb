@@ -61,7 +61,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_cloud_volumes
-    label = ui_lookup(:tables => "cloud_volumes")
+    label = _('Volumes')
     num   = @record.number_of(:cloud_volumes)
     h     = {:label => label, :image => "cloud_volume", :value => num}
     if num > 0 && role_allows(:feature => "cloud_volume_show_list")
@@ -72,7 +72,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_cloud_volume_snapshots
-    label = ui_lookup(:tables => "cloud_volume_snapshots")
+    label = _('Volume Snapshots')
     num   = @record.number_of(:cloud_volume_snapshots)
     h     = {:label => label, :image => "cloud_volume_snapshot", :value => num}
     if num > 0 && role_allows(:feature => "cloud_volume_snapshot_show_list")
