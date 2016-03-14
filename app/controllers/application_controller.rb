@@ -441,20 +441,7 @@ class ApplicationController < ActionController::Base
   end
 
   def show_statistics
-    case controller_name
-    when "ontap_storage_system"
-      db = OntapStorageSystem
-    when "ontap_logical_disk"
-      db = OntapLogicalDisk
-    when "cim_base_storage_extent"
-      db = CimBaseStorageExtent
-    when "ontap_storage_volume"
-      db = OntapStorageVolume
-    when "ontap_file_share"
-      db = OntapFileShare
-    when "snia_local_file_system"
-      db = SniaLocalFileSystem
-    end
+    db = self.class.model
 
     @display = "show_statistics"
     session[:stats_record_id] = params[:id] if params[:id]
