@@ -43,7 +43,7 @@ class ApiController
         parsed_filter = parse_filter(filter, operators)
         parts = parsed_filter[:attr].split(".")
         field = if parts.one?
-                  unless klass.column_names.include?(parsed_filter[:attr]) || klass.virtual_attribute?(parsed_filter[:attr])
+                  unless klass.attribute_method?(parsed_filter[:attr]) || klass.virtual_attribute?(parsed_filter[:attr])
                     raise BadRequestError, "attribute #{parsed_filter[:attr]} does not exist"
                   end
                   "#{klass.name}-#{parsed_filter[:attr]}"
