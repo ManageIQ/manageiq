@@ -46,12 +46,8 @@ class ApiController
         unless virtual_or_physical_attribute?(target_class(klass, parts), attr)
           raise BadRequestError, "attribute #{attr} does not exist"
         end
-        field = if parts.empty?
-                  "#{klass.name}-#{attr}"
-                else
-                  # parts.map { |assoc| ".#{assoc}"}
-                  "#{klass.name}.#{parts.join(".")}-#{attr}"
-                end
+        associations = parts.map { |assoc| ".#{assoc}" }.join
+        field = "#{klass.name}#{associations}-#{attr}"
         target = parsed_filter[:logical_or] ? or_expressions : and_expressions
         target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
       end
