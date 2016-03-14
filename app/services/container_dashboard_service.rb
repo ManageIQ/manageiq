@@ -230,12 +230,11 @@ class ContainerDashboardService
 
   def daily_provider_metrics
     if @daily_metrics.blank?
-      resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.select(:id)
+      resource_ids = @ems.try(:id) || ManageIQ::Providers::ContainerManager.select(:id)
       @daily_metrics = VimPerformanceDaily.find_entries(:tz => @controller.current_user.get_timezone)
-      @daily_metrics =
-        @daily_metrics.where('resource_type = :type and resource_id in (:resource_ids) and timestamp > :min_time',
-                             :type => 'ExtManagementSystem', :resource_ids => resource_ids, :min_time => 30.days.ago)
-      @daily_metrics = @daily_metrics.order("timestamp")
+                         .where(:resource_type => 'ExtManagementSystem', :resource_id => resource_ids)
+                         .where('timestamp > :min_time', :min_time => 30.days.ago)
+                         .order("timestamp")
     end
     @daily_metrics
   end
