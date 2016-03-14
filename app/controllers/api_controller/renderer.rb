@@ -185,18 +185,21 @@ class ApiController
         else
           klass.all
         end
-      sql_filter, ruby_filters = filter_param(klass)
-      res = res.where(sql_filter)                                     if sql_filter.present? && res.respond_to?(:where)
-      ruby_filters.each { |ruby_filter| res = ruby_filter.call(res) } if ruby_filters.present?
 
-      sort_options = sort_params(klass)                               if res.respond_to?(:reorder)
-      res = res.reorder(sort_options)                                 if sort_options.present?
+      miq_expression = filter_param(klass)
 
-      options = {
-        :user => @auth_user_obj,
-      }
-      options[:order] = sort_options              if sort_options.present?
+      if miq_expression
+        sql, _, attrs = miq_expression.to_sql
+        res = res.where(sql) if attrs[:supported_by_sql]
+      end
+
+      sort_options = sort_params(klass) if res.respond_to?(:reorder)
+      res = res.reorder(sort_options) if sort_options.present?
+
+      options = {:user => @auth_user_obj}
+      options[:order] = sort_options if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
+      options[:filter] = miq_expression if miq_expression
 
       Rbac.filtered(res, options)
     end

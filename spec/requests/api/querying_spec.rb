@@ -134,6 +134,16 @@ describe ApiController do
                                              {"name" => vm1.name, "guid" => vm1.guid}])
     end
 
+    it "supports attribute pattern matching via *" do
+      vm1, _vm2, vm3 = create_vms_by_name(%w(aa_B2 bb aa_A1))
+
+      run_get vms_url, :expand => "resources", :filter => ["name='aa*'"], :sort_by => "name"
+
+      expect_query_result(:vms, 2, 3)
+      expect_result_resources_to_match_hash([{"name" => vm3.name, "guid" => vm3.guid},
+                                             {"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
     it "supports inequality test via !=" do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
@@ -235,6 +245,68 @@ describe ApiController do
       expect_query_result(:vms, 2, 3)
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
                                              {"name" => vm3.name, "guid" => vm3.guid}])
+    end
+
+    it "supports filtering by attributes of associations" do
+      host1 = FactoryGirl.create(:host, :name => "foo")
+      host2 = FactoryGirl.create(:host, :name => "bar")
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "baz", :host => host1)
+      _vm2 = FactoryGirl.create(:vm_vmware, :name => "qux", :host => host2)
+
+      run_get vms_url, :expand => "resources",
+                       :filter => ["host.name='foo'"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
+    it "supports filtering by virtual string attributes" do
+      host_a = FactoryGirl.create(:host, :name => "aa")
+      host_b = FactoryGirl.create(:host, :name => "bb")
+      vm_a = FactoryGirl.create(:vm, :host => host_a)
+      _vm_b = FactoryGirl.create(:vm, :host => host_b)
+
+      run_get(vms_url, :filter => ["host_name='aa'"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm_a.name, "guid" => vm_a.guid}])
+    end
+
+    it "supports flexible filtering by virtual string attributes" do
+      host_a = FactoryGirl.create(:host, :name => "ab")
+      host_b = FactoryGirl.create(:host, :name => "cd")
+      vm_a = FactoryGirl.create(:vm, :host => host_a)
+      _vm_b = FactoryGirl.create(:vm, :host => host_b)
+
+      run_get(vms_url, :filter => ["host_name='a%'"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm_a.name, "guid" => vm_a.guid}])
+    end
+
+    it "supports filtering by virtual boolean attributes" do
+      ems = FactoryGirl.create(:ext_management_system)
+      storage = FactoryGirl.create(:storage)
+      host = FactoryGirl.create(:host, :storages => [storage])
+      _vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems)
+      archived_vm = FactoryGirl.create(:vm)
+
+      run_get(vms_url, :filter => ["archived=true"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => archived_vm.name, "guid" => archived_vm.guid}])
+    end
+
+    it "supports filtering by comparison of virtual integer attributes" do
+      hardware_1 = FactoryGirl.create(:hardware, :cpu_sockets => 4)
+      hardware_2 = FactoryGirl.create(:hardware, :cpu_sockets => 8)
+      _vm_1 = FactoryGirl.create(:vm, :hardware => hardware_1)
+      vm_2 = FactoryGirl.create(:vm, :hardware => hardware_2)
+
+      run_get(vms_url, :filter => ["num_cpu > 4"], :expand => "resources")
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm_2.name, "guid" => vm_2.guid}])
     end
   end
 
