@@ -65,5 +65,29 @@ ManageIQ.angular.app.service('topologyService', function() {
     return { x: 0, y: 9, r: 17 };
   };
 
+  this.getItemStatusClass = function(d) {
+    switch (d.item.status) {
+      case "OK":
+      case "On":
+      case "Ready":
+      case "Running":
+      case "Succeeded":
+      case "Valid":
+        return "Success";
+      case "NotReady":
+      case "Failed":
+      case "Error":
+      case "Unreachable":
+        return "Error";
+      case 'Warning':
+      case 'Waiting':
+      case 'Pending':
+        return "Warning";
+      case 'Unknown':
+      case 'Terminated':
+        return "Unknown";
+    }
+  };
+
 
 });
