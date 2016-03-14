@@ -27,6 +27,7 @@ module ContainersCommonMixin
     @refresh_div = "main_div" # Default div for button.rjs to refresh
     tag(self.class.model) if params[:pressed] == "#{params[:controller]}_tag"
     assign_policies(ContainerImage) if params[:pressed] == "container_image_protect"
+    check_compliance_images if params[:pressed] == "container_image_check_compliance"
     return if ["#{params[:controller]}_tag"].include?(params[:pressed]) && @flash_array.nil? # Tag screen showing
 
     # Handle scan
@@ -153,6 +154,22 @@ module ContainersCommonMixin
     images.count
   end
 
+  def check_compliance_images
+    assert_privileges("container_image_check_compliance")
+    showlist = @lastaction == "show_list"
+    images = showlist ? find_checked_items : find_scan_item
+
+    if images.empty?
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "container_image"),
+                                                              :task  => "Conpliance Check"}, :error)
+    else
+      process_check_images_compliance(images)
+    end
+
+    showlist ? show_list : show
+    images.count
+  end
+
   def find_scan_item
     images = []
     if params[:id].nil? || ContainerImage.find_by_id(params[:id]).nil?
@@ -175,6 +192,22 @@ module ContainersCommonMixin
                   :error) # Push msg and error flag
       else
         add_flash(_("\"%{record}\": Analysis successfully initiated") % {:record => image_name})
+      end
+    end
+  end
+
+  def process_check_images_compliance(images)
+    ContainerImage.where(:id => images).order("lower(name)").each do |image|
+      image_name = image.name
+      begin
+        image.check_compliance
+      rescue StandardError => bang
+        add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': ") %
+                  {:model => ui_lookup(:model => "ContainerImage"),
+                   :name  => image_name} << bang.message,
+                  :error) # Push msg and error flag
+      else
+        add_flash(_("\"%{record}\": Compliance check successfully initiated") % {:record => image_name})
       end
     end
   end
