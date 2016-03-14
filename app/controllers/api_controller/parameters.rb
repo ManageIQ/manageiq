@@ -42,13 +42,15 @@ class ApiController
       params['filter'].select(&:present?).each do |filter|
         parsed_filter = parse_filter(filter, operators)
         parts = parsed_filter[:attr].split(".")
-        field = if parts.one?
-                  unless klass.attribute_method?(parsed_filter[:attr]) || klass.virtual_attribute?(parsed_filter[:attr])
-                    raise BadRequestError, "attribute #{parsed_filter[:attr]} does not exist"
-                  end
-                  "#{klass.name}-#{parsed_filter[:attr]}"
+        attr = parts.pop
+        unless virtual_or_physical_attribute?(target_class(klass, parts), attr)
+          raise BadRequestError, "attribute #{attr} does not exist"
+        end
+        field = if parts.empty?
+                  "#{klass.name}-#{attr}"
                 else
-                  "#{klass.name}.#{parts[0..-2].join(".")}-#{parts.last}"
+                  # parts.map { |assoc| ".#{assoc}"}
+                  "#{klass.name}.#{parts.join(".")}-#{attr}"
                 end
         target = parsed_filter[:logical_or] ? or_expressions : and_expressions
         target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
@@ -57,6 +59,18 @@ class ApiController
       and_part = and_expressions.one? ? and_expressions.first : {"AND" => and_expressions}
       composite_expression = or_expressions.empty? ? and_part : {"OR" => [and_part, *or_expressions]}
       MiqExpression.new(composite_expression)
+    end
+
+    def target_class(klass, reflections)
+      if reflections.empty?
+        klass
+      else
+        target_class(klass.reflections_with_virtual[reflections.first.to_sym].klass, reflections[1..-1])
+      end
+    end
+
+    def virtual_or_physical_attribute?(klass, attribute)
+      klass.attribute_method?(attribute) || klass.virtual_attribute?(attribute)
     end
 
     def parse_filter(filter, operators)
