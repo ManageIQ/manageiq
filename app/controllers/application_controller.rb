@@ -1697,8 +1697,8 @@ class ApplicationController < ActionController::Base
       adv_search_build(db)
     end
     if @edit && !@edit[:selected] && # Load default search if search @edit hash exists
-       @settings.fetch_path(:default_search, db.to_sym) # and item in listnav not selected
-      load_default_search(@settings[:default_search][db.to_sym])
+       settings(:default_search, db.to_sym) # and item in listnav not selected
+      load_default_search(settings(:default_search, db.to_sym))
     end
 
     parent      = options[:parent] || nil             # Get passed in parent object
@@ -1713,6 +1713,7 @@ class ApplicationController < ActionController::Base
     sortdir_sym = "#{sort_prefix}_sortdir".to_sym
 
     # Set up the list view type (grid/tile/list)
+    @settings ||= {:views => {}, :perpage => {}}
     @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
 
     @gtl_type = get_view_calculate_gtl_type(db_sym)
@@ -1831,7 +1832,7 @@ class ApplicationController < ActionController::Base
 
   def get_view_pages_perpage(dbname)
     perpage = 10 # return a sane default
-    return perpage unless @settings.key?(:perpage)
+    return perpage unless @settings && @settings.key?(:perpage)
 
     key = perpage_key(dbname)
     perpage = @settings[:perpage][key] if key && @settings[:perpage].key?(key)

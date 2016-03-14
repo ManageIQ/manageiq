@@ -16,7 +16,7 @@
         - if %w(MiqTemplate VmOrTemplate Vm).include?(@sb[:compare_db])
           - width = size == 150 ? 54 : 35
           - height = width
-          - if @settings[:quadicons][:vm]
+          - if settings(:quadicons, :vm)
             .flobj
               %img{:src => image_path("#{size}/base.png")}
             - if @drift_obj.template?
@@ -49,7 +49,7 @@
         - elsif @sb[:compare_db] == "Host"
           - width = size == 150 ? 54 : 35
           - height = width
-          - if @settings[:quadicons][:host]
+          - if settings(:quadicons, :host)
             .flobj
               %img{:src => image_path("#{size}/base.png")}
             %div{:class => "flobj c#{size}"}

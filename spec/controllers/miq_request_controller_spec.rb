@@ -179,8 +179,7 @@ describe MiqRequestController do
                                                                 :requester      => User.current_user)
     end
     it "when the edit button is pressed the request is displayed" do
-      session[:settings] = {:display   => {:quad_truncate => 'f'},
-                            :quadicons => {:host => 'foo'}}
+      session[:settings] = {:display   => {:quad_truncate => 'f'}}
       get :show, :params => { :id => @miq_request.id }
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
@@ -192,7 +191,6 @@ describe MiqRequestController do
       set_user_privileges
       EvmSpecHelper.create_guid_miq_server_zone
       session[:settings] = {:display   => {:quad_truncate => 'f'},
-                            :quadicons => {:host => 'foo'},
                             :views     => {:miq_request => 'grid'}}
     end
 

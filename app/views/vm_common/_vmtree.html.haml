@@ -9,7 +9,7 @@
     :locals  => {:tree_id => "genealogy_treebox",
     :tree_name => @tree_name,
     :json_tree => @vm_tree,
-    :icon_size => @settings[:views][:treesize].to_i,
+    :icon_size => settings(:views, :treesize).to_i,
     :click_url => "/vm/vmtree_selected/",
     :onmousein => "miqOnMouseInHostNet",
     :onmouseout => "miqOnMouseOutHostNet",

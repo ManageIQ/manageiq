@@ -14,6 +14,6 @@
       :tree_name                   => session[:tree_name],
       :json_tree                   => session[:ch_tree],
       :cfme_no_click               => true,
-      :icon_size                   => @settings[:views][:treesize].to_i,
+      :icon_size                   => settings(:views, :treesize).to_i,
       :exp_tree                    => (params[:count] == "1"),
       :open_close_all_on_dbl_click => true})

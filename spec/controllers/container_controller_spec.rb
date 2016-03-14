@@ -3,7 +3,6 @@ describe ContainerController do
     server = EvmSpecHelper.local_miq_server
     allow(MiqServer).to receive(:my_server).and_return(server)
     allow(MiqServer).to receive(:my_zone).and_return("default")
-    session[:settings] = {:views => {}}
     set_user_privileges
   end
 

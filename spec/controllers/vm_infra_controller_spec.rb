@@ -7,7 +7,7 @@ describe VmInfraController do
   before do
     set_user_privileges
 
-    session[:settings] = {:quadicons => nil, :views => {:treesize => 20}}
+    session[:settings] = {:views => {:treesize => 20}}
 
     EvmSpecHelper.create_guid_miq_server_zone
   end
@@ -15,8 +15,6 @@ describe VmInfraController do
   render_views
 
   it 'can render the explorer' do
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
-
     get :explorer
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
@@ -370,7 +368,6 @@ describe VmInfraController do
 
   context "breadcrumbs" do
     subject { controller.instance_variable_get(:@breadcrumbs) }
-    before  { session[:settings] = {:views => {}, :perpage => {:list => 10}} }
 
     context "skip or drop breadcrumb" do
       before { get :explorer }
@@ -410,7 +407,6 @@ describe VmInfraController do
   end
 
   it "gets explorer when the request.referrer action is of type 'post'" do
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
     allow(request).to receive(:referrer).and_return("http://localhost:3000/configuration/update")
     get :explorer
     expect(response.status).to eq(200)
