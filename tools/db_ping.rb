@@ -1,6 +1,6 @@
 total = 0
 5.times do
-  ping = MiqServer.db_ping
+  ping = EvmDatabase.ping
   puts "%.6f ms" % ping
   total += ping
   sleep 1

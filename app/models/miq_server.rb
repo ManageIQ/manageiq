@@ -257,7 +257,7 @@ class MiqServer < ApplicationRecord
     _log.info "Server Role: #{my_role}"
     region = MiqRegion.my_region
     _log.info "Server Region number: #{region.region}, name: #{region.name}" unless region.nil?
-    _log.info "Database Latency: #{db_ping} ms"
+    _log.info "Database Latency: #{EvmDatabase.ping} ms"
 
     Vmdb::Appliance.log_config_on_startup
 
@@ -641,11 +641,6 @@ class MiqServer < ApplicationRecord
 
   def find_other_servers_in_zone
     zone.miq_servers.to_a.delete_if { |s| s.id == id }
-  end
-
-  # Determines the average time to the database in milliseconds
-  def self.db_ping
-    EvmDatabase.ping(connection)
   end
 
   def log_prefix
