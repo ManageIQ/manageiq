@@ -482,8 +482,7 @@ module VimPerformanceAnalysis
     rel = rel.where(options[:conditions]) if options[:conditions]
 
     rel
-      .where("timestamp > ? and timestamp <= ?", start_time.utc, end_time.utc)
-      .where(:resource => obj)
+      .where(:timestamp => start_time..end_time, :resource => obj)
       .order("timestamp")
       .select(options[:select])
       .to_a
@@ -505,16 +504,13 @@ module VimPerformanceAnalysis
 
     start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
     end_time   = options[:end_date].utc
-
-    user_cond = nil
-    user_cond = klass.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
-    cond =  klass.send(:sanitize_sql_for_conditions, ["(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc])
-    cond =  "(#{user_cond}) AND (#{cond})" if user_cond
+    rel        = rel.where(:timestamp => start_time..end_time)
+    rel        = rel.where(options[:conditions]) if options[:conditions]
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
       cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
       cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
-      cond += " AND ((#{cond1}) OR (#{cond2}))"
+      rel   = rel.where("((#{cond1}) OR (#{cond2}))")
     else
       parent_col = case obj
                    when Host then                :parent_host_id
@@ -524,13 +520,11 @@ module VimPerformanceAnalysis
                    else                      raise "unknown object type: #{obj.class}"
                    end
 
-      cond += " AND #{parent_col} = ?"
-      cond += " AND resource_type in ('Host', 'EmsCluster')" if obj.kind_of?(ExtManagementSystem)
-      cond = [cond, obj.id]
+      rel = rel.where(parent_col => obj.id)
+      rel = rel.where(:resource_type => %w(Host EmsCluster)) if obj.kind_of?(ExtManagementSystem)
     end
 
-    # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
-    rel.where(cond).select(options[:select]).to_a
+    rel.select(options[:select]).to_a
   end
 
   def self.child_tags_over_time_period(obj, interval_name, options = {})
@@ -644,8 +638,8 @@ module VimPerformanceAnalysis
   end
 
   def self.get_daily_perf(obj, start_time, end_time, options)
-    cond = ["resource_type = ? and resource_id = ? and (timestamp > ? and timestamp <= ?)", obj.class.base_class.name, obj.id, start_time.utc, end_time.utc]
-    VimPerformanceDaily.find_entries(options).where(cond).order("timestamp")
+    VimPerformanceDaily.find_entries(options)
+                       .where(:resource => obj, :timestamp => (start_time.utc)..(end_time.utc)).order("timestamp")
   end
 
   def self.calc_trend_value_at_timestamp(recs, attr, timestamp)
