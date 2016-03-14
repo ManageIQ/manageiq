@@ -1,5 +1,7 @@
 module ManageIQ::Providers
   class Hawkular::MiddlewareManager < ManageIQ::Providers::MiddlewareManager
+    require_nested :MiddlewareDeployment
+    require_nested :MiddlewareServer
     require_nested :RefreshParser
     require_nested :RefreshWorker
     require_nested :Refresher
@@ -51,6 +53,30 @@ module ManageIQ::Providers
       with_provider_connection do |connection|
         connection.list_child_resources(eap_parent)
       end
+    end
+
+    def metrics_resource(resource)
+      with_provider_connection do |connection|
+        connection.list_metrics_for_resource(resource)
+      end
+    end
+
+    def self.raw_metrics_connect(hostname, port, username, password)
+      require 'hawkular_all'
+      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/metrics').to_s
+      options = {}
+      credentials = {
+        :username => username,
+        :password => password
+      }
+      ::Hawkular::Metrics::Client.new(url, credentials, options)
+    end
+
+    def metrics_connect
+      self.class.raw_metrics_connect(hostname,
+                                     port,
+                                     authentication_userid('default'),
+                                     authentication_password('default'))
     end
 
     # UI methods for determining availability of fields
