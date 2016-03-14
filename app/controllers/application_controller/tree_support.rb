@@ -2,7 +2,7 @@ module ApplicationController::TreeSupport
   extend ActiveSupport::Concern
 
   def squash_toggle
-    @record = identify_record(params[:id], controller_name == "host" ? Host : VmOrTemplate)
+    @record = find_record
     item = "h_#{@record.name}"
     render :update do |page|
       if session[:squash_open] == false
@@ -17,6 +17,14 @@ module ApplicationController::TreeSupport
         page << "miqDynatreeActivateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"
         session[:squash_open] = false
       end
+    end
+  end
+
+  def find_record
+    if %w(container_image host).include? controller_name
+      identify_record(params[:id], controller_name.classify)
+    else
+      identify_record(params[:id], VmOrTemplate)
     end
   end
 
