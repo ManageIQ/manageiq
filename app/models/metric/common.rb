@@ -150,27 +150,12 @@ module Metric::Common
   alias_method :v_derived_logical_cpus_used, :v_derived_cpu_total_cores_used
   Vmdb::Deprecation.deprecate_methods(self, :v_derived_logical_cpus_used => :v_derived_cpu_total_cores_used)
 
+  # Applies the given time profile to this metric record
   def apply_time_profile(profile)
-    method = "apply_time_profile_#{capture_interval_name}"
-    return send(method, profile) if self.respond_to?(method)
-  end
-
-  def apply_time_profile_hourly(profile)
     unless profile.ts_in_profile?(timestamp)
       self.inside_time_profile = false
       nil_out_values_for_apply_time_profile
       _log.debug("Hourly Timestamp: [#{timestamp}] is outside of time profile: [#{profile.description}]")
-    else
-      self.inside_time_profile = true
-    end
-    inside_time_profile
-  end
-
-  def apply_time_profile_daily(profile)
-    unless profile.ts_day_in_profile?(timestamp)
-      self.inside_time_profile = false
-      nil_out_values_for_apply_time_profile
-      _log.debug("Daily Timestamp: [#{timestamp}] is outside of time profile: [#{profile.description}]")
     else
       self.inside_time_profile = true
     end
