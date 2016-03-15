@@ -260,6 +260,12 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
     end
 
+    it "does not support filtering by attributes of associations' associations" do
+      run_get vms_url, :expand => "resources", :filter => ["host.hardware.memory_mb>1024"]
+
+      expect_bad_request(/Filtering of attributes with more than one association away is not supported/)
+    end
+
     it "supports filtering by virtual string attributes" do
       host_a = FactoryGirl.create(:host, :name => "aa")
       host_b = FactoryGirl.create(:host, :name => "bb")

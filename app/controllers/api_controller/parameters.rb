@@ -43,6 +43,9 @@ class ApiController
         parsed_filter = parse_filter(filter, operators)
         parts = parsed_filter[:attr].split(".")
         attr = parts.pop
+        if parts.size > 1
+          raise BadRequestError, "Filtering of attributes with more than one association away is not supported"
+        end
         unless virtual_or_physical_attribute?(target_class(klass, parts), attr)
           raise BadRequestError, "attribute #{attr} does not exist"
         end
