@@ -41,16 +41,15 @@ class ApiController
 
       params['filter'].select(&:present?).each do |filter|
         parsed_filter = parse_filter(filter, operators)
-        parts = parsed_filter[:attr].split(".")
-        attr = parts.pop
-        if parts.size > 1
+        *associations, attr = parsed_filter[:attr].split(".")
+        if associations.size > 1
           raise BadRequestError, "Filtering of attributes with more than one association away is not supported"
         end
-        unless virtual_or_physical_attribute?(target_class(klass, parts), attr)
+        unless virtual_or_physical_attribute?(target_class(klass, associations), attr)
           raise BadRequestError, "attribute #{attr} does not exist"
         end
-        associations = parts.map { |assoc| ".#{assoc}" }.join
-        field = "#{klass.name}#{associations}-#{attr}"
+        associations.map! { |assoc| ".#{assoc}" }
+        field = "#{klass.name}#{associations.join}-#{attr}"
         target = parsed_filter[:logical_or] ? or_expressions : and_expressions
         target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
       end
