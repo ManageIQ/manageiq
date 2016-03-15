@@ -31,10 +31,10 @@ class Container < ApplicationRecord
     when :ems_events
       # TODO: improve relationship using the id
       ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ? AND container_name = ?",
-       container_project.name, ext_management_system.id, name]
+       container_project.try(:name), ext_management_system.try(:id), name]
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["#{events_table_name(assoc)}.ems_id = ?", ext_management_system.id]
+      ["#{events_table_name(assoc)}.ems_id = ?", ext_management_system.try(:id)]
     end
   end
 
@@ -42,5 +42,11 @@ class Container < ApplicationRecord
 
   def perf_rollup_parents(_interval_name = nil)
     # No rollups: nodes performance are collected separately
+  end
+
+  def disconnect_inv
+    _log.info "Disconnecting Container [#{name}] id [#{id}] from EMS "
+    self.deleted_on = Time.now.utc
+    save
   end
 end

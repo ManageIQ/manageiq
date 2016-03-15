@@ -202,7 +202,7 @@ class ContainerController < ApplicationController
     @sb[:action] = nil
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
       typ = "Container"
-      process_show_list
+      process_show_list(:where_clause => 'containers.deleted_on IS NULL')
       @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
     else
       show_record(from_cid(id))
