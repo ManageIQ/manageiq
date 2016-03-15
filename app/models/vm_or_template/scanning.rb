@@ -3,9 +3,7 @@
 # but wrongly doesn't require it itself.
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
 require 'xml_utils'
-
 require 'blackbox/VmBlackBox'
-require 'Verbs/miqservices_client'
 
 module VmOrTemplate::Scanning
   extend ActiveSupport::Concern

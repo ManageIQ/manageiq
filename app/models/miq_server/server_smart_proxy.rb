@@ -1,4 +1,3 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Verbs")
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VixDiskLib")
 require 'yaml'
 

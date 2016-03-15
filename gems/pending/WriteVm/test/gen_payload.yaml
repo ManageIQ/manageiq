@@ -4,7 +4,6 @@
   :todir: /PAYLOAD
   :include: 
     # Common
-    - lib/Verbs
     - lib/metadata
     - lib/util
     - lib/disk
