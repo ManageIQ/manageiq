@@ -1,3 +1,4 @@
+# noinspection RubyArgCount
 class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::Toolbar::Basic
   button_group('middleware_server_vmdb', [
     select(
@@ -34,6 +35,29 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"middleware_server")}'),
           N_('Edit Tags')),
+      ]
+    ),
+  ])
+  button_group('middleware_server_operations', [
+    select(
+      :middleware_server_power_choice,
+      'fa fa-power-off fa-lg',
+      t = N_('Power'),
+      t,
+      :items => [
+        button(
+          :middleware_server_reload,
+          'pficon pficon-restart fa-lg',
+          N_('Reload this #{ui_lookup(:table=>"middleware_server")}'),
+          N_('Reload Server'),
+          :confirm => N_("Do you want to trigger a reload of this server?")),
+        button(
+          :middleware_server_stop,
+          nil,
+          N_('Stop this #{ui_lookup(:table=>"middleware_server")}'),
+          N_('Stop Server'),
+          :image   => "guest_shutdown",
+          :confirm => N_("Do you want to stop this server?")),
       ]
     ),
   ])

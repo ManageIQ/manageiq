@@ -3256,6 +3256,14 @@
         :description: Edit Tags of Middleware Servers
         :feature_type: control
         :identifier: middleware_server_tag
+      - :name: Reload middleware server
+        :description: Trigger reload operation for Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_reload
+      - :name: Stop middleware server
+        :description: Stop Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_stop
 
   # MiddlewareDeployment
   - :name: MiddlewareDeployment
