@@ -84,7 +84,14 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
   end
 
   def self.create_audit_event(options)
-    msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => 'providers').pluralize}"
+    msg = "'%{task}' initiated for %{amount} %{providers}" % {
+      :task      => options[:task],
+      :amount    => options[:ids].length,
+      :providers => Dictionary.gettext('providers',
+                                       :type      => :table,
+                                       :notfound  => :titleize,
+                                       :plural    => options[:ids].length > 1,
+                                       :translate => false)}
     AuditEvent.success(:event        => options[:task],
                        :target_class => base_class.name,
                        :userid       => options[:userid],
