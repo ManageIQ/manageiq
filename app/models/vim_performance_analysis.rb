@@ -488,12 +488,16 @@ module VimPerformanceAnalysis
       .to_a
   end
 
+  # @param obj base object
+  # @param interval_name
+  # @option options :days        [Numeric] Number of days back from end_date. Used to derive start_date (if not passed)
+  # @option options :start_date  [Date] Starting date (typically not passed)
+  # @option options :end_date    [Date] Ending date
+  # @option options :select      [String|Array] Active record list of columns to bring back
+  # @option options :conditions  [String|Hash|nil]
+  # @option options[:ext_options] :time_profile [TimeProfile]
+  # @option options[:ext_options] :tz [String] timezone used to derive time_profile (if not passed)
   def self.find_child_perf_for_time_period(obj, interval_name, options = {})
-    # Options
-    #   :days        => Number of days back from end_date. Used only if start_date not passed
-    #   :start_date  => Starting date
-    #   :end_date    => Ending date
-    #   :conditions  => ActiveRecord find conditions
 
     klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
     rel = if interval_name == "daily"
@@ -527,14 +531,15 @@ module VimPerformanceAnalysis
     rel.select(options[:select]).to_a
   end
 
+  # @params obj base object
+  # @params interval_name (currently only 'daily')
+  # @opts options :end_date [Date] end_date
+  # @opts options :days     [Numeric] Number of days back from daily_date
+  # @opts options :ext_options [Hash] :tz and :time_profile
+  # @returns [Hash<String,String>] environment name and corresponding tags
+  #   "Host/environment/prod" => "Host: Environment: Production",
+  #   "Host/environment/dev"  => "Host: Environment: Development"
   def self.child_tags_over_time_period(obj, interval_name, options = {})
-    # Options
-    #   :days        => Number of days back from daily_date
-    #   :end_date    => Ending date
-
-    # Returns a hash:
-    #   "Host/environment/prod" => "Host: Environment: Production",
-    #   "Host/environment/dev"  => "Host: Environment: Development"
     classifications = Classification.hash_all_by_type_and_name
 
     find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
