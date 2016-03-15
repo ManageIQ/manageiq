@@ -9,24 +9,18 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ
     event_monitor_handle.poll do |event|
       _log.debug { "#{log_prefix} Received event #{event["messageId"]}" }
       event_monitor_running
-      @queue.enq event
+      if filtered?(event)
+        _log.info "#{log_prefix} Skipping filtered Amazon event [#{event["messageId"]}]"
+      else
+        _log.info "#{log_prefix} Caught event [#{event["messageId"]}]"
+        yield event
+      end
     end
   ensure
     stop_event_monitor
   end
 
-  def process_event(event)
-    if filtered?(event)
-      _log.info "#{log_prefix} Skipping filtered Amazon event [#{event["messageId"]}]"
-    else
-      _log.info "#{log_prefix} Caught event [#{event["messageId"]}]"
-      event_hash = ManageIQ::Providers::Amazon::CloudManager::EventParser.event_to_hash(event, @cfg[:ems_id])
-      EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
-    end
-  end
-
   private
-
   def filtered?(event)
     filtered_events.include?(event["messageType"])
   end

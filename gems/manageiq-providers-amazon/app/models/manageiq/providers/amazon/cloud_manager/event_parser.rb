@@ -11,7 +11,6 @@ module ManageIQ::Providers::Amazon::CloudManager::EventParser
       :message    => event["configurationItemDiff"],
       :timestamp  => event["notificationCreationTime"],
       :full_data  => event,
-      :ems_id     => ems_id
     }
 
     event_hash[:vm_ems_ref]                = parse_vm_ref(event)

@@ -91,20 +91,14 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
-  # runs in its own thread and get called for every object yielded by monitor_events
-  # if monitor_events yields an array this is called for every object in the array
-  #
-  # @param [Object] _event the event object
-  # @return [Hash, nil] an event_hash to be read by EmsEvent.add or nil if the event should be ignored
-  def parse_event(_event)
-    raise NotImplementedError, "must be implemented in subclass"
+  def event_parser
+    @ems.class::EventParser
   end
 
   def process_event(event)
-    event_hash = parse_event(event)
-    event_hash[:ems_id] ||= @cfg[:ems_id]
-    # FIXME: maybe check for correctness of event
-    EmsEvent.add_queue('add', @cfg[:ems_id], event_hash) if event_hash
+    event_hash = event_parser.event_to_hash(event, @cfg[:ems_id])
+    event_hash[:ems_id] = @cfg[:ems_id]
+    EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
   def event_monitor_running
