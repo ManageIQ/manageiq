@@ -127,7 +127,11 @@ module VmShowMixin
     end
 
     unless @record.hardware.nil?
-      @record_notes = @record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : @record.hardware.annotation
+      @record_notes = if @record.hardware.annotation.nil?
+                        _("<No notes have been entered for this VM>")
+                      else
+                        @record.hardware.annotation
+                      end
     end
     set_config(@record)
     get_host_for_vm(@record)
@@ -139,7 +143,7 @@ module VmShowMixin
   end
 
   def get_session_data
-    @title          = "VMs And Templates"
+    @title          = _("VMs And Templates")
     @layout         = controller_name
     @lastaction     = session[:vm_lastaction]
     @showtype       = session[:vm_showtype]

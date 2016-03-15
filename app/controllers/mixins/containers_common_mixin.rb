@@ -61,7 +61,7 @@ module ContainersCommonMixin
                     true)
     if %w(download_pdf main summary_only).include? @display
       get_tagdata(@record)
-      drop_breadcrumb(:name => "#{record.name} (Summary)",
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => record.name},
                       :url  => "/#{controller_name}/show/#{record.id}")
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     elsif @display == "timeline"
@@ -70,12 +70,12 @@ module ContainersCommonMixin
       @lastaction = "show_timeline"
       @timeline = @timeline_filter = true
       tl_build_timeline # Create the timeline report
-      drop_breadcrumb(:name => "Timelines",
+      drop_breadcrumb(:name => _("Timelines"),
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?refresh=n&display=timeline")
     elsif @display == "performance"
       @showtype = "performance"
-      drop_breadcrumb(:name => "#{record.name} Capacity & Utilization",
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => record.name},
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?display=#{@display}&refresh=n")
       perf_gen_init_options # Intialize options, charts are generated async
@@ -128,7 +128,7 @@ module ContainersCommonMixin
 
   def show_container_display(record, display, clazz, alt_controller_name = nil)
     title = ui_lookup(:tables => display)
-    drop_breadcrumb(:name => record.name + " (All #{title})",
+    drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => record.name, :title => title},
                     :url  => "/#{alt_controller_name || controller_name}/show/#{record.id}?display=#{@display}")
     @view, @pages = get_view(clazz, :parent => record)  # Get the records (into a view) and the paginator
     @showtype = @display
@@ -142,8 +142,8 @@ module ContainersCommonMixin
     images = showlist ? find_checked_items : find_scan_item
 
     if images.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "container_image"),
-                                                              :task  => "Analysis"}, :error)
+      add_flash(_("No %{model} were selected for Analysis") % {:model => ui_lookup(:tables => "container_image")},
+                :error)
     else
       process_scan_images(images)
     end
@@ -155,7 +155,7 @@ module ContainersCommonMixin
   def find_scan_item
     images = []
     if params[:id].nil? || ContainerImage.find_by_id(params[:id]).nil?
-      add_flash(_("%s no longer exists") % ui_lookup(:table => "container_image"), :error)
+      add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "container_image")}, :error)
     else
       images.push(params[:id])
     end
@@ -168,9 +168,10 @@ module ContainersCommonMixin
       begin
         image.scan
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during 'Analysis': ") %
-                      {:model => ui_lookup(:model => "ContainerImage"),
-                       :name  => image_name} << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during 'Analysis': %{message}") %
+                      {:model   => ui_lookup(:model => "ContainerImage"),
+                       :name    => image_name,
+                       :message => bang.message},
                   :error) # Push msg and error flag
       else
         add_flash(_("\"%{record}\": Analysis successfully initiated") % {:record => image_name})
