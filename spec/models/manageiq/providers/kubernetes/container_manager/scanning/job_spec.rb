@@ -69,8 +69,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
   end
 
   context "A single Container Scan Job," do
-    IMAGE_ID = '3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'
-    IMAGE_NAME = 'test'
+    IMAGE_ID = '3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'.freeze
+    IMAGE_NAME = 'test'.freeze
     before(:each) do
       @server = EvmSpecHelper.local_miq_server
 
@@ -147,7 +147,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
     context 'when create pod throws exception' do
       CODE = 0
-      CLIENT_MESSAGE = 'error'
+      CLIENT_MESSAGE = 'error'.freeze
       before(:each) do
         allow_any_instance_of(MockKubeClient).to receive(:create_pod) do |_instance, *_args|
           raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
@@ -180,7 +180,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
     context 'when the image tag points to a different image' do
       before(:each) do
-        MODIFIED_IMAGE_ID = '0d071bb732e1e3eb1e01629600c9b6c23f2b26b863b5321335f564c8f018c452'
+        MODIFIED_IMAGE_ID = '0d071bb732e1e3eb1e01629600c9b6c23f2b26b863b5321335f564c8f018c452'.freeze
         allow_any_instance_of(described_class).to receive_messages(
           :image_inspector_client => MockImageInspectorClient.new(MODIFIED_IMAGE_ID)
         )
