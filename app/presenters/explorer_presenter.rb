@@ -28,7 +28,6 @@ class ExplorerPresenter
   #   ManageIQ.widget.dashboardUrl     -- set dashboard widget drag drop url
   #   osf_node                         -- node to open, select and focus
   #   open_accord                      -- accordion to open
-  #   extra_js                         -- array of extra javascript chunks to be written out
   #
   #   object_tree_json            --
   #   exp                         --
@@ -52,13 +51,28 @@ class ExplorerPresenter
       :element_updates      => {},
       :replace_partials     => {},
       :reload_toolbars      => {},
-      :extra_js             => [],
       :object_tree_json     => '',
       :exp                  => {},
       :osf_node             => '',
       :show_miq_buttons     => false,
       :load_chart           => nil
     ).update(options)
+  end
+
+  def reset_changes
+    @options[:reset_changes] = true
+  end
+
+  def reset_one_trans
+    @options[:reset_one_trans] = true
+  end
+
+  def one_trans_ie
+    @options[:one_trans_ie] = true
+  end
+
+  def focus(element_id)
+    @options[:focus] = element_id
   end
 
   def load_chart(chart_data)
@@ -206,11 +220,17 @@ class ExplorerPresenter
 
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
 
-    @out << @options[:extra_js].join("\n")
-
     if @options[:load_chart]
       @out << 'ManageIQ.charts.chartData = ' + @options[:load_chart].to_json + ';'
       @out << Charting.js_load_statement(true)
+    end
+
+    @out << 'ManageIQ.changes = null;'                       if @options[:reset_changes]
+    @out << 'ManageIQ.oneTransition.oneTrans = 0;'           if @options[:reset_one_trans]
+    @out << 'ManageIQ.oneTransition.IEButtonPressed = true;' if @options[:one_trans_ie]
+
+    if @options[:focus]
+      @out << "if ($('##{@options[:focus]}').length) $('##{@options[:focus]}').focus();"
     end
 
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
