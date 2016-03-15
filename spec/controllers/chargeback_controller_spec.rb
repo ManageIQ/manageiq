@@ -26,7 +26,8 @@ describe ChargebackController do
       before do
         cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Storage")
         ChargebackRate.set_assignments(:Storage, [{:cb_rate => cbr, :tag => [tag, "vm"]}])
-        sandbox = {:active_tree => :cb_assignments_tree, :trees => {:cb_assignments_tree => {:active_node => 'xx-Storage'}}}
+        sandbox = {:active_tree => :cb_assignments_tree, :trees => \
+          {:cb_assignments_tree => {:active_node => 'xx-Storage'}}}
         controller.instance_variable_set(:@sb, sandbox)
       end
 
@@ -108,6 +109,27 @@ describe ChargebackController do
 
       flash_array = assigns(:flash_array)
       expect(flash_array.first[:message]).to include("rate is assigned and cannot be deleted")
+    end
+  end
+  context "#get_cis_all" do
+    elements_miq = %w(enterprise storage ext_management_system ems_cluster tenants)
+    elements_miq.each do |element|
+      it "returns names of instances of " + element do
+        names = {}
+        classtype =
+          if element == "enterprise"
+            MiqEnterprise
+          else
+            element.classify.constantize
+          end
+
+        classtype.all.each do |instance|
+          names[instance.id] = instance.name
+        end
+        controller.instance_variable_set(:@edit, :new => {:cbshow_typ => element}, :cb_assign => {})
+        controller.send(:get_cis_all)
+        expect(assigns(:edit)[:cb_assign][:cis]).to eq(names)
+      end
     end
   end
 end
