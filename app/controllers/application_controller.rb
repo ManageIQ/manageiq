@@ -1174,8 +1174,6 @@ class ApplicationController < ActionController::Base
   def set_config(db_record) # pass in the db record, either @host or @vm
     @devices = []    # This will be an array of hashes to allow the rhtml to pull out each device field by name
     unless db_record.hardware.nil?
-      db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
-
       if db_record.hardware.cpu_total_cores
         cpu_details =
           if db_record.num_cpu && db_record.cpu_cores_per_socket
