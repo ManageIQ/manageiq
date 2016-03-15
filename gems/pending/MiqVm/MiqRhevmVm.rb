@@ -44,7 +44,7 @@ class MiqRhevmVm < MiqVm
       $log.debug "MiqRhevmVm#getCfg: disk = #{disk.inspect}"
       storage_domain = disk[:storage_domains].first
       if storage_domain.nil?
-        $log.warn "Disk <#{disk[:name]}> is skipped due to unassigned storage domain"
+        $log.info "Disk <#{disk[:name]}> is skipped due to unassigned storage domain"
         next
       end
       storage_id     = storage_domain && storage_domain[:id]
