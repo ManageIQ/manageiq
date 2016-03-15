@@ -1,10 +1,12 @@
 require 'winrm'
+require 'winrm-elevated'
 
 class MiqWinRM
   attr_reader :uri, :username, :password, :hostname, :port, :connection, :executor
 
   def initialize
-    @port = 5985
+    @port            = 5985
+    @elevated_runner = @executor = nil
     require 'uri'
   end
 
@@ -16,12 +18,29 @@ class MiqWinRM
     validate_options(options)
     @uri        = build_uri
     @connection = raw_connect(@username, @password, @uri)
-    @executor   = @connection.create_executor
+  end
+
+  def execute
+    @executor = @connection.create_executor
+  end
+
+  def elevate
+    @elevated_runner = WinRM::Elevated::Runner.new(@connection)
   end
 
   def run_powershell_script(script)
+    execute if @executor.nil?
     $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}" unless $log.nil?
     @executor.run_powershell_script(script)
+  rescue WinRM::WinRMAuthorizationError
+    $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
+    raise
+  end
+
+  def run_elevated_powershell_script(script)
+    elevate if @elevated_runner.nil?
+    $log.debug "Running powershell script elevated on #{hostname} as #{username}:\n#{script}" unless $log.nil?
+    @elevated_runner.powershell_elevated(script, @username, @password)
   rescue WinRM::WinRMAuthorizationError
     $log.info "Error Logging In to #{hostname} using user \"#{username}\"" unless $log.nil?
     raise

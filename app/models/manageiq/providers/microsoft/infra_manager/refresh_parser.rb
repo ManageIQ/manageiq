@@ -261,8 +261,10 @@ module ManageIQ::Providers::Microsoft
     end
 
     def map_mount_point_to_datastore(properties)
+      log_header = "MIQ(#{self.class.name}.#{__method__})"
       properties[:DiskVolumes].each.with_object({}) do |dv, h|
         mount_point    = dv[:Props][:Name].match(DRIVE_LETTER).to_s
+        $scvmm_log.debug("#{log_header} Drive #{dv[:Props][:Name]} missing drive letter") if mount_point.blank?
         next if mount_point.blank?
         storage        = @data_index.fetch_path(:storages, dv[:Props][:ID])
         h[mount_point] = storage

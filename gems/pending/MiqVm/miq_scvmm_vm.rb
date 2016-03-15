@@ -25,6 +25,7 @@ class MiqScvmmVm < MiqVm
   def init_disk_info(disk_info, disk_file)
     disk_info.hyperv_connection        = {}
     disk_info.fileName                 = disk_file
+    disk_info.driveType                = @scvmm.get_drivetype(disk_file)
     disk_info.hyperv_connection[:host] = @ost.miq_hyperv[:host]
     disk_info.hyperv_connection[:port] = @ost.miq_hyperv[:port]
     if @ost.miq_hyperv[:domain].nil?

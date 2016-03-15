@@ -4,6 +4,7 @@ class MiqScvmmParsePowershell
     if stderr =~ /Exception/ || stderr =~ /At line:/
       raise "Error running PowerShell command.\n #{stderr}"
     end
+    $log.debug "MiqScvmmParsePowershell: STDERR is \"#{stderr}\"" unless stderr.nil? || $log.nil?
     attribute.split("\r\n").last
   end
 
