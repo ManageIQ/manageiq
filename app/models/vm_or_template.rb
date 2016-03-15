@@ -50,7 +50,7 @@ class VmOrTemplate < ApplicationRecord
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
 
   validates_presence_of     :name, :location
-  validates_inclusion_of    :vendor, :in => VENDOR_TYPES.values
+  validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
   has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
 
@@ -300,6 +300,10 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specific, and is this even being used anywhere?
   def connected_to_ems?
     connection_state == 'connected'
+  end
+
+  def terminated?
+    current_state == 'terminated'
   end
 
   def raw_set_custom_field(attribute, value)
@@ -576,17 +580,8 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
-  def vendor
-    v = read_attribute(:vendor)
-    VENDOR_TYPES[v]
-  end
-
-  def vendor=(v)
-    unless VENDOR_TYPES.key?(v)
-      v = VENDOR_TYPES.key(v)
-      raise "vendor must be one of VENDOR_TYPES" unless VENDOR_TYPES.key?(v)
-    end
-    write_attribute(:vendor, v)
+  def vendor_display
+    VENDOR_TYPES[vendor]
   end
 
   #
@@ -1003,7 +998,7 @@ class VmOrTemplate < ApplicationRecord
       hosts = [myhost] if hosts.empty?
 
       # VMware needs a VMware host to resolve datastore names
-      if vendor == 'VMware'
+      if vendor == 'vmware'
         hosts.delete_if { |h| !h.is_vmware? }
       end
     end
@@ -1055,11 +1050,11 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def miq_server_proxies
-    case vm_vendor = vendor.to_s
-    when 'VMware'
+    case vendor
+    when 'vmware'
       # VM cannot be scanned by server if they are on a repository
       return [] if storage_id.blank? || self.repository_vm?
-    when 'Microsoft'
+    when 'microsoft'
       return [] if storage_id.blank?
     else
       _log.debug "else"
@@ -1086,7 +1081,7 @@ class VmOrTemplate < ApplicationRecord
 
     miq_servers.select! do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
-      result &&= svr.is_vix_disk? if vm_vendor == 'VMware'
+      result &&= svr.is_vix_disk? if vendor == 'vmware'
       result
     end
     _log.debug "miq_servers2.length = #{miq_servers.length}"

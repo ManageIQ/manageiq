@@ -9,6 +9,14 @@ module ReportFormatter
       C3Series
     end
 
+    CONVERT_TYPES = {
+      "ColumnThreed"         => "Column",
+      "ParallelThreedColumn" => "Column",
+      "StackedThreedColumn"  => "StackedColumn",
+      "PieThreed"            => "Pie",
+      "AreaThreed"           => "Area",
+      "StackedAreaThreed"    => "StackedArea"
+    }
     def add_series(label, data)
       @counter ||= 0
       @counter += 1
@@ -35,11 +43,10 @@ module ReportFormatter
     # report building methods
     def build_document_header
       super
+      type = c3_convert_type("#{mri.graph[:type]}")
       mri.chart = {
-        :miqChart => "#{mri.graph[:type]}",
-        :data     => {
-          :columns => []
-        }
+        :miqChart => type,
+        :data     => {:columns => []}
       }
 
       if chart_is_2d?
@@ -54,6 +61,10 @@ module ReportFormatter
       if chart_is_stacked?
         mri.chart[:data][:groups] = [[]]
       end
+    end
+
+    def c3_convert_type(type)
+      CONVERT_TYPES[type] || type
     end
 
     def chart_is_2d?

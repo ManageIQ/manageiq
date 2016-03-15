@@ -1,19 +1,22 @@
 describe Rbac do
   before { allow(User).to receive_messages(:server_timezone => "UTC") }
-  let(:default_tenant) { Tenant.seed }
 
-  let(:owner_tenant) { FactoryGirl.create(:tenant) }
-  let(:owner_group)  { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
-  let(:owner_user)   { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
-  let(:owned_vm)     { FactoryGirl.create(:vm_vmware, :tenant => owner_tenant) }
+  let(:default_tenant)     { Tenant.seed }
 
-  let(:other_tenant) { FactoryGirl.create(:tenant) }
-  let(:other_group)  { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
-  let(:other_user)   { FactoryGirl.create(:user, :miq_groups => [other_group]) }
-  let(:other_vm)     { FactoryGirl.create(:vm_vmware, :tenant => other_tenant) }
+  let(:admin_user)         { FactoryGirl.create(:user, :role => "super_administrator") }
 
-  let(:child_tenant) { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
-  let(:child_group)  { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
+  let(:owner_tenant)       { FactoryGirl.create(:tenant) }
+  let(:owner_group)        { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
+  let(:owner_user)         { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
+  let(:owned_vm)           { FactoryGirl.create(:vm_vmware, :tenant => owner_tenant) }
+
+  let(:other_tenant)       { FactoryGirl.create(:tenant) }
+  let(:other_group)        { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
+  let(:other_user)         { FactoryGirl.create(:user, :miq_groups => [other_group]) }
+  let(:other_vm)           { FactoryGirl.create(:vm_vmware, :tenant => other_tenant) }
+
+  let(:child_tenant)       { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
+  let(:child_group)        { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
@@ -97,6 +100,20 @@ describe Rbac do
 
           results = Rbac.search(:class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :results_format => :objects, :miq_group => owner_group).first
           expect(results).to match_array [child_openstack_vm]
+        end
+
+        it "can see current tenant's descendants when non-admin user is logged" do
+          User.with_user(other_user) do
+            results = Rbac.search(:class => "Tenant", :results_format => :objects).first
+            expect(results).to match_array([other_tenant])
+          end
+        end
+
+        it "can see current tenant's descendants when admin user is logged" do
+          User.with_user(admin_user) do
+            results = Rbac.search(:class => "Tenant", :results_format => :objects).first
+            expect(results).to match_array([default_tenant, owner_tenant, other_tenant])
+          end
         end
       end
 
@@ -204,6 +221,17 @@ describe Rbac do
         results = Rbac.search(:class => "Host", :filter => expression).first
 
         expect(results).to include(host.id)
+      end
+    end
+
+    context "searching for vms" do
+      it "can filter results by vendor" do
+        vm = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
+        expression = MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"})
+
+        results = Rbac.search(:class => "Vm", :filter => expression).first
+
+        expect(results).to include(vm.id)
       end
     end
   end
@@ -1176,7 +1204,7 @@ describe Rbac do
 
     it "works with no filters" do
       all_vms
-      result = Rbac.find_targets_with_direct_rbac(Vm, Vm, {})
+      result = Rbac.find_targets_with_direct_rbac(Vm, {})
       expect_counts(result, all_vms, all_vms.size, all_vms.size)
     end
 
@@ -1184,7 +1212,7 @@ describe Rbac do
     # including :conditions, :include, :order, :limit
     it "applies find_options[:conditions, :include]" do
       all_vms
-      result = Rbac.find_targets_with_direct_rbac(Vm, Vm, {}, host_filter_find_options)
+      result = Rbac.find_targets_with_direct_rbac(Vm, {}, host_filter_find_options)
       expect_counts(result, vms_match, 2, 2)
     end
   end

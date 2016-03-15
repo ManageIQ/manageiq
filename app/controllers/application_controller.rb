@@ -130,7 +130,7 @@ class ApplicationController < ActionController::Base
         response.status = 500
         render(:template => "layouts/exception", :locals => {:message => msg})
       end
-      format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
+      format.any { head :not_found }  # Anything else, just send 404
     end
   end
   private :render_exception
@@ -195,22 +195,14 @@ class ApplicationController < ActionController::Base
       response.headers["Cache-Control"] = "cache, must-revalidate"
       response.headers["Pragma"] = "public"
     end
-
     rpt.to_chart(@settings[:display][:reporttheme], true, MiqReport.graph_options(params[:width], params[:height]))
     render Charting.render_format => rpt.chart
   end
 
   # Send the current report in text format
   def render_txt
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
-      @report = miq_task.task_results
-    elsif session[:rpt_task_id].nil? && session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
-      @report = rr.report_results
-      @report.report_run_time = rr.last_run_on
-    end
-    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @report = report_for_rendering
+    filename = filename_timestamp(@report.title)
     disable_client_cache
     send_data(@report.to_text,
               :filename => "#{filename}.txt")
@@ -218,14 +210,8 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in csv format
   def render_csv
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])  # Get report task id from the session
-      @report = miq_task.task_results
-    elsif session[:rpt_task_id].nil? && session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
-      @report = rr.report_results
-    end
-    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @report = report_for_rendering
+    filename = filename_timestamp(@report.title)
     disable_client_cache
     send_data(@report.to_csv,
               :filename => "#{filename}.csv")
@@ -233,16 +219,10 @@ class ApplicationController < ActionController::Base
 
   # Send the current report in pdf format
   def render_pdf(report = nil)
-    if session[:rpt_task_id]
-      miq_task = MiqTask.find(session[:rpt_task_id])
-      @report = miq_task.task_results
-    elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id])
-      @report = rr.report_results
-    end
-    if report || @report
+    report ||= report_for_rendering
+    if report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
-      rr =  (report || @report).build_create_results(:userid => userid) # Create rr from the report object
+      rr = report.build_create_results(:userid => userid)
     end
 
     # Use rr frorm paging, if present
@@ -250,7 +230,7 @@ class ApplicationController < ActionController::Base
     # Use report_result_id in session, if present
     rr ||= MiqReportResult.find(session[:report_result_id]) if session[:report_result_id]
 
-    filename = rr.report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = filename_timestamp(rr.report.title)
     disable_client_cache
     send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
@@ -300,7 +280,7 @@ class ApplicationController < ActionController::Base
   def send_report_data
     if @sb[:render_rr_id]
       rr = MiqReportResult.find(@sb[:render_rr_id])
-      filename = rr.report.title + "_" + format_timezone(Time.zone.now, Time.zone, "export_filename")
+      filename = filename_timestamp(rr.report.title, 'export_filename')
       disable_client_cache
       generated_result = rr.get_generated_result(@sb[:render_type])
       rr.destroy
@@ -316,7 +296,7 @@ class ApplicationController < ActionController::Base
     options = session[:paged_view_search_options].merge(:page => nil, :per_page => nil) # Get all pages
     @view.table, _attrs = @view.paged_view_search(options) # Get the records
 
-    @filename = @view.title + "_" + format_timezone(Time.now, Time.zone, "fname")
+    @filename = filename_timestamp(@view.title)
     case params[:download_type]
     when "pdf"
       download_pdf(@view)
@@ -461,20 +441,7 @@ class ApplicationController < ActionController::Base
   end
 
   def show_statistics
-    case controller_name
-    when "ontap_storage_system"
-      db = OntapStorageSystem
-    when "ontap_logical_disk"
-      db = OntapLogicalDisk
-    when "cim_base_storage_extent"
-      db = CimBaseStorageExtent
-    when "ontap_storage_volume"
-      db = OntapStorageVolume
-    when "ontap_file_share"
-      db = OntapFileShare
-    when "snia_local_file_system"
-      db = SniaLocalFileSystem
-    end
+    db = self.class.model
 
     @display = "show_statistics"
     session[:stats_record_id] = params[:id] if params[:id]
@@ -634,6 +601,10 @@ class ApplicationController < ActionController::Base
     tree
   end
 
+  def filename_timestamp(basename, format = 'fname')
+    basename + '_' + format_timezone(Time.zone.now, Time.zone, format)
+  end
+
   def set_summary_pdf_data
     @report_only = true
     @showtype    = @display
@@ -667,7 +638,7 @@ class ApplicationController < ActionController::Base
       pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
       send_data(pdf_data,
                 :type     => "application/pdf",
-                :filename => "#{klass}_#{@record.name}_summary_#{format_timezone(run_time, Time.zone, "fname")}.pdf"
+                :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
                )
     end
   end
@@ -956,6 +927,18 @@ class ApplicationController < ActionController::Base
         {:tenant_name       => tenant_name,
          :group             => ui_lookup(:model => "MiqGroup"),
          :group_description => current_user.current_group.description}
+    end
+  end
+
+  def report_for_rendering
+    if session[:rpt_task_id]
+      miq_task = MiqTask.find(session[:rpt_task_id])
+      miq_task.task_results
+    elsif session[:report_result_id]
+      rr = MiqReportResult.find(session[:report_result_id])
+      report = rr.report_results
+      report.report_run_time = rr.last_run_on
+      report
     end
   end
 
@@ -1270,7 +1253,7 @@ class ApplicationController < ActionController::Base
       end
 
       format.json do
-        render :nothing => true, :status => :unauthorized
+        head :unauthorized
       end
 
       format.js do
@@ -1340,7 +1323,7 @@ class ApplicationController < ActionController::Base
       # we need to make sure we have the referer in the session for future requests
       session['referer'] = request.base_url + '/' unless session['referer'].present?
     else
-      render :status => :forbidden, :text => ''
+      head :forbidden
       return
     end
 
@@ -1531,11 +1514,11 @@ class ApplicationController < ActionController::Base
                     :description => db_record.vmm_buildnumber) unless db_record.vmm_buildnumber.nil?
     end
 
-    if db_record.respond_to?("vendor") # For Vm table, this will pull the vendor and notes fields
+    if db_record.respond_to?("vendor_display") # For Vm table, this will pull the vendor and notes fields
       @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
       @vmminfo.push(:vmminfo     => "Vendor",
-                    :description => db_record.vendor) unless db_record.vendor.nil?
+                    :description => db_record.vendor_display)
       @vmminfo.push(:vmminfo     => "Format",
                     :description => db_record.format) unless db_record.format.nil?
       @vmminfo.push(:vmminfo     => "Version",
@@ -1701,8 +1684,8 @@ class ApplicationController < ActionController::Base
       adv_search_build(db)
     end
     if @edit && !@edit[:selected] && # Load default search if search @edit hash exists
-       @settings.fetch_path(:default_search, db.to_sym) # and item in listnav not selected
-      load_default_search(@settings[:default_search][db.to_sym])
+       settings(:default_search, db.to_sym) # and item in listnav not selected
+      load_default_search(settings(:default_search, db.to_sym))
     end
 
     parent      = options[:parent] || nil             # Get passed in parent object
@@ -1717,6 +1700,7 @@ class ApplicationController < ActionController::Base
     sortdir_sym = "#{sort_prefix}_sortdir".to_sym
 
     # Set up the list view type (grid/tile/list)
+    @settings ||= {:views => {}, :perpage => {}}
     @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
 
     @gtl_type = get_view_calculate_gtl_type(db_sym)
@@ -1782,12 +1766,17 @@ class ApplicationController < ActionController::Base
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
-       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
+    if grid_hash_conditions(view)
       @grid_hash = view_to_hash(view)
     end
 
     [view, get_view_pages(dbname, view)]
+  end
+
+  def grid_hash_conditions(view)
+    !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
+      !(view.db.ends_with?("Build") && view.db != "ContainerBuild") &&
+      !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
   end
 
   def get_view_where_clause(default_where_clause)
@@ -1830,7 +1819,7 @@ class ApplicationController < ActionController::Base
 
   def get_view_pages_perpage(dbname)
     perpage = 10 # return a sane default
-    return perpage unless @settings.key?(:perpage)
+    return perpage unless @settings && @settings.key?(:perpage)
 
     key = perpage_key(dbname)
     perpage = @settings[:perpage][key] if key && @settings[:perpage].key?(key)
@@ -2196,7 +2185,8 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
            "container_route", "container_project", "container_replicator", "persistent_volume",
-           "container_image_registry", "container_image", "container_topology", "container_dashboard"
+           "container_image_registry", "container_image", "container_topology", "container_dashboard",
+           "container_build"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
         session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
@@ -2476,7 +2466,7 @@ class ApplicationController < ActionController::Base
     if db.respond_to?(:find_filtered) && !mfilters.empty?
       result = db.find_tags_by_grouping(mfilters, :conditions => options[:conditions], :ns => "*")
     else
-      result = db.find(count, options)
+      result = db.apply_legacy_finder_options(options)
     end
 
     result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:find_filtered) && result

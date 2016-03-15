@@ -29,7 +29,7 @@ class DashboardController < ApplicationController
   def csp_report
     report = ActiveSupport::JSON.decode(request.body.read)
     $log.warn("security warning, CSP violation report follows: #{report.inspect}")
-    render :nothing => true
+    head :ok
   end
 
   def resize_layout
@@ -39,7 +39,7 @@ class DashboardController < ApplicationController
       sidebar = params[:sidebar].to_i
       session[:sidebar][params[:context]] = sidebar if [0, 2, 3, 4, 5].include?(sidebar)
     end
-    render :nothing => true # No response required
+    head :ok # No response required
   end
 
   # Accept window sizes from the client
@@ -50,7 +50,7 @@ class DashboardController < ApplicationController
       # Set the left divider position in the controller's sandbox
       session[:sandboxes][params[:exp_controller]][:exp_left] = params[:exp_left]
     end
-    render :nothing => true # No response required
+    head :ok # No response required
   end
 
   EXPLORER_FEATURE_LINKS = {
@@ -288,7 +288,7 @@ class DashboardController < ApplicationController
   # Toggle dashboard item size
   def widget_toggle_minmax
     unless params[:widget] # Make sure we got a widget in
-      render :nothing => true
+      head :ok
       return
     end
 
@@ -316,7 +316,7 @@ class DashboardController < ApplicationController
   # Zoom in on chart widget
   def widget_zoom
     unless params[:widget] # Make sure we got a widget in
-      render :nothing => true
+      head :ok
       return
     end
 
@@ -349,7 +349,7 @@ class DashboardController < ApplicationController
       end
       save_user_dashboards
     end
-    render :nothing => true               # We have nothing to say  :)
+    head :ok               # We have nothing to say  :)
   end
 
   # A widget has been closed
@@ -368,7 +368,7 @@ class DashboardController < ApplicationController
         page.redirect_to :action => 'show'
       end
     else
-      render :nothing => true
+      head :ok
     end
   end
 
@@ -394,7 +394,7 @@ class DashboardController < ApplicationController
         page.redirect_to :action => 'show'
       end
     else
-      render :nothing => true
+      head :ok
     end
   end
 

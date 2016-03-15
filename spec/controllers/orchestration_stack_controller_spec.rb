@@ -9,13 +9,13 @@ describe OrchestrationStackController do
   render_views
 
   describe '#show' do
-    let(:record) { FactoryGirl.create(:orchestration_stack) }
+    let(:record) { FactoryGirl.create(:orchestration_stack_cloud) }
 
     before do
       session[:settings] = {
         :views => {:manageiq_providers_cloudmanager_vm => "grid"}
       }
-      get :show, :id => record.id, :display => "instances"
+      get :show, :params => {:id => record.id, :display => "instances"}
     end
 
     it 'does not render compliance check and comparison buttons' do

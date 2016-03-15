@@ -94,20 +94,6 @@ module NTFS
       @length += r.length
     end
 
-    def [](what)
-      if what.class == Range
-        offset = what.begin
-        len    = what.end - what.begin + 1
-        return self.[](offset, len)
-      end
-
-      if what.instance_of?(Integer)
-        return self.[](what, 1)
-      end
-
-      raise "MIQ(NTFS::DataRun.[]) Invalid Class (#{what.class})"
-    end
-
     def [](offset, len)
       seek(offset)
       read(len)

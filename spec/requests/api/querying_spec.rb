@@ -328,7 +328,7 @@ describe ApiController do
       run_get vms_url(vm1.id)
 
       expect_request_success
-      expect(@result).to_not have_key("actions")
+      expect(response_hash).to_not have_key("actions")
     end
 
     it "returns actions if authorized" do
@@ -347,7 +347,7 @@ describe ApiController do
 
       expect_request_success
       expect_result_to_have_keys(%w(id href name vendor actions))
-      actions = @result["actions"]
+      actions = response_hash["actions"]
       expect(actions.size).to eq(1)
       expect(actions.first["name"]).to eq("suspend")
     end
@@ -360,7 +360,7 @@ describe ApiController do
 
       expect_request_success
       expect_result_to_have_keys(%w(id href name vendor actions))
-      expect(@result["actions"].collect { |a| a["name"] }).to match_array(%w(start stop))
+      expect(response_hash["actions"].collect { |a| a["name"] }).to match_array(%w(start stop))
     end
 
     it "returns actions if asked for with physical attributes" do

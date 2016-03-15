@@ -49,8 +49,8 @@ class ServiceOrchestration < Service
   end
 
   def deploy_orchestration_stack
-    @orchestration_stack =
-      OrchestrationStack.create_stack(orchestration_manager, stack_name, orchestration_template, stack_options)
+    @orchestration_stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(
+      orchestration_manager, stack_name, orchestration_template, stack_options)
     add_resource(@orchestration_stack)
     @orchestration_stack
   ensure
@@ -76,7 +76,7 @@ class ServiceOrchestration < Service
   end
 
   def indirect_vms
-    all_vms - direct_vms
+    orchestration_stack.try(:indirect_vms) || []
   end
 
   def direct_vms

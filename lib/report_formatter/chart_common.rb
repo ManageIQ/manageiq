@@ -21,7 +21,6 @@ module ReportFormatter
 
     def build_document_body
       return no_records_found_chart if mri.table.nil? || mri.table.data.blank?
-
       # find the highest chart value and set the units accordingly for large disk values (identified by GB in units)
       maxcols = 8
       divider = 1

@@ -32,20 +32,23 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     ManageIQ::Providers::Azure::Regions.find_by_name(provider_region)[:description]
   end
 
-  def self.raw_connect(clientid, clientkey, azuretenantid)
+  def self.raw_connect(client_id, client_key, azure_tenant_id, proxy_uri = nil)
+    proxy_uri ||= VMDB::Util.http_proxy_uri
+
     ::Azure::Armrest::ArmrestService.configure(
-      :client_id  => clientid,
-      :client_key => clientkey,
-      :tenant_id  => azuretenantid
+      :client_id  => client_id,
+      :client_key => client_key,
+      :tenant_id  => azure_tenant_id,
+      :proxy      => proxy_uri.to_s
     )
   end
 
   def connect(options = {})
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    clientid  = options[:user] || authentication_userid(options[:auth_type])
-    clientkey = options[:pass] || authentication_password(options[:auth_type])
-    self.class.raw_connect(clientid, clientkey, azure_tenant_id)
+    client_id  = options[:user] || authentication_userid(options[:auth_type])
+    client_key = options[:pass] || authentication_password(options[:auth_type])
+    self.class.raw_connect(client_id, client_key, azure_tenant_id, options[:proxy_uri])
   end
 
   def verify_credentials(_auth_type = nil, options = {})

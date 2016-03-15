@@ -270,7 +270,7 @@ class StartVM < VerbBase
   end
 
   def policy_check(ost)
-    VmdbOps.new(ost).policyCheckVmInternal(ost)
+    # TODO: If still needed, this should do a policy check using the REST API.
   end
 end
 

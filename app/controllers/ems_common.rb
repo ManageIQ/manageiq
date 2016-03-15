@@ -5,7 +5,7 @@ module EmsCommon
   def show
     @display = params[:display] || "main" unless control_selected?
 
-    session[:vm_summary_cool] = (@settings[:views][:vm_summary_cool] == "summary")
+    session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")
     @summary_view = session[:vm_summary_cool]
     @ems = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@ems)
@@ -92,7 +92,7 @@ module EmsCommon
 
   def calculate_display_class(display_name, session_display)
     [Container, ContainerReplicator, ContainerNode, ContainerGroup,
-     ContainerService, ContainerImage, ContainerRoute,
+     ContainerService, ContainerImage, ContainerRoute, ContainerBuild,
      ContainerProject, ContainerImageRegistry, AvailabilityZone,
      MiddlewareServer, MiddlewareDeployment,
      CloudTenant, CloudVolume, Flavor, SecurityGroup,].detect do |klass|

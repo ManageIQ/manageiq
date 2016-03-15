@@ -36,7 +36,7 @@ class RssFeed < ApplicationRecord
     }
 
     feed = Rss.rss_feed_for(find_items, options)
-    local ? feed : {:text => feed, :content_type => Mime::RSS}
+    local ? feed : {:text => feed, :content_type => Mime[:rss]}
   end
 
   def self.to_html(feed, options)

@@ -5,7 +5,7 @@ class PictureController < ApplicationController
     if picture && picture.extension == extension
       render_picture_content(picture)
     else
-      render :nothing => true, :status => 404
+      head :not_found
     end
   end
 
@@ -15,6 +15,6 @@ class PictureController < ApplicationController
     response.headers['Cache-Control'] = "public"
     response.headers['Content-Type'] = "image/#{picture.extension}"
     response.headers['Content-Disposition'] = "inline"
-    render :text => picture.content
+    render :body => picture.content
   end
 end

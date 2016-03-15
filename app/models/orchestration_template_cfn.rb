@@ -30,8 +30,12 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     end
   end
 
+  def self.register_eligible_manager(cloud_manager_class)
+    eligible_manager_types << cloud_manager_class
+  end
+
   def self.eligible_manager_types
-    [ManageIQ::Providers::Amazon::CloudManager, ManageIQ::Providers::Openstack::CloudManager]
+    @eligible_manager_types ||= [ManageIQ::Providers::Openstack::CloudManager]
   end
 
   # return the parsing error message if not valid JSON; otherwise nil

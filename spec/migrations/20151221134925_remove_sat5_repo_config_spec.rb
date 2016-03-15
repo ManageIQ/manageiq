@@ -2,6 +2,7 @@ require_migration
 
 describe RemoveSat5RepoConfig do
   let(:db_stub) { migration_stub(:MiqDatabase) }
+  let(:authentication_stub) { migration_stub(:Authentication) }
 
   migration_context :up do
     it "removes Sat5 registration info" do
@@ -13,19 +14,19 @@ describe RemoveSat5RepoConfig do
         :update_repo_name                       => "repo",
         :registration_organization_display_name => "name"
       )
-      Authentication.create!(
+      authentication_stub.create!(
         :resource_type => 'MiqDatabase',
         :resource_id   => db.id,
         :authtype      => :registration_http_proxy,
         :name          => "auth"
       )
-      Authentication.create!(
+      authentication_stub.create!(
         :resource_type => 'MiqDatabase',
         :resource_id   => db.id,
         :authtype      => :registration,
         :name          => "auth2"
       )
-      default_auth = Authentication.create!(
+      default_auth = authentication_stub.create!(
         :resource_type => 'MiqDatabase',
         :resource_id   => db.id,
         :authtype      => :default,
@@ -44,7 +45,7 @@ describe RemoveSat5RepoConfig do
         :registration_organization_display_name => nil
       )
 
-      auths = Authentication.where(:resource_type => 'MiqDatabase', :resource_id => db.id)
+      auths = authentication_stub.where(:resource_type => 'MiqDatabase', :resource_id => db.id)
       expect(auths).to match_array([default_auth])
     end
   end

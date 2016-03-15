@@ -132,7 +132,7 @@ module VmHelper::TextualSummary
     if vendor.blank?
       h[:value] = _("None")
     else
-      h[:image] = "vendor-#{vendor.downcase}"
+      h[:image] = "vendor-#{vendor}"
       h[:title] = _("Show VMM container information")
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
@@ -440,7 +440,7 @@ module VmHelper::TextualSummary
     num = @record.number_of(:guest_applications)
     label = (os =~ /linux/) ? n_("Package", "Packages", num) : n_("Application", "Applications", num)
 
-    h = {:label => label.pluralize, :image => "guest_application", :value => num}
+    h = {:label => label, :image => "guest_application", :value => num}
     if num > 0
       h[:title] = _("Show the %{label} installed on this VM") % {:label => label}
       h[:explorer] = true

@@ -288,7 +288,6 @@ describe EmsCloudController do
     end
 
     it "refresh relationships and power states" do
-      session[:settings] = {:views => {}}
       ems = FactoryGirl.create(:ems_amazon)
       post :button, :params => { :id => ems.id, :pressed => "ems_cloud_refresh" }
       expect(response.status).to eq(200)
@@ -327,7 +326,6 @@ describe EmsCloudController do
       post :button, :params => { :id => ems.id, :pressed => "ems_cloud_timeline" }
       expect(response.status).to eq(200)
 
-      session[:settings] = {:views => {}}
       get :show, :params => { :display => "timeline", :id => ems.id }
       expect(response.status).to eq(200)
     end

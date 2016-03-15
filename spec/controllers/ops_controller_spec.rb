@@ -31,7 +31,6 @@ describe OpsController do
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_settings',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
     post :change_tab, :params => { :tab_id => 'db_settings', :format => :json }
   end
 
@@ -41,8 +40,7 @@ describe OpsController do
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_connections',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
-    expect(controller).to receive(:render)
+    expect(controller).to receive(:head)
     post :change_tab, :params => { :tab_id => 'db_connections', :format => :json }
     expect(response.status).to eq(200)
   end
@@ -56,7 +54,6 @@ describe OpsController do
     end
 
     it 'can add a user w/ group' do
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
       session[:edit] = {
         :key     => 'rbac_user_edit__new',
         :current => {},
@@ -75,8 +72,6 @@ describe OpsController do
     end
 
     it 'cannot add a user w/o matching passwords' do
-      session[:settings] = {}
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
       session[:edit] = {
         :key => 'rbac_user_edit__new',
         :new => {
@@ -97,8 +92,6 @@ describe OpsController do
     end
 
     it 'cannot add a user w/o group' do
-      session[:settings] = {}
-      session[:settings] = {:views => {}, :perpage => {:list => 10}}
       session[:edit] = {
         :key => 'rbac_user_edit__new',
         :new => {
@@ -121,9 +114,7 @@ describe OpsController do
 
   context "#db_backup" do
     it "posts db_backup action" do
-      session[:settings] = {:default_search => '',
-                            :views          => {},
-                            :perpage        => {:list => 10}}
+      session[:settings] = {:default_search => ''}
 
       miq_schedule = FactoryGirl.create(:miq_schedule,
                                         :name        => "test_db_schedule",

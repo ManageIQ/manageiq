@@ -2,6 +2,9 @@ FactoryGirl.define do
   factory :orchestration_stack do
   end
 
+  factory :orchestration_stack_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack" do
+  end
+
   factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack" do
   end
 

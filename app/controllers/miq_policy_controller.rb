@@ -20,7 +20,7 @@ class MiqPolicyController < ApplicationController
   def export
     @breadcrumbs = []
     @layout = "miq_policy_export"
-    drop_breadcrumb(:name => "Import / Export", :url => "miq_policy/export")
+    drop_breadcrumb(:name => _("Import / Export"), :url => "miq_policy/export")
     case params[:button]
     when "cancel"
       @sb = nil
@@ -128,9 +128,7 @@ class MiqPolicyController < ApplicationController
   def x_button
     action = params[:pressed]
 
-    raise ActionController::RoutingError.new('invalid button action') unless
-      POLICY_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-
+    raise ActionController::RoutingError, _('invalid button action') unless POLICY_X_BUTTON_ALLOWED_ACTIONS.key?(action)
     send(POLICY_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 
@@ -198,7 +196,7 @@ class MiqPolicyController < ApplicationController
         page << "miqSparkle(false);"
       end
     elsif params[:commit] == "cancel"
-      miq_policy_import_service.cancel_import(params[:import_file_upload_id])
+      miq_policy_import_service.cancel_import(@import_file_upload_id)
 
       render :update do |page|
         page.redirect_to :action => 'export', :flash_msg => _("Import cancelled by user")
@@ -206,6 +204,7 @@ class MiqPolicyController < ApplicationController
 
     # init import
     else
+      @import = iterate_status(ImportFileUpload.find(@import_file_upload_id).policy_import_data)
       if @sb[:conflict]
         add_flash(_("Import not available due to conflicts"), :error)
       else
@@ -349,7 +348,9 @@ class MiqPolicyController < ApplicationController
     disable_client_cache
     send_data($policy_log.contents(nil, nil),
               :filename => "policy.log")
-    AuditEvent.success(:userid => session[:userid], :event => "download_policy_log", :message => "Policy log downloaded")
+    AuditEvent.success(:userid  => session[:userid],
+                       :event   => "download_policy_log",
+                       :message => _("Policy log downloaded"))
   end
 
   private
@@ -358,26 +359,18 @@ class MiqPolicyController < ApplicationController
     iterate_status(yaml_array) if yaml_array
   end
 
-  def iterate_status(items = nil, result = [], parent_id = nil, indent = nil)
+  def iterate_status(items = nil, result = [], parent_id = nil)
     items.each do |item|
-      entry = {"id"          => result.count.to_s,
-               "title"       => "<b>#{ui_lookup(:model => item[:class])}:</b> #{item[:description]}",
-               "parent"      => parent_id,
-               "status_icon" => get_status_icon(item[:status]),
-               "indent"      => (indent.nil? ? 0 : indent + 1)}
-
-      entry["_collapsed"] = false if item[:children]
+      entry = {
+        :id     => result.count.to_s,
+        :type   => ui_lookup(:model => item[:class]),
+        :title  => item[:description],
+        :parent => parent_id,
+        :icon   => get_status_icon(item[:status])
+      }
 
       if item[:messages]
-        entry["msg"] = ""
-        messages = item[:messages]
-
-        if messages.count > 1
-          messages.each { |msg| entry["msg"] += msg + ', ' }
-        else
-          messages.each { |msg| entry["msg"] += msg }
-        end
-
+        entry['msg'] = item[:messages].join(', ')
         @sb[:conflict] = true
       end
 
@@ -385,21 +378,19 @@ class MiqPolicyController < ApplicationController
 
       # recursive call if item have the childrens
       if item[:children]
-        iterate_status(item[:children], result, result.count - 1, result.last["indent"])
+        iterate_status(item[:children], result, result.count - 1)
       end
     end
 
-    result.to_json
+    result
   end
 
   def get_status_icon(status)
-    icon = case status
-           when :update then "checkmark"
-           when :add then "equal-green"
-           when :conflict then "x"
-           end
-
-    ActionController::Base.helpers.image_path("16/#{icon}.png")
+    case status
+    when :update then "fa-check icon-green"
+    when :add then "fa-plus icon-green"
+    when :conflict then "fa-times icon-red"
+    end
   end
 
   def miq_policy_import_service
@@ -571,7 +562,7 @@ class MiqPolicyController < ApplicationController
       when :alert
         self.x_node = @new_alert_node if @new_alert_node
       else
-        raise "unknown tree in replace_trees: #{name}"
+        raise _("unknown tree in replace_trees: %{name}") % {name => name}
       end
     end
     replace_trees_by_presenter(presenter, trees)
@@ -797,7 +788,8 @@ class MiqPolicyController < ApplicationController
                                 choices_chosen = :choices_chosen)
     if params[:button].ends_with?("_left")
       if params[members_chosen].nil?
-        add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
+        add_flash(_("No %{members} were selected to move left") % {:members => members.to_s.split("_").first.titleize},
+                  :error)
       else
         if @edit[:event_id]                                           # Handle Actions for an Event
           params[members_chosen].each do |mc|
@@ -982,7 +974,11 @@ class MiqPolicyController < ApplicationController
   # Build the audit object when a profile is saved
   def build_saved_audit(record, add = false)
     name = record.respond_to?(:name) ? record.name : record.description
-    msg = "[#{name}] Record #{add ? "added" : "updated"} ("
+    msg = if add
+            _("[%{name}] Record added (") % {:name => name}
+          else
+            _("[%{name}] Record updated (") % {:name => name}
+          end
     event = "#{record.class.to_s.downcase}_record_#{add ? "add" : "update"}"
     i = 0
     @edit[:new].each_key do |k|
@@ -990,9 +986,13 @@ class MiqPolicyController < ApplicationController
         msg += ", " if i > 0
         i += 1
         if k == :members
-          msg = msg + k.to_s + ":[" + @edit[:current][k].keys.join(",") + "] to [" + @edit[:new][k].keys.join(",") + "]"
+          msg += _("%{name}:[%{key}] to [%{new_key}]") % {:name    => k.to_s,
+                                                          :key     => @edit[:current][k].keys.join(","),
+                                                          :new_key => @edit[:new][k].keys.join(",")}
         else
-          msg = msg + k.to_s + ":[" + @edit[:current][k].to_s + "] to [" + @edit[:new][k].to_s + "]"
+          msg += _("%{name}:[%{key}] to [%{new_key}]") % {:name    => k.to_s,
+                                                          :key     => @edit[:current][k].to_s,
+                                                          :new_key => @edit[:new][k].to_s}
         end
       end
     end
@@ -1035,18 +1035,18 @@ class MiqPolicyController < ApplicationController
     options[:variables].each_with_index do |var, _i|
       if var[:oid].blank? || var[:value].blank? || var[:var_type] == "<None>"
         if !var[:oid].blank? && var[:var_type] != "<None>" && var[:var_type] != "Null" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val => "Value", :field => var[:oid]}, :error)
+          add_flash(_("Value missing for %{field}") % {:field => var[:oid]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "<None>" && var[:var_type] != "Null" && !var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID", :field => var[:value]}, :error)
+          add_flash(_("Object ID missing for %{field}") % {:field => var[:value]}, :error)
         elsif !var[:oid].blank? && var[:var_type] == "<None>" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val => "Type", :field => var[:oid]}, :error)
-          add_flash(_("%{val} missing for %{field}") % {:val => "Value", :field => var[:oid]}, :error)
+          add_flash(_("Type missing for %{field}") % {:field => var[:oid]}, :error)
+          add_flash(_("Value missing for %{field}") % {:field => var[:oid]}, :error)
         elsif var[:oid].blank? && var[:var_type] == "Null" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID", :field => var[:var_type]}, :error)
+          add_flash(_("Object ID missing for %{field}") % {:field => var[:var_type]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "<None>" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID and Values", :field => var[:var_type]}, :error)
+          add_flash(_("Object ID and Values missing for %{field}") % {:field => var[:var_type]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "Null" && var[:var_type] != "<None>" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID", :field => var[:var_type]}, :error)
+          add_flash(_("Object ID missing for %{field}") % {:field => var[:var_type]}, :error)
         end
       end
     end
@@ -1107,7 +1107,7 @@ class MiqPolicyController < ApplicationController
   end
 
   def get_session_data
-    @title          = "Policies"
+    @title = _("Policies")
     if request.parameters["action"] == "wait_for_task"  # Don't change layout when wait_for_task came in for RSOP
       @layout = session[:layout]
     else

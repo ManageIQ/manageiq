@@ -37,8 +37,18 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   # EC2 interactions
   #
 
-  def set_custom_field(attribute, value)
-    with_provider_object { |ec2_instance| ec2_instance.tags[attribute] = value }
+  def set_custom_field(key, value)
+    with_provider_object do |instance|
+      tags = instance.create_tags ({
+        tags: [
+                {
+                  key: key,
+                  value: value,
+                },
+              ],
+      })
+      tags.find{|tag| tag.key == key}.value == value
+    end
   end
 
   def self.calculate_power_state(raw_power_state)

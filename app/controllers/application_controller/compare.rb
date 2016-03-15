@@ -213,7 +213,7 @@ module ApplicationController::Compare
     end
     render :update do |page|                    # Use RJS to update the display
       page << "miqSparkle(false);"
-      # render :nothing => true
+      # head :ok
     end
   end
 
@@ -638,7 +638,7 @@ module ApplicationController::Compare
     else
       render :update do |page|                    # Use RJS to update the display
         page << "miqSparkle(false);"
-        # render :nothing => true
+        # head :ok
       end
     end
   end

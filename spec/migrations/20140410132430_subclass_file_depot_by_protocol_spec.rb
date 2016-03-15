@@ -7,7 +7,7 @@ describe SubclassFileDepotByProtocol do
     it "Sets type on existing FileDepot records" do
       ["ftp", "nfs", "smb"].each { |type| file_depot_stub.create!(:name => "#{type} depot", :uri => "#{type}://example.com/share") }
 
-      expect(FileDepot.count).to eq(3)
+      expect(file_depot_stub.count).to eq(3)
 
       migrate
 
@@ -19,11 +19,11 @@ describe SubclassFileDepotByProtocol do
     it "Removes invalid records" do
       [nil, "", "aaa"].each { |type| file_depot_stub.create!(:uri => type) }
 
-      expect(FileDepot.count).to eq(3)
+      expect(file_depot_stub.count).to eq(3)
 
       migrate
 
-      expect(FileDepot.count).to eq(0)
+      expect(file_depot_stub.count).to eq(0)
     end
   end
 end

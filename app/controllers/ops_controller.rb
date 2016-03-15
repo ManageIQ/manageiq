@@ -117,7 +117,7 @@ class OpsController < ApplicationController
     @breadcrumbs = []
     build_accordions_and_trees
 
-    @sb[:rails_log] = $rails_log.filename.to_s.include?("production.log") ? _("Production") : _("Development")
+    @sb[:rails_log] = $rails_log.filename.to_s.include?("production.log") ? "Production" : "Development"
 
     if !params[:no_refresh]
       @sb[:good] = nil

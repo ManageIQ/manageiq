@@ -122,7 +122,7 @@ RSpec.describe "users API" do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      user_id = @result["results"].first["id"]
+      user_id = response_hash["results"].first["id"]
       expect(User.exists?(user_id)).to be_truthy
     end
 
@@ -134,7 +134,7 @@ RSpec.describe "users API" do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      user_id = @result["results"].first["id"]
+      user_id = response_hash["results"].first["id"]
       expect(User.exists?(user_id)).to be_truthy
     end
 
@@ -146,7 +146,7 @@ RSpec.describe "users API" do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      results = @result["results"]
+      results = response_hash["results"]
       user1_hash, user2_hash = results.first, results.second
       expect(User.exists?(user1_hash["id"])).to be_truthy
       expect(User.exists?(user2_hash["id"])).to be_truthy

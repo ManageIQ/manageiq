@@ -66,8 +66,9 @@ describe EmsInfraController do
     end
 
     it "when Host Analyze then Check Compliance is pressed" do
+      ems_infra = FactoryGirl.create(:ems_vmware)
       expect(controller).to receive(:analyze_check_compliance_hosts)
-      post :button, :params => { :pressed => "host_analyze_check_compliance", :format => :js }
+      post :button, :params => {:pressed => "host_analyze_check_compliance", :id => ems_infra.id, :format => :js}
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
@@ -159,7 +160,6 @@ describe EmsInfraController do
 
   describe "#show" do
     before(:each) do
-      session[:settings] = {:views => {}}
       set_user_privileges
       get :show, :params => {:id => ems.id}.merge(url_params)
     end
@@ -180,7 +180,6 @@ describe EmsInfraController do
 
   describe "#show_list" do
     before(:each) do
-      session[:settings] = {:views => {}}
       set_user_privileges
       FactoryGirl.create(:ems_vmware)
       get :show_list
@@ -220,7 +219,6 @@ describe EmsInfraController do
     before do
       set_user_privileges
       EvmSpecHelper.create_guid_miq_server_zone
-      session[:settings] = {:views => {}}
     end
     context "when previous breadcrumbs path contained 'Cloud Providers'" do
       it "shows 'Infrastructure Providers -> (Summary)' breadcrumb path" do

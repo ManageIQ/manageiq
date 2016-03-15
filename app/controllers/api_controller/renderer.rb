@@ -149,7 +149,7 @@ class ApiController
     # Render nothing for normal resource deletes.
     #
     def render_normal_destroy
-      render :nothing => true, :status => Rack::Utils.status_code(:no_content)
+      head :no_content
     end
 
     #

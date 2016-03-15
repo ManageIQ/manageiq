@@ -1,35 +1,4 @@
 describe DatabaseBackup do
-  context "with basic db settings" do
-    before(:each) do
-      DatabaseBackup.instance_variable_set(:@backup_supported, nil)
-      @db_opts = {:username => "root", :password => "smartvm", :name => "postgresl", :host => "localhost", :database => "vmdb"}
-    end
-
-    it "should support backup with internal pg" do
-      @db_opts[:name] = "internal"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).to be_truthy
-    end
-
-    it "should support backup with pg" do
-      @db_opts[:name] = "postgresql"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).to be_truthy
-    end
-
-    it "should support backup with external pg" do
-      @db_opts[:name] = "external_evm"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).to be_truthy
-    end
-
-    it "should not support backup with mysql" do
-      @db_opts[:name] = "mysql"
-      allow_any_instance_of(MiqDbConfig).to receive(:options).and_return(@db_opts)
-      expect(DatabaseBackup.backup_supported?).not_to be_truthy
-    end
-  end
-
   context "region" do
     before(:each) do
       @region = FactoryGirl.create(:miq_region, :region => 3)

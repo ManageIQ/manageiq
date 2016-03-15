@@ -225,9 +225,9 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       case "ContainerService":
         return '\uE61E'; // pficon-service
       case "Vm":
-        return '\uE600'; // pficon-screen
+        return '\uE90f'; // pficon-virtual-machine
       case "Host":
-        return '\uE620'; // pficon-cluster
+        return '\uE600'; // pficon-screen
       case "ContainerGroup":
         return '\uF1B3'; // fa-cubes
       case "ContainerReplicator":

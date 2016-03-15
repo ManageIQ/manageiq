@@ -121,7 +121,7 @@ module ApplicationController::Tags
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Smart Tagging") %
-        {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize}, :error)
+        {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return

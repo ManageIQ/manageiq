@@ -85,7 +85,7 @@ module Metric::Targets
   # If a Cluster is enabled, capture all of its Hosts.
   # If a Host is enabled, capture all of its Vms.
   def self.capture_targets(zone = nil, options = {})
-    zone = MiqServer.my_server.zone(true) if zone.nil?
+    zone = MiqServer.my_server.zone if zone.nil?
     zone = Zone.find(zone) if zone.kind_of?(Integer)
     capture_infra_targets(zone, options) + \
       capture_cloud_targets(zone, options) + \

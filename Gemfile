@@ -46,7 +46,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "azure-armrest",                  "~>0.1.2"
+gem "azure-armrest",                  "~>0.2.0"
 gem "color",                          "~>1.8"
 gem "default_value_for",              "~>3.0.1", :git => "git://github.com/matthewd/default_value_for.git", :branch => "rails-50" # https://github.com/FooBarWidget/default_value_for/pull/57
 gem "draper",                         "~>2.1.0", :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712
@@ -93,6 +93,7 @@ gem "ovirt_metrics",                  :git => "git://github.com/matthewd/ovirt_m
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
+gem "rugged",                         "~>0.23.0",  :require => false
 gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
@@ -105,6 +106,7 @@ gem "sshkey",                         "~>1.8.0",   :require => false
 #
 unless ENV['APPLIANCE']
   group :development do
+    gem "rubocop",          "~>0.37.2", :require => false
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
   end
 

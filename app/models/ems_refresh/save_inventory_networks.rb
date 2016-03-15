@@ -13,9 +13,9 @@ module EmsRefresh
     def save_cloud_networks_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.cloud_networks(true)
+      ems.cloud_networks.reset
       deletes = if (target == ems)
-                  ems.cloud_networks.dup
+                  :use_association
                 else
                   []
                 end
@@ -35,8 +35,6 @@ module EmsRefresh
     end
 
     def save_cloud_subnets_inventory(cloud_network, hashes)
-      deletes = cloud_network.cloud_subnets(true).dup
-
       hashes.each do |h|
         %i(availability_zone).each do |relation|
           h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
@@ -45,7 +43,7 @@ module EmsRefresh
         h[:ems_id] = cloud_network.ems_id
       end
 
-      save_inventory_multi(cloud_network.cloud_subnets, hashes, deletes, [:ems_ref], nil, [:network_router])
+      save_inventory_multi(cloud_network.cloud_subnets, hashes, :use_association, [:ems_ref], nil, [:network_router])
 
       cloud_network.save!
       store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
@@ -54,9 +52,9 @@ module EmsRefresh
     def save_security_groups_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.security_groups(true)
+      ems.security_groups.reset
       deletes = if (target == ems)
-                  ems.security_groups.dup
+                  :use_association
                 else
                   []
                 end
@@ -88,9 +86,9 @@ module EmsRefresh
     def save_floating_ips_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.floating_ips(true)
+      ems.floating_ips.reset
       deletes = if (target == ems)
-                  ems.floating_ips.dup
+                  :use_association
                 else
                   []
                 end
@@ -123,8 +121,7 @@ module EmsRefresh
           [:name]
         end
 
-      deletes = parent.firewall_rules(true).dup
-      save_inventory_multi(parent.firewall_rules, hashes, deletes, find_key, nil, [:source_security_group])
+      save_inventory_multi(parent.firewall_rules, hashes, :use_association, find_key, nil, [:source_security_group])
 
       parent.save!
       store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
@@ -133,9 +130,9 @@ module EmsRefresh
     def save_network_routers_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.network_routers(true)
+      ems.network_routers.reset
       deletes = if (target == ems)
-                  ems.network_routers.dup
+                  :use_association
                 else
                   []
                 end
@@ -157,9 +154,9 @@ module EmsRefresh
     def save_network_ports_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.network_ports(true)
+      ems.network_ports.reset
       deletes = if (target == ems)
-                  ems.network_ports.dup
+                  :use_association
                 else
                   []
                 end

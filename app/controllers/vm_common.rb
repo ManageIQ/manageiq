@@ -130,7 +130,7 @@ module VmCommon
     # Since the virtual console opens multiple ports, we need to specify * here!
     # After the WebSocket proxying/multiplexing is done on port 443, use the following line as an override:
     # override_content_security_policy_directives(:connect_src => ["'self'", "wss://#{request.env['SERVER_NAME']}"]
-    override_content_security_policy_directives(:connect_src => ['*'])
+    override_content_security_policy_directives(:connect_src => ['*'], :img_src => %w(data: 'self'))
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
 
     case protocol
@@ -175,7 +175,7 @@ module VmCommon
         session[:exp_parms] = {:id => tree_node_id}
         redirect_to :action => "explorer"
       end
-      format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
+      format.any { head :not_found }  # Anything else, just send 404
     end
   end
 
@@ -1185,7 +1185,7 @@ module VmCommon
       end
     end
     @lastaction = "set_checked_items"
-    render :nothing => true
+    head :ok
   end
 
   def scan_history

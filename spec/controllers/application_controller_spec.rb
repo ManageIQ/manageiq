@@ -1,4 +1,10 @@
+require 'ostruct'
+
 describe ApplicationController do
+  example ".model" do
+    expect(CimBaseStorageExtentController.model).to eq CimBaseStorageExtent
+  end
+
   context "Service Templates" do
     before :each do
       EvmSpecHelper.local_miq_server
@@ -222,6 +228,24 @@ describe ApplicationController do
           controller.instance_variable_set(:@record, record)
           expect(controller.send(:determine_record_id_for_presenter)).to eq(id)
         end
+      end
+    end
+
+    context "#get_view" do
+      it 'calculates grid hash condition' do
+        controller.instance_variable_set(:@force_no_grid_xml, false)
+        controller.instance_variable_set(:@force_grid_xml, true)
+        controller.instance_variable_set(:@gtl_type, "list")
+
+        view = OpenStruct.new
+        view.db = "MiqProvision"
+        expect(controller.send(:grid_hash_conditions, view)).to eq(false)
+        view.db = "Build"
+        expect(controller.send(:grid_hash_conditions, view)).to eq(false)
+        view.db = "ContainerBuild"
+        expect(controller.send(:grid_hash_conditions, view)).to eq(true)
+        controller.instance_variable_set(:@force_no_grid_xml, true)
+        expect(controller.send(:grid_hash_conditions, view)).to eq(false)
       end
     end
   end

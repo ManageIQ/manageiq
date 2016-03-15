@@ -20,9 +20,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_projects(true)
+    ems.container_projects.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_projects.dup
+                :use_association
               else
                 []
               end
@@ -36,9 +36,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.persistent_volumes(true)
+    ems.persistent_volumes.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.persistent_volumes.dup
+                :use_association
               else
                 []
               end
@@ -51,9 +51,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hash.nil?
     target = ems if target.nil?
 
-    ems.container_quotas(true)
+    ems.container_quotas.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_quotas.dup
+                :use_association
               else
                 []
               end
@@ -68,9 +68,9 @@ module EmsRefresh::SaveInventoryContainer
 
   def save_container_quota_items_inventory(container_quota, hashes, target = nil)
     return if hashes.nil?
-    container_quota.container_quota_items(true)
+    container_quota.container_quota_items.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_quota.container_quota_items.dup
+                :use_association
               else
                 []
               end
@@ -82,9 +82,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hash.nil?
     target = ems if target.nil?
 
-    ems.container_limits(true)
+    ems.container_limits.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_limits.dup
+                :use_association
               else
                 []
               end
@@ -98,9 +98,9 @@ module EmsRefresh::SaveInventoryContainer
 
   def save_container_limit_items_inventory(container_limit, hashes, target = nil)
     return if hashes.nil?
-    container_limit.container_limit_items(true)
+    container_limit.container_limit_items.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_limit.container_limit_items.dup
+                :use_association
               else
                 []
               end
@@ -112,9 +112,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_routes(true)
+    ems.container_routes.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_routes.dup
+                :use_association
               else
                 []
               end
@@ -133,9 +133,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_nodes(true)
+    ems.container_nodes.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_nodes.dup
+                :use_association
               else
                 []
               end
@@ -153,9 +153,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_replicators(true)
+    ems.container_replicators.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_replicators.dup
+                :use_association
               else
                 []
               end
@@ -173,9 +173,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_services(true)
+    ems.container_services.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_services.dup
+                :use_association
               else
                 []
               end
@@ -197,9 +197,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_groups(true)
+    ems.container_groups.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_groups.dup
+                :use_association
               else
                 []
               end
@@ -221,9 +221,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_definitions_inventory(container_group, hashes, target = nil)
     return if hashes.nil?
 
-    container_group.container_definitions(true)
+    container_group.container_definitions.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_group.container_definitions.dup
+                :use_association
               else
                 []
               end
@@ -236,9 +236,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_port_configs_inventory(container_definition, hashes, target = nil)
     return if hashes.nil?
 
-    container_definition.container_port_configs(true)
+    container_definition.container_port_configs.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_definition.container_port_configs.dup
+                :use_association
               else
                 []
               end
@@ -250,9 +250,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_service_port_configs_inventory(container_service, hashes, target = nil)
     return if hashes.nil?
 
-    container_service.container_service_port_configs(true)
+    container_service.container_service_port_configs.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_service.container_service_port_configs.dup
+                :use_association
               else
                 []
               end
@@ -263,9 +263,9 @@ module EmsRefresh::SaveInventoryContainer
 
   def save_container_env_vars_inventory(container_definition, hashes, target = nil)
     return if hashes.nil?
-    container_definition.container_env_vars(true)
+    container_definition.container_env_vars.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_definition.container_env_vars.dup
+                :use_association
               else
                 []
               end
@@ -276,9 +276,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_images_inventory(ems, hashes, target = nil)
     return if hashes.nil?
 
-    ems.container_images(true)
+    ems.container_images.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_images.dup
+                :use_association
               else
                 []
               end
@@ -297,9 +297,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_image_registries(true)
+    ems.container_image_registries.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_image_registries.dup
+                :use_association
               else
                 []
               end
@@ -311,9 +311,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_component_statuses_inventory(ems, hashes, target = nil)
     return if hashes.nil?
 
-    ems.container_component_statuses(true)
+    ems.container_component_statuses.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_component_statuses.dup
+                :use_association
               else
                 []
               end
@@ -333,9 +333,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_conditions_inventory(container_entity, hashes, target = nil)
     return if hashes.nil?
 
-    container_entity.container_conditions(true)
+    container_entity.container_conditions.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_entity.container_conditions.dup
+                :use_association
               else
                 []
               end
@@ -351,9 +351,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_container_volumes_inventory(container_group, hashes, target = nil)
     return if hashes.nil?
 
-    container_group.container_volumes(true)
+    container_group.container_volumes.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                container_group.container_volumes.dup
+                :use_association
               else
                 []
               end
@@ -365,9 +365,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_labels_inventory(entity, hashes, target = nil)
     return if hashes.nil?
 
-    entity.labels(true)
+    entity.labels.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                entity.labels.dup
+                :use_association
               else
                 []
               end
@@ -379,9 +379,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_selector_parts_inventory(entity, hashes, target = nil)
     return if hashes.nil?
 
-    entity.selector_parts(true)
+    entity.selector_parts.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                entity.selector_parts.dup
+                :use_association
               else
                 []
               end
@@ -393,9 +393,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_node_selector_parts_inventory(entity, hashes, target = nil)
     return if hashes.nil?
 
-    entity.node_selector_parts(true)
+    entity.node_selector_parts.reset
     deletes = if target.kind_of?(ExtManagementSystem)
-                entity.node_selector_parts.dup
+                :use_association
               else
                 []
               end
@@ -408,8 +408,8 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_builds(true)
-    deletes = target.kind_of?(ExtManagementSystem) ? ems.container_builds.dup : []
+    ems.container_builds.reset
+    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
 
     hashes.each do |h|
       h[:container_project_id] = h.fetch_path(:project, :id)
@@ -423,8 +423,8 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_build_pods(true)
-    deletes = target.kind_of?(ExtManagementSystem) ? ems.container_build_pods.dup : []
+    ems.container_build_pods.reset
+    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
 
     hashes.each do |h|
       h[:container_build_id] = h.fetch_path(:build_config, :id)

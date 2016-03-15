@@ -1510,6 +1510,12 @@ function add_expanding_icon(element){
     element.find('.pull-right').append( "<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>" );
 }
 
+function chartData(type, data, data2) {
+  var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
+  return _.defaultsDeep({}, config, data, data2);
+}
+
+
 $( document ).ready(function() {
     check_for_ellipsis();
 });

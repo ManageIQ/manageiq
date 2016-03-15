@@ -11,7 +11,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'vm'" do
-      let(:vm) { double("Vm", :name => "vmtest") }
+      let(:vm) { FactoryGirl.create(:vm_vmware, :name => "vmtest") }
       let(:filter_type) { "vm" }
 
       before do
@@ -26,7 +26,7 @@ describe OpsController do
     end
 
     context "when the filter_type is 'ems'" do
-      let(:ext_management_system) { double("ExtManagementSystem", :name => "emstest") }
+      let(:ext_management_system) { FactoryGirl.create(:ext_management_system, :name => "emstest") }
       let(:filter_type) { "ems" }
 
       before do
@@ -42,16 +42,15 @@ describe OpsController do
 
     context "when the filter_type is 'cluster'" do
       let(:cluster) do
-        double(
-          "EmsCluster",
-          :name                => "clustertest",
-          :v_parent_datacenter => "datacenter",
-          :v_qualified_desc    => "desc"
+        FactoryGirl.create(
+          :ems_cluster,
+          :name                => "clustertest"
         )
       end
       let(:filter_type) { "cluster" }
 
       before do
+        cluster.parent = FactoryGirl.create(:ems_folder, :name => "datacenter", :is_datacenter => true)
         bypass_rescue
         allow(EmsCluster).to receive(:find).with(:all, {}).and_return([cluster])
         post :schedule_form_filter_type_field_changed, :params => params, :session => session
@@ -59,12 +58,12 @@ describe OpsController do
 
       it "responds with a filtered cluster list" do
         json = JSON.parse(response.body)
-        expect(json["filtered_item_list"]).to eq([%w(clustertest__datacenter desc)])
+        expect(json["filtered_item_list"]).to eq([['clustertest__datacenter', 'clustertest in datacenter']])
       end
     end
 
     context "when the filter_type is 'host'" do
-      let(:host) { double("Host", :name => "hosttest") }
+      let(:host) { FactoryGirl.create(:host, :name => "hosttest") }
       let(:filter_type) { "host" }
 
       before do

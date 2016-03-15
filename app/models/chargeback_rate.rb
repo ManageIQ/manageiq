@@ -158,7 +158,7 @@ class ChargebackRate < ApplicationRecord
   def ensure_unassigned
     if assigned?
       errors.add(:rate, "rate is assigned and cannot be deleted")
-      return false
+      throw :abort
     end
   end
 end

@@ -41,11 +41,7 @@ class CustomButton < ApplicationRecord
   def expanded_serializable_hash
     button_hash = serializable_hash
     if resource_action
-      resource_action_hash = resource_action.serializable_hash
-      if resource_action.dialog
-        resource_action_hash.merge!(:dialog => DialogSerializer.new.serialize([resource_action.dialog]).first)
-      end
-      button_hash.merge!(:resource_action => resource_action_hash)
+      button_hash[:resource_action] = resource_action.serializable_hash
     end
     button_hash
   end

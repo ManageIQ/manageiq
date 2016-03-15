@@ -18,8 +18,8 @@ describe AddUpdateRepoNameToMiqDatabase do
       migrate
 
       # Expect counts
-      expect(Reserve.count).to      be(0)
-      expect(MiqDatabase.count).to  be(1)
+      expect(reserve_stub.count).to be(0)
+      expect(db_stub.count).to      be(1)
 
       # Expect data
       expect(db.reload.update_repo_name).to eq("abc")
@@ -33,13 +33,13 @@ describe AddUpdateRepoNameToMiqDatabase do
       migrate
 
       # Expect counts
-      expect(Reserve.count).to      be(1)
-      expect(MiqDatabase.count).to  be(1)
+      expect(reserve_stub.count).to be(1)
+      expect(db_stub.count).to      be(1)
 
       # Expect data
-      expect(Reserve.first.resource_id).to    eq(db.id)
-      expect(Reserve.first.resource_type).to  eq("MiqDatabase")
-      expect(Reserve.first.reserved).to       eq(:update_repo_name => "abc")
+      expect(reserve_stub.first.resource_id).to    eq(db.id)
+      expect(reserve_stub.first.resource_type).to  eq("MiqDatabase")
+      expect(reserve_stub.first.reserved).to       eq(:update_repo_name => "abc")
     end
   end
 end

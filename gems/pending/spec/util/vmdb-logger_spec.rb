@@ -1,6 +1,35 @@
 require 'util/vmdb-logger'
 
 describe VMDBLogger do
+  describe "#log_hashes" do
+    let(:buffer) { StringIO.new }
+    let(:logger) { described_class.new(buffer) }
+
+    it "filters out passwords when keys are symbols" do
+      hash = {:a => {:b => 1, :password => "pa$$w0rd"}}
+      logger.log_hashes(hash)
+
+      buffer.rewind
+      expect(buffer.read).to_not include("pa$$w0rd")
+    end
+
+    it "filters out passwords when keys are strings" do
+      hash = {"a" => {"b" => 1, "password" => "pa$$w0rd"}}
+      logger.log_hashes(hash)
+
+      buffer.rewind
+      expect(buffer.read).to_not include("pa$$w0rd")
+    end
+
+    it "with :filter option, filters out given keys and passwords" do
+      hash = {:a => {:b => 1, :extra_key => "pa$$w0rd", :password => "pa$$w0rd"}}
+      logger.log_hashes(hash, :filter => :extra_key)
+
+      buffer.rewind
+      expect(buffer.read).to_not include("pa$$w0rd")
+    end
+  end
+
   it ".contents with no log returns empty string" do
     allow(File).to receive_messages(:file? => false)
     expect(VMDBLogger.contents("mylog.log")).to eq("")

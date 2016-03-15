@@ -70,7 +70,7 @@ describe ApiController do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = @result["results"].first["id"]
+      group_id = response_hash["results"].first["id"]
       expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
@@ -82,7 +82,7 @@ describe ApiController do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = @result["results"].first["id"]
+      group_id = response_hash["results"].first["id"]
       expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
@@ -97,7 +97,7 @@ describe ApiController do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      result = @result["results"].first
+      result = response_hash["results"].first
       group_id = result["id"]
       expect(MiqGroup.exists?(group_id)).to be_truthy
 
@@ -121,11 +121,11 @@ describe ApiController do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      result = @result["results"].first
-      group_id = result["id"]
+      res = response_hash["results"].first
+      group_id = res["id"]
       expect(MiqGroup.exists?(group_id)).to be_truthy
 
-      expect_result_to_match_hash(result, sample_group)
+      expect_result_to_match_hash(res, sample_group)
     end
 
     it "supports multiple group creation" do
@@ -136,7 +136,7 @@ describe ApiController do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      results = @result["results"]
+      results = response_hash["results"]
       group1_id = results.first["id"]
       group2_id = results.second["id"]
       expect(MiqGroup.exists?(group1_id)).to be_truthy

@@ -30,7 +30,7 @@ module Metric::Capture
   def self.perf_capture_timer(zone = nil)
     _log.info "Queueing performance capture..."
 
-    zone ||= MiqServer.my_server.zone(true)
+    zone ||= MiqServer.my_server.zone
     perf_capture_health_check(zone)
     targets = Metric::Targets.capture_targets(zone)
 

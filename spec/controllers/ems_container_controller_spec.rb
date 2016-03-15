@@ -1,6 +1,5 @@
 describe EmsContainerController do
   before(:each) do
-    session[:settings] = {:views => {}}
     set_user_privileges
   end
 

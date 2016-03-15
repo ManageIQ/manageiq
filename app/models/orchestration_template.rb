@@ -78,7 +78,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   # Find all in use and read-only templates
   def self.in_use
-    joins(:stacks).uniq
+    joins(:stacks).distinct
   end
 
   # Find all not in use thus editable templates
@@ -172,6 +172,6 @@ class OrchestrationTemplate < ApplicationRecord
   def check_not_in_use
     return true unless in_use?
     errors[:base] << "Cannot delete the template while it is used by some orchestration stacks"
-    false
+    throw :abort
   end
 end

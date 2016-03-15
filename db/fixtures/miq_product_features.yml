@@ -3595,6 +3595,52 @@
       :feature_type: control
       :identifier: persistent_volume_tag
 
+# ContainerBuild
+- :name: Builds
+  :description: Everything under Container Build
+  :feature_type: node
+  :identifier: container_build
+  :children:
+  - :name: View
+    :description: View Container Build
+    :feature_type: node
+    :identifier: container_build_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Build
+      :feature_type: view
+      :identifier: container_build_show_list
+    - :name: Show
+      :description: Display Individual Container Build
+      :feature_type: view
+      :identifier: container_build_show
+  - :name: Modify
+    :description: Modify Container Build
+    :feature_type: admin
+    :identifier: container_build_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Build from the VMDB
+      :feature_type: admin
+      :identifier: container_build_delete
+    - :name: Edit
+      :description: Edit a Container Build
+      :feature_type: admin
+      :identifier: container_build_edit
+    - :name: Add
+      :description: Add a Container Build
+      :feature_type: admin
+      :identifier: container_build_new
+  - :name: Operate
+    :description: Perform Operations on Container Build
+    :feature_type: control
+    :identifier: container_build_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Build
+      :feature_type: control
+      :identifier: container_build_tag
+
 # ContainerService
 - :name: Services
   :description: Everything under Container Services

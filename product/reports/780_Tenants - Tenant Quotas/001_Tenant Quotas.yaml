@@ -6,6 +6,11 @@ rpt_group: Custom
 priority: 231
 rpt_type: Custom
 db: Tenant
+conditions: !ruby/object:MiqExpression
+  exp:
+    ">":
+      count: tenants.tenant_quotas
+      value: 0
 include:
   tenant_quotas:
     columns:

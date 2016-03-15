@@ -43,7 +43,7 @@ describe('containerTopologyController', function() {
         d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3"}};
         expect($controller.getIcon(d)).toEqual("\uF1B3");
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4"}};
-        expect($controller.getIcon(d)).toEqual("\uE600");
+        expect($controller.getIcon(d)).toEqual("\uE90f");
         expect($controller.getIcon(replicator)).toEqual("\uE624");
       });
     });

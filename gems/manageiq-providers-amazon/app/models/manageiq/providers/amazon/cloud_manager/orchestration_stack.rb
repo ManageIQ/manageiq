@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ::OrchestrationStack
+class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ManageIQ::Providers::CloudManager::OrchestrationStack
   require_nested :Status
 
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})

@@ -174,13 +174,9 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   end
 
   def child_process_heartbeat_settings
-    @default_settings ||= VMDB::Config.new("vmdb").retrieve_config(:tmpl)
-                          .fetch_path(:workers, :worker_base, :replication_worker, :replication)
-    worker_settings ||= @default_settings
     {
       :file      => MiqRubyrep.heartbeat_file,
-      :threshold => worker_settings.fetch_path(:options, :heartbeat_threshold).to_i ||
-        @default_settings.fetch_path(:options, :heartbeat_threshold).to_i
+      :threshold => (worker_settings.fetch_path(:replication, :options, :heartbeat_threshold) || 300).to_i_with_method
     }
   end
 

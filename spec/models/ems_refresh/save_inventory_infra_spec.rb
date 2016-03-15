@@ -110,4 +110,26 @@ describe EmsRefresh::SaveInventoryInfra do
       expect(refresher.look_up_host(host_duplicate_hostname.hostname, host_duplicate_hostname.ipaddress, :ems_ref => host_duplicate_hostname.ems_ref, :ems_id => 0)).to be_nil
     end
   end
+
+  context ".save_hosts_inventory" do
+    before(:each) do
+      @zone   = FactoryGirl.create(:zone)
+      @ems    = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    end
+
+    it "should handle >10 hosts with duplicate hostnames" do
+      data = Array.new(11) do |i|
+        {
+          :name     => 'localhost',
+          :hostname => 'localhost',
+          :ems_ref  => "host-#{i}"
+        }
+      end
+
+      EmsRefresh.save_hosts_inventory(@ems, data)
+
+      hosts = Host.all
+      expect(hosts.length).to eq(data.length)
+    end
+  end
 end

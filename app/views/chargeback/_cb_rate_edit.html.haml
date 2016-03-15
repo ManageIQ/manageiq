@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate_compute].id || "new"}")
-#flash_msg_div
-=======
-- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
 - currency = ChargebackRateDetailCurrency.currencies_for_select
->>>>>>> master
+#flash_msg_div
 #form_div
   %h3
     = _('Basic Info')
@@ -68,6 +64,7 @@
           %th= _('Rate')
           %th= _('Per Time')
           %th= _('Per Unit')
+          %th= _('Currency')
           %th= ''
       %tbody
         - @sb[:rate_details].select { |k| k.rate != "0" }.each_with_index do |r, i|
@@ -107,6 +104,9 @@
                 /if the rate detail have a metric associated, display an options field with per_unit selected
                 %td
                   = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
+            /Show the code of the currency selected by the user
+            %td{:id => "column_currency_#{i}"}
+              = r[:currency]
             %td
               = button_tag("<span class=\"pficon-delete\"></span>".html_safe,
                             :class   => "btn btn-default btn-xs",

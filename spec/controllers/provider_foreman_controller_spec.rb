@@ -54,7 +54,6 @@ describe ProviderForemanController do
 
   it "renders explorer" do
     set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
-    set_view_10_per_page
 
     get :explorer
     accords = controller.instance_variable_get(:@accords)
@@ -68,7 +67,6 @@ describe ProviderForemanController do
   context "renders explorer based on RBAC" do
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
       set_user_privileges user_with_feature %w(configured_system_tag)
-      set_view_10_per_page
 
       get :explorer
       accords = controller.instance_variable_get(:@accords)
@@ -80,7 +78,6 @@ describe ProviderForemanController do
 
     it "renders explorer based on RBAC access to feature 'provider_foreman_add_provider'" do
       set_user_privileges user_with_feature %w(provider_foreman_add_provider)
-      set_view_10_per_page
 
       get :explorer
       accords = controller.instance_variable_get(:@accords)
@@ -114,7 +111,6 @@ describe ProviderForemanController do
   end
 
   it "renders a new page" do
-    set_view_10_per_page
     post :new, :format => :js
     expect(response.status).to eq(200)
   end
@@ -163,13 +159,13 @@ describe ProviderForemanController do
     end
 
     it "renders the refresh flash message for Ansible Tower" do
-      post :refresh, :miq_grid_checks => @config_ans.id
+      post :refresh, :params => {:miq_grid_checks => @config_ans.id}
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Ansible Tower)")
     end
 
     it "renders the refresh flash message for Foreman" do
-      post :refresh, :miq_grid_checks => @config_mgr.id
+      post :refresh, :params => {:miq_grid_checks => @config_mgr.id}
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Foreman)")
     end
@@ -188,7 +184,6 @@ describe ProviderForemanController do
       allow(controller).to receive(:update_partials)
       allow(controller).to receive(:render)
 
-      controller.instance_variable_set(:@settings, :per_page => {:list => 20})
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
@@ -240,7 +235,6 @@ describe ProviderForemanController do
       allow(controller).to receive(:update_partials)
       allow(controller).to receive(:render)
 
-      controller.instance_variable_set(:@settings, :perpage => {:list => 20})
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:gtl_type).and_return("list")
       allow(controller).to receive(:current_page).and_return(1)
@@ -341,7 +335,6 @@ describe ProviderForemanController do
   end
 
   it "renders tagging editor" do
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
     session[:tag_items] = [@configured_system.id]
     session[:assigned_filters] = []
     parent = FactoryGirl.create(:classification, :name => "test_category")
@@ -404,7 +397,6 @@ describe ProviderForemanController do
       allow(controller).to receive(:render)
 
       controller.instance_variable_set(:@settings,
-                                       :per_page => {:list => 20},
                                        :views    => {:cm_providers          => "grid",
                                                      :cm_configured_systems => "tile"})
       controller.send(:build_accordions_and_trees)
@@ -477,12 +469,6 @@ describe ProviderForemanController do
   def user_with_feature(features)
     features = EvmSpecHelper.specific_product_features(*features)
     FactoryGirl.create(:user, :features => features)
-  end
-
-  def set_view_10_per_page
-    session[:settings] = {:default_search => '',
-                          :views          => {},
-                          :perpage        => {:list => 10}}
   end
 
   def find_treenode_for_foreman_provider(provider)

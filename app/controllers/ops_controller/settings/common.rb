@@ -10,7 +10,7 @@ module OpsController::Settings::Common
   def settings_form_field_changed
     tab = params[:id] ? "settings_#{params[:id]}" : nil # workaround to prevent an error that happens when IE sends a transaction when tab is changed when there is text_area in the form, checking for tab id
     if tab && tab != @sb[:active_tab] && params[:id] != 'new'
-      render :nothing => true
+      head :ok
       return
     end
 
@@ -1116,7 +1116,6 @@ module OpsController::Settings::Common
       @zones = Zone.in_my_region
       @ldap_regions = LdapRegion.in_my_region
       @miq_schedules = MiqSchedule.where("(prod_default != 'system' or prod_default is null) and adhoc IS NULL")
-                       .select { |s| s.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported? }
                        .sort_by { |s| s.name.downcase }
     end
   end
@@ -1131,7 +1130,7 @@ module OpsController::Settings::Common
     {
       :key      => "#{server.id}__#{node_type}",
       :icon     => ActionController::Base.helpers.image_path("100/#{node_type}.png"),
-      :title    => Dictionary.gettext(node_type.camelcase, :type => :model, :notfound => :titleize).pluralize,
+      :title    => Dictionary.gettext(node_type.camelcase, :type => :model, :notfound => :titleize, :plural => true),
       :children => zone.send(node_type.pluralize).sort_by(&:name).collect do |node|
         {
           :key    => "#{server.id}__#{node_type}_#{node.id}",

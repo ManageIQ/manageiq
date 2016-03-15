@@ -80,7 +80,7 @@ describe CloudTenantController do
     end
 
     subject do
-      get :show, :id => @tenant.id
+      get :show, :params => {:id => @tenant.id}
     end
 
     context "render listnav partial" do
