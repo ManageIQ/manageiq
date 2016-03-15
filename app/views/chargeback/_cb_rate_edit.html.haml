@@ -114,7 +114,6 @@
                             :type    => "submit",
                             :onclick => "miqAjaxButton('#{url_for(:action => "cb_remove_rd", :button => "remove_single", :index => "#{i}")}');")
             :javascript
-              // check or un uncheck the rate detail checkbox
               $(document).ready(function () {
                   $("[id^=select]").prop('checked', false);
                   $(".btm-remove_rd").attr("disabled","disabled");

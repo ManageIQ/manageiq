@@ -192,11 +192,11 @@ class ChargebackController < ApplicationController
         rate_storage = ChargebackRate.find(obj[0].to_i + 1)
 
         @sb[:rate_compute] = ChargebackRate.new
-        @sb[:rate].description = _("Copy of %{description}") % {:description => rate_compute.description}
+        @sb[:rate_compute].description = _("Copy of %{description}") % {:description => rate_compute.description}
         @sb[:rate_compute].rate_type = rate_compute.rate_type
 
         @sb[:rate_storage] = ChargebackRate.new
-        @sb[:rate_storage].description = "Copy of " + rate_storage.description
+        @sb[:rate_storage].description = _("Copy of %{description}") % {:description => rate_storage.description}
         @sb[:rate_storage].rate_type = rate_storage.rate_type
 
         # uniting the two rates details into one variable
@@ -214,7 +214,8 @@ class ChargebackController < ApplicationController
           detail.metric = r[:metric]
           detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
           detail.chargeback_rate_detail_currency_id = r[:chargeback_rate_detail_currency_id]
-          @sb[:rate_details][:currency] = r.detail_currency.code
+          # I have problems with this line
+          # @sb[:rate_details][:currency] = r.detail_currency.code
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else
@@ -275,6 +276,7 @@ class ChargebackController < ApplicationController
       end
       replace_right_cell
     end
+    byebug
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
@@ -342,6 +344,7 @@ class ChargebackController < ApplicationController
           page << javascript_disable_field("btm-remove_rd")
         end
         page << javascript_unchecked("select_all")
+        page << javascript_checked_by_class("select[value=#{params[:index].to_i}]")
       end
     end
   end
@@ -451,7 +454,6 @@ class ChargebackController < ApplicationController
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
-<<<<<<< HEAD
       process_cb_rates(rates_compute, "destroy") unless rates_compute.empty?
       # delete the storage rate (id_compute_rate + 1)
       rates_storage = rates_compute.map { |v|; v.to_i + 1 }
@@ -970,7 +972,6 @@ class ChargebackController < ApplicationController
     )
     r = proc { |opts| render_to_string(opts) }
     replace_trees_by_presenter(presenter, :cb_rates => cb_rates_build_tree) if replace_trees.include?(:cb_rates)
-
     # FIXME
     #  if params[:action].ends_with?("_delete")
     #    page << "miqDynatreeActivateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"

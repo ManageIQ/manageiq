@@ -155,8 +155,13 @@
   $('.container-fluid').scrollTop(0);
 
 - if @record
-  :javascript
-    ManageIQ.record.recordId = '#{@record.id}';
+  - if @record.is_a?(Array)
+    // only for chargeback rate. @record store a array with compute and storage rates
+    :javascript
+      ManageIQ.record.recordId = '#{@record[0].id}';
+  - else
+    :javascript
+      ManageIQ.record.recordId = '#{@record.id}';
 - else
   :javascript
     ManageIQ.record.recordId = null;
