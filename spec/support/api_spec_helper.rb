@@ -74,7 +74,7 @@ module ApiSpecHelper
 
   def define_user
     @role  = FactoryGirl.create(:miq_user_role, :name => api_config(:role_name))
-    @group = FactoryGirl.create(:miq_group, :description => api_config(:group_name), :miq_user_role_id => @role.id)
+    @group = FactoryGirl.create(:miq_group, :description => api_config(:group_name), :miq_user_role => @role)
     @user  = FactoryGirl.create(:user,
                                 :name             => api_config(:user_name),
                                 :userid           => api_config(:user),
