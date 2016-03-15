@@ -58,6 +58,7 @@ require 'appliance_console/database_configuration'
 require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
 require 'appliance_console/external_httpd_authentication'
+require 'appliance_console/external_auth_options'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/key_configuration'
 require 'appliance_console/scap'
@@ -272,6 +273,18 @@ Static Network Configuration
           press_any_key
           raise MiqSignalError
         end
+
+      when I18n.t("advanced_settings.extauth_opts")
+        say("#{selection}\n\n")
+
+        extauth_options = ExternalAuthOptions.new
+        if extauth_options.ask_questions && extauth_options.any_updates?
+          extauth_options.update_configuration
+          say("\nExternal Authentication Options updated successfully.\n")
+        else
+          say("\nExternal Authentication Options not updated.\n")
+        end
+        press_any_key
 
       when I18n.t("advanced_settings.ca")
         say("#{selection}\n\n")

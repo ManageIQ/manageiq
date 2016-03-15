@@ -6,6 +6,7 @@ require 'appliance_console/database_configuration'
 require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
 require 'appliance_console/external_httpd_authentication'
+require 'appliance_console/external_auth_options'
 require 'appliance_console/service_group'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/key_configuration'
@@ -70,6 +71,10 @@ module ApplianceConsole
       options[:tmpdisk]
     end
 
+    def extauth_opts?
+      options[:extauth_opts]
+    end
+
     def initialize(options = {})
       self.options = options
     end
@@ -117,13 +122,15 @@ module ApplianceConsole
         opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
         opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
         opt :http_cert,            "install certs for http server",     :type => :boolean
+        opt :extauth_opts,         "External Authentication Options",   :type => :string
       end
       Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && local_database?
       self
     end
 
     def run
-      Trollop.educate unless set_host? || key? || database? || tmp_disk? || uninstall_ipa? || install_ipa? || certs?
+      Trollop.educate unless set_host? || key? || database? || tmp_disk? ||
+                             uninstall_ipa? || install_ipa? || certs? || extauth_opts?
       if set_host?
         ip = LinuxAdmin::NetworkInterface.new("eth0").address
         system_hosts = LinuxAdmin::Hosts.new
@@ -138,6 +145,7 @@ module ApplianceConsole
       uninstall_ipa if uninstall_ipa?
       install_ipa if install_ipa?
       install_certs if certs?
+      extauth_opts if extauth_opts?
     rescue AwesomeSpawn::CommandResultError => e
       say e.result.output
       say e.result.error
@@ -263,6 +271,13 @@ module ApplianceConsole
           say "no disks with a free partition"
         end
       end
+    end
+
+    def extauth_opts
+      extauthopts = ExternalAuthOptions.new
+      extauthopts_hash = extauthopts.parse(options[:extauth_opts])
+      raise "Must specify at least one external authentication option to set" unless extauthopts_hash.present?
+      extauthopts.update_configuration(extauthopts_hash)
     end
 
     def self.parse(args)

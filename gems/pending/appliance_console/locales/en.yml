@@ -13,6 +13,7 @@ en:
     - dbrestore
     - db_config
     - httpdauth
+    - extauth_opts
     - key_gen
     - evmstop
     - evmstart
@@ -29,6 +30,7 @@ en:
     dbrestore: Restore Database From Backup
     db_config: Configure Database
     httpdauth: Configure External Authentication (httpd)
+    extauth_opts: Update External Authentication Options
     evmstop: Stop EVM Server Processes
     key_gen: Generate Custom Encryption Key
     evmstart: Start EVM Server Processes
