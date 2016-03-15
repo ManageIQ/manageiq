@@ -274,3 +274,9 @@
     />\n</unattend>"
   :type: CustomizationTemplateSysprep
   :system: true
+
+- :name: Basic root pass template
+  :description: This template takes use of rootpassword defined in the UI
+  :script: "#cloud-config\nchpasswd:\n  list: |\n    root:<%= MiqPassword.decrypt(evm[:root_password]) %>\n  expire: False"
+  :type: CustomizationTemplateCloudInit
+  :system: true
