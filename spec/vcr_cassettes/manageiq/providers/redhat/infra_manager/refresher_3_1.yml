@@ -268,6 +268,10 @@ http_interactions:
         id=\"5fdbd265-0ead-4038-ba68-39ef4deafcd6\">\n        <name>iSCSI</name>\n
         \       <data_center href=\"/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db\"
         id=\"45b5a710-eccd-11e1-bc2c-005056a217db\"/>\n        <stp>false</stp>\n
+        \       <mtu>0</mtu>\n        <usages/>\n    </network>\n    <network href=\"/api/networks/249d49d3-e0e6-444d-a1f1-f62a1c5d69b0\"
+        id=\"249d49d3-e0e6-444d-a1f1-f62a1c5d69b0\">\n        <name>vmnet</name>\n
+        \       <data_center href=\"/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db\"
+        id=\"45b5a710-eccd-11e1-bc2c-005056a217db\"/>\n        <stp>false</stp>\n
         \       <mtu>0</mtu>\n        <usages/>\n    </network>\n    <network href=\"/api/networks/bf717cad-b3fd-4dea-a7d5-c56778dc70fa\"
         id=\"bf717cad-b3fd-4dea-a7d5-c56778dc70fa\">\n        <name>rhevm</name>\n
         \       <description>Management Network</description>\n        <data_center
@@ -2310,6 +2314,18 @@ http_interactions:
         id=\"5fdbd265-0ead-4038-ba68-39ef4deafcd6\"/>\n        <mac address=\"00:24:e8:69:f0:b6\"/>\n
         \       <ip address=\"\" netmask=\"\"/>\n        <boot_protocol>static</boot_protocol>\n
         \       <speed>1000000000</speed>\n        <status>\n            <state>up</state>\n
+        \       </status>\n        <mtu>1500</mtu>\n        <bridged>false</bridged>\n
+        \       <custom_configuration>false</custom_configuration>\n    </host_nic>\n
+        <host_nic href=\"/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db/nics/f2585809-3563-483a-8b62-e9976c7d1d92\"
+        id=\"f2585809-3563-483a-8b62-e9976c7d1d92\">\n        <actions>\n        <link
+        href=\"/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db/nics/f2585809-3563-483a-8b62-e9976c7d1d92/attach\"
+        rel=\"attach\"/>\n            <link href=\"/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db/nics/f2585809-3563-483a-8b62-e9976c7d1d92/detach\"
+        rel=\"detach\"/>\n        </actions>\n        <name>em3</name>\n        <link
+        href=\"/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db/nics/f2585809-3563-483a-8b62-e9976c7d1d92/statistics\"
+        rel=\"statistics\"/>\n        <host href=\"/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db\"
+        id=\"2f1d11cc-e269-11e2-839c-005056a217db\"/>\n        <network href=\"/api/networks/249d49d3-e0e6-444d-a1f1-f62a1c5d69b0\"
+        id=\"b167e5b4-1c68-429c-8c82-14fe668739af\"/>\n        <mac address=\"00:24:e8:69:f0:cc\"/>\n
+        \       <speed>1000000000</speed>\n        <status>\n            <state>down</state>\n
         \       </status>\n        <mtu>1500</mtu>\n        <bridged>false</bridged>\n
         \       <custom_configuration>false</custom_configuration>\n    </host_nic>\n</host_nics>\n"
     http_version: 
