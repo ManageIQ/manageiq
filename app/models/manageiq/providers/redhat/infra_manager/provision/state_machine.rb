@@ -53,7 +53,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
     update_and_notify_parent(:message => "Waiting for provider PowerOn of #{for_destination}")
     raise MiqException::MiqProvisionError, "VM Failed to start" if phase_context[:power_on_wait_count].to_i > 120
 
-    if destination.with_provider_object(&:status)[:state] == "up"
+    if powered_on_in_provider?
       signal :poll_destination_powered_off_in_provider
     else
       phase_context[:power_on_wait_count] ||= 0
@@ -87,5 +87,9 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
 
   def powered_off_in_provider?
     destination.with_provider_object(&:status)[:state] == "down"
+  end
+
+  def powered_on_in_provider?
+    destination.with_provider_object(&:status)[:state] == "up"
   end
 end
