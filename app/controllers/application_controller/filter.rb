@@ -755,6 +755,7 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_last_loaded] = nil                    # Clear the last search loaded
       @edit[:adv_search_name] = nil                             # Clear search name
       @edit[:adv_search_report] = nil                           # Clear the report name
+      @edit[@expkey][:selected] = nil                           # Clear selected search
     elsif params[:button] == "save"
       @edit[:search_type] = nil
     end
