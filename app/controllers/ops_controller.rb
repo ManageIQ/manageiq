@@ -743,14 +743,16 @@ class OpsController < ApplicationController
 
   def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
-    if nodetype == "log_depot_edit"
-      presenter.hide(:form_buttons_div, :pc_div_1)
-    elsif @pages || @in_a_form
+    if @pages || @in_a_form
       if @pages
         presenter.hide(:form_buttons_div).show(:pc_div_1)
         presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
       elsif @in_a_form
-        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        if nodetype == "log_depot_edit"
+          presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
+        else
+          presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        end
         presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
       presenter.show(:paging_div)
