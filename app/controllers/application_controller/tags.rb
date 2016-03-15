@@ -384,7 +384,7 @@ module ApplicationController::Tags
     assert_privileges(params[:pressed])
     @tagging = session[:tag_db] = db        # Remember the DB
     get_tag_items
-    drop_breadcrumb(:name => "Tag Assignment", :url => "/#{session[:controller]}/tagging_edit")
+    drop_breadcrumb(:name => _("Tag Assignment"), :url => "/#{session[:controller]}/tagging_edit")
     render :update do |page|
       page.redirect_to :action => 'tagging_edit',
                        :id     => params[:id],
