@@ -30,11 +30,13 @@ module Authenticator
       user = User.find_by_userid(username)
       return user unless user.nil?
 
-      raise "Unable to auto-create user because LDAP bind credentials are not configured" unless authorize?
+      raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
 
       create_user_from_ldap(username) do |lobj|
         groups = match_groups(groups_for(lobj))
-        raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if groups.empty?
+        if groups.empty?
+          raise _("Unable to auto-create user because unable to match user's group membership to an EVM role")
+        end
         groups
       end
     end
@@ -49,7 +51,10 @@ module Authenticator
 
     def create_user_from_ldap(username)
       lobj = ldap.get_user_object(username)
-      raise "Unable to auto-create user because LDAP search returned no data for user: [#{username}]" if lobj.nil?
+      if lobj.nil?
+        raise _("Unable to auto-create user because LDAP search returned no data for user: [%{name}]") %
+                {:name => username}
+      end
 
       groups = yield lobj
 
@@ -133,7 +138,11 @@ module Authenticator
       auth[:mode] ||= authentication[:mode]
       auth[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
-      REQUIRED_LDAP_USER_PROXY_KEYS.each { |key| raise "Required key not specified: [#{key}]" unless auth.key?(key) }
+      REQUIRED_LDAP_USER_PROXY_KEYS.each do |key|
+        unless auth.key?(key)
+          raise _("Required key not specified: [%{key}]") % {:key => key}
+        end
+      end
 
       fsp_dn  = "cn=#{sid},CN=ForeignSecurityPrincipals,#{auth[:basedn]}"
 

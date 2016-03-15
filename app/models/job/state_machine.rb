@@ -28,7 +28,7 @@ class Job
         save
         send(signal, *args) if respond_to?(signal)
       else
-        raise "#{signal} is not permitted at state #{state}"
+        raise _("%{signal} is not permitted at state #{state}") % {:signal => signal}
       end
     end
   end
