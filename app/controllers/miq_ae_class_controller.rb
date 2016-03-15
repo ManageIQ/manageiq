@@ -297,7 +297,7 @@ class MiqAeClassController < ApplicationController
     )
     r = proc { |opts| render_to_string(opts) }
 
-    replace_trees_by_presenter(presenter, :ae => build_ae_tree) if replace_trees
+    replace_trees_by_presenter(presenter, :ae => build_ae_tree) unless replace_trees.blank?
 
     if @sb[:action] == "miq_ae_field_seq"
       if @flash_array
@@ -1770,7 +1770,7 @@ class MiqAeClassController < ApplicationController
     @sb[:domain_id] = domains.first.first
     @edit[:current] = copy_hash(@edit[:new])
     model = @edit[:selected_items].count > 1 ? :models : :model
-    @right_cell_text = _("Copy %{model}") % {model => ui_lookup(model => "typ")}
+    @right_cell_text = _("Copy %{model}") % {:model => ui_lookup(model => typ.to_s)}
     session[:edit] = @edit
   end
 
