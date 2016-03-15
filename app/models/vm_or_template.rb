@@ -1426,7 +1426,7 @@ class VmOrTemplate < ApplicationRecord
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
-    when :ems_events
+    when :ems_events, :event_streams
       return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
     when :policy_events
       return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]

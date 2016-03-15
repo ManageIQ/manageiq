@@ -1601,7 +1601,7 @@ class Host < ApplicationRecord
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
-    when :ems_events
+    when :ems_events, :event_streams
       ["host_id = ? OR dest_host_id = ?", id, id]
     when :policy_events
       ["host_id = ?", id]
