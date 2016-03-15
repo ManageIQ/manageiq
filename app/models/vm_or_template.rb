@@ -1157,35 +1157,44 @@ class VmOrTemplate < ApplicationRecord
     ems = ExtManagementSystem.find(ems_id)
 
     # Collect the newly added VMs
-    added_vms = ems.vms_and_templates.where("created_on >= ?", update_start_time)
+    added_vm_ids = ems.vms_and_templates.where("created_on >= ?", update_start_time).pluck(:id).to_set
+    updated_folder_ids = ems.ems_folders.where("updated_on >= ?", update_start_time).pluck(:id).to_set
 
     # Create queue items to do additional process like apply tags and link events
-    unless added_vms.empty?
-      added_vm_ids = []
-      added_vms.each do |v|
-        v.post_create_actions_queue
-        added_vm_ids << v.id
-      end
+    unless added_vm_ids.empty?
+      post_create_actions_queue(added_vm_ids)
 
       assign_ems_created_on_queue(added_vm_ids) if VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :capture_vm_created_on_date)
     end
 
     # Collect the updated folder relationships to determine which vms need updated path information
-    ems_folders = ems.ems_folders
-    MiqPreloader.preload(ems_folders, :all_relationships)
+    tree = ems.descendant_rels_arranged
+    prune_relationships_for_parent_folder_path!(tree, update_start_time, updated_folder_ids)
 
-    updated_folders = ems_folders.select do |f|
-      f.created_on >= update_start_time || f.updated_on >= update_start_time || # Has the folder itself changed (e.g. renamed)?
-      f.relationships.any? do |r|                                                  # Or has its relationship rows changed?
-        r.created_at >= update_start_time || r.updated_at >= update_start_time || #   Has the direct relationship changed (e.g. this folder moved under another folder)?
-        r.children.any? do |child_r|                                             #   Or have any of the child relationship rows changed (e.g. vm moved under this folder)?
-          child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time
-        end
-      end
+    updated_vm_ids = extract_vm_ids(tree) - added_vm_ids
+    classify_with_parent_folder_path_queue(updated_vm_ids)
+  end
+
+  def self.extract_vm_ids(tree, vm_set = Set.new)
+    tree.each do |rel, children|
+      extract_vm_ids(children, vm_set)
+      vm_set.add?(rel.resource_id) if rel.resource_type == "VmOrTemplate".freeze
     end
-    unless updated_folders.empty?
-      updated_vms = updated_folders.collect(&:all_vms_and_templates).flatten.uniq - added_vms
-      updated_vms.each(&:classify_with_parent_folder_path_queue)
+    vm_set
+  end
+
+  def self.prune_relationships_for_parent_folder_path!(tree, update_start_time, updated_folder_ids)
+    tree.select! do |rel, children|
+      if rel.resource_type == "EmsFolder" &&
+        (rel.updated_at >= update_start_time ||        # folder changed
+         updated_folder_ids.include?(rel.resource_id)) # folder rel changed
+          true
+      elsif rel.resource_type == "VmOrTemplate"
+        rel.updated_at >= update_start_time            # vm rel changed
+      else
+        prune_relationships_for_parent_folder_path!(children, update_start_time, updated_folder_ids)
+        children.any?
+      end
     end
   end
 
@@ -1193,7 +1202,7 @@ class VmOrTemplate < ApplicationRecord
     MiqQueue.put(
       :class_name  => name,
       :method_name => 'assign_ems_created_on',
-      :args        => [vm_ids],
+      :args        => Array(vm_ids),
       :priority    => MiqQueue::MIN_PRIORITY
     )
   end
@@ -1228,12 +1237,18 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
+  def self.post_create_actions_queue(ids)
+    Array(ids).each do |id|
+      MiqQueue.put(
+        :class_name  => "VmOrTemplate".freeze,
+        :instance_id => id,
+        :method_name => :post_create_actions
+      )
+    end
+  end
+
   def post_create_actions_queue
-    MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => 'post_create_actions'
-    )
+    self.class.post_create_actions_queue(id)
   end
 
   def post_create_actions
@@ -1375,14 +1390,20 @@ class VmOrTemplate < ApplicationRecord
     !plist.blank?
   end
 
+  def self.classify_with_parent_folder_path_queue(ids, add = true)
+    Array(ids).each do |id|
+      MiqQueue.put(
+        :class_name  => name,
+        :instance_id => id,
+        :method_name => :classify_with_parent_folder_path,
+        :args        => [add],
+        :priority    => MiqQueue::MIN_PRIORITY
+      )
+    end
+  end
+
   def classify_with_parent_folder_path_queue(add = true)
-    MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => 'classify_with_parent_folder_path',
-      :args        => [add],
-      :priority    => MiqQueue::MIN_PRIORITY
-    )
+    self.class.classify_with_parent_folder_path_queue(id, add)
   end
 
   def classify_with_parent_folder_path(add = true)

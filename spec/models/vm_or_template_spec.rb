@@ -1,4 +1,85 @@
 describe VmOrTemplate do
+  context ".post_refresh_ems" do
+    before do
+      #          fa
+      #       fb
+      #    fc
+      # vc
+      #
+      @before_time = Time.now.utc
+
+      _guid, _server, zone = EvmSpecHelper.local_guid_miq_server_zone
+      @ems      = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @vm       = FactoryGirl.create(:vm_vmware,  :ext_management_system => @ems)
+      @folder_a = FactoryGirl.create(:ems_folder, :ext_management_system => @ems)
+      @folder_b = FactoryGirl.create(:ems_folder, :ext_management_system => @ems)
+      @folder_c = FactoryGirl.create(:ems_folder, :ext_management_system => @ems)
+      @ems.add_child(@folder_a)
+      @folder_a.add_child(@folder_b)
+      @folder_b.add_child(@folder_c)
+      @folder_c.add_child(@vm)
+
+      # post_refresh_ems checks if updated_on >= a provided start time, so jump
+      # forward to avoid subsecond rounding issues.
+      Timecop.travel(1.second)
+      @after_time = Time.now.utc
+    end
+
+    after do
+      Timecop.return
+    end
+
+    def assert_queued_method_for_vm(vm_id, method_name)
+      expected_attributes = {:class_name  => "VmOrTemplate"}
+      if vm_id.kind_of?(Array)
+        expected_attributes[:args] = vm_id
+      else
+        expected_attributes[:instance_id] = vm_id
+      end
+
+      messages = MiqQueue.where(:method_name => method_name).to_a
+      expect(messages.length).to eq 1
+      expect(messages.first).to have_attributes(expected_attributes)
+    end
+
+    it "queues post_create_actions for a new vm" do
+      VmOrTemplate.post_refresh_ems(@ems.id, @before_time)
+      assert_queued_method_for_vm(@vm.id, :post_create_actions)
+    end
+
+    it "queues assign_ems_created_on for a new vm if capture_vm_created_on_date is enabled " do
+      VMDB::Config.stub(:new).and_return(double(:config => {:ems_refresh => {:capture_vm_created_on_date => true}}))
+      VmOrTemplate.post_refresh_ems(@ems.id, @before_time)
+      assert_queued_method_for_vm([@vm.id], :assign_ems_created_on)
+    end
+
+    context "queues classify_with_parent_folder_path for a vm" do
+      it "in an updated folder" do
+        @folder_c.touch
+        VmOrTemplate.post_refresh_ems(@ems.id, @after_time)
+        assert_queued_method_for_vm(@vm.id, :classify_with_parent_folder_path)
+      end
+
+      it "in an updated ancestor folder" do
+        @folder_b.touch
+        VmOrTemplate.post_refresh_ems(@ems.id, @after_time)
+        assert_queued_method_for_vm(@vm.id, :classify_with_parent_folder_path)
+      end
+
+      it "in a folder with an updated relationship" do
+        @folder_c.child_rels.first.touch
+        VmOrTemplate.post_refresh_ems(@ems.id, @after_time)
+        assert_queued_method_for_vm(@vm.id, :classify_with_parent_folder_path)
+      end
+
+      it "with an updated relationship" do
+        @vm.all_relationships.first.touch
+        VmOrTemplate.post_refresh_ems(@ems.id, @after_time)
+        assert_queued_method_for_vm(@vm.id, :classify_with_parent_folder_path)
+      end
+    end
+  end
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before(:each) do
