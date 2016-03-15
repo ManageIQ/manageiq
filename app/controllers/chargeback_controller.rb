@@ -276,7 +276,6 @@ class ChargebackController < ApplicationController
       end
       replace_right_cell
     end
-    byebug
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
