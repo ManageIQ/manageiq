@@ -320,13 +320,6 @@ class VmOrTemplate < ApplicationRecord
     save
   end
 
-  # Ask host to update all locally registered vm state data
-  def refresh_state
-    run_command_via_parent("SendVMState")
-  rescue => err
-    _log.log_backtrace(err)
-  end
-
   def run_command_via_parent(verb, options = {})
     raise "VM/Template <#{name}> with Id: <#{id}> is not associated with a provider." unless ext_management_system
     raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless ext_management_system.authentication_status_ok?
