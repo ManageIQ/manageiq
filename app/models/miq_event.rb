@@ -72,7 +72,7 @@ class MiqEvent < EventStream
   end
 
   def self.build_evm_event(event, target)
-    MiqEvent.create(:event_type => event, :target => target, :source => 'POLICY')
+    MiqEvent.create(:event_type => event, :target => target, :source => 'POLICY', :timestamp => Time.now.utc)
   end
 
   def update_with_policy_result(result = {})
