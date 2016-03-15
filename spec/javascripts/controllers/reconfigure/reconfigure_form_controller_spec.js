@@ -99,7 +99,7 @@ describe('reconfigureFormController', function() {
                            socket_count:           $scope.reconfigureModel.socket_count,
                            cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count};
 
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure_update?button=submit', submitContent);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure_update/1000000000003?button=submit', submitContent);
     });
   });
 });

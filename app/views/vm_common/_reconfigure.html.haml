@@ -22,7 +22,7 @@
                             "id"          => "textInput-markup",
                             "name"        => "memory",
                             "ng-model"    => "reconfigureModel.memory",
-                            "ng-chnge"    => "cb_change()",
+                            "ng-change"    => "cbChange()",
                             "maxlength"   => "50",
                             "ng-pattern"  => "/^[-+]?[0-9]+$/",
                             "miqrequired" => "",
@@ -63,7 +63,7 @@
       %h3
         = _('Processor Options')
       - if @socket_options.length > 1
-        .form-group{"ng-class" => "{'has-error': angularForm.total_cpus.$invalid}"}
+        .form-group{"ng-class" => "{'has-error': angularForm.socket_count.$invalid}"}
           %label.col-md-2.control-label
             = _('Sockets')
           .col-md-2
@@ -71,7 +71,7 @@
                         options_for_select([["<#{_('Choose')}>", '']] + @socket_options, disabled: ["<#{_('Choose')}>", nil]),
                         "ng-model"                    => "reconfigureModel.socket_count",
                         "ng-change"                   => "processorValueChanged()",
-                        "required"                    => "",
+                        "miqrequired"                 => "",
                         "maxlength"                   => "100",
                         "checkchange"                 => "",
                         "selectpicker-for-select-tag" => "")
@@ -107,7 +107,7 @@
                                 "miqmax"      => "#{@reconfig_limits[:max__total_vcpus]}",
                                 "auto-focus"  => ""}
             %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
-              = _(" Total memory value larger than the maximum allowed")
+              = _(" Total processors value larger than the maximum allowed")
 
   %hr
   %hr

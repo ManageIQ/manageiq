@@ -396,6 +396,9 @@ module ApplicationController::CiProcessing
         vsockets = params[:socket_count] == 0 ? 1 : params[:socket_count]
         options[:number_of_cpus] = vccores.to_i * vsockets.to_i
       end
+      if(params[:id] && params[:id] != 'new')
+        @request_id = params[:id]
+      end
       if VmReconfigureRequest.make_request(@request_id, options, current_user)
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)

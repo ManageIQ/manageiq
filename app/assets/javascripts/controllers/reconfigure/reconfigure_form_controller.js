@@ -58,39 +58,53 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.isBasicInfoValid = function() {
-      if($scope.angularForm.memory.$valid &&
-        $scope.angularForm.socket_count.$valid &&
-        $scope.angularForm.memory_type.$valid &&
-        $scope.angularForm.cores_per_socket_count.$valid &&
-        $scope.angularForm.total_cpus.$valid)
-        return true;
-      else
+      if(( $scope.angularForm.memory && !$scope.angularForm.memory.$valid) ||
+        ($scope.angularForm.socket_count && !$scope.angularForm.socket_count.$valid) ||
+        ($scope.angularForm.mem_type && !$scope.angularForm.mem_type.$valid) ||
+        ($scope.angularForm.cores_per_socket_count && !$scope.angularForm.cores_per_socket_count.$valid) ||
+        ($scope.angularForm.total_cpus && !$scope.angularForm.total_cpus.$valid))
         return false;
+      else
+        return true;
     };
 
     $scope.cbChange = function() {
       var memUnchanged = false;
       var cpuUnchanged = false;
+      miqService.miqFlashClear();
 
+      if(!$scope.newRecord)
+        return;
       $scope.angularForm.$setValidity("unchanged", true);
-      if($scope.cb_memory && ($scope.reconfigureModel.memory == $scope.modelCopy.memory))
-        memUnchanged = true;
+
+      if($scope.cb_memory) {
+        var memorynow = $scope.reconfigureModel.memory;
+        var memoryprev = $scope.modelCopy.memory;
+        if ($scope.reconfigureModel.memory_type == 'GB')
+          memorynow *= 1024;
+        if($scope.modelCopy.memory_type == 'GB')
+          memoryprev *= 1024;
+        if (memorynow == memoryprev)
+          memUnchanged = true;
+      }
 
       if($scope.cb_cpu && (($scope.reconfigureModel.socket_count == $scope.modelCopy.socket_count)) &&
         ($scope.reconfigureModel.cores_per_socket_count == $scope.modelCopy.cores_per_socket_count))
         cpuUnchanged = true;
 
-      if(($scope.cb_memory && !memUnchanged) || ($scope.cb_cpu && !cpuUnchanged))
-        return;
-
-      if($scope.cb_memory && !$scope.cb_cpu && memUnchanged)
-        $scope.angularForm.$setValidity("unchanged", false);
-
-      if($scope.cb_cpu && !$scope.cb_memory && cpuUnchanged)
-        $scope.angularForm.$setValidity("unchanged", false);
-
       if($scope.cb_memory && $scope.cb_cpu && memUnchanged && cpuUnchanged) {
+        miqService.miqFlash("warn", "Change Memory and Processor value to submit reconfigure request");
         $scope.angularForm.$setValidity("unchanged", false);
+      }
+      else {
+        if($scope.cb_memory && memUnchanged) {
+          miqService.miqFlash("warn", "Change Memory value to submit reconfigure request");
+          $scope.angularForm.$setValidity("unchanged", false);
+        }
+        if($scope.cb_cpu && cpuUnchanged){
+          miqService.miqFlash("warn", "Change Processor Sockets or Cores Per Socket value to submit reconfigure request");
+          $scope.angularForm.$setValidity("unchanged", false);
+        }
       }
     };
 
@@ -106,7 +120,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       if($scope.reconfigureModel.memory_type == "GB" && $scope.mem_type_prev == "MB")
         $scope.reconfigureModel.memory = ~~(parseInt($scope.reconfigureModel.memory, 10) / 1024);
       else if($scope.reconfigureModel.memory_type == "MB" && $scope.mem_type_prev == "GB")
-        $scope.reconfigureModel.memory =  ~~(parseInt($scope.reconfigureModel.memory, 10) * 1024);
+        $scope.reconfigureModel.memory =  parseInt($scope.reconfigureModel.memory, 10) * 1024;
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.angularForm['memory'].$validate();
       $scope.cbChange();
@@ -114,7 +128,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
     var reconfigureEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
-      var url = 'reconfigure_update' + '?button=' + buttonName;
+      var url = 'reconfigure_update/' + reconfigureFormId + '?button=' + buttonName;
       if (serializeFields === undefined) {
         miqService.miqAjaxButton(url);
       } else {
