@@ -14,7 +14,7 @@ describe Metric::Common do
     end
   end
 
-  context "#apply_time_profile_hourly" do
+  context "#apply_time_profile" do
     it "with all days and hours selected it should return true" do
       profile = FactoryGirl.create(:time_profile,
                                    :description => "foo",
@@ -22,7 +22,7 @@ describe Metric::Common do
                                                     :days  => TimeProfile::ALL_DAYS,
                                                     :hours => TimeProfile::ALL_HOURS}
                                   )
-      res = @metric.apply_time_profile_hourly(profile)
+      res = @metric.apply_time_profile(profile)
       expect(res).to be_truthy
     end
 
@@ -33,31 +33,7 @@ describe Metric::Common do
                                                     :days  => [1],
                                                     :hours => [1]}
                                   )
-      res = @metric.apply_time_profile_hourly(profile)
-      expect(res).to be_falsey
-    end
-  end
-
-  context "#apply_time_profile_daily" do
-    it "with all days selected it should return true" do
-      profile = FactoryGirl.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
-                                                    :days  => TimeProfile::ALL_DAYS,
-                                                    :hours => [1]}
-                                  )
-      res = @metric.apply_time_profile_daily(profile)
-      expect(res).to be_truthy
-    end
-
-    it "with specific days selected it should return false" do
-      profile = FactoryGirl.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
-                                                    :days  => [1, 2],
-                                                    :hours => [1]}
-                                  )
-      res = @metric.apply_time_profile_daily(profile)
+      res = @metric.apply_time_profile(profile)
       expect(res).to be_falsey
     end
   end
