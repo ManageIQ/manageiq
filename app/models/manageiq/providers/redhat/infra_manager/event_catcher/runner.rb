@@ -6,11 +6,12 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
 
   def event_monitor_options
     {
-      :server     => @ems.hostname,
-      :port       => @ems.port.blank? ? nil : @ems.port.to_i,
-      :username   => @ems.authentication_userid,
-      :password   => @ems.authentication_password,
-      :verify_ssl => false
+      :server      => @ems.hostname,
+      :port        => @ems.port.blank? ? nil : @ems.port.to_i,
+      :username    => @ems.authentication_userid,
+      :password    => @ems.authentication_password,
+      :api_version => @ems.api_version,
+      :verify_ssl  => false
     }
   end
 

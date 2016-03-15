@@ -607,6 +607,8 @@ module EmsCommon
 
     @edit[:openstack_api_versions] = retrieve_openstack_api_versions
 
+    @edit[:ovirt_api_versions] = retrieve_ovirt_api_versions
+
     @edit[:new][:default_userid] = @ems.authentication_userid
     @edit[:new][:default_password] = @ems.authentication_password
     @edit[:new][:default_verify] = @ems.authentication_password
@@ -653,6 +655,7 @@ module EmsCommon
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_api_versions = retrieve_openstack_api_versions
     @openstack_security_protocols = retrieve_openstack_security_protocols
+    @ovirt_api_versions = retrieve_ovirt_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
@@ -676,6 +679,10 @@ module EmsCommon
     [['SSL without validation', 'ssl'], ['SSL', 'ssl-with-validation'], ['Non-SSL', 'non-ssl']]
   end
 
+  def retrieve_ovirt_api_versions
+    [['v3', 'v3'], ['v4', 'v4']]
+  end
+
   # Get variables from edit form
   def get_form_vars
     @ems = @edit[:ems_id] ? model.find_by_id(@edit[:ems_id]) : model.new
@@ -691,6 +698,8 @@ module EmsCommon
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
         @edit[:new][:api_version] = @ems.api_version ? @ems.api_version : 'v2'
         @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+      elsif ["rhevm"].include?(params[:server_emstype])
+          @edit[:new][:api_version] = @ems.api_version ? @ems.api_version : 'v3'
       elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager::DEFAULT_PORT
       elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type

@@ -37,6 +37,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     true
   end
 
+  def supports_api_version?
+    true
+  end
+
   def supported_auth_types
     %w(default metrics)
   end
@@ -45,16 +49,17 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     supported_auth_types.include?(authtype.to_s)
   end
 
-  def self.raw_connect(server, port, username, password, service = "Service")
+  def self.raw_connect(server, port, username, password, api_version, service = "Service")
     require 'ovirt'
     Ovirt.logger = $rhevm_log
 
     params = {
-      :server     => server,
-      :port       => port.presence && port.to_i,
-      :username   => username,
-      :password   => password,
-      :verify_ssl => false
+      :server        => server,
+      :port          => port.presence && port.to_i,
+      :username      => username,
+      :password      => password,
+      :api_version   => api_version,
+      :verify_ssl    => false
     }
 
     read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
@@ -67,13 +72,14 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    server   = options[:ip] || address
-    port     = options[:port] || self.port
-    username = options[:user] || authentication_userid(options[:auth_type])
-    password = options[:pass] || authentication_password(options[:auth_type])
-    service  = options[:service] || "Service"
+    server      = options[:ip] || address
+    port        = options[:port] || self.port
+    username    = options[:user] || authentication_userid(options[:auth_type])
+    password    = options[:pass] || authentication_password(options[:auth_type])
+    api_version = options[:api_version] || self.api_version
+    service     = options[:service] || "Service"
 
-    self.class.raw_connect(server, port, username, password, service)
+    self.class.raw_connect(server, port, username, password, api_version, service)
   end
 
   def rhevm_service

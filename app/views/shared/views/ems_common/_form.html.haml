@@ -37,13 +37,14 @@
                             :maxlength         => 15,
                             "class"            => "form-control",
                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    - if @edit[:new][:emstype] && %w(openstack openstack_infra).include?(@edit[:new][:emstype])
+    - if @edit[:new][:emstype] && %w(rhevm openstack openstack_infra).include?(@edit[:new][:emstype])
+    - api_versions = %w(openstack openstack_infra).include?(@edit[:new][:emstype]) ? :openstack_api_versions : :ovirt_api_versions
       .form-group
         %label.control-label.col-md-2
           = _('API Version')
         .col-md-8
           = select_tag("api_version",
-                       options_for_select(@edit[:openstack_api_versions], @edit[:new][:api_version]),
+                       options_for_select(@edit[api_versions], @edit[:new][:api_version]),
                        "class" => "selectpicker")
           :javascript
             miqInitSelectPicker();
