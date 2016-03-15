@@ -67,8 +67,9 @@ module Authenticator
         else
           reason = failure_reason(username, request)
           reason = ": #{reason}" unless reason.blank?
-          AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
-          raise MiqException::MiqEVMLoginError, fail_message
+          err_message = "Authentication failed for userid #{username}#{reason}"
+          AuditEvent.failure(audit.merge(:message => err_message))
+          raise MiqException::MiqEVMLoginError, err_message
         end
 
       rescue MiqException::MiqEVMLoginError => err
@@ -82,7 +83,8 @@ module Authenticator
       if options[:require_user] && !user_or_taskid.kind_of?(User)
         task = MiqTask.wait_for_taskid(user_or_taskid, options)
         if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
-          raise MiqException::MiqEVMLoginError, fail_message
+          err_message = task.message.present? ? task.message : fail_message
+          raise MiqException::MiqEVMLoginError, err_message
         end
         user_or_taskid = User.find_by_userid(task.userid)
       end
