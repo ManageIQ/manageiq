@@ -5,6 +5,7 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
       'fa fa-download fa-lg',
       N_('Download'),
       nil,
+      :klass => ApplicationHelper::Button::ChargebackDownloadChoice,
       :items => [
         button(
           :chargeback_download_text,
@@ -23,6 +24,7 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
           'fa fa-file-pdf-o fa-lg',
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
+          :klass => ApplicationHelper::Button::Pdf,
           :url => "/render_pdf"),
       ]
     ),
@@ -31,6 +33,7 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
       'product product-report fa-lg',
       N_('Show full screen report'),
       nil,
+      :klass   => ApplicationHelper::Button::ChargebackReportOnly,
       :url     => "/report_only",
       :popup   => true,
       :confirm => N_("This will show the entire report (all rows) in your browser.  Do you want to proceed?")),
