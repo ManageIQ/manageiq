@@ -49,16 +49,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
     signal :poll_destination_powered_off_in_provider
   end
 
-  def poll_destination_powered_off_in_provider
-    update_and_notify_parent(:message => "Waiting for provider PowerOff of #{for_destination}")
-
-    if powered_off_in_provider?
-      signal :poll_destination_powered_off_in_vmdb
-    else
-      requeue_phase
-    end
-  end
-
   def autostart_destination
     if get_option(:vm_auto_start)
       message = "Starting"
