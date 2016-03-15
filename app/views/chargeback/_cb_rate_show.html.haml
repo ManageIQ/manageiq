@@ -20,6 +20,8 @@
         %th= _('Rate')
         %th= _('Units')
     %tbody
+      /Currency code is the same for all the chargeback_rate_details
+      - code_currency = @sb[:selected_rate_details].first.detail_currency.code
       - @sb[:selected_rate_details].each do |r|
         - @cur_group = r[:group] if @cur_group.nil?
         - if @cur_group != r[:group]
@@ -34,4 +36,4 @@
           %td{:align => 'right'}
             = r[:rate]
           %td{:align => "right"}
-            = r.show_rates
+            = r.show_rates(code_currency)

@@ -147,39 +147,26 @@ describe ChargebackRateDetail do
 
   it "#show_rates" do
     cbm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
-    cbc = ChargebackRateDetailCurrency.create(:code        => "USD",
-                                              :name        => "Dollars",
-                                              :full_name   => "United States Dollars",
-                                              :symbol      => "$",
-                                              :unicode_hex => "36"
-                                             )
+    cbc = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
 
-    cbd = FactoryGirl.create(:chargeback_rate_detail,
-                             :group                              => 'fixed',
-                             :per_time                           => 'daily',
+    cbd = FactoryGirl.create(:chargeback_rate_detail_cpu_allocated,
                              :rate                               => '0.0',
-                             :chargeback_rate_detail_measure_id  => cbm.id,
                              :chargeback_rate_detail_currency_id => cbc.id
                              )
-    expect(cbd.show_rates).to eq("USD")
+    expect(cbd.show_rates(cbc.code)).to eq("EUR")
 
-    cbd = FactoryGirl.create(:chargeback_rate_detail,
-                             :group                              => 'fixed',
-                             :per_time                           => 'daily',
+    cbd = FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
                              :rate                               => '1.47',
                              :chargeback_rate_detail_measure_id  => cbm.id,
                              :chargeback_rate_detail_currency_id => cbc.id
                              )
-    expect(cbd.show_rates).to eq("USD / Day")
+    expect(cbd.show_rates(cbc.code)).to eq("EUR / Day")
 
-    cbd = FactoryGirl.create(:chargeback_rate_detail,
-                             :per_unit                           => 'gigabytes',
-                             :metric                             => 'derived_memory_available',
-                             :per_time                           => 'daily',
+    cbd = FactoryGirl.create(:chargeback_rate_detail_memory_allocated,
                              :rate                               => '1.47',
                              :chargeback_rate_detail_measure_id  => cbm.id,
                              :chargeback_rate_detail_currency_id => cbc.id
                              )
-    expect(cbd.show_rates).to eq("USD / Day / GB")
+    expect(cbd.show_rates(cbc.code)).to eq("EUR / Day / MB")
   end
 end
