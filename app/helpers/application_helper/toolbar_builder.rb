@@ -768,6 +768,20 @@ class ApplicationHelper::ToolbarBuilder
       when "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"
         return true
       end
+    when "MiqTemplate"
+      case id
+      when "miq_template_clone"
+        return true unless @record.is_available?(:clone)
+      when "miq_template_policy_sim", "miq_template_protect"
+        return true if @record.host && @record.host.vmm_product.downcase == "workstation"
+      when "miq_template_refresh"
+        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
+      when "miq_template_scan", "image_scan"
+        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
+        return true unless @record.has_proxy?
+      when "miq_template_refresh", "miq_template_reload"
+        return true unless @perf_options[:typ] == "realtime"
+      end
     when "ScanItemSet"
       case id
       when "scan_delete"
@@ -828,20 +842,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
         return true unless @record.has_proxy?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
-        return true unless @perf_options[:typ] == "realtime"
-      end
-    when "MiqTemplate"
-      case id
-      when "miq_template_clone"
-        return true unless @record.is_available?(:clone)
-      when "miq_template_policy_sim", "miq_template_protect"
-        return true if @record.host && @record.host.vmm_product.downcase == "workstation"
-      when "miq_template_refresh"
-        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "miq_template_scan", "image_scan"
-        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
-        return true unless @record.has_proxy?
-      when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
