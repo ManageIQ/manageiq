@@ -19,6 +19,7 @@ FactoryGirl.define do
     source      "allocated"
     metric      "derived_vm_numvcpus"
     per_unit    "cpu"
+    per_time    "daily"
   end
 
   factory :chargeback_rate_detail_memory_allocated, :parent => :chargeback_rate_detail do
@@ -27,6 +28,7 @@ FactoryGirl.define do
     source      "allocated"
     metric      "derived_memory_available"
     per_unit    "megabytes"
+    per_time    "daily"
   end
 
   factory :chargeback_rate_detail_memory_used, :parent => :chargeback_rate_detail do
@@ -67,5 +69,12 @@ FactoryGirl.define do
     source      "allocated"
     metric      "derived_vm_allocated_disk_storage"
     per_unit    "gigabytes"
+  end
+
+  factory :chargeback_rate_detail_fixed_compute_cost, :parent => :chargeback_rate_detail do
+    description "Fixed Compute Cost 1"
+    group       "fixed"
+    source      "compute_1"
+    per_time    "daily"
   end
 end
