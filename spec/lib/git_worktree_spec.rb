@@ -260,6 +260,10 @@ describe GitWorktree do
       expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
     end
 
+    it "get branch info" do
+      expect(test_repo.branch_info('branch2').keys).to match_array([:time, :message, :commit_sha])
+    end
+
     it "non existent branch" do
       expect { test_repo.branch = 'nada' }.to raise_exception(GitWorktreeException::BranchMissing)
     end
@@ -277,6 +281,10 @@ describe GitWorktree do
       test_repo.tag = 'tag2'
 
       expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+    end
+
+    it "get tag info" do
+      expect(test_repo.tag_info('tag2').keys).to match_array([:time, :message, :commit_sha])
     end
 
     it "non existent tag" do
