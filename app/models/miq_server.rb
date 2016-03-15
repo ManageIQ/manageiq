@@ -257,7 +257,7 @@ class MiqServer < ApplicationRecord
     _log.info "Server Role: #{my_role}"
     region = MiqRegion.my_region
     _log.info "Server Region number: #{region.region}, name: #{region.name}" unless region.nil?
-    _log.info "Database Latency: #{EvmDatabase.ping} ms"
+    _log.info "Database Latency: #{EvmDatabase.ping(connection)} ms"
 
     Vmdb::Appliance.log_config_on_startup
 
