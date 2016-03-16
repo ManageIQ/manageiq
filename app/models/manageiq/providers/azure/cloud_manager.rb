@@ -16,6 +16,8 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
 
+  ExtManagementSystem.register_cloud_discovery_type('azure' => 'azure')
+
   def self.ems_type
     @ems_type ||= "azure".freeze
   end

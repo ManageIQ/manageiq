@@ -726,7 +726,7 @@ module ApplicationController::CiProcessing
         @discover_type = ExtManagementSystem.ems_cloud_discovery_types.invert.collect do |type|
           [discover_type(type[0]), type[1]]
         end
-        @discover_type_selected = @discover_type.first.last
+        @discover_type_selected = @discover_type.first.try!(:last)
       end
     else
       @discover_type = ExtManagementSystem.ems_infra_discovery_types
@@ -769,7 +769,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => "#{title} Discovery", :url => "/host/discover")
       @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
+      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
@@ -813,7 +813,7 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            if params[:discover_type_selected] == ExtManagementSystem::EMS_CLOUD_DISCOVERY_TYPES['azure']
+            if params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
               ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
             else
               ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
