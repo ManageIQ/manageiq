@@ -7,7 +7,13 @@
     - items[:labels].each do |label|
       %td
         %strong
-          = label
+          - if (label.kind_of? Hash) && label[:sortable]
+            .pull-left
+              = label[:value]
+            .pull-rigt
+              %i{:class => label[:sortable] == :asc ? "fa-sort-asc" : "fa-sort-desc"}
+          - else
+            = label
     - items[:values].each do |item|
       %tr
         - item.each do |value|
