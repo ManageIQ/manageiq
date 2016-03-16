@@ -98,12 +98,13 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       result = response_hash["results"].first
-      group_id = result["id"]
-      expect(MiqGroup.exists?(group_id)).to be_truthy
+      created_group = MiqGroup.find_by_id(result["id"])
+
+      expect(created_group).to be_present
+      expect(created_group.entitlement.miq_user_role).to eq(role3)
 
       expect_result_to_match_hash(result,
                                   "description"      => "sample_group3",
-                                  "miq_user_role_id" => role3.id,
                                   "tenant_id"        => tenant3.id)
     end
 
