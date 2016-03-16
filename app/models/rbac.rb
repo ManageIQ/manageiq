@@ -95,8 +95,8 @@ module Rbac
     klass < MetricRollup || klass < Metric
   end
 
-  def self.rbac_class(klass)
-    klass = klass.respond_to?(:klass) ? klass.klass : klass
+  def self.rbac_class(scope)
+    klass = scope.respond_to?(:klass) ? scope.klass : scope
     return klass if apply_rbac_to_class?(klass)
     if apply_rbac_to_associated_class?(klass)
       return klass.name[0..-12].constantize.base_class # e.g. VmPerformance => VmOrTemplate
