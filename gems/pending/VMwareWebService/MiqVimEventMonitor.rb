@@ -2,11 +2,12 @@ require 'enumerator'
 require 'VMwareWebService/MiqVimInventory'
 
 class MiqVimEventMonitor < MiqVimInventory
-  def initialize(server, username, password, eventFilterSpec = nil, pgSize = 100)
+  def initialize(server, username, password, eventFilterSpec = nil, pgSize = 100, maxWait = 60)
     super(server, username, password, :cache_scope_event_monitor)
 
     @eventFilterSpec = eventFilterSpec || VimHash.new("EventFilterSpec")
     @pgSize = pgSize
+    @maxWait = maxWait
     @_monitorEvents = true
     @emPropCol = nil
 
@@ -48,7 +49,9 @@ class MiqVimEventMonitor < MiqVimInventory
         version = nil
         begin
             while @_monitorEvents
-              updateSet = waitForUpdates(@emPropCol, version)
+              updateSet = waitForUpdatesEx(@emPropCol, version, :max_wait => @maxWait)
+              next if updateSet.nil?
+
               version = updateSet.version
 
               next if updateSet.filterSet.nil? || updateSet.filterSet.empty?

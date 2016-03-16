@@ -6,7 +6,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
   include VimPropMaps
   include MiqVimDump
 
-  def initialize(server, username, password, propMap = nil)
+  def initialize(server, username, password, propMap = nil, maxWait = 60)
     super(server, username, password)
 
     @propMap    = propMap || VimCoreUpdaterPropMap
@@ -19,6 +19,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
     @rootFolder = @sic.rootFolder
     @objectSet  = objectSet
     @updateSpec = updateSpec
+    @maxWait    = maxWait
 
     @debugUpdates = false
 
@@ -184,7 +185,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
       version = nil
 
       while @monitor
-        updates_version = doUpdate(version, &block)
+        updates_version = doUpdate(version, @maxWait, &block)
         next if updates_version.nil?
         version = updates_version
         sleep @updateDelay if @updateDelay
@@ -216,12 +217,14 @@ class MiqVimCoreUpdater < MiqVimClientBase
     end
   end # def monitorUpdates
 
-  def doUpdate(version, &block)
+  def doUpdate(version, max_wait, &block)
     log_prefix = "#{self.class.name}.doUpdate"
     begin
       $vim_log.info "#{log_prefix}: call to waitForUpdates...Starting" if $vim_log
-      updateSet = waitForUpdates(@umPropCol, version)
+      updateSet = waitForUpdatesEx(@umPropCol, version, :max_wait => max_wait)
       $vim_log.info "#{log_prefix}: call to waitForUpdates...Complete" if $vim_log
+      return version if updateSet.nil?
+
       version = updateSet.version
 
       return if updateSet.filterSet.nil? || updateSet.filterSet.empty?

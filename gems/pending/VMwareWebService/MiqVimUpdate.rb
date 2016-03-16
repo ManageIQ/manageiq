@@ -28,7 +28,7 @@ module MiqVimUpdate
     retries = @@max_retries
     begin
       $vim_log.info "#{log_prefix}: call to waitForUpdates...Starting" if $vim_log
-      updateSet = waitForUpdates(@umPropCol)
+      updateSet = waitForUpdatesEx(@umPropCol)
       $vim_log.info "#{log_prefix}: call to waitForUpdates...Complete" if $vim_log
       version = updateSet.version
 
@@ -60,8 +60,10 @@ module MiqVimUpdate
     log_prefix = "MiqVimUpdate.monitorUpdatesSince (#{@connId})"
     begin
       $vim_log.info "#{log_prefix}: call to waitForUpdates...Starting (version = #{version})" if $vim_log
-      updateSet = waitForUpdates(@umPropCol, version)
+      updateSet = waitForUpdatesEx(@umPropCol, version, :max_wait => @maxWait)
       $vim_log.info "#{log_prefix}: call to waitForUpdates...Complete (version = #{version})" if $vim_log
+      return version if updateSet.nil?
+
       version = updateSet.version
 
       return if updateSet.filterSet.nil? || updateSet.filterSet.empty?
