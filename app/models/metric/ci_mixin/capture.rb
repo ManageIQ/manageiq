@@ -25,7 +25,8 @@ module Metric::CiMixin::Capture
     force      = options[:force] # Force capture to run regardless of last capture time
     priority   = options[:priority] || Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
     task_id    = options[:task_id]
-
+    zone       = options[:zone] || my_zone
+    zone = zone.name if zone.respond_to?(:name)
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
 
@@ -66,7 +67,7 @@ module Metric::CiMixin::Capture
       :instance_id => id,
       :role        => 'ems_metrics_collector',
       :queue_name  => queue_name_for_metrics_collection,
-      :zone        => my_zone,
+      :zone        => zone,
       :state       => ['ready', 'dequeue'],
     }
 
