@@ -22,12 +22,12 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
     deltas = Vmdb::Settings::HashDiffer.changes(TEMPLATES[full_config.typ], full_config.settings)
     deltas.each do |d|
       d.merge!(
-        :name          => full_config.typ,
         :resource_type => "MiqServer",
         :resource_id   => full_config.miq_server_id,
         :created_at    => full_config.created_on,
         :updated_at    => full_config.updated_on,
       )
+      d[:key] = "/#{full_config.typ}#{d[:key]}" unless full_config.typ == "vmdb"
     end
   end
 

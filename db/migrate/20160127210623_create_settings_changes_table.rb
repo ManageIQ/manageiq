@@ -2,7 +2,6 @@ class CreateSettingsChangesTable < ActiveRecord::Migration
   def up
     create_table :settings_changes do |t|
       t.belongs_to :resource, :type => :bigint, :polymorphic => true
-      t.string     :name
       t.string     :key
       t.text       :value
       t.timestamps :null => false
