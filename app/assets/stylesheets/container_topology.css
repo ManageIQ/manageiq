@@ -53,19 +53,19 @@ kubernetes-topology-icon svg {
   stroke-width: 2px;
 }
 
-.kube-topology g circle.Success {
+.kube-topology g circle.success {
     stroke: #3F9C35;
 }
 
-.kube-topology g circle.Error {
+.kube-topology g circle.error {
     stroke: #CC0000;
 }
 
-.kube-topology g circle.Warning {
+.kube-topology g circle.warning {
     stroke: #EC7A08;
 }
 
-.kube-topology g circle.Unknown {
+.kube-topology g circle.unknown {
     stroke: #bbb;
 }
 
