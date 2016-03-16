@@ -29,7 +29,7 @@ describe "ops/_zone_form.html.haml" do
                :key => 'zone_edit__new',
                :default_verify_status => true}
     end
-    it "should  show zone information" do
+    it "should show zone information" do
       render :partial => "ops/zone_form"
       expect(response.body).to include('Name')
       expect(response.body).to include('Description')

@@ -88,7 +88,7 @@ describe OpsController do
       end
     end
 
-    context "schedule additon" do
+    context "schedule addition" do
       before(:each) do
         EvmSpecHelper.create_guid_miq_server_zone
         expect(controller).to receive(:render)
@@ -141,7 +141,7 @@ describe OpsController do
       login_as user
     end
 
-    context "zone additon" do
+    context "zone addition" do
       it "#does not allow duplicate names when adding" do
         miq_server = EvmSpecHelper.local_miq_server
         MiqRegion.seed
