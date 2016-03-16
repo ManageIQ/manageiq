@@ -80,7 +80,7 @@ class ExplorerPresenter
   end
 
   def show_miq_buttons(show = true)
-    @options[show_miq_buttons] = show
+    @options[:show_miq_buttons] = show
   end
 
   def set_visibility(value, *elements)
