@@ -82,4 +82,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::StateMachine
     destination.ext_management_system.reset_vim_cache
     destination.start
   end
+
+  def powered_off_in_provider?
+    destination.with_provider_object(&:poweredOff?)
+  end
+
+  def powered_on_in_provider?
+    destination.with_provider_object(&:poweredOn?)
+  end
 end
