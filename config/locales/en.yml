@@ -821,12 +821,14 @@ en:
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives
       cim_base_storage_extent:     Base Extents
+      cloud_tenants:               Cloud Tenants
       cloud_volume:                Cloud Volume
       cloud_volumes:               Cloud Volumes
       cloud_volume_snapshot:       Cloud Volume Snapshot
       cloud_volume_snapshots:      Cloud Volume Snapshots
       compliance_details:          Details
       compliances:                 Compliance History
+      configured_system:           Configured System
       container:                   Container
       containers:                  Containers
       container_group:             Pod
@@ -867,6 +869,7 @@ en:
       ems_containers:              Containers Providers
       ems_middleware:              Middleware Provider
       ems_middlewares:             Middleware Providers
+      evm_server:                  EVM Server
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
       middleware_deployment:       Middleware Deployment
@@ -917,6 +920,7 @@ en:
       miq_template:                VM Template
       miq_worker:                  EVM Worker
       miq_workers:                 EVM Workers
+      miq_zone:                    Zone
       nics:                        Network Adapters
       ontap_concrete_extents:      Storage - Aggregates
       ontap_file_share:            File Shares
@@ -934,7 +938,10 @@ en:
       orchestration_template:      Orchestration Template
       operating_system:            OS
       registry_items:              Registry
+      repository:                  Repository
+      resource_pool:               Resource Pool
       resource_pools:              Resource Pools
+      security_group:              Security Group
       server_builds:               EVM Builds
       service_template:            Catalog Item
       service_template_catalog:    Catalog
@@ -942,6 +949,7 @@ en:
       storage:                     Datastore
       storage_file:                Datastore File
       storage_files:               Datastore Files
+      storage_managers:            Storage Managers
       storages:                    Datastores
       switches:                    vSwitches
       template_cloud:              Image

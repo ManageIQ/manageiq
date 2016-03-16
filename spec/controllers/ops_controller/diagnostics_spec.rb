@@ -198,7 +198,7 @@ describe OpsController do
 
           expect(assigns(:flash_array)).to eq [
             {
-              message: 'Evm Server no longer exists',
+              message: 'EVM Server no longer exists',
               level: :error
             }
           ]
@@ -214,7 +214,7 @@ describe OpsController do
 
           expect(assigns(:flash_array)).to eq [
             {
-              message: 'The selected Evm Server was deleted',
+              message: 'The selected EVM Server was deleted',
               level: :success
             }
           ]
