@@ -1670,7 +1670,7 @@ module VmCommon
               :record_id  => @edit[:rec_id],
             }
           ])
-        elsif action != "retire"
+        elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         end
         presenter.hide(:pc_div_1).show(:form_buttons_div)
