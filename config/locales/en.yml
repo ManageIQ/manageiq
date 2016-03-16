@@ -767,6 +767,7 @@ en:
       MiqSearch:                Search
       MiqServer:                Server
       MiqSmisAgent:             SMI-S Agent
+      MiqTask:                  Task
       MiqTemplate:              VM Template and Image
       MiqUserRole:              Role
       MiqWidget:                Widget
@@ -789,12 +790,14 @@ en:
       PxeImage:                 PXE Image
       PxeImageType:             System Image Type
       PxeServer:                PXE Server
+      Repository:               Repository
       ResourcePool:             Resource Pool
       ScanItem:                 Scan Item
       ScanItemSet:              Analysis Profile
       Service:                  Service
       ServiceTemplate:          Service Catalog Item
       ServiceTemplateCatalog:   Catalog
+      Snapshot:                 Snapshot
       SniaLocalFileSystem:      Storage - Local File System
       Storage:                  Datastore
       StorageFile:              Datastore File
@@ -807,10 +810,12 @@ en:
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
       #VmCloud:                  Instance
+      VmdbIndex:                Index
       VmdbTable:                VMDB Table
       #VmInfra:                  Virtual Machine
       VmOrTemplate:             VM or Template
       VmPerformance:            Performance - VM
+      WindowsImage:             Windows Image
       Zone:                     Zone
 
     table:
