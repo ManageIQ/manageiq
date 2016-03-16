@@ -18,9 +18,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
                                 :ems_ref               => 'group')
 
     @container = FactoryGirl.create(:kubernetes_container,
-                                    :name            => 'container',
-                                    :container_group => @group,
-                                    :ems_ref         => 'target')
+                                    :name                  => 'container',
+                                    :container_group       => @group,
+                                    :ext_management_system => @ems_kubernetes,
+                                    :ems_ref               => 'target')
   end
 
   context "#perf_collect_metrics" do
