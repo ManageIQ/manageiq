@@ -1,15 +1,43 @@
 class AddCreatedOnForContainerEntities < ActiveRecord::Migration
-  CONTAINER_TABLES = [:container_nodes, :container_projects, :container_services, :container_routes, :container_groups,
-                      :container_replicators, :container_quotas, :container_builds, :container_build_pods,
-                      :container_limits, :container_volumes]
+  class ContainerNode < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
+  class ContainerProject < ActiveRecord::Base; end
+
+  class ContainerService < ActiveRecord::Base; end
+
+  class ContainerRoute < ActiveRecord::Base; end
+
+  class ContainerGroup < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
+  class ContainerReplicator < ActiveRecord::Base; end
+
+  class ContainerQuota < ActiveRecord::Base; end
+
+  class ContainerBuild < ActiveRecord::Base; end
+
+  class ContainerBuildPod < ActiveRecord::Base; end
+
+  class ContainerLimit < ActiveRecord::Base; end
+
+  class ContainerVolume < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled # disable STI
+  end
+
+  CONTAINER_MODELS = [ContainerNode, ContainerProject, ContainerService, ContainerRoute, ContainerGroup,
+                      ContainerReplicator, ContainerQuota, ContainerBuild, ContainerBuildPod, ContainerLimit,
+                      ContainerVolume].freeze
 
   def change
-    CONTAINER_TABLES.each do |t|
-      add_column t, :created_on, :datetime
-      rename_column t, :creation_timestamp, :ems_created_on
+    CONTAINER_MODELS.each do |model|
+      add_column model.table_name, :created_on, :datetime
+      rename_column model.table_name, :creation_timestamp, :ems_created_on
 
-      say_with_time("adding created_on datetime to all existing #{t.to_s.tr("_", " ")}") do
-        t.to_s.classify.constantize.update_all("created_on=ems_created_on")
+      say_with_time("adding created_on datetime to all existing #{model}") do
+        model.update_all("created_on=ems_created_on")
       end
     end
   end
