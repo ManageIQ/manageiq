@@ -1880,7 +1880,7 @@ class MiqAeClassController < ApplicationController
 
     process_aeinstances(aeinstances, "destroy") unless aeinstances.empty?
     add_flash(_("The selected %{record} were deleted") %
-      {:record => ui_lookup(:models => "MiqAeInstances")}) if @flash_array.nil?
+      {:record => ui_lookup(:models => "MiqAeInstance")}) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 

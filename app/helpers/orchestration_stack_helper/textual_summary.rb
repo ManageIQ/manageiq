@@ -92,34 +92,31 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_parameters
-    label = ui_lookup(:tables => "parameter")
     num   = @record.number_of(:parameters)
-    h     = {:label => label, :image => "parameter", :value => num}
+    h     = {:label => _("Parameters"), :image => "parameter", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _("Show all parameters")
     end
     h
   end
 
   def textual_outputs
-    label = ui_lookup(:tables => "output")
     num   = @record.number_of(:outputs)
-    h     = {:label => label, :image => "output", :value => num}
+    h     = {:label => _("Outputs"), :image => "output", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _("Show all outputs")
     end
     h
   end
 
   def textual_resources
-    label = ui_lookup(:tables => "resource")
     num   = @record.number_of(:resources)
-    h     = {:label => label, :image => "resource", :value => num}
+    h     = {:label => _("Resources"), :image => "resource", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _("Show all resources")
     end
     h
   end

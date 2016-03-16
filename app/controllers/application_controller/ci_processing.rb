@@ -1450,7 +1450,7 @@ module ApplicationController::CiProcessing
     end
     if vms.length < 1
       add_flash(_("At least 1 %{model} must be selected for Policy Simulation") %
-        {:model => ui_lookup(:model => "vm")}, :error)
+        {:model => ui_lookup(:model => "Vm")}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
     else
