@@ -6,7 +6,8 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
       @ems.authentication_userid,
       @ems.authentication_password,
       nil,
-      worker_settings[:ems_event_page_size])
+      worker_settings[:ems_event_page_size],
+      worker_settings[:ems_event_max_wait])
   end
 
   def reset_event_monitor_handle
