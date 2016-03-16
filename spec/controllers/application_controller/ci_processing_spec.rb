@@ -253,7 +253,7 @@ describe HostController do
       vms = [vm1.id, vm2.id, vm3.id]
       controller.send(:process_objects, vms, 'refresh_ems')
       flash_messages = assigns(:flash_array)
-      expect(flash_messages.first[:message]).to include "Refresh Ems initiated for #{vms.length} VMs"
+      expect(flash_messages.first[:message]).to include "Refresh Provider initiated for #{vms.length} VMs"
     end
   end
 

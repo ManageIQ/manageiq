@@ -15,9 +15,9 @@ class ProviderForemanController < ApplicationController
 
   def self.model_to_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
-      return "Ansible Tower"
+      return ui_lookup(:ui_title => 'ansible_tower')
     elsif provmodel.include?("ManageIQ::Providers::Foreman")
-      return "Foreman"
+      return ui_lookup(:ui_title => 'foreman')
     end
   end
 
@@ -75,7 +75,7 @@ class ProviderForemanController < ApplicationController
         provider.destroy_queue
       end
 
-      add_flash(_("%{task} initiated for %{count_model}") % {:task => "Delete", :count_model => pluralize(providers.length, "provider")})
+      add_flash(_("Delete initiated for %{count_model}") % {:count_model => pluralize(providers.length, "provider")})
     end
     replace_right_cell
   end
@@ -83,7 +83,7 @@ class ProviderForemanController < ApplicationController
   def refresh
     assert_privileges("provider_foreman_refresh_provider")
     @explorer = true
-    foreman_button_operation('refresh_ems', 'Refresh')
+    foreman_button_operation('refresh_ems', _('Refresh'))
     replace_right_cell
   end
 
@@ -158,10 +158,14 @@ class ProviderForemanController < ApplicationController
       AuditEvent.success(build_created_audit(@provider_cfgmgmt, @edit))
       @in_a_form = false
       @sb[:action] = nil
-      model = "#{ui_lookup(:ui_title => "#{model_to_name(@provider_cfgmgmt.type)}")} #{ui_lookup(:model => 'ExtManagementSystem')}"
-      add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => model,
-                                                           :name   => @provider_cfgmgmt.name,
-                                                           :action => params[:id] == "new" ? "added" : "updated"})
+      model = "#{model_to_name(@provider_cfgmgmt.type)} #{ui_lookup(:model => 'ExtManagementSystem')}"
+      if params[:id] == "new"
+        add_flash(_("%{model} \"%{name}\" was added") % {:model => model,
+                                                         :name  => @provider_cfgmgmt.name})
+      else
+        add_flash(_("%{model} \"%{name}\" was updated") % {:model => model,
+                                                           :name  => @provider_cfgmgmt.name})
+      end
       if params[:id] == "new"
         process_cfgmgr([@provider_cfgmgmt.configuration_manager.id], "refresh_ems")
       end
@@ -179,10 +183,13 @@ class ProviderForemanController < ApplicationController
   def cancel_provider_foreman
     @in_a_form = false
     @sb[:action] = nil
-    model = "#{ui_lookup(:ui_title => 'Configuration Manager')} #{ui_lookup(:model => 'ExtManagementSystem')}"
-    add_flash(_("%{action} %{model} was cancelled by the user") %
-                  {:model  => model,
-                   :action => params[:id] == "new" ? "Add of" : "Edit of"})
+    if params[:id] == "new"
+      add_flash(_("Add of Configuration Manager %{provider} was cancelled by the user") %
+        {:provider  => ui_lookup(:model => 'ExtManagementSystem')})
+    else
+      add_flash(_("Edit of Configuration Manager %{provider} was cancelled by the user") %
+        {:provider  => ui_lookup(:model => 'ExtManagementSystem')})
+    end
     replace_right_cell
   end
 
@@ -532,7 +539,7 @@ class ProviderForemanController < ApplicationController
     return provider_node(id, model) unless id.nil?
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %{title} Providers") % {:title => ui_lookup(:ui_title => model_to_name(model))}
+      @right_cell_text = _("All %{title} Providers") % {:title => model_to_name(model)}
       process_show_list(options)
     end
   end
@@ -574,7 +581,7 @@ class ProviderForemanController < ApplicationController
     @listicon = "configured_system"
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
-      @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => model_to_name(model))}
+      @right_cell_text = _("All %{title} Configured Systems") % {:title => model_to_name(model)}
       process_show_list(options)
     end
   end
@@ -605,7 +612,7 @@ class ProviderForemanController < ApplicationController
     if self.x_active_tree == :configuration_manager_providers_tree
       options = {:model => "ManageIQ::Providers::ConfigurationManager"}
       process_show_list(options)
-      @right_cell_text = _("All %{title} Providers") % {:title => ui_lookup(:ui_title => "Configuration Management")}
+      @right_cell_text = _("All Configuration Management Providers")
     elsif self.x_active_tree == :cs_filter_tree
       options = {:model => "ConfiguredSystem"}
       process_show_list(options)
@@ -659,10 +666,9 @@ class ProviderForemanController < ApplicationController
 
   def update_title(presenter)
     if action_name == "new"
-      @right_cell_text = _("Add a new %{title} Provider") %
-                           {:title => ui_lookup(:ui_title => "Configuration Management")}
+      @right_cell_text = _("Add a new Configuration Management Provider")
     elsif action_name == "edit"
-      @right_cell_text = _("Edit %{title} Provider") % {:title => ui_lookup(:ui_title => "configuration manager")}
+      @right_cell_text = _("Edit Configuration Manager Provider")
     end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -757,10 +763,10 @@ class ProviderForemanController < ApplicationController
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_add_provider"
-        @right_cell_text = _("Add a new %{title} Provider") % {title => ui_lookup(:ui_title => "Configuration Manager")}
+        @right_cell_text = _("Add a new Configuration Manager Provider")
       elsif @sb[:action] == "provider_foreman_edit_provider"
         # set the title based on the configuration manager provider type
-        @right_cell_text = _("Edit %{title} Provider") % {:title => ui_lookup(:ui_title => "Configuration Manager")}
+        @right_cell_text = _("Edit Configuration Manager Provider")
       end
       partial = 'form'
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
@@ -928,15 +934,13 @@ class ProviderForemanController < ApplicationController
     record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_configuration_profile_record?(@configuration_profile_record)
-      @right_cell_text =
-        _("%{model} \"%{name}\"") %
-        {:name  => @configuration_profile_record.name,
-         :model => "#{ui_lookup(:tables => "configured_system")} under #{record_model}"}
+      @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
+        {:model        => ui_lookup(:tables => "configured_system"),
+         :record_model => record_model,
+         :name         => @configuration_profile_record.name}
     else
-      name  = _("Unassigned Profiles Group")
-      @right_cell_text =
-        _("%{model}") %
-        {:model => "#{ui_lookup(:tables => "configured_system")} under \"#{name}\""}
+      @right_cell_text = _("%{model} under Unassigned Profiles Group") %
+        {:model => ui_lookup(:tables => "configured_system")}
     end
   end
 
