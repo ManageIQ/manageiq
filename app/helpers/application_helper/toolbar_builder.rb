@@ -43,8 +43,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def toolbar_button(props)
     button_class = props[:klass] || ApplicationHelper::Button::Basic
-    button = button_class.new(@view_context, @view_binding, @instance_data, props)
-    button
+    button_class.new(@view_context, @view_binding, @instance_data, props)
   end
 
   def build_select_button(bgi, index)
