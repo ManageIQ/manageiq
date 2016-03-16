@@ -2974,6 +2974,7 @@ describe ApplicationHelper do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
       @pdf_button = {"id"       => "download_choice__download_pdf",
+                     :klass     => ApplicationHelper::Button::Pdf,
                      "child_id" => "download_pdf",
                      "type"     => "button",
                      "img"      => "download_pdf.png",
