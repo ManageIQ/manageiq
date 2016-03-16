@@ -5,6 +5,7 @@ class ApplicationHelper::Toolbar::SummaryViewRestful < ApplicationHelper::Toolba
       'fa fa-file-pdf-o fa-lg',
       N_('Download summary in PDF format'),
       nil,
+      :klass     => ApplicationHelper::Button::Pdf,
       :url       => "/",
       :url_parms => "?display=download_pdf"),
   ])

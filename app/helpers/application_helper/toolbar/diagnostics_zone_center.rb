@@ -55,12 +55,16 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
           :zone_collect_current_logs,
           'fa fa-filter fa-lg',
           N_('Collect the current logs from the selected #{ui_lookup(:table=>"zone")}'),
-          N_('Collect current logs')),
+          N_('Collect current logs'),
+          :klass => ApplicationHelper::Button::CollectLogs
+        ),
         button(
           :zone_collect_logs,
           'fa fa-filter fa-lg',
           N_('Collect all logs from the selected #{ui_lookup(:table=>"zone")}'),
-          N_('Collect all logs')),
+          N_('Collect all logs'),
+          :klass => ApplicationHelper::Button::CollectLogs
+        ),
       ]
     ),
     button(

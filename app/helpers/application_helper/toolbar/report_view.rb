@@ -46,6 +46,7 @@ class ApplicationHelper::Toolbar::ReportView < ApplicationHelper::Toolbar::Basic
           'fa fa-file-pdf-o fa-lg',
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
+          :klass     => ApplicationHelper::Button::Pdf,
           :url_parms => "?render_type=pdf"),
       ]
     ),

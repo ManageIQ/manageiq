@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqDialogCenter < ApplicationHelper::Toolbar::
           :old_dialogs_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Dialog'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::OldDialogsEditDelete),
         button(
           :old_dialogs_copy,
           'fa fa-files-o fa-lg',
@@ -23,7 +24,8 @@ class ApplicationHelper::Toolbar::MiqDialogCenter < ApplicationHelper::Toolbar::
           N_('Remove this Dialog from the VMDB'),
           N_('Remove from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?")),
+          :confirm   => N_("Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?"),
+          :klass     => ApplicationHelper::Button::OldDialogsEditDelete),
       ]
     ),
   ])

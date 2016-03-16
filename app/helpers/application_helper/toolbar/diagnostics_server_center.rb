@@ -55,12 +55,16 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
           :collect_current_logs,
           'fa fa-filter fa-lg',
           N_('Collect the current logs from the selected #{ui_lookup(:table=>"miq_servers")}'),
-          N_('Collect current logs')),
+          N_('Collect current logs'),
+          :klass => ApplicationHelper::Button::CollectLogs
+        ),
         button(
           :collect_logs,
           'fa fa-filter fa-lg',
           N_('Collect all logs from the selected #{ui_lookup(:table=>"miq_servers")}'),
-          N_('Collect all logs')),
+          N_('Collect all logs'),
+          :klass => ApplicationHelper::Button::CollectLogs
+        ),
       ]
     ),
     button(

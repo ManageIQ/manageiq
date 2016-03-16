@@ -41,10 +41,16 @@ class ApplicationHelper::ToolbarBuilder
     build(toolbar)
   end
 
+  def toolbar_button(props)
+    button_class = props[:klass] || ApplicationHelper::Button::Basic
+    button = button_class.new(@view_context, @view_binding, @instance_data, props)
+    button
+  end
+
   def build_select_button(bgi, index)
     bs_children = false
-    props = ApplicationHelper::ToolbarButtons.button(
-      @view_context, @view_binding, @instance_data,
+    props = toolbar_button(
+      :klass   => bgi[:klass],
       "id"     => bgi[:buttonSelect],
       "type"   => "buttonSelect",
       "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
@@ -63,8 +69,8 @@ class ApplicationHelper::ToolbarBuilder
       else
         next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button]) # Use pressed, else button name
         bs_children = true
-        props = ApplicationHelper::ToolbarButtons.button(
-          @view_context, @view_binding, @instance_data,
+        props = toolbar_button(
+          :klass     => bsi[:klass],
           "child_id" => bsi[:button],
           "id"       => bgi[:buttonSelect] + "__" + bsi[:button],
           "type"     => "button",
@@ -129,8 +135,8 @@ class ApplicationHelper::ToolbarBuilder
     end
 
     @sep_needed = true unless button_hide
-    props = ApplicationHelper::ToolbarButtons.button(
-      @view_context, @view_binding, @instance_data,
+    props = toolbar_button(
+      :klass   => bgi[:klass],
       "id"     => bgi[:button],
       "type"   => "button",
       "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
@@ -160,8 +166,8 @@ class ApplicationHelper::ToolbarBuilder
   def build_twostate_button(bgi, index)
     return nil if build_toolbar_hide_button(bgi[:buttonTwoState])
 
-    props = ApplicationHelper::ToolbarButtons.button(
-      @view_context, @view_binding, @instance_data,
+    props = toolbar_button(
+      :klass   => bgi[:klass],
       "id"     => bgi[:buttonTwoState],
       "type"   => "buttonTwoState",
       "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",

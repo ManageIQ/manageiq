@@ -37,6 +37,7 @@ class ApplicationHelper::Toolbar::CompareView < ApplicationHelper::Toolbar::Basi
           'fa fa-file-pdf-o fa-lg',
           N_('Download comparison report in PDF format'),
           N_('Download as PDF'),
+          :klass     => ApplicationHelper::Button::Pdf,
           :url => "/compare_to_pdf"),
       ]
     ),
