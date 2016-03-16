@@ -20,7 +20,7 @@ db: MiddlewareServer
 # Columns to fetch from the main table
 cols:
 - feed
-- host
+- product
 - name
 
 
@@ -36,14 +36,14 @@ include:
 # Order of columns (from all tables)
 col_order:
 - name
-- host
+- product
 - feed
 - ext_management_system.name
 
 # Column titles, in order
 headers:
 - Server Name
-- Host
+- Product
 - Feed
 - Provider
 
@@ -56,7 +56,7 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
-- host
+- product
 - feed
 - ext_management_system.name
 

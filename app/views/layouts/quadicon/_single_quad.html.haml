@@ -8,6 +8,8 @@
     - img = "vendor-#{item.image_name}"
   - elsif item.kind_of?(ConfigurationProfile)
     - img = controller.send(:list_row_image, item.class.base_class.to_s.underscore, item)
+  - elsif item.decorator_class?
+    - img = item.decorate.try(:fonticon) || item.decorate.try(:listicon_image)
   - else
     - img = item.class.base_class.to_s.underscore
   .flobj
