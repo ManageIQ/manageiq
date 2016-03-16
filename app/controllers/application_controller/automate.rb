@@ -126,9 +126,9 @@ module ApplicationController::Automate
     @explorer = true
     @collapse_c_cell = true
     @breadcrumbs = []
-    drop_breadcrumb(:name => "Resolve", :url => "/miq_ae_tools/resolve")
+    drop_breadcrumb(:name => _("Resolve"), :url => "/miq_ae_tools/resolve")
     @lastaction = "resolve"
-    @right_cell_text = "Simulation"
+    @right_cell_text = _("Simulation")
 
     case params[:button]
     when "throw", "retry" then resolve_button_throw
