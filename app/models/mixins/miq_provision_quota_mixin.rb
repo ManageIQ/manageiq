@@ -108,8 +108,7 @@ module MiqProvisionQuotaMixin
       scope = scope.where.not(:retired => true)
     end
 
-    vms = scope.user_or_group_owned(prov_owner, prov_owner.current_group).to_a
-    MiqPreloader.preload(vms, :hardware => :disks)
+    scope.user_or_group_owned(prov_owner, prov_owner.current_group).includes(:hardware => :disks).to_a
   end
 
   def quota_find_vms_by_owner(options)
