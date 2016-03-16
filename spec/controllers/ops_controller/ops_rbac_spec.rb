@@ -99,6 +99,26 @@ describe OpsController do
         expect(flash_message[:message]).to include("Error during delete")
         expect(flash_message[:level]).to be(:error)
       end
+
+      it "deletes checked tenant records successfully" do
+        allow(ApplicationHelper).to receive(:role_allows).and_return(true)
+        t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
+        sb_hash = {
+            :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(t.id)}"}},
+            :active_tree => :rbac_tree,
+            :active_tab  => "rbac_details"
+        }
+        controller.instance_variable_set(:@sb, sb_hash)
+        allow(controller).to receive(:find_checked_items).and_return([t.id])
+        expect(controller).to receive(:x_active_tree_replace_cell)
+        expect(controller).to receive(:render)
+        expect(response.status).to eq(200)
+        controller.send(:rbac_tenant_delete)
+
+        flash_message = assigns(:flash_array).first
+        expect(flash_message[:message]).to include("Delete successful")
+        expect(flash_message[:level]).to be(:success)
+      end
     end
 
     context "#rbac_tenants_list" do
