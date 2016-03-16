@@ -8,14 +8,29 @@ describe "layouts/listnav/_security_group.html.haml" do
     allow(view).to receive(:role_allows).and_return(true)
   end
 
-  let(:provider) do
-    allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
-    FactoryGirl.create(:ems_amazon)
-  end
+  ["openstack"].each do |t|
+    before :each do
+      allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
+      provider        = FactoryGirl.create("ems_#{t}".to_sym)
+      @security_group = FactoryGirl.create("security_group_#{t}".to_sym,
+                                           :ext_management_system => provider.network_manager,
+                                           :name                  => 'A test')
+      vm              = FactoryGirl.create("vm_#{t}".to_sym)
+      network         = FactoryGirl.create("cloud_network_#{t}".to_sym)
+      subnet          = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
+      vm.network_ports << FactoryGirl.create("network_port_#{t}".to_sym,
+                                             :device          => vm,
+                                             :cloud_subnet    => subnet,
+                                             :security_groups => [@security_group])
+    end
 
-  it "link to parent cloud provider uses restful path" do
-    @record = FactoryGirl.create(:security_group, :ext_management_system => provider, :name => 'A test')
-    render
-    expect(response).to include("Show this Security Group&#39;s parent Cloud Provider\" href=\"/ems_cloud/#{@record.ext_management_system.id}\">")
+    context "for #{t}" do
+      it "relationships links uses restful path in #{t.camelize}" do
+        @record = @security_group
+        render
+        expect(response).to include("Show this Security Group&#39;s parent Network Provider\" href=\"/ems_network/show/#{@record.ext_management_system.id}\">")
+        expect(response).to include("Show all Instances\" onclick=\"return miqCheckForChanges()\" href=\"/security_group/show/#{@record.id}?display=instances\">")
+      end
+    end
   end
 end
