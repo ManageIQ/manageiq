@@ -19,6 +19,7 @@ module ManageIQ::Providers::Openstack
           :raw_power_state    => "never",
           :template           => true,
           :publicly_available => public?(image),
+          :cloud_tenants      => image_tenants(image),
           :hardware           => {
             :bitness             => architecture(image),
             :disk_size_minimum   => (image.min_disk * 1.gigabyte),
@@ -34,6 +35,22 @@ module ManageIQ::Providers::Openstack
         return uid, new_result
       end
 
+      def image_tenants(image)
+        if public?(image)
+          # For public image, we will fill a relation to all tenants. Calling members api for public image throws 403
+          @data.fetch_path(:cloud_tenants)
+        else
+          tenants = []
+          # Add owner of the image
+          tenants << @data_index.fetch_path(:cloud_tenants, image.owner) if image.owner
+          # Add members of the image
+          unless (members = image.members).blank?
+            tenants += members.map { |x| @data_index.fetch_path(:cloud_tenants, x['member_id']) }
+          end
+          tenants
+        end
+      end
+
       def architecture(image)
         architecture = image.properties.try(:[], 'architecture') || image.attributes['architecture']
         return nil if architecture.blank?
@@ -46,7 +63,7 @@ module ManageIQ::Providers::Openstack
         # Glance v1
         return image.is_public if image.respond_to? :is_public
         # Glance v2
-        image.visibility == 'private' if image.respond_to? :visibility
+        image.visibility != 'private' if image.respond_to? :visibility
       end
 
       def parse_image_parent_id(image)
