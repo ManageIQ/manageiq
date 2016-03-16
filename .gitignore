@@ -22,6 +22,7 @@ BUILD
 ca/root
 certs/v2_key
 config/secrets.yml*
+.rvmrc
 coverage/
 Gemfile.dev.rb
 Gemfile.lock*
