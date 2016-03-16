@@ -870,6 +870,32 @@ class VimService < Handsoap::Service
     (parse_response(response, 'RetrievePropertiesResponse')['returnval'])
   end
 
+  def retrievePropertiesEx(propCol, specSet, max_objects = nil)
+    options = VimHash.new("RetrieveOptions") do |opts|
+      opts.maxObjects = max_objects.to_s if max_objects
+    end
+
+    response = invoke("n1:RetrievePropertiesEx") do |message|
+      message.add "n1:_this", propCol do |i|
+        i.set_attr "type", propCol.vimType
+      end
+      message.add "n1:specSet" do |i|
+        i.set_attr "xsi:type", "PropertyFilterSpec"
+        marshalObj(i, specSet)
+      end
+      message.add "n1:options" do |i|
+        i.set_attr "xsi:type", "RetrieveOptions"
+        marshalObj(i, options)
+      end
+    end
+    (parse_response(response, 'RetrievePropertiesExResponse')['returnval'])
+  end
+
+  def retrievePropertiesCompat(propCol, specSet, max_objects = nil)
+    rv = retrievePropertiesEx(propCol, specSet, max_objects)
+    rv ? rv['objects'] : []
+  end
+
   def retrieveServiceContent
     response = invoke("n1:RetrieveServiceContent") do |message|
       message.add "n1:_this", @serviceInstanceMor do |i|
