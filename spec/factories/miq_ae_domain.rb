@@ -6,6 +6,11 @@ FactoryGirl.define do
     enabled false
   end
 
+  factory :miq_ae_git_domain, :parent => :miq_ae_domain do
+    system true
+    git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.sample.com/abc') }
+  end
+
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     tenant { Tenant.seed }
