@@ -1597,6 +1597,10 @@ _("Servers")
 _("SMI-S Agent")
 # TRANSLATORS: en.yml key: dictionary.model.MiqSmisAgent (plural form)
 _("SMI-S Agents")
+# TRANSLATORS: en.yml key: dictionary.model.MiqTask
+_("Task")
+# TRANSLATORS: en.yml key: dictionary.model.MiqTask (plural form)
+_("Tasks")
 # TRANSLATORS: en.yml key: dictionary.model.MiqTemplate
 _("VM Template and Image")
 # TRANSLATORS: en.yml key: dictionary.model.MiqTemplate (plural form)
@@ -1683,6 +1687,10 @@ _("System Image Types")
 _("PXE Server")
 # TRANSLATORS: en.yml key: dictionary.model.PxeServer (plural form)
 _("PXE Servers")
+# TRANSLATORS: en.yml key: dictionary.model.Repository
+_("Repository")
+# TRANSLATORS: en.yml key: dictionary.model.Repository (plural form)
+_("Repositories")
 # TRANSLATORS: en.yml key: dictionary.model.ResourcePool
 _("Resource Pool")
 # TRANSLATORS: en.yml key: dictionary.model.ResourcePool (plural form)
@@ -1707,6 +1715,10 @@ _("Service Catalog Items")
 _("Catalog")
 # TRANSLATORS: en.yml key: dictionary.model.ServiceTemplateCatalog (plural form)
 _("Catalogs")
+# TRANSLATORS: en.yml key: dictionary.model.Snapshot
+_("Snapshot")
+# TRANSLATORS: en.yml key: dictionary.model.Snapshot (plural form)
+_("Snapshots")
 # TRANSLATORS: en.yml key: dictionary.model.SniaLocalFileSystem
 _("Storage - Local File System")
 # TRANSLATORS: en.yml key: dictionary.model.SniaLocalFileSystem (plural form)
@@ -1743,6 +1755,10 @@ _("Performance Trends")
 _("VM and Instance")
 # TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
 _("VM and Instances")
+# TRANSLATORS: en.yml key: dictionary.model.VmdbIndex
+_("Index")
+# TRANSLATORS: en.yml key: dictionary.model.VmdbIndex (plural form)
+_("Indices")
 # TRANSLATORS: en.yml key: dictionary.model.VmdbTable
 _("VMDB Table")
 # TRANSLATORS: en.yml key: dictionary.model.VmdbTable (plural form)
@@ -1755,6 +1771,10 @@ _("VM or Templates")
 _("Performance - VM")
 # TRANSLATORS: en.yml key: dictionary.model.VmPerformance (plural form)
 _("Performance - VMs")
+# TRANSLATORS: en.yml key: dictionary.model.WindowsImage
+_("Windows Image")
+# TRANSLATORS: en.yml key: dictionary.model.WindowsImage (plural form)
+_("Windows Images")
 # TRANSLATORS: en.yml key: dictionary.model.Zone
 _("Zone")
 # TRANSLATORS: en.yml key: dictionary.model.Zone (plural form)
@@ -1781,6 +1801,8 @@ _("Cloud Volumes Based on Snapshots")
 _("CD/DVD Drives")
 # TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
 _("Base Extents")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_tenants
+_("Cloud Tenants")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volume
 _("Cloud Volume")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volume (plural form)
@@ -1799,6 +1821,10 @@ _("Details")
 _("Compliance History")
 # TRANSLATORS: en.yml key: dictionary.table.compliances (plural form)
 _("Compliance Histories")
+# TRANSLATORS: en.yml key: dictionary.table.configured_system
+_("Configured System")
+# TRANSLATORS: en.yml key: dictionary.table.configured_system (plural form)
+_("Configured Systems")
 # TRANSLATORS: en.yml key: dictionary.table.container
 _("Container")
 # TRANSLATORS: en.yml key: dictionary.table.container (plural form)
@@ -1859,6 +1885,12 @@ _("Volume")
 _("Volumes")
 # TRANSLATORS: en.yml key: dictionary.table.persistent_volumes
 _("Volumes")
+# TRANSLATORS: en.yml key: dictionary.table.container_build
+_("Build")
+# TRANSLATORS: en.yml key: dictionary.table.container_build (plural form)
+_("Builds")
+# TRANSLATORS: en.yml key: dictionary.table.container_builds
+_("Builds")
 # TRANSLATORS: en.yml key: dictionary.table.custom_button
 _("Button")
 # TRANSLATORS: en.yml key: dictionary.table.custom_button (plural form)
@@ -1915,6 +1947,10 @@ _("Middleware Provider")
 _("Middleware Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_middlewares
 _("Middleware Providers")
+# TRANSLATORS: en.yml key: dictionary.table.evm_server
+_("EVM Server")
+# TRANSLATORS: en.yml key: dictionary.table.evm_server (plural form)
+_("EVM Servers")
 # TRANSLATORS: en.yml key: dictionary.table.middleware_server
 _("Middleware Server")
 # TRANSLATORS: en.yml key: dictionary.table.middleware_server (plural form)
@@ -2063,6 +2099,10 @@ _("EVM Worker")
 _("EVM Workers")
 # TRANSLATORS: en.yml key: dictionary.table.miq_workers
 _("EVM Workers")
+# TRANSLATORS: en.yml key: dictionary.table.miq_zone
+_("Zone")
+# TRANSLATORS: en.yml key: dictionary.table.miq_zone (plural form)
+_("Zones")
 # TRANSLATORS: en.yml key: dictionary.table.nics
 _("Network Adapters")
 # TRANSLATORS: en.yml key: dictionary.table.ontap_concrete_extents
@@ -2103,8 +2143,20 @@ _("OS")
 _("Registry")
 # TRANSLATORS: en.yml key: dictionary.table.registry_items (plural form)
 _("Registries")
+# TRANSLATORS: en.yml key: dictionary.table.repository
+_("Repository")
+# TRANSLATORS: en.yml key: dictionary.table.repository (plural form)
+_("Repositories")
+# TRANSLATORS: en.yml key: dictionary.table.resource_pool
+_("Resource Pool")
+# TRANSLATORS: en.yml key: dictionary.table.resource_pool (plural form)
+_("Resource Pools")
 # TRANSLATORS: en.yml key: dictionary.table.resource_pools
 _("Resource Pools")
+# TRANSLATORS: en.yml key: dictionary.table.security_group
+_("Security Group")
+# TRANSLATORS: en.yml key: dictionary.table.security_group (plural form)
+_("Security Groups")
 # TRANSLATORS: en.yml key: dictionary.table.server_builds
 _("EVM Builds")
 # TRANSLATORS: en.yml key: dictionary.table.service_template
@@ -2127,6 +2179,8 @@ _("Datastore File")
 _("Datastore Files")
 # TRANSLATORS: en.yml key: dictionary.table.storage_files
 _("Datastore Files")
+# TRANSLATORS: en.yml key: dictionary.table.storage_managers
+_("Storage Managers")
 # TRANSLATORS: en.yml key: dictionary.table.storages
 _("Datastores")
 # TRANSLATORS: en.yml key: dictionary.table.switches
