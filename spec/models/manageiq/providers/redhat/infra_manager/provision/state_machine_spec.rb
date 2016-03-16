@@ -12,6 +12,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
     end
 
     include_examples "common rhev state machine methods"
+    include_examples "polling destination power status in provider"
 
     it "#create_destination" do
       expect(@task).to receive(:determine_placement)
@@ -96,40 +97,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       expect(@task).to receive(:configure_cloud_init)
       expect(@task).to receive(:poll_destination_powered_off_in_provider)
       @task.configure_destination
-    end
-
-    it "#poll_destination_powered_off_in_provider" do
-      expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm)
-        .to receive(:with_provider_object).and_return(:state => "up")
-      expect(@task).to receive(:requeue_phase)
-
-      @task.poll_destination_powered_off_in_provider
-    end
-
-    context "#poll_destination_powered_on_in_provider" do
-      it "requeues if the VM didn't start" do
-        allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm).to receive_messages(:with_provider_object => {:state => "down"})
-        expect(@task).to receive(:requeue_phase)
-
-        @task.poll_destination_powered_on_in_provider
-
-        expect(@task.phase_context[:power_on_wait_count]).to eq(1)
-      end
-
-      it "moves on if the vm started" do
-        allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Vm).to receive_messages(:with_provider_object => {:state => "up"})
-        expect(@task).to receive(:poll_destination_powered_off_in_provider)
-
-        @task.poll_destination_powered_on_in_provider
-
-        expect(@task.phase_context[:power_on_wait_count]).to be_nil
-      end
-
-      it "raises if the vm failed to start" do
-        @task.phase_context[:power_on_wait_count] = 121
-
-        expect { @task.poll_destination_powered_on_in_provider }.to raise_error(MiqException::MiqProvisionError)
-      end
     end
   end
 end
