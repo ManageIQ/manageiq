@@ -6,11 +6,11 @@ module CloudVolume::Operations
 
   module InstanceMethods
     def validate_attach_volume
-      validate_unsupported("Attach Volume Operation")
+      validate_unsupported(_("Attach Volume Operation"))
     end
 
     def validate_detach_volume
-      validate_unsupported("Detach Volume Operation")
+      validate_unsupported(_("Detach Volume Operation"))
     end
 
     private
@@ -31,14 +31,14 @@ module CloudVolume::Operations
       msg = validate_volume
       return {:available => msg[:available], :message => msg[:message]} unless msg.nil?
       return {:available => true, :message => nil} if status == "available"
-      {:available => false, :message => "The volume can't be attached, status has to be 'available'"}
+      {:available => false, :message => _("The volume can't be attached, status has to be 'available'")}
     end
 
     def validate_volume_in_use
       msg = validate_volume
       return {:available => msg[:available], :message => msg[:message]} unless msg[:available]
       return {:available => true, :message => nil} if status == "in-use"
-      {:available => false, :message => "The volume can't be detached, status has to be 'in-use'"}
+      {:available => false, :message => _("The volume can't be detached, status has to be 'in-use'")}
     end
   end
 
@@ -46,18 +46,22 @@ module CloudVolume::Operations
     def validate_volume(ext_management_system)
       if ext_management_system.nil?
         return {:available => false,
-                :message   => "The Volume is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"}
+                :message   => _("The Volume is not connected to an active %{table}") %
+                  {:table => ui_lookup(:table => "ext_management_systems")}}
       end
       {:available => true, :message => nil}
     end
 
     def validate_unsupported(message_prefix)
-      {:available => false, :message => "#{message_prefix} is not available for #{name}."}
+      {:available => false, :message => _("%{message} is not available for %{name}.") % {:message => message_prefix,
+                                                                                         :name    => name}}
     end
 
     def validation_failed(operation, reason)
       {:available => false,
-       :message   => "Validation failed for #{name} operation #{operation}. #{reason}"}
+       :message   => _("Validation failed for %{name} operation %{operation}. %{reason}") % {:name      => name,
+                                                                                             :operation => operation,
+                                                                                             :reason    => reason}}
     end
   end
 end
