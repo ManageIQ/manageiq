@@ -1,5 +1,19 @@
 = render :partial => "layouts/flash_msg"
 - case @display
+- when "devices"
+  - unless @devices.empty?
+    %table.table.table-bordered.table-striped
+      %thead
+        %tr
+          %th{:colspan => "2"}= _('Devices')
+      %tbody
+        - @devices.each do |item|
+          %tr
+            %td.label
+              = h(item[:device])
+            %td
+              %img{:src => image_path("100/hardware-#{item[:icon].downcase}.png")}
+              = h(item[:description])
 - when "os_info"
   - if @osinfo
     %table.table.table-bordered.table-striped

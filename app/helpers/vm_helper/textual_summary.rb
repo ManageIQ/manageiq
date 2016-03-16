@@ -6,7 +6,7 @@ module VmHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo cpu_affinity snapshots advanced_settings resources guid)
+    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo devices cpu_affinity snapshots advanced_settings resources guid)
   end
 
   def textual_group_lifecycle
@@ -821,6 +821,18 @@ module VmHelper::TextualSummary
       value = @record.send("max_mem_usage_absolute_average_#{key}_over_time_period")
       h[:value] << {:label => label,
                     :value => (value.nil? ? _("Not Available") : number_to_percentage(value, :precision => 2))}
+    end
+    h
+  end
+
+  def textual_devices
+    h = {:label    => _("Devices"),
+         :image    => "devices",
+         :explorer => true,
+         :value    => (@devices.nil? || @devices.empty? ? _("None") : @devices.length)}
+    if @devices.length > 0
+      h[:title] = _("Show VMs devices")
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'devices')
     end
     h
   end
