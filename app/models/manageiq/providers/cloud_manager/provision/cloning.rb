@@ -8,8 +8,10 @@ module ManageIQ::Providers::CloudManager::Provision::Cloning
   end
 
   def validate_dest_name
-    raise MiqException::MiqProvisionError, "Provision Request's Destination Name cannot be blank" if dest_name.blank?
-    raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
+    raise MiqException::MiqProvisionError, _("Provision Request's Destination Name cannot be blank") if dest_name.blank?
+    if source.ext_management_system.vms.where(:name => dest_name).any?
+      raise MiqException::MiqProvisionError, _("A VM with name: [%{name}] already exists") % {:name => dest_name}
+    end
   end
 
   def prepare_for_clone_task

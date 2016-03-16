@@ -46,7 +46,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   end
 
   def connect(options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(options[:auth_type])
 
     client_id  = options[:user] || authentication_userid(options[:auth_type])
     client_key = options[:pass] || authentication_password(options[:auth_type])
@@ -56,10 +56,10 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   def verify_credentials(_auth_type = nil, options = {})
     connect(options)
   rescue Azure::Armrest::UnauthorizedException
-    raise MiqException::MiqHostError, "Incorrect credentials - check your Azure Client ID and Client Key"
+    raise MiqException::MiqHostError, _("Incorrect credentials - check your Azure Client ID and Client Key")
   rescue StandardError => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-    raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
+    raise MiqException::MiqHostError, _("Unexpected response returned from system, see log for details")
 
     true
   end

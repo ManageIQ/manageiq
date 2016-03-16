@@ -5,7 +5,7 @@ module ManageIQ::Providers
     self.default_queue_name = "atomic_enterprise"
 
     def friendly_name
-      @friendly_name ||= "C&U Metrics Collector for Atomic Enterprise"
+      @friendly_name ||= _("C&U Metrics Collector for Atomic Enterprise")
     end
 
     def self.ems_class

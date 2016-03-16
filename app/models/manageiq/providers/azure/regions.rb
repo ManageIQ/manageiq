@@ -4,115 +4,115 @@ module ManageIQ
       REGIONS = {
         "westus" => {
           :name        => "westus",
-          :description => "US West",
+          :description => _("US West"),
         },
         "eastus" => {
           :name        => "eastus",
-          :description => "US East",
+          :description => _("US East"),
         },
         "australiaeast" => {
           :name        => "australiaeast",
-          :description => "Australia East",
+          :description => _("Australia East"),
         },
         "australiasoutheast" => {
           :name        => "australiasoutheast",
-          :description => "Australia South East",
+          :description => _("Australia South East"),
         },
         "centralus" => {
           :name        => "centralus",
-          :description => "Central US",
+          :description => _("Central US"),
         },
         "eastus2" => {
           :name        => "eastus2",
-          :description => "East US2",
+          :description => _("East US2"),
         },
         "northcentralus" => {
           :name        => "northcentralus",
-          :description => "North Central US",
+          :description => _("North Central US"),
         },
         "southcentralus" => {
           :name        => "southcentralus",
-          :description => "South Central US",
+          :description => _("South Central US"),
         },
         "northeurope" => {
           :name        => "northeurope",
-          :description => "North Europe",
+          :description => _("North Europe"),
         },
         "westeurope" => {
           :name        => "westeurope",
-          :description => "West Europe",
+          :description => _("West Europe"),
         },
         "eastasia" => {
           :name        => "eastasia",
-          :description => "East Asia",
+          :description => _("East Asia"),
         },
         "southeastasia" => {
           :name        => "southeastasia",
-          :description => "South East Asia",
+          :description => _("South East Asia"),
         },
         "japaneast" => {
           :name        => "japaneast",
-          :description => "Japan East",
+          :description => _("Japan East"),
         },
         "japanwest" => {
           :name        => "japanwest",
-          :description => "Japan West",
+          :description => _("Japan West"),
         },
         "brazilsouth" => {
           :name        => "brazilsouth",
-          :description => "Brazil South",
+          :description => _("Brazil South"),
         },
         "westindia" => {
           :name        => "westindia",
-          :description => "West India",
+          :description => _("West India"),
         },
         "southindia" => {
           :name        => "southindia",
-          :description => "South India",
+          :description => _("South India"),
         },
         "centralindia" => {
           :name        => "centralindia",
-          :description => "Central India",
+          :description => _("Central India"),
         },
         "westus(partner)" => {
           :name        => "westus(partner)",
-          :description => "West US (Partner)",
+          :description => _("West US (Partner)"),
         },
         "eastus2(stage)" => {
           :name        => "eastus2(stage)",
-          :description => "East US2 (Stage)",
+          :description => _("East US2 (Stage)"),
         },
         "northcentralus(stage)" => {
           :name        => "northcentralus(stage)",
-          :description => "North Central US (Stage)",
+          :description => _("North Central US (Stage)"),
         },
         "global" => {
           :name        => "global",
-          :description => "Global",
+          :description => _("Global"),
         },
         "msftwestus" => {
           :name        => "msftwestus",
-          :description => "MSFT West US",
+          :description => _("MSFT West US"),
         },
         "msfteastus" => {
           :name        => "msfteastus",
-          :description => "MSFT East US",
+          :description => _("MSFT East US"),
         },
         "msfteastasia" => {
           :name        => "msfteastasia",
-          :description => "MSFT East Asia",
+          :description => _("MSFT East Asia"),
         },
         "msftnortheurope" => {
           :name        => "msftnortheurope",
-          :description => "MSFT North Europe",
+          :description => _("MSFT North Europe"),
         },
         "eastasia(stage)" => {
           :name        => "eastasia(stage)",
-          :description => "East Asia (Stage)",
+          :description => _("East Asia (Stage)"),
         },
         "centralus(stage)" => {
           :name        => "centralus(stage)",
-          :description => "Central US (Stage)",
+          :description => _("Central US (Stage)"),
         },
       }
 
