@@ -1,0 +1,5 @@
+---
+:values:
+:filter:
+:default:
+  :blob_uri: https://my-azure-storage-account6.blob.core.windows.net/vhds/miq-oracle-linux.vhd
