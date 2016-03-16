@@ -378,7 +378,7 @@ class MiqQueue < ApplicationRecord
   rescue => err
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
   ensure
-    destroy
+    destroy_potentially_stale_record
   end
 
   def delivered_on
@@ -516,5 +516,11 @@ class MiqQueue < ApplicationRecord
       options[key] = [nil, options[key]].uniq if options.key?(key)
     end
     options
+  end
+
+  def destroy_potentially_stale_record
+    destroy
+  rescue ActiveRecord::StaleObjectError
+    reload.destroy
   end
 end # Class MiqQueue
