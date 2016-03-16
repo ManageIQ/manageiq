@@ -83,6 +83,25 @@ describe MiqAeClassController do
   end
 
   context "#copy_objects" do
+    it "do not replace left side explorer tree when copy form is loaded initially" do
+      set_user_privileges
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
+      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
+      cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+
+      node = "aec-#{cls1.id}"
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :ae_tree,
+                                       :action      => "miq_ae_class_copy",
+                                       :trees       => {:ae_tree => {:active_node => node}})
+      controller.instance_variable_set(:@_params, :button => "reset", :id => cls1.id)
+      allow(controller).to receive(:open_parent_nodes)
+      expect(controller).to_not receive(:replace_trees_by_presenter)
+      expect(controller).to receive(:render)
+      controller.send(:copy_objects)
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+    end
+
     it "copies class under specified namespace" do
       set_user_privileges
       d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
