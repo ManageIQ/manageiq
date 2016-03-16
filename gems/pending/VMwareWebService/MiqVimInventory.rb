@@ -1899,7 +1899,7 @@ class MiqVimInventory < MiqVimClientBase
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
       $vim_log.info "MiqVimInventory(#{@server}, #{@username}).inventoryHash_locked: calling retrieveProperties" if $vim_log
-      rv = retrieveProperties(@propCol, @spec)
+      rv = retrievePropertiesCompat(@propCol, @spec)
       $vim_log.info "MiqVimInventory(#{@server}, #{@username}).inventoryHash_locked: returned from retrieveProperties" if $vim_log
       @inventoryHash = {}
       rv.each { |v| (@inventoryHash[v.obj.vimType] ||= []) << v.obj }
@@ -2141,7 +2141,7 @@ class MiqVimInventory < MiqVimClientBase
     state = result = error = nil
 
     until state
-      oca = retrieveProperties(@propCol, args)
+      oca = retrievePropertiesCompat(@propCol, args)
       raise "waitForTask: task not found #{tmor}" if !oca || !oca[0] || !oca[0].propSet
 
       oca[0].propSet.each do |ps|
@@ -2183,7 +2183,7 @@ class MiqVimInventory < MiqVimClientBase
 
     state = result = error = progress = nil
 
-    oca = retrieveProperties(@propCol, args)
+    oca = retrievePropertiesCompat(@propCol, args)
     raise "pollTask: task not found #{tmor}" if !oca || !oca[0] || !oca[0].propSet
 
     oca[0].propSet.each do |ps|
@@ -2239,7 +2239,7 @@ class MiqVimInventory < MiqVimClientBase
     end
 
     $vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoProp_local: calling retrieveProperties(#{mo.vimType})" if $vim_log
-    oca = retrieveProperties(@propCol, pfSpec)
+    oca = retrievePropertiesCompat(@propCol, pfSpec)
     $vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoProp_local: return from retrieveProperties(#{mo.vimType})" if $vim_log
 
     return nil if !oca || !oca[0] || !oca[0].propSet
@@ -2314,7 +2314,7 @@ class MiqVimInventory < MiqVimClientBase
     end
 
     begin
-      oca = retrieveProperties(@propCol, args)
+      oca = retrievePropertiesCompat(@propCol, args)
     rescue HTTPClient::ReceiveTimeoutError => rte
       $vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoPropMulti: retrieveProperties timed out, reverting to getMoPropMultiIter" if $vim_log
       return getMoPropMultiIter(moa, path)

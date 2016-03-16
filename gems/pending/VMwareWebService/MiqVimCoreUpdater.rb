@@ -333,7 +333,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
       end
     end
 
-    oca = retrieveProperties(@propCol, pfSpec)
+    oca = retrievePropertiesCompat(@propCol, pfSpec)
 
     return nil if !oca || !oca[0] || !oca[0].propSet
 
