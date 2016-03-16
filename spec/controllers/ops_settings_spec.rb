@@ -88,7 +88,7 @@ describe OpsController do
       end
     end
 
-    context "schedule additon" do
+    context "schedule addition" do
       before(:each) do
         EvmSpecHelper.create_guid_miq_server_zone
         expect(controller).to receive(:render)
@@ -128,6 +128,41 @@ describe OpsController do
         controller.instance_variable_set(:@_params, @params)
         FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => user.userid, :towhat => "Vm")
         controller.send(:schedule_edit)
+        expect(controller.send(:flash_errors?)).to be_truthy
+        expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
+      end
+    end
+  end
+
+  render_views
+  context "OpsController::Settings" do
+    let(:user) { FactoryGirl.create(:user, :features => %w(zone_edit zone_new)) }
+    before do
+      login_as user
+    end
+
+    context "zone addition" do
+      it "#does not allow duplicate names when adding" do
+        miq_server = EvmSpecHelper.local_miq_server
+        MiqRegion.seed
+        EvmSpecHelper.create_guid_miq_server_zone
+        expect(controller).to receive(:render)
+        @zone = FactoryGirl.create(:zone, :name => 'zoneName', :description => "description1")
+        allow(controller).to receive(:assert_privileges)
+
+        @params = {:id => 'new',
+                   :action      => "zone_edit",
+                   :button      => "add"
+        }
+        edit = {:new => {:name        => @zone.name,
+                         :description => "description02",
+                         :ntp => {}}}
+        controller.instance_variable_set(:@edit, edit)
+        controller.instance_variable_set(:@_params, @params)
+        controller.instance_variable_set(:@sb, {:x_active_tree => :settings_tree, :active_tab =>"settings_evm_servers"})
+        allow(controller).to receive(:load_edit).and_return(true)
+        controller.send(:zone_edit)
+
         expect(controller.send(:flash_errors?)).to be_truthy
         expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
       end

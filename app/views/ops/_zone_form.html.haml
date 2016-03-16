@@ -1,6 +1,6 @@
 - url = url_for(:action => 'zone_field_changed', :id => "#{@zone.id || "new"}")
 = render :partial => "layouts/flash_msg"
-- disabled_name = !(@zone.name.nil? && @edit[:current][:name].nil?)
+- disabled_name = !@zone.name.nil? && !@edit[:current][:name].nil?
 %h3
   = _("Zone Information")
 .form-horizontal
