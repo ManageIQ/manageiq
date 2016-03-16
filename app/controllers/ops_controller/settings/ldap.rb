@@ -161,7 +161,7 @@ module OpsController::Settings::Ldap
       if !@ldap_domain || @ldap_domain.id.blank?
         add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "LdapDomain")})
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Ldapomain"), :name => @ldap_domain.name})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "LdapDomain"), :name => @ldap_domain.name})
       end
       get_node_info(x_node)
       @ldap_domain = nil

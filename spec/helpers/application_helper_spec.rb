@@ -24,11 +24,11 @@ describe ApplicationHelper do
       req = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
       controller.instance_variable_set(:@sb,
                                        :active_tree => :cb_reports_tree,
-                                       :nodeid      => 'storages',
+                                       :nodeid      => 'Storage',
                                        :mode        => 'foo')
 
       menu_info  = helper.build_toolbar 'miq_policies_center_tb'
-      title_text = ui_lookup(:model => "storages")
+      title_text = ui_lookup(:model => "Storage")
 
       menu_info[0][:items].collect do |value|
         next unless value['title']

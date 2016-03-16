@@ -361,7 +361,7 @@ class HostController < ApplicationController
         valid_host = find_by_id_filtered(Host, params[:id])
         set_record_vars(valid_host, :validate)                      # Set the record variables, but don't save
         if valid_record?(valid_host) && set_record_vars(@host) && @host.save
-          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "host"), :name => @host.name})
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "Host"), :name => @host.name})
           @breadcrumbs.pop if @breadcrumbs
           AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, false))
           session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
