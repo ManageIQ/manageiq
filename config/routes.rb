@@ -1110,6 +1110,7 @@ Vmdb::Application.routes.draw do
         discover
         download_data
         edit
+        ems_network_form_fields
         index
         new
         protect
