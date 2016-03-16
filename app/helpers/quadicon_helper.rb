@@ -77,8 +77,6 @@ module QuadiconHelper
     "100/vendor-#{h(item.vmm_vendor_display.downcase)}.png"
   end
 
-  private
-
   def render_quadicon_text(item, row)
     return unless item
     db = db_from_item(item)
@@ -167,6 +165,8 @@ module QuadiconHelper
       end
     end
   end
+
+  private
 
   def db_from_item(item)
     item.kind_of?(ExtManagementSystem) ? item.class.db_name : item.class.base_model.name

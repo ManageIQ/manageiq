@@ -1,10 +1,8 @@
 require 'spec_helper'
-include ApplicationHelper
-include ERB::Util
 
 describe QuadiconHelper do
   describe "#render_quadicon" do
-    subject { render_quadicon(item, {}) }
+    subject { helper.render_quadicon(item, {}) }
 
     let(:item) do
       FactoryGirl.create(:vm_vmware)#, :type => ManageIQ::Providers::Vmware::InfraManager::Vm.name)
@@ -17,7 +15,7 @@ describe QuadiconHelper do
   end
 
   describe "#render_quadicon_text" do
-    subject { render_quadicon_text(item, row) }
+    subject { helper.render_quadicon_text(item, row) }
 
     let(:item) do
       FactoryGirl.create(:vm_vmware)
