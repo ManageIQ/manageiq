@@ -462,7 +462,8 @@ module UiConstants
   ASSIGN_TOS["Storage"] = {
     "enterprise"   => _("The Enterprise"),
     "storage"      => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "storage")},
-    "storage-tags" => _("Tagged %{tables}") % {:tables => ui_lookup(:tables => "storage")}
+    "storage-tags" => _("Tagged %{tables}") % {:tables => ui_lookup(:tables => "storage")},
+    "tenant"       => _("Tenant")
   }
   ASSIGN_TOS["MiqServer"] = {
     "miq_server" => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "miq_server")},
@@ -474,7 +475,8 @@ module UiConstants
     "enterprise"            => _("The Enterprise"),
     "ext_management_system" => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ext_management_systems")},
     "ems_cluster"           => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ems_cluster")},
-    "vm-tags"               => _("Tagged %{tables}") % {:tables => ui_lookup(:tables => "vm")}
+    "vm-tags"               => _("Tagged %{tables}") % {:tables => ui_lookup(:tables => "vm")},
+    "tenant"		     => _("Tenant")
   }
 
   EXP_COUNT_TYPE = [_("Count of"), "count"].freeze  # Selection for count based filters
