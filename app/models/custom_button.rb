@@ -39,7 +39,7 @@ class CustomButton < ApplicationRecord
   end
 
   def expanded_serializable_hash
-    button_hash = serializable_hash(:except => [:created_on, :updated_on])
+    button_hash = serializable_hash
     if resource_action
       button_hash[:resource_action] = resource_action.serializable_hash
     end
