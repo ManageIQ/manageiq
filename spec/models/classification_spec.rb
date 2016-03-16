@@ -356,6 +356,76 @@ describe Classification do
     end
   end
 
+  describe '.find_by_name' do
+    let(:my_region_number) { Classification.my_region_number }
+    let(:other_region) { Classification.my_region_number + 1 }
+    let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+
+    before do
+      @local = FactoryGirl.create(:classification, :name => "test_category1")
+      FactoryGirl.create(:classification, :name => "test_category3")
+
+      FactoryGirl.create(:tag, :name => "/managed/test_category2", :id => other_region_id)
+      @remote = FactoryGirl.create(:classification, :name => "test_category2", :id => other_region_id)
+    end
+
+    it "created classification in other region" do
+      expect(@remote.region_id).to eq(other_region)
+      expect(@remote.reload.id).to eq(other_region_id)
+      expect(@remote.tag_id).to eq(other_region_id)
+      expect(@remote.tag.region_id).to eq(other_region)
+    end
+
+    it "finds in region" do
+      local = Classification.find_by_name("test_category1", my_region_number)
+      expect(local).to eq(@local)
+      remote = Classification.find_by_name("test_category2", other_region)
+      expect(remote).to eq(@remote)
+    end
+
+    it "filters out wrong region" do
+      expect(Classification.find_by_name("test_category1", other_region)).to be_nil
+      expect(Classification.find_by_name("test_category2", my_region_number)).to be_nil
+    end
+
+    it "finds in all regions" do
+      expect(Classification.find_by_name("test_category1", nil)).to eq(@local)
+      expect(Classification.find_by_name("test_category2", nil)).to eq(@remote)
+    end
+
+    it "finds in my region" do
+      expect(Classification.find_by_name("test_category1")).to eq(@local)
+      expect(Classification.find_by_name("test_category2")).to be_nil
+    end
+  end
+
+  describe '.find_by_names' do
+    let(:my_region_number) { Classification.my_region_number }
+    let(:other_region) { Classification.my_region_number + 1 }
+    let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+
+    before do
+      @local = FactoryGirl.create(:classification, :name => "test_category1")
+      FactoryGirl.create(:tag, :name => Classification.name2tag("test_category2"), :id => other_region_id)
+      @remote = FactoryGirl.create(:classification, :name => "test_category2", :id => other_region_id)
+      FactoryGirl.create(:classification, :name => "test_category3")
+    end
+
+    it "finds in region" do
+      expect(Classification.find_by_names(%w(test_category1 test_category2), my_region_number)).to eq([@local])
+      expect(Classification.find_by_names(%w(test_category1 test_category2), other_region)).to eq([@remote])
+    end
+
+    it "finds in all regions" do
+      expect(Classification.find_by_names(%w(test_category1 test_category2), nil)).to match_array([@local, @remote])
+    end
+
+    it "finds in my region" do
+      Classification.find_by_name(%w(test_category1 test_category2))
+      expect(Classification.find_by_names(%w(test_category1 test_category2))).to eq([@local])
+    end
+  end
+
   def all_tagged_with(target, all, category)
     tagged_with(target, :all => all, :cat => category)
   end

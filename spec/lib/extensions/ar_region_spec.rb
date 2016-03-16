@@ -1,52 +1,54 @@
 describe "AR Regions extension" do
+  let(:base_class) { ManageIQ::Providers::Vmware::InfraManager::Vm }
+
   before(:each) do
-    allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:rails_sequence_factor).and_return(10)
+    allow(base_class).to receive(:rails_sequence_factor).and_return(10)
   end
 
   after(:each) do
-    ManageIQ::Providers::Vmware::InfraManager::Vm.clear_region_cache
+    base_class.clear_region_cache
   end
 
   it ".id_to_region" do
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.id_to_region(5)).to eq(0)
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.id_to_region(15)).to eq(1)
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.id_to_region(25)).to eq(2)
+    expect(base_class.id_to_region(5)).to eq(0)
+    expect(base_class.id_to_region(15)).to eq(1)
+    expect(base_class.id_to_region(25)).to eq(2)
   end
 
   it ".region_to_range" do
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.region_to_range(0)).to eq(0..9)
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.region_to_range(1)).to eq(10..19)
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.region_to_range(2)).to eq(20..29)
+    expect(base_class.region_to_range(0)).to eq(0..9)
+    expect(base_class.region_to_range(1)).to eq(10..19)
+    expect(base_class.region_to_range(2)).to eq(20..29)
   end
 
   it ".compressed_id?" do
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compressed_id?(5)).to     be_falsey
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compressed_id?(15)).to    be_falsey
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compressed_id?(25)).to    be_falsey
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compressed_id?("5")).to   be_falsey
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compressed_id?("1r5")).to be_truthy
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compressed_id?("2r5")).to be_truthy
+    expect(base_class.compressed_id?(5)).to     be_falsey
+    expect(base_class.compressed_id?(15)).to    be_falsey
+    expect(base_class.compressed_id?(25)).to    be_falsey
+    expect(base_class.compressed_id?("5")).to   be_falsey
+    expect(base_class.compressed_id?("1r5")).to be_truthy
+    expect(base_class.compressed_id?("2r5")).to be_truthy
   end
 
   it ".split_id" do
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(5)).to eq([0, 5])
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(15)).to eq([1, 5])
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.split_id(25)).to eq([2, 5])
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("5")).to eq([0, 5])
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("1r5")).to eq([1, 5])
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.split_id("2r5")).to eq([2, 5])
+    expect(base_class.split_id(5)).to eq([0, 5])
+    expect(base_class.split_id(15)).to eq([1, 5])
+    expect(base_class.split_id(25)).to eq([2, 5])
+    expect(base_class.split_id("5")).to eq([0, 5])
+    expect(base_class.split_id("1r5")).to eq([1, 5])
+    expect(base_class.split_id("2r5")).to eq([2, 5])
   end
 
   it ".compress_id" do
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(5)).to eq("5")
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(15)).to eq("1r5")
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.compress_id(25)).to eq("2r5")
+    expect(base_class.compress_id(5)).to eq("5")
+    expect(base_class.compress_id(15)).to eq("1r5")
+    expect(base_class.compress_id(25)).to eq("2r5")
   end
 
   it ".uncompress_id" do
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("5")).to eq(5)
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("1r5")).to eq(15)
-    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.uncompress_id("2r5")).to eq(25)
+    expect(base_class.uncompress_id("5")).to eq(5)
+    expect(base_class.uncompress_id("1r5")).to eq(15)
+    expect(base_class.uncompress_id("2r5")).to eq(25)
   end
 
   context "with some records" do
@@ -55,74 +57,73 @@ describe "AR Regions extension" do
       loop do
         dummy = FactoryGirl.create(:vm_vmware)
         @base_id = dummy.id
-        break if (@base_id % ManageIQ::Providers::Vmware::InfraManager::Vm.rails_sequence_factor) == 0
+        @base_region, small_id = dummy.split_id
+        break if small_id == 0
         dummy.destroy
       end
 
-      @base_region = (@base_id / ManageIQ::Providers::Vmware::InfraManager::Vm.rails_sequence_factor)
-      allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:my_region_number).and_return(@base_region + 1)
-      allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:rails_sequence_start).and_return(ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number * ManageIQ::Providers::Vmware::InfraManager::Vm.rails_sequence_factor + @base_id)
-      allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:rails_sequence_end).and_return(ManageIQ::Providers::Vmware::InfraManager::Vm.rails_sequence_start + ManageIQ::Providers::Vmware::InfraManager::Vm.rails_sequence_factor - 1)
+      allow(base_class).to receive(:my_region_number).and_return(@base_region + 1)
 
       29.times { FactoryGirl.create(:vm_vmware) } # 1 less because we created the base one above
     end
 
     it ".in_my_region" do
-      recs = ManageIQ::Providers::Vmware::InfraManager::Vm.in_my_region
+      recs = base_class.in_my_region
       expect(recs.count).to eq(10)
-      expect(recs.all? { |v| v.region_number == ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number }).to be_truthy
+      expect(recs.all? { |v| v.region_number == base_class.my_region_number }).to be_truthy
     end
 
     context ".in_region" do
       it "with region param" do
-        recs = ManageIQ::Providers::Vmware::InfraManager::Vm.in_region(@base_region)
+        recs = base_class.in_region(@base_region)
         expect(recs.count).to eq(10)
         expect(recs.all? { |v| v.region_number == @base_region }).to be_truthy
       end
 
       it "with nil param" do
-        recs = ManageIQ::Providers::Vmware::InfraManager::Vm.in_region(nil)
+        recs = base_class.in_region(nil)
         expect(recs.count).to eq(30)
       end
     end
 
     it ".with_region" do
-      recs = ManageIQ::Providers::Vmware::InfraManager::Vm.with_region(@base_region) { ManageIQ::Providers::Vmware::InfraManager::Vm.all }
+      recs = base_class.with_region(@base_region) { base_class.all }
       expect(recs.count).to eq(10)
       expect(recs.all? { |v| v.region_number == @base_region }).to be_truthy
     end
 
     it "#region_id" do
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).region_id).to eq(@base_region)
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).region_id).to eq(@base_region)
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 15).region_id).to eq(@base_region + 1)
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 19).region_id).to eq(@base_region + 1)
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 25).region_id).to eq(@base_region + 2)
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 29).region_id).to eq(@base_region + 2)
+      expect(base_class.find(@base_id + 5).region_id).to eq(@base_region)
+      expect(base_class.find(@base_id + 9).region_id).to eq(@base_region)
+      expect(base_class.find(@base_id + 15).region_id).to eq(@base_region + 1)
+      expect(base_class.find(@base_id + 19).region_id).to eq(@base_region + 1)
+      expect(base_class.find(@base_id + 25).region_id).to eq(@base_region + 2)
+      expect(base_class.find(@base_id + 29).region_id).to eq(@base_region + 2)
 
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.new.region_id).to eq(ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number)
+      expect(base_class.new.region_id).to eq(base_class.my_region_number)
+      expect(base_class.new(:id => @base_id + 29).region_id).to eq(@base_region + 2)
     end
 
     it "#compressed_id" do
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).compressed_id).to eq("#{@base_region}r5")
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).compressed_id).to eq("#{@base_region}r9")
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 15).compressed_id).to eq("#{@base_region + 1}r5")
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 19).compressed_id).to eq("#{@base_region + 1}r9")
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 25).compressed_id).to eq("#{@base_region + 2}r5")
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 29).compressed_id).to eq("#{@base_region + 2}r9")
+      expect(base_class.find(@base_id + 5).compressed_id).to eq("#{@base_region}r5")
+      expect(base_class.find(@base_id + 9).compressed_id).to eq("#{@base_region}r9")
+      expect(base_class.find(@base_id + 15).compressed_id).to eq("#{@base_region + 1}r5")
+      expect(base_class.find(@base_id + 19).compressed_id).to eq("#{@base_region + 1}r9")
+      expect(base_class.find(@base_id + 25).compressed_id).to eq("#{@base_region + 2}r5")
+      expect(base_class.find(@base_id + 29).compressed_id).to eq("#{@base_region + 2}r9")
 
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.new.compressed_id).to be_nil
+      expect(base_class.new.compressed_id).to be_nil
     end
 
     it "#split_id" do
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 5).split_id).to eq([@base_region, 5])
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 9).split_id).to eq([@base_region, 9])
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 15).split_id).to eq([@base_region + 1, 5])
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 19).split_id).to eq([@base_region + 1, 9])
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 25).split_id).to eq([@base_region + 2, 5])
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.find(@base_id + 29).split_id).to eq([@base_region + 2, 9])
+      expect(base_class.find(@base_id + 5).split_id).to eq([@base_region, 5])
+      expect(base_class.find(@base_id + 9).split_id).to eq([@base_region, 9])
+      expect(base_class.find(@base_id + 15).split_id).to eq([@base_region + 1, 5])
+      expect(base_class.find(@base_id + 19).split_id).to eq([@base_region + 1, 9])
+      expect(base_class.find(@base_id + 25).split_id).to eq([@base_region + 2, 5])
+      expect(base_class.find(@base_id + 29).split_id).to eq([@base_region + 2, 9])
 
-      expect(ManageIQ::Providers::Vmware::InfraManager::Vm.new.split_id).to eq([ManageIQ::Providers::Vmware::InfraManager::Vm.my_region_number, nil])
+      expect(base_class.new.split_id).to eq([base_class.my_region_number, nil])
     end
   end
 
