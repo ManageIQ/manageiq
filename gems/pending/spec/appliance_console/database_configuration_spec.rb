@@ -120,11 +120,13 @@ describe ApplianceConsole::DatabaseConfiguration do
 
   context "#create_region" do
     it "normal case" do
+      expect(ApplianceConsole::Utilities).to receive(:bail_if_db_connections)
       allow(@config).to receive_messages(:log_and_feedback => :some_object)
       expect(@config.create_region).to be_truthy
     end
 
     it "failure" do
+      expect(ApplianceConsole::Utilities).to receive(:bail_if_db_connections)
       allow(@config).to receive_messages(:log_and_feedback => nil)
       expect(@config.create_region).to be_falsey
     end

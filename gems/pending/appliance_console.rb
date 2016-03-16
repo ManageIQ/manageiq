@@ -422,35 +422,6 @@ Date and Time Configuration
         end
         press_any_key
 
-      when I18n.t("advanced_settings.dbregion_setup")
-        say("#{selection}\n\n")
-        unless configured
-          say("There is no database configured yet, please choose #{I18n.t("advanced_settings.db_config")} instead.")
-          press_any_key
-          raise MiqSignalError
-        end
-        ApplianceConsole::Utilities.bail_if_db_connections("preventing the setup of a database region")
-        clear_screen
-        say("#{selection}\n\n")
-        say("Note: Each database region number must be unique.\n\n")
-        region_number = ask_for_integer("database region number")
-        clear_screen
-        say "It is recommended to use a new database or backup the existing database first.\n"
-        say "Warning: SETTING A DATABASE REGION WILL DESTROY ANY EXISTING DATA AND CANNOT BE UNDONE.\n\n"
-        if agree("Setting Database Region to: #{region_number}\nAre you sure you want to continue? (Y/N): ")
-          say("Setting Database Region...  This process may take a few minutes.\n\n")
-
-          if ApplianceConsole::Utilities.rake("evm:db:region", ["--", {:region => region_number}])
-            say("Database region setup complete...")
-            say("Start the #{I18n.t("product.name")} server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
-          else
-            say("Database region setup failed.")
-          end
-          press_any_key
-        else
-          raise MiqSignalError
-        end
-
       when I18n.t("advanced_settings.key_gen")
         say("#{selection}\n\n")
 
@@ -483,31 +454,55 @@ Date and Time Configuration
           end
         end
 
-        loc_selection = ask_with_menu("Database Location", %w(Internal External), nil, false)
+        options = {
+          "Create Internal Database"           => "create_internal",
+          "Create Region in External Database" => "create_external",
+          "Join Region in External Database"   => "join_external",
+          "Reset Configured Database"          => "reset_region"
+        }
+        action = ask_with_menu("Database Operation", options)
 
-        ApplianceConsole::Logging.logger = VMDBLogger.new(LOGFILE)
-        database_configuration = ApplianceConsole.const_get("#{loc_selection}DatabaseConfiguration").new
-        begin
-          database_configuration.ask_questions
-        rescue ArgumentError => e
-          say("\nConfiguration failed: #{e.message}\n")
-          press_any_key
-          raise MiqSignalError
-        end
+        database_configuration =
+          if action == "create_internal"
+            ApplianceConsole::InternalDatabaseConfiguration.new
+          elsif action =~ /_external/
+            ApplianceConsole::ExternalDatabaseConfiguration.new(:action => action.split("_").first.to_sym)
+          else
+            ApplianceConsole::DatabaseConfiguration.new
+          end
 
-        clear_screen
-        say "Activating the configuration using the following settings...\n"
-        say "#{database_configuration.friendly_inspect}\n"
+        case action
+        when "reset_region"
+          if database_configuration.reset_region
+            say("Database reset successfully")
+            say("Start the server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
+          else
+            say("Failed to reset database")
+          end
+          press_any_key
+        when "create_internal", "create_external", "join_external"
+          begin
+            database_configuration.ask_questions
+          rescue ArgumentError => e
+            say("\nConfiguration failed: #{e.message}\n")
+            press_any_key
+            raise MiqSignalError
+          end
 
-        if database_configuration.activate
-          database_configuration.post_activation
-          say("\nConfiguration activated successfully.\n")
-          dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
-          press_any_key
-        else
-          say("\nConfiguration activation failed!\n")
-          press_any_key
-          raise MiqSignalError
+          clear_screen
+          say "Activating the configuration using the following settings...\n"
+          say "#{database_configuration.friendly_inspect}\n"
+
+          if database_configuration.activate
+            database_configuration.post_activation
+            say("\nConfiguration activated successfully.\n")
+            dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
+            press_any_key
+          else
+            say("\nConfiguration activation failed!\n")
+            press_any_key
+            raise MiqSignalError
+          end
         end
 
       when I18n.t("advanced_settings.tmp_config")

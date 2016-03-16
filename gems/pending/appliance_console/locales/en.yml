@@ -10,7 +10,6 @@ en:
     - hostname
     - datetime
     - dbrestore
-    - dbregion_setup
     - db_config
     - httpdauth
     - key_gen
@@ -26,7 +25,6 @@ en:
     hostname: Set Hostname
     datetime: Set Timezone, Date, and Time
     dbrestore: Restore Database From Backup
-    dbregion_setup: Setup Database Region
     db_config: Configure Database
     httpdauth: Configure External Authentication (httpd)
     evmstop: Stop EVM Server Processes
