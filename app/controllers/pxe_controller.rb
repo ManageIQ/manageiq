@@ -186,10 +186,8 @@ class PxeController < ApplicationController
                     _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
           end
         # resetting ManageIQ.oneTransition.oneTrans when tab loads
-        presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;'
-        if %w(save reset).include?(params[:button]) && is_browser_ie?
-          presenter[:extra_js] << 'ManageIQ.oneTransition.IEButtonPressed = true'
-        end
+        presenter.reset_one_trans
+        presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
       end
     when :iso_datastores_tree
       presenter.update(:main_div, r[:partial => "iso_datastore_list"])

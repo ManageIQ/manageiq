@@ -1926,17 +1926,11 @@ class CatalogController < ApplicationController
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = determine_record_id_for_presenter
-
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
-
     presenter[:osf_node] = x_node
+    presenter.reset_changes
+    presenter.reset_one_trans
 
-    # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
-    presenter[:extra_js] << "ManageIQ.changes = null;"
-    # resetting ManageIQ.oneTransition.oneTrans when tab loads
-    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;"
-
-    # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
   end
 
