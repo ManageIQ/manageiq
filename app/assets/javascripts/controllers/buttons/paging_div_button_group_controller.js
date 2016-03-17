@@ -1,5 +1,6 @@
 ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'miqService', '$compile', '$attrs', function($scope, miqService, $compile, $attrs) {
   var init = function() {
+    $scope.addBtnText = __("Add");
     $scope.saveBtnText = __("Save");
     $scope.saveAltText = __("Save Changes");
     $scope.submitBtnText = __("Submit");
@@ -8,7 +9,10 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     $scope.resetAltText = __("Reset Changes");
     $scope.cancelBtnText = __("Cancel");
 
-    if ($attrs.pagingDivButtonsType == "Submit") {
+    if ($attrs.pagingDivButtonsType == "Add") {
+      saveButton('Add');
+      cancelButton();
+    } else if ($attrs.pagingDivButtonsType == "Submit") {
       saveButton('Submit');
       cancelButton();
     } else {
@@ -25,7 +29,10 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     $scope.altText =  $scope.saveAltText;
     $scope.btnText = $scope.saveBtnText;
 
-    if(type == "Submit") {
+    if(type == "Add") {
+      $scope.altText =  $scope.addBtnText;
+      $scope.btnText = $scope.addBtnText;
+    } else if(type == "Submit") {
       $scope.altText =  $scope.submitAltText;
       $scope.btnText = $scope.submitBtnText;
     }
