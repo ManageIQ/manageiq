@@ -135,5 +135,10 @@ describe ChargebackController do
       controller.send(:get_cis_all)
       expect(assigns(:edit)[:cb_assign][:cis]).to eq(names_storage)
     end
+
+    it "returns a ArgumentError when element not in whitelist" do
+      controller.instance_variable_set(:@edit, :new => {:cbshow_typ => "None"}, :cb_assign => {})
+      expect { controller.send(:get_cis_all) }.to raise_error(ArgumentError)
+    end
   end
 end
