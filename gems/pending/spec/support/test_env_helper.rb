@@ -29,7 +29,7 @@ class TestEnvHelper
 
     # some_dir1/some_dir2/some_spec
     @relative_dir = File.join(spec_relative_path(@test_dir), @test_basename)
-    
+
     # <GEMS_PENDING_ROOT>/spec/recordings/some_dir1/some_dir2
     @absolute_recording_dir = File.join(RECORDINGS_DIR, @relative_dir)
 
@@ -163,7 +163,7 @@ class TestEnvHelper
   end
 end
 
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   env = TestEnvHelper.new(__FILE__)
   puts env.global_config.inspect
   puts

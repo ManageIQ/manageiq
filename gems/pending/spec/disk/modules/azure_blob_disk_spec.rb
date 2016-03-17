@@ -7,8 +7,7 @@ describe AzureBlobDisk do
   before(:all) do
     @test_env = TestEnvHelper.new(__FILE__)
     @test_env.vcr_filter
-    foo = 0
-    
+
     @client_id     = @test_env[:azure_client_id]
     @client_key    = @test_env[:azure_client_key]
     @tenant_id     = @test_env[:azure_tenant_id]
@@ -80,7 +79,7 @@ describe AzureBlobDisk do
 
     describe "#size" do
       it "should return the size of the disk in bytes", :ex_tag => 1 do
-        expect(@miq_disk.size).to eq(16492674678784)
+        expect(@miq_disk.size).to eq(16_492_674_678_784)
       end
     end
 
@@ -92,7 +91,7 @@ describe AzureBlobDisk do
 
     describe "#lbaEnd" do
       it "should return the expected end logical block address", :ex_tag => 1 do
-        expect(@miq_disk.lbaEnd).to eq(32212255232)
+        expect(@miq_disk.lbaEnd).to eq(32_212_255_232)
       end
     end
 
@@ -104,7 +103,7 @@ describe AzureBlobDisk do
 
     describe "#endByteAddr" do
       it "should return the expected end byte address", :ex_tag => 1 do
-        expect(@miq_disk.endByteAddr).to eq(16492674678784)
+        expect(@miq_disk.endByteAddr).to eq(16_492_674_678_784)
       end
 
       it "should return a value consistent with the other values", :ex_tag => 2 do
