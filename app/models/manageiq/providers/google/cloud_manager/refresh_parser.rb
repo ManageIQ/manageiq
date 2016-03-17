@@ -274,6 +274,7 @@ module ManageIQ::Providers
           :operating_system   => process_os(image),
           :template           => true,
           :publicly_available => true,
+          :deprecated         => !image.deprecated.nil?
         }
 
         return uid, new_result
