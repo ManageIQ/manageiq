@@ -67,24 +67,37 @@ describe OpsController do
     end
 
     context "#rbac_tenant_delete" do
-      it "deletes a tenant record successfully" do
+      before do
         allow(ApplicationHelper).to receive(:role_allows).and_return(true)
-        t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
+        @t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
         sb_hash = {
-          :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(t.id)}"}},
+          :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@t.id)}"}},
           :active_tree => :rbac_tree,
           :active_tab  => "rbac_details"
         }
         controller.instance_variable_set(:@sb, sb_hash)
-        controller.instance_variable_set(:@_params, :id => t.id)
-        expect(controller).to receive(:x_active_tree_replace_cell)
+        controller.instance_variable_set(:@_params, :id => @t.id)
         expect(controller).to receive(:render)
-        expect(response.status).to eq(200)
+      end
+
+      it "deletes a tenant record successfully" do
+        expect(controller).to receive(:x_active_tree_replace_cell)
         controller.send(:rbac_tenant_delete)
 
+        expect(response.status).to eq(200)
         flash_message = assigns(:flash_array).first
         expect(flash_message[:message]).to include("Delete successful")
         expect(flash_message[:level]).to be(:success)
+      end
+
+      it "returns error flash when tenant cannot be deleted" do
+        FactoryGirl.create(:miq_group, :tenant => @t)
+        controller.send(:rbac_tenant_delete)
+
+        expect(response.status).to eq(200)
+        flash_message = assigns(:flash_array).first
+        expect(flash_message[:message]).to include("Error during delete")
+        expect(flash_message[:level]).to be(:error)
       end
     end
 
