@@ -61,7 +61,7 @@ module OrchestrationStackHelper::TextualSummary
     h = {:label => label, :image => "orchestration_template", :value => template.name}
     if role_allows(:feature => "orchestration_templates_view")
       h[:title] = _("Show this Orchestration Template")
-      h[:link] = url_for(:controller => 'catalog', :action => 'ot_show', :id => template.id)
+      h[:link] = url_for(:action => 'show', :id => @orchestration_stack, :display => 'stack_orchestration_template')
     end
     h
   end

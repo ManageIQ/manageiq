@@ -6,6 +6,10 @@ FactoryGirl.define do
   factory :orchestration_stack_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack" do
   end
 
+  factory :orchestration_stack_cloud_with_template, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack" do
+    orchestration_template { FactoryGirl.create(:orchestration_template) }
+  end
+
   factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack" do
   end
 
