@@ -110,4 +110,35 @@ describe ChargebackController do
       expect(flash_array.first[:message]).to include("rate is assigned and cannot be deleted")
     end
   end
+
+  context "#get_cis_all" do
+    let!(:storage) { FactoryGirl.create(:storage) }
+    let!(:miq_enterprise) { FactoryGirl.create(:miq_enterprise) }
+
+    it "returns names of instances of enterprise" do
+      names_miqent = {}
+      MiqEnterprise.all.each do |instance|
+        names_miqent[instance.id] = instance.name
+      end
+      controller.instance_variable_set(:@edit, :new => {:cbshow_typ => "enterprise"}, :cb_assign => {})
+      controller.send(:get_cis_all)
+      expect(assigns(:edit)[:cb_assign][:cis]).to eq(names_miqent)
+    end
+
+    it "returns names of instances of storage" do
+      names_storage = {}
+      element = "storage"
+      element.classify.constantize.all.each do |instance|
+        names_storage[instance.id] = instance.name
+      end
+      controller.instance_variable_set(:@edit, :new => {:cbshow_typ => element}, :cb_assign => {})
+      controller.send(:get_cis_all)
+      expect(assigns(:edit)[:cb_assign][:cis]).to eq(names_storage)
+    end
+
+    it "returns a ArgumentError when element not in whitelist" do
+      controller.instance_variable_set(:@edit, :new => {:cbshow_typ => "None"}, :cb_assign => {})
+      expect { controller.send(:get_cis_all) }.to raise_error(ArgumentError)
+    end
+  end
 end
