@@ -9,17 +9,17 @@ module MiqReport::Generator
   include_concern 'Utilization'
 
   DATE_TIME_BREAK_SUFFIXES = [
-    ["Hour",              "hour"],
-    ["Day",               "day"],
-    ["Week",              "week"],
-    ["Month",             "month"],
-    ["Quarter",           "quarter"],
-    ["Year",              "year"],
-    ["Hour of the Day",   "hour_of_day"],
-    ["Day of the Week",   "day_of_week"],
-    ["Day of the Month",  "day_of_month"],
-    ["Week of the Year",  "week_of_year"],
-    ["Month of the Year", "month_of_year"]
+    [_("Hour"),              "hour"],
+    [_("Day"),               "day"],
+    [_("Week"),              "week"],
+    [_("Month"),             "month"],
+    [_("Quarter"),           "quarter"],
+    [_("Year"),              "year"],
+    [_("Hour of the Day"),   "hour_of_day"],
+    [_("Day of the Week"),   "day_of_week"],
+    [_("Day of the Month"),  "day_of_month"],
+    [_("Week of the Year"),  "week_of_year"],
+    [_("Month of the Year"), "month_of_year"]
   ].freeze
 
   module ClassMethods
@@ -200,7 +200,7 @@ module MiqReport::Generator
         # Use custom method in MiqReport class to get report results if defined
         results, ext = send(custom_results_method, options)
       else
-        raise "Unsupported report type '#{db_options[:rpt_type]}'"
+        raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
       end
       self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
 
@@ -399,8 +399,12 @@ module MiqReport::Generator
   end
 
   def build_table_from_report(options = {})
-    raise "No #{self.class.name} object provided" unless db_options && db_options[:report]
-    raise "DB option :report must be a #{self.class.name} object" unless db_options[:report].kind_of?(self.class)
+    unless db_options && db_options[:report]
+      raise _("No %{class_name} object provided") % {:class_name => self.class.name}
+    end
+    unless db_options[:report].kind_of?(self.class)
+      raise _("DB option :report must be a %{class_name} object") % {:class_name => self.class.name}
+    end
 
     result = generate_rows_from_data(get_data_from_report(db_options[:report]))
 
@@ -414,7 +418,7 @@ module MiqReport::Generator
   end
 
   def get_data_from_report(rpt)
-    raise "Report table is nil" if rpt.table.nil?
+    raise _("Report table is nil") if rpt.table.nil?
 
     rpt_data = if db_options[:row_col] && db_options[:row_val]
                  rpt.table.find_all { |d| d.data.key?(db_options[:row_col]) && (d.data[db_options[:row_col]] == db_options[:row_val]) }.collect(&:data)
@@ -441,7 +445,9 @@ module MiqReport::Generator
     unless col_def.kind_of?(Hash)
       return col_def
     else
-      raise "Column '#{col_def[:col_name]} does not exist in data" unless data.key?(col_def[:col_name])
+      unless data.key?(col_def[:col_name])
+        raise _("Column '%{name} does not exist in data") % {:name => col_def[:col_name]}
+      end
       return col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
     end
   end
@@ -449,13 +455,17 @@ module MiqReport::Generator
   def apply_col_function(col_def, data)
     case col_def[:function]
     when 'percent_of_col'
-      raise "Column '#{gen_row[:col_name]} does not exist in data" unless data.key?(col_def[:col_name])
-      raise "Column '#{gen_row[:pct_col_name]} does not exist in data" unless data.key?(col_def[:pct_col_name])
+      unless data.key?(col_def[:col_name])
+        raise _("Column '%{name} does not exist in data") % {:name => gen_row[:col_name]}
+      end
+      unless data.key?(col_def[:pct_col_name])
+        raise _("Column '%{name} does not exist in data") % {:name => gen_row[:pct_col_name]}
+      end
       col_val = data[col_def[:col_name]] || 0
       pct_val = data[col_def[:pct_col_name]] || 0
       return pct_val == 0 ? 0 : (col_val / pct_val * 100.0)
     else
-      raise "Column function '#{col_def[:function]}' not supported"
+      raise _("Column function '%{name}' not supported") % {:name => col_def[:function]}
     end
   end
 
@@ -762,7 +772,9 @@ module MiqReport::Generator
 
     # If a scheduler :at time was provided, convert that to a Time object, otherwise use the current time
     if res_opts[:at]
-      raise "Expected scheduled time 'at' to be 'numeric', received '#{res_opts[:at].class}'" unless res_opts[:at].kind_of?(Numeric)
+      unless res_opts[:at].kind_of?(Numeric)
+        raise _("Expected scheduled time 'at' to be 'numeric', received '%{type}'") % {:type => res_opts[:at].class}
+      end
       at = Time.at(res_opts[:at]).utc
     else
       at = res_last_run_on

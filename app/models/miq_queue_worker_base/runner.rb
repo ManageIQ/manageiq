@@ -64,7 +64,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
         _log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
         next
       rescue => err
-        raise "#{log_prefix} \"#{err}\" attempting to get next message"
+        raise _("%{log} \"%{error}\" attempting to get next message") % {:log => log_prefix, :error => err}
       end
     end
   end
@@ -134,9 +134,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     return deliver_queue_message(msg) if msg.kind_of?(MiqQueue)
     return process_message(msg)       if msg.kind_of?(String)
 
-    emsg = "#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>"
-    _log.error(emsg)
-    raise emsg
+    _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
+    raise _("%{log} Message <%{message}> is of unknown type <%{type}>") % {:log     => log_prefix,
+                                                                           :message => msg.inspect,
+                                                                           :type    => msg.class}
   end
 
   def do_work

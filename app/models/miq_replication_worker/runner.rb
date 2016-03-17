@@ -83,7 +83,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   end
 
   def start_rubyrep(verb)
-    raise "Cannot call start_rubyrep if a process already exists" if rubyrep_alive?
+    raise _("Cannot call start_rubyrep if a process already exists") if rubyrep_alive?
     _log.info("#{log_prefix} Starting #{verb.to_s.humanize} Process")
     start_rubyrep_process(verb)
     _log.info("#{log_prefix} Started  #{verb.to_s.humanize} Process")

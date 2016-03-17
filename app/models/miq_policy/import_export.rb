@@ -3,7 +3,7 @@ module MiqPolicy::ImportExport
 
   module ClassMethods
     def import_from_hash(policy, options = {})
-      raise "No Policy to Import" if policy.nil?
+      raise _("No Policy to Import") if policy.nil?
       pe = policy.delete("MiqPolicyContent") { |_k| raise "No contents for Policy == #{policy.inspect}" }
       pc = policy.delete("Condition") || []
 
