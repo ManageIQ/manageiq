@@ -13,7 +13,7 @@ module Metric::CiMixin::Capture
           elsif self.respond_to?(:ext_management_system)
             ext_management_system
           else
-            raise "Unsupported type #{self.class.name} (id: #{id})"
+            raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id}
           end
 
     ems.metrics_collector_queue_name
@@ -113,8 +113,10 @@ module Metric::CiMixin::Capture
   end
 
   def perf_capture(interval_name, start_time = nil, end_time = nil)
-    raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
-    raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
+    unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
+      raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
+    end
+    raise ArgumentError, _("end_time cannot be specified if start_time is nil") if start_time.nil? && !end_time.nil?
 
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?

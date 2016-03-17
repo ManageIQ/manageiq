@@ -37,7 +37,10 @@ module Metric::Processing
   ]
 
   def self.process_derived_columns(obj, attrs, ts = nil)
-    raise "object #{obj} is not one of #{VALID_PROCESS_TARGETS.collect(&:name).join(", ")}" unless VALID_PROCESS_TARGETS.any? { |t| obj.kind_of?(t) }
+    unless VALID_PROCESS_TARGETS.any? { |t| obj.kind_of?(t) }
+      raise _("object %{name} is not one of %{items}") % {:name  => obj,
+                                                          :items => VALID_PROCESS_TARGETS.collect(&:name).join(", ")}
+    end
 
     ts = attrs[:timestamp] if ts.nil?
     state = obj.vim_performance_state_for_ts(ts)
@@ -161,7 +164,7 @@ module Metric::Processing
     when "realtime" then 20
     when "hourly" then   1.hour.to_i
     when "daily" then    1.day.to_i
-    else             raise "unknown interval name: [#{name}]"
+    else raise _("unknown interval name: [%{name}]") % {:name => name}
     end
   end
 end
