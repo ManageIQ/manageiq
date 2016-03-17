@@ -597,9 +597,9 @@ module OpsController::Settings::Common
       end
       @sb[:roles] = new[:server][:role].split(",")
       params.each do |var, val|
-        if var.starts_with?("server_roles_") && val.to_s == "1"
+        if var.starts_with?("server_roles_") && val.to_s == "true"
           @sb[:roles].push(var.split("server_roles_").last) unless @sb[:roles].include?(var.split("server_roles_").last)
-        elsif var.starts_with?("server_roles_") && val.downcase == "null"
+        elsif var.starts_with?("server_roles_") && val.downcase == "false"
           @sb[:roles].delete(var.split("server_roles_").last)
         end
         server_role = @sb[:roles].sort.join(",")
