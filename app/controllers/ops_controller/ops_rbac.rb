@@ -351,12 +351,10 @@ module OpsController::OpsRbac
     assert_privileges("rbac_tenant_delete")
     tenants = []
     if !params[:id] # showing a tenants list
-      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
-      tenants = Tenant.where(:id => ids).to_a
-      tenants.reject! do |t|
-        t.parent.nil?
+      tenants = Tenant.where(:id => find_checked_items).reject do |t|
         add_flash(_("Default %{model} \"%{name}\" can not be deleted") % {:model => ui_lookup(:model => "Tenant"),
                                                                           :name  => t.name}, :error) if t.parent.nil?
+        t.parent.nil?
       end
     else # showing 1 tenant, delete it
       if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
