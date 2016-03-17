@@ -16,8 +16,7 @@ describe NotificationType, :type => :model do
   describe '#subscribers' do
     let(:user1) { FactoryGirl.create(:user) }
     let(:tenant2) { FactoryGirl.create(:tenant) }
-    let(:tenant2_group) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
-    let!(:user2) { FactoryGirl.create(:user, :miq_groups => [tenant2_group]) }
+    let!(:user2) { FactoryGirl.create(:user_with_group, :tenant => tenant2) }
     let(:vm) { FactoryGirl.create(:vm, :tenant => tenant2) }
     subject { notification.subscriber_ids(vm, user1) }
     context 'global notification type' do
