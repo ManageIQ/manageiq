@@ -33,7 +33,7 @@ class MiqWorker::Runner
 
   def poll_method=(val)
     val = "sleep_poll_#{val}"
-    raise ArgumentError, "poll method '#{val}' not defined" unless self.respond_to?(val)
+    raise ArgumentError, _("poll method '%{value}' not defined") % {:value => val} unless respond_to?(val)
     @poll_method = val.to_sym
   end
 
@@ -100,9 +100,16 @@ class MiqWorker::Runner
   end
 
   def worker_monitor_drb
-    raise "#{log_prefix} No MiqServer found to establishing DRb Connection to" if server.nil?
+    raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
     drb_uri = server.reload.drb_uri
-    raise "#{log_prefix} Blank DRb_URI for MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}]"    if drb_uri.blank?
+    if drb_uri.blank?
+      raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
+        {:log         => log_prefix,
+         :number      => server.id,
+         :name        => server.name,
+         :pid_number  => server.pid,
+         :guid_number => server.guid}
+    end
     _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
     require 'drb'
     DRbObject.new(nil, drb_uri)
@@ -312,7 +319,7 @@ class MiqWorker::Runner
   #
 
   def do_work
-    raise NotImplementedError, "must be implemented in a subclass"
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def do_wait_for_worker_monitor
