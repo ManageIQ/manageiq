@@ -30,7 +30,7 @@ class EmsFolder < ApplicationRecord
 
     case name
     when "Datacenters"              then p.kind_of?(ExtManagementSystem)
-    when "vm", "host", "datastore"  then p.kind_of?(EmsFolder) && p.is_datacenter?
+    when "vm", "host", "datastore"  then p.kind_of?(Datacenter)
     else                            false
     end
   end
@@ -65,11 +65,11 @@ class EmsFolder < ApplicationRecord
   end
 
   def folders_only
-    folders.select { |f| !f.is_datacenter }
+    folders.select { |f| !f.kind_of?(Datacenter) }
   end
 
   def datacenters_only
-    folders.select(&:is_datacenter)
+    folders.select { |f| f.kind_of?(Datacenter) }
   end
 
   # Cluster relationship methods
@@ -131,7 +131,7 @@ class EmsFolder < ApplicationRecord
 
   # Parent relationship methods
   def parent_datacenter
-    detect_ancestor(:of_type => "EmsFolder", &:is_datacenter)
+    detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
 
   # TODO: refactor by vendor/hypervisor (currently, this assumes VMware)
@@ -204,7 +204,7 @@ class EmsFolder < ApplicationRecord
       path = options[:prefix]
       unless options[:exclude_non_display_folders] && NON_DISPLAY_FOLDERS.include?(f.name)
         path = path.blank? ? f.name : "#{path}/#{f.name}"
-        h[f.id] = path unless options[:exclude_datacenters] && f.is_datacenter?
+        h[f.id] = path unless options[:exclude_datacenters] && f.kind_of?(Datacenter)
       end
       h.merge!(child_folder_paths_recursive(children, options.merge(:prefix => path)))
     end

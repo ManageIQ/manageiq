@@ -1036,7 +1036,6 @@ module ManageIQ::Providers
             :ems_ref_obj   => mor,
             :uid_ems       => mor,
             :name          => data["name"],
-            :is_datacenter => false,
             :child_uids    => child_mors
           }
           result << new_result
@@ -1059,7 +1058,6 @@ module ManageIQ::Providers
             :ems_ref_obj   => mor,
             :uid_ems       => mor,
             :name          => data["name"],
-            :is_datacenter => true,
             :child_uids    => child_mors
           }
           result << new_result
@@ -1083,7 +1081,6 @@ module ManageIQ::Providers
             :ems_ref_obj   => mor,
             :uid_ems       => mor,
             :name          => name,
-            :is_datacenter => false,
             :child_uids    => child_mors
           }
 

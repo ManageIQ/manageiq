@@ -339,33 +339,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     # nic.network.should == network # TODO: Hook up this connection
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
-      :name          => "Default",
-      :is_datacenter => true,
+      :ems_ref     => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :ems_ref_obj => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085",
+      :name        => "Default",
+      :type        => "Datacenter",
 
-      :folder_path   => "Datacenters/Default"
+      :folder_path => "Datacenters/Default"
     )
 
     expect(v.parent_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "root_dc",
-      :name          => "Datacenters",
-      :is_datacenter => false,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "root_dc",
+      :name        => "Datacenters",
+      :type        => nil,
 
-      :folder_path   => "Datacenters"
+      :folder_path => "Datacenters"
     )
 
     expect(v.parent_blue_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
-      :name          => "vm",
-      :is_datacenter => false,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
+      :name        => "vm",
+      :type        => nil,
 
-      :folder_path   => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/Default/vm"
     )
   end
 
@@ -494,33 +494,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(v.hardware.networks.size).to eq(0)
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
-      :name          => "Default",
-      :is_datacenter => true,
+      :ems_ref     => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :ems_ref_obj => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085",
+      :name        => "Default",
+      :type        => "Datacenter",
 
-      :folder_path   => "Datacenters/Default"
+      :folder_path => "Datacenters/Default"
     )
 
     expect(v.parent_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "root_dc",
-      :name          => "Datacenters",
-      :is_datacenter => false,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "root_dc",
+      :name        => "Datacenters",
+      :type        => nil,
 
-      :folder_path   => "Datacenters"
+      :folder_path => "Datacenters"
     )
 
     expect(v.parent_blue_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
-      :name          => "vm",
-      :is_datacenter => false,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
+      :name        => "vm",
+      :type        => nil,
 
-      :folder_path   => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/Default/vm"
     )
   end
 
@@ -597,43 +597,43 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(v.hardware.networks.size).to eq(0)
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref       => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :ems_ref_obj   => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085",
-      :name          => "Default",
-      :is_datacenter => true,
+      :ems_ref     => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :ems_ref_obj => "/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085",
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085",
+      :name        => "Default",
+      :type        => "Datacenter",
 
-      :folder_path   => "Datacenters/Default"
+      :folder_path => "Datacenters/Default"
     )
 
     expect(v.parent_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "root_dc",
-      :name          => "Datacenters",
-      :is_datacenter => false,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "root_dc",
+      :name        => "Datacenters",
+      :type        => nil,
 
-      :folder_path   => "Datacenters"
+      :folder_path => "Datacenters"
     )
 
     expect(v.parent_blue_folder).to have_attributes(
-      :ems_ref       => nil,
-      :ems_ref_obj   => nil,
-      :uid_ems       => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
-      :name          => "vm",
-      :is_datacenter => false,
+      :ems_ref     => nil,
+      :ems_ref_obj => nil,
+      :uid_ems     => "eb5592d2-ce76-11e0-a703-005056af0085_vm",
+      :name        => "vm",
+      :type        => nil,
 
-      :folder_path   => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/Default/vm"
     )
   end
 
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
-      [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
-        [EmsFolder, "DC-iSCSI", {:is_datacenter => true}] => {
-          [EmsFolder, "host", {:is_datacenter => false}] => {
+      [EmsFolder, "Datacenters"] => {
+        [Datacenter, "DC-iSCSI"] => {
+          [EmsFolder, "host"] => {
             [EmsCluster, "Cluster1-iSCSI"] => {
-              [ResourcePool, "Default for Cluster Cluster1-iSCSI", {:is_default => true}] => {
+              [ResourcePool, "Default for Cluster Cluster1-iSCSI"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"]   => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"]  => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-5005-test"] => {},
@@ -641,7 +641,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+          [EmsFolder, "vm"]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "Template1"]  => {},
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"]   => {},
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"]  => {},
@@ -649,13 +649,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-v5005"]        => {}
           }
         },
-        [EmsFolder, "DC2", {:is_datacenter => true}]      => {
-          [EmsFolder, "host", {:is_datacenter => false}] => {
+        [Datacenter, "DC2"]      => {
+          [EmsFolder, "host"] => {
             [EmsCluster, "DC2-iSCSI"]   => {
-              [ResourcePool, "Default for Cluster DC2-iSCSI", {:is_default => true}] => {}
+              [ResourcePool, "Default for Cluster DC2-iSCSI"] => {}
             },
             [EmsCluster, "DC2Cluster1"] => {
-              [ResourcePool, "Default for Cluster DC2Cluster1", {:is_default => true}] => {
+              [ResourcePool, "Default for Cluster DC2Cluster1"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-TrunkSVN"] => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-V5001"]    => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "new-server"]   => {},
@@ -665,7 +665,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+          [EmsFolder, "vm"]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM"]         => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-V5"]      => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v5-Base"] => {},
@@ -678,10 +678,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "V5-test"]           => {}
           }
         },
-        [EmsFolder, "Default", {:is_datacenter => true}]  => {
-          [EmsFolder, "host", {:is_datacenter => false}] => {
+        [Datacenter, "Default"]  => {
+          [EmsFolder, "host"] => {
             [EmsCluster, "Cluster2"] => {
-              [ResourcePool, "Default for Cluster Cluster2", {:is_default => true}] => {
+              [ResourcePool, "Default for Cluster Cluster2"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOff"] => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"]  => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-RH-50013"]              => {},
@@ -696,10 +696,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             },
             [EmsCluster, "Default"]  => {
-              [ResourcePool, "Default for Cluster Default", {:is_default => true}] => {}
+              [ResourcePool, "Default for Cluster Default"] => {}
             }
           },
-          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+          [EmsFolder, "vm"]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "empty"]               => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EmsRefreshSpec"]      => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-50011"]           => {},

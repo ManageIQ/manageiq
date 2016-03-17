@@ -349,11 +349,8 @@ class TreeBuilder
                         when DialogGroup         then x_get_tree_dialog_group_kids(parent, count_only, options[:type])
                         when DialogTab           then x_get_tree_dialog_tab_kids(parent, count_only, options[:type])
                         when ExtManagementSystem then x_get_tree_ems_kids(parent, count_only)
-                        when EmsFolder           then if parent.is_datacenter
-                                                        x_get_tree_datacenter_kids(parent, count_only, options[:type])
-                                                      else
-                                                        x_get_tree_folder_kids(parent, count_only, options[:type])
-                                                      end
+                        when Datacenter          then x_get_tree_datacenter_kids(parent, count_only, options[:type])
+                        when EmsFolder           then x_get_tree_folder_kids(parent, count_only, options[:type])
                         when EmsCluster          then x_get_tree_cluster_kids(parent, count_only)
                         when Hash                then
                           # TreeBuilderAlertProfile - :type

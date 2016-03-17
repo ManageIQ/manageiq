@@ -2,7 +2,7 @@ describe MiqFilter do
   let(:ems)             { FactoryGirl.create(:ems_vmware, :name => 'ems') }
   let(:ems_folder_path) { "/belongsto/ExtManagementSystem|#{ems.name}" }
   let(:datacenter)      { FactoryGirl.create(:ems_folder, :name => "Datacenters") }
-  let(:mtc)             { FactoryGirl.create(:ems_folder, :name => "MTC", :is_datacenter => true) }
+  let(:mtc)             { FactoryGirl.create(:datacenter, :name => "MTC") }
   let(:ems_folder_path) { "/belongsto/ExtManagementSystem|#{ems.name}" }
   let(:mtc_folder_path) { "#{ems_folder_path}/EmsFolder|#{datacenter.name}/EmsFolder|#{mtc.name}" }
   let(:host_folder)     { FactoryGirl.create(:ems_folder, :name => "host") }

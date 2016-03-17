@@ -255,7 +255,7 @@ class TreeNodeBuilder
   end
 
   def ems_folder_node
-    if object.is_datacenter
+    if object.kind_of?(Datacenter)
       generic_node(object.name, "datacenter.png", "Datacenter: #{object.name}")
     else # normal Folders
       normal_folder_node
@@ -340,7 +340,7 @@ class TreeNodeBuilder
       "-#{object.name.split('|').last}"
     else
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
-      base_class = "Datacenter" if base_class == "EmsFolder" && object.is_datacenter
+      base_class = "Datacenter" if base_class == "EmsFolder" && object.kind_of?(Datacenter)
       prefix = TreeBuilder.get_prefix_for_model(base_class)
       cid = ApplicationRecord.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"

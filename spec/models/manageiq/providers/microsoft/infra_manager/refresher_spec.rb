@@ -238,13 +238,13 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
-      [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
-        [EmsFolder, "SCVMM", {:is_datacenter => true}] => {
-          [EmsFolder, "host", {:is_datacenter => false}] => {
+      [EmsFolder, "Datacenters"] => {
+        [Datacenter, "SCVMM"] => {
+          [EmsFolder, "host"] => {
             [ManageIQ::Providers::Microsoft::InfraManager::Host, "dell-r410-01.cloudformswin.lab.redhat.com"] => {},
             [ManageIQ::Providers::Microsoft::InfraManager::Host, "dell-r410-03.cloudformswin.lab.redhat.com"] => {},
           },
-          [EmsFolder, "vm", {:is_datacenter => false}]   => {
+          [EmsFolder, "vm"]   => {
             [ManageIQ::Providers::Microsoft::InfraManager::Template, "linux_template"] => {},
             [ManageIQ::Providers::Microsoft::InfraManager::Vm, "linux2"]               => {},
             [ManageIQ::Providers::Microsoft::InfraManager::Vm, "vm_linux1"]            => {},
