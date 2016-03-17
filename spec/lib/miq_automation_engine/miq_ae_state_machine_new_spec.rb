@@ -7,6 +7,10 @@ describe "MiqAeStateMachine" do
       def initialize(workspace)
         @workspace = workspace
       end
+
+      def get_value(_f, type)
+        @workspace.root[type]
+      end
     end
   end
 
@@ -76,6 +80,29 @@ describe "MiqAeStateMachine" do
             expect { obj.enforce_max_time('max_time' => '6.seconds') }.to_not raise_error
           end
         end
+      end
+    end
+  end
+
+  describe "#process_state_relationship" do
+    context "method" do
+      let(:options) { {:aetype_relationship => "Method::my_method"} }
+      it "check it calls method" do
+        obj = test_class
+        expect(obj).to receive(:process_method_raw).with('my_method').once.and_return({})
+        expect(obj).to receive(:enforce_state_maxima).with(any_args).once.and_return({})
+        obj.process_state_relationship({'name' => 'a'}, "abc", nil)
+      end
+    end
+
+    context "relationship" do
+      let(:options) { {:aetype_relationship => "my_relations"} }
+      it "check it calls relationship" do
+        obj = test_class
+        obj.instance_variable_set(:@rels, 'a' => "test")
+        expect(obj).to receive(:process_relationship_raw).with('my_relations', 'abc', nil, 'a', nil).once.and_return({})
+        expect(obj).to receive(:enforce_state_maxima).with(any_args).once.and_return({})
+        obj.process_state_relationship({'name' => 'a'}, "abc", nil)
       end
     end
   end
