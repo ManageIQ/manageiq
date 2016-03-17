@@ -429,6 +429,8 @@ class ApplicationHelper::ToolbarChooser
         return "resource_pools_center_tb"
       elsif @display == "storages"
         return "storages_center_tb"
+      elsif @display == "stack_orchestration_template"
+        return "stack_orchestration_template_center"
       elsif (@layout == "vm" || @layout == "host") && @display == "performance"
         return "#{@explorer ? "x_" : ""}vm_performance_tb"
       elsif @display == "dashboard"
