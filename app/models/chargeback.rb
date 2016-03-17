@@ -1,4 +1,45 @@
 class Chargeback < ActsAsArModel
+  set_columns_hash(
+    :start_date               => :datetime,
+    :end_date                 => :datetime,
+    :interval_name            => :string,
+    :display_range            => :string,
+    :vm_name                  => :string,
+    :owner_name               => :string,
+    :cpu_allocated_metric     => :float,
+    :cpu_allocated_cost       => :float,
+    :cpu_used_cost            => :float,
+    :cpu_used_metric          => :float,
+    :cpu_cost                 => :float,
+    :cpu_metric               => :float,
+    :disk_io_used_cost        => :float,
+    :disk_io_used_metric      => :float,
+    :disk_io_cost             => :float,
+    :disk_io_metric           => :float,
+    :fixed_compute_1_cost     => :float,
+    :fixed_compute_2_cost     => :float,
+    :fixed_storage_1_cost     => :float,
+    :fixed_storage_2_cost     => :float,
+    :fixed_2_cost             => :float,
+    :fixed_cost               => :float,
+    :memory_allocated_cost    => :float,
+    :memory_allocated_metric  => :float,
+    :memory_used_cost         => :float,
+    :memory_used_metric       => :float,
+    :memory_cost              => :float,
+    :memory_metric            => :float,
+    :net_io_used_cost         => :float,
+    :net_io_used_metric       => :float,
+    :net_io_cost              => :float,
+    :net_io_metric            => :float,
+    :storage_allocated_cost   => :float,
+    :storage_allocated_metric => :float,
+    :storage_used_cost        => :float,
+    :storage_used_metric      => :float,
+    :storage_cost             => :float,
+    :storage_metric           => :float,
+    :total_cost               => :float
+  )
 
   def self.build_results_for_report_chargeback(options)
     # Options:
@@ -130,11 +171,6 @@ class Chargeback < ActsAsArModel
     @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents, :associations_preloaded => true)
   end
 
-  def self.column_names
-    set_columns_hash(valids_columns)
-    @column_names ||= columns.collect(&:name).sort
-  end
-
   def self.calculate_costs(perf, h, rates)
     # This expects perf interval to be hourly. That will be the most granular interval available for chargeback.
     raise "expected 'hourly' performance interval but got '#{perf.capture_interval_name}" unless perf.capture_interval_name == "hourly"
@@ -221,29 +257,6 @@ class Chargeback < ActsAsArModel
     end
 
     [start_time, end_time]
-  end
-
-  def self.valids_columns
-    hash_columns = {:start_date    => :datetime,
-                    :end_date      => :datetime,
-                    :interval_name => :string,
-                    :display_range => :string,
-                    :vm_name       => :string,
-                    :owner_name    => :string
-                   }
-    ChargebackRate.where(:default => true).each do |cb|
-      cb.chargeback_rate_details.where.not(:rate => "0").each do |rd|
-        column = rd.group + "_" + rd.source
-        hash_columns[(column + "_cost").to_sym] = :float
-        hash_columns[(rd.group + "_cost").to_sym] = :float
-        if rd.group != "fixed"
-          hash_columns[(column + "_metric").to_sym] = :float
-          hash_columns[(rd.group + "_metric").to_sym] = :float
-        end
-      end
-    end
-    hash_columns[:total_const] = :float
-    hash_columns
   end
 
   def self.report_col_options
