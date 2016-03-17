@@ -1,0 +1,1381 @@
+---
+:api:
+  :token_ttl: 10.minutes
+  :authentication_timeout: 30.seconds
+:authentication:
+  :basedn:
+  :bind_dn:
+  :bind_pwd:
+  :get_direct_groups: true
+  :group_memberships_max_depth: 2
+  :ldaphost:
+  :ldapport: '389'
+  :mode: database
+  :user_suffix:
+  :user_type: userprincipalname
+  :amazon_key:
+  :amazon_secret:
+:broker_notify_properties:
+  :exclude:
+    :HostSystem:
+      :config.consoleReservation:
+      :config.dateTimeInfo:
+      :config.network:
+      :config.service:
+      :summary:
+      :summary.overallStatus:
+      :summary.runtime.bootTime:
+      :summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo:
+    :VirtualMachine:
+      :config.locationId:
+      :config.memoryAllocation.overheadLimit:
+      :config.npivWorldWideNameType:
+      :guest.disk:
+      :guest.guestFamily:
+      :guest.guestFullName:
+      :guest.guestId:
+      :guest.ipStack:
+      :guest.net:
+      :guest.screen:
+      :guest.screen.height:
+      :guest.screen.width:
+      :guest.toolsRunningStatus:
+      :guest.toolsStatus:
+      :resourceConfig:
+      :summary:
+      :summary.guest.guestFullName:
+      :summary.guest.guestId:
+      :summary.guest.toolsRunningStatus:
+      :summary.overallStatus:
+      :summary.runtime.bootTime:
+      :summary.runtime.memoryOverhead:
+      :summary.runtime.numMksConnections:
+      :summary.storage:
+      :summary.storage.committed:
+      :summary.storage.unshared:
+:capacity:
+  :profile:
+    :1:
+      :vcpu_commitment_ratio: 2.0
+      :vcpu_method: vcpu_average
+      :vcpu_method_description: Average of Allocated vCPU
+      :memory_commitment_ratio: 1.2
+      :memory_method: mem_average
+      :memory_method_description: Average of Allocated Memory
+    :2:
+      :vcpu_commitment_ratio: 1.0
+      :vcpu_method: vcpu_high_norm
+      :vcpu_method_description: High Normal Range of Allocated vCPU
+      :memory_commitment_ratio: 1.0
+      :memory_method: mem_high_norm
+      :memory_method_description: High Normal Range of Allocated Memory
+  :failover:
+    :rule: discovered
+:coresident_miqproxy:
+  :concurrent_per_ems: 1
+  :concurrent_per_host: 1
+  :scan_via_host: true
+  :use_vim_broker: true
+:database:
+  :metrics_collection:
+    :collection_schedule: "1 * * * *"
+    :daily_rollup_schedule: "23 0 * * *"
+  :metrics_history:
+    :keep_daily_metrics: 6.months
+    :keep_hourly_metrics: 6.months
+    :purge_schedule: "50 * * * *"
+    :purge_window_size: 100000
+:drift_states:
+  :history:
+    :keep_drift_states: 6.months
+    :purge_window_size: 10000
+:ems:
+  :ems_redhat:
+    :service:
+      :read_timeout: 1.hour
+  :ems_kubernetes:
+    :miq_namespace: management-infra
+:ems_events:
+  :history:
+    :keep_ems_events: 6.months
+    :purge_window_size: 1000
+:ems_refresh:
+  :capture_vm_created_on_date: false
+  :ec2:
+    :get_private_images: true
+    :get_shared_images: true
+    :get_public_images: false
+    :ignore_terminated_instances: true
+  :ansible_tower_configuration:
+    :refresh_interval: 15.minutes
+  :foreman_configuration:
+    :refresh_interval: 15.minutes
+  :foreman_provisioning:
+    :refresh_interval: 1.hour
+  :full_refresh_threshold: 100
+  :kubernetes:
+    :refresh_interval: 15.minutes
+  :openshift:
+    :refresh_interval: 15.minutes
+  :atomic:
+    :refresh_interval: 15.minutes
+  :openshift_enterprise:
+    :refresh_interval: 15.minutes
+  :atomic_enterprise:
+    :refresh_interval: 15.minutes
+  :raise_vm_snapshot_complete_if_created_within: 15.minutes
+  :refresh_interval: 24.hours
+  :scvmm:
+    :refresh_interval: 15.minutes
+:event_handling:
+  :bottleneck_event_groups:
+    :Capacity:
+      :detail:
+      - DiskUsage
+      :name: Capacity
+    :Utilization:
+      :detail:
+      - CpuUsage
+      - MemoryUsage
+      :name: Utilization
+  :event_groups:
+    :addition:
+      :critical:
+      - CloneTaskEvent
+      - ClusterCreatedEvent
+      - CreateFolder
+      - DatacenterCreatedEvent
+      - DatastoreDiscoveredEvent
+      - HostConnectedEvent
+      - HOST_DETECTED
+      - HOST_REGISTER_AUTO_APPROVE_PATTERN
+      - HOST_REGISTER_ERROR_UPDATING_HOST
+      - HOST_REGISTER_ERROR_UPDATING_HOST_ALL_TAKEN
+      - HOST_REGISTER_ERROR_UPDATING_NAME
+      - HOST_REGISTER_ERROR_UPDATING_NAMES_ALL_TAKEN
+      - HOST_REGISTER_EXISTING_HOST_UPDATE_FAILED
+      - HOST_REGISTER_FAILED
+      - HOST_REGISTER_HOST_IS_ACTIVE
+      - HOST_REGISTER_NAME_IS_ACTIVE
+      - HOST_REGISTER_SUCCEEDED
+      - IMPORTEXPORT_STARTING_EXPORT_TEMPLATE
+      - IMPORTEXPORT_EXPORT_TEMPLATE
+      - ResourcePoolCreatedEvent
+      - TemplateDeployedEvent
+      - USER_ADD
+      - USER_ADD_HOST
+      - USER_ADD_VM
+      - USER_ADD_VM_FINISHED_FAILURE
+      - USER_ADD_VM_FINISHED_SUCCESS
+      - USER_ADD_VM_TEMPLATE
+      - USER_ADD_VM_TEMPLATE_FINISHED_FAILURE
+      - USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS
+      - USER_FAILED_ADD_HOST
+      - USER_FAILED_ADD_VM_TEMPLATE
+      - VmConnectedEvent
+      - VmCreatedEvent
+      - VmDeployedEvent
+      - VmRegisteredEvent
+      - image.update
+      - image.create
+      - image.upload
+      - orchestration.stack.create.end
+      - orchestration.stack.create.error
+      - servergroup.create
+      - REPLICATOR_SUCCESSFULCREATE
+      - REPLICATOR_FAILEDCREATE
+      - CONTAINER_CREATED
+      :detail:
+      - CloneVM_Task
+      - CloneVM_Task_Complete
+      - CreateClusterEx
+      - CreateClusterEx_Complete
+      - CreateDatacenter
+      - CreateDatacenter_Complete
+      - CreateResourcePool
+      - CreateResourcePool_Complete
+      - CreateVM_Task
+      - CreateVM_Task_Complete
+      - ReconnectHost_Task
+      - RegisterVM_Task
+      - RegisterVM_Task_Complete
+      - VmBeingClonedEvent
+      - VmBeingCreatedEvent
+      - VmBeingDeployedEvent
+      :name: Creation/Addition
+    :configuration:
+      :critical:
+      - ClusterReconfiguredEvent
+      - EnterMaintenanceMode_Task_Complete
+      - ExitMaintenanceMode_Task_Complete
+      - FailoverLevelRestored
+      - MarkAsTemplate_Complete
+      - RefreshStorageSystem
+      - ResourcePoolReconfiguredEvent
+      - TemplateToVm
+      - USER_ADD_DISK_TO_VM
+      - USER_ADD_DISK_TO_VM_FINISHED_FAILURE
+      - USER_ADD_DISK_TO_VM_FINISHED_SUCCESS
+      - USER_CHANGE_FLOPPY_VM
+      - USER_EJECT_VM_DISK
+      - USER_EJECT_VM_FLOPPY
+      - USER_FAILED_ADD_DISK_TO_VM
+      - USER_FAILED_CHANGE_DISK_VM
+      - USER_FAILED_CHANGE_FLOPPY_VM
+      - USER_FAILED_REMOVE_DISK_FROM_VM
+      - USER_FAILED_UPDATE_HOST
+      - USER_FAILED_UPDATE_VM
+      - USER_FAILED_UPDATE_VM_DISK
+      - USER_FAILED_UPDATE_VM_TEMPLATE
+      - USER_REMOVE_DISK_FROM_VM
+      - USER_UPDATE_HOST
+      - USER_UPDATE_VM
+      - USER_UPDATE_VM_DISK
+      - USER_UPDATE_VM_TEMPLATE
+      - VmReconfiguredEvent
+      - VmResourcePoolMovedEvent
+      - VmToTemplate
+      - compute.instance.rebuild.end
+      - compute.instance.resize.end
+      - orchestration.stack.update.end
+      - orchestration.stack.update.error
+      - orchestration.stack.suspend.end
+      - orchestration.stack.suspend.error
+      - orchestration.stack.resume.end
+      - orchestration.stack.resume.error
+      - orchestration.autoscaling.end
+      - orchestration.autoscaling.error
+      - servergroup.update
+      - servergroup.addmemeber
+      :detail:
+      - EnterMaintenanceMode_Task
+      - ExitMaintenanceMode_Task
+      - MarkAsTemplate
+      - MoveIntoFolder_Task
+      - MoveInto_Task
+      - MoveIntoResourcePool
+      - MoveIntoResourcePool_Complete
+      - ReconfigVM_Task
+      - ReconfigVM_Task_Complete
+      - VmMacAssignedEvent
+      - VmResourceReallocatedEvent
+      - VmUuidAssignedEvent
+      :name: Configuration/Reconfiguration
+    :console:
+      :critical:
+      - USER_LOGGED_IN_VM
+      - USER_LOGGED_OUT_VM
+      - UserLoginSessionEvent
+      - UserLogoutSessionEvent
+      - VmAcquiredMksTicketEvent
+      - VmRemoteConsoleConnectedEvent
+      :detail: []
+      :name: Console Activity
+    :deletion:
+      :critical:
+      - ClusterDestroyedEvent
+      - DestroyDatacenter_Task
+      - DestroyFolder_Task
+      - HostConnectionLostEvent
+      - HostDisconnectedEvent
+      - ResourcePoolDestroyedEvent
+      - UnregisterVM_Complete
+      - USER_FAILED_REMOVE_HOST
+      - USER_FAILED_REMOVE_VM
+      - USER_FAILED_REMOVE_VM_TEMPLATE
+      - USER_REMOVE_HOST
+      - USER_REMOVE_VM
+      - USER_REMOVE_VM_FINISHED
+      - USER_REMOVE_VM_TEMPLATE
+      - USER_REMOVE_VM_TEMPLATE_FINISHED
+      - VmDisconnectedEvent
+      - VmRemovedEvent
+      - image.delete
+      - orchestration.stack.delete.end
+      - orchestration.stack.delete.error
+      - servergroup.delete
+      :detail:
+      - Destroy_Task
+      - Destroy_Task_Complete
+      - DestroyCluster_Task_Complete
+      - DestroyCluster_Task
+      - DestroyResourcePool_Task
+      - DestroyResourcePool_Task_Complete
+      - DestroyVM_Task
+      - DestroyVM_Task_Complete
+      - DisconnectHost_Task
+      - UnregisterVM
+      :name: Deletion/Removal
+    :general:
+      :critical:
+      - AD_COMPUTER_ACCOUNT_FAILED
+      - AD_COMPUTER_ACCOUNT_SUCCEEDED
+      - CPU_FLAGS_NX_IS_MISSING
+      - HOST_APPROVE
+      - HOST_APPROVE_FAILED
+      - HOST_DOMAIN_DELAY_INTERVAL
+      - HOST_INITIALIZING
+      - HOST_INSTALL
+      - HOST_INSTALL_FAILED
+      - HOST_INSTALL_IN_PROGRESS
+      - HOST_INSTALL_IN_PROGRESS_ERROR
+      - HOST_INSTALL_IN_PROGRESS_WARNING
+      - HOST_RECOVER_FAILED_VMS_UNKNOWN
+      - HOST_RUN_IN_NO_KVM_MODE
+      - HOST_SET_NONOPERATIONAL
+      - HOST_SET_NONOPERATIONAL_DOMAIN
+      - HOST_SET_NONOPERATIONAL_DOMAIN_FAILED
+      - HOST_SET_NONOPERATIONAL_FAILED
+      - HOST_SET_NONOPERATIONAL_IFACE_DOWN
+      - HOST_SET_NONOPERATIONAL_NETWORK
+      - HOST_VERSION_NOT_SUPPORTED_FOR_CLUSTER
+      - IMAGES_SYNCRONIZER_DESKTOP_NOT_EXIST_IN_IRS
+      - IMAGES_SYNCRONIZER_DESKTOP_NOT_EXIST_IN_VDC
+      - IMAGES_SYNCRONIZER_DESKTOP_WITHOUT_TEMPLATE_VDC
+      - IMAGES_SYNCRONIZER_IMAGE_TEMPLATE_NOT_EXIST
+      - IMAGES_SYNCRONIZER_SNAPSHOT_NOT_EXIST_IN_IRS
+      - IMAGES_SYNCRONIZER_SNAPSHOT_NOT_EXIST_IN_VDC
+      - IMAGES_SYNCRONIZER_SNAPSHOTS_NOT_ATTACHED_TO_VM_IN_VDC
+      - IMAGES_SYNCRONIZER_TEMPLATE_NOT_EXIST_IMAGE_EXIST
+      - IMAGES_SYNCRONIZER_TEMPLATE_NOT_EXIST_IN_VDC
+      - IRS_HOSTED_ON_HOST
+      - RECONSTRUCT_MASTER_DONE
+      - RECONSTRUCT_MASTER_FAILED
+      - RECONSTRUCT_MASTER_FAILED_NO_MASTER
+      - RescanAllHBA
+      - RescanVMFS
+      - ScheduledTaskStartedEvent
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_SEARCHING_NEW_SPM
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_WITH_ERROR
+      - SYSTEM_UPDATE_HOST_GROUP
+      - SYSTEM_UPDATE_HOST_GROUP_FAILED
+      - TaskTimeoutEvent
+      - TASK_CLEARING_ASYNC_TASK
+      - TASK_STOPPING_ASYNC_TASK
+      - UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE
+      - UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE_FAILED
+      - USER_ADD_BOOKMARK
+      - USER_ADD_BOOKMARK_FAILED
+      - USER_ADD_HOST_GROUP
+      - USER_ADD_HOST_GROUP_FAILED
+      - USER_ADD_PERMISSION
+      - USER_ADD_PERMISSION_FAILED
+      - USER_ADD_ROLE
+      - USER_ADD_ROLE_FAILED
+      - USER_ADD_ROLE_WITH_ACTION_GROUP
+      - USER_ADD_ROLE_WITH_ACTION_GROUP_FAILED
+      - USER_ADD_TAG
+      - USER_ADD_TAG_FAILED
+      - USER_ATTACH_TAG_TO_HOST
+      - USER_ATTACH_TAG_TO_HOST_EXISTS
+      - USER_ATTACH_TAG_TO_HOST_FAILED
+      - USER_ATTACH_TAG_TO_USER
+      - USER_ATTACH_TAG_TO_USER_EXISTS
+      - USER_ATTACH_TAG_TO_USER_FAILED
+      - USER_ATTACH_TAG_TO_USER_GROUP
+      - USER_ATTACH_TAG_TO_USER_GROUP_EXISTS
+      - USER_ATTACH_TAG_TO_USER_GROUP_FAILED
+      - USER_ATTACH_TAG_TO_VM
+      - USER_ATTACH_TAG_TO_VM_EXISTS
+      - USER_ATTACH_TAG_TO_VM_FAILED
+      - USER_ATTACHED_ACTION_GROUP_TO_ROLE
+      - USER_ATTACHED_ACTION_GROUP_TO_ROLE_FAILED
+      - USER_CHANGE_DISK_VM
+      - USER_CLEAR_UNKNOWN_VMS
+      - USER_COPIED_TEMPLATE
+      - USER_COPIED_TEMPLATE_FINISHED_FAILURE
+      - USER_COPIED_TEMPLATE_FINISHED_SUCCESS
+      - USER_DEDICATE_VM_TO_POWERCLIENT
+      - USER_DEDICATE_VM_TO_POWERCLIENT_FAILED
+      - USER_DETACH_HOST_FROM_TAG
+      - USER_DETACH_HOST_FROM_TAG_FAILED
+      - USER_DETACH_USER_FROM_TAG
+      - USER_DETACH_USER_FROM_TAG_FAILED
+      - USER_DETACH_USER_GROUP_FROM_TAG
+      - USER_DETACH_USER_GROUP_FROM_TAG_FAILED
+      - USER_DETACH_VM_FROM_TAG
+      - USER_DETACH_VM_FROM_TAG_FAILED
+      - USER_DETACHED_ACTION_GROUP_FROM_ROLE
+      - USER_DETACHED_ACTION_GROUP_FROM_ROLE_FAILED
+      - USER_FAILED_ADD_ADUSER
+      - USER_FAILED_CLEAR_UNKNOWN_VMS
+      - USER_FAILED_COPY_TEMPLATE
+      - USER_FAILED_REMOVE_ADUSER
+      - USER_LOCKED_VM
+      - USER_MOVE_TAG
+      - USER_MOVE_TAG_FAILED
+      - USER_PASSWORD_CHANGE_FAILED
+      - USER_PASSWORD_CHANGED
+      - USER_REMOVE_ADUSER
+      - USER_REMOVE_BOOKMARK
+      - USER_REMOVE_BOOKMARK_FAILED
+      - USER_REMOVE_HOST_GROUP
+      - USER_REMOVE_HOST_GROUP_FAILED
+      - USER_REMOVE_PERMISSION
+      - USER_REMOVE_PERMISSION_FAILED
+      - USER_REMOVE_ROLE
+      - USER_REMOVE_ROLE_FAILED
+      - USER_REMOVE_TAG
+      - USER_REMOVE_TAG_FAILED
+      - USER_UNLOCKED_VM
+      - USER_UPDATE_BOOKMARK
+      - USER_UPDATE_BOOKMARK_FAILED
+      - USER_UPDATE_HOST_GROUP
+      - USER_UPDATE_HOST_GROUP_FAILED
+      - USER_UPDATE_ROLE
+      - USER_UPDATE_ROLE_FAILED
+      - USER_UPDATE_TAG
+      - USER_UPDATE_TAG_FAILED
+      - USER_UPDATE_VM_CLUSTER_DEFAULT_HOST_CLEARED
+      - USER_VDC_LOGIN_FAILED
+      - USER_VDC_LOGOUT_FAILED
+      - VDC_START
+      - VDC_STOP
+      - VM_BLK_VIRTIO_NO_CACHE
+      - VM_CLEARED
+      - VM_SET_TO_UNKNOWN_STATUS
+      - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
+      - VM_RENAMED
+      - hardware.ipmi.metrics.update
+      :detail: []
+      :name: General Activity
+    :import_export:
+      :critical:
+      - IMPORTEXPORT_EXPORT_TEMPLATE
+      - IMPORTEXPORT_EXPORT_TEMPLATE_FAILED
+      - IMPORTEXPORT_EXPORT_VM
+      - IMPORTEXPORT_EXPORT_VM_FAILED
+      - IMPORTEXPORT_FAILED_TO_IMPORT_TEMPLATE
+      - IMPORTEXPORT_FAILED_TO_IMPORT_VM
+      - IMPORTEXPORT_IMPORT_TEMPLATE
+      - IMPORTEXPORT_IMPORT_TEMPLATE_FAILED
+      - IMPORTEXPORT_IMPORT_VM
+      - IMPORTEXPORT_IMPORT_VM_FAILED
+      - IMPORTEXPORT_REMOVE_TEMPLATE
+      - IMPORTEXPORT_REMOVE_TEMPLATE_FAILED
+      - IMPORTEXPORT_REMOVE_VM
+      - IMPORTEXPORT_REMOVE_VM_FAILED
+      - IMPORTEXPORT_STARTING_EXPORT_TEMPLATE
+      - IMPORTEXPORT_STARTING_EXPORT_VM
+      - IMPORTEXPORT_STARTING_IMPORT_TEMPLATE
+      - IMPORTEXPORT_STARTING_IMPORT_VM
+      - IMPORTEXPORT_STARTING_REMOVE_TEMPLATE
+      - IMPORTEXPORT_STARTING_REMOVE_VM
+      - TEMPLATE_IMPORT
+      - TEMPLATE_IMPORT_FAILED
+      - USER_EXPORT_TEMPLATE
+      - USER_EXPORT_TEMPLATE_FAILED
+      - USER_EXPORT_VM
+      - USER_EXPORT_VM_FAILED
+      - VM_IMPORT
+      - VM_IMPORT_FAILED
+      - VM_IMPORT_INFO
+      :detail: []
+      :name: Import / Export
+    :migration:
+      :critical:
+      - DatastoreFileMovedEvent
+      - DrsMigrateVM_Task
+      - DrsVmMigratedEvent
+      - MigrateTaskEvent
+      - MigrateVM_Task
+      - RelocateVM_Task
+      - USER_FAILED_MOVE_TEMPLATE
+      - USER_FAILED_MOVE_VM
+      - USER_HOST_MAINTENANCE_MIGRATION_FAILED
+      - USER_MOVED_TEMPLATE
+      - USER_MOVED_TEMPLATE_FINISHED_FAILURE
+      - USER_MOVED_TEMPLATE_FINISHED_SUCCESS
+      - USER_MOVED_VM
+      - USER_MOVED_VM_FINISHED_FAILURE
+      - USER_MOVED_VM_FINISHED_SUCCESS
+      - VM_MIGRATION_ABORT
+      - VM_MIGRATION_DONE
+      - VM_MIGRATION_FAILED
+      - VM_MIGRATION_FAILED_DURING_MOVE_TO_MAINTANANCE
+      - VM_MIGRATION_FAILED_FROM_TO
+      - VM_MIGRATION_ON_CONNECT_CHECK_FAILED
+      - VM_MIGRATION_ON_CONNECT_CHECK_SUCCEEDED
+      - VM_MIGRATION_START
+      - VM_MIGRATION_TRYING_RERUN
+      - VmMigratedEvent
+      - VmRelocatedEvent
+      :detail:
+      - DrsMigrateVM_Task_Complete
+      - MigrateVM_Task_Complete
+      - MigrationHostWarningEvent
+      - Move_Task
+      - Move_Task_Complete
+      - RelocateTaskEvent
+      - RelocateVM_Task_Complete
+      - VmBeingRelocatedEvent
+      :name: Migration/Vmotion
+    :network:
+      :critical:
+      - HOST_ALERT_FENCING_IS_NOT_CONFIGURED
+      - HOST_ALERT_FENCING_NO_PROXY_HOST
+      - HOST_ALERT_FENCING_OPERATION_FAILED
+      - HOST_ALERT_FENCING_OPERATION_SKIPPED
+      - HOST_ALERT_FENCING_TEST_FAILED
+      - HOST_FENCE_STATUS
+      - HOST_FENCE_STATUS_FAILED
+      - HOST_MANUAL_FENCE_FAILED_CALL_FENCE_SPM
+      - HOST_MANUAL_FENCE_STATUS
+      - HOST_MANUAL_FENCE_STATUS_FAILED
+      - NETWORK_ADD_BOND
+      - NETWORK_ADD_BOND_FAILED
+      - NETWORK_ADD_NETWORK
+      - NETWORK_ADD_NETWORK_FAILED
+      - NETWORK_ADD_TEMPLATE_INTERFACE
+      - NETWORK_ADD_TEMPLATE_INTERFACE_FAILED
+      - NETWORK_ADD_VM_INTERFACE
+      - NETWORK_ADD_VM_INTERFACE_FAILED
+      - NETWORK_INTERFACE_PLUGGED_INTO_VM
+      - NETWORK_ATTACH_NETWORK_TO_HOST
+      - NETWORK_ATTACH_NETWORK_TO_HOST_FAILED
+      - NETWORK_ATTACH_NETWORK_TO_HOST_GROUP
+      - NETWORK_ATTACH_NETWORK_TO_HOST_GROUP_FAILED
+      - NETWORK_COMMINT_NETWORK_CHANGES
+      - NETWORK_COMMINT_NETWORK_CHANGES_FAILED
+      - NETWORK_DETACH_NETWORK_FROM_HOST
+      - NETWORK_DETACH_NETWORK_FROM_HOST_FAILED
+      - NETWORK_DETACH_NETWORK_TO_HOST_GROUP
+      - NETWORK_DETACH_NETWORK_TO_HOST_GROUP_FAILED
+      - NETWORK_HOST_MISSING_CLUSER_VLAN
+      - NETWORK_HOST_NETWORK_MATCH_CLUSTER
+      - NETWORK_HOST_NETWORK_NOT_MATCH_CLUSTER
+      - NETWORK_HOST_USING_WRONG_CLUSER_VLAN
+      - NETWORK_REMOVE_BOND
+      - NETWORK_REMOVE_BOND_FAILED
+      - NETWORK_REMOVE_NETWORK
+      - NETWORK_REMOVE_NETWORK_FAILED
+      - NETWORK_REMOVE_TEMPLATE_INTERFACE
+      - NETWORK_REMOVE_TEMPLATE_INTERFACE_FAILED
+      - NETWORK_REMOVE_VM_INTERFACE
+      - NETWORK_REMOVE_VM_INTERFACE_FAILED
+      - NETWORK_UPDATE_DISPLAY_TO_HOST_GROUP
+      - NETWORK_UPDATE_DISPLAY_TO_HOST_GROUP_FAILED
+      - NETWORK_UPDATE_NETWORK_TO_HOST_INTERFACE
+      - NETWORK_UPDATE_NETWORK_TO_HOST_INTERFACE_FAILED
+      - NETWORK_UPDATE_TEMPLATE_INTERFACE
+      - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
+      - NETWORK_UPDATE_VM_INTERFACE
+      - NETWORK_UPDATE_VM_INTERFACE_FAILED
+      - network.floating_ip.allocate
+      - network.floating_ip.deallocate
+      - network.floating_ip.associate
+      - network.floating_ip.disassociate
+      - POD_HOSTPORTCONFLICT
+      :detail: []
+      :name: Network
+    :power:
+      :critical:
+      - AUTO_FAILED_SUSPEND_VM
+      - AUTO_SUSPEND_VM
+      - AUTO_SUSPEND_VM_FINISH_FAILURE
+      - AUTO_SUSPEND_VM_FINISH_SUCCESS
+      - DrsVmPoweredOnEvent
+      - HOST_FAILED_TO_RUN_VMS
+      - HOST_INITIATED_RUN_VM
+      - HOST_INITIATED_RUN_VM_FAILED
+      - RebootGuest_Complete
+      - RecommendHostsForVm
+      - RUN_VM_FAILED
+      - SYSTEM_HOST_RESTART
+      - SYSTEM_FAILED_HOST_RESTART
+      - ShutdownGuest
+      - USER_ADD_VM_STARTED
+      - USER_FAILED_ADD_VM
+      - USER_FAILED_HOST_RESTART
+      - USER_FAILED_HOST_SHUTDOWN
+      - USER_FAILED_HOST_START
+      - USER_FAILED_HOST_STOP
+      - USER_FAILED_PAUSE_VM
+      - USER_FAILED_RESUME_VM
+      - USER_FAILED_RUN_VM
+      - USER_FAILED_SHUTDOWN_VM
+      - USER_FAILED_STOP_VM
+      - USER_FAILED_STOPPING_VM_INSTEAD_OF_SHUTDOWN
+      - USER_FAILED_SUSPEND_VM
+      - USER_HOST_MAINTENANCE
+      - USER_HOST_RESTART
+      - USER_HOST_SHUTDOWN
+      - USER_HOST_START
+      - USER_HOST_STOP
+      - USER_INITIATED_RUN_VM
+      - USER_INITIATED_RUN_VM_FAILED
+      - USER_INITIATED_SHUTDOWN_VM
+      - USER_PAUSE_VM
+      - USER_RESUME_VM
+      - USER_RUN_VM
+      - USER_RUN_VM_AS_STATELESS_FINISHED_FAILURE
+      - USER_RUN_VM_ON_NON_DEFAULT_HOST
+      - USER_STARTED_VM
+      - USER_STOP_VM
+      - USER_STOP_SUSPENDED_VM
+      - USER_STOP_SUSPENDED_VM_FAILED
+      - USER_STOPPED_VM_INSTEAD_OF_SHUTDOWN
+      - USER_SUSPEND_VM
+      - USER_SUSPEND_VM_FINISH_FAILURE
+      - USER_SUSPEND_VM_FINISH_SUCCESS
+      - USER_SUSPEND_VM_OK
+      - VM_DOWN
+      - VM_DOWN_ERROR
+      - VM_PAUSED_ENOSPC
+      - VM_PAUSED_ERROR
+      - VM_SHUTDOWN_FAILED
+      - VmGuestRebootEvent
+      - VmGuestShutdownEvent
+      - VmPoweredOffEvent
+      - VmPoweredOnEvent
+      - VmResumingEvent
+      - VmStartedOnEvent
+      - VmStoppedEvent
+      - VmSuspendedEvent
+      - compute.instance.create.end
+      - compute.instance.create.error
+      - compute.instance.shutdown.end
+      - compute.instance.shutdown.error
+      - compute.instance.delete.end
+      - compute.instance.power_off.end
+      - compute.instance.power_on.end
+      - compute.instance.soft_delete.end
+      - compute.instance.reboot.end
+      - compute.instance.suspend
+      - compute.instance.resume
+      - compute.instance.pause.end
+      - compute.instance.unpause.end
+      - compute.instance.shelve.end
+      - compute.instance.unshelve.end
+      - compute.instance.shelve_offload.end
+      - NODE_REBOOT
+      - NODE_NODESCHEDULABLE
+      - NODE_NODENOTSCHEDULABLE
+      :detail:
+      - PowerOffVM_Task
+      - PowerOffVM_Task_Complete
+      - PowerOnMultiVM_Task
+      - PowerOnVM_Task
+      - PowerOnVM_Task_Complete
+      - RebootGuest
+      - ResetVM_Task
+      - ResetVM_Task_Complete
+      - ShutdownGuest_Complete
+      - SuspendVM_Task
+      - SuspendVM_Task_Complete
+      - VmStartingEvent
+      - VmStoppingEvent
+      - VmSuspendingEvent
+      :name: Power Activity
+    :snapshot:
+      :critical:
+      - CreateSnapshot_Task
+      - RemoveAllSnapshots_Task
+      - RemoveSnapshot_Task
+      - RevertToSnapshot_Task
+      - USER_CREATE_SNAPSHOT
+      - USER_CREATE_SNAPSHOT_FINISHED_FAILURE
+      - USER_CREATE_SNAPSHOT_FINISHED_SUCCESS
+      - USER_FAILED_CREATE_SNAPSHOT
+      - USER_FAILED_MERGE_SNAPSHOT
+      - USER_FAILED_RESTORE_FROM_SNAPSHOT
+      - USER_FAILED_TRY_BACK_TO_SNAPSHOT
+      - USER_MERGE_SNAPSHOT
+      - USER_MERGE_SNAPSHOT_FINISHED_FAILURE
+      - USER_MERGE_SNAPSHOT_FINISHED_SUCCESS
+      - USER_RESTORE_FROM_SNAPSHOT
+      - USER_RESTORE_FROM_SNAPSHOT_FINISH_FAILURE
+      - USER_RESTORE_FROM_SNAPSHOT_FINISH_SUCCESS
+      - USER_TRY_BACK_TO_SNAPSHOT
+      - USER_TRY_BACK_TO_SNAPSHOT_FINISH_FAILURE
+      - USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS
+      - compute.instance.snapshot.end
+      :detail: []
+      :name: Snapshot Activity
+    :status:
+      :critical:
+      - AlarmCreatedEvent
+      - AlarmRemovedEvent
+      - AlarmStatusChangedEventVm
+      - CERTIFICATE_FILE_NOT_FOUND
+      - ClusterStatusChangedEvent
+      - DasHostFailedEvent
+      - DuplicateIpDetectedEvent
+      - EVMAlertEvent
+      - GeneralHostWarningEvent
+      - HostDasErrorEvent
+      - HOST_ACTIVATE
+      - HOST_ACTIVATE_FAILED
+      - HOST_CPU_LOWER_THAN_CLUSTER
+      - HOST_CPU_RETRIEVE_FAILED
+      - HOST_FAILURE
+      - HOST_LOW_MEM
+      - HOST_MAINTENANCE
+      - HOST_MAINTENANCE_FAILED
+      - HOST_RECOVER
+      - HOST_RECOVER_FAILED
+      - HOST_SLOW_STORAGE_RESPONSE_TIME
+      - IRS_DISK_SPACE_LOW
+      - IRS_DISK_SPACE_LOW_ERROR
+      - IRS_FAILURE
+      - MAC_ADDRESS_IS_IN_USE
+      - MAC_POOL_EMPTY
+      - RemoveAlarm
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_FROM_NON_OPERATIONAL
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_WITH_ERROR
+      - SYSTEM_MASTER_DOMAIN_NOT_IN_SYNC
+      - USER_FAILED_ATTACH_USER_TO_VM
+      - VM_FAILURE
+      - VM_NOT_RESPONDING
+      - VmConfigMissingEvent
+      - NODE_NODEREADY
+      - NODE_NODENOTREADY
+      - POD_FAILEDVALIDATION
+      - POD_DEADLINEEXCEEDED
+      - POD_FAILEDSYNC
+      - POD_INSUFFICIENTFREECPU
+      - CONTAINER_UNHEALTHY
+      - POD_NODESELECTORMISMATCHING
+      - CONTAINER_KILLING
+      - CONTAINER_STARTED
+      - CONTAINER_STOPPED
+      - POD_SCHEDULED
+      - POD_FAILEDSCHEDULING
+      :detail:
+      - DatacenterRenamedEvent
+      - GeneralUserEvent
+      - LicenseServerUnavailableEvent
+      - Rename_Task
+      - Rename_Task_Complete
+      - RenameCluster_Task
+      - RenameDatacenter_Task
+      - RenameDatacenter_Task_Complete
+      - RenameFolder_Task
+      - RenameResourcePool_Task
+      - RenameVM_Task
+      - RenameVM_Task_Complete
+      - VmRenamedEvent
+      :name: Alarm/Status change/Errors
+    :storage:
+      :critical:
+      - CONNECT_STORAGE_POOL_FAILED
+      - CONNECT_STORAGE_SERVERS_FAILED
+      - RECOVERY_STORAGE_POOL
+      - RECOVERY_STORAGE_POOL_FAILED
+      - STORAGE_DOMAIN_ERROR
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_NO_HOST_FOR_SPM
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC
+      - SYSTEM_CHANGE_STORAGE_POOL_STATUS_RESET_IRS
+      - SYSTEM_DEACTIVATE_STORAGE_DOMAIN_FAILED
+      - SYSTEM_DEACTIVATED_STORAGE_DOMAIN
+      - SYSTEM_FAILED_CHANGE_STORAGE_POOL_STATUS
+      - USER_ACTIVATE_STORAGE_DOMAIN_FAILED
+      - USER_ACTIVATE_STORAGE_POOL
+      - USER_ACTIVATE_STORAGE_POOL_FAILED
+      - USER_ACTIVATED_STORAGE_DOMAIN
+      - USER_ADD_STORAGE_DOMAIN
+      - USER_ADD_STORAGE_DOMAIN_FAILED
+      - USER_ADD_STORAGE_POOL
+      - USER_ADD_STORAGE_POOL_FAILED
+      - USER_ATTACH_STORAGE_DOMAIN_TO_POOL
+      - USER_ATTACH_STORAGE_DOMAIN_TO_POOL_FAILED
+      - USER_CONNECT_HOSTS_TO_LUN_FAILED
+      - USER_DEACTIVATE_STORAGE_DOMAIN_FAILED
+      - USER_DEACTIVATED_STORAGE_DOMAIN
+      - USER_DETACH_STORAGE_DOMAIN_FROM_POOL
+      - USER_DETACH_STORAGE_DOMAIN_FROM_POOL_FAILED
+      - USER_EXTENDED_STORAGE_DOMAIN
+      - USER_EXTENDED_STORAGE_DOMAIN_FAILED
+      - USER_FORCE_REMOVE_STORAGE_DOMAIN
+      - USER_FORCE_REMOVE_STORAGE_DOMAIN_FAILED
+      - USER_REMOVE_STORAGE_DOMAIN
+      - USER_REMOVE_STORAGE_DOMAIN_FAILED
+      - USER_REMOVE_STORAGE_POOL
+      - USER_REMOVE_STORAGE_POOL_FAILED
+      - USER_UPDATE_STORAGE_DOMAIN
+      - USER_UPDATE_STORAGE_DOMAIN_FAILED
+      - USER_UPDATE_STORAGE_POOL
+      - USER_UPDATE_STORAGE_POOL_FAILED
+      - volume.create.end
+      - volume.delete.end
+      - POD_OUTOFDISK
+      - POD_INSUFFICIENTFREEMEMORY
+      - NODE_FAILEDMOUNT
+      - NODE_INVALIDDISKCAPACITY
+      :detail: []
+      :name: Storage
+  :task_final_events:
+    :ClusterCreatedEvent:
+    - CreateClusterEx
+    :ClusterDestroyedEvent:
+    - DestroyCluster_Task
+    :DatacenterCreatedEvent:
+    - CreateDatacenter
+    :DatacenterRenamedEvent:
+    - RenameDatacenter_Task
+    :DatastoreFileMovedEvent:
+    - Move_Task
+    :DrsVmMigratedEvent:
+    - DrsMigrateVM_Task
+    :DrsVmPoweredOnEvent:
+    - PowerOnVM_Task
+    :EnteredMaintenanceModeEvent:
+    - EnterMaintenanceMode_Task
+    :ExitMaintenanceModeEvent:
+    - ExitMaintenanceMode_Task
+    :ResourcePoolCreatedEvent:
+    - CreateResourcePool
+    :ResourcePoolDestroyedEvent:
+    - DestroyResourcePool_Task
+    :ResourcePoolMovedEvent:
+    - MoveIntoResourcePool
+    :VmClonedEvent:
+    - CloneVM_Task
+    :VmCreatedEvent:
+    - CreateVM_Task
+    :VmDeployedEvent:
+    - CloneVM_Task
+    :VmGuestRebootEvent:
+    - RebootGuest
+    :VmGuestShutdownEvent:
+    - ShutdownGuest
+    :VmGuestStandbyEvent:
+    - StandbyGuest
+    :VmMigratedEvent:
+    - MigrateVM_Task
+    - RelocateVM_Task
+    :VmPoweredOffEvent:
+    - PowerOffVM_Task
+    :VmPoweredOnEvent:
+    - PowerOnVM_Task
+    - ResetVM_Task
+    :VmReconfiguredEvent:
+    - ReconfigVM_Task
+    :VmRegisteredEvent:
+    - RegisterVM_Task
+    :VmRelocatedEvent:
+    - RelocateVM_Task
+    :VmRemovedEvent:
+    - DestroyVM_Task
+    - UnregisterVM
+    :VmRenamedEvent:
+    - RenameVM_Task
+    :VmResourcePoolMovedEvent:
+    - MarkAsTemplate
+    - MoveIntoResourcePool
+    :VmSuspendedEvent:
+    - SuspendVM_Task
+:host_scan:
+  :queue_timeout: 20.minutes
+:http_proxy:
+  :host:
+  :password:
+  :port:
+  :user:
+:ldap_synchronization:
+  :ldap_synchronization_schedule: "0 2 * * *"
+:log:
+  :collection:
+    :archive:
+      :pattern:
+    :current:
+      :pattern:
+      - log/*.log
+      - log/apache/*.log
+      - log/*.txt
+      - config/*
+      - "/var/log/syslog*"
+      - "/var/log/daemon.log*"
+      - "/etc/default/ntp*"
+      - "/var/log/messages*"
+      - "/var/log/cron*"
+      - BUILD
+      - GUID
+      - VERSION
+    :ping_depot: true
+    :ping_depot_timeout: 20
+  :level: info
+  :level_rails: info
+  :level_aws: info
+  :level_aws_in_evm: error
+  :level_kube: info
+  :level_kube_in_evm: error
+  :level_api: info
+  :level_api_in_evm: error
+  :level_fog: info
+  :level_fog_in_evm: error
+  :level_rhevm: info
+  :level_rhevm_in_evm: error
+  :level_scvmm: info
+  :level_scvmm_in_evm: error
+  :level_vim: warn
+  :level_vim_in_evm: error
+:management_system:
+  :power_operation_expiration: 10.minutes
+:performance:
+  :capture_threshold:
+    :ems_cluster: 50.minutes
+    :host: 50.minutes
+    :storage: 60.minutes
+    :vm: 50.minutes
+  :capture_threshold_with_alerts:
+    :host: 20.minutes
+    :vm: 20.minutes
+  :concurrent_requests:
+    :hourly: 1
+    :realtime: 20
+  :history:
+    :initial_capture_days: 0
+    :keep_daily_performances: 6.months
+    :keep_hourly_performances: 6.months
+    :keep_realtime_performances: 4.hours
+    :purge_window_size: 1000
+  :host_overhead:
+    :memory: 2.01.percent
+    :cpu: 0.15.percent
+:policy_events:
+  :history:
+    :keep_policy_events: 6.months
+    :purge_window_size: 1000
+:product:
+  :maindb: ExtManagementSystem
+:reporting:
+  :format_by_class:
+    :Fixnum:
+      :function:
+        :name: number_with_delimiter
+    :Float:
+      :function:
+        :name: number_with_delimiter
+  :format_by_column: {}
+  :history:
+    :keep_reports: 6.months
+    :purge_window_size: 100
+  :precision:
+    :default: 2
+  :precision_by_column:
+    :slope: 4
+  :queue_timeout: 1.hour
+:repository_scanning:
+  :defaultsmartproxy:
+:server:
+  :case_sensitive_name_search: false
+  :company: My Company
+  :custom_logo: false
+  :events:
+    :disk_usage_gt_percent: 80
+  :host:
+  :listening_port: '443'
+  :mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
+  :mks_version: 2.1.0.0
+  :monitor_poll: 5.seconds
+  :name: EVM
+  :rails_server: thin
+  :remote_console_type: VMRC
+  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,web_services,automate
+  :server_dequeue_frequency: 5.seconds
+  :session_store: cache
+  :startup_timeout: 300
+  :timezone: UTC
+  :worker_monitor:
+    :kill_algorithm:
+      :name: :used_swap_percent_gt_value
+      :value: 80
+    :miq_server_time_threshold: 2.minutes
+    :nice_delta: 1
+    :poll: 2.seconds
+    :start_algorithm:
+      :name: :used_swap_percent_lt_value
+      :value: 60
+    :sync_interval: 30.minutes
+    :wait_for_started_timeout: 10.minutes
+  :zone: default
+:session:
+  :interval: 60
+  :memcache_server: 127.0.0.1:11211
+  :memcache_server_opts: "-l 127.0.0.1"
+  :show_login_info: true
+  :timeout: 3600
+:smartproxy_deploy:
+  :queue_timeout: 30.minutes
+:smtp:
+  :authentication: login
+  :domain: mydomain.com
+  :from: cfadmin@cfserver.com
+  :host: localhost
+  :password: ''
+  :port: '25'
+  :user_name: evmadmin
+:snapshots:
+  :create_free_percent: 100
+  :remove_free_percent: 100
+:ssl:
+  :ssl_ca_file:
+  :ssl_ca_path:
+:storage:
+  :alignment:
+    :boundary: 4.kilobytes
+  :collection:
+    :timeout: 1800
+  :debris:
+    :filters:
+      :ext_name:
+      - log
+      - nvram
+      - vmdk
+      - vmsn
+      - vmx
+      - vmsd
+      - vmxf
+      - vmtx
+      - vswp
+      - "%redo%"
+  :inventory:
+    :full_refresh_schedule: "38 * * * *"
+  :metrics_collection:
+    :collection_schedule: "0,15,30,45  * * * *"
+    :hourly_rollup_schedule: "8 * * * *"
+    :daily_rollup_schedule: "23 0 * * *"
+    :collection_interval: 15.minutes
+    :max_gap_to_fill: 6.hours
+  :metrics_history:
+    :purge_schedule: "50 * * * *"
+    :keep_daily_metrics: 6.months
+    :keep_hourly_metrics: 6.months
+    :keep_realtime_metrics: 4.hours
+    :purge_window_size: 1000
+:ui:
+  :mark_translated_strings: false
+:webservices:
+  :consume_protocol: https
+  :contactwith: ipaddress
+  :integrate:
+    :security: basic
+  :mode: invoke
+  :nameresolution: false
+  :provide_protocol: https
+  :security: none
+  :timeout: 120
+  :use_vim_broker: true
+  :authentication_timeout: 30.seconds
+:workers:
+  :worker_base:
+    :defaults:
+      :count: 1
+      :gc_interval: 15.minutes
+      :heartbeat_freq: 60.seconds
+      :heartbeat_timeout: 2.minutes
+      :memory_threshold: 200.megabytes
+      :nice_delta: 10
+      :parent_time_threshold: 3.minutes
+      :poll: 3.seconds
+      :poll_escalate_max: 30.seconds
+      :poll_method: :normal
+      :restart_interval: 0.hours
+      :starting_timeout: 10.minutes
+    :ems_refresh_core_worker:
+      :poll: 1.seconds
+      :memory_threshold: 400.megabytes
+      :nice_delta: 1
+      :thread_shutdown_timeout: 10.seconds
+    :event_catcher:
+      :defaults:
+        :ems_event_page_size: 100
+        :ems_event_thread_shutdown_timeout: 10.seconds
+        :memory_threshold: 2.gigabytes
+        :nice_delta: 1
+        :poll: 1.seconds
+      :event_catcher_redhat:
+        :poll: 15.seconds
+      :event_catcher_vmware:
+        :poll: 1.seconds
+        :ems_event_max_wait: 60
+      :event_catcher_openstack:
+        :poll: 15.seconds
+        :topics:
+          :nova: notifications.*
+          :cinder: notifications.*
+          :glance: notifications.*
+          :heat: notifications.*
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
+        :amqp_heartbeat: 30
+      :event_catcher_openstack_infra:
+        :poll: 15.seconds
+        :topics:
+          :nova: notifications.*
+          :cinder: notifications.*
+          :glance: notifications.*
+          :heat: notifications.*
+          :ironic: notifications.*
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
+        :amqp_heartbeat: 30
+      :event_catcher_openstack_network:
+        :poll: 15.seconds
+        :topics:
+          :neutron: "notifications.*"
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
+        :amqp_heartbeat: 30
+      :event_catcher_amazon:
+        :poll: 15.seconds
+      :event_catcher_kubernetes:
+        :poll: 1.seconds
+      :event_catcher_openshift:
+        :poll: 1.seconds
+      :event_catcher_atomic:
+        :poll: 1.seconds
+      :event_catcher_openshift_enterprise:
+        :poll: 1.seconds
+      :event_catcher_atomic_enterprise:
+        :poll: 1.seconds
+    :queue_worker_base:
+      :defaults:
+        :cpu_usage_threshold: 100.percent
+        :dequeue_method: :drb
+        :memory_threshold: 400.megabytes
+        :poll_method: :normal
+        :queue_timeout: 10.minutes
+      :ems_metrics_collector_worker:
+        :defaults:
+          :count: 2
+          :nice_delta: 3
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_amazon: {}
+        :ems_metrics_collector_worker_atomic: {}
+        :ems_metrics_collector_worker_atomic_enterprise: {}
+        :ems_metrics_collector_worker_kubernetes:
+          :metrics_port: 5000
+          :metrics_path: "/hawkular/metrics"
+        :ems_metrics_collector_worker_openshift: {}
+        :ems_metrics_collector_worker_openshift_enterprise: {}
+        :ems_metrics_collector_worker_openstack: {}
+        :ems_metrics_collector_worker_openstack_infra: {}
+        :ems_metrics_collector_worker_openstack_network: {}
+        :ems_metrics_collector_worker_redhat: {}
+        :ems_metrics_collector_worker_vmware: {}
+      :ems_metrics_processor_worker:
+        :count: 2
+        :memory_threshold: 400.megabytes
+        :nice_delta: 7
+        :poll_method: :escalate
+      :ems_refresh_worker:
+        :defaults:
+          :memory_threshold: 2.gigabytes
+          :nice_delta: 7
+          :poll: 10.seconds
+          :poll_method: :normal
+          :queue_timeout: 120.minutes
+          :restart_interval: 2.hours
+        :ems_refresh_worker_amazon: {}
+        :ems_refresh_worker_ansible_tower_configuration: {}
+        :ems_refresh_worker_atomic: {}
+        :ems_refresh_worker_atomic_enterprise: {}
+        :ems_refresh_worker_azure: {}
+        :ems_refresh_worker_foreman_configuration: {}
+        :ems_refresh_worker_foreman_provisioning: {}
+        :ems_refresh_worker_google: {}
+        :ems_refresh_worker_hawkular: {}
+        :ems_refresh_worker_kubernetes: {}
+        :ems_refresh_worker_microsoft: {}
+        :ems_refresh_worker_openshift: {}
+        :ems_refresh_worker_openshift_enterprise: {}
+        :ems_refresh_worker_openstack: {}
+        :ems_refresh_worker_openstack_infra: {}
+        :ems_refresh_worker_openstack_network: {}
+        :ems_refresh_worker_redhat: {}
+        :ems_refresh_worker_vmware: {}
+      :event_handler:
+        :cpu_usage_threshold: 0.percent
+        :nice_delta: 7
+      :generic_worker:
+        :count: 2
+      :netapp_refresh_worker:
+        :memory_threshold: 2.gigabytes
+        :nice_delta: 7
+        :poll: 10.seconds
+        :poll_method: :normal
+        :queue_timeout: 60.minutes
+      :priority_worker:
+        :count: 2
+        :nice_delta: 1
+        :poll: 1.seconds
+      :reporting_worker:
+        :count: 2
+        :nice_delta: 7
+      :smart_proxy_worker:
+        :count: 2
+        :memory_threshold: 600.megabytes
+        :queue_timeout: 20.minutes
+        :restart_interval: 2.hours
+      :storage_metrics_collector_worker:
+        :count: 2
+        :nice_delta: 3
+        :poll_method: :escalate
+      :vmdb_storage_bridge_worker:
+        :memory_threshold: 2.gigabytes
+        :nice_delta: 7
+        :poll: 10.seconds
+        :poll_method: :normal
+        :queue_timeout: 120.minutes
+    :replication_worker:
+      :connection_pool_size: 5
+      :poll: 1.seconds
+      :replication:
+        :destination:
+          :database: vmdb_production
+          :username: root
+        :exclude_tables:
+        - ar_internal_metadata
+        - assigned_server_roles
+        - audit_events
+        - binary_blobs
+        - binary_blob_parts
+        - chargeback_rate_details
+        - chargeback_rates
+        - conditions
+        - conditions_miq_policies
+        - configurations
+        - custom_buttons
+        - customization_specs
+        - database_backups
+        - event_logs
+        - file_depots
+        - jobs
+        - log_files
+        - metrics
+        - metrics_00
+        - metrics_01
+        - metrics_02
+        - metrics_03
+        - metrics_04
+        - metrics_05
+        - metrics_06
+        - metrics_07
+        - metrics_08
+        - metrics_09
+        - metrics_10
+        - metrics_11
+        - metrics_12
+        - metrics_13
+        - metrics_14
+        - metrics_15
+        - metrics_16
+        - metrics_17
+        - metrics_18
+        - metrics_19
+        - metrics_20
+        - metrics_21
+        - metrics_22
+        - metrics_23
+        - metric_rollups
+        - miq_actions
+        - miq_ae_classes
+        - miq_ae_fields
+        - miq_ae_instances
+        - miq_ae_methods
+        - miq_ae_namespaces
+        - miq_ae_values
+        - miq_ae_workspaces
+        - miq_alert_statuses
+        - miq_alerts
+        - miq_databases
+        - miq_enterprises
+        - miq_event_definitions
+        - miq_globals
+        - miq_groups
+        - miq_policies
+        - miq_policy_contents
+        - miq_product_features
+        - miq_queue
+        - miq_roles_features
+        - miq_report_result_details
+        - miq_report_results
+        - miq_reports
+        - miq_searches
+        - miq_servers_product_updates
+        - miq_sets
+        - miq_schedules
+        - miq_shortcuts
+        - miq_tasks
+        - miq_user_roles
+        - miq_widgets
+        - miq_widget_contents
+        - miq_workers
+        - rss_feeds
+        - scan_items
+        - schema_migrations
+        - server_roles
+        - sessions
+        - vim_performance_states
+        - vim_performance_tag_values
+        - vmdb_database_metrics
+        - vmdb_databases
+        - vmdb_indexes
+        - vmdb_metrics
+        - vmdb_tables
+        :options:
+          :replication_trace: false
+          :debug_sql: false
+          :heartbeat_threshold: 300
+          :database_connection_timeout: 15
+    :schedule_worker:
+      :authentication_check_interval: 1.day
+      :db_diagnostics_interval: 30.minutes
+      :ems_events_purge_interval: 1.day
+      :evm_snapshot_delete_delay_for_job_not_found: 1.hour
+      :evm_snapshot_interval: 1.hour
+      :job_proxy_dispatcher_interval: 15.seconds
+      :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
+      :job_proxy_dispatcher_stale_message_timeout: 2.minutes
+      :job_timeout_interval: 60.seconds
+      :log_active_configuration_interval: 1.days
+      :log_database_statistics_interval: 1.days
+      :memory_threshold: 300.megabytes
+      :nice_delta: 3
+      :orchestration_stack_retired_interval: 10.minutes
+      :performance_collection_interval: 3.minutes
+      :performance_collection_start_delay: 5.minutes
+      :performance_realtime_purging_interval: 15.minutes
+      :performance_realtime_purging_start_delay: 5.minutes
+      :performance_rollup_purging_interval: 4.hours
+      :performance_rollup_purging_start_delay: 5.minutes
+      :policy_events_purge_interval: 1.day
+      :poll: 15.seconds
+      :server_log_stats_interval: 5.minutes
+      :server_stats_interval: 60.seconds
+      :service_retired_interval: 10.minutes
+      :session_timeout_interval: 30.seconds
+      :storage_file_collection_interval: 1.days
+      :storage_file_collection_time_utc: 21600
+      :vm_retired_interval: 10.minutes
+    :smis_refresh_worker:
+      :connection_pool_size: 5
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 3
+      :poll: 15.seconds
+      :smis_update_period: 1.hours
+      :stats_update_period: 10.minutes
+      :status_update_period: 5.minutes
+    :ui_worker:
+      :connection_pool_size: 5
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
+      :poll: 60.seconds
+    :vim_broker_worker:
+      :heartbeat_freq: 15.seconds
+      :memory_threshold: 2.gigabytes
+      :nice_delta: 3
+      :poll: 1.seconds
+      :reconnect_retry_interval: 5.minutes
+      :vim_broker_status_interval: 15.minutes
+      :vim_broker_update_interval: 0.seconds
+    :web_service_worker:
+      :connection_pool_size: 5
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
+      :poll: 60.seconds

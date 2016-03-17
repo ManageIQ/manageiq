@@ -58,7 +58,7 @@ module Vmdb
     end
 
     def self.template_settings
-      raw_hash = YAML.load_file(Rails.root.join("config/vmdb.tmpl.yml"))
+      raw_hash = YAML.load_file(Rails.root.join("config/settings.yml"))
       decrypt_passwords!(raw_hash).deep_symbolize_keys!
     end
 
@@ -78,7 +78,7 @@ module Vmdb
 
     def self.build_settings(resource = nil)
       ::Config::Options.new.tap do |settings|
-        settings.add_source!(Rails.root.join("config/vmdb.tmpl.yml").to_s)
+        settings.add_source!(Rails.root.join("config/settings.yml").to_s)
         settings.add_source!(DatabaseSource.new(resource))
         settings.add_source!(Rails.root.join("config/settings.local.yml").to_s)
       end
