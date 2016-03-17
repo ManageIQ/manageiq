@@ -100,4 +100,20 @@ module MiqAeServiceModelSpec
       expect(svc_vm.id).to eq(vm.id)
     end
   end
+
+  describe "find_or_create_by" do
+    it "blocks" do
+      expect do
+        MiqAeMethodService::MiqAeServiceVmOrTemplate.find_or_create_by(:name => 'test123')
+      end.to raise_error(NoMethodError)
+    end
+  end
+
+  describe "find_or_initialize_by" do
+    it "blocks" do
+      expect do
+        MiqAeMethodService::MiqAeServiceVmOrTemplate.find_or_initialize_by(:name => 'test123')
+      end.to raise_error(NoMethodError)
+    end
+  end
 end

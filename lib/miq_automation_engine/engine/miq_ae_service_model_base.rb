@@ -27,11 +27,17 @@ module MiqAeMethodService
       super
     end
 
+    def self.allowed_find_method?(m)
+      return false if m.starts_with?('find_or_create') || m.starts_with?('find_or_initialize')
+      m.starts_with?('find')
+    end
+
     # Expose the ActiveRecord find, all, count, and first
     def self.class_method_exposed?(m)
-      m.to_s.starts_with?('find_') || [:where, :find, :all, :count, :first].include?(m)
+      allowed_find_method?(m.to_s) || [:where, :find, :all, :count, :first].include?(m)
     end
     private_class_method :class_method_exposed?
+    private_class_method :allowed_find_method?
 
     def self.inherited(subclass)
       subclass.class_eval do
