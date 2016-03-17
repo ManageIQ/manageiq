@@ -32,12 +32,14 @@ module ManageIQ::Providers
         @data_index         = {}
         @resource_to_stack  = {}
         @network_interfaces = []
+        @subscriptions      = []
       end
 
       def ems_inv_to_hashes
         log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
 
         _log.info("#{log_header}...")
+        get_subscriptions
         get_resource_groups
         get_network_interfaces
         get_security_groups
@@ -56,6 +58,11 @@ module ManageIQ::Providers
 
       def get_network_interfaces
         @network_interfaces = gather_data_for_this_region(@nis)
+      end
+
+      # Can use any service object here, results are identical.
+      def get_subscriptions
+        @subscriptions = @vmm.subscriptions.map(&:subscription_id)
       end
 
       def get_resource_groups
@@ -87,7 +94,7 @@ module ManageIQ::Providers
       def get_stacks
         # deployments are realizations of a template in the Azure provider
         # they are parsed and converted to stacks in vmdb
-        deployments = gather_data_for_this_region(@tds)
+        deployments = gather_data_for_this_region(@tds, 'list')
         process_collection(deployments, :orchestration_stacks) { |dp| parse_stack(dp) }
         update_nested_stack_relations
       end
@@ -170,9 +177,32 @@ module ManageIQ::Providers
         end
       end
 
-      def gather_data_for_this_region(arm_service, method = "list")
-        @data[:resource_groups].collect do |resource_group|
-          arm_service.send(method, resource_group[:name])
+      # Gather all data for all resource groups. If a subscription ID is provided,
+      # then only collect data for that subscription. Otherwise, collect all data
+      # for all subscriptions.
+      #
+      def gather_data_for_this_region(arm_service, method = 'list_all', subscription_id = nil)
+        subscriptions = subscription_id ? [subscription_id] : @subscriptions
+
+        subscriptions.collect do |sub_id|
+          arm_service.configuration.subscription_id = sub_id
+
+          begin
+            if method.to_s == 'list_all'
+              arm_service.send(method).select { |obj| obj.location == @ems.provider_region }
+            else
+              @data[:resource_groups].collect do |resource_group|
+                arm_service.send(method, resource_group[:name])
+              end
+            end
+          rescue Azure::Armrest::UnauthorizedException => err
+            if err.code == 'InvalidAuthenticationTokenTenant'
+              _log.warn("Invalid subscription for this tenant. Skipping.")
+              next
+            else
+              raise
+            end
+          end
         end.flatten
       end
 
