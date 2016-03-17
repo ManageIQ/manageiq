@@ -727,21 +727,14 @@ class ChargebackController < ApplicationController
 
   def get_cis_all
     @edit[:cb_assign][:cis] = {}
-    if @edit[:new][:cbshow_typ] == "enterprise"
-      e_id = MiqEnterprise.first
-      @edit[:cb_assign][:cis]["#{e_id.id}"] = "Enterprise"
-    elsif @edit[:new][:cbshow_typ] == "storage"
-      Storage.all.each do |s|
-        @edit[:cb_assign][:cis][s.id] = s.name
+    classtype =
+      if @edit[:new][:cbshow_typ] == "enterprise"
+        MiqEnterprise
+      else
+        @edit[:new][:cbshow_typ].classify.constantize
       end
-    elsif @edit[:new][:cbshow_typ] == "ext_management_system"
-      ExtManagementSystem.all.each do |ms|
-        @edit[:cb_assign][:cis][ms.id] = ms.name
-      end
-    elsif @edit[:new][:cbshow_typ] == "ems_cluster"
-      EmsCluster.all.each do |cl|
-        @edit[:cb_assign][:cis][cl.id] = cl.name
-      end
+    classtype.all.each do |instance|
+      @edit[:cb_assign][:cis][instance.id] = instance.name
     end
   end
 
