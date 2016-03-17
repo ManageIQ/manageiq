@@ -3,9 +3,7 @@ class MigrateEmsAttributesToEndpoints < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
-  class Endpoint < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class Endpoint < ActiveRecord::Base; end
 
   def up
     say_with_time("Migrating EMS attributes to endpoints") do

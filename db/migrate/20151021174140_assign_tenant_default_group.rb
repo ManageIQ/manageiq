@@ -1,7 +1,5 @@
 class AssignTenantDefaultGroup < ActiveRecord::Migration
   class Tenant < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     def add_default_miq_group
       tenant_group = ::AssignTenantDefaultGroup::MiqGroup.create_tenant_group(self)
       update_attributes!(:default_miq_group_id => tenant_group.id)
@@ -14,7 +12,6 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
 
   class MiqUserRole < ActiveRecord::Base
     DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
-    self.inheritance_column = :_type_disabled # disable STI
 
     # if there is no role, that is ok
     # MiqGroup.seed will populate
@@ -26,7 +23,6 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
 
   class MiqGroup < ActiveRecord::Base
     TENANT_GROUP = "tenant"
-    self.inheritance_column = :_type_disabled # disable STI
 
     def self.create_tenant_group(tenant)
       role = ::AssignTenantDefaultGroup::MiqUserRole.default_tenant_role

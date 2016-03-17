@@ -1,11 +1,7 @@
 class RemoveUiTasksAndUiTaskSets < ActiveRecord::Migration
-  class MiqSet < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqSet < ActiveRecord::Base; end
 
-  class Relationship < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class Relationship < ActiveRecord::Base; end
 
   def up
     remove_index :ui_tasks, [:area, :typ, :task]

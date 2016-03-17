@@ -1,7 +1,5 @@
 class AddGroupAndUserColumnsToMiqWidgetContents < ActiveRecord::Migration
-  class MiqWidgetContent < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqWidgetContent < ActiveRecord::Base; end
 
   def up
     add_column    :miq_widget_contents, :miq_group_id, :bigint

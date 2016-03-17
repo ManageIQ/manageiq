@@ -1,11 +1,9 @@
 class CreateMiqGroupsUsersJoinTable < ActiveRecord::Migration
   class MiqGroupsUsers < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     self.primary_key = nil
   end
 
   class User < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     include ReservedMixin
     include MigrationStubHelper # NOTE: Must be included after other mixins
   end

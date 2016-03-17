@@ -3,12 +3,10 @@ class RenameEmsEventTableToEventStream < ActiveRecord::Migration
   include MigrationHelper::SharedStubs
 
   class EventStream < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
+    self.inheritance_column = :_type_disabled
   end
 
-  class EmsEvent < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class EmsEvent < ActiveRecord::Base; end
 
   def up
     rename_table :ems_events, :event_streams

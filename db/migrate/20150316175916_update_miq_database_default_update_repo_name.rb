@@ -1,7 +1,5 @@
 class UpdateMiqDatabaseDefaultUpdateRepoName < ActiveRecord::Migration
-  class MiqDatabase < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class MiqDatabase < ActiveRecord::Base; end
 
   REPO_NAME_HASH = {
     "rhel-x86_64-server-6-cf-me-3"                                => "rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1",

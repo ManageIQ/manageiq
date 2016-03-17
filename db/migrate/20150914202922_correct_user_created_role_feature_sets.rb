@@ -1,12 +1,9 @@
 class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration
   class MiqUserRole < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features, :class_name => "CorrectUserCreatedRoleFeatureSets::MiqProductFeature"
   end
 
-  class MiqProductFeature < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqProductFeature < ActiveRecord::Base; end
 
   def up
     say_with_time "Correcting user created role feature sets" do

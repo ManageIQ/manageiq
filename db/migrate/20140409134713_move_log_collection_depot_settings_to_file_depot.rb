@@ -5,20 +5,14 @@ class MoveLogCollectionDepotSettingsToFileDepot < ActiveRecord::Migration
 
   class Configuration < ActiveRecord::Base
     serialize :settings, Hash
-    self.inheritance_column = :_type_disabled # disable STI
   end
 
-  class FileDepot < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class FileDepot < ActiveRecord::Base; end
 
-  class MiqServer < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqServer < ActiveRecord::Base; end
 
   class Zone < ActiveRecord::Base
     serialize :settings, Hash
-    self.inheritance_column = :_type_disabled # disable STI
   end
 
   def up

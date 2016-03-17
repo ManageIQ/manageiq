@@ -1,5 +1,7 @@
 class AddKerberosToExtManagementSystem < ActiveRecord::Migration
   class ExtManagementSystem < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled
+
     include ReservedMixin
     include MigrationStubHelper # NOTE: Must be included after other mixins
   end

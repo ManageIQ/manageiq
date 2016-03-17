@@ -1,7 +1,6 @@
 class SetMiqGroupsGroupType < ActiveRecord::Migration
   class MiqGroup < ActiveRecord::Base
     USER_GROUP = "user"
-    self.inheritance_column = :_type_disabled # disable STI
   end
 
   def up

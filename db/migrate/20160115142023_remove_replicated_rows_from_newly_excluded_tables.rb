@@ -1,15 +1,10 @@
 class RemoveReplicatedRowsFromNewlyExcludedTables < ActiveRecord::Migration
-  class MiqEventDefinition < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class MiqEventDefinition < ActiveRecord::Base; end
 
-  class ScanItem < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class ScanItem < ActiveRecord::Base; end
 
   class Configuration < ActiveRecord::Base
     serialize :settings, Hash
-    self.inheritance_column = :_type_disabled
   end
 
   def up

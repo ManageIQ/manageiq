@@ -8,9 +8,7 @@ class MigrateProvisioningManagerToEms < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled
   end
 
-  class OperatingSystemFlavor < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class OperatingSystemFlavor < ActiveRecord::Base; end
 
   class CustomizationScript < ActiveRecord::Base
     self.inheritance_column = :_type_disabled

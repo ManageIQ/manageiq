@@ -1,7 +1,5 @@
 class UpdateDefaultRegistrationChannelNames < ActiveRecord::Migration
-  class MiqDatabase < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqDatabase < ActiveRecord::Base; end
 
   def up
     say_with_time("Updating Default Registration Channel Names for v5.3") do
