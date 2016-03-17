@@ -43,7 +43,7 @@ module Vmdb
 
     def self.save!(miq_server, hash)
       raise "configuration invalid" unless VMDB::Config::Validator.new(hash).valid?
-      diff = HashDiffer.diff(template_settings, hash)
+      diff = HashDiffer.diff(template_settings.to_hash, hash)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
       apply_settings_changes(miq_server, deltas)
@@ -54,8 +54,7 @@ module Vmdb
     end
 
     def self.template_settings
-      raw_hash = YAML.load_file(Rails.root.join("config/settings.yml"))
-      decrypt_passwords!(raw_hash).deep_symbolize_keys!
+      build_template.load!
     end
 
     def self.mask_passwords!(settings)
@@ -72,16 +71,33 @@ module Vmdb
 
     private
 
-    def self.build(resource)
+    def self.build_template
       ::Config::Options.new.tap do |settings|
-        settings.add_source!(Rails.root.join("config/settings.yml").to_s)
-        settings.add_source!(Rails.root.join("config/settings/#{Rails.env}.yml").to_s)
-        settings.add_source!(Rails.root.join("config/environments/#{Rails.env}.yml").to_s)
-        settings.add_source!(DatabaseSource.new(resource))
-        settings.add_source!(Rails.root.join("config/settings.local.yml").to_s)
-        settings.add_source!(Rails.root.join("config/settings/#{Rails.env}.local.yml").to_s)
-        settings.add_source!(Rails.root.join("config/environments/#{Rails.env}.local.yml").to_s)
+        template_sources.each { |s| settings.add_source!(s) }
       end
+    end
+
+    def self.build(resource)
+      build_template.tap do |settings|
+        settings.add_source!(DatabaseSource.new(resource))
+        local_sources.each { |s| settings.add_source!(s) }
+      end
+    end
+
+    def self.template_sources
+      [
+        Rails.root.join("config/settings.yml").to_s,
+        Rails.root.join("config/settings/#{Rails.env}.yml").to_s,
+        Rails.root.join("config/environments/#{Rails.env}.yml").to_s
+      ]
+    end
+
+    def self.local_sources
+      [
+        Rails.root.join("config/settings.local.yml").to_s,
+        Rails.root.join("config/settings/#{Rails.env}.local.yml").to_s,
+        Rails.root.join("config/environments/#{Rails.env}.local.yml").to_s
+      ]
     end
 
     # This is a near copy of Config.load_and_set_settings, but we can't use that
