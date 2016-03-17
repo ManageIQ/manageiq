@@ -108,7 +108,7 @@ $(document).ready(function () {
     }
   });
 
-  $(document).on('click', '[data-miq_observe_checkbox]', function () {
+  $(document).on('click', '[data-miq_observe_checkbox]', function (event) {
     var el = $(this);
     var parms = $.parseJSON(el.attr('data-miq_observe_checkbox'));
     var url = parms.url;
@@ -128,7 +128,7 @@ $(document).ready(function () {
     }
     miqJqueryRequest(url, options);
 
-    return false;
+    event.stopPropagation();
   });
 
   ManageIQ.observeDate = function(el) {

@@ -2082,7 +2082,8 @@ class MiqAeClassController < ApplicationController
         return
       end
       new_fields = {}
-      field_attributes.each_with_object({}) { |field| new_fields[field] = @edit[:new_field][field] }
+      field_attributes.each_with_object({}) { |field| new_fields[field] =
+        @edit[:new_field][field] || @edit[:new_field][field.to_sym]}
       @edit[:new][:fields].push(new_fields)
       @edit[:new_field] = session[:field_data] = {}
     end
