@@ -333,6 +333,7 @@ module ManageIQ::Providers
       end
 
       def self.host_inv_to_switch_hashes(inv)
+        host_mor = inv['MOR']
         inv = inv.fetch_path('config', 'network')
 
         result = []
@@ -340,7 +341,8 @@ module ManageIQ::Providers
         return result, result_uids if inv.nil?
 
         inv['vswitch'].to_miq_a.each do |data|
-          name = uid = data['name']
+          name = data['name']
+          uid = "#{host_mor}|#{data['name']}"
           pnics = data['pnic'].to_miq_a
 
           security_policy = data.fetch_path('spec', 'policy', 'security') || {}
