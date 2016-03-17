@@ -1,0 +1,6 @@
+<miq-sort-items items="vm.data" headers="vm.columnsToShow"></miq-sort-items>
+<miq-tile-view  items="vm.data"
+                on-tile-click="vm.onRowClick($event, rowData)"
+                on-tile-select="vm.onRowSelected()"
+                headers="vm.columnsToShow"
+                class="max-height"></miq-tile-view>

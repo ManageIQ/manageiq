@@ -15,7 +15,69 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def index
-    redirect_to :action => 'show_list'
+    @angular_app_name = 'mwProviders'
+    @directive = 'miq-list-providers'
+  end
+
+  def list_providers
+    render :json => generate_providers
+  end
+
+  def new
+    redirect_to :action => :index, :anchor => "new"
+  end
+
+  def show_list
+    redirect_to :action => :index, :anchor => "show_list"
+  end
+
+  def new_provider
+    result_object = provider_validator
+    if result_object[:result]
+      store_provier result_object
+    end
+    render :json => result_object
+  end
+
+  def validate_provider
+    status = provider_validator
+    render :json => status
+  end
+
+  private
+
+  def store_provier(result_object)
+    set_record_vars(result_object[:ems_object])
+    if valid_record?(result_object[:ems_object]) && result_object[:ems_object].save
+      AuditEvent.success(build_created_audit(result_object[:ems_object], @edit))
+      session[:edit] = nil
+    else
+      result_object[:result] = false
+      result_object[:validation_errors] = @edit[:errors]
+      result_object[:database_errors] = result_object[:ems_object].errors
+    end
+  end
+
+  def generate_providers
+    get_view(ManageIQ::Providers::MiddlewareManager)
+    @grid_hash
+  end
+
+  def provider_validator
+    create_or_edit
+    middleware_provider = model.model_from_emstype(@edit[:new][:emstype]).new
+    result_object = get_validation_object middleware_provider
+    result_object[:ems_object] = middleware_provider
+    result_object
+  end
+
+  def create_or_edit
+    @ems = model.new
+    @edit = {}
+    @edit[:key] = "ems_edit__#{@ems.id || "new"}"
+    @edit[:new] = {}
+    @edit[:current] = {}
+    get_form_vars
   end
 
   def listicon_image(item, _view)

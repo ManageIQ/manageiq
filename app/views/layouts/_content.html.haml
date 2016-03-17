@@ -70,6 +70,9 @@
             = render :partial => "layouts/listnav"
           = yield :left
         #custom_left_cell
+- elsif @angular_app_name
+  = render :partial => "layouts/vertical_navbar"
+  .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height{:style => "overflow: hidden;", "data-ng-app" => @angular_app_name.to_s, "ui-view" => ''}
 - else
   #center_div{:style => "height: 100%;"}
     - if layout_uses_listnav?

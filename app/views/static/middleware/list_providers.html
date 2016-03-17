@@ -1,0 +1,58 @@
+<div class="row toolbar-pf">
+  <div class="col-md-12">
+    <div class="toolbar-pf-actions">
+      <miq-toolbar-menu toolbar-items="vm.toolbarItems"></miq-toolbar-menu>
+      <div class="toolbar-pf-view-selector  form-group">
+        <ul class="list-inline">
+          <li class="" ng-class="vm.getClassByLocation('grid')">
+            <a ui-sref="list_providers.grid" title="Grid View" ng-click="vm.activeView = 'grid'">
+              <i class="fa fa-th" style=""></i>
+            </a>
+          </li>
+          <li class="" ng-class="vm.getClassByLocation('tile')">
+            <a ui-sref="list_providers.tile" title="Tile View" ng-click="vm.activeView = 'tile'">
+              <i class="fa fa-th-large" style=""></i>
+            </a>
+          </li>
+            <li class="" ng-class="vm.getClassByLocation('list')">
+              <a ui-sref="list_providers.list" title="List View" ng-click="vm.activeView = 'list'">
+                <i class="fa fa-th-list" style=""></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row max-height">
+  <div class="col-md-2 col-ld-2 col-xs-3 sidebar-pf sidebar-pf-left max-height">
+    <div>
+      <br>
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <strong>
+          No filters defined.
+        </strong>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-10 col-ld-10 max-height  miq-auto-overflow">
+    <miq-notification-section limit="2" show-info="{{true}}" class="col-md-12"></miq-notification-section>
+    <div class="row" style="">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-7">
+            <h1>
+              Middleware Managers
+            </h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div ui-view=""></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -317,7 +317,7 @@ module EmsCommon
   end
   private :update_button_validate
 
-  def validate_credentials(verify_ems)
+  def get_validation_object(verify_ems)
     set_record_vars(verify_ems, :validate)
     @in_a_form = true
     @changed = session[:changed]
@@ -325,10 +325,16 @@ module EmsCommon
     # validate button should say "revalidate" if the form is unchanged
     revalidating = !edit_changed?
     result, details = verify_ems.authentication_check(params[:type], :save => revalidating)
-    if result
+    {:details => details, :result => result}
+  end
+
+  def validate_credentials(verify_ems)
+    result_object = get_validation_object verify_ems
+    if result_object[:result]
       add_flash(_("Credential validation was successful"))
     else
-      add_flash(_("Credential validation was not successful: %{details}") % {:details => details}, :error)
+      add_flash(_("Credential validation was not successful: %{details}") %
+      {:details => result_object[:details]}, :error)
     end
 
     render_flash

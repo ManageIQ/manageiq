@@ -1035,9 +1035,12 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        list_providers
       ) +
                compare_get,
       :post => %w(
+        new_provider
+        validate_provider
         button
         create
         dynamic_checkbox_refresh
