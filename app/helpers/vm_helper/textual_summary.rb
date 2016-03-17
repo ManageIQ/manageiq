@@ -292,7 +292,7 @@ module VmHelper::TextualSummary
     elsif storages.length == 1
       storage = storages.first
       h[:value] = storage.name
-      h[:title] = _("Show this %{label}") % {:label => label}
+      h[:title] = _("Show this VM's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'storage', :action => 'show', :id => storage)
     else
       h.delete(:image) # Image will be part of each line item, instead
@@ -300,7 +300,7 @@ module VmHelper::TextualSummary
       h[:value] = storages.sort_by { |s| s.name.downcase }.collect do |s|
         {:image => "storage",
          :value => "#{s.name}#{" (main)" if s == main}",
-         :title => _("Show this %{label}") % {:label => label},
+         :title => _("Show this VM's %{label}") % {:label => label},
          :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
       end
     end
