@@ -14,7 +14,7 @@ describe ConfigurationScript do
   end
   let(:manager)      { FactoryGirl.create(:configuration_manager_ansible_tower, :provider, :configuration_script) }
   let(:mock_api)     { AnsibleTowerClient::Api.new(faraday_connection) }
-  let(:job_template) { AnsibleTowerClient::JobTemplate.new(mock_api, "id" => 1, "name" => "template", "description" => "description", "extra_vars" => "{\n \"instance_ids\": [\"i-3434\"]}") }
+  let(:job_template) { AnsibleTowerClient::JobTemplate.new(mock_api, "id" => 1, "url" => "url", "name" => "template", "description" => "description", "extra_vars" => "{\n \"instance_ids\": [\"i-3434\"]}") }
 
   it "belongs_to the Ansible Tower manager" do
     expect(manager.configuration_scripts.size).to eq 1
