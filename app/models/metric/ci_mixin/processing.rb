@@ -1,6 +1,8 @@
 module Metric::CiMixin::Processing
   def perf_process(interval_name, start_time, end_time, counters, counter_values)
-    raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
+    unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
+      raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
+    end
 
     log_header = "[#{interval_name}]"
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
