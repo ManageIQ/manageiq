@@ -265,7 +265,7 @@ module OpsController::OpsRbac
     assert_privileges("rbac_user_delete")
     users = []
     unless params[:id] # showing a list
-      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
+      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
       users = User.where(:id => ids).compact
       if users.empty?
         add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => "Administrator"}, :error)
@@ -314,7 +314,7 @@ module OpsController::OpsRbac
     assert_privileges("rbac_role_delete")
     roles = []
     if !params[:id] # showing a role list
-      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
+      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
       roles = MiqUserRole.where(:id => ids)
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
@@ -377,7 +377,7 @@ module OpsController::OpsRbac
     assert_privileges("rbac_group_delete")
     groups = []
     if !params[:id] # showing a list
-      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
+      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
       groups = MiqGroup.where(:id => ids)
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g"  # reset node to show list
