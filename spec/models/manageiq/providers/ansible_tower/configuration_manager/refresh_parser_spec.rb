@@ -13,7 +13,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
   let(:parser)            { described_class.new(manager) }
   let(:manager)           { FactoryGirl.create(:configuration_manager_ansible_tower, :provider) }
   let(:mock_api)          { double("AnsibleTowerClient::Api") }
-  let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new(mock_api, "id" => i, "name" => "host#{i}", "inventory" => i) } }
+  let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new(mock_api, "related" => {"inventory" => "url"}, "id" => i, "name" => "host#{i}", "inventory" => i) } }
   let(:all_inventories)   { (1..2).collect { |i| AnsibleTowerClient::Inventory.new(mock_api, "id" => i, "name" => "inventory#{i}") } }
   let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new(mock_api, "id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload") } }
 
