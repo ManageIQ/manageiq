@@ -595,4 +595,15 @@ describe MiqQueue do
                                   :expanded     => [nil, "exp"]
                                 )
   end
+
+  context "#delivered" do
+    it "destroys a stale object" do
+      q = MiqQueue.create!(:state => 'ready')
+      MiqQueue.find(q.id).tap { |q2| q2.state = 'dequeue' }.save # update_attributes doesn't expose the issue
+
+      q.delivered('warn', nil, nil)
+
+      expect(MiqQueue.where(:id => q.id).count).to eq(0)
+    end
+  end
 end
