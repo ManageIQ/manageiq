@@ -169,8 +169,6 @@ module MiqServer::LogManagement
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
-      base = base_zip_log_name + ".zip"
-
       msg = "Zipping and posting current logs and configs on #{resource}"
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
