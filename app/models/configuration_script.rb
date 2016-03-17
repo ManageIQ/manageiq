@@ -5,10 +5,10 @@ class ConfigurationScript < ActiveRecord::Base
   include ProviderObjectMixin
 
   def run(vars = {})
-    current_vars = {'extra_vars' => variables}
-    extra_vars = vars.reverse_merge(current_vars)
+    extra_vars = {'extra_vars' => variables}
+    options = vars.reverse_merge(extra_vars)
     with_provider_object do |jt|
-      jt.launch(extra_vars)
+      jt.launch(options)
     end
   end
 
