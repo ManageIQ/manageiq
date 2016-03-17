@@ -725,13 +725,18 @@ class ChargebackController < ApplicationController
     classification.entries.each { |e| @edit[:cb_assign][:tags][e.id.to_s] = e.description } if classification
   end
 
+  WHITELIST_INSTANCE_TYPE = %w(enterprise storage ext_management_system ems_cluster tenant).freeze
   def get_cis_all
     @edit[:cb_assign][:cis] = {}
+    klass = @edit[:new][:cbshow_typ]
+    unless WHITELIST_INSTANCE_TYPE.include?(klass)
+      raise ArgumentError, "Received: #{klass}, expected one of #{WHITELIST_INSTANCE_TYPE}"
+    end
     classtype =
-      if @edit[:new][:cbshow_typ] == "enterprise"
+      if klass == "enterprise"
         MiqEnterprise
       else
-        @edit[:new][:cbshow_typ].classify.constantize
+        klass.classify.constantize
       end
     classtype.all.each do |instance|
       @edit[:cb_assign][:cis][instance.id] = instance.name
