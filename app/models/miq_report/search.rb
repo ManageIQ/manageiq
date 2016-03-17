@@ -15,7 +15,7 @@ module MiqReport::Search
 
   def get_sqltable(assoc)
     r = db_class.reflection_with_virtual(assoc.to_sym)
-    raise "Invalid reflection <#{assoc}> on model <#{db_class.name}>" if r.nil?
+    raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class.name} if r.nil?
     r.klass.table_name
   end
 

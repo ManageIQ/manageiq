@@ -105,7 +105,7 @@ module MiqReport::Formatting
   def apply_format_function(value, options = {})
     function = options.delete(:function)
     method = "format_#{function[:name]}"
-    raise "Unknown format function '#{function[:name]}'" unless self.respond_to?(method)
+    raise _("Unknown format function '%{name}'") % {:name => function[:name]} unless respond_to?(method)
 
     send(method, value, function.merge(options))
   end

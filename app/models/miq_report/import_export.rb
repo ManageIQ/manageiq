@@ -3,11 +3,11 @@ module MiqReport::ImportExport
 
   module ClassMethods
     def import_from_hash(report, options = nil)
-      raise "No Report to Import" if report.nil?
+      raise _("No Report to Import") if report.nil?
 
       report = report["MiqReport"] if report.keys.first == "MiqReport"
       if !report["menu_name"] || !report["col_order"] || !report["cols"] || report["rpt_type"] != "Custom"
-        raise "Incorrect format, only policy records can be imported."
+        raise _("Incorrect format, only policy records can be imported.")
       end
 
       user = options[:user] || User.find_by_userid(options[:userid])

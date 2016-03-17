@@ -12,7 +12,8 @@ module MiqHostProvision::OptionsHelper
   end
 
   def description
-    @description ||= "PXE install on [#{host_name}] from image [#{get_option(:pxe_image_id)}]"
+    @description ||= _("PXE install on [%{name}] from image [%{id}]") % {:name => host_name,
+                                                                         :id   => get_option(:pxe_image_id)}
   end
 
   def ip_address

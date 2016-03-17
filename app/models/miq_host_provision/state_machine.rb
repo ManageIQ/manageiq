@@ -7,14 +7,23 @@ module MiqHostProvision::StateMachine
   end
 
   def validate_provision
-    raise "Unable to find PXE server with id [#{get_option(:pxe_server_id)}]"                  if pxe_server.nil?
-    raise "Unable to find PXE image with id [#{get_option(:pxe_image_id)}]"                    if pxe_image.nil?
-    raise "Host [#{host_name}] does not have a valid Mac Address"                         if host.mac_address.blank?
-    raise "Host [#{host_name}] does not have valid IPMI credentials"                      if host.missing_credentials?(:ipmi)
-    raise "Host [#{host_name}] does not have an IP Address configured"                    if ip_address.blank?
-    raise "Host [#{host_name}] has #{host.v_total_vms} VMs"                          if host.v_total_vms > 0
-    raise "Host [#{host_name}] has #{host.v_total_miq_templates} Templates"          if host.v_total_miq_templates > 0
-    raise "Host [#{host_name}] is registered to #{host.ext_management_system.name}"  unless host.ext_management_system.nil?
+    raise _("Unable to find PXE server with id [%{id}]") % {:id => get_option(:pxe_server_id)} if pxe_server.nil?
+    raise _("Unable to find PXE image with id [%{id}]") % {:id => get_option(:pxe_image_id)} if pxe_image.nil?
+    raise _("Host [%{name}] does not have a valid Mac Address") % {:name => host_name} if host.mac_address.blank?
+    if host.missing_credentials?(:ipmi)
+      raise _("Host [%{name}] does not have valid IPMI credentials") % {:name => host_name}
+    end
+    raise _("Host [%{name}] does not have an IP Address configured") % {:name => host_name} if ip_address.blank?
+    if host.v_total_vms > 0
+      raise _("Host [%{name}] has %{number} VMs") % {:name => host_name, :number => host.v_total_vms}
+    end
+    if host.v_total_miq_templates > 0
+      raise _("Host [%{name}] has %{number} Templates") % {:name => host_name, :number => host.v_total_miq_templates}
+    end
+    unless host.ext_management_system.nil?
+      raise _("Host [%{name}] is registered to %{system_name}") % {:name        => host_name,
+                                                                   :system_name => host.ext_management_system.name}
+    end
   end
 
   def create_destination

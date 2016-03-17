@@ -23,14 +23,17 @@ module MiqReport::Generator::Async
 
     def _async_generate_tables(taskid, options = {})
       task = MiqTask.find_by_id(taskid)
-      raise MiqException::Error, "Unable to generate report if a task with id [#{taskid}] is not found!" unless task
+      unless task
+        raise MiqException::Error,
+              _("Unable to generate report if a task with id [%{number}] is not found!") % {:number => taskid}
+      end
 
       task.update_status("Active", "Ok", "Generating reports")
       reports = options.delete(:reports)
       reports.each_with_index do |rpt, index|
         rpt.generate_table(options)
         pct_complete = reports.length / (index + 1) * 100.0
-        task.info("Generation of report [#{rpt.name}] complete", pct_complete)
+        task.info(_("Generation of report [%{name}] complete") % {:name => rpt.name}, pct_complete)
       end
 
       task.task_results = reports
@@ -47,7 +50,7 @@ module MiqReport::Generator::Async
     options[:userid] ||= "system"
     sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
 
-    task = MiqTask.create(:name => "Generate Report: '#{name}'")
+    task = MiqTask.create(:name => _("Generate Report: '%{name}'") % {:name => name})
     unless sync # Only queued if sync reporting disabled (default)
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
       unless self.new_record?

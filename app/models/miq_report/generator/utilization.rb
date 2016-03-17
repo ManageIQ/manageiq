@@ -10,7 +10,10 @@ module MiqReport::Generator::Utilization
     #   :tag            => "Host/environment/prod"
 
     resource = Object.const_get(db_options[:resource_type]).find_by_id(db_options[:resource_id])
-    raise "unable to find #{db_options[:resource_type]} with id #{db_options[:resource_id]}" if resource.nil?
+    if resource.nil?
+      raise _("unable to find %{type} with id %{number}") % {:type   => db_options[:resource_type],
+                                                             :number => db_options[:resource_id]}
+    end
 
     if db_options[:tag]
       tag_klass, cat, tag = db_options[:tag].split("/")

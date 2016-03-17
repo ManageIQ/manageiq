@@ -219,7 +219,9 @@ module MiqReport::Generator::Html
         "#{label}#{group_label}"
       end
 
-    display_count = "Count: #{extras[:grouping][group][:count]}" if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
+    if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
+      display_count = _("Count: %{number}") % {:number => extras[:grouping][group][:count]}
+    end
     content << " | #{display_count}" unless display_count.blank?
     html_rows << "<tr><td class='group' colspan='#{col_count}'>#{CGI.escapeHTML(content)}</td></tr>"
 

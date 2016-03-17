@@ -415,7 +415,9 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   # rufus_add_schedule(:method => :schedule_at, :interval => time, :months => 1, :schedule_id => self.id, :discard_past => true, :tags => self.tag
   def rufus_add_schedule(options = {})
     return if options.blank?
-    raise "invalid method: #{options[:method]}" unless @user_scheduler.respond_to?(options[:method])
+    unless @user_scheduler.respond_to?(options[:method])
+      raise _("invalid method: %{options}") % {:options => options[:method]}
+    end
 
     options[:tags].to_miq_a << CLASS_TAG
     @schedules[:scheduler] ||= []

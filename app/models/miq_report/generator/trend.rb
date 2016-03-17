@@ -153,7 +153,7 @@ module MiqReport::Generator::Trend
   end
 
   def calc_value_at_target(limit, trend_data_key, trend_data)
-    unknown = "Trending Down"
+    unknown = _("Trending Down")
     if limit.nil? || trend_data[trend_data_key].nil? || trend_data[trend_data_key][:slope].nil? || trend_data[trend_data_key][:yint].nil? || trend_data[trend_data_key][:slope] <= 0 # can't project with a negative slope value
       return unknown
     else
