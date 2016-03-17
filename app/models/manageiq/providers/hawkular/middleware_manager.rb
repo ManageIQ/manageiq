@@ -3,6 +3,7 @@
 module ManageIQ::Providers
   class Hawkular::MiddlewareManager < ManageIQ::Providers::MiddlewareManager
     require_nested :EventCatcher
+    require_nested :LiveMetricsCapture
     require_nested :MiddlewareDeployment
     require_nested :MiddlewareServer
     require_nested :RefreshParser
