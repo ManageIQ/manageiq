@@ -40,34 +40,16 @@ module OwnershipMixin
       errors.empty? ? true : errors
     end
 
-    def conditions_for_owned(user_or_group = nil)
-      user_or_group ||= User.current_user
-
-      case user_or_group
-      when User
-        ["evm_owner_id = ?", user_or_group.id]
-      when MiqGroup
-        ["miq_group_id = ?", user_or_group.id]
+    def user_or_group_owned(user, miq_group)
+      if user && miq_group
+        where("evm_owner_id" => user.id).or(where("miq_group_id" => miq_group.id))
+      elsif user
+        where("evm_owner_id" => user.id)
+      elsif miq_group
+        where("miq_group_id" => miq_group.id)
+      else
+        none
       end
-    end
-
-    def conditions_for_owned_or_group_owned(user_or_group = nil)
-      user_or_group ||= User.current_user
-
-      cond = conditions_for_owned(user_or_group)
-      case user_or_group
-      when MiqGroup
-        cond
-      when User
-        group_cond = conditions_for_owned(user_or_group.current_group)
-        cond[0] += " OR #{group_cond[0]}"
-        cond << group_cond[1]
-        cond
-      end
-    end
-
-    def user_or_group_owned(user = nil)
-      where(conditions_for_owned_or_group_owned(user)).to_a
     end
   end
 

@@ -77,8 +77,8 @@ module Rbac
   #     BelongsToFilters is: BelongsToFilters.any? { |f| matched_filter(f) }
   ########################################################################################
 
-  def self.apply_user_group_rbac_to_class?(klass)
-    [User, MiqGroup].include?(klass)
+  def self.apply_user_group_rbac_to_class?(klass, miq_group)
+    [User, MiqGroup].include?(klass) && miq_group.try!(:self_service?)
   end
 
   def self.safe_base_class(klass)
@@ -110,28 +110,31 @@ module Rbac
     nil
   end
 
-  def self.get_self_service_objects(user_or_group, klass)
-    return nil if user_or_group.nil? || !user_or_group.self_service? || !(klass < OwnershipMixin)
+  def self.get_self_service_objects(user, miq_group, klass)
+    return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
+
+    # for limited_self_service, use user's resources, not user.current_group's resources
+    # for reports (user = nil), still use miq_group
+    miq_group = nil if user && miq_group.limited_self_service?
 
     # Get the list of objects that are owned by the user or their LDAP group
-    cond = user_or_group.limited_self_service? ? klass.conditions_for_owned(user_or_group) : klass.conditions_for_owned_or_group_owned(user_or_group)
-    klass.select(minimum_columns_for(klass)).where(cond)
+    klass.user_or_group_owned(user, miq_group).select(minimum_columns_for(klass))
   end
 
   # @return nil if no objects are owned by self service or user not a selfservice user
-  # @return [Array<Integer>] object_ids owned by a user or group
-  def self.get_self_service_object_ids(user_or_group, klass)
-    targets = get_self_service_objects(user_or_group, klass)
-    targets = targets.reorder(nil).collect(&:id) if targets.respond_to?(:collect)
-    targets
+  # @return [Array<Integer>, nil] object_ids owned by a user or group
+  def self.get_self_service_object_ids(user, miq_group, klass)
+    targets = get_self_service_objects(user, miq_group, klass)
+    targets.reorder(nil).pluck(:id) if targets
   end
 
-  def self.calc_filtered_ids(scope, user_filters, user_or_group = nil)
+  def self.calc_filtered_ids(scope, user_filters, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
-    u_filtered_ids = get_self_service_object_ids(user_or_group, klass)
+    u_filtered_ids = get_self_service_object_ids(user, miq_group, klass)
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
     m_filtered_ids = get_managed_filter_object_ids(scope, user_filters['managed'])
-    d_filtered_ids = user_filters['ids_via_descendants']
+    d_filtered_ids = ids_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
+                                         :user => user, :miq_group => miq_group)
 
     filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
     [filtered_ids, u_filtered_ids]
@@ -173,9 +176,9 @@ module Rbac
     filtered_ids
   end
 
-  def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
     parent_class = rbac_class(scope)
-    filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user_or_group)
+    filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
 
     find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
   end
@@ -242,36 +245,30 @@ module Rbac
     scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
   end
 
-  def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options = {}, user_or_group = nil)
-    filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user_or_group)
+  def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+    filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
     find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
 
-  def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options = {}, user_or_group = nil)
+  def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
-    if user_or_group && user_or_group.self_service?
-      if klass == User && user_or_group.kind_of?(User)
-        cond = ["id = ?", user_or_group.id]
-      elsif klass == MiqGroup
-        group_id = user_or_group.id if user_or_group.kind_of?(MiqGroup)
-        group_id ||= user_or_group.current_group_id if user_or_group.kind_of?(User) && user_or_group.current_group
-        cond = ["id = ?", group_id] if group_id
-      else
-        cond = nil
-      end
-
-      cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.where(cond).includes(incl).references(incl).group(find_options[:group])
-                     .order(find_options[:order]).offset(find_options[:offset]).limit(find_options[:limit]).to_a
-
-      [targets, targets.length, targets.length]
-    else
-      find_targets_without_rbac(scope, find_options)
+    if klass == User && user
+      cond = {:id => user.id}
+    elsif klass == MiqGroup
+      cond = {:id => miq_group.id}
     end
+
+    targets = klass.where(cond).where(find_options[:condition])
+                .includes(find_options[:include]).references(find_options[:include])
+                .group(find_options[:group]).order(find_options[:order])
+                .offset(find_options[:offset]).limit(find_options[:limit]).to_a
+
+    [targets, targets.length, targets.length]
   end
 
-  def self.find_options_for_tenant(scope, user_or_group, find_options = {})
+  def self.find_options_for_tenant(scope, user, miq_group, find_options)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
+    user_or_group = user || miq_group
     tenant_id_clause = klass.tenant_id_clause(user_or_group)
 
     find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause) if tenant_id_clause
@@ -282,16 +279,23 @@ module Rbac
     TENANT_ACCESS_STRATEGY[klass.base_model.to_s]
   end
 
-  def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
-    find_options = find_options_for_tenant(scope, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
+  def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options, user, miq_group)
+    if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
+      find_options = find_options_for_tenant(scope, user, miq_group, find_options)
+    end
 
-    return find_targets_with_direct_rbac(scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
-    return find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
-    return find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)
-    find_targets_without_rbac(scope, find_options)
+    if apply_rbac_to_class?(klass)
+      find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+    elsif apply_rbac_to_associated_class?(klass)
+      find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
+    elsif apply_user_group_rbac_to_class?(klass, miq_group)
+      find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
+    else
+      find_targets_without_rbac(scope, find_options)
+    end
   end
 
-  def self.find_targets_without_rbac(scope, find_options = {})
+  def self.find_targets_without_rbac(scope, find_options)
     targets     = method_with_scope(scope, find_options)
     total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
@@ -341,17 +345,17 @@ module Rbac
     matches
   end
 
-  def self.find_descendants(descendant_klass, options = {})
+  def self.find_descendants(descendant_klass, options)
     search(options.merge(:class => descendant_klass, :results_format => :objects)).first
   end
 
-  def self.ids_via_descendants(klass, descendant_types, options = {})
+  def self.ids_via_descendants(klass, descendant_types, options)
     objects = matches_via_descendants(klass, descendant_types, options)
     return nil if objects.blank?
     objects.collect(&:id)
   end
 
-  def self.matches_via_descendants(klass, descendant_types, options = {})
+  def self.matches_via_descendants(klass, descendant_types, options)
     return nil if descendant_types.nil?
 
     matches = []
@@ -494,7 +498,7 @@ module Rbac
       end
     end
 
-    user_filters['ids_via_descendants'] = ids_via_descendants(rbac_class(klass), options.delete(:match_via_descendants), :user => user, :miq_group => miq_group)
+    user_filters['match_via_descendants'] = options.delete(:match_via_descendants)
 
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
@@ -508,7 +512,7 @@ module Rbac
     _log.debug("Find options: #{find_options.inspect}")
 
     if klass.respond_to?(:find)
-      targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user || miq_group)
+      targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
     else
       total_count = targets.length
       auth_count  = targets.length
