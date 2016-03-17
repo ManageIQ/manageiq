@@ -12,8 +12,8 @@ class UpdateSwitchUidEms < ActiveRecord::Migration[5.0]
 
   def down
     Switch.all.each do |s|
-      fail "Expected '|' not found in uid_ems" if s.uid_ems.index('|').nil?
-      s.update(:uid_ems => s.uid_ems[s.uid_ems.index('|')+1..-1])
+      raise "Expected '|' not found in uid_ems" if s.uid_ems.index('|').nil?
+      s.update(:uid_ems => s.uid_ems[s.uid_ems.index('|') + 1..-1])
     end
   end
 end

@@ -25,7 +25,7 @@ describe UpdateSwitchUidEms do
       migrate
 
       switch.reload
-      expect(switch.uid_ems).to eq("#{uid_ems}")
+      expect(switch.uid_ems).to eq(uid_ems.to_s)
     end
 
     it "Rollback switches.uid_ems fails due to missing '|'" do
@@ -37,6 +37,5 @@ describe UpdateSwitchUidEms do
         migrate
       end.to raise_error RuntimeError, "Expected '|' not found in uid_ems"
     end
-
   end
 end
