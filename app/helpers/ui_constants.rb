@@ -191,6 +191,8 @@ module UiConstants
       :containerbuild                           => "list",
       :cimbasestorageextent                     => "list",
       :cimstorageextent                         => "list",
+      :cloudobjectstorecontainer                => "list",
+      :cloudobjectstoreobject                   => "list",
       :cloudtenant                              => "list",
       :cloudvolume                              => "list",
       :cloudvolumesnapshot                      => "list",

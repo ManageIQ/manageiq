@@ -11,12 +11,12 @@ class RequestRefererService
     # For all 'show' actions below the case where ID is not found is handled in
     # record_no_longer_exists? which sets a flash message and redirects either
     # to 'explorer' or 'show_list'. Therefor we need to whitelist more then just 'show'.
-    'vm_or_template'           => %w(show:id explorer), # http://localhost:3000/vm_or_template/show/400r75
+    'vm_or_template'               => %w(show:id explorer), # http://localhost:3000/vm_or_template/show/400r75
     # Valid vm_or_template/show/:id redirects to {vm_infra,vm_cloud,vm_or_template}/explorer
     # the decision is done in 'controller_for_vm'.
-    'vm_infra'                 => %w(launch_html5_console explorer),
-    'vm_cloud'                 => %w(launch_html5_console explorer),
-    'vm'                       => %w(launch_html5_console show:id show_list), # http://localhost:3000/vm/show/400r6
+    'vm_infra'                     => %w(launch_html5_console explorer),
+    'vm_cloud'                     => %w(launch_html5_console explorer),
+    'vm'                           => %w(launch_html5_console show:id show_list), # http://localhost:3000/vm/show/400r6
     # 'launch_html5_console' above added due to IE even in version 11 does not set the referrer headir
     # most likely when the new window is opened by JavaScript code
     'availability_zone'        => %w(show:id show_list), # http://localhost:3000/availability_zone/show/400r1

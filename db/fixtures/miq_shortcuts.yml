@@ -64,15 +64,15 @@
   :url: /availability_zone/show_list
   :rbac_feature_name: availability_zone_show_list
   :startup: true
+- :name: cloud_object_store_containers
+  :description: Clouds / Object Store Containers
+  :url: /cloud_object_store_container/show_list
+  :rbac_feature_name: cloud_object_store_container_show_list
+  :startup: true
 - :name: cloud_tenants
   :description: Clouds / Tenants
   :url: /cloud_tenant/show_list
   :rbac_feature_name: cloud_tenant_show_list
-  :startup: true
-- :name: flavors
-  :description: Clouds / Flavors
-  :url: /flavor/show_list
-  :rbac_feature_name: flavor_show_list
   :startup: true
 - :name: cloud_volumes
   :description: Clouds / Volumes
@@ -83,6 +83,11 @@
   :description: Clouds / Snapshots
   :url: /cloud_volume_snapshot/show_list
   :rbac_feature_name: cloud_volume_snapshot_show_list
+  :startup: true
+- :name: flavors
+  :description: Clouds / Flavors
+  :url: /flavor/show_list
+  :rbac_feature_name: flavor_show_list
   :startup: true
 - :name: vm_cloud_instances_accord
   :description: Clouds / Instances / Instances By Providers

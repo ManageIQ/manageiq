@@ -418,6 +418,64 @@
       :feature_type: control
       :identifier: availability_zone_tag
 
+# CloudObjectStoreContainer
+- :name: Cloud Object Stores
+  :description: Everything under Cloud Object Stores
+  :feature_type: node
+  :identifier: cloud_object_store_container
+  :children:
+  - :name: View
+    :description: View Volumes
+    :feature_type: view
+    :identifier: cloudobject_store_container_view
+    :children:
+    - :name: List
+      :description: Display Lists of Object Store Containers
+      :feature_type: view
+      :identifier: cloud_object_store_container_show_list
+    - :name: Show
+      :description: Display Individual Object Store Containers
+      :feature_type: view
+      :identifier: cloud_object_store_container_show
+  - :name: Operate
+    :description: Perform Operations on Object Store Containers
+    :feature_type: control
+    :identifier: cloud_object_store_container_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Object Store Containers
+      :feature_type: control
+      :identifier: cloud_object_store_container_tag
+
+# CloudObjectStoreObject
+- :name: Cloud Objects
+  :description: Everything under Cloud Objects
+  :feature_type: node
+  :identifier: cloud_object_store_object
+  :children:
+  - :name: View
+    :description: View Objects
+    :feature_type: view
+    :identifier: cloud_object_store_object_view
+    :children:
+    - :name: List
+      :description: Display Lists of Objects
+      :feature_type: view
+      :identifier: cloud_object_store_object_show_list
+    - :name: Show
+      :description: Display Individual Objects
+      :feature_type: view
+      :identifier: cloud_object_store_object_show
+  - :name: Operate
+    :description: Perform Operations on Objects
+    :feature_type: control
+    :identifier: cloud_object_store_object_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Objects
+      :feature_type: control
+      :identifier: cloud_object_store_object_tag
+
 # CloudTenant
 - :name: Cloud Tenants
   :description: Everything under Cloud Tenants

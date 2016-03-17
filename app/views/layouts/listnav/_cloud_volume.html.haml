@@ -3,23 +3,18 @@
     = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render_quadicon(@record, :mode => :icon, :size => 72, :typ => :listnav)
 
-    = miq_accordion_panel(_("Properties"), false, "cloud_volume_prop") do
+    = miq_accordion_panel(_("Properties"), false, "cloud_object_store_container_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
 
-    = miq_accordion_panel(_("Relationships"), false, "cloud_volume_rel") do
+    = miq_accordion_panel(_("Relationships"), false, "cloud_object_store_container_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
             = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
               ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show this Cloud Volumes's parent %s") % ui_lookup(:table => "ems_cloud"))
-        - if role_allows(:feature => "availability_zone_show") && @record.availability_zone
-          %li
-            = link_to("#{ui_lookup(:table => "availability_zone")}: #{@record.availability_zone.name}",
-              {:action => 'show', :id => @record.availability_zone.id, :controller => 'availability_zone'},
-              :title => _("Show this Cloud Volumes's parent %s") % ui_lookup(:table => "availability_zone"))
+              :title => _("Show this #{ui_lookup(:table => 'cloud_object_store')}'s parent %s") % ui_lookup(:table => "ems_cloud"))
         - if role_allows(:feature => "cloud_tenant_show") && @record.cloud_tenant
           %li
             = link_to("#{ui_lookup(:table => "cloud_tenant")}: #{@record.cloud_tenant.name}",

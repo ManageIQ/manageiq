@@ -3,7 +3,7 @@
   - arr.concat(%w(container_builds container_projects container_nodes container_services container_groups availability_zones))
   - arr.concat(%w(middleware_servers middleware_deployments))
   - arr.concat(%w(cloud_tenants ems_clusters flavors security_groups resource_group hosts instances images miq_templates cloud_volumes))
-  - arr.concat(%w(cloud_volume_snapshots orchestration_stacks vms storages miq_proxies persistent_volumes))
+  - arr.concat(%w(cloud_volume_snapshots orchestration_stacks vms storages miq_proxies persistent_volumes cloud_object_store_containers))
   - if arr.include?(@display) && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "compare"

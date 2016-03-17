@@ -3,7 +3,7 @@ module CloudTenantHelper::TextualSummary
   # Groups
   #
   def textual_group_relationships
-    %i(ems_cloud security_groups instances images cloud_volumes cloud_volume_snapshots)
+    %i(ems_cloud security_groups instances images cloud_object_store_containers cloud_volumes cloud_volume_snapshots)
   end
 
   def textual_group_tags
@@ -78,6 +78,17 @@ module CloudTenantHelper::TextualSummary
     if num > 0 && role_allows(:feature => "cloud_volume_snapshot_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => "cloud_volume_snapshots")
+    end
+    h
+  end
+
+  def textual_cloud_object_store_containers
+    label = ui_lookup(:tables => "cloud_object_store")
+    num   = @record.number_of(:cloud_object_store_containers)
+    h     = {:label => label, :image => "cloud_object_store_container", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_object_store_container_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => 'cloud_object_store_containers')
+      h[:title] = _("Show all %{models}") % {:models => label}
     end
     h
   end
