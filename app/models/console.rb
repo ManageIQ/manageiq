@@ -2,5 +2,5 @@ class Console < ApplicationRecord
   belongs_to :vm
   belongs_to :user
 
-  validates_uniqueness_of :url_secret
+  validates :url_secret, :uniqueness => true
 end
