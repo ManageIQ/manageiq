@@ -1,5 +1,6 @@
 module ManageIQ::Providers::Amazon::CloudManager::Vm::Operations
   include_concern 'Guest'
+  include_concern 'Instance'
   include_concern 'Power'
 
   def raw_destroy

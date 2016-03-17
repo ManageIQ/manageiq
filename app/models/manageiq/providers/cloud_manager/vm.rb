@@ -49,6 +49,10 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raw_resize_revert
   end
 
+  def validate_timeline
+    {:available => true, :message => nil}
+  end
+
   private
 
   def raise_created_event

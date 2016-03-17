@@ -199,6 +199,11 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     )
   end
 
+  def validate_timeline
+    {:available => false,
+     :message   => _("Timeline is not available for %{model}") % {:model => ui_lookup(:model => self.class.to_s)}}
+  end
+
   private
 
   def self.discover_from_queue(access_key_id, secret_access_key)
