@@ -1,7 +1,5 @@
 class AddFileDepotIdToMiqSchedule < ActiveRecord::Migration
   class MiqSchedule < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-
     def file_depot
       return @file_depot if defined?(@file_depot)
       @file_depot = FileDepot.where(:id => file_depot_id).first

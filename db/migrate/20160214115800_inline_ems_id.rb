@@ -1,7 +1,5 @@
 class InlineEmsId < ActiveRecord::Migration
-  class ContainerDefinition < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class ContainerDefinition < ActiveRecord::Base; end
 
   class ContainerGroup < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
@@ -15,8 +13,6 @@ class InlineEmsId < ActiveRecord::Migration
   end
 
   class ContainerDefinition < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     belongs_to :container_group, :class_name => "InlineEmsId::ContainerGroup"
   end
 

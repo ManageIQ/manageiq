@@ -1,7 +1,5 @@
 class MigrateAutomateToCustomerDomain < ActiveRecord::Migration
   class MiqAeNamespace < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     def self.root_instances
       where(:parent_id => nil).where(arel_table[:name].not_eq("$"))
     end

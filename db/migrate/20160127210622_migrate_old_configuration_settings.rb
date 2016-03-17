@@ -1,6 +1,5 @@
 class MigrateOldConfigurationSettings < ActiveRecord::Migration
   class Configuration < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     serialize :settings, Hash
   end
 

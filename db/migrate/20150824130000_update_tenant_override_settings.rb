@@ -1,9 +1,7 @@
 class UpdateTenantOverrideSettings < ActiveRecord::Migration
   include MigrationHelper
 
-  class Tenant < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class Tenant < ActiveRecord::Base; end
 
   def up
     return if previously_migrated_as?("20151435234634")

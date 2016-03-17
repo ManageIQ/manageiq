@@ -44,8 +44,6 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   end
 
   class MiqReportResult < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-
     include Serializer
   end
 
@@ -82,7 +80,6 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   end
 
   class BinaryBlob < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
     has_many :binary_blob_parts, -> { order(:id) }, :class_name => 'FixSerializedReportsForRailsFour::BinaryBlobPart'
     belongs_to :resource, :class_name => 'FixSerializedReportsForRailsFour::MiqReportResult'
 

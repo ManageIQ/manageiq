@@ -1,7 +1,5 @@
 class AssignTenant < ActiveRecord::Migration
   class Tenant < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     # seed and return the current root_tenant
     def self.root_tenant
       create_with(
@@ -17,21 +15,15 @@ class AssignTenant < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
-  class MiqAeNamespace < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqAeNamespace < ActiveRecord::Base; end
 
-  class MiqGroup < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqGroup < ActiveRecord::Base; end
 
   class Provider < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end
 
-  class TenantQuota < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class TenantQuota < ActiveRecord::Base; end
 
   class Vm < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI

@@ -1,14 +1,10 @@
 class AddUserCurrentGroupToMiqGroups < ActiveRecord::Migration
   class User < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     belongs_to :current_group, :class_name => "AddUserCurrentGroupToMiqGroups::MiqGroup"
     has_and_belongs_to_many :miq_groups, :class_name => "AddUserCurrentGroupToMiqGroups::MiqGroup"
   end
 
-  class MiqGroup < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqGroup < ActiveRecord::Base; end
 
   def up
     say_with_time("Migrating current_group into user's miq_groups") do

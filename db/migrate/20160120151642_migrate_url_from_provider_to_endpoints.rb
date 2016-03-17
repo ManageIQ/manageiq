@@ -3,9 +3,7 @@ class MigrateUrlFromProviderToEndpoints < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
-  class Endpoint < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class Endpoint < ActiveRecord::Base; end
 
   class ExtManagementSystem < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI

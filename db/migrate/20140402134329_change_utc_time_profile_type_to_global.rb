@@ -1,7 +1,5 @@
 class ChangeUtcTimeProfileTypeToGlobal < ActiveRecord::Migration
-  class TimeProfile < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class TimeProfile < ActiveRecord::Base; end
 
   def up
     say_with_time("Change Default UTC Time Profile to Type Global") do

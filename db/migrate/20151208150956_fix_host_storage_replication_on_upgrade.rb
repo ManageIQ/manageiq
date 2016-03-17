@@ -2,13 +2,10 @@ class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration
   include MigrationHelper
   include MigrationHelper::SharedStubs
 
-  class MiqRegion < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class MiqRegion < ActiveRecord::Base; end
 
   class HostsStorage < ActiveRecord::Base
     self.table_name = "host_storages"
-    self.inheritance_column = :_type_disabled
   end
 
   def up

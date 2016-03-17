@@ -2,18 +2,13 @@ class RenameMiqEventTableToMiqEventDefinition < ActiveRecord::Migration
   include MigrationHelper
   include MigrationHelper::SharedStubs
 
-  class MiqSet < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
-  class Relationship < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
-  class MiqEvent < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
-  class MiqEventDefinition < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqSet < ActiveRecord::Base; end
+
+  class Relationship < ActiveRecord::Base; end
+
+  class MiqEvent < ActiveRecord::Base; end
+
+  class MiqEventDefinition < ActiveRecord::Base; end
 
   def up
     rename_table  :miq_events, :miq_event_definitions

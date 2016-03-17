@@ -2,9 +2,7 @@ class AddContainerImageDigest < ActiveRecord::Migration
   # https://github.com/docker/distribution/blob/v2.1.1/digest/digester.go#L15-L17
   SUPPORTED_DIGESTS = 'sha256', 'sha384', 'sha512'
 
-  class ContainerImage < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class ContainerImage < ActiveRecord::Base; end
 
   def up
     add_column :container_images, :digest, :string

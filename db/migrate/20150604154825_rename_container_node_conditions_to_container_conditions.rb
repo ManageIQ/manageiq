@@ -1,7 +1,5 @@
 class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migration
-  class ContainerCondition < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class ContainerCondition < ActiveRecord::Base; end
 
   def up
     rename_table :container_node_conditions, :container_conditions

@@ -1,6 +1,5 @@
 class ImportProvisionDialogs < ActiveRecord::Migration
   class MiqDialog < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled    # disable STI
     serialize :content
   end
 

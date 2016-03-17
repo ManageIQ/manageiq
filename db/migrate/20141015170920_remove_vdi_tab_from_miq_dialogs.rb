@@ -1,7 +1,6 @@
 class RemoveVdiTabFromMiqDialogs < ActiveRecord::Migration
   class MiqDialog < ActiveRecord::Base
     serialize :content, Hash
-    self.inheritance_column = :_type_disabled # disable STI
   end
 
   def up
