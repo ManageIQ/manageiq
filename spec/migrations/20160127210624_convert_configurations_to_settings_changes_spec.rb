@@ -7,7 +7,7 @@ describe ConvertConfigurationsToSettingsChanges do
   let(:settings_change_stub) { migration_stub(:SettingsChange) }
 
   migration_context :up do
-    it 'converts migration data' do
+    it 'converts migration data with fake templates' do
       config_stub.create!(
         :typ           => "simple",
         :miq_server_id => 1,
@@ -44,8 +44,8 @@ describe ConvertConfigurationsToSettingsChanges do
       )
 
       test_templates = {
-        "simple" => YAML.load_file(data_dir.join("simple.tmpl.yml")),
-        "vmdb"  => YAML.load_file(data_dir.join("simple.tmpl.yml"))
+        "simple" => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys,
+        "vmdb"   => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys
       }
       described_class.with_constants(:TEMPLATES => test_templates) do
         migrate
@@ -87,16 +87,16 @@ describe ConvertConfigurationsToSettingsChanges do
         :value => "not nil"
       )
       expect(deltas[7]).to have_attributes(
-        :key   => "/simple/values/non_existant",
-        :value => "exists"
-      )
-      expect(deltas[8]).to have_attributes(
         :key   => "/simple/values/non_nil",
         :value => "not nil"
       )
-      expect(deltas[9]).to have_attributes(
+      expect(deltas[8]).to have_attributes(
         :key   => "/simple/values/string",
         :value => "new value"
+      )
+      expect(deltas[9]).to have_attributes(
+        :key   => "/simple/values/non_existant",
+        :value => "exists"
       )
       expect(deltas[10]).to have_attributes(
         :key   => "/simple/very/deeply/nested/string",
@@ -113,5 +113,53 @@ describe ConvertConfigurationsToSettingsChanges do
         :value         => "vmdb value",
       )
     end
+
+    it 'converts migration data with real templates' do
+      vmdb_data = stringify_first_two_levels(described_class::TEMPLATES["vmdb"])
+      vmdb_data.store_path("api", "token_ttl", "1.second")
+      config_stub.create!(
+        :typ           => "vmdb",
+        :miq_server_id => 1,
+        :settings      => vmdb_data
+      )
+
+      storage_data = stringify_first_two_levels(described_class::TEMPLATES["storage"])
+      storage_data.store_path("alignment", "boundary", "1.byte")
+      config_stub.create!(
+        :typ           => "storage",
+        :miq_server_id => 2,
+        :settings      => storage_data
+      )
+
+      migrate
+
+      deltas = settings_change_stub.where(:resource_id => 1)
+      expect(deltas.size).to eq(1)
+
+      expect(deltas.first).to have_attributes(
+        :resource_type => "MiqServer",
+        :resource_id   => 1,
+        :key           => "/api/token_ttl",
+        :value         => "1.second",
+      )
+
+      deltas = settings_change_stub.where(:resource_id => 2)
+      expect(deltas.size).to eq(1)
+
+      expect(deltas.first).to have_attributes(
+        :resource_type => "MiqServer",
+        :resource_id   => 2,
+        :key           => "/storage/alignment/boundary",
+        :value         => "1.byte",
+      )
+    end
+  end
+
+  private
+
+  def stringify_first_two_levels(hash)
+    hash = hash.stringify_keys
+    hash.keys.each { |k| hash[k] = hash[k].stringify_keys }
+    hash
   end
 end

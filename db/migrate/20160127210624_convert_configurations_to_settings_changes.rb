@@ -19,7 +19,7 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
   private
 
   def full_to_deltas(full_config)
-    deltas = Vmdb::Settings::HashDiffer.changes(TEMPLATES[full_config.typ], full_config.settings)
+    deltas = Vmdb::Settings::HashDiffer.changes(TEMPLATES[full_config.typ], full_config.settings.deep_symbolize_keys)
     deltas.each do |d|
       d.merge!(
         :resource_type => "MiqServer",
@@ -31,9 +31,8 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
     end
   end
 
-  # TODO: Replace the vmdb key with a hardcoded Hash
-  # TODO: Add the rest of the convertable config types
-  TEMPLATES = {
-    "vmdb" => YAML.load_file(Rails.root.join("config/vmdb.tmpl.yml"))
-  }
+  DATA_DIR = Pathname.new(__dir__).join("data", File.basename(__FILE__, ".rb"))
+  TEMPLATES = Dir.glob(DATA_DIR.join("*.tmpl.yml")).sort.each_with_object({}) do |f, h|
+    h[File.basename(f, ".tmpl.yml")] = YAML.load_file(f).deep_symbolize_keys
+  end
 end
