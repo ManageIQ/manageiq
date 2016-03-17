@@ -33,7 +33,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Mon, 14 Mar 2016 09:54:54 GMT
+      - Tue, 15 Mar 2016 15:51:35 GMT
       X-Total-Count:
       - '1'
       Connection:
@@ -41,20 +41,20 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '121'
+      - '120'
       Link:
       - <http://localhost:8080/hawkular/inventory/feeds>; rel="current"
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAI3MPRLCQAhA4T6nYLaWybogS8xRMhYkwGhnkc7J3f05gf17
-        3wKvAaA8bb8XuEIZ97lpbbKSoGYwMlFD5U3x0jjOnUx0zTHnnCp1SUN3I+T+
-        aZXdUX2KSOnVtiinL/7wH/3XMBxwewOB77sPlAAAAA==
+        H4sIAAAAAAAAAI3MPQ7CMAxA4b2nsDJjNfVfDD1KxZA2sWBj6IZ69wInYH/v
+        W+A9AKRX3R8JbpDGfSbPZCsbenRBYSZ02RyVpE+Fq/kaY8zuVJtTRtMWKF4U
+        r58ONUuZuIdp3dLliz/bj/5rGA64n5yIJFaUAAAA
     http_version: 
-  recorded_at: Mon, 14 Mar 2016 09:54:54 GMT
+  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f90376fa-dda3-47e4-84dd-8d9eef670ace/resourceTypes/WildFly%20Server/resources
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resourceTypes/WildFly%20Server/resources
     body:
       encoding: US-ASCII
       string: ''
@@ -85,7 +85,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Mon, 14 Mar 2016 09:54:54 GMT
+      - Tue, 15 Mar 2016 15:51:35 GMT
       X-Total-Count:
       - '1'
       Connection:
@@ -95,21 +95,21 @@ http_interactions:
       Content-Length:
       - '193'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/f90376fa-dda3-47e4-84dd-8d9eef670ace/resourceTypes/WildFly%20Server/resources>;
+      - <http://localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resourceTypes/WildFly%20Server/resources>;
         rel="current"
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAALWPsQrCMBiE9z5FCLgZEpOYpmZ3cnNwEIffJsFCrKUEoUj7
-        7LaxCoKr893x3XdEjwwh3EC8YLRBmEbDNePqLBTR3kkiheBEy1KTNZdulQtQ
-        +uypN75gIlceiLUgiMzHrpbWEm0L57zKGZSOtmZ3KyEMA15OmNg1bsJMzH9S
-        ozlUwW5Dt+Bs79q7axN/RNZwTQ/wXEDfcWV/hWPWp/+fNcRYBahpsnu5zdO3
-        b9aj0xO7S8cFXQEAAA==
+        H4sIAAAAAAAAALWPvQrCMBhF9z5FCLgZ0uavn2Z3cnNwEIe0SbBQaylBKNI+
+        u22sguDqfO/l3HNCjwQh3JpwwWiLMA2aQcpUwRUB7wQRnDMCogQimXBZzo2C
+        wlOvAZixwFKipPVEQC7JZuoRmYo8484raUra6f2tNPU44vWMCX3rZszM/Cc1
+        6GNV213dr1h6cN3ddZE/IRtzjQ/wUkDfcWV/hVM2xP+ftQmhqk1Do93LbZm+
+        fZMBnZ8R/vCGXQEAAA==
     http_version: 
-  recorded_at: Mon, 14 Mar 2016 09:54:54 GMT
+  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f90376fa-dda3-47e4-84dd-8d9eef670ace/resources/Local~~/data?dataType=configuration
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resources/Local~~/data?dataType=configuration
     body:
       encoding: US-ASCII
       string: ''
@@ -140,27 +140,27 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Mon, 14 Mar 2016 09:54:54 GMT
+      - Tue, 15 Mar 2016 15:51:35 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '251'
+      - '252'
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAFWPP0/DMBTE934KyzMmcWwSl0xhyoBKpSD2V/9pI4JdOXYZ
-        qvaz4xgFCb3p9LvT3btuEMJnCCeMnhEuQluJsqoPrCbCaE44YxURXAryVHFN
-        Gwa1OJjCtGZbsqY2QJQCRniTvIIrRYTaam3qpgSpC9++OgnT/V6oVjprxmP0
-        EEZn8cNSe4Ep6qX3mlTSLy5ahTqlvJ7nvIdWzWOZjuZAsnxoPy/5DDPqpvMJ
-        KCXDrtsP/dv76hy0v2iPhgAhd2AfrR3tceV771SUAe3g65f38P0ZJ/CroXdz
-        sCuEEMYJLE7olrf/kf9/bW4/BoKeRVEBAAA=
+        H4sIAAAAAAAAAFWPMW/DIBSE9/wKxFxqg7FN68mZPFRpJFfdXwwkVh2IMKRD
+        lPz2YipXqt50+u50924bhPAF/AmjV4Qz3zCRs+pQVERoxQkvCkYEHwQpGVe0
+        LqASB53pRggGUrCcVKXUhIu6JC/RR8qc17RQuiphyFzzZgeYHo9MNoM1ejwG
+        B360Bj8ttVeYglp6b1FFvbXBSNRK6dQ8pz2U1c95PJoC0fKp3LzkE0yonS4n
+        oJT0u3bfd+8fq7NX7qoc6j341IFdMGY0x5XvnZVh8GgH51/ewfdXmMCths7O
+        3qwQvB8nMDiie9r+R/7/tbn/AM9KS1dRAQAA
     http_version: 
-  recorded_at: Mon, 14 Mar 2016 09:54:54 GMT
+  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f90376fa-dda3-47e4-84dd-8d9eef670ace/resources/Local~~/children
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resources/Local~~/children
     body:
       encoding: US-ASCII
       string: ''
@@ -191,7 +191,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Mon, 14 Mar 2016 09:54:54 GMT
+      - Tue, 15 Mar 2016 15:51:35 GMT
       X-Total-Count:
       - '22'
       Connection:
@@ -199,32 +199,32 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '823'
+      - '824'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/f90376fa-dda3-47e4-84dd-8d9eef670ace/resources/Local~~/children>;
+      - <http://localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resources/Local~~/children>;
         rel="current"
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAN2ZTW+bQBCG7/kVyFJu2djFrk1q+dDWjaq2OaVSD1EOAzs4
-        1Hy4u2u7qEp+exaCic2CIYcatAdLhpnZnXceBhb2zvh3Zhi9FYiHnvHB6PXF
-        1LQG5tgejonl4oiMhkOTWCPHIu/NEb6bDGFs2W7fnbpXg+Fk7AKhFIZkNJG+
-        1ohSYtErRHc8GYCDfTb9ETngPz3l/87Na762ecwFBjMKAni0Zg5yeT45Ii+H
-        sy9/IVj5OL/tXST5iXiFSX5Jsv8zXTGd5ymlM8vJQgjSuXuqyaNFgzz/mGac
-        RxWUZCEvxeiXlqJfXoizx4uOwvqOseNHsNSAVlHKW3HtxXeL129qO4Qyb4Ns
-        9mCemtO3+afP5+Zgns6voEqsxqEtq/u+RYW109EEUkF/O3AorvwoDjAUswfY
-        Ltc+MOJEQQAhJQsQuIWYbIFdyt/JOylPTe0kxbTrpFdDCZxGAg/RvaU+3SEI
-        PjLBCTjCi0JOMADP1wvhcYX1DCvjuwNx6/nU9WMCC3ma0Ggbyts41QtjncZ6
-        kEdG6A5K2MjLizgMQUSa3UsrpDXoQCWwdV4cZTqCcJkQakGpXFAlG8W9dSL5
-        1eKFG3kcsZhQjwst4NRqq++hksjuIMsesQx141UqrPGSIw/rECnHidahzA2T
-        y4kTG5wlhpotNWpFNiB4ZIju0Fx54QI1W2UUNdWz2ovoDpqk9wmsPL3gqKrq
-        8RzEdAdQgIJ5Dk9e8VdRKE16kToirx5ZeXB32CWfZV7e5W2kFClxgHMIKQOC
-        wC5RJ5BNtTb7mFUzUncQ7x7AenWlqqr5UqRjPWiLgHBkG93WH2W66iEVolrH
-        tMy2gnRCVKmpEk9ZROto9u7HIY98PT4/VYtq8lx6DWl731IwCHm2VXBqKD9f
-        5z43BzcQwqJkv3LPyyj4ZKUu81CJVY1TuaF5UJq2OQUoly4L+eKX7utsMPiT
-        mNMun1F0Ye2LU+O72aUk4d2mmSjschfj0CEruWJWqRVdjLtM7f1xeGq9+oVq
-        tU20fJvn1BC/ZllIhr9kHtd+LP99XJTdKHeuRuZoHLhlICqcVLBHRquEWlGy
-        s0fj/hm5oMPtWyUAAA==
+        H4sIAAAAAAAAAN2ZTW+bQBCG7/kVyFJu2djBH6G1fGjrRlXbnFKphyiHgR07
+        1Hx1d20XVclv70IwsVkw5FCD9mDJMDO7887DwMLeG3/PDKMXgXjsGe+NXl9M
+        TWtgTuzhhFgLHJHRcGgSa+RYZGyO8Op6CBPLXvQXU8sygVrmgEzGdEFG1vWY
+        vJN+ZDwYXV8NcTEZg9Nn0++hA97zc/7v3Lzha5vHXKA/oyCAh2vmIJfnkyPy
+        cjj7/Af8yMP5Xe8iyU/EESb5Jcn+z3TFdJ6nlM4sJwvAT+fuqSaXFg3y/FOa
+        cR5VUJKFvBSjX1qKfnkhzp4uOgrrG8aOF8JKA1pFKW/FtRffLV6/qO0QytwN
+        stmjeWpOX+cfP52bg3k6v4IqsRqHtqzu+xYV1k5HE0gF/e3AoRh5YexjIGaP
+        sF2tPWDECX0fAkqWIHALMdkCu5S/k3dSnpraSYpp10mvhhI4jQQeontLfbpD
+        EDxkghNwhBsGnKAPrqcXwuMK6xlWxncH4tb16MKLCSzlaULDbSBv41QvjHUa
+        60EeGaE7KGEjLy/iMAQRanYvrZDWoAOVwNZ5cZTpCMJlQqgFpXJBlWwU99aJ
+        5FeLG2zkcchiQl0utIBTq62+h0oiu4Mse8Qy1I1XqbDGS448rEOkHCdcBzI3
+        TC4nTmxwVhhottSoFdmA4JEhukMzcoMlarbKKGqqZ7UX0R00Se8TiFy94Kiq
+        6vEcxHQHkI+CuQ5PXvGjMJAmvUgdkVePrDy4O+ySzzIv7/I2UoqUOMA5BJQB
+        QWCXqBPIplqbfcyqGak7iHcPYL26UlXVfCnSsR60hU84so1u648yXfWQClGt
+        Y1plW0E6IarUVImnLKJ1NHv344CHnh6fn6pFNXkuvYa0vW8pGAQ82yo4NZQf
+        r3Ofm4NbCGBZsl+552UUfLJSl3moxKrGqdzQPChN25x8lEuXpXzxS/d1Nuj/
+        Tsxpl88oLmDtiVPju92lJOHdpZko7HIX49AhK7liVqkVXYz7TO3DcXhqvfqF
+        arVNtHyb59QQv2RZSIY/ZR43Xiz/fViW3Sh3rkbmaBy4ZSAqnFSwR0arhFpR
+        srMn4+Ef+blgtVslAAA=
     http_version: 
-  recorded_at: Mon, 14 Mar 2016 09:54:54 GMT
+  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
 recorded_with: VCR 2.9.3
