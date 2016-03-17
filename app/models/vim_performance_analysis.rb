@@ -512,8 +512,8 @@ module VimPerformanceAnalysis
     rel        = rel.where(options[:conditions]) if options[:conditions]
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
-      cond1 = rel.where(:resource_type => "Storage",             :resource_id => obj.storage_ids)
-      cond2 = rel.where(:resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
+      cond1 = rel.where(:resource => obj.storages)
+      cond2 = rel.where(:resource => obj.ext_management_systems)
       rel = cond1.or(cond2)
     else
       parent_col = case obj
