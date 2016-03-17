@@ -30,7 +30,7 @@ class ApplicationHelper::Toolbar::ContainerImagesCenter < ApplicationHelper::Too
         button(
           :container_image_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_images")}'),
+          N_('Edit Tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => "false",

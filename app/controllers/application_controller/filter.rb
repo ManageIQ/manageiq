@@ -107,7 +107,7 @@ module ApplicationController::Filter
       rescue StandardError => bang
         @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
                             _("This element should be removed and recreated or you can report the error to your CFME administrator."),
-                            _("Error details: %s") % bang]
+                            _("Error details: %{message}") % {:message => bang}]
       end
       @edit[@expkey][:exp_token] = token
       render :update do |page|
@@ -755,6 +755,7 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_last_loaded] = nil                    # Clear the last search loaded
       @edit[:adv_search_name] = nil                             # Clear search name
       @edit[:adv_search_report] = nil                           # Clear the report name
+      @edit[@expkey][:selected] = nil                           # Clear selected search
     elsif params[:button] == "save"
       @edit[:search_type] = nil
     end
@@ -999,13 +1000,14 @@ module ApplicationController::Filter
   def adv_search_set_text
     if @edit[@expkey][:exp_idx] == 0                          # Are we pointing at the first exp
       if @edit[:adv_search_name]
-        @edit[:adv_search_applied][:text] = " - Filtered by \"#{@edit[:adv_search_name]}\""
+        @edit[:adv_search_applied][:text] = _(" - Filtered by \"%{text}\"") % {:text => @edit[:adv_search_name]}
       else
-        @edit[:adv_search_applied][:text] = " - Filtered by \"#{@edit[:adv_search_report]}\" report"
+        @edit[:adv_search_applied][:text] = _(" - Filtered by \"%{text}\" report") %
+                                              {:text => @edit[:adv_search_report]}
       end
     else
       @edit[:custom_search] = true
-      @edit[:adv_search_applied][:text] = " - Filtered by custom search"
+      @edit[:adv_search_applied][:text] = _(" - Filtered by custom search")
     end
   end
 

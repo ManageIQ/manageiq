@@ -41,9 +41,8 @@ describe Tag do
     before(:each) do
       FactoryGirl.create(:classification_department_with_tags)
 
-      @tag_details    = {:category => "department", :name => "finance", :path => "/managed/department/finance"}
-      @tag            = Tag.find_by_name(@tag_details[:path])
-      @category       = Classification.find_by_name(@tag_details[:category], nil)
+      @tag            = Tag.find_by_name("/managed/department/finance")
+      @category       = Classification.find_by_name("department")
       @classification = @tag.classification
     end
 
@@ -66,16 +65,21 @@ describe Tag do
     end
   end
 
-  context "classification" do
+  describe ".find_by_classification_name" do
+    let(:root_ns)   { "/managed" }
+    let(:parent_ns) { "/managed/test_category" }
+    let(:entry_ns)  { "/managed/test_category/test_entry" }
+    let(:my_region_number) { Tag.my_region_number }
+    let(:parent) { FactoryGirl.create(:classification, :name => "test_category") }
+
     before do
-      parent = FactoryGirl.create(:classification, :name => "test_category")
       FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
       FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
     end
 
     it "finds tag by name" do
       expect(Tag.find_by_classification_name("test_category")).not_to be_nil
-      expect(Tag.find_by_classification_name("test_category").name).to eq('/managed/test_category')
+      expect(Tag.find_by_classification_name("test_category").name).to eq(parent_ns)
     end
 
     it "doesn't find non tag" do
@@ -83,9 +87,30 @@ describe Tag do
     end
 
     it "finds tag by name and ns" do
-      ns = '/managed/test_category'
-      expect(Tag.find_by_classification_name("test_entry", nil, ns)).not_to be_nil
-      expect(Tag.find_by_classification_name("test_entry", nil, ns).name).to eq("#{ns}/test_entry")
+      expect(Tag.find_by_classification_name("test_entry", nil, parent_ns)).not_to be_nil
+      expect(Tag.find_by_classification_name("test_entry", nil, parent_ns).name).to eq(entry_ns)
+    end
+
+    it "finds tag by name, ns, and parent_id" do
+      expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent.id)).not_to be_nil
+      expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent.id).name).to eq(entry_ns)
+    end
+
+    it "finds tag by name, ns and parent" do
+      expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent)).not_to be_nil
+      expect(Tag.find_by_classification_name("test_entry", nil, root_ns, parent).name).to eq(entry_ns)
+    end
+
+    it "finds tag in region" do
+      expect(Tag.find_by_classification_name("test_category", my_region_number)).not_to be_nil
+    end
+
+    it "filters tag in wrong region" do
+      expect(Tag.find_by_classification_name("test_category", my_region_number + 1)).to be_nil
+    end
+
+    it "find tag in any region" do
+      expect(Tag.find_by_classification_name("test_category", nil)).not_to be_nil
     end
   end
 

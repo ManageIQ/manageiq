@@ -21,7 +21,6 @@ RSpec.describe "categories API" do
 
     expect_query_result(:categories, 1, 2)
     expect_result_resources_to_include_hrefs("resources", [categories_url(category_1.id)])
-    expect_request_success
   end
 
   it "will return a bad request error if the filter name is invalid" do

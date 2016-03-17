@@ -643,9 +643,7 @@ class OpsController < ApplicationController
       if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
         # show all the tabs if on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
-        if %w(save reset).include?(params[:button]) && is_browser_ie?
-          presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true;"
-        end
+        presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
       elsif x_node.split("-").first == "svr" && my_server_id != active_id.to_i
         # show only 4 tabs if not on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
@@ -655,8 +653,6 @@ class OpsController < ApplicationController
 
   def rbac_replace_right_cell(nodetype, presenter, r)
     @sb[:tab_label] = @tagging ? _("Tagging") : rbac_set_tab_label
-    # Make sure the double_click var is there
-    presenter[:extra_js] << "var miq_double_click = false;"
     if %w(accordion_select change_tab tree_select).include?(params[:action])
       presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
     elsif nodetype == "group_seq"
@@ -721,8 +717,8 @@ class OpsController < ApplicationController
   def extra_js_commands(presenter)
     presenter[:right_cell_text] = @right_cell_text
     presenter[:osf_node] = x_node
-    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;" # resetting miqOneTrans when tab loads
-    presenter[:extra_js] << "if ($('#server_company').length) $('#server_company').focus();"
+    presenter.reset_one_trans
+    presenter.focus('server_company')
     presenter[:ajax_action] = {
       :controller => controller_name,
       :action     => @ajax_action,
@@ -743,14 +739,16 @@ class OpsController < ApplicationController
 
   def handle_bottom_cell(nodetype, presenter, r, locals)
     # Handle bottom cell
-    if nodetype == "log_depot_edit"
-      presenter.hide(:form_buttons_div, :pc_div_1)
-    elsif @pages || @in_a_form
+    if @pages || @in_a_form
       if @pages
         presenter.hide(:form_buttons_div).show(:pc_div_1)
         presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
       elsif @in_a_form
-        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        if nodetype == "log_depot_edit"
+          presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
+        else
+          presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        end
         presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
       presenter.show(:paging_div)

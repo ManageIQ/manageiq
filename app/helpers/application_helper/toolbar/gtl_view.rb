@@ -5,6 +5,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
       'fa fa-th',
       N_('Grid View'),
       nil,
+      :klass     => ApplicationHelper::Button::View,
       :url       => "\#{@gtl_url}",
       :url_parms => "?type=grid"),
     twostate(
@@ -12,6 +13,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
       'fa fa-th-large',
       N_('Tile View'),
       nil,
+      :klass     => ApplicationHelper::Button::View,
       :url       => "\#{@gtl_url}",
       :url_parms => "?type=tile"),
     twostate(
@@ -19,6 +21,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
       'fa fa-th-list',
       N_('List View'),
       nil,
+      :klass     => ApplicationHelper::Button::View,
       :url       => "\#{@gtl_url}",
       :url_parms => "?type=list"),
   ])
@@ -48,6 +51,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
           'fa fa-file-pdf-o fa-lg',
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
+          :klass     => ApplicationHelper::Button::Pdf,
           :url       => "/download_data",
           :url_parms => "?download_type=pdf"),
       ]

@@ -19,15 +19,16 @@
         %th= _('Group')
         %th= _('Description')
         %th= _('Rate')
-        %th= _('Per Time')
-        %th= _('Per Unit')
+        %th= _('Units')
     %tbody
+      /Currency code is the same for all the chargeback_rate_details
+      - code_currency = @sb[:selected_rate_details].first.detail_currency.code
       - @sb[:selected_rate_details].each do |r|
         - @cur_group = r[:group] if @cur_group.nil?
         - if @cur_group != r[:group]
           - @cur_group = r[:group]
           %tr
-            %td.active{:colspan => "6"} &nbsp;
+            %td.active{:colspan => "4"} &nbsp;
         %tr
           %td
             - if r.rate_type == "Compute"
@@ -39,9 +40,7 @@
             = h(rate_detail_group(r[:group]))
           %td
             = r[:description]
+          %td{:align => 'right'}
+            = r[:rate]
           %td{:align => "right"}
-            = "#{r[:rate]} #{r.detail_currency.symbol} [#{r.detail_currency.code}]"
-          %td
-            = r[:per_time]
-          %td
-            = r.per_unit_display
+            = r.show_rates(code_currency)

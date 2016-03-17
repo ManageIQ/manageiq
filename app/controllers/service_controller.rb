@@ -369,7 +369,7 @@ class ServiceController < ApplicationController
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
     presenter[:osf_node] = x_node
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
-    presenter[:extra_js] << "ManageIQ.changes = null;"
+    presenter.reset_changes
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

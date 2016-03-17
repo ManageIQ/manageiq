@@ -36,7 +36,7 @@ module Metric::Capture
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
-    queue_captures(targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
@@ -48,7 +48,7 @@ module Metric::Capture
     _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
 
     targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
-    targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time) }
+    targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
 
     _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
   end
@@ -154,13 +154,13 @@ module Metric::Capture
     tasks_by_rollup_parent
   end
 
-  def self.queue_captures(targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+  def self.queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
     # Queue the captures for each target
     use_historical = historical_days != 0
     targets.each do |target|
       interval_name = perf_target_to_interval_name(target)
 
-      options = {}
+      options = {:zone => zone}
       target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
         if tasks_by_rollup_parent.key?("#{parent.class}:#{parent.id}")
           pkey = "#{parent.class}:#{parent.id}"

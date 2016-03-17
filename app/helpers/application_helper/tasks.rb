@@ -12,6 +12,8 @@ module ApplicationHelper
         _("Retirement")
       when "scan"
         _("Analysis")
+      when "refresh_ems"
+        _("Refresh Provider")
       else
         task.titleize
       end

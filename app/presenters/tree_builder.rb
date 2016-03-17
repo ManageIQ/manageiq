@@ -129,7 +129,7 @@ class TreeBuilder
     when :old_dialogs_tree              then [_("All Dialogs"),                  _("All Dialogs")]
     when :ot_tree                       then [_("All Orchestration Templates"),  _("All Orchestration Templates")]
     when :configuration_manager_providers_tree        then
-      title = "All #{ui_lookup(:ui_title => "configuration_manager")} Providers"
+      title = _("All Configuration Manager Providers")
       [title, title]
     when :pxe_image_types_tree          then [_("All System Image Types"),       _("All System Image Types")]
     when :pxe_servers_tree              then [_("All PXE Servers"),              _("All PXE Servers")]

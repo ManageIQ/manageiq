@@ -89,28 +89,25 @@
 
 - when "networks"
   - if @vmminfo
-    .modbox{:style => "margin: 0px 0px 20px 30px"}
-      %h2.modtitle= _('Network Adapters')
+    - @record.hardware.networks.each do |adapter|
       %table.table.table-bordered.table-striped
-        - if @record.hardware.networks.blank?
-          %tbody
+        %thead
+          %tr
+            %th{:colspan => "2"}= _('Network Adapter')
+        %tbody
+          - {:ipaddress       => _('IP Address'),
+             :ipv6address     => _('IPv6 Address'),
+             :description     => _('Description'),
+             :dhcp_server     => _('DHCP Server'),
+             :dhcp_enabled    => _('DHCP Enabled'),
+             :default_gateway => _('Default Gateway'),
+             :subnet_mask     => _('Subnet Mask'),
+             :dns_server      => _('DNS Server')}.each do |sym, label|
             %tr
+              %td.label
+                = label
               %td
-                %strong
-                  = _("%s has no network adapters") % @record.name
-        - else
-          %thead
-            %tr
-              - [_("IPAddress"), _("Description"), _("DHCP Server"), _("DHCP Enabled"), _("Default Gateway"), _("Subnet Mask"), _("DNS Server")].each do |title|
-                %th
-                  = h(title)
-          %tbody
-            %tr
-              - @record.hardware.networks.each do |v|
-                %tr
-                  - [:ipaddress, :description, :dhcp_server, :dhcp_enabled, :default_gateway, :subnet_mask, :dns_server].each do |item|
-                    %td
-                      = v[item]
+                = adapter.send(sym)
 - when "resources_info"
   %table.table.table-bordered.table-striped
     %thead

@@ -6,6 +6,14 @@ class ChargebackRateDetail < ApplicationRecord
   validates :rate, :numericality => true
   validates :group, :source, :presence => true
 
+  PER_TIME_MAP = {
+    :hourly  => "Hour",
+    :daily   => "Day",
+    :weekly  => "Week",
+    :monthly => "Month",
+    :yearly  => "Year"
+  }
+
   def cost(value)
     return 0.0 unless self.enabled?
     value = 1 if group == 'fixed'
@@ -91,5 +99,16 @@ class ChargebackRateDetail < ApplicationRecord
   def rate_type
     # Return parent's rate type
     chargeback_rate.rate_type unless chargeback_rate.nil?
+  end
+
+  # New method created in order to show the rates in a easier to understand way
+  def show_rates(code_currency)
+    rate = self.rate.to_s
+    return code_currency if rate.to_f.zero?
+
+    hr = ChargebackRateDetail::PER_TIME_MAP[per_time.to_sym]
+    rate_display = "#{detail_currency.code} / #{hr}"
+    rate_display_unit = "#{rate_display} / #{per_unit_display}"
+    per_unit.nil? ? rate_display : rate_display_unit
   end
 end

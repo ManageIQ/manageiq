@@ -85,7 +85,8 @@ module ApplicationController::PolicySupport
       session[:edit] = @edit
     end
     @lastaction = "policy_sim"
-    drop_breadcrumb(:name => "Policy Simulation", :url => "/#{request.parameters["controller"]}/policy_sim?continue=true")
+    drop_breadcrumb(:name => _("Policy Simulation"),
+                    :url  => "/#{request.parameters["controller"]}/policy_sim?continue=true")
     session[:policies] = {} unless params[:continue]  # Clear current policies, unless continuing previous simulation
     policy_sim_build_screen
     @tabs = [["polsim", nil], ["polsim", "Policy Simulation"]]
@@ -193,7 +194,9 @@ module ApplicationController::PolicySupport
   # Build the policy assignment screen
   def protect_build_screen
     drop_breadcrumb(
-      :name => "'#{Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize)}' Policy Assignment",
+      :name => _("'%{model}' Policy Assignment") % {:model => Dictionary.gettext(session[:pol_db].to_s,
+                                                                                 :type     => :model,
+                                                                                 :notfound => :titleize)},
       :url  => "/#{request.parameters["controller"]}/protecting"
     )
     # session[:pol_db] = session[:pol_db] == Vm ? VmOrTemplate : session[:pol_db]
@@ -218,7 +221,7 @@ module ApplicationController::PolicySupport
 
   # Create policy assignment audit record
   def protect_audit(pp, mode, db, recs)
-    msg = "[#{pp.name}] Policy Profile #{mode} (db:[#{db}]"
+    msg = _("[%{name}] Policy Profile %{mode} (db:[%{db}]") % {:name => pp.name, :mode => mode, :db => db}
     msg += ", ids:[#{recs.sort_by(&:to_i).join(',')}])"
     event = "policyset_" + mode
     audit = {:event => event, :target_id => pp.id, :target_class => pp.class.base_class.name, :userid => session[:userid], :message => msg}
@@ -266,7 +269,7 @@ module ApplicationController::PolicySupport
     if @all_profs.length > 0
       @all_profs["<select>"] = ""
     else
-      @all_profs["<select>"] = "No Policy Profiles are available"
+      @all_profs["<select>"] = _("No Policy Profiles are available")
     end
     build_targets_hash(@tagitems)
   end

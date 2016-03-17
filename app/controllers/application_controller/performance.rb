@@ -260,9 +260,13 @@ module ApplicationController::Performance
       bc_tag =  "#{Classification.find_by_name(@perf_options[:cat]).description}:#{report.extras[:group_by_tag_descriptions][legend_idx]}"
       dt = typ == "tophour" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
       if top_ids.blank?
-        msg = "No #{bc_tag} #{bc_model} were running #{dt}"
+        msg = _("No %{tag} %{model} were running %{time}") % {:tag => bc_tag, :model => bc_model, :time => dt}
       else
-        bc = request.parameters["controller"] == "storage" ? "#{bc_model} (#{bc_tag} #{dt})" : "#{bc_model} (#{bc_tag} running #{dt})"
+        bc = if request.parameters["controller"] == "storage"
+               "#{bc_model} (#{bc_tag} #{dt})"
+             else
+               _("%{model} (%{tag} running %{time})") % {:tag => bc_tag, :model => bc_model, :time => dt}
+             end
         render :update do |page|
           page.redirect_to(:controller    => model.downcase.singularize,
                            :action        => "show_list",
@@ -276,9 +280,9 @@ module ApplicationController::Performance
 
     elsif cmd == "Display"  # Display selected resources
       dt = @perf_options[:typ] == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
-      state = typ == "on" ? "running" : "stopped"
+      state = typ == "on" ? _("running") : _("stopped")
       if data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym].blank?
-        msg = "No #{model} were #{state} #{dt}"
+        msg = _("No %{model} were %{state} %{time}") % {:model => model, :state => state, :time => dt}
       else
         bc = request.parameters["controller"] == "storage" ? "#{bc_model} #{dt}" : "#{bc_model} #{state} #{dt}"
         render :update do |page|
@@ -310,7 +314,11 @@ module ApplicationController::Performance
       session[(request.parameters["controller"] + "_tl").to_sym].merge!(new_opts)
       f = @perf_record.first_event
       if f.nil?
-        msg = "No events available for this #{new_opts[:model] == "EmsCluster" ? "Cluster" : new_opts[:model]}"
+        msg = if new_opts[:model] == "EmsCluster"
+                _("No events available for this Cluster")
+              else
+                _("No events available for this %{model}") % {:model => new_opts[:model]}
+              end
       elsif @record.kind_of?(MiqServer) # For server charts in OPS
         change_tab("diagnostics_timelines")                # Switch to the Timelines tab
         return
@@ -349,7 +357,11 @@ module ApplicationController::Performance
       session[(controller + "_tl").to_sym].merge!(new_opts)
       f = @record.first_event
       if f.nil?
-        msg = "No events available for this #{model == "EmsCluster" ? "Cluster" : model}"
+        msg = if model == "EmsCluster"
+                _("No events available for this Cluster")
+              else
+                _("No events available for this %{model}") % {:model => model}
+              end
       elsif @record.kind_of?(MiqServer) # For server charts in OPS
         change_tab("diagnostics_timelines")                # Switch to the Timelines tab
         return
@@ -507,7 +519,7 @@ module ApplicationController::Performance
       top_ids = data_row["assoc_ids"][model.downcase.to_sym][:on]
       dt = typ == "tophour" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
       if top_ids.blank?
-        msg = "No #{model} were running #{dt}"
+        msg = _("No %{model} were running %{time}") % {:model => model, :time => dt}
       else
         render :update do |page|
           page.redirect_to(:id          => @perf_record.id,
@@ -520,7 +532,7 @@ module ApplicationController::Performance
       end
 
     else
-      msg = "Chart menu selection not yet implemented"
+      msg = _("Chart menu selection not yet implemented")
     end
 
     msg ? add_flash(msg, :warning) : add_flash(_("Unknown error has occurred"), :error)
@@ -599,10 +611,11 @@ module ApplicationController::Performance
 
     name = @perf_record.respond_to?(:evm_display_name) ? @perf_record.evm_display_name : @perf_record.name
     if @perf_options[:cat]
-      drop_breadcrumb(:name => "#{name} Capacity & Utilization (by #{@perf_options[:cats][@perf_options[:cat_model] + ":" + @perf_options[:cat]]})",
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization (by %{option}:%{model})") %
+        {:name => name, :option => @perf_options[:cats][@perf_options[:cat_model]], :model => @perf_options[:cat]},
                       :url  => url_for(:action => "show", :id => @perf_record, :display => "performance", :refresh => "n"))
     else
-      drop_breadcrumb(:name => "#{name} Capacity & Utilization",
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => name},
                       :url  => url_for(:action => "show", :id => @perf_record, :display => "performance", :refresh => "n"))
     end
     @ajax_action = "perf_chart_chooser"
@@ -611,10 +624,13 @@ module ApplicationController::Performance
   # Generate performance data for a model's charts
   def perf_gen_data(_refresh = nil)
     if @perf_options[:cat]
-      drop_breadcrumb(:name => "#{@perf_record.name} Capacity & Utilization (by #{@perf_options[:cats][@perf_options[:cat_model] + ":" + @perf_options[:cat]]})",
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization (by %{option}:%{model})") %
+        {:name   => @perf_record.name,
+         :option => @perf_options[:cats][@perf_options[:cat_model]],
+         :model  => @perf_options[:cat]},
                       :url  => url_for(:action => "show", :id => @perf_record, :display => "performance", :refresh => "n"))
     else
-      drop_breadcrumb(:name => "#{@perf_record.name} Capacity & Utilization",
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @perf_record.name},
                       :url  => url_for(:action => "show", :id => @perf_record, :display => "performance", :refresh => "n"))
     end
 

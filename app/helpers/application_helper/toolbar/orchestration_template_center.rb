@@ -16,7 +16,9 @@ class ApplicationHelper::Toolbar::OrchestrationTemplateCenter < ApplicationHelpe
           :orchestration_template_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Orchestration Template'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::OrchestrationTemplateEditRemove
+        ),
         button(
           :orchestration_template_copy,
           'fa fa-files-o fa-lg',
@@ -27,6 +29,7 @@ class ApplicationHelper::Toolbar::OrchestrationTemplateCenter < ApplicationHelpe
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Orchestration Template'),
           t,
+          :klass => ApplicationHelper::Button::OrchestrationTemplateEditRemove,
           :confirm => N_("Remove this Orchestration Template?")),
       ]
     ),

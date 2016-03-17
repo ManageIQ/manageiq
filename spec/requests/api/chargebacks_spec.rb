@@ -41,7 +41,6 @@ RSpec.describe "chargebacks API" do
       "resources",
       ["#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}"]
     )
-    expect_request_success
   end
 
   it "can fetch an individual chargeback rate detail" do

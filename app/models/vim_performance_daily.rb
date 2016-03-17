@@ -51,10 +51,6 @@ class VimPerformanceDaily < MetricRollup
     klass.where(:time_profile_id => tp_ids, :capture_interval_name => 'daily')
   end
 
-  def self.find_adhoc(*_args)
-    []
-  end
-
   def self.generate_daily_for_one_day(recs, options = {})
     process_hashes(process_hourly_for_one_day(recs, options), options.merge(:save => false))
   end

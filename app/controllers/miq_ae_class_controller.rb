@@ -297,7 +297,7 @@ class MiqAeClassController < ApplicationController
     )
     r = proc { |opts| render_to_string(opts) }
 
-    replace_trees_by_presenter(presenter, :ae => build_ae_tree) if replace_trees
+    replace_trees_by_presenter(presenter, :ae => build_ae_tree) unless replace_trees.blank?
 
     if @sb[:action] == "miq_ae_field_seq"
       if @flash_array
@@ -371,10 +371,8 @@ class MiqAeClassController < ApplicationController
     end
 
     presenter[:record_id] = determine_record_id_for_presenter
-
     presenter[:osf_node] = x_node
-
-    presenter[:extra_js] << "miqButtons('#{@changed ? 'show' : 'hide'}');"
+    presenter.show_miq_buttons if @changed
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
@@ -1770,7 +1768,7 @@ class MiqAeClassController < ApplicationController
     @sb[:domain_id] = domains.first.first
     @edit[:current] = copy_hash(@edit[:new])
     model = @edit[:selected_items].count > 1 ? :models : :model
-    @right_cell_text = _("Copy %{model}") % {model => ui_lookup(model => "typ")}
+    @right_cell_text = _("Copy %{model}") % {:model => ui_lookup(model => typ.to_s)}
     session[:edit] = @edit
   end
 
@@ -1882,7 +1880,7 @@ class MiqAeClassController < ApplicationController
 
     process_aeinstances(aeinstances, "destroy") unless aeinstances.empty?
     add_flash(_("The selected %{record} were deleted") %
-      {:record => ui_lookup(:models => "MiqAeInstances")}) if @flash_array.nil?
+      {:record => ui_lookup(:models => "MiqAeInstance")}) if @flash_array.nil?
     replace_right_cell([:ae])
   end
 

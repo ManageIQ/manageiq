@@ -47,8 +47,9 @@ describe ExtManagementSystem do
   end
 
   it ".ems_cloud_discovery_types" do
-    expected_types = {"azure" => "azure", "amazon" => "ec2"}
-    expect(described_class.ems_cloud_discovery_types).to eq(expected_types)
+    discovery_type = {'amazon' => 'ec2'}
+    described_class.register_cloud_discovery_type(discovery_type)
+    expect(described_class.ems_cloud_discovery_types).to include(discovery_type)
   end
 
   context "#ipaddress / #ipaddress=" do

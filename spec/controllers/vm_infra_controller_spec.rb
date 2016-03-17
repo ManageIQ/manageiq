@@ -66,7 +66,7 @@ describe VmInfraController do
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
+    post :x_button, :params => { :pressed => 'vm_reconfigure', :rec_ids => vm.id }
     expect(response.status).to eq(200)
   end
 
@@ -362,8 +362,8 @@ describe VmInfraController do
 
     post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
     expect(response.status).to eq(200)
-    expect(response.body).to include('button=submit')
-    expect(response.body).to include('button=cancel')
+    expect(response.body).to include('class=\"btn btn-primary\" alt=\"Submit\"')
+    expect(response.body).to include('class=\"btn btn-default\" alt=\"Cancel\"')
   end
 
   context "breadcrumbs" do

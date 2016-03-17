@@ -25,6 +25,7 @@ class ApplicationHelper::Toolbar::MiqCapacityView < ApplicationHelper::Toolbar::
           'fa fa-file-pdf-o fa-lg',
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
+          :klass     => ApplicationHelper::Button::Pdf,
           :url       => "/\#{x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
           :url_parms => "?typ=pdf"),
       ]

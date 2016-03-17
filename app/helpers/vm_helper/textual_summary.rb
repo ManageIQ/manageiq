@@ -118,7 +118,13 @@ module VmHelper::TextualSummary
 
   def textual_ipaddress
     ips = @record.ipaddresses
-    {:label => n_("IP Address", "IP Addresses", ips.size), :value => ips.join(", ")}
+    h = {:label    => n_("IP Address", "IP Addresses", ips.size),
+         :value    => ips.join(", "),
+         :explorer => true}
+    if @record.hardware.try(:networks) && @record.hardware.networks.present?
+      h[:link] = url_for(:action => 'show', :id => @record, :display => 'networks')
+    end
+    h
   end
 
   def textual_custom_1

@@ -69,4 +69,13 @@ class ContainerProject < ApplicationRecord
   def perf_rollup_parents(interval_name = nil)
     []
   end
+
+  def disconnect_inv
+    _log.info "Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] "
+    self.old_ems_id = ems_id
+    self.ext_management_system = nil
+    self.deleted_on = Time.now.utc
+    save
+  end
 end

@@ -61,25 +61,11 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
          * added: Just the ones that were added
          */
         added.attr("class", function(d) { return d.item.kind; });
-        added.append("circle").attr("r", function(d) { return getDimensions(d).r}).style("stroke", function(d) {
-            switch (d.item.status) {
-                case "OK":
-                case "On":
-                case "Ready":
-                case "Running":
-                case "Succeeded":
-                    return "#3F9C35";
-                case "NotReady":
-                case "Failed":
-                    return "#CC0000";
-                case 'Warning':
-                case 'Waiting':
-                case 'Pending':
-                    return "#EC7A08";
-                case 'Unknown':
-                case 'Terminated':
-                    return "#bbb";
-            }});
+        added.append("circle")
+            .attr("r", function(d) { return getDimensions(d).r})
+            .attr('class' , function(d) {
+              return topologyService.getItemStatusClass(d);
+            });
         added.append("title");
         added.on("dblclick", function(d) {
             return self.dblclick(d);});

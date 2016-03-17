@@ -71,6 +71,58 @@ module JobProxyDispatcherSpec
             expect { dispatcher.dispatch }.not_to raise_error
           end
         end
+
+        context "with a Microsoft vm without a storage" do
+          before(:each) do
+            # Test a Microsoft vm without a storage
+            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            @vm = @vms.first
+            @vm.storage = nil
+            @vm.vendor = "microsoft"
+            @vm.save
+            @vm.scan
+          end
+
+          it "should run dispatch without calling queue_signal" do
+            dispatcher = JobProxyDispatcher.new
+            expect(dispatcher).not_to receive(:queue_signal)
+          end
+        end
+
+        context "with a Microsoft vm with a Microsoft storage" do
+          before(:each) do
+            # Test a Microsoft vm without a storage
+            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            @vm = @vms.first
+            @vm.storage.store_type = "CSVFS"
+            @vm.vendor = "microsoft"
+            @vm.save
+            @vm.scan
+          end
+
+          it "should run dispatch without calling queue_signal" do
+            dispatcher = JobProxyDispatcher.new
+            expect(dispatcher).not_to receive(:queue_signal)
+          end
+        end
+
+        context "with a Microsoft vm with an invalid storage" do
+          before(:each) do
+            # Test a Microsoft vm without a storage
+            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            @vm = @vms.first
+            @vm.storage.store_type = "XFS"
+            @vm.vendor = "microsoft"
+            @vm.save
+            @vm.scan
+          end
+
+          it "should expect queue_signal and dispatch without errors" do
+            dispatcher = JobProxyDispatcher.new
+            expect(dispatcher).to receive(:queue_signal)
+            expect { dispatcher.dispatch }.not_to raise_error
+          end
+        end
       end
 
       context "with jobs, a default smartproxy for repo scanning" do

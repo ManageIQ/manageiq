@@ -18,14 +18,14 @@ describe ApplianceConsole::Principal do
   it { expect(subject).to be_ipa }
 
   it "should register if not yet registered" do
-    expect_run(/ipa/, ["service-find", "--principal", principal_name], response(1))
-    expect_run(/ipa/, ["service-add", "--force", principal_name], response)
+    expect_run(/ipa/, ["-e", "skip_version_check=1", "service-find", "--principal", principal_name], response(1))
+    expect_run(/ipa/, ["-e", "skip_version_check=1", "service-add", "--force", principal_name], response)
 
     subject.register
   end
 
   it "should not register if already registered" do
-    expect_run(/ipa/, ["service-find", "--principal", principal_name], response)
+    expect_run(/ipa/, ["-e", "skip_version_check=1", "service-find", "--principal", principal_name], response)
 
     subject.register
   end

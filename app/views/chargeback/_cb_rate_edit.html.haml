@@ -67,6 +67,7 @@
           %th= _('Currency')
           %th= ''
       %tbody
+        - code_currency = @sb[:rate_details][0].detail_currency.code
         - @sb[:rate_details].select { |k| k.rate != "0" }.each_with_index do |r, i|
           - @cur_group = r[:group] if @cur_group.nil?
           - if @cur_group != r[:group]
@@ -106,17 +107,10 @@
                   = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
             /Show the code of the currency selected by the user
             %td{:id => "column_currency_#{i}"}
-              = r[:currency]
-            %td
-              = button_tag("<span class=\"pficon-delete\"></span>".html_safe,
-                            :class   => "btn btn-default btn-xs",
-                            :alt     => t,
-                            :type    => "submit",
-                            :onclick => "miqAjaxButton('#{url_for(:action => "cb_remove_rd", :button => "remove_single", :index => "#{i}")}');")
+              = code_currency
             :javascript
               $(document).ready(function () {
                   $("[id^=select]").prop('checked', false);
                   $(".btm-remove_rd").attr("disabled","disabled");
                   $('.add_rds').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();
                   $('.add_rds').addClass('add_rds_off').removeClass('add_rds');
-              });

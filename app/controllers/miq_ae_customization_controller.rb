@@ -452,10 +452,8 @@ class MiqAeCustomizationController < ApplicationController
 
     presenter[:build_calendar] = true
     # resetting ManageIQ.oneTransition.oneTrans when tab loads
-    presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;'
-    if %w(save reset).include?(params[:button]) && is_browser_ie?
-      presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true"
-    end
+    presenter.reset_one_trans
+    presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
     presenter.hide(:custom_left_cell).show(:default_left_cell)
   end
 
@@ -481,8 +479,8 @@ class MiqAeCustomizationController < ApplicationController
         @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @dialog.description.gsub(/'/, "\\'"), :model => "#{title} #{ui_lookup(:model => "MiqDialog")}"}
       end
 
-      presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;' # resetting ManageIQ.oneTransition.oneTrans when tab loads
-      presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true" if %w(save reset).include?(params[:button]) && is_browser_ie?
+      presenter.reset_one_trans
+      presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
     end
   end
 

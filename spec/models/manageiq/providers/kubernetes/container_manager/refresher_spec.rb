@@ -32,6 +32,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       assert_authentication
       assert_table_counts
       assert_specific_container
+      assert_specific_container_definition
       assert_specific_container_group
       assert_specific_container_node
       assert_specific_container_service
@@ -122,6 +123,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(@container.container_node).to have_attributes(
       :name => "10.35.0.169"
     )
+  end
+
+  def assert_specific_container_definition
+    expect(ContainerDefinition.find_by_name("heapster").ext_management_system).to eq(@ems)
   end
 
   def assert_specific_container_group

@@ -34,7 +34,6 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 gem "net-ldap",                       "~>0.7.0",   :require => false
 gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/matthewd/rubyrep.git", :branch => "rails5"
 gem "simple-rss",                     "~>1.3.1",   :require => false
-gem "winrm",                          "~>1.7.2",   :require => false
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
 
 # Not vendored, but required
@@ -46,7 +45,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "azure-armrest",                  "~>0.2.0"
+gem "azure-armrest",                  "=0.2.0"
 gem "color",                          "~>1.8"
 gem "default_value_for",              "~>3.0.1", :git => "git://github.com/matthewd/default_value_for.git", :branch => "rails-50" # https://github.com/FooBarWidget/default_value_for/pull/57
 gem "draper",                         "~>2.1.0", :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712

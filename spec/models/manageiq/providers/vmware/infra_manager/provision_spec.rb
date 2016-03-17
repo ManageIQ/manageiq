@@ -47,7 +47,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
       it "should return a transform spec" do
         spec = @vm_prov.build_transform_spec
         expect(spec).to be_nil
-        @vm_prov.options.merge!(:disk_format => 'thin')
+        @vm_prov.options[:disk_format] = 'thin'
         spec = @vm_prov.build_transform_spec
         expect(spec).to be_kind_of(VimString)
         expect(spec.vimType).to eq('VirtualMachineRelocateTransformation')
@@ -123,6 +123,45 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(@vm_prov.destination).to receive(:start).twice
           expect(@ems).to receive(:reset_vim_cache).once
           @vm_prov.signal :autostart_destination
+        end
+      end
+
+      context "#dest_folder" do
+        let(:user_folder) { FactoryGirl.create(:ems_folder) }
+
+        let(:dc) do
+          FactoryGirl.create(:datacenter).tap do |f|
+            f.parent = FactoryGirl.create(:ems_folder, :name => 'Datacenters').tap { |d| d.parent = @ems; }
+          end
+        end
+
+        let(:vm_folder) do
+          FactoryGirl.create(:ems_folder, :name => 'vm').tap { |v| v.parent = dc }
+        end
+
+        let(:discovered_vm_folder) do
+          FactoryGirl.create(:ems_folder, :name => 'Discovered virtual machine').tap { |f| f.parent = vm_folder }
+        end
+
+        let(:dest_host) do
+          FactoryGirl.create(:host_vmware, :ext_management_system => @ems).tap { |h| h.parent = dc }
+        end
+
+        it "uses folder set from option" do
+          @vm_prov.options[:placement_folder_name] = [user_folder.id, user_folder.name]
+          expect(@vm_prov.dest_folder).to eq(user_folder)
+        end
+
+        it "uses 'Discoverd virtual machine' folder in destination host" do
+          discovered_vm_folder
+          @vm_prov.options[:dest_host] = [dest_host.id, dest_host.name]
+          expect(@vm_prov.dest_folder).to eq(discovered_vm_folder)
+        end
+
+        it "uses vm folder in destination host" do
+          vm_folder
+          @vm_prov.options[:dest_host] = [dest_host.id, dest_host.name]
+          expect(@vm_prov.dest_folder).to eq(vm_folder)
         end
       end
     end

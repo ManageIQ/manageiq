@@ -3,7 +3,7 @@ class Container < ApplicationRecord
   include NewWithTypeStiMixin
 
   has_one    :container_group, :through => :container_definition
-  has_one    :ext_management_system, :through => :container_group
+  belongs_to :ext_management_system, :foreign_key => :ems_id
   has_one    :container_node, :through => :container_group
   has_one    :container_replicator, :through => :container_group
   has_one    :container_project, :through => :container_group
@@ -18,7 +18,6 @@ class Container < ApplicationRecord
   has_many   :vim_performance_states, :as => :resource
 
   # Needed for metrics
-  delegate   :ems_id, :to => :container_group
   delegate   :my_zone, :to => :ext_management_system
 
   include EventMixin
@@ -31,10 +30,10 @@ class Container < ApplicationRecord
     when :ems_events
       # TODO: improve relationship using the id
       ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ? AND container_name = ?",
-       container_project.name, ext_management_system.id, name]
+       container_project.try(:name), ext_management_system.try(:id), name]
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["#{events_table_name(assoc)}.ems_id = ?", ext_management_system.id]
+      ["#{events_table_name(assoc)}.ems_id = ?", ext_management_system.try(:id)]
     end
   end
 
@@ -42,5 +41,11 @@ class Container < ApplicationRecord
 
   def perf_rollup_parents(_interval_name = nil)
     # No rollups: nodes performance are collected separately
+  end
+
+  def disconnect_inv
+    _log.info "Disconnecting Container [#{name}] id [#{id}] from EMS "
+    self.deleted_on = Time.now.utc
+    save
   end
 end

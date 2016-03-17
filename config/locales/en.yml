@@ -957,3 +957,4 @@ en:
 
     ui_title:
       foreman:             Foreman
+      ansible_tower:       Ansible Tower

@@ -252,27 +252,24 @@ module ApplicationController::Buttons
 
   private ###########
 
+  BASE_MODEL_EXPLORER_CLASSES = [Vm, MiqTemplate, Service].freeze
+  APPLIES_TO_CLASS_BASE_MODELS = %w(EmsCluster ExtManagementSystem Host MiqTemplate Service ServiceTemplate Storage Vm).freeze
+  def applies_to_class_model(applies_to_class)
+    # TODO: Give a better name for this concept, including ServiceTemplate using Service
+    # This should probably live in the model once this concept is defined.
+    unless APPLIES_TO_CLASS_BASE_MODELS.include?(applies_to_class)
+      raise ArgumentError, "Received: #{applies_to_class}, expected one of #{APPLIES_TO_CLASS_BASE_MODELS}"
+    end
+
+    applies_to_class == "ServiceTemplate" ? Service : applies_to_class.constantize
+  end
+
   def custom_buttons
     button = CustomButton.find_by_id(params[:button_id])
-    case button.applies_to_class
-    when "Vm"
-      @explorer = true
-      cls = Vm
-    when "MiqTemplate"
-      @explorer = true
-      cls = MiqTemplate
-    when "Host"
-      cls = Host
-    when "EmsCluster"
-      cls = EmsCluster
-    when "ExtManagementSystem"
-      cls = ExtManagementSystem
-    when "Service", "ServiceTemplate"
-      @explorer = true
-      cls = Service
-    when "Storage"
-      cls = Storage
-    end
+    cls = applies_to_class_model(button.applies_to_class)
+
+    @explorer = true if BASE_MODEL_EXPLORER_CLASSES.include?(cls)
+
     obj = cls.find_by_id(params[:id].to_i)
     @right_cell_text = _("%{record} - \"%{button_text}\"") % {:record => obj.name, :button_text => button.name}
     if button.resource_action.dialog_id

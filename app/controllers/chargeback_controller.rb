@@ -214,8 +214,6 @@ class ChargebackController < ApplicationController
           detail.metric = r[:metric]
           detail.chargeback_rate_detail_measure_id = r[:chargeback_rate_detail_measure_id]
           detail.chargeback_rate_detail_currency_id = r[:chargeback_rate_detail_currency_id]
-          # I have problems with this line
-          # @sb[:rate_details][:currency] = r.detail_currency.code
           @sb[:rate_details].push(detail) unless @sb[:rate_details].include?(detail)
         end
       else

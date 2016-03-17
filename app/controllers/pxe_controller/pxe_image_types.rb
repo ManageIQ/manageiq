@@ -188,7 +188,7 @@ module PxeController::PxeImageTypes
   def pxe_image_type_set_form_vars
     @edit = {}
     @edit[:pxe_id] = @pxe_image_type.id
-    @edit[:prov_types] = {:host => ui_lookup(:model => "host"), :vm => ui_lookup(:model => "vm")}
+    @edit[:prov_types] = {:host => ui_lookup(:model => "Host"), :vm => ui_lookup(:model => "Vm")}
     @edit[:new] = {}
     @edit[:current] = {}
     @edit[:key] = "pxe_image_type_edit__#{@pxe_image_type.id || "new"}"

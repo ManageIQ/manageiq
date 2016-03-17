@@ -70,7 +70,7 @@ module ApplicationController::MiqRequestMethods
   # Pre provisioning, select a template
   def pre_prov
     if params[:button] == "cancel"
-      add_flash(_("Add of new %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
+      add_flash(_("Add of new %{type} Request was cancelled by the user") % {:type => session[:edit][:prov_type]})
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]
@@ -182,7 +182,12 @@ module ApplicationController::MiqRequestMethods
   def prov_edit
     if params[:button] == "cancel"
       req = MiqRequest.find_by_id(from_cid(session[:edit][:req_id])) if session[:edit] && session[:edit][:req_id]
-      add_flash(req && req.id ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "#{session[:edit][:prov_type]} Request", :name => req.description} : _("Provision %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
+      add_flash(if req && req.id
+                  _("Edit of %{model} Request \"%{name}\" was cancelled by the user") %
+                    {:model => session[:edit][:prov_type], :name => req.description}
+                else
+                  _("Provision %{type} Request was cancelled by the user") % {:type => session[:edit][:prov_type]}
+                end)
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]
@@ -206,7 +211,12 @@ module ApplicationController::MiqRequestMethods
         @edit[:explorer] = true if @explorer
         @tabactive = @edit[:new][:current_tab_key]
       end
-      drop_breadcrumb(:name => "#{params[:req_id] ? "Edit" : "Add"} #{@edit[:prov_type]} Request", :url => "/vm/provision")
+      drop_breadcrumb(:name => if params[:req_id]
+                                 _("Edit %{type}") % {:type => @edit[:prov_type]}
+                               else
+                                 _("Add %{type}") % {:type => @edit[:prov_type]}
+                               end,
+                      :url  => "/vm/provision")
       @in_a_form = true
       #     render :action=>"show"
     end
@@ -284,11 +294,11 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "ASC"
 
     headers = {
-      "hostname"                        => "Hostname",
-      "configuration_location_name"     => "Configuration Location",
-      "configuration_organization_name" => "Configuration Organization",
-      "operating_system_flavor_name"    => "Operating System",
-      "provider_name"                   => "Provider",
+      "hostname"                        => _("Hostname"),
+      "configuration_location_name"     => _("Configuration Location"),
+      "configuration_organization_name" => _("Configuration Organization"),
+      "operating_system_flavor_name"    => _("Operating System"),
+      "provider_name"                   => _("Provider"),
     }
 
     @configured_systems = _build_whatever_grid('configured_system', configured_systems, headers, sort_order, sort_by)
@@ -299,8 +309,8 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "ASC"
 
     headers = {
-      "name"        => "Name",
-      "description" => "Description",
+      "name"        => _("Name"),
+      "description" => _("Description"),
     }
 
     @pxe_imgs = _build_whatever_grid('pxe_img', pxe_imgs, headers, sort_order, sort_by)
@@ -311,7 +321,7 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "ASC"
 
     headers = {
-      "name" => "Name",
+      "name" => _("Name"),
     }
 
     @iso_imgs = _build_whatever_grid('iso_img', iso_imgs, headers, sort_order, sort_by)
@@ -322,8 +332,8 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "ASC"
 
     headers = {
-      "name"        => "Name",
-      "description" => "Description",
+      "name"        => _("Name"),
+      "description" => _("Description"),
     }
 
     @windows_images = _build_whatever_grid('windows_image', windows_images, headers, sort_order, sort_by)
@@ -334,9 +344,9 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "DESC"
 
     headers = {
-      "name"        => "Name",
-      "free_space"  => "Free Space",
-      "total_space" => "Total Space",
+      "name"        => _("Name"),
+      "free_space"  => _("Free Space"),
+      "total_space" => _("Total Space"),
     }
 
     integer_fields = %w(free_space total_space)
@@ -350,9 +360,9 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "DESC"
 
     headers = {
-      :name             => "Name",
-      :description      => "Description",
-      :last_update_time => "Last Updated",
+      :name             => _("Name"),
+      :description      => _("Description"),
+      :last_update_time => _("Last Updated"),
     }
 
     integer_fields = %w(last_update_time)
@@ -365,9 +375,9 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "DESC"
 
     headers = {
-      :name             => "Name",
-      :description      => "Description",
-      :last_update_time => "Last Updated",
+      :name             => _("Name"),
+      :description      => _("Description"),
+      :last_update_time => _("Last Updated"),
     }
 
     integer_fields = %w(last_update_time)
@@ -380,14 +390,14 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "ASC"
 
     headers = {
-      "name"                          => "Name",
-      "operating_system.product_name" => "Operating System",
-      "platform"                      => "Platform",
-      "logical_cpus"                  => "CPUs",
-      "mem_cpu"                       => "Memory",
-      "allocated_disk_storage"        => "Disk Size",
+      "name"                          => _("Name"),
+      "operating_system.product_name" => _("Operating System"),
+      "platform"                      => _("Platform"),
+      "logical_cpus"                  => _("CPUs"),
+      "mem_cpu"                       => _("Memory"),
+      "allocated_disk_storage"        => _("Disk Size"),
       "ext_management_system.name"    => ui_lookup(:model => 'ExtManagementSystem'),
-      "v_total_snapshots"             => "Snapshots",
+      "v_total_snapshots"             => _("Snapshots"),
     }
 
     # add tenant column header to cloud workflows only
@@ -408,17 +418,17 @@ module ApplicationController::MiqRequestMethods
     headers = if options[:wf].kind_of?(MiqHostProvisionWorkflow)
                 # non-editable grid for host prov to display hosts being provisioned
                 {
-                  "name"        => "Name",
-                  "mac_address" => "MAC Address",
+                  "name"        => _("Name"),
+                  "mac_address" => _("MAC Address"),
                 }
               else
                 # editable grid for vm/migrate prov screens
                 {
-                  "name"        => "Name",
-                  "v_total_vms" => "Total VMs",
-                  "vmm_product" => "Platform",
-                  "vmm_version" => "Version",
-                  "state"       => "State",
+                  "name"        => _("Name"),
+                  "v_total_vms" => _("Total VMs"),
+                  "vmm_product" => _("Platform"),
+                  "vmm_version" => _("Version"),
+                  "state"       => _("State"),
                 }
               end
 
@@ -582,11 +592,11 @@ module ApplicationController::MiqRequestMethods
       typ = @edit[:org_controller]
       case typ
       when "vm"
-        title = "VMs"
+        title = _("VMs")
       when "miq_template"
-        title = "Templates"
+        title = _("Templates")
       else
-        title = "Hosts"
+        title = _("Hosts")
       end
       flash = @edit[:req_id].nil? ? _("%{typ} Request was Submitted, you will be notified when your %{title} are ready") % {:typ => @edit[:prov_type], :title => title} : _("%{typ} Request was re-submitted, you will be notified when your %{title} are ready") % {:typ => @edit[:prov_type], :title => title}
       @explorer = @edit[:explorer] ? @edit[:explorer] : false

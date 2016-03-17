@@ -54,7 +54,7 @@ module ApplicationController::TreeSupport
         nil,
         :style_class => "cfme-no-cursor-node"
       )
-      c_node[:title] = "<b>Compliance Check on:</b> #{c_node[:title]}"
+      c_node[:title] = "<b>" + __("Compliance Check on:") + "</b>" + c_node[:title].to_s
       c_kids = []
       temp_pol_id = nil
       p_node = {}
@@ -73,7 +73,7 @@ module ApplicationController::TreeSupport
             nil,
             :style_class => "cfme-no-cursor-node"
           )
-          p_node[:title] = "<b>Policy:</b> #{p_node[:title]}"
+          p_node[:title] = "<b>" + _("Policy:") + "</b>" + " #{p_node[:title]}"
           p_kids = []
         end
         cn_node = TreeNodeBuilder.generic_tree_node(
@@ -83,7 +83,7 @@ module ApplicationController::TreeSupport
           nil,
           :style_class => "cfme-no-cursor-node"
         )
-        cn_node[:title] = "<b>Condition:</b> #{cn_node[:title]}"
+        cn_node[:title] = "<b>" + _("Condition:") + "</b>" + " #{cn_node[:title]}"
         p_kids.push(cn_node)
       end
       p_node[:children] = p_kids unless p_kids.empty?            # Gather up last policy kids
@@ -92,7 +92,7 @@ module ApplicationController::TreeSupport
       if c_kids.empty?
         np_node = generic_tree_node(
           "#{c_node[:key]}-nopol",
-          "No Compliance Policies Found",
+          _("No Compliance Policies Found"),
           "#{c_node[:key]}-nopol",
           nil,
           :style_class => "cfme-no-cursor-node"
@@ -177,7 +177,7 @@ module ApplicationController::TreeSupport
         "#{pid}_dc-#{to_cid(folder.id)}",
         folder.name,
         "datacenter.png",
-        "Datacenter: #{folder.name}",
+        _("Datacenter: %{name}") % {:name => folder.name},
         :style_class   => "cfme-no-cursor-node"
       )
       dc_kids = []
@@ -238,7 +238,7 @@ module ApplicationController::TreeSupport
         "#{pid}_f-#{to_cid(folder.id)}",
         folder.name,
         vat ? "blue_folder.png" : "folder.png",
-        "Folder: #{folder.name}",
+        _("Folder: %{name}") % {:name => folder.name},
         :style_class   => "cfme-no-cursor-node"
       )
       f_kids = []
@@ -274,7 +274,7 @@ module ApplicationController::TreeSupport
         "#{pid}_h-#{to_cid(folder.id)}",
         folder.name,
         "host.png",
-        "Host: #{folder.name}",
+        _("Host: %{name}") % {:name => folder.name},
         :style_class   => "cfme-no-cursor-node"
       )
       h_kids = []
@@ -289,7 +289,7 @@ module ApplicationController::TreeSupport
         end
       else
         set_node_tooltip_and_is_lazy(node,
-                                     "Host: #{folder.name} (click to view)",
+                                     _("Host: %{name} (click to view)") % {:name => folder.name},
                                      folder.resource_pools.count > 0 ||
                                        (folder.default_resource_pool &&
                                          folder.default_resource_pool.vms.count > 0)
@@ -315,7 +315,7 @@ module ApplicationController::TreeSupport
         "#{pid}_v-#{to_cid(folder.id)}",
         folder.name,
         image,
-        "VM: #{folder.name} (Click to view)",
+        _("VM: %{name} (Click to view)") % {:name => folder.name},
         :style_class   => "cfme-no-cursor-node"
       )
       kids.push(node)
@@ -327,7 +327,7 @@ module ApplicationController::TreeSupport
         "#{pid}_c-#{to_cid(folder.id)}",
         folder.name,
         "cluster.png",
-        "VM: #{folder.name} (Click to view)",
+        _("VM: #{folder.name} (Click to view)") % {:name => folder.name},
         :style_class   => "cfme-no-cursor-node"
       )
       cl_kids = []
@@ -343,7 +343,7 @@ module ApplicationController::TreeSupport
         end
       else
         set_node_tooltip_and_is_lazy(node,
-                                     "Cluster: #{folder.name} (Click to view)",
+                                     _("Cluster: %{name} (Click to view)") % {:name => folder.name},
                                      folder.resource_pools.count > 0 ||
                                        folder.vms.count > 0 ||
                                        folder.hosts.count > 0
@@ -382,7 +382,7 @@ module ApplicationController::TreeSupport
         end
       else
         set_node_tooltip_and_is_lazy(node,
-                                     "Resource Pool: #{f_name} (Click to view)",
+                                     _("Resource Pool: %{name} (Click to view)") % {:name => f_name},
                                      folder.resource_pools.count > 0 || folder.vms.count > 0
                                     )
       end
@@ -452,7 +452,7 @@ module ApplicationController::TreeSupport
     when "rp" # ResourcePool
       f_name = folder.name.gsub(/'/, "&apos;")
       @sb[:node_text] = f_name
-      @sb[:node_tooltip] = "Resource Pool: #{f_name} (Click to view)"
+      @sb[:node_tooltip] = _("Resource Pool: %{name} (Click to view)") % {:name => f_name}
       folder.resource_pools.each do |rp|        # Get the resource pool nodes
         n_node = get_dc_node(rp, id, vat)
         t_kids += n_node
@@ -463,7 +463,7 @@ module ApplicationController::TreeSupport
       end
     when "c"  # EmsCluster
       @sb[:node_text] = folder.name
-      @sb[:node_tooltip] = "Cluster: #{folder.name} (Click to view)"
+      @sb[:node_tooltip] = _("Cluster: %{name} (Click to view)") % {:name => folder.name}
       folder.hosts.each do |h|                  # Get hosts
         n_node = get_dc_node(h, id, vat)
         t_kids += n_node
@@ -478,7 +478,7 @@ module ApplicationController::TreeSupport
       end
     when "h"  # Host
       @sb[:node_text] = folder.name
-      @sb[:node_tooltip] = "Host: #{folder.name} (Click to view)"
+      @sb[:node_tooltip] = _("Host: %{name} (Click to view)") % {:name => folder.name}
       folder.resource_pools.each do |rp|
         n_node = get_dc_node(rp, id, vat)
         t_kids += n_node
@@ -566,7 +566,7 @@ module ApplicationController::TreeSupport
 
     # Handle Datacenter folders
     elsif folder.kind_of?(EmsFolder) && folder.is_datacenter
-      node[:tooltip] = "Datacenter: #{folder.name}"
+      node[:tooltip] = _("Datacenter: %{name}") % {:name => folder.name}
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       node[:icon] = ActionController::Base.helpers.image_path("100/datacenter.png")
       if @vat || @rp_only
@@ -631,7 +631,7 @@ module ApplicationController::TreeSupport
 
     # Handle normal Folders
     elsif folder.kind_of?(EmsFolder)
-      node[:tooltip] = "Folder: #{folder.name}"
+      node[:tooltip] = _("Folder: %{name}") % {:name => folder.name}
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       if vat
         node[:icon] = ActionController::Base.helpers.image_path("100/blue_folder.png")
@@ -676,7 +676,7 @@ module ApplicationController::TreeSupport
     # Handle Hosts
     elsif folder.kind_of?(Host) && folder.authorized_for_user?(session[:userid])
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
-        node[:tooltip] = "Host: #{folder.name}"
+        node[:tooltip] = _("Host: %{name}") % {:name => folder.name}
         node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
         if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
           node[:addClass] = "cfme-blue-bold-node"  # Show node as different
@@ -702,7 +702,7 @@ module ApplicationController::TreeSupport
     # Handle Clusters
     elsif folder.class == EmsCluster
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
-        node[:tooltip] = "Cluster: #{folder.name}"
+        node[:tooltip] = _("Cluster: %{name}") % {:name => folder.name}
         node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
         node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
         node[:hideCheckbox] = true if @vat || @rp_only
@@ -735,7 +735,7 @@ module ApplicationController::TreeSupport
 
     # Handle non-default Resource Pools
     elsif folder.kind_of?(ResourcePool)         # Resource Pool
-      node[:tooltip] = "Resource Pool: #{folder.name}"
+      node[:tooltip] = _("Resource Pool: #%{name}") % {:name => folder.name}
       node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
         node[:addClass] = "cfme-blue-bold-node"  # Show node as different

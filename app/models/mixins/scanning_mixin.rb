@@ -119,7 +119,7 @@ module ScanningMixin
     )
   end
 
-  # Call the miqhost webservice to do the SyncMetadata operation
+  # Do the SyncMetadata operation through the server smart proxy
   def sync_metadata(category, options = {})
     _log.debug "category=[#{category}] [#{category.class}]"
     options = {
@@ -141,7 +141,7 @@ module ScanningMixin
     _log.log_backtrace(err)
   end
 
-  # Call the miqhost webservice to do the ScanMetadata operation
+  # Do the ScanMetadata operation through the server smart proxy
   def scan_metadata(category, options = {})
     _log.info "category=[#{category}] [#{category.class}]"
     options = {

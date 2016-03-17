@@ -9,12 +9,12 @@ class ApplicationController
         @edit[:new][:sysprep_upload_file] = params[:upload][:file].original_filename
         begin
           @edit[:new][:sysprep_upload_text] = SysprepFile.new(params[:upload][:file]).content
-          msg = _('Sysprep "%s" upload was successful') % params[:upload][:file].original_filename
+          msg = _('Sysprep "%{params}" upload was successful') % {:params => params[:upload][:file].original_filename}
           add_flash(msg)
         rescue StandardError => bang
           @edit[:new][:sysprep_upload_text] = nil
-          msg = _("Error during Sysprep \"%s\" file upload: ") % params[:upload][:file].original_filename <<
-                bang.message
+          msg = _("Error during Sysprep \"%{params}\" file upload: %{message}") %
+                  {:params => params[:upload][:file].original_filename, :message => bang.message}
           add_flash(msg, :error)
         end
       else

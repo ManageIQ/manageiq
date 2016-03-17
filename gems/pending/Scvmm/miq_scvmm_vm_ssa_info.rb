@@ -55,7 +55,7 @@ GETCHECKPOINT_EOL
 Checkpoint-VM -ComputerName localhost -Name "#{vm_name}" -SnapshotName "#{snapshot}"
 CHECKPOINT_EOL
 
-    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(checkpoint_script))
+    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_elevated_powershell_script(checkpoint_script))
     raise "Unable to create Snapshot for #{vm_name}" if stderr =~ /At line:/
     snapshot
   end
@@ -66,8 +66,21 @@ CHECKPOINT_EOL
 Remove-VMSnapshot -ComputerName localhost -VMName "#{vm_name}" -Name "#{snapshot}"
 RM_CHECKPOINT_EOL
 
-    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(rm_checkpoint_script))
+    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_elevated_powershell_script(rm_checkpoint_script))
     raise "Unable to remove Snapshot for #{vm_name}" if stderr =~ /At line:/
+  end
+
+  def get_drivetype(vhd_path)
+    return "Network" if vhd_path[0, 2] == '\\\\'
+    raise "Invalid Drive Letter for Hard Drive #{vhd_path}" unless vhd_path[1, 1] == ":"
+    drive_letter = vhd_path[0, 1]
+
+    drivetype_script = <<-DRIVETYPE_EOL
+([System.IO.DriveInfo]("#{drive_letter}")).DriveType
+DRIVETYPE_EOL
+    drive_type, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(drivetype_script))
+    raise "Unable to get drive letter for disk #{vhd_path}" if stderr =~ /At line:/
+    drive_type
   end
 
   private

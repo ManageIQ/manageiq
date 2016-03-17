@@ -14,6 +14,21 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
     validate_unsupported("Migrate")
   end
 
+  def proxies4job(_job = nil)
+    {
+      :proxies => [MiqServer.my_server],
+      :message => 'Perform SmartState Analysis on this VM'
+    }
+  end
+
+  def has_active_proxy?
+    true
+  end
+
+  def has_proxy?
+    true
+  end
+
   def validate_publish
     validate_unsupported("Publish VM")
   end
