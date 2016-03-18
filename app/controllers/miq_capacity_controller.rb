@@ -155,38 +155,27 @@ class MiqCapacityController < ApplicationController
 
   def planning_option_changed
     vms = nil
-    if params[:filter_typ]
-      @sb[:planning][:options][:filter_value] = nil
-      if params[:filter_typ] == "all"
-        vms = find_filtered(Vm, :all).sort_by { |v| v.name.downcase }
-      end
-    end
-    if params[:filter_value]
-      if params[:filter_value] == "<Choose>"
-        @sb[:planning][:options][:filter_value] = nil
+    filter_value = params[:filter_value]
+    if filter_value && filter_value != "<Choose>"
+      case params[:filter_typ]
+      when "host"
+        vms, = Host.find(filter_value).find_filtered_children("vms")
+      when "ems"
+        vms, = ExtManagementSystem.find(filter_value).find_filtered_children("vms")
+      when "cluster"
+        vms, = EmsCluster.find(filter_value).find_filtered_children("all_vms")
+      when "filter"
+        s = MiqSearch.find(filter_value)
+        vms = s.filtered(s.db, :userid => current_userid)
       else
-        @sb[:planning][:options][:filter_value] = params[:filter_value]
         vms = []
-        if @sb[:planning][:options][:filter_value]
-          case params[:filter_typ]
-          when "host"
-            vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-          when "ems"
-            vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-          when "cluster"
-            vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
-          when "filter"
-            s = MiqSearch.find(@sb[:planning][:options][:filter_value])     # Get the chosen search filter
-            s.options ||= {}                                         # Create options as a Hash
-            s.options[:userid] = session[:userid]                           # Set the userid
-            s.options[:results_format] = :objects                           # Return objects, not ids
-            vms, attrs = s.search                                           # Get the VM objects and search attributes
-          end
-        end
       end
+    elsif params[:filter_typ] == "all"
+      vms = find_filtered(Vm, :all).sort_by { |v| v.name.downcase }
     end
     @sb[:planning][:vms] = vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name }
     @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
+    @sb[:planning][:options][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
     @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
     @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
