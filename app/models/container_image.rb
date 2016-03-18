@@ -1,4 +1,6 @@
 class ContainerImage < ApplicationRecord
+  include ComplianceMixin
+  include MiqPolicyMixin
   include ReportableMixin
   include ScanningMixin
 
@@ -13,6 +15,8 @@ class ContainerImage < ApplicationRecord
   has_many :guest_applications, :dependent => :destroy
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
   has_one :operating_system, :through => :computer_system
+  has_one :openscap_result
+  has_many :openscap_rule_results, :through => :openscap_result
 
   # Needed for scanning
   delegate :my_zone, :to => :ext_management_system
@@ -59,5 +63,14 @@ class ContainerImage < ApplicationRecord
     scan_via_miq_vm(miq_cnt_group, ost)
   end
 
+  def tenant_identity
+    User.super_admin
+  end
+
+  def has_compliance_policies?
+    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "containerimage_compliance_check")
+    !plist.blank?
+  end
+
   alias_method :perform_metadata_sync, :sync_stashed_metadata
-end
+  end

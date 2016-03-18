@@ -576,6 +576,10 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         guest_applications
+        protect
+        openscap_rule_results
+        openscap_html
+        squash_toggle
       ),
       :post => %w(
         button
@@ -592,6 +596,9 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         guest_applications
+        protect
+        openscap_rule_results
+        squash_toggle
       ) + adv_search_post + exp_post + save_post
     },
 
@@ -969,6 +976,7 @@ Vmdb::Application.routes.draw do
         index
         new
         perf_top_chart
+        protect
         show
         show_list
         tagging_edit
@@ -982,6 +990,7 @@ Vmdb::Application.routes.draw do
         form_field_changed
         listnav_search_selected
         panel_control
+        protect
         quick_search
         sections_field_changed
         show

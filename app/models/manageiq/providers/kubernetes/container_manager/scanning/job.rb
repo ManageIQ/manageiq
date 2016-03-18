@@ -124,10 +124,22 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                           msg % [options[:image_full_name], options[:docker_image_id][0..11], actual[0..11]],
                           'error')
     end
+
+    collect_compliance_data(image)
+
     image.scan_metadata(SCAN_CATEGORIES,
                         "taskid" => jobid,
                         "host"   => MiqServer.my_server,
                         "args"   => [YAML.dump(scan_args)])
+  end
+
+  def collect_compliance_data(image)
+    return unless image_inspector_client.respond_to?(:fetch_oscap_arf)
+
+    openscap_result = OpenscapResult.new(:container_image => image)
+    openscap_result.raw = image_inspector_client.fetch_oscap_arf
+
+    openscap_result.save
   end
 
   def synchronize
@@ -152,6 +164,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def cleanup(*args)
+    image = target_entity
+    if image
+      # TODO: check job success / failure
+      MiqEvent.raise_evm_job_event(image, :type => "scan", :suffix => "complete")
+    end
     client = kubernetes_client
 
     begin

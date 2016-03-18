@@ -207,6 +207,7 @@ module ApplicationHelper
     case view.db
     when "AdvancedSetting"  then association = "advanced_settings"
     when "CloudNetwork"     then association = "cloud_networks"
+    when "OpenscapRuleResult"       then association = "openscap_rule_results"
     when "OrchestrationStackOutput" then association = "outputs"
     when "OrchestrationStackParameter" then association = "parameters"
     when "OrchestrationStackResource"  then association = "resources"

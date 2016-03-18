@@ -27,6 +27,17 @@ class ApplicationHelper::Toolbar::ContainerImageCenter < ApplicationHelper::Tool
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"container_image")}'),
           N_('Edit Tags')),
+        button(
+          :container_image_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_image")}'),
+          N_('Manage Policies')),
+        button(
+          :container_image_check_compliance,
+          'fa fa-search fa-lg',
+          N_('Check Compliance of the last known configuration for this item'),
+          N_('Check Compliance of Last Known Configuration'),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this item?"))
       ]
     ),
   ])

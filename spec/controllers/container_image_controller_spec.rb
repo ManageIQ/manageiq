@@ -12,6 +12,16 @@ describe ContainerImageController do
     expect(controller.send(:flash_errors?)).not_to be_truthy
   end
 
+  it 'renders edit container image tags' do
+    ApplicationController.handle_exceptions = true
+
+    post :button, :params => {:pressed => "container_image_protect", :format => :js}
+    expect(response.status).to eq(200)
+    expect(response.body).to_not be_empty
+
+    expect(response).to render_template('shared/views/protect')
+  end
+
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
