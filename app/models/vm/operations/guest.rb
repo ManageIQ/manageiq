@@ -16,7 +16,10 @@ module Vm::Operations::Guest
   end
 
   def raw_shutdown_guest
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to shutdown guest OS" unless self.has_active_ems?
+    unless has_active_ems?
+      raise _("VM has no %{table}, unable to shutdown guest OS") %
+              {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     run_command_via_parent(:vm_shutdown_guest)
   end
 
@@ -25,7 +28,10 @@ module Vm::Operations::Guest
   end
 
   def raw_standby_guest
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to standby guest OS" unless self.has_active_ems?
+    unless has_active_ems?
+      raise _("VM has no %{table}, unable to standby guest OS") %
+              {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     run_command_via_parent(:vm_standby_guest)
   end
 
@@ -34,7 +40,10 @@ module Vm::Operations::Guest
   end
 
   def raw_reboot_guest
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to reboot guest OS" unless self.has_active_ems?
+    unless has_active_ems?
+      raise _("VM has no %{table}, unable to reboot guest OS") %
+              {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     run_command_via_parent(:vm_reboot_guest)
   end
 
@@ -43,7 +52,9 @@ module Vm::Operations::Guest
   end
 
   def raw_reset
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to reset VM" unless self.has_active_ems?
+    unless has_active_ems?
+      raise _("VM has no %{table}, unable to reset VM") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     run_command_via_parent(:vm_reset)
   end
 

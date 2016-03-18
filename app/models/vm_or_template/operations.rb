@@ -8,7 +8,7 @@ module VmOrTemplate::Operations
   alias_method :ruby_clone, :clone
 
   def raw_clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
-    raise "VM has no EMS, unable to clone" unless ext_management_system
+    raise _("VM has no EMS, unable to clone") unless ext_management_system
     folder_mor    = folder.ems_ref_obj    if folder.respond_to?(:ems_ref_obj)
     pool_mor      = pool.ems_ref_obj      if pool.respond_to?(:ems_ref_obj)
     host_mor      = host.ems_ref_obj      if host.respond_to?(:ems_ref_obj)
@@ -21,7 +21,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_mark_as_template
-    raise "VM has no EMS, unable to mark as template" unless ext_management_system
+    raise _("VM has no EMS, unable to mark as template") unless ext_management_system
     run_command_via_parent(:vm_mark_as_template)
   end
 
@@ -30,7 +30,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_mark_as_vm(pool, host = nil)
-    raise "VM has no EMS, unable to mark as vm" unless ext_management_system
+    raise _("VM has no EMS, unable to mark as vm") unless ext_management_system
     pool_mor = pool.ems_ref_obj if pool.respond_to?(:ems_ref_obj)
     host_mor = host.ems_ref_obj if host.respond_to?(:ems_ref_obj)
     run_command_via_parent(:vm_mark_as_vm, :pool => pool_mor, :host => host_mor)
@@ -41,7 +41,9 @@ module VmOrTemplate::Operations
   end
 
   def raw_unregister
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to unregister VM" unless ext_management_system
+    unless ext_management_system
+      raise _("VM has no %{table}, unable to unregister VM") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     run_command_via_parent(:vm_unregister)
   end
 
@@ -50,7 +52,9 @@ module VmOrTemplate::Operations
   end
 
   def raw_destroy
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to destroy VM" unless ext_management_system
+    unless ext_management_system
+      raise _("VM has no %{table}, unable to destroy VM") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     run_command_via_parent(:vm_destroy)
   end
 
