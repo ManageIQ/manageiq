@@ -1231,7 +1231,7 @@ class ApplicationController < ActionController::Base
                                                                                        :precision => 2)}
             end
             unless disk.used_percent_of_provisioned.nil?
-              dev += _(", Percent Used Provisioned Space: %{number}%") %
+              dev += _(", Percent Used Provisioned Space: %{number}%%") %
                 {:number => disk.used_percent_of_provisioned.to_s}
             end
             desc += _(", Mode: %{mode}") % {:mode => disk.mode} unless disk.mode.nil?
@@ -1244,7 +1244,7 @@ class ApplicationController < ActionController::Base
               dev += _(", Size on disk: %{number}") % {:number => number_to_human_size(disk.size_on_disk, :precision => 2)}
             end
             unless disk.used_percent_of_provisioned.nil?
-              dev += _(", Percent Used Provisioned Space: %{number}%") %
+              dev += _(", Percent Used Provisioned Space: %{number}%%") %
                 {:number => disk.used_percent_of_provisioned.to_s}
             end
             desc += _(", Mode: %{mode}") % {:mode => disk.mode} unless disk.mode.nil?
@@ -1259,7 +1259,7 @@ class ApplicationController < ActionController::Base
                                                                                        :precision => 2)}
             end
             unless disk.used_percent_of_provisioned.nil?
-              dev += _(", Percent Used Provisioned Space: %{number}%") %
+              dev += _(", Percent Used Provisioned Space: %{number}%%") %
                 {:number => disk.used_percent_of_provisioned.to_s}
             end
             desc += _(", Mode: %{mode}") % {:mode => disk.mode} unless disk.mode.nil?
