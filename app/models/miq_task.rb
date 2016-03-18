@@ -25,6 +25,8 @@ class MiqTask < ApplicationRecord
 
   before_validation :initialize_attributes, :on => :create
 
+  virtual_has_one :task_results
+
   include ReportableMixin
 
   def self.status_ok?(status)

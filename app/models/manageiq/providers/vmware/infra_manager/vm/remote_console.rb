@@ -101,6 +101,19 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     end
     update_attributes(:vnc_port => host_port)
 
+    SystemConsole.where(:vm_id => id).each { |c| c.destroy }
+    c = SystemConsole.new(
+      :user_id    => userid, # User.find # :userid => userid
+      :vm_id      => id,
+      :host_name  => host_address,
+      :port       => host_port,
+      :ssl        => false,
+      :protocol   => 'vnc',
+      :secret     => password,
+      :url_secret => SecureRandom.hex
+    )
+    c.save!
+
     return password, host_address, host_port, proxy_address, proxy_port
   end
 end

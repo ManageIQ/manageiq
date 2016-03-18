@@ -33,6 +33,20 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
 
       proxy_address = proxy_port = nil
       password = parsed_ticket.xpath('action/ticket/value')[0].text
+
+      SystemConsole.where(:vm_id => id).each { |c| c.destroy }
+      c = SystemConsole.new(
+        :user_id    => userid, # User.find # :userid => userid
+        :vm_id      => id,
+        :host_name  => host_address,
+        :port       => host_port,
+        :ssl        => ssl,
+        :protocol   => protocol,
+        :secret     => password,
+        :url_secret => SecureRandom.hex
+      )
+      c.save!
+
       return password, host_address, host_port, proxy_address, proxy_port, protocol, ssl
     end
 
