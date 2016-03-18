@@ -312,6 +312,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def hostnames
     hostnames ||= endpoints.map(&:hostname)
+    hostnames
   end
 
   def authentication_check_role
