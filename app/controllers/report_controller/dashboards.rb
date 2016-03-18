@@ -237,7 +237,7 @@ module ReportController::Dashboards
       @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
     elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g"
       g = MiqGroup.find(from_cid(@sb[:nodes].last))
-      @right_cell_text = _("%Dashboards for \"%{name}\"") % {:name => g.description}
+      @right_cell_text = _("Dashboards for \"%{name}\"") % {:name => g.description}
       @right_cell_div  = "db_list"
       widgetsets = MiqWidgetSet.where(:owner_type => "MiqGroup", :owner_id => g.id)
       @widgetsets = []
