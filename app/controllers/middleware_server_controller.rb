@@ -23,6 +23,11 @@ class MiddlewareServerController < ApplicationController
     show_container(@record, controller_name, display_name)
   end
 
+  def listicon_image(item, _view)
+    icon = item.decorate.try(:listicon_image)
+    "100/#{icon}.png"
+  end
+
   private ############################
 
   def display_name
