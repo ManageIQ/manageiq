@@ -5,6 +5,13 @@ module MiqAeServiceVmOpenstackSpec
     ["openstack", "amazon", "google"].each do |t|
       context "for #{t}" do
         define_method(:service_class_for) do |part|
+          case t.camelize
+          when "Openstack"
+            case part.to_s.camelize
+            when "FloatingIp", "SecurityGroup"
+              return "MiqAeMethodService::MiqAeServiceManageIQ_Providers_#{t.camelize}_NetworkManager_#{part.to_s.camelize}".constantize
+            end
+          end
           "MiqAeMethodService::MiqAeServiceManageIQ_Providers_#{t.camelize}_CloudManager_#{part.to_s.camelize}".constantize
         end
 
@@ -14,21 +21,23 @@ module MiqAeServiceVmOpenstackSpec
           vm.flavor            =  FactoryGirl.create("flavor_#{t}".to_sym)
           if t != "google"
             vm.key_pairs << FactoryGirl.create("auth_key_pair_#{t}".to_sym)
-            vm.floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym)
-            vm.security_groups << FactoryGirl.create("security_group_#{t}".to_sym)
           end
           case t
           when "openstack"
             network = FactoryGirl.create("cloud_network_#{t}".to_sym)
             subnet  = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
-            vm.network_ports << FactoryGirl.create("network_port_#{t}".to_sym,
-                                                   :device        => vm,
-                                                   :cloud_subnet  => subnet)
+            vm.network_ports << network_port = FactoryGirl.create("network_port_#{t}".to_sym,
+                                                                  :device       => vm,
+                                                                  :cloud_subnet => subnet)
+            network_port.security_groups << FactoryGirl.create("security_group_#{t}".to_sym)
+            network_port.floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym)
           when "google"
             vm.cloud_network = FactoryGirl.create(:cloud_network)
           else
-            # TODO(lsmola) when ready, all providers should act as openstack
+            # TODO(lsmola) NetworkManager, when ready, all providers should act as openstack
             vm.cloud_subnet  = FactoryGirl.create(:cloud_subnet)
+            vm.security_groups << FactoryGirl.create("security_group_#{t}".to_sym)
+            vm.floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym)
           end
 
           vm.save!

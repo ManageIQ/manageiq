@@ -35,8 +35,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     context "security_groups" do
       context "non cloud network" do
         it "#get_targets_for_ems" do
-          sg = FactoryGirl.create(:security_group_amazon, :ext_management_system => provider)
-          provider.security_groups << sg
+          sg = FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager)
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup,
                                    'security_groups.non_cloud_network')
           expect(filtered.size).to eq(1)
@@ -47,8 +46,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       context "cloud network" do
         it "#get_targets_for_ems" do
           cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => provider)
-          sg_cn = FactoryGirl.create(:security_group_amazon, :ext_management_system => provider, :cloud_network => cn1)
-          provider.security_groups << sg_cn
+          sg_cn = FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager, :cloud_network => cn1)
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup, 'security_groups')
           expect(filtered.size).to eq(1)
           expect(filtered.first.name).to eq(sg_cn.name)
@@ -81,7 +79,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       admin.current_group.save
 
       2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => provider.id) }
-      2.times { FactoryGirl.create(:security_group_amazon, :ext_management_system => provider) }
+      2.times { FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager) }
       ct1 = FactoryGirl.create(:cloud_tenant)
       ct2 = FactoryGirl.create(:cloud_tenant)
       provider.cloud_tenants << ct1
@@ -258,8 +256,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
           before do
             @cn1 = FactoryGirl.create(:cloud_network)
             @cn2 = FactoryGirl.create(:cloud_network)
-            provider.cloud_networks << @cn1
-            provider.cloud_networks << @cn2
+            provider.network_manager.cloud_networks << @cn1
+            provider.network_manager.cloud_networks << @cn2
             @ct1.cloud_networks << @cn1
             @ct2.cloud_networks << @cn2
           end
@@ -280,8 +278,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
           before do
             @sg1 = FactoryGirl.create(:security_group_openstack)
             @sg2 = FactoryGirl.create(:security_group_openstack)
-            provider.security_groups << @sg1
-            provider.security_groups << @sg2
+            provider.network_manager.security_groups << @sg1
+            provider.network_manager.security_groups << @sg2
             @ct1.security_groups << @sg1
             @ct2.security_groups << @sg2
           end
@@ -302,8 +300,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
           before do
             @ip1 = FactoryGirl.create(:floating_ip, :address => "1.1.1.1")
             @ip2 = FactoryGirl.create(:floating_ip, :address => "2.2.2.2")
-            provider.floating_ips << @ip1
-            provider.floating_ips << @ip2
+            provider.network_manager.floating_ips << @ip1
+            provider.network_manager.floating_ips << @ip2
             @ct1.floating_ips << @ip1
             @ct2.floating_ips << @ip2
           end

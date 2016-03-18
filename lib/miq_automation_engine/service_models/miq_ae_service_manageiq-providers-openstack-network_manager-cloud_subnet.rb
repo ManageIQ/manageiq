@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Openstack_NetworkManager_CloudSubnet < MiqAeServiceCloudSubnet
+  end
+end

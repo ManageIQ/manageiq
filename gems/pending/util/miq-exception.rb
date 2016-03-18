@@ -107,6 +107,7 @@ module MiqException
   class MiqOpenstackRequiredServiceMissing < Error; end
   class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackNovaServiceMissing < MiqOpenstackRequiredServiceMissing; end
+  class MiqOpenstackNetworkServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackGlanceServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackIronicServiceMissing < MiqOpenstackRequiredServiceMissing; end
 

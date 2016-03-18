@@ -2,19 +2,21 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :availability_zone
   belongs_to :flavor
   belongs_to :orchestration_stack
-  # TODO(lsmola) need to go away, but relation needs to be fixed in AWS and Azure first, then we can delete the
-  # foreign keys and model these as methods returning cloud_networks.first, cloud_subnets.first
+  # TODO(lsmola) NetworkProvider, need to go away, but relation needs to be fixed in AWS and Azure first, then we can
+  # delete the foreign keys and model these as methods returning cloud_networks.first, cloud_subnets.first
   belongs_to :cloud_network
   belongs_to :cloud_subnet
 
   has_many :network_ports, :as => :device
   has_many :cloud_subnets, :through => :network_ports
   has_many :network_routers, :through => :cloud_subnets
-  # TODO(lsmola) backwards compatibility layer, though VM can have multiple floating_ips assigned through multiple
-  # network_ports, remove when appropriate
+  # TODO(lsmola) NetworkProvider, backwards compatibility layer, though VM can have multiple floating_ips assigned
+  # through multiple network_ports, remove when appropriate
   has_one  :floating_ip, :foreign_key => :vm_id
   has_many :floating_ips
 
+  # TODO(lsmola) NetworkProvider replace by by has_many :security_groups, :through => :network_ports, will need to be
+  # implemented in all providers
   has_and_belongs_to_many :security_groups, :join_table => :security_groups_vms, :foreign_key => :vm_id
   has_and_belongs_to_many :key_pairs,       :join_table => :key_pairs_vms,       :foreign_key => :vm_id, :association_foreign_key => :authentication_id, :class_name => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 

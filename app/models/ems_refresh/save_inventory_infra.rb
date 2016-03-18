@@ -51,9 +51,17 @@ module EmsRefresh::SaveInventoryInfra
       _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
     end
 
-    child_keys = [:storages, :clusters, :hosts, :vms, :folders, :resource_pools, :customization_specs,
-                  :orchestration_templates, :orchestration_stacks, :cloud_networks, :security_groups, :floating_ips,
-                  :network_routers, :network_ports]
+    child_keys = [
+      :storages,
+      :clusters,
+      :hosts,
+      :vms,
+      :folders,
+      :resource_pools,
+      :customization_specs,
+      :orchestration_templates,
+      :orchestration_stacks
+    ]
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)

@@ -12,6 +12,7 @@
 - ems-type:foreman_configuration
 - ems-type:scvmm
 - ems-type:openstack_infra
+- ems-type:openstack_network
 - ems-type:rhevm
 - ems-type:vmwarews
 - ems-type:azure

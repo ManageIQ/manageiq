@@ -306,9 +306,15 @@ workers:
           :nova: "notifications.*"
           :cinder: "notifications.*"
           :glance: "notifications.*"
-          :neutron: "notifications.*"
-          :quantum: "notifications.*"
           :heat: "notifications.*"
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
+        :amqp_heartbeat: 30
+      :event_catcher_openstack_network:
+        :poll: 15.seconds
+        :topics:
+          :neutron: "notifications.*"
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
@@ -319,7 +325,6 @@ workers:
           :nova: "notifications.*"
           :cinder: "notifications.*"
           :glance: "notifications.*"
-          :neutron: "notifications.*"
           :heat: "notifications.*"
           :ironic: "notifications.*"
         :duration: 10.seconds
@@ -357,6 +362,8 @@ workers:
         :ems_metrics_collector_worker_vmware:
           :poll_method: :escalate
         :ems_metrics_collector_worker_openstack:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_openstack_network:
           :poll_method: :escalate
         :ems_metrics_collector_worker_openstack_infra:
           :poll_method: :escalate
@@ -400,6 +407,7 @@ workers:
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_openstack: {}
+        :ems_refresh_worker_openstack_network: {}
         :ems_refresh_worker_openstack_infra: {}
         :ems_refresh_worker_vmware: {}
       :event_handler:

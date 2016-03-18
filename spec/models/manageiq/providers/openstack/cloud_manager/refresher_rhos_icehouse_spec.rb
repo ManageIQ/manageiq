@@ -12,6 +12,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
     2.times do # Run twice to verify that a second run with existing data does not change anything
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
+        EmsRefresh.refresh(@ems.network_manager)
       end
 
       assert_common
@@ -28,6 +29,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
     it "will not parse the ignored items" do
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
+        EmsRefresh.refresh(@ems.network_manager)
       end
 
       assert_with_skips

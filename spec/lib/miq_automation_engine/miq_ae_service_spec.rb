@@ -86,12 +86,9 @@ module MiqAeServiceSpec
 
       it "loads cloud networks" do
         items = %w(
-          ManageIQ_Providers_Openstack_CloudManager_CloudNetwork
-          ManageIQ_Providers_Openstack_CloudManager_CloudNetwork_Private
-          ManageIQ_Providers_Openstack_CloudManager_CloudNetwork_Public
-          ManageIQ_Providers_Openstack_InfraManager_CloudNetwork
-          ManageIQ_Providers_Openstack_InfraManager_CloudNetwork_Private
-          ManageIQ_Providers_Openstack_InfraManager_CloudNetwork_Public
+          ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork
+          ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork_Private
+          ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork_Public
         )
         items.each do |name|
           expect(miq_ae_service.vmdb(name)).to be("#{prefix}#{name}".constantize)

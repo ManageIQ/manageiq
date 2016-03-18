@@ -8,8 +8,15 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
   has_many :cloud_subnets, :through    => :network_ports,
-                           :class_name => "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet"
+                           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
   has_many :public_networks, :through => :cloud_subnets
+  has_many :security_groups, :through => :network_ports
+  has_many :floating_ips, :through => :network_ports
+
+  def floating_ip
+    # Backwards compatibility layer with simplified architecture where VM has only one network
+    floating_ips.first
+  end
 
   def cloud_network
     # Backwards compatibility layer with simplified architecture where VM has only one network

@@ -9,11 +9,11 @@ describe "layouts/listnav/_ems_cloud.html.haml" do
   end
 
   it "Flavors link for Openstack cloud manager uses restful path" do
-    record =  ManageIQ::Providers::Openstack::CloudManager.new(:name => "Test Cloud")
+    record = FactoryGirl.create(:ems_openstack)
     assign(:record, record)
     allow(record).to receive(:flavors).and_return(5)
     render
-    expect(response).to include "ems_cloud?display=flavors"
+    expect(response).to include "ems_cloud/#{record.id}?display=flavors"
   end
 
   it "Flavors link for Amazon cloud manager uses restful paths" do
@@ -24,11 +24,11 @@ describe "layouts/listnav/_ems_cloud.html.haml" do
     expect(response).to include "ems_cloud?display=flavors"
   end
   it "Availability Zones link uses restful paths" do
-    record = ManageIQ::Providers::Openstack::CloudManager.new(:name => "Test Cloud")
+    record = FactoryGirl.create(:ems_openstack)
     assign(:record, record)
     allow(record).to receive(:availability_zones).and_return(14)
     render
-    expect(response).to include "ems_cloud?display=availability_zones"
+    expect(response).to include "ems_cloud/#{record.id}?display=availability_zones"
   end
   it "Cloud Tenants link uses restful paths" do
     record = ManageIQ::Providers::Amazon::CloudManager.new(:name => "Test Cloud")

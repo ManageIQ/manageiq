@@ -21,6 +21,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
       VCR.use_cassette("#{described_class.name.underscore}_rhos_juno", :match_requests_on => [:method, :host, :path]) do
         EmsRefresh.refresh(@ems)
+        EmsRefresh.refresh(@ems.network_manager)
       end
       @ems.reload
 
@@ -32,7 +33,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_table_counts
-    expect(ExtManagementSystem.count).to         eq 1
+    expect(ExtManagementSystem.count).to         eq 2
     expect(EmsCluster.count).to                  be > 0
     expect(Host.count).to                        be > 0
     expect(OrchestrationStack.count).to          be > 0
@@ -107,9 +108,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
 
     expect(@host.private_networks.count).to be > 0
-    expect(@host.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::InfraManager::CloudNetwork::Private)
+    expect(@host.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private)
     expect(@host.network_ports.count).to    be > 0
-    expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::InfraManager::NetworkPort)
+    expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::NetworkPort)
 
     expect(@host.operating_system).to have_attributes(
       :product_name     => "linux"
