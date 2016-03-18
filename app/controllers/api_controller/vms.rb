@@ -199,7 +199,7 @@ class ApiController
       end
     end
 
-    def request_console_resource_vms(type, id = nil, _data = nil)
+    def request_console_resource_vms(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for requesting a console for a #{type} resource" unless id
 
       # NOTE:
@@ -208,14 +208,16 @@ class ApiController
       #   protocol = data["protocol"] || "mks"
       # However, there are different entitlements for the different protocol as per miq_product_feature,
       # so we may go for different action, i.e. request_console_vnc
-      protocol = "mks"
+      #protocol = "mks"
+      protocol = data["protocol"] || "vnc"
 
+      binding.pry
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
         api_log_info("Requesting Console #{vm_ident(vm)}")
 
         result = validate_vm_for_remote_console(vm, protocol)
-        result = request_console_vm(vm) if result[:success]
+        result = request_console_vm(vm, protocol) if result[:success]
         result
       end
     end
@@ -381,13 +383,15 @@ class ApiController
       action_result(false, err.to_s)
     end
 
-    def request_console_vm(vm)
+    def request_console_vm(vm, protocol)
       desc = "#{vm_ident(vm)} requesting console"
+      binding.pry
       task_id = queue_object_action(vm, desc,
-                                    :method_name => "remote_console_mks_acquire_ticket",
-                                    :role        => "ems_operations")
+                                    :method_name => "remote_console_acquire_ticket",
+                                    :role        => "ems_operations",
+                                    :args => [@auth_user, protocol])
       # NOTE:
-      # we are queuing the :remote_console_mks_acquire_ticket and returning the task id and href.
+      # we are queuing the :remote_console_acquire_ticket and returning the task id and href.
       #
       # The remote console ticket/info can be stashed in the task's context_data by the *_acquire_ticket method
       # context_data is returned as part of the task i.e. GET /api/tasks/:id
