@@ -7,7 +7,7 @@ module ManageIQ::Providers
     end
 
     # TODO(lsmola) NetworkManager, remove this once we have a full representation of the NetworkManager.
-    # NetworkManager should refresh base on it;s own conditions
+    # NetworkManager should refresh base on its own conditions
     def save_inventory(ems, _targets, hashes)
       EmsRefresh.save_ems_inventory(ems, hashes)
       EmsRefresh.queue_refresh(ems.network_manager)
