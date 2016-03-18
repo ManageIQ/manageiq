@@ -6,7 +6,7 @@ linters:
 
   ClassAttributeWithStaticValue:
     enabled: true
-    severity: convention
+    severity: warning
 
   ClassesBeforeIds:
     enabled: false
@@ -19,24 +19,24 @@ linters:
 
   EmptyScript:
     enabled: true
-    severity: convention
+    severity: warning
 
   HtmlAttributes:
     enabled: true
-    severity: convention
+    severity: warning
 
   ImplicitDiv:
     enabled: true
-    severity: convention
+    severity: warning
 
   LeadingCommentSpace:
     enabled: true
-    severity: convention
+    severity: warning
 
   LineLength:
     enabled: true
     max: 160
-    severity: refactor
+    severity: warning
 
   MultilinePipe:
     enabled: false
@@ -46,7 +46,7 @@ linters:
 
   ObjectReferenceAttributes:
     enabled: true
-    severity: convention
+    severity: warning
 
   RuboCop:
     enabled: true
@@ -69,28 +69,28 @@ linters:
 
   RubyComments:
     enabled: true
-    severity: convention
+    severity: warning
 
   SpaceBeforeScript:
     enabled: true
-    severity: convention
+    severity: warning
 
   SpaceInsideHashAttributes:
     enabled: true
     style: no_space
-    severity: convention
+    severity: warning
 
   TagName:
     enabled: true
-    severity: convention
+    severity: warning
 
   TrailingWhitespace:
     enabled: false
 
   UnnecessaryInterpolation:
     enabled: true
-    severity: convention
+    severity: warning
 
   UnnecessaryStringOutput:
     enabled: true
-    severity: convention
+    severity: warning
