@@ -155,34 +155,26 @@ class MiqCapacityController < ApplicationController
 
   def planning_option_changed
     vms = nil
-    if params[:filter_typ]
-      @sb[:planning][:options][:filter_value] = nil
-      if params[:filter_typ] == "all"
-        vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
-      end
+    filter_value = params[:filter_value]
+    if params[:filter_typ] == "all"
+      vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
     end
-    if params[:filter_value]
-      if params[:filter_value] == "<Choose>"
-        @sb[:planning][:options][:filter_value] = nil
-      else
-        @sb[:planning][:options][:filter_value] = params[:filter_value]
-        vms = []
-        if @sb[:planning][:options][:filter_value]
-          case params[:filter_typ]
-          when "host"
-            vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-          when "ems"
-            vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-          when "cluster"
-            vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
-          when "filter"
-            vms = MiqSearch.find(@sb[:planning][:options][:filter_value]).results(:userid => current_userid)
-          end
-        end
+    if filter_value && filter_value != "<Choose>"
+      vms = []
+      case params[:filter_typ]
+      when "host"
+        vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
+      when "ems"
+        vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
+      when "cluster"
+        vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
+      when "filter"
+        vms = MiqSearch.find(@sb[:planning][:options][:filter_value]).results(:userid => current_userid)
       end
     end
     @sb[:planning][:vms] = vms ? vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name } : nil
     @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
+    @sb[:planning][:options][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
     @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
     @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
