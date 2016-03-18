@@ -71,7 +71,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       end
 
       it 'catches errors from provider' do
-        expect(the_new_volume).to receive(:save).and_throw('bad request')
+        expect(the_new_volume).to receive(:save).and_raise('bad request')
 
         expect { CloudVolume.create_volume(ems, volume_options) }.to raise_error(MiqException::MiqVolumeCreateError)
       end
@@ -95,7 +95,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       end
 
       it 'catches errors from provider' do
-        expect(the_raw_volume).to receive(:save).and_throw('bad request')
+        expect(the_raw_volume).to receive(:save).and_raise('bad request')
         expect { cloud_volume.update_volume({}) }.to raise_error(MiqException::MiqVolumeUpdateError)
       end
     end
@@ -131,7 +131,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       end
 
       it 'catches errors from provider' do
-        expect(the_raw_volume).to receive(:destroy).and_throw('bad request')
+        expect(the_raw_volume).to receive(:destroy).and_raise('bad request')
         expect { cloud_volume.delete_volume }.to raise_error(MiqException::MiqVolumeDeleteError)
       end
     end
