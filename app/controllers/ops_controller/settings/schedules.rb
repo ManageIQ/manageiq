@@ -306,16 +306,16 @@ module OpsController::Settings::Schedules
   def build_filtered_item_list(filter_type)
     case filter_type
     when "vm"
-      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      filtered_item_list = find_filtered(Vm).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "miq_template"
       filtered_item_list =
-        find_filtered(MiqTemplate, :all).sort_by { |miq_template| miq_template.name.downcase }.collect(&:name).uniq
+        find_filtered(MiqTemplate).sort_by { |miq_template| miq_template.name.downcase }.collect(&:name).uniq
     when "host"
-      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      filtered_item_list = find_filtered(Host).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "ems"
-      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      filtered_item_list = find_filtered(ExtManagementSystem).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
     when "cluster"
-      filtered_item_list = find_filtered(EmsCluster, :all).collect do |cluster|
+      filtered_item_list = find_filtered(EmsCluster).collect do |cluster|
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
       end.sort_by { |cluster| cluster.first.downcase }.uniq
     when "global"

@@ -32,7 +32,7 @@ module MiqFilter
       conditions += " AND (#{reflection.options[:conditions]})" if reflection.options[:conditions]
       options.delete(:include)
       options.delete(:includes)
-      result, total_count = db.find_filtered(:all, options.merge(:conditions => conditions))
+      result, total_count = db.find_filtered(options.merge(:conditions => conditions))
     else
       options.delete(:tag_filters)
       if reflection.macro == :has_one
