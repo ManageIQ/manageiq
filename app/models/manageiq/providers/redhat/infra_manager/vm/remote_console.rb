@@ -20,7 +20,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
             "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
     end
 
-    def remote_console_acquire_ticket(console_type, _proxy_miq_server = nil)
+    def remote_console_acquire_ticket(userid, console_type, _proxy_miq_server = nil)
       validate_remote_console_acquire_ticket(console_type)
 
       parsed_ticket = Nokogiri::XML(provider_object.ticket)
@@ -33,6 +33,20 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
 
       proxy_address = proxy_port = nil
       password = parsed_ticket.xpath('action/ticket/value')[0].text
+
+      binding.pry
+      c = Console.new(
+        :user_id   => userid, # User.find # :userid => userid
+        :vm_id     => id,
+        :host_name => host_address,
+        :port      => host_port,
+        :ssl       => ssl,
+        :protocol  => protocol,
+        :secret    => password,
+        :url_secret => 'sekret' # empty
+      )
+      c.save!
+
       return password, host_address, host_port, proxy_address, proxy_port, protocol, ssl
     end
 
@@ -49,7 +63,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => 'ems_operations',
         :zone        => my_zone,
-        :args        => [protocol, proxy_miq_server]
+        :args        => [userid, protocol, proxy_miq_server]
       }
 
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
