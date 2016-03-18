@@ -4,7 +4,9 @@ class DialogFieldSortedItem < DialogField
   end
 
   def sort_by=(value)
-    raise "Invalid sort_by type <#{value}> specified." unless [:value, :description, :none].include?(value.to_sym)
+    unless [:value, :description, :none].include?(value.to_sym)
+      raise _("Invalid sort_by type <%{value}> specified.") % {:value => value}
+    end
     options[:sort_by] = value.to_sym
   end
 
@@ -13,7 +15,9 @@ class DialogFieldSortedItem < DialogField
   end
 
   def sort_order=(value)
-    raise "Invalid sort_order type <#{value}> specified." unless [:ascending, :descending].include?(value.to_sym)
+    unless [:ascending, :descending].include?(value.to_sym)
+      raise _("Invalid sort_order type <#{value}> specified.") % {:value => value}
+    end
     options[:sort_order] = value.to_sym
   end
 

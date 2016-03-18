@@ -277,7 +277,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def with_provider_connection(options = {})
-    raise "no block given" unless block_given?
+    raise _("no block given") unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
@@ -305,8 +305,12 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def refresh_ems
-    raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.missing_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.authentication_status_ok?
+    if missing_credentials?
+      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     EmsRefresh.queue_refresh(self)
   end
 

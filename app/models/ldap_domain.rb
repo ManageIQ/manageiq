@@ -66,7 +66,7 @@ class LdapDomain < ApplicationRecord
     rescue Exception => err
       raise MiqException::Error, err.message
     else
-      raise MiqException::Error, "Authentication failed" unless result
+      raise MiqException::Error, _("Authentication failed") unless result
     end
 
     result

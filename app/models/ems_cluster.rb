@@ -302,7 +302,9 @@ class EmsCluster < ApplicationRecord
 
   def effective_resource(resource)
     resource = resource.to_s
-    raise ArgumentError, "Unknown resource #{resource.inspect}" unless %w(cpu vcpu memory).include?(resource)
+    unless %w(cpu vcpu memory).include?(resource)
+      raise ArgumentError, _("Unknown resource %{name}") % {:name => resource.inspect}
+    end
     resource = "cpu" if resource == "vcpu"
     send("effective_#{resource}")
   end
@@ -354,7 +356,7 @@ class EmsCluster < ApplicationRecord
   # Vmware specific
   def register_host(host)
     host = Host.extract_objects(host)
-    raise "Host cannot be nil" if host.nil?
+    raise _("Host cannot be nil") if host.nil?
     userid, password = host.auth_user_pwd(:default)
     network_address  = host.address
 

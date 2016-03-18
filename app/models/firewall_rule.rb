@@ -7,7 +7,7 @@ class FirewallRule < ApplicationRecord
   end
 
   def operating_system=(os)
-    raise ArgumentError, "must be an OperatingSystem" unless os.kind_of?(OperatingSystem)
+    raise ArgumentError, _("must be an OperatingSystem") unless os.kind_of?(OperatingSystem)
     self.resource = os
   end
 

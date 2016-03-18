@@ -94,7 +94,7 @@ class EmsEvent < EventStream
 
   def self.add(ems_id, event_hash)
     event_type = event_hash[:event_type]
-    raise MiqException::Error, "event_type must be set in event" if event_type.nil?
+    raise MiqException::Error, _("event_type must be set in event") if event_type.nil?
 
     event_hash[:ems_id] = ems_id
     process_vm_in_event!(event_hash)

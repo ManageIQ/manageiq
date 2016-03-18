@@ -61,9 +61,9 @@ class ImportFileUpload < ApplicationRecord
   def determine_status(status_icon)
     case status_icon
     when "checkmark"
-      "This object already exists in the database with the same name"
+      _("This object already exists in the database with the same name")
     when "equal-green"
-      "New object"
+      _("New object")
     end
   end
 end
