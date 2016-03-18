@@ -105,6 +105,7 @@ gem "sshkey",                         "~>1.8.0",   :require => false
 #
 unless ENV['APPLIANCE']
   group :development do
+    gem "haml_lint",        "~>0.16.1", :require => false
     gem "rubocop",          "~>0.37.2", :require => false
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
   end
