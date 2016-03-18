@@ -262,22 +262,20 @@ class ExtManagementSystem < ApplicationRecord
     default || endpoints.build(:role => "default")
   end
 
-  # TODO: takes multiple connection data
-  # endpoints, authentications, and works out what's what.
-  def connections=(options)
+  # Takes multiple connection data
+  # endpoints, and authentications
+  def connection_configurations=(options)
     options.each do |option|
-      endpoint = endpoint_builder(option[:endpoint])
-      authentication_builder(option[:authentication])
-        # connection_by_role=(option)
+      add_connection_configuration_by_role(option)
     end
   end
 
-  def connections
+  def connection_configurations
     roles = endpoints.map(&:role)
     options = {}
 
     roles.each do |role|
-      conn = connection_by_role(role)
+      conn = connection_configuration_by_role(role)
       options[role] = conn
     end
 
@@ -289,40 +287,22 @@ class ExtManagementSystem < ApplicationRecord
   # Takes a hash of connection data
   # hostname, port, and authentication
   # if no role is passed in assume is default role
-  def connection_by_role=(options)
+  def add_connection_configuration_by_role(options)
     unless options[:endpoint].key?(:role)
-      options[:endpoint][:role] = "default"
+      options[:endpoint][:role] ||= "default"
     end
-
-    endpoint_builder(options[:endpoint])
-    authentication_builder(options[:authentication])
-  end
-
-  def endpoint_builder(options)
-    unless options.blank?
-      endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
-      # update or create
-      unless endpoint.nil?
-        endpoint.update(options)
-      else
-        endpoints.build(options)
+    if options[:authentication]
+      unless options[:authentication].key?(:role)
+        options[:authentication][:role] ||= "default"
       end
     end
+    build_connection(options)
   end
 
-  def authentication_builder(options)
-    unless options.blank?
-      role = options.delete(:role)
-      creds = {}
-      creds[role] = options
-      update_authentication(creds)
-    end
-  end
-
-  def connection_by_role(role = "default")
+  def connection_configuration_by_role(role = "default")
     endpoint = endpoints.detect { |e| e.role == role }
 
-    unless endpoint.nil?
+    if endpoint
       auth = authentications.detect { |a| a.authtype == endpoint.role }
 
       options = {:endpoint => endpoint, :authentication => auth}
@@ -629,6 +609,30 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   private
+
+  def build_connection(options = {})
+    build_endpoint_by_role(options[:endpoint])
+    build_authentication_by_role(options[:authentication])
+  end
+
+  def build_endpoint_by_role(options)
+    return if options.blank?
+    endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
+    # update or create
+    if endpoint
+      endpoint.update(options)
+    else
+      endpoints.build(options)
+    end
+  end
+
+  def build_authentication_by_role(options)
+    return if options.blank?
+    role = options.delete(:role)
+    creds = {}
+    creds[role] = options
+    update_authentication(creds)
+  end
 
   def clear_association_cache
     @storages = nil

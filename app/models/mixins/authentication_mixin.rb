@@ -130,7 +130,7 @@ module AuthenticationMixin
     data.each_pair do |type, value|
       cred = authentication_type(type)
       current = {:new => nil, :old => nil}
-      
+
       if value[:auth_key] && self.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
         # TODO(lsmola) figure out if there is a better way. Password field is replacing \n with \s, I need to replace
         # them back

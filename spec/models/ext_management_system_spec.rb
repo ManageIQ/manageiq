@@ -96,11 +96,11 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints" do
     let(:ems) { FactoryGirl.build(:ems_openstack, :hostname => "example.org") }
-    before { ems.connection_by_role=({:endpoint => {:role => "amqp", :hostname => "amqp.example.org"}}) }
-    
+    before { ems.add_connection_configuration_by_role(:endpoint => {:role => "amqp", :hostname => "amqp.example.org"}) }
+
     it "will contain seperate ampq endpoint" do
       expect(ems.default_endpoint.hostname).to eq "example.org"
-      expect(ems.connection_by_role("amqp").endpoint.hostname).to eq "amqp.example.org"
+      expect(ems.connection_configuration_by_role("amqp").endpoint.hostname).to eq "amqp.example.org"
     end
 
     it "will contain multiple endpoints" do
