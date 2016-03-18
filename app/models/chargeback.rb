@@ -66,14 +66,14 @@ class Chargeback < ActsAsArModel
       user = User.find_by_userid(options[:owner])
       if user.nil?
         _log.error("Unable to find user '#{options[:owner]}'. Calculating chargeback costs aborted.")
-        raise MiqException::Error, "Unable to find user '#{options[:owner]}'"
+        raise MiqException::Error, _("Unable to find user '%{name}'") % {:name => options[:owner]}
       end
       vms = user.vms
     elsif options[:tag]
       vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
       vms &= report_user.accessible_vms if report_user && report_user.self_service?
     else
-      raise "must provide options :owner or :tag"
+      raise _("must provide options :owner or :tag")
     end
     return [[]] if vms.empty?
 
@@ -162,7 +162,9 @@ class Chargeback < ActsAsArModel
 
   def self.calculate_costs(perf, h, rates)
     # This expects perf interval to be hourly. That will be the most granular interval available for chargeback.
-    raise "expected 'hourly' performance interval but got '#{perf.capture_interval_name}" unless perf.capture_interval_name == "hourly"
+    unless perf.capture_interval_name == "hourly"
+      raise _("expected 'hourly' performance interval but got '%{interval}") % {:interval => perf.capture_interval_name}
+    end
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
@@ -198,7 +200,7 @@ class Chargeback < ActsAsArModel
     when "monthly"
       ts = ts.beginning_of_month
     else
-      raise "interval '#{interval}' is not supported"
+      raise _("interval '%{interval}' is not supported") % {:interval => interval}
     end
 
     ts
@@ -218,7 +220,7 @@ class Chargeback < ActsAsArModel
       e_ts = ts.end_of_month
       [s_ts, e_ts, "#{s_ts.strftime("%b %Y")}"]
     else
-      raise "interval '#{interval}' is not supported"
+      raise _("interval '%{interval}' is not supported") % {:interval => interval}
     end
   end
 
@@ -228,7 +230,7 @@ class Chargeback < ActsAsArModel
   # @option options :end_interval_offset
   def self.get_report_time_range(options, interval, tz)
     return options[:start_time]..options[:end_time] if options[:start_time]
-    raise "Option 'interval_size' is required" if options[:interval_size].nil?
+    raise _("Option 'interval_size' is required") if options[:interval_size].nil?
 
     end_interval_offset = options[:end_interval_offset] || 0
     start_interval_offset = (end_interval_offset + options[:interval_size] - 1)
@@ -245,7 +247,7 @@ class Chargeback < ActsAsArModel
       start_time = (ts - start_interval_offset.months).beginning_of_month.utc
       end_time   = (ts - end_interval_offset.months).end_of_month.utc
     else
-      raise "interval '#{interval}' is not supported"
+      raise _("interval '%{interval}' is not supported") % {:interval => interval}
     end
 
     start_time..end_time

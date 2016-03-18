@@ -30,7 +30,7 @@ class CustomButton < ApplicationRecord
       applies_to_class = other
       applies_to_id    = applies_to_id
     else
-      raise "Instance has no id" if other.id.nil?
+      raise _("Instance has no id") if other.id.nil?
       applies_to_class = other.class.base_model.name
       applies_to_id    = other.id
     end
@@ -59,7 +59,7 @@ class CustomButton < ApplicationRecord
       self.applies_to_class = other
       self.applies_to_id    = nil
     else
-      raise "Instance has no id" if other.id.nil?
+      raise _("Instance has no id") if other.id.nil?
       self.applies_to_class = other.class.base_model.name
       self.applies_to_id    = other.id
     end
@@ -148,7 +148,7 @@ class CustomButton < ApplicationRecord
 
   def self.get_user(user)
     user = User.in_region.find_by_userid(user) if user.kind_of?(String)
-    raise "Unable to find user '#{user}'" if user.nil?
+    raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
     user
   end
 end

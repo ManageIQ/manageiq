@@ -14,7 +14,10 @@ class DatabaseBackup < ApplicationRecord
 
   def backup(options)
     # TODO: Create a real exception out of this
-    raise "Missing or Invalid task: #{options[:task_id]}, depot id: #{options[:file_depot_id]}" unless options[:task_id].kind_of?(Integer) && options[:file_depot_id].kind_of?(Integer)
+    unless options[:task_id].kind_of?(Integer) && options[:file_depot_id].kind_of?(Integer)
+      raise _("Missing or Invalid task: %{task_id}, depot id: %{depot_id}") % {:task_id  => options[:task_id],
+                                                                               :depot_id => options[:file_depot_id]}
+    end
 
     task = MiqTask.find(options[:task_id])
     task.update_status("Active", "Ok", "Starting DB Backup for Region: #{region_name}")
@@ -45,7 +48,9 @@ class DatabaseBackup < ApplicationRecord
   end
 
   def self.gc(options)
-    raise "Missing or Invalid task: #{options[:task_id]}" unless options[:task_id].kind_of?(Integer)
+    unless options[:task_id].kind_of?(Integer)
+      raise _("Missing or Invalid task: %{task_id}") % {:task_id => options[:task_id]}
+    end
 
     task = MiqTask.find(options[:task_id])
     task.update_status("Active", "Ok", "Starting DB GC for Region: #{region_name}")

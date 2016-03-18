@@ -30,7 +30,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def self.create_volume(ext_management_system, options = {})
-    raise ArgumentError, "ext_management_system cannot be nil" if ext_management_system.nil?
+    raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
     tenant = options[:cloud_tenant]
@@ -54,7 +54,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def self.raw_create_volume(_ext_management_system, _options = {})
-    raise NotImplementedError, "raw_create_volume must be implemented in a subclass"
+    raise NotImplementedError, _("raw_create_volume must be implemented in a subclass")
   end
 
   def update_volume(options = {})
@@ -66,7 +66,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def raw_update_volume(_options = {})
-    raise NotImplementedError, "raw_update_volume must be implemented in a subclass"
+    raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
   end
 
   def delete_volume
@@ -78,6 +78,6 @@ class CloudVolume < ApplicationRecord
   end
 
   def raw_delete_volume
-    raise NotImplementedError, "raw_delete_volume must be implemented in a subclass"
+    raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
   end
 end

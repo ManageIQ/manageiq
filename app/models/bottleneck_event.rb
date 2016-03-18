@@ -43,7 +43,7 @@ class BottleneckEvent < ApplicationRecord
 
   def self.calculate_future_event(obj, options)
     method = "calculate_future_#{options[:name]}"
-    raise "'#{options[:name]}', calculation not supported" unless self.respond_to?(method)
+    raise _("'%{name}', calculation not supported") % {:name => options[:name]} unless respond_to?(method)
     send(method, obj, options)
   end
 

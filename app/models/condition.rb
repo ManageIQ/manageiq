@@ -52,7 +52,8 @@ class Condition < ApplicationRecord
       when "all", "none"
         result = true
       else
-        raise "condition '#{name}', include value \"#{expression["include"]}\", is invalid. Should be one of \"any, all or none\""
+        raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
+                {:name => name, :value => expression["include"]}
       end
 
       result = expression["include"] != "any"
@@ -183,7 +184,7 @@ class Condition < ApplicationRecord
     if checkmode == "count"
       e = check.gsub(/<count>/i, list.length.to_s)
       left, operator, right = e.split
-      raise "Illegal operator, '#{operator}'" unless %w(== != < > <= >=).include?(operator)
+      raise _("Illegal operator, '%{operator}'") % {:operator => operator} unless %w(== != < > <= >=).include?(operator)
 
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
       _ = inputs # used by eval (presumably?)
