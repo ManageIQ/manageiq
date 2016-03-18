@@ -740,6 +740,7 @@ en:
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
       ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
+      ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
       ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
       ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
       MiddlewareDeployment:     Middleware Deployment
