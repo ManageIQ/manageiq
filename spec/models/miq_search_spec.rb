@@ -52,6 +52,13 @@ describe MiqSearch do
     end
   end
 
+  describe "#results" do
+    it "respects filter" do
+      all_vms
+      expect(vm_location_search.results).to match_array(matched_vms)
+    end
+  end
+
   describe "#filtered" do
     it "works with models" do
       all_vms
@@ -66,11 +73,6 @@ describe MiqSearch do
     it "finds elements only in the array" do
       all_vms
       expect(vm_location_search.filtered(partial_vms)).to match_array(partial_matched_vms)
-    end
-
-    it "brings back all for unspecified target" do
-      all_vms
-      expect(vm_location_search.filtered(nil)).to match_array(matched_vms)
     end
 
     it "brings back empty array for empty arrays" do

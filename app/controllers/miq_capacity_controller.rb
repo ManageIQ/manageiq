@@ -184,11 +184,7 @@ class MiqCapacityController < ApplicationController
             vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
             vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "filter"
-            s = MiqSearch.find(@sb[:planning][:options][:filter_value])     # Get the chosen search filter
-            s.options ||= {}                                         # Create options as a Hash
-            s.options[:userid] = session[:userid]                           # Set the userid
-            s.options[:results_format] = :objects                           # Return objects, not ids
-            vms, attrs = s.search                                           # Get the VM objects and search attributes
+            vms = MiqSearch.find(@sb[:planning][:options][:filter_value]).results(:userid => current_userid)
             vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }   # Add the VMs to the pulldown hash
           end
         end
