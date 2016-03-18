@@ -156,21 +156,21 @@ class MiqCapacityController < ApplicationController
   def planning_option_changed
     vms = nil
     filter_value = params[:filter_value]
-    if params[:filter_typ] == "all"
-      vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
-    end
     if filter_value && filter_value != "<Choose>"
-      vms = []
       case params[:filter_typ]
       when "host"
-        vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
+        vms, = Host.find(filter_value).find_filtered_children("vms")
       when "ems"
-        vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
+        vms, = ExtManagementSystem.find(filter_value).find_filtered_children("vms")
       when "cluster"
-        vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
+        vms, = EmsCluster.find(filter_value).find_filtered_children("all_vms")
       when "filter"
-        vms = MiqSearch.find(@sb[:planning][:options][:filter_value]).results(:userid => current_userid)
+        vms = MiqSearch.find(filter_value).results(:userid => current_userid)
+      else
+        vms = []
       end
+    elsif params[:filter_typ] == "all"
+      vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
     end
     @sb[:planning][:vms] = vms ? vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name } : nil
     @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
