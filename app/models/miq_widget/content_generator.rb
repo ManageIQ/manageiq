@@ -11,7 +11,10 @@ class MiqWidget::ContentGenerator
       name = klass == "MiqGroup" ? "Group: #{group_description}" : userids.inspect
       error_message = "Expected #{expected_count} contents, received #{result.length} contents for #{name[0, 256]}"
       _log.error("#{widget.log_prefix} #{error_message}")
-      raise MiqException::Error, error_message
+      raise MiqException::Error,
+            "Expected %{number} contents, received %{length} contents for %{name}" % {:number => expected_count,
+                                                                                      :length => result.length,
+                                                                                      :name   => name[0, 256]}
     end
 
     result
@@ -44,7 +47,7 @@ class MiqWidget::ContentGenerator
     if group.nil?
       error_message = "MiqGroup #{group_description} was not found"
       _log.error("#{widget.log_prefix} #{error_message}")
-      raise MiqException::Error, error_message
+      raise MiqException::Error, _("MiqGroup %{description} was not found") % {:description => group_description}
     end
 
     group

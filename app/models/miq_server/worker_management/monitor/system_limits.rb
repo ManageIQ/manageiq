@@ -124,7 +124,9 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       _log.warn("Using default algorithm: [#{default}] since [#{name}] is not a valid algorithm")
       name = default
       real_algorithm_name = "#{type}_algorithm_#{default}"
-      raise "Default algorithm [#{default}] not found!" unless self.respond_to?(real_algorithm_name)
+      unless respond_to?(real_algorithm_name)
+        raise _("Default algorithm [%{default}] not found!") % {:default => default}
+      end
     end
     real_algorithm_name
   end

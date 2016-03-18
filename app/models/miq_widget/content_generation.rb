@@ -1,6 +1,6 @@
 class MiqWidget::ContentGeneration
   def initialize(options)
-    raise "Must call .new with an options hash." unless options.kind_of?(Hash)
+    raise _("Must call .new with an options hash.") unless options.kind_of?(Hash)
 
     options.each do |k, v|
       class_eval { attr_accessor k.to_sym }
