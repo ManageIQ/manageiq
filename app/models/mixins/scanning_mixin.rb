@@ -44,7 +44,7 @@ module ScanningMixin
                   "vmscan"
                 end
         job = Job.find_by_guid(taskid)
-        raise "Unable to process data for job with id <#{taskid}>.  Job not found." if job.nil?
+        raise _("Unable to process data for job with id <%{number}>. Job not found.") % {:number => taskid} if job.nil?
         begin
           job.signal(:data, xml_file)
         rescue => err
@@ -307,7 +307,7 @@ module ScanningMixin
     _log.info "from #{self.class.name}"
     xml_summary = nil
     begin
-      raise "No synchronize category specified" if ost.category.nil?
+      raise _("No synchronize category specified") if ost.category.nil?
       categories = ost.category.split(",")
       ost.scanTime = Time.now.utc
       ost.compress = true       # Request that data returned from the blackbox is compressed

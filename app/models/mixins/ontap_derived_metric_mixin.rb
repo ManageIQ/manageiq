@@ -132,12 +132,18 @@ module OntapDerivedMetricMixin
   end
 
   def counter_unit(counterName)
-    raise "#{self.class.name}.counter_unit: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    if (ci = counter_info[counterName]).nil?
+      raise _("%{class_name}.counter_unit: counter %{counter_name} not found") % {:class_name   => self.class.name,
+                                                                                  :counter_name => counterName}
+    end
     ci['unit']
   end
 
   def counter_desc(counterName)
-    raise "#{self.class.name}.counter_desc: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    if (ci = counter_info[counterName]).nil?
+      raise _("%{class_name}.counter_desc: counter %{counter_name} not found") % {:class_name   => self.class.name,
+                                                                                  :counter_name => counterName}
+    end
     ci['desc']
   end
 

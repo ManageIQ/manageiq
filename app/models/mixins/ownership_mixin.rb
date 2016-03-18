@@ -27,7 +27,7 @@ module OwnershipMixin
                   when :owner then :evm_owner
                   when :group then :miq_group
                   else
-                    raise "Unknown option, '#{k}'"
+                    raise _("Unknown option, '%{name}'") % {:name => k}
                   end
             obj.send("#{col}=", options[k])
           end

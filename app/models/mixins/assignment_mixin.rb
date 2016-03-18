@@ -18,7 +18,7 @@ module AssignmentMixin
       if obj.kind_of?(ActiveRecord::Base) # obj is a CI
         tag = "#{obj.class.base_model.name.underscore}/id/#{obj.id}"
       else                                # obj is the id of an instance of <klass>
-        raise "Class must be specified when object is an integer" if klass.nil?
+        raise _("Class must be specified when object is an integer") if klass.nil?
         tag = "#{klass.underscore}/id/#{obj}"
       end
       tag_add(tag, :ns => namespace)

@@ -1,7 +1,7 @@
 module VimConnectMixin
   def connect(options = {})
     options[:auth_type] ||= :ws
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise _("no credentials defined") if missing_credentials?(options[:auth_type])
 
     options[:fault_tolerant] = true unless options.key?(:fault_tolerant)
 
@@ -10,7 +10,7 @@ module VimConnectMixin
     if options[:check_broker_worker] && !MiqVimBrokerWorker.available?
       msg = "Broker Worker is not available"
       _log.error(msg)
-      raise MiqException::MiqVimBrokerUnavailable, msg
+      raise MiqException::MiqVimBrokerUnavailable, _("Broker Worker is not available")
     end
     options[:vim_broker_drb_port] ||= MiqVimBrokerWorker.method(:drb_port) if options[:use_broker]
 
@@ -29,7 +29,7 @@ module VimConnectMixin
   end
 
   def with_provider_connection(options = {})
-    raise "no block given" unless block_given?
+    raise _("no block given") unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
       vim = connect(options)

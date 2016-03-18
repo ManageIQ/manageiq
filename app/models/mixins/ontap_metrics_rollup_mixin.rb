@@ -108,12 +108,18 @@ module OntapMetricsRollupMixin
   end
 
   def counter_unit(counterName)
-    raise "#{self.class.name}.counter_unit: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    if (ci = counter_info[counterName]).nil?
+      raise _("%{class_name}.counter_unit: counter %{counter_name} not found") % {:class_name   => self.class.name,
+                                                                                  :counter_name => counterName}
+    end
     ci['unit']
   end
 
   def counter_desc(counterName)
-    raise "#{self.class.name}.counter_desc: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    if (ci = counter_info[counterName]).nil?
+      raise _("%{class_name}.counter_desc: counter _{counter_name} not found") % {:class_name   => self.class.name,
+                                                                                  :counter_name => counterName}
+    end
     ci['desc']
   end
 
@@ -247,12 +253,12 @@ module OntapMetricsRollupMixin
     counterInfo[cnMin] = NetAppManageability::NAMHash.new do
       name  cnMin
       unit  ci.unit
-      desc  "Minimum value over rollup period - " + ci.desc
+      desc  _("Minimum value over rollup period - %{number}") % {:nummber => ci.desc}
     end
     counterInfo[cnMax] = NetAppManageability::NAMHash.new do
       name  cnMax
       unit  ci.unit
-      desc  "Maximum value over rollup period - " + ci.desc
+      desc  _("Maximum value over rollup period - %{number}") % {:number => ci.desc}
     end
   end
 
