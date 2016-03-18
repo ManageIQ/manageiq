@@ -157,7 +157,7 @@ class MiqTaskController < ApplicationController
                          :message      => _("Delete started for record ids: %{id}") % {:id => job_ids.inspect},
                          :target_class => db_class.base_class.name)
       if @flash_array.nil?
-        add_flash(_("%Delete initiated for %{count_model} from the CFME Database") %
+        add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
                     {:count_model => pluralize(job_ids.length, ui_lookup(:tables => "miq_task"))})
       end
     end

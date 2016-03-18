@@ -259,7 +259,7 @@ class RepositoryController < ApplicationController
         AuditEvent.success(audit)
       end
       Repository.destroy_queue(repos)
-      add_flash(_("%Delete initiated for %{count_model} from the CFME Database") %
+      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
                   {:count_model => pluralize(repos.length, "Repository")})
     else
       Repository.where(:id => repos).order("lower(name)").each do |repo|
