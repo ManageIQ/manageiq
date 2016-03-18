@@ -1,4 +1,3 @@
-require "spec_helper"
 require_migration
 
 describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
@@ -45,7 +44,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         name_key(name) => x[:name],
       )
       if x[:ems_out].include?("new_ems")
-        expect(ems_row_entries.select { |e| e[:ems_in] }.include?(x[name].ems_id)).to be false
+        expect(ems_row_entries.select { |e| e[:ems_in] }).to_not include(x[name].ems_id)
       else
         expect(x[name]).to have_attributes(
           :ems_id => x[:ems_out][:ems].id,
@@ -130,7 +129,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       end
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| create_record(x, :in, model_name) }
+        send(model_name.to_s.pluralize).each { |x| create_record(x, :in, model_name) }
       end
 
       expect(ext_management_system_stub.count).to eq 4
@@ -138,7 +137,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       migrate
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| verify_record(x, :out, model_name) }
+        send(model_name.to_s.pluralize).each { |x| verify_record(x, :out, model_name) }
       end
 
       expect(ext_management_system_stub.count).to eq 6
@@ -162,7 +161,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         :parent_ems_id => ems_row_entries[1][:ems].id)
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| create_record(x, :out, model_name, network_manager, network_manager_infra) }
+        send(model_name.to_s.pluralize).each { |x| create_record(x, :out, model_name, network_manager, network_manager_infra) }
       end
 
       expect(ext_management_system_stub.count).to eq 6
@@ -170,7 +169,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       migrate
 
       all_model_names.each do |model_name|
-        send("#{model_name}s").each { |x| verify_record(x, :in, model_name) }
+        send(model_name.to_s.pluralize).each { |x| verify_record(x, :in, model_name) }
       end
 
       expect(ext_management_system_stub.count).to eq 4
