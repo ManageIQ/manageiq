@@ -171,7 +171,7 @@ class MiqCapacityController < ApplicationController
         vms = []
       end
     elsif params[:filter_typ] == "all"
-      vms = find_filtered(Vm, :all).sort_by { |v| v.name.downcase }
+      vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
     end
     @sb[:planning][:vms] = vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name }
     @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
@@ -527,13 +527,13 @@ class MiqCapacityController < ApplicationController
     @sb[:planning][:options][:display_vms] ||= 100
 
     @sb[:planning][:emss] = {}
-    find_filtered(ExtManagementSystem, :all).each { |e| @sb[:planning][:emss][e.id.to_s] = e.name }
+    find_filtered(ExtManagementSystem).each { |e| @sb[:planning][:emss][e.id.to_s] = e.name }
     @sb[:planning][:clusters] = {}
-    find_filtered(EmsCluster, :all).each { |e| @sb[:planning][:clusters][e.id.to_s] = e.name }
+    find_filtered(EmsCluster).each { |e| @sb[:planning][:clusters][e.id.to_s] = e.name }
     @sb[:planning][:hosts] = {}
-    find_filtered(Host, :all).each { |e| @sb[:planning][:hosts][e.id.to_s] = e.name }
+    find_filtered(Host).each { |e| @sb[:planning][:hosts][e.id.to_s] = e.name }
     @sb[:planning][:datastores] = {}
-    find_filtered(Storage, :all).each { |e| @sb[:planning][:datastores][e.id.to_s] = e.name }
+    find_filtered(Storage).each { |e| @sb[:planning][:datastores][e.id.to_s] = e.name }
     @sb[:planning][:vm_filters] = MiqSearch.where(:db => "Vm").descriptions
     @right_cell_text = _("Planning Summary")
     if params[:button] == "reset"
