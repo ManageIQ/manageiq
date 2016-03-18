@@ -18,20 +18,32 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
     #   false => can    terminate the instance using the API
     # If you set this to true, and you later want to terminate the instance, you must first enable API termination.
     clone_options[:disable_api_termination] = false
-    clone_options[:image_id]           = source.ems_ref
-    clone_options[:instance_type]      = instance_type.name
-    clone_options[:subnet_id]          = cloud_subnet.try(:ems_ref)
-    clone_options[:security_group_ids] = security_groups.collect(&:ems_ref) if security_groups
+    clone_options[:image_id] = source.ems_ref
+    clone_options[:instance_type] = instance_type.name
+
+    if cloud_subnet
+      clone_options[:subnet_id] = cloud_subnet.ems_ref
+    else
+      clone_options.delete(:subnet_id)
+    end
+
+    if security_groups.any?
+      clone_options[:security_group_ids] = security_groups.collect(&:ems_ref)
+    else
+      clone_options.delete(:security_group_ids)
+    end
+
     # CloudWatch
     #   true  => Advanced Monitoring
     #   false => Basic    Monitoring
     clone_options[:monitoring] = {
       :enabled => get_option(:monitoring).to_s.downcase == "advanced"
     }
+
     if clone_options[:availability_zone].present?
       clone_options[:placement] = {:availability_zone => clone_options[:availability_zone]}
-      clone_options.delete(:availability_zone)
     end
+    clone_options.delete(:availability_zone)
 
     clone_options
   end
