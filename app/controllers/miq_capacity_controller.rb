@@ -165,8 +165,7 @@ class MiqCapacityController < ApplicationController
       when "cluster"
         vms, = EmsCluster.find(filter_value).find_filtered_children("all_vms")
       when "filter"
-        s = MiqSearch.find(filter_value)
-        vms = s.filtered(s.db, :userid => current_userid)
+        vms = MiqSearch.find(filter_value).filtered(nil, :userid => current_userid)
       else
         vms = []
       end
