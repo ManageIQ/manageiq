@@ -69,4 +69,9 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   def validate_smartstate_analysis
     validate_unsupported("Smartstate Analysis")
   end
+
+  def validate_timeline
+    {:available => false,
+     :message   => _("Timeline is not available for %{model}") % {:model => ui_lookup(:model => self.class.to_s)}}
+  end
 end
