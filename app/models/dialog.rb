@@ -104,6 +104,8 @@ class Dialog < ApplicationRecord
   end
 
   def reject_if_has_resource_actions
-    raise "Dialog cannot be deleted because it is connected to other components." if resource_actions.length > 0
+    if resource_actions.length > 0
+      raise _("Dialog cannot be deleted because it is connected to other components.")
+    end
   end
 end

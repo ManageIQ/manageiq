@@ -42,7 +42,9 @@ class AutomationRequest < MiqRequest
   def self.zone(options)
     zone_name = options[:attrs][:miq_zone]
     return nil if zone_name.blank?
-    raise ArgumentError, "unknown zone #{zone_name}" unless Zone.where(:name => zone_name).exists?
+    unless Zone.where(:name => zone_name).exists?
+      raise ArgumentError, _("unknown zone %{zone_name}") % {:zone_name => zone_name}
+    end
     zone_name
   end
 

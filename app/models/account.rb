@@ -94,7 +94,8 @@ class Account < ApplicationRecord
     if accttype == valid_account_type
       block.call
     else
-      raise "Cannot call method '#{caller[0][/`.*'/][1..-2]}' on an Account of type '#{accttype}'"
+      raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller[0][/`.*'/][1..-2],
+                                                                                   :type   => accttype}
     end
   end
 

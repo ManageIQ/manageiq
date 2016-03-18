@@ -37,7 +37,7 @@ module Authenticator
     def authenticate(username, password, request = nil, options = {})
       options = options.dup
       options[:require_user] ||= false
-      fail_message = "Authentication failed"
+      fail_message = _("Authentication failed")
 
       user_or_taskid = nil
 
@@ -59,7 +59,8 @@ module Authenticator
 
             unless user_or_taskid
               AuditEvent.failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
-              raise MiqException::MiqEVMLoginError, "User authenticated but not defined in EVM, please contact your EVM administrator"
+              raise MiqException::MiqEVMLoginError,
+                    _("User authenticated but not defined in EVM, please contact your EVM administrator")
             end
           end
 
@@ -231,7 +232,7 @@ module Authenticator
     def run_task(taskid, status)
       task = MiqTask.find_by_id(taskid)
       if task.nil?
-        message = "Unable to find task with id: [#{taskid}]"
+        message = _("Unable to find task with id: [%{task_id}]") % {:task_id => taskid}
         _log.error(message)
         raise message
       end

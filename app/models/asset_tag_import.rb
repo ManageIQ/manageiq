@@ -22,8 +22,8 @@ class AssetTagImport
 
   def self.upload(klass, fd)
     klass = Object.const_get(klass.to_s)
-    raise "#{klass} not supported for upload!" unless REQUIRED_COLS.key?(klass)
-    raise "#{klass} not supported for upload!" unless MATCH_KEYS.key?(klass)
+    raise _("%{name} not supported for upload!") % {:name => klass} unless REQUIRED_COLS.key?(klass)
+    raise _("%{name} not supported for upload!") % {:name => klass} unless MATCH_KEYS.key?(klass)
     data, keys, tags = MiqBulkImport.upload(fd, REQUIRED_COLS[klass], MATCH_KEYS[klass].dup)
 
     import = new(:data => data, :keys => keys, :tags => tags, :klass => klass)

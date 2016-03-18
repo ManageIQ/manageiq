@@ -83,7 +83,7 @@ class Classification < ApplicationRecord
 
   def self.classify_by_tag(obj, tag, is_request = true)
     parts = tag.split("/")
-    raise "Tag #{tag} is not a category entry" unless parts[1] == "managed"
+    raise _("Tag %{tag} is not a category entry") % {:tag => tag} unless parts[1] == "managed"
 
     entry_name = parts.pop
     category_name = parts.pop
@@ -93,7 +93,7 @@ class Classification < ApplicationRecord
 
   def self.unclassify_by_tag(obj, tag, is_request = true)
     parts = tag.split("/")
-    raise "Tag #{tag} is not a category entry" unless parts[1] == "managed"
+    raise _("Tag #{tag} is not a category entry") % {:tag => tag} unless parts[1] == "managed"
 
     entry_name = parts.pop
     category_name = parts.pop
@@ -113,10 +113,10 @@ class Classification < ApplicationRecord
     targets = model.where(:id => options[:object_ids]).includes(:taggings, :tags)
 
     adds = where(:id => options[:add_ids]).includes(:tag)
-    adds.each { |a| raise "Classification add id: [#{a.id}] is not an entry" if a.category? }
+    adds.each { |a| raise _("Classification add id: [%{id}] is not an entry") % {:id => a.id} if a.category? }
 
     deletes = where(:id => options[:delete_ids]).includes(:tag)
-    deletes.each { |d| raise "Classification delete id: [#{d.id}] is not an entry" if d.category? }
+    deletes.each { |d| raise _("Classification delete id: [%{id}] is not an entry") % {:id => d.id} if d.category? }
 
     failed_deletes = Hash.new { |h, k| h[k] = [] }
     failed_adds    = Hash.new { |h, k| h[k] = [] }
@@ -148,14 +148,16 @@ class Classification < ApplicationRecord
     end
 
     if failed_deletes.any? || failed_adds.any?
-      msg = "Failures occurred during bulk reassignment."
+      msg = _("Failures occurred during bulk reassignment.")
       failed_deletes.each do |target, deletes|
         names = deletes.collect(&:name).sort
-        msg << "  Unable to remove the following tags from #{target.class.name} #{target.id}: #{names.join(", ")}."
+        msg += _("  Unable to remove the following tags from %{class_name} %{id}: %{names}.") %
+                 {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
       failed_adds.each do |target, adds|
         names = adds.collect(&:name).sort
-        msg << "  Unable to add the following tags to #{target.class.name} #{target.id}: #{names.join(", ")}."
+        msg += _("  Unable to add the following tags to %{class_name} %{id}: %{names}.") %
+                 {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
       raise msg
     end
@@ -187,7 +189,9 @@ class Classification < ApplicationRecord
   end
 
   def self.find_assigned_entries(obj, ns = DEFAULT_NAMESPACE)
-    raise "Class '#{obj.class}' is not eligible for classification" unless obj.respond_to?("tag_with")
+    unless obj.respond_to?("tag_with")
+      raise _("Class '%{name}' is not eligible for classification") % {:name => obj.class}
+    end
 
     tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
     where(:tag_id => tag_ids) rescue []
@@ -236,7 +240,7 @@ class Classification < ApplicationRecord
   end
 
   def add_entry(options)
-    raise "entries can only be added to classifications" unless self.category?
+    raise _("entries can only be added to classifications") unless category?
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
     children.create(options)
@@ -247,16 +251,20 @@ class Classification < ApplicationRecord
   end
 
   def find_by_entry(type)
-    raise "method is only available for an entry" if self.category?
+    raise _("method is only available for an entry") if category?
     klass = type.constantize
-    raise "Class '#{type}' is not eligible for classification" unless klass.respond_to?("find_tagged_with")
+    unless klass.respond_to?("find_tagged_with")
+      raise _("Class '%{type}' is not eligible for classification") % {:type => type}
+    end
 
     klass.find_tagged_with(:any => name, :ns => ns, :cat => parent.name)
   end
 
   def assign_entry_to(obj, is_request = true)
-    raise "method is only available for an entry" if self.category?
-    raise "Class '#{obj.class}' is not eligible for classification" unless obj.respond_to?("tag_with")
+    raise _("method is only available for an entry") if category?
+    unless obj.respond_to?("tag_with")
+      raise _("Class '%{name}' is not eligible for classification") % {:name => obj.class}
+    end
 
     enforce_policy(obj, :request_assign_company_tag) if is_request
     if parent.single_value?
@@ -374,7 +382,7 @@ class Classification < ApplicationRecord
   end
 
   def self.import_from_hash(classification, parent = nil)
-    raise "No Classification to Import" if classification.nil?
+    raise _("No Classification to Import") if classification.nil?
 
     stats = {"categories" => 0, "entries" => 0}
 
