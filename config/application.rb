@@ -9,7 +9,9 @@ require 'active_job/railtie'
 require 'sprockets/railtie'
 
 if defined?(Bundler)
-  Bundler.require *Rails.groups(:assets => %w(development test))
+  asset_groups = %w(development test)
+  asset_groups << 'production' if ENV['LOAD_ASSETS']
+  Bundler.require *Rails.groups(:assets => asset_groups)
 end
 
 module Vmdb

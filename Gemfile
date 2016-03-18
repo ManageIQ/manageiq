@@ -15,20 +15,12 @@ path "gems/" do
   gem "manageiq-providers-amazon"
 end
 
-# Client-side dependencies
-gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "codemirror-rails",               "=4.2"
-gem "jquery-hotkeys-rails"
-gem "jquery-rails",                   "~>4.0.4"
+# Client side dependencies
+gem "sprockets-es6",                  "~>0.9.0", :require => "sprockets/es6"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/matthewd/jquery-rjs.git", :branch => "rails5" # https://github.com/amatsuda/jquery-rjs/pull/4
-gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "~>3.2.0"
-gem "sass-rails"
-gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
-
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
@@ -58,7 +50,6 @@ gem "puma",                           "~>2.13"
 gem "recursive-open-struct",          "~>0.6.1"
 gem "responders",                     "~>2.0"
 gem "secure_headers",                 "~>3.0.0"
-gem "spice-html5-rails"
 #gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
@@ -95,9 +86,7 @@ gem "rufus-scheduler",                "~>3.1.3",   :require => false
 gem "rugged",                         "~>0.23.0",  :require => false
 gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",   :require => false
-gem "uglifier",                       "~>2.7.1",   :require => false
 gem "sshkey",                         "~>1.8.0",   :require => false
-
 
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
@@ -124,34 +113,46 @@ unless ENV['APPLIANCE']
   end
 end
 
-# Assets from rails-assets.org
-source "https://rails-assets.org" do
-  gem "rails-assets-angular",                         "~>1.4.3"
-  gem "rails-assets-angular-animate",                 "~>1.4.3"
-  gem "rails-assets-angular-mocks",                   "~>1.4.3"
-  gem "rails-assets-angular-patternfly-sass",         "~>3.2.0"
-  gem "rails-assets-angular-sanitize",                "~>1.4.3"
-  gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
-  gem "rails-assets-bootstrap-filestyle",             "~>1.2.1"
-  gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
-  gem "rails-assets-bootstrap-select",                "~>1.7.3"
-  gem "rails-assets-c3",                              "~>0.4.10"
-  gem "rails-assets-himdel--jquery.observe_field",    "~>0.1.0"
-  gem "rails-assets-jasmine-jquery",                  "~>2.1.1"
-  gem "rails-assets-jquery-1.8",                      "~>1.8.3"
-  gem "rails-assets-jquery-ujs",                      "~>1.1.0"
-  gem "rails-assets-jqueryui",                        "~>1.9.2"
-  gem "rails-assets-bootstrap-switch",                "~>3.3.2"
-  gem "rails-assets-angular-bootstrap-switch",        "~>0.4.1"
-  gem "rails-assets-kubernetes-topology-graph",       "= 0.0.22"
-  gem "rails-assets-moment",                          "~>2.10.3"
-  gem "rails-assets-moment-strftime",                 "~>0.1.5"
-  gem "rails-assets-moment-timezone",                 "~>0.4.0"
-  gem "rails-assets-numeral",                         "~>1.5.3"
-  gem "rails-assets-slickgrid",                       "~>2.1.0"
-  gem "rails-assets-spin.js",                         "~>2.3.2"
-  gem "rails-assets-sprintf",                         "~>1.0.3"
-  gem "rails-assets-xml_display",                     "~>0.1.1"
+group :assets do
+  gem "angular-ui-bootstrap-rails",     "~>0.13.0"
+  gem "codemirror-rails",               "=4.2"
+  gem "jquery-hotkeys-rails"
+  gem "jquery-rails",                   "~>4.0.4"
+  gem "lodash-rails",                   "~>3.10.0"
+  gem "patternfly-sass",                "~>3.2.0"
+  gem "sass-rails"
+  gem "spice-html5-rails"
+  gem "uglifier",                       "~>2.7.1", :require => false
+
+  # Assets from rails-assets.org
+  source "https://rails-assets.org" do
+    gem "rails-assets-angular",                         "~>1.4.3"
+    gem "rails-assets-angular-animate",                 "~>1.4.3"
+    gem "rails-assets-angular-mocks",                   "~>1.4.3"
+    gem "rails-assets-angular-patternfly-sass",         "~>3.2.0"
+    gem "rails-assets-angular-sanitize",                "~>1.4.3"
+    gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
+    gem "rails-assets-bootstrap-filestyle",             "~>1.2.1"
+    gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
+    gem "rails-assets-bootstrap-select",                "~>1.7.3"
+    gem "rails-assets-c3",                              "~>0.4.10"
+    gem "rails-assets-himdel--jquery.observe_field",    "~>0.1.0"
+    gem "rails-assets-jasmine-jquery",                  "~>2.1.1"
+    gem "rails-assets-jquery-1.8",                      "~>1.8.3"
+    gem "rails-assets-jquery-ujs",                      "~>1.1.0"
+    gem "rails-assets-jqueryui",                        "~>1.9.2"
+    gem "rails-assets-bootstrap-switch",                "~>3.3.2"
+    gem "rails-assets-angular-bootstrap-switch",        "~>0.4.1"
+    gem "rails-assets-kubernetes-topology-graph",       "= 0.0.22"
+    gem "rails-assets-moment",                          "~>2.10.3"
+    gem "rails-assets-moment-strftime",                 "~>0.1.5"
+    gem "rails-assets-moment-timezone",                 "~>0.4.0"
+    gem "rails-assets-numeral",                         "~>1.5.3"
+    gem "rails-assets-slickgrid",                       "~>2.1.0"
+    gem "rails-assets-spin.js",                         "~>2.3.2"
+    gem "rails-assets-sprintf",                         "~>1.0.3"
+    gem "rails-assets-xml_display",                     "~>0.1.1"
+  end
 end
 
 #
