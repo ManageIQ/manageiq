@@ -49,18 +49,11 @@
         .col-md-8
           %select{:name => 'destination_host_id', 'ng-model' => 'vmCloudModel.host', 'ng-options' => 'host.id as host.name for host in hosts | filter : {cluster_id: vmCloudModel.cluster.id}'}
 
-  %table{:width => '100%'}
-    %tr
-      %td{:align => 'right'}
-        #buttons_on
-          = button_tag("Submit",
-                       :class        => "btn btn-primary",
-                       "ng-click"    => "submitClicked()",
-                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                       "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
-        = button_tag("Cancel",
-                      :class     => "btn btn-default",
-                      "ng-click" => "cancelClicked()")
+
+  %div_for_paging{'ng-controller'           => "pagingDivButtonGroupController",
+                  'paging_div_buttons_id'   => "angular_paging_div_buttons",
+                  'paging_div_buttons_type' => "Submit"}
+
 :javascript
   ManageIQ.angular.app.value('vmCloudLiveMigrateFormId', '#{@record.id}');
   miq_bootstrap('#form_div');

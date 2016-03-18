@@ -1715,6 +1715,8 @@ module VmCommon
               :record_id  => @edit[:rec_id],
             }
           ])
+        elsif @sb[:action] == 'live_migrate'
+          presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         end
