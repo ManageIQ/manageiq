@@ -154,46 +154,41 @@ class MiqCapacityController < ApplicationController
   end
 
   def planning_option_changed
+    vms = nil
     if params[:filter_typ]
-      @sb[:planning][:vms] = nil
       @sb[:planning][:options][:chosen_vm] = nil
       @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
       @sb[:planning][:options][:filter_value] = nil
       if params[:filter_typ] == "all"
-        @sb[:planning][:vms] = {}
-        find_filtered(Vm, :all).sort_by { |v| v.name.downcase }.each { |e| @sb[:planning][:vms][e.id.to_s] = e.name }
+        vms = find_filtered(Vm, :all).sort_by { |v| v.name.downcase }
       end
     end
     if params[:filter_value]
-      @sb[:planning][:vms] = nil
       @sb[:planning][:options][:chosen_vm] = nil
       if params[:filter_value] == "<Choose>"
         @sb[:planning][:options][:filter_value] = nil
       else
         @sb[:planning][:options][:filter_value] = params[:filter_value]
-        @sb[:planning][:vms] = {}
+        vms = []
         if @sb[:planning][:options][:filter_value]
           case @sb[:planning][:options][:filter_typ]
           when "host"
             vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "ems"
             vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "cluster"
             vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
           when "filter"
             s = MiqSearch.find(@sb[:planning][:options][:filter_value])     # Get the chosen search filter
             s.options ||= {}                                         # Create options as a Hash
             s.options[:userid] = session[:userid]                           # Set the userid
             s.options[:results_format] = :objects                           # Return objects, not ids
             vms, attrs = s.search                                           # Get the VM objects and search attributes
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }   # Add the VMs to the pulldown hash
           end
         end
       end
     end
+    @sb[:planning][:vms] = vms ? vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name } : nil
     @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm] if params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
     @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
