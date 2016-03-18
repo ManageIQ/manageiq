@@ -66,6 +66,7 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
           'product product-timeline fa-lg',
           N_('Show Timelines for this #{ui_lookup(:table=>"ems_cloud")}'),
           N_('Timelines'),
+          :klass     => ApplicationHelper::Button::EmsCloudTimeline,
           :url_parms => "?display=timeline"),
       ]
     ),

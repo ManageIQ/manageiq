@@ -115,6 +115,7 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           'product product-timeline fa-lg',
           N_('Show Timelines for this Instance'),
           N_('Timelines'),
+          :klass     => ApplicationHelper::Button::InstanceTimeline,
           :url_parms => "?display=timeline"),
       ]
     ),
