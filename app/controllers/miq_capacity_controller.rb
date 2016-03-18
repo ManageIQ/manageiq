@@ -156,7 +156,6 @@ class MiqCapacityController < ApplicationController
   def planning_option_changed
     vms = nil
     if params[:filter_typ]
-      @sb[:planning][:options][:chosen_vm] = nil
       @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
       @sb[:planning][:options][:filter_value] = nil
       if params[:filter_typ] == "all"
@@ -164,7 +163,6 @@ class MiqCapacityController < ApplicationController
       end
     end
     if params[:filter_value]
-      @sb[:planning][:options][:chosen_vm] = nil
       if params[:filter_value] == "<Choose>"
         @sb[:planning][:options][:filter_value] = nil
       else
@@ -185,7 +183,7 @@ class MiqCapacityController < ApplicationController
       end
     end
     @sb[:planning][:vms] = vms ? vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name } : nil
-    @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm] if params[:chosen_vm]
+    @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
     @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
     @sb[:planning][:options][:trend_cpu] = (params[:trend_cpu] == "1") if params[:trend_cpu]
