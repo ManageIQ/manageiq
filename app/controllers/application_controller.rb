@@ -2303,7 +2303,7 @@ class ApplicationController < ActionController::Base
                :model     => ui_lookup(:model => db.to_s)})
   end
 
-  def find_filtered(db, count, options = {})
+  def find_filtered(db, options = {})
     user     = current_user
     mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
