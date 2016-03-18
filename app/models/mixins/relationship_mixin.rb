@@ -73,7 +73,7 @@ module RelationshipMixin
   end
 
   def with_relationship_type(rel)
-    raise "no block given" unless block_given?
+    raise _("no block given") unless block_given?
 
     rel_changed = rel && (relationship_type != rel)
     self.relationship_type = rel unless rel.nil?
@@ -134,21 +134,21 @@ module RelationshipMixin
   # Returns the relationship of the parent of the record, nil for a root node
   def parent_rel(*args)
     rels = parent_rels(*args)
-    raise "Multiple parents found." if rels.length > 1
+    raise _("Multiple parents found.") if rels.length > 1
     rels.first
   end
 
   # Returns the parent of the record, nil for a root node
   def parent(*args)
     rels = parents(*args)
-    raise "Multiple parents found." if rels.length > 1
+    raise _("Multiple parents found.") if rels.length > 1
     rels.first
   end
 
   # Returns the class/id pair of the parent of the record, nil for a root node
   def parent_id(*args)
     rels = parent_ids(*args)
-    raise "Multiple parents found." if rels.length > 1
+    raise _("Multiple parents found.") if rels.length > 1
     rels.first
   end
 
@@ -403,7 +403,7 @@ module RelationshipMixin
   #   the first is returned, unless :raise_on_multiple is passed as true.
   def relationship(*args)
     options = args.extract_options!
-    raise "Multiple relationships found" if options[:raise_on_multiple] && self.has_multiple_relationships?
+    raise _("Multiple relationships found") if options[:raise_on_multiple] && has_multiple_relationships?
     relationships.first
   end
 

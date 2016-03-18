@@ -1,12 +1,17 @@
 
 module AlertMixin
   def event_log_threshold?(options)
-    raise "#{self.class.name} expected to respond to event_logs and doesn't!" unless self.respond_to?(:event_logs)
-    raise "option :message_filter_type is required"     unless options[:message_filter_type]
-    raise "option :message_filter_value is required"    unless options[:message_filter_value]
+    unless respond_to?(:event_logs)
+      raise _("%{class_name} expected to respond to event_logs and doesn't!") % {:class_name => self.class.name}
+    end
+    raise _("option :message_filter_type is required") unless options[:message_filter_type]
+    raise _("option :message_filter_value is required") unless options[:message_filter_value]
 
     allowed_types = %w(STARTS\ WITH ENDS\ WITH INCLUDES REGULAR\ EXPRESSION)
-    raise "option :message_filter_type: #{options[:message_filter_type]}, invalid, expected one of #{allowed_types}" unless allowed_types.include?(options[:message_filter_type])
+    unless allowed_types.include?(options[:message_filter_type])
+      raise _("option :message_filter_type: %{options}, invalid, expected one of %{type}") %
+              {:options => options[:message_filter_type], :type => allowed_types}
+    end
 
     options.reverse_merge!({:time_threshold => 10.days, :freq_threshold => 2})
 

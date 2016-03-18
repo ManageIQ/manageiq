@@ -16,7 +16,7 @@ module ServiceMixin
 
   def add_resource(rsc, options = {})
     rsc_type = rsc.class.base_class.name.tableize
-    raise "Cannot connect service with nil ID." if rsc.id.nil? && rsc_type == "service_templates"
+    raise _("Cannot connect service with nil ID.") if rsc.id.nil? && rsc_type == "service_templates"
 
     sr = service_resources.detect { |sr| sr.resource_type == rsc.class.base_class.name && sr.resource_id == rsc.id }
     if sr.nil?
@@ -28,7 +28,9 @@ module ServiceMixin
       end
 
       if self.is_circular_reference?(rsc)
-        raise MiqException::MiqServiceCircularReferenceError, "Adding resource <#{rsc.name}> to Service <#{name}> will create a circular reference"
+        raise MiqException::MiqServiceCircularReferenceError,
+              _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
+                {:resource_name => rsc.name, :name => name}
       else
         sr = service_resources.new(nh.merge(:resource => rsc))
         set_service_type if self.respond_to?(:set_service_type)

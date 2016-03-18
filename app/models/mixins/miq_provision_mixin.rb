@@ -80,7 +80,7 @@ module MiqProvisionMixin
 
     allowed_method = "allowed_#{rsc_type}"
     unless prov_wf.respond_to?(allowed_method)
-      error_str = "Provision workflow does not contain the expected method <#{allowed_method}>"
+      error_str = _("Provision workflow does not contain the expected method <%{method}>") % {:method => allowed_method}
       raise MiqException::MiqProvisionError, error_str
     end
 
@@ -109,7 +109,8 @@ module MiqProvisionMixin
     rsc_class = resource_class(rsc)
     rsc_type, key = class_to_resource_type_and_key(rsc_class)
     if rsc_type.nil?
-      raise "Unsupported resource type <#{rsc.class.base_class.name}> passed to set_resource for provisioning."
+      raise _("Unsupported resource type <%{class_name}> passed to set_resource for provisioning.") %
+              {:class_name => rsc.class.base_class.name}
     end
 
     rsc_name = resource_display_name(rsc)
@@ -117,7 +118,8 @@ module MiqProvisionMixin
 
     if result == false
       resource_str = "<#{rsc_class}> <#{rsc.id}:#{rsc_name}>"
-      raise "Resource #{resource_str} is not an eligible resource for this provisioning instance."
+      raise _("Resource %{resource_name} is not an eligible resource for this provisioning instance.") %
+              {:resource_name => resource_str}
     end
     value = construct_value(key, rsc_class, rsc.id, rsc_name)
     _log.info("option <#{key}> being set to <#{value.inspect}>")
@@ -166,9 +168,9 @@ module MiqProvisionMixin
 
   def get_source_vm
     vm_id = get_option(:src_vm_id)
-    raise "Source VM not provided" if vm_id.nil?
+    raise _("Source VM not provided") if vm_id.nil?
     svm = VmOrTemplate.find_by_id(vm_id)
-    raise "Unable to find VM with Id: [#{vm_id}]" if svm.nil?
+    raise _("Unable to find VM with Id: [%{vm_id}]") % {:vm_id => vm_id} if svm.nil?
     svm
   end
 
@@ -202,7 +204,8 @@ module MiqProvisionMixin
       prov_wf.refresh_field_values(options)
       custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
       if custom_spec.nil?
-        raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist."
+        raise MiqException::MiqProvisionError,
+              _("Customization Specification [%{name}] does not exist.") % {:name => custom_spec_name}
       end
 
       options[:sysprep_custom_spec] = [custom_spec.id, custom_spec.name]

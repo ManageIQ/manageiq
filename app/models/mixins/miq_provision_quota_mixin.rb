@@ -5,7 +5,9 @@ module MiqProvisionQuotaMixin
   # requset_by_owner, request_by_group
   def check_quota(quota_type = :vms_by_owner, options = {})
     quota_method = "quota_#{quota_type}"
-    raise "check_quota called with an invalid provisioning quota method <#{quota_type}>" unless self.respond_to?(quota_method)
+    unless respond_to?(quota_method)
+      raise _("check_quota called with an invalid provisioning quota method <%{type}>") % {:type => quota_type}
+    end
     send(quota_method, options)
   end
 

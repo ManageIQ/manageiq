@@ -124,7 +124,7 @@ module RetirementMixin
   end
 
   def finish_retirement
-    raise "#{name} already retired" if self.retired?
+    raise _("%{name} already retired") % {:name => name} if retired?
     $log.info("Finishing Retirement for [#{name}]")
     update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
     message = "#{self.class.base_model.name}: [#{name}], Retires On Date: [#{retires_on}], has been retired"

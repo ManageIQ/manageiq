@@ -4,7 +4,7 @@ module ProcessTasksMixin
   module ClassMethods
     # Processes tasks received from the UI and queues them
     def process_tasks(options)
-      raise "No ids given to process_tasks" if options[:ids].blank?
+      raise _("No ids given to process_tasks") if options[:ids].blank?
       if options[:task] == "refresh_ems" && respond_to?("refresh_ems")
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
@@ -118,7 +118,9 @@ module ProcessTasksMixin
     end
 
     def assert_known_task(options)
-      raise "Unknown task, #{options[:task]}" unless instance_methods.collect(&:to_s).include?(options[:task])
+      unless instance_methods.collect(&:to_s).include?(options[:task])
+        raise _("Unknown task, %{task}") % {:task => options[:task]}
+      end
     end
   end
 end
