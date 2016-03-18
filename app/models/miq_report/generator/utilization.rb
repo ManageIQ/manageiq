@@ -18,12 +18,12 @@ module MiqReport::Generator::Utilization
     if db_options[:tag]
       tag_klass, cat, tag = db_options[:tag].split("/")
       cond = ["resource_type = ? and tag_names like ?", tag_klass, "%#{cat}/#{tag}%"]
-      results = VimPerformanceAnalysis.find_child_perf_for_time_period(resource, db_options[:interval], db_options.merge(:conditions => cond, :ext_options => {:only_cols => cols, :tz => tz, :time_profile => time_profile}))
+      results = VimPerformanceAnalysis.find_child_perf_for_time_period(resource, db_options[:interval], db_options.merge(:conditions => cond, :ext_options => {:tz => tz, :time_profile => time_profile}))
 
       # Roll up results by timestamp
       results = VimPerformanceAnalysis.group_perf_by_timestamp(resource, results, cols)
     else
-      results = VimPerformanceAnalysis.find_perf_for_time_period(resource, db_options[:interval], db_options.merge(:ext_options => {:only_cols => cols, :tz => tz, :time_profile => time_profile}))
+      results = VimPerformanceAnalysis.find_perf_for_time_period(resource, db_options[:interval], db_options.merge(:ext_options => {:tz => tz, :time_profile => time_profile}))
     end
 
     # Return rpt object:

@@ -482,34 +482,39 @@ module VimPerformanceAnalysis
     rel = rel.where(options[:conditions]) if options[:conditions]
 
     rel
-      .where("timestamp > ? and timestamp <= ?", start_time.utc, end_time.utc)
-      .where(:resource => obj)
+      .where(:timestamp => start_time..end_time, :resource => obj)
       .order("timestamp")
       .select(options[:select])
       .to_a
   end
 
+  # @param obj base object
+  # @param interval_name
+  # @option options :days        [Numeric] Number of days back from end_date. Used to derive start_date (if not passed)
+  # @option options :start_date  [Date] Starting date (typically not passed)
+  # @option options :end_date    [Date] Ending date
+  # @option options :select      [String|Array] Active record list of columns to bring back
+  # @option options :conditions  [String|Hash|nil]
+  # @option options[:ext_options] :time_profile [TimeProfile]
+  # @option options[:ext_options] :tz [String] timezone used to derive time_profile (if not passed)
   def self.find_child_perf_for_time_period(obj, interval_name, options = {})
-    # Options
-    #   :days        => Number of days back from end_date. Used only if start_date not passed
-    #   :start_date  => Starting date
-    #   :end_date    => Ending date
-    #   :conditions  => ActiveRecord find conditions
+
+    klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    rel = if interval_name == "daily"
+            VimPerformanceDaily.find_entries(options[:ext_options])
+          else
+            klass.where(:capture_interval_name => interval_name)
+          end
 
     start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
     end_time   = options[:end_date].utc
-    klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
-
-    user_cond = nil
-    user_cond = klass.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
-    cond =  klass.send(:sanitize_sql_for_conditions, ["(timestamp > ? AND timestamp <= ?)", start_time.utc, end_time.utc])
-    cond += klass.send(:sanitize_sql_for_conditions, [" AND capture_interval_name = ?", interval_name]) unless interval_name == "daily"
-    cond =  "(#{user_cond}) AND (#{cond})" if user_cond
+    rel        = rel.where(:timestamp => start_time..end_time)
+    rel        = rel.where(options[:conditions]) if options[:conditions]
 
     if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
-      cond1 = klass.send(:sanitize_sql_for_conditions, :resource_type => "Storage",             :resource_id => obj.storage_ids)
-      cond2 = klass.send(:sanitize_sql_for_conditions, :resource_type => "ExtManagementSystem", :resource_id => obj.ext_management_system_ids)
-      cond += " AND ((#{cond1}) OR (#{cond2}))"
+      cond1 = rel.where(:resource => obj.storages)
+      cond2 = rel.where(:resource => obj.ext_management_systems)
+      rel = cond1.or(cond2)
     else
       parent_col = case obj
                    when Host then                :parent_host_id
@@ -519,28 +524,22 @@ module VimPerformanceAnalysis
                    else                      raise "unknown object type: #{obj.class}"
                    end
 
-      cond += " AND #{parent_col} = ?"
-      cond += " AND resource_type in ('Host', 'EmsCluster')" if obj.kind_of?(ExtManagementSystem)
-      cond = [cond, obj.id]
+      rel = rel.where(parent_col => obj.id)
+      rel = rel.where(:resource_type => %w(Host EmsCluster)) if obj.kind_of?(ExtManagementSystem)
     end
 
-    # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
-
-    if interval_name == "daily"
-      VimPerformanceDaily.find_entries(options[:ext_options]).where(cond).select(options[:select])
-    else
-      klass.where(cond).select(options[:select]).to_a
-    end
+    rel.select(options[:select]).to_a
   end
 
+  # @params obj base object
+  # @params interval_name (currently only 'daily')
+  # @opts options :end_date [Date] end_date
+  # @opts options :days     [Numeric] Number of days back from daily_date
+  # @opts options :ext_options [Hash] :tz and :time_profile
+  # @returns [Hash<String,String>] environment name and corresponding tags
+  #   "Host/environment/prod" => "Host: Environment: Production",
+  #   "Host/environment/dev"  => "Host: Environment: Development"
   def self.child_tags_over_time_period(obj, interval_name, options = {})
-    # Options
-    #   :days        => Number of days back from daily_date
-    #   :end_date    => Ending date
-
-    # Returns a hash:
-    #   "Host/environment/prod" => "Host: Environment: Production",
-    #   "Host/environment/dev"  => "Host: Environment: Development"
     classifications = Classification.hash_all_by_type_and_name
 
     find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
@@ -644,8 +643,8 @@ module VimPerformanceAnalysis
   end
 
   def self.get_daily_perf(obj, start_time, end_time, options)
-    cond = ["resource_type = ? and resource_id = ? and (timestamp > ? and timestamp <= ?)", obj.class.base_class.name, obj.id, start_time.utc, end_time.utc]
-    VimPerformanceDaily.find_entries(options).where(cond).order("timestamp")
+    VimPerformanceDaily.find_entries(options)
+                       .where(:resource => obj, :timestamp => (start_time.utc)..(end_time.utc)).order("timestamp")
   end
 
   def self.calc_trend_value_at_timestamp(recs, attr, timestamp)
