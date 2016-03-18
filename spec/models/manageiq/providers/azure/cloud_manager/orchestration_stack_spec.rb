@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        expect(orchestration_service).to receive(:create).and_throw('bad request')
+        expect(orchestration_service).to receive(:create).and_raise('bad request')
 
         expect do
           ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, 'mystack', template, {})
@@ -50,7 +50,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        expect(orchestration_service).to receive(:create).and_throw('bad request')
+        expect(orchestration_service).to receive(:create).and_raise('bad request')
         expect { orchestration_stack.update_stack(template, {}) }.to raise_error(MiqException::MiqOrchestrationUpdateError)
       end
     end
@@ -62,7 +62,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        expect(orchestration_service).to receive(:delete).and_throw('bad request')
+        expect(orchestration_service).to receive(:delete).and_raise('bad request')
         expect { orchestration_stack.delete_stack }.to raise_error(MiqException::MiqOrchestrationDeleteError)
       end
     end
@@ -80,14 +80,14 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
 
       it 'parses error message to determine stack not exist' do
-        allow(orchestration_service).to receive(:get).and_throw("Deployment xxx could not be found")
+        allow(orchestration_service).to receive(:get).and_raise("Deployment xxx could not be found")
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStackNotExistError)
 
         expect(orchestration_stack.raw_exists?).to be_falsey
       end
 
       it 'catches errors from provider' do
-        allow(orchestration_service).to receive(:get).and_throw("bad request")
+        allow(orchestration_service).to receive(:get).and_raise("bad request")
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
 
         expect { orchestration_stack.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)

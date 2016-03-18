@@ -40,7 +40,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        expect(handle).to receive(:patch_stack).and_throw('bad request')
+        expect(handle).to receive(:patch_stack).and_raise('bad request')
         expect { orchestration_stack.update_stack(nil, {}) }.to raise_error(MiqException::MiqOrchestrationUpdateError)
       end
     end
@@ -52,7 +52,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        expect(the_raw_stack).to receive(:delete).and_throw('bad request')
+        expect(the_raw_stack).to receive(:delete).and_raise('bad request')
         expect { orchestration_stack.delete_stack }.to raise_error(MiqException::MiqOrchestrationDeleteError)
       end
     end
@@ -80,7 +80,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_throw("bad request")
+        allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_raise("bad request")
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
 
         expect { orchestration_stack.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)
