@@ -154,47 +154,28 @@ class MiqCapacityController < ApplicationController
   end
 
   def planning_option_changed
-    if params[:filter_typ]
-      @sb[:planning][:vms] = nil
-      @sb[:planning][:options][:chosen_vm] = nil
-      @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
-      @sb[:planning][:options][:filter_value] = nil
-      if params[:filter_typ] == "all"
-        @sb[:planning][:vms] = {}
-        find_filtered(Vm, :all).sort_by { |v| v.name.downcase }.each { |e| @sb[:planning][:vms][e.id.to_s] = e.name }
-      end
-    end
-    if params[:filter_value]
-      @sb[:planning][:vms] = nil
-      @sb[:planning][:options][:chosen_vm] = nil
-      if params[:filter_value] == "<Choose>"
-        @sb[:planning][:options][:filter_value] = nil
+    vms = nil
+    filter_value = params[:filter_value]
+    if filter_value && filter_value != "<Choose>"
+      case params[:filter_typ]
+      when "host"
+        vms, = Host.find(filter_value).find_filtered_children("vms")
+      when "ems"
+        vms, = ExtManagementSystem.find(filter_value).find_filtered_children("vms")
+      when "cluster"
+        vms, = EmsCluster.find(filter_value).find_filtered_children("all_vms")
+      when "filter"
+        vms = MiqSearch.find(filter_value).filtered(nil, :userid => current_userid)
       else
-        @sb[:planning][:options][:filter_value] = params[:filter_value]
-        @sb[:planning][:vms] = {}
-        if @sb[:planning][:options][:filter_value]
-          case @sb[:planning][:options][:filter_typ]
-          when "host"
-            vms, count = Host.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
-          when "ems"
-            vms, count = ExtManagementSystem.find(@sb[:planning][:options][:filter_value]).find_filtered_children("vms")
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
-          when "cluster"
-            vms, count = EmsCluster.find(@sb[:planning][:options][:filter_value]).find_filtered_children("all_vms")
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }
-          when "filter"
-            s = MiqSearch.find(@sb[:planning][:options][:filter_value])     # Get the chosen search filter
-            s.options ||= {}                                         # Create options as a Hash
-            s.options[:userid] = session[:userid]                           # Set the userid
-            s.options[:results_format] = :objects                           # Return objects, not ids
-            vms, attrs = s.search                                           # Get the VM objects and search attributes
-            vms.each { |v| @sb[:planning][:vms][v.id.to_s] = v.name }   # Add the VMs to the pulldown hash
-          end
-        end
+        vms = []
       end
+    elsif params[:filter_typ] == "all"
+      vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
     end
-    @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm] if params[:chosen_vm]
+    @sb[:planning][:vms] = vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name }
+    @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
+    @sb[:planning][:options][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
+    @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
     @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
     @sb[:planning][:options][:trend_cpu] = (params[:trend_cpu] == "1") if params[:trend_cpu]
@@ -545,13 +526,13 @@ class MiqCapacityController < ApplicationController
     @sb[:planning][:options][:display_vms] ||= 100
 
     @sb[:planning][:emss] = {}
-    find_filtered(ExtManagementSystem, :all).each { |e| @sb[:planning][:emss][e.id.to_s] = e.name }
+    find_filtered(ExtManagementSystem).each { |e| @sb[:planning][:emss][e.id.to_s] = e.name }
     @sb[:planning][:clusters] = {}
-    find_filtered(EmsCluster, :all).each { |e| @sb[:planning][:clusters][e.id.to_s] = e.name }
+    find_filtered(EmsCluster).each { |e| @sb[:planning][:clusters][e.id.to_s] = e.name }
     @sb[:planning][:hosts] = {}
-    find_filtered(Host, :all).each { |e| @sb[:planning][:hosts][e.id.to_s] = e.name }
+    find_filtered(Host).each { |e| @sb[:planning][:hosts][e.id.to_s] = e.name }
     @sb[:planning][:datastores] = {}
-    find_filtered(Storage, :all).each { |e| @sb[:planning][:datastores][e.id.to_s] = e.name }
+    find_filtered(Storage).each { |e| @sb[:planning][:datastores][e.id.to_s] = e.name }
     @sb[:planning][:vm_filters] = MiqSearch.where(:db => "Vm").descriptions
     @right_cell_text = _("Planning Summary")
     if params[:button] == "reset"

@@ -73,6 +73,11 @@ describe MiqSearch do
       expect(vm_location_search.filtered(nil)).to match_array(matched_vms)
     end
 
+    it "brings back all for no target" do
+      all_vms
+      expect(vm_location_search.filtered).to match_array(matched_vms)
+    end
+
     it "brings back empty array for empty arrays" do
       all_vms
       expect(vm_location_search.filtered([])).to match_array([])

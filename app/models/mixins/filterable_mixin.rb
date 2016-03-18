@@ -2,7 +2,7 @@ module FilterableMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def find_filtered(number, options = {})
+    def find_filtered(options = {})
       filters = options.delete(:tag_filters)
       mfilters = filters && filters["managed"] ? filters["managed"] : []
       bfilters = filters && filters["belongsto"] ? filters["belongsto"] : []
@@ -35,7 +35,7 @@ module FilterableMixin
     end
 
     def count_filtered(options = {})
-      result = find_filtered(:all, options).first
+      result = find_filtered(options).first
       result ? result.length : 0
     end
   end

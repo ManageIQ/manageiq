@@ -21,7 +21,8 @@ class MiqSearch < ApplicationRecord
     Rbac.search(options.merge(:class => db, :filter => filter).merge(opts))
   end
 
-  def filtered(targets, opts = {})
+  def filtered(targets = nil, opts = {})
+    targets ||= db
     self.options ||= {}
     Rbac.filtered(targets, options.merge(:class => db, :filter => filter).merge(opts))
   end
