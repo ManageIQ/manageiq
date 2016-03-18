@@ -20,7 +20,8 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ
       _log.info "#{log_prefix} Skipping filtered Amazon event [#{event["messageId"]}]"
     else
       _log.info "#{log_prefix} Caught event [#{event["messageId"]}]"
-      EmsEvent.add_queue('add_amazon', @cfg[:ems_id], event)
+      event_hash = ManageIQ::Providers::Amazon::CloudManager::EventParser.event_to_hash(event, @cfg[:ems_id])
+      EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
     end
   end
 
