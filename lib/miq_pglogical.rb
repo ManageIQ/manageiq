@@ -1,0 +1,117 @@
+require 'pg'
+
+class MiqPglogical
+  REPLICATION_SET_NAME = 'miq'.freeze
+  SETTINGS_PATH = [:workers, :worker_base, :replication_worker, :replication].freeze
+  NODE_PREFIX = "region_".freeze
+
+  def initialize
+    @connection = ApplicationRecord.connection
+  end
+
+  # Returns whether or not this server is configured as a provider node
+  # @return Boolean
+  def provider?
+    pglogical.enabled? && pglogical.replication_sets.include?(REPLICATION_SET_NAME)
+  end
+
+  # Returns whether or not this server is configured as a subscriber node
+  # @return Boolean
+  def subscriber?
+    pglogical.enabled? && !pglogical.subscriptions.empty?
+  end
+
+  # Returns whether or not this server is a pglogical node
+  def node?
+    pglogical.enabled? && pglogical.nodes.field_values("name").include?(local_node_name)
+  end
+
+  # Creates a pglogical node using the rails connection
+  def create_node
+    pglogical.node_create(local_node_name, connection_dsn)
+  end
+
+  # Drops the pglogical node associated with this connection
+  def drop_node
+    pglogical.node_drop(local_node_name, true)
+  end
+
+  # Configures the database as a pglogical replication source
+  #   This includes enabling the extension, creating the
+  #   node and creating the replication set
+  def configure_provider
+    return if provider?
+    pglogical.enable
+    create_node unless node?
+    create_replication_set
+  end
+
+  # Removes the replication configuration and pglogical node from the
+  # database
+  def destroy_provider
+    return unless provider?
+    pglogical.replication_set_drop(REPLICATION_SET_NAME)
+    drop_node
+  end
+
+  # Lists the tables currently being replicated by pglogical
+  # @return Array<String> the table list
+  def included_tables
+    pglogical.tables_in_replication_set(REPLICATION_SET_NAME)
+  end
+
+  # Lists the tables configured to be excluded in the vmdb configuration
+  # @return Array<String> the table list
+  def configured_excludes
+    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables)
+  end
+
+  # Creates the 'miq' replication set and refreshes the excluded tables
+  def create_replication_set
+    pglogical.replication_set_create(REPLICATION_SET_NAME)
+    refresh_excludes
+  end
+
+  # Aligns the contents of the 'miq' replication set with the currently configured vmdb excludes
+  def refresh_excludes
+    # remove newly excluded tables from replication set
+    newly_excluded_tables.each do |table|
+      pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
+    end
+
+    # add tables to the set which are no longer excluded (or new)
+    newly_included_tables.each do |table|
+      pglogical.replication_set_add_table(REPLICATION_SET_NAME, table)
+    end
+  end
+
+  private
+
+  def pglogical(refresh = false)
+    @pglogical = nil if refresh
+    @pglogical ||= @connection.pglogical
+  end
+
+  def connection_dsn
+    config = @connection.raw_connection.conninfo_hash.delete_blanks
+    PG::Connection.parse_connect_args(config)
+  end
+
+  def local_node_name
+    NODE_PREFIX + MiqRegion.my_region_number.to_s
+  end
+
+  def node_name_to_region(name)
+    name.sub(NODE_PREFIX, "").to_i
+  end
+
+  # tables that are currently included, but we want them excluded
+  def newly_excluded_tables
+    included_tables & configured_excludes
+  end
+
+  # tables that are currently excluded, but we want them included
+  def newly_included_tables
+    (@connection.tables - configured_excludes) - included_tables
+  end
+end

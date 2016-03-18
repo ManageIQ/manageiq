@@ -50,6 +50,8 @@ describe "pglogical replication" do
 
   after do
     Object.send(:remove_const, :MasterDb) if defined? MasterDb
+    @slave_connection.pglogical.replication_set_drop(replication_set_name)
+    @slave_connection.pglogical.node_drop("slave_node")
   end
 
   # As these tests are not rolled back it makes sense to do the test in one shot and make them order dependant.
