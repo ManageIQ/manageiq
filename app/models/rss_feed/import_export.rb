@@ -4,7 +4,7 @@ class RssFeed
 
     module ClassMethods
       def import_from_hash(rss, options = {})
-        raise "No RssFeed to Import" if rss.nil?
+        raise _("No RssFeed to Import") if rss.nil?
 
         rss = rss["RssFeed"] if rss.keys.first == "RssFeed"
 
@@ -15,20 +15,29 @@ class RssFeed
           # create new RssFeed
           msg = "Importing RssFeed: [#{rss["name"]}]"
           rf = RssFeed.new(rss)
-          result = {:message => "Imported RssFeed: [#{rss["name"]}]", :level => :info, :status => :add}
+          result = {:message => _("Importing RssFeed: [%{name}]") % {:name => rss["name"]},
+                    :level   => :info,
+                    :status  => :add}
         elsif !options[:overwrite]
           # if RssFeed exists dont overwrite
           msg = "Skipping RssFeed (already in DB): [#{rss["name"]}]"
-          result = {:message => msg, :level => :info, :status => :keep}
+          result = {:message => _("Skipping RssFeed (already in DB): [%{name}]") % {:name => rss["name"]},
+                    :level   => :info,
+                    :status  => :keep}
         elsif user.admin_user?
           # if RssFeed exists delete and create new
           msg = "Overwriting RssFeed: [#{rss["name"]}]"
           rf.attributes = rss
-          result = {:message => "Replaced RssFeed: [#{rss["name"]}]", :level => :info, :status => :update}
+          result = {:message => _("Replaced RssFeed: [%{name}]") % {:name => rss["name"]},
+                    :level   => :info,
+                    :status  => :update}
         else
           # if RssFeed exists dont overwrite
           msg = "Skipping RssFeed (already in DB under a different group): [#{rss["name"]}]"
-          result = {:message => msg, :level => :error, :status => :skip}
+          result = {:message => _("Skipping RssFeed (already in DB under a different group): [%{name}]") %
+                                  {:name => rss["name"]},
+                    :level   => :error,
+                    :status  => :skip}
         end
         _log.info("#{msg}")
 

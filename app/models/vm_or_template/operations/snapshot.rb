@@ -39,7 +39,7 @@ module VmOrTemplate::Operations::Snapshot
   def raw_remove_snapshot(snapshot_id)
     raise_is_available_now_error_message(:remove_snapshot)
     snapshot = snapshots.find_by_id(snapshot_id)
-    raise "Requested VM snapshot not found, unable to remove snapshot" unless snapshot
+    raise _("Requested VM snapshot not found, unable to remove snapshot") unless snapshot
     begin
       run_command_via_parent(:vm_remove_snapshot, :snMor => snapshot.uid_ems)
     rescue => err
@@ -101,7 +101,10 @@ module VmOrTemplate::Operations::Snapshot
     if (ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager) && ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && MiqVimBrokerWorker.available?) || host.nil? || host.state == "on"
       raw_remove_snapshot_by_description(description, refresh)
     else
-      raise "The VM's Host system is unavailable to remove the snapshot.  VM id:[#{id}]  Snapshot description:[#{description}]" if retry_time.nil?
+      if retry_time.nil?
+        raise _("The VM's Host system is unavailable to remove the snapshot. VM id:[%{id}] Snapshot description:[%{description}]") %
+                {:id => id, :descrption => description}
+      end
       # If the host is off re-queue the action based on the retry_time
       MiqQueue.put(:class_name  => self.class.name,
                    :instance_id => id,
@@ -125,7 +128,7 @@ module VmOrTemplate::Operations::Snapshot
   def raw_revert_to_snapshot(snapshot_id)
     raise_is_available_now_error_message(:revert_to_snapshot)
     snapshot = snapshots.find_by_id(snapshot_id)
-    raise "Requested VM snapshot not found, unable to RevertTo snapshot" unless snapshot
+    raise _("Requested VM snapshot not found, unable to RevertTo snapshot") unless snapshot
     run_command_via_parent(:vm_revert_to_snapshot, :snMor => snapshot.uid_ems)
   end
 
