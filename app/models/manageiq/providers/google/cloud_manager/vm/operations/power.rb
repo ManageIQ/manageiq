@@ -1,10 +1,26 @@
 module ManageIQ::Providers::Google::CloudManager::Vm::Operations::Power
   def validate_suspend
-    validate_unsupported("Suspend Operation")
+    validate_unsupported(_("Suspend Operation"))
   end
 
   def validate_pause
-    validate_unsupported("Pause Operation")
+    validate_unsupported(_("Pause Operation"))
+  end
+
+  def raw_suspend
+    validate_unsupported(_("Suspend Operation"))
+  end
+
+  def raw_pause
+    validate_unsupported(_("Pause Operation"))
+  end
+
+  def raw_shelve
+    validate_unsupported(_("Shelve Operation"))
+  end
+
+  def raw_shelve_offload
+    validate_unsupported(_("Shelve Offload Operation"))
   end
 
   def raw_start
