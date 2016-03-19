@@ -1122,6 +1122,29 @@ class VimService < Handsoap::Service
     (parse_response(response, 'WaitForUpdatesResponse')['returnval'])
   end
 
+  def waitForUpdatesEx(propCol, version = nil, options = {})
+    max_wait    = options[:max_wait]
+    max_objects = options[:max_objects]
+
+    options = VimHash.new("WaitOptions") do |opts|
+      opts.maxObjectUpdates = max_objects.to_s if max_objects
+      opts.maxWaitSeconds   = max_wait.to_s    if max_wait
+    end
+
+    response = invoke("n1:WaitForUpdatesEx") do |message|
+      message.add "n1:_this", propCol do |i|
+        i.set_attr "type", propCol.vimType
+      end
+
+      message.add "n1:version", version if version
+      message.add "n1:options" do |i|
+        i.set_attr "type", options.vimType
+        marshalObj(i, options)
+      end
+    end
+    (parse_response(response, 'WaitForUpdatesExResponse')['returnval'])
+  end
+
   def xmlToCustomizationSpecItem(csmMor, specItemXml)
     response = invoke("n1:XmlToCustomizationSpecItem") do |message|
       message.add "n1:_this", csmMor do |i|

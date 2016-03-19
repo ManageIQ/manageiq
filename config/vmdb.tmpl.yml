@@ -300,6 +300,7 @@ workers:
         :poll: 15.seconds
       :event_catcher_vmware:
         :poll: 1.seconds
+        :ems_event_max_wait: 60
       :event_catcher_openstack:
         :poll: 15.seconds
         :topics:
