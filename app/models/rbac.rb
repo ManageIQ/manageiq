@@ -104,12 +104,6 @@ module Rbac
     nil
   end
 
-  def self.rbac_instance(obj)
-    return obj                if apply_rbac_to_class?(obj.class)
-    return obj.resource       if obj.kind_of?(MetricRollup) || obj.kind_of?(Metric)
-    nil
-  end
-
   def self.get_self_service_objects(user, miq_group, klass)
     return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
 
