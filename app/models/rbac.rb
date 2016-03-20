@@ -349,21 +349,11 @@ module Rbac
     objects.collect(&:id)
   end
 
-  def self.matches_via_descendants(klass, descendant_types, options)
-    return nil if descendant_types.nil?
-
-    matches = []
-    descendant_types = [descendant_types] unless descendant_types.kind_of?(Hash) || descendant_types.kind_of?(Array)
-    descendant_types.each do |descendant_type|
-      descendant_klass, method_name = parse_descendant_type(descendant_type, klass)
-      next if method_name.nil?
-
+  def self.matches_via_descendants(klass, descendant_klass, options)
+    if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
       descendants = find_descendants(descendant_klass, options)
-      objects     = find_via_descendants(descendants, method_name, klass)
-      matches.concat(objects)
+      find_via_descendants(descendants, method_name, klass)
     end
-
-    matches.uniq
   end
 
   def self.lookup_method_for_descendant_class(klass, descendant_klass)
@@ -371,17 +361,6 @@ module Rbac
     MATCH_VIA_DESCENDANT_RELATIONSHIPS[key].tap do |method_name|
       _log.warn "could not find method name for #{key}" if method_name.nil?
     end
-  end
-
-  def self.parse_descendant_type(descendant_type, klass)
-    if descendant_type.kind_of?(Array)
-      descendant_klass, method_name = descendant_type
-    else
-      descendant_klass = descendant_type
-    end
-    descendant_klass = to_class(descendant_klass)
-    method_name ||= lookup_method_for_descendant_class(klass, descendant_klass)
-    return descendant_klass, method_name
   end
 
   def self.to_class(klass)
@@ -490,7 +469,7 @@ module Rbac
       end
     end
 
-    user_filters['match_via_descendants'] = options.delete(:match_via_descendants)
+    user_filters['match_via_descendants'] = to_class(options.delete(:match_via_descendants))
 
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
