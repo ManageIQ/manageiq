@@ -22,15 +22,15 @@ class VimPerformanceDaily < MetricRollup
 
   # @param ext_options [Hash] search options
   # @opts ext_options :klass [Class] class for metrics (default: MetricRollup)
-  # @opts ext_options :tp [TimeProfile]
+  # @opts ext_options :time_profile [TimeProfile]
   # @opts ext_options :tz [Timezone] (default: DEFAULT_TIMEZONE)
   def self.find_entries(ext_options)
     ext_options ||= {}
+    # TODO: remove changing ext_options once this side effect is no longer needed:
     time_profile = ext_options[:time_profile] ||= TimeProfile.default_time_profile(ext_options[:tz])
-    klass = ext_options[:class] || MetricRollup
+    klass = Metric::Helper::class_for_interval_name("daily", ext_options[:class])
 
-    tp_ids = time_profile ? time_profile.profile_for_each_region.collect(&:id) : []
-    klass.where(:time_profile_id => tp_ids, :capture_interval_name => 'daily')
+    klass.with_time_profile_or_tz(time_profile || ext_options[:tz]).where(:capture_interval_name => 'daily')
   end
 
   def self.process_hourly_for_one_day(recs, options = {})

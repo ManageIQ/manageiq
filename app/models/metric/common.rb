@@ -182,5 +182,15 @@ module Metric::Common
         where(:timestamp => start_time..end_time)
       end
     end
+
+    # @param :time_profile_or_tz [TimeProfile|Timezone] (default: DEFAULT_TIMEZONE)
+    def with_time_profile_or_tz(time_profile_or_tz = nil)
+      if (time_profile = TimeProfile.default_time_profile(time_profile_or_tz))
+        tp_ids = time_profile.profile_for_each_region.pluck(:id)
+        where(:time_profile_id => tp_ids)
+      else
+        none
+      end
+    end
   end
 end
