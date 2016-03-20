@@ -374,11 +374,9 @@ module Rbac
 
   def self.lookup_method_for_descendant_class(klass, descendant_klass)
     key = "#{descendant_klass.base_class}::#{klass.base_class}"
-    method_name = MATCH_VIA_DESCENDANT_RELATIONSHIPS[key]
-    if method_name.nil?
-      _log.warn "could not find method name for #{key}"
+    MATCH_VIA_DESCENDANT_RELATIONSHIPS[key].tap do |method_name|
+      _log.warn "could not find method name for #{key}" if method_name.nil?
     end
-    method_name
   end
 
   def self.parse_descendant_type(descendant_type, klass)
