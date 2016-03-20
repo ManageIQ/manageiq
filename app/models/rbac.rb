@@ -345,8 +345,10 @@ module Rbac
     matches
   end
 
-  def self.find_descendants(descendant_klass, options)
-    search(options.merge(:class => descendant_klass, :results_format => :objects)).first
+  # @option options :user [User]
+  # @option options :miq_group [MiqGroup]
+  def self.find_descendants(scope, options)
+    filtered(scope, options)
   end
 
   def self.ids_via_descendants(klass, descendant_types, options)
