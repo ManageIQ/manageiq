@@ -331,18 +331,10 @@ module Rbac
     Rbac.search(options.merge(:targets => objects, :results_format => :objects, :empty_means_empty => true)).first
   end
 
+  # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
   def self.find_via_descendants(descendants, method_name, klass)
-    matches = []
-    descendants.each do |object|
-      match = object.send(method_name)
-      match = [match] unless match.kind_of?(Array)
-      match.each do |m|
-        next unless m.kind_of?(klass)
-        next if matches.include?(m)
-        matches << m
-      end
-    end
-    matches
+    MiqPreloader.preload(descendants, method_name)
+    descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
   end
 
   # @option options :user [User]
