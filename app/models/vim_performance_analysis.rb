@@ -432,20 +432,13 @@ module VimPerformanceAnalysis
     #   :start_date  => Starting date
     #   :end_date    => Ending date
     #   :conditions  => ActiveRecord find conditions
-    rel = if interval_name == "daily"
-            VimPerformanceDaily.find_entries(options[:ext_options])
-          else
-            klass, _meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-            klass.where(:capture_interval_name => interval_name)
-          end
-
-    rel = rel.where(options[:conditions]) if options[:conditions]
-
-    rel
-      .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
-      .order("timestamp")
-      .select(options[:select])
-      .to_a
+    ext_options = options[:ext_options] || {}
+    Metric::Helper.find_for_interval_name(interval_name, ext_options[:time_profile] || ext_options[:tz],
+                                          ext_options[:class])
+                  .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
+                  .where(options[:conditions]).order("timestamp")
+                  .select(options[:select])
+                  .to_a
   end
 
   # @param obj base object
@@ -458,21 +451,12 @@ module VimPerformanceAnalysis
   # @option options[:ext_options] :time_profile [TimeProfile]
   # @option options[:ext_options] :tz [String] timezone used to derive time_profile (if not passed)
   def self.find_child_perf_for_time_period(obj, interval_name, options = {})
-
-    klass, = Metric::Helper.class_and_association_for_interval_name(interval_name)
-    rel = if interval_name == "daily"
-            VimPerformanceDaily.find_entries(options[:ext_options])
-          else
-            klass.where(:capture_interval_name => interval_name)
-          end
-
-    rel = rel.where(options[:conditions]).where(:timestamp => Metric::Helper.time_range_from_hash(options))
-
+    ext_options = options[:ext_options] || {}
+    rel = Metric::Helper.find_for_interval_name(interval_name, ext_options[:time_profile] || ext_options[:tz],
+                                                ext_options[:class])
     case obj
     when MiqEnterprise, MiqRegion then
-      cond1 = rel.where(:resource => obj.storages)
-      cond2 = rel.where(:resource => obj.ext_management_systems)
-      rel = cond1.or(cond2)
+      rel = rel.where(:resource => obj.storages).or(rel.where(:resource => obj.ext_management_systems))
     when Host then
       rel = rel.where(:parent_host_id => obj.id)
     when EmsCluster
@@ -485,7 +469,8 @@ module VimPerformanceAnalysis
       raise _("unknown object type: %{class}") % {:class => obj.class}
     end
 
-    rel.select(options[:select]).to_a
+    rel.where(options[:conditions]).select(options[:select])
+       .where(:timestamp => Metric::Helper.time_range_from_hash(options)).to_a
   end
 
   # @params obj base object
@@ -602,8 +587,10 @@ module VimPerformanceAnalysis
   def self.get_daily_perf(obj, range, ext_options, perf_cols)
     return unless perf_cols
 
-    VimPerformanceDaily.find_entries(ext_options).order("timestamp").select(perf_cols)
-                       .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
+    ext_options ||= {}
+    Metric::Helper.find_for_interval_name("daily", ext_options[:time_profile] || ext_options[:tz], ext_options[:class])
+                  .order("timestamp").select(perf_cols)
+                  .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 
   def self.calc_trend_value_at_timestamp(recs, attr, timestamp)

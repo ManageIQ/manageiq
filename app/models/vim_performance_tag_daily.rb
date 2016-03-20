@@ -5,6 +5,10 @@ class VimPerformanceTagDaily < VimPerformanceTag
 
   def self.find_and_group_by_tags(options)
     raise _("no catagory provided") if options[:category].blank?
-    group_by_tags(VimPerformanceDaily.find_entries(options[:ext_options]).where(options[:where_clause]), options)
+    ext_options = options[:ext_options] || {}
+    entries = Metric::Helper.find_for_interval_name("daily", ext_options[:time_profile] || ext_options[:tz],
+                                                    ext_options[:class])
+                            .where(options[:where_clause])
+    group_by_tags(entries, options)
   end
 end

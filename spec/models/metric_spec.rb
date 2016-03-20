@@ -578,22 +578,22 @@ describe Metric do
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
-            rec = VimPerformanceDaily.find_entries(:time_profile => @time_profile)
+            rec = Metric::Helper.find_for_interval_name("daily", @time_profile)
             expect(rec).to eq([@perf])
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is not passed, but an associated tz is" do
-            rec = VimPerformanceDaily.find_entries(:tz => "UTC")
+            rec = Metric::Helper.find_for_interval_name("daily", "UTC")
             expect(rec).to eq([@perf])
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when defaulting to UTC time zone" do
-            rec = VimPerformanceDaily.find_entries({})
+            rec = Metric::Helper.find_for_interval_name("daily")
             expect(rec).to eq([@perf])
           end
 
           it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
-            rec = VimPerformanceDaily.find_entries(:tz => "Alaska")
+            rec = Metric::Helper.find_for_interval_name("daily", "Alaska")
             expect(rec.length).to eq(0)
           end
         end
