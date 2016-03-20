@@ -387,12 +387,13 @@ module Rbac
     else
       descendant_klass = descendant_type
     end
-
-    descendant_klass = descendant_klass.constantize      if descendant_klass.kind_of?(String)
-    descendant_klass = descendant_klass.to_s.constantize if descendant_klass.kind_of?(Symbol)
-
+    descendant_klass = to_class(descendant_klass)
     method_name ||= lookup_method_for_descendant_class(klass, descendant_klass)
     return descendant_klass, method_name
+  end
+
+  def self.to_class(klass)
+    klass.kind_of?(String) || klass.kind_of?(Symbol) ? klass.to_s.constantize : klass
   end
 
   # @param  options filtering options
@@ -452,7 +453,7 @@ module Rbac
     # Example with args:    :named_scope => [in_region, 1]
     scope             = options.delete(:named_scope)
 
-    class_or_name     = options.delete(:class) { Object }
+    klass             = to_class(options.delete(:class) { Object })
     conditions        = options.delete(:conditions)
     where_clause      = options.delete(:where_clause)
     sub_filter        = options.delete(:sub_filter)
@@ -466,7 +467,6 @@ module Rbac
                                                   options.delete(:miq_group_id))
     tz                     = user.try(:get_timezone)
     attrs                  = {:user_filters => copy_hash(user_filters)}
-    klass                  = class_or_name.kind_of?(Class) ? class_or_name : class_or_name.to_s.constantize
     ids_clause             = nil
     target_ids             = nil
 
@@ -484,7 +484,7 @@ module Rbac
 
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
     else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
-      targets = targets.to_s.constantize if targets.kind_of?(String) || targets.kind_of?(Symbol)
+      targets = to_class(targets)
       targets = targets.all if targets < ActiveRecord::Base
 
       results_format ||= :objects
