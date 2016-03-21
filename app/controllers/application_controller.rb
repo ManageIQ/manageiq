@@ -945,7 +945,7 @@ class ApplicationController < ActionController::Base
           if ['miqschedule'].include?(view.db.downcase)
             celltz = row['run_at'][:tz] if row['run_at'] && row['run_at'][:tz]
           end
-          celltext = escape_once(format_col_for_display(view, row, col, celltz || tz))
+          celltext = format_col_for_display(view, row, col, celltz || tz)
         end
 
         new_row[:cells] << {:text => celltext}
