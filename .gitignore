@@ -108,9 +108,6 @@ public/stylesheets/jmaki-3column-footer.css
 public/stylesheets/jmaki-standard-no-sidebars.css
 public/stylesheets/jmaki-standard-right-sidebar.css
 
-# spec/
-spec/examples.txt
-
 # tmp/
 tmp/*
 
