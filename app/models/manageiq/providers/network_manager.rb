@@ -1,11 +1,8 @@
 module ManageIQ::Providers
   class NetworkManager < BaseManager
     class << model_name
-      # define_method(:route_key) { "ems_networks" }
-      # define_method(:singular_route_key) { "ems_network" }
-      # TODO(lsmola) NetworkManager, has to be changed to ems_networks, once we have UI  and Controllers for IT
-      define_method(:route_key) { "ems_clouds" }
-      define_method(:singular_route_key) { "ems_cloud" }
+      define_method(:route_key) { "ems_networks" }
+      define_method(:singular_route_key) { "ems_network" }
     end
 
     has_many :floating_ips,    :foreign_key => :ems_id, :dependent => :destroy
