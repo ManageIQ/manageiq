@@ -52,7 +52,7 @@ describe Volume do
 
     it "disk_id when controller like 'scsi0:0:0'" do
       parent = disk = double
-      allow(disk).to receive(:find_by_controller_type_and_location).with('scsi', '0:1').and_return('001')
+      allow(disk).to receive(:find_by).with(:controller_type => 'scsi', :location => '0:1').and_return('001')
       allow(parent).to receive_messages(:hardware => double(:disks => disk))
       expect(described_class.find_disk_by_controller(parent, 'scsi0:1:1')).to eq('001')
     end

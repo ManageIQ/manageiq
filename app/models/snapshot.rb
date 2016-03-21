@@ -34,7 +34,7 @@ class Snapshot < ApplicationRecord
 
   def get_current_snapshot
     # Find the snapshot that is marked as current
-    Snapshot.find_by_vm_or_template_id_and_current(vm_or_template_id, 1)
+    Snapshot.find_by(:vm_or_template_id => vm_or_template_id, :current => 1)
   end
 
   #

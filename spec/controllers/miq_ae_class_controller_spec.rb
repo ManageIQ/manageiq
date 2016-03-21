@@ -129,7 +129,7 @@ describe MiqAeClassController do
       controller.send(:copy_objects)
       expect(controller.send(:flash_errors?)).not_to be_truthy
       expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
-      expect(MiqAeClass.find_by_name_and_namespace_id(cls1.name, ns2.id)).not_to be_nil
+      expect(MiqAeClass.find_by(:name => cls1.name, :namespace_id => ns2.id)).not_to be_nil
     end
 
     it "copy class under same namespace returns error when class exists" do

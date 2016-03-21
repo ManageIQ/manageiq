@@ -629,7 +629,7 @@ class VmOrTemplate < ApplicationRecord
     _log.info("vm_hash [#{vm_hash.inspect}]")
     store = Storage.find_by_name(vm_hash[:name])
     return nil unless store
-    vmobj = VmOrTemplate.find_by_location_and_storage_id(vm_hash[:location], store.id)
+    vmobj = VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
   end
 
   #
@@ -1297,7 +1297,7 @@ class VmOrTemplate < ApplicationRecord
       _log.warn "Invalid path specified [#{path}]"
       return nil
     end
-    VmOrTemplate.find_by_storage_id_and_location(storage_id, location)
+    VmOrTemplate.find_by(:storage_id => storage_id, :location => location)
   end
 
   def state
