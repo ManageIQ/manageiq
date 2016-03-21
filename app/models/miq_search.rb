@@ -75,7 +75,7 @@ class MiqSearch < ApplicationRecord
       name  = attrs['name']
       db    = attrs['db']
 
-      rec = find_by_name_and_db(name, db)
+      rec = find_by(:name => name, :db => db)
       if rec.nil?
         _log.info("Creating [#{name}]")
         create!(attrs)
