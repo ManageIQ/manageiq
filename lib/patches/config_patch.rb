@@ -3,7 +3,7 @@ module ConfigDecryptPasswords
     Vmdb::Settings.decrypt_passwords!(super)
   end
 
-  alias_method :load!, :reload!
+  alias load! reload!
 end
 
 Config::Options.prepend(ConfigDecryptPasswords)
