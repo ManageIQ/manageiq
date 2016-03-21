@@ -130,6 +130,17 @@
         - if @edit[:field_typ].include?('TextBox')
           .form-group
             %label.col-md-2.control-label
+              = _('Value Type')
+            .col-md-8
+              = select_tag('field_data_typ',
+                            options_for_select([[_("Integer"), "integer"], [_("String"), "string"]],
+                                                @edit[:field_data_typ]),
+                            "data-miq_sparkle_on" => true,
+                            :class    => "selectpicker")
+              :javascript
+                miqSelectPickerEvent('field_data_typ', "#{url}")
+          .form-group
+            %label.col-md-2.control-label
               = _('Protected')
             .col-md-8
               = check_box_tag('field_protected', 'true',
