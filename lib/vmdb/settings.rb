@@ -58,7 +58,7 @@ module Vmdb
     end
 
     def self.mask_passwords!(settings)
-      walk_passwords(settings) { |k, v, h| h[k] = "********" }
+      walk_passwords(settings) { |k, _v, h| h[k] = "********" }
     end
 
     def self.decrypt_passwords!(settings)
