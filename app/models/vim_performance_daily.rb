@@ -51,10 +51,6 @@ class VimPerformanceDaily < MetricRollup
     klass.where(:time_profile_id => tp_ids, :capture_interval_name => 'daily')
   end
 
-  def self.generate_daily_for_one_day(recs, options = {})
-    process_hashes(process_hourly_for_one_day(recs, options), options.merge(:save => false))
-  end
-
   def self.process_hourly_for_one_day(recs, options = {})
     return [] if recs.blank?
 
@@ -170,26 +166,6 @@ class VimPerformanceDaily < MetricRollup
     end
 
     results
-  end
-
-  def self.process_hashes(results, options = {:save => true})
-    klass = options[:class] || self
-    results.inject([]) do |a, h|
-      if options[:save]
-        perf = find_by(:timestamp => h[:timestamp],
-                       :capture_interval_name => h[:capture_interval_name],
-                       :resource_type => h[:resource_type],
-                       :resource_id => h[:resource_id])
-
-        perf ? perf.update_attributes!(h) : perf = create(h)
-
-        VimPerformanceTagValue.build_from_performance_record(perf) if options[:save]
-      else
-        perf = klass.new(h)
-      end
-
-      a << perf
-    end
   end
 
   def self.process_only_cols(options)
