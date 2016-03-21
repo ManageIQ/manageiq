@@ -28,7 +28,6 @@ module Menu
           Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
           Menu::Item.new('cloud_volume',        N_('Volumes'),             'cloud_volume',              {:feature => 'cloud_volume_show_list'},                  '/cloud_volume'),
           Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
-          Menu::Item.new('security_group',      N_('Security Groups'),     'security_group',            {:feature => 'security_group_show_list'},                '/security_group'),
           Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
           Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack'),
           Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),           'auth_key_pair_cloud',       {:feature => 'auth_key_pair_cloud_show_list'},           '/auth_key_pair_cloud'),
@@ -126,6 +125,16 @@ module Menu
         ])
       end
 
+      def network_menu_section
+        Menu::Section.new(:net, N_("Networks"), [
+          Menu::Item.new('ems_network',    N_('Providers'),       'ems_network',    {:feature => 'ems_network_show_list'},    '/ems_network'),
+          Menu::Item.new('security_group', N_('Security Groups'), 'security_group', {:feature => 'security_group_show_list'}, '/security_group'),
+          Menu::Item.new('floating_ip',    N_('Floating IP'),     'floating_ip',    {:feature => 'floating_ip_show_list'},    '/floating_ip'),
+          Menu::Item.new('cloud_subnet',   N_('Subnets'),         'cloud_subnet',   {:feature => 'cloud_subnet_show_list'},   '/cloud_subnet'),
+          Menu::Item.new('network_router', N_('Network Router'),  'network_router', {:feature => 'network_router_show_list'}, '/network_router'),
+        ])
+      end
+
       def storage_menu_section
         Menu::Section.new(:sto, N_("Storage"), [
           Menu::Item.new('ontap_storage_system', deferred_ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
@@ -177,7 +186,7 @@ module Menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
 
         [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section,
-         container_menu_section, middleware_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
+         container_menu_section, middleware_menu_section, network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
          automate_menu_section, optimize_menu_section, configuration_menu_section].compact
       end
     end
