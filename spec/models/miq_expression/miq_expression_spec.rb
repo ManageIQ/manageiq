@@ -9,6 +9,19 @@ describe MiqExpression do
       expect(sql_clause).to eq("vms.id IN (#{vm.id})")
     end
 
+    it "should test virtual column FB15509" do
+      exp = YAML.load '--- !ruby/object:MiqExpression
+      context_type:
+      exp:
+        CONTAINS:
+          field: MiqGroup.vms-disconnected
+          value: "false"
+      '
+
+      *, attrs = exp.to_sql
+      expect(attrs[:supported_by_sql]).to eq(false)
+    end
+
     context "date/time support" do
       it "generates the SQL for an AFTER expression" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
@@ -861,19 +874,6 @@ describe MiqExpression do
         expect(exp.to_human).to eq("Env CONTAINS 'Production'")
       end
     end
-  end
-
-  it "should test virtual column FB15509" do
-    exp = YAML.load '--- !ruby/object:MiqExpression
-    context_type:
-    exp:
-      CONTAINS:
-        field: MiqGroup.vms-disconnected
-        value: "false"
-    '
-
-    sql, incl, attrs = exp.to_sql
-    expect(attrs[:supported_by_sql]).to eq(false)
   end
 
   context "quick search" do
