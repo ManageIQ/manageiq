@@ -22,9 +22,8 @@ module MiqAeMethodService
       raise MiqAeException::ServiceNotFound, "Service Model not found"
     end
 
-    def self.respond_to?(m, *args)
-      return true if class_method_exposed?(m.to_sym)
-      super
+    def self.respond_to_missing?(method_name, include_private = false)
+      class_method_exposed?(method_name.to_sym) || super
     end
 
     def self.allowed_find_method?(m)
@@ -36,6 +35,7 @@ module MiqAeMethodService
     def self.class_method_exposed?(m)
       allowed_find_method?(m.to_s) || [:where, :find, :all, :count, :first].include?(m)
     end
+
     private_class_method :class_method_exposed?
     private_class_method :allowed_find_method?
 
