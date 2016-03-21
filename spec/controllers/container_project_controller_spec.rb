@@ -23,6 +23,25 @@ describe ContainerProjectController do
                                           :url  => "/container_project/show/#{container_project.id}"}])
   end
 
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      @project = FactoryGirl.create(:container_project)
+    end
+
+    subject { get :show, :id => @project.id }
+
+    context "render" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_container_project")
+      end
+    end
+  end
+
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containerproject => 'list'},

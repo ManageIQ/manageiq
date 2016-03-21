@@ -23,6 +23,25 @@ describe ContainerNodeController do
                                           :url  => "/container_node/show/#{container_node.id}"}])
   end
 
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      @node = FactoryGirl.create(:container_node)
+    end
+
+    subject { get :show, :id => @node.id }
+
+    context "render" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_container_node")
+      end
+    end
+  end
+
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containernode => 'list'},

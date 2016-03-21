@@ -27,7 +27,7 @@ describe CloudTenantController do
       user = FactoryGirl.create(:user, :userid => 'testuser')
       set_user_privileges user
       allow(@ct).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
-      classification = FactoryGirl.create(:classification, :name => "department", :description => "D    epartment")
+      classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag1",
                                  :parent => classification)
@@ -75,8 +75,8 @@ describe CloudTenantController do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       @tenant = FactoryGirl.create(:cloud_tenant)
-      @user = FactoryGirl.create(:user)
-      login_as @user
+      login_as FactoryGirl.create(:user)
+      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
     end
 
     subject do
@@ -85,8 +85,10 @@ describe CloudTenantController do
 
     context "render listnav partial" do
       render_views
-      it { is_expected.to have_http_status 200 }
-      it { is_expected.to render_template(:partial => "layouts/listnav/_cloud_tenant") }
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_cloud_tenant")
+      end
     end
   end
 end

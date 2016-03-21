@@ -65,18 +65,19 @@ describe EmsClusterController do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       @cluster = FactoryGirl.create(:ems_cluster)
-      @user = FactoryGirl.create(:user)
-      login_as @user
+      login_as FactoryGirl.create(:user)
     end
 
     subject do
       get :show, :params => {:id => @cluster.id}
     end
 
-    context "render listnav partial" do
+    context "render" do
       render_views
-      it { is_expected.to have_http_status 200 }
-      it { is_expected.to render_template(:partial => "layouts/listnav/_ems_cluster") }
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_ems_cluster")
+      end
     end
   end
 end

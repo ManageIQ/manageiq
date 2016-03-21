@@ -23,6 +23,24 @@ describe ContainerRouteController do
                                           :url  => "/container_route/show/#{container_route.id}"}])
   end
 
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      @route = FactoryGirl.create(:container_route)
+    end
+
+    subject { get :show, :id => @route.id }
+
+    context "render" do
+      render_views
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_container_route")
+      end
+    end
+  end
+
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containerroute => 'list'},

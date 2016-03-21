@@ -3,8 +3,8 @@ describe AvailabilityZoneController do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       @zone = FactoryGirl.create(:availability_zone)
-      @user = FactoryGirl.create(:user_admin)
-      login_as @user
+      login_as FactoryGirl.create(:user_admin)
+      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
     end
 
     subject do
@@ -14,8 +14,10 @@ describe AvailabilityZoneController do
     context "render listnav partial" do
       render_views
 
-      it { is_expected.to have_http_status 200 }
-      it { is_expected.to render_template(:partial => "layouts/listnav/_availability_zone") }
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_availability_zone")
+      end
     end
   end
 end

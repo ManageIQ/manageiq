@@ -31,6 +31,25 @@ describe ContainerImageController do
                                           :url  => "/container_image/show/#{container_image.id}"}])
   end
 
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      @image = FactoryGirl.create(:container_image)
+    end
+
+    subject { get :show, :id => @image.id }
+
+    context "render" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_container_image")
+      end
+    end
+  end
+
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containerimage => 'list'},

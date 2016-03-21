@@ -336,4 +336,26 @@ describe EmsCloudController do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      session[:settings] = {:views     => {:vm_summary_cool => "summary"},
+                            :quadicons => {}}
+      @ems = FactoryGirl.create(:ems_amazon)
+      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
+    end
+
+    subject { get :show, :id => @ems.id }
+
+    context "render listnav partial" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_ems_cloud")
+      end
+    end
+  end
 end

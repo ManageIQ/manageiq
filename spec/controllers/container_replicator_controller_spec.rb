@@ -27,6 +27,25 @@ describe ContainerReplicatorController do
                                           :url  => "/container_replicator/show/#{container_replicator.id}"}])
   end
 
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      @replicator = FactoryGirl.create(:replicator_with_assoc)
+    end
+
+    subject { get :show, :id => @replicator.id }
+
+    context "render" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_container_replicator")
+      end
+    end
+  end
+
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containerreplicator => 'list'},
