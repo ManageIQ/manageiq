@@ -1297,7 +1297,7 @@ class VmOrTemplate < ApplicationRecord
       _log.warn "Invalid path specified [#{path}]"
       return nil
     end
-    VmOrTemplate.find_by_storage_id_and_location(storage_id, location)
+    VmOrTemplate.find_by(:storage_id => storage_id, :location => location)
   end
 
   def state
