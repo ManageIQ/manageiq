@@ -133,6 +133,10 @@ class ApiController
       pf_result
     end
 
+    def product_settings
+      VMDB::Config.new("vmdb").config[:product]
+    end
+
     def add_product_feature(pf_result, ident)
       details  = MiqProductFeature.features[ident.to_s][:details]
       children = MiqProductFeature.feature_children(ident)
