@@ -38,7 +38,7 @@ RSpec.configure do |config|
 
   unless ENV['CI']
     # File store for --only-failures option
-    config.example_status_persistence_file_path = "./spec/examples.txt"
+    config.example_status_persistence_file_path = "./tmp/rspec_example_store.txt"
   end
 
   config.include VMDBConfigurationHelper
