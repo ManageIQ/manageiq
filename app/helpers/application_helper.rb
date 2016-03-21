@@ -236,7 +236,10 @@ module ApplicationHelper
                 OntapLogicalDisk
                 OntapStorageVolume
                 OntapFileShare
-                SecurityGroup).include?(view.db)
+                SecurityGroup
+                FloatingIp
+                NetworkRouter
+                CloudSubnet).include?(view.db)
             return url_for(:controller => controller, :action => "show") + "/"
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
             # this is to handle link to a vm in vm explorer from service explorer
@@ -713,7 +716,7 @@ module ApplicationHelper
   ]
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no custom toolbar to be shown
   def custom_toolbar_filename
-    if ["ems_cloud", "ems_cluster", "ems_infra", "host", "miq_template", "storage"].include?(@layout)  # Classic CIs
+    if ["ems_cloud", "ems_cluster", "ems_infra", "host", "miq_template", "storage", "ems_network"].include?(@layout)  # Classic CIs
       return "custom_buttons_tb" if @record && @lastaction == "show" && @display == "main"
     end
 
@@ -813,10 +816,11 @@ module ApplicationHelper
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
+       ems_network security_group floating_ip cloud_subnet network_router
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
        orchestration_stack cim_base_storage_extent storage_manager
-       security_group).include?(@layout)
+       ).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
@@ -1089,6 +1093,7 @@ module ApplicationHelper
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume container_build
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
+                        ems_network security_group floating_ip cloud_subnet network_router
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
                         policy policy_group policy_profile repository resource_pool retired scan_profile
@@ -1131,6 +1136,7 @@ module ApplicationHelper
           container_project container_replicator container_image container_image_registry container_build
           ems_infra host miq_template offline orchestration_stack persistent_volume repository ems_middleware
           middleware_server middleware_deployment
+          ems_network security_group floating_ip cloud_subnet network_router
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1144,9 +1150,10 @@ module ApplicationHelper
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment flavor
+             ems_network security_group floating_ip cloud_subnet network_router
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
-             scan_profile security_group service snia_local_file_system storage
+             scan_profile service snia_local_file_system storage
              storage_manager timeline).include?(@layout)
       @layout
     end
@@ -1158,7 +1165,8 @@ module ApplicationHelper
                      persistent_volume container_build
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
-                     orchestration_stack repository resource_pool retired security_group service
+                     ems_network security_group floating_ip cloud_subnet network_router
+                     orchestration_stack repository resource_pool retired service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && tree_with_advanced_search? && !@record)

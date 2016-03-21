@@ -1,28 +1,14 @@
-module SecurityGroupHelper::TextualSummary
+module NetworkRouterHelper::TextualSummary
   #
   # Groups
   #
 
   def textual_group_properties
-    %i(description type)
+    %i(name type status)
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network cloud_tenant instances orchestration_stack)
-  end
-
-  def textual_group_firewall
-    return nil if @record.firewall_rules.empty?
-    @record.firewall_rules.collect do |rule|
-      [
-        rule.network_protocol,
-        rule.host_protocol,
-        rule.direction,
-        rule.port,
-        rule.end_port,
-        (rule.source_ip_range || rule.source_security_group.try(:name) || "<None>")
-      ]
-    end.sort
+    %i(parent_ems_cloud ems_network cloud_tenant instances cloud_subnets)
   end
 
   def textual_group_tags
@@ -33,12 +19,16 @@ module SecurityGroupHelper::TextualSummary
   # Items
   #
 
-  def textual_description
-    @record.description
+  def textual_name
+    @record.name
   end
 
   def textual_type
     @record.type
+  end
+
+  def textual_status
+    @record.status
   end
 
   def textual_parent_ems_cloud
@@ -60,11 +50,11 @@ module SecurityGroupHelper::TextualSummary
     h
   end
 
-  def textual_orchestration_stack
-    @record.orchestration_stack
-  end
-
   def textual_cloud_tenant
     textual_link(@record.cloud_tenant)
+  end
+
+  def textual_cloud_subnets
+    textual_link(@record.cloud_subnets)
   end
 end
