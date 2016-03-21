@@ -1,5 +1,5 @@
 class ApplicationHelper::Toolbar::CloudSubnetsCenter < ApplicationHelper::Toolbar::Basic
-button_group('cloud_subnet_policy', [
+  button_group('cloud_subnet_policy', [
     select(
       :cloud_subnet_policy_choice,
       'fa fa-shield fa-lg',

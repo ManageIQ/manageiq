@@ -159,7 +159,7 @@ class Zone < ApplicationRecord
   end
 
   def ems_networks
-    ext_management_systems.select { |e| e.kind_of?  ManageIQ::Providers::NetworkManager }
+    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::NetworkManager }
   end
 
   def availability_zones

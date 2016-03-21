@@ -1,5 +1,5 @@
 class ApplicationHelper::Toolbar::NetworkRoutersCenter < ApplicationHelper::Toolbar::Basic
-button_group('network_router_policy', [
+  button_group('network_router_policy', [
     select(
       :network_router_policy_choice,
       'fa fa-shield fa-lg',

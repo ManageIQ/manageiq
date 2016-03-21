@@ -1,6 +1,8 @@
 module Mixins
   module GenericSessionMixin
+
     private
+
     def get_session_data
       @title      = ui_lookup(:tables => self.class.table_name)
       @layout     = self.class.table_name

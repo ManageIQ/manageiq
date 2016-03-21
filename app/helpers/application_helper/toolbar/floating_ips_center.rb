@@ -1,5 +1,5 @@
 class ApplicationHelper::Toolbar::FloatingIpsCenter < ApplicationHelper::Toolbar::Basic
-button_group('floating_ip_policy', [
+  button_group('floating_ip_policy', [
     select(
       :floating_ip_policy_choice,
       'fa fa-shield fa-lg',

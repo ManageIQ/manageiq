@@ -716,7 +716,7 @@ module ApplicationHelper
   ]
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no custom toolbar to be shown
   def custom_toolbar_filename
-    if ["ems_cloud", "ems_cluster", "ems_infra", "host", "miq_template", "storage", "ems_network"].include?(@layout)  # Classic CIs
+    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_network).include?(@layout)  # Classic CIs
       return "custom_buttons_tb" if @record && @lastaction == "show" && @display == "main"
     end
 

@@ -75,7 +75,6 @@ module EmsCloudHelper::TextualSummary
     textual_link(@record.try(:provider).try(:infra_ems))
   end
 
-
   def textual_network_manager
     textual_link(@record.ext_management_system.try(:network_manager))
   end

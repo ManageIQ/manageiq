@@ -1,5 +1,5 @@
 class ApplicationHelper::Toolbar::SecurityGroupsCenter < ApplicationHelper::Toolbar::Basic
-button_group('security_group_policy', [
+  button_group('security_group_policy', [
     select(
       :security_group_policy_choice,
       'fa fa-shield fa-lg',

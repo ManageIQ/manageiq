@@ -5,7 +5,6 @@ module Mixins
 
       @lastaction = "show"
       @showtype   = "config"
-
       @record     = identify_record(params[:id])
       return if record_no_longer_exists?(@record)
 
@@ -13,7 +12,9 @@ module Mixins
       case @display
       when "download_pdf", "main", "summary_only"
         get_tagdata(@record)
-        drop_breadcrumb({:name => "#{self.class.table_name}s", :url => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
+        drop_breadcrumb({:name => "#{self.class.table_name}s",
+                         :url  => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"},
+                        true)
         drop_breadcrumb(:name =>  _("%{name} (Summary)") % {:name => @record.name},
                         :url  => "/#{self.class.table_name}/show/#{@record.id}")
         @showtype = "main"
@@ -50,8 +51,8 @@ module Mixins
       title = ui_lookup(:tables => table_name)
       drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
-      @view, @pages = get_view(model, :parent => @record)  # Get the records (into a view) and the paginator
-      @showtype = @display
+      @view, @pages = get_view(model, :parent => @record) # Get the records (into a view) and the paginator
+      @showtype     = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => self.class.table_name))
     end
   end

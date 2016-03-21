@@ -70,7 +70,7 @@ module Mixins
       if result
         add_flash(_("Credential validation was successful"))
       else
-        add_flash(_("Credential validation was not successful: %s") % details, :error)
+        add_flash(_("Credential validation was not successful: %{details}") % {:details => details}, :error)
       end
 
       render_flash

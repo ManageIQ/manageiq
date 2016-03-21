@@ -14,11 +14,11 @@
       %ul.nav.nav-pills.nav-stacked
         = single_relationship_link(@record, :ems_network, "ext_management_system")
         - if role_allows(:feature => "vm_show_list")
-          = li_link(:count => @record.number_of(:vms),
-            :text          => _("Instances"),
-            :record_id     => @record.id,
-            :display       => 'instances',
-            :title         => _("Show all Instances"))
+          = li_link(:count     => @record.number_of(:vms),
+                    :text      => _("Instances"),
+                    :record_id => @record.id,
+                    :display   => 'instances',
+                    :title     => _("Show all Instances"))
         - if role_allows(:feature => "orchestration_stack_show") && @record.orchestration_stack
           %li
             - t = [ui_lookup(:table => "orchestration_stack"), ui_lookup(:table => "security_group")]

@@ -86,7 +86,8 @@ module EmsNetworkHelper::TextualSummary
         when "default" then "Default"
         when "metrics" then "C & U Database"
         when "amqp"    then "AMQP"
-        else;           "<Unknown>"
+        else
+          "<Unknown>"
         end
 
       {:label => "#{label} Credentials", :value => auth[:status] || "None", :title => auth[:status_details]}
