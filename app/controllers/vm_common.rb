@@ -557,39 +557,45 @@ module VmCommon
   end
 
   def processes
-    show_association('processes', 'Running Processes', 'processes', [:operating_system, :processes], OsProcess, 'processes')
+    show_association('processes', _('Running Processes'), 'processes', [:operating_system, :processes], OsProcess,
+                     'processes')
   end
 
   def registry_items
-    show_association('registry_items', 'Registry Entries', 'registry_items', :registry_items, RegistryItem)
+    show_association('registry_items', _('Registry Entries'), 'registry_items', :registry_items, RegistryItem)
   end
 
   def advanced_settings
-    show_association('advanced_settings', 'Advanced Settings', 'advancedsetting', :advanced_settings, AdvancedSetting)
+    show_association('advanced_settings', _('Advanced Settings'), 'advancedsetting', :advanced_settings,
+                     AdvancedSetting)
   end
 
   def linux_initprocesses
-    show_association('linux_initprocesses', 'Init Processes', 'linuxinitprocesses', :linux_initprocesses, SystemService, 'linux_initprocesses')
+    show_association('linux_initprocesses', _('Init Processes'), 'linuxinitprocesses', :linux_initprocesses,
+                     SystemService, 'linux_initprocesses')
   end
 
   def win32_services
-    show_association('win32_services', 'Win32 Services', 'win32service', :win32_services, SystemService, 'win32_services')
+    show_association('win32_services', _('Win32 Services'), 'win32service', :win32_services, SystemService,
+                     'win32_services')
   end
 
   def kernel_drivers
-    show_association('kernel_drivers', 'Kernel Drivers', 'kerneldriver', :kernel_drivers, SystemService, 'kernel_drivers')
+    show_association('kernel_drivers', _('Kernel Drivers'), 'kerneldriver', :kernel_drivers, SystemService,
+                     'kernel_drivers')
   end
 
   def filesystem_drivers
-    show_association('filesystem_drivers', 'File System Drivers', 'filesystemdriver', :filesystem_drivers, SystemService, 'filesystem_drivers')
+    show_association('filesystem_drivers', _('File System Drivers'), 'filesystemdriver', :filesystem_drivers,
+                     SystemService, 'filesystem_drivers')
   end
 
   def filesystems
-    show_association('filesystems', 'Files', 'filesystems', :filesystems, Filesystem)
+    show_association('filesystems', _('Files'), 'filesystems', :filesystems, Filesystem)
   end
 
   def security_groups
-    show_association('security_groups', 'Security Groups', 'security_group', :security_groups, SecurityGroup)
+    show_association('security_groups', _('Security Groups'), 'security_group', :security_groups, SecurityGroup)
   end
 
   def snap
