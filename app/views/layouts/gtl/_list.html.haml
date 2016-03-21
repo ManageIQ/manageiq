@@ -9,7 +9,7 @@
   - if @explorer
     -# used for most gtl lists
     #list_grid
-      - ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db)
+      - ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup FloatingIp NetworkRouter CloudSubnet).include?(view.db)
       - ajax_url = false if request.parameters[:controller] == "service" && view.db == "Vm"
       -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
       = render(:partial => 'layouts/list_grid',
