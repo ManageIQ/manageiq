@@ -331,22 +331,22 @@ Methods updated/added: %{method_stats}") % stat_options)
     e_kids = []
     if el.name == "MiqAeObject"
       e_node[:title] = "#{el.attributes["namespace"]} <b>/</b> #{el.attributes["class"]} <b>/</b> #{el.attributes["instance"]}"
-      e_node[:icon] = "q.png"
+      e_node[:icon] = ActionController::Base.helpers.image_path("100/q.png")
     elsif el.name == "MiqAeAttribute"
       e_node[:title] = el.attributes["name"]
-      e_node[:icon] = "attribute.png"
+      e_node[:icon] = ActionController::Base.helpers.image_path("100/attribute.png")
     elsif !el.text.blank?
       e_node[:title] = el.text
-      e_node[:icon] = "#{el.name.underscore}.png"
+      e_node[:icon] = ActionController::Base.helpers.image_path("100/#{el.name.underscore}.png")
     else
       e_node[:title] = el.name
-      e_node[:icon] = "#{e_node[:title].underscore}.png"
+      e_node[:icon] = ActionController::Base.helpers.image_path("100/#{e_node[:title].underscore}.png")
       el.attributes.each_pair do |k, v|
         a_node = {}
         a_node[:key] = "a_#{@idx}"
         @idx += 1
         a_node[:title] = "#{k} <b>=</b> #{v}"
-        a_node[:icon] = "attribute.png"
+        a_node[:icon] = ActionController::Base.helpers.image_path("100/attribute.png")
         e_kids.push(a_node)
       end
     end
