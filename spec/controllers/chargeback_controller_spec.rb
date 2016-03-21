@@ -140,5 +140,12 @@ describe ChargebackController do
       controller.instance_variable_set(:@edit, :new => {:cbshow_typ => "None"}, :cb_assign => {})
       expect { controller.send(:get_cis_all) }.to raise_error(ArgumentError)
     end
+
+    it "doesn't names of instances when nothing is selected" do
+      controller.instance_variable_set(:@edit,
+                                       :new => {:cbshow_typ => described_class::NOTHING_FORM_VALUE}, :cb_assign => {})
+      controller.send(:get_cis_all)
+      expect(assigns(:edit)[:cb_assign][:cis]).to eq({})
+    end
   end
 end
