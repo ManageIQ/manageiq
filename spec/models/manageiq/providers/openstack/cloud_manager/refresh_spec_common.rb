@@ -685,9 +685,9 @@ module Openstack
         expect(vm.private_networks.map(&:name)).to match_array vm_expected[:__network_names]
         expect(vm.public_networks.first.floating_ips).to include vm.floating_ips.first
         vm.network_ports.each do |network_port|
-          if network_port.public_network.floating_ips.count > 0
-            expect(network_port.public_network.floating_ips).to include network_port.floating_ip
-            expect(network_port.public_network.floating_ips).to include network_port.floating_ips.first
+          if network_port.public_networks.first.floating_ips.count > 0
+            expect(network_port.public_networks.first.floating_ips).to include network_port.floating_ip
+            expect(network_port.public_networks.first.floating_ips).to include network_port.floating_ips.first
           end
         end
       end

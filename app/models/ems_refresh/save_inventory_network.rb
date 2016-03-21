@@ -212,9 +212,21 @@ module EmsRefresh::SaveInventoryNetwork
       h[:security_groups] = h.fetch_path(:security_groups).map { |x| x[:_object] } if h.fetch_path(:security_groups, 0, :_object)
     end
 
-    save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref])
+    save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], :cloud_subnet_network_ports)
 
     store_ids_for_new_records(ems.network_ports, hashes, :ems_ref)
+  end
+
+  def save_cloud_subnet_network_ports_inventory(network_port, hashes)
+    deletes = network_port.cloud_subnet_network_ports(true).dup
+
+    hashes.each do |h|
+      %i(cloud_subnet).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet])
   end
 
   def link_floating_ips_to_network_ports(hashes)
