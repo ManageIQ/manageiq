@@ -464,7 +464,7 @@ class TreeBuilder
   end
 
   def rbac_filtered_objects(objects, options = {})
-    self.class.rbac_filtered_objects(objects, options)
+    Rbac.filtered(objects, options)
   end
 
   # Add child nodes to the active tree below node 'id'
@@ -476,27 +476,7 @@ class TreeBuilder
   end
 
   def self.rbac_filtered_objects(objects, options = {})
-    return objects if objects.empty?
-
-    # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
-    descendants = false
-    descendants = options.delete(:match_via_descendants) if %w(ConfiguredSystems VmOrTemplate).include?(options[:match_via_descendants])
-
-    results = Rbac.filtered(objects, options)
-
-    # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if descendants && User.current_user.has_filters?
-      filtered_objects = objects - results
-      results = objects.select do |o|
-        if o.kind_of?(EmsFolder) || filtered_objects.include?(o)
-          rbac_has_visible_descendants?(o, descendants)
-        else
-          true
-        end
-      end
-    end
-
-    results
+    Rbac.filtered(objects, options)
   end
 
   def self.rbac_has_visible_descendants?(o, type)
