@@ -133,14 +133,16 @@ module VimPerformanceAnalysis
         compute_hosts = @compute
       end
 
-      # Set :only_cols for target daily requested cols for better performance
-      options[:ext_options][:only_cols] = [:cpu, :memory, :storage].collect { |t| [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)] }.flatten.compact
+      perf_cols = [:cpu, :memory, :storage].collect do |t|
+        [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)]
+      end.flatten.compact
       result = compute_hosts.collect do |c|
         count_hash = {}
         hash = { :target => c, :count => count_hash }
 
         need_compute_perf = VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
-        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options]) if need_compute_perf
+        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options], perf_cols) if need_compute_perf
+        # if we rely upon daily perf columns, make sure we have values for them
         unless need_compute_perf && compute_perf.blank?
           ts = compute_perf.last.timestamp if compute_perf
 
@@ -271,10 +273,8 @@ module VimPerformanceAnalysis
 
       vm_perf = nil
       if VimPerformanceAnalysis.needs_perf_data?(options[:vm_options])
-        # Set :only_cols for VM daily requested cols for better performance
-        options[:ext_options] ||= {}
-        options[:ext_options][:only_cols] = [:cpu, :vcpus, :memory, :storage].collect { |t| options[:vm_options][t][:metric] if options[:vm_options][t] }.compact
-        vm_perf    = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options])
+        perf_cols = [:cpu, :vcpus, :memory, :storage].collect { |t| options.fetch(:vm_options, t, :metric) }.compact
+        vm_perf = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options], perf_cols)
       end
 
       vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
@@ -606,8 +606,8 @@ module VimPerformanceAnalysis
     slope_arr
   end
 
-  def self.get_daily_perf(obj, range, options)
-    VimPerformanceDaily.find_entries(options).order("timestamp")
+  def self.get_daily_perf(obj, range, ext_options, cols)
+    VimPerformanceDaily.find_entries(ext_options).order("timestamp").select(cols)
                        .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 
