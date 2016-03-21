@@ -36,19 +36,21 @@ describe('pagingDivButtonGroupController', function() {
   });
 
   describe('when form is pristine', function() {
-    it('it displays a disabled Save button and a disabled Reset button', function() {
+    it('it displays a disabled Save button and a disabled Reset button', inject(function($timeout) {
+      $timeout.flush();
       expect(paging_div[0].childNodes[0].className).not.toContain('ng-hide');
       expect(paging_div[0].childNodes[1].className).toContain('ng-hide');
       expect(paging_div[0].childNodes[2].outerHTML).toContain('disabled="disabled"');
-    });
+    }));
   });
 
   describe('when form is dirty', function() {
-    it('it displays an enabled Save button and an enabled Reset button', function() {
+    it('it displays an enabled Save button and an enabled Reset button', inject(function($timeout) {
+      $timeout.flush();
       angularForm.userid.$setViewValue('admin');
       expect(paging_div[0].childNodes[0].className).toContain('ng-hide');
       expect(paging_div[0].childNodes[1].className).not.toContain('ng-hide');
       expect(paging_div[0].childNodes[2].outerHTML).not.toContain('disabled="disabled"');
-    });
+    }));
   });
 });
