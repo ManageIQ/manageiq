@@ -2,7 +2,8 @@ class NetworkPort < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
+  # TODO(lsmola) NetworkManager, once all providers use network manager rename this to "ManageIQ::Providers::NetworkManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::BaseManager"
   belongs_to :cloud_tenant
   belongs_to :cloud_subnet
   belongs_to :device, :polymorphic => true

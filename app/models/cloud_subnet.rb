@@ -2,6 +2,10 @@ class CloudSubnet < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 
+  acts_as_miq_taggable
+
+  # TODO(lsmola) NetworkManager, once all providers use network manager rename this to "ManageIQ::Providers::NetworkManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::BaseManager"
   belongs_to :cloud_network
   belongs_to :cloud_tenant
   belongs_to :availability_zone
@@ -29,6 +33,16 @@ class CloudSubnet < ApplicationRecord
       extra_attributes_load(action)
     end
   end
+
+  def dns_nameservers_show
+    dns_nameservers.join(", ") if dns_nameservers
+  end
+  virtual_column :dns_nameservers_show, :type => :string, :uses => :dns_nameservers
+
+  def total_vms
+    vms.count
+  end
+  virtual_column :total_vms, :type => :integer, :uses => :vms
 
   private
 
