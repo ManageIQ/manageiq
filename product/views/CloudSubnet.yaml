@@ -9,18 +9,21 @@
 #
 
 # Report title
-title: Security Group
+title: Cloud Subnet
 
 # Menu name
-name: SecurityGroup
+name: CloudSubnet
 
 # Main DB table report is based on
-db: SecurityGroup
+db: CloudSubnet
 
 # Columns to fetch from the main table
 cols:
 - name
-- description
+- cidr
+- gateway
+- network_protocol
+- dns_nameservers_show
 - total_vms
 
 # Included tables (joined, has_one, has_many) and columns
@@ -36,16 +39,22 @@ include_for_find:
 # Order of columns (from all tables)
 col_order:
 - name
-- description
+- cidr
+- gateway
+- network_protocol
+- dns_nameservers_show
 - total_vms
 - ext_management_system.name
 
 # Column titles, in order
 headers:
 - Name
-- Description
+- CIDR
+- Gateway
+- Protocol
+- DNS Nameservers
 - Instances
-- Cloud Provider
+- Network Provider
 
 # Condition(s) string for the SQL query
 conditions:
