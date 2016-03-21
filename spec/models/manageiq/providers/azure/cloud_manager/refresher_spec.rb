@@ -3,11 +3,17 @@ require 'azure-armrest'
 describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => "eastus")
+    @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => 'eastus')
 
     @client_id  = Rails.application.secrets.azure.try(:[], 'client_id') || 'AZURE_CLIENT_ID'
     @client_key = Rails.application.secrets.azure.try(:[], 'client_secret') || 'AZURE_CLIENT_SECRET'
     @tenant_id  = Rails.application.secrets.azure.try(:[], 'tenant_id') || 'AZURE_TENANT_ID'
+    @subscription_id = Rails.application.secrets.azure.try(:[], 'subscription_id') || 'AZURE_SUBSCRIPTION_ID'
+
+    @resource_group = 'miq-azure-test1'
+    @device_name = 'miq-test-rhel1'
+    @template = nil
+    @avail_zone = nil
 
     cred = {
       :userid   => @client_id,
@@ -33,9 +39,13 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   it "will perform a full refresh" do
     2.times do # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
-      VCR.use_cassette(described_class.name.underscore, :allow_unused_http_interactions => true) do
+      name = described_class.name.underscore
+
+      # Must decode compressed response for subscription id.
+      VCR.use_cassette(name, :allow_unused_http_interactions => true, :decode_compressed_response => true) do
         EmsRefresh.refresh(@ems)
       end
+
       @ems.reload
 
       assert_table_counts
@@ -55,24 +65,23 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
   def assert_table_counts
     expect(ExtManagementSystem.count).to eql(1)
-    expect(Flavor.count).to eql(42)
+    expect(Flavor.count).to eql(43)
     expect(AvailabilityZone.count).to eql(1)
-    expect(VmOrTemplate.count).to eql(17)
-    expect(Vm.count).to eql(13)
-    expect(MiqTemplate.count).to eql(4)
-    expect(Disk.count).to eql(15)
+    expect(VmOrTemplate.count).to eql(8)
+    expect(Vm.count).to eql(7)
+    expect(MiqTemplate.count).to eql(1)
+    expect(Disk.count).to eql(7)
     expect(GuestDevice.count).to eql(0)
-    expect(Hardware.count).to eql(17)
-    expect(Network.count).to eql(22)
-    expect(OperatingSystem.count).to eql(13)
+    expect(Hardware.count).to eql(8)
+    expect(Network.count).to eql(12)
+    expect(OperatingSystem.count).to eql(7)
     expect(Relationship.count).to eql(0)
-    expect(MiqQueue.count).to eql(17)
+    expect(MiqQueue.count).to eql(8)
     expect(OrchestrationTemplate.count).to eql(2)
-    expect(OrchestrationStack.count).to eql(9)
-    expect(OrchestrationStackParameter.count).to eql(100)
-    expect(OrchestrationStackOutput.count).to eql(9)
-    expect(OrchestrationStackResource.count).to eql(44)
-    expect(SecurityGroup.count).to eql(11)
+    expect(OrchestrationStack.count).to eql(8)
+    expect(OrchestrationStackParameter.count).to eql(128)
+    expect(OrchestrationStackOutput.count).to eql(7)
+    expect(SecurityGroup.count).to eql(6)
   end
 
   def assert_ems
@@ -80,22 +89,23 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :api_version => nil,
       :uid_ems     => @tenant_id
     )
-    expect(@ems.flavors.size).to eql(42)
+    expect(@ems.flavors.size).to eql(43)
     expect(@ems.availability_zones.size).to eql(1)
-    expect(@ems.vms_and_templates.size).to eql(17)
-    expect(@ems.vms.size).to eql(13)
-    expect(@ems.miq_templates.size).to eq(4)
+    expect(@ems.vms_and_templates.size).to eql(8)
+    expect(@ems.vms.size).to eql(7)
+    expect(@ems.miq_templates.size).to eq(1)
 
-    expect(@ems.orchestration_stacks.size).to eql(9)
-    expect(@ems.direct_orchestration_stacks.size).to eql(8)
+    expect(@ems.orchestration_stacks.size).to eql(8)
+    expect(@ems.direct_orchestration_stacks.size).to eql(7)
   end
 
   def assert_specific_security_group
-    @sg = ManageIQ::Providers::Azure::CloudManager::SecurityGroup.where(:name => "Chef-Prod").first
+    name = 'miq-test-rhel1'
+    @sg = ManageIQ::Providers::Azure::CloudManager::SecurityGroup.where(:name => name).first
 
     expect(@sg).to have_attributes(
-      :name        => "Chef-Prod",
-      :description => "Chef-Prod-eastus"
+      :name        => name,
+      :description => 'miq-azure-test1-eastus'
     )
 
     expected_firewall_rules = [
@@ -136,20 +146,24 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_az
-    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
-    expect(@az).to have_attributes(
-      :name => @ems.name,
-    )
+    @avail_zone = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
+    expect(@avail_zone).to have_attributes(:name => @ems.name)
   end
 
   def assert_specific_cloud_network
-    @cn = CloudNetwork.where(:name => "Chef-Prod").first
+    name = 'miq-azure-test1'
+
+    cn_resource_id = "/subscriptions/#{@subscription_id}"\
+                     "/resourceGroups/#{@resource_group}/providers/Microsoft.Network"\
+                     "/virtualNetworks/#{@resource_group}"
+
+    @cn = CloudNetwork.where(:name => name).first
+    @avail_zone = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
+
     expect(@cn).to have_attributes(
-      :name    => "Chef-Prod",
-      :ems_ref => "/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485"\
-                  "/resourceGroups/Chef-Prod/providers/Microsoft.Network"\
-                  "/virtualNetworks/Chef-Prod",
-      :cidr    => "10.2.0.0/16",
+      :name    => name,
+      :ems_ref => cn_resource_id,
+      :cidr    => "10.16.0.0/16",
       :status  => nil,
       :enabled => true
     )
@@ -158,28 +172,26 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     @subnet = @cn.cloud_subnets.where(:name => "default").first
     expect(@subnet).to have_attributes(
       :name              => "default",
-      :ems_ref           => "/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485"\
-                             "/resourceGroups/Chef-Prod/providers/Microsoft.Network"\
-                             "/virtualNetworks/Chef-Prod/subnets/default",
-      :cidr              => "10.2.0.0/24",
-      :availability_zone => @az
-
+      :ems_ref           => "#{cn_resource_id}/subnets/default",
+      :cidr              => "10.16.0.0/24",
+      :availability_zone => @avail_zone
     )
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "Chef-Prod", :raw_power_state => "VM running").first
-    expect(v).to have_attributes(
+    vm_name = 'miq-test-rhel1'
+    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => vm_name, :raw_power_state => "VM running").first
+
+    vm_resource_id = "#{@subscription_id}\\#{@resource_group}\\microsoft.compute/virtualmachines\\#{vm_name}"
+
+    expect(vm).to have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod"\
-                                "\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :ems_ref               => vm_resource_id,
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod"\
-                                "\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :uid_ems               => vm_resource_id,
       :vendor                => "azure",
       :power_state           => "on",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\chef-prod"\
-                                "\\microsoft.compute/virtualmachines\\Chef-Prod",
+      :location              => vm_resource_id,
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -197,14 +209,14 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    expect(v.ext_management_system).to eql(@ems)
-    expect(v.availability_zone).to eql(@az)
-    expect(v.flavor).to eql(@flavor)
-    expect(v.operating_system.product_name).to eql("chef-server chefbyol")
-    expect(v.custom_attributes.size).to eql(0)
-    expect(v.snapshots.size).to eql(0)
+    expect(vm.ext_management_system).to eql(@ems)
+    expect(vm.availability_zone).to eql(@avail_zone)
+    expect(vm.flavor).to eql(@flavor)
+    expect(vm.operating_system.product_name).to eql("RHEL 7.2")
+    expect(vm.custom_attributes.size).to eql(0)
+    expect(vm.snapshots.size).to eql(0)
 
-    assert_specific_vm_powered_on_hardware(v)
+    assert_specific_vm_powered_on_hardware(vm)
   end
 
   def assert_specific_vm_powered_on_hardware(v)
@@ -231,30 +243,33 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "40.117.35.167",
+      :ipaddress   => "13.92.188.218",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
     expect(network).to have_attributes(
       :description => "private",
-      :ipaddress   => "10.2.0.4",
+      :ipaddress   => "10.16.0.4",
       :hostname    => "ipconfig1"
     )
   end
 
   def assert_specific_disk
-    disk = Disk.where(:device_name => "Chef-Prod").first
+    disk = Disk.where(:device_name => @device_name).first
 
     expect(disk).to have_attributes(
-      :location    => "http://chefprod5120.blob.core.windows.net/vhds/Chef-Prod.vhd",
-      :size        => 1023.megabyte
+      :location => "https://miqazuretest18686.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd",
+      :size     => 1023.megabyte
     )
   end
 
   def assert_specific_vm_powered_off
+    vm_name = 'miqazure-centos1'
+
     v = ManageIQ::Providers::Azure::CloudManager::Vm.where(
-      :name            => "MIQ2",
-      :raw_power_state => "VM deallocated").first
+      :name            => vm_name,
+      :raw_power_state => 'VM deallocated').first
+
     az1 = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.first
 
     assert_specific_vm_powered_off_attributes(v)
@@ -264,7 +279,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(v.floating_ip).to be_nil
     expect(v.cloud_network).to be_nil
     expect(v.cloud_subnet).to be_nil
-    expect(v.operating_system.product_name).to eql("UbuntuServer 14.04.3 LTS")
+    expect(v.operating_system.product_name).to eql('CentOS 7.1')
     expect(v.custom_attributes.size).to eql(0)
     expect(v.snapshots.size).to eql(0)
 
@@ -272,17 +287,17 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_off_attributes(v)
+    name = 'miqazure-centos1'
+    vm_resource_id = "#{@subscription_id}\\#{@resource_group}\\microsoft.compute/virtualmachines\\#{name}"
+
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\"\
-                                "microsoft.compute/virtualmachines\\MIQ2",
+      :ems_ref               => vm_resource_id,
       :ems_ref_obj           => nil,
-      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\"\
-                                "microsoft.compute/virtualmachines\\MIQ2",
+      :uid_ems               => vm_resource_id,
       :vendor                => "azure",
       :power_state           => "off",
-      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\computevms\\"\
-                                "microsoft.compute/virtualmachines\\MIQ2",
+      :location              => vm_resource_id,
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -320,17 +335,17 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_template
-    name      = "Images/postgres-cont/postgres-osDisk"
-    @template = ManageIQ::Providers::Azure::CloudManager::Template.where(:name => name).first
+    template_resource_id = "https://miqazuretest14047.blob.core.windows.net/system/"\
+                           "Microsoft.Compute/Images/miq-test-container/"\
+                           "test-win2k12-img-osDisk.e17a95b0-f4fb-4196-93c5-0c8be7d5c536.vhd"
+
+    @template = ManageIQ::Providers::Azure::CloudManager::Template.first
+
     expect(@template).to have_attributes(
       :template              => true,
-      :ems_ref               => "https://chefprod5120.blob.core.windows.net/system/"\
-                                "Microsoft.Compute/Images/postgres-cont/"\
-                                "postgres-osDisk.fcf3dcec-fb8d-49f5-9d8c-b15edcff704c.vhd",
+      :ems_ref               => template_resource_id,
       :ems_ref_obj           => nil,
-      :uid_ems               => "https://chefprod5120.blob.core.windows.net/system/"\
-                                "Microsoft.Compute/Images/postgres-cont/"\
-                                "postgres-osDisk.fcf3dcec-fb8d-49f5-9d8c-b15edcff704c.vhd",
+      :uid_ems               => template_resource_id,
       :vendor                => "azure",
       :power_state           => "never",
       :location              => "eastus",
@@ -375,9 +390,9 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_orchestration_template
-    @orch_template = OrchestrationTemplateAzure.where(:name => "spec-deployment1-dont-delete").first
+    @orch_template = OrchestrationTemplateAzure.find_by(:name => "spec-nested-deployment-dont-delete")
     expect(@orch_template).to have_attributes(
-      :md5 => "b5711eee5c9e35a7108f19ff078b7ffa"
+      :md5 => "521a0cf7ec949c106980d9da173ea21d"
     )
     expect(@orch_template.description).to eql('contentVersion: 1.0.0.0')
     expect(@orch_template.content).to start_with("{\n  \"$schema\": \"http://schema.management.azure.com"\
@@ -385,14 +400,14 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_orchestration_stack
-    @orch_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(
-      :name => "spec-deployment1-dont-delete").first
+    @orch_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.find_by(
+      :name => "spec-nested-deployment-dont-delete")
     expect(@orch_stack).to have_attributes(
       :status         => "Succeeded",
-      :description    => 'spec-deployment1-dont-delete',
-      :resource_group => 'ComputeVMs',
-      :ems_ref        => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups'\
-                         '/ComputeVMs/deployments/spec-deployment1-dont-delete',
+      :description    => "spec-nested-deployment-dont-delete",
+      :resource_group => "miq-azure-test1",
+      :ems_ref        => "/subscriptions/#{@subscription_id}/resourceGroups"\
+                         "/miq-azure-test1/deployments/spec-nested-deployment-dont-delete",
     )
 
     assert_specific_orchestration_stack_parameters
@@ -403,14 +418,13 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
   def assert_specific_orchestration_stack_parameters
     parameters = @orch_stack.parameters.order("ems_ref")
-    expect(parameters.size).to eq(13)
+    expect(parameters.size).to eq(14)
 
     # assert one of the parameter models
-    expect(parameters[1]).to have_attributes(
-      :name    => "adminUsername",
-      :value   => "serveradmin",
-      :ems_ref => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups'\
-                  '/ComputeVMs/deployments/spec-deployment1-dont-delete\adminUsername'
+    expect(parameters.find { |p| p.name == 'adminUsername' }).to have_attributes(
+      :value   => "deploy1admin",
+      :ems_ref => "/subscriptions/#{@subscription_id}/resourceGroups"\
+                  "/miq-azure-test1/deployments/spec-nested-deployment-dont-delete\\adminUsername"
     )
   end
 
@@ -419,28 +433,27 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(resources.size).to eq(9)
 
     # assert one of the resource models
-    expect(resources.first).to have_attributes(
-      :name                   => "myAvSet",
-      :logical_resource       => "myAvSet",
-      :physical_resource      => "6543c69e-1c83-47d1-96a6-d08d612fea76",
+    expect(resources.find { |r| r.name == 'spec0deply1as' }).to have_attributes(
+      :logical_resource       => "spec0deply1as",
+      :physical_resource      => "a2495990-63ae-4ea3-8904-866b7e01ec18",
       :resource_category      => "Microsoft.Compute/availabilitySets",
       :resource_status        => "Succeeded",
       :resource_status_reason => "OK",
-      :ems_ref                => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups'\
-                                 '/ComputeVMs/providers/Microsoft.Compute/availabilitySets/myAvSet'
+      :ems_ref                => "/subscriptions/#{@subscription_id}/resourceGroups"\
+                                 "/miq-azure-test1/providers/Microsoft.Compute/availabilitySets/spec0deply1as"
     )
   end
 
   def assert_specific_orchestration_stack_outputs
-    outputs = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(
-      :name => "spec-deployment2-dont-delete").first.outputs
+    outputs = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.find_by(
+      :name => "spec-deployment-dont-delete").outputs
     expect(outputs.size).to eq(1)
     expect(outputs[0]).to have_attributes(
       :key         => "siteUri",
       :value       => "hard-coded output for test",
       :description => "siteUri",
-      :ems_ref     => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups'\
-                      '/ComputeVMs/deployments/spec-deployment2-dont-delete\siteUri'
+      :ems_ref     => "/subscriptions/#{@subscription_id}/resourceGroups"\
+                      "/miq-azure-test1/deployments/spec-deployment-dont-delete\\siteUri"
     )
   end
 
@@ -452,18 +465,16 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@orch_stack.orchestration_template).to eql(@orch_template)
 
     # orchestration stack can be nested
-    parent_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(
-      :name => "spec-deployment2-dont-delete").first
-    child_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(
-      :name => "spec-nested-deployment-dont-delete").first
-    expect(child_stack.parent).to eql(parent_stack)
+    parent_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.find_by(
+      :name => "spec-deployment-dont-delete")
+    expect(@orch_stack.parent).to eql(parent_stack)
 
     # orchestration stack can have vms
-    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "spec-VM1").first
+    vm = ManageIQ::Providers::Azure::CloudManager::Vm.find_by(:name => "spec0deply1vm1")
     expect(vm.orchestration_stack).to eql(@orch_stack)
 
     # orchestration stack can have cloud networks
-    cloud_network = CloudNetwork.where(:name => 'spec-VNET').first
+    cloud_network = CloudNetwork.find_by(:name => 'spec0deply1vnet')
     expect(cloud_network.orchestration_stack).to eql(@orch_stack)
   end
 end
