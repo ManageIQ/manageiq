@@ -22,10 +22,10 @@ module MiqWebServerWorkerMixin
       configure_secret_token
     end
 
-    def self.configure_secret_token
+    def self.configure_secret_token(token = MiqDatabase.first.session_secret_token)
       return if Rails.application.config.secret_token
 
-      Rails.application.config.secret_token = MiqDatabase.first.session_secret_token
+      Rails.application.config.secret_token = token
 
       # To set a secret token after the Rails.application is initialized,
       # we need to reset the secrets since they are cached:
