@@ -151,7 +151,7 @@ describe MiqAeField do
     it "should not change boolean value for substitute field when updating existing AE field record" do
       field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false)
       expect(field1.substitute).to be_falsey
-      field2 = MiqAeField.find_by_name_and_class_id("test_field", @c1.id)
+      field2 = MiqAeField.find_by(:name => "test_field", :class_id => @c1.id)
       expect(field2.save).to be_truthy
       expect(field2.substitute).to be_falsey
     end

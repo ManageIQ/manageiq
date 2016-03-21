@@ -9,7 +9,7 @@ class MiqAeInstanceCopy
     @class_fqname = "#{@src_domain}/#{@partial_ns}/#{@ae_class}"
     @src_class = MiqAeClass.find_by_fqname("#{@src_domain}/#{@partial_ns}/#{@ae_class}")
     raise "Source class not found #{@class_fqname}" unless @src_class
-    @src_instance = MiqAeInstance.find_by_name_and_class_id(@instance_name, @src_class.id)
+    @src_instance = MiqAeInstance.find_by(:name => @instance_name, :class_id => @src_class.id)
     raise "Source instance #{@instance_name} not found #{@class_fqname}" unless @src_instance
     @target_class_name = @ae_class
     @flags = MiqAeClassCompareFields::CONGRUENT_SCHEMA | MiqAeClassCompareFields::COMPATIBLE_SCHEMA

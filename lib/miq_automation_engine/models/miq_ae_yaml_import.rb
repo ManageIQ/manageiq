@@ -183,7 +183,7 @@ class MiqAeYamlImport
     if method_attributes['location'] == 'inline'
       method_yaml.store_path('object', 'attributes', 'data', load_method_ruby(ruby_method_file_name))
     end
-    method_obj = MiqAeMethod.find_by_name_and_class_id(method_attributes['name'], class_obj.id) unless class_obj.nil?
+    method_obj = MiqAeMethod.find_by(:name => method_attributes['name'], :class_id => class_obj.id) unless class_obj.nil?
     track_stats('method', method_obj)
     method_obj ||= add_method(class_obj, method_yaml) unless @preview
     method_obj
