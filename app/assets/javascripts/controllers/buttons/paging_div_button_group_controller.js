@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'miqService', '$compile', '$attrs', function($scope, miqService, $compile, $attrs) {
+ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'miqService', '$compile', '$attrs', '$timeout', function($scope, miqService, $compile, $attrs, $timeout) {
   var init = function() {
     $scope.addBtnText = __("Add");
     $scope.saveBtnText = __("Save");
@@ -47,14 +47,16 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
       'ng-show="!newRecord && saveable(angularForm)">{{btnText}}</button>';
     var compiledEnabledSave = $compile(enabledSaveHtml)($scope);
 
-    if (angular.element(document.getElementById('save_disabled')).length == 0) {
-      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledDisabledSave);
-    }
+    $timeout(function () {
+      if (angular.element(document.getElementById('save_disabled')).length == 0) {
+        angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledDisabledSave);
+      }
 
-    if (angular.element(document.getElementById('save_enabled')).length == 0) {
-      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
-    }
-  }
+      if (angular.element(document.getElementById('save_enabled')).length == 0) {
+        angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
+      }
+    });
+  };
 
   var resetButton = function() {
     var resetHtml = '<button name="button" id="reset_enabled_disabled" type="submit" ' +
@@ -63,19 +65,23 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
       'ng-disabled="angularForm.$pristine" ng-hide="newRecord" disabled="disabled">{{resetBtnText}}</button>';
     var compiledReset = $compile(resetHtml)($scope);
 
-    if (angular.element(document.getElementById('reset_enabled_disabled')).length == 0) {
-      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledReset);
-    }
-  }
+    $timeout(function () {
+      if (angular.element(document.getElementById('reset_enabled_disabled')).length == 0) {
+        angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledReset);
+      }
+    });
+  };
 
   var cancelButton = function() {
     var cancelHtml = '<button name="button" id="cancel_enabled" type="submit" class="btn btn-default" alt={{cancelBtnText}} ' +
       'title={{cancelBtnText}} ng-click="cancelClicked($event)">{{cancelBtnText}}</button>';
     var compiledCancel = $compile(cancelHtml)($scope);
 
-    if (angular.element(document.getElementById('cancel_enabled')).length == 0) {
-      angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledCancel);
-    }
-  }
+    $timeout(function () {
+      if (angular.element(document.getElementById('cancel_enabled')).length == 0) {
+        angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledCancel);
+      }
+    });
+  };
   init();
 }]);
