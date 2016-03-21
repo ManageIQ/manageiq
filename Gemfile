@@ -114,8 +114,6 @@ unless ENV['APPLIANCE']
     gem "brakeman",         "~>3.1.0",  :require => false
     gem "capybara",         "~>2.5.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
-    gem "vcr",              "~>2.6",    :require => false
-    gem "webmock",          "~>1.12",   :require => false
   end
 
   group :development, :test do
