@@ -592,6 +592,18 @@ module VmCommon
     show_association('security_groups', 'Security Groups', 'security_group', :security_groups, SecurityGroup)
   end
 
+  def floating_ips
+    show_association('floating_ips', 'Floating IPs', 'floating_ip', :floating_ips, FloatingIp)
+  end
+
+  def cloud_subnets
+    show_association('cloud_subnets', 'Subnets', 'cloud_subnet', :cloud_subnets, CloudSubnet)
+  end
+
+  def network_routers
+    show_association('network_routers', 'Routers', 'network_router', :network_routers, NetworkRouter)
+  end
+
   def snap
     assert_privileges(params[:pressed])
     @vm = @record = identify_record(params[:id], VmOrTemplate)

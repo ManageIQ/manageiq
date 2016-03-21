@@ -2021,7 +2021,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:opt] = inbound_url if ["utilization", "planning", "bottlenecks", "waste"].include?(action_name)
       when "catalog", "vm", "vm_or_template", "miq_template", "service"
         session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "availability_zone", "ems_cloud", "flavor", "security_group", "vm_cloud", "orchestration_stack"
+      when "availability_zone", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
@@ -2030,6 +2030,8 @@ class ApplicationController < ActionController::Base
            "container_image_registry", "container_image", "container_topology", "container_dashboard",
            "container_build"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
+      when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip"
+          session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
       when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
         session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
       when "miq_request"
