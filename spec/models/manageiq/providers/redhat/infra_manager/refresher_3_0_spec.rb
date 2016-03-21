@@ -313,6 +313,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :filename        => "061baae8-69bc-410c-a950-7d78be535c8c",
       :location        => "0",
       :size            => 5.gigabytes,
+      :size_on_disk    => 0,
       :mode            => "persistent",
       :disk_type       => "thin",
       :start_connected => true

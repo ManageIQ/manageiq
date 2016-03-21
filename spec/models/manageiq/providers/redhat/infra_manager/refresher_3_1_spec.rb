@@ -322,6 +322,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :filename        => "5fc5484d-1730-42bc-adc3-262592ea595a",
       :location        => "0",
       :size            => 5.gigabytes,
+      :size_on_disk    => 1.gigabytes,
       :mode            => "persistent",
       :disk_type       => "thin",
       :start_connected => true
@@ -338,6 +339,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :filename        => "b7139a48-854b-49b4-b4a0-92ef88261b7b",
       :location        => "1",
       :size            => 1.gigabytes,
+      :size_on_disk    => 1.gigabytes,
       :mode            => "persistent",
       :disk_type       => "thick",
       :start_connected => true
