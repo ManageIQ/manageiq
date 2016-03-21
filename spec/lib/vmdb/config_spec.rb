@@ -32,13 +32,11 @@ describe VMDB::Config do
   end
 
   it ".get_file" do
-    server        = EvmSpecHelper.create_guid_miq_server_zone[1]
-    config        = VMDB::Config.new("vmdb")
-    config.config = {:log_depot => {:uri => "smb://server/share", :username => "user", :password => password}}
-    config.save
+    content = {:http_proxy => {:host => "proxy.example.com", :user => "user", :password => password, :port => 80}}
+    VMDB::Config.new("vmdb").tap { |c| c.config = content }.save
 
     expect(VMDB::Config.get_file("vmdb")).to eq(
-      "---\nlog_depot:\n  uri: smb://server/share\n  username: user\n  password: #{enc_pass}\n"
+      "---\nhttp_proxy:\n  host: proxy.example.com\n  user: user\n  password: #{enc_pass}\n  port: 80\n"
     )
   end
 
