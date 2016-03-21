@@ -134,6 +134,48 @@ class MiqRegion < ApplicationRecord
     end
   end
 
+  def self.remote_replication_type?
+    MiqPglogical.new.provider?
+  end
+
+  def self.global_replication_type?
+    MiqPglogical.new.subscriber?
+  end
+
+  def self.replication_enabled?
+    MiqPglogical.new.node?
+  end
+
+  def self.replication_type
+    if global_replication_type?
+      :global
+    elsif remote_replication_type?
+      :remote
+    else
+      :none
+    end
+  end
+
+  def self.replication_type=(desired_type)
+    current_type = replication_type
+    case desired_type
+    when :none
+      case current_type
+      when :remote then MiqPglogical.new.destroy_provider
+      when :global then PglogicalSubscription.delete_all
+      end
+    when :remote
+      case current_type
+      when :none then MiqPglogical.new.configure_provider
+      when :global
+        PglogicalSubscription.delete_all
+        MiqPglogical.new.configure_provider
+      end
+    when :global
+      MiqPglogical.new.destroy_provider if current_type == :remote
+    end
+  end
+
   def ems_clouds
     ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end
