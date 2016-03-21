@@ -33,33 +33,24 @@ class VimPerformanceDaily < MetricRollup
   end
 
   def self.process_hourly_for_one_day(recs, options = {})
-    return [] if recs.blank?
-
     process_only_cols(options)
-    _log.debug("Limiting cols to: #{options[:only_cols].inspect}")
-
     result = {}
     counts = {}
 
     tz = Metric::Helper.get_time_zone(options)
     tp = options[:time_profile]
 
-    # Get ts in desired time zone
-    ts = recs.first.timestamp.in_time_zone(tz)
-    # Convert to midnight in desired timezone to strip off hours to just get the date
-    ts = ts.beginning_of_day
+    ts = nil
 
     recs.each do |perf|
-      next unless perf.capture_interval_name == "hourly"
-
+      # Get ts in desired time zone - converted to local midnight to strip off hours and become a date
+      ts ||= recs.first.timestamp.in_time_zone(tz).beginning_of_day
       rtype = perf.resource_type
       rid   = perf.resource_id
 
       key = [perf.capture_interval_name, rtype, rid]
-      result[key] ||= {}
+      result[key] ||= INFO_COLS.each_with_object({}) { |c, h| h[c] = perf.send(c) }
       counts[key] ||= {}
-
-      INFO_COLS.each { |c| result[key][c] = perf.send(c) } if result[key].empty?
 
       if tp && tp.ts_in_profile?(perf.timestamp) == false
         # Save timestamp and info cols for daily row but don't aggregate any values
@@ -106,14 +97,14 @@ class VimPerformanceDaily < MetricRollup
       end
     end
 
+    return [] if result.empty?
     ts_utc = ts.utc.to_time
 
     # Don't bother rolling up values if day is outside of time profile
     rollup_day = tp.nil? || tp.ts_day_in_profile?(ts)
 
-    results = []
-    result.each_key do |key|
-      int, rtype, rid = key
+    results = result.each_key.collect do |key|
+      _int, rtype, rid = key
 
       if rollup_day
         (Metric::Rollup::ROLLUP_COLS & (options[:only_cols] || Metric::Rollup::ROLLUP_COLS)).each do |c|
@@ -124,14 +115,14 @@ class VimPerformanceDaily < MetricRollup
         _log.debug("Daily Timestamp: [#{ts}] is outside of time profile: [#{tp.description}]")
       end
 
-      results.push(result[key].merge(
-                     :timestamp             => ts_utc,
-                     :resource_type         => rtype,
-                     :resource_id           => rid,
-                     :capture_interval      => 1.day,
-                     :capture_interval_name => "daily",
-                     :intervals_in_rollup   => Metric::Helper.max_count(counts[key])
-      ))
+      result[key].merge(
+        :timestamp             => ts_utc,
+        :resource_type         => rtype,
+        :resource_id           => rid,
+        :capture_interval      => 1.day,
+        :capture_interval_name => "daily",
+        :intervals_in_rollup   => Metric::Helper.max_count(counts[key])
+      )
     end
 
     # Clean up min_max values that are stored directly by moving into min_max property Hash
