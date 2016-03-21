@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 
 
+## Unreleased - as of Sprint 37 end 2016-03-07
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+37+Ending+Mar+7%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - Vmware: Clustered datastores
+  - Containers: Bug fixes and UI updates
+  - Microsoft SCVMM: Inventory Performance
+  - Red Hat OpenStack: Instance Evacuation, better neutron modeling, Ceilometer events
+  - Pluggable providers: Amazon extraction
+- Tenancy
+  - Added scoping strategy for provision request
+  - Added ability to report on tenants and tenant quotas
+- REST API
+  - Added support for Service Reconfigure action
+  - Added new service orders collection and CRUD operations
+- SSUI
+  - RBAC Control of Menus and Features
+  - Reconfiguring a Service
+  - Set Ownership of a Service
+- Automate
+  - Ansible Service Models
+  - Added Google Auto-Placement methods
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+37+Ending+Mar+7%2C+2016%22+label%3Aenhancement)
+
+- Core
+  - Updated to Rails 5 (using Rails master branch until stable branch is cut)
+  - Replacement of rubyrep with pglogical in progress
+- Appliance Console
+  - Ability to reset database
+  - Ability to create region in external database
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+37+Ending+Mar+7%2C+2016%22+label%3A%22technical+debt%22)
+
+- Providers: Removed Amazon SDK v1
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+37+Ending+Mar+7%2C+2016%22+label%3Abug)
+
+Notable fixes include:
+
+- Tag management cleanup
+  - Tags are removed from managed filters for all groups after deletion
+  - Update of managed filters after tag rename (in progress)
+- SmartState Analysis
+  - LVM thin volume - fatal error: No longer fatal, but not supported. Thin volume support planned.
+  - LVM logical volume names containing “-”: LV name to device file mapping now properly accounts for “-”
+  - EXT4 - 64bit group descriptor: Variable group descriptor size correctly determined.
+  - Collect services that are symlinked
+
 ## Unreleased - as of Sprint 36 end 2016-02-15
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+36+Ending+Feb+15%2C+2016%22+label%3Aenhancement)
