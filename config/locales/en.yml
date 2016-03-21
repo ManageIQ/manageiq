@@ -731,11 +731,13 @@ en:
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
       ManageIQ::Providers::InfraManager::Template:                          Template
       ManageIQ::Providers::MiddlewareManager:                               Middleware Manager
+      ManageIQ::Providers::NetworkManager:                                  Network Manager
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (Openstack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Redhat)
       ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (Vmware)
       ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (Openstack)
+      ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (Openstack)
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
       ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
@@ -876,6 +878,7 @@ en:
       ems_middleware:              Middleware Provider
       ems_middlewares:             Middleware Providers
       evm_server:                  EVM Server
+      ems_network:                 Network Provider
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
       middleware_deployment:       Middleware Deployment
