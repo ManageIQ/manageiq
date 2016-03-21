@@ -8,7 +8,7 @@ class MiqAeMethodCopy
     @class_fqname = "#{@src_domain}/#{@partial_ns}/#{@ae_class}"
     @src_class = MiqAeClass.find_by_fqname("#{@src_domain}/#{@partial_ns}/#{@ae_class}")
     raise "Source class not found #{@class_fqname}" unless @src_class
-    @src_method = MiqAeMethod.find_by_name_and_class_id(@method_name, @src_class.id)
+    @src_method = MiqAeMethod.find_by(:name => @method_name, :class_id => @src_class.id)
     raise "Source method #{@method_name} not found #{@class_fqname}" unless @src_method
     @target_class_name = @ae_class
   end
