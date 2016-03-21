@@ -114,7 +114,7 @@ module EmsClusterHelper::TextualSummary
 
   def textual_aggregate_vm_cpus
     {:label => _("Total Configured CPUs"),
-     :value => _("%{number} (Virtual to Real Ratio: %{ration})") %
+     :value => _("%{number} (Virtual to Real Ratio: %{ratio})") %
        {:number => number_with_delimiter(@record.aggregate_vm_cpus), :ratio => @record.v_cpu_vr_ratio}}
   end
 
