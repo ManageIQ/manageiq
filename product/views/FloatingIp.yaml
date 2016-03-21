@@ -21,26 +21,23 @@ db: FloatingIp
 cols:
 - address
 - fixed_ip_address
+- instance_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
   ext_management_system:
     columns:
     - name
-  vm:
-    columns:
-    - name
 
 # Included tables and columns for query performance
 include_for_find:
   :ext_management_system: {}
-  :vm: {}
 
 # Order of columns (from all tables)
 col_order:
 - address
 - fixed_ip_address
-- vm.name
+- instance_name
 - ext_management_system.name
 
 # Column titles, in order

@@ -13,6 +13,11 @@ class FloatingIp < ApplicationRecord
   belongs_to :network_port
   belongs_to :network_router
 
+  def instance_name
+    vm.try(:name)
+  end
+  virtual_column :instance_name, :type => :string, :uses => :vm
+
   def self.available
     where(:vm_id => nil)
   end
