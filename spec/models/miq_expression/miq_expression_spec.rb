@@ -82,7 +82,7 @@ describe MiqExpression do
       expect(sql).to eq("NOT vms.name = 'foo'")
     end
 
-    xit "generates the SQL for a ! expression" do
+    it "generates the SQL for a ! expression" do
       sql, * = MiqExpression.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
       expect(sql).to eq("NOT vms.name = 'foo'")
     end

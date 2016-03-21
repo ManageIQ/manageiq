@@ -792,7 +792,7 @@ class MiqExpression
       exp[operator].compact!
       attrs.merge!(or_attrs)
       exp.delete(operator) if !or_attrs[:supported_by_sql] || exp[operator].empty? # Clean out unsupported or empty operands
-    when "not"
+    when "not", "!"
       preprocess_for_sql(exp[operator], attrs)
       exp.delete(operator) if exp[operator].empty? # Clean out empty operands
     else
