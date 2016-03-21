@@ -198,10 +198,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def default_require_sysprep_enabled(_field, _values, dlg, fld, value)
+    # This method is available as a dialog field validation. Do not erase.
     "#{required_description(dlg, fld)} is required" if value.blank? || value == "disabled"
   end
 
   def default_require_sysprep_custom_spec(_field, _values, dlg, fld, value)
+    # This method is available as a dialog field validation. Do not erase.
     "#{required_description(dlg, fld)} is required" if value.blank? || value == "__VC__NONE__"
   end
 
@@ -620,12 +622,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result
   end
 
-  def source_valid?
-    obj = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
-    return "Unable to find VM with Id: [#{obj.id}]" if obj.nil?
-    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is archived and cannot be used with provisioning." if obj.archived?
-    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is orphaned and cannot be used with provisioning." if obj.orphaned?
-  end
 
   def resources_for_ui
     auto_placement_enabled? ? {} : super
