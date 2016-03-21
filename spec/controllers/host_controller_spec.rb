@@ -160,8 +160,7 @@ describe HostController do
   describe "#show" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
-      @user = FactoryGirl.create(:user)
-      login_as @user
+      login_as FactoryGirl.create(:user)
       @host = FactoryGirl.create(:host,
                :hardware => FactoryGirl.create(:hardware,
                               :cpu_sockets          => 2,
@@ -172,11 +171,13 @@ describe HostController do
 
     subject { get :show, :params => {:id => @host.id} }
 
-    context "render listnav and host" do
+    context "render" do
       render_views
-      it { is_expected.to have_http_status 200 }
-      it { is_expected.to render_template('host/show') }
-      it { is_expected.to render_template(:partial => "layouts/listnav/_host") }
+      it "show and listnav" do
+        is_expected.to have_http_status 200
+        is_expected.to render_template('host/show')
+        is_expected.to render_template(:partial => "layouts/listnav/_host")
+      end
     end
   end
 

@@ -36,4 +36,23 @@ describe ContainerGroupController do
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
   end
+
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @container_group = FactoryGirl.create(:container_group_with_assoc)
+      login_as FactoryGirl.create(:user)
+    end
+
+    subject { get :show, :id => @container_group.id }
+
+    context "render" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_container_group")
+      end
+    end
+  end
 end

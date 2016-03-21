@@ -160,21 +160,28 @@ describe EmsInfraController do
 
   describe "#show" do
     before(:each) do
-      set_user_privileges
-      get :show, :params => {:id => ems.id}.merge(url_params)
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+      @ems = FactoryGirl.create(:ems_vmware)
+      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
     end
+
     let(:url_params) { {} }
-    let(:ems) do
-      FactoryGirl.create(:ems_infra)
-    end
-    subject do
-      response.status
-    end
-    it { is_expected.to eq 200 }
+
+    subject { get :show, :params => {:id => @ems.id}.merge(url_params) }
 
     context "display=timeline" do
       let(:url_params) { {:display => 'timeline'} }
-      it { is_expected.to eq 200 }
+      it { is_expected.to have_http_status 200 }
+    end
+
+    context "render listnav partial" do
+      render_views
+
+      it do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_ems_infra")
+      end
     end
   end
 
