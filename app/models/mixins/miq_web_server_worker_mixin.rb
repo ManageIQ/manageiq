@@ -13,6 +13,10 @@ module MiqWebServerWorkerMixin
       BINDING_ADDRESS
     end
 
+    def self.preload_for_console
+      configure_secret_token(SecureRandom.hex(64))
+    end
+
     def self.preload_for_worker_role
       require 'hamlit-rails'
 
