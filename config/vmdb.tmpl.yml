@@ -136,10 +136,6 @@ log:
   level_scvmm_in_evm: error
   level_vim: warn
   level_vim_in_evm: error
-log_depot:
-  password:
-  uri:
-  username:
 management_system:
   power_operation_expiration: 10.minutes
 performance:
