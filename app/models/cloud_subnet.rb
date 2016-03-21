@@ -12,7 +12,8 @@ class CloudSubnet < ApplicationRecord
   belongs_to :availability_zone
   belongs_to :network_router
 
-  has_many :network_ports, :dependent => :destroy
+  has_many :cloud_subnet_network_ports, :dependent => :destroy
+  has_many :network_ports, :through => :cloud_subnet_network_ports, :dependent => :destroy
   has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API

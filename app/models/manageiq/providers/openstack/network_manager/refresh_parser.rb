@@ -184,7 +184,7 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def find_device_object(network_port, subnet_id)
+    def find_device_object(network_port)
       case network_port.device_owner
       when /^compute\:.*?$/
         # Owner is in format compute:<availability_zone> or compute:None
@@ -196,6 +196,7 @@ module ManageIQ::Providers
       when "network:floatingip"
         # We don't need this association, floating ip has a direct link to subnet and network in it
       when "network:router_interface"
+        subnet_id               = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
         network_router          = @data_index.fetch_path(:network_routers, network_port.device_id)
         subnet                  = @data_index.fetch_path(:cloud_subnets, subnet_id)
         subnet[:network_router] = network_router
@@ -204,12 +205,18 @@ module ManageIQ::Providers
       nil
     end
 
+    def parse_cloud_subnet_network_ports(cloud_subnet_network_port)
+      {
+        :address      => cloud_subnet_network_port["ip_address"],
+        :cloud_subnet => @data_index.fetch_path(:cloud_subnets, cloud_subnet_network_port["subnet_id"])
+      }
+    end
+
     def parse_network_port(network_port)
-      uid             = network_port.id
-      # There can be multiple fixed_ips on the port, but only under one subnet
-      subnet_id       = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
-      device          = find_device_object(network_port, subnet_id)
-      security_groups = network_port.security_groups.blank? ? [] : network_port.security_groups.map do |x|
+      uid                        = network_port.id
+      cloud_subnet_network_ports = network_port.fixed_ips.map { |x| parse_cloud_subnet_network_ports(x) }
+      device                     = find_device_object(network_port)
+      security_groups            = network_port.security_groups.blank? ? [] : network_port.security_groups.map do |x|
         @data_index.fetch_path(:security_groups, x)
       end
 
@@ -219,12 +226,12 @@ module ManageIQ::Providers
         :ems_ref                           => uid,
         :status                            => network_port.status,
         :admin_state_up                    => network_port.admin_state_up,
-        :cloud_subnet                      => @data_index.fetch_path(:cloud_subnets, subnet_id),
         :mac_address                       => network_port.attributes[:mac_address],
         :device_owner                      => network_port.device_owner,
         :device_ref                        => network_port.device_id,
         :device                            => device,
         :cloud_tenant                      => parent_manager_fetch_path(:cloud_tenants, network_port.tenant_id),
+        :cloud_subnet_network_ports        => cloud_subnet_network_ports,
         # TODO(lsmola) expose missing atttributes in FOG
         :binding_host_id                   => network_port.attributes["binding:host_id"],
         :binding_virtual_interface_type    => network_port.attributes["binding:vif_type"],

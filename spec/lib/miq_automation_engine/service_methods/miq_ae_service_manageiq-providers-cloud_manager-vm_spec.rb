@@ -27,8 +27,9 @@ module MiqAeServiceVmOpenstackSpec
             network = FactoryGirl.create("cloud_network_#{t}".to_sym)
             subnet  = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
             vm.network_ports << network_port = FactoryGirl.create("network_port_#{t}".to_sym,
-                                                                  :device       => vm,
-                                                                  :cloud_subnet => subnet)
+                                                                  :device       => vm)
+            FactoryGirl.create(:cloud_subnet_network_port, :cloud_subnet => subnet, :network_port => network_port)
+
             network_port.security_groups << FactoryGirl.create("security_group_#{t}".to_sym)
             network_port.floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym)
           when "google"
