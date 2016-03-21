@@ -1,12 +1,4 @@
 describe MiqExpression do
-  let(:exp) { {"=" => {"field" => "Vm-name", "value" => "test"}} }
-  let(:qs_exp) { {"=" => {"field" => "Vm-name", "value" => :user_input}} }
-  let(:complex_qs_exp) do
-    {"AND" => [
-      {"=" => {"field" => "Vm-name", "value" => "test"}}, {"=" => {"field" => "Vm-name", "value" => :user_input}}
-    ]}
-  end
-
   describe "#to_sql" do
     let(:tag) { FactoryGirl.create(:tag, :name => "/managed/operations/analysis_failed") }
 
@@ -881,39 +873,52 @@ describe MiqExpression do
     expect(attrs[:supported_by_sql]).to eq(false)
   end
 
-  describe ".quick_search?" do
-    it "detects false in hash" do
-      expect(MiqExpression.quick_search?(exp)).to be_falsey
+  context "quick search" do
+    let(:exp) { {"=" => {"field" => "Vm-name", "value" => "test"}} }
+    let(:qs_exp) { {"=" => {"field" => "Vm-name", "value" => :user_input}} }
+    let(:complex_qs_exp) do
+      {
+        "AND" => [
+          {"=" => {"field" => "Vm-name", "value" => "test"}},
+          {"=" => {"field" => "Vm-name", "value" => :user_input}}
+        ]
+      }
     end
 
-    it "detects in hash" do
-      expect(MiqExpression.quick_search?(qs_exp)).to be_truthy
+    describe ".quick_search?" do
+      it "detects false in hash" do
+        expect(MiqExpression.quick_search?(exp)).to be_falsey
+      end
+
+      it "detects in hash" do
+        expect(MiqExpression.quick_search?(qs_exp)).to be_truthy
+      end
+
+      it "detects in complex hash" do
+        expect(MiqExpression.quick_search?(complex_qs_exp)).to be_truthy
+      end
+
+      it "detects false in miq expression" do
+        expect(MiqExpression.quick_search?(MiqExpression.new(exp))).to be_falsey
+      end
+
+      it "detects in miq expression" do
+        expect(MiqExpression.quick_search?(MiqExpression.new(qs_exp))).to be_truthy
+      end
     end
 
-    it "detects in complex hash" do
-      expect(MiqExpression.quick_search?(complex_qs_exp)).to be_truthy
-    end
+    describe "#quick_search?" do
+      it "detects false in hash" do
+        expect(MiqExpression.new(exp).quick_search?).to be_falsey
+      end
 
-    it "detects false in miq expression" do
-      expect(MiqExpression.quick_search?(MiqExpression.new(exp))).to be_falsey
-    end
+      it "detects in hash" do
+        expect(MiqExpression.new(qs_exp).quick_search?).to be_truthy
+      end
 
-    it "detects in miq expression" do
-      expect(MiqExpression.quick_search?(MiqExpression.new(qs_exp))).to be_truthy
-    end
-  end
-
-  describe "#quick_search?" do
-    it "detects false in hash" do
-      expect(MiqExpression.new(exp).quick_search?).to be_falsey
-    end
-
-    it "detects in hash" do
-      expect(MiqExpression.new(qs_exp).quick_search?).to be_truthy
-    end
-
-    it "detects in complex hash" do
-      expect(MiqExpression.new(complex_qs_exp).quick_search?).to be_truthy
+      it "detects in complex hash" do
+        expect(MiqExpression.new(complex_qs_exp).quick_search?).to be_truthy
+      end
     end
   end
 
