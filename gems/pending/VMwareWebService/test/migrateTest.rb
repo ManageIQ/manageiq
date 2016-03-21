@@ -69,7 +69,8 @@ begin
   
   miqVm.refresh
   puts "VM: #{miqVm.name}, HOST: #{miqVm.hostSystem}"
-  puts  rescue => err
+  puts
+rescue => err
   puts err.to_s
   puts err.backtrace.join("\n")
 ensure
