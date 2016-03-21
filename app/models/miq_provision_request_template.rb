@@ -21,7 +21,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
 
   def execute
     # Should not be called.
-    raise "Provision Request Templates do not support the execute method."
+    raise _("Provision Request Templates do not support the execute method.")
   end
 
   private

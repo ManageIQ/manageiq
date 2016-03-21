@@ -44,6 +44,6 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   private
 
   def default_description
-    "#{ui_lookup(:ui_title => 'foreman')} install on [#{host_name}]"
+    _("%{table} install on [%{name}]") % {:table => ui_lookup(:ui_title => 'foreman'), :name => host_name}
   end
 end

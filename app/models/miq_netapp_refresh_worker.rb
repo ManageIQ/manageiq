@@ -8,7 +8,7 @@ class MiqNetappRefreshWorker < MiqQueueWorkerBase
   self.maximum_workers_count = 1
 
   def friendly_name
-    @friendly_name ||= "Refresh Worker for NetApp Storage"
+    @friendly_name ||= _("Refresh Worker for NetApp Storage")
   end
 
   def self.storage_manager_class

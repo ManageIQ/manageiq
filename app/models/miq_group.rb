@@ -60,7 +60,9 @@ class MiqGroup < ApplicationRecord
       group = find_by_description(group_name) || new(:description => group_name)
       user_role = MiqUserRole.find_by_name("EvmRole-#{role_name}")
       if user_role.nil?
-        raise StandardError, "Unable to find user_role 'EvmRole-#{role_name}' for group '#{group_name}'"
+        raise StandardError,
+              _("Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'") %
+                {:role_name => role_name, :group_name => group_name}
       end
       group.miq_user_role = user_role
       group.sequence      = index + 1
@@ -93,9 +95,11 @@ class MiqGroup < ApplicationRecord
     username = user.kind_of?(self) ? user.userid : user
     ldap = MiqLdap.new
 
-    raise "Bind failed for user #{bind_dn}" unless ldap.bind(ldap.fqusername(bind_dn), bind_pwd)
+    unless ldap.bind(ldap.fqusername(bind_dn), bind_pwd)
+      raise _("Bind failed for user %{user_name}") % {:user_name => bind_dn}
+    end
     user_obj = ldap.get_user_object(ldap.normalize(ldap.fqusername(username)))
-    raise "Unable to find user #{username} in directory" if user_obj.nil?
+    raise _("Unable to find user %{user_name} in directory") % {:user_name => username} if user_obj.nil?
 
     ldap.get_memberships(user_obj, auth[:group_memberships_max_depth])
   end
@@ -113,7 +117,7 @@ class MiqGroup < ApplicationRecord
     begin
       user_groups = ifp_interface.GetUserGroups(user)
     rescue => err
-      raise "Unable to get groups for user #{username} - #{err}"
+      raise _("Unable to get groups for user %{user_name} - %{error}") % {:user_name => username, :error => err}
     end
     user_groups.first
   end
@@ -260,8 +264,8 @@ class MiqGroup < ApplicationRecord
   end
 
   def ensure_can_be_destroyed
-    raise "Still has users assigned." unless users.empty?
-    raise "A tenant default group can not be deleted" if tenant_group? && referenced_by_tenant?
-    raise "A read only group cannot be deleted." if system_group?
+    raise _("Still has users assigned.") unless users.empty?
+    raise _("A tenant default group can not be deleted") if tenant_group? && referenced_by_tenant?
+    raise _("A read only group cannot be deleted.") if system_group?
   end
 end
