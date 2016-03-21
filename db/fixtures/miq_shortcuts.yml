@@ -109,6 +109,11 @@
   :url: /vm_cloud/explorer?accordion=images_filter
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
+- :name: ems_networks
+  :description: Networks / Providers
+  :url: /ems_network/show_list
+  :rbac_feature_name: ems_network_show_list
+  :startup: true
 - :name: ems_infras
   :description: Infrastructure / Providers
   :url: /ems_infra/show_list
