@@ -142,7 +142,7 @@ class MiqEventDefinition < ApplicationRecord
     defns = YAML.load_file(fname)
     defns.each do |event_type, events|
       events[:events].each do |e|
-        event = find_by_name_and_event_type(e[:name], event_type.to_s)
+        event = find_by(:name => e[:name], :event_type => event_type.to_s)
         if event.nil?
           _log.info("Creating [#{e[:name]}]")
           event = create(e.merge(:event_type => event_type.to_s, :default => true, :enabled => true))
