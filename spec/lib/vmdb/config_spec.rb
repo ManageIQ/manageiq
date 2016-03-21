@@ -28,7 +28,7 @@ describe VMDB::Config do
       errors = VMDB::Config.save_file("xxx")
       expect(errors.length).to eq(1)
       expect(errors.first[0]).to eq(:contents)
-      expect(errors.first[1]).to match(/\AFile contents are malformed/)
+      expect(errors.first[1]).to start_with("File contents are malformed")
     end
   end
 

@@ -42,7 +42,7 @@ module MiqServer::ConfigurationManagement
     # Check that the column exists in the table and we are passed data that does not match
     # the current vaule.  The first check allows this code to run if we migrate down then
     # back up again.
-    if self.respond_to?(:name) && data.name && name != data.name
+    if respond_to?(:name) && data.name && name != data.name
       self.name = data.name
     end
 
