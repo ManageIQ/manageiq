@@ -189,7 +189,9 @@ module MiqReport::Generator
     where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
 
     time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
-    ext_options = {:only_cols => cols, :tz => tz, :time_profile => time_profile}
+    ext_options = {:tz => tz, :time_profile => time_profile}
+    # TODO: these columns need to be converted to real SQL columns
+    # only_cols = cols
     self.extras ||= {}
 
     if custom_results_method
@@ -202,6 +204,7 @@ module MiqReport::Generator
       else
         raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
       end
+      # TODO: results = results.select(only_cols)
       self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
 
     elsif performance
@@ -227,10 +230,11 @@ module MiqReport::Generator
         conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
         exp_sql, exp_includes = conditions.to_sql
         where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
-        ext_options[:only_cols] += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
+        # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
       end
 
       start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
+      # TODO: add .select(only_cols)
       results = VimPerformanceDaily
                 .find_entries(ext_options.merge(:class => klass))
                 .where(where_clause)
@@ -264,10 +268,13 @@ module MiqReport::Generator
     else
       # Basic report
       # Daily and Hourly for: C&U main reports go through here too
-      ext_options[:only_cols] += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
+      # TODO: need to enhance only_cols to better support virtual columns
+      # only_cols += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
       # NOTE: using search to get user property "managed", otherwise this is overkill
       results, attrs = Rbac.search(
         options.merge(
+          # TODO: add once only_cols is fixed
+          # :targets          => klass.select(only_cols),
           :class            => db,
           :filter           => conditions,
           :include_for_find => includes,
