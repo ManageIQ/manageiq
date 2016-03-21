@@ -17,15 +17,3 @@
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
               ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show this Security Group's parent %s") % ui_lookup(:table => "ems_network"))
-        - if role_allows(:feature => "vm_show_list")
-          = li_link(:count => @record.number_of(:vms),
-            :text          => _("Instances"),
-            :record_id     => @record.id,
-            :display       => 'instances',
-            :title         => _("Show all Instances"))
-        - if role_allows(:feature => "orchestration_stack_show") && @record.orchestration_stack
-          %li
-            - t = [ui_lookup(:table => "orchestration_stack"), ui_lookup(:table => "security_group")]
-            = link_to("#{ui_lookup(:table => "orchestration_stack")}: #{@record.orchestration_stack.name}",
-              {:controller => "orchestration_stack", :action => 'show', :id => @record.orchestration_stack.id.to_s},
-              :title => _("Show parent %s for this %s") % t)
