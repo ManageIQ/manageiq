@@ -1474,6 +1474,10 @@ module VmCommon
         else
           rec = TreeBuilder.get_model_for_prefix(@nodetype).constantize.find(from_cid(id))
           options.merge!({:association => "#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent => rec})
+          options[:where_clause] = MiqExpression.merge_where_clauses(
+            options[:where_clause],
+            "NOT #{VmOrTemplate::ARCHIVED_CONDITIONS} OR #{VmOrTemplate::ORPHANED_CONDITIONS}"
+          )
           process_show_list(options)
           model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model => rec.class.base_class.to_s)
           @is_redhat = case model_name

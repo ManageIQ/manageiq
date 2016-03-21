@@ -401,10 +401,6 @@ class TreeBuilder
         ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
          (object.kind_of?(Zone) && MiqServer.my_server(true).my_zone == object.name))
 
-    # # open nodes to show selected automate entry point
-    # x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
-    # x_tree[:open_nodes] = @open_nodes.dup if @open_nodes
-
     node = x_build_single_node(object, pid, options)
 
     if [:policy_profile_tree, :policy_tree].include?(options[:tree])

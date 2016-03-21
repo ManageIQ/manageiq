@@ -136,7 +136,10 @@ describe MiqReport do
     it "filters vms in folders" do
       host = FactoryGirl.create(:host)
       vm1  = FactoryGirl.create(:vm_vmware, :host => host)
+      allow(vm1).to receive(:archived?).and_return(false)
       vm2  = FactoryGirl.create(:vm_vmware, :host => host)
+      allow(vm2).to receive(:archived?).and_return(false)
+      allow(Vm).to receive(:find_by).and_return(vm1)
 
       root        = FactoryGirl.create(:ems_folder, :name => "datacenters")
       root.parent = host
@@ -191,7 +194,10 @@ describe MiqReport do
 
       host2 = FactoryGirl.create(:host)
       vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b")
+      allow(vmb).to receive(:archived?).and_return(false)
       vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c")
+      allow(vmc).to receive(:archived?).and_return(false)
+      allow(Vm).to receive(:find_by).and_return(vmb)
 
       report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
       results, = report.paged_view_search(

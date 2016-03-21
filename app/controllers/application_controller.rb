@@ -142,8 +142,8 @@ class ApplicationController < ActionController::Base
 
   def build_targets_hash(items, typ = true)
     @targets_hash ||= {}
-    # if array of objects came in
     if typ
+      # if array of objects came in
       items.each do |item|
         @targets_hash[item.id.to_i] = item
       end
