@@ -13,8 +13,4 @@ class FloatingIpController < ApplicationController
   def self.display_methods
     %w()
   end
-
-  def self.title
-    _("Floating IPs")
-  end
 end

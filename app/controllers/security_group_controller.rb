@@ -13,8 +13,4 @@ class SecurityGroupController < ApplicationController
   def self.display_methods
     %w(instances)
   end
-
-  def self.title
-    _("Security Groups")
-  end
 end

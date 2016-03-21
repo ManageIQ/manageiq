@@ -13,8 +13,4 @@ class NetworkRouterController < ApplicationController
   def self.display_methods
     %w(instances cloud_subnets)
   end
-
-  def self.title
-    _("Routers")
-  end
 end

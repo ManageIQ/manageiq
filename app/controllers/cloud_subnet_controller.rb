@@ -13,8 +13,4 @@ class CloudSubnetController < ApplicationController
   def self.display_methods
     %w(instances)
   end
-
-  def self.title
-    _("Subnets")
-  end
 end
