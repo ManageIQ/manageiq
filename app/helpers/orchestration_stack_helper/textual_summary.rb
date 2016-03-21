@@ -81,14 +81,8 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_cloud_networks
-    label = ui_lookup(:tables => "cloud_network")
     num   = @record.number_of(:cloud_networks)
-    h     = {:label => label, :image => "cloud_network", :value => num}
-    if num > 0
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'cloud_networks', :id => @record)
-      h[:title] = "Show all #{label}"
-    end
-    h
+    {:label => ui_lookup(:tables => "cloud_network"), :image => "cloud_network", :value => num}
   end
 
   def textual_parameters
