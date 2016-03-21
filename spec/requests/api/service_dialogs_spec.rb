@@ -119,11 +119,12 @@ describe ApiController do
 
       run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
 
-      expect_single_action_result(:success => true,
-                                  :message => /refreshing dialog fields/i,
-                                  :href    => service_dialogs_url(dialog1.id))
-      expect_hash_to_have_keys(response_hash, %w(result))
-      expect_hash_to_have_keys(response_hash["result"], %w(text1))
+      expect(response_hash).to include(
+        "success" => true,
+        "message" => a_string_matching(/refreshing dialog fields/i),
+        "href"    => a_string_matching(service_dialogs_url(dialog1.id)),
+        "result"  => hash_including("text1")
+      )
     end
   end
 end
