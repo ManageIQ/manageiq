@@ -25,14 +25,22 @@ describe MiqWebServerWorkerMixin do
     Rails.application.secrets = @secrets
   end
 
-  it ".configure_secret_token resets secrets when token unconfigured" do
+  it ".configure_secret_token defaults to MiqDatabase session_secret_token" do
     Rails.application.config.secret_token = nil
 
     test_class.configure_secret_token
     expect(Rails.application.secrets[:secret_token]).to eq(MiqDatabase.first.session_secret_token)
   end
 
-  it ".configure_secret_token does not reset secrets when token configured" do
+  it ".configure_secret_token accepts an input token" do
+    Rails.application.config.secret_token = nil
+
+    token = SecureRandom.hex(64)
+    test_class.configure_secret_token(token)
+    expect(Rails.application.secrets[:secret_token]).to eq(token)
+  end
+
+  it ".configure_secret_token does not reset secrets when token already configured" do
     Rails.application.config.secret_token = SecureRandom.hex(64)
     Rails.application.secrets = nil
     Rails.application.secrets

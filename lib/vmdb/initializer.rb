@@ -20,7 +20,7 @@ module Vmdb
 
       # Rails console needs session store configured
       if defined?(Rails::Console)
-        MiqUiWorker.preload_for_worker_role
+        MiqUiWorker.preload_for_console
       end
     end
   end
