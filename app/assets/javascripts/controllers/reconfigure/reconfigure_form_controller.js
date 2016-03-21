@@ -5,13 +5,24 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         memory_type:             '',
         socket_count:            '1',
         cores_per_socket_count:  '1',
-        total_cpus:              '1'
+        total_cpus:              '1',
+        vmDisks:                 [],
+        hdFilename:              '',
+        hdType:                  'thick',
+        hdMode:                  'nonpersistent',
+        hdSize:                  '',
+        hdUnit:                  'MB',
+        cb_dependent:            false,
+        addEnabled:              false,
+        vmAddDisks:              [],
+        vmRemoveDisks:           []
       };
       $scope.reconfigureFormId = reconfigureFormId;
       $scope.afterGet = false;
       $scope.objectIds = objectIds;
       $scope.cb_memory = $scope.cb_memoryCopy = false;
       $scope.cb_cpu = $scope.cb_cpuCopy = false;
+      $scope.cb_disks = false;
 
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.validateClicked = miqService.validateWithAjax;
@@ -34,6 +45,13 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
         $scope.cb_memory = data.cb_memory;
         $scope.cb_cpu = data.cb_cpu;
+        $scope.reconfigureModel.vmDisks = angular.copy(data.disks);
+
+        $scope.updateDisksAddRemove();
+
+        for (var disk in $scope.reconfigureModel.vmDisks)
+          if($scope.reconfigureModel.vmDisks[disk]['add_remove'] == '' )
+            $scope.reconfigureModel.vmDisks[disk]['cb_deletebacking'] = false;
 
         if(data.socket_count && data.cores_per_socket_count)
           $scope.reconfigureModel.total_cpus = (parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10)).toString();
@@ -62,7 +80,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         ($scope.angularForm.socket_count && !$scope.angularForm.socket_count.$valid) ||
         ($scope.angularForm.mem_type && !$scope.angularForm.mem_type.$valid) ||
         ($scope.angularForm.cores_per_socket_count && !$scope.angularForm.cores_per_socket_count.$valid) ||
-        ($scope.angularForm.total_cpus && !$scope.angularForm.total_cpus.$valid))
+        ($scope.angularForm.total_cpus && !$scope.angularForm.total_cpus.$valid)
+        ($scope.angularForm.hdSize && !$scope.angularForm.hdSize.$valid))
         return false;
       else
         return true;
@@ -73,7 +92,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       var cpuUnchanged = false;
       miqService.miqFlashClear();
 
-      if(!$scope.newRecord)
+      if(!$scope.newRecord || $scope.cb_disks)
         return;
       $scope.angularForm.$setValidity("unchanged", true);
 
@@ -126,6 +145,93 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       $scope.cbChange();
     };
 
+
+    $scope.updateDisksAddRemove = function() {
+      $scope.reconfigureModel.vmAddDisks.length = 0;
+      $scope.reconfigureModel.vmRemoveDisks.length = 0;
+      for (var disk in $scope.reconfigureModel.vmDisks) {
+        if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'remove') {
+          $scope.reconfigureModel.vmRemoveDisks.push({disk_name: $scope.reconfigureModel.vmDisks[disk].hdFilename,
+                                     delete_backing: $scope.reconfigureModel.vmDisks[disk].cb_deletebacking});
+        }
+        else if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'add') {
+          var dsize = parseInt($scope.reconfigureModel.vmDisks[disk].hdSize);
+          if($scope.reconfigureModel.vmDisks[disk].hdUnit == 'GB')
+            dsize *= 1024;
+          dmode = ($scope.reconfigureModel.vmDisks[disk].hdMode == 'persistent');
+          dtype = ($scope.reconfigureModel.vmDisks[disk].hdType != 'thin');
+          $scope.reconfigureModel.vmAddDisks.push({disk_name: $scope.reconfigureModel.vmDisks[disk].hdFilename,
+                                  size: dsize,
+                                  mode: dmode,
+                                  disk_type: dtype});
+        }
+      }
+    };
+
+    $scope.addDisk = function() {
+      $scope.reconfigureModel.vmDisks.push({hdFilename: $scope.reconfigureModel.hdFilename,
+                                            hdType: $scope.reconfigureModel.hdType,
+                                            hdMode: $scope.reconfigureModel.hdMode,
+                                            hdSize: $scope.reconfigureModel.hdSize,
+                                            hdUnit: $scope.reconfigureModel.hdUnit,
+                                            cb_dependent: $scope.reconfigureModel.cb_dependent,
+                                            add_remove: 'add'});
+      $scope.reconfigureModel.hdFilename = '';
+      $scope.reconfigureModel.hdType = 'thick';
+      $scope.reconfigureModel.hdMode = 'nonpersistent';
+      $scope.reconfigureModel.hdSize = '';
+      $scope.reconfigureModel.hdUnit = 'MB';
+      $scope.reconfigureModel.cb_dependent = false;
+      $scope.reconfigureModel.addEnabled = false;
+
+      $scope.updateDisksAddRemove();
+      $scope.angularForm.$setPristine(false);
+
+      if( $scope.reconfigureModel.vmAddDisks.length > 0  || $scope.reconfigureModel.vmRemoveDisks.length > 0)
+        $scope.cb_disks = true;
+      else
+        $scope.cb_disks = false;
+    };
+
+    $scope.enableDiskAdd = function(){
+      $scope.reconfigureModel.addEnabled = true;
+    };
+
+    $scope.deleteDisk = function(name) {
+      for (var disk in $scope.reconfigureModel.vmDisks) {
+        if ($scope.reconfigureModel.vmDisks[disk].hdFilename === name)
+          $scope.reconfigureModel.vmDisks[disk]['add_remove'] = 'remove';
+      }
+      $scope.updateDisksAddRemove();
+      $scope.angularForm.$setPristine(false);
+
+      if( $scope.reconfigureModel.vmAddDisks.length > 0  || $scope.reconfigureModel.vmRemoveDisks.length > 0)
+        $scope.cb_disks = true;
+      else
+        $scope.cb_disks = false;
+    };
+
+    $scope.cancelAddRemoveDisk = function(vmDisk) {
+      for (var disk in $scope.reconfigureModel.vmDisks) {
+        if ($scope.reconfigureModel.vmDisks[disk].hdFilename === vmDisk['hdFilename']) {
+          if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'remove') {
+            $scope.reconfigureModel.vmDisks[disk]['add_remove'] = '';
+            $scope.reconfigureModel.vmDisks[disk]['cb_deletebacking'] = false;
+          }
+          else if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'add') {
+            var index = $scope.reconfigureModel.vmDisks.indexOf(vmDisk);
+            $scope.reconfigureModel.vmDisks.splice(index, 1);
+            break;
+          }
+        }
+      }
+      $scope.updateDisksAddRemove();
+      if( $scope.reconfigureModel.vmAddDisks.length > 0  || $scope.reconfigureModel.vmRemoveDisks.length > 0)
+        $scope.cb_disks = true;
+      else
+        $scope.cb_disks = false;
+    };
+
     var reconfigureEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
       var url = 'reconfigure_update/' + reconfigureFormId + '?button=' + buttonName;
@@ -138,7 +244,10 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
                                        memory:                 $scope.reconfigureModel.memory,
                                        memory_type:            $scope.reconfigureModel.memory_type,
                                        socket_count:           $scope.reconfigureModel.socket_count,
-                                       cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count});
+                                       cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count,
+                                       vmAddDisks:             $scope.reconfigureModel.vmAddDisks,
+                                       vmRemoveDisks:          $scope.reconfigureModel.vmRemoveDisks
+                                      });
       }
     };
 

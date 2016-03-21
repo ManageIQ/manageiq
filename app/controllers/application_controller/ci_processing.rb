@@ -408,6 +408,9 @@ module ApplicationController::CiProcessing
         vsockets = params[:socket_count] == 0 ? 1 : params[:socket_count]
         options[:number_of_cpus] = vccores.to_i * vsockets.to_i
       end
+      # set the disk_add and disk_remove options
+      options[:disk_add] = params[:vmAddDisks].deep_symbolize_keys if params[:vmAddDisks]
+      options[:disk_remove] = params[:vmRemoveDisks].deep_symbolize_keys if params[:vmRemoveDisks]
       if(params[:id] && params[:id] != 'new')
         @request_id = params[:id]
       end
@@ -1112,8 +1115,13 @@ module ApplicationController::CiProcessing
     cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
     cores_per_socket = '' unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
     memory, memory_type = reconfigure_calculations(memory)
+    # if only one vm that supports disk reconfiguration is selected, get the disks information
+    vmDisks = []
+    @reconfigureitems.first.hardware.disks.each do |disk|
+      vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => disk.size.to_s, :add_remove => ''}
+    end
 
-    { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s}
+    { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s, :disks => vmDisks}
   end
 
   def get_reconfig_limits
@@ -1147,6 +1155,34 @@ module ApplicationController::CiProcessing
       @reconfig_values[:memory], @reconfig_values[:memory_type] = @req.options[:vm_memory] ? reconfigure_calculations(@req.options[:vm_memory]) : ['','']
       @reconfig_values[:cores_per_socket_count] = @req.options[:cores_per_socket] ? @req.options[:cores_per_socket].to_s : ''
       @reconfig_values[:socket_count] = @req.options[:number_of_sockets] ? @req.options[:number_of_sockets].to_s : ''
+      # check if there is only one VM that supports disk reconfiguration
+
+      @reconfig_values[:disk_add] = @req.options[:disk_add]
+      @reconfig_values[:disk_remove] = @req.options[:disk_remove]
+      vmDisks = []
+      if(@req.options[:disk_add])
+        @req.options[:disk_add].values.each do |disk|
+          vmDisks << {:hdFilename => "#{disk[:disk_name]}", :hdType => "#{disk[:disk_type] ? 'thin' : 'thick'}", :hdMode =>"#{disk[:mode] ? 'persistent' : 'nonpersistent'}", :hdSize => disk[:size].to_s, :add_remove => 'add'}
+        end
+      end
+
+      reconfig_item = Vm.find(@reconfigure_items)
+      if reconfig_item
+        reconfig_item.first.hardware.disks.each do |disk|
+          removing = ''
+          delbacking = false
+          if disk.filename && @req.options[:disk_remove]
+            @req.options[:disk_remove].values.each do |remdisk|
+              if remdisk[:disk_name] == disk.filename
+                removing = 'remove'
+                delbacking = remdisk[:delete_backing]
+              end
+            end
+          end
+          vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => disk.size.to_s, :delete_backing => delbacking, :add_remove => removing}
+        end
+      end
+      @reconfig_values[:disks] = vmDisks
     end
 
     @reconfig_values[:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
@@ -1154,15 +1190,14 @@ module ApplicationController::CiProcessing
     @reconfig_values
   end
 
-  def reconfigure_calculations(memory)
-    if memory.to_i > 1024 && memory.to_i % 1024 == 0
-      mem = memory.to_i / 1024
+  def reconfigure_calculations(mbsize)
+    humansize = mbsize
+    fmt = "MB"
+    if mbsize.to_i > 1024 && mbsize.to_i % 1024 == 0
+      humansize = mbsize.to_i / 1024
       fmt = "GB"
-    else
-      mem = memory
-      fmt = "MB"
     end
-    return mem.to_s, fmt
+    return humansize.to_s, fmt
   end
 
   # Common VM button handler routines
