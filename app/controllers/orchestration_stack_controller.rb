@@ -98,6 +98,9 @@ class OrchestrationStackController < ApplicationController
         @refresh_partial = "layouts/gtl"
         show                                                        # Handle VMs buttons
       end
+    elsif params[:pressed] == "make_ot_orderable"
+      make_ot_orderable
+      return
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
@@ -143,6 +146,32 @@ class OrchestrationStackController < ApplicationController
   end
 
   private ############################
+
+  def make_ot_orderable
+    stack = find_by_id_filtered(OrchestrationStack, params[:id])
+    template = stack.orchestration_template
+    if template.orderable?
+      add_flash(_("Orchestration template \"%{name}\" is already orderable") % {:name => template.name}, :error)
+      render_flash
+    else
+      begin
+        template.save_as_orderable!
+      rescue StandardError => bang
+        add_flash(_("An error occured when changing orchestration template \"%{name}\" to orderable: %{err_msg}") %
+          {:name => template.name, :err_msg => bang.message}, :error)
+        render_flash
+      else
+        @record = stack
+        add_flash(_("Orchestration template \"%{name}\" is now orderable") % {:name => template.name})
+        render :update do |page|
+          page << javascript_prologue
+          page.replace(:form_div, :partial => "stack_orchestration_template")
+          page << javascript_pf_toolbar_reload('center_tb', build_toolbar(center_toolbar_filename))
+          page << javascript_show_if_exists(:toolbar)
+        end
+      end
+    end
+  end
 
   def get_session_data
     @title      = _("Stack")
