@@ -1104,6 +1104,142 @@ Vmdb::Application.routes.draw do
                save_post
     },
 
+    :ems_network              => {
+      :get  => %w(
+        dialog_load
+        discover
+        download_data
+        edit
+        index
+        new
+        protect
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        dynamic_list_refresh
+        dynamic_radio_button_refresh
+        dynamic_text_box_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        protect
+        provider_type_field_changed
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+        tl_chooser
+        update
+        wait_for_task
+      ) +
+        adv_search_post +
+        compare_post +
+        dialog_runner_post +
+        discover_get_post +
+        exp_post +
+        save_post
+    },
+
+    :security_group           => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        panel_control
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
+    },
+
+    :floating_ip              => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        panel_control
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
+    },
+
+    :cloud_subnet             => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        panel_control
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
+    },
+
+    :network_router           => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        panel_control
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
+    },
 
     :flavor                   => {
       # FIXME: Change tagging_edit to POST only; We need to remove the redirects
@@ -1946,29 +2082,6 @@ Vmdb::Application.routes.draw do
                save_post
     },
 
-    :security_group           => {
-      :get  => %w(
-        download_data
-        index
-        show
-        show_list
-        tagging_edit
-      ) +
-               compare_get,
-      :post => %w(
-        button
-        quick_search
-        panel_control
-        show
-        show_list
-        tag_edit_form_field_changed
-        tagging_edit
-      ) +
-               adv_search_post +
-               compare_post +
-               exp_post
-    },
-
     :service                  => {
       :get  => %w(
         download_data
@@ -2161,6 +2274,9 @@ Vmdb::Application.routes.draw do
         scan_histories
         sections_field_changed
         security_groups
+        floating_ips
+        network_routers
+        cloud_subnets
         show
         squash_toggle
         tagging_edit
