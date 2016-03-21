@@ -14,7 +14,7 @@ describe PglogicalSubscription do
         "subscription_name" => "subscription_test_example_com",
         "status"            => "disabled",
         "provider_node"     => "region_1",
-        "provider_dsn"      => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432",
+        "provider_dsn"      => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
         "slot_name"         => "pgl_vmdb_test_region_1_subscripdb71d61",
         "replication_sets"  => ["miq"],
         "forward_origins"   => ["all"]
