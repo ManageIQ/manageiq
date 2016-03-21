@@ -147,7 +147,7 @@ class Volume < ApplicationRecord
   end
 
   def self.find_disk_by_controller(parent, controller)
-    return parent.hardware.disks.find_by_controller_type_and_location($1, $2) if controller =~ /^([^0-9]+)([0-9]:[0-9]):[0-9]$/
+    return parent.hardware.disks.find_by(:controller_type => $1, :location => $2) if controller =~ /^([^0-9]+)([0-9]:[0-9]):[0-9]$/
     nil
   end
 end
