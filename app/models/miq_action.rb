@@ -460,8 +460,10 @@ class MiqAction < ApplicationRecord
 
   def run_script(rec)
     filename = self.options[:filename]
-    raise "unable to execute script, no file name specified" if filename.nil?
-    raise "unable to execute script, file name [#{filename} does not exist]" unless File.exist?(filename)
+    raise _("unable to execute script, no file name specified") if filename.nil?
+    unless File.exist?(filename)
+      raise _("unable to execute script, file name [%{file_name} does not exist]") % {:file_name => filename}
+    end
 
     fd    = Tempfile.new("miq_action", SCRIPT_DIR)
     fname = fd.path
@@ -493,11 +495,17 @@ class MiqAction < ApplicationRecord
     when 4
       MiqPolicy.logger.warn("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
     when 8
-      raise MiqException::StopAction, "Action script exited with rc=#{rc_verbose}, error=#{command_result.error}"
+      raise MiqException::StopAction,
+            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
+                                                                                  :error_text => command_result.error}
     when 16
-      raise MiqException::AbortAction, "Action script exited with rc=#{rc_verbose}, error=#{command_result.error}"
+      raise MiqException::AbortAction,
+            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
+                                                                                  :error_text => command_result.error}
     else
-      raise MiqException::UnknownActionRc, "Action script exited with rc=#{rc_verbose}, error=#{command_result.error}"
+      raise MiqException::UnknownActionRc,
+            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
+                                                                                  :error_text => command_result.error}
     end
   end
 
@@ -864,7 +872,7 @@ class MiqAction < ApplicationRecord
 
     MiqPolicy.logger.info("MIQ(action_cancel_task): Now executing Cancel of task [#{inputs[:ems_event].event_type}] on VM [#{inputs[:ems_event].vm_name}]")
     ems = ExtManagementSystem.find_by_id(inputs[:ems_event].ems_id)
-    raise "unable to find vCenter with id [#{inputs[:ems_event].ems_id}]" if ems.nil?
+    raise _("unable to find vCenter with id [%{id}]") % {:id => inputs[:ems_event].ems_id} if ems.nil?
 
     vim = ems.connect
     vim.cancelTask(task_mor)
@@ -877,7 +885,10 @@ class MiqAction < ApplicationRecord
     MiqAeEngine.set_automation_attributes_from_objects([inputs[:policy], inputs[:ems_event]], automate_attrs)
 
     user = rec.tenant_identity
-    raise "A user is needed to raise an action to automate. [#{rec.class.name}] id:[#{rec.id}] action: [#{action.description}]" unless user
+    unless user
+      raise _("A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: [%{description}]") %
+              {:name => rec.class.name, :id => rec.id, :description => action.description}
+    end
 
     args = {
       :object_type      => rec.class.base_class.name,
@@ -1037,7 +1048,7 @@ class MiqAction < ApplicationRecord
   end
 
   def check_policy_contents_empty_on_destroy
-    raise "Action is referenced in at least one policy and connot be deleted" unless miq_policy_contents.empty?
+    raise _("Action is referenced in at least one policy and connot be deleted") unless miq_policy_contents.empty?
   end
 
   def round_if_memory_reconfigured

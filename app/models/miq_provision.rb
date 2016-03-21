@@ -87,11 +87,13 @@ class MiqProvision < MiqProvisionTask
   def self.get_description(prov_obj, vm_name)
     request_type = prov_obj.options[:request_type]
     title = case request_type
-            when :clone_to_vm       then "Clone"
-            when :clone_to_template then "Publish"
-            else "Provision"
+            when :clone_to_vm       then _("Clone")
+            when :clone_to_template then _("Publish")
+            else _("Provision")
             end
 
-    "#{title} from [#{prov_obj.vm_template.name}] to [#{vm_name}]"
+    _("%{title} from [%{name}] to [%{vm_name}]") % {:title   => title,
+                                                    :name    => prov_obj.vm_template.name,
+                                                    :vm_name => vm_name}
   end
 end

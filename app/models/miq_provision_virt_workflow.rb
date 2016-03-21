@@ -118,7 +118,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       vlan = nil
       show_dialog(:customize, :show, "disabled")
     else
-      raise "Source VM [#{vm.name}] does not belong to a #{ui_lookup(:table => "ext_management_systems")}" if vm.ext_management_system.nil?
+      if vm.ext_management_system.nil?
+        raise _("Source VM [%{name}] does not belong to a %{table}") %
+                {:name => vm.name, :table => ui_lookup(:table => "ext_management_systems")}
+      end
       set_or_default_hardware_field_values(vm)
 
       # Record the nic/lan setting on the template for validation checks at provision time.
@@ -160,19 +163,21 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def validate_memory_reservation(_field, values, dlg, fld, _value)
     allocated = get_value(values[:vm_memory]).to_i
     reserved  = get_value(values[:memory_reserve]).to_i
-    "#{required_description(dlg, fld)} Reservation is larger than VM Memory" if reserved > allocated
+    if reserved > allocated
+      _("%{description} Reservation is larger than VM Memory") % {:description => required_description(dlg, fld)}
+    end
   end
 
   def validate_pxe_image_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_image.nil?
-    "#{required_description(dlg, fld)} is required"
+    _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_pxe_server_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_server.nil?
-    "#{required_description(dlg, fld)} is required"
+    _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_placement(field, values, dlg, fld, value)
@@ -180,31 +185,35 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return nil unless value.blank?
     return nil if get_value(values[:placement_auto]) == true
     return nil unless get_value(values[field]).blank?
-    "#{required_description(dlg, fld)} is required"
+    _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_sysprep_upload(field, values, dlg, fld, value)
     return nil unless value.blank?
     return nil unless get_value(values[:sysprep_enabled]) == 'file'
     return nil unless get_value(values[field]).blank?
-    "#{required_description(dlg, fld)} is required"
+    _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_sysprep_field(field, values, dlg, fld, value)
     return nil unless value.blank?
     return nil unless get_value(values[:sysprep_enabled]) == 'fields'
     return nil unless get_value(values[field]).blank?
-    "#{required_description(dlg, fld)} is required"
+    _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def default_require_sysprep_enabled(_field, _values, dlg, fld, value)
     # This method is available as a dialog field validation. Do not erase.
-    "#{required_description(dlg, fld)} is required" if value.blank? || value == "disabled"
+    if value.blank? || value == "disabled"
+      _("%{description} is required") % {:description => required_description(dlg, fld)}
+    end
   end
 
   def default_require_sysprep_custom_spec(_field, _values, dlg, fld, value)
     # This method is available as a dialog field validation. Do not erase.
-    "#{required_description(dlg, fld)} is required" if value.blank? || value == "__VC__NONE__"
+    if value.blank? || value == "__VC__NONE__"
+      _("%{description} is required") % {:description => required_description(dlg, fld)}
+    end
   end
 
   def update_field_visibility(options = {})
@@ -584,7 +593,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result = {}
     return result if (vm = get_source_vm).blank?
     vm.snapshots.each { |ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name }
-    result["__CURRENT__"] = " Use the snapshot that is active at time of provisioning" unless result.blank?
+    result["__CURRENT__"] = _(" Use the snapshot that is active at time of provisioning") unless result.blank?
     result
   end
 
@@ -949,7 +958,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p = new(values, user, :use_pre_dialog => false)
     src_name_down = src_name.downcase
     src = p.allowed_templates.detect { |v| v.name.downcase == src_name_down }
-    raise "Source template [#{src_name}] was not found" if src.nil?
+    raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
     p = class_for_source(src.id).new(values, user, :use_pre_dialog => false)
 
     # Populate required fields
@@ -969,7 +978,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if p.validate(values) == false
       errors = []
       p.fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
-      raise "Provision failed for the following reasons:\n#{errors.join("\n")}"
+      raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
     end
 
     p.create_request(values, nil, auto_approve)
@@ -999,10 +1008,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         _log.info "VM Detected: <#{v.name.downcase}> <#{v.guid}> <#{v.uid_ems}> Datacenter:<#{v.datacenter_name}>"
         (src_name.nil? || src_name == v.name.downcase) && (src_guid.nil? || src_guid == v.guid) && (ems_guid.nil? || ems_guid == v.uid_ems) && (data_centers.nil? || data_centers.include?(v.datacenter_name))
       end
-      raise "Multiple source template were found from input data:<#{data.inspect}>" if srcs.length > 1
+      if srcs.length > 1
+        raise _("Multiple source template were found from input data:<%{data}>") % {:data => data.inspect}
+      end
       src = srcs.first
     end
-    raise "No source template was found from input data:<#{data.inspect}>" if src.nil?
+    if src.nil?
+      raise _("No source template was found from input data:<%{data}>") % {:data => data.inspect}
+    end
     _log.info "VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>"
     src
   end
@@ -1141,7 +1154,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     p = new(values = {}, user, init_options)
     src = p.ws_template_fields(values, template_fields, options.values)
-    raise "Source template [#{src_name}] was not found" if src.nil?
+    raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
     # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
     values.delete(:miq_request_dialog_name)
     p = class_for_source(src.id).new(values, user, init_options)
@@ -1223,7 +1236,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def selected_host(src)
-    raise "Unable to find Host with Id: [#{src[:host_id]}]" if src[:host].nil?
+    raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
     [load_ar_obj(src[:host])]
   end
 

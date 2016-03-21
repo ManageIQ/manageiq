@@ -60,7 +60,9 @@ class MiqPolicySet < ApplicationRecord
 
   def self.import_from_hash(policy_profile, options = {})
     status = {:class => name, :description => policy_profile["description"], :children => []}
-    pp = policy_profile.delete("MiqPolicy") { |_k| raise "No Policies for Policy Profile == #{policy_profile.inspect}" }
+    pp = policy_profile.delete("MiqPolicy") do |_k|
+      raise _("No Policies for Policy Profile == %{profile}") % {:profile => policy_profile.inspect}
+    end
 
     policies = []
     pp.each do |p|
