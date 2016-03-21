@@ -100,6 +100,8 @@ class OrchestrationStackController < ApplicationController
         @refresh_partial = "layouts/gtl"
         show                                                        # Handle VMs buttons
       end
+    elsif params[:pressed] == "make_ot_orderable"
+      make_ot_orderable
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
@@ -144,6 +146,22 @@ class OrchestrationStackController < ApplicationController
   end
 
   private ############################
+
+  def make_ot_orderable
+    template = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    if template.orderable?
+      add_flash(_("Orchestration template \"%{name}\" is already orderable") % {:name => template.name}, :error)
+    else
+      begin
+        template.save_as_orderable!
+      rescue StandardError => bang
+        add_flash(_("An error occured when changing orchestratino template \"%{name}\" to orderable: %{err_msg}") %
+          {:name => template.name, :err_msg => bang.message}, :error)
+      else
+        add_flash(_("Orchestration template \"%{name}\" is now orderable") % {:name => template.name})
+      end
+    end
+  end
 
   def get_session_data
     @title      = _("Stack")
