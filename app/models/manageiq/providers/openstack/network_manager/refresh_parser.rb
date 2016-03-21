@@ -268,7 +268,7 @@ module ManageIQ::Providers
         :network_protocol               => "ipv#{subnet.ip_version}",
         :gateway                        => subnet.gateway_ip,
         :dhcp_enabled                   => subnet.enable_dhcp,
-        :cloud_tenant_id                => parent_manager_fetch_path(:cloud_tenants, subnet.tenant_id),
+        :cloud_tenant                   => parent_manager_fetch_path(:cloud_tenants, subnet.tenant_id),
         :dns_nameservers                => subnet.dns_nameservers,
         :ipv6_router_advertisement_mode => subnet.attributes["ipv6_ra_mode"],
         :ipv6_address_mode              => subnet.attributes["ipv6_address_mode"],
