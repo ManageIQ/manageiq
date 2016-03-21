@@ -86,7 +86,7 @@ class TestEnvHelper
     end
   end
 
-    def global_config
+  def global_config
     self.class.global_config
   end
 
