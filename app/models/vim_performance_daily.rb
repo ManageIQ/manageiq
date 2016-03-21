@@ -176,9 +176,10 @@ class VimPerformanceDaily < MetricRollup
     klass = options[:class] || self
     results.inject([]) do |a, h|
       if options[:save]
-        perf = find_by_timestamp_and_capture_interval_name_and_resource_type_and_resource_id(
-          h[:timestamp], h[:capture_interval_name], h[:resource_type], h[:resource_id]
-        )
+        perf = find_by(:timestamp => h[:timestamp],
+                       :capture_interval_name => h[:capture_interval_name],
+                       :resource_type => h[:resource_type],
+                       :resource_id => h[:resource_id])
 
         perf ? perf.update_attributes!(h) : perf = create(h)
 
