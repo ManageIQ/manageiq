@@ -695,7 +695,7 @@ class MiqRequestWorkflow
     pre_dialog_name = dialog_name_from_automate('get_pre_dialog_name')
     unless pre_dialog_name.blank?
       pre_dialog_name = File.basename(pre_dialog_name, ".rb")
-      d = MiqDialog.find_by_name_and_dialog_type(pre_dialog_name, self.class.base_model.name)
+      d = MiqDialog.find_by(:name => pre_dialog_name, :dialog_type => self.class.base_model.name)
       unless d.nil?
         _log.info "Loading pre-dialogs <#{pre_dialog_name}> for user <#{@requester.userid}>"
         pre_dialogs = d.content

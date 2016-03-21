@@ -287,7 +287,7 @@ module MiqAeCustomizationController::OldDialogs
           self.x_node = "xx-MiqDialog_#{dialog.dialog_type}"
         else
           if params[:button] == "add"
-            d = MiqDialog.find_by_name_and_dialog_type(dialog.name, dialog.dialog_type)
+            d = MiqDialog.find_by(:name => dialog.name, :dialog_type => dialog.dialog_type)
             self.x_node = "odg-#{to_cid(d.id)}"
           end
         end
