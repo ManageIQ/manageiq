@@ -1,11 +1,11 @@
 module MiqProvision::PostInstallCallback
   extend ActiveSupport::Concern
 
-  # This method will be called via callback if the VM is unable to shut itself down.
-  # If called, we just stop the VM.  The state machine (running on a different worker)
-  # will be waiting for the power off.
+  # This method will be called via callback if the installer is unable to shut itself down.  If the state machine is
+  # waiting for the VM poweroff, we stop the VM. (:poll_destination_powered_off_in_vmdb, :poll_destination_powered_off_in_provider)
+  # The state machine (running on a different worker) will continue when the VM is off.
   def post_install_callback
-    if phase.to_sym == :poll_destination_powered_off_in_vmdb
+    if phase.to_s.include?("poll_destination_powered_off")
       _log.info("Powering Off #{for_destination}")
 
       destination.stop
