@@ -141,7 +141,7 @@ module ManageIQ::Providers
 
           # Collect the hardware, networking, and scsi inventories
           switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv, ems_inv[:ems].guid)
-          lans, lan_uids[mor] = host_inv_to_lan_hashes(host_inv, switch_uids[mor], ems_inv[:ems].guid)
+          _lans, lan_uids[mor] = host_inv_to_lan_hashes(host_inv, switch_uids[mor], ems_inv[:ems].guid)
 
           hardware = host_inv_to_hardware_hash(host_inv)
           hardware[:guest_devices], guest_device_uids[mor] = host_inv_to_guest_device_hashes(host_inv, switch_uids[mor])
