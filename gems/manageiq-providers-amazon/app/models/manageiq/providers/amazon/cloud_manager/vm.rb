@@ -62,6 +62,7 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
     when "pending"       then "suspended"
     when "terminated"    then "terminated"
     when "stopped"       then "off"
+    when "off"           then "off"
     # 'unknown' will be set by #disconnect_ems - which means 'terminated' in our case
     when "unknown"       then "terminated"
     else                      "terminated"

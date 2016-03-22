@@ -12,7 +12,7 @@ if vm
   $evm.log('info', "Instance:<#{vm.name}> on EMS:<#{ems.try(:name)} has Power State:<#{power_state}>")
 
   # If VM is powered off or this instance is running on an instance store
-  if %w(off suspended).include?(power_state) || vm.hardware.root_device_type == "instance_store"
+  if %w(off suspended terminated).include?(power_state) || vm.hardware.root_device_type == "instance_store"
     # Bump State
     $evm.root['ae_result'] = 'ok'
   elsif power_state == "never"
