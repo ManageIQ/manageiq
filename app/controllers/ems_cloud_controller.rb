@@ -23,4 +23,14 @@ class EmsCloudController < ApplicationController
   def ems_cloud_form_fields
     ems_form_fields
   end
+
+  # Special EmsCloud link builder for restful routes
+  def show_link(ems, options = {})
+    ems_path(ems.id, options)
+  end
+
+  def restful?
+    true
+  end
+  public :restful?
 end

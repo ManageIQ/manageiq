@@ -175,10 +175,6 @@ module Mixins
       thing.blank? ? nil : thing
     end
 
-    def show_link(ems, options = {})
-      ems_path(ems.id, options)
-    end
-
     def set_ems_record_vars(ems, mode = nil)
       ems.name            = params[:name].strip if params[:name]
       ems.provider_region = params[:provider_region]
@@ -259,10 +255,5 @@ module Mixins
                      :zone              => params[:zone]
       }
     end
-
-    def restful?
-      true
-    end
-    public :restful?
   end
 end
