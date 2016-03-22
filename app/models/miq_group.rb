@@ -4,7 +4,8 @@ class MiqGroup < ApplicationRecord
   TENANT_GROUP = "tenant"
 
   belongs_to :tenant
-  belongs_to :miq_user_role
+  has_one    :entitlement
+  has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
   has_many   :miq_templates, :dependent => :nullify
@@ -77,7 +78,7 @@ class MiqGroup < ApplicationRecord
     # find any default tenant groups that do not have a role
     tenant_role = MiqUserRole.default_tenant_role
     if tenant_role
-      tenant_groups.where(:miq_user_role_id => nil).each do |group|
+      tenant_groups.includes(:entitlement).where(:entitlements => {:miq_user_role_id => nil}).each do |group|
         group.update_attributes(:miq_user_role => tenant_role)
       end
     else

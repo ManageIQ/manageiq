@@ -3,7 +3,8 @@ class MiqUserRole < ApplicationRecord
   ADMIN_ROLE_NAME       = "EvmRole-administrator"
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
 
-  has_many                :miq_groups, :dependent => :restrict_with_exception
+  has_many                :entitlements, :dependent => :restrict_with_exception
+  has_many                :miq_groups, :through => :entitlements
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
   virtual_column :group_count,                      :type => :integer
