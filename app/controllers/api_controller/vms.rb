@@ -211,7 +211,6 @@ class ApiController
       #protocol = "mks"
       protocol = data["protocol"] || "vnc"
 
-      binding.pry
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
         api_log_info("Requesting Console #{vm_ident(vm)}")
@@ -385,7 +384,6 @@ class ApiController
 
     def request_console_vm(vm, protocol)
       desc = "#{vm_ident(vm)} requesting console"
-      binding.pry
       task_id = queue_object_action(vm, desc,
                                     :method_name => "remote_console_acquire_ticket",
                                     :role        => "ems_operations",
