@@ -155,7 +155,7 @@ module Mixins
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
                        :security_protocol               => @ems.security_protocol ? @ems.security_protocol : 'ssl',
                        :provider_region                 => @ems.provider_region,
-                       :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
+                       :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0,
                        :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :amqp_userid                     => amqp_userid,
                        :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
