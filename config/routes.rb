@@ -796,6 +796,12 @@ Vmdb::Application.routes.draw do
         data
       )
     },
+    :openshift_deployment      => {
+      :get => %w(
+        new
+        data
+      )
+    },
 
     :dashboard                => {
       :get  => %w(
@@ -964,6 +970,7 @@ Vmdb::Application.routes.draw do
 
     :ems_container            => {
       :get  => %w(
+        deployment
         download_data
         edit
         index

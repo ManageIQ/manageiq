@@ -7,6 +7,12 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
       t,
       :items => [
         button(
+          :ems_container_deployment,
+          'icon fa fa-plus fa-lg',
+          t = N_('Deploy a New #{ui_lookup(:table=>"ems_container")}'),
+          t,
+          :url => "/deployment"),
+        button(
           :ems_container_refresh,
           'icon fa fa-refresh fa-lg',
           N_('Refresh Items and Relationships for all #{ui_lookup(:table=>"ems_containers")}'),
