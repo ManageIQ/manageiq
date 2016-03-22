@@ -109,4 +109,33 @@ describe OpsController do
       expect(controller.send(:build_uri_settings, mocked_filedepot)).to include(settings)
     end
   end
+
+  context "#build_filtered_item_list" do
+    settings = {}
+    it "returns a filtered item list for MiqTemplate" do
+        controller.instance_variable_set(:@settings, settings)
+        current_user = FactoryGirl.create(:user)
+        FactoryGirl.create(:miq_search,
+                           :name        => "default_Environment / UAT",
+                           :description => "Environment / UAT",
+                           :db          => "MiqTemplate",
+                           :search_type => "default")
+        allow(controller).to receive(:current_user).and_return(current_user)
+        filtered_list = controller.send(:build_filtered_item_list, "miq_template", "global")
+        expect(filtered_list.first).to include("Environment / UAT")
+    end
+
+    it "returns a filtered item list for Datastore" do
+      controller.instance_variable_set(:@settings, settings)
+      current_user = FactoryGirl.create(:user)
+      FactoryGirl.create(:miq_search,
+                         :name        => "default_Environment_Storage / UAT",
+                         :description => "Storage_Environment / UAT",
+                         :db          => "Storage",
+                         :search_type => "default")
+      allow(controller).to receive(:current_user).and_return(current_user)
+      filtered_list = controller.send(:build_filtered_item_list, "storage", "global")
+      expect(filtered_list.first).to include("Storage_Environment / UAT")
+    end
+  end
 end
