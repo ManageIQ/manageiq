@@ -6,6 +6,8 @@ class MiqWidget < ApplicationRecord
   default_value_for :enabled, true
   default_value_for :read_only, false
 
+  DEFAULT_ROW_COUNT = 5
+
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_schedule
   belongs_to :user
@@ -41,6 +43,10 @@ class MiqWidget < ApplicationRecord
   virtual_column :status_message, :type => :string,    :uses => :miq_task
   virtual_column :queued_at,      :type => :datetime,  :uses => :miq_task
   virtual_column :last_run_on,    :type => :datetime,  :uses => :miq_schedule
+
+  def row_count(row_count_param = nil)
+    row_count_param.try(:to_i) || options.try(:[], :row_count) || DEFAULT_ROW_COUNT
+  end
 
   def name
     description

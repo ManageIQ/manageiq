@@ -1,7 +1,6 @@
 description: tenant_quotas
 title: Tenant Quotas
 content_type: report
-options:
 visibility:
   :roles:
   - _ALL_

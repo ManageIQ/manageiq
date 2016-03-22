@@ -115,6 +115,44 @@ describe ReportController do
         post :tree_select, :params => { :id => "xx-r_-#{widget.id}", :format => :js, :accord => 'widgets' }
         expect(response).to render_template('report/_widget_show')
       end
+
+      let(:default_row_count_value)        { 5 }
+      let(:other_row_count_value)          { 7 }
+      let(:widget_with_default_row_value)  { FactoryGirl.create(:miq_widget, :visibility => {:roles => ["_ALL_"]}) }
+      let(:widget_options)                 { {:row_count => other_row_count_value} }
+
+      let(:widget_with_row_value) do
+        FactoryGirl.create(:miq_widget, :visibility => {:roles => ["_ALL_"]}, :options => widget_options)
+      end
+
+      let(:params_default_row_value) do
+        {:id => "xx-r_-#{widget_with_default_row_value.compressed_id}", :format => :js, :accord => 'widgets'}
+      end
+
+      let(:params_row_value) do
+        {:id => "xx-r_-#{widget_with_row_value.compressed_id}", :format => :js, :accord => 'widgets'}
+      end
+
+      def row_count_html(row_count_value)
+        "<label class=\\'control-label col-md-2\\'>Row Count<\\/label>\\n" \
+        "<div class=\\'col-md-10\\'>\\n<p class=\\'form-control-static\\'>#{row_count_value}<\\/p>\\n<\\/div>"
+      end
+
+      it "renders show of Dashboard Widget in Widgets tree with default row_count value" do
+        post :tree_select, :params => params_default_row_value
+
+        expect(response).to render_template('report/_widget_show')
+        expect(response.status).to eq(200)
+        expect(response.body).to include(row_count_html(default_row_count_value))
+      end
+
+      it "renders show of Dashboard Widget in Widgets tree with row_count value from widget" do
+        post :tree_select, :params => params_row_value
+
+        expect(response).to render_template('report/_widget_show')
+        expect(response.status).to eq(200)
+        expect(response.body).to include(row_count_html(other_row_count_value))
+      end
     end
 
     context "role menus tree" do
