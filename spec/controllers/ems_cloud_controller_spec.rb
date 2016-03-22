@@ -358,4 +358,27 @@ describe EmsCloudController do
       end
     end
   end
+
+  describe "#dialog_form_button_pressed" do
+    let(:dialog) { double("Dialog") }
+    let(:wf) { double(:dialog => dialog) }
+
+    before do
+      @ems = FactoryGirl.create(:ems_amazon)
+      edit = {:rec_id => 1, :wf => wf, :key => 'dialog_edit__foo', :target_id => @ems.id}
+      controller.instance_variable_set(:@edit, edit)
+      controller.instance_variable_set(:@sb, {})
+      session[:edit] = edit
+    end
+
+    it "redirects to requests show list after dialog is submitted" do
+      controller.instance_variable_set(:@_params, :button => 'submit', :id => 'foo')
+      allow(controller).to receive(:role_allows).and_return(true)
+      allow(wf).to receive(:submit_request).and_return({})
+      page = double('page')
+      expect(page).to receive(:redirect_to).with("/ems_cloud/#{@ems.id}?flash_msg=Order+Request+was+Submitted")
+      expect(controller).to receive(:render).with(:update).and_yield(page)
+      controller.send(:dialog_form_button_pressed)
+    end
+  end
 end
