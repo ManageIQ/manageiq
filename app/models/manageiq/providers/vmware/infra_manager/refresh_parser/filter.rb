@@ -1,7 +1,7 @@
 class ManageIQ::Providers::Vmware::InfraManager
   module RefreshParser::Filter
-    def filter_vc_data(target)
-      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
+    def filter_vc_data(ems, target)
+      log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
       # Find the target in the data
       _log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]..."

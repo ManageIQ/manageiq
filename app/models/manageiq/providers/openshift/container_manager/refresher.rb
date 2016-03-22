@@ -11,7 +11,7 @@ module ManageIQ::Providers
         {:name => 'build_configs'}, {:name => 'builds'}
       ]
 
-      def parse_inventory(ems, _targets = nil)
+      def parse_legacy_inventory(ems)
         kube_entities = ems.with_provider_connection(:service => KUBERNETES_EMS_TYPE) do |kubeclient|
           fetch_entities(kubeclient, KUBERNETES_ENTITIES)
         end

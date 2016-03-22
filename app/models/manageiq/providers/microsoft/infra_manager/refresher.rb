@@ -2,7 +2,7 @@ module ManageIQ::Providers::Microsoft
   class InfraManager::Refresher < EmsRefresh::Refreshers::BaseRefresher
     include EmsRefresh::Refreshers::EmsRefresherMixin
 
-    def parse_inventory(ems, _targets)
+    def parse_legacy_inventory(ems)
       ManageIQ::Providers::Microsoft::InfraManager::RefreshParser.ems_inv_to_hashes(ems, refresher_options)
     end
 
