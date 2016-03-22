@@ -107,9 +107,13 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def task_check_on_execute
-    raise "#{request_class::TASK_DESCRIPTION} request is already being processed" if request_class::ACTIVE_STATES.include?(state)
-    raise "#{request_class::TASK_DESCRIPTION} request has already been processed" if state == "finished"
-    raise "approval is required for #{request_class::TASK_DESCRIPTION}"           unless self.approved?
+    if request_class::ACTIVE_STATES.include?(state)
+      raise _("%{task} request is already being processed") % {:task => request_class::TASK_DESCRIPTION}
+    end
+    if state == "finished"
+      raise _("%{task} request has already been processed") % {:task => request_class::TASK_DESCRIPTION}
+    end
+    raise _("approval is required for %{task}") % {:task => request_class::TASK_DESCRIPTION} unless approved?
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)

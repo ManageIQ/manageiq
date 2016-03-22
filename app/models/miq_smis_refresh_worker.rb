@@ -7,7 +7,7 @@ class MiqSmisRefreshWorker < MiqWorker
   self.maximum_workers_count = 1
 
   def friendly_name
-    @friendly_name ||= "Refresh Worker for SMIS"
+    @friendly_name ||= _("Refresh Worker for SMIS")
   end
 
   def self.storage_manager_class

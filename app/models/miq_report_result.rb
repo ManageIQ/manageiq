@@ -53,15 +53,15 @@ class MiqReportResult < ApplicationRecord
       when MiqTask::STATUS_TIMEOUT
         return "Timed Out"
       else
-        raise "Unknown status of: #{miq_task.status.inspect}"
+        raise _("Unknown status of: %{status}") % {:status => miq_task.status.inspect}
       end
     else
-      raise "Unknown state of: #{miq_task.state.inspect}"
+      raise _("Unknown state of: %{state}") % {:state => miq_task.state.inspect}
     end
   end
 
   def status_message
-    miq_task.nil? ? "Report results are no longer available" : miq_task.message
+    miq_task.nil? ? _("Report results are no longer available") : miq_task.message
   end
 
   def miq_group_description
@@ -152,7 +152,7 @@ class MiqReportResult < ApplicationRecord
     parts = userid.to_s.split("|")
     return parts[0] if (parts.last == 'adhoc')
     return parts[1] if (parts.last == 'schedule')
-    raise "Cannot parse userid #{userid.inspect}"
+    raise _("Cannot parse userid %{user_id}") % {:user_id => userid.inspect}
   end
 
   def self.purge_for_user(options = {})
@@ -182,7 +182,7 @@ class MiqReportResult < ApplicationRecord
   # Generate the header html section for pdfs
   def generate_pdf_header(options = {})
     page_size = options[:page_size] || "a4"
-    title     = options[:title] || "<No Title>"
+    title     = options[:title] || _("<No Title>")
     run_date  = options[:run_date] || "<N/A>"
 
     hdr  = "<head><style>"
@@ -202,8 +202,10 @@ class MiqReportResult < ApplicationRecord
     #   :session_id => <session_id>
     # }
 
-    raise "Result type #{result_type} not supported" unless [:csv, :txt, :pdf].include?(result_type.to_sym)
-    raise "A valid userid is required" if options[:userid].nil?
+    unless [:csv, :txt, :pdf].include?(result_type.to_sym)
+      raise _("Result type %{result_type} not supported") % {:result_type => result_type}
+    end
+    raise _("A valid userid is required") if options[:userid].nil?
 
     _log.info("Adding generate report result [#{result_type}] task to the message queue...")
     task = MiqTask.new(:name => "Generate Report result [#{result_type}]: '#{report.name}'", :userid => options[:userid])
@@ -241,7 +243,7 @@ class MiqReportResult < ApplicationRecord
     task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
 
     user = options[:user] || User.find_by_userid(options[:userid])
-    raise "Unable to find user with userid 'options[:userid]'" if user.nil?
+    raise _("Unable to find user with userid 'options[:userid]'") if user.nil?
 
     rpt = report_results
     begin
@@ -264,7 +266,7 @@ class MiqReportResult < ApplicationRecord
         when :pdf then to_pdf
         when :txt then rpt.to_text
         else
-          raise "Result type #{result_type} not supported"
+          raise _("Result type %{result_type} not supported") % {:result_type => result_type}
         end
       end
 
