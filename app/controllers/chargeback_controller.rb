@@ -726,9 +726,12 @@ class ChargebackController < ApplicationController
   end
 
   WHITELIST_INSTANCE_TYPE = %w(enterprise storage ext_management_system ems_cluster tenant).freeze
+  NOTHING_FORM_VALUE = "nil".freeze
+
   def get_cis_all
     @edit[:cb_assign][:cis] = {}
     klass = @edit[:new][:cbshow_typ]
+    return if klass == NOTHING_FORM_VALUE || klass.nil? # no rate was selected
     unless WHITELIST_INSTANCE_TYPE.include?(klass)
       raise ArgumentError, "Received: #{klass}, expected one of #{WHITELIST_INSTANCE_TYPE}"
     end
