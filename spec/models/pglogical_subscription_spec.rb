@@ -25,12 +25,13 @@ describe PglogicalSubscription do
   let(:expected_attrs) do
     [
       {
-        "id"              => "subscription_example_com",
-        "status"          => "replicating",
-        "dbname"          => "vmdb's_test",
-        "host"            => "example.com",
-        "user"            => "root",
-        "provider_region" => 0
+        "id"                   => "subscription_example_com",
+        "status"               => "replicating",
+        "dbname"               => "vmdb's_test",
+        "host"                 => "example.com",
+        "user"                 => "root",
+        "provider_region"      => 0,
+        "provider_region_name" => "The region"
       },
       {
         "id"              => "subscription_test_example_com",
@@ -47,6 +48,7 @@ describe PglogicalSubscription do
   let(:pglogical) { double }
 
   before do
+    FactoryGirl.create(:miq_region, :region => 0, :description => "The region")
     allow(described_class).to receive(:pglogical).and_return(pglogical)
   end
 
