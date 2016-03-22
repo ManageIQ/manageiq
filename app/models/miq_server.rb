@@ -278,7 +278,7 @@ class MiqServer < ApplicationRecord
       msg = @error_message
       @error_message = nil
       _log.error("#{msg}")
-      raise msg
+      raise _(msg)
     end
   end
 
@@ -461,7 +461,7 @@ class MiqServer < ApplicationRecord
 
   # Restart the local server
   def restart
-    raise "Server restart is only supported on Linux" unless MiqEnvironment::Command.is_linux?
+    raise _("Server restart is only supported on Linux") unless MiqEnvironment::Command.is_linux?
 
     _log.info("Server restart initiating...")
     update_attribute(:status, "restarting")
@@ -478,7 +478,7 @@ class MiqServer < ApplicationRecord
   end
 
   def friendly_name
-    "EVM Server (#{pid})"
+    _("EVM Server (%{id})") % {:id => pid}
   end
 
   def who_am_i
@@ -499,13 +499,13 @@ class MiqServer < ApplicationRecord
 
   def is_deleteable?
     if self.is_local?
-      @error_message = "Cannot delete currently used #{format_short_log_msg}"
+      @error_message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
       return false
     end
     return true if self.stopped?
 
     if is_recently_active?
-      @error_message = "Cannot delete recently active #{format_short_log_msg}"
+      @error_message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
       return false
     end
 

@@ -110,7 +110,9 @@ class MiqRegion < ApplicationRecord
     my_region_id = my_region_number
     db_region_id = MiqDatabase.first.try(:region_id)
     if db_region_id && db_region_id != my_region_id
-      raise Exception, "Region [#{my_region_id}] does not match the database's region [#{db_region_id}]"
+      raise Exception,
+            _("Region [%{region_id}] does not match the database's region [%{db_id}]") % {:region_id => my_region_id,
+                                                                                          :db_id     => db_region_id}
     end
 
     create_with(:description => "Region #{my_region_id}").find_or_create_by!(:region => my_region_id) do
@@ -288,9 +290,13 @@ class MiqRegion < ApplicationRecord
   end
 
   def perf_capture_always=(options)
-    raise "options should be a Hash of type => enabled" unless options.kind_of?(Hash)
-    raise "options are invalid, all keys must be one of #{VALID_CAPTURE_ALWAYS_TYPES.inspect}" unless options.keys.all? { |k| VALID_CAPTURE_ALWAYS_TYPES.include?(k.to_sym) }
-    raise "options are invalid, all values must be one of [true, false]" unless options.values.all? { |v| [true, false].include?(v) }
+    raise _("options should be a Hash of type => enabled") unless options.kind_of?(Hash)
+    unless options.keys.all? { |k| VALID_CAPTURE_ALWAYS_TYPES.include?(k.to_sym) }
+      raise _("options are invalid, all keys must be one of %{type}") % {:type => VALID_CAPTURE_ALWAYS_TYPES.inspect}
+    end
+    unless options.values.all? { |v| [true, false].include?(v) }
+      raise _("options are invalid, all values must be one of [true, false]")
+    end
 
     options.each do |type, enable|
       ns = "/performance/#{type}"

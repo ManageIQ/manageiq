@@ -9,7 +9,7 @@ class MiqSearch < ApplicationRecord
   before_destroy :check_schedules_empty_on_destroy
 
   def check_schedules_empty_on_destroy
-    raise "Search is referenced in a schedule and cannot be deleted" unless miq_schedules.empty?
+    raise _("Search is referenced in a schedule and cannot be deleted") unless miq_schedules.empty?
   end
 
   def search_type

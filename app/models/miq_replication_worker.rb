@@ -24,7 +24,7 @@ class MiqReplicationWorker < MiqWorker
   end
 
   def friendly_name
-    @friendly_name ||= "Database Replication Worker"
+    @friendly_name ||= _("Database Replication Worker")
   end
 
   #
