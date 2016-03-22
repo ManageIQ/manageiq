@@ -1,6 +1,8 @@
 #
 # REST API Request Tests - Service Dialogs specs
 #
+# - Refresh dialog fields       /api/service_dialogs/:id "refresh_dialog_fields"
+#
 describe ApiController do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
@@ -70,6 +72,59 @@ describe ApiController do
       dialogs = service.dialogs
       expect_query_result(:service_dialogs, dialogs.count, dialogs.count)
       expect_result_resources_to_include_data("resources", "label" => dialogs.pluck(:label))
+    end
+  end
+
+  describe "Service Dialogs refresh dialog fields" do
+    let(:dialog1) { FactoryGirl.create(:dialog, :label => "Dialog1") }
+    let(:tab1)    { FactoryGirl.create(:dialog_tab, :label => "Tab1") }
+    let(:group1)  { FactoryGirl.create(:dialog_group, :label => "Group1") }
+    let(:text1)   { FactoryGirl.create(:dialog_field_text_box, :label => "TextBox1", :name => "text1") }
+
+    def init_dialog
+      dialog1.dialog_tabs << tab1
+      tab1.dialog_groups << group1
+      group1.dialog_fields << text1
+    end
+
+    it "rejects refresh dialog fields requests without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(test1)))
+
+      expect_request_forbidden
+    end
+
+    it "rejects refresh dialog fields with unspecified fields" do
+      api_basic_authorize action_identifier(:service_dialogs, :refresh_dialog_fields)
+      init_dialog
+
+      run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields))
+
+      expect_single_action_result(:success => false, :message => /must specify fields/i)
+    end
+
+    it "rejects refresh dialog fields of invalid fields" do
+      api_basic_authorize action_identifier(:service_dialogs, :refresh_dialog_fields)
+      init_dialog
+
+      run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(bad_field)))
+
+      expect_single_action_result(:success => false, :message => /unknown dialog field bad_field/i)
+    end
+
+    it "supports refresh dialog fields of valid fields" do
+      api_basic_authorize action_identifier(:service_dialogs, :refresh_dialog_fields)
+      init_dialog
+
+      run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
+
+      expect(response_hash).to include(
+        "success" => true,
+        "message" => a_string_matching(/refreshing dialog fields/i),
+        "href"    => a_string_matching(service_dialogs_url(dialog1.id)),
+        "result"  => hash_including("text1")
+      )
     end
   end
 end
