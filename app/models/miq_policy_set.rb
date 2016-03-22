@@ -1,6 +1,7 @@
 class MiqPolicySet < ApplicationRecord
   acts_as_miq_set
 
+  validates         :description, :presence => true, :uniqueness => true
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :destroy_policy_tags
 
