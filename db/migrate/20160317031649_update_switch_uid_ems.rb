@@ -17,7 +17,7 @@ class UpdateSwitchUidEms < ActiveRecord::Migration[5.0]
 
   class Switch < ActiveRecord::Base
     belongs_to :host,
-             :class_name => 'UpdateSwitchUidEms::Host'
+               :class_name => 'UpdateSwitchUidEms::Host'
   end
 
   def up
