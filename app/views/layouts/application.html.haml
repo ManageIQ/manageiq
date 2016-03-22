@@ -40,6 +40,10 @@
       :javascript
         ManageIQ.browser = "#{j browser_info(:name_ui)}";
         ManageIQ.controller = "#{j controller_name}";
+        ManageIQ.timezone = {
+          name: "#{j Time.zone.name}",
+          utc_offset: #{Time.zone.utc_offset},
+        };
         API.autorenew();
 
       %style html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}
