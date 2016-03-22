@@ -579,10 +579,7 @@ describe MiqReport do
       it "returns expected html outputs with formatted values" do
         allow(User).to receive(:server_timezone).and_return("UTC")
         report.generate_table
-        rows_array = report.build_html_rows
-        rows_array.each_with_index do |row, index|
-          expect(@expected_html_rows[index]).to eq(row)
-        end
+        expect(report.build_html_rows).to match_array(@expected_html_rows)
       end
 
       it "returns only rows for tenant with any tenant_quotas" do
