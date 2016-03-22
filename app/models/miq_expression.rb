@@ -668,8 +668,6 @@ class MiqExpression
         clause = "(" + operands.join(" #{self.class.normalize_sql_operator(operator)} ") + ")"
       elsif operands.length == 1 # Operands may have been stripped out during pre-processing
         clause = "(" + operands.first + ")"
-      else # All operands may have been stripped out during pre-processing
-        clause = nil
       end
     when "not", "!"
       clause = self.class.normalize_sql_operator(operator) + " " + _to_sql(exp[operator], tz)
