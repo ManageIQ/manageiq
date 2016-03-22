@@ -157,7 +157,7 @@
       .form-group
         %label.control-label.col-md-2= _('Row Count')
         .col-md-10
-          %p.form-control-static= h(@widget.options[:row_count].to_s)
+          %p.form-control-static= h(@widget.row_count)
 
   %hr
   - unless @sb[:wtype] == "m"

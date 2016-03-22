@@ -436,7 +436,7 @@ module ReportController::Widgets
       @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivotby1] }
       @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivotby2] }
       @pivots4  = @pivots3.dup.delete_if { |g| g[1] == @edit[:new][:pivotby3] }
-      @edit[:new][:row_count] = @widget.options[:row_count] if @widget.options && @widget.options[:row_count]
+      @edit[:new][:row_count] = @widget.row_count
     elsif @sb[:wtype] == "rf"
       @edit[:rss_feeds] = {}
       rss_feeds = RssFeed.all
@@ -452,7 +452,7 @@ module ReportController::Widgets
         end
         @edit[:new][:txt_url] = @widget.options[:url] if @edit[:new][:url].blank?
       end
-      @edit[:new][:row_count]   = @widget.options[:row_count] if @widget.options && @widget.options[:row_count]
+      @edit[:new][:row_count]   = @widget.row_count
       @edit[:new][:rss_feed_id] = @widget.resource_id         if @widget.resource_id && @widget.resource_type == "RssFeed"
     end
     @edit[:current] = copy_hash(@edit[:new])
@@ -519,7 +519,7 @@ module ReportController::Widgets
     @edit[:new][:filter]      = params[:filter_typ]       if params[:filter_typ]
 
     # report/chart/menu options box
-    @edit[:new][:row_count] = params[:row_count] if params[:row_count]
+    @edit[:new][:row_count] = @widget.row_count(params[:row_count]) if params[:row_count]
     if @sb[:wtype] == "r"
       if params[:filter_typ] || params[:subfilter_typ] || params[:repfilter_typ]
         # reset columns if report has changed
@@ -645,9 +645,7 @@ module ReportController::Widgets
     widget.description = @edit[:new][:description]
     widget.enabled     = @edit[:new][:enabled]
     widget.options ||= {}
-    if ["r", "rf"].include?(@sb[:wtype])
-      widget.options[:row_count] = @edit[:new][:row_count].blank? ? 5 : @edit[:new][:row_count].to_i
-    end
+    widget.options[:row_count] = widget.row_count(@edit[:new][:row_count]) if %w(r rf).include?(@sb[:wtype])
     #    if @sb[:wtype] == "m"
     #      widget.miq_shortcuts = @edit[:new][:shortcuts].keys.collect{|s| MiqShortcut.find_by_id(s)}
     #      ws = Array.new  # Create an array of widget shortcuts

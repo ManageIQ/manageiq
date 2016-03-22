@@ -6,8 +6,7 @@ class MiqWidget::ReportContent < MiqWidget::ContentGeneration
 
     original_col_order = report.col_order
     report.col_order   = widget_options[:col_order] if widget_options[:col_order]
-
-    row_count   = widget_options[:row_count] || 10
+    row_count   = widget_options[:row_count] || MiqWidget::DEFAULT_ROW_COUNT
 
     headers     = report.col_order.inject([]) { |a, c| a << report.headers[original_col_order.index(c)] }
     col_formats = report.col_order.inject([]) { |a, c| a << report.col_formats[original_col_order.index(c)] }
