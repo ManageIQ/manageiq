@@ -13,8 +13,8 @@ module ApplianceConsole
       SSSD_CONFIG         = "/etc/sssd/sssd.conf"
       PAM_CONFIG          = "/etc/pam.d/httpd-auth"
       HTTP_KEYTAB         = "/etc/http.keytab"
-      HTTP_REMOTE_USER    = "/etc/httpd/conf.d/cfme-remote-user.conf"
-      HTTP_EXTERNAL_AUTH  = "/etc/httpd/conf.d/cfme-external-auth.conf"
+      HTTP_REMOTE_USER    = "/etc/httpd/conf.d/manageiq-remote-user.conf"
+      HTTP_EXTERNAL_AUTH  = "/etc/httpd/conf.d/manageiq-external-auth.conf"
       HTTP_EXTERNAL_AUTH_TEMPLATE = "#{HTTP_EXTERNAL_AUTH}.erb"
 
       GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
