@@ -47,7 +47,8 @@ module ReportFormatter
       type = c3_convert_type("#{mri.graph[:type]}")
       mri.chart = {
         :miqChart => type,
-        :data     => {:columns => []}
+        :data     => {:columns => []},
+        :axis     => {}
       }
 
       if chart_is_2d?
@@ -58,6 +59,7 @@ module ReportFormatter
           }
         }
       end
+
       # chart is numeric
       if mri.graph[:mode] == 'values'
         custom_format   = Array(mri[:col_formats])[Array(mri[:col_order]).index(raw_column_name)]
@@ -78,7 +80,7 @@ module ReportFormatter
     end
 
     def chart_is_2d?
-      true
+      ['Bar', 'Column', 'StackedBar', 'StackedColumn', 'Line', 'Area', 'StackedArea'].include?(mri.graph[:type])
     end
 
     def chart_is_stacked?

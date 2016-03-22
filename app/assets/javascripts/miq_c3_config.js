@@ -8,8 +8,8 @@
 
 (function (ManageIQ) {
 
-  var pfColors = ['#0088ce', '#00659c', '#3f9c35', '#ec7a08', '#cc0000', '#3b0083'];
-
+  var pfColors = [$.pfPaletteColors.blue, $.pfPaletteColors.red, $.pfPaletteColors.green, $.pfPaletteColors.orange, $.pfPaletteColors.cyan,
+    $.pfPaletteColors.gold, $.pfPaletteColors.purple, $.pfPaletteColors.lightBlue, $.pfPaletteColors.lightGreen, $.pfPaletteColors.black];
   var c3mixins = {};
 
   c3mixins.showGrid = {
@@ -102,117 +102,81 @@
     return d3.format('%')(ratio);
   }
 
+
   ManageIQ.charts.c3config = {
 
-    Bar: _.defaultsDeep({
-        data: {
-          type: 'bar'
-        },
-        axis: {
-          rotated: true
-        }
+    Bar: _.defaultsDeep(
+      {
+        axis : {x:{type: 'category'},
+                       rotated: true},
+        data : {type: 'bar'},
       },
-      c3mixins.xAxisCategory,
-      c3mixins.yAxisNoOuterTick,
-      c3mixins.pfDataColorFunction,
-      c3mixins.showGrid,
-      c3mixins.smallerBarWidth,
-      c3mixins.noLegend,
-      c3mixins.noTooltip
+      c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultBarConfig()
     ),
 
     Column: _.defaultsDeep({
-        data: {
-          type: 'bar'
-        }
-      },
-      c3mixins.xAxisCategoryRotated,
-      c3mixins.yAxisNoOuterTick,
-      c3mixins.pfDataColorFunction,
-      c3mixins.showGrid,
-      c3mixins.smallerBarWidth,
-      c3mixins.noLegend,
-      c3mixins.noTooltip
+      axis : {x:{type: 'category'}},
+      data : {type: 'bar'},
+    },c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultBarConfig()
     ),
 
-    StackedBar: _.defaultsDeep({
-        data: {
-          type: 'bar'
-        },
-        axis: {
-          rotated: true
-        }
-      },
-      c3mixins.xAxisCategory,
-      c3mixins.yAxisNoOuterTick,
-      c3mixins.pfColorPattern,
-      c3mixins.showGrid,
-      c3mixins.smallerBarWidth,
-      c3mixins.legendOnRightSide,
-      c3mixins.noTooltip
+    StackedBar: _.defaultsDeep(
+      {
+        axis : {x:{type: 'category'},
+                       rotated: true},
+        data : {type: 'bar'},
+      },c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
 
-    StackedColumn: _.defaultsDeep({
-        data: {
-          type: 'bar'
-        }
-      },
-      c3mixins.xAxisCategoryRotated,
-      c3mixins.yAxisNoOuterTick,
-      c3mixins.pfColorPattern,
-      c3mixins.showGrid,
-      c3mixins.smallerBarWidth,
-      c3mixins.legendOnRightSide,
-      c3mixins.noTooltip
+    StackedColumn: _.defaultsDeep(
+      {
+        axis : {x:{type: 'category'}},
+        data : {type: 'bar'},
+      },c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
 
     Pie: _.defaultsDeep({
-        data: {
-          type: 'pie'
-        },
-        pie: {
-          label: {
-            format: percentLabelFormat
-          },
-          expand: false
-        }
+      data: {
+        type: 'pie'
       },
+      pie: {
+        label: {
+          format: percentLabelFormat
+        },
+        expand: false
+      }
+    },
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
     ),
 
     Donut: _.defaultsDeep({
-        data: {
-          type: 'donut'
-        },
-        donut: {
-          label: {
-            format: percentLabelFormat
-          },
-          expand: false
-        }
+      data: {
+        type: 'donut'
       },
+      donut: {
+        label: {
+          format: percentLabelFormat
+        },
+        expand: false
+      }
+    },
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
     ),
 
-    Line: _.defaultsDeep({
-        data: {
-          type: 'line'
-        },
-        line: {
-          label: {
-            format: percentLabelFormat
-          },
-          expand: false
-        }
-      },
-      c3mixins.xAxisCategory,
-      c3mixins.pfColorPattern,
-      c3mixins.legendOnRightSide,
-      c3mixins.noTooltip
+    Line: _.defaultsDeep(
+      {
+        axis : {x:{type: 'category'}},
+        data : {type: 'line'},
+      },c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultLineConfig()
     ),
     Area: _.defaultsDeep({
         data: {
