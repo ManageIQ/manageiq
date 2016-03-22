@@ -7,6 +7,14 @@ angular.module('miq.util').factory('chartsMixin', function() {
       ({col1: theMoment.format('h:mm A'), col2: data[0].value + ' ' + data[0].name});
   };
 
+  var dailyTimeTooltip = function (data) {
+    var theMoment = moment(data[0].x);
+    return _.template('<div class="tooltip-inner"><%- col1 %>  <%- col2 %></div>')({
+      col1: theMoment.format('MM/DD/YYYY'),
+      col2: data[0].value + ' ' + data[0].name
+    });
+  };
+
   var chartConfig = {
     cpuUsageConfig: {
       chartId: 'cpuUsageChart',
@@ -15,7 +23,6 @@ angular.module('miq.util').factory('chartsMixin', function() {
       usageDataName: __('Used'),
       legendLeftText: __('Last 30 Days'),
       legendRightText: '',
-      tooltipType: 'valuePerDay',
       numDays: 30
     },
     memoryUsageConfig: {
@@ -25,7 +32,6 @@ angular.module('miq.util').factory('chartsMixin', function() {
       usageDataName: __('Used'),
       legendLeftText: __('Last 30 Days'),
       legendRightText: '',
-      tooltipType: 'valuePerDay',
       numDays: 30
     },
     hourlyNetworkUsageConfig: {
@@ -42,7 +48,7 @@ angular.module('miq.util').factory('chartsMixin', function() {
       timeFrame: __('Last 30 Days'),
       units    : __('KBps'),
       dataName : __('KBps'),
-      tooltipType: 'valuePerDay'
+      tooltipFn  : dailyTimeTooltip
     }
   };
 
@@ -81,6 +87,7 @@ angular.module('miq.util').factory('chartsMixin', function() {
     nodeHeatMapUsageLegendLabels:   ['< 70%', '70-80%' ,'80-90%', '> 90%'],
     chartConfig: chartConfig,
     processHeatmapData: processHeatmapData,
-    processUtilizationData: processUtilizationData
+    processUtilizationData: processUtilizationData,
+    dailyTimeTooltip: dailyTimeTooltip
   };
 });

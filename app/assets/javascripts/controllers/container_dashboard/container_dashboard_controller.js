@@ -36,7 +36,7 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
       // Node Utilization
       $scope.cpuUsageConfig = chartsMixin.chartConfig.cpuUsageConfig;
       $scope.cpuUsageSparklineConfig = {
-        tooltipType: 'valuePerDay',
+        tooltipFn : chartsMixin.dailyTimeTooltip,
         chartId: 'cpuSparklineChart'
       };
       $scope.cpuUsageDonutConfig = {
@@ -45,7 +45,7 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
       };
       $scope.memoryUsageConfig = chartsMixin.chartConfig.memoryUsageConfig;
       $scope.memoryUsageSparklineConfig = {
-        tooltipType: 'valuePerDay',
+        tooltipFn : chartsMixin.dailyTimeTooltip,
         chartId: 'memorySparklineChart'
       };
       $scope.memoryUsageDonutConfig = {
