@@ -1,4 +1,66 @@
 describe ServiceTemplate do
+  describe "#custom_actions" do
+    let(:service_template) do
+      described_class.create(:name => "test", :description => "test", :custom_button_sets => [assigned_group_set])
+    end
+    let(:generic_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
+    let(:assigned_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
+    let(:generic_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
+    let(:assigned_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
+    let(:assigned_group_set) do
+      FactoryGirl.create(:custom_button_set, :name => "assigned_group", :description => "assigned_group")
+    end
+    let(:generic_group_set) do
+      FactoryGirl.create(:custom_button_set, :name => "generic_group", :description => "generic_group")
+    end
+
+    before do
+      allow(generic_no_group).to receive(:expanded_serializable_hash).and_return("generic_no_group")
+      allow(assigned_no_group).to receive(:expanded_serializable_hash).and_return("assigned_no_group")
+
+      generic_group_set.add_member(generic_group)
+      assigned_group_set.add_member(assigned_group)
+
+      allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
+        [generic_no_group, generic_group]
+      )
+      allow(CustomButton).to receive(:buttons_for).with(service_template).and_return(
+        [assigned_no_group, assigned_group]
+      )
+    end
+
+    it "returns the custom actions in a hash grouped by buttons and button groups" do
+      assigned_group_buttons = assigned_group.expanded_serializable_hash.reject do |key, _|
+        %w(created_on updated_on).include?(key)
+      end
+      expected_assigned_group_set = assigned_group_set.serializable_hash.reject { |key, _|
+        %w(created_on updated_on).include?(key)
+      }.merge(:buttons => [assigned_group_buttons])
+
+      generic_group_buttons = generic_group.expanded_serializable_hash.reject do |key, _|
+        %w(created_on updated_on).include?(key)
+      end
+      expected_generic_group_set = generic_group_set.serializable_hash.reject { |key, _|
+        %w(created_on updated_on).include?(key)
+      }.merge(:buttons => [generic_group_buttons])
+
+      expected_hash_without_created_or_updated = service_template.custom_actions
+      expected_hash_without_created_or_updated[:button_groups].each do |button_group|
+        button_group.reject! do |key, _|
+          %w(created_on updated_on).include?(key)
+        end
+        button_group[:buttons].each do |button|
+          button.reject! { |key, _| %w(created_on updated_on).include?(key) }
+        end
+      end
+
+      expect(expected_hash_without_created_or_updated).to eq(
+        :buttons       => %w(generic_no_group assigned_no_group),
+        :button_groups => [expected_assigned_group_set, expected_generic_group_set]
+      )
+    end
+  end
+
   context "#type_display" do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
