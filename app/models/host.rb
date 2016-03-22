@@ -49,7 +49,8 @@ class Host < ApplicationRecord
   has_many                  :miq_templates, :inverse_of => :host
   has_many                  :host_storages
   has_many                  :storages, :through => :host_storages
-  has_many                  :switches, :dependent => :destroy
+  has_many                  :host_switches, :dependent => :destroy
+  has_many                  :switches, :through => :host_switches
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
   has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id", :inverse_of => :host
