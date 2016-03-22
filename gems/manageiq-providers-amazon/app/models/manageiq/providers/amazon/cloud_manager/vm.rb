@@ -15,7 +15,7 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
 
     # Mark all instances no longer found as terminated
     power_state == "off"
-    save
+    save!
   end
 
   def proxies4job(_job = nil)
