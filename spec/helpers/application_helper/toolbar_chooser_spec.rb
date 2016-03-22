@@ -13,7 +13,10 @@ describe ApplicationHelper, "ToolbarChooser" do
 
       it "miq_request list screen" do
         @lastaction = "show_list"
-        expect(_toolbar_chooser.send(:center_toolbar_filename_classic)).to eq("miq_requests_center_tb")
+        %w(miq_request_ae miq_request_host miq_request_vm).each do |layout|
+          @layout = layout
+          expect(_toolbar_chooser.send(:center_toolbar_filename_classic)).to eq("miq_requests_center_tb")
+        end
       end
     end
 
