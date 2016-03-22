@@ -17,7 +17,11 @@ describe ServiceOrchestration do
     }
   end
 
-  let(:service) { FactoryGirl.create(:service_orchestration) }
+  let(:service) do
+    FactoryGirl.create(:service_orchestration,
+      :evm_owner => FactoryGirl.create(:user),
+      :miq_group => FactoryGirl.create(:miq_group))
+  end
 
   let(:service_with_dialog_options) do
     service.options = {:dialog => dialog_options}
@@ -176,6 +180,20 @@ describe ServiceOrchestration do
       expect(service.direct_vms).to be_empty
       expect(service.indirect_vms).to be_empty
       expect(service.vms).to be_empty
+    end
+  end
+
+  context '#post_provision_configure' do
+    it 'sets owners for all vms included in the stack' do
+      vms = [FactoryGirl.create(:vm_amazon), FactoryGirl.create(:vm_amazon)]
+      deployed_stack.direct_vms.push(*vms)
+
+      service_with_deployed_stack.post_provision_configure
+      vms.each do |vm|
+        vm.reload
+        expect(vm.evm_owner).to eq(service_with_deployed_stack.evm_owner)
+        expect(vm.miq_group).to eq(service_with_deployed_stack.miq_group)
+      end
     end
   end
 end
