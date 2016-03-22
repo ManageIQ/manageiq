@@ -29,7 +29,7 @@ describe MiqProvisionWorkflow do
           @hardware    = FactoryGirl.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro",
                                             :memory_mb => 512,
                                             :cpu_sockets => 2)
-          @switch      = FactoryGirl.create(:switch, :name => 'vSwitch0', :ports => 32, :host => @host)
+          @switch      = FactoryGirl.create(:switch, :name => 'vSwitch0', :ports => 32, :hosts => [@host])
           @lan         = FactoryGirl.create(:lan, :name => "VM Network", :switch => @switch)
           @ethernet    = FactoryGirl.create(:guest_device, :hardware => @hardware, :lan => @lan,
                                             :device_type => 'ethernet',
