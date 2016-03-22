@@ -333,12 +333,6 @@ describe Rbac do
           it ".search filters out the wrong HostPerformance rows with :match_via_descendants option" do
             @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host2)
             @vm.tag_with(@tags.join(' '), :ns => '*')
-            results, attrs = Rbac.search(:targets => HostPerformance, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => {"VmOrTemplate" => :host})
-            expect(attrs[:user_filters]).to eq(group.filters)
-            expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
-            expect(attrs[:auth_count]).to eq(@timestamps.length)
-            expect(results.length).to eq(@timestamps.length)
-            results.each { |vp| expect(vp.resource).to eq(@host2) }
 
             results, attrs = Rbac.search(:targets => HostPerformance, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => "Vm")
             expect(attrs[:user_filters]).to eq(group.filters)

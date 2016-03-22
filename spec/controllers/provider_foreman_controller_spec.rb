@@ -206,6 +206,7 @@ describe ProviderForemanController do
   end
 
   it "builds foreman child tree" do
+    set_user_privileges
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_custom_kids, {:id => "fr"}, false, {})
@@ -214,6 +215,7 @@ describe ProviderForemanController do
   end
 
   it "builds ansible tower child tree" do
+    set_user_privileges
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_custom_kids, {:id => "at"}, false, {})
@@ -345,6 +347,7 @@ describe ProviderForemanController do
   end
 
   it "renders tree_select as js" do
+    set_user_privileges
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
 
     allow(controller).to receive(:process_show_list)
@@ -354,8 +357,6 @@ describe ProviderForemanController do
     allow(controller).to receive(:rebuild_toolbars)
     allow(controller).to receive(:replace_search_box)
     allow(controller).to receive(:update_partials)
-
-    set_user_privileges
 
     key = ems_key_for_provider(@provider)
     post :tree_select, :params => { :id => key, :format => :js }
@@ -443,7 +444,7 @@ describe ProviderForemanController do
     end
     it "builds foreman tree with no nodes after rbac filtering" do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
-      allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
+      User.current_user.current_group.update_attributes(:filters => user_filters)
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       first_child = find_treenode_for_foreman_provider(@provider)
       expect(first_child).to eq(nil)
@@ -451,7 +452,7 @@ describe ProviderForemanController do
 
     it "builds foreman tree with only those nodes that contain the filtered configured systems" do
       user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
-      allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
+      User.current_user.current_group.update_attributes(:filters => user_filters)
       Classification.seed
       quota_2gb_tag = Classification.where("description" => "2GB").first
       Classification.bulk_reassignment(:model      => "ConfiguredSystem",
