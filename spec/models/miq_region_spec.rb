@@ -70,4 +70,75 @@ describe MiqRegion do
       expect { MiqRegion.seed }.to raise_error(Exception)
     end
   end
+
+  describe ".replication_type" do
+    it "returns :global when configured as a pglogical subscriber" do
+      pgl = double(:provider? => false, :subscriber? => true, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(described_class.replication_type).to eq(:global)
+    end
+
+    it "returns :remote when configured as a pglogical provider" do
+      pgl = double(:provider? => true, :subscriber? => false, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(described_class.replication_type).to eq(:remote)
+    end
+
+    it "returns :none if pglogical is not configured" do
+      pgl = double(:provider? => false, :subscriber? => false, :node? => false)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(described_class.replication_type).to eq(:none)
+    end
+  end
+
+  describe ".replication_type=" do
+    it "destroys the provider when transition is :remote -> :none" do
+      pgl = double(:provider? => true, :subscriber? => false, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(pgl).to receive(:destroy_provider)
+
+      described_class.replication_type = :none
+    end
+
+    it "deletes all subscriptions when transition is :global -> :none" do
+      pgl = double(:provider? => false, :subscriber? => true, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(PglogicalSubscription).to receive(:delete_all)
+
+      described_class.replication_type = :none
+    end
+
+    it "creates a new provider when transition is :none -> :remote" do
+      pgl = double(:provider? => false, :subscriber? => false, :node? => false)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(pgl).to receive(:configure_provider)
+
+      described_class.replication_type = :remote
+    end
+
+    it "deletes all subscriptions and creates a new provider when transition is :global -> :remote" do
+      pgl = double(:provider? => false, :subscriber? => true, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(PglogicalSubscription).to receive(:delete_all)
+      expect(pgl).to receive(:configure_provider)
+
+      described_class.replication_type = :remote
+    end
+
+    it "destroys the provider when transition is :remote -> :global" do
+      pgl = double(:provider? => true, :subscriber? => false, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(pgl).to receive(:destroy_provider)
+
+      described_class.replication_type = :global
+    end
+  end
 end
