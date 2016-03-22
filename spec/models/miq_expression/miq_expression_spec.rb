@@ -112,6 +112,13 @@ describe MiqExpression do
       expect(sql).to eq("vms.id IN (SELECT DISTINCT vm_or_template_id FROM guest_applications WHERE name = 'foo')")
     end
 
+    it "generates the SQL for a CONTAINS expression with field containing a scope" do
+      sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users-name", "value" => "foo"}).to_sql
+      expected = "vms.id IN (SELECT DISTINCT vm_or_template_id FROM accounts WHERE (name = 'foo') "\
+                 "AND (\"accounts\".\"accttype\" = 'user'))"
+      expect(sql).to eq(expected)
+    end
+
     it "generates the SQL for a CONTAINS expression with tag" do
       tag = FactoryGirl.create(:tag, :name => "/managed/operations/analysis_failed")
       vm = FactoryGirl.create(:vm_vmware, :tags => [tag])
