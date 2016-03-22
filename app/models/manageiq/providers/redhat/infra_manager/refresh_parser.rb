@@ -143,7 +143,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
     inv[:host_nics].to_miq_a.each do |nic|
       ip_data = nic[:ip]
-      if !ip_data[:gateway].blank? && !ip_data[:address].blank?
+      if !ip_data.nil? && !ip_data[:gateway].blank? && !ip_data[:address].blank?
         ipaddress = ip_data[:address]
         break
       end
@@ -303,7 +303,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       guest_device = guest_device_uids.fetch_path(:pnic, uid)
 
       # Get the ip section
-      ip = vnic[:ip]
+      ip = vnic[:ip].presence || {}
 
       new_result = {
         :description => vnic[:name],

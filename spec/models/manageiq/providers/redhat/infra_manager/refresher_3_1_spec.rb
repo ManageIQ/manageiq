@@ -40,15 +40,15 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(CustomAttribute.count).to eq(0) # TODO: 3.0 spec has values for this
     expect(CustomizationSpec.count).to eq(0)
     expect(Disk.count).to eq(66)
-    expect(GuestDevice.count).to eq(29)
+    expect(GuestDevice.count).to eq(30)
     expect(Hardware.count).to eq(40)
-    expect(Lan.count).to eq(3)
+    expect(Lan.count).to eq(4)
     expect(MiqScsiLun.count).to eq(0)
     expect(MiqScsiTarget.count).to eq(0)
-    expect(Network.count).to eq(5)
+    expect(Network.count).to eq(6)
     expect(OperatingSystem.count).to eq(40)
     expect(Snapshot.count).to eq(32)
-    expect(Switch.count).to eq(3)
+    expect(Switch.count).to eq(4)
     expect(SystemService.count).to eq(0)
 
     expect(Relationship.count).to eq(81)
@@ -175,7 +175,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
     expect(@host.system_services.size).to eq(0)
 
-    expect(@host.switches.size).to eq(2)
+    expect(@host.switches.size).to eq(3)
     switch = @host.switches.find_by_name("rhevm")
     expect(switch).to have_attributes(
       :uid_ems           => "00000000-0000-0000-0000-000000000009",
@@ -218,7 +218,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_usage         => nil
     )
 
-    expect(@host.hardware.networks.size).to eq(2)
+    expect(@host.hardware.networks.size).to eq(3)
     network = @host.hardware.networks.find_by_description("em1")
     expect(network).to have_attributes(
       :description  => "em1",
@@ -227,10 +227,18 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :subnet_mask  => "255.255.254.0"
     )
 
-    # TODO: Verify this host should have 2 nics, 2 cdroms, 1 floppy, any storage adapters?
-    expect(@host.hardware.guest_devices.size).to eq(2)
+    nic_without_ip = @host.hardware.networks.find_by_description("em3")
+    expect(nic_without_ip).to have_attributes(
+      :description  => "em3",
+      :dhcp_enabled => nil,
+      :ipaddress    => nil,
+      :subnet_mask  => nil
+    )
 
-    expect(@host.hardware.nics.size).to eq(2)
+    # TODO: Verify this host should have 3 nics, 2 cdroms, 1 floppy, any storage adapters?
+    expect(@host.hardware.guest_devices.size).to eq(3)
+
+    expect(@host.hardware.nics.size).to eq(3)
     nic = @host.hardware.nics.find_by_device_name("em1")
     expect(nic).to have_attributes(
       :uid_ems         => "1e783be8-fe80-456e-9a19-42329b03f28c",
