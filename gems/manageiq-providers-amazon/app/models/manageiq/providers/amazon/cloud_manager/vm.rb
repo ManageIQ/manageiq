@@ -52,13 +52,19 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   end
 
   def self.calculate_power_state(raw_power_state)
-    case raw_power_state
+    # http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html
+    case raw_power_state.to_s
     when "running"       then "on"
     when "powering_up"   then "powering_up"
     when "shutting_down" then "powering_down"
+    when "shutting-down" then "powering_down"
+    when "stopping"      then "powering_down"
     when "pending"       then "suspended"
     when "terminated"    then "terminated"
-    else                      "off"
+    when "stopped"       then "off"
+    # 'unknown' will be set by #disconnect_ems - which means 'terminated' in our case
+    when "unknown"       then "terminated"
+    else                      "terminated"
     end
   end
 
