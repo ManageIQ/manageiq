@@ -34,13 +34,13 @@ describe CloudSubnetController do
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => { :id => @cloud_subnet.id }
+          get :show, :params => {:id => @cloud_subnet.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name=>"cloud_subnets",
-                                                :url=>"/cloud_subnet/show_list?page=&refresh=y"},
-                                               {:name=>"Cloud Subnet (Summary)",
-                                                :url=>"/cloud_subnet/show/#{@cloud_subnet.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "cloud_subnets",
+                                                :url  => "/cloud_subnet/show_list?page=&refresh=y"},
+                                               {:name => "Cloud Subnet (Summary)",
+                                                :url  => "/cloud_subnet/show/#{@cloud_subnet.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_cloud_subnet")
         end
@@ -48,7 +48,7 @@ describe CloudSubnetController do
 
       describe "#test_toolbars" do
         it 'edit cloud subnet tags' do
-          post :button, :params => { :miq_grid_checks => to_cid(@cloud_subnet.id), :pressed => "cloud_subnet_tag" }
+          post :button, :params => {:miq_grid_checks => to_cid(@cloud_subnet.id), :pressed => "cloud_subnet_tag"}
           expect(response.status).to eq(200)
         end
       end

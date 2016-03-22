@@ -34,13 +34,13 @@ describe SecurityGroupController do
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => { :id => @security_group.id }
+          get :show, :params => {:id => @security_group.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name=>"security_groups",
-                                                :url=>"/security_group/show_list?page=&refresh=y"},
-                                               {:name=>"Security Group (Summary)",
-                                                :url=>"/security_group/show/#{@security_group.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "security_groups",
+                                                :url  => "/security_group/show_list?page=&refresh=y"},
+                                               {:name => "Security Group (Summary)",
+                                                :url  => "/security_group/show/#{@security_group.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_security_group")
         end
@@ -48,7 +48,7 @@ describe SecurityGroupController do
 
       describe "#test_toolbars" do
         it 'edit security group tags' do
-          post :button, :params => { :miq_grid_checks => to_cid(@security_group.id), :pressed => "security_group_tag" }
+          post :button, :params => {:miq_grid_checks => to_cid(@security_group.id), :pressed => "security_group_tag"}
           expect(response.status).to eq(200)
         end
       end

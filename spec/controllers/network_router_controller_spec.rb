@@ -34,13 +34,13 @@ describe NetworkRouterController do
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => { :id => @network_router.id }
+          get :show, :params => {:id => @network_router.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name=>"network_routers",
-                                                :url=>"/network_router/show_list?page=&refresh=y"},
-                                               {:name=>"Network Router (Summary)",
-                                                :url=>"/network_router/show/#{@network_router.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "network_routers",
+                                                :url  => "/network_router/show_list?page=&refresh=y"},
+                                               {:name => "Network Router (Summary)",
+                                                :url  => "/network_router/show/#{@network_router.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_network_router")
         end
@@ -48,7 +48,7 @@ describe NetworkRouterController do
 
       describe "#test_toolbars" do
         it 'edit network router tags' do
-          post :button, :params => { :miq_grid_checks => to_cid(@network_router.id), :pressed => "network_router_tag" }
+          post :button, :params => {:miq_grid_checks => to_cid(@network_router.id), :pressed => "network_router_tag"}
           expect(response.status).to eq(200)
         end
       end

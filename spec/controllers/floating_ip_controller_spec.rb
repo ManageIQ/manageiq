@@ -34,13 +34,13 @@ describe FloatingIpController do
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => { :id => @floating_ip.id }
+          get :show, :params => {:id => @floating_ip.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name=>"floating_ips",
-                                                :url=>"/floating_ip/show_list?page=&refresh=y"},
-                                               {:name=>"192.0.2.1 (Summary)",
-                                                :url=>"/floating_ip/show/#{@floating_ip.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "floating_ips",
+                                                :url  => "/floating_ip/show_list?page=&refresh=y"},
+                                               {:name => "192.0.2.1 (Summary)",
+                                                :url  => "/floating_ip/show/#{@floating_ip.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_floating_ip")
         end
@@ -48,7 +48,7 @@ describe FloatingIpController do
 
       describe "#test_toolbars" do
         it 'edit floating ip tags' do
-          post :button, :params => { :miq_grid_checks => to_cid(@floating_ip.id), :pressed => "floating_ip_tag" }
+          post :button, :params => {:miq_grid_checks => to_cid(@floating_ip.id), :pressed => "floating_ip_tag"}
           expect(response.status).to eq(200)
         end
       end

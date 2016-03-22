@@ -34,13 +34,13 @@ describe EmsNetworkController do
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => { :id => @ems.id }
+          get :show, :params => {:id => @ems.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name=>"Network Providers",
-                                                :url=>"/ems_network/show_list?page=&refresh=y"},
-                                               {:name=>"Cloud Manager Network Manager (Summary)",
-                                                :url=>"/ems_network/show/#{@ems.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "Network Providers",
+                                                :url  => "/ems_network/show_list?page=&refresh=y"},
+                                               {:name => "Cloud Manager Network Manager (Summary)",
+                                                :url  => "/ems_network/show/#{@ems.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_ems_network")
         end
@@ -51,28 +51,28 @@ describe EmsNetworkController do
           controller.instance_variable_set(:@breadcrumbs, [])
           get :new
           expect(response.status).to eq(200)
-          expect(allow(controller).to receive(:edit)).to_not be_nil
+          expect(allow(controller).to(receive(:edit))).to_not be_nil
         end
       end
 
       describe "#test_toolbars" do
         it "refresh relationships and power states" do
-          post :button, :params => { :id => @ems.id, :pressed => "ems_network_refresh" }
+          post :button, :params => {:id => @ems.id, :pressed => "ems_network_refresh"}
           expect(response.status).to eq(200)
         end
 
         it 'edit selected network provider' do
-          post :button, :params => { :miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_edit" }
+          post :button, :params => {:miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_edit"}
           expect(response.status).to eq(200)
         end
 
         it 'edit network provider tags' do
-          post :button, :params => { :miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_tag" }
+          post :button, :params => {:miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_tag"}
           expect(response.status).to eq(200)
         end
 
         it 'manage network provider policies' do
-          post :button, :params => { :miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_protect" }
+          post :button, :params => {:miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_protect"}
           expect(response.status).to eq(200)
 
           get :protect
@@ -81,12 +81,12 @@ describe EmsNetworkController do
         end
 
         it 'edit network provider timeline' do
-          get :show, :params => { :display => "timeline", :id => @ems.id }
+          get :show, :params => {:display => "timeline", :id => @ems.id}
           expect(response.status).to eq(200)
         end
 
         it 'edit network providers' do
-          post :button, :params => { :miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_edit" }
+          post :button, :params => {:miq_grid_checks => to_cid(@ems.id), :pressed => "ems_network_edit"}
           expect(response.status).to eq(200)
         end
       end

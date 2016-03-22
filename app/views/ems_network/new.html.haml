@@ -5,7 +5,7 @@
            :html   => {"ng-controller"   => "emsCommonFormController",
                        "name"            => "angularForm",
                        "ng-show"         => "afterGet",
-                       "create-url"      => "#{url}",
+                       "create-url"      => url,
                        "form-fields-url" => "/#{controller_name}/ems_network_form_fields/",
                        "novalidate"      => true}) do |f|
   %input{:type => 'hidden', :id => "form_id", :value => "##{f.options[:html][:id]}"}
