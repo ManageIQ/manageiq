@@ -511,21 +511,21 @@ module VimPerformanceAnalysis
     rel        = rel.where(:timestamp => start_time..end_time)
     rel        = rel.where(options[:conditions]) if options[:conditions]
 
-    if obj.kind_of?(MiqEnterprise) || obj.kind_of?(MiqRegion)
+    case obj
+    when MiqEnterprise, MiqRegion then
       cond1 = rel.where(:resource => obj.storages)
       cond2 = rel.where(:resource => obj.ext_management_systems)
       rel = cond1.or(cond2)
+    when Host then
+      rel = rel.where(:parent_host_id => obj.id)
+    when EmsCluster
+      rel = rel.where(:parent_ems_cluster_id => obj.id)
+    when Storage then
+      rel = rel.where(:parent_storage_id => obj.id)
+    when ExtManagementSystem then
+      rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w(Host EmsCluster))
     else
-      parent_col = case obj
-                   when Host then                :parent_host_id
-                   when EmsCluster then          :parent_ems_cluster_id
-                   when Storage then             :parent_storage_id
-                   when ExtManagementSystem then :parent_ems_id
-                   else                      raise "unknown object type: #{obj.class}"
-                   end
-
-      rel = rel.where(parent_col => obj.id)
-      rel = rel.where(:resource_type => %w(Host EmsCluster)) if obj.kind_of?(ExtManagementSystem)
+      raise "unknown object type: #{obj.class}"
     end
 
     rel.select(options[:select]).to_a
