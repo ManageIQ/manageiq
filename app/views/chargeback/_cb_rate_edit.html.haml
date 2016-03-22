@@ -34,11 +34,11 @@
       %tr
         %th{:rowspan => "2"}= _('Group')
         %th{:rowspan => "2"}= _('Description')
-        %th{:colspan => "2"}= _('Range')
-        %th{:colspan => "2"}= _('Rate')
-        %th{:rowspan => "2"}= _('Add/Remove Tier')
         %th{:rowspan => "2"}= _('Per Time')
         %th{:rowspan => "2"}= _('Per Unit')
+        %th{:colspan => "2"}= _('Range')
+        %th{:colspan => "2"}= _('Rate')
+        %th{:rowspan => "2"}= _('Actions')
         %th{:rowspan => "2"}= _('Currency')
       %tr
         %th= _("Start")
@@ -58,31 +58,11 @@
             %td.active{:colspan => "10"} &nbsp;
         - num_tiers = @sb[:tiers][detail_index].blank? ? "1" : @sb[:tiers][detail_index].length.to_s
 
-        %tr{:id => "rate_detail_row_#{detail_index}_0"}
+        %tr.rdetail{:id => "rate_detail_row_#{detail_index}_0"}
           %td{:rowspan => num_tiers}
             = h(rate_detail_group(detail[:group]))
           %td{:rowspan => num_tiers}
             = detail[:description]
-          %td
-            = text_field_tag("start_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:start],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json, :disabled => "disabled")
-          %td
-            = text_field_tag("end_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:end],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td{:align => 'right'}
-            = text_field_tag("fixed_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:fixed_rate],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td{:align => 'right'}
-            = text_field_tag("variable_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:variable_rate],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td
-            = button_tag(_(""),
-                         :class   => "btn btn-default  pficon-add-circle-o",
-                         :alt     => t = _("Add a new tier"),
-                         :title   => t,
-                         :onclick => "miqAjaxButton('#{url_for(:action       => "cb_tier_add",
-                                                               :detail_index => detail_index,
-                                                               :button       => "add")}');")
           %td{:rowspan => num_tiers}
             = select_tag("per_time_#{detail_index}",
               options_for_select(@edit[:new][:per_time_types].invert, @edit[:new][:details][detail_index][:per_time]),
@@ -96,6 +76,26 @@
             /if the rate detail have a metric associated, display an options field with per_unit selected
             %td{:rowspan => num_tiers}
               = select_tag("per_unit_#{detail_index}", options_for_select(measure.measures, detail.per_unit), "data-miq_observe" => {:url => url}.to_json)
+          %td
+            = text_field_tag("start_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:start],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json, :disabled => "disabled")
+          %td
+            = text_field_tag("end_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:end],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td{:align => 'right'}
+            = text_field_tag("fixed_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:fixed_rate],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td{:align => 'right'}
+            = text_field_tag("variable_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:variable_rate],
+              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td.action
+            = button_tag(_("Add"),
+                         :class   => "btn btn-default",
+                         :alt     => t = _("Add a new tier"),
+                         :title   => t,
+                         :onclick => "miqAjaxButton('#{url_for(:action       => "cb_tier_add",
+                                                               :detail_index => detail_index,
+                                                               :button       => "add")}');")
           /Show the code of the currency selected by the user
           %td{:id => "column_currency_#{detail_index}", :rowspan => num_tiers}
             = code_currency
@@ -114,9 +114,9 @@
             %td{:align => "right"}
               = text_field_tag("variable_rate_#{detail_index}_#{tier_index}", tier.variable_rate,
                 :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-            %td
-              = button_tag(_(""),
-                   :class   => "btn btn-default pficon-delete",
+            %td.action
+              = button_tag(_("Delete"),
+                   :class   => "btn btn-default",
                    :alt     => t = _("Remove the tier"),
                    :title   => t,
                    :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",

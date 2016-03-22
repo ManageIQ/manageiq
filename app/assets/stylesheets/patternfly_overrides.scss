@@ -415,3 +415,12 @@ iframe, .iframe {
     right: 0;
     bottom: 0;
 }
+
+/* Used at Chargeback edit view */
+
+tr.rdetail > td {
+  white-space: nowrap;
+}
+td.action > .btn.btn-default {
+    width: 50px;
+}

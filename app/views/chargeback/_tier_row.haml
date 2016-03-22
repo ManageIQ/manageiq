@@ -3,7 +3,7 @@
 - n = @sb[:num_tiers][i.to_i]
 - n = params[:tier_row] if params[:tier_row]
 
-%tr{:id => "rate_detail_row_#{i}_#{n - 1}"}
+%tr.rdetail{:id => "rate_detail_row_#{i}_#{n - 1}"}
   %td
     = text_field_tag("start_#{i}_#{n - 1}",  @edit[:new][:tiers][i.to_i][n - 1][:start],
       :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
@@ -16,9 +16,9 @@
   %td{:align => 'right'}
     = text_field_tag("variable_rate_#{i}_#{n - 1}", @edit[:new][:tiers][i.to_i][n - 1][:variable_rate],
       :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %td
-    = button_tag(_(""),
-                 :class   => "btn btn-default pficon-delete",
+  %td.action
+    = button_tag(_("Delete"),
+                 :class   => "btn btn-default",
                  :alt     => t = _("Remove the tier"),
                  :title   => t,
                  :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",
