@@ -18,8 +18,8 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
   def disconnect_inv
     super
 
-    # Mark all instances no longer found as terminated
-    power_state == "off"
+    # Mark all instances no longer found as unknown
+    self.raw_power_state = "unknown"
     save
   end
 

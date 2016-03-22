@@ -13,8 +13,8 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
   def disconnect_inv
     super
 
-    # Mark all instances no longer found as terminated
-    power_state == "off"
+    # Mark all instances no longer found as unknown
+    self.raw_power_state = "unknown"
     save
   end
 
