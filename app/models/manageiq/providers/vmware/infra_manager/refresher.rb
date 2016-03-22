@@ -84,7 +84,7 @@ module ManageIQ::Providers
           target, data = targets_with_data.shift
 
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
-
+          data[:ems] = target
           hashes = parse_data(data)
 
           # We no longer need the filtered VC data, so remove it to help the GC
