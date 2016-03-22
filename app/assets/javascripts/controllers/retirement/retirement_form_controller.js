@@ -7,6 +7,7 @@ ManageIQ.angular.app.controller('retirementFormController', ['$http', '$scope', 
   $scope.datepickerStartDate = new Date();
   $scope.modelCopy = _.extend({}, $scope.retirementInfo);
   $scope.model = 'retirementInfo';
+  $scope.timezone = ManageIQ.timezone || { name: "unknown" };
 
   if (objectIds.length == 1) {
     $http.get('retirement_info/' + objectIds[0]).success(function(response) {
