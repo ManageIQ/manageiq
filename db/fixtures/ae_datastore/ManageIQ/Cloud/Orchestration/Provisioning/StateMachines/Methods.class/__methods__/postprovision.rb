@@ -10,8 +10,11 @@ end
 
 $evm.log("info", "Starting Orchestration Post-Provisioning")
 
-service = $evm.root["service_template_provision_task"].destination
+task = $evm.root["service_template_provision_task"]
+service = task.destination
 stack = service.orchestration_stack
+
+service.post_provision_configure
 
 # You can add logic to process the stack object in VMDB
 # For example, dump all outputs from the stack
