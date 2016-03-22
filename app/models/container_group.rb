@@ -85,6 +85,7 @@ class ContainerGroup < ApplicationRecord
     self.container_services = []
     self.container_replicator_id = nil
     self.container_build_pod_id = nil
+    self.old_container_project_id = self.container_project_id
     self.container_project_id = nil
     self.deleted_on = Time.now.utc
     save
