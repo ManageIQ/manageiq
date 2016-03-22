@@ -75,6 +75,17 @@ class TestEnvHelper
   end
 
   #
+  # Filter global values.
+  #
+  def self.vcr_filter(vcr_config)
+    global_config_filter.each do |val_tag, replacement_text|
+      next unless (value = global_config_values[val_tag])
+      vcr_config.filter_sensitive_data(replacement_text) { CGI.escape(value) }
+      vcr_config.filter_sensitive_data(replacement_text) { value }
+    end
+  end
+
+  #
   # Test-local configuration.
   #
   def config
@@ -139,24 +150,12 @@ class TestEnvHelper
   end
 
   #
-  # Filter global values.
-  #
-  def self.vcr_filter(vcr_config)
-    global_config_filter.each do |val_tag, replacement_text|
-      next unless (value = global_config_values[val_tag])
-      vcr_config.filter_sensitive_data(replacement_text) { CGI.escape(value) }
-      vcr_config.filter_sensitive_data(replacement_text) { value }
-    end
-  end
-
-  #
   # Filter test-specific values.
   #
   def vcr_filter
     VCR.configure do |c|
       config_filter.each do |val_tag, replacement_text|
         next unless (value = config_values[val_tag])
-        puts "**** vcr_filter: mapping #{value} -> #{replacement_text}"
         c.filter_sensitive_data(replacement_text) { CGI.escape(value) }
         c.filter_sensitive_data(replacement_text) { value }
       end
