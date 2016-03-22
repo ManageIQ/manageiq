@@ -1107,7 +1107,6 @@ Vmdb::Application.routes.draw do
     :ems_network              => {
       :get  => %w(
         dialog_load
-        discover
         download_data
         edit
         ems_network_form_fields
@@ -1145,7 +1144,6 @@ Vmdb::Application.routes.draw do
         adv_search_post +
         compare_post +
         dialog_runner_post +
-        discover_get_post +
         exp_post +
         save_post
     },

@@ -15,13 +15,6 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
           :confirm   => N_("Refresh relationships and power states for all items related to the selected \#{ui_lookup(:tables=>\"ems_networks\")}?"),
           :enabled   => "false",
           :onwhen    => "1+"),
-        button(
-          :ems_network_discover,
-          'fa fa-search fa-lg',
-          t = N_('Discover #{ui_lookup(:tables=>"ems_networks")}'),
-          t,
-          :url       => "/discover",
-          :url_parms => "?discover_type=ems"),
         separator,
         button(
           :ems_network_new,
