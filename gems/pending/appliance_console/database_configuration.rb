@@ -38,6 +38,22 @@ module ApplianceConsole
       self.interactive = true unless hash.key?(:interactive)
     end
 
+    def run_interactive
+      ask_questions
+
+      clear_screen
+      say "Activating the configuration using the following settings...\n#{friendly_inspect}\n"
+
+      raise MiqSignalError unless activate
+
+      post_activation
+      say("\nConfiguration activated successfully.\n")
+    rescue RuntimeError => e
+      puts "Configuration failed#{": " + e.message unless e.class == MiqSignalError}"
+      press_any_key
+      raise MiqSignalError
+    end
+
     def local?
       host.blank? || host.in?(%w(localhost 127.0.0.1))
     end

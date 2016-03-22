@@ -463,9 +463,10 @@ Date and Time Configuration
         action = ask_with_menu("Database Operation", options)
 
         database_configuration =
-          if action == "create_internal"
+          case action
+          when "create_internal"
             ApplianceConsole::InternalDatabaseConfiguration.new
-          elsif action =~ /_external/
+          when /_external/
             ApplianceConsole::ExternalDatabaseConfiguration.new(:action => action.split("_").first.to_sym)
           else
             ApplianceConsole::DatabaseConfiguration.new
@@ -479,31 +480,11 @@ Date and Time Configuration
           else
             say("Failed to reset database")
           end
-          press_any_key
-        when "create_internal", "create_external", "join_external"
-          begin
-            database_configuration.ask_questions
-          rescue ArgumentError => e
-            say("\nConfiguration failed: #{e.message}\n")
-            press_any_key
-            raise MiqSignalError
-          end
-
-          clear_screen
-          say "Activating the configuration using the following settings...\n"
-          say "#{database_configuration.friendly_inspect}\n"
-
-          if database_configuration.activate
-            database_configuration.post_activation
-            say("\nConfiguration activated successfully.\n")
-            dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
-            press_any_key
-          else
-            say("\nConfiguration activation failed!\n")
-            press_any_key
-            raise MiqSignalError
-          end
+        when "create_internal", /_external/
+          database_configuration.run_interactive
         end
+        dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
+        press_any_key
 
       when I18n.t("advanced_settings.tmp_config")
         say("#{selection}\n\n")
