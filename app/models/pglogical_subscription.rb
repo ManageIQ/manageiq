@@ -3,14 +3,15 @@
 # This model then exposes select values returned from that method
 class PglogicalSubscription < ActsAsArModel
   set_columns_hash(
-    :id              => :string,
-    :status          => :string,
-    :dbname          => :string,
-    :host            => :string,
-    :user            => :string,
-    :password        => :string,
-    :port            => :integer,
-    :provider_region => :integer
+    :id                   => :string,
+    :status               => :string,
+    :dbname               => :string,
+    :host                 => :string,
+    :user                 => :string,
+    :password             => :string,
+    :port                 => :integer,
+    :provider_region      => :integer,
+    :provider_region_name => :string
   )
 
   def self.find(*args)
@@ -76,8 +77,7 @@ class PglogicalSubscription < ActsAsArModel
     # create the individual dsn columns
     cols.merge!(dsn_attributes(cols.delete(:provider_dsn)))
 
-    cols[:provider_region] = cols.delete(:provider_node).sub("region_", "").to_i
-    cols
+    cols.merge!(provider_node_attributes(cols.delete(:provider_node)))
   end
   private_class_method :subscription_to_columns
 
@@ -89,6 +89,15 @@ class PglogicalSubscription < ActsAsArModel
     attrs
   end
   private_class_method :dsn_attributes
+
+  def self.provider_node_attributes(node_name)
+    attrs = {}
+    attrs[:provider_region] = node_name.sub(MiqPglogical::NODE_PREFIX, "").to_i
+    region = MiqRegion.find_by_region(attrs[:provider_region])
+    attrs[:provider_region_name] = region.description if region
+    attrs
+  end
+  private_class_method :provider_node_attributes
 
   private
 
