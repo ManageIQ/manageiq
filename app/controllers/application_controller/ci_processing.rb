@@ -282,7 +282,7 @@ module ApplicationController::CiProcessing
             flash = _("Retirement dates removed")
           end
         else
-          t = params[:retire_date]
+          t = params[:retire_date].in_time_zone
           w = params[:retire_warn].to_i
           if session[:retire_items].length == 1
             flash = _("Retirement date set to %{date}") % {:date => t}
