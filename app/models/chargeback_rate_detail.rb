@@ -142,26 +142,33 @@ class ChargebackRateDetail < ApplicationRecord
 
   # Check that tiers are complete and disjoint
   def complete_tiers
-    cbts = chargeback_tiers
-    start = 0
-    tier_ends = false
     error = false
-    unless cbts.nil?
-      cbts.each do |tier|
-        if tier.start != start
-          errors.add(:chargeback_tiers, "must include all values from 0 to ∞ once.")
+    tiers = chargeback_tiers.order(:start)
+
+    tiers.each_with_index do |tier, index|
+      if tier == tiers.first
+        if !tier.start.zero?
           error = true
           break
-        else
-          start = tier.end
-          if tier.end == Float::INFINITY
-            tier_ends = true
-          end
         end
+
+        next
       end
-      unless tier_ends || error
-        errors.add(:chargeback_tiers, "must include all values from 0 to ∞.")
+
+      if tier.start != tiers[index - 1].end
+        error = true
+        break
+      end
+
+      next if tier != tiers.last
+
+      if tier.end != Float::INFINITY
+        error = true
+        break
       end
     end
+    errors.add(:chargeback_tiers, "must start at zero and not contain any gaps between start and prior end value.") if error
+
+    !error
   end
 end

@@ -71,7 +71,6 @@ RSpec.describe "chargebacks API" do
 
   context "with an appropriate role" do
     it "can create a new chargeback rate detail" do
-      pending "until ChargebackTier is included in the API"
       api_basic_authorize action_identifier(:rates, :create, :collection_actions)
 
       expect do
