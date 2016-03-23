@@ -2327,6 +2327,8 @@ Vmdb::Application.routes.draw do
         live_migrate_form_fields
         attach
         detach
+        evacuate
+        evacuate_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -2385,6 +2387,7 @@ Vmdb::Application.routes.draw do
         live_migrate_vm
         attach_volume
         detach_volume
+        evacuate_vm
       ) +
                adv_search_post +
                compare_post +
