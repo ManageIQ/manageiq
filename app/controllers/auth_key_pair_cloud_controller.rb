@@ -43,12 +43,10 @@ class AuthKeyPairCloudController < ApplicationController
           page.redirect_to :action => "new"
         end
       end
+    elsif @refresh_div == "main_div" && @lastaction == "show_list"
+      replace_gtl_main_div
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        render_flash
-      end
+      render_flash
     end
   end
 
@@ -71,9 +69,7 @@ class AuthKeyPairCloudController < ApplicationController
 
     @edit[:ems_choices] = {}
     ManageIQ::Providers::CloudManager.all.each { |ems| @edit[:ems_choices][ems.name] = ems.id }
-    if @edit[:ems_choices].length > 0
-      @edit[:new][:ems_id] = @edit[:ems_choices].values[0]
-    end
+    @edit[:new][:ems_id] = @edit[:ems_choices].values[0] unless @edit[:ems_choices].empty?
 
     @edit[:new][:name] = @key_pair.name
     @edit[:current] = @edit[:new].dup
@@ -262,7 +258,7 @@ class AuthKeyPairCloudController < ApplicationController
   def process_deletions(key_pairs)
     return if key_pairs.empty?
 
-    ManageIQ::Providers::CloudManager::AuthKeyPair.where(id: key_pairs).order('lower(name)').each do |kp|
+    ManageIQ::Providers::CloudManager::AuthKeyPair.where(:id => key_pairs).order('lower(name)').each do |kp|
       audit = {
         :event        => "auth_key_pair_cloud_record_delete_initiateed",
         :message      => "[#{kp.name}] Record delete initiated",
@@ -272,6 +268,7 @@ class AuthKeyPairCloudController < ApplicationController
       }
       AuditEvent.success(audit)
       kp.delete_key_pair
+      kp.destroy
     end
     add_flash(_("Delete initiated for %{models}") % {
       :models => pluralize(key_pairs.length, ui_lookup(:table => 'auth_key_pair_cloud'))
