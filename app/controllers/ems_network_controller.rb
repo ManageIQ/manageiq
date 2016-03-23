@@ -17,7 +17,8 @@ class EmsNetworkController < ApplicationController
   end
 
   def ems_path(*args)
-    ems_network_path(*args)
+    path_hash = {:action => 'show', :id => args[0].id.to_s }
+    path_hash.merge(args[1])
   end
 
   def ems_network_form_fields

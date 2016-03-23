@@ -1,4 +1,4 @@
-- url = @ems.persisted? ? ems_network_path(@ems) : ems_network_path
+- url = url_for(:controller => 'ems_network', :action => 'create', :id => "#{@ems.id || 'new'}")
 = form_for(@ems,
            :url    => url,
            :method => :post,
