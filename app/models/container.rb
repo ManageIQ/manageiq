@@ -27,7 +27,7 @@ class Container < ApplicationRecord
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
-    when :ems_events
+    when :ems_events, :event_streams
       # TODO: improve relationship using the id
       ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ? AND container_name = ?",
        container_project.try(:name), ext_management_system.try(:id), name]

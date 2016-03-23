@@ -42,17 +42,26 @@ describe MiqAction do
     end
   end
 
-  it "#action_evm_event" do
-    ems = FactoryGirl.create(:ems_vmware)
-    host = FactoryGirl.create(:host_vmware)
-    vm = FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems)
-    action = FactoryGirl.create(:miq_action)
-    expect_any_instance_of(EmsEvent).to receive(:handle_event).never
-    res = action.action_evm_event(action, vm, :policy => MiqPolicy.new)
+  context "#action_evm_event" do
+    it "for Vm" do
+      ems = FactoryGirl.create(:ems_vmware)
+      host = FactoryGirl.create(:host_vmware)
+      vm = FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems)
+      action = FactoryGirl.create(:miq_action)
+      res = action.action_evm_event(action, vm, :policy => FactoryGirl.create(:miq_policy))
 
-    expect(res).to be_kind_of EmsEvent
-    expect(res.host_id).to eq(host.id)
-    expect(res.ems_id).to eq(ems.id)
+      expect(res).to be_kind_of(MiqEvent)
+      expect(res.target).to eq(vm)
+    end
+
+    it "for Datastore" do
+      storage = FactoryGirl.create(:storage)
+      action  = FactoryGirl.create(:miq_action)
+      result  = action.action_evm_event(action, storage, :policy => FactoryGirl.create(:miq_policy))
+
+      expect(result).to be_kind_of(MiqEvent)
+      expect(result.target).to eq(storage)
+    end
   end
 
   context "#raise_automation_event" do

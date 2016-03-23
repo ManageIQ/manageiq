@@ -7,28 +7,23 @@ feed_link: "/alert/rss?feed=all_alert_event"
 # Item metadata
 item_title: |-
     <script>
-      if rec.ems_cluster_id && rec.host_id.nil?
-        "Cluster: #{rec.ems_cluster_name}"
-      elsif rec.host_id && rec.vm_or_template_id.nil?
-        "Host: #{rec.host_name}"
-      else
-        "VM: #{rec.vm_name}"
-      end
+      "#{rec.target.class.name}: #{rec.target.name}"
     </script>
    
 # item_description: "#{rec.vm_name} was #{rec.event_type == "VmPoweredOnEvent" ? "powered on" : "powered off"} on #{rec.created_on}"
 item_description: "#{rec.message} was raised on #{rec.timestamp}"
 item_link: |-
     <script>
-    if rec.ems_cluster_id && rec.host_id.nil?
-      "/ems_cluster/show/#{rec.ems_cluster_id}"
-    elsif rec.host_id && rec.vm_or_template_id.nil?
-      "/host/show/#{rec.host_id}"
+    case rec.target
+    when ManageIQ::Providers::InfraManager
+      "/ems_infra/show/#{rec.target.id}"
+    when ManageIQ::Providers::CloudManager
+      "/ems_cloud/show/#{rec.target.id}"
     else
-      "/vm/show/#{rec.vm_or_template_id}"
+      "/#{rec.target.class.table_name.singularize}/show/#{rec.target.id}"
     end
     </script>
-item_class: EmsEvent
+item_class: MiqEvent
 
 # Search criteria
 #   search_method: find, nil or a custom method name

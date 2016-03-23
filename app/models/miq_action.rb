@@ -353,6 +353,7 @@ class MiqAction < ApplicationRecord
       :timestamp  => Time.now.utc
     }
     opts = default_options.merge(action.options || {})
+    opts[:target] = rec
 
     opts[:ems_id] = rec.ext_management_system.id if rec.respond_to?(:ext_management_system) && rec.ext_management_system
     case rec
@@ -373,7 +374,7 @@ class MiqAction < ApplicationRecord
       opts[:ems_cluster_uid]   = rec.uid_ems
     end
 
-    EmsEvent.create(opts)
+    MiqEvent.create(opts)
   end
 
   def action_compliance_failed(action, rec, _inputs)

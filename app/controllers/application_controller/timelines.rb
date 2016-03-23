@@ -283,7 +283,7 @@ module ApplicationController::Timelines
       @tl_options[:tl_show_options].push(["Policy Events", "policy_timeline"])
       @tl_options[:tl_show] = "timeline"
     end
-    evt_type = @tl_options[:tl_show] == "timeline" ? "ems_events" : "policy_events"
+    evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
     sdate, edate = @tl_record.first_and_last_event(evt_type.to_sym)
     if !sdate.nil? && !edate.nil?
       @tl_options[:sdate] = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
@@ -340,7 +340,7 @@ module ApplicationController::Timelines
   end
 
   def tl_build_timeline_report_options
-    evt_type = @tl_options[:tl_show] == "timeline" ? "ems_events" : "policy_events"
+    evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
     sdate, edate = @tl_record.first_and_last_event(evt_type.to_sym)
     if !@tl_options[:sdate].nil? && !@tl_options[:edate].nil?
       case @tl_options[:typ]
