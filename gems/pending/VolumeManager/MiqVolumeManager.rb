@@ -81,6 +81,7 @@ class MiqVolumeManager
 
     @vgHash = {}
     parseLvmMetadata(lvmPvHdrHash)
+    parseLvmThinMetadata
     @vgHash.each_value { |vg| @logicalVolumes.concat(vg.getLvs) }
 
     @lvHash = {}
@@ -124,7 +125,7 @@ class MiqVolumeManager
       if pvh.lvm_type == "LVM2"
         $log.debug "MiqVolumeManager.parseLvmMetadata: parsing LVM2 metadata"
         pvh.mdList.each do |md|
-          # Lvm2MdParser.dumpMetadata(md)
+          Lvm2MdParser.dumpMetadata(md) if $log.debug?
           parser = Lvm2MdParser.new(md, pvHdrs)
           next if @vgHash[parser.vgName]
           @vgHash[parser.vgName] = parser.parse
@@ -138,6 +139,25 @@ class MiqVolumeManager
       else
         $log.debug "MiqVolumeManager.parseLvmMetadata: unknown metadata type #{pvh.lvm_type}"
         next
+      end
+    end
+  end
+
+  def parseLvmThinMetadata
+    @vgHash.each do |vgname, vg|
+      $log.debug "MiqVolumeManager.parseLvmThinMetadata: setting LVM2 thin metadata"
+
+      vg.thin_volumes.each do |tv|
+        tv.thin_segments.each do |seg|
+          seg.set_thin_pool_volume vg.logicalVolumes.values
+        end
+      end
+
+      vg.thin_pool_volumes.each do |tpv|
+        tpv.thin_pool_segments.each do |seg|
+          seg.set_metadata_volume vg.logicalVolumes.values
+          seg.set_data_volume     vg.logicalVolumes.values
+        end
       end
     end
   end
