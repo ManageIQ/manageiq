@@ -19,11 +19,14 @@ class VmCloudController < ApplicationController
       :url  => "/vm_cloud/resize"
     ) unless @explorer
     @flavors = {}
-    @record.ext_management_system.flavors.each { |f| @flavors[f.name_with_details] = f.id unless f == @record.flavor }
-
+    if !@record.ext_management_system.nil?
+      @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+    end
     @edit = {}
     @edit[:new] ||= {}
-    @edit[:new][:flavor] = @record.flavor.id
+    if !@record.flavor.nil?
+      @edit[:new][:flavor] = @record.flavor.id
+    end
     @edit[:key] = "vm_resize__#{@record.id}"
     @edit[:vm_id] = @record.id
     @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
@@ -35,10 +38,9 @@ class VmCloudController < ApplicationController
 
   def resize_vm
     assert_privileges("instance_resize")
-    return unless load_edit("vm_resize__#{params[:id]}")
     flavor_id = @edit[:new][:flavor]
     flavor = find_by_id_filtered(Flavor, flavor_id)
-    @record = VmOrTemplate.find_by_id(@edit[:vm_id])
+    @record = VmOrTemplate.find_by_id(params[:id])
 
     case params[:button]
     when "cancel"
