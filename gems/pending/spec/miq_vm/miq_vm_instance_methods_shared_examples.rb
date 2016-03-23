@@ -21,12 +21,12 @@ shared_examples_for "MiqVm instance methods" do
     end
 
     it "should return the expected types of mounted filesystems", :ex_tag => 6 do
-      fs_types = miq_vm.rootTrees.first.fileSystems.collect{ |fsd| fsd.fs.fsType }
+      fs_types = miq_vm.rootTrees.first.fileSystems.collect { |fsd| fsd.fs.fsType }
       expect(fs_types).to match_array(expected_num_fs_types)
     end
 
     it "should return the expected mount points", :ex_tag => 7 do
-      mount_points = miq_vm.rootTrees.first.fileSystems.collect{ |fsd| fsd.mountPoint }
+      mount_points = miq_vm.rootTrees.first.fileSystems.collect(&:mountPoint)
       expect(mount_points).to match_array(expected_mount_points)
     end
   end

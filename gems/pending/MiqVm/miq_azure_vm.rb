@@ -48,7 +48,7 @@ class MiqAzureVm < MiqVm
 
       dInfo.fileName   = df
       dInfo.hardwareId = dtag
-      disk_format = @vmConfig.getHash["#{dtag}.format"]  # Set by rhevm for iscsi and fcp disks
+      disk_format = @vmConfig.getHash["#{dtag}.format"]
       dInfo.format = disk_format unless disk_format.blank?
 
       mode = @vmConfig.getHash["#{dtag}.mode"]
