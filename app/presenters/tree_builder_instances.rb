@@ -16,7 +16,7 @@ class TreeBuilderInstances < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, _options)
-    objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => "VmCloud")
+    objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => VmCloud)
     objects += [
       {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived Instances")},
       {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned Instances")}
