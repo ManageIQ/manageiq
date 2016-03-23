@@ -402,20 +402,28 @@ class ChargebackController < ApplicationController
 
   # Add a new tier at the end
   def cb_tier_add
-    @edit = session[:edit]
     detail_index = params[:detail_index]
     ii = detail_index.to_i
-    @sb[:num_tiers][ii] =
-      @edit[:new][:details][ii][:chargeback_tiers].to_a.length if @edit[:new][:details][ii][:chargeback_tiers]
+
+    @edit  = session[:edit]
+    detail = @edit[:new][:details][ii]
+
+    @sb[:num_tiers][ii] = detail[:chargeback_tiers].to_a.length if detail[:chargeback_tiers]
     @sb[:num_tiers][ii] = 1 unless @sb[:num_tiers][ii] || @sb[:num_tiers][ii] == 0
     @sb[:num_tiers][ii] += 1
+
     tier_index = @sb[:num_tiers][ii] - 1
-    @edit[:new][:tiers][ii][tier_index] = {}
-    @edit[:new][:tiers][ii][tier_index][:start] = @edit[:new][:tiers][ii][tier_index - 1][:end]
-    @edit[:new][:tiers][ii][tier_index][:end] = Float::INFINITY
-    @edit[:new][:tiers][ii][tier_index][:fixed_rate] = 0.0
-    @edit[:new][:tiers][ii][tier_index][:variable_rate] = 0.0
-    params[:code_currency] = ChargebackRateDetailCurrency.find_by(:id => @edit[:new][:details][ii][:currency]).code
+    tier_list = @edit[:new][:tiers][ii]
+    tier_list[tier_index] = {}
+
+    tier                 = tier_list[tier_index]
+    tier[:start]         = tier_list[tier_index - 1][:end]
+    tier[:end]           = Float::INFINITY
+    tier[:fixed_rate]    = 0.0
+    tier[:variable_rate] = 0.0
+
+    params[:code_currency] = ChargebackRateDetailCurrency.find_by(:id => detail[:currency]).code
+
     add_row(detail_index, tier_index - 1)
   end
 
