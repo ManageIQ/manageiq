@@ -11,8 +11,12 @@ class ApplicationController < ActionController::Base
   include Vmdb::Logging
 
   if Vmdb::Application.config.action_controller.allow_forgery_protection
-    db = MiqDatabase.connected? ? MiqDatabase.first : nil
-    protect_from_forgery :secret => db ? db.csrf_secret_token : SecureRandom.hex(64), :except => :csp_report, :with => :exception
+    # Add CSRF protection for this controller, which enables the
+    # verify_authenticity_token before_action, with a random secret.
+    # This secret is reset to a value found in the miq_databases table in
+    # MiqWebServerWorkerMixin.configure_secret_token for rails server, UI, and
+    # web service worker processes.
+    protect_from_forgery :secret => SecureRandom.hex(64), :except => :csp_report, :with => :exception
   end
 
   helper ChartingHelper
