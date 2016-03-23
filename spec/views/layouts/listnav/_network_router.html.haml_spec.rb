@@ -25,11 +25,12 @@ describe "layouts/listnav/_network_router.html.haml" do
                                            :ext_management_system => provider.network_manager)
       floating_ip     = FactoryGirl.create("floating_ip_#{t}".to_sym,
                                            :ext_management_system => provider.network_manager)
-      vm.network_ports << FactoryGirl.create("network_port_#{t}".to_sym,
-                                             :device          => vm,
-                                             :cloud_subnet    => subnet,
-                                             :security_groups => [security_group],
-                                             :floating_ip     => floating_ip)
+      vm.network_ports << network_port = FactoryGirl.create("network_port_#{t}".to_sym,
+                                                            :device          => vm,
+                                                            :security_groups => [security_group],
+                                                            :floating_ip     => floating_ip)
+
+      FactoryGirl.create(:cloud_subnet_network_port, :cloud_subnet => subnet, :network_port => network_port)
     end
 
     context "for #{t}" do
