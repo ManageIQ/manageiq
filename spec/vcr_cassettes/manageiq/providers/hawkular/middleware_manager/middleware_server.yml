@@ -2,233 +2,6 @@
 http_interactions:
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Content-Encoding:
-      - gzip
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 17 Mar 2016 15:35:06 GMT
-      X-Total-Count:
-      - '1'
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '120'
-      Link:
-      - <http://localhost:8080/hawkular/inventory/feeds>; rel="current"
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAI3MsQ0CMQwAwP6nsFJjfXDsvMOPgijsJBZ0FN8hdkcwAQPc
-        XeG1AKSnHfcEF0jrsZNmql4qakxGLoVQuSsK8Txvxap6rLG30UaX2JCzGbKo
-        oU8ntOnRRXIj7+n0zR/jV/8FljfcPlponNCUAAAA
-    http_version: 
-  recorded_at: Thu, 17 Mar 2016 15:35:06 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/9d9dc5f7-40aa-458a-beb2-aebfc55092bc/resourceTypes/WildFly%20Server/resources
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Content-Encoding:
-      - gzip
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 17 Mar 2016 15:35:06 GMT
-      X-Total-Count:
-      - '1'
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '194'
-      Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/9d9dc5f7-40aa-458a-beb2-aebfc55092bc/resourceTypes/WildFly%20Server/resources>;
-        rel="current"
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAALWPvQrCMBhF9z5FCLgZUvPTpmZ3cnNwEIcvaYKFWksJQpH2
-        2W1jFQRX53Mv594TeiQI4RbCBaMtwjRoplKWGZ4R5Z0ggnNGlLCKSCbcJueQ
-        KeOp10VZlFb6nIgUgAipgBhnGAFnvJUyLZixtNP7m4V6HPF61oS+dbNmdv7T
-        GvSxqstd3a9YenDd3XXRPykbuMYFeAmgb1yVv+DEhrj/04YQqhoaGt+9vi3V
-        999kQOcngJd39V0BAAA=
-    http_version: 
-  recorded_at: Thu, 17 Mar 2016 15:35:06 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/9d9dc5f7-40aa-458a-beb2-aebfc55092bc/resources/Local~~/data?dataType=configuration
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Content-Encoding:
-      - gzip
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 17 Mar 2016 15:35:06 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '252'
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAFWPP2+DMBTE93wKy3NdwBgwYaITQ5VGour+8J8EldqRsdMh
-        Sj57wRWVqjedfne6e7cdQvgC/ozRHuHEN5SntBzyknCtGGF5TglngpOCMpVV
-        OZR80IluallLUeiKsBSAsIIDGdRACahBi6JIazqIxDWvVsD0eCSyEdbo8RQc
-        +NEa/LTWXmEKau29LWrRLzYYiVopnZrnuCej1XO6XBYDi+VDuXnNRxhRO13O
-        kGWkP7THvnt735y9clflUO/Bxw7sgjGjOW386KwMwqMDfP3yDr4/wwRuM3R2
-        9maD4P04gcELusftf+T/X7v7DzrKS19RAQAA
-    http_version: 
-  recorded_at: Thu, 17 Mar 2016 15:35:06 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/9d9dc5f7-40aa-458a-beb2-aebfc55092bc/resources/Local~~/children
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Content-Encoding:
-      - gzip
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 17 Mar 2016 15:35:06 GMT
-      X-Total-Count:
-      - '22'
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '824'
-      Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/9d9dc5f7-40aa-458a-beb2-aebfc55092bc/resources/Local~~/children>;
-        rel="current"
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAN2ZTW/aQBCG7/kVFlJu2UANJKSIQ1saVW1zSqUeohzGu2Pi
-        4q/uLlCrIr+9a2IIeG3sHIqtPSBhz8zuvPN47LX3wfp7ZlmdGORTx3pvdbpy
-        bI969pXTvyIjFwdk0O/bZDSgIzK0B/juug9XI8ftuuMbdsPo0L0mgx4AGQxH
-        QBx0bALouHQ47N3YDu3y8feIgv/8vPt3bt+KhSMSITGYMJAgogWnKNT59Ii8
-        HE4+/4Eg9nF637lI85NJjGl+abL/M105nu5S2sysJgsh2Mzd0U0eyxvU+fUm
-        411UTkkW8lKMbmEpusWFOFtftBTWN0yoH8HcAFp5KW/FtRffLl6/mEMJ494S
-        +eTJPjWnr9OPn87t3nQzv4YqtVqHtqzu+xYd1lZHHUg5/c3AYRj7URJgKCdP
-        sJovfOCERkEAISMzkLiChKyAX6rfyTtpl5reSZpp20mvhgI4tQQeontLfdpD
-        EHzkUhCg0otCQTAAzzcL4XGF1QxL49sDceX5zPUTAjN1mrBoFarbODMLY5XG
-        apBHRmgPSliqy4tQjiAjw+6lJdJqdKAW2DgvgSodSYRKCI2gVCyolI3m3jiR
-        3dXihUt1HPGEME9II+BUaqvuoYLI9iDLHrEcTeNVKKz2kmMX1iJSlEaLUOWG
-        6eUkiAN0jqFhS41KkTUIHhmiPTRjL5yhYauMvKZqVnsR7UGT9j6B2DMLjq6q
-        Gs9BTHsABSi5R0X6ih9HoTKZReqIvGpkxcHtYZd+lnl5l3eQMWSEghAQMg4E
-        gV+iSSDraq33MatipPYg3j6AzepKXVX9pUjLetCRARHIl6atP4p0VUPKRTWO
-        aZ5tBZmEqFRTKZ6iiMbR7N2PQxH5Znx+KhdV57n0GtL0vqXkEIpsq+DUUH68
-        zn1u9+4ghFnBfuWel5XzyUpd5KETKxundEPzoDRNcwpQLV1m6sVvs6+zxOB3
-        at50+YShCwtfnhrf3TYlBe9+k4nGbudiHTpkJdfMOrW8i/WQqX08Dk+vVzdX
-        raaJFm/znBrilywLxfCnyuPWT9S/D7OiG+XW1cocrQO3DESJkw72yGilUEtK
-        dra2Hv8BC6OlW1slAAA=
-    http_version: 
-  recorded_at: Thu, 17 Mar 2016 15:35:06 GMT
-- request:
-    method: get
     uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/9d9dc5f7-40aa-458a-beb2-aebfc55092bc/resources/Local~~/metrics
     body:
       encoding: US-ASCII
@@ -8692,4 +8465,1152 @@ http_interactions:
         +blafk7k5/4tP58vs4DJmkvECAA=
     http_version: 
   recorded_at: Thu, 17 Mar 2016 15:35:08 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '61'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNdRKkvMKU1V
+        sjIyN6mNBQBAb3u1KQAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '64'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjAxMTQwNNZRKkvMKU1V
+        sjIyNDLXM6iNBQDMJ/pHLAAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjA2NTQwMNJRKkvMKU1V
+        srLUMzUwNLIwMTZytaiNBQAVy2C5MgAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNVRKkvMKU0F
+        iupZGlhYGhuZGVi4WtbGAgD1lhDuMwAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjA2NTQwN9BRKkvMKU1V
+        sjLRMzA3tzQ1NzdztaiNBQB67N7jMgAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwsNRRKkvMKU1V
+        stI1NNUzqI0FAHguiK4rAAAA
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '62'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNBRKkvMKU1V
+        sjI1tDCvjQUAWlZSfCoAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '59'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwtNRRKkvMKU1V
+        sjKojQUAkH010ycAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNJRKkvMKU1V
+        sjLRMzGyNDW3MDJxtaiNBQCPTD9PMgAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNJRKkvMKU1V
+        sjI3N7Iwr40FAMhuuiMrAAAA
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '59'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwMtRRKkvMKU1V
+        sjKojQUAJotX9ScAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNZRKkvMKU0F
+        iuoZGxsYGlqYmZq5WtbGAgCo9NUxMwAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '61'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjC2MDQwNNFRKkvMKU1V
+        sjLQM6iNBQCQ5t70KQAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '62'
+      Date:
+      - Wed, 23 Mar 2016 11:28:20 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3NjA2NTQwMNRRKkvMKU1V
+        slIqLVCqjQUAxtcgFCoAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 11:28:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '64'
+      Date:
+      - Wed, 23 Mar 2016 13:28:17 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3tjQzMTYwMNJRKkvMKU1V
+        sjIyMDQxN6uNBQAV/e9rLAAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:28:17 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '64'
+      Date:
+      - Wed, 23 Mar 2016 13:28:17 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3tjSzNDUwMNVRKkvMKU1V
+        sjIyNDbUM6iNBQAfYvWELAAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:28:17 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MTYwMNRRKkvMKU0F
+        iuoZGBoZm5sZmhq5WtbGAgDlUz1fMwAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwMNRRKkvMKU0F
+        iupZGlhYGhuZGVi4WtbGAgBDiU9zMwAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MTYwMNRRKkvMKU1V
+        sjLRMzUxt7AwtTRytaiNBQBH4puNMgAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwMNFRKkvMKU1V
+        stI1NNUzqI0FAPRdDBArAAAA
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '62'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwMNVRKkvMKU0F
+        ipoamxvVxgIAwBuQDSsAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '59'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwMNNRKkvMKU1V
+        sjKojQUAUVsbHScAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwMNdRKkvMKU1V
+        sjLRM7cwMbcwNjZztaiNBQD83/BnMgAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '65'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwMNdRKkvMKU1V
+        sjKxNDcytrCsjQUALSp3nC0AAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '59'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwsNBRKkvMKU1V
+        sjKojQUA4Vf95ycAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '70'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzUwsNBRKkvMKU0F
+        iuqZGpqaG5qZGVi4WtbGAgCmJDGEMwAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '61'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2NTcwMNRRKkvMKU1V
+        sjLQM6iNBQBw2781KQAAAA==
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B9d9dc5f7-40aa-458a-beb2-aebfc55092bc%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '62'
+      Date:
+      - Wed, 23 Mar 2016 13:39:27 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAIuuVirJzE0tLknMLVCyMjQxtTA3MTA2MzQwMNBRKkvMKU1V
+        slIqLVCqjQUAM5NYYyoAAAA=
+    http_version:
+  recorded_at: Wed, 23 Mar 2016 13:39:27 GMT
 recorded_with: VCR 2.9.3

@@ -30,7 +30,7 @@ class MiddlewareServerController < ApplicationController
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"
-    @record = identify_record(params[:id])
+    @record = identify_record(params[:id], ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer)
     show_container(@record, controller_name, display_name)
   end
 
