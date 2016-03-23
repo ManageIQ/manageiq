@@ -9,9 +9,7 @@ class ApiController
     end
 
     def show_service_dialogs
-      if @req[:s_id] || expand?(:resources) || attribute_selection == "all"
-        @req[:additional_attributes] = %w(content) if attribute_selection == "all"
-      end
+      @req[:additional_attributes] = %w(content) if attribute_selection == "all"
       show_generic(:service_dialogs)
     end
   end
