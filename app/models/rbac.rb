@@ -543,7 +543,7 @@ module Rbac
     targets = case results_format
               when :objects then targets
               when :ids     then targets.collect(&:id)
-              else raise "unknown results format of '#{results_format.inspect}"
+              else raise _("unknown results format of '%{format_type}") % {:format_type => results_format.inspect}
               end
 
     return targets, attrs
@@ -564,7 +564,10 @@ module Rbac
     if scope_name.nil?
       klass
     else
-      raise "Named scope '#{scope_name}' is not defined for class '#{klass.name}'" unless klass.respond_to?(scope_name)
+      unless klass.respond_to?(scope_name)
+        raise _("Named scope '%{scope_name}' is not defined for class '%{class_name}'") % {:scope_name => scope_name,
+                                                                                           :class_name => klass.name}
+      end
       klass.send(*scope)
     end
   end

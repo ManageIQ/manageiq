@@ -43,7 +43,7 @@ class Provider < ApplicationRecord
   end
 
   def with_provider_connection(options = {})
-    raise "no block given" unless block_given?
+    raise _("no block given") unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
@@ -54,8 +54,12 @@ class Provider < ApplicationRecord
   alias_method :zone_name, :my_zone
 
   def refresh_ems
-    raise "no #{ui_lookup(:table => "provider")} credentials defined" if self.missing_credentials?
-    raise "#{ui_lookup(:table => "provider")} failed last authentication check" unless self.authentication_status_ok?
+    if missing_credentials?
+      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "provider")}
+    end
+    unless authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "provider")}
+    end
     managers.each { |manager| EmsRefresh.queue_refresh(manager) }
   end
 end

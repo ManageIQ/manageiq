@@ -25,7 +25,9 @@ class NetappRcu < StorageManager
   end
 
   def self.add_from_ems(ems)
-    raise "NetappRcu.add_from_ems: unsupported ems type: #{ems.type}" unless ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+    unless ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+      raise _("NetappRcu.add_from_ems: unsupported ems type: %{type}") % {:type => ems.type}
+    end
     # TODO: Use hostname, not ipaddress
     add(ems.ipaddress,
         ems.authentication_userid(:default),
@@ -100,7 +102,7 @@ class NetappRcu < StorageManager
   end
 
   def current_controller
-    raise "NetappRcu.current_controller: current controller is not set" unless @currentController
+    raise _("NetappRcu.current_controller: current controller is not set") unless @currentController
     @currentController
   end
 
@@ -157,17 +159,23 @@ class NetappRcu < StorageManager
     size = 1.gigabyte if size < 1.gigabyte
 
     if protocol == "NFS"
-      raise "Controller '#{controller_name}' does not have aggregate '#{aggregate_or_volume_name}'" unless controller_has_aggregate?(aggregate_or_volume_name)
+      unless controller_has_aggregate?(aggregate_or_volume_name)
+        raise _("Controller '%{name}' does not have aggregate '%{item}'") % {:name => controller_name,
+                                                                             :item => aggregate_or_volume_name}
+      end
     elsif protocol == "VMFS" # XXX ???
-      raise "Controller '#{controller_name}' does not have volume '#{aggregate_or_volume_name}'"    unless controller_has_volume?(aggregate_or_volume_name)
+      unless controller_has_volume?(aggregate_or_volume_name)
+        raise _("Controller '%{name}' does not have volume '%{item}'") % {:name => controller_name,
+                                                                          :item => aggregate_or_volume_name}
+      end
     else
-      raise "Unrecognized protocol: #{protocol}"
+      raise _("Unrecognized protocol: %{protocol}") % {:protocol => protocol}
     end
-    raise "Container not provided" if container.nil?
+    raise _("Container not provided") if container.nil?
 
     if auto_grow
-      raise "auto_grow it true, but auto_grow_increment is not set" unless auto_grow_increment
-      raise "auto_grow it true, but auto_grow_maximum is not set" unless auto_grow_maximum
+      raise _("auto_grow it true, but auto_grow_increment is not set") unless auto_grow_increment
+      raise _("auto_grow it true, but auto_grow_maximum is not set") unless auto_grow_maximum
     else
       auto_grow_increment = 0
       auto_grow_maximum = 0

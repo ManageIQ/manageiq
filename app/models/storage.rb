@@ -347,11 +347,18 @@ class Storage < ApplicationRecord
   end
 
   def scan(userid = "system", _role = "ems_operations")
-    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{store_type}], [#{name}] with id: [#{id}]") unless SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
+    unless SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
+      raise(MiqException::MiqUnsupportedStorage,
+            _("Action not supported for %{table} type [%{store_type}], [%{name}] with id: [%{id}]") %
+              {:table => ui_lookup(:table => "storages"), :store_type => store_type, :name => name, :id => id})
+    end
 
     hosts = active_hosts_with_authentication_status_ok
-    raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table => "storages")} [#{name}] with id: [#{id}]") if hosts.empty?
-
+    if hosts.empty?
+      raise(MiqException::MiqStorageError,
+            _("Check that a Host is running and has valid credentials for %{table} [%{name}] with id: [%{id}]")) %
+              {:table => ui_lookup(:table => "storages"), :name => name, :id => id}
+    end
     task_name = "SmartState Analysis for [#{name}]"
     self.class.create_scan_task(task_name, userid, [self])
   end
@@ -512,7 +519,9 @@ class Storage < ApplicationRecord
     if hosts.empty?
       message = "There are no active Hosts with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
       _log.warn "#{message}"
-      raise MiqException::MiqUnreachableStorage, message
+      raise MiqException::MiqUnreachableStorage,
+            _("There are no active Hosts with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
+              {:name => name, :zone => MiqServer.my_zone}
     end
 
     max_parallel_storage_scans_per_host = self.class.max_parallel_storage_scans_per_host
@@ -702,7 +711,9 @@ class Storage < ApplicationRecord
 
   # TODO: See if we can reuse the main perf_capture method, and only overwrite the perf_collect_metrics method
   def perf_capture(interval_name)
-    raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
+    unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
+      raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
+    end
 
     log_header = "[#{interval_name}]"
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"

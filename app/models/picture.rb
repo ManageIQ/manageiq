@@ -63,7 +63,7 @@ class Picture < ApplicationRecord
 
   def basename
     @basename ||= begin
-      raise "must have a numeric id" unless id.kind_of?(Numeric)
+      raise _("must have a numeric id") unless id.kind_of?(Numeric)
       "#{compressed_id}.#{extension}"
     end
   end

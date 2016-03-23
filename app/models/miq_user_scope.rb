@@ -15,10 +15,10 @@ class MiqUserScope
     # => :feature_type => view | admin | control
     # => :class        => Vm, Host, etc.
     feature_type = options[:feature_type]
-    raise "No value provided for option :feature_type" if feature_type.nil?
+    raise _("No value provided for option :feature_type") if feature_type.nil?
 
     klass = options[:class]
-    raise "No value provided for option :class" if klass.nil?
+    raise _("No value provided for option :class") if klass.nil?
 
     result = {}
     FILTER_TYPES.each { |filter_type| result[filter_type] = filters_by_class_feature_filter(klass, feature_type, filter_type) }
@@ -27,7 +27,9 @@ class MiqUserScope
   end
 
   def filters_by_class_feature_filter(klass, feature_type, filter_type)
-    raise "Filter type must be one of #{FILTER_TYPES.inspect}" unless FILTER_TYPES.include?(filter_type.to_sym)
+    unless FILTER_TYPES.include?(filter_type.to_sym)
+      raise _("Filter type must be one of %{filter}") % {:filter => FILTER_TYPES.inspect}
+    end
 
     filter = scope.fetch_path(feature_type.to_sym, filter_type.to_sym)
     return if filter.nil?

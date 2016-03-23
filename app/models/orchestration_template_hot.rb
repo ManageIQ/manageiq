@@ -63,7 +63,7 @@ class OrchestrationTemplateHot < OrchestrationTemplate
       elsif raw_constraint.key? 'custom_constraint'
         parse_custom_constraint(raw_constraint)
       else
-        raise MiqException::MiqParsingError, "Unknown constraint #{raw_constraint}"
+        raise MiqException::MiqParsingError, _("Unknown constraint %{constraint}") % {:constraint => raw_constraint}
       end
     end
   end

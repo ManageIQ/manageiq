@@ -66,7 +66,7 @@ class RssFeed < ApplicationRecord
     return @options unless @options.nil?
 
     file = RssFeed.yml_file_name(name)
-    raise "no yml file found for name \"#{name}\"" unless File.exist?(file)
+    raise _("no yml file found for name \"%{name}\"") % {:name => name} unless File.exist?(file)
     @options = YAML.load(File.read(file)).symbolize_keys
   end
 

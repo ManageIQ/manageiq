@@ -22,7 +22,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def save!
-    raise "Cannot update an existing subscription" if id
+    raise _("Cannot update an existing subscription") if id
     create_node.check if !pglogical.enabled? || self.class.count == 0
     id = "subscription_#{host.gsub(/\.|-/, "_")}"
     pglogical.subscription_create(id, dsn, [MiqPglogical::REPLICATION_SET_NAME], false).check
