@@ -48,6 +48,12 @@ describe ApiController do
       )
       expect_result_to_have_keys(%w(content))
     end
+
+    it "query single dialog to exclude content when attributes are asked for" do
+      run_get service_dialogs_url(dialog1.id), :attributes => "id,label"
+
+      expect_result_to_have_only_keys(%w(href id label))
+    end
   end
 
   context "Service Dialogs subcollection" do
