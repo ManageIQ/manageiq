@@ -47,7 +47,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def hourly_rate
-    (fixed_rate, variable_rate) = find_rate(0.0)
+    variable_rate = find_rate(0.0)
     rate = variable_rate
     return 0.0 if rate.zero?
 
@@ -116,8 +116,9 @@ class ChargebackRateDetail < ApplicationRecord
     else
       s = ""
       ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
-        # Example: Daily @ .02 per MHz
-        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + #{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.end}\n"
+        # Example: Daily @ .02 per MHz from 0.0 to Infinity
+        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate}"\
+             "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.end}\n"
       end
       s.chomp
     end

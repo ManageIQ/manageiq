@@ -4,7 +4,7 @@ class ChargebackTier < ApplicationRecord
 
   def self.to_float(s)
     if s.to_s.include?("Infinity")
-        Float::INFINITY
+      Float::INFINITY
     else
       s
     end

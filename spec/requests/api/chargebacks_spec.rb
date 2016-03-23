@@ -166,7 +166,8 @@ RSpec.describe "chargebacks API" do
     it "cannot create a chargeback rate detail" do
       api_basic_authorize
 
-      expect { run_post rates_url, :description => "rate_0", :enabled => true }.not_to change(ChargebackRateDetail, :count)
+      expect { run_post rates_url, :description => "rate_0", :enabled => true }.not_to change(ChargebackRateDetail,
+                                                                                              :count)
       expect_request_forbidden
     end
 

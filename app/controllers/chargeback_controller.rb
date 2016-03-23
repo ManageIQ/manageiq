@@ -149,7 +149,9 @@ class ChargebackController < ApplicationController
           @sb[:rate_details].each do |detail|
             detail.errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error) }
             detail.chargeback_tiers.each do |tier|
-              tier.errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error) }
+              tier.errors.each do |field, msg|
+                 add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error)
+              end
             end
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
@@ -404,17 +406,17 @@ class ChargebackController < ApplicationController
     detail_index = params[:detail_index]
     ii = detail_index.to_i
     @sb[:num_tiers][ii] =
-        @edit[:new][:details][ii][:chargeback_tiers].to_a.length if @edit[:new][:details][ii][:chargeback_tiers]
+      @edit[:new][:details][ii][:chargeback_tiers].to_a.length if @edit[:new][:details][ii][:chargeback_tiers]
     @sb[:num_tiers][ii] = 1 unless @sb[:num_tiers][ii] || @sb[:num_tiers][ii] == 0
     @sb[:num_tiers][ii] += 1
     tier_index = @sb[:num_tiers][ii] - 1
     @edit[:new][:tiers][ii][tier_index] = {}
-    @edit[:new][:tiers][ii][tier_index][:start] = @edit[:new][:tiers][ii][tier_index-1][:end]
+    @edit[:new][:tiers][ii][tier_index][:start] = @edit[:new][:tiers][ii][tier_index - 1][:end]
     @edit[:new][:tiers][ii][tier_index][:end] = Float::INFINITY
     @edit[:new][:tiers][ii][tier_index][:fixed_rate] = 0.0
     @edit[:new][:tiers][ii][tier_index][:variable_rate] = 0.0
     params[:code_currency] = ChargebackRateDetailCurrency.find_by(:id => @edit[:new][:details][ii][:currency]).code
-    add_row(detail_index, tier_index-1)
+    add_row(detail_index, tier_index - 1)
   end
 
   # Remove the selected tier
@@ -670,17 +672,13 @@ class ChargebackController < ApplicationController
 
     @sb[:rate_details].each_with_index do |detail, detail_index|
       temp = {}
-      temp[:per_time] = detail.per_time ? detail.per_time : "hourly"
-      temp[:per_unit] = detail.per_unit
-      temp[:detail_measure] = detail.detail_measure
+      temp = detail.slice(:per_time, :per_unit, :detail_measure)
+      temp[:per_time] ||= "hourly"
       temp[:currency] = detail.detail_currency.id
       @edit[:new][:tiers][detail_index] = []
       @sb[:tiers][detail_index].each do |tier|
         temp2 = {}
-        temp2[:fixed_rate] = tier.fixed_rate
-        temp2[:variable_rate] = tier.variable_rate
-        temp2[:start] = tier.start
-        temp2[:end] = tier.end
+        temp2 = tier.slice(:fixed_rate, :variable_rate, :start, :end)
         temp2[:chargeback_rate_detail_id] = detail.id
         @edit[:new][:tiers][detail_index].push(temp2)
       end
@@ -703,12 +701,12 @@ class ChargebackController < ApplicationController
     @sb[:rate] = @edit[:rate]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:details].each_with_index do |_detail, detail_index|
-      @edit[:new][:details][detail_index][:per_time] =
+      _detail[:per_time] =
         params["per_time_#{detail_index}".to_sym] if params["per_time_#{detail_index}".to_sym]
-      @edit[:new][:details][detail_index][:per_unit] =
+      _detail[:per_unit] =
         params["per_unit_#{detail_index}".to_sym] if params["per_unit_#{detail_index}".to_sym]
       # Add currencies to chargeback_controller.rb
-      @edit[:new][:details][detail_index][:currency] = params[:currency] if params[:currency]
+      _detail[:currency] = params[:currency] if params[:currency]
 
       # Save tiers into @edit
       (0..@sb[:num_tiers][detail_index].to_i - 1).each do |tier_index|
@@ -727,18 +725,18 @@ class ChargebackController < ApplicationController
 
   def cb_rate_set_record_vars
     @edit[:new][:details].each_with_index do |_detail, detail_index|
-      @sb[:rate_details][detail_index].per_time           = @edit[:new][:details][detail_index][:per_time]
-      @sb[:rate_details][detail_index].per_unit           = @edit[:new][:details][detail_index][:per_unit]
+      @sb[:rate_details][detail_index].per_time           = _detail[:per_time]
+      @sb[:rate_details][detail_index].per_unit           = _detail[:per_unit]
       # C: Record the currency selected in the edit view, in my chargeback_rate_details table
       @sb[:rate_details][detail_index].chargeback_rate_detail_currency_id = @edit[:new][:details][detail_index][:currency]
       @sb[:rate_details][detail_index].chargeback_rate_id = @sb[:rate].id
       # Save tiers into @sb
       @edit[:new][:tiers][detail_index].each_with_index do |_tier, tier_index|
         @sb[:tiers][detail_index][tier_index] =
-          ChargebackTier.new(:start                     => @edit[:new][:tiers][detail_index][tier_index][:start],
-                             :end                       => @edit[:new][:tiers][detail_index][tier_index][:end],
-                             :fixed_rate                => @edit[:new][:tiers][detail_index][tier_index][:fixed_rate],
-                             :variable_rate             => @edit[:new][:tiers][detail_index][tier_index][:variable_rate],
+          ChargebackTier.new(:start                     => _tier[:start],
+                             :end                       => _tier[:end],
+                             :fixed_rate                => _tier[:fixed_rate],
+                             :variable_rate             => _tier[:variable_rate],
                              :chargeback_rate_detail_id => @sb[:rate_details][detail_index].id)
         if tier_index >= @sb[:num_tiers][detail_index]
           break
@@ -1005,8 +1003,10 @@ class ChargebackController < ApplicationController
 
   def add_row(i, pos)
     render :update do |page|
-      page.replace("rate_detail_row_#{i}_0", :partial => "tier_first_row") # Update the first row to change the colspan
-      page.insert_html(:after, "rate_detail_row_#{i}_#{pos}", :partial => "tier_row") # Insert the new tier after the last one
+      # Update the first row to change the colspan
+      page.replace("rate_detail_row_#{i}_0", :partial => "tier_first_row")
+      # Insert the new tier after the last one
+      page.insert_html(:after, "rate_detail_row_#{i}_#{pos}", :partial => "tier_row")
       page << javascript_for_miq_button_visibility(true)
     end
   end

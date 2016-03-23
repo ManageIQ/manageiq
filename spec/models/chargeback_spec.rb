@@ -238,7 +238,9 @@ describe Chargeback do
       expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes * @metric_size)
       expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
-      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage.gigabytes * @count_hourly_rate * @metric_size)
+      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage.gigabytes *
+                                                   @count_hourly_rate *
+                                                   @metric_size)
       expect(subject.storage_used_cost).to eq(@vm_used_disk_storage.gigabytes * @count_hourly_rate * @metric_size)
       expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
@@ -472,7 +474,9 @@ describe Chargeback do
       expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes * @metric_size)
       expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
-      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage.gigabytes * @count_hourly_rate * @metric_size)
+      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage.gigabytes *
+                                                   @count_hourly_rate *
+                                                   @metric_size)
       expect(subject.storage_used_cost).to eq(@vm_used_disk_storage.gigabytes * @count_hourly_rate * @metric_size)
       expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end

@@ -93,7 +93,7 @@ describe ChargebackRateDetail do
     expect(cbd.friendly_rate).to eq(friendly_rate)
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :group => 'fixed', :per_time => 'monthly')
-    cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id =>  cbd.id,
+    cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                        :end => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("3.0 Monthly")
@@ -185,13 +185,13 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     cbd = FactoryGirl.build(:chargeback_rate_detail_fixed_compute_cost,
                             :chargeback_rate_detail_measure_id  => cbm.id,
                             :chargeback_rate_detail_currency_id => cbc.id
-                            )
+                           )
     expect(cbd.show_rates(cbc.code)).to eq("EUR / Day")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail_memory_allocated,
                             :chargeback_rate_detail_measure_id  => cbm.id,
                             :chargeback_rate_detail_currency_id => cbc.id
-                            )
+                           )
     expect(cbd.show_rates(cbc.code)).to eq("EUR / Day / MB")
   end
 

@@ -10,7 +10,11 @@ class TransferRateValueToTiers < ActiveRecord::Migration
     ChargebackRateDetail.reset_column_information
     ChargebackRateDetail.all.to_a.each do |detail|
       if detail.respond_to?(:rate)
-        ChargebackTier.create(:chargeback_rate_detail_id => detail.id, :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0, :variable_rate => detail.rate)
+        ChargebackTier.create(:chargeback_rate_detail_id => detail.id,
+                              :start                     => 0,
+                              :end                       => Float::INFINITY,
+                              :fixed_rate                => 0.0,
+                              :variable_rate             => detail.rate)
       end
     end
   end
