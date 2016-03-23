@@ -951,11 +951,22 @@ function miqDropComplete(event, ui) {
   var url = "/" + ManageIQ.widget.dashboardUrl + "?" + el.sortable(
               'serialize', {key: el.attr('id') + "[]"}
             ).toString();
+  // dialog service uses div ID for reorder, because unsaved element doesnt have record ID
+  if (url.match(/dialog_res_reorder/)) {
+    miqUpdateElementsId(el);
+  }
   // Adding id of record being edited to be used by load_edit call
   if (ManageIQ.record.recordId !== null) {
     url += "&id=" + ManageIQ.record.recordId;
   }
   miqJqueryRequest(url);
+}
+
+function miqUpdateElementsId(el){
+  $(el).children().each(function(idx, el) {
+    var el_id = $(el).attr("id").split("|")[1];
+    $(el).attr("id", "t_" + idx + "|" + el_id);
+  });
 }
 
 // Attach a calendar control to all text boxes that start with miq_date_
