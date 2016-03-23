@@ -1,0 +1,44 @@
+#main_div
+  - url = url_for(:action => 'form_field_changed', :id => @key_pair.id || "new")
+
+  = render :partial => "layouts/flash_msg"
+
+  %h3
+    = _('Basic Information')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Name')
+      .col-md-8
+        = text_field_tag("name",
+                          @edit[:new][:name],
+                          :maxlength => 50,
+                          :class => "form-control",
+                          "data-miq_focus" => true,
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.col-md-2.control-label
+        = _('Public Key (optional)')
+      .col-md-8
+        = text_area_tag("public_key",
+                          @edit[:new][:public_key],
+                          :size => "50x10",
+                          :class => "form-control",
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Provider')
+      .col-md-8
+        = select_tag("ems_id",
+                      options_for_select(@edit[:ems_choices].sort, @edit[:new][:ems_id]),
+                      :multiple => false,
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_sparkle_off" => true,
+                      :class    => "selectpicker",
+                      "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    :javascript
+       miqInitSelectPicker();
+       miqSelectPickerEvent("ems_id", "#{url}")
+
+  = render(:partial => '/layouts/edit_buttons', :locals  => {:ajax_buttons => true, :record_id => @key_pair.id || "", :action_url => "#{@key_pair.id ? 'update' : 'create'}"})

@@ -13,7 +13,11 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
     klass = class_by_ems(ext_management_system)
     # TODO(maufart): add cloud_tenant to database table?
     created_key_pair = klass.raw_create_key_pair(ext_management_system, options)
-    klass.create(:name => created_key_pair.name, :fingerprint => created_key_pair.fingerprint)
+    klass.create(
+      :name        => created_key_pair.name,
+      :fingerprint => created_key_pair.fingerprint,
+      :resource    => ext_management_system
+    )
   end
 
   def delete_key_pair

@@ -131,7 +131,6 @@ Vmdb::Application.routes.draw do
     :auth_key_pair_cloud      => {
       :get  => %w(
         download_data
-        edit
         index
         new
         show
@@ -151,7 +150,6 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
-        update
       ) + adv_search_post + compare_post + exp_post + save_post
     },
 

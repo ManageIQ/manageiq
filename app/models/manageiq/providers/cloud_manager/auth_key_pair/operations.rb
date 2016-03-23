@@ -25,7 +25,7 @@ module ManageIQ::Providers::CloudManager::AuthKeyPair::Operations
     end
 
     def validate_key_pair
-      self.class.validate_key_pair(ext_management_system)
+      self.class.validate_key_pair(resource)
     end
   end
 

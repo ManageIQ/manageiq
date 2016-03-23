@@ -11,7 +11,7 @@ module AuthKeyPairCloudHelper::TextualSummary
   end
 
   def textual_group_properties
-    %i(name type fingerprint)
+    %i(name fingerprint)
   end
 
   #
@@ -20,10 +20,6 @@ module AuthKeyPairCloudHelper::TextualSummary
 
   def textual_name
     @record.name
-  end
-
-  def textual_type
-    @record.type
   end
 
   def textual_fingerprint

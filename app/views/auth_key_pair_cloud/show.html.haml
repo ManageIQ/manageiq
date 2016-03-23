@@ -1,6 +1,4 @@
-- if @display == 'clouds'
-  = render :partial => "layouts/gtl", :locals => {:action_url => "@lastaction"}
-- elsif @display == 'instances'
+- if @display == 'instances'
   = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
 - else
   - if @showtype == "item"
