@@ -22,7 +22,8 @@ module ContainerBuildHelper::TextualSummary
       :labels                 => [_("Name"), _("Phase"),
                                   _("Message"), _("Reason"),
                                   _("Pod"), _("Output Image"),
-                                  _("Start Timestamp"), _("Completion Timestamp"),
+                                  _("Start Timestamp"),
+                                  {:value => _("Completion Timestamp"), :sortable => :desc},
                                   _("Duration"),
                                  ],
       :values                 => collect_build_pods,
@@ -30,7 +31,7 @@ module ContainerBuildHelper::TextualSummary
   end
 
   def collect_build_pods
-    @record.container_build_pods.collect do |build_pod|
+    builds = @record.container_build_pods.collect do |build_pod|
       [
         build_pod.name,
         build_pod.phase,
@@ -43,6 +44,7 @@ module ContainerBuildHelper::TextualSummary
         parse_duration(build_pod.duration),
       ]
     end
+    builds.sort! { |a, b| Time.parse(b[7] || Time.current.to_s).to_i <=> Time.parse(a[7] || Time.current.to_s).to_i }
   end
 
   #
