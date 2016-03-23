@@ -211,7 +211,8 @@ class VmScan < Job
         scan_ci_type = ems_list['connect_to']
         if host.is_vix_disk? && ems_list[scan_ci_type] && (ems_list[scan_ci_type][:username].nil? || ems_list[scan_ci_type][:password].nil?)
           context[:snapshot_mor] = nil unless options[:snapshot] == :created
-          raise "no credentials defined for #{scan_ci_type} #{ems_list[scan_ci_type][:hostname]}"
+          raise _("no credentials defined for %{type} %{name}") % {:type => scan_ci_type,
+                                                                   :name => ems_list[scan_ci_type][:hostname]}
         end
       end
 
@@ -396,7 +397,7 @@ class VmScan < Job
             signal(:finish, "Process completed successfully", "ok")
 
             begin
-              raise "Unable to find Vm" if vm.nil?
+              raise _("Unable to find Vm") if vm.nil?
               inputs = {:vm => vm, :host => vm.host}
               MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "complete"}, inputs)
             rescue => err
@@ -433,7 +434,8 @@ class VmScan < Job
             vm.ext_management_system.vm_remove_snapshot(vm, :snMor => mor, :user_event => user_event)
           end
         else
-          raise "No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot"
+          raise _("No %{table} available to delete snapshot") %
+                  {:table => ui_lookup(:table => "ext_management_systems")}
         end
       rescue => err
         _log.error("#{err.message}")

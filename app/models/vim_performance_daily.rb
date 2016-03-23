@@ -23,7 +23,7 @@ class VimPerformanceDaily < MetricRollup
   end
 
   def self.find(cnt, *args)
-    raise "Unsupported finder value #{cnt}" unless cnt == :all
+    raise _("Unsupported finder value %{number}") % {:number => cnt} unless cnt == :all
     Vmdb::Deprecation.deprecation_warning(:find, :find_entries, caller(1))
 
     all(*args)

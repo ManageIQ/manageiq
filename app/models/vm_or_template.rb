@@ -307,7 +307,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def raw_set_custom_field(attribute, value)
-    raise "VM has no EMS, unable to set custom attribute" unless ext_management_system
+    raise _("VM has no EMS, unable to set custom attribute") unless ext_management_system
     run_command_via_parent(:vm_set_custom_field, :attribute => attribute, :value => value)
   end
 
@@ -321,8 +321,12 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def run_command_via_parent(verb, options = {})
-    raise "VM/Template <#{name}> with Id: <#{id}> is not associated with a provider." unless ext_management_system
-    raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless ext_management_system.authentication_status_ok?
+    unless ext_management_system
+      raise _("VM/Template <%{name}> with Id: <%{id}> is not associated with a provider.") % {:name => name, :id => id}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("VM/Template <%{name}> with Id: <%{id}>: Provider authentication failed.") % {:name => name, :id => id}
+    end
 
     # TODO: Need to break this logic out into a method that can look at the verb and the vm and decide the best way to invoke it - Virtual Center WS, ESX WS, Storage Proxy.
     _log.info("Invoking [#{verb}] through EMS: [#{ext_management_system.name}]")
@@ -356,7 +360,7 @@ class VmOrTemplate < ApplicationRecord
 
   def enforce_policy(event, inputs = {}, options = {})
     return {"result" => true, :details => []} if event.to_s == "rsop" && host.nil?
-    raise "vm does not belong to any host" if host.nil? && ext_management_system.nil?
+    raise _("vm does not belong to any host") if host.nil? && ext_management_system.nil?
 
     inputs[:vm]                    = self
     inputs[:host]                  = host                  unless host.nil?
@@ -482,7 +486,7 @@ class VmOrTemplate < ApplicationRecord
       end
 
       begin
-        raise "SOAP services are no longer supported.  Remote server operations are dependent on a REST client library."
+        raise _("SOAP services are no longer supported. Remote server operations are dependent on a REST client library.")
         # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
         client.vm_invoke_tasks(remote_options)
       rescue => err
@@ -1119,9 +1123,15 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
+    unless ext_management_system
+      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.has_credentials?
+      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     EmsRefresh.queue_refresh(self)
   end
 
@@ -1132,16 +1142,28 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def refresh_ems_sync
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
+    unless ext_management_system
+      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.has_credentials?
+      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     EmsRefresh.refresh(self)
   end
 
   def refresh_on_reconfig
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
+    unless ext_management_system
+      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.has_credentials?
+      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     EmsRefresh.reconfig_refresh(self)
   end
 
@@ -1236,7 +1258,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def raise_created_event
-    raise NotImplementedError, "raise_created_event must be implemented in a subclass"
+    raise NotImplementedError, _("raise_created_event must be implemented in a subclass")
   end
 
   # TODO: Vmware specific
@@ -1492,9 +1514,9 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def event_threshold?(options = {:time_threshold => 30.minutes, :event_types => ["MigrateVM_Task_Complete"], :freq_threshold => 2})
-    raise "option :event_types is required"    unless options[:event_types]
-    raise "option :time_threshold is required" unless options[:time_threshold]
-    raise "option :freq_threshold is required" unless options[:freq_threshold]
+    raise _("option :event_types is required")    unless options[:event_types]
+    raise _("option :time_threshold is required") unless options[:time_threshold]
+    raise _("option :freq_threshold is required") unless options[:freq_threshold]
     EmsEvent
       .where(:event_type => options[:event_types])
       .where("vm_or_template_id = :id OR dest_vm_or_template_id = :id", :id => id)
@@ -1504,7 +1526,7 @@ class VmOrTemplate < ApplicationRecord
 
   def reconfigured_hardware_value?(options)
     attr = options[:hdw_attr]
-    raise ":hdw_attr required" if attr.nil?
+    raise _(":hdw_attr required") if attr.nil?
 
     operator = options[:operator] || ">"
     operator = operator.downcase == "increased" ? ">" : operator.downcase == "decreased" ? "<" : operator
@@ -1525,7 +1547,7 @@ class VmOrTemplate < ApplicationRecord
 
   def changed_vm_value?(options)
     attr = options[:attr] || options[:hdw_attr]
-    raise ":attr required" if attr.nil?
+    raise _(":attr required") if attr.nil?
 
     operator = options[:operator]
 
@@ -1541,7 +1563,7 @@ class VmOrTemplate < ApplicationRecord
     if operator.downcase == "changed"
       result = !(v0 == v1)
     else
-      raise "operator '#{operator}' is not supported"
+      raise _("operator '%{operator}' is not supported") % {:operator => operator}
     end
     _log.info("Evaluate: !(#{v1} == #{v0}) = #{result}")
 
@@ -1773,7 +1795,7 @@ class VmOrTemplate < ApplicationRecord
         end
       end
     else
-      raise "Unsupported property type [#{property}]"
+      raise _("Unsupported property type [%{property}]") % {:property => property}
     end
   end
 
@@ -1792,7 +1814,7 @@ class VmOrTemplate < ApplicationRecord
         vm.add_ems_event(event_type, event_message, event_timestamp)
       end
     else
-      raise "Unsupported property type [#{property}]"
+      raise _("Unsupported property type [%{property}]") % {:property => property}
     end
   end
 

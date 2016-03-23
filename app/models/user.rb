@@ -104,7 +104,10 @@ class User < ApplicationRecord
 
   def change_password(oldpwd, newpwd)
     auth = self.class.authenticator(userid)
-    raise MiqException::MiqEVMLoginError, "password change not allowed when authentication mode is #{auth.class.proper_name}" unless auth.uses_stored_password?
+    unless auth.uses_stored_password?
+      raise MiqException::MiqEVMLoginError,
+            _("password change not allowed when authentication mode is %{name}") % {:name => auth.class.proper_name}
+    end
     if auth.authenticate(userid, oldpwd)
       self.password = newpwd
       self.save!

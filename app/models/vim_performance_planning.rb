@@ -33,7 +33,7 @@ class VimPerformancePlanning < ActsAsArModel
       elsif options[:targets][:host]
         targets[:compute] = Host.extract_objects(targets.delete(:host))
       else
-        raise "Targets must contain a cluster or a host key"
+        raise _("Targets must contain a cluster or a host key")
       end
 
       targets[:storage] = Storage.extract_objects(targets[:storage])
