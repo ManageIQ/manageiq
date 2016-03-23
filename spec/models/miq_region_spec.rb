@@ -95,13 +95,19 @@ describe MiqRegion do
   end
 
   describe ".replication_type=" do
+    it "returns the replication_type, even when unchanged" do
+      pgl = double(:provider? => true, :subscriber? => false, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+      expect(described_class.replication_type = :remote).to eq :remote
+    end
+
     it "destroys the provider when transition is :remote -> :none" do
       pgl = double(:provider? => true, :subscriber? => false, :node? => true)
       allow(MiqPglogical).to receive(:new).and_return(pgl)
 
       expect(pgl).to receive(:destroy_provider)
 
-      described_class.replication_type = :none
+      expect(described_class.replication_type = :none).to eq :none
     end
 
     it "deletes all subscriptions when transition is :global -> :none" do
@@ -110,7 +116,7 @@ describe MiqRegion do
 
       expect(PglogicalSubscription).to receive(:delete_all)
 
-      described_class.replication_type = :none
+      expect(described_class.replication_type = :none).to eq :none
     end
 
     it "creates a new provider when transition is :none -> :remote" do
@@ -119,7 +125,7 @@ describe MiqRegion do
 
       expect(pgl).to receive(:configure_provider)
 
-      described_class.replication_type = :remote
+      expect(described_class.replication_type = :remote).to eq :remote
     end
 
     it "deletes all subscriptions and creates a new provider when transition is :global -> :remote" do
@@ -129,7 +135,7 @@ describe MiqRegion do
       expect(PglogicalSubscription).to receive(:delete_all)
       expect(pgl).to receive(:configure_provider)
 
-      described_class.replication_type = :remote
+      expect(described_class.replication_type = :remote).to eq :remote
     end
 
     it "destroys the provider when transition is :remote -> :global" do
@@ -138,7 +144,7 @@ describe MiqRegion do
 
       expect(pgl).to receive(:destroy_provider)
 
-      described_class.replication_type = :global
+      expect(described_class.replication_type = :global).to eq :global
     end
   end
 end
