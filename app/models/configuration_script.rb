@@ -5,11 +5,17 @@ class ConfigurationScript < ActiveRecord::Base
   include ProviderObjectMixin
 
   def run(vars = {})
-    extra_vars = {'extra_vars' => variables}
-    options = vars.reverse_merge(extra_vars)
+    options = vars.merge(merge_extra_vars(vars[:extra_vars]))
+
     with_provider_object do |jt|
       jt.launch(options)
     end
+  end
+
+  def merge_extra_vars(external)
+    internal = variables.empty? ? {} : JSON.parse(variables)
+    merged_vars = internal.merge(external || {})
+    {:extra_vars => merged_vars.to_json}
   end
 
   def provider_object(connection = nil)
