@@ -6,7 +6,7 @@ describe MoveSwitchHostToJointable do
     let(:host_stub) { migration_stub(:Host) }
     let(:hosts_switches_stub) { migration_stub(:HostsSwitches) }
     it 'Move host-to-switch relationship to hosts_switches table' do
-      host = host_stub.create!()
+      host = host_stub.create!
       switch1 = switch_stub.create!(:host_id => host.id)
       switch2 = switch_stub.create!(:host_id => host.id)
       expect(host.switches.length).to eq 2

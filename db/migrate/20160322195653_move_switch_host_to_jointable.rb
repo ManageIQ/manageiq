@@ -2,13 +2,13 @@ class MoveSwitchHostToJointable < ActiveRecord::Migration[5.0]
   class Host < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
     has_many :switches,
-                            :class_name => 'MoveSwitchHostToJointable::Switch'
+             :class_name => 'MoveSwitchHostToJointable::Switch'
 
   end
 
   class Switch < ActiveRecord::Base
     belongs_to :host,
-                            :class_name => 'MoveSwitchHostToJointable::Host'
+               :class_name => 'MoveSwitchHostToJointable::Host'
   end
 
   class HostsSwitches < ActiveRecord::Base
