@@ -158,6 +158,28 @@ describe ApplicationController do
       expect(response.status).to eq(200)
       expect(assigns(:devices)).to_not be_empty
     end
+
+    it "doesn't crash on nil filename" do
+      disk = FactoryGirl.create(:disk, :filename => nil, :controller_type => nil, :device_type => 'disk', :mode => "foo")
+      host_hardware = FactoryGirl.create(:hardware, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8, :disks => [disk])
+      host = FactoryGirl.create(:host, :hardware => host_hardware)
+      set_user_privileges
+
+      controller.send(:set_config, host)
+      expect(response.status).to eq(200)
+      expect(assigns(:devices)).to_not be_empty
+    end
+
+    it "doesn't crash on one letter controller_type" do
+      disk = FactoryGirl.create(:disk, :controller_type => nil)
+      host_hardware = FactoryGirl.create(:hardware, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8, :disks => [disk])
+      host = FactoryGirl.create(:host, :hardware => host_hardware)
+      set_user_privileges
+
+      controller.send(:set_config, host)
+      expect(response.status).to eq(200)
+      expect(assigns(:devices)).to_not be_empty
+    end
   end
 
   context "#prov_redirect" do
