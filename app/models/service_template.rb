@@ -59,7 +59,9 @@ class ServiceTemplate < ApplicationRecord
 
   def destroy
     parent_svcs = parent_services
-    raise MiqException::MiqServiceError, "Cannot delete a service that is the child of another service." unless parent_svcs.blank?
+    unless parent_svcs.blank?
+      raise MiqException::MiqServiceError, _("Cannot delete a service that is the child of another service.")
+    end
 
     service_resources.each do |sr|
       rsc = sr.resource

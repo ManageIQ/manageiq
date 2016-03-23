@@ -17,7 +17,7 @@ class MiqUserRole < ApplicationRecord
 
   default_value_for :read_only, false
 
-  before_destroy { |r| raise "Read only roles cannot be deleted." if r.read_only }
+  before_destroy { |r| raise _("Read only roles cannot be deleted.") if r.read_only }
 
   include ReportableMixin
 
@@ -37,7 +37,7 @@ class MiqUserRole < ApplicationRecord
 
   def allows?(options = {})
     ident = options[:identifier]
-    raise "No value provided for option :identifier" if ident.nil?
+    raise _("No value provided for option :identifier") if ident.nil?
 
     if ident.kind_of?(MiqProductFeature)
       feat = ident
@@ -62,7 +62,7 @@ class MiqUserRole < ApplicationRecord
 
   def allows_any?(options = {})
     scope = options[:scope] || :sub
-    raise ":scope must be one of #{SCOPES.inspect}" unless SCOPES.include?(scope)
+    raise _(":scope must be one of %{scope}") % {:scope => SCOPES.inspect} unless SCOPES.include?(scope)
 
     idents = options[:identifiers].to_miq_a
     return false if idents.empty?

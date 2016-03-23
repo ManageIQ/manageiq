@@ -45,7 +45,9 @@ class Service < ApplicationRecord
   validates_presence_of :name
 
   def add_resource(rsc, options = {})
-    raise MiqException::Error, "Vm <#{rsc.name}> is already connected to a service." if rsc.kind_of?(Vm) && !rsc.service.nil?
+    if rsc.kind_of?(Vm) && !rsc.service.nil?
+      raise MiqException::Error, _("Vm <%{name}> is already connected to a service.") % {:name => rsc.name}
+    end
     super
   end
   alias_method :<<, :add_resource

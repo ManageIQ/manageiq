@@ -308,7 +308,7 @@ class SniaFileShare < MiqCimInstance
 
     storage_system     = self.storage_system
     nrs                = storage_system.storage_managers.first
-    raise "Could not find manager entry for NetApp filer: #{evm_display_name}" if nrs.nil?
+    raise _("Could not find manager entry for NetApp filer: %{name}") % {:name => evm_display_name} if nrs.nil?
 
     # TODO: Log hostname, not ipaddress
     _log.info("Found service entry for NetApp filer: #{evm_display_name} -> #{nrs.ipaddress}")

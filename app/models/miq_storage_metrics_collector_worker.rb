@@ -6,6 +6,6 @@ class MiqStorageMetricsCollectorWorker < MiqQueueWorkerBase
   self.workers      = 1
 
   def friendly_name
-    @friendly_name ||= "Storage Metrics Collector"
+    @friendly_name ||= _("Storage Metrics Collector")
   end
 end

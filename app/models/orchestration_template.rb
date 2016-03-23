@@ -87,7 +87,7 @@ class OrchestrationTemplate < ApplicationRecord
   end
 
   def parameter_groups
-    raise NotImplementedError, "parameter_groups must be implemented in subclass"
+    raise NotImplementedError, _("parameter_groups must be implemented in subclass")
   end
 
   # List managers that may be able to deploy this template
@@ -107,7 +107,7 @@ class OrchestrationTemplate < ApplicationRecord
   end
 
   def validate_format
-    raise NotImplementedError, "validate_format must be implemented in subclass"
+    raise NotImplementedError, _("validate_format must be implemented in subclass")
   end
 
   # use cases for md5 conflict:

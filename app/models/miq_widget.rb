@@ -88,10 +88,10 @@ class MiqWidget < ApplicationRecord
       when MiqTask::STATUS_TIMEOUT
         return "Timed Out"
       else
-        raise "Unknown status of: #{miq_task.status.inspect}"
+        raise _("Unknown status of: %{task_status}") % {:task_status => miq_task.status.inspect}
       end
     else
-      raise "Unknown state of: #{miq_task.state.inspect}"
+      raise _("Unknown state of: %{task_status}") % {:task_status => miq_task.state.inspect}
     end
   end
 
@@ -525,7 +525,7 @@ class MiqWidget < ApplicationRecord
     if rname && attrs["resource_type"]
       klass = attrs.delete("resource_type").constantize
       attrs["resource"] = klass.find_by_name(rname)
-      raise "Unable to find #{klass} with name #{rname}" unless attrs["resource"]
+      raise _("Unable to find %{class} with name %{name}") % {:class => klass, :name => rname} unless attrs["resource"]
     end
 
     schedule_info = attrs.delete("miq_schedule_options")
@@ -564,7 +564,7 @@ class MiqWidget < ApplicationRecord
       ts[14..18] = "00:00"
       sched_time = ts.to_time(:utc).in_time_zone(server_tz)
     else
-      raise "Unsupported interval '#{interval}'"
+      raise _("Unsupported interval '%{interval}'") % {:interval => interval}
     end
 
     sched = MiqSchedule.create!(
