@@ -93,27 +93,8 @@ class Chargeback < ActsAsArModel
     data = {}
 
     timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      if options[:tag] && (report_user.nil? || !report_user.self_service?)
-        cond = ["resource_type = ? and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
-                "VmOrTemplate",
-                query_start_time,
-                query_end_time,
-                "hourly",
-                "%" + options[:tag].split("/")[2..-1].join("/") + "%"
-               ]
-      else
-        cond = ["resource_type = ? and resource_id IN (?) and timestamp >= ? and timestamp < ? and capture_interval_name = ?",
-                "VmOrTemplate",
-                vm_owners.keys,
-                query_start_time,
-                query_end_time,
-                "hourly"
-               ]
-      end
-      _log.debug("Conditions: #{cond.inspect}")
-
       recs = MetricRollup
-             .where(cond)
+             .where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
              .includes(
                :resource           => :hardware,
                :parent_host        => :tags,
@@ -123,6 +104,14 @@ class Chargeback < ActsAsArModel
              )
              .select(*options[:ext_options][:only_cols])
              .order("resource_id, timestamp")
+      if options[:tag] && (report_user.nil? || !report_user.self_service?)
+        recs = recs.where(:resource_type => "VmOrTemplate")
+                   .where.not(:resource_id => nil)
+                   .where("tag_names like ? ", "%" + options[:tag].split("/")[2..-1].join("/") + "%")
+      else
+        recs = recs.where(:resource_type => "VmOrTemplate", :resource_id => vm_owners.keys)
+      end
+
       recs = Metric::Helper.remove_duplicate_timestamps(recs)
       _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
