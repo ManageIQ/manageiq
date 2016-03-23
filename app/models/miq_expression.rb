@@ -1189,8 +1189,10 @@ class MiqExpression
         fld = val
         fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         ret.push(fld)
-        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match", "ruby"].include?(operator)
+        if ["like", "not like", "starts with", "ends with", "includes", "ruby"].include?(operator)
           ret.push(ops["value"].to_s.downcase)
+        elsif ["regular expression matches", "regular expression does not match"].include?(operator)
+          ret.push(ops["value"])
         else
           ret.push(quote(ops["value"], col_type.to_s))
         end
