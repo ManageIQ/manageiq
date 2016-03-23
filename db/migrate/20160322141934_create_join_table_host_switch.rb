@@ -4,5 +4,6 @@ class CreateJoinTableHostSwitch < ActiveRecord::Migration[5.0]
       t.index [:host_id, :switch_id]
       t.index [:switch_id, :host_id]
     end
+    add_column :hosts_switches, :id, :primary_key
   end
 end
