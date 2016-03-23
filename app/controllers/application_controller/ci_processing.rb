@@ -307,14 +307,7 @@ module ApplicationController::CiProcessing
     build_targets_hash(@retireitems)
     @view = get_db_view(kls)              # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@retireitems, @view.cols + ['id'])
-    if @retireitems.length == 1 && !@retireitems[0].retires_on.nil?
-      t = @retireitems[0].retires_on                                         # Single VM, set to current time
-      w = @retireitems[0].retirement_warn if @retireitems[0].retirement_warn # Single VM, get retirement warn
-    else
-      t = nil
-    end
-    session[:retire_date] = t.nil? ? nil : "#{t.month}/#{t.day}/#{t.year}"
-    session[:retire_warn] = w
+
     @in_a_form = true
     @refresh_partial = "shared/views/retire" if @explorer || @layout == "orchestration_stack"
   end
