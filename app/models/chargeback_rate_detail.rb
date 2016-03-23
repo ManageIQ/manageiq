@@ -47,16 +47,15 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def hourly_rate
-    variable_rate = find_rate(0.0)
-    rate = variable_rate
-    return 0.0 if rate.zero?
+    _fixed_rate, variable_rate = find_rate(0.0)
+    return 0.0 if variable_rate.zero?
 
     hr = case per_time
-         when "hourly"  then rate
-         when "daily"   then rate / 24
-         when "weekly"  then rate / 24 / 7
-         when "monthly" then rate / 24 / 30
-         when "yearly"  then rate / 24 / 365
+         when "hourly"  then variable_rate
+         when "daily"   then variable_rate / 24
+         when "weekly"  then variable_rate / 24 / 7
+         when "monthly" then variable_rate / 24 / 30
+         when "yearly"  then variable_rate / 24 / 365
          else raise _("rate time unit of '%{time_type}' not supported") % {:time_type => per_time}
          end
 
@@ -117,7 +116,7 @@ class ChargebackRateDetail < ApplicationRecord
       s = ""
       ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
         # Example: Daily @ .02 per MHz from 0.0 to Infinity
-        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate}"\
+        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
              "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.end}\n"
       end
       s.chomp
