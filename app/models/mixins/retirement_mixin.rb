@@ -59,7 +59,7 @@ module RetirementMixin
 
     if options.key?(:date)
       date = nil
-      date = options[:date].to_date unless options[:date].nil?
+      date = options[:date].in_time_zone unless options[:date].nil?
       self.retires_on = date
 
       if date
