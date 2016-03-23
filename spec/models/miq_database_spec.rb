@@ -4,9 +4,7 @@ describe MiqDatabase do
 
     context "default values" do
       it "new record" do
-        MiqDatabase.seed
-
-        db = MiqDatabase.first
+        db = MiqDatabase.seed
         expect(db.csrf_secret_token_encrypted).to be_encrypted
         expect(db.session_secret_token_encrypted).to be_encrypted
         expect(db.update_repo_name).to eq("cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms")
@@ -22,9 +20,7 @@ describe MiqDatabase do
                             :update_repo_name     => nil
                            ).save(:validate => false)
 
-          MiqDatabase.seed
-
-          db = MiqDatabase.first
+          db = MiqDatabase.seed
           expect(db.csrf_secret_token_encrypted).to be_encrypted
           expect(db.session_secret_token_encrypted).to be_encrypted
           expect(db.update_repo_name).to eq("cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms")
@@ -38,9 +34,7 @@ describe MiqDatabase do
                             )
           csrf, session, update_repo = MiqDatabase.all.collect { |db| [db.csrf_secret_token, db.session_secret_token, db.update_repo_name] }.first
 
-          MiqDatabase.seed
-
-          db = MiqDatabase.first
+          db = MiqDatabase.seed
           expect(db.csrf_secret_token).to eq(csrf)
           expect(db.session_secret_token).to eq(session)
           expect(db.update_repo_name).to eq(update_repo)
@@ -74,8 +68,7 @@ describe MiqDatabase do
   skip("New model-based-rewrite") do
     context "#vmdb_tables" do
       before(:each) do
-        MiqDatabase.seed
-        @db = MiqDatabase.first
+        @db = MiqDatabase.seed
 
         @expected_tables = %w(ar_internal_metadata schema_migrations vms miq_databases)
         allow(VmdbTable).to receive(:vmdb_table_names).and_return(@expected_tables)
@@ -109,6 +102,12 @@ describe MiqDatabase do
                               :registration_organization              => "foo",
                               :registration_organization_display_name => "FOO")
       expect(db.registration_organization_name).to eq("FOO")
+    end
+  end
+
+  if ENV.key?("CI")
+    it "uses region 1 on travis" do
+      expect(MiqDatabase.seed.my_region_number).to eq(1)
     end
   end
 end
