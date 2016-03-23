@@ -629,16 +629,13 @@ class MiqExpression
   def to_sql(tz = nil)
     tz ||= "UTC"
     @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
-    sql = _to_sql(@pexp, tz)
+    sql = _to_sql(@pexp, tz) if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
   end
 
   def _to_sql(exp, tz)
-    return exp unless exp.kind_of?(Hash) || exp.kind_of?(Array)
-
     operator = exp.keys.first
-    return if operator.nil?
 
     case operator.downcase
     when "equal", "=", "<", ">", ">=", "<=", "!=", "before", "after"
@@ -661,7 +658,7 @@ class MiqExpression
       clause = "!(" + clause + ")" if operator.downcase == "not like"
     when "and", "or"
       operands = exp[operator].collect do|operand|
-        o = _to_sql(operand, tz)
+        o = _to_sql(operand, tz) if operand.present?
         o.blank? ? nil : o
       end.compact
       if operands.length > 1
