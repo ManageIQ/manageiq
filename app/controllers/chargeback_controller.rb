@@ -700,25 +700,21 @@ class ChargebackController < ApplicationController
   def cb_rate_get_form_vars
     @sb[:rate] = @edit[:rate]
     @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:details].each_with_index do |_detail, detail_index|
-      _detail[:per_time] =
-        params["per_time_#{detail_index}".to_sym] if params["per_time_#{detail_index}".to_sym]
-      _detail[:per_unit] =
-        params["per_unit_#{detail_index}".to_sym] if params["per_unit_#{detail_index}".to_sym]
+    @edit[:new][:details].each_with_index do |detail, detail_index|
+      %i{per_time per_unit}.each do |measure|
+        key = "#{measure}_#{detail_index}".to_sym
+        detail[measure] = params[key] if params[key]
+      end
       # Add currencies to chargeback_controller.rb
-      _detail[:currency] = params[:currency] if params[:currency]
+      detail[:currency] = params[:currency] if params[:currency]
 
       # Save tiers into @edit
       (0..@sb[:num_tiers][detail_index].to_i - 1).each do |tier_index|
-        @edit [:new][:tiers][detail_index][tier_index] = {} unless @edit[:new][:tiers][detail_index][tier_index]
-        @edit[:new][:tiers][detail_index][tier_index][:fixed_rate] =
-          params["fixed_rate_#{detail_index}_#{tier_index}".to_sym] if params["fixed_rate_#{detail_index}_#{tier_index}".to_sym]
-        @edit[:new][:tiers][detail_index][tier_index][:variable_rate] =
-          params["variable_rate_#{detail_index}_#{tier_index}".to_sym] if params["variable_rate_#{detail_index}_#{tier_index}".to_sym]
-        @edit[:new][:tiers][detail_index][tier_index][:start] =
-          params["start_#{detail_index}_#{tier_index}".to_sym] if params["start_#{detail_index}_#{tier_index}".to_sym]
-        @edit[:new][:tiers][detail_index][tier_index][:end] =
-          params["end_#{detail_index}_#{tier_index}".to_sym] if params["end_#{detail_index}_#{tier_index}".to_sym]
+        tier = @edit[:new][:tiers][detail_index][tier_index] || {}
+        %i{fixed_rate variable_rate start end}.each do |field|
+          key = "#{field}_#{detail_index}_#{tier_index}".to_sym
+          tier[field] = params[key] if params[key]
+        end
       end
     end
   end
