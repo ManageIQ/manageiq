@@ -37,7 +37,7 @@
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
     #form_ns_div
       %h3
-      = _('Info')
+        = _('Info')
       .form-horizontal
         - unless @ae_ns.domain?
           .form-group
