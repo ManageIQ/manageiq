@@ -1628,4 +1628,27 @@ describe ApplicationHelper do
       end
     end
   end
+
+  describe '#view_to_association' do
+    [%w(AdvancedSetting advanced_settings), %w(CloudNetwork cloud_networks), %w(OrchestrationStackOutput outputs),
+     %w(OrchestrationStackParameter parameters), %w(OrchestrationStackResource resources), %w(Filesystem filesystems),
+     %w(FirewallRule firewall_rules), %w(GuestApplication guest_applications), %w(Patch patches),
+     %w(RegistryItem registry_items), %w(ScanHistory scan_histories)].each do |spec|
+      it "finds the table name for #{spec[0]}" do
+        view = double
+        allow(view).to receive_messages(:db => spec[0], :scoped_association => nil)
+        expect(helper.view_to_association(view, nil)).to eq(spec[1])
+      end
+    end
+
+    it "finds table name for SystemService host" do
+      allow(view).to receive_messages(:db => 'SystemService', :scoped_association => nil)
+      expect(
+        helper.view_to_association(
+          view,
+          ManageIQ::Providers::Vmware::InfraManager::Host.new
+        )
+      ).to eq('host_services')
+    end
+  end
 end

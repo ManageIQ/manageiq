@@ -202,26 +202,7 @@ module ApplicationHelper
 
   # Create a url to show a record from the passed in view
   def view_to_url(view, parent = nil)
-    association = view.scoped_association
-    # Handle other sub-items of a VM or Host
-    case view.db
-    when "AdvancedSetting"  then association = "advanced_settings"
-    when "CloudNetwork"     then association = "cloud_networks"
-    when "OrchestrationStackOutput" then association = "outputs"
-    when "OrchestrationStackParameter" then association = "parameters"
-    when "OrchestrationStackResource"  then association = "resources"
-    when "Filesystem"       then association = "filesystems"
-    when "FirewallRule"     then association = "firewall_rules"
-    when "GuestApplication" then association = "guest_applications"
-    when "Patch"            then association = "patches"
-    when "RegistryItem"     then association = "registry_items"
-    when "ScanHistory"      then association = "scan_histories"
-    when "SystemService"
-      case parent.class.base_class.to_s.downcase
-      when "host" then association = "host_services"
-      when "vm"   then association = @lastaction
-      end
-    end
+    association = view_to_association(view, parent)
     if association.nil?
       controller, action = db_to_controller(view.db)
       if controller == "ems_cloud" && action == "show"
@@ -266,6 +247,30 @@ module ApplicationHelper
                      :action     => association,
                      :id         => parent.id) + "?#{@explorer ? "x_show" : "show"}="
     end
+  end
+
+  def view_to_association(view, parent)
+    association = view.scoped_association
+    # Handle other sub-items of a VM or Host
+    case view.db
+    when "AdvancedSetting"  then association = "advanced_settings"
+    when "CloudNetwork"     then association = "cloud_networks"
+    when "OrchestrationStackOutput" then association = "outputs"
+    when "OrchestrationStackParameter" then association = "parameters"
+    when "OrchestrationStackResource"  then association = "resources"
+    when "Filesystem"       then association = "filesystems"
+    when "FirewallRule"     then association = "firewall_rules"
+    when "GuestApplication" then association = "guest_applications"
+    when "Patch"            then association = "patches"
+    when "RegistryItem"     then association = "registry_items"
+    when "ScanHistory"      then association = "scan_histories"
+    when "SystemService"
+      case parent.class.base_class.to_s.downcase
+      when "host" then association = "host_services"
+      when "vm"   then association = @lastaction
+      end
+    end
+    association
   end
 
   # Convert a db name to a controller name and an action
