@@ -68,7 +68,7 @@ module RetirementMixin
       self.retires_on = date
 
       if date
-        message += " is scheduled to retire on date: [#{retires_on_date}]"
+        message += " is scheduled to retire on: [#{retires_on}]"
       else
         message += " is no longer scheduled to retire"
       end
@@ -115,7 +115,7 @@ module RetirementMixin
   def retire_now(requester = nil)
     if retired
       return if retired_validated?
-      _log.info("#{retirement_object_title}: [#{name}], Retires On Date: [#{retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
+      _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on}], was previously retired, but currently #{retired_invalid_reason}")
     else
       update_attributes(:retirement_requester => requester)
       event_name = "request_#{retirement_event_prefix}_retire"
