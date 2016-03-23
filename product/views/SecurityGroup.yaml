@@ -21,7 +21,8 @@ db: SecurityGroup
 cols:
 - name
 - description
-- total_vms
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- total_vms
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -37,15 +38,17 @@ include_for_find:
 col_order:
 - name
 - description
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- total_vms
 - ext_management_system.name
-- total_vms
 
 # Column titles, in order
 headers:
 - Name
 - Description
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- Instances
 - Cloud Provider
-- Instances
 
 # Condition(s) string for the SQL query
 conditions:

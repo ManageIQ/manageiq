@@ -17,6 +17,10 @@ module ControllerSpecHelper
     allow_any_instance_of(User).to receive(:role_allows?).and_return(true)
   end
 
+  def setup_zone
+    EvmSpecHelper.create_guid_miq_server_zone
+  end
+
   shared_context "valid session" do
     let(:privilege_checker_service) { double("PrivilegeCheckerService", :valid_session?  => true) }
     let(:request_referer_service)   { double("RequestRefererService",   :allowed_access? => true) }

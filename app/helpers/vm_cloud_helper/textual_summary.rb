@@ -11,7 +11,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_group_vm_cloud_relationships
     %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history security_groups
-       service cloud_network cloud_subnet orchestration_stack)
+       service cloud_network cloud_subnet orchestration_stack floating_ips cloud_subnets network_routers)
   end
 
   def textual_group_template_cloud_relationships
@@ -532,6 +532,42 @@ module VmCloudHelper::TextualSummary
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:action => 'security_groups', :id => @record, :display => "security_groups")
+    end
+    h
+  end
+
+  def textual_floating_ips
+    label = ui_lookup(:tables => "floating_ip")
+    num   = @record.number_of(:floating_ips)
+    h     = {:label => label, :image => "floating_ip", :value => num}
+    if num > 0 && role_allows(:feature => "floating_ip_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'floating_ips', :id => @record, :display => "floating_ips")
+    end
+    h
+  end
+
+  def textual_network_routers
+    label = ui_lookup(:tables => "network_router")
+    num   = @record.number_of(:network_routers)
+    h     = {:label => label, :image => "network_router", :value => num}
+    if num > 0 && role_allows(:feature => "network_router_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'network_routers', :id => @record, :display => "network_routers")
+    end
+    h
+  end
+
+  def textual_cloud_subnets
+    label = ui_lookup(:tables => "cloud_subnet")
+    num   = @record.number_of(:cloud_subnets)
+    h     = {:label => label, :image => "cloud_subnet", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_subnet_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'cloud_subnets', :id => @record, :display => "cloud_subnets")
     end
     h
   end

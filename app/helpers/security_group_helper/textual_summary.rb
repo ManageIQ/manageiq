@@ -8,7 +8,7 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems_cloud instances orchestration_stack)
+    %i(parent_ems_cloud ems_network cloud_tenant instances orchestration_stack)
   end
 
   def textual_group_firewall
@@ -41,7 +41,11 @@ module SecurityGroupHelper::TextualSummary
     @record.type
   end
 
-  def textual_ems_cloud
+  def textual_parent_ems_cloud
+    textual_link(@record.ext_management_system.try(:parent_manager))
+  end
+
+  def textual_ems_network
     textual_link(@record.ext_management_system)
   end
 
@@ -50,7 +54,7 @@ module SecurityGroupHelper::TextualSummary
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @security_group, :display => 'instances')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
@@ -58,5 +62,9 @@ module SecurityGroupHelper::TextualSummary
 
   def textual_orchestration_stack
     @record.orchestration_stack
+  end
+
+  def textual_cloud_tenant
+    textual_link(@record.cloud_tenant)
   end
 end

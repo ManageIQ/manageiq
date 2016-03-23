@@ -8,7 +8,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems_infra availability_zones cloud_tenants flavors security_groups
+    %i(ems_infra network_manager availability_zones cloud_tenants flavors security_groups
        instances images orchestration_stacks cloud_volumes cloud_object_store_containers)
   end
 
@@ -73,6 +73,10 @@ module EmsCloudHelper::TextualSummary
 
   def textual_ems_infra
     textual_link(@record.try(:provider).try(:infra_ems))
+  end
+
+  def textual_network_manager
+    textual_link(@record.ext_management_system.try(:network_manager))
   end
 
   def textual_availability_zones

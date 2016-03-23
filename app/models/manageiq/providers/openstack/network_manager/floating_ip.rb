@@ -1,6 +1,8 @@
 class ManageIQ::Providers::Openstack::NetworkManager::FloatingIp < ::FloatingIp
-  has_one :vm, :through => :network_port, :as => :device
+  # TODO(lsmola) NetworkManager, move to the base class when all providers share the new network architecture
+  has_one :vm, :through => :network_port, :source => :device, :source_type => "VmOrTemplate"
 
-  # TODO(lsmola) NetworkManager, once all providers use network manager we don't need this
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
+  def self.available
+    where(:network_port_id => nil)
+  end
 end

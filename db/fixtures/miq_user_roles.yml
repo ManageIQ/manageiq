@@ -12,6 +12,7 @@
   - all_vm_rules
   - availability_zone
   - flavor
+  - floating_ip
   - bottlenecks
   - chargeback
   - ontap_storage_system
@@ -19,11 +20,13 @@
   - cim_base_storage_extent
   - ontap_storage_volume
   - catalog
+  - cloud_network
   - control_explorer
   - dashboard
   - datacenter
   - storage
   - ems_cloud
+  - ems_network
   - ems_cluster
   - ems_infra
   - host

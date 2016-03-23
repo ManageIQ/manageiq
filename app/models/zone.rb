@@ -158,6 +158,10 @@ class Zone < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end
 
+  def ems_networks
+    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::NetworkManager }
+  end
+
   def availability_zones
     MiqPreloader.preload(ems_clouds, :availability_zones)
     ems_clouds.flat_map(&:availability_zones)

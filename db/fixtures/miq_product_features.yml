@@ -600,35 +600,6 @@
       :feature_type: control
       :identifier: cloud_volume_snapshot_tag
 
-# Security Group
-- :name: Security Groups
-  :description: Everything under Security Groups
-  :feature_type: node
-  :identifier: security_group
-  :children:
-  - :name: View
-    :description: View Security Groups
-    :feature_type: view
-    :identifier: security_group_view
-    :children:
-    - :name: List
-      :description: Display Lists of Security Groups
-      :feature_type: view
-      :identifier: security_group_show_list
-    - :name: Show
-      :description: Display Individual Security Groups
-      :feature_type: view
-      :identifier: security_group_show
-  - :name: Operate
-    :description: Perform Operations on Security Groups
-    :feature_type: control
-    :identifier: security_group_control
-    :children:
-    - :name: Edit Tags
-      :description: Edit Tags of Security Group
-      :feature_type: control
-      :identifier: security_group_tag
-
 # Flavor
 - :name: Flavors
   :description: Everything under Flavors
@@ -3365,6 +3336,184 @@
         :feature_type: control
         :identifier: middleware_deployment_tag
 
+# EmsNetwork
+- :name: Network Providers
+  :description: Everything under Network Providers
+  :feature_type: node
+  :identifier: ems_network
+  :children:
+  - :name: View
+    :description: View Network Providers
+    :feature_type: view
+    :identifier: ems_network_view
+    :children:
+    - :name: List
+      :description: Display Lists of Network Providers
+      :feature_type: view
+      :identifier: ems_network_show_list
+    - :name: Show
+      :description: Display Individual Network Providers
+      :feature_type: view
+      :identifier: ems_network_show
+    - :name: Timeline
+      :description: Display Timelines for Network Providers
+      :feature_type: view
+      :identifier: ems_network_timeline
+  - :name: Operate
+    :description: Perform Operations on Network Providers
+    :feature_type: control
+    :identifier: ems_network_control
+    :children:
+    - :name: Discover
+      :description: Discover Network Providers
+      :feature_type: control
+      :identifier: ems_network_discover
+    - :name: Edit Tags
+      :description: Edit Tags of Network Providers
+      :feature_type: control
+      :identifier: ems_network_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Network Providers
+      :feature_type: control
+      :identifier: ems_network_protect
+    - :name: Refresh
+      :description: Refresh Network Providers
+      :feature_type: control
+      :identifier: ems_network_refresh
+  - :name: Modify
+    :description: Modify Network Providers
+    :feature_type: admin
+    :identifier: ems_network_admin
+    :children:
+    - :name: Remove
+      :description: Remove Network Providers from the VMDB
+      :feature_type: admin
+      :identifier: ems_network_delete
+    - :name: Edit
+      :description: Edit a Network Provider
+      :feature_type: admin
+      :identifier: ems_network_edit
+    - :name: Add
+      :description: Add a Network Provider
+      :feature_type: admin
+      :identifier: ems_network_new
+
+# Security Group
+- :name: Security Groups
+  :description: Everything under Security Groups
+  :feature_type: node
+  :identifier: security_group
+  :children:
+  - :name: View
+    :description: View Security Groups
+    :feature_type: view
+    :identifier: security_group_view
+    :children:
+    - :name: List
+      :description: Display Lists of Security Groups
+      :feature_type: view
+      :identifier: security_group_show_list
+    - :name: Show
+      :description: Display Individual Security Groups
+      :feature_type: view
+      :identifier: security_group_show
+  - :name: Operate
+    :description: Perform Operations on Security Groups
+    :feature_type: control
+    :identifier: security_group_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Security Group
+      :feature_type: control
+      :identifier: security_group_tag
+
+# Floating IP
+- :name: Floating IPs
+  :description: Everything under Floating IPs
+  :feature_type: node
+  :identifier: floating_ip
+  :children:
+  - :name: View
+    :description: View Floating IPs
+    :feature_type: view
+    :identifier: floating_ip_view
+    :children:
+    - :name: List
+      :description: Display Lists of Floating IPs
+      :feature_type: view
+      :identifier: floating_ip_show_list
+    - :name: Show
+      :description: Display Individual Floating IPs
+      :feature_type: view
+      :identifier: floating_ip_show
+  - :name: Operate
+    :description: Perform Operations on Floating IPs
+    :feature_type: control
+    :identifier: floating_ip_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Floating IP
+      :feature_type: control
+      :identifier: floating_ip_tag
+
+# Cloud Subnet
+- :name: Cloud Subnets
+  :description: Everything under Cloud Subnets
+  :feature_type: node
+  :identifier: cloud_subnet
+  :children:
+  - :name: View
+    :description: View Cloud Subnets
+    :feature_type: view
+    :identifier: cloud_subnet_view
+    :children:
+    - :name: List
+      :description: Display Lists of Cloud Subnets
+      :feature_type: view
+      :identifier: cloud_subnet_show_list
+    - :name: Show
+      :description: Display Individual Cloud Subnets
+      :feature_type: view
+      :identifier: cloud_subnet_show
+  - :name: Operate
+    :description: Perform Operations on Cloud Subnets
+    :feature_type: control
+    :identifier: cloud_subnet_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Cloud Subnet
+      :feature_type: control
+      :identifier: cloud_subnet_tag
+
+# Network Router
+- :name: Network Routers
+  :description: Everything under Network Routers
+  :feature_type: node
+  :identifier: network_router
+  :children:
+  - :name: View
+    :description: View Network Routers
+    :feature_type: view
+    :identifier: network_router_view
+    :children:
+    - :name: List
+      :description: Display Lists of Network Routers
+      :feature_type: view
+      :identifier: network_router_show_list
+    - :name: Show
+      :description: Display Individual Network Routers
+      :feature_type: view
+      :identifier: network_router_show
+  - :name: Operate
+    :description: Perform Operations on Network Routers
+    :feature_type: control
+    :identifier: network_router_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Network Router
+      :feature_type: control
+      :identifier: network_router_tag
+
 # ContainerGroup
 - :name: Pods
   :description: Everything under Pods
@@ -4115,6 +4264,7 @@
         :description: Edit EVM Server Relationship
         :feature_type: admin
         :identifier: instance_evm_relationship
+
   # Images access rules
   - :name: Image Access Rules
     :description: Access Rules for Images
