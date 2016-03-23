@@ -89,31 +89,12 @@ class Chargeback < ActsAsArModel
       end.compact
     end
 
-    start_time, end_time = get_report_time_range(options, interval, tz)
+    timerange = get_report_time_range(options, interval, tz)
     data = {}
 
-    (start_time..end_time).step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      if options[:tag] && (report_user.nil? || !report_user.self_service?)
-        cond = ["resource_type = ? and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
-                "VmOrTemplate",
-                query_start_time,
-                query_end_time,
-                "hourly",
-                "%" + options[:tag].split("/")[2..-1].join("/") + "%"
-               ]
-      else
-        cond = ["resource_type = ? and resource_id IN (?) and timestamp >= ? and timestamp < ? and capture_interval_name = ?",
-                "VmOrTemplate",
-                vm_owners.keys,
-                query_start_time,
-                query_end_time,
-                "hourly"
-               ]
-      end
-      _log.debug("Conditions: #{cond.inspect}")
-
+    timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
       recs = MetricRollup
-             .where(cond)
+             .where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
              .includes(
                :resource           => :hardware,
                :parent_host        => :tags,
@@ -123,6 +104,14 @@ class Chargeback < ActsAsArModel
              )
              .select(*options[:ext_options][:only_cols])
              .order("resource_id, timestamp")
+      if options[:tag] && (report_user.nil? || !report_user.self_service?)
+        recs = recs.where(:resource_type => "VmOrTemplate")
+                   .where.not(:resource_id => nil)
+                   .where("tag_names like ? ", "%" + options[:tag].split("/")[2..-1].join("/") + "%")
+      else
+        recs = recs.where(:resource_type => "VmOrTemplate", :resource_id => vm_owners.keys)
+      end
+
       recs = Metric::Helper.remove_duplicate_timestamps(recs)
       _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
@@ -233,30 +222,33 @@ class Chargeback < ActsAsArModel
     end
   end
 
+  # @option options :start_time [DateTime] used with :end_time to create time range
+  # @option options :end_time [DateTime]
+  # @option options :interval_size [Fixednum] Used with :end_interval_offset to generate time range
+  # @option options :end_interval_offset
   def self.get_report_time_range(options, interval, tz)
-    return [options[:start_time], options[:end_time]] if options[:start_time]
-
+    return options[:start_time]..options[:end_time] if options[:start_time]
     raise "Option 'interval_size' is required" if options[:interval_size].nil?
 
-    options[:end_interval_offset] ||= 0
-    options[:start_interval_offset] = (options[:end_interval_offset] + options[:interval_size] - 1)
+    end_interval_offset = options[:end_interval_offset] || 0
+    start_interval_offset = (end_interval_offset + options[:interval_size] - 1)
 
     ts = Time.now.in_time_zone(tz)
     case interval
     when "daily"
-      start_time = (ts - options[:start_interval_offset].days).beginning_of_day.utc
-      end_time   = (ts - options[:end_interval_offset].days).end_of_day.utc
+      start_time = (ts - start_interval_offset.days).beginning_of_day.utc
+      end_time   = (ts - end_interval_offset.days).end_of_day.utc
     when "weekly"
-      start_time = (ts - options[:start_interval_offset].weeks).beginning_of_week.utc
-      end_time   = (ts - options[:end_interval_offset].weeks).end_of_week.utc
+      start_time = (ts - start_interval_offset.weeks).beginning_of_week.utc
+      end_time   = (ts - end_interval_offset.weeks).end_of_week.utc
     when "monthly"
-      start_time = (ts - options[:start_interval_offset].months).beginning_of_month.utc
-      end_time   = (ts - options[:end_interval_offset].months).end_of_month.utc
+      start_time = (ts - start_interval_offset.months).beginning_of_month.utc
+      end_time   = (ts - end_interval_offset.months).end_of_month.utc
     else
       raise "interval '#{interval}' is not supported"
     end
 
-    [start_time, end_time]
+    start_time..end_time
   end
 
   def self.report_col_options
