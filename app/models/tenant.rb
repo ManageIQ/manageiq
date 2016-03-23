@@ -327,7 +327,7 @@ class Tenant < ApplicationRecord
   end
 
   def ensure_can_be_destroyed
-    raise "A tenant with groups associated cannot be deleted." if miq_groups.non_tenant_groups.exists?
+    raise _("A tenant with groups associated cannot be deleted.") if miq_groups.non_tenant_groups.exists?
   end
 
   def validate_default_tenant

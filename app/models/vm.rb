@@ -24,7 +24,8 @@ class Vm < VmOrTemplate
   alias_method :corresponding_template_model, :corresponding_model
 
   def validate_remote_console_vmrc_support
-    raise(MiqException::RemoteConsoleNotSupportedError, "VMRC remote console is not supported on #{vendor}.")
+    raise(MiqException::RemoteConsoleNotSupportedError,
+          _("VMRC remote console is not supported on %{vendor}.") % {:vendor => vendor})
   end
 
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)

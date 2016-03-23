@@ -4,12 +4,12 @@ class VimPerformanceTag < MetricRollup
   end
 
   def self.find_and_group_by_tags(options)
-    raise "no category provided" if options[:category].blank?
+    raise _("no category provided") if options[:category].blank?
     group_by_tags(where(options[:where_clause]), options)
   end
 
   def self.group_by_tags(recs, options)
-    raise "option :cat_model must have a value" unless options[:cat_model]
+    raise _("option :cat_model must have a value") unless options[:cat_model]
     cat_assoc = Object.const_get(options[:cat_model].to_s).table_name.to_sym
     tp = options.fetch_path(:ext_options, :time_profile)
     results = recs.inject(:res => [], :tags => [], :tcols => []) do |h, rec|

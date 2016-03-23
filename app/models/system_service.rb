@@ -12,25 +12,25 @@ class SystemService < ApplicationRecord
   SVC_TYPES = {
     # Type     Display
     ""    => "",
-    "1"   => "Kernel Driver",
-    "2"   => "File System Driver",
-    "4"   => "Service Adapter",
-    "8"   => "Recognizer Driver",
-    "16"  => "Win32 Own Process",
-    "32"  => "Win32 Shared Process",
-    "256" => "Interactive",
-    "272" => "Win32 Own Process, Interactive",
-    "288" => "Win32 Shared Process, Interactive",
+    "1"   => _("Kernel Driver"),
+    "2"   => _("File System Driver"),
+    "4"   => _("Service Adapter"),
+    "8"   => _("Recognizer Driver"),
+    "16"  => _("Win32 Own Process"),
+    "32"  => _("Win32 Shared Process"),
+    "256" => _("Interactive"),
+    "272" => _("Win32 Own Process, Interactive"),
+    "288" => _("Win32 Shared Process, Interactive"),
   }
 
   START_TYPES = {
     # Type     Display
     ""  => "",
-    "0" => "Boot Start",
-    "1" => "System Start",
-    "2" => "Automatic",
-    "3" => "Manual",
-    "4" => "Disabled"
+    "0" => _("Boot Start"),
+    "1" => _("System Start"),
+    "2" => _("Automatic"),
+    "3" => _("Manual"),
+    "4" => _("Disabled")
   }
 
   def start
