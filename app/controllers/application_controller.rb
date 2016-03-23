@@ -1282,7 +1282,7 @@ class ApplicationController < ActionController::Base
           end
           # uppercase the first character of the device name and description
           dev = dev[0..0].upcase + dev[1..-1].to_s
-          desc = desc.nil? ? "" : desc[0..0].upcase + desc[1..-1].to_s
+          desc = desc[0..0].upcase + desc[1..-1].to_s
 
           @devices.push(:device      => dev,
                         :description => desc,
