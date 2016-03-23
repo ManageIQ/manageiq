@@ -37,4 +37,7 @@ FactoryGirl.define do
       x.value = "1"
     end
   end
+
+  factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job" do
+  end
 end
