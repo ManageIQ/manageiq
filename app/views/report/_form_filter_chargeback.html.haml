@@ -8,7 +8,7 @@
         %label.control-label.col-md-2
           = _('Show Costs by')
         .col-md-8
-          - opts = [["<#{_('Choose')}>", nil], [_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"]]
+          - opts = [["<#{_('Choose')}>", nil], [_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"], [_('Tenant'), "tenant"]]
           = select_tag("cb_show_typ",
             options_for_select(opts, @edit[:new][:cb_show_typ]),
             :class                 => "selectpicker")
@@ -27,6 +27,18 @@
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent('cb_owner_id', '#{url}', {beforeSend: true, complete: true});
+      - elsif @edit[:new][:cb_show_typ] == "tenant"
+        .form-group
+          %label.control-label.col-md-2
+            = _('Tenant')
+          .col-md-8
+            - opts = [["<#{_('Choose a tenant')}>", nil]] + Array(@edit[:cb_tenant].invert).sort_by { |a| a.first.downcase }
+            = select_tag("cb_tenant_id",
+              options_for_select(opts, @edit[:new][:cb_tenant_id]),
+              :class                 => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent('cb_tenant_id', '#{url}', {beforeSend: true, complete: true});
       - elsif @edit[:new][:cb_show_typ] == "tag"
         .form-group
           %label.control-label.col-md-2

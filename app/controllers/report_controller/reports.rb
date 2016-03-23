@@ -248,6 +248,9 @@ module ReportController::Reports
             add_flash(_("An Owner must be selected"), :error)
             active_tab = "edit_3"
           end
+        elsif @edit[:new][:cb_show_typ] == "tenant" && !@edit[:new][:cb_tenant_id]
+          add_flash(_("A Tenant Category must be selected"), :error)
+          active_tab = "edit_3"
         elsif @edit[:new][:cb_show_typ] == "tag"
           unless @edit[:new][:cb_tag_cat]
             add_flash(_("A Tag Category must be selected"), :error)
@@ -301,6 +304,19 @@ module ReportController::Reports
     @flash_array.nil?
   end
 
+  # Check if chargeback field is valid
+  def valid_chargeback_fields
+    is_valid = false
+    # There are valid show typ fields
+    if %w(owner tenant tag).include?(@edit[:new][:cb_show_typ])
+      is_valid = case @edit[:new][:cb_show_typ]
+                 when "owner" then @edit[:new][:cb_owner_id]
+                 when "tenant" then @edit[:new][:cb_tenant_id]
+                 when "tag" then @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
+                 end
+    end
+    is_valid
+  end
   # Check for tab switch error conditions
   def check_tabs
     @sb[:miq_tab] = params[:tab]
@@ -370,13 +386,9 @@ module ReportController::Reports
       else
         if @edit[:new][:fields].length == 0
           add_flash(_("Preview tab is not available until at least 1 field has been selected"), :error)
-        elsif @edit[:new][:model] == "Chargeback"
-          unless @edit[:new][:cb_show_typ] &&
-                 ((@edit[:new][:cb_show_typ] == "owner" && @edit[:new][:cb_owner_id]) ||
-                   (@edit[:new][:cb_show_typ] == "tag" && @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]))
-            add_flash(_("Preview tab is not available until Chargeback Filters has been configured"), :error)
-            active_tab = "edit_3"
-          end
+        elsif @edit[:new][:model] == "Chargeback" && !valid_chargeback_fields
+          add_flash(_("Preview tab is not available until Chargeback Filters has been configured"), :error)
+          active_tab = "edit_3"
         end
       end
     when "9"
