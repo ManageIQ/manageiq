@@ -9,12 +9,13 @@
         = _('Description')
       .col-md-8
         %p.form-control-static
-          = h(@record.description)
+          = h(@record.first.description)
   %hr
   %h3= _('Rate Details')
   %table.table.table-bordered
     %thead
       %tr
+        %th= _('Level')
         %th= _('Group')
         %th= _('Description')
         %th= _('Rate')
@@ -27,8 +28,14 @@
         - if @cur_group != r[:group]
           - @cur_group = r[:group]
           %tr
-            %td.active{:colspan => "4"} &nbsp;
+            %td.active{:colspan => "5"} &nbsp;
         %tr
+          %td
+            - if r.rate_type == "Compute"
+              = image_tag "/assets/100/hardware-processor.png"
+            - else
+              = image_tag "/assets/100/hardware-disk.png"
+            = r.rate_type
           %td
             = h(rate_detail_group(r[:group]))
           %td

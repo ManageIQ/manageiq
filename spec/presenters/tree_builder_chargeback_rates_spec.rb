@@ -7,8 +7,6 @@ describe TreeBuilderChargebackRates do
       rates = ChargebackRate.all
 
       expect(rates).to be_empty
-      expect(keys).to match_array %w(xx-Compute xx-Storage)
-      expect(titles).to match_array %w(Compute Storage)
     end
   end
 end

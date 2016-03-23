@@ -537,6 +537,15 @@ module ApplicationHelper
     end
   end
 
+  # Show/hide the Add metric button on Chargeback
+  def javascript_for_cb_button_add_metric_visibility(display)
+    if display
+      "$('.cb_add_metric_off').hide();$('.cb_add_metric_on').show();".html_safe
+    else
+      "$('.cb_add_metric_off').show();$('.cb_add_metric_on').hide();".html_safe
+    end
+  end
+
   def javascript_for_miq_button_visibility_changed(changed)
     return "" if changed == session[:changed]
     session[:changed] = changed

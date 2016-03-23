@@ -1,0 +1,43 @@
+- url = url_for(:action => 'cb_add_rd_form_field_changed')
+%tr
+  %td
+    = select_tag("level", options_for_select(@edit[:new][:levels], @edit[:new][:level]), :class => "selectpicker")
+    :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent('level', '#{url}')
+  %td
+    = select_tag("group", options_for_select(@edit[:new][:groups], @edit[:new][:group]), :class => "selectpicker", :disabled => @edit[:new][:groups].empty?)
+    :javascript
+        miqSelectPickerEvent('group', '#{url}')
+  %td
+    = select_tag("metric", options_for_select(@edit[:new][:metrics]), :multiple => true, :class => "selectpicker", :disabled => @edit[:new][:metrics].empty?)
+    :javascript
+        miqSelectPickerEvent('metric', '#{url}')
+  %td
+    - title = _("Add Metric(s)")
+    = button_tag("<span class=\"glyphicon glyphicon-plus\">#{_(title)}</span>".html_safe,
+                :disabled => "disabled",
+                :class => "cb_add_metric_off btn btn-default")
+
+    = button_tag("<span class=\"glyphicon glyphicon-plus\">#{_(title)}</span>".html_safe,
+                 :style => "display: none;",
+                 :class   => "cb_add_metric_on btn btn-primary",
+                 :alt     => t = _(" Add new Metrics"),
+                 :title   => t,
+                 :type    => "submit",
+                 :onclick => "miqAjaxButton('#{url_for(:action => "cb_add_rd", :button => "add_single")}');")
+  %td{:style => "padding-left: 20px;"}
+    = button_tag("<span class=\"glyphicon pficon-add-circle-o\">#{_(" Add all Metrics")}</span>".html_safe,
+                 :class   => "cb_add_all_metric_on btn btn-primary btn-left",
+                 :alt     => _(" Add all Metrics"),
+                 :title   => t,
+                 :type    => "submit",
+                 :onclick => "miqAjaxButton('#{url_for(:action => "cb_add_rd", :button => "add_all")}');")
+
+- if @edit[:new][:groups].empty?
+  %tr
+    %th{:colspan => "4"}
+      .alert.alert-info
+        %span.pficon.pficon-info
+        %strong
+          = h("All available rate details for this level are already in use")

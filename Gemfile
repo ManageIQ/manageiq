@@ -98,7 +98,6 @@ gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
 gem "sshkey",                         "~>1.8.0",   :require => false
 
-
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.

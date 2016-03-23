@@ -1,5 +1,6 @@
-- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
+- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate_compute].id || "new"}")
 - currency = ChargebackRateDetailCurrency.currencies_for_select
+#flash_msg_div
 #form_div
   %h3
     = _('Basic Info')
@@ -12,9 +13,7 @@
                         :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
                         :class => "form-control")
         = javascript_tag(javascript_focus('description'))
-
   %hr
-
   /Add a new selector for the currencies
   %h3
     = _('Currencies')
@@ -26,46 +25,93 @@
         = select_tag("currency",
           options_for_select(currency, @edit[:new][:currency]),
           "data-miq_observe" => {:url => url}.to_json)
-
-  %h3= _('Rate Details')
-  %table.table.table-bordered
-    %thead
-      %tr
-        %th= _('Group')
-        %th= _('Description')
-        %th= _('Rate')
-        %th= _('Per Time')
-        %th= _('Per Unit')
-        %th= _('Currency')
-    %tbody
-      - code_currency = @sb[:rate_details][0].detail_currency.code
-      - @sb[:rate_details].each_with_index do |r, i|
-        - @cur_group = r[:group] if @cur_group.nil?
-        - if @cur_group != r[:group]
-          - @cur_group = r[:group]
+  %h3= _('Add Rate Details')
+  .col-md-8
+    - if @edit[:new][:show_form]
+      %table
+        %thead
           %tr
-            %td.active{:colspan => "6"} &nbsp;
+            %th= _('Level')
+            %th= _('Group')
+            %th= _('Metric')
+            %th= _('')
+        %tbody{:id => "add_metric_fields"}
+          = render(:partial => "cb_rate_add_metrics")
+    - else
+      .alert.alert-info
+        %span.pficon.pficon-info
+        %strong
+          = h("No rate details for add")
+.col-md-12
+  %h3= _('Add Rate Details')
+  .panel.panel-default
+    .panel-heading{:style => "text-align: right;"}
+      = button_tag("<span class=\"pficon-delete\">#{t = _(" Remove selected rate details")}</span>".html_safe,
+                   :class   => "btn btn-default btn-sm",
+                   :id      => "btm-remove_rd",
+                   :alt     => t,
+                   :disabled => "disabled",
+                   :type    => "submit",
+                   :onclick => "miqAjaxButton('#{url_for(:action => "cb_remove_rd", :button => "remove_selected")}');")
+    %table.table.table-bordered
+      %thead
         %tr
-          %td
-            = h(rate_detail_group(r[:group]))
-          %td
-            = r[:description]
-          %td{:align => 'right'}
-            = text_field_tag("rate_#{i}", @edit[:new][:details][i][:rate],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td
-            = select_tag("per_time_#{i}",
-              options_for_select(@edit[:new][:per_time_types].invert, @edit[:new][:details][i][:per_time]),
-              "data-miq_observe" => {:url => url}.to_json)
-            - measure = @edit[:new][:details][i][:detail_measure]
-            - if measure.nil?
-              /if the rate detail don't have a metric associated, display the per_unit_display
-              %td
-                = r.per_unit_display
-            - else
-              /if the rate detail have a metric associated, display an options field with per_unit selected
-              %td
-                = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
-          /Show the code of the currency selected by the user
-          %td{:id => "column_currency_#{i}"}
-            = code_currency
+          %th
+            = check_box_tag('select_all', 'all', nil, "data-miq_observe_checkbox" => {:url => url_for(:action => 'cb_selected_rd')}.to_json)
+          %th= _('Level')
+          %th= _('Group')
+          %th= _('Description')
+          %th= _('Rate')
+          %th= _('Per Time')
+          %th= _('Per Unit')
+          %th= _('Currency')
+          %th= ''
+      %tbody
+        - code_currency = @sb[:rate_details][0].detail_currency.code
+        - @sb[:rate_details].select { |k| k.rate != "0" }.each_with_index do |r, i|
+          - @cur_group = r[:group] if @cur_group.nil?
+          - if @cur_group != r[:group]
+            - @cur_group = r[:group]
+            %tr
+              %td.active{:colspan => "8"} &nbsp;
+          - if !@added_rds.nil? && @added_rds.include?(r)
+            - class_add_rds = "add_rds"
+          %tr{:class => class_add_rds}
+            %td
+              = check_box_tag("select", "#{i}", nil, "data-miq_observe_checkbox" => {:url => url_for(:action => 'cb_selected_rd', :index => "#{i}")}.to_json, :class => "select")
+            %td
+              - if r.rate_type == "Compute"
+                = image_tag "/assets/100/hardware-processor.png"
+              - else
+                = image_tag "/assets/100/hardware-disk.png"
+              = r.rate_type
+            %td
+              = Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
+            %td
+              = r[:description]
+            %td{:align => 'right'}
+              = text_field_tag("rate_#{i}", @edit[:new][:details][i][:rate],
+                :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            %td
+              = select_tag("per_time_#{i}",
+                options_for_select(@edit[:new][:per_time_types].invert, @edit[:new][:details][i][:per_time]),
+                "data-miq_observe" => {:url => url}.to_json)
+              - measure = @edit[:new][:details][i][:detail_measure]
+              - if measure.nil?
+                /if the rate detail don't have a metric associated, display the per_unit_display
+                %td
+                  = r.per_unit_display
+              - else
+                /if the rate detail have a metric associated, display an options field with per_unit selected
+                %td
+                  = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
+            /Show the code of the currency selected by the user
+            %td{:id => "column_currency_#{i}"}
+              = code_currency
+            :javascript
+              $(document).ready(function () {
+                  $("[id^=select]").prop('checked', false);
+                  $(".btm-remove_rd").attr("disabled","disabled");
+                  $('.add_rds').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();
+                  $('.add_rds').addClass('add_rds_off').removeClass('add_rds');
+              });

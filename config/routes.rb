@@ -261,6 +261,10 @@ Vmdb::Application.routes.draw do
         cb_assign_update
         cb_rate_edit
         cb_rate_form_field_changed
+        cb_add_rd_form_field_changed
+        cb_add_rd
+        cb_remove_rd
+        cb_selected_rd
         cb_rate_show
         cb_rates_delete
         cb_rates_list
