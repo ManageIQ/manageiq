@@ -21,7 +21,8 @@ db: NetworkRouter
 cols:
 - name
 - status
-- total_vms
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- total_vms
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -37,14 +38,16 @@ include_for_find:
 col_order:
 - name
 - status
-- total_vms
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- total_vms
 - ext_management_system.name
 
 # Column titles, in order
 headers:
 - Name
 - Status
-- Instances
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- Instances
 - Network Provider
 
 # Condition(s) string for the SQL query

@@ -24,7 +24,8 @@ cols:
 - gateway
 - network_protocol
 - dns_nameservers_show
-- total_vms
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- total_vms
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -43,7 +44,8 @@ col_order:
 - gateway
 - network_protocol
 - dns_nameservers_show
-- total_vms
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- total_vms
 - ext_management_system.name
 
 # Column titles, in order
@@ -53,7 +55,8 @@ headers:
 - Gateway
 - Protocol
 - DNS Nameservers
-- Instances
+# TODO(lsmola) uncomment when rails bug is fixed https://github.com/rails/rails/pull/24192
+#- Instances
 - Network Provider
 
 # Condition(s) string for the SQL query
