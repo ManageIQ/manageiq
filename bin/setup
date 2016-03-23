@@ -16,9 +16,6 @@ Dir.chdir APP_ROOT do
   unless File.exist?("certs/v2_key")
     system "cp certs/v2_key.dev certs/v2_key"
   end
-  unless File.exist?("REGION")
-    File.open("REGION", "w") { |f| f.puts "0" }
-  end
 
   puts "\n== Preparing database =="
   system "bin/rake db:create"
