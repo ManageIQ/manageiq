@@ -937,6 +937,7 @@ Vmdb::Application.routes.draw do
         dialog_load
         discover
         download_data
+        ems_infra_form_fields
         protect
         show_list
         tagging_edit

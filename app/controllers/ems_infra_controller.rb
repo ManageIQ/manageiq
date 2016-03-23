@@ -101,6 +101,50 @@ class EmsInfraController < ApplicationController
     end
   end
 
+  def ems_infra_form_fields
+    assert_privileges("#{permission_prefix}_edit")
+    @ems = model.new if params[:id] == 'new'
+    @ems = find_by_id_filtered(model, params[:id]) if params[:id] != 'new'
+
+    if @ems.zone.nil? || @ems.my_zone == ""
+      zone = "default"
+    else
+      zone = @ems.my_zone
+    end
+
+    amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+
+    if @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
+      security_protocol = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+    else
+      if @ems.id
+        security_protocol = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+      else
+        security_protocol = 'kerberos'
+      end
+    end
+
+    @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
+
+    render :json => {:name                            => @ems.name,
+                     :provider_region                 => @ems.provider_region,
+                     :emstype                         => @ems.emstype,
+                     :zone                            => zone,
+                     :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
+                     :hostname                        => @ems.hostname,
+                     :api_port                        => @ems.port,
+                     :api_version                     => @ems.api_version,
+                     :security_protocol               => security_protocol,
+                     :provider_region                 => @ems.provider_region,
+                     :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
+                     :amqp_userid                     => amqp_userid,
+                     :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
+                     :client_id                       => client_id ? client_id : "",
+                     :client_key                      => client_key ? client_key : "",
+                     :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+    }
+  end
+
   private
 
   ############################
