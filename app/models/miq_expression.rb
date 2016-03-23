@@ -635,7 +635,7 @@ class MiqExpression
   end
 
   def _to_sql(exp, tz)
-    return exp unless exp.kind_of?(Hash) || exp.kind_of?(Array)
+    return exp unless exp.kind_of?(Hash)
 
     operator = exp.keys.first
     return if operator.nil?
