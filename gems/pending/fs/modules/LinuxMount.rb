@@ -9,8 +9,6 @@ module LinuxMount
     @rootFS = MiqFS.getFS(@rootVolume)
     raise "LinuxMount: could not mount root volume" unless @rootFS
 
-    saveFs(@rootFS, "/", "ROOT")
-
     #
     # Assign device letters to all ide and scsi devices,
     # even if they're not visible volumes. We need to do
@@ -105,6 +103,7 @@ module LinuxMount
     #
     # Build a tree of file systems and their associated mont points.
     #
+    root_added = false
     @mountPoints = {}
     $log.debug "LinuxMount: processing #{FSTAB_FILE_NAME}" if $log.debug?
     @rootFS.fileOpen(FSTAB_FILE_NAME, &:read).each_line do |fstl|
@@ -116,7 +115,9 @@ module LinuxMount
       next unless (fs = fsSpecHash[fsSpec])
       $log.debug "LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
       addMountPoint(mtPoint, fs, fsSpec)
+      root_added = true if mtPoint == '/'
     end
+    saveFs(@rootFS, "/", "ROOT") unless root_added
   end # def fs_init
 
   #
