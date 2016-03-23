@@ -18,10 +18,10 @@ describe "layouts/listnav/_security_group.html.haml" do
       vm              = FactoryGirl.create("vm_#{t}".to_sym)
       network         = FactoryGirl.create("cloud_network_#{t}".to_sym)
       subnet          = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
-      vm.network_ports << FactoryGirl.create("network_port_#{t}".to_sym,
-                                             :device          => vm,
-                                             :cloud_subnet    => subnet,
-                                             :security_groups => [@security_group])
+      vm.network_ports << network_port = FactoryGirl.create("network_port_#{t}".to_sym,
+                                                            :device          => vm,
+                                                            :security_groups => [@security_group])
+      FactoryGirl.create(:cloud_subnet_network_port, :cloud_subnet => subnet, :network_port => network_port)
     end
 
     context "for #{t}" do

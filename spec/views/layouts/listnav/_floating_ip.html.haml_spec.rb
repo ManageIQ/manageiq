@@ -19,11 +19,11 @@ describe "layouts/listnav/_floating_ip.html.haml" do
       network        = FactoryGirl.create("cloud_network_#{t}".to_sym)
       subnet         = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
       @floating_ip   = FactoryGirl.create("floating_ip_#{t}".to_sym, :ext_management_system => provider.network_manager)
-      vm.network_ports << FactoryGirl.create("network_port_#{t}".to_sym,
-                                             :device          => vm,
-                                             :cloud_subnet    => subnet,
-                                             :security_groups => [security_group],
-                                             :floating_ip     => @floating_ip)
+      vm.network_ports << network_port = FactoryGirl.create("network_port_#{t}".to_sym,
+                                                            :device          => vm,
+                                                            :security_groups => [security_group],
+                                                            :floating_ip     => @floating_ip)
+      FactoryGirl.create(:cloud_subnet_network_port, :cloud_subnet => subnet, :network_port => network_port)
     end
 
     context "for #{t}" do
