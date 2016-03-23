@@ -75,7 +75,7 @@ module ServiceHelper::TextualSummary
   def textual_retirement_date
     {:label => _("Retirement Date"),
      :image => "retirement",
-     :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.to_time.strftime("%x"))}
+     :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.strftime("%x %R %Z"))}
   end
 
   def textual_retirement_state
