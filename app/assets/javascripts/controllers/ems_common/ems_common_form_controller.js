@@ -14,6 +14,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       amqp_api_port: '',
       api_version: '',
       default_security_protocol: '',
+      realm: '',
+      security_protocol: '',
       amqp_security_protocol: '',
       provider_region: '',
       default_userid: '',
@@ -33,7 +35,10 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ems_common: true,
       azure_tenant_id: '',
       subscription: ''
+      host_default_vnc_port_start: '',
+      host_default_vnc_port_end: ''
     };
+    $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
     $scope.afterGet = false;
     $scope.validateClicked = miqService.validateWithREST;
@@ -78,19 +83,17 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.provider_id                     = data.provider_id.toString();
-
         $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port : '5000';
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port : '5672';
         $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
+        $scope.emsCommonModel.realm                           = data.realm;
+        $scope.emsCommonModel.security_protocol               = data.security_protocol;
         $scope.emsCommonModel.amqp_security_protocol          = angular.isDefined(data.amqp_security_protocol) ? data.amqp_security_protocol : 'ssl';
         $scope.emsCommonModel.provider_region                 = data.provider_region;
-
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
-
         $scope.emsCommonModel.service_account                 = data.service_account;
-
         $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
         $scope.emsCommonModel.subscription                    = data.subscription;
 
@@ -214,6 +217,24 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     }
 
     return false;
+  };
+
+  $scope.providerTypeChanged = function() {
+    $scope.emsCommonModel.api_port = "";
+    $scope.emsCommonModel.security_protocol = "";
+    $scope.note = "";
+    if ($scope.emsCommonModel.emstype === 'openstack_infra') {
+      $scope.emsCommonModel.api_port = "5000";
+    } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.security_protocol === 'kerberos'){
+      $scope.note = $scope.realmNote;
+    }
+  };
+
+  $scope.scvmmSecurityProtocolChanged = function() {
+    $scope.note = "";
+    if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.security_protocol === 'kerberos'){
+      $scope.note = $scope.realmNote;
+    }
   };
 
   init();
