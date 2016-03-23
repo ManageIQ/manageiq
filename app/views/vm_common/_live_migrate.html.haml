@@ -12,7 +12,8 @@
                         @edit[:auto_select_host],
                         'ng-model'     => "vmCloudModel.auto_select_host",
                         :miqrequired   => true,
-                        :checkchange   => true)
+                        :checkchange   => true,
+                        'ng-disabled'  => "hosts.length == 0")
     .form-group
       %label.col-md-2.control-label
         = _('Block Migration')
@@ -50,9 +51,10 @@
           %select{:name => 'destination_host_id', 'ng-model' => 'vmCloudModel.host', 'ng-options' => 'host.id as host.name for host in hosts | filter : {cluster_id: vmCloudModel.cluster.id}'}
 
 
-  %div_for_paging{'ng-controller'           => "pagingDivButtonGroupController",
-                  'paging_div_buttons_id'   => "angular_paging_div_buttons",
-                  'paging_div_buttons_type' => "Submit"}
+  %div_for_paging{'ng-controller'                    => "pagingDivButtonGroupController",
+                  'paging_div_buttons_state_enabled' => true,
+                  'paging_div_buttons_id'            => "angular_paging_div_buttons",
+                  'paging_div_buttons_type'          => "Submit"}
 
 :javascript
   ManageIQ.angular.app.value('vmCloudLiveMigrateFormId', '#{@record.id}');

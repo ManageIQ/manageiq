@@ -3,8 +3,8 @@ ManageIQ.angular.app.controller('vmCloudLiveMigrateFormController', ['$http', '$
     auto_select_host:    true,
     cluster_id:          null,
     destination_host_id: null,
-    block_migration:     null,
-    disk_over_commit:    null
+    block_migration:     false,
+    disk_over_commit:    false
   };
   $scope.clusters = [];
   $scope.hosts = [];
