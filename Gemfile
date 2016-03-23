@@ -45,7 +45,6 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "azure-armrest",                  "~>0.2.2"
 gem "color",                          "~>1.8"
 gem "default_value_for",              "~>3.0.1", :git => "git://github.com/matthewd/default_value_for.git", :branch => "rails-50" # https://github.com/FooBarWidget/default_value_for/pull/57
 gem "draper",                         "~>2.1.0", :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712
@@ -116,8 +115,6 @@ unless ENV['APPLIANCE']
     gem "brakeman",         "~>3.1.0",  :require => false
     gem "capybara",         "~>2.5.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
-    gem "vcr",              "~>2.6",    :require => false
-    gem "webmock",          "~>1.12",   :require => false
   end
 
   group :development, :test do
