@@ -632,7 +632,7 @@ class ExtManagementSystem < ApplicationRecord
     role = options.delete(:role)
     creds = {}
     creds[role] = options
-    update_authentication(creds)
+    update_authentication(creds,options)
   end
 
   def clear_association_cache
