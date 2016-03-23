@@ -10,7 +10,7 @@
       %label.col-md-2.control-label
         = _('Current Flavor')
       .col-md-8
-        = @record.flavor.name_with_details
+        = @record.flavor.name_with_details if @record.flavor
     .form-group
       %label.col-md-2.control-label
         = _('Choose Flavor')
