@@ -480,7 +480,10 @@ class TreeBuilder
 
     # Remove VmOrTemplate :match_via_descendants option if present, comment to let Rbac.search process it
     descendants = false
-    descendants = options.delete(:match_via_descendants) if %w(ConfiguredSystems VmOrTemplate).include?(options[:match_via_descendants])
+    descendant = options[:match_via_descendants]
+    descendant = descendant.first if descendant.kind_of?(Array)
+    descendants = options.delete(:match_via_descendants) if %w(ConfiguredSystem ConfiguredSystems
+                                                               VmOrTemplate).include?(descendant.to_s)
 
     results = Rbac.filtered(objects, options)
 
