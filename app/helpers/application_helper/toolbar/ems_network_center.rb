@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
           'pficon pficon-edit fa-lg',
           t = N_('Edit this #{ui_lookup(:table=>"ems_network")}'),
           t,
-          :full_path => "<%= edit_ems_network_path(@ems) %>"),
+          :url => "/edit"),
         button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
