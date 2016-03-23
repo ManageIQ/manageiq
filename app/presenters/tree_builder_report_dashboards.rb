@@ -50,7 +50,7 @@ class TreeBuilderReportDashboards < TreeBuilder
         end
       end
     else
-      objects = copy_array(widgetsets)
+      objects = copy_array(widgetsets.to_a)
     end
     count_only ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
   end
