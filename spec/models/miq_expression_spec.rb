@@ -5,6 +5,13 @@ describe MiqExpression do
       expect(sql).to eq("vms.name = 'foo'")
     end
 
+    it "generates the SQL for an EQUAL expression with an association" do
+      exp = {"EQUAL" => {"field" => "Vm.guest_applications-name", "value" => 'foo'}}
+      sql, includes, * = MiqExpression.new(exp).to_sql
+      expect(sql).to eq("guest_applications.name = 'foo'")
+      expect(includes).to eq(:guest_applications => {})
+    end
+
     it "generates the SQL for a = expression" do
       sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
       expect(sql).to eq("vms.name = 'foo'")
