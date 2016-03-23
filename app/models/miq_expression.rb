@@ -1137,7 +1137,11 @@ class MiqExpression
     if  ops["field"]
       col = get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
       col_type = get_col_type(ops["field"]) || "string"
-      ret << (col_type.to_s == "string" ? "LOWER(#{col})" : col)
+      if ["is null", "is not null", "is empty", "is not empty"].include?(operator)
+        ret << col
+      else
+        ret << (col_type.to_s == "string" ? "LOWER(#{col})" : col)
+      end
       ret.push(quote(ops["value"], col_type.to_s, :sql))
     elsif ops["count"]
       val = get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last

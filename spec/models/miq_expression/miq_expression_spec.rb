@@ -1,52 +1,52 @@
 describe MiqExpression do
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
-      sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name = 'foo'")
+      sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("LOWER(vms.name) = 'foo'")
     end
 
     it "generates the SQL for a = expression" do
-      sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name = 'foo'")
+      sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("LOWER(vms.name) = 'foo'")
     end
 
     it "generates the SQL for a LIKE expression" do
-      sql, * = MiqExpression.new("LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name LIKE '%foo%'")
+      sql, * = MiqExpression.new("LIKE" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("LOWER(vms.name) LIKE '%foo%'")
     end
 
     it "generates the SQL for a NOT LIKE expression" do
-      sql, * = MiqExpression.new("NOT LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("!(vms.name LIKE '%foo%')")
+      sql, * = MiqExpression.new("NOT LIKE" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("!(LOWER(vms.name) LIKE '%foo%')")
     end
 
     it "generates the SQL for a STARTS WITH expression " do
-      sql, * = MiqExpression.new("STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name LIKE 'foo%'")
+      sql, * = MiqExpression.new("STARTS WITH" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("LOWER(vms.name) LIKE 'foo%'")
     end
 
     it "generates the SQL for an ENDS WITH expression" do
-      sql, * = MiqExpression.new("ENDS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name LIKE '%foo'")
+      sql, * = MiqExpression.new("ENDS WITH" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("LOWER(vms.name) LIKE '%foo'")
     end
 
     it "generates the SQL for an INCLUDES" do
-      sql, * = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name LIKE '%foo%'")
+      sql, * = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "Foo"}).to_sql
+      expect(sql).to eq("LOWER(vms.name) LIKE '%foo%'")
     end
 
     it "generates the SQL for an AND expression" do
-      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
-      exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
+      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "Foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "Bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(vms.name LIKE 'foo%' AND vms.name LIKE '%bar')")
+      expect(sql).to eq("(LOWER(vms.name) LIKE 'foo%' AND LOWER(vms.name) LIKE '%bar')")
     end
 
     it "generates the SQL for an AND expression where only one is supported by SQL" do
-      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
-      exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
+      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "Foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "Bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(vms.name LIKE 'foo%')")
+      expect(sql).to eq("(LOWER(vms.name) LIKE 'foo%')")
     end
 
     it "returns nil for an AND expression where none is supported by SQL" do
@@ -60,7 +60,7 @@ describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
       sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(vms.name LIKE 'foo%' OR vms.name LIKE '%bar')")
+      expect(sql).to eq("(LOWER(vms.name) LIKE 'foo%' OR LOWER(vms.name) LIKE '%bar')")
     end
 
     it "returns nil for an OR expression where one is not supported by SQL" do
@@ -78,13 +78,13 @@ describe MiqExpression do
     end
 
     it "generates the SQL for a NOT expression" do
-      sql, * = MiqExpression.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
-      expect(sql).to eq("NOT vms.name = 'foo'")
+      sql, * = MiqExpression.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "Foo"}}).to_sql
+      expect(sql).to eq("NOT LOWER(vms.name) = 'foo'")
     end
 
     it "generates the SQL for a ! expression" do
-      sql, * = MiqExpression.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
-      expect(sql).to eq("NOT vms.name = 'foo'")
+      sql, * = MiqExpression.new("!" => {"=" => {"field" => "Vm-name", "value" => "Foo"}}).to_sql
+      expect(sql).to eq("NOT LOWER(vms.name) = 'foo'")
     end
 
     it "generates the SQL for an IS NULL expression" do
@@ -511,7 +511,7 @@ describe MiqExpression do
 
     expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled' \
       '</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value>' \
-      ' =~ /^.*slp.*$/</check></find>')
+      ' =~ /^.*SLP.*$/</check></find>')
 
     filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
@@ -527,7 +527,7 @@ describe MiqExpression do
 
     expect(filter.to_ruby).to eq("<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled" \
       '</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value>' \
-      ' !~ /^.*slp.*$/</check></find>')
+      ' !~ /^.*SLP.*$/</check></find>')
   end
 
   it "should test fb7726" do
