@@ -1,12 +1,136 @@
 describe MiqExpression do
   describe "#to_sql" do
-    it "returns condition with ids of the model, when operation is 'CONTAINS' some tag in expression" do
+    it "generates the SQL for an EQUAL expression" do
+      sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name = 'foo'")
+    end
+
+    it "generates the SQL for a = expression" do
+      sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name = 'foo'")
+    end
+
+    it "generates the SQL for a LIKE expression" do
+      sql, * = MiqExpression.new("LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name LIKE '%foo%'")
+    end
+
+    it "generates the SQL for a NOT LIKE expression" do
+      sql, * = MiqExpression.new("NOT LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("!(vms.name LIKE '%foo%')")
+    end
+
+    it "generates the SQL for a STARTS WITH expression " do
+      sql, * = MiqExpression.new("STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name LIKE 'foo%'")
+    end
+
+    it "generates the SQL for an ENDS WITH expression" do
+      sql, * = MiqExpression.new("ENDS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name LIKE '%foo'")
+    end
+
+    it "generates the SQL for an INCLUDES" do
+      sql, * = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name LIKE '%foo%'")
+    end
+
+    it "generates the SQL for an AND expression" do
+      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
+      sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
+      expect(sql).to eq("(vms.name LIKE 'foo%' AND vms.name LIKE '%bar')")
+    end
+
+    it "generates the SQL for an AND expression where only one is supported by SQL" do
+      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
+      sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
+      expect(sql).to eq("(vms.name LIKE 'foo%')")
+    end
+
+    it "returns nil for an AND expression where none is supported by SQL" do
+      exp1 = {"STARTS WITH" => {"field" => "Vm-platform", "value" => "foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
+      sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "generates the SQL for an OR expression" do
+      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
+      sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
+      expect(sql).to eq("(vms.name LIKE 'foo%' OR vms.name LIKE '%bar')")
+    end
+
+    it "returns nil for an OR expression where one is not supported by SQL" do
+      exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
+      sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "returns nil for an OR expression where none is supported by SQL" do
+      exp1 = {"STARTS WITH" => {"field" => "Vm-platform", "value" => "foo"}}
+      exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
+      sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "generates the SQL for a NOT expression" do
+      sql, * = MiqExpression.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
+      expect(sql).to eq("NOT vms.name = 'foo'")
+    end
+
+    it "generates the SQL for a ! expression" do
+      sql, * = MiqExpression.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
+      expect(sql).to eq("NOT vms.name = 'foo'")
+    end
+
+    it "generates the SQL for an IS NULL expression" do
+      sql, * = MiqExpression.new("IS NULL" => {"field" => "Vm-name"}).to_sql
+      expect(sql).to eq("(vms.name IS NULL)")
+    end
+
+    it "generates the SQL for an IS NOT NULL expression" do
+      sql, * = MiqExpression.new("IS NOT NULL" => {"field" => "Vm-name"}).to_sql
+      expect(sql).to eq("(vms.name IS NOT NULL)")
+    end
+
+    it "generates the SQL for an IS EMPTY expression" do
+      sql, * = MiqExpression.new("IS EMPTY" => {"field" => "Vm-name"}).to_sql
+      expect(sql).to eq("((vms.name IS NULL) OR (vms.name = ''))")
+    end
+
+    it "generates the SQL for an IS NOT EMPTY expression" do
+      sql, * = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-name"}).to_sql
+      expect(sql).to eq("((vms.name IS NOT NULL) AND (vms.name != ''))")
+    end
+
+    it "generates the SQL for a CONTAINS expression with field" do
+      sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.id IN (SELECT DISTINCT vm_or_template_id FROM guest_applications WHERE name = 'foo')")
+    end
+
+    it "generates the SQL for a CONTAINS expression with field containing a scope" do
+      sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users-name", "value" => "foo"}).to_sql
+      expected = "vms.id IN (SELECT DISTINCT vm_or_template_id FROM accounts WHERE (name = 'foo') "\
+                 "AND (\"accounts\".\"accttype\" = 'user'))"
+      expect(sql).to eq(expected)
+    end
+
+    it "generates the SQL for a CONTAINS expression with tag" do
       tag = FactoryGirl.create(:tag, :name => "/managed/operations/analysis_failed")
       vm = FactoryGirl.create(:vm_vmware, :tags => [tag])
-      expression_with_tag = {"CONTAINS" => {"tag" => "VmInfra.managed-operations", "value" => "analysis_failed"}}
-      expression = MiqExpression.new(expression_with_tag)
-      sql_clause = expression.to_sql.first
-      expect(sql_clause).to eq("vms.id IN (#{vm.id})")
+      exp = {"CONTAINS" => {"tag" => "VmInfra.managed-operations", "value" => "analysis_failed"}}
+      sql, * = MiqExpression.new(exp).to_sql
+      expect(sql).to eq("vms.id IN (#{vm.id})")
+    end
+
+    it "raises an error for an expression with unknown operator" do
+      expect do
+        MiqExpression.new("FOOBAR" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      end.to raise_error(/operator 'FOOBAR' is not supported/)
     end
 
     it "should test virtual column FB15509" do
@@ -23,6 +147,16 @@ describe MiqExpression do
     end
 
     context "date/time support" do
+      it "generates the SQL for an EQUAL expression" do
+        sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
+        expect(sql).to eq("vms.boot_time = '2016-01-01T00:00:00Z'")
+      end
+
+      it "generates the SQL for a = expression" do
+        sql, * = MiqExpression.new("=" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
+        expect(sql).to eq("vms.boot_time = '2016-01-01T00:00:00Z'")
+      end
+
       it "generates the SQL for an AFTER expression" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         sql, * = exp.to_sql
