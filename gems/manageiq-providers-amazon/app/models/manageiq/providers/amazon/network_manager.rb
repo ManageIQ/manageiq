@@ -1,11 +1,7 @@
 class ManageIQ::Providers::Amazon::NetworkManager < ManageIQ::Providers::NetworkManager
   require_nested :CloudNetwork
   require_nested :CloudSubnet
-  require_nested :EventCatcher
-  require_nested :EventParser
   require_nested :FloatingIp
-  require_nested :MetricsCapture
-  require_nested :MetricsCollectorWorker
   require_nested :NetworkPort
   require_nested :NetworkRouter
   require_nested :RefreshParser

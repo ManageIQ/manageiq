@@ -3,7 +3,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
 
   MONITOR_CLASS_NAMES = %w(
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
-    ManageIQ::Providers::Amazon::NetworkManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker
@@ -36,7 +35,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
-    ManageIQ::Providers::Amazon::NetworkManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
     ManageIQ::Providers::Atomic::ContainerManager::EventCatcher
@@ -66,7 +64,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w(
     MiqEmsMetricsProcessorWorker
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
-    ManageIQ::Providers::Amazon::NetworkManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker
@@ -116,7 +113,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
-    ManageIQ::Providers::Amazon::NetworkManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
     ManageIQ::Providers::Atomic::ContainerManager::EventCatcher
