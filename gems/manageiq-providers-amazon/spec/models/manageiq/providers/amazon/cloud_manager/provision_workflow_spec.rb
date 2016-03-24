@@ -48,7 +48,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
 
     it "#allowed_security_groups" do
       sg = FactoryGirl.create(:security_group_amazon, :name => "sq_1")
-      ems.security_groups << sg
+      ems.network_manager.security_groups << sg
       expect(workflow.allowed_security_groups).to eq(sg.id => sg.name)
     end
   end
@@ -115,7 +115,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
       admin.current_group.save
 
       2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
-      2.times { FactoryGirl.create(:security_group_amazon, :name => "sgb_1", :ext_management_system => ems) }
+      2.times { FactoryGirl.create(:security_group_amazon, :name                  => "sgb_1",
+                                                           :ext_management_system => ems.network_manager) }
       ems.flavors << FactoryGirl.create(:flavor, :name => "t1.micro", :supports_32_bit => true,
                                         :supports_64_bit => true)
       ems.flavors << FactoryGirl.create(:flavor, :name => "m1.large", :supports_32_bit => false,
@@ -195,17 +196,24 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
       @az2 = FactoryGirl.create(:availability_zone_amazon, :ext_management_system => ems)
       @az3 = FactoryGirl.create(:availability_zone_amazon, :ext_management_system => ems)
 
-      @cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems)
+      @cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager)
 
-      @cs1 = FactoryGirl.create(:cloud_subnet, :cloud_network => @cn1, :availability_zone => @az1)
-      @cs2 = FactoryGirl.create(:cloud_subnet, :cloud_network => @cn1, :availability_zone => @az2)
+      @cs1 = FactoryGirl.create(:cloud_subnet, :cloud_network         => @cn1,
+                                               :availability_zone     => @az1,
+                                               :ext_management_system => ems.network_manager)
+      @cs2 = FactoryGirl.create(:cloud_subnet, :cloud_network         => @cn1,
+                                               :availability_zone     => @az2,
+                                               :ext_management_system => ems.network_manager)
 
-      @ip1 = FactoryGirl.create(:floating_ip, :cloud_network_only => true,  :ext_management_system => ems)
-      @ip2 = FactoryGirl.create(:floating_ip, :cloud_network_only => false, :ext_management_system => ems)
+      @ip1 = FactoryGirl.create(:floating_ip, :cloud_network_only    => true,
+                                              :ext_management_system => ems.network_manager)
+      @ip2 = FactoryGirl.create(:floating_ip, :cloud_network_only    => false,
+                                              :ext_management_system => ems.network_manager)
 
-      @sg1 = FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems,
-                                :cloud_network => @cn1)
-      @sg2 = FactoryGirl.create(:security_group_amazon, :name => "sgn_2", :ext_management_system => ems)
+      @sg1 = FactoryGirl.create(:security_group_amazon, :name                  => "sgn_1",
+                                                        :ext_management_system => ems.network_manager,
+                                                        :cloud_network         => @cn1)
+      @sg2 = FactoryGirl.create(:security_group_amazon, :name => "sgn_2", :ext_management_system => ems.network_manager)
     end
 
     it "#allowed_cloud_networks" do
