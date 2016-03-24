@@ -30,9 +30,13 @@
                         "data-method"         => :post,
                         "data-miq_sparkle_on" => true,
                         "data-submit"         => 'login_div')
-              .spacer
-                %p.text-center
-                  = _('- or - ')
+
+              %div#saml-login.text-center
+                %hr#saml-login
+                &nbsp;
+                = _('Or')
+                &nbsp;
+                %hr#saml-login
 
         .form-group
           %label.col-md-3.control-label= _('Username')
