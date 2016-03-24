@@ -1054,7 +1054,15 @@ Vmdb::Application.routes.draw do
                exp_post +
                save_post
     },
-
+    :container_deployment => {
+      :get  => %w(
+        data
+      ) +
+        compare_get,
+      :post => %w(
+        create
+      )
+    },
     :middleware_server            => {
       :get  => %w(
         download_data
