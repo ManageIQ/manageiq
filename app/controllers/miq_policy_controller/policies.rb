@@ -225,7 +225,7 @@ module MiqPolicyController::Policies
 
   def policy_get_all_folders(parent = nil)
     if !parent.nil?
-      @folders = ["Host", "Vm"]
+      @folders = %w(Host Vm)
       @right_cell_text = _("%{typ} %{model}") % {:typ => parent, :model => ui_lookup(:models => "MiqPolicy")}
       @right_cell_div = "policy_folders"
     else
