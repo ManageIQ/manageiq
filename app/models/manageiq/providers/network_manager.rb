@@ -13,5 +13,10 @@ module ManageIQ::Providers
     has_many :network_routers, :foreign_key => :ems_id, :dependent => :destroy
 
     alias all_cloud_networks cloud_networks
+
+    def total_subnets
+      cloud_subnets.size
+    end
+    virtual_column :total_subnets, :type => :integer, :uses => :cloud_subnets
   end
 end
