@@ -6,7 +6,8 @@ class VmdbTableEvm < VmdbTable
 
   def sql_indexes
     actual  = self.class.connection.indexes(name)
-    actual += self.class.connection.respond_to?(:primary_key_indexes) ? self.class.connection.primary_key_indexes(name) : []
+    pk = self.class.connection.primary_key_index(name)
+    actual << pk if pk
     actual
   end
 end
