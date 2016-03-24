@@ -107,7 +107,7 @@ module VimPerformanceAnalysis
       if target.kind_of?(EmsCluster)
         return target.hosts.collect(&:storages).flatten.compact
       else
-        raise "unable to get storages for #{target.class}"
+        raise _("unable to get storages for %{name}") % {:name => target.class}
       end
     end
 
@@ -413,7 +413,9 @@ module VimPerformanceAnalysis
       when :perf_trend
         VimPerformanceAnalysis.calc_trend_value_at_timestamp(perf, col, ts)
       else
-        raise "Unsupported Mode (#{mode}) for #{obj.class} #{type} options"
+        raise _("Unsupported Mode (%{mode}) for %{class} %{type} options") % {:mode  => mode,
+                                                                              :class => obj.class,
+                                                                              :type  => type}
       end
     end
 
@@ -525,7 +527,7 @@ module VimPerformanceAnalysis
     when ExtManagementSystem then
       rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w(Host EmsCluster))
     else
-      raise "unknown object type: #{obj.class}"
+      raise _("unknown object type: %{class}") % {:class => obj.class}
     end
 
     rel.select(options[:select]).to_a

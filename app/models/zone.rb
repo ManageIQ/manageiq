@@ -241,8 +241,8 @@ class Zone < ApplicationRecord
   protected
 
   def check_zone_in_use_on_destroy
-    raise "cannot delete default zone" if name == "default"
-    raise "zone name '#{name}' is used by a server" unless miq_servers.blank?
+    raise _("cannot delete default zone") if name == "default"
+    raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
   end
 
   private
