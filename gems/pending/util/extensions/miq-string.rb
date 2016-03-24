@@ -160,4 +160,12 @@ class String
       Integer(self[0..-3]) * 1024**(exp_index + 1)
     end
   end
+
+  def is_json?
+    begin
+      !!JSON.parse(self)
+    rescue
+      false
+    end
+  end
 end

@@ -99,4 +99,18 @@ class Authentication < ApplicationRecord
     when "ExtManagementSystem" then "ems"
     end
   end
+
+
+  def ansible_format(options = {})
+    options.merge!({'name' => name, 'login' => "true", 'challenge' => "true", 'kind' => authtype})
+    res = "openshift_master_identity_providers=[" + options.to_json + "]"
+    if type.instance_of?(AuthenticationHtpassd) && !htpassd_users.empty?
+      res += "\nopenshift_master_htpasswd_users=#{htpassd_users}"
+    end
+    res
+  end
+
+  def ansible_config(options = {})
+    options.merge!({'name' => name, 'login' => "true", 'challenge' => "true", 'kind' => authtype})
+  end
 end
