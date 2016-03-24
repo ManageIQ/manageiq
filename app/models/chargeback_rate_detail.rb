@@ -31,7 +31,7 @@ class ChargebackRateDetail < ApplicationRecord
          when "weekly"  then rate / 24 / 7
          when "monthly" then rate / 24 / 30
          when "yearly"  then rate / 24 / 365
-         else raise "rate time unit of '#{per_time}' not supported"
+         else raise _("rate time unit of '%{time_type}' not supported") % {:time_type => per_time}
          end
 
     # Handle cases where we need to adjust per_unit to a common value.

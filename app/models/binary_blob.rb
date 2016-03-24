@@ -12,8 +12,12 @@ class BinaryBlob < ApplicationRecord
   def binary
     # TODO: Change this to collect the binary_blob_parts in batches, so we are not pulling in every row into memory at once
     data = binary_blob_parts.inject("") { |d, b| d << b.data; d }
-    raise "size of #{self.class.name} id [#{id}] is incorrect" unless size.nil? || size == data.bytesize
-    raise "md5 of #{self.class.name} id [#{id}] is incorrect" unless md5.nil? || md5 == Digest::MD5.hexdigest(data)
+    unless size.nil? || size == data.bytesize
+      raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+    end
+    unless md5.nil? || md5 == Digest::MD5.hexdigest(data)
+      raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+    end
     data
   end
 
@@ -55,8 +59,12 @@ class BinaryBlob < ApplicationRecord
       fd.close unless path_or_io.respond_to?(:write)
     end
 
-    raise "size of #{self.class.name} id [#{id}] is incorrect" unless size.nil? || size == dump_size
-    raise "md5 of #{self.class.name} id [#{id}] is incorrect" unless md5.nil? || md5 == hasher.hexdigest
+    unless size.nil? || size == dump_size
+      raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+    end
+    unless md5.nil? || md5 == hasher.hexdigest
+      raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+    end
     true
   end
 

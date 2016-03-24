@@ -16,8 +16,12 @@ class BinaryBlobPart < ApplicationRecord
 
   def data
     val = read_attribute(:data)
-    raise "size of #{self.class.name} id [#{id}] is incorrect" unless size.nil? || size == val.bytesize
-    raise "md5 of #{self.class.name} id [#{id}] is incorrect" unless md5.nil? || md5 == Digest::MD5.hexdigest(val)
+    unless size.nil? || size == val.bytesize
+      raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+    end
+    unless md5.nil? || md5 == Digest::MD5.hexdigest(val)
+      raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+    end
     val
   end
 
