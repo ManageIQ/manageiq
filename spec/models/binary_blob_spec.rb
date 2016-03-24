@@ -46,35 +46,6 @@ describe BinaryBlob do
     end
   end
 
-  context "#dump_binary" do
-    before { @blob = FactoryGirl.build(:binary_blob, :name => "test") }
-
-    subject do
-      @blob.binary = @data.dup
-      @string = StringIO.new
-      @blob.save
-      @blob.reload
-      @blob.dump_binary(@string)
-      @string.rewind
-      @string.read
-    end
-
-    it "without UTF-8 data" do
-      @data = "--- Quota - Max CPUs\n...\n"
-      expect(subject.bytes.to_a).to eq(@data.bytes.to_a)
-    end
-
-    it "with UTF-8 data" do
-      @data = "--- Quota \xE2\x80\x93 Max CPUs\n...\n"
-      expect(subject.bytes.to_a).to eq(@data.bytes.to_a)
-    end
-
-    it "with UTF-8 data with bad encoding" do
-      @data = "%PDF-1.4\n%\xE2"
-      expect(subject.bytes.to_a).to eq(@data.bytes.to_a)
-    end
-  end
-
   describe "serializing and deserializing data" do
     it "can store and load data as YAML" do
       bb = FactoryGirl.build(:binary_blob)
