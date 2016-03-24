@@ -38,6 +38,22 @@ module ApplianceConsole
       self.interactive = true unless hash.key?(:interactive)
     end
 
+    def run_interactive
+      ask_questions
+
+      clear_screen
+      say "Activating the configuration using the following settings...\n#{friendly_inspect}\n"
+
+      raise MiqSignalError unless activate
+
+      post_activation
+      say("\nConfiguration activated successfully.\n")
+    rescue RuntimeError => e
+      puts "Configuration failed#{": " + e.message unless e.class == MiqSignalError}"
+      press_any_key
+      raise MiqSignalError
+    end
+
     def local?
       host.blank? || host.in?(%w(localhost 127.0.0.1))
     end
@@ -72,6 +88,7 @@ module ApplianceConsole
     end
 
     def create_region
+      ApplianceConsole::Utilities.bail_if_db_connections("preventing the setup of a database region")
       log_and_feedback(__method__) do
         ApplianceConsole::Utilities.rake("evm:db:region", ["--", {:region => region}])
       end
@@ -92,9 +109,19 @@ module ApplianceConsole
       end
     end
 
+    def reset_region
+      say("Warning: RESETTING A DATABASE WILL DESTROY ANY EXISTING DATA AND CANNOT BE UNDONE.\n\n")
+      raise MiqSignalError unless are_you_sure?("reset the configured database")
+
+      create_new_region_questions(false)
+      ENV["DISABLE_DATABASE_ENVIRONMENT_CHECK"] = "1"
+      create_region
+    ensure
+      ENV["DISABLE_DATABASE_ENVIRONMENT_CHECK"] = nil
+    end
+
     def create_new_region_questions(warn = true)
       clear_screen
-      say(I18n.t("advanced_settings.dbregion_setup"))
       say("\n\nNote: Creating a new database region requires an empty database.") if warn
       say("Each database region number must be unique.\n")
       self.region = ask_for_integer("database region number", REGION_RANGE)
