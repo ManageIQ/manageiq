@@ -1,5 +1,7 @@
 module MiqAeEngine
   module MiqAeStateMachine
+
+    STATE_METHOD_REGEX = Regexp.new(/^METHOD::(.*$)/i)
     def state_runnable?(f)
       return false unless (@workspace.root['ae_state'] == f['name'])
       return false unless (@workspace.root['ae_result'] == 'ok')
@@ -106,8 +108,13 @@ module MiqAeEngine
         $miq_ae_logger.info "Processing State=[#{f['name']}]"
         @workspace.root['ae_state_step'] = 'main'
         enforce_state_maxima(f)
-        process_relationship_raw(relationship, message, args, f['name'], f['collect'])
-        raise MiqAeException::MiqAeDatastoreError, "empty relationship" unless @rels[f['name']]
+        match_data = STATE_METHOD_REGEX.match(relationship)
+        if match_data
+          process_method_raw(match_data[1])
+        else
+          process_relationship_raw(relationship, message, args, f['name'], f['collect'])
+          raise MiqAeException::MiqAeDatastoreError, "empty relationship" unless @rels[f['name']]
+        end
         $miq_ae_logger.info "Processed  State=[#{f['name']}] with Result=[#{@workspace.root['ae_result']}]"
       end
     end
