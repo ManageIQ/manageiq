@@ -327,6 +327,21 @@ class MiqExpression
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].inject({}) { |h, (v, k)| h[k] = v; h }
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
 
+  INFREQUENTLY_CHANGING_COLS = [
+    :derived_cpu_available,
+    :derived_cpu_reserved,
+    :derived_host_count_off,
+    :derived_host_count_on,
+    :derived_memory_available,
+    :derived_memory_reserved,
+    :derived_vm_allocated_disk_storage,
+    :derived_vm_count_off,
+    :derived_vm_count_on,
+    :derived_vm_numvcpus,
+  ] + Metric::Rollup::STORAGE_COLS
+
+  EXCLUDED_COLS_FOR_EXPRESSIONS = Metric::Rollup::ROLLUP_COLS - INFREQUENTLY_CHANGING_COLS
+
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
@@ -991,12 +1006,8 @@ class MiqExpression
 
   def self.exclude_col_by_preprocess_options?(col, options)
     return false unless options.kind_of?(Hash)
-
-    if options[:vim_performance_daily_adhoc]
-      return VimPerformanceDaily.excluded_cols_for_expressions.include?(col.to_sym)
-    end
-
-    false
+    return false unless options[:vim_performance_daily_adhoc]
+    EXCLUDED_COLS_FOR_EXPRESSIONS.include?(col.to_sym)
   end
 
   def self.evaluate(expression, obj, inputs = {}, tz = nil)

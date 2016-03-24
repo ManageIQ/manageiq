@@ -3,25 +3,6 @@ class VimPerformanceDaily < MetricRollup
 
   INFO_COLS = [:resource_type, :resource_id, :resource_name]
 
-  INFREQUENTLY_CHANGING_COLS = [
-    :derived_cpu_available,
-    :derived_cpu_reserved,
-    :derived_host_count_off,
-    :derived_host_count_on,
-    :derived_memory_available,
-    :derived_memory_reserved,
-    :derived_vm_allocated_disk_storage,
-    :derived_vm_count_off,
-    :derived_vm_count_on,
-    :derived_vm_numvcpus,
-  ] + Metric::Rollup::STORAGE_COLS
-
-  EXCLUDED_COLS_FOR_EXPRESSIONS = Metric::Rollup::ROLLUP_COLS - INFREQUENTLY_CHANGING_COLS
-
-  def self.excluded_cols_for_expressions
-    EXCLUDED_COLS_FOR_EXPRESSIONS
-  end
-
   def self.find(cnt, *args)
     raise _("Unsupported finder value %{number}") % {:number => cnt} unless cnt == :all
     Vmdb::Deprecation.deprecation_warning(:find, :find_entries, caller(1))
