@@ -191,7 +191,7 @@ class ContainerDashboardService
     resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.select(:id)
     hourly_network_trend = Hash.new(0)
     hourly_metrics =
-      MetricRollup.find_all_by_interval_and_time_range("hourly", 1.day.ago.beginning_of_hour.utc, Time.now.utc)
+      MetricRollup.with_interval_and_time_range("hourly", (1.day.ago.beginning_of_hour.utc)..(Time.now.utc))
     hourly_metrics =
       hourly_metrics.where('resource_type = ? AND resource_id in (?)', 'ExtManagementSystem', resource_ids)
 
