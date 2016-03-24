@@ -31,14 +31,14 @@ class TreeBuilderUtilization < TreeBuilderRegion
 
   def x_get_tree_vandt_datacenter_kids(object)
     # Count clusters directly in this folder
-    objects = rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => "VmOrTemplate")
+    objects = rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => VmOrTemplate)
     object.folders.each do |f|
       if f.name == "vm"                 # Count vm folder children
-        objects += rbac_filtered_sorted_objects(f.folders, "name", :match_via_descendants => "VmOrTemplate")
+        objects += rbac_filtered_sorted_objects(f.folders, "name", :match_via_descendants => VmOrTemplate)
         objects += rbac_filtered_sorted_objects(f.vms_and_templates, "name")
       elsif f.name == "host"            # Don't count host folder children
       else                              # add in other folders
-        objects += rbac_filtered_objects([f], :match_via_descendants => "VmOrTemplate")
+        objects += rbac_filtered_objects([f], :match_via_descendants => VmOrTemplate)
       end
     end
   end
@@ -61,10 +61,10 @@ class TreeBuilderUtilization < TreeBuilderRegion
     objects = []
     case type
     when :vandt, :handc
-      objects =  rbac_filtered_sorted_objects(object.folders_only, "name", :match_via_descendants => "VmOrTemplate")
-      objects += rbac_filtered_sorted_objects(object.datacenters_only, "name", :match_via_descendants => "VmOrTemplate")
-      objects += rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => "VmOrTemplate")
-      objects += rbac_filtered_sorted_objects(object.hosts, "name", :match_via_descendants => "VmOrTemplate")
+      objects =  rbac_filtered_sorted_objects(object.folders_only, "name", :match_via_descendants => VmOrTemplate)
+      objects += rbac_filtered_sorted_objects(object.datacenters_only, "name", :match_via_descendants => VmOrTemplate)
+      objects += rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => VmOrTemplate)
+      objects += rbac_filtered_sorted_objects(object.hosts, "name", :match_via_descendants => VmOrTemplate)
       objects += rbac_filtered_sorted_objects(object.vms_and_templates, "name")
     end
     count_only_or_objects(count_only, objects, nil)

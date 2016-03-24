@@ -42,11 +42,8 @@ describe VmInfraController do
         user = FactoryGirl.create(:user_admin)
         user.current_group.set_managed_filters([["/managed/service_level/gold"]])
         login_as user
-
-        expect(Rbac).to receive(:search).with(:targets           => [ems_folder],
-                                              :empty_means_empty => true,
-                                              :results_format    => :objects).and_call_original
-        controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")
+        expect(controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")).to(
+          eq([ems_folder]))
       end
     end
 

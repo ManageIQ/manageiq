@@ -4,7 +4,7 @@ class TreeBuilderVandt < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, options)
-    objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
+    objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => VmOrTemplate)
 
     if count_only
       objects.length + 2

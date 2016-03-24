@@ -331,22 +331,16 @@ module Rbac
     Rbac.search(options.merge(:targets => objects, :results_format => :objects, :empty_means_empty => true)).first
   end
 
+  # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
   def self.find_via_descendants(descendants, method_name, klass)
-    matches = []
-    descendants.each do |object|
-      match = object.send(method_name)
-      match = [match] unless match.kind_of?(Array)
-      match.each do |m|
-        next unless m.kind_of?(klass)
-        next if matches.include?(m)
-        matches << m
-      end
-    end
-    matches
+    MiqPreloader.preload(descendants, method_name)
+    descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
   end
 
-  def self.find_descendants(descendant_klass, options)
-    search(options.merge(:class => descendant_klass, :results_format => :objects)).first
+  # @option options :user [User]
+  # @option options :miq_group [MiqGroup]
+  def self.find_descendants(scope, options)
+    filtered(scope, options)
   end
 
   def self.ids_via_descendants(klass, descendant_types, options)
@@ -355,44 +349,22 @@ module Rbac
     objects.collect(&:id)
   end
 
-  def self.matches_via_descendants(klass, descendant_types, options)
-    return nil if descendant_types.nil?
-
-    matches = []
-    descendant_types = [descendant_types] unless descendant_types.kind_of?(Hash) || descendant_types.kind_of?(Array)
-    descendant_types.each do |descendant_type|
-      descendant_klass, method_name = parse_descendant_type(descendant_type, klass)
-      next if method_name.nil?
-
+  def self.matches_via_descendants(klass, descendant_klass, options)
+    if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
       descendants = find_descendants(descendant_klass, options)
-      objects     = find_via_descendants(descendants, method_name, klass)
-      matches.concat(objects)
+      find_via_descendants(descendants, method_name, klass)
     end
-
-    matches.uniq
   end
 
   def self.lookup_method_for_descendant_class(klass, descendant_klass)
     key = "#{descendant_klass.base_class}::#{klass.base_class}"
-    method_name = MATCH_VIA_DESCENDANT_RELATIONSHIPS[key]
-    if method_name.nil?
-      _log.warn "could not find method name for #{key}"
+    MATCH_VIA_DESCENDANT_RELATIONSHIPS[key].tap do |method_name|
+      _log.warn "could not find method name for #{key}" if method_name.nil?
     end
-    method_name
   end
 
-  def self.parse_descendant_type(descendant_type, klass)
-    if descendant_type.kind_of?(Array)
-      descendant_klass, method_name = descendant_type
-    else
-      descendant_klass = descendant_type
-    end
-
-    descendant_klass = descendant_klass.constantize      if descendant_klass.kind_of?(String)
-    descendant_klass = descendant_klass.to_s.constantize if descendant_klass.kind_of?(Symbol)
-
-    method_name ||= lookup_method_for_descendant_class(klass, descendant_klass)
-    return descendant_klass, method_name
+  def self.to_class(klass)
+    klass.kind_of?(String) || klass.kind_of?(Symbol) ? klass.to_s.constantize : klass
   end
 
   # @param  options filtering options
@@ -452,7 +424,7 @@ module Rbac
     # Example with args:    :named_scope => [in_region, 1]
     scope             = options.delete(:named_scope)
 
-    class_or_name     = options.delete(:class) { Object }
+    klass             = to_class(options.delete(:class) { Object })
     conditions        = options.delete(:conditions)
     where_clause      = options.delete(:where_clause)
     sub_filter        = options.delete(:sub_filter)
@@ -466,7 +438,6 @@ module Rbac
                                                   options.delete(:miq_group_id))
     tz                     = user.try(:get_timezone)
     attrs                  = {:user_filters => copy_hash(user_filters)}
-    klass                  = class_or_name.kind_of?(Class) ? class_or_name : class_or_name.to_s.constantize
     ids_clause             = nil
     target_ids             = nil
 
@@ -484,7 +455,7 @@ module Rbac
 
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
     else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
-      targets = targets.to_s.constantize if targets.kind_of?(String) || targets.kind_of?(Symbol)
+      targets = to_class(targets)
       targets = targets.all if targets < ActiveRecord::Base
 
       results_format ||= :objects
@@ -498,7 +469,7 @@ module Rbac
       end
     end
 
-    user_filters['match_via_descendants'] = options.delete(:match_via_descendants)
+    user_filters['match_via_descendants'] = to_class(options.delete(:match_via_descendants))
 
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])

@@ -222,7 +222,7 @@ module ApplicationController::Explorer
   end
 
   def rbac_filtered_objects(objects, options = {})
-    TreeBuilder.rbac_filtered_objects(objects, options)
+    Rbac.filtered(objects, options)
   end
 
   # FIXME: move partly to Tree once Trees are made from TreeBuilder

@@ -37,7 +37,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
     assigned_configuration_profile_objs =
       count_only_or_objects(count_only,
                             rbac_filtered_objects(ConfigurationProfile.where(:configuration_manager_id => object[:id]),
-                                                  :match_via_descendants => %w(ConfiguredSystem)),
+                                                  :match_via_descendants => ConfiguredSystem),
                             "name")
     unassigned_configuration_profile_objs =
       fetch_unassigned_configuration_profile_objects(count_only, object[:id])
@@ -77,7 +77,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
     objects =
       case object_hash[:id]
       when "fr" then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"),
-                                           :match_via_descendants => %w(ConfiguredSystem))
+                                           :match_via_descendants => ConfiguredSystem)
       when "at" then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
       end
     count_only_or_objects(count_only, objects, "name")
