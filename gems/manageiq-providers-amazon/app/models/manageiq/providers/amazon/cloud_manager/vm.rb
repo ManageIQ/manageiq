@@ -1,6 +1,14 @@
 class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
 
+  has_many :cloud_networks, :through => :cloud_subnets
+  alias_method :private_networks, :cloud_networks
+  has_many :cloud_subnets, :through    => :network_ports,
+           :class_name => "ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet"
+  has_many :public_networks, :through => :cloud_subnets
+  has_many :security_groups, :through => :network_ports
+  has_many :floating_ips, :through => :network_ports
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.instance(ems_ref)
