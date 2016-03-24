@@ -1,0 +1,2 @@
+class AuthenticationOpenId < Authentication
+end

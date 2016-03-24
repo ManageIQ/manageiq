@@ -29,6 +29,7 @@ gem "google-api-client",              "~>0.8.6",       :require => false
 gem "hamlit",                         "~>2.0.0",       :require => false
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
+gem "htauth",                         "2.0.0",         :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"

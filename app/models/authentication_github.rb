@@ -1,0 +1,2 @@
+class AuthenticationGithub < Authentication
+end
