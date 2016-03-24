@@ -109,6 +109,11 @@
   :url: /vm_cloud/explorer?accordion=images_filter
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
+- :name: cloud_orchestration_stack
+  :description: Clouds / Stacks
+  :url: orchestration_stack/show_list
+  :rbac_feature_name: orchestration_stack
+  :startup: true
 - :name: ems_networks
   :description: Networks / Providers
   :url: /ems_network/show_list
@@ -158,6 +163,11 @@
   :description: Infrastructure / Repositories
   :url: /repository/show_list
   :rbac_feature_name: repository_show_list
+  :startup: true
+- :name: configuration_management
+  :description: Infrastructure / Configuration Management
+  :url: provider_foreman/explorer
+  :rbac_feature_name: provider_foreman_explorer
   :startup: true
 - :name: storage_systems
   :description: Storage / Storage Systems
