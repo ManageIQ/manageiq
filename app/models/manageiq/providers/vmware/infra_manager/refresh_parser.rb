@@ -24,6 +24,7 @@ module ManageIQ::Providers
 
         link_ems_metadata(result, inv)
         link_root_folder(result)
+        set_hidden_folders(result)
         set_default_rps(result)
 
         result
@@ -1270,6 +1271,25 @@ module ManageIQ::Providers
         else
           _log.warn "Unable to find a root folder."
         end
+      end
+
+      def self.set_hidden_folders(data)
+        return if data[:ems_root].nil?
+
+        # Mark the root folder as hidden
+        data[:ems_root][:hidden] = true
+
+        # Mark all child folders of each Datacenter as hidden
+        # e.g.: "vm", "host", "datastore"
+        data[:folders].select { |f| f[:type] == "Datacenter" }.each do |dc|
+          dc_children = dc.fetch_path(:ems_children, :folders)
+          dc_children.to_miq_a.each do |f|
+            f[:hidden] = true
+          end
+        end
+
+        # Set all other folders to be not hidden
+        data[:folders].each { |f| f[:hidden] = false unless f[:hidden] }
       end
 
       def self.set_default_rps(data)

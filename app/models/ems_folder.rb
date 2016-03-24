@@ -22,19 +22,6 @@ class EmsFolder < ApplicationRecord
 
   NON_DISPLAY_FOLDERS = %w(Datacenters vm host datastore).freeze
 
-  def hidden?(overrides = {})
-    ems = overrides[:ext_management_system] || ext_management_system
-    return false unless ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-
-    p = overrides[:parent] || parent if NON_DISPLAY_FOLDERS.include?(name)
-
-    case name
-    when "Datacenters"              then p.kind_of?(ExtManagementSystem)
-    when "vm", "host", "datastore"  then p.kind_of?(Datacenter)
-    else                            false
-    end
-  end
-
   #
   # Provider Object methods
   #

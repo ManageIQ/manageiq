@@ -504,6 +504,7 @@ module ManageIQ::Providers::Microsoft
         :type         => 'EmsFolder',
         :uid_ems      => "host_folder",
         :ems_ref      => "host_folder",
+        :hidden       => true,
         :ems_children => set_host_folder_children
 
       }
@@ -512,6 +513,7 @@ module ManageIQ::Providers::Microsoft
         :type         => 'EmsFolder',
         :uid_ems      => "vm_folder",
         :ems_ref      => "vm_folder",
+        :hidden       => true,
         :ems_children => {:vms => @data[:vms]}
       }
       scvmm_folder = {
@@ -519,6 +521,7 @@ module ManageIQ::Providers::Microsoft
         :type         => 'Datacenter',
         :uid_ems      => "scvmm",
         :ems_ref      => "scvmm",
+        :hidden       => false,
         :ems_children => {:folders => [host_folder, vm_folder]}
       }
       dc_folder = {
@@ -526,6 +529,7 @@ module ManageIQ::Providers::Microsoft
         :type         => 'EmsFolder',
         :uid_ems      => 'root_dc',
         :ems_ref      => 'root_dc',
+        :hidden       => true,
         :ems_children => {:folders => [scvmm_folder]}
       }
       @data[:folders]  = [dc_folder, scvmm_folder, host_folder, vm_folder]
