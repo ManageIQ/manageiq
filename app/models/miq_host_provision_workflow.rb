@@ -116,17 +116,21 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     mac_address  =     data[:mac_address].blank? ? nil : data[:mac_address].downcase
     ipmi_address =     data[:ipmi_address].blank? ? nil : data[:ipmi_address].downcase
 
-    raise "No host search criteria values were passed.  input data:<#{data.inspect}>" if name.nil? && mac_address.nil? && ipmi_address.nil?
+    if name.nil? && mac_address.nil? && ipmi_address.nil?
+      raise _("No host search criteria values were passed.  input data:<%{data}>") % {:data => data.inspect}
+    end
 
     _log.info "Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
     srcs = allowed_ws_hosts(:include_datacenter => true).find_all do |v|
       _log.info "Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end
-    raise "Multiple source template were found from input data:<#{data.inspect}>" if srcs.length > 1
+    if srcs.length > 1
+      raise _("Multiple source template were found from input data:<%{data}>") % {:data => data.inspect}
+    end
     src = srcs.first
 
-    raise "No target host was found from input data:<#{data.inspect}>" if src.nil?
+    raise _("No target host was found from input data:<%{data}>") % {:data => data.inspect} if src.nil?
     _log.info "Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>"
     src
   end

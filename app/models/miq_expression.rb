@@ -246,79 +246,79 @@ class MiqExpression
 
   FORMAT_SUB_TYPES = {
     :boolean     => {
-      :short_name => "Boolean",
-      :title      => "Enter true or false"
+      :short_name => _("Boolean"),
+      :title      => _("Enter true or false")
     },
     :bytes       => {
-      :short_name => "Bytes",
-      :title      => "Enter the number of Bytes",
+      :short_name => _("Bytes"),
+      :title      => _("Enter the number of Bytes"),
       :units      => [
-        ["Bytes", :bytes],
-        ["KB", :kilobytes],
-        ["MB", :megabytes],
-        ["GB", :gigabytes],
-        ["TB", :terabytes]
+        [_("Bytes"), :bytes],
+        [_("KB"), :kilobytes],
+        [_("MB"), :megabytes],
+        [_("GB"), :gigabytes],
+        [_("TB"), :terabytes]
       ]
     },
     :date        => {
-      :short_name => "Date",
-      :title      => "Click to Choose a Date"
+      :short_name => _("Date"),
+      :title      => _("Click to Choose a Date")
     },
     :datetime    => {
-      :short_name => "Date / Time",
-      :title      => "Click to Choose a Date / Time"
+      :short_name => _("Date / Time"),
+      :title      => _("Click to Choose a Date / Time")
     },
     :float       => {
-      :short_name => "Number",
-      :title      => "Enter a Number (like 12.56)"
+      :short_name => _("Number"),
+      :title      => _("Enter a Number (like 12.56)")
     },
     :gigabytes   => {
-      :short_name => "Gigabytes",
-      :title      => "Enter the number of Gigabytes"
+      :short_name => _("Gigabytes"),
+      :title      => _("Enter the number of Gigabytes")
     },
     :integer     => {
-      :short_name => "Integer",
-      :title      => "Enter an Integer"
+      :short_name => _("Integer"),
+      :title      => _("Enter an Integer")
     },
     :kbps        => {
-      :short_name => "KBps",
-      :title      => "Enter the Kilobytes per second"
+      :short_name => _("KBps"),
+      :title      => _("Enter the Kilobytes per second")
     },
     :kilobytes   => {
-      :short_name => "Kilobytes",
-      :title      => "Enter the number of Kilobytes"
+      :short_name => _("Kilobytes"),
+      :title      => _("Enter the number of Kilobytes")
     },
     :megabytes   => {
-      :short_name => "Megabytes",
-      :title      => "Enter the number of Megabytes"
+      :short_name => _("Megabytes"),
+      :title      => _("Enter the number of Megabytes")
     },
     :mhz         => {
-      :short_name => "Mhz",
-      :title      => "Enter the number of Megahertz"
+      :short_name => _("Mhz"),
+      :title      => _("Enter the number of Megahertz")
     },
     :numeric_set => {
-      :short_name => "Number List",
-      :title      => "Enter a list of numbers separated by commas"
+      :short_name => _("Number List"),
+      :title      => _("Enter a list of numbers separated by commas")
     },
     :percent     => {
-      :short_name => "Percent",
-      :title      => "Enter a Percent (like 12.5)",
+      :short_name => _("Percent"),
+      :title      => _("Enter a Percent (like 12.5)"),
     },
     :regex       => {
-      :short_name => "Regular Expression",
-      :title      => "Enter a Regular Expression"
+      :short_name => _("Regular Expression"),
+      :title      => _("Enter a Regular Expression")
     },
     :ruby        => {
-      :short_name => "Ruby Script",
-      :title      => "Enter one or more lines of Ruby Script"
+      :short_name => _("Ruby Script"),
+      :title      => _("Enter one or more lines of Ruby Script")
     },
     :string      => {
-      :short_name => "Text String",
-      :title      => "Enter a Text String"
+      :short_name => _("Text String"),
+      :title      => _("Enter a Text String")
     },
     :string_set  => {
-      :short_name => "String List",
-      :title      => "Enter a list of text strings separated by commas"
+      :short_name => _("String List"),
+      :title      => _("Enter a list of text strings separated by commas")
     }
   }
   FORMAT_SUB_TYPES[:fixnum] = FORMAT_SUB_TYPES[:decimal] = FORMAT_SUB_TYPES[:integer]
@@ -396,7 +396,7 @@ class MiqExpression
       check = "checkall" if exp[operator].include?("checkall")
       check = "checkany" if exp[operator].include?("checkany")
       check = "checkcount" if exp[operator].include?("checkcount")
-      raise "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'" unless check
+      raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
       check =~ /^check(.*)$/; mode = $1.upcase
       clause = "FIND" + " " + _to_human(exp[operator]["search"]) + " CHECK " + mode + " " + _to_human(exp[operator][check], :include_table => false).strip
     when "key exists"
@@ -490,7 +490,7 @@ class MiqExpression
         op = exp[operator][check].keys.first
         exp[operator][check][op]["field"] = "<count>"
       end
-      raise "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'" unless check
+      raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
       check =~ /^check(.*)$/; mode = $1.downcase
       clause = "<find><search>" + _to_ruby(exp[operator]["search"], context_type, tz) + "</search><check mode=#{mode}>" + _to_ruby(exp[operator][check], context_type, tz) + "</check></find>"
     when "key exists"
@@ -498,7 +498,7 @@ class MiqExpression
     when "value exists"
       clause = operands2rubyvalue(operator, exp[operator], context_type)
     when "ruby"
-      raise "Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead."
+      raise _("Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.")
     when "is"
       col_name = exp[operator]["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
@@ -559,7 +559,7 @@ class MiqExpression
         clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{quote(val.utc, :datetime)}"
       end
     else
-      raise "operator '#{operator}' is not supported"
+      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
 
     # puts "clause: #{clause}"
@@ -763,7 +763,7 @@ class MiqExpression
         clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.utc, :datetime, :sql)}"
       end
     else
-      raise "operator '#{operator}' is not supported"
+      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
 
     # puts "clause: #{clause}"
@@ -1739,7 +1739,7 @@ class MiqExpression
       return false if send((dt == :float ? :is_numeric? : :is_integer?), value)
 
       dt_human = dt == :float ? "Number" : "Integer"
-      return "#{dt_human} value must not be blank" if value.delete(',').blank?
+      return _("%{value_name} value must not be blank") % {:value_name => dt_human} if value.delete(',').blank?
 
       if value.include?(".") && (value.split(".").last =~ /([a-z]+)/i)
         sfx = $1
@@ -1747,40 +1747,47 @@ class MiqExpression
         value = "#{value.split(".")[0..-2].join(".")} #{sfx}"
       end
 
-      return "Value '#{value}' is not a valid #{dt_human}"
+      return _("Value '%{value}' is not a valid %{value_name}") % {:value => value, :value_name => dt_human}
     when :date, :datetime
       return false if operator.downcase.include?("empty")
 
       values = value.to_miq_a
-      return "No Date/Time value specified" if values.empty? || values.include?(nil)
-      return "Two Date/Time values must be specified" if operator.downcase == "from" && values.length < 2
+      return _("No Date/Time value specified") if values.empty? || values.include?(nil)
+      return _("Two Date/Time values must be specified") if operator.downcase == "from" && values.length < 2
 
       values_converted = values.collect do |v|
-        return "Date/Time value must not be blank" if value.blank?
+        return _("Date/Time value must not be blank") if value.blank?
         v_cvt = normalize_date_time(v, "UTC") rescue nil
-        return "Value '#{v}' is not valid" if v_cvt.nil?
+        return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
         v_cvt
       end
-      return "Invalid Date/Time range, #{values[1]} comes before #{values[0]}" if values_converted.length > 1 && values_converted[0] > values_converted[1]
+      if values_converted.length > 1 && values_converted[0] > values_converted[1]
+        return _("Invalid Date/Time range, %{first_value} comes before %{second_value}") % {:first_value  => values[1],
+                                                                                            :second_value => values[0]}
+      end
       return false
     when :boolean
-      return "Value must be true or false" unless operator.downcase.include?("null") || ["true", "false"].include?(value)
+      unless operator.downcase.include?("null") || %w(true false).include?(value)
+        return _("Value must be true or false")
+      end
       return false
     when :regexp
       begin
         Regexp.new(value).match("foo")
       rescue => err
-        return "Regular expression '#{value}' is invalid, '#{err.message}'"
+        return _("Regular expression '%{value}' is invalid, '%{error_message}'") % {:value         => value,
+                                                                                    :error_message => err.message}
       end
       return false
     when :ruby
-      return "Ruby Script must not be blank" if value.blank?
+      return _("Ruby Script must not be blank") if value.blank?
       return false
     else
       return false
     end
 
-    "Value '#{value}' must be in the form of #{FORMAT_SUB_TYPES[dt][:short_name]}"
+    _("Value '%{value}' must be in the form of %{format_type}") % {:value       => value,
+                                                                   :format_type => FORMAT_SUB_TYPES[dt][:short_name]}
   end
 
   def self.get_categories

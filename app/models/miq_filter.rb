@@ -95,7 +95,7 @@ module MiqFilter
     case mode
     when :by_reflection  then find_children_of_via_reflection(obj, reflection, options)
     when :by_method      then find_children_of_via_method(obj, assoc, options)
-    else                      raise "Unknown mode: <#{mode.inspect}>"
+    else                      raise _("Unknown mode: <%{mode}>") % {:mode => mode.inspect}
     end
   end
 
@@ -110,7 +110,7 @@ module MiqFilter
 
   def self.belongsto2object_list(tag)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
-    raise "invalid tag: #{tag}" unless tag.starts_with?("/belongsto/ExtManagementSystem")
+    raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
     parts = tag.split("/")
     2.times { parts.shift }
 
@@ -149,7 +149,9 @@ module MiqFilter
 
   def self.object2belongsto(obj)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
-    raise "Folder Root is not a #{ui_lookup(:table => "ext_management_systems")}" unless obj.root_id[0] == "ExtManagementSystem"
+    unless obj.root_id[0] == "ExtManagementSystem"
+      raise _("Folder Root is not a %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
 
     tag = obj.ancestry(
       :field_delimiter  => '|',
