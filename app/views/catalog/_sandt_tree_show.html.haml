@@ -3,7 +3,7 @@
   %ul.nav.nav-tabs
     = miq_tab_header('basic') do
       = _('Basic Info')
-    - if @record.display
+    - if @record.display && !@record.prov_type.start_with?("generic_")
       = miq_tab_header('details') do
         = _('Details')
     - if @record.composite?
@@ -49,8 +49,14 @@
                 = _('Provider')
               .col-md-8
                 = h(@record.orchestration_manager.name)
+        - elsif @record.prov_type == "generic_ansible_tower"
+          .form-group
+            %label.col-md-2.control-label
+              = _('Ansible Tower Job Template')
+            .col-md-8
+              = h(@record.try(:job_template).try(:name))
         - entry_points = [[_("Provisioning"), :fqname]]
-        - unless @record.prov_type == "generic_orchestration"
+        - unless @record.prov_type.start_with?("generic_")
           - entry_points.push([_("Reconfigure"),  :reconfigure_fqname],
              [_("Retirement"),   :retire_fqname])
         - entry_points.each do |entry_points_op|
@@ -99,7 +105,7 @@
             .col-md-6
               = submit_tag(_("Upload"), :id => "upload", :class => "upload btn btn-default")
               = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
-    - if @record.display
+    - if @record.display && !@record.prov_type.start_with?("generic_")
       = miq_tab_content('details') do
         %h3
           = _('Basic Information')
