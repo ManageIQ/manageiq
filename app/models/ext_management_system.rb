@@ -291,7 +291,9 @@ class ExtManagementSystem < ApplicationRecord
     unless options[:endpoint].key?(:role)
       options[:endpoint][:role] ||= "default"
     end
-    if options[:authentication]
+    if options[:authentication].blank?
+      options.delete(:authentication)
+    else
       unless options[:authentication].key?(:role)
         options[:authentication][:role] ||= "default"
       end
