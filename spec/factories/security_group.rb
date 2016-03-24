@@ -4,7 +4,7 @@ FactoryGirl.define do
   end
 
   factory :security_group_amazon, :parent => :security_group,
-                                  :class  => "ManageIQ::Providers::Amazon::CloudManager::SecurityGroup"
+                                  :class  => "ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup"
   factory :security_group_openstack, :parent => :security_group,
                                      :class  => "ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup"
   factory :security_group_azure, :parent => :security_group,
