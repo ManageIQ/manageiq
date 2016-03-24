@@ -41,8 +41,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   before_validation :ensure_managers
 
-  private
-
   def ensure_managers
     build_network_manager unless network_manager
     network_manager.name            = "#{name} Network Manager"
