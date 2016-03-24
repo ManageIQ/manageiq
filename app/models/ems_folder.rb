@@ -20,8 +20,6 @@ class EmsFolder < ApplicationRecord
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
 
-  NON_DISPLAY_FOLDERS = %w(Datacenters vm host datastore).freeze
-
   #
   # Provider Object methods
   #
@@ -164,7 +162,7 @@ class EmsFolder < ApplicationRecord
     options = args.extract_options!
     folders = path(:of_type => "EmsFolder")
     folders = folders[1..-1] if options[:exclude_root_folder]
-    folders = folders.reject { |f| NON_DISPLAY_FOLDERS.include?(f.name) } if options[:exclude_non_display_folders]
+    folders = folders.reject(&:hidden?) if options[:exclude_non_display_folders]
     folders
   end
 
@@ -189,7 +187,7 @@ class EmsFolder < ApplicationRecord
     options[:prefix] ||= ""
     subtree.each_with_object({}) do |(f, children), h|
       path = options[:prefix]
-      unless options[:exclude_non_display_folders] && NON_DISPLAY_FOLDERS.include?(f.name)
+      unless options[:exclude_non_display_folders] && f.hidden?
         path = path.blank? ? f.name : "#{path}/#{f.name}"
         h[f.id] = path unless options[:exclude_datacenters] && f.kind_of?(Datacenter)
       end
