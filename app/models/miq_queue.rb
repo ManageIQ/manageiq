@@ -36,8 +36,13 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.priority(which, dir = nil, by = 0)
-    raise ArgumentError, "which must be an Integer or one of #{PRIORITY_WHICH.join(", ")}" unless which.kind_of?(Integer) || PRIORITY_WHICH.include?(which)
-    raise ArgumentError, "dir must be one of #{PRIORITY_DIR.join(", ")}" unless dir.nil? || PRIORITY_DIR.include?(dir)
+    unless which.kind_of?(Integer) || PRIORITY_WHICH.include?(which)
+      raise ArgumentError,
+            _("which must be an Integer or one of %{priority}") % {:priority => PRIORITY_WHICH.join(", ")}
+    end
+    unless dir.nil? || PRIORITY_DIR.include?(dir)
+      raise ArgumentError, _("dir must be one of %{directory}") % {:directory => PRIORITY_DIR.join(", ")}
+    end
 
     which = const_get("#{which.to_s.upcase}_PRIORITY") unless which.kind_of?(Integer)
     priority = which.send(dir == :higher ? "-" : "+", by)
@@ -169,7 +174,7 @@ class MiqQueue < ApplicationRecord
       rescue ActiveRecord::StaleObjectError
         result = :stale
       rescue => err
-        raise "#{_log.prefix} \"#{err}\" attempting to get next message"
+        raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
       end
     end
     if result == :stale
@@ -276,7 +281,10 @@ class MiqQueue < ApplicationRecord
       rescue ActiveRecord::StaleObjectError
         _log.debug("#{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
       rescue => err
-        raise RuntimeError, "#{_log.prefix} \"#{err}\" attempting merge next message", err.backtrace
+        raise RuntimeError,
+              _("%{log_message} \"%{error}\" attempting merge next message") % {:log_message => _log.prefix,
+                                                                                :error       => err},
+              err.backtrace
       end
     end
     msg
@@ -306,7 +314,7 @@ class MiqQueue < ApplicationRecord
     begin
       raise MiqException::MiqQueueExpired if expires_on && (Time.now.utc > expires_on)
 
-      raise "class_name cannot be nil" if class_name.nil?
+      raise _("class_name cannot be nil") if class_name.nil?
 
       obj = class_name.constantize
 

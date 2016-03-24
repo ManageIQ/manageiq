@@ -147,7 +147,8 @@ class MiqRequest < ApplicationRecord
     MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
     _log.info("Raised  event [#{event_name}] to Automate")
   rescue MiqAeException::Error => err
-    message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
+    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
+                {:name => event_name, :error_message => err.message}
     raise
   end
 
@@ -157,7 +158,8 @@ class MiqRequest < ApplicationRecord
     _log.info("Raised event [#{event_name}] to Automate")
     return ws
   rescue MiqAeException::Error => err
-    message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
+    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
+                {:name => event_name, :error_message => err.message}
     raise
   end
 
@@ -351,9 +353,13 @@ class MiqRequest < ApplicationRecord
   end
 
   def task_check_on_execute
-    raise "#{self.class::TASK_DESCRIPTION} request is already being processed" if self.class::ACTIVE_STATES.include?(request_state)
-    raise "#{self.class::TASK_DESCRIPTION} request has already been processed" if request_state == "finished"
-    raise "approval is required for #{self.class::TASK_DESCRIPTION}"           unless self.approved?
+    if self.class::ACTIVE_STATES.include?(request_state)
+      raise _("%{task} request is already being processed") % {:task => self.class::TASK_DESCRIPTION}
+    end
+    if request_state == "finished"
+      raise _("%{task} request has already been processed") % {:task => self.class::TASK_DESCRIPTION}
+    end
+    raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
   end
 
   def execute

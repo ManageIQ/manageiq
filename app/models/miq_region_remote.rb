@@ -21,7 +21,7 @@ class MiqRegionRemote < ApplicationRecord
 
     log_details = "Host: [#{host}]}, Database: [#{database}], Adapter: [#{adapter}], User: [#{username}]"
 
-    return ["Validation failed due to missing port"] if port.blank?
+    return [_("Validation failed due to missing port")] if port.blank?
     begin
       with_remote_connection(host, port, username, password, database, adapter) do |c|
         _log.info("Attempting to connection to: #{log_details}...")
@@ -31,16 +31,21 @@ class MiqRegionRemote < ApplicationRecord
 
           # Validate the local region against the remote
           region = MiqRegion.my_region
-          return ["Validation failed due to missing region"] if region.nil?
-          return self.region_valid?(region.guid, region.region, host, port, username, password, database, adapter) ? nil : ["Validation failed because region #{region.region} has already been used"]
+          return [_("Validation failed due to missing region")] if region.nil?
+          if region_valid?(region.guid, region.region, host, port, username, password, database, adapter)
+            return nil
+          else
+            return [_("Validation failed because region %{region_name} has already been used") %
+                      {:region_name => region.region}]
+          end
         else
           _log.info("Attempting to connection to: #{log_details}...Failed")
-          return ["Validation failed"]
+          return [_("Validation failed")]
         end
       end
     rescue => err
       _log.warn("Attempting to connection to: #{log_details}...Failed with error: '#{err.message}")
-      return ["Validation failed with error: '#{err.message}"]
+      return [_("Validation failed with error: '%{error_message}") % {:error_message => err.message}]
     end
   end
 
@@ -87,10 +92,12 @@ class MiqRegionRemote < ApplicationRecord
     # Don't allow accidental connections to localhost.  A blank host will
     # connect to localhost, so don't allow that at all.
     host = host.to_s.strip
-    raise ArgumentError, "host cannot be blank" if host.blank?
+    raise ArgumentError, _("host cannot be blank") if host.blank?
     if [nil, "", "localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
       local_database = Rails.configuration.database_configuration.fetch_path(Rails.env, "database").to_s.strip
-      raise ArgumentError, "host cannot be set to localhost if database matches the local database" if database == local_database
+      if database == local_database
+        raise ArgumentError, _("host cannot be set to localhost if database matches the local database")
+      end
     end
 
     pool = establish_connection({

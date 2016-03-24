@@ -490,19 +490,27 @@ class MiqRequestWorkflow
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect { |category| Classification.find_by_name(category.to_s).description rescue nil }.compact
     return nil if missing_categories_names.blank?
-    "Required tag(s): #{missing_categories_names.join(', ')}"
+    _("Required tag(s): %{names}") % {:names => missing_categories_names.join(', ')}
   end
 
   def validate_length(_field, _values, dlg, fld, value)
-    return "#{required_description(dlg, fld)} is required" if value.blank?
-    return "#{required_description(dlg, fld)} must be at least #{fld[:min_length]} characters"  if fld[:min_length] && value.to_s.length < fld[:min_length]
-    return "#{required_description(dlg, fld)} must not be greater than #{fld[:max_length]} characters" if fld[:max_length] && value.to_s.length > fld[:max_length]
+    return _("%{name} is required") % {:name => required_description(dlg, fld)} if value.blank?
+    if fld[:min_length] && value.to_s.length < fld[:min_length]
+      return _("%{name} must be at least %{length} characters") % {:name   => required_description(dlg, fld),
+                                                                   :length => fld[:min_length]}
+    end
+    if fld[:max_length] && value.to_s.length > fld[:max_length]
+      return _("%{name} must not be greater than %{length} characters") % {:name   => required_description(dlg, fld),
+                                                                           :length => fld[:max_length]}
+    end
   end
 
   def validate_regex(_field, _values, dlg, fld, value)
     regex = fld[:required_regex]
-    return "#{required_description(dlg, fld)} is required" if value.blank?
-    return "#{required_description(dlg, fld)} must be correctly formatted" unless value.match(regex)
+    return _("%{name} is required") % {:name => required_description(dlg, fld)} if value.blank?
+    unless value.match(regex)
+      return _("%{name} must be correctly formatted") % {:name => required_description(dlg, fld)}
+    end
   end
 
   def required_description(dlg, fld)
@@ -542,7 +550,7 @@ class MiqRequestWorkflow
     unless email.blank?
       l = MiqLdap.new
       if l.bind_with_default == true
-        raise "No information returned for #{email}" if (d = l.get_user_info(email)).nil?
+        raise _("No information returned for %{email}") % {:email => email} if (d = l.get_user_info(email)).nil?
         [:first_name, :last_name, :address, :city, :state, :zip, :country, :title, :company,
          :department, :office, :phone, :phone_mobile, :manager, :manager_mail, :manager_phone].each do |prop|
           @values["owner_#{prop}".to_sym] = d[prop].nil? ? nil : d[prop].dup
@@ -684,7 +692,11 @@ class MiqRequestWorkflow
     dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
     _log.info "Loading dialogs <#{dp}> for user <#{@requester.userid}>"
     d = MiqDialog.find_by("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name)
-    raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
+    if d.nil?
+      raise MiqException::Error,
+            "Dialog cannot be found.  Name:[%{name}]  Type:[%{type}]" % {:name => @values[:miq_request_dialog_name],
+                                                                         :type => self.class.base_model.name}
+    end
     prov_dialogs = d.content
 
     prov_dialogs
@@ -1486,7 +1498,7 @@ class MiqRequestWorkflow
       fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
       err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
       _log.error "<#{err_text}>"
-      raise err_text
+      raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
     end
   end
 

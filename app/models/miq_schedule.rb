@@ -148,24 +148,29 @@ class MiqSchedule < ApplicationRecord
     start_time = run_at[:start_time].in_time_zone(timezone)
     start_time = start_time.strftime("%a %b %d %H:%M:%S %Z %Y")
     if run_at[:interval][:unit].downcase == "once"
-      return "Run #{run_at[:interval][:unit]} on #{start_time}"
+      return _("Run %{interval} on %{start_time}") % {:interval => run_at[:interval][:unit], :start_time => start_time}
     else
       if run_at[:interval][:value].to_i == 1
-        return "Run #{run_at[:interval][:unit]} starting on #{start_time}"
+        return _("Run %{interval} starting on %{start_time}") % {:interval   => run_at[:interval][:unit],
+                                                                 :start_time => start_time}
       else
         case run_at[:interval][:unit]
         when "minutely"
-          unit = "minutes"
+          unit = _("minutes")
         when "hourly"
-          unit = "hours"
+          unit = _("hours")
         when "daily"
-          unit = "days"
+          unit = _("days")
         when "weekly"
-          unit = "weeks"
+          unit = _("weeks")
         when "monthly"
-          unit = "months"
+          unit = _("months")
         end
-        return "Run #{run_at[:interval][:unit]} every #{run_at[:interval][:value]} #{unit} starting on #{start_time}"
+        return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
+                 {:interval   => run_at[:interval][:unit],
+                  :value      => run_at[:interval][:value],
+                  :unit       => unit,
+                  :start_time => start_time}
       end
     end
   end
@@ -244,7 +249,7 @@ class MiqSchedule < ApplicationRecord
     # :aggressive   true  (if provided and true, a full GC will be done)
 
     userid = options.delete(:userid)
-    raise "No userid provided!" unless userid
+    raise _("No userid provided!") unless userid
 
     sch = new(:userid => userid, :sched_action => {:options => options})
     sch.action_db_gc(DatabaseBackup, nil)
@@ -341,7 +346,10 @@ class MiqSchedule < ApplicationRecord
       return nil if interval_value == 0
 
       meth = rails_interval
-      raise "Schedule: [#{id}] [#{name}], cannot calculate next run with past start_time using: #{run_at.fetch_path(:interval, :unit)}" if meth.nil?
+      if meth.nil?
+        raise _("Schedule: [%{id}] [%{name}], cannot calculate next run with past start_time using: %{path}") %
+                {:id => id, :name => name, :path => run_at.fetch_path(:interval, :unit)}
+      end
 
       if meth == :months
         # use the scheduled start_time, adding x.months, until it's in the future
