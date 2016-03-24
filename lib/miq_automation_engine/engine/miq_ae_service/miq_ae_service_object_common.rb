@@ -56,5 +56,9 @@ module MiqAeMethodService
     def name
       @object.object_name
     end
+
+    def parent
+      @object.node_parent ? MiqAeServiceObject.new(@object.node_parent, @service) : nil
+    end
   end
 end
