@@ -1,9 +1,7 @@
 # TODO: Separate collection from parsing (perhaps collecting in parallel a la RHEVM)
 
 class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
-  def self.ems_inv_to_hashes(ems, options = nil)
-    new(ems, options).ems_inv_to_hashes
-  end
+  include ManageIQ::Providers::Amazon::HelperMethods
 
   def initialize(ems, options = nil)
     @ems                 = ems
@@ -28,13 +26,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     get_availability_zones
     get_key_pairs
     get_stacks
-    get_cloud_networks
-    get_security_groups
     get_private_images if @options["get_private_images"]
     get_shared_images  if @options["get_shared_images"]
     get_public_images  if @options["get_public_images"]
     get_instances
-    get_floating_ips
     $aws_log.info("#{log_header}...Complete")
 
     filter_unused_disabled_flavors
@@ -43,10 +38,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   private
-
-  def security_groups
-    @security_groups ||= @aws_ec2.security_groups
-  end
 
   def get_flavors
     process_collection(ManageIQ::Providers::Amazon::InstanceTypes.all, :flavors) { |flavor| parse_flavor(flavor) }
@@ -60,35 +51,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   def get_key_pairs
     kps = @aws_ec2.client.describe_key_pairs[:key_pairs]
     process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
-  end
-
-  def get_cloud_networks
-    vpcs = @aws_ec2.client.describe_vpcs[:vpcs]
-    process_collection(vpcs, :cloud_networks) { |vpc| parse_cloud_network(vpc) }
-  end
-
-  def get_cloud_subnets(subnets)
-    process_collection(subnets, :cloud_subnets) { |s| parse_cloud_subnet(s) }
-  end
-
-  def get_security_groups
-    process_collection(security_groups, :security_groups) { |sg| parse_security_group(sg) }
-    get_firewall_rules
-  end
-
-  def get_firewall_rules
-    security_groups.each do |sg|
-      new_sg = @data_index.fetch_path(:security_groups, sg.group_id)
-      new_sg[:firewall_rules] = get_inbound_firewall_rules(sg) + get_outbound_firewall_rules(sg)
-    end
-  end
-
-  def get_inbound_firewall_rules(sg)
-    sg.ip_permissions.collect { |perm| parse_firewall_rule(perm, "inbound") }.flatten
-  end
-
-  def get_outbound_firewall_rules(sg)
-    sg.ip_permissions_egress.collect { |perm| parse_firewall_rule(perm, "outbound") }.flatten
   end
 
   def get_private_images
@@ -147,23 +109,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     process_collection(instances, :vms) { |instance| parse_instance(instance) }
   end
 
-  def get_floating_ips
-    ips = @aws_ec2.client.describe_addresses.addresses
-    process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
-  end
-
-  def process_collection(collection, key)
-    @data[key] ||= []
-
-    collection.each do |item|
-      uid, new_result = yield(item)
-      next if uid.nil?
-
-      @data[key] << new_result
-      @data_index.store_path(key, uid, new_result)
-    end
-  end
-
   def parse_flavor(flavor)
     name = uid = flavor[:name]
 
@@ -219,94 +164,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def self.key_pair_type
     ManageIQ::Providers::Amazon::CloudManager::AuthKeyPair.name
-  end
-
-  def parse_cloud_network(vpc)
-    uid    = vpc.vpc_id
-
-    name   = get_from_tags(vpc, :name)
-    name ||= uid
-
-    status  = (vpc.state == :available) ? "active" : "inactive"
-
-    subnets = @aws_ec2.client.describe_subnets(:filters => [{:name => "vpc-id", :values => [vpc.vpc_id]}])[:subnets]
-    get_cloud_subnets(subnets)
-    cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.subnet_id) }
-
-    new_result = {
-      :ems_ref             => uid,
-      :name                => name,
-      :cidr                => vpc.cidr_block,
-      :status              => status,
-      :enabled             => true,
-
-      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
-                                                     get_from_tags(vpc, "aws:cloudformation:stack-id")),
-      :cloud_subnets       => cloud_subnets,
-    }
-    return uid, new_result
-  end
-
-  def parse_cloud_subnet(subnet)
-    uid    = subnet.subnet_id
-
-    name   = get_from_tags(subnet, :name)
-    name ||= uid
-
-    new_result = {
-      :ems_ref           => uid,
-      :name              => name,
-      :cidr              => subnet.cidr_block,
-      :status            => subnet.state.try(:to_s),
-      :availability_zone => @data_index.fetch_path(:availability_zones, subnet.availability_zone)
-    }
-
-    return uid, new_result
-  end
-
-  def self.security_group_type
-    ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.name
-  end
-
-  def parse_security_group(sg)
-    uid = sg.group_id
-
-    new_result = {
-      :type                => self.class.security_group_type,
-      :ems_ref             => uid,
-      :name                => sg.group_name,
-      :description         => sg.description.try(:truncate, 255),
-      :cloud_network       => @data_index.fetch_path(:cloud_networks, sg.vpc_id),
-      :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
-                                                     get_from_tags(sg, "aws:cloudformation:stack-id")),
-    }
-    return uid, new_result
-  end
-
-  # TODO: Should ICMP protocol values have their own 2 columns, or
-  #   should they override port and end_port like the Amazon API.
-  def parse_firewall_rule(perm, direction)
-    ret = []
-
-    common = {
-      :direction     => direction,
-      :host_protocol => perm.ip_protocol.to_s.upcase,
-      :port          => perm.from_port,
-      :end_port      => perm.to_port,
-    }
-
-    perm.user_id_group_pairs.each do |g|
-      new_result = common.dup
-      new_result[:source_security_group] = @data_index.fetch_path(:security_groups, g.group_id)
-      ret << new_result
-    end
-    perm.ip_ranges.each do |r|
-      new_result = common.dup
-      new_result[:source_ip_range] = r.cidr_ip
-      ret << new_result
-    end
-
-    ret
   end
 
   def parse_image(image, is_public)
@@ -424,27 +281,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     return uid, new_result
   end
 
-  def parse_floating_ip(ip)
-    address = uid = ip.public_ip
-
-    associated_vm = @data[:vms].detect do |v|
-      v.fetch_path(:hardware, :networks).to_miq_a.detect do |n|
-        n[:description] == "public" && n[:ipaddress] == address
-      end
-    end
-
-    new_result = {
-      :type               => ManageIQ::Providers::Amazon::CloudManager::FloatingIp.name,
-      :ems_ref            => uid,
-      :address            => address,
-      :cloud_network_only => ip.domain["vpc"] ? true : false,
-
-      :vm                 => associated_vm
-    }
-
-    return uid, new_result
-  end
-
   def parse_stack(stack)
     uid = stack.stack_id.to_s
     child_stacks, resources = find_stack_resources(stack)
@@ -551,41 +387,5 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :last_updated           => resource.last_updated_timestamp
     }
     return uid, new_result
-  end
-
-  #
-  # Helper methods
-  #
-  ARCHITECTURE_TO_BITNESS = {
-    :i386   => 32,
-    :x86_64 => 64,
-  }.freeze
-
-  def architecture_to_bitness(arch)
-    ARCHITECTURE_TO_BITNESS[arch.to_sym]
-  end
-
-  # Remap from children to parent
-  def update_nested_stack_relations
-    @data[:orchestration_stacks].each do |stack|
-      stack[:children].each do |child_stack_id|
-        child_stack = @data_index.fetch_path(:orchestration_stacks, child_stack_id)
-        child_stack[:parent] = stack if child_stack
-      end
-      stack.delete(:children)
-    end
-  end
-
-  def get_from_tags(resource, item)
-    resource.tags.detect { |tag, _| tag.key.downcase == item.to_s.downcase }.try(:value)
-  end
-
-  def add_instance_disk(disks, size, name, location)
-    super(disks, size, name, location, "amazon")
-  end
-
-  # Compose an ems_ref combining some existing keys
-  def compose_ems_ref(*keys)
-    keys.join('_')
   end
 end
