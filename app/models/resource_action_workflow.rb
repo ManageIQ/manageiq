@@ -32,12 +32,21 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     values[:src_id] = @target.id
 
     if create_request?(values)
-      create_request(values)
+      request = create_request(values)
+      create_service_order_and_checkout(request) if request
     else
       ra = load_resource_action(values)
       ra.deliver_to_automate_from_dialog(values, @target, @requester)
     end
     result
+  end
+
+  def create_service_order_and_checkout(request)
+    service_order = ServiceOrder.create(:state        => 'ordered',
+                                        :user         => @requester,
+                                        :miq_requests => [request],
+                                        :tenant       => request.tenant)
+    service_order.checkout
   end
 
   def request_class
