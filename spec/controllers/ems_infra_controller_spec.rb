@@ -302,7 +302,7 @@ describe EmsInfraController do
         expect(breadcrumbs).to eq([{:name => "Infrastructure Providers",
                                     :url  => "/ems_infra/show_list?page=&refresh=y"},
                                    {:name => "#{ems.name} (Summary)",
-                                    :url  => "/ems_infra/show/#{ems.id}"}])
+                                    :url  => "/ems_infra/#{ems.id}"}])
       end
     end
   end

@@ -247,7 +247,7 @@ describe EmsInfraController do
     it "sets relative url" do
       controller.instance_variable_set(:@table_name, "ems_infra")
       link = controller.send(:show_link, ems, :display => "vms")
-      expect(link).to eq("/ems_infra/show/#{ems.id}?display=vms")
+      expect(link).to eq("/ems_infra/#{ems.id}?display=vms")
     end
 
     context "#restore_password" do
