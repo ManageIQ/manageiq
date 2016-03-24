@@ -1,9 +1,8 @@
 class CreateJoinTableHostSwitch < ActiveRecord::Migration[5.0]
   def change
-    create_join_table :hosts, :switches do |t|
-      t.index [:host_id, :switch_id]
-      t.index [:switch_id, :host_id]
+    create_table :hosts_switches do |t|
+      t.bigint  :host_id
+      t.bigint  :switch_id
     end
-    add_column :hosts_switches, :id, :primary_key
   end
 end
