@@ -73,7 +73,7 @@ class MiqWorker < ApplicationRecord
     when Array
       required_roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
     else
-      raise "Unexpected type: <self.required_roles.class.name>"
+      raise _("Unexpected type: <self.required_roles.class.name>")
     end
   end
 
@@ -133,7 +133,7 @@ class MiqWorker < ApplicationRecord
     when Array
       required_roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
     else
-      raise "Unexpected type: <self.required_roles.class.name>"
+      raise _("Unexpected type: <self.required_roles.class.name>")
     end
   end
 
@@ -197,7 +197,7 @@ class MiqWorker < ApplicationRecord
         classes = path_to_my_worker_settings
         classes.each do |c|
           section = section[c]
-          raise "Missing config section #{c}" if section.nil?
+          raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
           defaults = section[:defaults]
           settings.merge!(defaults) unless defaults.nil?
         end
@@ -301,7 +301,7 @@ class MiqWorker < ApplicationRecord
 
   def self.send_message_to_worker_monitor(wid, message, *args)
     w = MiqWorker.find_by_id(wid)
-    raise "Worker with id=<#{wid}> does not exist" if w.nil?
+    raise _("Worker with id=<%{id}> does not exist") % {:id => wid} if w.nil?
     w.send_message_to_worker_monitor(message, *args)
   end
 

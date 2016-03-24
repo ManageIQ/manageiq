@@ -83,14 +83,14 @@ class Repository < ApplicationRecord
   def self.parse_path(path)
     path.gsub!(/\\/, "/")
     if path.starts_with? "//"
-      raise "path, '#{path}', is malformed" unless path =~ %r{^//[^/].*/.+$}
+      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
       type = "NAS"
     else
       if path.starts_with? "["
-        raise "path, '#{path}', is malformed"  unless path =~ /^\[[^\]].+\].*$/
+        raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
         type = "VMFS"
       else
-        raise "path, '#{path}', is malformed"
+        raise _("path, '%{path}', is malformed") % {:path => path}
         # type = "local"
       end
     end

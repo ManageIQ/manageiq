@@ -94,7 +94,7 @@ class ServiceOrchestration < Service
     dialog_options = options[:dialog] || {}
     manager_from_dialog = OptionConverter.get_manager(dialog_options)
     self.orchestration_manager = manager_from_dialog if manager_from_dialog
-    raise "orchestration manager was not set" if orchestration_manager.nil?
+    raise _("orchestration manager was not set") if orchestration_manager.nil?
 
     # orchestration template from dialog_options overrides the one copied from service_template
     template_from_dialog = OptionConverter.get_template(dialog_options)

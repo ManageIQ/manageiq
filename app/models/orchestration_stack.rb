@@ -40,11 +40,11 @@ class OrchestrationStack < ApplicationRecord
   end
 
   def self.raw_create_stack(_orchestration_manager, _stack_name, _template, _options = {})
-    raise NotImplementedError, "raw_create_stack must be implemented in a subclass"
+    raise NotImplementedError, _("raw_create_stack must be implemented in a subclass")
   end
 
   def raw_update_stack(_template, _options = {})
-    raise NotImplementedError, "raw_update_stack must be implemented in a subclass"
+    raise NotImplementedError, _("raw_update_stack must be implemented in a subclass")
   end
 
   def update_stack(template, options = {})
@@ -52,7 +52,7 @@ class OrchestrationStack < ApplicationRecord
   end
 
   def raw_delete_stack
-    raise NotImplementedError, "raw_delete_stack must be implemented in a subclass"
+    raise NotImplementedError, _("raw_delete_stack must be implemented in a subclass")
   end
 
   def delete_stack
@@ -60,7 +60,7 @@ class OrchestrationStack < ApplicationRecord
   end
 
   def raw_status
-    raise NotImplementedError, "raw_status must be implemented in a subclass"
+    raise NotImplementedError, _("raw_status must be implemented in a subclass")
   end
 
   def raw_exists?
