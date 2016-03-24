@@ -1,5 +1,6 @@
 class EmsInfraController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
+  include Mixins::EmsCommonAngular
 
   before_action :check_privileges
   before_action :get_session_data
@@ -12,6 +13,10 @@ class EmsInfraController < ApplicationController
 
   def self.table_name
     @table_name ||= "ems_infra"
+  end
+
+  def ems_path(*args)
+    ems_infra_path(*args)
   end
 
   def index
@@ -113,6 +118,7 @@ class EmsInfraController < ApplicationController
     end
 
     amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+    ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
 
     if @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
       security_protocol = @ems.security_protocol ? @ems.security_protocol : 'ssl'
@@ -126,6 +132,11 @@ class EmsInfraController < ApplicationController
 
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
 
+    if @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+      host_default_vnc_port_start = @ems.host_default_vnc_port_start.to_s
+      host_default_vnc_port_end = @ems.host_default_vnc_port_end.to_s
+    end
+
     render :json => {:name                            => @ems.name,
                      :provider_region                 => @ems.provider_region,
                      :emstype                         => @ems.emstype,
@@ -138,25 +149,26 @@ class EmsInfraController < ApplicationController
                      :provider_region                 => @ems.provider_region,
                      :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
                      :amqp_userid                     => amqp_userid,
-                     :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
-                     :client_id                       => client_id ? client_id : "",
-                     :client_key                      => client_key ? client_key : "",
-                     :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+                     :ssh_keypair_userid              => ssh_keypair_userid,
+                     :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
+                     :host_default_vnc_port_start     => host_default_vnc_port_start ? host_default_vnc_port_start : "",
+                     :host_default_vnc_port_end       => host_default_vnc_port_end ? host_default_vnc_port_end : ""
     }
   end
 
   private
 
   ############################
+  # Special EmsCloud link builder for restful routes
   def show_link(ems, options = {})
-    ems_infra_path(ems.id, options)
+    ems_path(ems.id, options)
   end
 
   def log_and_flash_message(message)
     add_flash(message, :error)
     $log.error(message)
   end
-
+  
   def update_stack(stack, stack_parameters, provider_id, return_message)
     begin
       # Check if stack is ready to be updated
@@ -229,4 +241,9 @@ class EmsInfraController < ApplicationController
     stack_parameters['ComputeRemovalPolicies'] = [{:resource_list => parent_resource_names}]
     return stack_parameters
   end
+
+  def restful?
+    true
+  end
+  public :restful?
 end

@@ -276,6 +276,10 @@ module Mixins
         amqp_password = params[:amqp_password] ? params[:amqp_password] : ems.authentication_password(:amqp)
         creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password}
       end
+      if ems.supports_authentication?(:ssh_keypair) && params[:ssh_keypair_userid]
+        ssh_keypair_password = params[:ssh_keypair_password] ? params[:ssh_keypair_password] : ems.authentication_key(:ssh_keypair)
+        creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => ssh_keypair_password}
+      end
       if ems.supports_authentication?(:auth_key) && params[:service_account]
         creds[:default] = {:auth_key => params[:service_account], :userid => "_"}
       end

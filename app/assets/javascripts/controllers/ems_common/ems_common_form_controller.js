@@ -93,9 +93,15 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.provider_region                 = data.provider_region;
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
+
+        $scope.emsCommonModel.ssh_keypair_userid              = data.ssh_keypair_userid;
+
         $scope.emsCommonModel.service_account                 = data.service_account;
         $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
         $scope.emsCommonModel.subscription                    = data.subscription;
+
+        $scope.emsCommonModel.host_default_vnc_port_start     = data.host_default_vnc_port_start;
+        $scope.emsCommonModel.host_default_vnc_port_end       = data.host_default_vnc_port_end;
 
         if($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
@@ -150,6 +156,12 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
+      return true;
+    } else if(($scope.currentTab == "ssh_keypair" && $scope.emsCommonModel.emstype == "openstack_infra") &&
+      ($scope.emsCommonModel.hostname != '' && $scope.angularForm.hostname.$valid) &&
+      ($scope.emsCommonModel.ssh_keypair_userid != '' && $scope.angularForm.ssh_keypair_userid.$valid &&
+      $scope.emsCommonModel.ssh_keypair_password != '' && $scope.angularForm.ssh_keypair_password.$valid &&
+      $scope.emsCommonModel.ssh_keypair_verify != '' && $scope.angularForm.ssh_keypair_verify.$valid)) {
       return true;
     } else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
       ($scope.currentTab == "default" ||
