@@ -37,8 +37,8 @@ module ManageIQ::Providers
       get_security_groups
       get_networks
       get_network_routers
-      get_floating_ips
       get_network_ports
+      get_floating_ips
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -319,15 +319,15 @@ module ManageIQ::Providers
       address = ip.floating_ip_address
 
       new_result = {
-        :type                 => self.class.floating_ip_type,
-        :ems_ref              => uid,
-        :address              => address,
-        :fixed_ip_address     => ip.fixed_ip_address,
-        :cloud_tenant         => parent_manager_fetch_path(:cloud_tenants, ip.tenant_id),
-        :cloud_network        => @data_index.fetch_path(:cloud_networks, ip.floating_network_id),
+        :type             => self.class.floating_ip_type,
+        :ems_ref          => uid,
+        :address          => address,
+        :fixed_ip_address => ip.fixed_ip_address,
+        :cloud_tenant     => parent_manager_fetch_path(:cloud_tenants, ip.tenant_id),
+        :cloud_network    => @data_index.fetch_path(:cloud_networks, ip.floating_network_id),
         # TODO(lsmola) expose attributes in FOG
-        :status               => ip.attributes['status'],
-        :network_port_ems_ref => ip.port_id
+        :status           => ip.attributes['status'],
+        :network_port     => @data_index.fetch_path(:netowrk_ports, ip.port_id)
       }
 
       return uid, new_result
