@@ -1,49 +1,19 @@
 describe EmsFolder do
   context "#hidden?" do
-    it "when not VMware" do
+    it "when not hidden" do
       folder = FactoryGirl.build(:ems_folder, :name                  => "vm",
+                                              :hidden                => false,
                                               :ext_management_system => FactoryGirl.build(:ems_openstack)
                                 )
       expect(folder).to_not be_hidden
     end
 
-    context "when VMware" do
-      let(:ems) { FactoryGirl.build(:ems_vmware) }
-
-      context "and named Datacenters" do
-        let(:folder) { FactoryGirl.create(:ems_folder, :name => "Datacenters", :ext_management_system => ems) }
-
-        it "and parent is the EMS" do
-          folder.parent = ems
-          expect(folder).to be_hidden
-        end
-
-        it "and parent is not the EMS" do
-          folder.parent = FactoryGirl.create(:ems_folder)
-          expect(folder).to_not be_hidden
-        end
-      end
-
-      ["vm", "host"].each do |name|
-        context "and named #{name}" do
-          let(:folder) { FactoryGirl.create(:ems_folder, :name => name, :ext_management_system => ems) }
-
-          it "and parent is a datacenter" do
-            folder.parent = FactoryGirl.create(:datacenter)
-            expect(folder).to be_hidden
-          end
-
-          it "and parent is not a datacenter" do
-            folder.parent = FactoryGirl.create(:ems_folder)
-            expect(folder).to_not be_hidden
-          end
-        end
-      end
-
-      it "and not named with a hidden name" do
-        folder = FactoryGirl.build(:ems_folder, :ext_management_system => ems)
-        expect(folder).to_not be_hidden
-      end
+    it "when hidden" do
+      folder = FactoryGirl.build(:ems_folder, :name                  => "vm",
+                                              :hidden                => true,
+                                              :ext_management_system => FactoryGirl.build(:ems_vmware)
+                                )
+      expect(folder).to be_hidden
     end
   end
 
