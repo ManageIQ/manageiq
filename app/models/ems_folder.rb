@@ -137,7 +137,7 @@ class EmsFolder < ApplicationRecord
   # TODO: refactor by vendor/hypervisor (currently, this assumes VMware)
   def register_host(host)
     host = Host.extract_objects(host)
-    raise "Host cannot be nil" if host.nil?
+    raise _("Host cannot be nil") if host.nil?
     userid, password = host.auth_user_pwd(:default)
     network_address  = host.address
 

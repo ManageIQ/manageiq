@@ -581,9 +581,15 @@ class Host < ApplicationRecord
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
+    unless ext_management_system
+      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.has_credentials?
+      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
     EmsRefresh.queue_refresh(self)
   end
 
@@ -755,8 +761,10 @@ class Host < ApplicationRecord
   end
 
   def verify_credentials(auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
-    raise MiqException::MiqHostError, "Logon to platform [#{os_image_name}] not supported" if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
+    raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
+    if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
+      raise MiqException::MiqHostError, _("Logon to platform [%{os_name}] not supported") % {:os_name => os_image_name}
+    end
 
     case auth_type.to_s
     when 'remote' then verify_credentials_with_ssh(auth_type, options)
@@ -770,53 +778,61 @@ class Host < ApplicationRecord
   end
 
   def verify_credentials_with_ws(_auth_type = nil, _options = {})
-    raise MiqException::MiqHostError, "Web Services authentication is not supported for hosts of this type."
+    raise MiqException::MiqHostError, _("Web Services authentication is not supported for hosts of this type.")
   end
 
   def verify_credentials_with_ssh(auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
-    raise MiqException::MiqHostError, "Logon to platform [#{os_image_name}] not supported" unless os_image_name =~ /linux_*/
+    raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
+    unless os_image_name =~ /linux_*/
+      raise MiqException::MiqHostError, _("Logon to platform [%{os_name}] not supported") % {:os_name => os_image_name}
+    end
 
     begin
       # connect_ssh logs address and user name(s) being used to make connection
       _log.info "Verifying Host SSH credentials for [#{name}]"
       connect_ssh(options) { |ssu| ssu.exec("uname -a") }
     rescue Net::SSH::AuthenticationFailed
-      raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password."
+      raise MiqException::MiqInvalidCredentialsError, _("Login failed due to a bad username or password.")
     rescue Net::SSH::HostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
     rescue Exception => err
       _log.warn("#{err.inspect}")
-      raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
+      raise MiqException::MiqHostError, _("Unexpected response returned from system, see log for details")
     else
       true
     end
   end
 
   def verify_credentials_with_ipmi(auth_type = nil)
-    raise "No credentials defined for IPMI" if missing_credentials?(auth_type)
+    raise _("No credentials defined for IPMI") if missing_credentials?(auth_type)
 
     require 'miq-ipmi'
     address = ipmi_address
-    raise MiqException::MiqHostError, "IPMI address is not configured for this Host" if address.blank?
+    raise MiqException::MiqHostError, _("IPMI address is not configured for this Host") if address.blank?
 
     if MiqIPMI.is_available?(address)
       ipmi = MiqIPMI.new(address, *auth_user_pwd(auth_type))
-      raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password." unless ipmi.connected?
+      unless ipmi.connected?
+        raise MiqException::MiqInvalidCredentialsError, _("Login failed due to a bad username or password.")
+      end
     else
-      raise MiqException::MiqHostError, "IPMI is not available on this Host"
+      raise MiqException::MiqHostError, _("IPMI is not available on this Host")
     end
   end
 
   def self.discoverByIpRange(starting, ending, options = {:ping => true})
     options[:timeout] ||= 10
     pattern = /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/
-    raise "Starting address is malformed" if (starting =~ pattern).nil?
-    raise "Ending address is malformed" if (ending =~ pattern).nil?
+    raise _("Starting address is malformed") if (starting =~ pattern).nil?
+    raise _("Ending address is malformed") if (ending =~ pattern).nil?
 
     starting.split(".").each_index do|i|
-      raise "IP address octets must be 0 to 255" if starting.split(".")[i].to_i > 255 || ending.split(".")[i].to_i > 255
-      raise "Ending address must be greater than starting address" if starting.split(".")[i].to_i > ending.split(".")[i].to_i
+      if starting.split(".")[i].to_i > 255 || ending.split(".")[i].to_i > 255
+        raise _("IP address octets must be 0 to 255")
+      end
+      if starting.split(".")[i].to_i > ending.split(".")[i].to_i
+        raise _("Ending address must be greater than starting address")
+      end
     end
 
     network_id = starting.split(".")[0..2].join(".")
@@ -849,9 +865,9 @@ class Host < ApplicationRecord
   end
 
   def reset_discoverable_fields
-    raise "Host Not Resettable - No IPMI Address" if ipmi_address.blank?
+    raise _("Host Not Resettable - No IPMI Address") if ipmi_address.blank?
     cred = authentication_type(:ipmi)
-    raise "Host Not Resettable - No IPMI Credentials" if cred.nil?
+    raise _("Host Not Resettable - No IPMI Credentials") if cred.nil?
 
     run_callbacks(:destroy) { false } # Run only the before_destroy callbacks to destroy all associations
     reload
@@ -1269,7 +1285,7 @@ class Host < ApplicationRecord
 
   def set_custom_field(attribute, value)
     return unless is_vmware?
-    raise "Host has no EMS, unable to set custom attribute" unless ext_management_system
+    raise _("Host has no EMS, unable to set custom attribute") unless ext_management_system
 
     ext_management_system.set_custom_field(self, :attribute => attribute, :value => value)
   end
@@ -1279,7 +1295,7 @@ class Host < ApplicationRecord
     return {} unless is_vmware?
 
     begin
-      raise "Host has no EMS, unable to get host statistics" unless ext_management_system
+      raise _("Host has no EMS, unable to get host statistics") unless ext_management_system
 
       @qs = ext_management_system.host_quick_stats(self)
     rescue => err
@@ -1788,7 +1804,7 @@ class Host < ApplicationRecord
       return 0 if values.length == 0
       return (values.compact.sum / values.length)
     else
-      raise "Function #{function} is invalid, should be one of :min, :max, :avg or nil"
+      raise _("Function %{function} is invalid, should be one of :min, :max, :avg or nil") % {:function => function}
     end
   end
 

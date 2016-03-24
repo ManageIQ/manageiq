@@ -21,7 +21,9 @@ class FileDepotFtp < FileDepot
       rescue => err
         msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
         _log.error("#{msg}")
-        raise msg
+        raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
+                                                                                      :uri     => uri,
+                                                                                      :id      => authentication_userid}
       else
         file.update_attributes(
           :state   => "available",
@@ -43,12 +45,12 @@ class FileDepotFtp < FileDepot
 
   def verify_credentials(_auth_type = nil, cred_hash = nil)
     res = with_connection(cred_hash, &:last_response)
-    raise "Depot Settings validation failed" unless res
+    raise _("Depot Settings validation failed") unless res
     res
   end
 
   def with_connection(cred_hash = nil)
-    raise "no block given" unless block_given?
+    raise _("no block given") unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(cred_hash)

@@ -44,16 +44,16 @@ class DialogField < ApplicationRecord
   ]
 
   DIALOG_FIELD_TYPES = {
-    "DialogFieldTextBox"         => "Text Box",
-    "DialogFieldTextAreaBox"     => "Text Area Box",
-    "DialogFieldCheckBox"        => "Check Box",
-    "DialogFieldDropDownList"    => "Drop Down List",
+    "DialogFieldTextBox"         => _("Text Box"),
+    "DialogFieldTextAreaBox"     => _("Text Area Box"),
+    "DialogFieldCheckBox"        => _("Check Box"),
+    "DialogFieldDropDownList"    => _("Drop Down List"),
     # Commented out next to field types until they can be implemented
     #    "DialogFieldButton" => "Button",
-    "DialogFieldTagControl"      => "Tag Control",
-    "DialogFieldDateControl"     => "Date Control",
-    "DialogFieldDateTimeControl" => "Date/Time Control",
-    "DialogFieldRadioButton"     => "Radio Button"
+    "DialogFieldTagControl"      => _("Tag Control"),
+    "DialogFieldDateControl"     => _("Date Control"),
+    "DialogFieldDateTimeControl" => _("Date/Time Control"),
+    "DialogFieldRadioButton"     => _("Radio Button")
   }
 
   DIALOG_FIELD_DYNAMIC_CLASSES = %w(
