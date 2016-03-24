@@ -37,9 +37,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     return queue_signal(:abort_job, "no image found", "error") unless image
     return queue_signal(:abort_job, "cannont analyze non-docker images", "error") unless image.docker_id
 
-    ems_configs = VMDB::Config.new('vmdb').config[:ems]
+    @ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
-    namespace = ems_configs.fetch_path(:ems_kubernetes, :miq_namespace)
+    namespace = @ems_configs.fetch_path(:ems_kubernetes, :miq_namespace)
     namespace = INSPECTOR_NAMESPACE if namespace.blank?
 
     update!(:options => options.merge(
@@ -302,6 +302,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    'docker.io/openshift/image-inspector:v1.0.z'
+    fq_inspector_image = @ems_configs.fetch_path(:ems_kubernetes, :image_inspector)
+    return fq_inspector_image unless fq_inspector_image.blank?
+    _log.warn('image_inspector not explicitly configured.')
+    'image-inspector:latest'
   end
 end

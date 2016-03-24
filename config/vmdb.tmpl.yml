@@ -61,6 +61,7 @@ ems:
       :read_timeout: 1.hour
   ems_kubernetes:
     :miq_namespace: management-infra
+    :image_inspector: 'docker.io/openshift/image-inspector:v1.0.z'
 ems_events:
   history:
     :keep_ems_events: 6.months
