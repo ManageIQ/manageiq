@@ -19,12 +19,12 @@ class VmCloudController < ApplicationController
       :url  => "/vm_cloud/resize"
     ) unless @explorer
     @flavors = {}
-    if !@record.ext_management_system.nil?
+    unless @record.ext_management_system.nil?
       @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
     end
     @edit = {}
     @edit[:new] ||= {}
-    if !@record.flavor.nil?
+    unless @record.flavor.nil?
       @edit[:new][:flavor] = @record.flavor.id
     end
     @edit[:key] = "vm_resize__#{@record.id}"
@@ -34,7 +34,7 @@ class VmCloudController < ApplicationController
     @in_a_form = true
     @refresh_partial = "vm_common/resize"
   end
-  alias_method :instance_resize, :resize
+  alias instance_resize resize
 
   def resize_vm
     assert_privileges("instance_resize")

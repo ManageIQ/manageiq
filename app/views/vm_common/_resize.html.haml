@@ -1,5 +1,5 @@
 #main_div
-  - url = url_for(:action => 'resize_field_changed', :id => "#{@record.id}")
+  - url = url_for(:action => 'resize_field_changed', :id => @record.id.to_s)
 
   = render :partial => "layouts/flash_msg"
 
@@ -17,6 +17,6 @@
       .col-md-8
         = select_tag('flavor',
             options_for_select(@flavors.sort),
-            :multiple              => false,
-            :id                    => "flavor",
-            "data-miq_observe"     => {:interval => '.5', :url => url}.to_json)
+            :multiple          => false,
+            :id                => "flavor",
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
