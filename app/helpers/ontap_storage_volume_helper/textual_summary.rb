@@ -112,7 +112,7 @@ module OntapStorageVolumeHelper::TextualSummary
     ss   = @record.storage_system
     h     = {:label => label, :image => "ontap_storage_system", :value => ss.evm_display_name}
     if role_allows(:feature => "ontap_storage_system_show")
-      h[:title] = _("Show all %{label} %{name}") % {:label => label, :name => ss.evm_display_name}
+      h[:title] = _("Show all %{label} '%{name}'") % {:label => label, :name => ss.evm_display_name}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
     end
     h

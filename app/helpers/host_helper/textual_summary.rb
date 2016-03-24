@@ -396,7 +396,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:groups)
     h = {:label => _("Groups"), :image => "group", :value => num}
     if num > 0
-      h[:title] = _("Show the Group defined on this %{title}", "Show the Groups defined on this %{title}", num) %
+      h[:title] = n_("Show the Group defined on this %{title}", "Show the Groups defined on this %{title}", num) %
         {:title => host_title}
       h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller.controller_name)
     end
