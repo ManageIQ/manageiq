@@ -1,5 +1,5 @@
 class VmCloudController < ApplicationController
-  include VmCommon        # common methods for vm controllers
+  include VmCommon # common methods for vm controllers
   include VmShowMixin
 
   before_action :check_privileges
@@ -44,19 +44,10 @@ class VmCloudController < ApplicationController
 
     case params[:button]
     when "cancel"
-      if @edit[:explorer]
-        add_flash(_("Reconfigure of %{model} \"%{name}\" was cancelled by the user") % {
-          :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
-        @record = @sb[:action] = nil
-        replace_right_cell
-      else
-        add_flash(_("Reconfigure of %{model} \"%{name}\" was cancelled by the user") % {
-          :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
-        session[:flash_msgs] = @flash_array.dup
-        render :update do |page|
-          page.redirect_to(previous_breadcrumb_url)
-        end
-      end
+      add_flash(_("Reconfigure of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+      @record = @sb[:action] = nil
+      replace_right_cell
     when "submit"
       valid, details = @record.validate_resize
       if valid
@@ -82,15 +73,8 @@ class VmCloudController < ApplicationController
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
-      if @edit[:explorer]
-        @sb[:action] = nil
-        replace_right_cell
-      else
-        session[:flash_msgs] = @flash_array.dup
-        render :update do |page|
-          page.redirect_to(previous_breadcrumb_url)
-        end
-      end
+      @sb[:action] = nil
+      replace_right_cell
     end
   end
 
