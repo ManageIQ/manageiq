@@ -6,7 +6,7 @@ describe MiqTaskController do
       allow(controller).to receive_messages(:session => user)
     end
 
-    describe "My VM Analysis Tasks" do
+    describe "My VM and Container Analysis Tasks" do
       before do
         controller.instance_variable_set(:@tabform, "tasks_1")
         @opts = {:ok           => true,
@@ -451,7 +451,7 @@ describe MiqTaskController do
       end
     end
 
-    describe "All VM Analysis Tasks" do
+    describe "All VM and Container Analysis Tasks" do
       before do
         controller.instance_variable_set(:@tabform, "tasks_3")
         @opts = {:ok           => true,
