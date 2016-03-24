@@ -7,7 +7,7 @@ describe FloatingIpController do
     setup_zone
   end
 
-  %w(openstack).each do |t|
+  %w(openstack amazon).each do |t|
     context "for #{t}" do
       before :each do
         @floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym, :address => "192.0.2.1")
