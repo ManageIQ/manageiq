@@ -692,23 +692,15 @@ class ChargebackController < ApplicationController
     elsif @edit[:new][:cbshow_typ]
       get_cis_all
     end
-    if @edit[:new][:cbshow_typ] && @edit[:new][:cbshow_typ].ends_with?("-tags") && @edit[:cb_assign][:tags]
-      @edit[:current_assignment].each do |el|
-        if el[:object]
-          @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:object]["id"]}"] = el[:cb_rate]["id"].to_s
-        elsif el[:tag]
-          @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:tag][0]["id"]}"] = el[:cb_rate]["id"].to_s
-        end
-      end
-    else
-      @edit[:current_assignment].each do |el|
-        if el[:object]
-          @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:object]["id"]}"] = el[:cb_rate]["id"].to_s
-        elsif el[:tag]
-          @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:tag][0]["id"]}"] = el[:cb_rate]["id"].to_s
-        end
+
+    @edit[:current_assignment].each do |el|
+      if el[:object]
+        @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:object]["id"]}"] = el[:cb_rate]["id"].to_s
+      elsif el[:tag]
+        @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:tag][0]["id"]}"] = el[:cb_rate]["id"].to_s
       end
     end
+
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
     @in_a_form = true
