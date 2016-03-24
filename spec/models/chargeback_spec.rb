@@ -181,6 +181,51 @@ describe Chargeback do
     end
   end
 
+  context "Report a chargeback of a tenant" do
+    before do
+      @tenant = FactoryGirl.create(:tenant)
+      @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
+      @tenant_child_empty = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
+      @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant")
+      ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
+        @vm_tenant.metric_rollups <<
+          FactoryGirl.create(:metric_rollup_vm_hr,
+                             :timestamp                         => t,
+                             :cpu_usagemhz_rate_average         => @cpu_usagemhz_rate,
+                             :derived_vm_numvcpus               => @cpu_count,
+                             :derived_memory_available          => @memory_available,
+                             :derived_memory_used               => @memory_used,
+                             :disk_usage_rate_average           => @disk_usage_rate,
+                             :net_usage_rate_average            => @net_usage_rate,
+                             :derived_vm_used_disk_storage      => @vm_used_disk_storage.gigabytes,
+                             :derived_vm_allocated_disk_storage => @vm_allocated_disk_storage.gigabytes,
+                             :tag_names                         => "environment/prod",
+                             :parent_host_id                    => @host1.id,
+                             :parent_ems_cluster_id             => @ems_cluster.id,
+                             :parent_ems_id                     => @ems.id,
+                             :parent_storage_id                 => @storage.id,
+                             :resource_name                     => @vm_tenant.name,
+                            )
+      end
+      @options_tenant = {:interval_size       => 1,
+                         :end_interval_offset => 0,
+                         :tag                 => "/managed/environment/prod",
+                         :ext_options         => {:tz => "Pacific Time (US & Canada)"},
+                         :tenant_id           => @tenant_child.id
+                        }
+    end
+
+    subject { Chargeback.build_results_for_report_chargeback(@options_tenant).first.first }
+
+    it "report a chargeback of a subtenant" do
+      FactoryGirl.create(:chargeback_rate_detail_cpu_allocated,
+                         :chargeback_rate_id => @cbr.id,
+                         :per_time           => "hourly",
+                         :rate               => @count_hourly_rate.to_s,
+                        )
+      expect(subject.vm_name).to eq(@vm_tenant.name)
+    end
+  end
   context "Monthly" do
     before  do
       @options[:interval] = "monthly"
