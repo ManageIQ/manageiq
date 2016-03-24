@@ -121,7 +121,7 @@ module VmCloudHelper::TextualSummary
   def textual_architecture
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
     bitness = @record.hardware.try(:bitness)
-    {:label => _("Architecture "), :value => bitness.nil? ? "" : "#{bitness} bit"}
+    {:label => _("Architecture"), :value => bitness.nil? ? "" : "#{bitness} bit"}
   end
 
   def textual_advanced_settings
@@ -429,7 +429,7 @@ module VmCloudHelper::TextualSummary
     else
       # TODO: Why does this date differ in style from the compliance one?
       h[:value] = _("From %{time} Ago") % {:time => time_ago_in_words(date.in_time_zone(Time.zone)).titleize}
-      h[:title] = n_("Show Running Process on this VM", "Show Running Processes on this VM", num)
+      h[:title] = _("Show Running Processes on this VM")
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'processes', :id => @record)
     end

@@ -143,7 +143,7 @@ module EmsInfraHelper::TextualSummary
 
   def textual_authentications
     authentications = @ems.authentication_userid_passwords
-    return [{:label => _("Default Authentication"), :title => _("None"), :value => _("None")}] if authentications.blank?
+    return [{:label => _("Default Authentication"), :title => t = _("None"), :value => t}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
