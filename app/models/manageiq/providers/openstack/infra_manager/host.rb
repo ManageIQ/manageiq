@@ -16,6 +16,8 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   has_many :floating_ips
 
+  include_concern 'Operations'
+
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
   # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
   # cloud tenant with rails relations

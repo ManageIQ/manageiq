@@ -206,6 +206,7 @@ module ManageIQ::Providers
             :connection_state => connection_state,
             :power_state      => connection_state != "connected" ? "off" : (maintenance_mode.to_s.downcase == "true" ? "maintenance" : "on"),
             :admin_disabled   => config["adminDisabled"].to_s.downcase == "true",
+            :maintenance      => maintenance_mode.to_s.downcase == "true",
             :asset_tag        => asset_tag,
             :service_tag      => service_tag,
             :failover         => failover,

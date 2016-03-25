@@ -32,6 +32,39 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     end
   end
 
+  it "will verify maintenance mode" do
+    # We need VCR to match requests differently here because fog adds a dynamic
+    #   query param to avoid HTTP caching - ignore_awful_caching##########
+    #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
+    VCR.use_cassette("#{described_class.name.underscore}_rhos_juno_maintenance",
+                     :match_requests_on => [:method, :host, :path]) do
+      @ems.reload
+      @ems.reset_openstack_handle
+      EmsRefresh.refresh(@ems)
+      EmsRefresh.refresh(@ems.network_manager)
+      @ems.reload
+
+      @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(NovaCompute)') }
+
+      expect(@host.maintenance).to eq(false)
+      expect(@host.maintenance_reason).to eq(nil)
+
+      @host.set_node_maintenance
+      EmsRefresh.refresh(@ems)
+      @ems.reload
+      @host.reload
+      expect(@host.maintenance).to eq(true)
+      expect(@host.maintenance_reason).to eq("CFscaledown")
+
+      @host.unset_node_maintenance
+      EmsRefresh.refresh(@ems)
+      @ems.reload
+      @host.reload
+      expect(@host.maintenance).to eq(false)
+      expect(@host.maintenance_reason).to eq(nil)
+    end
+  end
+
   def assert_table_counts
     expect(ExtManagementSystem.count).to         eq 2
     expect(EmsCluster.count).to                  be > 0
@@ -98,13 +131,15 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(@host.ems_cluster).not_to be nil
 
     expect(@host).to have_attributes(
-      :ipmi_address     => nil,
-      :vmm_vendor       => "redhat",
-      :vmm_version      => nil,
-      :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
-      :power_state      => "on",
-      :connection_state => "connected",
-      :service_tag      => nil,
+      :ipmi_address       => nil,
+      :vmm_vendor         => "redhat",
+      :vmm_version        => nil,
+      :vmm_product        => "rhel (No hypervisor, Host Type is Controller)",
+      :power_state        => "on",
+      :connection_state   => "connected",
+      :service_tag        => nil,
+      :maintenance        => false,
+      :maintenance_reason => nil,
     )
 
     expect(@host.private_networks.count).to be > 0
