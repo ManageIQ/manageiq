@@ -153,20 +153,21 @@ module VimPerformanceAnalysis
               count_hash[type] = {:total => 0}
               next
             end
-            avail, usage = compute_offers(compute_perf, ts, options[:target_options][type], type, c)
+            avail, usage = offers(compute_perf, ts, options[:target_options][type], type, c)
             count_hash[type] = {:total => can_fit(avail, usage, vm_needs[type])}
           end
 
           unless vm_needs[:storage].nil? || options[:target_options][:storage].nil?
             details = []
             total   = 0
+            type    = :storage
             storages_for_compute_target(c).each do |s|
-              avail, usage = storage_offers(compute_perf, ts, options[:target_options][:storage], s)
-              fits = can_fit(avail, usage, vm_needs[:storage])
+              avail, usage = offers(compute_perf, ts, options[:target_options][type], type, s)
+              fits = can_fit(avail, usage, vm_needs[type])
               details << {s.id => fits}
               total += fits unless fits.nil?
             end
-            count_hash[:storage] = {:total => total, :details => details}
+            count_hash[type] = {:total => total, :details => details}
           end
         end
         count_hash[:total] = {:total => count_hash.each_value.pluck(:total).compact.max}
@@ -373,14 +374,6 @@ module VimPerformanceAnalysis
       end
       usage = (usage > reserve) ? usage : reserve # Take the greater of usage or total reserve of child VMs
       [avail, usage]
-    end
-
-    def compute_offers(perf, ts, options, type, target)
-      offers(perf, ts, options, type, target)
-    end
-
-    def storage_offers(perf, ts, options, storage)
-      offers(perf, ts, options, :storage, storage)
     end
 
     def can_fit(avail, usage, need)
