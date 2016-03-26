@@ -74,6 +74,19 @@ module Metric::Helper
     (start_time..end_time).step_value(1.day).collect! { |t| t.in_time_zone(tz).beginning_of_day.utc.iso8601 }
   end
 
+  # @option range :start_date start of the range (if not present, sets to end_date - days)
+  # @option range :end_date end of time range (default: now)
+  # @option range :days number of days for range (default: 20)
+  # @return Range<DateTime,DateTime>
+  def self.time_range_from_hash(range)
+    return range unless range.kind_of?(Hash)
+    end_time = (range[:end_date] || Time.now.utc).utc
+    days = range[:days] || 20
+    start_time = (range[:start_date] || (end_time - days.days)).utc
+
+    start_time..end_time
+  end
+
   def self.days_from_range_by_time_profile(start_time, end_time = nil)
     TimeProfile.rollup_daily_metrics.each_with_object({}) do |tp, h|
       days = days_from_range(start_time, end_time, tp.tz_or_default)
