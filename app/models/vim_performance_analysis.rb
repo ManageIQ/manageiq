@@ -280,12 +280,10 @@ module VimPerformanceAnalysis
         vm_perf    = VimPerformanceAnalysis.get_daily_perf(@vm, start_time, end_time, options[:ext_options])
       end
 
-      @vm_needs = {}
       vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
-      [:cpu, :vcpus, :memory, :storage].each do |type|
-        @vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
+      [:cpu, :vcpus, :memory, :storage].each_with_object({}) do |type, vm_needs|
+        vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
       end
-      @vm_needs
     end
 
     def vm_consumes(perf, ts, options, type, vm = @vm)
