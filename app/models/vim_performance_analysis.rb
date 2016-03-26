@@ -140,8 +140,7 @@ module VimPerformanceAnalysis
         hash = { :target => c, :count => count_hash }
 
         need_compute_perf = VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
-        start_time, end_time = get_time_range(options[:range])
-        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, start_time, end_time, options[:ext_options]) if need_compute_perf
+        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options]) if need_compute_perf
         unless need_compute_perf && compute_perf.blank?
           ts = compute_perf.last.timestamp if compute_perf
 
@@ -272,12 +271,10 @@ module VimPerformanceAnalysis
 
       vm_perf = nil
       if VimPerformanceAnalysis.needs_perf_data?(options[:vm_options])
-        # Get VM performance data
-        start_time, end_time = get_time_range(options[:range])
         # Set :only_cols for VM daily requested cols for better performance
         options[:ext_options] ||= {}
         options[:ext_options][:only_cols] = [:cpu, :vcpus, :memory, :storage].collect { |t| options[:vm_options][t][:metric] if options[:vm_options][t] }.compact
-        vm_perf    = VimPerformanceAnalysis.get_daily_perf(@vm, start_time, end_time, options[:ext_options])
+        vm_perf    = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options])
       end
 
       vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
@@ -428,21 +425,6 @@ module VimPerformanceAnalysis
       end
       {:recomendations => [hash], :errors => nil}
     end
-
-    def get_time_range(range)
-      ##########################################################
-      #   :range        => Trend calculation options
-      #     :days         => Number of days back from daily_date
-      #     :end_date     => Ending date
-      ##########################################################
-      range[:days] ||= 20
-      range[:end_date] ||= Time.now
-
-      start_time = (range[:end_date].utc - range[:days].days)
-      end_time   = Time.now.utc
-
-      return start_time, end_time
-    end
   end # class Planning
 
   # Helper methods
@@ -457,11 +439,6 @@ module VimPerformanceAnalysis
     #   :start_date  => Starting date
     #   :end_date    => Ending date
     #   :conditions  => ActiveRecord find conditions
-
-    options[:end_date] ||= Time.now.utc
-    start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
-    end_time   = options[:end_date].utc
-
     rel = if interval_name == "daily"
             VimPerformanceDaily.find_entries(options[:ext_options])
           else
@@ -472,7 +449,7 @@ module VimPerformanceAnalysis
     rel = rel.where(options[:conditions]) if options[:conditions]
 
     rel
-      .where(:timestamp => start_time..end_time, :resource => obj)
+      .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
       .order("timestamp")
       .select(options[:select])
       .to_a
@@ -496,10 +473,7 @@ module VimPerformanceAnalysis
             klass.where(:capture_interval_name => interval_name)
           end
 
-    start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
-    end_time   = options[:end_date].utc
-    rel        = rel.where(:timestamp => start_time..end_time)
-    rel        = rel.where(options[:conditions]) if options[:conditions]
+    rel = rel.where(options[:conditions]).where(:timestamp => Metric::Helper.time_range_from_hash(options))
 
     case obj
     when MiqEnterprise, MiqRegion then
@@ -632,9 +606,9 @@ module VimPerformanceAnalysis
     slope_arr
   end
 
-  def self.get_daily_perf(obj, start_time, end_time, options)
-    VimPerformanceDaily.find_entries(options)
-                       .where(:resource => obj, :timestamp => (start_time.utc)..(end_time.utc)).order("timestamp")
+  def self.get_daily_perf(obj, range, options)
+    VimPerformanceDaily.find_entries(options).order("timestamp")
+                       .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 
   def self.calc_trend_value_at_timestamp(recs, attr, timestamp)
