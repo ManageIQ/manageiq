@@ -75,6 +75,37 @@ describe ReportController do
           expect(new_widget.errors.count).not_to eq(0)
         end
       end
+
+      context "rss widget" do
+        before do
+          RssFeed.seed
+          controller.instance_variable_set(:@sb, :wtype => 'rf') # RSS Feed widget
+        end
+
+        let(:rss_feed) { RssFeed.first }
+        let(:default_row_count_value) { 5 }
+
+        it 'creates internal rss widget' do
+          controller.instance_variable_set(:@edit, :schedule => miq_schedule, :new => {})
+          controller.instance_variable_set(:@_params, :button      => 'add',
+                                                      :start_min   => '10',
+                                                      :start_hour  => '00',
+                                                      :start_date  => '11/13/2015',
+                                                      :timer_typ   => 'Hourly',
+                                                      :title       => 'NewRssWidget',
+                                                      :description => 'All the news',
+                                                      :feed_type   => 'internal',
+                                                      :row_count   => default_row_count_value,
+                                                      :rss_feed    => rss_feed.id,
+                                          )
+          controller.send(:widget_new)
+          expect(MiqWidget.count).to eq(@previous_count_of_widgets + 1)
+          expect(new_widget.errors.count).to eq(0)
+          expect(new_widget.title).to eq("NewRssWidget")
+          expect(new_widget.resource.id).to eq(rss_feed.id)
+          expect(new_widget.options).to eq(:row_count => default_row_count_value)
+        end
+      end
     end
   end
 end
