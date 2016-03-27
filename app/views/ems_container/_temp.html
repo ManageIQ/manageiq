@@ -1,0 +1,17 @@
+<div ng-app="providersModule" ng-controller="deployProviderController" class="container-fluid container-tiles-pf containers-dashboard miq-dashboard-view"/>
+<div miq-modal class="wizard-miq" modal-title="Deploy New Provider" visible="showDeploymentWizard" on-cancel="cancelDeploymentWizard()" on-hide="cancelDeploymentWizard()" modal-size="large">
+    <div class="modal fade" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" ng-class="{'modal-lg': modalSize === 'large', 'modal-sm': modalSize === 'small'}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="onCancel()" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{modalTitle}}</h4>
+                </div>
+                <div class="modal-body" ng-transclude>
+
+
+                 </div>
+            </div>
+        </div>
+    </div>'
+</div>

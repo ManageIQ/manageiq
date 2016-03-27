@@ -1,0 +1,32 @@
+
+<h3>Select CDN configuration</h3>
+<form class="form-horizontal">
+  <div class="miq-form-no-label">
+    <label class="radio">
+      <input type="radio" ng-model="data.cdnConfigType" value="satellite">Satellite</input>
+    </label>
+    <div class="sub-group">
+      <form class="form-horizontal">
+        <div pf-form-group pf-label="URL" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+          <input id="satellite-url" name="name" ng-model="data.satelliteUrl" type="text" required ng-disabled="data.cdnConfigType != 'satellite'"/>
+        </div>
+      </form>
+    </div>
+    <label class="radio">
+      <input type="radio" ng-model="data.cdnConfigType" value="rhn">Create new VMs on provider</input>
+    </label>
+    <div class="sub-group">
+      <form class="form-horizontal">
+        <div pf-form-group pf-label="Username" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+          <input id="rhn-user-name" name="name" ng-model="data.rhnUsername" type="text" required ng-disabled="data.cdnConfigType != 'rhn'"/>
+        </div>
+        <div pf-form-group pf-label="Password" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+          <input id="rhn-password" name="name" ng-model="data.rhnPassword" type="password" required ng-disabled="data.cdnConfigType != 'rhn'"/>
+        </div>
+        <div pf-form-group pf-label="Pool ID" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+          <input id="rhn-pool" name="name" ng-model="data.rhnPool" type="text" required ng-disabled="data.cdnConfigType != 'rhn'"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</form>

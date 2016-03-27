@@ -16,6 +16,11 @@
 //= require numeral
 //= require miq_api
 //= require miq_angular_application
+//= require controllers/deployment/wizard-module
+//= require controllers/deployment/wizard-directive
+//= require controllers/deployment/wizard-buttons
+//= require controllers/deployment/wizard-step-directive
+//= require controllers/deployment/wizard-substep-directive
 //= require_tree ./directives/
 //= require_tree ./services/
 //= require_tree ./controllers/

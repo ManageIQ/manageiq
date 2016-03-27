@@ -1,0 +1,40 @@
+<form class="form-horizontal">
+  <div pf-form-group pf-label="Name" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+    <input id="name" name="name" ng-model="data.providerName" type="text" ng-change="updateProviderName()" required/>
+  </div>
+  <div pf-form-group pf-label="Type" required pf-label-class="miq-input-label-class" pf-input-class="miq-radio-input-class">
+    <label class="radio">
+      <input type="radio" ng-model="data.providerType" value="atomic">Atomic</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.providerType" value="openshift">OpenShift</input>
+    </label>
+  </div>
+</form>
+<h3>Provider to provision on</h3>
+<form class="form-horizontal">
+  <div class="miq-form-no-label">
+    <label class="radio">
+      <input type="radio" ng-model="data.provisionOn" value="existingVms">Use existing VMs from an existing provider</input>
+    </label>
+    <div class="form-group  sub-group">
+      <select pf-select ng-model="data.existingProviderId" value="data.existingProviderId" id="exitingProviderType" ng-disabled="data.provisionOn != 'existingVms'">
+        <option ng-repeat="provider in existingProviders" value="provider.id">{{provider.name}}</option>
+      </select>
+    </div>
+    <label class="radio">
+      <input type="radio" ng-model="data.provisionOn" value="newVms">Create new VMs on provider</input>
+    </label>
+    <div class="form-group sub-group">
+      <select pf-select ng-model="data.newProviderType" id="newProviderType" ng-disabled="data.provisionOn != 'newVms'">
+        <option value="rhev">Existing Provider 1</option>
+        <option value="apple">Existing Provider 2</option>
+        <option value="banana">Existing Provider 3</option>
+      </select>
+      <a ng-class="{disabled: data.provisionOn != 'newVms'}">+ Create new provider</a>
+    </div>
+    <label class="radio">
+      <input type="radio" ng-model="data.provisionOn" value="noProvider">Specify a list of machines to deploy on (No existing provider)</input>
+    </label>
+  </div>
+</form>

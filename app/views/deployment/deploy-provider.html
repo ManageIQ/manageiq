@@ -1,0 +1,45 @@
+<div ng-controller="containers.deployProviderController">
+  <div miq-modal class="wizard-miq" modal-title="Deploy New Provider" visible="showDeploymentWizard" on-cancel="cancelDeploymentWizard()" on-hide="cancelDeploymentWizard()" modal-size="large">
+    <div ng-if="showDeploymentWizard === true"> <!-- this is done to reset the wizard each time it is shown -->
+      <div miq-wizard class="miq-deploy-provider-wizard" on-finish="finishedWizard()" on-cancel="cancelWizard()" content-height="455px" next-title="nextButtonTitle"
+      next-callback="nextCallback" back-callback="backCallback" wizard-done="deployComplete || deployInProgress">
+        <div miq-wizard-step step-title="Deployment Details" substeps="true" step-id="details">
+          <div miq-wizard-substep step-title="General"  next-enabled="deploymentDetailsGeneralComplete" step-id="details-general">
+            <div ng-include="'modules/containers/providers/deploy-provider-details-general.html'"></div>
+          </div>
+          <div miq-wizard-substep step-title="Masters & Nodes" step-id="details-nodes">
+            <div ng-if="data.provisionOn == 'existingVms'" ng-include="'modules/containers/providers/deploy-provider-details-existing-vms.html'"></div>
+            <div ng-if="data.provisionOn == 'newVms'">
+              You chose Create new VMs on provider.
+            </div>
+            <div ng-if="data.provisionOn == 'noProvider'">
+              You chose Specify a list of machnines to deploy on / No existing provider.
+            </div>
+            <div ng-if="data.provisionOn == 'cdnSatelliteRepo'">
+              You chose CDN/Satellite repo.
+            </div>
+          </div>
+          <div miq-wizard-substep step-title="CDN Channel" step-id="details-channel">
+            <div ng-include="'modules/containers/providers/deploy-provider-details-cdn-channel.html'"></div>
+          </div>
+        </div>
+        <div miq-wizard-step step-title="Configuration" substeps="true" step-id="configuration">
+          <div miq-wizard-substep step-title="First" step-id="config-first">
+            <p>You have continued to the first substep!</p>
+          </div>
+          <div miq-wizard-substep step-title="Second" step-id="config-second">
+            <p>You have continued to the second substep!</p>
+          </div>
+          <div miq-wizard-substep step-title="Third" step-id="config-third">
+            <p>You have continued to the third substep!</p>
+          </div>
+        </div>
+        <div miq-wizard-step step-title="Review" step-id="review">
+          <p ng-if="!deployInProgress && !deployComplete">Review all your choices then hit Deploy to submit.</p>
+          <p ng-if="deployInProgress">Please wait while the deployment processes...</p>
+          <p ng-if="deployComplete">Deployment succeeded!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
