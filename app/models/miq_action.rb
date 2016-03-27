@@ -848,6 +848,42 @@ class MiqAction < ApplicationRecord
     rec.scan
   end
 
+  def action_container_image_annotate_deny_execution(action, rec, inputs)
+    error_prefix = "MIQ(#{__method__}): Unable to perform action [#{action.description}], "
+    unless rec.kind_of?(ContainerImage)
+      MiqPolicy.logger.error("#{error_prefix} object [#{rec.inspect}] is not a Container Image")
+      return
+    end
+
+    unless rec.try(:ext_management_system).kind_of?(ManageIQ::Providers::Openshift::ContainerManagerMixin)
+      MiqPolicy.logger.error("#{error_prefix} only applicable for OpenShift Providers")
+      return
+    end
+
+    unless rec.digest.present?
+      MiqPolicy.logger.error("#{error_prefix} ContainerImage is not linked with an OpenShift image")
+      return
+    end
+
+    if inputs[:synchronous]
+      MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}] for event "\
+                            "[#{inputs[:event].description}]")
+      rec.annotate_deny_execution(inputs[:policy].name)
+    else
+      MiqPolicy.logger.info("MIQ(#{__method__}): Queueing [#{action.description}] for event "\
+                            "[#{inputs[:event].description}]")
+      MiqQueue.put(
+        :class_name  => rec.class.name,
+        :method_name => "annotate_deny_execution",
+        :args        => inputs[:policy].name,
+        :instance_id => rec.id,
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :zone        => rec.my_zone,
+        :role        => "ems_operations"
+      )
+    end
+  end
+
   def action_host_analyze(action, rec, inputs)
     action_method = "action_host_analyze"
     if inputs[:event].name == "request_host_scan"
