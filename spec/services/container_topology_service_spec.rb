@@ -19,7 +19,7 @@ describe ContainerTopologyService do
     subject { container_topology_service.build_topology }
 
     it "topology contains only the expected keys" do
-      expect(subject.keys).to match_array([:items, :kinds, :relations])
+      expect(subject.keys).to match_array([:items, :kinds, :relations, :icons])
     end
 
     let(:container) { Container.create(:name => "ruby-example", :ems_ref => long_id, :state => 'running') }
