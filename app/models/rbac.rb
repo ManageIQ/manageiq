@@ -104,10 +104,8 @@ module Rbac
     nil
   end
 
-  def self.rbac_instance(obj)
-    return obj                if apply_rbac_to_class?(obj.class)
-    return obj.resource       if obj.kind_of?(MetricRollup) || obj.kind_of?(Metric)
-    nil
+  def self.pluck_ids(targets)
+    targets.pluck(:id) if targets
   end
 
   def self.get_self_service_objects(user, miq_group, klass)
@@ -118,23 +116,16 @@ module Rbac
     miq_group = nil if user && miq_group.limited_self_service?
 
     # Get the list of objects that are owned by the user or their LDAP group
-    klass.user_or_group_owned(user, miq_group).select(minimum_columns_for(klass))
-  end
-
-  # @return nil if no objects are owned by self service or user not a selfservice user
-  # @return [Array<Integer>, nil] object_ids owned by a user or group
-  def self.get_self_service_object_ids(user, miq_group, klass)
-    targets = get_self_service_objects(user, miq_group, klass)
-    targets.reorder(nil).pluck(:id) if targets
+    klass.user_or_group_owned(user, miq_group).except(:order)
   end
 
   def self.calc_filtered_ids(scope, user_filters, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
-    u_filtered_ids = get_self_service_object_ids(user, miq_group, klass)
+    u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
     m_filtered_ids = get_managed_filter_object_ids(scope, user_filters['managed'])
-    d_filtered_ids = ids_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
-                                         :user => user, :miq_group => miq_group)
+    d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
+                                                       :user => user, :miq_group => miq_group))
 
     filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
     [filtered_ids, u_filtered_ids]
@@ -341,12 +332,6 @@ module Rbac
   # @option options :miq_group [MiqGroup]
   def self.find_descendants(scope, options)
     filtered(scope, options)
-  end
-
-  def self.ids_via_descendants(klass, descendant_types, options)
-    objects = matches_via_descendants(klass, descendant_types, options)
-    return nil if objects.blank?
-    objects.collect(&:id)
   end
 
   def self.matches_via_descendants(klass, descendant_klass, options)
