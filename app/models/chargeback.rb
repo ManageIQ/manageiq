@@ -80,30 +80,24 @@ class Chargeback < ActsAsArModel
     vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
     options[:ext_options] ||= {}
 
+    base_rollup = MetricRollup.includes(
+      :resource           => :hardware,
+      :parent_host        => :tags,
+      :parent_ems_cluster => :tags,
+      :parent_storage     => :tags,
+      :parent_ems         => :tags)
+                              .select(*Metric::BASE_COLS).order("resource_id, timestamp")
     perf_cols = MetricRollup.attribute_names
-    options[:ext_options][:only_cols] = Metric::BASE_COLS
-    rates = ChargebackRate.where(:default => true)
-    rates.each do |rate|
-      options[:ext_options][:only_cols] += rate.chargeback_rate_details.collect do |r|
-        r.metric if perf_cols.include?(r.metric.to_s)
-      end.compact
+    rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
+      rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
     end
+    base_rollup = base_rollup.select(*rate_cols)
 
     timerange = get_report_time_range(options, interval, tz)
     data = {}
 
     timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      recs = MetricRollup
-             .where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
-             .includes(
-               :resource           => :hardware,
-               :parent_host        => :tags,
-               :parent_ems_cluster => :tags,
-               :parent_storage     => :tags,
-               :parent_ems         => :tags,
-             )
-             .select(*options[:ext_options][:only_cols])
-             .order("resource_id, timestamp")
+      recs = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
       if options[:tag] && (report_user.nil? || !report_user.self_service?)
         recs = recs.where(:resource_type => "VmOrTemplate")
                    .where.not(:resource_id => nil)
