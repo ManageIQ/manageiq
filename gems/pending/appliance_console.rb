@@ -42,39 +42,11 @@ require 'appliance_console/errors'
 
 VERSION_FILE  = RAILS_ROOT.join("VERSION")
 LOGFILE       = RAILS_ROOT.join("log", "appliance_console.log")
-DB_RESTORE_FILE = "/tmp/evm_db.backup"
+DB_RESTORE_FILE = "/tmp/evm_db.backup".freeze
 
 AS_OPTIONS = I18n.t("advanced_settings.menu_order").collect do |item|
   I18n.t("advanced_settings.#{item}")
 end
-
-CANCEL        = "Cancel"
-
-# Restore database choices
-RESTORE_LOCAL   = "Local file"
-RESTORE_NFS     = "Network File System (nfs)"
-RESTORE_SMB     = "Samba (smb)"
-RESTORE_OPTIONS = [RESTORE_LOCAL, RESTORE_NFS, RESTORE_SMB, CANCEL]
-
-# Restart choices
-RE_RESTART  = "Restart"
-RE_DELLOGS  = "Restart and Clean Logs"
-RE_OPTIONS  = [RE_RESTART, RE_DELLOGS, CANCEL]
-
-# Timezone constants
-$tzdata          = nil
-TZ_AREAS         = %w(Africa America Asia Atlantic Australia Canada Europe Indian Pacific US)
-TZ_AREAS_OPTIONS = ["United States", "Canada", "Africa", "America", "Asia", "Atlantic Ocean", "Australia", "Europe",
-                    "Indian Ocean", "Pacific Ocean", CANCEL]
-TZ_AREAS_MAP     = Hash.new { |_h, k| k }.merge!(
-  "United States"  => "US",
-  "Atlantic Ocean" => "Atlantic",
-  "Pacific Ocean"  => "Pacific",
-  "Indian Ocean"   => "Indian"
-)
-TZ_AREAS_MAP_REV = Hash.new { |_h, k| k }.merge!(TZ_AREAS_MAP.invert)
-
-NETWORK_INTERFACE = "eth0"
 
 require 'util/miq-password'
 MiqPassword.key_root = "#{RAILS_ROOT}/certs"
@@ -90,9 +62,24 @@ require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/key_configuration'
 require 'appliance_console/scap'
 require 'appliance_console/certificate_authority'
+require 'appliance_console/timezone_configuration'
+require 'appliance_console/date_time_configuration'
 
 require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
+
+# Restore database choices
+RESTORE_LOCAL   = "Local file".freeze
+RESTORE_NFS     = "Network File System (nfs)".freeze
+RESTORE_SMB     = "Samba (smb)".freeze
+RESTORE_OPTIONS = [RESTORE_LOCAL, RESTORE_NFS, RESTORE_SMB, ApplianceConsole::CANCEL].freeze
+
+# Restart choices
+RE_RESTART  = "Restart".freeze
+RE_DELLOGS  = "Restart and Clean Logs".freeze
+RE_OPTIONS  = [RE_RESTART, RE_DELLOGS, ApplianceConsole::CANCEL].freeze
+
+NETWORK_INTERFACE = "eth0".freeze
 
 module ApplianceConsole
   eth0 = LinuxAdmin::NetworkInterface.new(NETWORK_INTERFACE)
@@ -248,66 +235,28 @@ Static Network Configuration
           press_any_key
         end
 
-      when I18n.t("advanced_settings.datetime")
-        say("Date and Time Configuration\n\n")
-
-        # Cache time zone data the first time
-        if $tzdata.nil?
-          $tzdata = {}
-          TZ_AREAS.each do |a|
-            $tzdata[a] = ary = []
-            a = "/usr/share/zoneinfo/#{a}/"
-            Dir.glob("#{a}*").each do |z|
-              ary << z[a.length..-1]
-            end
-            ary.sort!
-          end
-        end
-
-        timezone = timezone.split("/")
-        cur_loc = timezone[0]
-        cur_city = timezone[1..-1].join("/")
-
-        # Prompt for timezone geographic area (with current area as default)
-        def_loc = TZ_AREAS.include?(cur_loc) ? TZ_AREAS_MAP_REV[cur_loc] : nil
-        tz_area = ask_with_menu("Geographic Location", TZ_AREAS_OPTIONS, def_loc, false)
-        next if tz_area == CANCEL
-        new_loc = TZ_AREAS_MAP[tz_area]
-
-        # Prompt for timezone specific city (with current city as default)
-        default_city = cur_city if $tzdata[new_loc].include?(cur_city) && cur_loc == new_loc
-        new_city = ask_with_menu("Timezone", $tzdata[new_loc], default_city, true) do |menu|
-          menu.list_option = :columns_across
-        end
-        next if new_city == CANCEL
-
-        clear_screen
-        say("Date and Time Configuration\n\n")
-
-        new_date = ask_for_date("current date (YYYY-MM-DD)")
-        new_time = ask_for_time("current time in 24 hour format (HH:MM:SS)")
-
-        clear_screen
-        say(<<-EOL)
-Date and Time Configuration
-
-        Timezone area: #{tz_area}
-        Timezone city: #{new_city}
-        Date:          #{new_date}
-        Time:          #{new_time}
-
-          EOL
-
-        if agree("Apply time and timezone configuration? (Y/N): ")
-          say("Applying time and timezone configuration...")
-          begin
-            LinuxAdmin::TimeDate.system_timezone = "#{new_loc}/#{new_city}"
-            LinuxAdmin::TimeDate.system_time = Time.parse("#{new_date} #{new_time}")
-          rescue LinuxAdmin::TimeDate::TimeCommandError => e
-            say("Failed to apply time and timezone configuration")
-            Logging.logger.error("Failed to apply time and timezone configuration: #{e.message}")
-          end
+      when I18n.t("advanced_settings.timezone")
+        say("#{selection}\n\n")
+        timezone_config = ApplianceConsole::TimezoneConfiguration.new(timezone)
+        if timezone_config.ask_questions && timezone_config.activate
+          say("Timezone configured")
           press_any_key
+        else
+          say("Timezone not configured")
+          press_any_key
+          raise MiqSignalError
+        end
+
+      when I18n.t("advanced_settings.datetime")
+        say("#{selection}\n\n")
+        date_time_config = ApplianceConsole::DateTimeConfiguration.new
+        if date_time_config.ask_questions && date_time_config.activate
+          say("Date and time configured")
+          press_any_key
+        else
+          say("Date and time not configured")
+          press_any_key
+          raise MiqSignalError
         end
 
       when I18n.t("advanced_settings.httpdauth")
@@ -396,7 +345,7 @@ Date and Time Configuration
           task = "evm:db:restore:remote"
           task_params = ["--", {:uri => uri, :uri_username => user, :uri_password => pass}]
 
-        when CANCEL
+        when ApplianceConsole::CANCEL
           raise MiqSignalError
         end
 
@@ -500,7 +449,7 @@ Date and Time Configuration
 
       when I18n.t("advanced_settings.restart")
         case ask_with_menu("Restart Option", RE_OPTIONS, nil, false)
-        when CANCEL
+        when ApplianceConsole::CANCEL
           # don't do anything
         when RE_RESTART
           if are_you_sure?("restart the appliance now")
