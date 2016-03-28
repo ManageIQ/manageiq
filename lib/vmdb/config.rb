@@ -1,5 +1,7 @@
 module VMDB
   class Config
+    include Vmdb::Logging
+
     def self.for_resource(name, resource)
       new(name).tap do |config|
         config.config = filter_settings_by_name(Vmdb::Settings.for_resource(resource), name)
@@ -9,11 +11,13 @@ module VMDB
     attr_accessor :errors, :name
 
     def initialize(name)
+      _log.debug("VMDB::Config.new is deprecated.  Prefer using Settings directly.")
       @name = name
       @errors = nil
     end
 
     def config
+      _log.debug("VMDB::Config#config is deprecated.  Prefer using Settings directly.")
       @config ||= self.class.filter_settings_by_name(::Settings.to_hash, name).to_hash
     end
 
