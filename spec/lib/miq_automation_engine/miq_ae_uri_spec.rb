@@ -25,5 +25,12 @@ module MiqAeUriSpec
       result_hash = MiqAeUri.query2hash(query)
       expect(result_hash).to eq(hash)
     end
+
+    it "trim URI before parsing" do
+      uri = "/Cloud/VM/StateMachines/Sample  "
+      _, _, _, _, _, path = MiqAeUri.split(uri)
+
+      expect(path).to eq(uri.strip)
+    end
   end
 end
