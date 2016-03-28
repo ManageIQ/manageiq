@@ -18,7 +18,8 @@
  *= require jqplot
  *= require product_slickgrid
  *= require kubernetes-topology-graph/topology-graph
- *= require jquery-ui-miq-theme/jquery-ui-1.9.2.custom
+ *= require jqueryui/themes/base/jquery-ui
+ *= require jquery-ui_overrides
  *= require container_providers_dashboard
  *= require template
  *= require container_topology
