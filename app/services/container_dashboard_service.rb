@@ -188,19 +188,14 @@ class ContainerDashboardService
   end
 
   def hourly_network_metrics
-    resource_ids = @ems.present? ? [@ems.id] : ManageIQ::Providers::ContainerManager.select(:id)
     hourly_network_trend = Hash.new(0)
-    hourly_metrics =
-      MetricRollup.with_interval_and_time_range("hourly", (1.day.ago.beginning_of_hour.utc)..(Time.now.utc))
-    hourly_metrics =
-      hourly_metrics.where('resource_type = ? AND resource_id in (?)', 'ExtManagementSystem', resource_ids)
-
-    hourly_metrics.each do |m|
+    MetricRollup.with_interval_and_time_range("hourly", (1.day.ago.beginning_of_hour.utc)..(Time.now.utc))
+                .where(:resource => (@ems || ManageIQ::Providers::ContainerManager.all)).each do |m|
       hour = m.timestamp.beginning_of_hour.utc
       hourly_network_trend[hour] += m.net_usage_rate_average
     end
 
-    if hourly_metrics.any?
+    if hourly_network_trend.any?
       {
         :xData => hourly_network_trend.keys,
         :yData => hourly_network_trend.values.map(&:round)
