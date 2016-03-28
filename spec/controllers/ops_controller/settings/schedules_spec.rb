@@ -137,5 +137,12 @@ describe OpsController do
       filtered_list = controller.send(:build_filtered_item_list, "storage", "global")
       expect(filtered_list.first).to include("Storage_Environment / UAT")
     end
+
+    it "returns a filtered item list for a single Datastore" do
+      controller.instance_variable_set(:@settings, settings)
+      storage = FactoryGirl.create(:storage_vmware)
+      filtered_list = controller.send(:build_filtered_item_list, "storage", "storage")
+      expect(filtered_list.first).to include(storage.name)
+    end
   end
 end

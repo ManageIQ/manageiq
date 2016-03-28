@@ -318,6 +318,8 @@ module OpsController::Settings::Schedules
       filtered_item_list = find_filtered(EmsCluster).collect do |cluster|
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
       end.sort_by { |cluster| cluster.first.downcase }.uniq
+    when "storage"
+      filtered_item_list = find_filtered(Storage).sort_by { |ds| ds.name.downcase }.collect(&:name).uniq
     when "global"
       if action_type == "miq_template"
         action_type = action_type.camelize
