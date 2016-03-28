@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(VmOrTemplate.count).to eq(38)
     expect(Vm.count).to eq(27)
     expect(MiqTemplate.count).to eq(11)
-    expect(Storage.count).to eq(7)
+    expect(Storage.count).to eq(8)
 
     expect(CustomAttribute.count).to eq(0) # TODO: 3.0 spec has values for this
     expect(CustomizationSpec.count).to eq(0)
@@ -138,6 +138,22 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :uncommitted                   => 45097156608,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
       :location                      => nil,
+      :directory_hierarchy_supported => nil,
+      :thin_provisioning_supported   => nil,
+      :raw_disk_mappings_supported   => nil
+    )
+
+    @storage3 = Storage.find_by_name("RHEVM31-gluster")
+    expect(@storage3).to have_attributes(
+      :ems_ref                       => "/api/storagedomains/efbe372b-7634-49f0-901e-0c05d526181f",
+      :ems_ref_obj                   => "/api/storagedomains/efbe372b-7634-49f0-901e-0c05d526181f",
+      :name                          => "RHEVM31-gluster",
+      :store_type                    => "GLUSTERFS",
+      :total_space                   => 20_401_094_656,
+      :free_space                    => 16_106_127_360,
+      :uncommitted                   => 19_327_352_832,
+      :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
+      :location                      => "example.gluster.server.com:/gv0",
       :directory_hierarchy_supported => nil,
       :thin_provisioning_supported   => nil,
       :raw_disk_mappings_supported   => nil

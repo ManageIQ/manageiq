@@ -31,7 +31,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       mor = storage_inv[:id]
 
       storage_type = storage_inv[:storage][:type].to_s.upcase
-      location = if storage_type == 'NFS'
+      location = if storage_type == 'NFS' || storage_type == 'GLUSTERFS'
                    "#{storage_inv[:storage][:address]}:#{storage_inv[:storage][:path]}"
                  else
                    storage_inv.attributes.fetch_path(:storage, :volume_group, :logical_unit, :id)
