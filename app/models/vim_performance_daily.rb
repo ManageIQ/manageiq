@@ -33,7 +33,7 @@ class VimPerformanceDaily < MetricRollup
   end
 
   def self.process_hourly_for_one_day(recs, options = {})
-    process_only_cols(options)
+    only_cols = process_only_cols(recs)
     result = {}
     counts = {}
 
@@ -58,7 +58,7 @@ class VimPerformanceDaily < MetricRollup
         next
       end
 
-      (Metric::Rollup::ROLLUP_COLS & (options[:only_cols] || Metric::Rollup::ROLLUP_COLS)).each do |c|
+      (Metric::Rollup::ROLLUP_COLS & (only_cols || Metric::Rollup::ROLLUP_COLS)).each do |c|
         result[key][c] ||= 0
         counts[key][c] ||= 0
         value = perf.send(c)
@@ -74,7 +74,7 @@ class VimPerformanceDaily < MetricRollup
       end
       if rtype == 'VmOrTemplate' && perf.min_max.kind_of?(Hash)
         result[key][:min_max] ||= {}
-        (Metric::Rollup::BURST_COLS & (options[:only_cols] || Metric::Rollup::BURST_COLS)).each do |c|
+        (Metric::Rollup::BURST_COLS & (only_cols || Metric::Rollup::BURST_COLS)).each do |c|
           Metric::Rollup::BURST_TYPES.each do |type|
             ts_key, val_key = Metric::Rollup.burst_col_names(type, c)
             # check the hourly row's min_max column's value for a key such as: "abs_min_mem_usage_absolute_average_value"
@@ -83,12 +83,12 @@ class VimPerformanceDaily < MetricRollup
         end
       end
 
-      Metric::Rollup.rollup_assoc(:assoc_ids, result[key], perf.assoc_ids) if options[:only_cols].nil? || options[:only_cols].include?(:assoc_ids)
-      Metric::Rollup.rollup_tags(:tag_names, result[key], perf.tag_names)  if options[:only_cols].nil? || options[:only_cols].include?(:tag_names)
+      Metric::Rollup.rollup_assoc(:assoc_ids, result[key], perf.assoc_ids) if only_cols.nil? || only_cols.include?(:assoc_ids)
+      Metric::Rollup.rollup_tags(:tag_names, result[key], perf.tag_names)  if only_cols.nil? || only_cols.include?(:tag_names)
 
       [:parent_host_id, :parent_ems_cluster_id, :parent_storage_id, :parent_ems_id].each do |c|
         val = perf.send(c)
-        result[key][c] = val if val && (options[:only_cols].nil? || options[:only_cols].include?(c))
+        result[key][c] = val if val && (only_cols.nil? || only_cols.include?(c))
       end
 
       (options[:reflections] || []).each do |assoc|
@@ -107,7 +107,7 @@ class VimPerformanceDaily < MetricRollup
       _int, rtype, rid = key
 
       if rollup_day
-        (Metric::Rollup::ROLLUP_COLS & (options[:only_cols] || Metric::Rollup::ROLLUP_COLS)).each do |c|
+        (Metric::Rollup::ROLLUP_COLS & (only_cols || Metric::Rollup::ROLLUP_COLS)).each do |c|
           Metric::Aggregation::Process.average(c, nil, result[key], counts[key])
           result[key][c] = result[key][c].round if columns_hash[c.to_s].type == :integer && !result[key][c].nil?
         end
@@ -140,14 +140,16 @@ class VimPerformanceDaily < MetricRollup
     results
   end
 
-  def self.process_only_cols(options)
-    unless options[:only_cols].nil?
-      options[:only_cols] =  options[:only_cols].collect(&:to_sym) if options[:only_cols]
-      options[:only_cols] += options[:only_cols].collect { |c| c.to_s[4..-1].to_sym if c.to_s.starts_with?("min_", "max_") }.compact
-      options[:only_cols] += options[:only_cols].collect { |c| c.to_s.split("_")[2..-2].join("_").to_sym if c.to_s.starts_with?("abs_") }.compact
-      options[:only_cols] += [:cpu_ready_delta_summation, :cpu_wait_delta_summation, :cpu_used_delta_summation] if options[:only_cols].find { |c| c.to_s.starts_with?("v_pct_") }
-      options[:only_cols] += [:derived_storage_total, :derived_storage_free] if options[:only_cols].include?(:v_derived_storage_used)
-      options[:only_cols] += Metric::BASE_COLS.collect(&:to_sym)
+  def self.process_only_cols(recs)
+    only_cols = recs.select_values.collect(&:to_sym).presence
+    return unless only_cols
+    only_cols += only_cols.select { |c| c.to_s.starts_with?("min_", "max_") }.collect { |c| c.to_s[4..-1].to_sym }
+    only_cols += only_cols.select { |c| c.to_s.starts_with?("abs_") }.collect { |c| c.to_s.split("_")[2..-2].join("_").to_sym }
+    if only_cols.detect { |c| c.to_s.starts_with?("v_pct_") }
+      only_cols += [:cpu_ready_delta_summation, :cpu_wait_delta_summation, :cpu_used_delta_summation]
     end
+    only_cols += [:derived_storage_total, :derived_storage_free] if only_cols.include?(:v_derived_storage_used)
+    only_cols += Metric::BASE_COLS.collect(&:to_sym)
+    only_cols.uniq
   end
 end # class VimPerformanceDaily
