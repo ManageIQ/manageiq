@@ -2,14 +2,21 @@ class DashboardController < ApplicationController
   @@items_per_page = 8
 
   before_action :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate,
-                                               :logout, :login, :login_retry, :wait_for_task]
-  before_action :get_session_data, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate]
+                                               :logout, :login, :login_retry, :wait_for_task,
+                                               :saml_login, :initiate_saml_login]
+  before_action :get_session_data, :except => [:csp_report, :window_sizes,
+                                               :authenticate, :kerberos_authenticate, :saml_login]
   after_action :cleanup_action,    :except => [:csp_report]
   after_action :set_session_data,  :except => [:csp_report, :window_sizes]
 
   def index
     redirect_to :action => 'show'
   end
+
+  def saml_protected_page
+    request.base_url + '/saml_login'
+  end
+  helper_method :saml_protected_page
 
   def iframe
     override_content_security_policy_directives(:frame_src => ['*'])
@@ -400,6 +407,11 @@ class DashboardController < ApplicationController
 
   # Methods to handle login/authenticate/logout functions
   def login
+    if ext_auth?(:saml_enabled) && ext_auth?(:local_login_disabled)
+      redirect_to saml_protected_page
+      return
+    end
+
     if get_vmdb_config[:product][:allow_passed_in_credentials]  # Only pre-populate credentials if setting is turned on
       @user_name     = params[:user_name]
       @user_password = params[:user_password]
@@ -411,6 +423,11 @@ class DashboardController < ApplicationController
     flash[:notice] = _("Session was timed out due to inactivity. Please log in again.") if params[:timeout] == "true"
     logon_details = MiqServer.my_server(true).logon_status_details
     @login_message = logon_details[:message] if logon_details[:status] == :starting && logon_details[:message]
+
+    if session[:user_validation_error]
+      add_flash(session[:user_validation_error], :error)
+      session[:user_validation_error] = nil
+    end
 
     render :layout => "login"
   end
@@ -427,6 +444,39 @@ class DashboardController < ApplicationController
       else
         page.redirect_to :action => 'login'
       end
+    end
+  end
+
+  # Initiate a SAML Login from the main login page
+  def initiate_saml_login
+    render :update do |page|
+      page.redirect_to(saml_protected_page)
+    end
+  end
+
+  # Login support for SAML - GET /saml_login
+  def saml_login
+    session[:saml_login_request] = nil
+    if @user_name.blank? && request.env.key?("HTTP_X_REMOTE_USER").present?
+      @user_name = params[:user_name] = request.env["HTTP_X_REMOTE_USER"].split("@").first
+    else
+      redirect_to :action => 'logout'
+      return
+    end
+
+    user = {:name => @user_name}
+    validation = validate_user(user, nil, request, :require_user => true, :timeout => 30)
+
+    case validation.result
+    when :pass
+      session['referer'] = request.base_url + '/'
+      session[:saml_login_request] = true
+      redirect_to validation.url
+      return
+    when :fail
+      session[:user_validation_error] = validation.flash_msg || "User validation failed"
+      redirect_to :action => 'logout'
+      return
     end
   end
 
@@ -579,9 +629,18 @@ class DashboardController < ApplicationController
     current_user.try(:logoff)
     clear_current_user
 
+    user_validation_error = session[:user_validation_error]
     session.clear
     session[:auto_login] = false
-    redirect_to :action => 'login'
+    session[:user_validation_error] = user_validation_error if user_validation_error
+
+    # For SAML, let's do the SAML logout to clear mod_auth_mellon IdP cookies and such
+    if ext_auth?(:saml_enabled)
+      redirect_to "/saml2/logout?ReturnTo=/"
+    else
+      redirect_to :action => 'login'
+    end
+    return
   end
 
   # User request to change to a different eligible group
@@ -619,8 +678,8 @@ class DashboardController < ApplicationController
   end
   helper_method(:tl_toggle_button_enablement)
 
-  def validate_user(user, task_id = nil, request = nil)
-    UserValidationService.new(self).validate_user(user, task_id, request)
+  def validate_user(user, task_id = nil, request = nil, authenticate_options = {})
+    UserValidationService.new(self).validate_user(user, task_id, request, authenticate_options)
   end
 
   def start_url_for_user(start_url)

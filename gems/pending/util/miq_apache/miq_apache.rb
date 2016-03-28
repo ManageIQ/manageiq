@@ -208,6 +208,7 @@ module MiqApache
         if redirect == "/"
           content << "RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts)) /self_service/index.html [L]\n"
           content << "RewriteCond \%{REQUEST_URI} !^/proxy_pages\n"
+          content << "RewriteCond \%{REQUEST_URI} !^/saml2\n"
           content << "RewriteCond \%{REQUEST_URI} !^/api\n"
           content << "RewriteCond \%{DOCUMENT_ROOT}/\%{REQUEST_FILENAME} !-f\n"
           content << "RewriteRule ^#{redirect} balancer://#{opts[:cluster]}\%{REQUEST_URI} [P,QSA,L]\n"

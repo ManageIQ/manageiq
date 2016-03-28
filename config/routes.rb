@@ -803,6 +803,7 @@ Vmdb::Application.routes.draw do
         index
         login
         logout
+        saml_login
         maintab
         render_csv
         render_pdf
@@ -816,6 +817,7 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         kerberos_authenticate
+        initiate_saml_login
         authenticate
         change_group
         csp_report
@@ -2482,6 +2484,7 @@ Vmdb::Application.routes.draw do
   }
 
   root :to => 'dashboard#login'
+  get '/saml_login(/*path)' => 'dashboard#saml_login'
 
   # Let's serve pictures directly from the DB
   get '/pictures/:basename' => 'picture#show', :basename => /[\da-zA-Z]+\.[\da-zA-Z]+/

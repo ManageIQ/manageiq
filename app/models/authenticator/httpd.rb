@@ -10,7 +10,7 @@ module Authenticator
                     :firstname => request.headers['X-REMOTE-USER-FIRSTNAME'],
                     :lastname  => request.headers['X-REMOTE-USER-LASTNAME'],
                     :email     => request.headers['X-REMOTE-USER-EMAIL']}
-      membership_list = (request.headers['X-REMOTE-USER-GROUPS'] || '').split(":")
+      membership_list = (request.headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:]/)
 
       super(username, request, user_attrs, membership_list)
     end

@@ -124,6 +124,17 @@ li.brand-white-label.whitelabeled {
   padding-bottom: 0 !important;
 }
 
+div#saml-login {
+  padding-bottom: 8px;
+}
+
+div#saml-login hr {
+  display: inline-block;
+  position: relative;
+  top: 15px;
+  width: 43%;
+}
+
 #notification {
   position:absolute;
   left:0;

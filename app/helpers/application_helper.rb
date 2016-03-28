@@ -1502,4 +1502,11 @@ module ApplicationHelper
     end
     true
   end
+
+  def ext_auth?(auth_option = nil)
+    auth_config = get_vmdb_config[:authentication]
+    return false unless auth_config[:mode] == "httpd"
+    auth_option ? auth_config[auth_option] : true
+  end
+  public :ext_auth?
 end

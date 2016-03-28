@@ -16,6 +16,28 @@
 
         = render :partial => "layouts/flash_msg"
 
+        - if ext_auth?(:saml_enabled)
+          .form-group
+            %label.col-md-3.control-label
+            .col-md-9
+              = link_to(_("Login to Corporate System"), {:action => "initiate_saml_login",
+                                                         :button => "saml_login"},
+                        :id                   => "saml_login",
+                        :class                => "btn btn-primary form-control",
+                        :alt                  => "Login",
+                        :title                => _("Login to Corporate System"),
+                        :remote               => true,
+                        "data-method"         => :post,
+                        "data-miq_sparkle_on" => true,
+                        "data-submit"         => 'login_div')
+
+              %div#saml-login.text-center
+                %hr#saml-login
+                &nbsp;
+                = _('Or')
+                &nbsp;
+                %hr#saml-login
+
         .form-group
           %label.col-md-3.control-label= _('Username')
           .col-md-9
@@ -106,12 +128,15 @@
   miqClearTreeState();
 
 - auto_login  = session[:auto_login]  # Set to false via dashboard/logout
-- sso_enabled = get_vmdb_config[:authentication][:sso_enabled]
 - session[:auto_login] = true
-- if auth_mode == "httpd" && sso_enabled
+- if ext_auth?(:sso_enabled)
   - if auto_login != false
-    :javascript
-      var miq_after_onload = "$('#sso_login').click()";
+    - if ext_auth?(:saml_enabled)
+      :javascript
+        var miq_after_onload = "$('#saml_login').click()";
+    - else
+      :javascript
+        var miq_after_onload = "$('#sso_login').click()";
 - elsif @user_name  # If user name is pre-populated by the server, press the Login button automatically
   :javascript
     var miq_after_onload = "$('#login').click()";
