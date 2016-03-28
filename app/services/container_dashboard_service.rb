@@ -120,38 +120,33 @@ class ContainerDashboardService
     metrics = metrics.where('timestamp > ?', 1.day.ago.utc).includes(:resource)
     metrics = metrics.includes(:resource => [:ext_management_system]) unless @ems.present?
 
-    node_cpu_usage = nil
-    node_memory_usage = nil
+    node_cpu_usage = []
+    node_memory_usage = []
 
-    if metrics.any?
-      node_cpu_usage = []
-      node_memory_usage = []
+    metrics.each do |m|
+      next if m.resource.nil? # Metrics are purged asynchronously and might be missing their node
+      provider_name = @ems.present? ? @ems.name : m.resource.ext_management_system.name
 
-      metrics.each do |m|
-        next if m.resource.nil? # Metrics are purged asynchronously and might be missing their node
-        provider_name = @ems.present? ? @ems.name : m.resource.ext_management_system.name
+      node_cpu_usage << {
+        :id       => m.resource.id,
+        :node     => m.resource.name,
+        :provider => provider_name,
+        :total    => m.derived_vm_numvcpus.round,
+        :percent  => (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+      }
 
-        node_cpu_usage << {
-          :id       => m.resource.id,
-          :node     => m.resource.name,
-          :provider => provider_name,
-          :total    => m.derived_vm_numvcpus.round,
-          :percent  => (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
-        }
-
-        node_memory_usage << {
-          :id       => m.resource.id,
-          :node     => m.resource.name,
-          :provider => m.resource.ext_management_system.name,
-          :total    => m.derived_memory_available.round,
-          :percent  => (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
-        }
-      end
+      node_memory_usage << {
+        :id       => m.resource.id,
+        :node     => m.resource.name,
+        :provider => m.resource.ext_management_system.name,
+        :total    => m.derived_memory_available.round,
+        :percent  => (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+      }
     end
 
     {
-      :nodeCpuUsage    => node_cpu_usage,
-      :nodeMemoryUsage => node_memory_usage
+      :nodeCpuUsage    => node_cpu_usage.presence,
+      :nodeMemoryUsage => node_memory_usage.presence
     }
   end
 
