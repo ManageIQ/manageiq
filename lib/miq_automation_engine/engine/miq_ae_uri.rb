@@ -25,7 +25,7 @@ module MiqAeEngine
     end
 
     def self.split(uri, default_scheme = 'miqaews')
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(uri)
+      scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(uri.strip)
       scheme = default_scheme if scheme.nil?
       scheme = 'miqaews' if scheme.downcase == 'miqae'
       scheme.downcase!
