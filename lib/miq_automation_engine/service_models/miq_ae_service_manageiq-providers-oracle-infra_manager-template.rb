@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Oracle_InfraManager_Template < MiqAeServiceTemplateInfra
+  end
+end

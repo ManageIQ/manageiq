@@ -125,7 +125,7 @@
         %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
           = _("Required")
 
-    .form-group{"ng-class" => "{'has-error': angularForm.api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'rhevm'"}
+    .form-group{"ng-class" => "{'has-error': angularForm.api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'rhevm' || emsCommonModel.emstype == 'oraclevm'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('API Port')
       .col-md-8

@@ -56,6 +56,11 @@ FactoryGirl.define do
     ems_ref_obj "openstack-perf-host-nova-instance"
   end
 
+  factory :host_oracle, :parent => :host, :class => "ManageIQ::Providers::Oracle::InfraManager::Host" do
+    sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
+    vmm_vendor "oracle"
+  end
+
   factory :host_microsoft, :parent => :host, :class => "ManageIQ::Providers::Microsoft::InfraManager::Host" do
     vmm_vendor  "microsoft"
     vmm_product "Hyper-V"

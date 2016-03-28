@@ -114,6 +114,15 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_oracle, :aliases => ["manageiq/providers/oracle/infra_manager"], :class => "ManageIQ::Providers::Oracle::InfraManager", :parent => :ems_infra do
+  end
+
+  factory :ems_oracle_with_authentication, :parent => :ems_oracle do
+    after(:create) do |x|
+      x.authentications << FactoryGirl.create(:authentication)
+    end
+  end
+
   # Leaf classes for ems_cloud
 
   factory :ems_amazon,
