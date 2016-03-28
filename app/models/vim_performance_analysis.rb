@@ -135,9 +135,9 @@ module VimPerformanceAnalysis
 
       # Set :only_cols for target daily requested cols for better performance
       options[:ext_options][:only_cols] = [:cpu, :memory, :storage].collect { |t| [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)] }.flatten.compact
-      compute_hosts.each do |c|
-        hash = {:target => c}
+      result = compute_hosts.collect do |c|
         count_hash = {}
+        hash = { :target => c, :count => count_hash }
 
         need_compute_perf = VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
         start_time, end_time = get_time_range(options[:range])
@@ -168,8 +168,7 @@ module VimPerformanceAnalysis
           end
         end
         count_hash[:total] = { :total => count_hash.each_value.pluck(:total).compact.max }
-        hash[:count] = count_hash
-        result << hash
+        hash
       end
 
       result = how_many_more_can_fit_host_to_cluster_results(result) if @compute.first.kind_of?(EmsCluster)
