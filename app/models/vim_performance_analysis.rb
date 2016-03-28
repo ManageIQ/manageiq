@@ -167,14 +167,7 @@ module VimPerformanceAnalysis
             count_hash[:storage] = {:total => total, :details => details}
           end
         end
-
-        total = nil
-        count_hash.each_value do |v|
-          next if v[:total].nil?
-          total = v[:total] if total.nil? || total > v[:total]
-        end
-        count_hash[:total] = {:total => total}
-
+        count_hash[:total] = { :total => count_hash.each_value.pluck(:total).compact.max }
         hash[:count] = count_hash
         result << hash
       end
