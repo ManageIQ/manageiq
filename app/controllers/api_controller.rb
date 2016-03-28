@@ -120,7 +120,7 @@ class ApiController < ApplicationController
   # not have these. They would instead dealing with the /api/auth
   # mechanism.
   #
-  if respond_to?(:verify_authenticity_token)
+  if Vmdb::Application.config.action_controller.allow_forgery_protection
     skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
   end
 
