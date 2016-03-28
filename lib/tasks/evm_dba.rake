@@ -300,10 +300,3 @@ namespace :evm do
 end
 
 Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])
-
-# HACK: Teach db:migrate to clear the schema cache, specifically the column
-# information, after it runs.  Without this, running `rake db:migrate db:seed`
-# in the same process can fail during seed with:
-#   `PG::UndefinedColumn: ERROR:  column XYZ does not exist`
-# We do exactly this, `rake db:migrate db:seed`, in bin/setup and bin/update.
-Rake::Task["db:migrate"].enhance { ActiveRecord::Base.clear_cache! }
