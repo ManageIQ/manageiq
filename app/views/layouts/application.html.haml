@@ -44,8 +44,21 @@
         API.autorenew();
 
     - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
-    %body{:id => id, :onload => is_browser_ie? ? '' : 'miqOnLoad();', 'data-controller' => controller_name}
+    - if controller.send(:angular_app?) && @in_a_form
+      %body{:id               => id,
+            :onresize         => "miqOnResize();",
+            :onload           => is_browser_ie? ? '' : 'miqOnLoad();',
+            'data-controller' => controller_name,
+            'ng-app'          => "ManageIQ"}
+        = render :partial => "layouts/header"
+        = render :partial => "layouts/content"
+        = render :partial => 'layouts/footer'
+    - else
+      %body{:id               => id,
+            :onresize         => "miqOnResize();",
+            :onload           => is_browser_ie? ? '' : 'miqOnLoad();',
+            'data-controller' => controller_name}
+        = render :partial => "layouts/header"
+        = render :partial => "layouts/content"
+        = render :partial => "layouts/footer"
 
-      = render :partial => "layouts/header"
-      = render :partial => "layouts/content"
-      = render :partial => 'layouts/footer'

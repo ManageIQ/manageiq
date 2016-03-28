@@ -160,7 +160,6 @@ class ServiceController < ApplicationController
       @service = find_by_id_filtered(Service, checked[0])
       @in_a_form = true
       @title = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
-      return
     end
   end
 
@@ -393,6 +392,10 @@ class ServiceController < ApplicationController
 
   def tagging_explorer_controller?
     @explorer
+  end
+
+  def angular_app?
+    true
   end
 
   def get_session_data
