@@ -29,6 +29,8 @@ class MiqVimBroker
   @@updateDelay = nil
   @@cacheScope  = :cache_scope_full
   @@selectorHash  = {}
+  @@maxWait    = 60
+  @@maxObjects = 250
 
   def initialize(mode = :client, port = 9001)
     if mode == :client
@@ -314,6 +316,22 @@ class MiqVimBroker
     end
   end
 
+  def self.maxWait=(val)
+    @@maxWait = val
+  end
+
+  def self.maxWait
+    @@maxWait
+  end
+
+  def self.maxObjects=(val)
+    @@maxObjects = val
+  end
+
+  def self.maxObjects
+    @@maxObjects
+  end
+
   def releaseSession(sessionId)
     if @mode == :client
       $vim_log.info "Client releaseSession: #{sessionId}"
@@ -412,7 +430,7 @@ class MiqVimBroker
           removeMiqVimSS(key, vim)
         end
         begin
-          vim = DMiqVim.new(server.untaint, username, password, self, @@preLoad, @@debugUpdates, @@notifyMethod, @cacheScope)
+          vim = DMiqVim.new(server.untaint, username, password, self, @@preLoad, @@debugUpdates, @@notifyMethod, @cacheScope, @@maxWait, @@maxObjects)
           vim.updateDelay = @@updateDelay if @@updateDelay
           vim.setSelector(@selectorHash) unless @selectorHash.empty?
           $vim_log.info "MiqVimBroker.getMiqVim: returning new connection for #{key}"
