@@ -187,6 +187,7 @@ module ManageIQ
           :mac_address          => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address         => identify_ipmi_address(host),
           :power_state          => lookup_power_state(host.power_state),
+          :admin_disabled       => host.maintenance,
           :connection_state     => lookup_connection_state(host.power_state),
           :hardware             => process_host_hardware(host, extra_attributes),
           :hypervisor_hostname  => hypervisor_hostname,
