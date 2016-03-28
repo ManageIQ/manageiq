@@ -393,7 +393,14 @@ http_interactions:
         \       <storage>\n            <type>iscsi</type>\n            <volume_group
         id=\"FXdwmR-2eBU-wyhv-Pbxn-XECC-kdRC-KjXk31\"/>\n        </storage>\n        <available>10737418240</available>\n
         \       <used>4294967296</used>\n        <committed>0</committed>\n        <storage_format>v3</storage_format>\n
-        \   </storage_domain>\n</storage_domains>\n"
+        \   </storage_domain>\n    <storage_domain href=\"/api/storagedomains/efbe372b-7634-49f0-901e-0c05d526181f\"
+        id=\"efbe372b-7634-49f0-901e-0c05d526181f\">\n        <name>RHEVM31-gluster</name>\n
+        \       <link href=\"/api/storagedomains/efbe372b-7634-49f0-901e-0c05d526181f/permissions\"
+        rel=\"permissions\"/>\n        <type>data</type>\n        <master>false</master>\n
+        \       <storage>\n            <address>example.gluster.server.com</address>        <type>glusterfs</type>\n
+        \        <path>/gv0</path>        </storage>\n        <available>16106127360</available>\n
+        \       <used>4294967296</used>\n        <committed>1073741824</committed>\n        <storage_format>v3</storage_format>\n
+        \   </storage_domain></storage_domains>\n"
     http_version: 
   recorded_at: Wed, 08 Oct 2014 01:27:22 GMT
 - request:
