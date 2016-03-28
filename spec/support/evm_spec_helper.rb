@@ -22,9 +22,6 @@ module EvmSpecHelper
 
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
-
-    # Clear configuration caches
-    VMDB::Config.invalidate_all
   end
 
   def self.clear_instance_variables(instance)

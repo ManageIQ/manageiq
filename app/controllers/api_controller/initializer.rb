@@ -66,14 +66,6 @@ class ApiController
         $api_log.info("Static Configuration")
         base_config.each { |key, val| log_kv(key, val) }
 
-        [:token_ttl, :authentication_timeout].each do |key|
-          cfg.merge_from_template_if_missing([mod.to_sym] + [key])
-        end
-
-        [:level_api, :level_api_in_evm].each do |key|
-          cfg.merge_from_template_if_missing([:log] + [key])
-        end
-
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
         api_config = cfg.config[mod.to_sym].merge(REQUESTER_TTL_CONFIG["ui"] => fetch_ui_token_ttl(cfg))

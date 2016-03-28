@@ -122,8 +122,7 @@ class MiqStorageMetric < ApplicationRecord
   end
 
   def self.purge_date(type)
-    cfg = VMDB::Config.new("vmdb")
-    value = cfg.fetch_with_fallback(:storage, :metrics_history, type.to_sym)
+    value = VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, type.to_sym)
     return nil if value.nil?
 
     value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days

@@ -57,7 +57,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     _log.info("#{log_prefix} Enabling Broker's Update Manager Notification")
 
     @exclude_props = VMDB::Config.new("broker_notify_properties").config[:exclude] || {}
-    @exclude_props.stringify_keys! # TODO: Remove when we clean up cfg yamls
+    @exclude_props.deep_stringify_keys!
 
     if @exclude_props.empty?
       _log.info("#{log_prefix} Not excluding any properties for broker notification.")

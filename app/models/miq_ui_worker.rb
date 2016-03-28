@@ -1,8 +1,7 @@
 class MiqUiWorker < MiqWorker
   require_nested :Runner
 
-  REQUIRED_ROLE = 'user_interface'
-  self.required_roles = [REQUIRED_ROLE]
+  self.required_roles = ['user_interface']
   self.check_for_minimal_role = false
   self.workers = lambda do
     if MiqServer.minimal_env?
@@ -23,19 +22,6 @@ class MiqUiWorker < MiqWorker
 
   def friendly_name
     @friendly_name ||= "User Interface Worker"
-  end
-
-  def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
-    if configuration.config.fetch_path(:workers, :worker_base, :ui_worker).nil?
-      _log.info("Migrating Settings")
-      configuration.merge_from_template_if_missing(:workers, :worker_base, :ui_worker)
-      roles = configuration.config.fetch_path(:server, :role).split(',')
-      unless roles.include?(REQUIRED_ROLE)
-        _log.info("Adding Default Role #{REQUIRED_ROLE}")
-        roles << REQUIRED_ROLE
-        configuration.config.store_path(:server, :role, roles.join(','))
-      end
-    end
   end
 
   include MiqWebServerWorkerMixin

@@ -56,6 +56,10 @@ config/apache
 config/database.yml*
 config/vmdb.yml.db
 
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+
 # db/
 db/*.sqlite3
 db/schema.rb

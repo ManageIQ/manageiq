@@ -226,9 +226,8 @@ class RepositoryController < ApplicationController
 
   def process_repos(repos, task)
     if task == "refresh"
-      current = VMDB::Config.new("vmdb")    # Get the vmdb configuration settings
       sp = nil                              # Init the smartproxy
-      spid = current.config[:repository_scanning][:defaultsmartproxy]
+      spid = get_vmdb_config[:repository_scanning][:defaultsmartproxy]
       if spid.nil?
         add_flash(_("No Default Repository SmartProxy is configured, contact your CFME Administrator"), :error)
         return

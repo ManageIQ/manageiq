@@ -22,10 +22,7 @@ module Vmdb
       @initialized = true
     end
 
-    def self.apply_config(config = nil)
-      config ||= VMDB::Config.new("vmdb").config
-      config = config[:log] if config[:log]
-
+    def self.apply_config(config)
       apply_config_value(config, $log,       :level)
       apply_config_value(config, $rails_log, :level_rails)
       apply_config_value(config, $vim_log,   :level_vim,   :level_vim_in_evm)

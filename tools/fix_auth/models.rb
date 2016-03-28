@@ -2,7 +2,6 @@ require 'active_support/all'
 require 'active_record'
 require 'securerandom'
 require 'util/extensions/miq-deep'
-require 'vmdb/configuration_encoder'
 
 module FixAuth
   class FixAuthentication < ActiveRecord::Base
@@ -48,22 +47,6 @@ module FixAuth
     end
   end
 
-  class FixConfiguration < ActiveRecord::Base
-    include FixAuth::AuthConfigModel
-    self.password_columns = %w(settings)
-    self.password_fields = Vmdb::ConfigurationEncoder::PASSWORD_FIELDS
-    self.table_name = "configurations"
-
-    def self.display_record(r)
-      puts "  #{r.id} (#{r.typ}.yml):"
-    end
-
-    # only bring back rows that store passwords
-    def self.contenders
-      where("typ = 'vmdb'")
-    end
-  end
-
   class FixMiqRequest < ActiveRecord::Base
     include FixAuth::AuthConfigModel
     # don't want to leverage STI
@@ -91,6 +74,22 @@ module FixAuth
 
     def self.contenders
       where("options like '%password%'")
+    end
+  end
+
+  class FixSettingsChange < ActiveRecord::Base
+    include FixAuth::AuthModel
+    self.table_name = "settings_changes"
+    self.password_columns = %w(value)
+
+    serialize :value
+
+    def self.contenders
+      query = Vmdb::Settings::PASSWORD_FIELDS.collect do |field|
+        "(key LIKE '%/#{field}')"
+      end.join(" OR ")
+
+      super.where(query)
     end
   end
 

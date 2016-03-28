@@ -8,10 +8,6 @@ module MiqServer::LogManagement
     has_many   :log_files, :dependent => :destroy, :as => :resource
   end
 
-  def sync_log_level
-    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
-  end
-
   def format_log_time(time)
     time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end

@@ -9,6 +9,8 @@ gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",      "~>0.1.2", :require => false
 
+gem "config",                          "~>1.0.0"
+
 # Local gems
 path "gems/" do
   gem "manageiq_foreman", :require => false

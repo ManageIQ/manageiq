@@ -55,10 +55,6 @@ class MiqServer < ApplicationRecord
     configuration  = VMDB::Config.new("vmdb")
     starting_roles = configuration.config.fetch_path(:server, :role)
 
-    monitor_class_names.each { |class_name| class_name.constantize.validate_config_settings(configuration) }
-
-    EmsInfra.merge_config_settings(configuration)
-
     # Change the database role to database_operations
     roles = configuration.config.fetch_path(:server, :role)
     if roles.gsub!(/\bdatabase\b/, 'database_operations')
@@ -206,7 +202,10 @@ class MiqServer < ApplicationRecord
     EvmDatabase.seed_primordial
 
     setup_data_directory
-    cfg = activate_configuration
+    check_migrations_up_to_date
+    Vmdb::Settings.activate
+
+    cfg = VMDB::Config.new("vmdb")
 
     svr = my_server(true)
     svr_hash = {}
@@ -263,7 +262,7 @@ class MiqServer < ApplicationRecord
 
     svr.ntp_reload(svr.server_ntp_settings)
     # Update the config settings in the db table for MiqServer
-    svr.config_updated(OpenStruct.new(:name => cfg.get(:server, :name)))
+    svr.config_activated(OpenStruct.new(:name => cfg.get(:server, :name)))
 
     EvmDatabase.seed_last
 
@@ -271,6 +270,13 @@ class MiqServer < ApplicationRecord
     prep_apache_proxying
     svr.start
     svr.monitor_loop
+  end
+
+  def self.check_migrations_up_to_date
+    up_to_date, *message = SchemaMigration.up_to_date?
+    level = up_to_date ? :info : :warn
+    message.to_miq_a.each { |msg| _log.send(level, msg) }
+    up_to_date
   end
 
   def validate_is_deleteable
@@ -545,28 +551,6 @@ class MiqServer < ApplicationRecord
     workers = wcnt == 1 ? "worker" : "workers"
     message = "Waiting for #{wcnt} #{workers} to start"
     result.merge(:message => message)
-  end
-
-  def self.config_updated
-    cfg = VMDB::Config.new("vmdb")
-    cfg.save
-  end
-
-  def config_updated(data, _mode = "activate")
-    # Check that the column exists in the table and we are passed data that does not match
-    # the current vaule.  The first check allows this code to run if we migrate down then
-    # back up again.
-    if self.respond_to?(:name) && data.name && name != data.name
-      self.name = data.name
-    end
-
-    unless data.zone.nil?
-      self.zone = Zone.find_by(:name => data.zone)
-      save
-    end
-    update_capabilities
-
-    save
   end
 
   #
