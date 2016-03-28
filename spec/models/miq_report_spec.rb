@@ -490,6 +490,22 @@ describe MiqReport do
         report.generate_table(:userid => "admin")
       end
     end
+    context "chargeback report" do
+      let!(:report) do
+        MiqReport.new(
+            :title   => "chargeback_report",
+            :db      => "Chargeback",
+            :cols    => %w(start_date display_range entity_namecpu_cost cpu_metric cpu_used_cost
+                           cpu_used_metric fixed_compute_1_cost fixed_compute_2_cost fixed_cost
+                           memory_cost memory_metric memory_used_cost memory_used_metric total_cost),
+            :include => {})
+      end
+      let(:ems) { FactoryGirl.create(:ems_vmware, :zone => @server.zone) }
+
+      it "runs report" do
+        expect { report.generate_table(:userid => "admin") }.not_to raise_error
+      end
+    end
 
     context "Tenant Quota Report" do
       include QuotaHelper
