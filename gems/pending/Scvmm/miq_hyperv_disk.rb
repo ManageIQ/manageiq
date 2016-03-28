@@ -99,15 +99,28 @@ STAT_EOL
   def bread_cached(start_sector, number_sectors)
     $log.debug "miq_hyperv_disk.bread_cached(#{start_sector}, #{number_sectors})"
     @block_cache.keys.each do |block_range|
-      next unless block_range.include?(start_sector) && block_range.include?(start_sector + number_sectors - 1)
       sector_offset = start_sector - block_range.first
       buffer_offset = sector_offset * @block_size
-      length        = number_sectors * @block_size
-      @cache_hits[start_sector] += 1
-      return @block_cache[block_range][buffer_offset, length]
+      if block_range.include?(start_sector) && block_range.include?(start_sector + number_sectors - 1)
+        length = number_sectors * @block_size
+        @cache_hits[start_sector] += 1
+        return @block_cache[block_range][buffer_offset, length]
+      elsif block_range.include?(start_sector)
+        sectors_in_range = block_range.last - start_sector
+        length           = sectors_in_range * @block_size
+        remaining_blocks = number_sectors - sectors_in_range
+        @cache_hits[start_sector] += 1
+        return @block_cache[block_range][buffer_offset, length] + bread_cached(block_range.last + 1, remaining_blocks)
+      elsif block_range.include?(start_sector + number_sectors - 1)
+        sectors_in_range = (start_sector + number_sectors) - block_range.first
+        length           = sectors_in_range * @block_size
+        remaining_blocks = number_sectors - sectors_in_range
+        @cache_hits[start_sector] += 1
+        return bread_cached(start_sector, remaining_blocks) + @block_cache[block_range][block_range.first, length]
+      end
     end
     block_range               = entry_range(start_sector, number_sectors)
-    @block_cache[block_range] = bread(start_sector, block_range.last - start_sector + 1)
+    @block_cache[block_range] = bread(block_range.first, block_range.last - block_range.first + 1)
     @cache_misses[start_sector] += 1
 
     sector_offset             = start_sector - block_range.first
@@ -172,8 +185,11 @@ DELETE_SNAP_EOL
   end
 
   def entry_range(start_sector, number_sectors)
-    sectors_to_read = [MIN_SECTORS_TO_CACHE, number_sectors].max
-    end_sector      = start_sector + sectors_to_read - 1
-    Range.new(start_sector, end_sector)
+    real_start_block, sector_offset = start_sector.divmod(MIN_SECTORS_TO_CACHE)
+    number_blocks     = number_sectors % MIN_SECTORS_TO_CACHE
+    sectors_to_read   = (number_blocks + (sector_offset > 0 ? 1 : 0)) * MIN_SECTORS_TO_CACHE
+    real_start_sector = real_start_block * MIN_SECTORS_TO_CACHE
+    end_sector        = real_start_sector + sectors_to_read - 1
+    Range.new(real_start_sector, end_sector)
   end
 end
