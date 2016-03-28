@@ -94,12 +94,40 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
     end
 
-    it 'should report success' do
-      VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
-        expect(@job.state).to eq 'waiting_to_start'
-        @job.signal(:start)
+    context "completes successfully" do
+      before(:each) do
+        if OpenscapResult.openscap_available?
+          allow_any_instance_of(MockImageInspectorClient).to receive(:fetch_oscap_arf) do
+            File.read(
+              File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
+            ).encode("UTF-8")
+          end
+        else
+          allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data)
+        end
+
+        VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
+          expect(@job.state).to eq 'waiting_to_start'
+          @job.signal(:start)
+        end
+      end
+
+      it 'should report success' do
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'ok'
+      end
+
+      it 'should persist openscap data' do
+        skip unless OpenscapResult.openscap_available?
+        allow_any_instance_of(MockImageInspectorClient).to receive(:fetch_oscap_arf) do
+          File.read(
+            File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
+          ).encode("UTF-8")
+        end
+
+        expect(@image.openscap_result).to be
+        expect(@image.openscap_result.binary_blob.md5).to eq('d1f1857281573cd777b31d76e8529dc9')
+        expect(@image.openscap_result.openscap_rule_results.count).to eq(213)
       end
     end
 
