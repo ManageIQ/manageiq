@@ -381,3 +381,214 @@ describe('emsCommonFormController', function() {
     });
   });
 });
+
+describe('emsCommonFormController in the context of ems infra provider', function() {
+  var $scope, $controller, $httpBackend, miqService, compile;
+
+  beforeEach(module('ManageIQ'));
+
+  beforeEach(inject(function (_$httpBackend_, $rootScope, _$controller_, _miqService_, _$compile_) {
+    miqService = _miqService_;
+    compile = _$compile_;
+    spyOn(miqService, 'miqAjaxButton');
+    spyOn(miqService, 'restAjaxButton');
+    spyOn(miqService, 'sparkleOn');
+    spyOn(miqService, 'sparkleOff');
+    $scope = $rootScope.$new();
+
+    var emsCommonFormResponse = {
+      name: '',
+      emstype: '',
+      zone: 'default',
+      emstype_vm: false,
+      openstack_infra_providers_exist: false,
+      api_port: '5000',
+      api_version: 'v2'
+    };
+    $httpBackend = _$httpBackend_;
+    $httpBackend.whenGET('/ems_infra/ems_infra_form_fields/new').respond(emsCommonFormResponse);
+    $controller = _$controller_('emsCommonFormController',
+      {
+        $scope: $scope,
+        $attrs: {
+          'formFieldsUrl': '/ems_infra/ems_infra_form_fields/',
+          'createUrl': '/ems_infra',
+          'updateUrl': '/ems_infra/12345'
+        },
+        emsCommonFormId: 'new',
+        miqService: miqService
+      });
+  }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('when the emsCommonFormId is new', function () {
+    beforeEach(inject(function () {
+      $httpBackend.flush();
+    }));
+
+    it('sets the name to blank', function () {
+      expect($scope.emsCommonModel.name).toEqual('');
+    });
+
+    it('sets the type to blank', function () {
+      expect($scope.emsCommonModel.emstype).toEqual('');
+    });
+
+    it('sets the zone to default', function () {
+      expect($scope.emsCommonModel.zone).toEqual('default');
+    });
+
+    it('sets the api_port to 5000', function () {
+      expect($scope.emsCommonModel.api_port).toEqual(5000);
+    });
+
+    it('sets the api_version to v2', function () {
+      expect($scope.emsCommonModel.api_version).toEqual('v2');
+    });
+  });
+
+  describe('when the emsCommonFormId is an SCVMM Id', function () {
+    var emsCommonFormResponse = {
+      id: 12345,
+      name: 'msft',
+      emstype: 'scvmm',
+      zone: 'default',
+      security_protocol: "ssl",
+      default_userid: "default_user"
+    };
+
+    beforeEach(inject(function (_$controller_) {
+      $httpBackend.whenGET('/ems_infra/ems_infra_form_fields/12345').respond(emsCommonFormResponse);
+
+      $controller = _$controller_('emsCommonFormController',
+        {
+          $scope: $scope,
+          $attrs: {
+            'formFieldsUrl': '/ems_infra/ems_infra_form_fields/',
+            'createUrl': '/ems_infra',
+            'updateUrl': '/ems_infra/12345'
+          },
+          emsCommonFormId: 12345,
+          miqService: miqService
+        });
+      $httpBackend.flush();
+    }));
+
+    it('sets the name to the SCVMM Infra Provider', function () {
+      expect($scope.emsCommonModel.name).toEqual('msft');
+    });
+
+    it('sets the type to scvmm', function () {
+      expect($scope.emsCommonModel.emstype).toEqual('scvmm');
+    });
+
+    it('sets the zone to default', function () {
+      expect($scope.emsCommonModel.zone).toEqual('default');
+    });
+
+    it('sets the security protocol to ssl', function () {
+      expect($scope.emsCommonModel.security_protocol).toEqual('ssl');
+    });
+
+    it('sets the default_userid', function () {
+      expect($scope.emsCommonModel.default_userid).toEqual("default_user");
+    });
+
+    it('sets the default_password', function () {
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
+    });
+
+    it('sets the default_verify', function () {
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
+    });
+  });
+
+  describe('when the emsCommonFormId is an Openstack Id', function () {
+    var emsCommonFormResponse = {
+      id: 12345,
+      name: 'myOpenstack',
+      hostname: '10.22.33.44',
+      emstype: 'openstack_infra',
+      security_protocol: 'ssl',
+      zone: 'default',
+      api_port: '5000',
+      api_version: 'v2',
+      default_userid: "default_user",
+      amqp_userid: "amqp_user",
+      ssh_keypair_userid: "ssh_keypair_user"
+    };
+
+    beforeEach(inject(function (_$controller_) {
+      $httpBackend.whenGET('/ems_infra/ems_infra_form_fields/12345').respond(emsCommonFormResponse);
+
+      $controller = _$controller_('emsCommonFormController',
+        {
+          $scope: $scope,
+          $attrs: {
+            'formFieldsUrl': '/ems_infra/ems_infra_form_fields/',
+            'createUrl': '/ems_infra',
+            'updateUrl': '/ems_infra/update/'
+          },
+          emsCommonFormId: 12345,
+          miqService: miqService
+        });
+      $httpBackend.flush();
+    }));
+
+    it('sets the name to the Openstack Infra Provider', function () {
+      expect($scope.emsCommonModel.name).toEqual('myOpenstack');
+    });
+
+    it('sets the type to openstack', function () {
+      expect($scope.emsCommonModel.emstype).toEqual('openstack_infra');
+    });
+
+    it('sets the hostname', function () {
+      expect($scope.emsCommonModel.hostname).toEqual('10.22.33.44');
+    });
+
+    it('sets the zone to default', function () {
+      expect($scope.emsCommonModel.zone).toEqual('default');
+    });
+
+    it('sets the default_userid', function () {
+      expect($scope.emsCommonModel.default_userid).toEqual("default_user");
+    });
+
+    it('sets the default_password', function () {
+      expect($scope.emsCommonModel.default_password).toEqual(miqService.storedPasswordPlaceholder);
+    });
+
+    it('sets the default_verify', function () {
+      expect($scope.emsCommonModel.default_verify).toEqual(miqService.storedPasswordPlaceholder);
+    });
+
+    it('sets the amqp_userid', function () {
+      expect($scope.emsCommonModel.amqp_userid).toEqual("amqp_user");
+    });
+
+    it('sets the amqp_password', function () {
+      expect($scope.emsCommonModel.amqp_password).toEqual(miqService.storedPasswordPlaceholder);
+    });
+
+    it('sets the amqp_verify', function () {
+      expect($scope.emsCommonModel.amqp_verify).toEqual(miqService.storedPasswordPlaceholder);
+    });
+
+    it('sets the ssh_keypair_userid', function () {
+      expect($scope.emsCommonModel.ssh_keypair_userid).toEqual("ssh_keypair_user");
+    });
+
+    it('sets the ssh_keypair_password', function () {
+      expect($scope.emsCommonModel.ssh_keypair_password).toEqual(miqService.storedPasswordPlaceholder);
+    });
+
+    it('sets the ssh_keypair_verify', function () {
+      expect($scope.emsCommonModel.ssh_keypair_verify).toEqual(miqService.storedPasswordPlaceholder);
+    });
+  });
+});

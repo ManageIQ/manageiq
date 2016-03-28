@@ -82,7 +82,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.project                         = data.project;
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
-        $scope.emsCommonModel.provider_id                     = data.provider_id.toString();
+
+        $scope.emsCommonModel.provider_id                     = angular.isDefined(data.provider_id) ? data.provider_id.toString() : "";
+
         $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port : '5000';
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port : '5672';
         $scope.emsCommonModel.api_version                     = data.api_version;
