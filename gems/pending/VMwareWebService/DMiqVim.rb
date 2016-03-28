@@ -25,7 +25,7 @@ class DMiqVim < MiqVim
 
   attr_reader :updateThread
 
-  def initialize(server, username, password, broker, preLoad = false, debugUpdates = false, notifyMethod = nil, cacheScope = nil, maxWait = 60)
+  def initialize(server, username, password, broker, preLoad = false, debugUpdates = false, notifyMethod = nil, cacheScope = nil, maxWait = 60, maxObjects = 250)
     super(server, username, password, cacheScope)
 
     log_prefix        = "DMiqVim.initialize (#{@connId})"
@@ -37,6 +37,7 @@ class DMiqVim < MiqVim
     @connectionRemoved    = false
     @debugUpdates     = debugUpdates
     @maxWait          = maxWait
+    @maxObjects       = maxObjects
 
     checkForOrphanedMonitors
     $vim_log.info "#{log_prefix}: starting update monitor thread" if $vim_log

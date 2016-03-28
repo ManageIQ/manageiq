@@ -20,40 +20,39 @@ module MiqVimUpdate
 
   def monitorUpdatesInitial(preLoad)
     log_prefix = "MiqVimUpdate.monitorUpdatesInitial (#{@connId})"
-    #
-    # This timeout value setting for the session is serielized through the initialize method of DMiqVim.
-    #
-    ort = receiveTimeout
-    self.receiveTimeout = 1200
-    retries = @@max_retries
-    begin
-      $vim_log.info "#{log_prefix}: call to waitForUpdates...Starting" if $vim_log
-      updateSet = waitForUpdatesEx(@umPropCol)
-      $vim_log.info "#{log_prefix}: call to waitForUpdates...Complete" if $vim_log
-      version = updateSet.version
 
-      if preLoad && @monitor
-        @cacheLock.synchronize(:EX) do
-          updateSet.filterSet.each do |fu|
-            next if fu.filter != @filterSpecRef
-            fu.objectSet.each { |objUpdate| updateObject(objUpdate, true) }
-          end # updateSet.filterSet.each
-          iUpdateFixUp
+    version      = nil
+    truncated    = true
+    wait_options = {:max_objects => @maxObjects}
+
+    while truncated
+      begin
+        $vim_log.info "#{log_prefix}: call to waitForUpdates...Starting" if $vim_log
+        updateSet = waitForUpdatesEx(@umPropCol, version, wait_options)
+        $vim_log.info "#{log_prefix}: call to waitForUpdates...Complete" if $vim_log
+
+        version   = updateSet.version
+        truncated = updateSet.truncated
+
+        if preLoad && @monitor
+          @cacheLock.synchronize(:EX) do
+            updateSet.filterSet.each do |fu|
+              next if fu.filter != @filterSpecRef
+              fu.objectSet.each { |objUpdate| updateObject(objUpdate, true) }
+            end # updateSet.filterSet.each
+            iUpdateFixUp
+          end
         end
+        # Help out the Ruby Garbage Collector by resetting variables pointing to large objects back to nil
+        updateSet = nil
+      rescue HTTPClient::ReceiveTimeoutError => terr
+        $vim_log.info "#{log_prefix}: call to waitForUpdates...Timeout" if $vim_log
+        raise terr if !isAlive?
+        retry
       end
-      # Help out the Ruby Garbage Collector by resetting variables pointing to large objects back to nil
-      updateSet = nil
-      return version
-    rescue HTTPClient::ReceiveTimeoutError => terr
-      $vim_log.info "#{log_prefix}: call to waitForUpdates...Timeout" if $vim_log
-      raise terr if !isAlive? || retries <= 0
-      retries -= 1
-      self.receiveTimeout = receiveTimeout * 2
-      $vim_log.info "#{log_prefix}: retrying - timeout: #{receiveTimeout}, retries remaining: #{retries}"
-      retry
-    ensure
-      self.receiveTimeout = ort
     end
+
+    return version
   end
 
   def monitorUpdatesSince(version)

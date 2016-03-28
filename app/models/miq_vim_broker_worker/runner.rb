@@ -223,6 +223,8 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     MiqVimBroker.notifyMethod = nil
     MiqVimBroker.cacheScope   = expected_broker_cache_scope
     MiqVimBroker.setSelector(EmsRefresh::VcUpdates::VIM_SELECTOR_SPEC)
+    MiqVimBroker.maxWait      = worker_settings[:vim_broker_max_wait]
+    MiqVimBroker.maxObjects   = worker_settings[:vim_broker_max_objects]
 
     _log.info("#{log_prefix} Creating broker server with [#{MiqVimBroker.cacheScope}]")
 

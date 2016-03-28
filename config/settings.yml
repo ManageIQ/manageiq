@@ -1374,6 +1374,8 @@
       :reconnect_retry_interval: 5.minutes
       :vim_broker_status_interval: 15.minutes
       :vim_broker_update_interval: 0.seconds
+      :vim_broker_max_wait: 60
+      :vim_broker_max_objects: 250
     :web_service_worker:
       :connection_pool_size: 5
       :memory_threshold: 1.gigabytes
