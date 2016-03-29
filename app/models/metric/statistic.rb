@@ -3,7 +3,7 @@ module Metric::Statistic
     return {} unless obj.respond_to?(:container_groups)
 
     capture_interval = Metric::Helper.get_time_interval(obj, timestamp)
-    container_groups = ContainerGroup.where("ems_id = #{obj.id} OR old_ems_id = #{obj.id}")
+    container_groups = ContainerGroup.where(:ems_id => obj.id).or(ContainerGroup.where(:old_ems_id => obj.id))
 
     {
       :stat_containergroup_create_rate => container_groups.where(:created_on => capture_interval).count,
