@@ -255,9 +255,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :cloud_network       => @data_index.fetch_path(:cloud_networks, instance.vpc_id),
       :cloud_subnet        => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
       :key_pairs           => [@data_index.fetch_path(:key_pairs, instance.key_name)].compact,
-      :security_groups     => instance.security_groups.to_a.collect do |sg|
-        @data_index.fetch_path(:security_groups, sg.group_id)
-      end.compact,
       :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
                                                      get_from_tags(instance, "aws:cloudformation:stack-id")),
     }
