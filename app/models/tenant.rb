@@ -282,7 +282,7 @@ class Tenant < ApplicationRecord
     tenants_and_projects.partition(&:divisible?).map do |tenants|
       tenants.map do |t|
         all_names = (t.ancestor_ids + [t.id]).map { |tid| tenants_by_id[tid] }.map(&:name)
-        [all_names.join("."), t.id]
+        [all_names.join("/"), t.id]
       end.sort_by(&:first)
     end
   end
