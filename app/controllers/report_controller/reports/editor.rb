@@ -625,6 +625,8 @@ module ReportController::Reports::Editor
       end
     elsif params.key?(:cb_owner_id)
       @edit[:new][:cb_owner_id] = params[:cb_owner_id].blank? ? nil : params[:cb_owner_id]
+    elsif params.key?(:cb_tenant_id)
+      @edit[:new][:cb_tenant_id] = params[:cb_tenant_id].blank? ? nil : params[:cb_tenant_id].to_i
     elsif params.key?(:cb_tag_value)
       @edit[:new][:cb_tag_value] = params[:cb_tag_value].blank? ? nil : params[:cb_tag_value]
     elsif params.key?(:cb_groupby)
@@ -1171,6 +1173,8 @@ module ReportController::Reports::Editor
       options[:end_interval_offset] = @edit[:new][:cb_end_interval_offset]
       if @edit[:new][:cb_show_typ] == "owner"
         options[:owner] = @edit[:new][:cb_owner_id]
+      elsif @edit[:new][:cb_show_typ] == "tenant"
+        options[:tenant_id] = @edit[:new][:cb_tenant_id]
       elsif @edit[:new][:cb_show_typ] == "tag"
         if @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
           options[:tag] = "/managed/#{@edit[:new][:cb_tag_cat]}/#{@edit[:new][:cb_tag_value]}"
@@ -1453,6 +1457,9 @@ module ReportController::Reports::Editor
       if options.key?(:owner) # Get the owner options
         @edit[:new][:cb_show_typ] = "owner"
         @edit[:new][:cb_owner_id] = options[:owner]
+      elsif options.key?(:tenant_id) # Get the tenant options
+        @edit[:new][:cb_show_typ] = "tenant"
+        @edit[:new][:cb_tenant_id] = options[:tenant_id]
       elsif options.key?(:tag)  # Get the tag options
         @edit[:new][:cb_show_typ] = "tag"
         @edit[:new][:cb_tag_cat] = options[:tag].split("/")[-2]
@@ -1471,6 +1478,8 @@ module ReportController::Reports::Editor
     if admin_user?
       @edit[:cb_users] = {}
       User.all.each { |u| @edit[:cb_users][u.userid] = u.name }
+      @edit[:cb_tenant] = {}
+      Tenant.all.each { |t| @edit[:cb_tenant][t.id] = t.name }
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
@@ -1612,6 +1621,8 @@ module ReportController::Reports::Editor
     if admin_user?
       @edit[:cb_users] = {}
       User.all.each { |u| @edit[:cb_users][u.userid] = u.name }
+      @edit[:cb_tenant] = {}
+      Tenant.all.each { |t| @edit[:cb_tenant][t.id] = t.name }
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]

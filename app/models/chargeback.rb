@@ -72,6 +72,13 @@ class Chargeback < ActsAsArModel
     elsif options[:tag]
       vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
       vms &= report_user.accessible_vms if report_user && report_user.self_service?
+    elsif options[:tenant_id]
+      tenant = Tenant.find(options[:tenant_id])
+      if tenant.nil?
+        _log.error("Unable to find tenant '#{options[:tenant_id]}'. Calculating chargeback costs aborted.")
+        raise MiqException::Error, "Unable to find tenant '#{options[:tenant_id]}'"
+      end
+      vms = tenant.vms
     else
       raise _("must provide options :owner or :tag")
     end
