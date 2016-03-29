@@ -170,7 +170,8 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
       :address            => address,
       :fixed_ip_address   => ip.private_ip_address,
       :cloud_network_only => ip.domain["vpc"] ? true : false,
-      :network_port       => @data_index.fetch_path(:network_ports, ip.network_interface_id)
+      :network_port       => @data_index.fetch_path(:network_ports, ip.network_interface_id),
+      :vm                 => parent_manager_fetch_path(:vms, ip.instance_id)
     }
 
     return uid, new_result

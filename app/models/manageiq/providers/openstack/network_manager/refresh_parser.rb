@@ -42,8 +42,6 @@ module ManageIQ::Providers
 
       $fog_log.info("#{log_header}...Complete")
 
-      link_network_ports_associations
-
       @data
     end
 
@@ -327,7 +325,8 @@ module ManageIQ::Providers
         :cloud_network    => @data_index.fetch_path(:cloud_networks, ip.floating_network_id),
         # TODO(lsmola) expose attributes in FOG
         :status           => ip.attributes['status'],
-        :network_port     => @data_index.fetch_path(:netowrk_ports, ip.port_id)
+        :network_port     => @data_index.fetch_path(:network_ports, ip.port_id),
+        :vm               => @data_index.fetch_path(:network_ports, ip.port_id, :device)
       }
 
       return uid, new_result
@@ -336,16 +335,6 @@ module ManageIQ::Providers
     #
     # Helper methods
     #
-
-    def link_network_ports_associations
-      return unless @network_service.name == :neutron
-      # link network ports to floating ips
-      return unless (floating_ips = @data.fetch_path(:floating_ips))
-      floating_ips.each do |floating_ip|
-        network_port_ems_ref = floating_ip.delete(:network_port_ems_ref)
-        floating_ip[:network_port] = @data_index.fetch_path(:network_ports, network_port_ems_ref)
-      end
-    end
 
     class << self
       def security_group_type
