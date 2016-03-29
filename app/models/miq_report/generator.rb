@@ -250,12 +250,12 @@ module MiqReport::Generator
         # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
       end
 
-      start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
+      time_range = Metric::Helper.time_range_from_offset("daily", db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
       results = VimPerformanceDaily
                 .find_entries(ext_options.merge(:class => klass))
                 .where(where_clause)
-                .where(:timestamp => start_time..end_time)
+                .where(:timestamp => time_range)
                 .includes(includes)
                 .references(includes)
                 .limit(options[:limit])
