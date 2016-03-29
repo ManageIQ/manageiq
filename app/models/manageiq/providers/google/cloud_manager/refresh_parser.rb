@@ -16,6 +16,9 @@ module ManageIQ::Providers
         @data              = {}
         @data_index        = {}
         @project_key_pairs = Set.new
+
+        # Mapping from disk url to source image id.
+        @disk_to_source_image_id = {}
       end
 
       def ems_inv_to_hashes
@@ -26,9 +29,9 @@ module ManageIQ::Providers
         get_flavors
         get_cloud_networks
         get_security_groups
-        get_disks
+        get_volumes
         get_images
-        get_instances
+        get_instances # Must occur after get_volumes is called
         _log.info("#{log_header}...Complete")
 
         @data
@@ -63,9 +66,9 @@ module ManageIQ::Providers
         end
       end
 
-      def get_disks
+      def get_volumes
         disks = @connection.disks.all
-        process_collection(disks, :disks) { |disk| parse_disk(disk) }
+        process_collection(disks, :cloud_volumes) { |volume| parse_volume(volume) }
       end
 
       def get_images
@@ -209,16 +212,24 @@ module ManageIQ::Providers
         ret
       end
 
-      def parse_disk(disk)
+      def parse_volume(volume)
+        zone_id = parse_uid_from_url(volume.zone)
+
         new_result = {
-          :name         => disk.name,
-          :description  => disk.description,
-          :size         => disk.size_gb.to_i * 1.gigabyte,
-          :location     => disk.zone,
-          :parent_image => disk.source_image_id,
+          :ems_ref           => volume.id,
+          :name              => volume.name,
+          :status            => volume.status,
+          :creation_time     => volume.creation_timestamp,
+          :volume_type       => parse_uid_from_url(volume.type),
+          :description       => volume.description,
+          :size              => volume.size_gb.to_i.gigabyte,
+          :availability_zone => @data_index.fetch_path(:availability_zones, zone_id)
         }
 
-        return disk.self_link, new_result
+        # Take note of the source_image_id so we can expose it in parse_instance
+        @disk_to_source_image_id[volume.self_link] = volume.source_image_id
+
+        return volume.self_link, new_result
       end
 
       def parse_image(image)
@@ -301,8 +312,8 @@ module ManageIQ::Providers
             :cpu_total_cores      => flavor[:cpu_cores],
             :cpu_cores_per_socket => 1,
             :memory_mb            => flavor[:memory] / 1.megabyte,
-            :disks                => [],
-            :networks             => [],
+            :disks                => [], # populated below
+            :networks             => [], # populated below
           }
         }
 
@@ -314,16 +325,20 @@ module ManageIQ::Providers
       end
 
       def populate_hardware_hash_with_disks(hardware_disks_array, instance)
-        instance.disks.each do |disk|
+        instance.disks.each do |attached_disk|
           # lookup the full disk information from the data_index by source link
-          d = @data_index.fetch_path(:disks, disk["source"])
+          d = @data_index.fetch_path(:cloud_volumes, attached_disk["source"])
+
           next if d.nil?
 
           disk_size     = d[:size]
-          disk_name     = disk["deviceName"]
-          disk_location = disk["index"]
+          disk_name     = attached_disk["deviceName"]
+          disk_location = attached_disk["index"]
 
-          add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
+          disk = add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
+          # Link the disk and the instance together
+          disk[:backing]      = d
+          disk[:backing_type] = 'CloudVolume'
         end
       end
 
@@ -373,10 +388,8 @@ module ManageIQ::Providers
         parent_image_uid = nil
 
         instance.disks.each do |disk|
-          d = @data_index.fetch_path(:disks, disk["source"])
-          next if d.nil? || d[:parent_image].nil?
-
-          parent_image_uid = d[:parent_image]
+          parent_image_uid = @disk_to_source_image_id[disk["source"]]
+          next if parent_image_uid.nil?
           break
         end
 
