@@ -6,4 +6,6 @@ FactoryGirl.define do
 
   factory :network_port_openstack, :class  => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
                                    :parent => :network_port
+  factory :network_port_amazon, :class  => "ManageIQ::Providers::Amazon::NetworkManager::NetworkPort",
+                                   :parent => :network_port
 end
