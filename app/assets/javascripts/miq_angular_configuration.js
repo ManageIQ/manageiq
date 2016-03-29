@@ -28,11 +28,11 @@ ManageIQ.angular.app.config([ '$httpProvider', '$stateProvider', '$urlRouterProv
 }]);
 
 ManageIQ.angular.app.run(['$rootScope', 'miqService', '$window', function($rootScope, miqService, $window) {
-  var otherwisePath;
+  var otherwisePath, newUrlPath;
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
     if (toState.name === "otherwise") {
       event.preventDefault();
-      otherwisePath = toParams.path;
+      otherwisePath = newUrlPath;
     }
     else {
       miqService.sparkleOn();
@@ -47,7 +47,8 @@ ManageIQ.angular.app.run(['$rootScope', 'miqService', '$window', function($rootS
     if (angular.isDefined(otherwisePath) && $window.location.pathname != otherwisePath ) {
       miqService.sparkleOn();
       $window.location.href = otherwisePath;
+    } else {
+      newUrlPath = newURL;
     }
   });
-
 }]);
