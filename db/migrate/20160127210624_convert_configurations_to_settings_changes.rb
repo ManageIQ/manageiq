@@ -11,7 +11,7 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
 
   def up
     say_with_time("Migrating configuration changes") do
-      deltas = Configuration.all.flat_map { |f| full_to_deltas(f) }
+      deltas = Configuration.where(:typ => TEMPLATES.keys).all.flat_map { |f| full_to_deltas(f) }
       deltas.each { |d| SettingsChange.create!(d) }
     end
   end
