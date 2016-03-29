@@ -73,7 +73,9 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
 
   def get_network_ports
     network_ports = @aws_ec2.client.describe_network_interfaces.network_interfaces
+    instances     = @aws_ec2.instances
     process_collection(network_ports, :network_ports) { |n| parse_network_port(n) }
+    process_collection(instances, :network_ports) { |x| parse_network_port_inferred_from_instance(x) }
   end
 
   def parse_cloud_network(vpc)
@@ -205,6 +207,33 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
       :device                     => device,
       :cloud_subnet_network_ports => cloud_subnet_network_ports,
       :security_groups            => security_groups,
+    }
+    return uid, new_result
+  end
+
+  def parse_network_port_inferred_from_instance(instance)
+    # Create network_port placeholder for old EC2 instances, those do not have interface nor subnet nor VPC
+    # require 'byebug'; byebug
+    return nil, nil unless instance.network_interfaces.blank?
+
+    uid    = instance.id
+    name   = get_from_tags(instance, :name)
+    name ||= uid
+
+    device = parent_manager_fetch_path(:vms, uid)
+
+    new_result = {
+      :type            => self.class.network_port_type,
+      :name            => name,
+      :ems_ref         => uid,
+      :status          => nil,
+      :mac_address     => nil,
+      :device_owner    => nil,
+      :device_ref      => nil,
+      :device          => device,
+      :security_groups => instance.security_groups.to_a.collect do |sg|
+        @data_index.fetch_path(:security_groups, sg.group_id)
+      end.compact,
     }
     return uid, new_result
   end
