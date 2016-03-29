@@ -34,7 +34,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_table_counts
-    expect(ExtManagementSystem.count).to eq(1)
+    expect(ExtManagementSystem.count).to eq(2)
     expect(Flavor.count).to eq(55)
     expect(AvailabilityZone.count).to eq(3)
     expect(FloatingIp.count).to eq(1)
@@ -55,7 +55,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(SystemService.count).to eq(0)
 
     expect(Relationship.count).to eq(2)
-    expect(MiqQueue.count).to eq(5)
+    expect(MiqQueue.count).to eq(6)
   end
 
   def assert_ems
