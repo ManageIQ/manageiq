@@ -8,6 +8,8 @@ object:
     inherits: 
     description: 
   fields:
+  - quota_source_type:
+      value: tenant
   - warn_vms:
       value: '10'
   - max_vms:
