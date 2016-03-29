@@ -1,0 +1,19 @@
+{
+  "name": "manageiq",
+  "homepage": "http://manageiq.org/",
+  "authors": [
+    "ManageIQ"
+  ],
+  "description": "ManageIQ Cloud Management Platform",
+  "main": "",
+  "moduleType": [],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/assets/bower_components",
+    "test",
+    "tests"
+  ]
+}
