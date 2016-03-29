@@ -69,60 +69,6 @@ describe MiqProvisionVirtWorkflow do
         expect(vlans.values).to match_array(lan_keys)
       end
     end
-
-    context 'dvs' do
-      before do
-        @host1_dvs = {'pg1' => ['switch1'], 'pg2' => ['switch2']}
-        @host1_dvs_hash = {'dvs_pg1' => 'pg1 (switch1)',
-                           'dvs_pg2' => 'pg2 (switch2)'}
-        allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:connect)
-        allow(workflow).to receive(:get_host_dvs).with(@host1, nil).and_return(@host1_dvs)
-      end
-
-      it '#allowed_dvs single host' do
-        workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
-                                      :host_id => @host1.id)
-        workflow.instance_variable_set(:@target_resource,
-                                       :host    => workflow.host_to_hash_struct(@host1),
-                                       :ems     => workflow.ci_to_hash_struct(@ems),
-                                       :host_id => @host1.id)
-        dvs = workflow.allowed_dvs({}, nil)
-        expect(dvs).to eql(@host1_dvs_hash)
-      end
-
-      context "#allowed_dvs" do
-        before do
-          @host2 = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-          @host2_dvs = {'pg1' => ['switch21'], 'pg2' => ['switch2'], 'pg3' => ['switch23']}
-          allow(workflow).to receive(:get_host_dvs).with(@host2, nil).and_return(@host2_dvs)
-          workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
-                                        :placement_auto => true)
-
-          @combined_dvs_hash = {'dvs_pg1' => 'pg1 (switch1/switch21)',
-                                'dvs_pg2' => 'pg2 (switch2)',
-                                'dvs_pg3' => 'pg3 (switch23)'}
-        end
-
-        it 'multiple hosts auto placement' do
-          dvs = workflow.allowed_dvs({}, nil)
-          expect(dvs).to eql(@combined_dvs_hash)
-        end
-
-        it 'cached filtering' do
-          # Cache the dvs for 2 hosts
-          workflow.allowed_dvs({}, nil)
-
-          workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
-                                        :placement_auto => false)
-          workflow.instance_variable_set(:@target_resource,
-                                         :host    => workflow.host_to_hash_struct(@host1),
-                                         :ems     => workflow.ci_to_hash_struct(@ems),
-                                         :host_id => @host1.id)
-          dvs = workflow.allowed_dvs({}, nil)
-          expect(dvs).to eql(@host1_dvs_hash)
-        end
-      end
-    end
   end
 
   context "#validate email formatting" do
