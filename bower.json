@@ -15,5 +15,28 @@
     "vendor/assets/bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular": "^1.5.3",
+    "angular-animate": "^1.5.3",
+    "angular-mocks": "^1.5.3",
+    "angular-patternfly-sass": "^3.3.3",
+    "angular-sanitize": "^1.5.3",
+    "bootstrap-filestyle": "^1.2.1",
+    "bootstrap-hover-dropdown": "^2.0.11",
+    "jquery.observe_field": "himdel/jquery.observe_field#^0.1.0",
+    "jasmine-jquery": "^2.1.1",
+    "jquery-1.8": "^1.8.3",
+    "jquery-ujs": "^1.1.0",
+    "jquery-ui": "jqueryui#^1.9.2",
+    "bootstrap-switch": "^3.3.2",
+    "angular-bootstrap-switch": "^0.5.0",
+    "kubernetes-topology-graph": "0.0.23",
+    "moment-timezone": "^0.4.0",
+    "moment-strftime": "himdel/moment-strftime#^0.1.7",
+    "numeral": "^1.5.3",
+    "spin.js": "^2.3.2",
+    "sprintf": "^1.0.3",
+    "xml_display": "^0.1.1"
+  }
 }
