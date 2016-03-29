@@ -117,13 +117,6 @@ module Vmdb
     end
 
     console do
-      # Re-enable SQL logging in the console.  This log level setting gets set
-      #   to INFO, by default, for the loggers in Vmdb::Initializer.init.  So,
-      #   we set the value back to DEBUG for now.
-      # TODO: This can be removed once we can have separate config settings for
-      #   dev/test/prod in the config revamp.
-      ActiveRecord::Base.logger.level = Logger::DEBUG
-
       Rails::ConsoleMethods.include(Vmdb::ConsoleMethods)
     end
   end
