@@ -17,7 +17,7 @@ module MiqServer::ConfigurationManagement
 
   def settings_updated
     if is_local?
-      Settings.reload!
+      ::Settings.reload!
       Vmdb::Settings.activate
     elsif started?
       settings_updated_queue
