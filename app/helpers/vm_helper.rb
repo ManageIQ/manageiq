@@ -1,5 +1,6 @@
 module VmHelper
   include_concern 'TextualSummary'
+  include_concern 'ComplianceSummaryHelper'
 
   # TODO: These methods can be removed once the Summary and ListNav data layer is consolidated.
   def last_date(request_type)
