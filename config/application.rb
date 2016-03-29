@@ -124,9 +124,7 @@ module Vmdb
       #   dev/test/prod in the config revamp.
       ActiveRecord::Base.logger.level = Logger::DEBUG
 
-      Rails::ConsoleMethods.class_eval do
-        include Vmdb::ConsoleMethods
-      end
+      Rails::ConsoleMethods.include(Vmdb::ConsoleMethods)
     end
   end
 end
