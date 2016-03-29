@@ -3,6 +3,7 @@
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *
+ *= require c3
  *= require main
  *= require slickgrid/slick.grid
  *= require jquery.jqplot
@@ -24,5 +25,4 @@
  *= require container_topology
  *= require service_dialogs
  *= require xml_display
- *= require c3
 */
