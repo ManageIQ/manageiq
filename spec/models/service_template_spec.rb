@@ -7,6 +7,7 @@ describe ServiceTemplate do
     let(:assigned_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
     let(:generic_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
     let(:assigned_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
+    let(:double_agent) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
     let(:assigned_group_set) do
       FactoryGirl.create(:custom_button_set, :name => "assigned_group", :description => "assigned_group")
     end
@@ -20,9 +21,10 @@ describe ServiceTemplate do
 
       generic_group_set.add_member(generic_group)
       assigned_group_set.add_member(assigned_group)
+      assigned_group_set.add_member(double_agent)
 
       allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
-        [generic_no_group, generic_group]
+        [generic_no_group, generic_group, double_agent]
       )
       allow(CustomButton).to receive(:buttons_for).with(service_template).and_return(
         [assigned_no_group, assigned_group]
@@ -33,9 +35,12 @@ describe ServiceTemplate do
       assigned_group_buttons = assigned_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
       end
+      double_agent_button = double_agent.expanded_serializable_hash.reject do |key, _|
+        %w(created_on updated_on).include?(key)
+      end
       expected_assigned_group_set = assigned_group_set.serializable_hash.reject { |key, _|
         %w(created_on updated_on).include?(key)
-      }.merge(:buttons => [assigned_group_buttons])
+      }.merge(:buttons => [double_agent_button, assigned_group_buttons])
 
       generic_group_buttons = generic_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)

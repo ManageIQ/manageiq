@@ -35,10 +35,10 @@ class ServiceTemplate < ApplicationRecord
 
   def custom_actions
     generic_button_group = CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
-    custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
+    unique_custom_button_sets = (custom_button_sets + generic_button_group.map(&:parent).uniq.flatten).uniq(&:name)
     {
       :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
-      :button_groups => custom_button_sets_with_generics.collect do |button_set|
+      :button_groups => unique_custom_button_sets.collect do |button_set|
         button_set.serializable_hash.merge(:buttons => button_set.children.collect(&:expanded_serializable_hash))
       end
     }
