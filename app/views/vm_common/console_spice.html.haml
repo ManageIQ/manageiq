@@ -6,7 +6,7 @@
       = _('SPICE Console')
     = favicon_link_tag
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'application', 'spiceHTML5/spicearraybuffer', 'spice-html5-bower'
+    = javascript_include_tag 'application', 'spice-html5-bower/spiceHTML5/spicearraybuffer', 'spice-html5-bower'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
