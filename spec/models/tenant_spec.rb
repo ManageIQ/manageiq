@@ -818,7 +818,7 @@ describe Tenant do
       ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => ten1)
 
       tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants).to eq([["root", root_tenant.id], ["root.ten1", ten1.id], ["root.ten1.ten2", ten2.id]])
+      expect(tenants).to eq([["root", root_tenant.id], ["root/ten1", ten1.id], ["root/ten1/ten2", ten2.id]])
       expect(projects).to be_empty
     end
 
@@ -831,7 +831,7 @@ describe Tenant do
 
       tenants, projects = Tenant.tenant_and_project_names
       expect(tenants).to eq([["root", root_tenant.id]])
-      expect(projects).to eq([["root.proj1", proj1.id], ["root.proj2", proj2.id]])
+      expect(projects).to eq([["root/proj1", proj1.id], ["root/proj2", proj2.id]])
     end
 
     # root
@@ -850,10 +850,10 @@ describe Tenant do
       FactoryGirl.create(:tenant, :name => "proj3", :divisible => false, :parent => root_tenant)
 
       tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants.map(&:first)).to eq(%w(root root.ten1 root.ten2 root.ten3))
+      expect(tenants.map(&:first)).to eq(%w(root root/ten1 root/ten2 root/ten3))
       expect(tenants.first.last).to eq(root_tenant.id)
 
-      expect(projects.map(&:first)).to eq(%w(root.proj3 root.ten1.proj1 root.ten2.proj2))
+      expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
     end
   end
 end
