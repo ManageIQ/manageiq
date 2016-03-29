@@ -91,13 +91,6 @@ class MiqServer < ApplicationRecord
     end
   end
 
-  def self.update_server_config(cfg, key, value)
-    if cfg.get(:server, key) != value
-      cfg.set(:server, key, value)
-      cfg.save
-    end
-  end
-
   def starting_server_record
     self.started_on = self.last_heartbeat = Time.now.utc
     self.stopped_on = ""
@@ -209,21 +202,25 @@ class MiqServer < ApplicationRecord
 
     server = my_server(true)
     server_hash = {}
+    config_hash = {}
 
     ipaddr, hostname, mac_address = get_network_information
 
     if ipaddr =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
-      server_hash[:ipaddress] = ipaddr
-      update_server_config(config, :host, ipaddr)
+      server_hash[:ipaddress] = config_hash[:host] = ipaddr
     end
 
     unless hostname.blank?
-      server_hash[:hostname] = hostname
-      update_server_config(config, :hostname, hostname)
+      server_hash[:hostname] = config_hash[:hostname] = hostname
     end
 
     unless mac_address.blank?
       server_hash[:mac_address] = mac_address
+    end
+
+    if config_hash.any?
+      Vmdb::Settings.save!(server, :server => config_hash)
+      ::Settings.reload!
     end
 
     # Determine the corresponding Vm
@@ -260,9 +257,7 @@ class MiqServer < ApplicationRecord
 
     Vmdb::Appliance.log_config_on_startup
 
-    server.ntp_reload(server.server_ntp_settings)
-    # Update the config settings in the db table for MiqServer
-    server.config_activated(OpenStruct.new(:name => config.get(:server, :name)))
+    server.ntp_reload
 
     EvmDatabase.seed_last
 
