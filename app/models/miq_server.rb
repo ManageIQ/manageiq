@@ -205,52 +205,52 @@ class MiqServer < ApplicationRecord
     check_migrations_up_to_date
     Vmdb::Settings.activate
 
-    cfg = VMDB::Config.new("vmdb")
+    config = VMDB::Config.new("vmdb")
 
-    svr = my_server(true)
-    svr_hash = {}
+    server = my_server(true)
+    server_hash = {}
 
     ipaddr, hostname, mac_address = get_network_information
 
     if ipaddr =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
-      svr_hash[:ipaddress] = ipaddr
-      update_server_config(cfg, :host, ipaddr)
+      server_hash[:ipaddress] = ipaddr
+      update_server_config(config, :host, ipaddr)
     end
 
     unless hostname.blank?
-      svr_hash[:hostname] = hostname
-      update_server_config(cfg, :hostname, hostname)
+      server_hash[:hostname] = hostname
+      update_server_config(config, :hostname, hostname)
     end
 
     unless mac_address.blank?
-      svr_hash[:mac_address] = mac_address
+      server_hash[:mac_address] = mac_address
     end
 
     # Determine the corresponding Vm
-    if svr.vm_id.nil?
+    if server.vm_id.nil?
       vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddr)
       if vms.length > 1
         _log.warn "Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}"
       elsif vms.length == 1
-        svr_hash[:vm_id] = vms.first.id
+        server_hash[:vm_id] = vms.first.id
       end
     end
 
-    unless svr.new_record?
+    unless server.new_record?
       [
         # Reset the DRb URI
         :drb_uri, :last_heartbeat,
         # Reset stats
         :memory_usage, :memory_size, :percent_memory, :percent_cpu, :cpu_time
-      ].each { |k| svr_hash[k] = nil }
+      ].each { |k| server_hash[k] = nil }
     end
 
-    svr.update_attributes(svr_hash)
+    server.update_attributes(server_hash)
     my_server_clear_cache
 
-    _log.info("Server IP Address: #{svr.ipaddress}")    unless svr.ipaddress.blank?
-    _log.info("Server Hostname: #{svr.hostname}")       unless svr.hostname.blank?
-    _log.info("Server MAC Address: #{svr.mac_address}") unless svr.mac_address.blank?
+    _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
+    _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
+    _log.info("Server MAC Address: #{server.mac_address}") unless server.mac_address.blank?
     _log.info "Server GUID: #{my_guid}"
     _log.info "Server Zone: #{my_zone}"
     _log.info "Server Role: #{my_role}"
@@ -260,16 +260,16 @@ class MiqServer < ApplicationRecord
 
     Vmdb::Appliance.log_config_on_startup
 
-    svr.ntp_reload(svr.server_ntp_settings)
+    server.ntp_reload(server.server_ntp_settings)
     # Update the config settings in the db table for MiqServer
-    svr.config_activated(OpenStruct.new(:name => cfg.get(:server, :name)))
+    server.config_activated(OpenStruct.new(:name => config.get(:server, :name)))
 
     EvmDatabase.seed_last
 
-    start_memcached(cfg)
+    start_memcached(config)
     prep_apache_proxying
-    svr.start
-    svr.monitor_loop
+    server.start
+    server.monitor_loop
   end
 
   def self.check_migrations_up_to_date
