@@ -59,7 +59,6 @@ gem "puma",                           "~>2.13"
 gem "recursive-open-struct",          "~>0.6.1"
 gem "responders",                     "~>2.0"
 gem "secure_headers",                 "~>3.0.0"
-gem "spice-html5-rails"
 #gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
@@ -145,6 +144,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-himdel--moment-strftime",         "~>0.1.7"
   gem "rails-assets-numeral",                         "~>1.5.3"
   gem "rails-assets-slickgrid",                       "~>2.1.0"
+  gem "rails-assets-himdel--spice-html5-bower",       "~>0.1.5"
   gem "rails-assets-spin.js",                         "~>2.3.2"
   gem "rails-assets-sprintf",                         "~>1.0.3"
   gem "rails-assets-xml_display",                     "~>0.1.1"
