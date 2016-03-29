@@ -282,10 +282,11 @@ describe Chargeback do
     subject { Chargeback.build_results_for_report_chargeback(@options_tenant).first.first }
 
     it "report a chargeback of a subtenant" do
+      tier = FactoryGirl.create(:chargeback_tier_singular)
       FactoryGirl.create(:chargeback_rate_detail_cpu_allocated,
                          :chargeback_rate_id => @cbr.id,
                          :per_time           => "hourly",
-                         :rate               => @count_hourly_rate.to_s,
+                         :chargeback_tiers   => [tier],
                         )
       expect(subject.vm_name).to eq(@vm_tenant.name)
     end
