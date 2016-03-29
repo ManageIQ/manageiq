@@ -49,33 +49,32 @@ class ApplicationHelper::ToolbarBuilder
   def build_select_button(bgi, index)
     bs_children = false
     props = toolbar_button(
-      :klass   => bgi[:klass],
-      "id"     => bgi[:buttonSelect],
-      "type"   => "buttonSelect",
-      "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
-      "imgdis" => img,
-      :icon    => bgi[:icon]
+      :klass  => bgi[:klass],
+      :id     => bgi[:buttonSelect],
+      :type   => "buttonSelect",
+      :img    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
+      :imgdis => img,
+      :icon   => bgi[:icon]
     )
     apply_common_props(props, bgi)
-    props["openAll"] = true # Open/close the button select on click
 
     current_item = props
     current_item[:items] ||= []
     any_visible = false
     bgi[:items].each_with_index do |bsi, bsi_idx|
       if bsi.key?(:separator)
-        props = ApplicationHelper::Button::Separator.new("id" => "sep_#{index}_#{bsi_idx}", :hidden => !any_visible)
+        props = ApplicationHelper::Button::Separator.new(:id => "sep_#{index}_#{bsi_idx}", :hidden => !any_visible)
       else
         next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button]) # Use pressed, else button name
         bs_children = true
         props = toolbar_button(
-          :klass     => bsi[:klass],
-          "child_id" => bsi[:button],
-          "id"       => bgi[:buttonSelect] + "__" + bsi[:button],
-          "type"     => "button",
-          "img"      => img = "#{bsi[:image] || bsi[:button]}.png",
-          "imgdis"   => img,
-          :icon      => bsi[:icon]
+          :klass    => bsi[:klass],
+          :child_id => bsi[:button],
+          :id       => bgi[:buttonSelect] + "__" + bsi[:button],
+          :type     => "button",
+          :img      => img = "#{bsi[:image] || bsi[:button]}.png",
+          :imgdis   => img,
+          :icon     => bsi[:icon]
         )
         apply_common_props(props, bsi)
         props.calculate_properties
@@ -83,11 +82,11 @@ class ApplicationHelper::ToolbarBuilder
       build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
       current_item[:items] << props unless props.skip?
 
-      any_visible ||= !props[:hidden] && props["type"] != "separator"
+      any_visible ||= !props[:hidden] && props[:type] != 'separator'
     end
     current_item[:items].reverse_each do |item|
-      break if !item[:hidden] && item["type"] != 'separator'
-      item[:hidden] = true if item["type"] == 'separator'
+      break if !item[:hidden] && item[:type] != 'separator'
+      item[:hidden] = true if item[:type] == 'separator'
     end
     current_item[:hidden] = !any_visible
 
@@ -100,15 +99,15 @@ class ApplicationHelper::ToolbarBuilder
 
   def apply_common_props(button, input)
     button.update(
-      :name    => button['id'],
+      :name    => button[:id],
       :hidden  => button[:hidden] || !!input[:hidden],
       :pressed => input[:pressed],
       :onwhen  => input[:onwhen]
     )
 
-    button["title"]    = safer_eval(input[:title])   unless input[:title].blank?
-    button["enabled"]  = input[:enabled].to_s        unless input[:enabled].blank?
-    button["text"]     = safer_eval(input[:text])    unless input[:text].blank?
+    button[:title]     = safer_eval(input[:title])   unless input[:title].blank?
+    button[:enabled]   = input[:enabled]
+    button[:text]      = safer_eval(input[:text])    unless input[:text].blank?
     button[:confirm]   = safer_eval(input[:confirm]) unless input[:confirm].blank?
     button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
 
@@ -117,10 +116,10 @@ class ApplicationHelper::ToolbarBuilder
       button[:window_url] = "/#{request.parameters["controller"]}#{input[:url]}"
     end
 
-    dis_title = build_toolbar_disable_button(button['child_id'] || button['id'])
+    dis_title = build_toolbar_disable_button(button[:child_id] || button[:id])
     if dis_title
-      button["enabled"] = "false"
-      button["title"]   = dis_title if dis_title.kind_of? String
+      button[:enabled] = false
+      button[:title]   = dis_title if dis_title.kind_of? String
     end
     button
   end
@@ -135,12 +134,12 @@ class ApplicationHelper::ToolbarBuilder
 
     @sep_needed = true unless button_hide
     props = toolbar_button(
-      :klass   => bgi[:klass],
-      "id"     => bgi[:button],
-      "type"   => "button",
-      "img"    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-      "imgdis" => "#{bgi[:image] || bgi[:button]}.png",
-      :icon    => bgi[:icon]
+      :klass  => bgi[:klass],
+      :id     => bgi[:button],
+      :type   => "button",
+      :img    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
+      :imgdis => "#{bgi[:image] || bgi[:button]}.png",
+      :icon   => bgi[:icon]
     )
     apply_common_props(props, bgi)
 
@@ -155,7 +154,7 @@ class ApplicationHelper::ToolbarBuilder
     # Add a separator, if needed, before this button
     if !@sep_added && @sep_needed
       if @groups_added.include?(index) && @groups_added.length > 1
-        @toolbar << {"id" => "sep_#{index}", "type" => "separator"} # Put separators between buttons
+        @toolbar << ApplicationHelper::Button::Separator.new(:id => "sep_#{index}")
         @sep_added = true
       end
     end
@@ -166,16 +165,16 @@ class ApplicationHelper::ToolbarBuilder
     return nil if build_toolbar_hide_button(bgi[:buttonTwoState])
 
     props = toolbar_button(
-      :klass   => bgi[:klass],
-      "id"     => bgi[:buttonTwoState],
-      "type"   => "buttonTwoState",
-      "img"    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
-      "imgdis" => img,
-      :icon    => bgi[:icon]
+      :klass  => bgi[:klass],
+      :id     => bgi[:buttonTwoState],
+      :type   => "buttonTwoState",
+      :img    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
+      :imgdis => img,
+      :icon   => bgi[:icon]
     )
     apply_common_props(props, bgi)
 
-    props["selected"] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
+    props[:selected] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
 
     _add_separator(index)
     props

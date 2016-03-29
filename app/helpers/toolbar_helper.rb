@@ -62,7 +62,7 @@ module ToolbarHelper
   #
   def split_to_groups(buttons)
     buttons.slice_before do |props|
-      props['type'] == 'separator' ||
+      props[:type] == 'separator' ||
         props[:name] == 'download_choice' # exceptional behavior for view toolbar download drop down
     end.to_a
   end
@@ -70,7 +70,7 @@ module ToolbarHelper
   # Render toolbar top button.
   #
   def toolbar_top_button(props)
-    case props['type']
+    case props[:type]
     when 'buttonSelect'
       toolbar_top_button_select(props)
     when 'button'
@@ -87,10 +87,10 @@ module ToolbarHelper
   #
   def toolbar_image(props)
     if props[:icon].present?
-      content_tag(:i, '', :class => props[:icon], :style => props['text'].present? ? 'margin-right: 5px;' : '')
+      content_tag(:i, '', :class => props[:icon], :style => props[:text].present? ? 'margin-right: 5px;' : '')
     else
-      img = ActionController::Base.helpers.image_path("toolbars/#{props['img']}")
-      imgdis = ActionController::Base.helpers.image_path("toolbars/#{props['imgdis']}")
+      img = ActionController::Base.helpers.image_path("toolbars/#{props[:img]}")
+      imgdis = ActionController::Base.helpers.image_path("toolbars/#{props[:imgdis]}")
       tag(:img, :src => t = "#{img}", 'data-enabled' => t, 'data-disabled' => "#{imgdis}")
     end
   end
@@ -100,7 +100,7 @@ module ToolbarHelper
   def toolbar_top_button_select(props)
     cls = props[:hidden] ? 'hidden ' : ''
     content_tag(:div, :class => "#{cls}btn-group dropdown") do
-      cls += 'disabled ' if props['enabled'].to_s == 'false'
+      cls += 'disabled ' unless props[:enabled]
       out = []
       out << content_tag(:button,
                          prepare_tag_keys(props).update(
@@ -109,7 +109,7 @@ module ToolbarHelper
                            'data-toggle' => "dropdown",
                          )) do
         (toolbar_image(props) +
-          _(props['text'].to_s) + "&nbsp;".html_safe +
+          _(props[:text].to_s) + "&nbsp;".html_safe +
           content_tag(:span, '', :class => "caret")).html_safe
       end
       out << content_tag(:ul, :class => 'dropdown-menu') do
@@ -125,20 +125,20 @@ module ToolbarHelper
   #
   def toolbar_top_button_normal(props)
     cls = props[:hidden] ? 'hidden ' : ''
-    cls += 'active ' if props['selected'] # for buttonTwoState only
-    cls += 'disabled ' if props['enabled'] == 'false'
+    cls += 'active ' if props[:selected] # for buttonTwoState only
+    cls += 'disabled ' unless props[:enabled]
     content_tag(:button, prepare_tag_keys(props).update(
                            :type  => "button",
                            :class => "#{cls}btn btn-default")) do
       (toolbar_image(props) +
-        _(props['text'].to_s) + "&nbsp;".html_safe).html_safe
+        _(props[:text].to_s) + "&nbsp;".html_safe).html_safe
     end
   end
 
   # Render child button (in the drop-down)
   #
   def toolbar_button(props)
-    case props['type']
+    case props[:type]
     when 'button'
       toolbar_button_normal(props)
     when 'separator'
@@ -160,13 +160,13 @@ module ToolbarHelper
   def toolbar_button_normal(props, view_button = false)
     hidden = props[:hidden]
     cls = if view_button
-            props['enabled'].to_s == 'false' ? 'active ' : ''
+            props[:enabled] ? '' : 'active '
           else
-            props['enabled'].to_s == 'false' ? 'disabled ' : ''
+            props[:enabled] ? '' : 'disabled '
           end
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
       content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
-        (toolbar_image(props) + _(props['text'].to_s).html_safe)
+        (toolbar_image(props) + _(props[:text].to_s).html_safe)
       end
     end
   end
@@ -184,9 +184,9 @@ module ToolbarHelper
   #
   def prepare_tag_keys(props)
     h = data_hash_keys(props)
-    h.update('title'      => _(props['title']),
-             'data-click' => props['id'])
-    h['name']         = props[:name] if props.key?(:name)
+    h.update('title'      => _(props[:title]),
+             'data-click' => props[:id])
+    h['name'] = props[:name] if props.key?(:name)
     h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
     h
   end
