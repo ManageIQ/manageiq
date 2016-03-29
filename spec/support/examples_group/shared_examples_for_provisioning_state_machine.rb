@@ -4,7 +4,6 @@ shared_examples_for "common rhev state machine methods" do
     allow(@task).to receive(:update_and_notify_parent)
 
     expect(@task).to receive(:configure_container)
-    expect(@task).to receive(:configure_destination)
 
     @task.customize_destination
   end
