@@ -84,11 +84,11 @@ module Win32
       # Find the GUID of the default Boot element
       default_guid_path = "HKEY_LOCAL_MACHINE\\BCD\\Objects\\#{SYSTEM_STORE_GUID}\\Elements\\#{BCD_BOOTMGR_OBJECT_DEFAULTOBJECT}\\Element"
       default_os = MIQRexml.findRegElement(default_guid_path, xml.root)
-      default_os = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\BCD\\Objects\\#{default_os.text}\\Elements", xml.root)
+      default_os = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\BCD\\Objects\\#{default_os.text}\\Elements", xml.root) if default_os
 
       [BCD_OS_LOADER_DEVICE_OSDEVICE, :os_device, BCD_OS_LOADER_STRING_SYSTEMROOT, :system_root,
        BCD_LIBRARYSTRING_DESCRIPTION, :os_description].each_slice(2) do |key_id, name|
-        device = MIQRexml.findRegElement("#{key_id}\\Element", default_os)
+        device = MIQRexml.findRegElement("#{key_id}\\Element", default_os) if default_os
         result[name] = device.text unless device.nil?
       end
 

@@ -1,0 +1,114 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.windows.net/azure_tenant_id/oauth2/token
+    body:
+      encoding: US-ASCII
+      string: grant_type=client_credentials&client_id=azure_client_id&client_secret=azure_client_key&resource=https%3A%2F%2Fmanagement.azure.com%2F
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      Content-Length:
+      - '186'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Server:
+      - Microsoft-IIS/8.5
+      X-Ms-Request-Id:
+      - d7bfe7c6-6510-488f-b48d-a0761c538cb9
+      Client-Request-Id:
+      - 6a878caf-a6dd-4e1a-aecf-930ca7c53d7c
+      X-Ms-Gateway-Service-Instanceid:
+      - ESTSFE_IN_219
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      Set-Cookie:
+      - flight-uxoptin=true; path=/; secure; HttpOnly
+      - stsservicecookie=ests; path=/; secure; HttpOnly
+      - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Wed, 23 Mar 2016 15:27:03 GMT
+      Content-Length:
+      - '1247'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3599","expires_on":"1458750423","not_before":"1458746523","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg3NDY1MjMsIm5iZiI6MTQ1ODc0NjUyMywiZXhwIjoxNDU4NzUwNDIzLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.Inb3Dg2WRK17OHDg0zvW3lq0viH-_NQM_zp-b2fRtjdqdC3ZPfWjcSIzQlopEf7AduwkiME2Vo51FiIzCuIVxgovzg4pUj2ZIliataNZXJn1KtxzU_-4Y9iFUpxuZp3tKHJsyKdG5I-cHN2qopPT9lJuH3FjhjgsnnmKMif9cfJpwxy8E2FPQkRlpu97G6k-j6mstLNE3l3fgh5cOVA6OrBZ73xsrG8-BbwmBAgs_zw7beAuIKi6YUUY32WwR2G7E6GLNhGjpUscYzxEZqNawRysb59sHBSHmQXyEHgOh4Yk7Z6CJpo1nyJZ23oioVYZGl_KWfZraEEMRHjeE9YLaQ"}'
+    http_version: 
+  recorded_at: Wed, 23 Mar 2016 15:27:02 GMT
+- request:
+    method: get
+    uri: https://management.azure.com/subscriptions?api-version=2015-01-01
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg3NDY1MjMsIm5iZiI6MTQ1ODc0NjUyMywiZXhwIjoxNDU4NzUwNDIzLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.Inb3Dg2WRK17OHDg0zvW3lq0viH-_NQM_zp-b2fRtjdqdC3ZPfWjcSIzQlopEf7AduwkiME2Vo51FiIzCuIVxgovzg4pUj2ZIliataNZXJn1KtxzU_-4Y9iFUpxuZp3tKHJsyKdG5I-cHN2qopPT9lJuH3FjhjgsnnmKMif9cfJpwxy8E2FPQkRlpu97G6k-j6mstLNE3l3fgh5cOVA6OrBZ73xsrG8-BbwmBAgs_zw7beAuIKi6YUUY32WwR2G7E6GLNhGjpUscYzxEZqNawRysb59sHBSHmQXyEHgOh4Yk7Z6CJpo1nyJZ23oioVYZGl_KWfZraEEMRHjeE9YLaQ
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Vary:
+      - Accept-Encoding
+      X-Ms-Ratelimit-Remaining-Tenant-Reads:
+      - '14997'
+      X-Ms-Request-Id:
+      - 8b212f56-c514-49f2-87e7-f37f44d8ab2e
+      X-Ms-Correlation-Request-Id:
+      - 8b212f56-c514-49f2-87e7-f37f44d8ab2e
+      X-Ms-Routing-Request-Id:
+      - EASTUS:20160323T152703Z:8b212f56-c514-49f2-87e7-f37f44d8ab2e
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Date:
+      - Wed, 23 Mar 2016 15:27:02 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c","subscriptionId":"2586c64b-38b4-4527-a140-012d49dfc02c","displayName":"Microsoft
+        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
+    http_version: 
+  recorded_at: Wed, 23 Mar 2016 15:27:03 GMT
+recorded_with: VCR 2.9.3
