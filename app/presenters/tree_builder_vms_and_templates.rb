@@ -37,7 +37,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
   def hidden_child_folder?(object, children)
     return false unless children.length == 1
     child = children.keys.first
-    child.kind_of?(EmsFolder) && child.hidden?(:ext_management_system => root_ems, :parent => object)
+    child.kind_of?(EmsFolder) && child.hidden?
   end
 
   def reparent_hidden_folders(tree)
