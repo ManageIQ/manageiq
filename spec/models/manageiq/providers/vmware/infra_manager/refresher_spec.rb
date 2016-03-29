@@ -204,6 +204,20 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(@host.storages.size).to eq(25)
     expect(@host.storages).to      include(@storage)
 
+    expect(@host.writable_storages.size).to  eq(24)
+    expect(@host.read_only_storages.size).to eq(1)
+
+    read_only_storage = @host.read_only_storages.first
+    expect(read_only_storage).to have_attributes(
+      :ems_ref            => "datastore-12282",
+      :name               => "temp1",
+      :store_type         => "VMFS",
+      :total_space        => 2830920318976,
+      :free_space         => 2667552178176,
+      :multiplehostaccess => 1,
+      :location           => "4dce5b88-623e8e7e-0dc0-00188b404015"
+    )
+
     expect(@host.operating_system).to have_attributes(
       :name         => "VI4ESXM1.manageiq.com",
       :product_name => "ESXi",

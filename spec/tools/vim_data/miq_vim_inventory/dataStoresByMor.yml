@@ -4,6 +4,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -66,6 +95,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -128,6 +186,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -190,6 +263,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -248,6 +336,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -310,6 +413,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readOnly
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -368,6 +500,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -426,6 +573,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -484,6 +646,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -546,6 +737,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -608,6 +814,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -666,6 +887,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -724,6 +974,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -782,6 +1047,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -840,6 +1134,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -902,6 +1211,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -960,6 +1284,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1018,6 +1371,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1076,6 +1444,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1134,6 +1531,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1196,6 +1622,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1254,6 +1695,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1312,6 +1768,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1374,6 +1859,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1432,6 +1932,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1490,6 +2005,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1548,6 +2092,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1606,6 +2165,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1668,6 +2256,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1730,6 +2333,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1788,6 +2406,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1850,6 +2497,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1908,6 +2570,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -1970,6 +2661,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2032,6 +2752,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2090,6 +2825,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2152,6 +2916,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2210,6 +3003,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2268,6 +3090,7 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2330,6 +3153,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2388,6 +3226,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2446,6 +3313,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2504,6 +3386,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2562,6 +3459,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2620,6 +3546,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2682,6 +3637,7 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2740,6 +3696,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-648
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2798,6 +3769,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2856,6 +3856,21 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-12692
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
@@ -2914,6 +3929,35 @@
   "@vimType": :Datastore
   "@xsiType": :ManagedObjectReference
 : !map:VimHash 
+  host: !map:VimArray
+    - !map:VimHash
+      key: !str:VimString
+        str: host-9
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
+    - !map:VimHash
+      key: !str:VimString
+        str: host-891
+        "@vimType": :HostSystem
+        "@xsiType": :ManagedObjectReference
+      mountInfo: !map:VimHash
+        accessMode: !str:VimString
+          str: readWrite
+          "@xsiType": :"SOAP::SOAPString"
+          "@vimType":
+        __iv__@vimType:
+        __iv__@xsiType: :HostMountInfo
+      __iv__@vimType:
+      __iv__@xsiType: :DatastoreHostMount
   capability: !map:VimHash 
     perFileThinProvisioningSupported: !str:VimString 
       str: "true"
