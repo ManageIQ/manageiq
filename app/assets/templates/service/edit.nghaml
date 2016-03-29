@@ -1,0 +1,34 @@
+%form.form-horizontal#form_div{"name" => "angularForm"}
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+        %label.col-md-2.control-label{"for" => "textInput-markup"}
+          = _("Name")
+        .col-md-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "name",
+                              "name"        => "name",
+                              "ng-model"    => "serviceModel.name",
+                              "maxlength"   => "#{MAX_NAME_LEN}",
+                              "required"    => "",
+                              "checkchange" => "",
+                              "auto-focus"  => ""}
+          %span.help-block{"ng-show" => "angularForm.name.$error.required"}
+            = _("Required")
+      .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
+        %label.col-md-2.control-label{"for" => "textInput-markup"}
+          = _("Description")
+        .col-md-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "description",
+                              "name"        => "description",
+                              "ng-model"    => "serviceModel.description",
+                              "maxlength"   => "#{MAX_DESC_LEN}",
+                              "required"    => "",
+                              "checkchange" => ""}
+          %span.help-block{"ng-show" => "angularForm.description.$error.required"}
+            = _("Required")
+  %form-buttons
