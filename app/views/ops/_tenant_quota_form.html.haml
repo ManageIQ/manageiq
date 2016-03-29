@@ -29,7 +29,7 @@
             %td {{quota_obj.description}}
             %td
               %input.form-control{"type"        => "text",
-                                  "id"          => "textInput-markup",
+                                  "id"          => "id_{{quota_name}}",
                                   "name"        => "value",
                                   "ng-model"    => "quota_obj.value",
                                   "ng-required" => "quota_obj.enforced",
