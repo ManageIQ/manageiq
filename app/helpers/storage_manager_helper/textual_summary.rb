@@ -16,7 +16,7 @@ module StorageManagerHelper::TextualSummary
   end
 
   def textual_ipaddress
-    {:label => _("IP Adress"), :value => @record.ipaddress}
+    {:label => _("IP Address"), :value => @record.ipaddress}
   end
 
   def textual_agent_type

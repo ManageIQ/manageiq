@@ -43,12 +43,12 @@ module FlavorHelper::TextualSummary
 
   def textual_supports_32_bit
     return nil if @record.supports_32_bit.nil?
-    {:label => _("32 Bit Architecture "), :value => @record.supports_32_bit?}
+    {:label => _("32 Bit Architecture"), :value => @record.supports_32_bit?}
   end
 
   def textual_supports_64_bit
     return nil if @record.supports_64_bit.nil?
-    {:label => _("64 Bit Architecture "), :value => @record.supports_64_bit?}
+    {:label => _("64 Bit Architecture"), :value => @record.supports_64_bit?}
   end
 
   def textual_supports_hvm
