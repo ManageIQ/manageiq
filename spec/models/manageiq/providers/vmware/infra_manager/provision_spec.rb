@@ -164,6 +164,38 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(@vm_prov.dest_folder).to eq(vm_folder)
         end
       end
+
+      context "#dest_resource_pool" do
+        let(:resource_pool) { FactoryGirl.create(:resource_pool) }
+
+        let(:dest_host) do
+          host = FactoryGirl.create(:host_vmware, :ext_management_system => @ems)
+          FactoryGirl.create(:resource_pool).parent = host
+          host
+        end
+
+        let(:cluster) do
+          cluster = FactoryGirl.create(:ems_cluster)
+          FactoryGirl.create(:resource_pool).parent = cluster
+        end
+
+        let(:dest_host_with_cluster) { FactoryGirl.create(:host_vmware, :ems_cluster => cluster) }
+
+        it "uses the resource pool from options" do
+          @vm_prov.options[:placement_rp_name] = resource_pool.id
+          expect(@vm_prov.dest_resource_pool).to eq(resource_pool)
+        end
+
+        it "uses the resource pool from the cluster" do
+          @vm_prov.options[:dest_host] = [dest_host_with_cluster.id, dest_host_with_cluster.name]
+          expect(@vm_prov.dest_resource_pool).to eq(cluster.default_resource_pool)
+        end
+
+        it "uses the resource pool from destination host" do
+          @vm_prov.options[:dest_host] = [dest_host.id, dest_host.name]
+          expect(@vm_prov.dest_resource_pool).to eq(dest_host.default_resource_pool)
+        end
+      end
     end
   end
 end
