@@ -6,7 +6,7 @@ module MiqAeServiceVmOpenstackSpec
       context "for #{t}" do
         define_method(:service_class_for) do |part|
           case t.camelize
-          when "Openstack"
+          when "Openstack", "Amazon"
             case part.to_s.camelize
             when "FloatingIp", "SecurityGroup"
               return "MiqAeMethodService::MiqAeServiceManageIQ_Providers_#{t.camelize}_NetworkManager_#{part.to_s.camelize}".constantize
@@ -23,7 +23,7 @@ module MiqAeServiceVmOpenstackSpec
             vm.key_pairs << FactoryGirl.create("auth_key_pair_#{t}".to_sym)
           end
           case t
-          when "openstack"
+          when "openstack", "amazon"
             network = FactoryGirl.create("cloud_network_#{t}".to_sym)
             subnet  = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :cloud_network => network)
             vm.network_ports << network_port = FactoryGirl.create("network_port_#{t}".to_sym,
@@ -31,7 +31,7 @@ module MiqAeServiceVmOpenstackSpec
             FactoryGirl.create(:cloud_subnet_network_port, :cloud_subnet => subnet, :network_port => network_port)
 
             network_port.security_groups << FactoryGirl.create("security_group_#{t}".to_sym)
-            network_port.floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym)
+            network_port.floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym, :vm => vm)
           when "google"
             vm.cloud_network = FactoryGirl.create(:cloud_network)
           else
@@ -55,8 +55,8 @@ module MiqAeServiceVmOpenstackSpec
 
         it "#cloud_network" do
           case t
-          when "openstack", "google"
-            # Only OpenStack and Google have concept of cloud network
+          when "openstack", "google", "amazon"
+            # Only OpenStack and Google have concept of cloud network. Amazon cloud_network will move to NetworkGroup
             expect(@vm.cloud_network).to be_kind_of(MiqAeMethodService::MiqAeServiceCloudNetwork)
           else
             expect(@vm.cloud_network).to be nil

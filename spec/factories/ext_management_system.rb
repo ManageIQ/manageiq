@@ -123,6 +123,13 @@ FactoryGirl.define do
     provider_region "us-east-1"
   end
 
+  factory :ems_amazon_network,
+          :aliases => ["manageiq/providers/amazon/network_manager"],
+          :class   => "ManageIQ::Providers::Amazon::NetworkManager",
+          :parent  => :ems_network do
+    provider_region "us-east-1"
+  end
+
   factory :ems_amazon_with_authentication,
           :parent => :ems_amazon do
     after(:create) do |x|
