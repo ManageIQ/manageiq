@@ -38,11 +38,11 @@ describe "AMAZON best fit" do
   end
 
   let(:cloud_network1) do
-    FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true)
+    FactoryGirl.create(:cloud_network_amazon, :ems_id => ems.network_manager.id, :enabled => true)
   end
 
   let(:cloud_subnet1) do
-    FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network1.id)
+    FactoryGirl.create(:cloud_subnet_amazon, :ems_id => ems.network_manager.id, :cloud_network_id => cloud_network1.id)
   end
 
   context "provision task object" do
@@ -54,6 +54,7 @@ describe "AMAZON best fit" do
       ws.root
 
       miq_provision.reload
+
       expect(miq_provision.options[:cloud_network].first).to eql(cloud_network1.id)
       expect(miq_provision.options[:cloud_subnet].first).to eql(cloud_subnet1.id)
     end
