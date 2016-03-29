@@ -30,7 +30,7 @@
                        "ng-class"    => "{'btn-disabled': cloudVolumeForm.$pristine}")
           = button_tag("Cancel",
                         :class     => "btn btn-default",
-                        "ng-click" => "cancelEditClicked()")
+                        "ng-click" => "cancelClicked()")
 
 :javascript
   ManageIQ.angular.app.value('cloudVolumeFormId', '#{@volume.id}');

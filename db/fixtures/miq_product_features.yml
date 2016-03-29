@@ -4387,6 +4387,14 @@
         :description: Migrate Instance
         :feature_type: control
         :identifier: instance_live_migrate
+      - :name: Attach Volume
+        :description: Attach Volume to Instance
+        :feature_type: control
+        :identifier: instance_attach
+      - :name: Detach Volume
+        :description: Detach Volume from Instance
+        :feature_type: control
+        :identifier: instance_detach
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin
