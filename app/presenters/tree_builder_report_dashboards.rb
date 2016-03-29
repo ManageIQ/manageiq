@@ -30,7 +30,7 @@ class TreeBuilderReportDashboards < TreeBuilder
     assert_type(options[:type], :db)
     objects = []
     if object[:id].split('-').first == "g"
-      objects = MiqGroup.non_tenant_groups
+      objects = rbac_filtered_objects(MiqGroup.non_tenant_groups)
       return count_only ? objects.count : objects.sort_by(&:name)
     end
     count_only_or_objects(count_only, objects, :name)
@@ -50,7 +50,7 @@ class TreeBuilderReportDashboards < TreeBuilder
         end
       end
     else
-      objects = copy_array(widgetsets)
+      objects = copy_array(widgetsets.to_a)
     end
     count_only ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
   end

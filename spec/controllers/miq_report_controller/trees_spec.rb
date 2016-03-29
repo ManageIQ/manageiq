@@ -76,6 +76,9 @@ describe ReportController do
     end
 
     context "dashboards tree" do
+      let!(:other_group)  { FactoryGirl.create(:miq_group) }
+      let(:current_group) { User.current_user.current_group }
+
       before do
         seed_session_trees('db', :db_tree)
       end
@@ -84,6 +87,20 @@ describe ReportController do
         MiqWidgetSet.seed
         post :tree_select, :params => { :id => 'root', :format => :js, :accord => 'db' }
         expect(response).to render_template('report/_db_list')
+      end
+
+      it 'renders list of Groups in Dashboards tree' do
+        allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+        post :tree_select, :params => {:id => 'xx-g', :format => :js, :accord => 'db'}
+        expect(response.body).to include(current_group.name)
+        expect(response.body).not_to include(other_group.name)
+      end
+
+      it 'renders list of Groups, when self service user logged' do
+        allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+        post :tree_select, :params => {:id => 'xx-g', :format => :js, :accord => 'db'}
+        expect(response.body).to include(current_group.name)
+        expect(response.body).not_to include(other_group.name)
       end
 
       it 'renders show of Dashboards in Dashboards tree' do
