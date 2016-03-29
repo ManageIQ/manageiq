@@ -176,12 +176,12 @@ module OpsController::Settings::Common
   def settings_update_ldap_verify
     settings_get_form_vars
     return unless @edit
-    @validate = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
-    @validate.config.each_key do |category|
-      @validate.config[category] = @edit[:new][category].dup
+    server_config = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
+    server_config.config.each_key do |category|
+      server_config.config[category] = @edit[:new][category].dup
     end
 
-    valid, errors = MiqLdap.validate_connection(@validate.config)
+    valid, errors = MiqLdap.validate_connection(server_config.config)
     if valid
       add_flash(_("LDAP Settings validation was successful"))
     else
@@ -198,12 +198,12 @@ module OpsController::Settings::Common
   def settings_update_amazon_verify
     settings_get_form_vars
     return unless @edit
-    @validate = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
-    @validate.config.each_key do |category|
-      @validate.config[category] = @edit[:new][category].dup
+    server_config = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
+    server_config.config.each_key do |category|
+      server_config.config[category] = @edit[:new][category].dup
     end
 
-    valid, errors = Authenticator::Amazon.validate_connection(@validate.config)
+    valid, errors = Authenticator::Amazon.validate_connection(server_config.config)
     if valid
       add_flash(_("Amazon Settings validation was successful"))
     else
@@ -340,7 +340,7 @@ module OpsController::Settings::Common
       if @update.validate                                           # Have VMDB class validate the settings
         if ["settings_server", "settings_authentication"].include?(@sb[:active_tab])
           server = MiqServer.find(@sb[:selected_server_id])
-          @validate = server.set_config(@update)  # Save server settings against selected server
+          server.set_config(@update)
           if @update.config[:server][:name] != server.name # appliance name was modified
             begin
               server.name = @update.config[:server][:name]
@@ -410,7 +410,7 @@ module OpsController::Settings::Common
       end
       if @update.validate                                           # Have VMDB class validate the settings
         server = MiqServer.find(@sb[:selected_server_id])
-        @validate = server.set_config(@update)  # Save server settings against selected server
+        server.set_config(@update)
 
         AuditEvent.success(build_config_audit(@edit[:new].config, @edit[:current].config))
         add_flash(_("Configuration settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
