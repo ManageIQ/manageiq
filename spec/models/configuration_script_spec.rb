@@ -34,10 +34,40 @@ describe ConfigurationScript do
     end
 
     it "accepts different variables to launch a job template against" do
-      added_extras = {'extra_vars' => {'some_key' => 'some_value'}.to_json}
+      added_extras = {:extra_vars => {:some_key => :some_value}}
       expect(manager.configuration_scripts.first.run(added_extras)).to be_a AnsibleTowerClient::Job
-      expect_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:launch).with(added_extras)
+      expect_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:launch).with(:extra_vars=>"{\"instance_ids\":[\"i-3434\"],\"some_key\":\"some_value\"}")
       manager.configuration_scripts.first.run(added_extras)
+    end
+
+    it "merges a json string and a hash to send out to the tower gem" do
+      config_script = manager.configuration_scripts.first
+      external = {:some_key => :some_value}
+      internal = config_script.variables
+      expect(internal).to be_a String
+      expect(config_script.merge_extra_vars(external)).to eq(:extra_vars => "{\"instance_ids\":[\"i-3434\"],\"some_key\":\"some_value\"}")
+    end
+
+    it "merges a json string and an empty hash to send out to the tower gem" do
+      config_script = manager.configuration_scripts.first
+      external = nil
+      expect(config_script.merge_extra_vars(external)).to eq(:extra_vars => "{\"instance_ids\":[\"i-3434\"]}")
+    end
+
+    it "merges an empty string and a hash to send out to the tower gem" do
+      external = {:some_key => :some_value}
+      internal = ""
+      config_script = manager.configuration_scripts.first
+      config_script.variables = internal
+      expect(config_script.merge_extra_vars(external)).to eq(:extra_vars => "{\"some_key\":\"some_value\"}")
+    end
+
+    it "merges all empty arguments to send out to the tower gem" do
+      external = nil
+      internal = ""
+      config_script = manager.configuration_scripts.first
+      config_script.variables = internal
+      expect(config_script.merge_extra_vars(external)).to eq(:extra_vars => "{}")
     end
   end
 end
