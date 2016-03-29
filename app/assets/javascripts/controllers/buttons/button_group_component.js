@@ -8,6 +8,13 @@ ManageIQ.angular.app.component('buttonGroup', {
     titleOff: '@',
     btnClass: '@',
   },
+  controller: ['miqService', '$scope', function(miqService, $scope){
+    console.log($scope.$parent);
+    this.saveable = miqService.saveable;
+  }],
+  link: function(scope, elem, attrs, ctrl) {
+    ctrl.angularForm = scope.$parent.angularForm;
+  },
   controllerAs: 'buttonGroup',
   templateUrl: '/static/_form_buttons_angular.html.haml',
 });

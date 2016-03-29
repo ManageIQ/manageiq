@@ -1,21 +1,21 @@
 .button-group
   %button-group{:visible    => "newRecord",
                 :submit     => "addClicked($event, true)",
-                :disabled   => "!miqService.saveable(angularForm)",
+                'ng-disabled'   => "!buttonGroup.saveable(buttonGroup.angularForm)",
                 :label      => _("Add"),
                 "title-on"  => _("Add"),
                 "title-off" => _("Add"),
                 "btn-class" => "btn-primary"}
   %button-group{:visible    => "!newRecord",
                 :submit     => "saveClicked($event, true)",
-                :disabled   => "!miqService.saveable(angularForm)",
+                'ng-disabled'   => "!buttonGroup.saveable(buttonGroup.angularForm)",
                 :label      => _("Save"),
                 "title-on"  => _("Save changes"),
                 "title-off" => _("Save changes"),
                 "btn-class" => "btn-primary"}
   %button-group{:visible    => "!newRecord",
                 :submit     => "resetClicked()",
-                :disabled   => "angularForm.$pristine",
+                'ng-disabled'  => "buttonGroup.angularForm.$pristine",
                 :label      => _("Reset"),
                 "title-on"  => _("Reset changes"),
                 "btn-class" => "btn-default"}
