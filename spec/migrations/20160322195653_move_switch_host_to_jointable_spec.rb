@@ -9,7 +9,6 @@ describe MoveSwitchHostToJointable do
       host = host_stub.create!
       switch1 = switch_stub.create!(:host_id => host.id)
       switch2 = switch_stub.create!(:host_id => host.id)
-      expect(host.switches.length).to eq 2
 
       migrate
 
