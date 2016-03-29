@@ -71,12 +71,6 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
     miqService.miqAjaxButton(url);
   };
 
-  $scope.cancelEditClicked = function() {
-    miqService.sparkleOn();
-    var url = '/cloud_volume/update/' + cloudVolumeFormId + '?button=cancel';
-    miqService.miqAjaxButton(url);
-  };
-
   $scope.resetClicked = function() {
     $scope.cloudVolumeModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);

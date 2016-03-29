@@ -1,0 +1,47 @@
+%form#form_div{:name => "angularForm", 'ng-controller' => "vmCloudFormController"}
+  = render :partial => "layouts/flash_msg"
+  %h3
+    = _('Attach Volume')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Volume')
+      .col-md-8
+        = select_tag("volume_id",
+                      options_for_select(@volume_choices),
+                      "ng-model"                    => "vmCloudModel.volume_id",
+                      :miqrequired                  => true,
+                      :checkchange                  => true,
+                      "selectpicker-for-select-tag" => "")
+    .form-group
+      %label.col-md-2.control-label
+        = _('Device Mountpoint (optional)')
+      .col-md-8
+        %input.form-control{:type          => "text",
+                            :name          => "device_path",
+                            'ng-model'     => "vmCloudModel.device_path",
+                            'ng-maxlength' => 128,
+                            :miqrequired   => false,
+                            :checkchange   => true}
+
+  %table{:width => '100%'}
+    %tr
+      %td{:align => 'right'}
+        #buttons_on
+          = button_tag("Attach",
+                       :class        => "btn btn-primary",
+                       "ng-click"    => "attachClicked()",
+                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+                       "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+          = button_tag("Reset",
+                       :class        => "btn btn-primary",
+                       "ng-click"    => "resetClicked()",
+                       "ng-disabled" => "angularForm.$pristine",
+                       "ng-class"    => "{'btn-disabled': angularForm.$pristine}")
+          = button_tag("Cancel",
+                        :class     => "btn btn-default",
+                        "ng-click" => "cancelAttachClicked()")
+
+:javascript
+  ManageIQ.angular.app.value('vmCloudFormId', '#{@vm.id}');
+  miq_bootstrap('#form_div');
