@@ -395,75 +395,26 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_vlans(options = {})
-    if @allowed_vlan_cache.nil?
-      @vlan_options ||= options
-      vlans = {}
-      src = get_source_and_targets
-      return vlans if src.blank?
-
-      hosts = nil
-      unless @vlan_options[:vlans] == false
-        rails_logger('allowed_vlans', 0)
-        hosts = get_selected_hosts(src)
-        # TODO: Use Active Record to preload this data?
-        MiqPreloader.preload(hosts, :switches => :lans)
-        hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
-
-        # Remove certain networks
-        vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
-        rails_logger('allowed_vlans', 1)
-      end
-
-      unless @vlan_options[:dvs] == false
-        rails_logger('allowed_dvs', 0)
-        vlans_dvs = allowed_dvs(@vlan_options, hosts)
-        vlans.merge!(vlans_dvs)
-        rails_logger('allowed_dvs', 1)
-      end
-      @allowed_vlan_cache = vlans
-    end
+    @allowed_vlan_cache ||= available_vlans(options)
     filter_by_tags(@allowed_vlan_cache, options)
   end
 
-  def allowed_dvs(_options = {}, hosts = nil)
-    @dvs_ems_connect_ok ||= {}
-    @dvs_by_host ||= {}
-    switches = {}
+  def available_vlans(options = {})
+    @vlan_options ||= options
+    vlans = {}
     src = get_source_and_targets
-    return switches if src.blank?
+    return vlans if src.blank?
 
-    hosts = get_selected_hosts(src) if hosts.nil?
-
-    # Find if we need to connect to the EMS to collect a host's dvs
-    missing_hosts = hosts.reject { |h| @dvs_by_host.key?(h.id) }
-    unless missing_hosts.blank?
-      begin
-        st = Time.now
-        return switches if src[:ems] && @dvs_ems_connect_ok[src[:ems].id] == false
-        vim = load_ar_obj(src[:ems]).connect
-        missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
-      rescue
-        @dvs_ems_connect_ok[src[:ems].id] = false if src[:ems]
-        return switches
-      ensure
-        vim.disconnect if vim rescue nil
-        _log.info "Network DVS collection completed in [#{Time.now - st}] seconds"
-      end
-    end
-    create_unified_pg(@dvs_by_host, hosts)
-  end
-
-  def get_host_dvs(dest_host, vim)
-    switches = {}
-    dvs = vim.queryDvsConfigTarget(vim.sic.dvSwitchManager, dest_host.ems_ref_obj, nil) rescue nil
-
-    # List the names of the non-uplink portgroups.
-    unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
-      nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
-      nupga.each { |nupg| switches[URI.decode(nupg.portgroupName)] = [URI.decode(nupg.switchName)] }
+    unless @vlan_options[:vlans] == false
+      rails_logger('allowed_vlans', 0)
+      hosts = get_selected_hosts(src)
+      # TODO: Use Active Record to preload this data?
+      MiqPreloader.preload(hosts, :switches => :lans)
+      hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
+      rails_logger('allowed_vlans', 1)
     end
 
-    switches
+    vlans
   end
 
   def filter_by_tags(target, options)
@@ -1238,20 +1189,5 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def selected_host(src)
     raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
     [load_ar_obj(src[:host])]
-  end
-
-  def create_unified_pg(dvs_by_host, hosts)
-    all_pgs = Hash.new { |h, k| h[k] = [] }
-    hosts.each do |host|
-      pgs = dvs_by_host[host.id]
-      next if pgs.blank?
-      pgs.each { |k, v| all_pgs[k].concat(v) }
-    end
-
-    switches = {}
-    all_pgs.each do |pg, switch|
-      switches["dvs_#{pg}"] = "#{pg} (#{switch.uniq.sort.join('/')})"
-    end
-    switches
   end
 end

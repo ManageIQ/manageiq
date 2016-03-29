@@ -122,4 +122,74 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
 
     super(options)
   end
+
+  def available_vlans(options = {})
+    vlans = super
+
+    # Remove certain networks
+    vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
+
+    unless @vlan_options[:dvs] == false
+      rails_logger('allowed_dvs', 0)
+      vlans_dvs = allowed_dvs(@vlan_options, hosts)
+      vlans.merge!(vlans_dvs)
+      rails_logger('allowed_dvs', 1)
+    end
+
+    vlans
+  end
+
+  def allowed_dvs(_options = {}, hosts = nil)
+    @dvs_ems_connect_ok ||= {}
+    @dvs_by_host ||= {}
+    switches = {}
+    src = get_source_and_targets
+    return switches if src.blank?
+
+    hosts ||= get_selected_hosts(src)
+
+    # Find if we need to connect to the EMS to collect a host's dvs
+    missing_hosts = hosts.reject { |h| @dvs_by_host.key?(h.id) }
+    unless missing_hosts.blank?
+      begin
+        st = Time.now
+        return switches if src[:ems] && @dvs_ems_connect_ok[src[:ems].id] == false
+        vim = load_ar_obj(src[:ems]).connect
+        missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
+      rescue
+        @dvs_ems_connect_ok[src[:ems].id] = false if src[:ems]
+        return switches
+      ensure
+        vim.disconnect if vim rescue nil
+        _log.info "Network DVS collection completed in [#{Time.now - st}] seconds"
+      end
+    end
+    create_unified_pg(@dvs_by_host, hosts)
+  end
+
+  def get_host_dvs(dest_host, vim)
+    switches = {}
+    dvs = vim.queryDvsConfigTarget(vim.sic.dvSwitchManager, dest_host.ems_ref_obj, nil) rescue nil
+
+    # List the names of the non-uplink portgroups.
+    unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
+      nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
+      nupga.each { |nupg| switches[URI.decode(nupg.portgroupName)] = [URI.decode(nupg.switchName)] }
+    end
+
+    switches
+  end
+
+  def create_unified_pg(dvs_by_host, hosts)
+    all_pgs = Hash.new { |h, k| h[k] = [] }
+    hosts.each do |host|
+      pgs = dvs_by_host[host.id]
+      next if pgs.blank?
+      pgs.each { |k, v| all_pgs[k].concat(v) }
+    end
+
+    all_pgs.each_with_object({}) do |(pg, switch), switches|
+      switches["dvs_#{pg}"] = "#{pg} (#{switch.uniq.sort.join('/')})"
+    end
+  end
 end
