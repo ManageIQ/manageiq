@@ -135,9 +135,9 @@ module VimPerformanceAnalysis
 
       # Set :only_cols for target daily requested cols for better performance
       options[:ext_options][:only_cols] = [:cpu, :memory, :storage].collect { |t| [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)] }.flatten.compact
-      compute_hosts.each do |c|
-        hash = {:target => c}
+      result = compute_hosts.collect do |c|
         count_hash = {}
+        hash = { :target => c, :count => count_hash }
 
         need_compute_perf = VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
         start_time, end_time = get_time_range(options[:range])
@@ -148,7 +148,7 @@ module VimPerformanceAnalysis
           [:cpu, :vcpus, :memory].each do |type|
             next if vm_needs[type].nil? || options[:target_options][type].nil?
             if type == :vcpus && vm_needs[type] > c.total_vcpus
-              count_hash[type] = {:total => 0}
+              count_hash[type] = { :total => 0 }
               next
             end
             avail, usage = compute_offers(compute_perf, ts, options[:target_options][type], type, c)
@@ -164,19 +164,11 @@ module VimPerformanceAnalysis
               details << {s.id => fits}
               total += fits unless fits.nil?
             end
-            count_hash[:storage] = {:total => total, :details => details}
+            count_hash[:storage] = { :total => total, :details => details }
           end
         end
-
-        total = nil
-        count_hash.each_value do |v|
-          next if v[:total].nil?
-          total = v[:total] if total.nil? || total > v[:total]
-        end
-        count_hash[:total] = {:total => total}
-
-        hash[:count] = count_hash
-        result << hash
+        count_hash[:total] = { :total => count_hash.each_value.pluck(:total).compact.max }
+        hash
       end
 
       result = how_many_more_can_fit_host_to_cluster_results(result) if @compute.first.kind_of?(EmsCluster)
@@ -210,9 +202,8 @@ module VimPerformanceAnalysis
             # build up array of storage details unique by storage Id
             chash[:details] ||= []
             hhash[:details].each do |h|
-              id, val = h.to_a.flatten
-              next if chash[:details].find { |i| i.keys.first == id }
-              chash[:details] << h
+              id, = h.to_a.flatten
+              chash[:details] << h unless chash[:details].find { |i| i.keys.first == id }
             end
           end
         end
@@ -289,12 +280,10 @@ module VimPerformanceAnalysis
         vm_perf    = VimPerformanceAnalysis.get_daily_perf(@vm, start_time, end_time, options[:ext_options])
       end
 
-      @vm_needs = {}
       vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
-      [:cpu, :vcpus, :memory, :storage].each do |type|
-        @vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
+      [:cpu, :vcpus, :memory, :storage].each_with_object({}) do |type, vm_needs|
+        vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
       end
-      @vm_needs
     end
 
     def vm_consumes(perf, ts, options, type, vm = @vm)
@@ -459,8 +448,7 @@ module VimPerformanceAnalysis
   # Helper methods
 
   def self.needs_perf_data?(options)
-    options.each { |_k, v| return true if v && v[:mode] == :perf_trend }
-    false
+    options.values.detect { |v| v && v[:mode] == :perf_trend }
   end
 
   def self.find_perf_for_time_period(obj, interval_name, options = {})
