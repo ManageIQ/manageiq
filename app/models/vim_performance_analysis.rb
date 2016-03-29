@@ -141,7 +141,7 @@ module VimPerformanceAnalysis
 
       result = compute_hosts.collect do |c|
         count_hash = {}
-        hash = { :target => c, :count => count_hash }
+        hash = {:target => c, :count => count_hash}
 
         compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options], perf_cols)
         # if we rely upon daily perf columns, make sure we have values for them
@@ -151,7 +151,7 @@ module VimPerformanceAnalysis
           [:cpu, :vcpus, :memory].each do |type|
             next if vm_needs[type].nil? || options[:target_options][type].nil?
             if type == :vcpus && vm_needs[type] > c.total_vcpus
-              count_hash[type] = { :total => 0 }
+              count_hash[type] = {:total => 0}
               next
             end
             avail, usage = compute_offers(compute_perf, ts, options[:target_options][type], type, c)
@@ -167,10 +167,10 @@ module VimPerformanceAnalysis
               details << {s.id => fits}
               total += fits unless fits.nil?
             end
-            count_hash[:storage] = { :total => total, :details => details }
+            count_hash[:storage] = {:total => total, :details => details}
           end
         end
-        count_hash[:total] = { :total => count_hash.each_value.pluck(:total).compact.max }
+        count_hash[:total] = {:total => count_hash.each_value.pluck(:total).compact.max}
         hash
       end
 
