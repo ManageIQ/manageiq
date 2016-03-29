@@ -7,7 +7,6 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
            :class_name => "ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet"
   has_many :public_networks, :through => :cloud_subnets
   has_many :security_groups, :through => :network_ports
-  has_many :floating_ips, :through => :network_ports
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
