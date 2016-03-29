@@ -43,6 +43,16 @@ describe ConvertConfigurationsToSettingsChanges do
         }
       )
 
+      _non_existing_tmpl_file = config_stub.create!(
+        :typ           => "hostdefaults",
+        :miq_server_id => 2,
+        :settings      => {
+          "values" => {
+            "string" => "hostdefaults value",
+          },
+        }
+      )
+
       test_templates = {
         "simple" => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys,
         "vmdb"   => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys
