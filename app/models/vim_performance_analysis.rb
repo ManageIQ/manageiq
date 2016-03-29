@@ -134,7 +134,7 @@ module VimPerformanceAnalysis
       end
 
       if VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
-        perf_cols = [:cpu, :memory, :storage].collect do |t|
+        perf_cols = [:cpu, :vcpus, :memory, :storage].collect do |t|
           [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)]
         end.flatten.compact
       end
