@@ -35,6 +35,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
       assert_specific_template
+      assert_specific_cloud_volume
     end
   end
 
@@ -56,6 +57,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(OperatingSystem.count).to     eql(371)
     expect(Relationship.count).to        eql(4)
     expect(MiqQueue.count).to            eql(371)
+    expect(CloudVolume.count).to         eql(4)
   end
 
   def assert_ems
@@ -270,8 +272,25 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :device_type     => "disk",
       :location        => "0",
       :controller_type => "google",
-      :size            => 10 * 1.gigabyte,
+      :size            => 10.gigabyte,
+      :backing_type    => "CloudVolume"
     )
+    expect(disk.backing).to eql(CloudVolume.where(:name => "rhel7").first)
+  end
+
+  def assert_specific_cloud_volume
+    v = CloudVolume.where(
+      :name            => "rhel7"
+    ).first
+
+    expect(v.ems_ref).to                 eql("7616431006268085360")
+    expect(v.name).to                    eql("rhel7")
+    expect(v.status).to                  eql("READY")
+    expect(v.creation_time.to_s).to      eql("2015-11-18 21:16:15 UTC")
+    expect(v.volume_type).to             eql("pd-standard")
+    expect(v.description).to             eql(nil)
+    expect(v.size).to                    eql(10.gigabyte)
+    expect(v.availability_zone.name).to  eql("us-east1-b")
   end
 
   def assert_specific_vm_powered_off
