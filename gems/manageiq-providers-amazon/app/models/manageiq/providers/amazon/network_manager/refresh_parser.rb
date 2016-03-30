@@ -1,7 +1,7 @@
 # TODO: Separate collection from parsing (perhaps collecting in parallel a la RHEVM)
 
 class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
-  include ManageIQ::Providers::Amazon::HelperMethods
+  include ManageIQ::Providers::Amazon::RefreshHelperMethods
 
   def initialize(ems, options = nil)
     @ems        = ems
