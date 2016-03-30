@@ -33,11 +33,11 @@ http_interactions:
       Server:
       - Microsoft-IIS/8.5
       X-Ms-Request-Id:
-      - e309733d-b728-496f-ba0c-1b6cfb829ea1
+      - ae19852c-5a0f-4a8d-ae61-0c1c17277043
       Client-Request-Id:
-      - 2d4b1cf8-d8b8-43d1-a368-7c9a8a57caef
+      - 0982b341-9cbd-4884-9620-c19bd7c49e58
       X-Ms-Gateway-Service-Instanceid:
-      - ESTSFE_IN_76
+      - ESTSFE_IN_277
       X-Content-Type-Options:
       - nosniff
       Strict-Transport-Security:
@@ -47,18 +47,18 @@ http_interactions:
       Set-Cookie:
       - flight-uxoptin=true; path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
-      - x-ms-gateway-slice=productionb; path=/; secure; HttpOnly
+      - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Tue, 22 Mar 2016 20:18:04 GMT
+      - Wed, 30 Mar 2016 18:23:33 GMT
       Content-Length:
       - '1247'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3600","expires_on":"1458681484","not_before":"1458677584","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg2Nzc1ODQsIm5iZiI6MTQ1ODY3NzU4NCwiZXhwIjoxNDU4NjgxNDg0LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.cESYuMFFsjPemIFa4ddwk7xInvq6YSK2DCUafmsjW94hfKpXxRGF-11Fh2GJ3TqcMVUGK6sBsLBLWkMZ3kOSwjg-eiJw_clEEjh6UfEV8Dh6FZ6KrvvFU__5xl5IRb1D5KUBn_dnML95DYMrmeLZs6_Z4DgzkvnhAEcE30J2EOjuIjdpjzevY4Jz2rtUBnqNDP6j2uyRzY5gRDps-3nNotOoEIk190y-V-RjnzISWlzYiin_y8SUbe3IzTxUriRW8Wpn6xOS0-ppVP0tX713mhUhtV_WYQzuIS-99j_3Ot3t8C2wZGGMtCW4vfogBfigjtSw8dsm4KHlfHek0cdrNw"}'
+      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3599","expires_on":"1459365813","not_before":"1459361913","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTkzNjE5MTMsIm5iZiI6MTQ1OTM2MTkxMywiZXhwIjoxNDU5MzY1ODEzLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.LNvww-l3TDf8qnENahTKXbbeoh7jGSyQo0T9g4-Ksuoh-tr8VHNm7PBNr-7K4r9DCDk9bxwnWP1nnrrGI6StrBPISamiVp9CUhRJmDe8u_w3l9op4nIbYDiOsLcZXiGNZzgH8pf2R5jA4Uhw7mZC8Kuj8K33IeBEAgkaMCFTaRbqnq27CVb-Oo55joG7_bzPRbsH7EZBOlq-hsBqGmT_ghMcc4yXY-VckczeRRTWZUEMOKnf_wU1McMy8uIWO0g0PQtKnxBAEMUca4DTqr3f1sc3k-XzUPnP2s73f5qvNwwqtNRh5Zhu62DSCyKqEWiBX_VxAszONSrHfmjFUkxM5Q"}'
     http_version: 
-  recorded_at: Tue, 22 Mar 2016 20:18:04 GMT
+  recorded_at: Wed, 30 Mar 2016 18:23:33 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions?api-version=2015-01-01
@@ -75,7 +75,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg2Nzc1ODQsIm5iZiI6MTQ1ODY3NzU4NCwiZXhwIjoxNDU4NjgxNDg0LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.cESYuMFFsjPemIFa4ddwk7xInvq6YSK2DCUafmsjW94hfKpXxRGF-11Fh2GJ3TqcMVUGK6sBsLBLWkMZ3kOSwjg-eiJw_clEEjh6UfEV8Dh6FZ6KrvvFU__5xl5IRb1D5KUBn_dnML95DYMrmeLZs6_Z4DgzkvnhAEcE30J2EOjuIjdpjzevY4Jz2rtUBnqNDP6j2uyRzY5gRDps-3nNotOoEIk190y-V-RjnzISWlzYiin_y8SUbe3IzTxUriRW8Wpn6xOS0-ppVP0tX713mhUhtV_WYQzuIS-99j_3Ot3t8C2wZGGMtCW4vfogBfigjtSw8dsm4KHlfHek0cdrNw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTkzNjE5MTMsIm5iZiI6MTQ1OTM2MTkxMywiZXhwIjoxNDU5MzY1ODEzLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.LNvww-l3TDf8qnENahTKXbbeoh7jGSyQo0T9g4-Ksuoh-tr8VHNm7PBNr-7K4r9DCDk9bxwnWP1nnrrGI6StrBPISamiVp9CUhRJmDe8u_w3l9op4nIbYDiOsLcZXiGNZzgH8pf2R5jA4Uhw7mZC8Kuj8K33IeBEAgkaMCFTaRbqnq27CVb-Oo55joG7_bzPRbsH7EZBOlq-hsBqGmT_ghMcc4yXY-VckczeRRTWZUEMOKnf_wU1McMy8uIWO0g0PQtKnxBAEMUca4DTqr3f1sc3k-XzUPnP2s73f5qvNwwqtNRh5Zhu62DSCyKqEWiBX_VxAszONSrHfmjFUkxM5Q
   response:
     status:
       code: 200
@@ -96,21 +96,21 @@ http_interactions:
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
       - '14999'
       X-Ms-Request-Id:
-      - a65397de-40b5-4dc5-a7cb-25e809dbf7ec
+      - b735e838-02b8-4f59-9b1d-c337c82355cc
       X-Ms-Correlation-Request-Id:
-      - a65397de-40b5-4dc5-a7cb-25e809dbf7ec
+      - b735e838-02b8-4f59-9b1d-c337c82355cc
       X-Ms-Routing-Request-Id:
-      - EASTUS:20160322T201804Z:a65397de-40b5-4dc5-a7cb-25e809dbf7ec
+      - EASTUS:20160330T182334Z:b735e838-02b8-4f59-9b1d-c337c82355cc
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 22 Mar 2016 20:18:04 GMT
+      - Wed, 30 Mar 2016 18:23:33 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c","subscriptionId":"2586c64b-38b4-4527-a140-012d49dfc02c","displayName":"Microsoft
         Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
     http_version: 
-  recorded_at: Tue, 22 Mar 2016 20:18:04 GMT
+  recorded_at: Wed, 30 Mar 2016 18:23:34 GMT
 - request:
     method: get
     uri: https://management.azure.com/providers?api-version=2015-01-01
@@ -127,7 +127,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg2Nzc1ODQsIm5iZiI6MTQ1ODY3NzU4NCwiZXhwIjoxNDU4NjgxNDg0LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.cESYuMFFsjPemIFa4ddwk7xInvq6YSK2DCUafmsjW94hfKpXxRGF-11Fh2GJ3TqcMVUGK6sBsLBLWkMZ3kOSwjg-eiJw_clEEjh6UfEV8Dh6FZ6KrvvFU__5xl5IRb1D5KUBn_dnML95DYMrmeLZs6_Z4DgzkvnhAEcE30J2EOjuIjdpjzevY4Jz2rtUBnqNDP6j2uyRzY5gRDps-3nNotOoEIk190y-V-RjnzISWlzYiin_y8SUbe3IzTxUriRW8Wpn6xOS0-ppVP0tX713mhUhtV_WYQzuIS-99j_3Ot3t8C2wZGGMtCW4vfogBfigjtSw8dsm4KHlfHek0cdrNw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTkzNjE5MTMsIm5iZiI6MTQ1OTM2MTkxMywiZXhwIjoxNDU5MzY1ODEzLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.LNvww-l3TDf8qnENahTKXbbeoh7jGSyQo0T9g4-Ksuoh-tr8VHNm7PBNr-7K4r9DCDk9bxwnWP1nnrrGI6StrBPISamiVp9CUhRJmDe8u_w3l9op4nIbYDiOsLcZXiGNZzgH8pf2R5jA4Uhw7mZC8Kuj8K33IeBEAgkaMCFTaRbqnq27CVb-Oo55joG7_bzPRbsH7EZBOlq-hsBqGmT_ghMcc4yXY-VckczeRRTWZUEMOKnf_wU1McMy8uIWO0g0PQtKnxBAEMUca4DTqr3f1sc3k-XzUPnP2s73f5qvNwwqtNRh5Zhu62DSCyKqEWiBX_VxAszONSrHfmjFUkxM5Q
   response:
     status:
       code: 200
@@ -148,15 +148,15 @@ http_interactions:
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
       - '14999'
       X-Ms-Request-Id:
-      - 53d88062-a63c-417a-bc38-b13f78928a2f
+      - 8816d920-4f2d-4bdc-a40f-a3d0bd5734e4
       X-Ms-Correlation-Request-Id:
-      - 53d88062-a63c-417a-bc38-b13f78928a2f
+      - 8816d920-4f2d-4bdc-a40f-a3d0bd5734e4
       X-Ms-Routing-Request-Id:
-      - EASTUS:20160322T201805Z:53d88062-a63c-417a-bc38-b13f78928a2f
+      - EASTUS:20160330T182334Z:8816d920-4f2d-4bdc-a40f-a3d0bd5734e4
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 22 Mar 2016 20:18:04 GMT
+      - Wed, 30 Mar 2016 18:23:34 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"namespace":"Microsoft.ADHybridHealthService","resourceTypes":[{"resourceType":"services","locations":["West
@@ -259,7 +259,7 @@ http_interactions:
         South","Australia East","Australia Southeast"],"apiVersions":["2015-06-01"]},{"resourceType":"edgenodes","locations":["Central
         US","East US","East US 2","North Central US","South Central US","West US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Brazil
-        South","Australia East","Australia Southeast"],"apiVersions":["2015-06-01"]}]},{"namespace":"Microsoft.CertificateRegistration","resourceTypes":[{"resourceType":"certificateOrders","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"certificateOrders/certificates","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"provisionGlobalAppServicePrincipalInUserTenant","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"validateCertificateRegistrationInformation","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"operations","locations":["global"],"apiVersions":["2015-08-01"]}]},{"namespace":"Microsoft.ClassicCompute","resourceTypes":[{"resourceType":"domainNames","locations":["East
+        South","Australia East","Australia Southeast"],"apiVersions":["2015-06-01"]}]},{"namespace":"Microsoft.CertificateRegistration","resourceTypes":[{"resourceType":"certificateOrders","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"certificateOrders/certificates","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"validateCertificateRegistrationInformation","locations":["global"],"apiVersions":["2015-08-01"]},{"resourceType":"operations","locations":["global"],"apiVersions":["2015-08-01"]}]},{"namespace":"Microsoft.ClassicCompute","resourceTypes":[{"resourceType":"domainNames","locations":["East
         Asia","Southeast Asia","East US","East US 2","West US","North Central US","South
         Central US","Central US","North Europe","West Europe","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","South India","Central
@@ -318,52 +318,66 @@ http_interactions:
         US"],"apiVersions":["2016-02-01-preview"]}]},{"namespace":"Microsoft.Compute","resourceTypes":[{"resourceType":"availabilitySets","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachines","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachines","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachines/extensions","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachines/extensions","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/extensions","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/extensions","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/virtualMachines","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/virtualMachines","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/networkInterfaces","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/networkInterfaces","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/virtualMachines/networkInterfaces","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"virtualMachineScaleSets/virtualMachines/networkInterfaces","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/operations","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/operations","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/vmSizes","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/vmSizes","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/usages","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/usages","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/publishers","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"locations/publishers","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"operations","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"operations","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"disks","locations":["West
-        US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"snapshots","locations":["West
-        US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"locations/diskoperations","locations":["West
-        US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
+        East","Australia Southeast","Brazil South"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"disks","locations":["Southeast
+        Asia","West US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"snapshots","locations":["Southeast
+        Asia","West US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"locations/diskoperations","locations":["Southeast
+        Asia","West US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2014-04-01"]},{"resourceType":"virtualMachines/metricDefinitions","locations":["East
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2014-04-01"]},{"resourceType":"virtualMachines/metricDefinitions","locations":["East
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
-        East","Australia Southeast","Brazil South"],"apiVersions":["2014-04-01"]}]},{"namespace":"Microsoft.ContainerService","resourceTypes":[{"resourceType":"containerServices","locations":["Japan
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India"],"apiVersions":["2014-04-01"]}]},{"namespace":"Microsoft.ContainerService","resourceTypes":[{"resourceType":"containerServices","locations":["Japan
         East","Central US","East US 2","Japan West","East Asia","South Central US","Australia
         East","Australia Southeast","Brazil South","Southeast Asia","West US","North
         Central US","West Europe","North Europe","East US"],"apiVersions":["2015-11-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-11-01-preview"]},{"resourceType":"locations/operations","locations":["Japan
@@ -391,9 +405,12 @@ http_interactions:
         US 2","North Europe"],"apiVersions":["2015-10-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-10-01-preview"]},{"resourceType":"locations/operationresults","locations":[],"apiVersions":["2015-10-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-10-01-preview"]}]},{"namespace":"Microsoft.DataLakeStore","resourceTypes":[{"resourceType":"accounts","locations":["East
         US 2","North Europe"],"apiVersions":["2015-10-01-preview"]},{"resourceType":"accounts/firewallRules","locations":["East
         US 2","North Europe"],"apiVersions":["2015-10-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-10-01-preview"]},{"resourceType":"locations/operationresults","locations":[],"apiVersions":["2015-10-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-10-01-preview"]}]},{"namespace":"Microsoft.Devices","resourceTypes":[{"resourceType":"checkNameAvailability","locations":["East
-        US","North Europe","East Asia","West US","West Europe","Southeast Asia"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"operations","locations":["East
-        US","North Europe","East Asia","West US","West Europe","Southeast Asia"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"IotHubs","locations":["East
-        US","North Europe","East Asia","West US","West Europe","Southeast Asia"],"apiVersions":["2016-02-03","2015-08-15-preview"]}]},{"namespace":"Microsoft.DevTestLab","resourceTypes":[{"resourceType":"labs","locations":["Southeast
+        US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
+        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"operations","locations":["East
+        US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
+        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"IotHubs","locations":["East
+        US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
+        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]}]},{"namespace":"Microsoft.DevTestLab","resourceTypes":[{"resourceType":"labs","locations":["Southeast
         Asia","East US","West US","West Europe","East Asia","East US 2","Japan East","Japan
         West","Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"environments","locations":["Southeast
         Asia","East US","West US","West Europe","East Asia","East US 2","Japan East","Japan
@@ -406,13 +423,13 @@ http_interactions:
         East","Japan West","Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-05-21-preview"]}]},{"namespace":"Microsoft.DocumentDB","resourceTypes":[{"resourceType":"databaseAccounts","locations":["West
         US","North Europe","West Europe","East US","East US 2","East Asia","Southeast
         Asia","Australia East","Australia Southeast","Central India","South India","South
-        Central US","Central US","Japan East","Japan West"],"apiVersions":["2014-04-01"]},{"resourceType":"databaseAccountNames","locations":["West
+        Central US","Central US","Japan East","Japan West"],"apiVersions":["2015-04-08","2014-04-01"]},{"resourceType":"databaseAccountNames","locations":["West
         US","North Europe","West Europe","East US","East US 2","East Asia","Southeast
         Asia","Australia East","Australia Southeast","Central India","South India","South
-        Central US","Central US","Japan East","Japan West"],"apiVersions":["2014-04-01"]},{"resourceType":"operations","locations":["West
+        Central US","Central US","Japan East","Japan West"],"apiVersions":["2015-04-08","2014-04-01"]},{"resourceType":"operations","locations":["West
         US","North Europe","West Europe","East US","East US 2","East Asia","Southeast
         Asia","Australia East","Australia Southeast","Central India","South India","South
-        Central US","Central US","Japan East","Japan West"],"apiVersions":["2014-04-01"]}]},{"namespace":"Microsoft.DomainRegistration","resourceTypes":[{"resourceType":"domains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"domains/domainOwnershipIdentifiers","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"topLevelDomains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"checkDomainAvailability","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"listDomainRecommendations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"validateDomainRegistrationInformation","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"generateSsoRequest","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"operations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]}]},{"namespace":"Microsoft.DynamicsLcs","resourceTypes":[{"resourceType":"lcsprojects","locations":["Brazil
+        Central US","Central US","Japan East","Japan West"],"apiVersions":["2015-04-08","2014-04-01"]}]},{"namespace":"Microsoft.DomainRegistration","resourceTypes":[{"resourceType":"domains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"domains/domainOwnershipIdentifiers","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"topLevelDomains","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"checkDomainAvailability","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"listDomainRecommendations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"validateDomainRegistrationInformation","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"generateSsoRequest","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]},{"resourceType":"operations","locations":["global"],"apiVersions":["2015-04-01","2015-02-01"]}]},{"namespace":"Microsoft.DynamicsLcs","resourceTypes":[{"resourceType":"lcsprojects","locations":["Brazil
         South","East Asia","East US","Japan East","Japan West","North Central US","North
         Europe","South Central US","West Europe","West US","Southeast Asia","Central
         US","East US 2","MSFT West US","MSFT East US","MSFT East Asia","MSFT North
@@ -432,7 +449,7 @@ http_interactions:
         East","Australia Southeast","Central US","East US","East US 2","West US","North
         Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
         East","Japan West","North Europe","West Europe","Central India","South India","West
-        India"],"apiVersions":["2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":[],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-01","2014-09-01"]}]},{"namespace":"Microsoft.Features","resourceTypes":[{"resourceType":"features","locations":[],"apiVersions":["2015-12-01","2014-08-01-preview"]},{"resourceType":"providers","locations":[],"apiVersions":["2015-12-01","2014-08-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-12-01","2014-08-01-preview"]}]},{"namespace":"Microsoft.HDInsight","resourceTypes":[{"resourceType":"clusters","locations":["East
+        India"],"apiVersions":["2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":[],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-01","2014-09-01"]}]},{"namespace":"Microsoft.Features","resourceTypes":[{"resourceType":"features","locations":[],"apiVersions":["2015-12-01","2014-08-01-preview"]},{"resourceType":"providers","locations":[],"apiVersions":["2015-12-01","2014-08-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-12-01","2014-08-01-preview"]}]},{"namespace":"Microsoft.Gallery","resourceTypes":[{"resourceType":"myareas","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"myareas/areas","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"myareas/areas/areas","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"myareas/galleryitems","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"myareas/areas/galleryitems","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"myareas/areas/areas/galleryitems","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"enroll","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"galleryitems","locations":[],"apiVersions":["2016-03-01-preview","2014-04-01-preview"]},{"resourceType":"resources","locations":[],"apiVersions":["2016-03-01-preview","2014-04-01-preview"]},{"resourceType":"retrieveresourcesbyid","locations":[],"apiVersions":["2016-03-01-preview","2014-04-01-preview"]},{"resourceType":"generateartifactaccessuri","locations":[],"apiVersions":["2016-03-01-preview"]},{"resourceType":"checknameavailability","locations":[],"apiVersions":["2016-03-01-preview"]}]},{"namespace":"Microsoft.HDInsight","resourceTypes":[{"resourceType":"clusters","locations":["East
         Asia","Southeast Asia","East US","East US 2","West US","North Central US","South
         Central US","Central US","North Europe","West Europe","Japan East","Japan
         West","Brazil South","Australia East","Australia Southeast","Central India"],"apiVersions":["2015-03-01-preview"]},{"resourceType":"clusters/applications","locations":[],"apiVersions":["2015-03-01-preview"]},{"resourceType":"clusters/operationresults","locations":[],"apiVersions":["2015-03-01-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-03-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-03-01-preview"]}]},{"namespace":"microsoft.insights","resourceTypes":[{"resourceType":"components","locations":["Central
@@ -463,19 +480,16 @@ http_interactions:
         India","West India"],"apiVersions":["2015-07-01"]},{"resourceType":"eventCategories","locations":[],"apiVersions":["2015-04-01"]}]},{"namespace":"Microsoft.KeyVault","resourceTypes":[{"resourceType":"vaults","locations":["North
         Central US","East US","North Europe","West Europe","East Asia","Southeast
         Asia","East US 2","Central US","South Central US","West US","Japan East","Japan
-        West","Australia East","Australia Southeast","Brazil South"],"apiVersions":["2015-06-01","2014-12-19-preview"]},{"resourceType":"vaults/secrets","locations":["North
+        West","Australia East","Australia Southeast","Brazil South","Central India"],"apiVersions":["2015-06-01"]},{"resourceType":"vaults/secrets","locations":["North
         Central US","East US","North Europe","West Europe","East Asia","Southeast
         Asia","East US 2","Central US","South Central US","West US","Japan East","Japan
-        West","Australia East","Australia Southeast","Brazil South"],"apiVersions":["2015-06-01","2014-12-19-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-01","2014-12-19-preview"]}]},{"namespace":"Microsoft.Logic","resourceTypes":[{"resourceType":"workflows","locations":["North
+        West","Australia East","Australia Southeast","Brazil South","Central India"],"apiVersions":["2015-06-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-01","2014-12-19-preview"]}]},{"namespace":"Microsoft.Logic","resourceTypes":[{"resourceType":"workflows","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
         East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"operations","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
-        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"apiOperations","locations":["Brazil
-        South"],"apiVersions":["2015-08-01-preview"]},{"resourceType":"integrationAccounts","locations":["Brazil
-        South"],"apiVersions":["2015-08-01-preview"]},{"resourceType":"managedApis","locations":["Brazil
-        South"],"apiVersions":["2015-08-01-preview"]},{"resourceType":"managedApiConnections","locations":["Brazil
+        East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-08-01-preview","2015-02-01-preview"]},{"resourceType":"integrationAccounts","locations":["Brazil
         South"],"apiVersions":["2015-08-01-preview"]}]},{"namespace":"Microsoft.MarketplaceOrdering","resourceTypes":[{"resourceType":"agreements","locations":["South
         Central US","West US"],"apiVersions":["2015-06-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-01"]}]},{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"virtualNetworks","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","North
@@ -563,11 +577,15 @@ http_interactions:
         Central US","South Central US","North Europe","West Europe","East Asia","Southeast
         Asia","West US","East US","Japan West","Japan East","Brazil South","Central
         US","East US 2","Australia East","Australia Southeast","South India","Central
-        India","West India"],"apiVersions":["2016-01-01","2014-08-01-preview"]},{"resourceType":"operations","locations":["North
+        India","West India"],"apiVersions":["2016-03-01","2016-01-01","2014-08-01-preview"]},{"resourceType":"operations","locations":["North
         Central US","South Central US","North Europe","West Europe","East Asia","Southeast
         Asia","West US","East US","Japan West","Japan East","Brazil South","Central
         US","East US 2","Australia East","Australia Southeast","South India","Central
-        India","West India"],"apiVersions":["2016-01-01","2014-08-01-preview"]},{"resourceType":"flows","locations":["North
+        India","West India"],"apiVersions":["2016-03-01","2016-01-01","2014-08-01-preview"]},{"resourceType":"operationResults","locations":["North
+        Central US","South Central US","North Europe","West Europe","East Asia","Southeast
+        Asia","West US","East US","Japan West","Japan East","Brazil South","Central
+        US","East US 2","Australia East","Australia Southeast","South India","Central
+        India","West India"],"apiVersions":["2016-03-01","2016-01-01","2014-08-01-preview"]},{"resourceType":"flows","locations":["North
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
         East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2015-08-01-preview","2015-02-01-preview"]}]},{"namespace":"Microsoft.Search","resourceTypes":[{"resourceType":"searchServices","locations":["West
@@ -595,15 +613,16 @@ http_interactions:
         India","West India"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-12-01-alpha","2015-07-01-alpha","2015-06-01-preview"]},{"resourceType":"policies","locations":["Central
         US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-12-01-alpha","2015-07-01-alpha","2015-06-01-preview"]},{"resourceType":"appliances","locations":["Central
         US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-12-01-alpha","2015-07-01-alpha","2015-06-01-preview"]},{"resourceType":"webApplicationFirewalls","locations":["Central
-        US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-12-01-alpha","2015-07-01-alpha","2015-06-01-preview"]}]},{"namespace":"Microsoft.ServerManagement","resourceTypes":[{"resourceType":"gateways","locations":["Central
-        US","East US"],"apiVersions":["2015-07-01-preview"]},{"resourceType":"nodes","locations":["Central
-        US","East US"],"apiVersions":["2015-07-01-preview"]}]},{"namespace":"Microsoft.ServiceBus","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
+        US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-12-01-alpha","2015-07-01-alpha","2015-06-01-preview"]}]},{"namespace":"Microsoft.ServerManagement","resourceTypes":[{"resourceType":"operations","locations":["Central
+        US","East US","North Europe","West Europe"],"apiVersions":["2015-07-01-preview"]},{"resourceType":"gateways","locations":["Central
+        US","East US","North Europe","West Europe"],"apiVersions":["2015-07-01-preview"]},{"resourceType":"nodes","locations":["Central
+        US","East US","North Europe","West Europe"],"apiVersions":["2015-07-01-preview"]}]},{"namespace":"Microsoft.ServiceBus","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US","North
         Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
         East","Japan West","North Europe","West Europe","Central India","South India","West
         India"],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":[],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-01","2014-09-01"]}]},{"namespace":"Microsoft.ServiceFabric","resourceTypes":[{"resourceType":"clusters","locations":["West
         US","East US","West Europe","Australia East","Australia Southeast","North
-        Central US","Japan West","South Central US"],"apiVersions":["2016-01-01-beta","2015-01-01-alpha"]}]},{"namespace":"Microsoft.Sql","resourceTypes":[{"resourceType":"operations","locations":["East
+        Central US","Japan West","South Central US"],"apiVersions":["2016-03-01","2016-01-01-beta","2015-01-01-alpha"]}]},{"namespace":"Microsoft.Sql","resourceTypes":[{"resourceType":"operations","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
@@ -824,163 +843,163 @@ http_interactions:
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots/extensions","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots/extensions","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/instances","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/instances","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots/instances","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots/instances","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/instances/extensions","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/instances/extensions","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots/instances/extensions","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots/instances/extensions","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"publishingUsers","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"publishingUsers","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"ishostnameavailable","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"ishostnameavailable","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"isusernameavailable","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"isusernameavailable","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sourceControls","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sourceControls","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"availableStacks","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"availableStacks","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"listSitesAssignedToHostName","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"listSitesAssignedToHostName","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"sites/hostNameBindings","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"sites/hostNameBindings","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"sites/domainOwnershipIdentifiers","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"sites/domainOwnershipIdentifiers","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"sites/slots/hostNameBindings","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"sites/slots/hostNameBindings","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"operations","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01"]},{"resourceType":"operations","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"certificates","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"certificates","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01-preview","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"serverFarms","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01-preview","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"serverFarms","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"serverFarms/workers","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"serverFarms/workers","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01-preview","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01-preview","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/slots","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"runtimes","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/slots/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/slots/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"serverFarms/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"serverFarms/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/recommendations","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"recommendations","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"georegions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/premieraddons","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"runtimes","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/slots/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/slots/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"serverFarms/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"serverFarms/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"sites/recommendations","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"recommendations","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"georegions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"sites/premieraddons","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01"]},{"resourceType":"hostingEnvironments","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01"]},{"resourceType":"hostingEnvironments","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/instances","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/instances/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/instances/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/instances","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/instances/metrics","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/instances/metricDefinitions","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"managedHostingEnvironments","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/instances","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/instances/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/multiRolePools/instances/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/instances","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/instances/metrics","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"hostingEnvironments/workerPools/instances/metricDefinitions","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"managedHostingEnvironments","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"deploymentLocations","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"provisionGlobalAppServicePrincipalInUserTenant","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"functions","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01"]},{"resourceType":"deploymentLocations","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"functions","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
         India","South India","MSFT West US","MSFT East US","MSFT East Asia","MSFT
         North Europe","East US 2 (Stage)","East Asia (Stage)","Central US (Stage)","North
-        Central US (Stage)"],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"ishostingenvironmentnameavailable","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"classicMobileServices","locations":[],"apiVersions":["2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"apiManagementAccounts","locations":["South
+        Central US (Stage)"],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"ishostingenvironmentnameavailable","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"classicMobileServices","locations":[],"apiVersions":["2016-03-01","2015-08-01","2015-07-01","2015-06-01","2015-05-01","2015-04-01","2015-02-01","2014-11-01","2014-06-01","2014-04-01-preview","2014-04-01"]},{"resourceType":"apiManagementAccounts","locations":["South
         Central US","North Europe","West Europe","Southeast Asia","West US","East
         US","Japan West","Japan East","East Asia","East US 2","North Central US","Central
         US","Brazil South","Australia East","Australia Southeast","West India","Central
@@ -1063,10 +1082,10 @@ http_interactions:
         US","Australia Southeast","Australia East","South Central US"],"apiVersions":["2014-04-01"]}]},{"namespace":"TrendMicro.DeepSecurity","resourceTypes":[{"resourceType":"accounts","locations":["West
         US (Partner)","Central US"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}]}]}'
     http_version: 
-  recorded_at: Tue, 22 Mar 2016 20:18:05 GMT
+  recorded_at: Wed, 30 Mar 2016 18:23:34 GMT
 - request:
     method: get
-    uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/my_resource_group/providers/Microsoft.Compute/virtualMachines/my_instance_name?api-version=2015-06-15
+    uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/my_resource_group/providers/Microsoft.Compute/virtualMachines/my_instance_name?api-version=2016-03-30
     body:
       encoding: US-ASCII
       string: ''
@@ -1080,7 +1099,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg2Nzc1ODQsIm5iZiI6MTQ1ODY3NzU4NCwiZXhwIjoxNDU4NjgxNDg0LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.cESYuMFFsjPemIFa4ddwk7xInvq6YSK2DCUafmsjW94hfKpXxRGF-11Fh2GJ3TqcMVUGK6sBsLBLWkMZ3kOSwjg-eiJw_clEEjh6UfEV8Dh6FZ6KrvvFU__5xl5IRb1D5KUBn_dnML95DYMrmeLZs6_Z4DgzkvnhAEcE30J2EOjuIjdpjzevY4Jz2rtUBnqNDP6j2uyRzY5gRDps-3nNotOoEIk190y-V-RjnzISWlzYiin_y8SUbe3IzTxUriRW8Wpn6xOS0-ppVP0tX713mhUhtV_WYQzuIS-99j_3Ot3t8C2wZGGMtCW4vfogBfigjtSw8dsm4KHlfHek0cdrNw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTkzNjE5MTMsIm5iZiI6MTQ1OTM2MTkxMywiZXhwIjoxNDU5MzY1ODEzLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.LNvww-l3TDf8qnENahTKXbbeoh7jGSyQo0T9g4-Ksuoh-tr8VHNm7PBNr-7K4r9DCDk9bxwnWP1nnrrGI6StrBPISamiVp9CUhRJmDe8u_w3l9op4nIbYDiOsLcZXiGNZzgH8pf2R5jA4Uhw7mZC8Kuj8K33IeBEAgkaMCFTaRbqnq27CVb-Oo55joG7_bzPRbsH7EZBOlq-hsBqGmT_ghMcc4yXY-VckczeRRTWZUEMOKnf_wU1McMy8uIWO0g0PQtKnxBAEMUca4DTqr3f1sc3k-XzUPnP2s73f5qvNwwqtNRh5Zhu62DSCyKqEWiBX_VxAszONSrHfmjFUkxM5Q
   response:
     status:
       code: 200
@@ -1103,18 +1122,18 @@ http_interactions:
       X-Ms-Served-By:
       - 1a5498b5-371e-4a3a-8afd-84914b23eaad_131006081444041502
       X-Ms-Request-Id:
-      - 56e2b982-0397-4c28-8f76-30d72f47d77e
+      - 169f95b5-33a1-485b-96c3-15ebedce4d60
       Server:
       - Microsoft-HTTPAPI/2.0
       - Microsoft-HTTPAPI/2.0
       X-Ms-Ratelimit-Remaining-Subscription-Reads:
-      - '14957'
+      - '14996'
       X-Ms-Correlation-Request-Id:
-      - df564e54-06ce-4be3-b57a-4d8a6068e468
+      - 2244747f-80be-4e5d-96bd-2d9fa3e984a6
       X-Ms-Routing-Request-Id:
-      - EASTUS:20160322T201805Z:df564e54-06ce-4be3-b57a-4d8a6068e468
+      - EASTUS:20160330T182339Z:2244747f-80be-4e5d-96bd-2d9fa3e984a6
       Date:
-      - Tue, 22 Mar 2016 20:18:05 GMT
+      - Wed, 30 Mar 2016 18:23:39 GMT
     body:
       encoding: ASCII-8BIT
       string: "{\r\n  \"properties\": {\r\n    \"vmId\": \"c4d577ae-4be8-41c1-84f8-642320910a5e\",\r\n
@@ -1145,5 +1164,5 @@ http_interactions:
         \ \"name\": \"my_instance_name\",\r\n  \"type\": \"Microsoft.Compute/virtualMachines\",\r\n
         \ \"location\": \"eastus\"\r\n}"
     http_version: 
-  recorded_at: Tue, 22 Mar 2016 20:18:05 GMT
+  recorded_at: Wed, 30 Mar 2016 18:23:39 GMT
 recorded_with: VCR 2.9.3
