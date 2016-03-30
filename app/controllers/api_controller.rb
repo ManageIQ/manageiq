@@ -88,7 +88,7 @@ class ApiController < ApplicationController
   extend ErrorHandler::ClassMethods
   respond_to :json
   rescue_from_api_errors
-  before_action :require_api_user_or_token, :except => [:handle_options_request]
+  prepend_before_action :require_api_user_or_token, :except => [:handle_options_request]
 
   TAG_NAMESPACE = "/managed"
 
