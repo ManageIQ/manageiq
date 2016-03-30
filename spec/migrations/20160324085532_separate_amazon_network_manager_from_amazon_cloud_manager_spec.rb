@@ -18,8 +18,8 @@ describe SeparateAmazonNetworkManagerFromAmazonCloudManager do
                                              :ems_id        => x[:ems_in][:ems].id)
     when :out
       case x[:ems_out]
-        when 'new_ems'
-          x[:ems_out] = {:ems => network_manager}
+      when 'new_ems'
+        x[:ems_out] = {:ems => network_manager}
       end
 
       x[name] = send("#{name}_stub").create!(:type          => x[:type_out],
@@ -94,7 +94,6 @@ describe SeparateAmazonNetworkManagerFromAmazonCloudManager do
       :security_group
     ]
   end
-
 
   let(:ext_management_system_stub) { migration_stub(:ExtManagementSystem) }
   let(:cloud_network_stub) { migration_stub(:CloudNetwork) }

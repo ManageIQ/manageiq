@@ -115,8 +115,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
       admin.current_group.save
 
       2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
-      2.times { FactoryGirl.create(:security_group_amazon, :name                  => "sgb_1",
-                                                           :ext_management_system => ems.network_manager) }
+      2.times do
+        FactoryGirl.create(:security_group_amazon, :name                  => "sgb_1",
+                                                   :ext_management_system => ems.network_manager)
+      end
       ems.flavors << FactoryGirl.create(:flavor, :name => "t1.micro", :supports_32_bit => true,
                                         :supports_64_bit => true)
       ems.flavors << FactoryGirl.create(:flavor, :name => "m1.large", :supports_32_bit => false,
