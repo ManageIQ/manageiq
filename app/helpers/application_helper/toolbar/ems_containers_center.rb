@@ -23,6 +23,12 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           t,
           :url => "/new"),
         button(
+          :ems_container_deployment,
+          'icon fa fa-plus fa-lg',
+          t = N_('Deploy a New #{ui_lookup(:table=>"ems_container")}'),
+          t,
+          :ng_click => "showListener()"),
+        button(
           :ems_container_edit,
           'pficon pficon-edit fa-lg',
           N_('Select a single #{ui_lookup(:table=>"ems_container")} to edit'),

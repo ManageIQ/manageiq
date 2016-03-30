@@ -1,0 +1,37 @@
+<div ng-controller="containers.deployProviderReviewSummaryController">
+  <div miq-wizard-substep step-title="Summary" step-id="review-summary" step-priority="0" on-show="onShow"
+       next-enabled="!playbookChanged" prev-enabled="!playbookChanged" ok-to-nav-away="!playbookChanged"
+       next-tooltip="navTooltip" prev-tooltip="navTooltip" wz-disabled="false">
+    <div miq-wizard-review-page shown="pageShown" wizard-data="data"></div>
+    <div class="wizard-miq-review-steps">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a class="miq-form-collapse" ng-class="{'collapsed': !showAdvancedSettings}" ng-click="toggleAdvancedSettings()">
+            Advanced Settings
+          </a>
+          <div class="wizard-miq-review-content" ng-class="{'collapse': !showAdvancedSettings}">
+            <form>
+              <div class="miq-review-edit-item">
+                <label class="miq-review-label-class">Inventory Name</label>
+                <input class="miq-input-class" id="playbook-name-input" ng-model="data.playbookName"
+                       type="text" required ng-if="editPlaybookName"
+                       ng-blur="toggleEditPlaybookName()" ng-enter="toggleEditPlaybookName()"/>
+                <a class="miq-review-edit-field" ng-if="!editPlaybookName" ng-click="toggleEditPlaybookName()">{{data.playbookName}}</a>
+              </div>
+              <textarea class="miq-review-edit-text" rows="10" type="text" ng-model="data.editedPlaybookText" ng-change="onPlaybookTextChange()"></textarea>
+              <div class="modal-footer miq-review-button-panel">
+                <button class="btn btn-default" ng-disabled="!playbookChanged" ng-click="cancelPlaybookChanges()">Cancel</button>
+                <button class="btn btn-primary" ng-disabled="!playbookChanged" ng-click="savePlaybookChanges()">Save</button>
+              </div>
+            </form>
+        </li>
+      </ul>
+    </div>
+    <div miq-modal class="miq-wizard-page-wait-dialog" visible="showWaitDialog" modal-size="small" show-header="false" show-close="false">
+      <div class="miq-wait-dialog-content">
+        <div class="spinner spinner-lg"></div>
+        <div class="miq-wait-dialog-text">Loading summary...</div>
+      </div>
+    </div>
+  </div>
+</div>
