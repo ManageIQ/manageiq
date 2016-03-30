@@ -30,9 +30,12 @@ module ManageIQ::Providers
         get_cloud_networks
         get_security_groups
         get_volumes
+        get_snapshots
         get_images
         get_instances # Must occur after get_volumes is called
         _log.info("#{log_header}...Complete")
+
+        link_volumes_to_base_snapshots
 
         @data
       end
@@ -69,6 +72,11 @@ module ManageIQ::Providers
       def get_volumes
         disks = @connection.disks.all
         process_collection(disks, :cloud_volumes) { |volume| parse_volume(volume) }
+      end
+
+      def get_snapshots
+        snapshots = @connection.snapshots.all
+        process_collection(snapshots, :cloud_volume_snapshots) { |snapshot| parse_snapshot(snapshot) }
       end
 
       def get_images
@@ -223,13 +231,31 @@ module ManageIQ::Providers
           :volume_type       => parse_uid_from_url(volume.type),
           :description       => volume.description,
           :size              => volume.size_gb.to_i.gigabyte,
-          :availability_zone => @data_index.fetch_path(:availability_zones, zone_id)
+          :availability_zone => @data_index.fetch_path(:availability_zones, zone_id),
+          # Note that this is just the name, not the hash - this must be
+          # rewritten before returning the data to ems
+          :base_snapshot     => volume.source_snapshot,
         }
 
         # Take note of the source_image_id so we can expose it in parse_instance
         @disk_to_source_image_id[volume.self_link] = volume.source_image_id
 
         return volume.self_link, new_result
+      end
+
+      def parse_snapshot(snapshot)
+        new_result = {
+          :ems_ref       => snapshot.id,
+          :type          => "ManageIQ::Providers::Google::CloudManager::CloudVolumeSnapshot",
+          :name          => snapshot.name,
+          :status        => snapshot.status,
+          :creation_time => snapshot.creation_timestamp,
+          :description   => snapshot.description,
+          :size          => snapshot.disk_size_gb.to_i.gigabytes,
+          :volume        => @data_index.fetch_path(:cloud_volumes, snapshot.source_disk)
+        }
+
+        return snapshot.self_link, new_result
       end
 
       def parse_image(image)
@@ -437,6 +463,15 @@ module ManageIQ::Providers
         end
 
         ssh_keys
+      end
+
+      def link_volumes_to_base_snapshots
+        @data_index[:cloud_volumes].each do |_, volume|
+          base_snapshot = volume[:base_snapshot]
+          next if base_snapshot.nil?
+
+          volume[:base_snapshot] = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot)
+        end
       end
 
       def parse_uid_from_url(url)
