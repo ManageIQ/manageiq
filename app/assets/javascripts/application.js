@@ -5,12 +5,12 @@
 //= require patternfly
 //= require jquery-ujs
 //= require angular
-//= require angular-patternfly-sass/angular-patternfly
+//= require angular-patternfly-sass/dist/angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize
 //= require moment
-//= require moment-strftime
+//= require moment-strftime/build/moment-strftime.min
 //= require moment-timezone
 //= require sprintf
 //= require numeral
@@ -22,7 +22,7 @@
 //= require d3
 //= require c3
 //= require lodash
-//= require kubernetes-topology-graph/topology-graph
+//= require kubernetes-topology-graph/dist/topology-graph
 //= require miq_browser_detect
 //= require miq_application
 //= require miq_change_stored_password
@@ -43,7 +43,7 @@
 //= require jqplot-plugins/jqplot.canvasTextRenderer
 //= require miq_jqplot
 //= require miq_c3_config
-//= require jqueryui
+//= require jquery-ui
 //= require bootstrap
 //= require bootstrap-datepicker
 //= require bootstrap-filestyle
