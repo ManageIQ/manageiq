@@ -10,8 +10,8 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
       $scope.model     = "serviceModel";
       ManageIQ.angular.scope = $scope;
 
-      $scope.serviceModel.name = serviceData.data.name;
-      $scope.serviceModel.description = serviceData.data.description;
+      $scope.serviceModel.name = serviceData.name;
+      $scope.serviceModel.description = serviceData.description;
       $scope.modelCopy = angular.copy( $scope.serviceModel );
 
       // need this in order to get Abandon Changes? prompt when leaving form without saving

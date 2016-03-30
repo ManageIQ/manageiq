@@ -182,15 +182,6 @@ class ServiceController < ApplicationController
     end
   end
 
-  def service_form_fields
-    service = Service.find_by_id(params[:id])
-
-    render :json => {
-      :name        => service.name,
-      :description => service.description
-    }
-  end
-
   private
 
   def features
