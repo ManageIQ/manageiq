@@ -7,7 +7,8 @@ module HasManyCloudNetworksMixin
     has_one :network_manager,
             :foreign_key => :parent_ems_id,
             :class_name  => "ManageIQ::Providers::Openstack::NetworkManager",
-            :autosave    => true
+            :autosave    => true,
+            :dependent   => :destroy
 
     delegate :floating_ips,
              :security_groups,
