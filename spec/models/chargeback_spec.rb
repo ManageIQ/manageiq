@@ -282,7 +282,7 @@ describe Chargeback do
     subject { Chargeback.build_results_for_report_chargeback(@options_tenant).first.first }
 
     it "report a chargeback of a subtenant" do
-      tier = FactoryGirl.create(:chargeback_tier_singular)
+      tier = FactoryGirl.create(:chargeback_tier)
       FactoryGirl.create(:chargeback_rate_detail_cpu_allocated,
                          :chargeback_rate_id => @cbr.id,
                          :per_time           => "hourly",

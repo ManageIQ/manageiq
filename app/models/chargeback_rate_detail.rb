@@ -4,7 +4,7 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
   has_many :chargeback_tiers, :dependent => :destroy
   validates :group, :source, :presence => true
-  validate :complete_tiers, :if => "!respond_to?(:rate)"
+  validate :complete_tiers
 
   # Set the rates according to the tiers
   def find_rate(value)
@@ -143,7 +143,10 @@ class ChargebackRateDetail < ApplicationRecord
   # Check that tiers are complete and disjoint
   def complete_tiers
     error = false
-    tiers = chargeback_tiers.order(:start)
+
+    # Note, we use sort_by vs. order since we need to call this method against
+    # the in memory chargeback_tiers association and NOT hit the database.
+    tiers = chargeback_tiers.sort_by(&:start)
 
     tiers.each_with_index do |tier, index|
       if tier == tiers.first
@@ -151,11 +154,7 @@ class ChargebackRateDetail < ApplicationRecord
           error = true
           break
         end
-
-        next
-      end
-
-      if tier.start != tiers[index - 1].end
+      elsif tier.start != tiers[index - 1].end
         error = true
         break
       end
