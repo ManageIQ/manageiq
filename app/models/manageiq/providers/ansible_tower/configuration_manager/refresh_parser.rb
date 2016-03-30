@@ -65,6 +65,7 @@ module ManageIQ::Providers
           :manager_ref          => host.id.to_s,
           :hostname             => name,
           :inventory_root_group => inventory_root_group,
+          :virtual_instance_ref => host.instance_id,
         }
 
         return uid, new_result

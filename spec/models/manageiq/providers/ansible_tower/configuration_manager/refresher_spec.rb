@@ -39,9 +39,10 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
 
   def assert_configured_system
     expect(expected_configured_system).to have_attributes(
-      :type        => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
-      :hostname    => "Ansible-Host",
-      :manager_ref => "48",
+      :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
+      :hostname             => "Ansible-Host",
+      :manager_ref          => "48",
+      :virtual_instance_ref => "4233080d-7467-de61-76c9-c8307b6e4830",
     )
     expect(expected_configured_system.inventory_root_group).to eq(expected_inventory_root_group)
   end
