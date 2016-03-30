@@ -183,7 +183,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
     return uid, new_result
   end
 
-  def parse_cloud_subnet_network_ports(cloud_subnet_network_port, subnet_id)
+  def parse_cloud_subnet_network_port(cloud_subnet_network_port, subnet_id)
     {
       :address      => cloud_subnet_network_port.private_ip_address,
       :cloud_subnet => @data_index.fetch_path(:cloud_subnets, subnet_id)
@@ -193,7 +193,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
   def parse_network_port(network_port)
     uid                        = network_port.network_interface_id
     cloud_subnet_network_ports = network_port.private_ip_addresses.map do |x|
-      parse_cloud_subnet_network_ports(x, network_port.subnet_id)
+      parse_cloud_subnet_network_port(x, network_port.subnet_id)
     end
     device                     = parent_manager_fetch_path(:vms, network_port.try(:attachment).try(:instance_id))
     security_groups            = network_port.groups.blank? ? [] : network_port.groups.map do |x|
