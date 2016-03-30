@@ -12,7 +12,6 @@ describe RemoveHostIdFromSwitch do
     let(:host_stub) { migration_stub(:Host) }
     let(:host_switches_stub) { migration_stub(:HostSwitch) }
     it 'Move host-to-switch relationship back to switches.host_id' do
-
       migrate
 
       @host.reload

@@ -6,8 +6,8 @@ class RemoveHostIdFromSwitch < ActiveRecord::Migration[5.0]
   end
 
   class Switch < ActiveRecord::Base
-    has_many :host_switches, :dependent => :destroy, :class_name  => 'RemoveHostIdFromSwitch::HostSwitch'
-    has_many :hosts, :through => :host_switches, :class_name  => 'RemoveHostIdFromSwitch::Host'
+    has_many :host_switches, :dependent => :destroy, :class_name => 'RemoveHostIdFromSwitch::HostSwitch'
+    has_many :hosts, :through => :host_switches, :class_name => 'RemoveHostIdFromSwitch::Host'
   end
 
   class HostSwitch < ActiveRecord::Base
