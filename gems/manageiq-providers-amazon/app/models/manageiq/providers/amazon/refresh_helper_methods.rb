@@ -1,4 +1,4 @@
-module ManageIQ::Providers::Amazon::HelperMethods
+module ManageIQ::Providers::Amazon::RefreshHelperMethods
   extend ActiveSupport::Concern
 
   def process_collection(collection, key)
