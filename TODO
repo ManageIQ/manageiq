@@ -1,0 +1,1 @@
+ensure {conditions,miq_alerts,miq_policies}.expression touching code can handle old and new format

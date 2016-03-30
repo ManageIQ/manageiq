@@ -159,10 +159,12 @@ EOF
       expect(service_service.retirement_state).to be_nil
       expect(service_service.retires_on).to be_nil
 
+      before = Time.zone.now
       service_service.finish_retirement
+      after = Time.zone.now
 
       expect(service_service.retired).to be_truthy
-      expect(service_service.retires_on).to eq(Date.today)
+      expect(service_service.retires_on).to be_between(before, after)
       expect(service_service.retirement_state).to eq("retired")
     end
 

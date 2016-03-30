@@ -28,28 +28,25 @@ module RetirementMixin
   end
 
   def retirement_warning_due?
-    retirement_warn && retires_on && retirement_warn.days.from_now.to_date >= retires_on.to_date
+    retirement_warn && retires_on && retirement_warn.days.from_now >= retires_on
   end
 
   def retirement_due?
-    retires_on && (Date.today >= retires_on_date)
+    retires_on && (Time.zone.now >= retires_on)
   end
 
   def retires_on=(timestamp)
     return if retires_on == timestamp
 
-    if timestamp.nil? || (timestamp.to_date > Time.zone.today)
+    if timestamp.nil? || (timestamp > Time.zone.now)
       self.retired = false
       _log.warn("Resetting retirement state from #{retirement_state}") unless retirement_state.nil?
       self.retirement_state = nil
     end
+
     self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
     self[:retires_on] = timestamp
     self.retirement_requester = nil
-  end
-
-  def retires_on_date
-    retires_on.nil? ? nil : retires_on.to_date
   end
 
   def retire(options = {})
@@ -59,11 +56,11 @@ module RetirementMixin
 
     if options.key?(:date)
       date = nil
-      date = options[:date].to_date unless options[:date].nil?
+      date = options[:date].in_time_zone unless options[:date].nil?
       self.retires_on = date
 
       if date
-        message += " is scheduled to retire on date: [#{retires_on_date}]"
+        message += " is scheduled to retire on: [#{retires_on}]"
       else
         message += " is no longer scheduled to retire"
       end
@@ -110,7 +107,7 @@ module RetirementMixin
   def retire_now(requester = nil)
     if retired
       return if retired_validated?
-      _log.info("#{retirement_object_title}: [#{name}], Retires On Date: [#{retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
+      _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on}], was previously retired, but currently #{retired_invalid_reason}")
     else
       update_attributes(:retirement_requester => requester)
       event_name = "request_#{retirement_event_prefix}_retire"
@@ -126,8 +123,8 @@ module RetirementMixin
   def finish_retirement
     raise _("%{name} already retired") % {:name => name} if retired?
     $log.info("Finishing Retirement for [#{name}]")
-    update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
-    message = "#{self.class.base_model.name}: [#{name}], Retires On Date: [#{retires_on}], has been retired"
+    update_attributes(:retires_on => Time.zone.now, :retired => true, :retirement_state => "retired")
+    message = "#{self.class.base_model.name}: [#{name}], Retires On: [#{retires_on}], has been retired"
     $log.info("Calling audit event for: #{message} ")
     raise_audit_event(retired_event_name, message)
     $log.info("Called audit event for: #{message} ")

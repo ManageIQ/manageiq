@@ -15,6 +15,7 @@ if (typeof(ManageIQ) === 'undefined') {
     sizeTimer: null, // timer for routines to get size of the window
     timelineFilter: null, //
     toolbars: null, // toolbars
+    timezone: null, // server timezone - name & utc_offset in seconds
     oneTransition: {
       IEButtonPressed: null, // pressed save/reset button identificator
       oneTrans: null, // used to generate Ajax request only once for a drawn screen

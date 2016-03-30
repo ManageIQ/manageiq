@@ -245,9 +245,10 @@ module ApplicationController::CiProcessing
       kls = Vm
     end
     obj = kls.find_by_id(params[:id])
+
     render :json => {
-      :retirement_date    => obj.retires_on.try(:strftime, '%m/%d/%Y'),
-      :retirement_warning => obj.retirement_warn
+      :retirement_date    => obj.retires_on.try(:iso8601),
+      :retirement_warning => obj.retirement_warn,
     }
   end
 
@@ -276,12 +277,12 @@ module ApplicationController::CiProcessing
             flash = _("Retirement dates removed")
           end
         else
-          t = "#{params[:retire_date]} 00:00:00 Z"
+          t = params[:retire_date].in_time_zone
           w = params[:retire_warn].to_i
           if session[:retire_items].length == 1
-            flash = _("Retirement date set to %{date}") % {:date => params[:retire_date]}
+            flash = _("Retirement date set to %{date}") % {:date => t}
           else
-            flash = _("Retirement dates set to %{date}") % {:date => params[:retire_date]}
+            flash = _("Retirement dates set to %{date}") % {:date => t}
           end
         end
         kls.retire(session[:retire_items], :date => t, :warn => w) # Call the model to retire the VM(s)
@@ -306,14 +307,7 @@ module ApplicationController::CiProcessing
     build_targets_hash(@retireitems)
     @view = get_db_view(kls)              # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@retireitems, @view.cols + ['id'])
-    if @retireitems.length == 1 && !@retireitems[0].retires_on.nil?
-      t = @retireitems[0].retires_on                                         # Single VM, set to current time
-      w = @retireitems[0].retirement_warn if @retireitems[0].retirement_warn # Single VM, get retirement warn
-    else
-      t = nil
-    end
-    session[:retire_date] = t.nil? ? nil : "#{t.month}/#{t.day}/#{t.year}"
-    session[:retire_warn] = w
+
     @in_a_form = true
     @refresh_partial = "shared/views/retire" if @explorer || @layout == "orchestration_stack"
   end

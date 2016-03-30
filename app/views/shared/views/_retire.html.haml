@@ -19,7 +19,10 @@
         %a{'href'              => '#',
            'ng-click'          => 'retirementInfo.retirementDate = null; retirementInfo.retirementWarning = ""',
            'ng-hide'           => '!retirementInfo.retirementDate'}
-          = image_tag(image_path('16/clear.png'), :border => "0", :alt => _("Set to blank"))
+          %i.pficon.pficon-delete{:title => _("Set to blank")}
+        %span
+          = _("(after midnight in the {{timezone.name}} timezone)")
+
     .form-group
       %label.col-md-2.control-label
         = _('Retirement Warning')

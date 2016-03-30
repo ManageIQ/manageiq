@@ -651,7 +651,7 @@ class MiqAction < ApplicationRecord
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_vm_retire): Now executing VM Retire for VM [#{rec.name}]")
-      VmOrTemplate.retire([rec], :date => Time.now.utc - 1.day)
+      VmOrTemplate.retire([rec], :date => Time.zone.now - 1.day)
     else
       MiqPolicy.logger.info("MIQ(action_vm_retire): Queueing VM Retire for VM [#{rec.name}]")
       MiqQueue.put(

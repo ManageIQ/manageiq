@@ -1,0 +1,33 @@
+#!/bin/sh
+
+bundle exec \
+rspec --order=defined \
+      ./spec/helpers/orchestration_stack_helper/textual_summary_spec.rb:13 \
+      ./spec/lib/miq_automation_engine/service_methods/miq_ae_service_vm_spec.rb:119 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:112 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:124 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:142 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:160 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:166 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:26 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:32 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:38 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:44 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:50 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:525 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:56 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:569 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:734 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:74 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:775 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:80 \
+      ./spec/models/miq_expression/miq_expression_spec.rb:86 \
+      ./spec/models/miq_provision/state_machine_spec.rb:110 \
+      ./spec/models/miq_provision/state_machine_spec.rb:125 \
+      ./spec/models/orchestration_stack/retirement_management_spec.rb:74 \
+      ./spec/models/rbac_spec.rb:950 \
+      ./spec/models/service/retirement_management_spec.rb:103 \
+      ./spec/models/vm/retirement_management_spec.rb:71 \
+      ./spec/requests/api/services_spec.rb:158 \
+      ./spec/requests/api/services_spec.rb:182 \
+
