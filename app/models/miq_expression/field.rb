@@ -1,6 +1,6 @@
 class MiqExpression::Field
   FIELD_REGEX = /
-(?<model_name>[[:upper:]][[:alnum:]]*)
+(?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 \.?(?<association>[a-z_]+)?
 -(?<column>[a-z]+(_[a-z]+)*)
 /x
