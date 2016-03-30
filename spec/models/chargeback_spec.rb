@@ -185,7 +185,6 @@ describe Chargeback do
     before do
       @tenant = FactoryGirl.create(:tenant)
       @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
-      @tenant_child_empty = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
       @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant")
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @vm_tenant.metric_rollups <<
@@ -211,7 +210,7 @@ describe Chargeback do
                          :end_interval_offset => 0,
                          :tag                 => "/managed/environment/prod",
                          :ext_options         => {:tz => "Pacific Time (US & Canada)"},
-                         :tenant_id           => @tenant_child.id
+                         :tenant_id           => @tenant.id
                         }
     end
 
