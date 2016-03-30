@@ -3231,6 +3231,10 @@
       :description: Add a Containers Provider
       :feature_type: admin
       :identifier: ems_container_new
+    - :name: deploy
+      :description: Deploy a New Containers Provider
+      :feature_type: admin
+      :identifier: ems_container_deployment
 
   # EmsMiddleware
   - :name: Providers
