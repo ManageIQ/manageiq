@@ -1,0 +1,27 @@
+<div miq-wizard-substep step-title="Authentication Type" step-id="config-auth-mode" step-priority="0"
+     review-template="/static/deploy-provider-auth-mode-review.html">
+  <div class="miq-form-heading">Select authenticaton type</div>
+  <form class="form-horizontal">
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="all">Allow All</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="htPassword">HTPassword</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="ldap">LDAP</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="requestHeader">Request Header</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="openId">OpenID Connect</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="google">Google</input>
+    </label>
+    <label class="radio">
+      <input type="radio" ng-model="data.authentication.mode" value="github">GitHub</input>
+    </label>
+  </form>
+</div>
