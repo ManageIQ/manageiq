@@ -12,7 +12,7 @@ module Vmdb
       def load
         return if resource.nil?
 
-        resource.settings_changes(true).each_with_object({}) do |c, h|
+        resource.settings_changes.reload.each_with_object({}) do |c, h|
           h.store_path(c.key_path, c.value)
         end
       rescue => err
