@@ -34,18 +34,11 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
       :host          => dest_host,
       :datastore     => dest_datastore,
       :folder        => dest_folder,
+      :pool          => dest_resource_pool,
       :config        => build_config_spec,
       :customization => build_customization_spec,
       :transform     => build_transform_spec
     }
-
-    # Find destination resource pool
-    respool_id = get_option(:placement_rp_name)
-    clone_options[:pool] = ResourcePool.find_by_id(respool_id) unless respool_id.nil?
-    clone_options[:pool] ||= begin
-      cluster = dest_host.owning_cluster
-      cluster ? cluster.default_resource_pool : dest_host.default_resource_pool
-    end
 
     # Determine if we are doing a linked-clone provision
     clone_options[:linked_clone] = get_option(:linked_clone).to_s == 'true'
@@ -54,6 +47,15 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     validate_customization_spec(clone_options[:customization])
 
     clone_options
+  end
+
+  def dest_resource_pool
+    respool_id = get_option(:placement_rp_name)
+    resource_pool = ResourcePool.find_by(:id => respool_id) unless respool_id.nil?
+    return resource_pool unless resource_pool.nil?
+
+    cluster = dest_host.owning_cluster
+    cluster ? cluster.default_resource_pool : dest_host.default_resource_pool
   end
 
   def dest_folder
