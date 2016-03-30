@@ -1046,7 +1046,7 @@ module ApplicationController::Compare
         :field    => "col#{i + 1}",
         :width    => @compressed ? 40 : 150,
         :cssClass => "cell-effort-driven",
-        :name     => @compressed ? "<span class='rotated-text slick-header-column'>#{txt}</span>" : txt
+        :name     => @compressed ? "<span class='rotated-text'>#{txt}</span>" : txt
       }
       row.push(rowtemp)
     end

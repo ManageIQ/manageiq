@@ -1,3 +1,5 @@
+
+
 /*Override Bootstrap box-sizing*/
 .slick-header-column.ui-state-default
  {
@@ -15,9 +17,9 @@
   background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
   background-image:    -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
   background-image:     -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
-  background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */ 
+  background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */
   background-image:         linear-gradient(top, #fafafa, #ededed); /* Standard syntax; must be last */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */  
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
   font: normal 11px OpenSansSemibold,Arial,Helvetica,sans-serif;
   color: #4d5258;
 }
@@ -111,28 +113,9 @@
     background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
     background-image:    -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
     background-image:     -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
-    background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */ 
+    background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */
     background-image:         linear-gradient(top, #fafafa, #ededed); /* Standard syntax; must be last */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
-}
-
-.rotated-text {
-    /*position: absolute; bottom: 0; left: 0;*/
-    /*display: inline-block;*/
-    /*margin-bottom: 10px;*/
-    /*white-space: nowrap;*/
-    /*text-align: left;*/
-    width: 100%;
-    display: inline-block;
-    /*text-align: center;*/
-    /*position: absolute;*/
-    bottom: 0;
-    left: 0;
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    padding-bottom: 30px;
-    margin-left: 17px !important;
 }
 
 .toggle {
@@ -149,18 +132,11 @@
     background: image-url('layout/minus.gif') no-repeat center center;
 }
 
-.quadicon_grid { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;
-    padding-left: 33%
-}
-.quadicon_grid:hover{
-    padding: 1px 0 0 34%;
-}
-
 abbr[title] {
     border-bottom-width: 0;
 }
 
-#import-grid .slick-header-column.ui-state-default {  
+#import-grid .slick-header-column.ui-state-default {
     height: 24px !important;
 }
 
@@ -168,7 +144,7 @@ abbr[title] {
     padding-bottom: 10px;
 }
 
-#import-grid .odd { 
+#import-grid .odd {
     background-color: #f5f5f5;
 }
 

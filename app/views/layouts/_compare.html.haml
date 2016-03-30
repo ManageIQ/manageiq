@@ -2,12 +2,13 @@
 - if @compare.nil?
   = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
 - else
-  %table.table.table-bordered.table-treegrid
+  %table.table.table-bordered.table-treegrid{:class => @compressed ? 'table-compressed' : 'table-expanded'}
     %thead
       %tr
         - @cols.each do |col|
-          %td
-            = col[:name].html_safe
+          %th
+            %a
+              = col[:name].html_safe
     %tbody
       - @rows.each do |row|
         %tr{'data-parent' => row[:parent], :class => row[:_collapsed] ? 'collapsed' : nil, 'data-exp-id' => row[:exp_id]}
