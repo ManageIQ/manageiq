@@ -1,0 +1,103 @@
+<div ng-controller="containers.deployProviderAuthSettingsController">
+  <div miq-wizard-substep step-title="Authentication Details" step-id="auth-settings" step-priority="1"
+       next-enabled="deploymentDetailsAuthSettingsComplete" on-show="onShow"
+       wz-disabled="{{data.authentication.mode == 'all'}}" review-template="{{reviewTemplate}}">
+    <div class="miq-form-heading">{{authTypeString}} authentication details</div>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'all'">
+      <span>There are no fruther settings needed for the Allow All authentication mode.</span>
+    </form>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'htPassword'">
+      <div pf-form-group pf-label="Username" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input id="initial-setting-input" name="username" ng-model="data.authentication.htPassword.username" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Password" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="password" ng-model="data.authentication.htPassword.password" type="password" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="File Path" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="filePath" ng-model="data.authentication.htPassword.filePath" type="text" ng-change="validateForm()" required/>
+      </div>
+    </form>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'ldap'">
+      <div pf-form-group pf-label="ID" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input id="initial-setting-input" name="id" ng-model="data.authentication.ldap.id" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Email Address" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="email" ng-model="data.authentication.ldap.email" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Name" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="name" ng-model="data.authentication.ldap.name" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Username" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="username" ng-model="data.authentication.ldap.username" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="BindDN" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="bindDN" ng-model="data.authentication.ldap.bindDN" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Bind Password" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="bindPassword" ng-model="data.authentication.ldap.bindPassword" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="CA" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="ca" ng-model="data.authentication.ldap.ca" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Insecure" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="insecure" ng-model="data.authentication.ldap.insecure" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="URL" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="url" ng-model="data.authentication.ldap.url" type="text" ng-change="validateForm()" required/>
+      </div>
+    </form>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'requestHeader'">
+      <div pf-form-group pf-label="Challenge URL" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input id="initial-setting-input" name="challengeUrl" ng-model="data.authentication.requestHeader.challengeUrl" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Login URL" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="loginUrl" ng-model="data.authentication.requestHeader.loginUrl" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Client CA" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="clientCA" ng-model="data.authentication.requestHeader.clientCA" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Headers" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="headers" ng-model="data.authentication.requestHeader.headers" type="text" ng-change="validateForm()" required/>
+      </div>
+    </form>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'openId'">
+      <div pf-form-group pf-label="Client ID" required pf-label-class="miq-input-label-class miq-input-label-class-xlg" pf-input-class="miq-input-class">
+        <input id="initial-setting-input" name="clientId" ng-model="data.authentication.openId.clientId" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Client Secret" required pf-label-class="miq-input-label-class miq-input-label-class-xlg" pf-input-class="miq-input-class">
+        <input name="clientSecret" ng-model="data.authentication.openId.clientSecret" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Sub-claim" required pf-label-class="miq-input-label-class miq-input-label-class-xlg" pf-input-class="miq-input-class">
+        <input name="subClaim" ng-model="data.authentication.openId.subClaim" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Authorization-Endpoint" required pf-label-class="miq-input-label-class miq-input-label-class-xlg" pf-input-class="miq-input-class">
+        <input name="authEndpoint" ng-model="data.authentication.openId.authEndpoint" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Token-Endpoint" required pf-label-class="miq-input-label-class miq-input-label-class-xlg" pf-input-class="miq-input-class">
+        <input name="tokenEndpoint" ng-model="data.authentication.openId.tokenEndpoint" type="text" ng-change="validateForm()" required/>
+      </div>
+    </form>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'google'">
+      <div pf-form-group pf-label="Client ID" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input id="initial-setting-input" name="clientId" ng-model="data.authentication.google.clientId" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Client Secret" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="clientSecret" ng-model="data.authentication.google.clientSecret" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Hosted Domain" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="hostedDomain" ng-model="data.authentication.google.hostedDomain" type="text" ng-change="validateForm()" required/>
+      </div>
+    </form>
+    <form class="form-horizontal" ng-if="data.authentication.mode == 'github'">
+      <div pf-form-group pf-label="Client ID" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input id="initial-setting-input" name="clientId" ng-model="data.authentication.github.clientId" type="text" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Client Secret" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="clientSecret" ng-model="data.authentication.github.clientSecret" type="password" ng-change="validateForm()" required/>
+      </div>
+      <div pf-form-group pf-label="Hosted Domain" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+        <input name="hostedDomain" ng-model="data.authentication.github.hostedDomain" type="text" ng-change="validateForm()" required/>
+      </div>
+    </form>
+  </div>
+</div>

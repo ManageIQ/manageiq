@@ -1,0 +1,24 @@
+<div ng-controller="containers.deployProviderReviewController">
+  <form class="form-horizontal">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">CDN Channel:</span>
+      <span class="wizard-miq-review-item-value">{{data.cdnEnabled ? "Enabled" : "Disabled"}}</span>
+    </div>
+    <div class="wizard-miq-review-item" ng-if="data.cdnEnabled">
+      <span class="wizard-miq-review-item-label">Username:</span>
+      <span class="wizard-miq-review-item-value">{{data.rhnUsername}}</span>
+    </div>
+    <div class="wizard-miq-review-item" ng-if="data.cdnEnabled">
+      <span class="wizard-miq-review-item-label">Password:</span>
+      <span class="wizard-miq-review-item-value">{{data.rhnPassword}}</span>
+    </div>
+    <div class="wizard-miq-review-item" ng-if="data.cdnEnabled">
+      <span class="wizard-miq-review-item-label">SKU:</span>
+      <span class="wizard-miq-review-item-value">{{data.rhnSKU}}</span>
+    </div>
+    <div class="wizard-miq-review-item" ng-if="data.cdnEnabled">
+      <span class="wizard-miq-review-item-label">RHN Satellite URL:</span>
+      <span class="wizard-miq-review-item-value">{{data.specifySatelliteUrl ? data.rhnSatelliteUrl : 'Unspecified'}}</span>
+    </div>
+  </form>
+</div>

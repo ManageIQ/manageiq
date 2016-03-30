@@ -1,0 +1,20 @@
+<div ng-controller="containers.deployProviderReviewProgressController">
+  <div miq-wizard-substep step-title="Progress" step-id="review-progress" step-priority="1" on-show="onShow" wz-disabled="false">
+    <div ng-if="deployInProgress" class="blank-slate-pf">
+      <div class="spinner spinner-lg"></div>
+      <h1>Deployment in Progress</h1>
+      <p>Your deployment <strong>{{data.providerName}}</strong> is currently in progress. Updates will be posted here shortly.</p>
+      <p>If you choose to close this wizard, deployment status can be monitored under requests.</p>
+    </div>
+    <div ng-if="deployComplete" class="blank-slate-pf">
+      <div ng-if="deploySuccess" class="alert alert-success">
+        <span class="pficon pficon-ok"></span>
+        Deployment <strong>{{data.providerName}}</strong> was successful.
+      </div>
+      <div ng-if="deployFailed" class="alert alert-danger">
+        <span class="pficon pficon-error-circle-o"></span>
+        Failed to deploy <strong>{{data.providerName}}</strong>. {{deployFailureMessage}}
+      </div>
+    </div>
+  </div>
+</div>

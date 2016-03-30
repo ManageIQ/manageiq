@@ -8,9 +8,14 @@ class DeploymentService
   end
 
   def possible_provision_providers
+    result = []
     providers = ExtManagementSystem.all.select do |m|
       m.instance_of?(ManageIQ::Providers::Amazon::CloudManager) || m.instance_of?(ManageIQ::Providers::Redhat::InfraManager)
     end
+    providers.each do |provider|
+      result << {:provider => provider, :templates => provider.miq_templates}
+    end
+    result
   end
 
   def possible_providers_and_vms_for_provisioning

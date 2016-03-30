@@ -1,0 +1,62 @@
+<div ng-controller="containers.deployProviderDetailsNoProviderController">
+  <form class="form-horizontal">
+    <div pf-form-group pf-label="Key" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+      <input id="deploy-key" name="name" ng-model="data.deploymentKey" type="text" ng-change="validateForm()" required/>
+    </div>
+    <div pf-form-group pf-label="Username" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+      <input id="deploy-username" name="name" ng-model="data.deploymentUsername" type="text" ng-change="validateForm()" required/>
+    </div>
+    <div pf-form-group pf-label="Password" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+      <input id="deploy-password" name="name" ng-model="data.deploymentPassword" type="password" ng-change="validateForm()" required/>
+    </div>
+  </form>
+  <div class="miq-form-heading">Add Masters and Nodes</div>
+  <div class="nodes-table-container add-nodes-table">
+    <div pf-toolbar config="toolbarConfig"></div>
+    <div class="table-responsive">
+      <table class="datatable table table-striped table-bordered dataTable no-footer" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" role="grid">
+        <thead>
+        <tr role="row">
+          <th tabindex="0" rowspan="1" colspan="1"><input type="checkbox" ng-checked="allNodesSelected" ng-click="toggleAllNodesSelected()"></th>
+          <th tabindex="0" rowspan="1" colspan="1">Host Name</th>
+          <th tabindex="0" rowspan="1" colspan="1">State</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="node in allNodes" ng-class="{odd: ($index / 2 == 0), even: ($index / 2 != 0)}">
+          <td><input type="checkbox" ng-checked="node.selected" ng-click="toggleNodeSelected(node)"></td>
+          <td>{{node.vmName}}</td>
+          <td>{{node.state}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <div class="badge" tooltip="{{mastersWarning}}" tooltip-placement="right">
+        <span class="pficon pficon-warning-triangle-o" ng-if="mastersWarning && mastersWarning != ''"></span>
+        <span ng-if="mastersCount == 1">{{mastersCount}} Master</span>
+        <span ng-if="mastersCount != 1">{{mastersCount}} Masters</span>
+      </div>
+      <div class="badge" tooltip="{{nodesWarning}}" tooltip-placement="right">
+        <span class="pficon pficon-warning-triangle-o" ng-if="nodesWarning && nodesWarning != ''"></span>
+        <span ng-if="nodesCount == 1">{{nodesCount}} Node</span>
+        <span ng-if="nodesCount != 1">{{nodesCount}} Nodes</span>
+      </div>
+      <div class="badge" tooltip="{{infraNodesWarning}}" tooltip-placement="right">
+        <span class="pficon pficon-warning-triangle-o" ng-if="infraNodesWarning && infraNodesWarning != ''"></span>
+        <span ng-if="infraNodesCount == 1">{{infraNodesCount}} Infra Node</span>
+        <span ng-if="infraNodesCount != 1">{{infraNodesCount}} Infra Nodes</span>
+      </div>
+    </div>
+  </div>
+  <div miq-modal class="wizard-miq" modal-title="{{addDialogTitle}}" visible="showAddDialog" on-cancel="cancelAddDialog()" modal-size="medium">
+    <div class="miq-add-dialog-text">{{addDialogText}}</div>
+    <div class="miq-add-dialog-input">
+      <input id="addname" name="addname" ng-model="newItem.vmName" type="text"
+             ng-enter="saveAddDialog()" required auto-focus="showAddDialog"/>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="cancelAddDialog()">Cancel</button>
+      <button type="button" class="btn btn-primary" ng-click="saveAddDialog()" ng-class="{disabled: !newItem.vmName || newItem.vmName.length === 0} ">Add</button>
+    </div>
+  </div>
+</div>
