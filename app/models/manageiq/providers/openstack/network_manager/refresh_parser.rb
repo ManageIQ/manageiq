@@ -332,10 +332,6 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    #
-    # Helper methods
-    #
-
     class << self
       def security_group_type
         'ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup'
@@ -361,10 +357,6 @@ module ManageIQ::Providers
         "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort"
       end
     end
-
-    #
-    # Helper methods
-    #
 
     def data_security_groups_by_name
       @data_security_groups_by_name ||= @data[:security_groups].index_by { |sg| sg[:name] }

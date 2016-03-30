@@ -446,10 +446,6 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    #
-    # Helper methods
-    #
-
     def clean_up_extra_flavor_keys
       @data[:flavors].each do |f|
         f.delete(:ephemeral_disk)
