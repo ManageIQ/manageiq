@@ -15,6 +15,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
     log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
     $aws_log.info("#{log_header}...")
+    # The order of the below methods does matter, because there are inner dependencies of the data!
     get_cloud_networks
     get_security_groups
     get_network_ports

@@ -22,6 +22,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
     $aws_log.info("#{log_header}...")
+    # The order of the below methods does matter, because there are inner dependencies of the data!
     get_flavors
     get_availability_zones
     get_key_pairs

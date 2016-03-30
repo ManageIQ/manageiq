@@ -55,6 +55,8 @@ module ManageIQ
         log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data" \
                      " for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
         $fog_log.info("#{log_header}...")
+        # The order of the below methods does matter, because there are inner dependencies of the data!
+
         # get_flavors # Not needed in infra
         # get_availability_zones # Not needed in infra
         # get_tenants # TODO(lsmola) should be needed, add it
