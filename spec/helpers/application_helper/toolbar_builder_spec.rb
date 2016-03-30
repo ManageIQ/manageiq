@@ -3009,8 +3009,8 @@ describe ApplicationHelper do
     it "Enables edit and remove buttons for read-write orchestration templates" do
       @record = FactoryGirl.create(:orchestration_template)
       buttons = helper.build_toolbar('orchestration_template_center_tb').first[:items]
-      edit_btn = buttons.select {|b| b[:id].end_with?("_edit")}.first
-      remove_btn = buttons.select {|b| b[:id].end_with?("_remove")}.first
+      edit_btn = buttons.find { |b| b[:id].end_with?("_edit") }
+      remove_btn = buttons.find { |b| b[:id].end_with?("_remove") }
       expect(edit_btn[:enabled]).to eq(true)
       expect(remove_btn[:enabled]).to eq(true)
     end
@@ -3018,8 +3018,8 @@ describe ApplicationHelper do
     it "Disables edit and remove buttons for read-only orchestration templates" do
       @record = FactoryGirl.create(:orchestration_template_with_stacks)
       buttons = helper.build_toolbar('orchestration_template_center_tb').first[:items]
-      edit_btn = buttons.select {|b| b[:id].end_with?("_edit")}.first
-      remove_btn = buttons.select {|b| b[:id].end_with?("_remove")}.first
+      edit_btn = buttons.find { |b| b[:id].end_with?("_edit") }
+      remove_btn = buttons.find { |b| b[:id].end_with?("_remove") }
       expect(edit_btn[:enabled]).to eq(false)
       expect(remove_btn[:enabled]).to eq(false)
     end

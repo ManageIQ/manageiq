@@ -105,8 +105,8 @@ class ApplicationHelper::ToolbarBuilder
       :onwhen  => input[:onwhen]
     )
 
-    button[:title]     = safer_eval(input[:title])   unless input[:title].blank?
     button[:enabled]   = input[:enabled]
+    button[:title]     = safer_eval(input[:title])   unless input[:title].blank?
     button[:text]      = safer_eval(input[:text])    unless input[:text].blank?
     button[:confirm]   = safer_eval(input[:confirm]) unless input[:confirm].blank?
     button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
@@ -174,7 +174,7 @@ class ApplicationHelper::ToolbarBuilder
     )
     apply_common_props(props, bgi)
 
-    props[:selected] = "true"  if build_toolbar_select_button(bgi[:buttonTwoState])
+    props[:selected] = "true" if build_toolbar_select_button(bgi[:buttonTwoState])
 
     _add_separator(index)
     props
