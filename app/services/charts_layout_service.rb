@@ -31,9 +31,14 @@ class ChartsLayoutService
 
   def find_chart_path
     if @fname
-      # First check if there is file for specific class of the @perf_record
+      # First, if this class specified a chart layout path, use it.
+      return chart_path(@layout, @perf_record.chart_layout_path) if
+        @perf_record.respond_to?(:chart_layout_path)
+
+      # Fallback to check if there is file for specific class of the @perf_record
       path = chart_path(@layout, @perf_record.class.name.gsub(/::/, '_'))
       return path if File.exist?(path)
+
       # Fallback to fname, which is usually base class of the @perf_record
       chart_path(@layout, @fname)
     else
