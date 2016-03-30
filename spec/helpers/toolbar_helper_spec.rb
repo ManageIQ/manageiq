@@ -5,14 +5,14 @@ describe ToolbarHelper do
     let(:buttons) do
       [
         {
-          :id      => "history_choice",
-          :type    => "buttonSelect",
-          :img     => "history.png",
-          :imgdis  => "history.png",
-          :icon    => nil,
-          :title   => "History",
-          :enabled => false,
-          :items   => [
+          :id       => "history_choice",
+          :type     => "buttonSelect",
+          :img      => "history.png",
+          :imgdis   => "history.png",
+          :icon     => nil,
+          :title    => "History",
+          :enabled  => false,
+          :items    => [
             {
               :id      => "history_choice__history_1",
               :type    => "button",
@@ -78,7 +78,7 @@ describe ToolbarHelper do
             :name  => "view_grid",
           },
           {
-            :type  => "separator"
+            :type => "separator"
           },
           {
             :id    => "view_tile",
