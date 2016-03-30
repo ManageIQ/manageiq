@@ -34,6 +34,31 @@ class PgLogicalRaw
     typed_exec("SELECT pglogical.create_node($1, $2)", name, dsn)
   end
 
+  # Updates a node connection string
+  #
+  # @param name [String]
+  # @param dsn [String] new external connection string to the node
+  # @return [Boolean] true if the dsn was updated, false otherwise
+  #
+  # NOTE: This method relies on the internals of the pglogical tables
+  #       rather than a published API.
+  # NOTE: Disable subscriptions involving the node before
+  #       calling this method for a provider node in a subscriber
+  #       database.
+  def node_dsn_update(name, dsn)
+    res = typed_exec(<<-SQL, name, dsn)
+      UPDATE pglogical.node_interface
+      SET if_dsn = $2
+      WHERE if_nodeid = (
+        SELECT node_id
+        FROM pglogical.node
+        WHERE node_name = $1
+      )
+    SQL
+
+    res.cmd_tuples == 1
+  end
+
   # Drops the node
   #
   # @param name [String]

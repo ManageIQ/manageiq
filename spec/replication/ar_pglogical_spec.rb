@@ -71,6 +71,23 @@ describe "ar_pglogical extension" do
         end
       end
 
+      describe "#node_dsn_update" do
+        let(:new_dsn) { "host='newhost.example.com' dbname='vmdb_test' user='root'" }
+
+        it "sets the dsn" do
+          expect(connection.pglogical.node_dsn_update(node_name, new_dsn)).to be true
+          dsn = connection.exec_query(<<-SQL).first["if_dsn"]
+            SELECT if_dsn
+            FROM pglogical.node_interface if
+            JOIN pglogical.node node ON
+              if.if_nodeid = node.node_id
+            WHERE node.node_name = '#{node_name}'
+          SQL
+
+          expect(dsn).to eq(new_dsn)
+        end
+      end
+
       describe "#replication_set_create" do
         it "creates a replication set" do
           rep_insert = true
