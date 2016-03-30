@@ -14,4 +14,10 @@ else
 fi
 export BUNDLE_GEMFILE=${PWD}/Gemfile
 
+# suites that need bower assets to work: javascript, vmdb
+if [[ "$TEST_SUITE" = "javascript" ]] || [[ "$TEST_SUITE" = "vmdb" ]]; then
+  which bower || npm install -g bower
+  bower install --allow-root -F --config.analytics=false
+fi
+
 set +v
