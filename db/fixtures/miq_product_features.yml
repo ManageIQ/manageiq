@@ -168,10 +168,6 @@
         :description: Add Atomic Catalog Item
         :feature_type: admin
         :identifier: atomic_catalogitem_new
-      - :name: Edit Button
-        :description: Edit Button
-        :feature_type: admin
-        :identifier: ab_button_edit
     - :name: Operate
       :description: Perform Operations on Catalog Items
       :feature_type: control
