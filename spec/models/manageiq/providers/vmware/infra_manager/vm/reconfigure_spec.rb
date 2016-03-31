@@ -38,6 +38,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
         vm.hardware.update_attributes(:virtual_hw_version => "10")
         expect(subject).to eq(64)
       end
+
+      it "11" do
+        vm.hardware.update_attributes(:virtual_hw_version => "11")
+        expect(subject).to eq(128)
+      end
     end
 
     it "small host logical cpus" do

@@ -14,14 +14,23 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     when "07"       then 8
     when "08"       then 32
     when "09", "10" then 64
+    when "11"       then 128
+    else
+      _log.warn("Add support for new hardware version [#{hardware.virtual_hw_version}].")
+      128
     end
   end
 
   def max_cpu_cores_per_socket(_total_vcpus = nil)
     case hardware.virtual_hw_version
     when "04"       then 1
-    when "07"       then [1, 2, 4, 8].include?(max_total_vcpus) ? max_total_vcpus : 1
-    else            max_total_vcpus
+    when "07"       then 8
+    when "08"       then 32
+    when "09", "10" then 64
+    when "11"       then 128
+    else
+      _log.warn("Add support for new hardware version [#{hardware.virtual_hw_version}].")
+      128
     end
   end
 
@@ -34,6 +43,10 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     when "04"             then   64.gigabyte / 1.megabyte
     when "07"             then  255.gigabyte / 1.megabyte
     when "08", "09", "10" then 1011.gigabyte / 1.megabyte
+    when "11"             then    4.terabyte / 1.megabyte
+    else
+      _log.warn("Add support for new hardware version [#{hardware.virtual_hw_version}].")
+      4.terabyte / 1.megabyte
     end
   end
 
