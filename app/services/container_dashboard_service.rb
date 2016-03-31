@@ -34,7 +34,7 @@ class ContainerDashboardService
         :href         => get_url_to_entity(:container_node)
       },
       :containers => {
-        :count        => @ems.present? ? @ems.containers.count : Container.count,
+        :count        => @ems.present? ? @ems.containers.count : Container.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:container)
@@ -46,13 +46,13 @@ class ContainerDashboardService
         :href         => get_url_to_entity(:container_image_registry)
       },
       :projects   => {
-        :count        => @ems.present? ? @ems.container_projects.count : ContainerProject.count,
+        :count        => @ems.present? ? @ems.container_projects.count : ContainerProject.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:container_project)
       },
       :pods       => {
-        :count        => @ems.present? ? @ems.container_groups.count : ContainerGroup.count,
+        :count        => @ems.present? ? @ems.container_groups.count : ContainerGroup.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:container_group)
