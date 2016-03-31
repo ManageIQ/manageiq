@@ -25,7 +25,6 @@ GlobalVars:
 #
 AllCops:
   Exclude:
-    - config/toolbar_strings.rb
     - gems/pending/VMwareWebService/wsdl41/vimws25MappingRegistry.rb
 ClassAndModuleCamelCase:
   Exclude:
@@ -33,4 +32,3 @@ ClassAndModuleCamelCase:
 FileName:
   Exclude:
     - lib/miq_automation_engine/service_models/*.rb
-    - config/toolbar_strings.rb
