@@ -87,4 +87,9 @@ class Vm < VmOrTemplate
     end
     pl
   end
+
+  def has_compliance_policies?
+    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
+    !plist.blank?
+  end
 end

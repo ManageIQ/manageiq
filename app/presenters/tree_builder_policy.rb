@@ -16,7 +16,8 @@ class TreeBuilderPolicy < TreeBuilder
   def compliance_control_kids(pid)
     text_i18n = {:compliance => {:host            => N_("Host Compliance Policies"),
                                  :vm              => N_("Vm Compliance Policies"),
-                                 :container_image => N_("Container Image Compliance Policies")},
+                                 :container_image => N_("Container Image Compliance Policies"),
+                                 :miq_template    => N_("Template Compliance Policies")},
                  :control    => {:host            => N_("Host Control Policies"),
                                  :vm              => N_("Vm Control Policies"),
                                  :container_image => N_("Container Image Control Policies")}}
@@ -32,7 +33,11 @@ class TreeBuilderPolicy < TreeBuilder
      {:id    => "#{pid}-containerImage",
       :text  => text_i18n[pid.to_sym][:container_image],
       :image => "container_image",
-      :tip   => N_("Container Image Policies")
+      :tip   => N_("Container Image Policies")},
+     {:id    => "#{pid}-miqTemplate",
+      :text  => text_i18n[pid.to_sym][:miq_template],
+      :image => "miq_template",
+      :tip   => N_("Template Policies")
      }]
   end
 
@@ -62,12 +67,12 @@ class TreeBuilderPolicy < TreeBuilder
       pid = parent[:id]
 
       # Push folder node ids onto open_nodes array
-      %W(xx-#{pid}_xx-#{pid}-host xx-#{pid}_xx-#{pid}-vm xx-#{pid}_xx-#{pid}-containerImage).each { |n| open_node(n) }
+      %W(xx-#{pid}_xx-#{pid}-host xx-#{pid}_xx-#{pid}-vm xx-#{pid}_xx-#{pid}-containerImage xx-#{pid}_xx-miqtemplate).each { |n| open_node(n) }
 
       objects = compliance_control_kids(pid)
       count_only_or_objects(count_only, objects)
     # level 3 - actual policies
-    elsif %w(host vm containerImage).include?(parent[:id].split('-').last)
+    elsif %w(host vm containerImage miqTemplate).include?(parent[:id].split('-').last)
       mode, towhat = parent[:id].split('-')
 
       objects = MiqPolicy.where(:mode   => mode.downcase,

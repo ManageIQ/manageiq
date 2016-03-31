@@ -1,4 +1,5 @@
 name,description,event_type,set_type
+
 #
 # EVM Server operations
 #
@@ -66,6 +67,7 @@ request_host_shutdown,Host Shutdown Request,Default,host_operations
 request_host_reboot,Host Reboot Request,Default,host_operations
 request_host_enable_vmotion,Host Vmotion Enable Request,Default,host_operations
 request_host_disable_vmotion,Host Vmotion Disable Request,Default,host_operations
+
 #
 # Company tags
 #
@@ -81,18 +83,18 @@ unassigned_company_tag_parent_host,Un-Tag Parent Host Complete,Default,tags
 unassigned_company_tag_parent_ems_cluster,Un-Tag Parent Cluster Complete,Default,tags
 unassigned_company_tag_parent_resource_pool,Un-Tag Parent Resource Pool Complete,Default,tags
 unassigned_company_tag_parent_storage,Un-Tag Parent Datastore Complete,Default,tags
+
 #
 # VM configuration
 #
 vm_create,VM Create Complete,Default,vm_configurational
-# vm_delete,VM Deletion,Default,vm_configurational
 vm_clone,VM Clone Complete,Default,vm_configurational
 vm_clone_start,VM Clone Start,Default,vm_configurational
-# vm_deploy,VM Deployment from Template,Default,vm_configurational
 vm_template,VM Template Create Complete,Default,vm_configurational
 vm_reconfigure,VM Settings Change,Default,vm_configurational
 vm_renamed_event,VM Renamed Event,Default,vm_configurational
 request_vm_destroy,VM Delete (from Disk) Request,Default,vm_configurational
+
 #
 # VM lifecycle
 #
@@ -100,15 +102,14 @@ vm_retired,VM Retired,Default,vm_process
 request_vm_retire,VM Retire Request,Default,vm_process
 vm_retire_warn,VM Retirement Warning,Default,vm_process
 vm_provisioned,VM Provision Complete,Default,vm_process
+
 #
 # VM operations
 #
 vm_start,VM Power On,Default,vm_operational
 request_vm_start,VM Power On Request,Default,vm_operational
-# vm_shutdown,VM Shutdown,Default,vm_operational
 vm_resume,VM Resume,Default,vm_operational
 vm_migrate,VM Live Migration (VMOTION),Default,vm_operational
-# vm_relocate,VM Relocation to a New Host,Default,vm_operational
 vm_reset,VM Reset,Default,vm_operational
 request_vm_reset,VM Reset Request,Default,vm_operational
 vm_suspend,VM Suspend,Default,vm_operational
@@ -168,3 +169,10 @@ containerimage_created,New Container Image created,Default,container_operations
 containerimage_compliance_check,Container Image Compliance Check,Default,compliance
 containerimage_compliance_passed,Container Image Compliance Passed,Default,compliance
 containerimage_compliance_failed,Container Image Compliance Failed,Default,compliance
+
+#
+# Template Operations
+#
+miqtemplate_compliance_check,Template Compliance Check,Default,compliance
+miqtemplate_compliance_passed,Template Compliance Passed,Default,compliance
+miqtemplate_compliance_failed,Template Compliance Failed,Default,compliance
