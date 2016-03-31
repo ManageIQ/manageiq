@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', '$window', '$timeout', 'serviceFormId', 'miqService', 'serviceData', function($http, $scope, $window, $timeout, serviceFormId, miqService, serviceData) {
+ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'serviceFormId', 'miqService', 'postService', 'serviceData', function($http, $scope, serviceFormId, miqService, postService, serviceData) {
     var init = function() {
       $scope.serviceModel = {
         name: '',
@@ -20,41 +20,9 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', '$w
      });
     };
 
-    var serviceEditButtonClicked = function(buttonName, serializeFields) {
-      miqService.sparkleOn();
-      return API.post('/api/services/' + serviceFormId,
-                      angular.toJson({action:   "edit",
-                                      resource: {name:        $scope.serviceModel.name,
-                                                 description: $scope.serviceModel.description
-                                                }
-                                     })).then(handleSuccess, handleFailure);
-
-      function handleSuccess(response) {
-        var msg = sprintf(__("Service %s was saved"), $scope.serviceModel.name);
-        $timeout(function () {
-          $window.location.href = '/service/explorer?flash_msg=' + msg;
-          miqService.sparkleOff();
-          miqService.miqFlash("success", msg);
-        });
-      }
-
-      function handleFailure(response) {
-        var msg = sprintf(__("Error during 'Service Edit': [%s - %s]"), response.status, response.responseText);
-        $timeout(function () {
-          $window.location.href = '/service/explorer?flash_msg=' + msg + '&flash_error=true';
-          miqService.sparkleOff();
-          miqService.miqFlash("error", msg);
-        });
-      }
-    };
-
     $scope.cancelClicked = function() {
       var msg = sprintf(__("Edit of Service %s was cancelled by the user"), $scope.serviceModel.description);
-      $timeout(function () {
-        $window.location.href = '/service/explorer?flash_msg=' + msg;
-        miqService.sparkleOff();
-        miqService.miqFlash("success", msg);
-      });
+      postService.cancelOperation('/service/explorer', msg);
       $scope.angularForm.$setPristine(true);
     };
 
@@ -66,7 +34,12 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', '$w
     };
 
     $scope.saveClicked = function() {
-      serviceEditButtonClicked('save', true);
+      var successMsg = sprintf(__("Service %s was saved"), $scope.serviceModel.name);
+      postService.saveRecord('/api/services/' + serviceFormId,
+        '/service/explorer',
+        {name:         $scope.serviceModel.name,
+          description: $scope.serviceModel.description},
+        successMsg);
       $scope.angularForm.$setPristine(true);
     };
 
