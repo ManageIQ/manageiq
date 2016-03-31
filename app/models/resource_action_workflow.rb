@@ -23,30 +23,45 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def submit_request
-    result = {}
+    process_request(ServiceOrder::STATE_ORDERED)
+  end
 
-    result[:errors] = @dialog.validate_field_data
-    return result unless result[:errors].blank?
+  def add_request_to_cart
+    process_request(ServiceOrder::STATE_CART)
+  end
 
-    values = create_values_hash
-    values[:src_id] = @target.id
+  def process_request(state)
+    validate_dialog.tap do |result|
+      generate_request(state) if result[:errors].blank?
+    end
+  end
 
+  def generate_request(state)
+    values = create_values
     if create_request?(values)
       request = create_request(values)
-      create_service_order_and_checkout(request) if request
+      process_service_order(request, state) if request
     else
       ra = load_resource_action(values)
       ra.deliver_to_automate_from_dialog(values, @target, @requester)
     end
-    result
   end
 
-  def create_service_order_and_checkout(request)
-    service_order = ServiceOrder.create(:state        => 'ordered',
-                                        :user         => @requester,
-                                        :miq_requests => [request],
-                                        :tenant       => request.tenant)
-    service_order.checkout
+  def process_service_order(request, state)
+    case state
+    when ServiceOrder::STATE_ORDERED
+      ServiceOrder.order_immediately(request, @requester)
+    when ServiceOrder::STATE_CART
+      ServiceOrder.add_to_cart(request, @requester)
+    end
+  end
+
+  def validate_dialog
+    {:errors => @dialog.validate_field_data}
+  end
+
+  def create_values
+    create_values_hash.tap { |value| value[:src_id] = @target.id }
   end
 
   def request_class
