@@ -43,3 +43,32 @@ shared_examples_for "polling destination power status in provider" do
     end
   end
 end
+
+shared_examples_for "End-to-end State Machine Run" do
+  it "Completes Successfully" do
+    expect(task).to be_kind_of(ManageIQ::Providers::Redhat::InfraManager::Provision)
+    task.options[:vm_target_name] = options[:vm_target_name] # HACK: Automate usually does this
+
+    @queue           = []
+    @called_states   = []
+    @signaled_states = []
+
+    allow(task).to receive(:signal).and_wrap_original do |_method, *args|
+      @called_state = args.first
+      expect(expected_states_with_counts.keys).to include(@called_state)
+      @signaled_states << @called_state
+      @queue |= [@called_state]
+    end
+
+    task.run_provision # Get the state machine rolling
+
+    loop { dequeue_method || break }
+
+    ssec = @signaled_states.element_counts
+    actual_states_with_counts = @called_states.element_counts.each_with_object({}) do |(state, count), hash|
+      hash.store_path(state, :calls, count)
+      hash.store_path(state, :signals, ssec[state])
+    end
+    expect(actual_states_with_counts).to eq(expected_states_with_counts)
+  end
+end
