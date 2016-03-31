@@ -131,8 +131,6 @@ module MiqPolicyController::Conditions
       @new_condition_node = "xx-#{con.towhat.downcase}"
     end
     process_conditions(conditions, "destroy") unless conditions.empty?
-    add_flash(_("The selected %{models} was deleted") %
-      {:models => ui_lookup(:models => "Condition")}) if @flash_array.nil?
     get_node_info(@new_condition_node)
     replace_right_cell("xx", [:condition])
   end
