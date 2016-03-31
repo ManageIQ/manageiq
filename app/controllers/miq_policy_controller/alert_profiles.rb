@@ -115,8 +115,6 @@ module MiqPolicyController::AlertProfiles
       alert_profiles.push(params[:id])
     end
     process_alert_profiles(alert_profiles, "destroy") unless alert_profiles.empty?
-    add_flash(_("The selected %{model} was deleted") %
-      {:model => ui_lookup(:models => "MiqAlertSet")}) if @flash_array.nil?
     nodes = x_node.split("_")
     nodes.pop
     self.x_node = nodes.join("_")
