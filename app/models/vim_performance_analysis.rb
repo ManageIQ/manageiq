@@ -133,17 +133,19 @@ module VimPerformanceAnalysis
         compute_hosts = @compute
       end
 
-      perf_cols = [:cpu, :memory, :storage].collect do |t|
-        [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)]
-      end.flatten.compact
+      if VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
+        perf_cols = [:cpu, :memory, :storage].collect do |t|
+          [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)]
+        end.flatten.compact
+      end
+
       result = compute_hosts.collect do |c|
         count_hash = {}
         hash = { :target => c, :count => count_hash }
 
-        need_compute_perf = VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
-        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options], perf_cols) if need_compute_perf
+        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options], perf_cols)
         # if we rely upon daily perf columns, make sure we have values for them
-        unless need_compute_perf && compute_perf.blank?
+        unless perf_cols && compute_perf.blank?
           ts = compute_perf.last.timestamp if compute_perf
 
           [:cpu, :vcpus, :memory].each do |type|
@@ -271,12 +273,11 @@ module VimPerformanceAnalysis
     def get_vm_needs
       options = @options
 
-      vm_perf = nil
       if VimPerformanceAnalysis.needs_perf_data?(options[:vm_options])
         perf_cols = [:cpu, :vcpus, :memory, :storage].collect { |t| options.fetch(:vm_options, t, :metric) }.compact
-        vm_perf = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options], perf_cols)
       end
 
+      vm_perf = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options], perf_cols)
       vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
       [:cpu, :vcpus, :memory, :storage].each_with_object({}) do |type, vm_needs|
         vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
@@ -606,8 +607,10 @@ module VimPerformanceAnalysis
     slope_arr
   end
 
-  def self.get_daily_perf(obj, range, ext_options, cols)
-    VimPerformanceDaily.find_entries(ext_options).order("timestamp").select(cols)
+  def self.get_daily_perf(obj, range, ext_options, perf_cols)
+    return unless perf_cols
+
+    VimPerformanceDaily.find_entries(ext_options).order("timestamp").select(perf_cols)
                        .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 
