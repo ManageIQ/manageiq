@@ -83,7 +83,10 @@ describe OrchestrationTemplateDialogService do
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",         :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
     assert_field(fields[2], DialogFieldDropDownList, :name => "resource_group",     :dynamic => true)
     assert_field(fields[3], DialogFieldTextBox,      :name => "new_resource_group", :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$')
-    assert_field(fields[4], DialogFieldDropDownList, :name => "deploy_mode",        :values => [%w(Complete Complete), %w(Incremental Incremental)])
+
+    mode_values = [["Complete",    "Complete (Delete other resources in the group)"],
+                   ["Incremental", "Incremental (Default)"]]
+    assert_field(fields[4], DialogFieldDropDownList, :name => "deploy_mode", :values => mode_values)
   end
 
   def assert_field(field, clss, attributes)

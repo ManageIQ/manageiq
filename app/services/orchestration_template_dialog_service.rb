@@ -108,28 +108,33 @@ class OrchestrationTemplateDialogService
 
   def add_timeout_field(group, position)
     group.dialog_fields.build(
-      :type           => "DialogFieldTextBox",
-      :name           => "stack_timeout",
-      :description    => "Abort the creation if it does not complete in a proper time window",
-      :data_type      => "integer",
-      :display        => "edit",
-      :required       => false,
-      :options        => {:protected => false},
-      :label          => "Timeout(minutes, optional)",
-      :position       => position,
-      :dialog_group   => group
+      :type         => "DialogFieldTextBox",
+      :name         => "stack_timeout",
+      :description  => "Abort the creation if it does not complete in a proper time window",
+      :data_type    => "integer",
+      :display      => "edit",
+      :required     => false,
+      :options      => {:protected => false},
+      :label        => "Timeout(minutes, optional)",
+      :position     => position,
+      :dialog_group => group
     )
   end
 
   def add_mode_field(group, position)
+    description = "Select deployment mode.\n"\
+                  "WARNING: Complete mode will delete all resources from "\
+                  "the group that are not in the template."
+
     group.dialog_fields.build(
       :type          => "DialogFieldDropDownList",
       :name          => "deploy_mode",
-      :description   => "Select deployment mode",
+      :description   => description,
       :data_type     => "string",
       :display       => "edit",
       :required      => true,
-      :values        => [%w(Incremental Incremental), %w(Complete Complete)],
+      :values        => [["Incremental", "Incremental (Default)"],
+                         ["Complete",    "Complete (Delete other resources in the group)"]],
       :default_value => "Incremental",
       :options       => {:sort_by => :description, :sort_order => :ascending},
       :label         => "Mode",
