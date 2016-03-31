@@ -71,4 +71,16 @@ describe MiqPglogical do
       expect(subject.included_tables).to include(table)
     end
   end
+
+  describe ".region_to_node_name" do
+    it "returns the correct name" do
+      expect(described_class.region_to_node_name(4)).to eq("region_4")
+    end
+  end
+
+  describe ".node_name_to_region" do
+    it "returns the correct region" do
+      expect(described_class.node_name_to_region("region_5")).to eq(5)
+    end
+  end
 end

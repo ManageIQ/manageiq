@@ -61,7 +61,7 @@ class PglogicalSubscription < ActsAsArModel
   def delete
     pglogical.subscription_drop(id, true)
     MiqRegion.destroy_region(connection, provider_region)
-    pglogical.node_drop(node_name, true) if self.class.count == 0
+    pglogical.node_drop(MiqPglogical.local_node_name, true) if self.class.count == 0
   end
 
   def self.delete_all
@@ -114,7 +114,7 @@ class PglogicalSubscription < ActsAsArModel
 
   def self.provider_node_attributes(node_name)
     attrs = {}
-    attrs[:provider_region] = node_name.sub(MiqPglogical::NODE_PREFIX, "").to_i
+    attrs[:provider_region] = MiqPglogical.node_name_to_region(node_name)
     region = MiqRegion.find_by_region(attrs[:provider_region])
     attrs[:provider_region_name] = region.description if region
     attrs
@@ -153,16 +153,12 @@ class PglogicalSubscription < ActsAsArModel
     end
   end
 
-  def node_name
-    MiqPglogical::NODE_PREFIX + MiqRegion.my_region_number.to_s
-  end
-
   def ensure_node_created
     return if MiqPglogical.new.node?
 
     pglogical.enable
     node_dsn = PG::Connection.parse_connect_args(connection.raw_connection.conninfo_hash.delete_blanks)
-    pglogical.node_create(node_name, node_dsn).check
+    pglogical.node_create(MiqPglogical.local_node_name, node_dsn).check
   end
 
   def dsn
