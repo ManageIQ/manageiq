@@ -141,11 +141,10 @@ module VimPerformanceAnalysis
 
       result = compute_hosts.collect do |c|
         count_hash = {}
-        hash = {:target => c, :count => count_hash}
 
         compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options], perf_cols)
         # if we rely upon daily perf columns, make sure we have values for them
-        unless perf_cols && compute_perf.blank?
+        if perf_cols.nil? || compute_perf.present?
           ts = compute_perf.last.timestamp if compute_perf
 
           [:cpu, :vcpus, :memory].each do |type|
@@ -171,7 +170,7 @@ module VimPerformanceAnalysis
           end
         end
         count_hash[:total] = {:total => count_hash.each_value.pluck(:total).compact.max}
-        hash
+        {:target => c, :count => count_hash}
       end
 
       result = how_many_more_can_fit_host_to_cluster_results(result) if @compute.first.kind_of?(EmsCluster)
