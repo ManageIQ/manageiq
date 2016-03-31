@@ -73,13 +73,16 @@ module ManageIQ::Providers
       end
 
       def self.group_dvswitch_portgroup_by_host(dvswitch_inv, dvportgroup_inv)
-        dvswitch_by_host = Hash.new{|h, k| h[k] = {}}
-        dvportgroup_by_host = Hash.new{|h, k| h[k] = {}}
+        byebug
+        dvswitch_by_host = Hash.new{|h, k| h[k] = []}
+        dvportgroup_by_host = Hash.new{|h, k| h[k] = []}
 
         dvswitch_inv.each do |_, data|
-          hosts = data.fetch_path('config', 'host') || []
-          hosts.each do |host_data|
-            host_mor = host_data.fetch_path('config', 'host')
+          hosts = (data.fetch_path('config', 'host') || []).map{
+            |host_data| host_data.fetch_path('config', 'host')
+          }
+          hosts += data.fetch_path('summary', 'hostMember') || []
+          hosts.uniq.each do |host_mor|
             dvswitch_by_host[host_mor] << data
           end
         end
@@ -87,9 +90,11 @@ module ManageIQ::Providers
         dvportgroup_inv.each do |_, data|
           switch_mor = data.fetch_path('config', 'distributedVirtualSwitch')
           switch = dvswitch_inv[switch_mor]
-          hosts = switch.fetch_path('config', 'host') || []
-          hosts.each do |host_data|
-            host_mor = host_data.fetch_path('config', 'host')
+          hosts = (switch.fetch_path('config', 'host') || []).map{
+            |host_data| host_data.fetch_path('config', 'host')
+          }
+          hosts += data.fetch('host', [])
+          hosts.each do |host_mor|
             dvportgroup_by_host[host_mor] << data
           end
         end
