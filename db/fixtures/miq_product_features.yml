@@ -707,6 +707,10 @@
       :description: Scale an Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_scale
+    - :name: Scale Down
+      :description: Scale an Infrastructure Provider down
+      :feature_type: admin
+      :identifier: ems_infra_scaledown
 
 # Datacenters
 - :name: Datacenters
