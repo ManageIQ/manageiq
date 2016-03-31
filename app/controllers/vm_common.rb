@@ -1867,10 +1867,6 @@ module VmCommon
       partial = "vm_common/evm_relationship"
       header = _("Edit CFME Server Relationship for %{model} \"%{name}\"") % {:model => ui_lookup(:table => table), :name => name}
       action = "evm_relationship_update"
-    # when "miq_request_new"
-    # partial = "miq_request/prov_edit"
-    # header = _("Provision %{models}") % {:models => ui_lookup(:models=>"Vm")}
-    # action = "prov_edit"
     when "miq_request_new"
       partial = "miq_request/pre_prov"
       typ = request.parameters[:controller] == "vm_cloud" ? "an #{ui_lookup(:table => "template_cloud")}" : "a #{ui_lookup(:table => "template_infra")}"
