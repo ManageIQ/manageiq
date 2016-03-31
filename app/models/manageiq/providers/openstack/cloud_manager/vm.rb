@@ -98,6 +98,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     true
   end
 
+  def requires_storage_for_scan?
+    false
+  end
+
   def memory_mb_available?
     true
   end
