@@ -16,12 +16,6 @@ function miqOnLoad() {
     ManageIQ.mouse.y = e.pageY;
   });
 
-  // Need to do this here for IE, rather then right after the grid is initialized
-  if ($('#compare_grid').length) {
-    $('#compare_grid')[0].enableAutoHeight(true);
-    $('#compare_grid')[0].enableAutoWidth(true);
-  }
-
   miqBuildCalendar();
   miqLoadCharts();
 

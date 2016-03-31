@@ -62,7 +62,6 @@
 //= require slickgrid/plugins/slick.autotooltips
 //= require slickgrid/plugins/slick.rowselectionmodel
 //= require slickgrid/plugins/slick.checkboxselectcolumn
-//= require miq_slickgrid
 //= require codemirror
 //= require codemirror/modes/yaml
 //= require spin.js/spin

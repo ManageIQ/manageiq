@@ -557,9 +557,10 @@ module ApplicationController::Compare
     drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @drift_obj.name},
                     :url  => "/#{@sb[:compare_db].downcase}/drift")
     @sb[:miq_vm_name] = @drift_obj.name
-    if params[:ppsetting]                     # Came in from per page setting
-      render :update do |page|                    # Use RJS to update the display
-        page.replace_html("main_div", :partial => "layouts/drift", :id => @drift_obj.id)  # Replace the main div area contents
+    if params[:ppsetting] # Came in from per page setting
+      render :update do |page| # Use RJS to update the display
+        # Replace the main div area contents
+        page.replace_html("main_div", :partial => "layouts/compare", :id => @drift_obj.id)
         page << "miqSparkle(false);"
       end
     else
@@ -612,7 +613,7 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'drift_same');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'drift_same');"
       end
-      page.replace_html("main_div", :partial => "layouts/drift")  # Replace the main div area contents
+      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
       page << "miqSparkle(false);"
     end
   end
@@ -684,7 +685,7 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'driftmode_exists');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'driftmode_exists');"
       end
-      page.replace_html("main_div", :partial => "layouts/drift")  # Replace the main div area contents
+      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
       page << "miqSparkle(false);"
     end
   end
@@ -707,7 +708,7 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#view_tb', 'drift_compressed');"
         page << "ManageIQ.toolbars.unmarkItem('#view_tb', 'drift_compressed');"
       end
-      page.replace_html("main_div", :partial => "layouts/drift")  # Replace the main div area contents
+      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
       page << "miqSparkle(false);"
     end
   end
@@ -964,8 +965,8 @@ module ApplicationController::Compare
       end
     end
     send("#{mode}_to_json", @compare)
-    render :update do |page|                    # Use RJS to update the display
-      page.replace_html("main_div", :partial => "layouts/#{mode}")  # Replace the main div area contents
+    render :update do |page| # Use RJS to update the display
+      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
       page << "miqSparkle(false);"
     end
   end

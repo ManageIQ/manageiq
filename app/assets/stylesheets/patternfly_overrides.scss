@@ -414,53 +414,55 @@ iframe, .iframe {
     left: 0;
     right: 0;
     bottom: 0;
+}
 /* compare styling */
 
+#compare-grid {
+  table.table-expanded, .table-compressed {
+    table-layout: fixed !important;
+    word-wrap: break-word !important;
+    width: auto !important;
+    max-width: auto !important;
+  }
 
-table.table-expanded, .table-compressed {
-  table-layout: fixed !important;
-  word-wrap: break-word !important;
-  width: auto !important;
-  max-width: auto !important;
-}
+  table.table-compressed thead tr th {
+    height: 150px !important;
+    width: 26px !important;
+    text-align: center;
+    white-space: nowrap;
+  }
 
-table.table-compressed thead tr th {
-  height: 150px !important;
-  width: 26px !important;
-  text-align: center;
-  white-space: nowrap;
-}
+  table.table-compressed thead tr th div.rotated-text {
+    transform:
+      translate(0px, 110px)
+      rotate(270deg);
+    width: 26px;
+  }
 
-table.table-compressed thead tr th div.rotated-text {
-  transform:
-    translate(0px, 110px)
-    rotate(270deg);
-  width: 26px;
-}
+  table.table-expanded thead tr th div.quadicon_grid {
+    padding-left: 40px
+  }
 
-table.table-expanded thead tr th div.quadicon_grid {
-  padding-left: 40px
-}
+  table.table-compressed thead th,
+  table.table-compressed tr td {
+    width: 26px !important;
+    text-align: center;
+  }
 
-table.table-compressed thead th,
-table.table-compressed tr td {
-  width: 26px !important;
-  text-align: center;
-}
+  table.table-expanded thead th,
+  table.table-expanded tr td {
+    width: 175px !important;
+    min-width: 175px !important;
+    text-align: center;
+  }
 
-table.table-expanded thead th,
-table.table-expanded tr td {
-  width: 175px !important;
-  min-width: 175px !important;
-  text-align: center;
-}
-
-// sets styling of first column
-table.table-expanded tbody tr th.treegrid-node,
-table.table-compressed tbody th.treegrid-node {
-  width: 270px !important;
-  text-align: left;
-  white-space: nowrap !important;
+  // sets styling of first column
+  table.table-expanded tbody tr th.treegrid-node,
+  table.table-compressed tbody th.treegrid-node {
+    width: 270px !important;
+    text-align: left;
+    white-space: nowrap !important;
+  }
 }
 
 /* Used at Chargeback edit view */
