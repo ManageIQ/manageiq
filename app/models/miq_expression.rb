@@ -645,15 +645,18 @@ class MiqExpression
       operands = self.class.operands2sqlvalue(operator, exp[operator])
       clause = operands.join(" #{self.class.normalize_sql_operator(operator)} ")
     when "like", "not like", "starts with", "ends with", "includes"
+      val = exp[operator]["value"]
+      exp[operator]["value"] = case operator.downcase
+                                 when "starts with"
+                                   "#{val}%"
+                                 when "ends with"
+                                   "%#{val}"
+                                 when "like", "not like", "includes"
+                                   "%#{val}%"
+                                 else
+                                   val
+                                 end
       operands = self.class.operands2sqlvalue(operator, exp[operator])
-      case operator.downcase
-      when "starts with"
-        operands[1] = "'" + operands[1].to_s + "%'"
-      when "ends with"
-        operands[1] = "'%" + operands[1].to_s + "'"
-      when "like", "not like", "includes"
-        operands[1] = "'%" + operands[1].to_s + "%'"
-      end
       clause = operands.join(" #{self.class.normalize_sql_operator(operator)} ")
       clause = "!(" + clause + ")" if operator.downcase == "not like"
     when "and", "or"
@@ -1128,13 +1131,14 @@ class MiqExpression
 
     ret = []
     if  ops["field"]
-      ret << get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
+      col = get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
       col_type = get_col_type(ops["field"]) || "string"
-      if ["like", "not like", "starts with", "ends with", "includes"].include?(operator)
-        ret.push(ops["value"])
-      else
-        ret.push(quote(ops["value"], col_type.to_s, :sql))
-      end
+      ret << if ["is null", "is not null", "is empty", "is not empty"].include?(operator)
+               col
+             else
+               (col_type.to_s == "string" ? "LOWER(#{col})" : col)
+             end
+      ret.push(quote(ops["value"], col_type.to_s, :sql))
     elsif ops["count"]
       val = get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last
       ret << "count(#{val})" # TODO
@@ -1185,7 +1189,9 @@ class MiqExpression
         fld = val
         fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         ret.push(fld)
-        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match", "ruby"].include?(operator)
+        if ["like", "not like", "starts with", "ends with", "includes", "ruby"].include?(operator)
+          ret.push(ops["value"].to_s.downcase)
+        elsif ["regular expression matches", "regular expression does not match"].include?(operator)
           ret.push(ops["value"])
         else
           ret.push(quote(ops["value"], col_type.to_s))
@@ -1215,7 +1221,7 @@ class MiqExpression
     when "string", "text", "boolean", nil
       val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
+      return mode == :sql ? ActiveRecord::Base.connection.quote(val.to_s.downcase) : val.to_s.downcase.inspect
     when "date"
       return "nil" if val.blank? # treat nil value as empty string
       return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
@@ -1235,7 +1241,7 @@ class MiqExpression
       return "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect { |v| "'#{v.to_s.strip}'" }.flatten.uniq.sort
+      v_arr = val.to_miq_a.collect { |v| "'#{v.to_s.strip.downcase}'" }.flatten.uniq.sort
       return "[#{v_arr.join(",")}]"
     when "raw"
       return val
