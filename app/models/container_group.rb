@@ -80,6 +80,7 @@ class ContainerGroup < ApplicationRecord
   def disconnect_inv
     _log.info "Disconnecting Container group [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
+    self.container_definitions.each(&:disconnect_inv)
     self.old_ems_id = ems_id
     self.ext_management_system = nil
     self.container_node_id = nil
