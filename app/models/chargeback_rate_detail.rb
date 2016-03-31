@@ -140,6 +140,15 @@ class ChargebackRateDetail < ApplicationRecord
     per_unit.nil? ? rate_display : rate_display_unit
   end
 
+  def save_tiers(tiers)
+    temp = self.class.new(:chargeback_tiers => tiers)
+    if temp.complete_tiers
+      self.chargeback_tiers = tiers
+    else
+      temp.errors.each {|a, e| errors.add(a, e)}
+    end
+  end
+
   # Check that tiers are complete and disjoint
   def complete_tiers
     error = false
@@ -149,22 +158,19 @@ class ChargebackRateDetail < ApplicationRecord
     tiers = chargeback_tiers.sort_by(&:start)
 
     tiers.each_with_index do |tier, index|
-      if tier == tiers.first
-        if !tier.start.zero?
-          error = true
-          break
-        end
-      elsif tier.start != tiers[index - 1].end
-        error = true
-        break
+      if tier == tiers.first && tier == tiers.last
+        error = true if !tier.start.zero? || tier.end != Float::INFINITY
+      elsif tier == tiers.first
+        error = true if !tier.start.zero? || tier.end == Float::INFINITY
+      elsif tier == tiers.last
+        error = true if tier.start != tiers[index - 1].end
+        error = true if tier.end != Float::INFINITY
+      else # middle tier
+        error = true if tier.start != tiers[index - 1].end
+        error = true if tier.end == Float::INFINITY
       end
 
-      next if tier != tiers.last
-
-      if tier.end != Float::INFINITY
-        error = true
-        break
-      end
+      break if error
     end
     errors.add(:chargeback_tiers, "must start at zero and not contain any gaps between start and prior end value.") if error
 

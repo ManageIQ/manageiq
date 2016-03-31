@@ -293,5 +293,13 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
       expect(cbd).not_to be_valid
       expect(cbd.errors[:chargeback_tiers]).to be_present
     end
+
+    it "middle tier must not start infinity" do
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => Float::INFINITY)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => Float::INFINITY, :end => Float::INFINITY)
+      cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt2, cbt1])
+
+      expect(cbd).not_to be_valid
+    end
   end
 end

@@ -169,7 +169,7 @@ class ChargebackController < ApplicationController
         # Replace the tiers
         if tiers_valid
           @sb[:rate].chargeback_rate_details.each_with_index do |_detail, i|
-            @sb[:rate_details][i].chargeback_tiers = @sb[:tiers][i]
+            @sb[:rate_details][i].save_tiers(@sb[:tiers][i])
           end
         end
         # Detect errors saving rate details
@@ -250,7 +250,7 @@ class ChargebackController < ApplicationController
         @sb[:rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
         @sb[:rate_details].each_with_index do |detail, i|
           @sb[:tiers][i] = detail.chargeback_tiers.to_a
-          @sb[:num_tiers][i] = detail.chargeback_tiers.to_a.length
+          @sb[:num_tiers][i] = detail.chargeback_tiers.to_a.size
         end
         if @sb[:rate_details].blank?
           fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
