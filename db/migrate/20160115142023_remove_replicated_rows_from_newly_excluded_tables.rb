@@ -21,7 +21,7 @@ class RemoveReplicatedRowsFromNewlyExcludedTables < ActiveRecord::Migration
 
     say_with_time("Adding tables to replication worker exclude list") do
       Configuration.where(:typ => "vmdb").each do |c|
-        c.settings[:workers][:worker_base][:replication_worker][:replication][:exclude_tables] << MiqEventDefinition.table_name << ScanItem.table_name
+        c.settings.deep_symbolize_keys[:workers][:worker_base][:replication_worker][:replication][:exclude_tables] << MiqEventDefinition.table_name << ScanItem.table_name
         c.save!
       end
     end
