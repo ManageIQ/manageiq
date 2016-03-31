@@ -24,5 +24,9 @@ module ReportFormatter
     def add_to_value(index, addition)
       self[index][:value] += addition
     end
+
+    def set_to_zero(index)
+      self[index][:value] = 0
+    end
   end
 end
