@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'serviceFormId', 'miqService',  'serviceData', function($http, $scope, serviceFormId, miqService, serviceData) {
+ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', '$window', '$timeout', 'serviceFormId', 'miqService', 'serviceData', function($http, $scope, $window, $timeout, serviceFormId, miqService, serviceData) {
     var init = function() {
       $scope.serviceModel = {
         name: '',
@@ -22,12 +22,39 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
 
     var serviceEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
-      var url = '/service/edit/' + serviceFormId + '?button=' + buttonName;
-      miqService.miqAjaxButton(url, serializeFields);
+      return API.post('/api/services/' + serviceFormId,
+                      angular.toJson({action:   "edit",
+                                      resource: {name:        $scope.serviceModel.name,
+                                                 description: $scope.serviceModel.description
+                                                }
+                                     })).then(handleSuccess, handleFailure);
+
+      function handleSuccess(response) {
+        var msg = sprintf(__("Service %s was saved"), $scope.serviceModel.name);
+        $timeout(function () {
+          $window.location.href = '/service/explorer?flash_msg=' + msg;
+          miqService.sparkleOff();
+          miqService.miqFlash("success", msg);
+        });
+      }
+
+      function handleFailure(response) {
+        var msg = sprintf(__("Error during 'Service Edit': [%s - %s]"), response.status, response.responseText);
+        $timeout(function () {
+          $window.location.href = '/service/explorer?flash_msg=' + msg + '&flash_error=true';
+          miqService.sparkleOff();
+          miqService.miqFlash("error", msg);
+        });
+      }
     };
 
     $scope.cancelClicked = function() {
-      serviceEditButtonClicked('cancel');
+      var msg = sprintf(__("Edit of Service %s was cancelled by the user"), $scope.serviceModel.description);
+      $timeout(function () {
+        $window.location.href = '/service/explorer?flash_msg=' + msg;
+        miqService.sparkleOff();
+        miqService.miqFlash("success", msg);
+      });
       $scope.angularForm.$setPristine(true);
     };
 

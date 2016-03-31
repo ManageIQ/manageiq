@@ -133,34 +133,11 @@ class ServiceController < ApplicationController
 
   def edit
     assert_privileges("service_edit")
-    case params[:button]
-    when "cancel"
-      service = Service.find_by_id(params[:id])
-      render :update do |page|
-        page.redirect_to :action => 'explorer', :flash_msg => _("Edit of Service \"%{name}\" was cancelled by the user") % {:name => service.description}
-      end
-    when "save", "add"
-      service = Service.find_by_id(params[:id])
-      service_set_record_vars(service)
-
-      begin
-        service.save
-      rescue StandardError => bang
-        msg = _("Error during 'Service Edit': %{message}") % {:message => bang.message}
-        error = true
-      else
-        msg = _("Service \"%{name}\" was saved") % {:name => service.name}
-      end
-      render :update do |page|
-        page.redirect_to :action => 'explorer', :flash_msg => msg, :flash_error => error
-      end
-    when "reset", nil # Reset or first time in
-      checked = find_checked_items
-      checked[0] = params[:id] if checked.blank? && params[:id]
-      @service = find_by_id_filtered(Service, checked[0])
-      @in_a_form = true
-      @title = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
-    end
+    checked = find_checked_items
+    checked[0] = params[:id] if checked.blank? && params[:id]
+    @service = find_by_id_filtered(Service, checked[0])
+    @in_a_form = true
+    @title = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
   end
 
   def service_reconfigure
