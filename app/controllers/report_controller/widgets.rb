@@ -104,15 +104,6 @@ module ReportController::Widgets
     end
     w = MiqWidget.find_by_id(widgets[0])        # temp var to determine the parent node of deleted items
     process_widgets(widgets, "destroy") unless widgets.empty?
-    unless flash_errors?
-      if widgets.length > 1
-        add_flash(_("The selected %{models} were deleted") % {:models => ui_lookup(:models => "MiqWidget")},
-                  :info, true)
-      else
-        add_flash(_("The selected %{models} was deleted") % {:models => ui_lookup(:model => "MiqWidget")},
-                  :info, true)
-      end
-    end
     nodes = x_node.split('-')
     self.x_node = "#{nodes[0]}-#{WIDGET_CONTENT_TYPE.invert[w.content_type]}"
     replace_right_cell(:replace_trees => [:widgets])
