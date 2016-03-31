@@ -70,14 +70,6 @@ describe FixEventClassForEvmAlertEvent do
         :vm_location       => 'test_vm/test_vm.vmx'
       )
     end
-
-    it "sets timestamp for MiqEvent" do
-      now = Time.now.utc
-      event = event_stream_stub.create!(:type => 'MiqEvent', :event_type => 'test', :created_on => now)
-
-      migrate
-      expect(event.reload).to have_attributes(:timestamp => now)
-    end
   end
 
   migration_context :down do
