@@ -54,7 +54,7 @@ module MiqAeEngine
         next unless h.power_state == "on"
         nvms = h.vms.collect { |v| v if v.power_state == "on" }.compact.length
         if min_running_vms.nil? || nvms < min_running_vms
-          storages = h.storages.find_all { |s| s.free_space > vm.provisioned_storage } # Filter out storages that do not have enough free space for the Vm
+          storages = h.writable_storages.find_all { |s| s.free_space > vm.provisioned_storage } # Filter out storages that do not have enough free space for the Vm
           s = storages.sort { |a, b| a.free_space <=> b.free_space }.last
           unless s.nil?
             result["host"]    = h

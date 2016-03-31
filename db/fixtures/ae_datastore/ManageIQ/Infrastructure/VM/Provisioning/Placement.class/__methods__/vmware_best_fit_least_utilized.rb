@@ -19,7 +19,7 @@ prov.eligible_hosts.each do |h|
   next unless h.power_state == "on"
   nvms = h.vms.length
   if min_registered_vms.nil? || nvms < min_registered_vms
-    s = h.storages.sort { |a, b| a.free_space <=> b.free_space }.last
+    s = h.writable_storages.sort { |a, b| a.free_space <=> b.free_space }.last
     unless s.nil?
       host    = h
       storage = s
