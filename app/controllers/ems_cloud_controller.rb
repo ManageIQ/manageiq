@@ -20,6 +20,10 @@ class EmsCloudController < ApplicationController
     ems_cloud_path(*args)
   end
 
+  def new_ems_path
+    new_ems_cloud_path
+  end
+
   def ems_cloud_form_fields
     ems_form_fields
   end

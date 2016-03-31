@@ -21,6 +21,10 @@ class EmsNetworkController < ApplicationController
     path_hash.merge(args[1])
   end
 
+  def new_ems_path
+    {:action => 'new'}
+  end
+
   def ems_network_form_fields
     ems_form_fields
   end
