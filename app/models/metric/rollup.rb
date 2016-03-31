@@ -3,12 +3,14 @@ module Metric::Rollup
                  [:stat_containergroup_create_rate, :stat_containergroup_delete_rate]
   STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
 
+  NON_STORAGE_ROLLUP_COLS = (ROLLUP_COLS - STORAGE_COLS)
+
   AGGREGATE_COLS = {
-    :MiqEnterprise_miq_regions            => (ROLLUP_COLS),
-    :MiqRegion_ext_management_systems     => (ROLLUP_COLS - STORAGE_COLS),
+    :MiqEnterprise_miq_regions            => ROLLUP_COLS,
+    :MiqRegion_ext_management_systems     => NON_STORAGE_ROLLUP_COLS,
     :MiqRegion_storages                   => STORAGE_COLS,
-    :ExtManagementSystem_hosts            => (ROLLUP_COLS - STORAGE_COLS),
-    :ExtManagementSystem_container_nodes  => (ROLLUP_COLS - STORAGE_COLS),
+    :ExtManagementSystem_hosts            => NON_STORAGE_ROLLUP_COLS,
+    :ExtManagementSystem_container_nodes  => NON_STORAGE_ROLLUP_COLS,
     :EmsCluster_hosts                     => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
@@ -108,6 +110,23 @@ module Metric::Rollup
   ]
 
   EMS_CLUSTER_REALTIME_COLS = HOST_REALTIME_COLS
+
+  INFREQUENTLY_CHANGING_COLS = [
+    :derived_cpu_available,
+    :derived_cpu_reserved,
+    :derived_host_count_off,
+    :derived_host_count_on,
+    :derived_memory_available,
+    :derived_memory_reserved,
+    :derived_vm_allocated_disk_storage,
+    :derived_vm_count_off,
+    :derived_vm_count_on,
+    :derived_vm_numvcpus,
+  ].freeze
+
+  def self.excluded_col_for_expression?(col)
+    NON_STORAGE_ROLLUP_COLS.include?(col) && !INFREQUENTLY_CHANGING_COLS.include?(col)
+  end
 
   # these columns will pass false for aggregate_only to process_for_column
   # this means that when processing the totals for a parent rollup, the total
