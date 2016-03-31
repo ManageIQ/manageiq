@@ -34,6 +34,13 @@ module ReportFormatter
       end
     end
 
+    def set_to_zero(index)
+      case @type
+      when :flat then self[index] = 0
+      when :pie  then self[index][1] = 0
+      end
+    end
+
     private
 
     def shorten_label(label)
