@@ -26,6 +26,10 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
     validate_supported_check("Smartstate Analysis")
   end
 
+  def requires_storage_for_scan?
+    false
+  end
+
   def scan_via_ems?
     false
   end
