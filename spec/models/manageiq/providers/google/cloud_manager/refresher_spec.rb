@@ -36,6 +36,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_vm_powered_off
       assert_specific_template
       assert_specific_cloud_volume
+      assert_specific_cloud_volume_snapshot
     end
   end
 
@@ -43,32 +44,33 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eql(1)
     expect(Flavor.count).to              eql(18)
     expect(AvailabilityZone.count).to    eql(13)
-    expect(AuthPrivateKey.count).to      eq(3)
+    expect(AuthPrivateKey.count).to      eq(4)
     expect(CloudNetwork.count).to        eql(1)
     expect(SecurityGroup.count).to       eql(1)
     expect(FirewallRule.count).to        eql(6)
-    expect(VmOrTemplate.count).to        eql(371)
+    expect(VmOrTemplate.count).to        eql(431)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(369)
+    expect(MiqTemplate.count).to         eql(429)
     expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(4)
-    expect(OperatingSystem.count).to     eql(371)
+    expect(OperatingSystem.count).to     eql(431)
     expect(Relationship.count).to        eql(4)
-    expect(MiqQueue.count).to            eql(371)
+    expect(MiqQueue.count).to            eql(431)
     expect(CloudVolume.count).to         eql(4)
+    expect(CloudVolumeSnapshot.count).to eql(1)
   end
 
   def assert_ems
     expect(@ems.flavors.size).to            eql(18)
-    expect(@ems.key_pairs.size).to          eql(3)
+    expect(@ems.key_pairs.size).to          eql(4)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(371)
+    expect(@ems.vms_and_templates.size).to  eql(431)
     expect(@ems.cloud_networks.size).to     eql(1)
     expect(@ems.security_groups.size).to    eql(1)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(369)
+    expect(@ems.miq_templates.size).to      eq(429)
   end
 
   def assert_specific_zone
@@ -258,7 +260,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "default External NAT").first
     expect(network).to have_attributes(
       :description => "default External NAT",
-      :ipaddress   => "104.196.37.81",
+      :ipaddress   => "104.196.56.26",
       :hostname    => nil
     )
   end
@@ -291,6 +293,16 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.description).to             eql(nil)
     expect(v.size).to                    eql(10.gigabyte)
     expect(v.availability_zone.name).to  eql("us-east1-b")
+  end
+
+  def assert_specific_cloud_volume_snapshot
+    v = CloudVolumeSnapshot.where(:name => "wheezy-snapshot-1").first
+    expect(v.ems_ref).to            eql("9048940034142591751")
+    expect(v.name).to               eql("wheezy-snapshot-1")
+    expect(v.description).to        be_nil
+    expect(v.status).to             eql("READY")
+    expect(v.creation_time.to_s).to eql("2015-11-18 20:56:08 UTC")
+    expect(v.size).to               eql(10.gigabyte)
   end
 
   def assert_specific_vm_powered_off
