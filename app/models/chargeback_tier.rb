@@ -11,4 +11,12 @@ class ChargebackTier < ApplicationRecord
       s
     end
   end
+
+  def starts_with_zero?
+    start.zero?
+  end
+
+  def ends_with_infinity?
+    self.end == Float::INFINITY
+  end
 end

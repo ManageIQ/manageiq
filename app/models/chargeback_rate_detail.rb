@@ -4,7 +4,7 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
   has_many :chargeback_tiers, :dependent => :destroy
   validates :group, :source, :presence => true
-  validate :complete_tiers
+  validate :contiguous_tiers?
 
   # Set the rates according to the tiers
   def find_rate(value)
@@ -142,7 +142,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
-    if temp.complete_tiers
+    if temp.contiguous_tiers?
       self.chargeback_tiers = tiers
     else
       temp.errors.each {|a, e| errors.add(a, e)}
@@ -150,7 +150,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   # Check that tiers are complete and disjoint
-  def complete_tiers
+  def contiguous_tiers?
     error = false
 
     # Note, we use sort_by vs. order since we need to call this method against
@@ -158,22 +158,42 @@ class ChargebackRateDetail < ApplicationRecord
     tiers = chargeback_tiers.sort_by(&:start)
 
     tiers.each_with_index do |tier, index|
-      if tier == tiers.first && tier == tiers.last
-        error = true if !tier.start.zero? || tier.end != Float::INFINITY
-      elsif tier == tiers.first
-        error = true if !tier.start.zero? || tier.end == Float::INFINITY
-      elsif tier == tiers.last
-        error = true if tier.start != tiers[index - 1].end
-        error = true if tier.end != Float::INFINITY
-      else # middle tier
-        error = true if tier.start != tiers[index - 1].end
-        error = true if tier.end == Float::INFINITY
+      if single_tier?(tier,tiers)
+        error = true if !tier.starts_with_zero? || !tier.ends_with_infinity?
+      elsif first_tier?(tier,tiers)
+        error = true if !tier.starts_with_zero? || tier.ends_with_infinity?
+      elsif last_tier?(tier,tiers)
+        error = true if !consecutive_tiers?(tier, tiers[index - 1])
+        error = true if !tier.ends_with_infinity?
+      elsif middle_tier?(tier,tiers)
+        error = true if !consecutive_tiers?(tier, tiers[index - 1])
+        error = true if tier.ends_with_infinity?
       end
 
       break if error
     end
-    errors.add(:chargeback_tiers, "must start at zero and not contain any gaps between start and prior end value.") if error
+    errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
 
     !error
+  end
+
+  def first_tier?(tier,tiers)
+    tier == tiers.first
+  end
+
+  def last_tier?(tier,tiers)
+    tier == tiers.last
+  end
+
+  def single_tier?(tier,tiers)
+    first_tier?(tier, tiers) && last_tier?(tier, tiers)
+  end
+
+  def middle_tier?(tier,tiers)
+    !first_tier?(tier, tiers) && !last_tier?(tier, tiers)
+  end
+
+  def consecutive_tiers?(tier, previous_tier)
+    tier.start == previous_tier.end
   end
 end
