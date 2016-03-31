@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/ManageIQ/manageiq"
   s.summary     = "Amazon AWS Provider for ManageIQ"
   s.description = "Amazon AWS Provider for ManageIQ"
-  s.licenses    = ["GPL-2.0", "Apache-2.0"]
+  s.licenses    = ["Apache-2.0"]
 
   s.files = Dir["{app,lib}/**/*"]
 
