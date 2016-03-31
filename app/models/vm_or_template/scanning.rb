@@ -59,6 +59,14 @@ module VmOrTemplate::Scanning
     validate_unsupported("Smartstate Analysis")
   end
 
+  #
+  # Subclasses need to override this method if a storage association
+  # is not required for SSA.
+  #
+  def requires_storage_for_scan?
+    true
+  end
+
   # TODO: Vmware specfic
   def require_snapshot_for_scan?
     return false unless self.runnable?

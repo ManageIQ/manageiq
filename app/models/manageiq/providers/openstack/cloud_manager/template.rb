@@ -54,6 +54,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
     true
   end
 
+  def requires_storage_for_scan?
+    false
+  end
+
   def validate_smartstate_analysis
     validate_supported_check("Smartstate Analysis")
   end
