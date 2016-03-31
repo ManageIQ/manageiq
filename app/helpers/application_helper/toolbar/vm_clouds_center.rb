@@ -61,6 +61,14 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :enabled   => "false",
           :onwhen    => "1+"),
         separator,
+        button(
+          :instance_resize,
+          'pficon pficon-edit fa-lg',
+          t = N_('Reconfigure selected Instance'),
+          t,
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1")
       ]
     ),
   ])

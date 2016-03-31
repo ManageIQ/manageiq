@@ -14,4 +14,18 @@ class Flavor < ApplicationRecord
   def total_vms
     vms.size
   end
+
+  def name_with_details
+    details = if cpus == 1
+                _("%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
+              else
+                _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
+              end
+    details % {
+      :name                => name,
+      :num_cpus            => cpus,
+      :memory_gigabytes    => memory.bytes / 1.0.gigabytes,
+      :root_disk_gigabytes => root_disk_size.bytes / 1.0.gigabytes
+    }
+  end
 end

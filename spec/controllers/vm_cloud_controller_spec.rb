@@ -1,6 +1,11 @@
+include CompressedIds
+
 describe VmCloudController do
+  let(:vm_openstack) { FactoryGirl.create(:vm_openstack) }
   before(:each) do
     set_user_privileges
+    session[:settings] = {:views => {:treesize => 20}}
+    EvmSpecHelper.create_guid_miq_server_zone
   end
 
   # All of the x_button is a suplement for Rails routes that is written in
@@ -54,6 +59,30 @@ describe VmCloudController do
     it 'can render the explorer' do
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
+    end
+
+    it 'can open instance resize tab' do
+      post :explorer
+      expect(response.status).to eq(200)
+
+      allow(controller).to receive(:x_node).and_return("v-#{vm_openstack.compressed_id}")
+
+      post :x_button, :params => {:pressed => 'instance_resize', :id => vm_openstack.id}
+      expect(response.status).to eq(200)
+      expect(response).to render_template(:partial => 'vm_common/_resize')
+    end
+
+    it 'can resize an instance' do
+      flavor = FactoryGirl.create(:flavor_openstack)
+      controller.instance_variable_set(:@edit,
+                                       :new      => {:flavor => flavor.id},
+                                       :explorer => true)
+      expect_any_instance_of(VmCloud).to receive(:resize).with(flavor)
+      post :resize_vm, :params => {
+        :button => 'submit',
+        :id     => vm_openstack.id
+      }
+      expect(response.status).to eq(200)
     end
 
     context "skip or drop breadcrumb" do

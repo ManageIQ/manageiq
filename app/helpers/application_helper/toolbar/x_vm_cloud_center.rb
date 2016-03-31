@@ -42,6 +42,11 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           t = N_('Edit Management Engine Relationship'),
           t),
         separator,
+        button(
+          :instance_resize,
+          'pficon pficon-edit fa-lg',
+          t = N_('Reconfigure this Instance'),
+          t)
       ]
     ),
   ])
@@ -93,7 +98,7 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           'fa fa-clock-o fa-lg',
           t = N_('Retire this Instance'),
           t,
-          :confirm => N_("Retire this Instance?")),
+          :confirm => N_("Retire this Instance?"))
       ]
     ),
   ])

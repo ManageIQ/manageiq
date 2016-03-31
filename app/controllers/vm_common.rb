@@ -1595,10 +1595,13 @@ module VmCommon
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-      if %w(clone migrate miq_request_new pre_prov publish reconfigure).include?(@sb[:action])
-        locals[:no_reset]        = true                                                                               # don't need reset button on the screen
-        locals[:submit_button]   = ['clone', 'migrate', 'publish', 'reconfigure', 'pre_prov'].include?(@sb[:action])  # need submit button on the screen
-        locals[:continue_button] = ['miq_request_new'].include?(@sb[:action])                                         # need continue button on the screen
+      if %w(clone migrate miq_request_new pre_prov publish reconfigure resize).include?(@sb[:action])
+        # don't render a reset button on the screen
+        locals[:no_reset]        = true
+        # render a submit button instead of a save button
+        locals[:submit_button]   = %(clone migrate publish reconfigure pre_prov resize).include?(@sb[:action])
+        # render continue button on the screen
+        locals[:continue_button] = ['miq_request_new'].include?(@sb[:action])
         update_buttons(locals) if @edit && @edit[:buttons].present?
         presenter[:clear_tree_cookies] = "prov_trees"
       end
@@ -1893,6 +1896,10 @@ module VmCommon
       partial = "vm_common/reconfigure"
       header = _("Reconfigure %{table}") % {:table => ui_lookup(:table => table)}
       action = "reconfigure_update"
+    when "resize"
+      partial = "vm_common/resize"
+      header = _("Reconfiguring %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      action = "resize_vm"
     when "retire"
       partial = "shared/views/retire"
       header = _("Set/Remove retirement date for %{table}") % {:table => ui_lookup(:table => table)}
