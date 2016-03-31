@@ -64,6 +64,7 @@ module ManageIQ::Providers
       get_volumes
       get_snapshots
       get_object_store
+      get_services
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -455,6 +456,64 @@ module ManageIQ::Providers
 
     def add_instance_disk(disks, size, location, name)
       super(disks, size, location, name, "openstack")
+    end
+
+    def get_services
+      # TODO(pblaho): use handled_list(:services) after fog with https://github.com/fog/fog/pull/3838 is released
+      # services = @compute_service.handled_list(:services)
+      services = @compute_service.services
+      process_collection(services, :system_services) { |service| parse_service(service) }
+    end
+
+    def parse_service(service)
+      # <Fog::Compute::OpenStack::Service
+      # id=1,
+      #   binary="nova-scheduler",
+      #   host="overcloud-controller-0.localdomain",
+      #   state="up",
+      #   status="enabled",
+      #   updated_at="2016-02-10T14:32:32.000000",
+      #   zone="internal",
+      #   disabled_reason=nil
+      # >
+
+      # <SystemService:0x0056064ec2e7f0
+      # id: 58,
+      #   name: "openstack-nova-compute",
+      #   svc_type: nil,
+      #   typename: "linux_systemd",
+      #   start: nil,
+      #   image_path: nil,
+      #   display_name: nil,
+      #   depend_on_service: nil,
+      #   depend_on_group: nil,
+      #   object_name: nil,
+      #   description: "OpenStack Nova Compute Server",
+      #   vm_or_template_id: nil,
+      #   enable_run_levels: nil,
+      #   disable_run_levels: nil,
+      #   host_id: 3,
+      #   running: true,
+      #   dependencies: {},
+      #   systemd_load: "loaded",
+      #   systemd_active: "active",
+      #   systemd_sub: "running",
+      #   host_service_group_id: 1,
+      #   scheduling_status: nil>
+
+      uid = service.id
+
+      new_result = {
+        # TODO(pblaho): solve the issue with openstack- prefix
+        # maybe remove storing that prefix at all
+        # prefix is used only at RH systems with systemd for openstack services
+        :name              => "openstack-#{service.binary}",
+        # hostname without domain[s]
+        :host              => service.host.split('.').first,
+        :scheduling_status => service.status,
+      }
+
+      return uid, new_result
     end
   end
 end

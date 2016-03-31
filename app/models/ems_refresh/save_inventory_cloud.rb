@@ -59,7 +59,8 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects,
-      :resource_groups
+      :resource_groups,
+      :system_services,
     ]
 
     # Save and link other subsections
