@@ -1,0 +1,37 @@
+= render :partial => "layouts/flash_msg"
+= form_tag('/ems_infra/scaledown', :method => :post)
+= hidden_field_tag('id', @infra.id)
+- unless @stack.nil?
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Orchestration Stack')
+      .col-md-8
+        = @stack.name
+    .form-group
+      %label.col-md-2.control-label
+        = _('Number of Compute Hosts')
+      .col-md-8
+        = @compute_hosts.count
+    - @compute_hosts.each do |host|
+      .form-group
+        %label.col-md-2.control-label
+          = host.uid_ems
+        .col-md-8
+          %input{:type => 'checkbox', :name => 'host_ids[]', :value => host.id}
+  %table{:width => "100%"}
+    %tr
+      %td{:align => "right"}
+        #buttons_on
+          = button_tag(_("Scale Down"),
+                       :name  => "scaledown",
+                       :class => "btn btn-primary",
+                       :alt   => t = _("Scale Infrastructure Provider Down"),
+                       :title => t,
+                       :type  => "submit")
+          = button_tag(_("Cancel"),
+                       :name  => "cancel",
+                       :class => "btn btn-default",
+                       :alt   => t = _("Cancel"),
+                       :title => t,
+                       :type  => "submit")
