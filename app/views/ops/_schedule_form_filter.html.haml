@@ -27,6 +27,12 @@
               "ng-change"      => "filterTypeChanged()",
               "checkchange"    => "",
               "selectpicker-for-select-tag"   => "")
+            = select_tag('filter_typ', options_for_select(@template_options_for_select),
+              "ng-switch-when" => "miq_template_check_compliance",
+              "ng-model"       => "$parent.scheduleModel.filter_typ",
+              "ng-change"      => "filterTypeChanged()",
+              "checkchange"    => "",
+              "selectpicker-for-select-tag"   => "")
             = select_tag('filter_typ', options_for_select(@host_options_for_select),
               "ng-switch-when" => "host",
               "ng-model"       => "$parent.scheduleModel.filter_typ",
