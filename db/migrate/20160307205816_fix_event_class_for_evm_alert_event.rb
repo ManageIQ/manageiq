@@ -33,10 +33,6 @@ class FixEventClassForEvmAlertEvent < ActiveRecord::Migration
         event.update_attributes(attrs)
       end
     end
-
-    say_with_time("Setting timestamp for MiqEvent") do
-      MiqEvent.where(:timestamp => nil).each { |e| e.update_attributes(:timestamp => e.created_on) }
-    end
   end
 
   def down
@@ -44,10 +40,6 @@ class FixEventClassForEvmAlertEvent < ActiveRecord::Migration
       EventStream.where(:type => 'MiqEvent', :event_type => 'EVMAlertEvent').update_all(
         :type => 'EmsEvent', :target_id => nil, :target_type => nil
       )
-    end
-
-    say_with_time("Deleting timestamp for MiqEvent") do
-      MiqEvent.update_all(:timestamp => nil)
     end
   end
 end
