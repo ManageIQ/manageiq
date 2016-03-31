@@ -20,8 +20,9 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
                        :status  => 'Ok')
   end
 
-  let(:host)    { FactoryGirl.create(:host_microsoft, :power_state => "on") }
-  let(:storage) { FactoryGirl.create(:storage) }
+  let(:host)       { FactoryGirl.create(:host_microsoft, :power_state => "on") }
+  let(:storage)    { FactoryGirl.create(:storage, :free_space => 10.gigabytes) }
+  let(:ro_storage) { FactoryGirl.create(:storage, :free_space => 20.gigabytes) }
 
   context "provision task object" do
     it "without host or storage will not set placement values" do
@@ -72,6 +73,27 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
 
           expect(miq_provision.options[:placement_host_name]).to be_nil
           expect(miq_provision.options[:placement_ds_name]).to   be_nil
+        end
+      end
+
+      context "with read-only storage" do
+        before do
+          host.storages << [ro_storage, storage]
+          HostStorage.where(:host_id => host.id, :storage_id => ro_storage.id).update(:read_only => true)
+
+          evm_object_class = storage.class.base_class.name.to_sym
+          storage_struct = [MiqHashStruct.new(:id => ro_storage.id, :evm_object_class => evm_object_class),
+                            MiqHashStruct.new(:id => storage.id,    :evm_object_class => evm_object_class)]
+          allow_any_instance_of(ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow)
+            .to receive(:allowed_storages).and_return(storage_struct)
+        end
+
+        it "picks the largest writable datastore" do
+          ws.root
+          miq_provision.reload
+
+          expect(miq_provision.options[:placement_host_name]).to eq([host.id, host.name])
+          expect(miq_provision.options[:placement_ds_name]).to   eq([storage.id, storage.name])
         end
       end
     end
