@@ -531,6 +531,7 @@ module OpsController::Settings::Schedules
         end
       when "ems"  then {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}}
       when "host" then {"=" => {"field" => "Host-name", "value" => params[:filter_value]}}
+      # TODO: probably remove:  when "miq_template" then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
       when "vm"   then {"=" => {"field" => "Vm-name", "value" => params[:filter_value]}}
       else             {"IS NOT NULL" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-name"}}
       end
@@ -569,6 +570,9 @@ module OpsController::Settings::Schedules
     ]
     if role_allows(:feature => "vm_check_compliance")
       @action_type_options_for_select.push([_("VM Compliance Check"), "vm_check_compliance"])
+    end
+    if role_allows(:feature => "miq_template_check_compliance")
+      @action_type_options_for_select.push([_("Template Compliance Check"), "miq_template_check_compliance"])
     end
     if role_allows(:feature => "host_check_compliance")
       @action_type_options_for_select.push([_("Host Compliance Check"), "host_check_compliance"])
