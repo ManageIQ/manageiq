@@ -77,8 +77,6 @@ module MiqPolicyController::MiqActions
       actions.push(params[:id])
     end
     process_actions(actions, "destroy") unless actions.empty?
-    add_flash(_("The selected %{models} was deleted") %
-      {:models => ui_lookup(:models => "MiqAction")}) if @flash_array.nil?
     @new_action_node = self.x_node = "root"
     get_node_info(x_node)
     replace_right_cell("root", [:action])
