@@ -89,7 +89,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       it "tests '#{ex[:image_name]}'" do
         result_image, result_registry = parser.send(:parse_image_name, ex[:image_name], example_ref)
 
-        expect(result_image).to eq(ex[:image])
+        expect(result_image.except(:registered_on)).to eq(ex[:image])
         expect(result_registry).to eq(ex[:registry])
       end
     end

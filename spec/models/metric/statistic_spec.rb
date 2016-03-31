@@ -17,6 +17,11 @@ describe Metric::Statistic do
     let(:c7) { FactoryGirl.create(:container_group, :deleted_on => hour - 120.minutes) }
     let(:c8) { FactoryGirl.create(:container_group, :deleted_on => hour + 1.minute) }
 
+    let(:c9) { FactoryGirl.create(:container_image, :registered_on => hour - 10.minutes) }
+    let(:c10) { FactoryGirl.create(:container_image, :registered_on => hour - 50.minutes) }
+    let(:c11) { FactoryGirl.create(:container_image, :registered_on => hour - 120.minutes) }
+    let(:c12) { FactoryGirl.create(:container_image, :registered_on => hour + 1.minute) }
+
     it "count created container groups in a provider" do
       ems_openshift.container_groups << [c1, c2, c3, c4, c5, c6, c7, c8]
       derived_columns = described_class.calculate_stat_columns(ems_openshift, hour)
@@ -29,6 +34,13 @@ describe Metric::Statistic do
       derived_columns = described_class.calculate_stat_columns(ems_openshift, hour)
 
       expect(derived_columns[:stat_container_group_delete_rate]).to eq(2)
+    end
+
+    it "count new registred container images in a provider" do
+      ems_openshift.container_images << [c9, c10, c11, c12]
+      derived_columns = described_class.calculate_stat_columns(ems_openshift, hour)
+
+      expect(derived_columns[:stat_container_image_registration_rate]).to eq(2)
     end
   end
 end
