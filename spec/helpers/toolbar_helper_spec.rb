@@ -5,28 +5,27 @@ describe ToolbarHelper do
     let(:buttons) do
       [
         {
-          "id"      => "history_choice",
-          "type"    => "buttonSelect",
-          "img"     => "history.png",
-          "imgdis"  => "history.png",
+          :id       => "history_choice",
+          :type     => "buttonSelect",
+          :img      => "history.png",
+          :imgdis   => "history.png",
           :icon     => nil,
-          "title"   => "History",
-          "enabled" => false,
-          "openAll" => true,
+          :title    => "History",
+          :enabled  => false,
           :items    => [
             {
-              "id"      => "history_choice__history_1",
-              "type"    => "button",
-              "img"     => "history.png",
-              "imgdis"  => "history.png",
-              :icon     => nil,
-              "enabled" => "false",
-              "title"   => "Go to this item",
-              :name     => "history_choice__history_1",
-              :hidden   => false,
-              :pressed  => nil,
-              :onwhen   => nil,
-              :url      => "x_history?item=1"
+              :id      => "history_choice__history_1",
+              :type    => "button",
+              :img     => "history.png",
+              :imgdis  => "history.png",
+              :icon    => nil,
+              :enabled => "false",
+              :title   => "Go to this item",
+              :name    => "history_choice__history_1",
+              :hidden  => false,
+              :pressed => nil,
+              :onwhen  => nil,
+              :url     => "x_history?item=1"
             }
           ],
           :hidden   => false,
@@ -36,12 +35,12 @@ describe ToolbarHelper do
           :explorer => true
         },
         {
-          "id"     => "summary_reload",
-          "type"   => "button",
-          "img"    => "reload.png",
-          "imgdis" => "reload.png",
+          :id      => "summary_reload",
+          :type    => "button",
+          :img     => "reload.png",
+          :imgdis  => "reload.png",
           :icon    => nil,
-          "title"  => "Reload current display",
+          :title   => "Reload current display",
           :name    => "summary_reload",
           :hidden  => false,
           :pressed => nil,
@@ -71,23 +70,23 @@ describe ToolbarHelper do
       let(:buttons) do
         [
           {
-            "id"    => "view_grid",
-            "type"  => "buttonTwoState",
-            "img"   => "view_grid.png",
-            :icon   => "fa fa-th",
-            "title" => "Grid View",
-            :name   => "view_grid",
+            :id    => "view_grid",
+            :type  => "buttonTwoState",
+            :img   => "view_grid.png",
+            :icon  => "fa fa-th",
+            :title => "Grid View",
+            :name  => "view_grid",
           },
           {
-            "type"  => "separator"
+            :type => "separator"
           },
           {
-            "id"    => "view_tile",
-            "type"  => "buttonTwoState",
-            "img"   => "view_tile.png",
-            :icon   => "fa fa-th-large",
-            "title" => "Tile View",
-            :name   => "view_tile",
+            :id    => "view_tile",
+            :type  => "buttonTwoState",
+            :img   => "view_tile.png",
+            :icon  => "fa fa-th-large",
+            :title => "Tile View",
+            :name  => "view_tile",
           }
         ]
       end
@@ -100,20 +99,20 @@ describe ToolbarHelper do
       let(:buttons) do
         [
           {
-            "id"    => "view_grid",
-            "type"  => "buttonTwoState",
-            "img"   => "view_grid.png",
-            :icon   => "fa fa-th",
-            "title" => "Grid View",
-            :name   => "view_grid",
+            :id    => "view_grid",
+            :type  => "buttonTwoState",
+            :img   => "view_grid.png",
+            :icon  => "fa fa-th",
+            :title => "Grid View",
+            :name  => "view_grid",
           },
           {
-            "id"    => "view_tile",
-            "type"  => "buttonTwoState",
-            "img"   => "view_tile.png",
-            :icon   => "fa fa-th-large",
-            "title" => "Tile View",
-            :name   => "view_tile",
+            :id    => "view_tile",
+            :type  => "buttonTwoState",
+            :img   => "view_tile.png",
+            :icon  => "fa fa-th-large",
+            :title => "Tile View",
+            :name  => "view_tile",
           }
         ]
       end
@@ -131,14 +130,14 @@ describe ToolbarHelper do
     let(:buttons) do
       [
         {
-          "id"       => "view_grid",
-          "type"     => "buttonTwoState",
-          "img"      => "view_grid.png",
-          "imgdis"   => "view_grid.png",
+          :id        => "view_grid",
+          :type      => "buttonTwoState",
+          :img       => "view_grid.png",
+          :imgdis    => "view_grid.png",
           :icon      => "fa fa-th",
-          "title"    => "Grid View",
-          "enabled"  => "false",
-          "selected" => "true",
+          :title     => "Grid View",
+          :enabled   => "false",
+          :selected  => "true",
           :name      => "view_grid",
           :hidden    => false,
           :pressed   => nil,
@@ -147,12 +146,12 @@ describe ToolbarHelper do
           :url_parms => "?type=grid"
         },
         {
-          "id"       => "view_tile",
-          "type"     => "buttonTwoState",
-          "img"      => "view_tile.png",
-          "imgdis"   => "view_tile.png",
+          :id        => "view_tile",
+          :type      => "buttonTwoState",
+          :img       => "view_tile.png",
+          :imgdis    => "view_tile.png",
           :icon      => "fa fa-th-large",
-          "title"    => "Tile View",
+          :title     => "Tile View",
           :name      => "view_tile",
           :hidden    => false,
           :pressed   => nil,

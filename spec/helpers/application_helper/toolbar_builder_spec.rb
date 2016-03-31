@@ -2753,7 +2753,7 @@ describe ApplicationHelper do
                 :url_parms => "?id=#{@record.id}&button_id=#{btn_num}&cls=#{@record.class.name}&pressed=custom_button&desc=#{desc}"
       }
       @tb_buttons = {}
-      @button = {'id' => "custom_#{btn_num}"}
+      @button = {:id => "custom_#{btn_num}"}
       allow_any_instance_of(Object).to receive(:query_string).and_return("")
       allow_message_expectations_on_nil
     end
@@ -2797,11 +2797,11 @@ describe ApplicationHelper do
 
     context "parameters correctness" do
       it "Ensures that build_toolbar_disable_button method is called with correct parameters" do
-        button = {'child_id' => "vm_scan",
-                  'id'       => "vm_vmdb_choice__vm_scan",
-                  'type'     => "button"}
-        input = {'button'    => "vm_scan",
-                 'url_parms' => "main_div"}
+        button = {:child_id => "vm_scan",
+                  :id       => "vm_vmdb_choice__vm_scan",
+                  :type     => "button"}
+        input = {:button    => "vm_scan",
+                 :url_parms => "main_div"}
         b = _toolbar_builder
         expect(b).to receive(:build_toolbar_disable_button).with("vm_scan")
         b.send(:apply_common_props, button, input)
@@ -2973,19 +2973,20 @@ describe ApplicationHelper do
   context "build_toolbar" do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
-      @pdf_button = {"id"       => "download_choice__download_pdf",
+      @pdf_button = {:id        => "download_choice__download_pdf",
                      :klass     => ApplicationHelper::Button::Pdf,
-                     "child_id" => "download_pdf",
-                     "type"     => "button",
-                     "img"      => "download_pdf.png",
-                     "imgdis"   => "download_pdf.png",
+                     :child_id  => "download_pdf",
+                     :type      => "button",
+                     :img       => "download_pdf.png",
+                     :imgdis    => "download_pdf.png",
                      :icon      => "fa fa-file-pdf-o fa-lg",
-                     "text"     => "Download as PDF",
-                     "title"    => "Download this report in PDF format",
+                     :text      => "Download as PDF",
+                     :title     => "Download this report in PDF format",
                      :name      => "download_choice__download_pdf",
                      :hidden    => false,
                      :pressed   => nil,
                      :onwhen    => nil,
+                     :enabled   => true,
                      :url       => "/download_data",
                      :url_parms => "?download_type=pdf"}
       @layout = "catalogs"
@@ -2995,32 +2996,32 @@ describe ApplicationHelper do
 
     it "Hides PDF button when PdfGenerator is not available" do
       allow(PdfGenerator).to receive_messages(:available? => false)
-      buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
+      buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button[:id] == "download_choice" }.compact.flatten
       expect(buttons).not_to include(@pdf_button)
     end
 
     it "Displays PDF button when PdfGenerator is available" do
       allow(PdfGenerator).to receive_messages(:available? => true)
-      buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
+      buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button[:id] == "download_choice" }.compact.flatten
       expect(buttons).to include(@pdf_button)
     end
 
     it "Enables edit and remove buttons for read-write orchestration templates" do
       @record = FactoryGirl.create(:orchestration_template)
       buttons = helper.build_toolbar('orchestration_template_center_tb').first[:items]
-      edit_btn = buttons.select {|b| b['id'].end_with?("_edit")}.first
-      remove_btn = buttons.select {|b| b['id'].end_with?("_remove")}.first
-      expect(edit_btn["enabled"]).to eq("true")
-      expect(remove_btn["enabled"]).to eq("true")
+      edit_btn = buttons.find { |b| b[:id].end_with?("_edit") }
+      remove_btn = buttons.find { |b| b[:id].end_with?("_remove") }
+      expect(edit_btn[:enabled]).to eq(true)
+      expect(remove_btn[:enabled]).to eq(true)
     end
 
     it "Disables edit and remove buttons for read-only orchestration templates" do
       @record = FactoryGirl.create(:orchestration_template_with_stacks)
       buttons = helper.build_toolbar('orchestration_template_center_tb').first[:items]
-      edit_btn = buttons.select {|b| b['id'].end_with?("_edit")}.first
-      remove_btn = buttons.select {|b| b['id'].end_with?("_remove")}.first
-      expect(edit_btn["enabled"]).to eq("false")
-      expect(remove_btn["enabled"]).to eq("false")
+      edit_btn = buttons.find { |b| b[:id].end_with?("_edit") }
+      remove_btn = buttons.find { |b| b[:id].end_with?("_remove") }
+      expect(edit_btn[:enabled]).to eq(false)
+      expect(remove_btn[:enabled]).to eq(false)
     end
   end
 end
