@@ -164,7 +164,9 @@
           ae_message: 
           ae_attributes: {}
       - name: deploy_mode
-        description: Select deployment mode
+        description: |-
+          Select deployment mode.
+          WARNING: Complete mode will delete all resources from the group that are not in the template.
         type: DialogFieldDropDownList
         data_type: string
         notes: 
@@ -178,9 +180,9 @@
         default_value: Incremental
         values:
         - - Complete
-          - Complete
+          - Complete (Delete other resources in the group)
         - - Incremental
-          - Incremental
+          - Incremental (Default)
         values_method: 
         values_method_options: {}
         options:
