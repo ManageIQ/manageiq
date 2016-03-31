@@ -13,7 +13,7 @@ describe ApplicationHelper::Button::HistoryItem do
 
     %w(1 2 3 4).each do |n|
       it "when with existing history_#{n}" do
-        @id = ":history_#{n}".to_sym
+        @id = "history_#{n}".to_sym
         expect(subject).to be_falsey
       end
     end
