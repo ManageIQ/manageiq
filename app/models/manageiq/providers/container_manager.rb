@@ -30,5 +30,10 @@ module ManageIQ::Providers
     def aggregate_memory(targets = nil)
       aggregate_hardware(:computer_systems, :memory_mb, targets)
     end
+
+    # enables overide of ChartsLayoutService#find_chart_path
+    def chart_layout_path
+      "ManageIQ_Providers_ContainerManager"
+    end
   end
 end
