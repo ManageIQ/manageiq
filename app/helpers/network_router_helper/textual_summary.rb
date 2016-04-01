@@ -24,7 +24,7 @@ module NetworkRouterHelper::TextualSummary
   end
 
   def textual_type
-    @record.type
+    ui_lookup(:model => @record.type)
   end
 
   def textual_status
