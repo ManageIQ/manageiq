@@ -22,6 +22,7 @@ module Metric::Finders
 
   def self.find_all_by_range(resource, start_time, end_time, interval_name)
     return [] if resource.blank?
+    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     cond = Metric::Helper.range_to_condition(start_time, end_time)
     if interval_name != "realtime"
@@ -29,25 +30,26 @@ module Metric::Finders
       cond << interval_name
     end
 
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
+      scope = resource.send(meth)
+    else
+      # Group the resources by type to find the ids on which to query
+      res_cond = []
+      res_params = []
+      res_by_type = {}
+      resource.each { |r| (res_by_type[r.class.base_class.to_s] ||= []) << r.id }
+      res_by_type.each do |t, id|
+        res_cond << '(resource_type = ? AND resource_id IN (?))'
+        res_params << t << id
+      end
+      res_cond = res_cond.join(' OR ')
 
-    return resource.send(meth).where(cond) unless resource.kind_of?(Array) || resource.kind_of?(ActiveRecord::Relation)
+      cond.nil? ? cond = [res_cond] : cond[0] << " AND #{res_cond}"
+      cond += res_params
 
-    # Group the resources by type to find the ids on which to query
-    res_cond = []
-    res_params = []
-    res_by_type = {}
-    resource.each { |r| (res_by_type[r.class.base_class.to_s] ||= []) << r.id }
-    res_by_type.each do |t, id|
-      res_cond << '(resource_type = ? AND resource_id IN (?))'
-      res_params << t << id
+      scope = klass
     end
-    res_cond = res_cond.join(' OR ')
-
-    cond.nil? ? cond = [res_cond] : cond[0] << " AND #{res_cond}"
-    cond += res_params
-
-    klass.where(cond)
+    scope.where(cond)
   end
 
   #
