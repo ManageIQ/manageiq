@@ -6,9 +6,13 @@ require_dependency 'vmdb/settings/hash_differ'
 module Vmdb
   class Settings
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
+    KNOCKOUT_STRING = "--!".freeze
 
     def self.init
       reset_settings_constant(for_resource(my_server))
+      Config.setup do |config|
+        config.knockout_prefix = KNOCKOUT_STRING
+      end
     end
 
     def self.walk(settings = ::Settings, path = [], &block)
@@ -46,6 +50,7 @@ module Vmdb
       diff = HashDiffer.diff(template_settings.to_hash, hash)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
+      knockout_array_delta_values(deltas)
       apply_settings_changes(miq_server, deltas)
     end
 
@@ -67,6 +72,16 @@ module Vmdb
 
     def self.encrypt_passwords!(settings)
       walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_encrypt(v) }
+    end
+
+    private_class_method def self.knockout_array_delta_values(deltas)
+      deltas.each do |d|
+        next unless d[:value].kind_of?(Array)
+
+        key_path = d[:key].split("/").delete_blanks.map(&:to_sym)
+        template_value = template_settings.to_hash.fetch_path(*key_path) || []
+        d[:value] += (template_value - d[:value]).map { |x| "#{KNOCKOUT_STRING}#{x}" }
+      end
     end
 
     private_class_method def self.build_template

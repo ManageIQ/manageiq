@@ -106,6 +106,26 @@ describe Vmdb::Settings do
       )
     end
 
+    it "knocksout removed array values" do
+      new_logs = %w(
+        log/*.log
+        log/apache/*.log
+        log/*.txt
+        config/*
+        /var/log/syslog*
+        /var/log/daemon.log*
+        /etc/default/ntp*
+        /var/log/messages*
+        /var/log/cron*
+      )
+      expected = new_logs + %w(--!BUILD --!GUID --!VERSION)
+
+      described_class.save!(miq_server, :log => {:collection => {:current => {:pattern => new_logs}}})
+
+      expect(miq_server.settings_changes.find_by(:key => "/log/collection/current/pattern"))
+        .to have_attributes(:value => expected)
+    end
+
     it "encrypts password fields" do
       password  = "pa$$word"
       encrypted = MiqPassword.encrypt(password)
