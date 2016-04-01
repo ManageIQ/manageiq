@@ -365,7 +365,7 @@ class TreeBuilder
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
                         when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
                         when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
-                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, count_only)
+                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, count_only, options[:type])
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                     x_get_tree_g_kids(parent, count_only) : nil
                         when MiqRegion           then x_get_tree_region_kids(parent, count_only)
@@ -412,6 +412,8 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
+      node[:expand] = true if options[:type] == :automate &&
+                              Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
       kids = x_get_tree_objects(object, options, false, parents).map do |o|
         x_build_node(o, node[:key], options)
       end
