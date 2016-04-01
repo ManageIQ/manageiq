@@ -67,7 +67,7 @@ describe 'routes for ServiceController' do
 
   describe "#show" do
     it "routes with GET" do
-      expect(get("/service/show")).to route_to("service#show")
+      expect(get("/#{controller_name}/123")).to route_to("#{controller_name}#show", :id => "123")
     end
   end
 
