@@ -120,14 +120,11 @@ module Metric::Processing
   def self.add_missing_intervals(obj, interval_name, start_time, end_time)
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    cond = Metric::Helper.range_to_condition(start_time, end_time)
-    if interval_name != "realtime"
-      cond[0] << " AND capture_interval_name = ?"
-      cond << interval_name
-    end
+    scope = obj.send(meth).where(Metric::Helper.range_to_condition(start_time, end_time))
+    scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
 
     last_perf = {}
-    obj.send(meth).where(cond).order("timestamp, capture_interval_name").each do |perf|
+    scope.order("timestamp, capture_interval_name").each do |perf|
       interval = interval_name_to_interval(perf.capture_interval_name)
       last_perf[interval] = perf if last_perf[interval].nil?
 
