@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: compute.instance.suspend.end
+    name: compute.instance.suspend
     inherits: 
     description: 
   fields:
