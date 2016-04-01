@@ -3,6 +3,7 @@ describe MiqRequestWorkflow do
   let(:ems) { FactoryGirl.create(:ext_management_system) }
   let(:resource_pool) { FactoryGirl.create(:resource_pool) }
   let(:ems_folder) { FactoryGirl.create(:ems_folder) }
+  let(:datacenter) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
 
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
@@ -338,6 +339,21 @@ describe MiqRequestWorkflow do
     it "returns an empty hash if no resource pools are found" do
       src = {:ems =>  ems, :folder => ems_folder}
       expect(workflow.folder_to_respool(src)).to be_empty
+    end
+  end
+
+  context "#folder_to_datacenter" do
+    before do
+      datacenter.ext_management_system = ems
+      attrs = datacenter.attributes.merge(:object => datacenter, :ems => ems)
+      xml_hash = XmlHash::Element.new('EmsFolder', attrs)
+      hash = {"EmsFolder_#{datacenter.id}" => xml_hash}
+      workflow.instance_variable_set("@ems_xml_nodes", hash)
+    end
+
+    it "returns a datacenter" do
+      src = {:ems => ems, :folder => datacenter}
+      expect(workflow.folder_to_datacenter(src)).to eql(datacenter.id => datacenter.name)
     end
   end
 
