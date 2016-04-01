@@ -51,6 +51,7 @@ describe Vmdb::Settings::HashDiffer do
   let(:diff_hash) do
     after_hash.deep_clone.tap do |h|
       h.delete_path(:values, :unchanged)
+      h.store_path(:values, :array, ["new val1", "new val2",])
     end
   end
 
