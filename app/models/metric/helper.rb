@@ -110,17 +110,15 @@ module Metric::Helper
   end
 
   def self.range_to_condition(start_time, end_time)
-    return nil if start_time.nil?
-    return ["timestamp = ?", start_time] if start_time == end_time
-
-    cond = "timestamp >= ?"
-    parms = [start_time]
-    unless end_time.nil?
-      cond << " AND timestamp <= ?"
-      parms << end_time
+    if start_time.nil?
+      nil
+    elsif start_time == end_time
+      {:timestamp => start_time}
+    elsif end_time.nil?
+      ["timestamp >= ?", start_time]
+    else
+      {:timestamp => start_time..end_time}
     end
-    parms.unshift(cond)
-    parms
   end
 
   def self.remove_duplicate_timestamps(recs)
