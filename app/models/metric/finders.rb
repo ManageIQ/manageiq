@@ -27,16 +27,7 @@ module Metric::Finders
     if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
       scope = resource.send(meth)
     else
-      # Group the resources by type to find the ids on which to query
-      res_cond = []
-      res_params = []
-      res_by_type = {}
-      resource.each { |r| (res_by_type[r.class.base_class.to_s] ||= []) << r.id }
-      res_by_type.each do |t, id|
-        res_cond << '(resource_type = ? AND resource_id IN (?))'
-        res_params << t << id
-      end
-      scope = klass.where([res_cond.join(' OR ')] + res_params)
+      scope = klass.where(:resource => resource)
     end
     scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
     scope.where(Metric::Helper.range_to_condition(start_time, end_time))
