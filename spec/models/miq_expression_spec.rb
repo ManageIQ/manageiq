@@ -659,72 +659,72 @@ describe MiqExpression do
       context "static dates and times with no timezone" do
         it "generates the ruby for an AFTER expression with date value" do
           exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date > '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a > expression date value" do
           exp = MiqExpression.new(">" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date > '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a BEFORE expression with date value" do
           exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date < '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a < expression with date value" do
           exp = MiqExpression.new("<" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date < '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a >= expression with date value" do
           exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date >= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a <= expression with date value" do
           exp = MiqExpression.new("<=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date <= '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date <= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a AFTER expression with datetime value" do
           exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time > '2011-01-10T09:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_time > '2011-01-10T09:00:00Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a > expression with datetime value" do
           exp = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time > '2011-01-10T09:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_time > '2011-01-10T09:00:00Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a IS expression with date value" do
           exp = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date == '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date == '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a IS expression with datetime value" do
           exp = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a FROM expression with date values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-09'.to_date && val.to_date <= '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date >= '2011-01-09'.to_date && val.to_date <= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a FROM expression with date values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["01/09/2011", "01/10/2011"]})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-09'.to_date && val.to_date <= '2011-01-10'.to_date")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_date >= '2011-01-09'.to_date && val.to_date <= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a FROM expression with datetime values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T08:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T17:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_time >= '2011-01-10T08:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T17:00:00Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a FROM expression with identical datetime values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]})
-          expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T00:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby).to match_ruby_expression("!val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T00:00:00Z'.to_time(:utc)")
         end
       end
 
@@ -733,63 +733,67 @@ describe MiqExpression do
 
         it "generates the ruby for a AFTER expression with date value" do
           exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date > '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a > expression with date value" do
           exp = MiqExpression.new(">" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date > '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a BEFORE expression with date value" do
           exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date < '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a < expression with date value" do
           exp = MiqExpression.new("<" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date < '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a >= expression with date value" do
           exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date >= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a <= expression with date value" do
           exp = MiqExpression.new("<=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date <= '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date <= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a AFTER expression with datetime value" do
           exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time > '2011-01-10T14:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_time > '2011-01-10T14:00:00Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a > expression with datetime value" do
           exp = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time > '2011-01-10T14:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_time > '2011-01-10T14:00:00Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a IS expression wtih date value" do
           exp = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date == '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date == '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a FROM expression with date values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-09'.to_date && val.to_date <= '2011-01-10'.to_date")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_date >= '2011-01-09'.to_date && val.to_date <= '2011-01-10'.to_date")
         end
 
         it "generates the ruby for a FROM expression with datetime values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T13:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T22:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_time >= '2011-01-10T13:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T22:00:00Z'.to_time(:utc)")
         end
 
         it "generates the ruby for a FROM expression with identical datetime values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]})
-          expect(exp.to_ruby(tz)).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T05:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T05:00:00Z'.to_time(:utc)")
+          expect(exp.to_ruby(tz)).to match_ruby_expression("!val.nil? && val.to_time >= '2011-01-10T05:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T05:00:00Z'.to_time(:utc)")
         end
+      end
+
+      def match_ruby_expression(ruby)
+        end_with("; #{ruby}")
       end
 
       it "should generate the correct human expression with an expression having static dates and times with no time zone" do
