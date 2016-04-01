@@ -753,6 +753,10 @@ en:
       ManageIQ::Providers::Amazon::CloudManager::FloatingIp:                Floating IP (Amazon)
       ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:          Cloud Subnet (OpenStack)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:        Network Router (OpenStack)
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Azure)
+      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
       MiqAction:                Action
