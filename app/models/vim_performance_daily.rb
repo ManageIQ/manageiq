@@ -78,8 +78,8 @@ class VimPerformanceDaily < MetricRollup
         # over the day.
         Metric::Aggregation::Aggregate.average(c, nil, result[key], counts[key], value)
 
-        Metric::Rollup.rollup_min(c, result[key], perf.send(c))
-        Metric::Rollup.rollup_max(c, result[key], perf.send(c))
+        Metric::Rollup.rollup_min(c, result[key], value)
+        Metric::Rollup.rollup_max(c, result[key], value)
       end
       if rtype == 'VmOrTemplate' && perf.min_max.kind_of?(Hash)
         result[key][:min_max] ||= {}
