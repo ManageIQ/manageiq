@@ -1715,7 +1715,9 @@ module VmCommon
               :record_id  => @edit[:rec_id],
             }
           ])
-        elsif @sb[:action] == 'live_migrate'
+        # these subviews use angular, so they need to use a special partial
+        # so the form buttons on the outer frame can be updated.
+        elsif %(attach detach live_migrate).include?(@sb[:action])
           presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
