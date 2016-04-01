@@ -1,31 +1,35 @@
 module ManageIQ::Providers::Azure::EventCatcherMixin
   def parse_event_type(event)
-    event_name = event["eventName"]["value"]
-    event_type = ""
+    event_name   = event["eventName"]["value"]
+    event_action = event.fetch_path("authorization", "action")
+    event_type   = parse_event_action(event_action) if event_action
 
-    unless event["authorization"].nil? || event["authorization"]["action"].nil?
-      event_type = parse_event_action(event)
-    end
     "#{event_type}#{event_name}"
   end
 
-  def parse_event_action(event)
-    action = event["authorization"]["action"].split("/")
-    "#{action[1]}_#{action[2]}_"
+  def parse_event_action(event_action)
+    # E.g. Microsoft.Compute/virtualMachines/deallocate/action
+
+    _provider, object_class, event_type, _action = event_action.split("/")
+    "#{object_class}_#{event_type}_"
   end
 
   def parse_vm_ref(event)
-    resource_id = event["resourceId"].downcase.split("/")
-    return nil if resource_id.length < 9
-    join(
-      resource_id[2],
-      resource_id[4],
-      resource_id[6] + "\/" + resource_id[7],
-      resource_id[8]
-    )
-  end
+    # E.g. /subscriptions/123456789-a1234-12b4-1234-5cd67890312/resourceGroups/
+    # rg_name/providers/Microsoft.Compute/virtualMachines/vm_name
 
-  def join(*keys)
-    keys.join('\\')
+    return nil if event["resourceId"].length < 9
+
+    _empty_space,
+    _subscriptions,
+    subscription_id,
+    _resource_groups,
+    resource_group,
+    _providers,
+    provider,
+    object_class,
+    object_name = event["resourceId"].downcase.split("/")
+
+    [subscription_id, resource_group, "#{provider}\/#{object_class}", object_name].join("\\")
   end
 end

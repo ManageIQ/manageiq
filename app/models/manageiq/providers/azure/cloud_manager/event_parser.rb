@@ -12,7 +12,7 @@ module ManageIQ::Providers::Azure::CloudManager::EventParser
       :message    => event["description"].blank? ? nil : event["description"],
       :ems_id     => ems_id,
       :event_type => event_type,
-      :full_data  => {:vm => {:uid_ems => parse_vm_ref(event)}},
+      :full_data  => event
     }
   end
 end

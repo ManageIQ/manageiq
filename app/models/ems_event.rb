@@ -80,12 +80,12 @@ class EmsEvent < EventStream
     add(ems_id, ManageIQ::Providers::Openstack::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
-  def self.add_azure(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Azure::CloudManager::EventParser.event_to_hash(event, ems_id))
-  end
-
   def self.add_kubernetes(ems_id, event)
     add(ems_id, ManageIQ::Providers::Kubernetes::ContainerManager::EventParser.event_to_hash(event, ems_id))
+  end
+
+  def self.add_azure(ems_id, event)
+    add(ems_id, ManageIQ::Providers::Azure::CloudManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_google(ems_id, event)

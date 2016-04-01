@@ -14,18 +14,6 @@ describe ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner do
       allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
     end
 
-    describe "filter events" do
-      it "filter" do
-        event["eventName"]["value"] = "BeginRequest"
-        expect(catcher.filtered?(event)).to be true
-      end
-
-      it "do not filter" do
-        event["eventName"]["value"] = "EndRequest"
-        expect(catcher.filtered?(event)).to be false
-      end
-    end
-
     describe "parse properties" do
       it "event type" do
         expect(catcher.parse_event_type(event)).to eq "virtualMachines_deallocate_EndRequest"

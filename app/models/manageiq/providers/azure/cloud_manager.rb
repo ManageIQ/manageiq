@@ -30,6 +30,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   def self.default_blacklisted_event_names
     %w(
+      storageAccounts_listKeys_BeginRequest
       storageAccounts_listKeys_EndRequest
     )
   end

@@ -22,30 +22,38 @@ class ManageIQ::Providers::Azure::CloudManager::EventCatcher::Stream
 
   def each_batch
     while @collecting_events
-
-      # Grab only events for the last minute if this is the first poll
-      startup_interval = (Time.current - 1.minute).httpdate
-      filter = @since ? "eventTimestamp ge #{@since}" : "eventTimestamp ge #{startup_interval}"
-      events = connection.list(:filter => filter, :all => true).sort_by(&:event_timestamp)
-
-      # HACK: the Azure Insights API does not support the 'gt' (greater than relational operator)
-      # therefore we have to poll from 1 millisecond past the timestamp of the last event to avoid
-      # gathering the same event more than once.
-      @since = one_ms_from_last_timestamp(events) unless events.empty?
-      yield events.collect { |e| JSON.parse(e) }
+      yield get_events.collect { |e| JSON.parse(e) }
     end
+  end
+
+  private
+
+  def get_events
+    # Grab only events for the last minute if this is the first poll
+    filter = @since ? "eventTimestamp ge #{@since}" : "eventTimestamp ge #{startup_interval}"
+    events = connection.list(:filter => filter, :all => true).sort_by(&:event_timestamp)
+
+    # HACK: the Azure Insights API does not support the 'gt' (greater than relational operator)
+    # therefore we have to poll from 1 millisecond past the timestamp of the last event to avoid
+    # gathering the same event more than once.
+    @since = one_ms_from_last_timestamp(events) unless events.empty?
+    events
+  end
+
+  def startup_interval
+    (Time.current - 1.minute).httpdate
   end
 
   def one_ms_from_last_timestamp(events)
     time = Time.at(one_ms_from_last_timestamp_as_f(events)).utc
-    print_timestamp(time)
+    format_timestamp(time)
   end
 
   def one_ms_from_last_timestamp_as_f(events)
     Time.zone.parse(events.last.event_timestamp).to_f + 0.001
   end
 
-  def print_timestamp(time)
+  def format_timestamp(time)
     time.strftime('%Y-%m-%dT%H:%M:%S.%L')
   end
 
