@@ -1055,12 +1055,13 @@ module ManageIQ::Providers
           child_mors = get_mors(data, 'childEntity')
 
           new_result = {
-            :type          => EmsFolder.name,
-            :ems_ref       => mor,
-            :ems_ref_obj   => mor,
-            :uid_ems       => mor,
-            :name          => data["name"],
-            :child_uids    => child_mors
+            :type        => EmsFolder.name,
+            :ems_ref     => mor,
+            :ems_ref_obj => mor,
+            :uid_ems     => mor,
+            :name        => data["name"],
+            :child_uids  => child_mors,
+            :hidden      => false
           }
           result << new_result
           result_uids[mor] = new_result
@@ -1077,12 +1078,13 @@ module ManageIQ::Providers
           child_mors = get_mors(data, 'hostFolder') + get_mors(data, 'vmFolder') + get_mors(data, 'datastoreFolder')
 
           new_result = {
-            :type          => Datacenter.name,
-            :ems_ref       => mor,
-            :ems_ref_obj   => mor,
-            :uid_ems       => mor,
-            :name          => data["name"],
-            :child_uids    => child_mors
+            :type        => Datacenter.name,
+            :ems_ref     => mor,
+            :ems_ref_obj => mor,
+            :uid_ems     => mor,
+            :name        => data["name"],
+            :child_uids  => child_mors,
+            :hidden      => false
           }
           result << new_result
           result_uids[mor] = new_result
@@ -1100,12 +1102,13 @@ module ManageIQ::Providers
           name       = data.fetch_path('summary', 'name')
 
           new_result = {
-            :type          => StorageCluster.name,
-            :ems_ref       => mor,
-            :ems_ref_obj   => mor,
-            :uid_ems       => mor,
-            :name          => name,
-            :child_uids    => child_mors
+            :type        => StorageCluster.name,
+            :ems_ref     => mor,
+            :ems_ref_obj => mor,
+            :uid_ems     => mor,
+            :name        => name,
+            :child_uids  => child_mors,
+            :hidden      => false
           }
 
           result << new_result
@@ -1287,9 +1290,6 @@ module ManageIQ::Providers
             f[:hidden] = true
           end
         end
-
-        # Set all other folders to be not hidden
-        data[:folders].each { |f| f[:hidden] = false unless f[:hidden] }
       end
 
       def self.set_default_rps(data)
