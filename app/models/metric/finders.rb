@@ -24,12 +24,6 @@ module Metric::Finders
     return [] if resource.blank?
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    cond = Metric::Helper.range_to_condition(start_time, end_time)
-    if interval_name != "realtime"
-      cond[0] << " AND capture_interval_name = ?"
-      cond << interval_name
-    end
-
     if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
       scope = resource.send(meth)
     else
@@ -44,7 +38,8 @@ module Metric::Finders
       end
       scope = klass.where([res_cond.join(' OR ')] + res_params)
     end
-    scope.where(cond)
+    scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
+    scope.where(Metric::Helper.range_to_condition(start_time, end_time))
   end
 
   #
