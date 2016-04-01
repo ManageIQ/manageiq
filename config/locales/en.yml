@@ -745,6 +745,14 @@ en:
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
       ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
       ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
+      ManageIQ::Providers::Amazon::CloudManager::SecurityGroup:             Security Group (Amazon)
+      ManageIQ::Providers::Google::CloudManager::SecurityGroup:             Security Group (Google)
+      ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:        Security Group (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::SecurityGroup:              Security Group (Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:           Floating IP (OpenStack)
+      ManageIQ::Providers::Amazon::CloudManager::FloatingIp:                Floating IP (Amazon)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:          Cloud Subnet (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:        Network Router (OpenStack)
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
       MiqAction:                Action
