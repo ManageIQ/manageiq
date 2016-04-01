@@ -88,3 +88,13 @@ graph:
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
 dims: 
+
+col_formats:
+-
+-
+- :model_name
+-
+-
+-
+-
+-
