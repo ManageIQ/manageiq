@@ -2,6 +2,7 @@ class VimPerformanceDaily < MetricRollup
   def self.instances_are_derived?; true; end
 
   INFO_COLS = [:resource_type, :resource_id, :resource_name]
+  PARENT_COLS = [:parent_host_id, :parent_ems_cluster_id, :parent_storage_id, :parent_ems_id].freeze
 
   def self.find(cnt, *args)
     raise _("Unsupported finder value %{number}") % {:number => cnt} unless cnt == :all
@@ -58,7 +59,7 @@ class VimPerformanceDaily < MetricRollup
         next
       end
 
-      (Metric::Rollup::ROLLUP_COLS & (only_cols || Metric::Rollup::ROLLUP_COLS)).each do |c|
+      relevant_cols(Metric::Rollup::ROLLUP_COLS, only_cols).each do |c|
         result[key][c] ||= 0
         counts[key][c] ||= 0
         value = perf.send(c)
@@ -74,7 +75,8 @@ class VimPerformanceDaily < MetricRollup
       end
       if rtype == 'VmOrTemplate' && perf.min_max.kind_of?(Hash)
         result[key][:min_max] ||= {}
-        (Metric::Rollup::BURST_COLS & (only_cols || Metric::Rollup::BURST_COLS)).each do |c|
+
+        relevant_cols(Metric::Rollup::BURST_COLS, only_cols).each do |c|
           Metric::Rollup::BURST_TYPES.each do |type|
             ts_key, val_key = Metric::Rollup.burst_col_names(type, c)
             # check the hourly row's min_max column's value for a key such as: "abs_min_mem_usage_absolute_average_value"
@@ -86,9 +88,9 @@ class VimPerformanceDaily < MetricRollup
       Metric::Rollup.rollup_assoc(:assoc_ids, result[key], perf.assoc_ids) if only_cols.nil? || only_cols.include?(:assoc_ids)
       Metric::Rollup.rollup_tags(:tag_names, result[key], perf.tag_names)  if only_cols.nil? || only_cols.include?(:tag_names)
 
-      [:parent_host_id, :parent_ems_cluster_id, :parent_storage_id, :parent_ems_id].each do |c|
+      relevant_cols(PARENT_COLS, only_cols).each do |c|
         val = perf.send(c)
-        result[key][c] = val if val && (only_cols.nil? || only_cols.include?(c))
+        result[key][c] = val if val
       end
 
       (options[:reflections] || []).each do |assoc|
@@ -138,6 +140,10 @@ class VimPerformanceDaily < MetricRollup
     end
 
     results
+  end
+
+  def self.relevant_cols(cols, only_cols)
+    only_cols ? (cols & only_cols) : cols
   end
 
   def self.process_only_cols(recs)
