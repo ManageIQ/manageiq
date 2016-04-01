@@ -24,11 +24,8 @@
           "data-method"         => :post,
           'data-click_url'      => {:url => "#{url}"}.to_json}
           %i.fa.fa-save.fa-lg
-      %td
-        = text_field("entry", "name",
-          :maxlength => MAX_NAME_LEN,
-          "value"    => entry.name,
-          :style     => "width: 100%;")
+      %td{:style => "cursor:default"}
+        = entry.name
       %td
         = text_field("entry", "description",
           :maxlength => MAX_DESC_LEN,
@@ -40,7 +37,7 @@
       %td
         %button.btn.btn-default
           %i.fa.fa-plus.fa-lg
-      %td
+      %td{:style => "min-width: 100px"}
         = _("<New Entry>")
       %td= _("<Click on this row to create a new entry>")
   - else
@@ -51,7 +48,7 @@
                                            :confirm => _("Deleting the '%s' entry will also unassign it from all items, are you sure?") % entry.name),
                                            :title => _("Click to delete this entry")}
           %i.fa.fa-minus.fa-lg
-      %td{:onclick => remote_function(:url => {:action => 'ce_select', :id => entry.id, :field => "name"}), :title => _("Click to update this entry")}
+      %td{:style => "cursor: default"}
         = entry.name
       %td{:onclick => remote_function(:url => {:action => 'ce_select', :id => entry.id, :field => "description"}), :title => _("Click to update this entry")}
         = entry.description
