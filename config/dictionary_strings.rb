@@ -1453,6 +1453,10 @@ _("Templates")
 _("Middleware Manager")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager (plural form)
 _("Middleware Managers")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::NetworkManager
+_("Network Manager")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::NetworkManager (plural form)
+_("Network Managers")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager
 _("Infrastructure Provider (Openstack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager (plural form)
@@ -1473,6 +1477,10 @@ _("Infrastructure Providers (Vmware)")
 _("Cloud Provider (Openstack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager (plural form)
 _("Cloud Providers (Openstack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager
+_("Network Provider (Openstack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager (plural form)
+_("Network Providers (Openstack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager
 _("Cloud Provider (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager (plural form)
@@ -1489,6 +1497,10 @@ _("Container Providers (Atomic)")
 _("Container Provider (Kubernetes)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Kubernetes::ContainerManager (plural form)
 _("Container Providers (Kubernetes)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup
+_("Pod (Kubernetes)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup (plural form)
+_("Pods (Kubernetes)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager
 _("Container Provider (Openshift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager (plural form)
@@ -1801,6 +1813,10 @@ _("Cloud Volumes Based on Snapshots")
 _("CD/DVD Drives")
 # TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
 _("Base Extents")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_network
+_("Cloud Network")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_network (plural form)
+_("Cloud Networks")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_tenants
 _("Cloud Tenants")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volume
@@ -1951,6 +1967,10 @@ _("Middleware Providers")
 _("EVM Server")
 # TRANSLATORS: en.yml key: dictionary.table.evm_server (plural form)
 _("EVM Servers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_network
+_("Network Provider")
+# TRANSLATORS: en.yml key: dictionary.table.ems_network (plural form)
+_("Network Providers")
 # TRANSLATORS: en.yml key: dictionary.table.middleware_server
 _("Middleware Server")
 # TRANSLATORS: en.yml key: dictionary.table.middleware_server (plural form)
