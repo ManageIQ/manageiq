@@ -339,10 +339,9 @@ describe MiqExpression do
   end
 
   describe ".to_ruby" do
-    # Based on FogBugz 6181: something INCLUDES []
     it "detects value empty array" do
-      exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "/[]/"})
-      expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\/\\[\\]\\//")
+      exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "[]"})
+      expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\[\\]/")
     end
 
     it "raises error if expression contains ruby script" do
