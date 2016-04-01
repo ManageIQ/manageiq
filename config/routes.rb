@@ -2168,12 +2168,10 @@ Vmdb::Application.routes.draw do
     :service                  => {
       :get  => %w(
         download_data
-        edit
         explorer
         retirement_info
         reconfigure_form_fields
         retire
-        show
       ),
       :post => %w(
         button
@@ -2671,7 +2669,7 @@ Vmdb::Application.routes.draw do
 
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
-    unless [:ems_cloud, :ems_infra, :ems_container].include?(controller_name)
+    unless [:ems_cloud, :ems_infra, :ems_container, :service].include?(controller_name)
       match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
     end
 
@@ -2704,6 +2702,7 @@ Vmdb::Application.routes.draw do
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
+  resources :service, :as => :services
 
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 

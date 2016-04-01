@@ -6,7 +6,7 @@ ManageIQ.angular.app.config([ '$httpProvider', '$stateProvider', '$urlRouterProv
    */
   $stateProvider
     .state('edit', {
-      url: '/service/edit/:service_id',
+      url: '/service/:service_id/edit',
       templateUrl: 'service/edit.html',
       controller: 'serviceFormController',
       resolve: {

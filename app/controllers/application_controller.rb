@@ -1672,6 +1672,8 @@ class ApplicationController < ActionController::Base
         javascript_redirect edit_ems_infra_path(params[:id])
       elsif params[:pressed] == "ems_container_edit" && params[:id]
         javascript_redirect edit_ems_container_path(params[:id])
+      elsif params[:pressed] == "service_edit" && (params[:id] || @redirect_id)
+        javascript_redirect edit_service_path(params[:id] || @redirect_id)
       else
         javascript_redirect :action => @refresh_partial, :id => @redirect_id
       end
