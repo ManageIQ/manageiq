@@ -1,4 +1,4 @@
-%form#form_div{:name => "angularForm", 'ng-controller' => "vmCloudFormController"}
+%form#form_div{:name => "angularForm", 'ng-controller' => "vmCloudAttachFormController"}
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Attach Volume')
@@ -24,24 +24,10 @@
                             :miqrequired   => false,
                             :checkchange   => true}
 
-  %table{:width => '100%'}
-    %tr
-      %td{:align => 'right'}
-        #buttons_on
-          = button_tag("Attach",
-                       :class        => "btn btn-primary",
-                       "ng-click"    => "attachClicked()",
-                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                       "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
-          = button_tag("Reset",
-                       :class        => "btn btn-primary",
-                       "ng-click"    => "resetClicked()",
-                       "ng-disabled" => "angularForm.$pristine",
-                       "ng-class"    => "{'btn-disabled': angularForm.$pristine}")
-          = button_tag("Cancel",
-                        :class     => "btn btn-default",
-                        "ng-click" => "cancelAttachClicked()")
+  %div_for_paging{'ng-controller'                    => "pagingDivButtonGroupController",
+                  'paging_div_buttons_id'            => "angular_paging_div_buttons",
+                  'paging_div_buttons_type'          => "Submit"}
 
 :javascript
-  ManageIQ.angular.app.value('vmCloudFormId', '#{@vm.id}');
+  ManageIQ.angular.app.value('vmCloudAttachFormId', '#{@vm.id}');
   miq_bootstrap('#form_div');

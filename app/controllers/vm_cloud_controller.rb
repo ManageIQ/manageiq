@@ -274,7 +274,7 @@ class VmCloudController < ApplicationController
     @vm = find_by_id_filtered(VmCloud, params[:id])
     case params[:button]
     when "cancel"
-      cancel_action(_("Detaching a %{volume} from {instance_model} \"%{instance_name}\" was cancelled by the user") % {
+      cancel_action(_("Detaching a %{volume} from %{instance_model} \"%{instance_name}\" was cancelled by the user") % {
         :volume         => ui_lookup(:table => 'cloud_volume'),
         :instance_model => ui_lookup(:table => 'vm_cloud'),
         :instance_name  => @vm.name
