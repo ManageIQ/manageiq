@@ -1,6 +1,7 @@
 class VmdbDatabaseConnection < ApplicationRecord
   self.table_name = 'pg_stat_activity'
-  self.primary_key = nil
+  # a little wierd since the self.pid != self["pid"] ( self.spid == self["pid"])
+  self.primary_key = 'pid'
 
   has_many :vmdb_database_locks, :primary_key => 'pid', :foreign_key => 'pid'
 
@@ -25,8 +26,6 @@ class VmdbDatabaseConnection < ApplicationRecord
 
   virtual_column :pid, :type => :integer
   virtual_column :blocked_by, :type => :integer
-
-  attr_reader :vmdb_database_id
 
   def self.sortable?
     false

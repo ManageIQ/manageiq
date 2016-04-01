@@ -506,9 +506,7 @@ module Rbac
   end
 
   def self.method_with_scope(ar_scope, options)
-    if ar_scope == VmdbDatabaseConnection
-      ar_scope.all
-    elsif ar_scope < ActsAsArModel || (ar_scope.respond_to?(:instances_are_derived?) && ar_scope.instances_are_derived?)
+    if ar_scope < ActsAsArModel || (ar_scope.respond_to?(:instances_are_derived?) && ar_scope.instances_are_derived?)
       ar_scope.all(options)
     else
       ar_scope.apply_legacy_finder_options(options)
