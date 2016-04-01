@@ -52,15 +52,15 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
 
     it "adds newly excluded tables with datatype of keys as string " do
       empty_settings = {
-          "workers" => {
-              "worker_base" => {
-                  :replication_worker => {
-                      :replication => {
-                          :exclude_tables => []
-                      }
-                  }
+        "workers" => {
+          "worker_base" => {
+            :replication_worker => {
+              :replication => {
+                :exclude_tables => []
               }
+            }
           }
+        }
       }
       config = conf_stub.create!(:typ => "vmdb", :settings => empty_settings)
 
@@ -71,6 +71,5 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
       expect(excludes).to include(event_def_stub.table_name)
       expect(excludes).to include(scan_item_stub.table_name)
     end
-
   end
 end
