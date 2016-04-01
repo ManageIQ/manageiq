@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - rel4:
-      value: "/System/event_handlers/event_action_refresh?target=ems "
+      value: "/System/event_handlers/event_action_refresh?target=ems"
   - rel5:
       value: "/System/event_handlers/event_action_policy?target=src_vm&policy_event=vm_reset&param="
