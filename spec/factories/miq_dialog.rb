@@ -43,8 +43,8 @@ FactoryGirl.define do
     dialog_type "MiqProvisionWorkflow"
 
     content do
-      YAML.load_file Rails.root.join("product", "dialogs", "miq_dialogs",
-                                     "miq_provision_amazon_dialogs_template.yaml")
+      path = Rails.root.join("product", "dialogs", "miq_dialogs", "miq_provision_amazon_dialogs_template.yaml")
+      YAML.load_file(path)[:content]
     end
   end
 end

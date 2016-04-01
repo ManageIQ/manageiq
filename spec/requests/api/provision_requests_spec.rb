@@ -96,22 +96,36 @@ describe ApiController do
   end
 
   context "AWS advanced provision requests" do
-    let(:aws_dialog)     { FactoryGirl.create(:miq_dialog_aws_provision) }
-    let(:ems)            { FactoryGirl.create(:ems_amazon_with_authentication) }
+    let(:aws_dialog) do
+      dialog = FactoryGirl.create(:miq_dialog_aws_provision)
+      allow_any_instance_of(MiqRequestWorkflow).to receive(:dialog_name_from_automate).and_return(dialog.name)
+    end
+    let(:ems) { FactoryGirl.create(:ems_amazon_with_authentication) }
     let(:template) do
       FactoryGirl.create(:template_amazon, :name => "template1", :ext_management_system => ems)
     end
     let(:flavor) do
       FactoryGirl.create(:flavor_amazon, :ems_id => ems.id, :name => 't2.small', :cloud_subnet_required => true)
     end
-    let(:az)             { FactoryGirl.create(:availability_zone_amazon) }
+    let(:az)             { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
     let(:cloud_network1) { FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true) }
-    let(:cloud_subnet1)  { FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network1.id) }
+    let(:cloud_subnet1) do
+      FactoryGirl.create(:cloud_subnet, :ems_id => ems.id, :cloud_network => cloud_network1, :availability_zone => az)
+    end
+    let(:security_group1) do
+      FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems,
+                         :cloud_network => cloud_network1)
+    end
+    let(:floating_ip1) { FactoryGirl.create(:floating_ip, :cloud_network_only => true, :ext_management_system => ems) }
 
     let(:provreq_body) do
       {
         "template_fields" => {"guid" => template.guid},
-        "requester"       => {"user_name" => api_config(:user)}
+        "requester"       => {
+          "owner_first_name" => "John",
+          "owner_last_name"  => "Doe",
+          "owner_email"      => "user@example.com"
+        }
       }
     end
 
@@ -124,8 +138,8 @@ describe ApiController do
           "placement_availability_zone" => az.id,
           "cloud_network"               => cloud_network1.id,
           "cloud_subnet"                => cloud_subnet1.id,
-          "security_groups"             => 1,
-          "floating_ip_address"         => 1
+          "security_groups"             => security_group1.id,
+          "floating_ip_address"         => floating_ip1.id
         }
       )
     end
@@ -168,32 +182,28 @@ describe ApiController do
     it "supports manual placement" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
-      # dialog  # Create the Provisioning dialog
       aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, provreq1_body)
 
-      # pp @result
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
-      options = @result["results"].first["options"]
-      # pp options
+      options = response_hash["results"].first["options"]
       expect(options["placement_auto"]).to eq([false, 0])
-      expect(options["placement_availability_zone"]).to eq(['xxx'])
-      expect(options["cloud_network"]).to eq(['xxx'])
-      expect(options["cloud_subnet"]).to eq(['xxx'])
-      expect(options["security_groups"]).to eq(['xxx'])
-      expect(options["floating_ip_address"]).to eq(['xxx'])
+      expect(options["placement_availability_zone"].first).to eq(az.id)
+      expect(options["cloud_network"].first).to eq(cloud_network1.id)
+      expect(options["cloud_subnet"].first).to eq(cloud_subnet1.id)
+      expect(options["security_groups"].first).to eq(security_group1.id)
+      expect(options["floating_ip_address"].first).to eq(floating_ip1.id)
 
-      task_id = @result["results"].first["id"]
+      task_id = response_hash["results"].first["id"]
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
     it "does not process manual placement data if placement_auto is not set" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
-      # dialog  # Create the Provisioning dialog
       aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, provreq2_body)
 
@@ -201,18 +211,17 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
-      options = @result["results"].first["options"]
+      options = response_hash["results"].first["options"]
       expect(options["placement_auto"]).to eq([true, 1])
-      expect(options["placement_availability_zone"]).to be_nil
+      expect(options["placement_availability_zone"].first).to eq nil
 
-      task_id = @result["results"].first["id"]
+      task_id = response_hash["results"].first["id"]
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
     it "does not process manual placement data if placement_auto is set to true" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
-      # dialog  # Create the Provisioning dialog
       aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, provreq3_body)
 
@@ -220,11 +229,11 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
-      options = @result["results"].first["options"]
+      options = response_hash["results"].first["options"]
       expect(options["placement_auto"]).to eq([true, 1])
-      expect(options["placement_availability_zone"]).to be_nil
+      expect(options["placement_availability_zone"].first).to eq nil
 
-      task_id = @result["results"].first["id"]
+      task_id = response_hash["results"].first["id"]
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
   end

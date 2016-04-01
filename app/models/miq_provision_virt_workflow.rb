@@ -994,7 +994,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_environment_fields(values, _fields, data)
     # do not parse environment data unless :placement_auto is false
-    if data[:placement_auto].nil? || data[:placement_auto]
+    if data[:placement_auto].to_s != "false"
       values[:placement_auto] = [true, 1]
       return
     end
