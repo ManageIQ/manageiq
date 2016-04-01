@@ -31,7 +31,18 @@ class TreeBuilderAeClass < TreeBuilder
     end
   end
 
-  def x_get_tree_ns_kids(object, count_only)
+  def x_get_tree_ns_kids(object, count_only, type)
+    if type == :automate
+      if object.respond_to?(:ae_namespaces) && filter_ae_objects(object.ae_namespaces).size == 1
+        open_node("aen-#{to_cid(object.id)}")
+        open_node("aen-#{to_cid(object.ae_namespaces.first.id)}")
+      end
+
+      if object.respond_to?(:ae_classes) && filter_ae_objects(object.ae_classes).size == 1
+        open_node("aen-#{to_cid(object.id)}")
+        open_node("aec-#{to_cid(object.ae_classes.first.id)}")
+      end
+    end
     objects = filter_ae_objects(object.ae_namespaces)
     unless MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
       ns_classes = filter_ae_objects(object.ae_classes)
