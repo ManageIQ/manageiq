@@ -8,6 +8,7 @@ module Vmdb
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
 
     def self.init
+      ::Config.overwrite_arrays = true
       reset_settings_constant(for_resource(my_server))
     end
 

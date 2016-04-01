@@ -106,6 +106,18 @@ describe Vmdb::Settings do
       )
     end
 
+    it "with a change to an Array" do
+      array_hash = {:log => {:collection => {:current => {:pattern => ["*.log"]}}}}
+      described_class.save!(miq_server, array_hash)
+
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(
+        :key   => "/log/collection/current/pattern",
+        :value => ["*.log"]
+      )
+    end
+
     it "encrypts password fields" do
       password  = "pa$$word"
       encrypted = MiqPassword.encrypt(password)
@@ -201,5 +213,26 @@ describe Vmdb::Settings do
     let(:expected) { "********" }
 
     include_examples "password handling"
+  end
+
+  describe ".for_resource" do
+    let(:server) { FactoryGirl.create(:miq_server) }
+
+    it "without database changes" do
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.api.token_ttl).to eq "10.minutes"
+    end
+
+    it "with database changes" do
+      server.settings_changes.create!(:key => "/api/token_ttl", :value => "2.minutes")
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.api.token_ttl).to eq "2.minutes"
+    end
+
+    it "with database changes on an Array" do
+      server.settings_changes.create!(:key => "/log/collection/current/pattern", :value => ["*.log"])
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.log.collection.current.pattern).to eq ["*.log"]
+    end
   end
 end
