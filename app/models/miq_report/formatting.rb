@@ -259,4 +259,8 @@ module MiqReport::Formatting
     return val if val.to_f < 1.0e+15
     val.to_f.to_s
   end
+
+  def format_model_name(val, _options = {})
+    ui_lookup(:model => val)
+  end
 end

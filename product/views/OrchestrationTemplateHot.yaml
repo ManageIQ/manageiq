@@ -49,7 +49,7 @@ headers:
 
 col_formats:
 -
--
+- :model_name
 - :boolean_yes_no
 -
 -

@@ -28,4 +28,10 @@ describe MiqReport, "::Formatting" do
         .to eq("Front 123 Bytes Back")
     end
   end
+
+  describe "#format_model_name" do
+    it "finds human readable name for given model" do
+      expect(subject.format_model_name("MiqAction")).to eq("Action")
+    end
+  end
 end

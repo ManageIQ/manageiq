@@ -833,3 +833,10 @@
     :function:
       :name: large_number_to_exponential_form
       :length: 50
+
+  :model_name:
+    :description: Human readable model name
+    :data_types:
+      - :string
+    :function:
+      :name: model_name
