@@ -38,7 +38,7 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_type
-    @record.type
+    ui_lookup(:model => @record.type)
   end
 
   def textual_parent_ems_cloud
