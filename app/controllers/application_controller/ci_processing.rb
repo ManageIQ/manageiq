@@ -996,7 +996,7 @@ module ApplicationController::CiProcessing
     session["#{self.class.session_key_prefix}_display".to_sym] = nil
     @display  = nil
     @lastaction  = "show_list"
-    @gtl_url = "/#{self.class.table_name}/show_list/?"
+    @gtl_url = "/show_list"
 
     model = options.delete(:model) # Get passed in model override
     @view, @pages = get_view(model || self.class.model, options)  # Get the records (into a view) and the paginator
