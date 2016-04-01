@@ -19,7 +19,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
   end
 
   def self.raw_create_stack(template, options = {})
-    template.run(options[:extra_vars] || {})
+    template.run(options)
   rescue => err
     _log.error "Failed to create job from template(#{name}), error: #{err}"
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
