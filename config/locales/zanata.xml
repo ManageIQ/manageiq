@@ -2,7 +2,7 @@
 <config xmlns="http://zanata.org/namespace/config/">
   <url>https://translate.zanata.org/zanata/</url>
   <project>manageiq</project>
-  <project-version>master</project-version>
+  <project-version>d-release</project-version>
   <project-type>gettext</project-type>
   <locales>
     <locale>ja</locale>
