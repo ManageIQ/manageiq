@@ -63,9 +63,6 @@ $(document).ready(function () {
       var el = $(this);
       el.unbind('change')
       el.change(function() {
-        if (parms.auto_refresh === true) {
-          dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-        }
         var data = el.attr('id') + '=';
         if (el.prop('multiple')) {
           data += el.val();
@@ -83,26 +80,31 @@ $(document).ready(function () {
         if (el.attr('data-miq_sparkle_off')) {
           options.complete = true;
         }
-        miqJqueryRequest(url, options);
+        $.when(miqJqueryRequest(url, options)).done(function() {
+          if (parms.auto_refresh === true) {
+            dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+          }
+        });
       });
     } else {
       $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
       var el = $(this);
       el.observe_field(interval, function () {
-        if (parms.auto_refresh === true) {
-          dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-        }
-
+        var attemptAutoRefreshTrigger = function() {
+          if (parms.auto_refresh === true) {
+            dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+          }
+        };
         var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
         if (typeof submit != "undefined") {
           // If submit element passed in
-          miqJqueryRequest(url, {data: miqSerializeForm(submit)});
+          $.when(miqJqueryRequest(url, {data: miqSerializeForm(submit)})).done(attemptAutoRefreshTrigger);
         } else if (oneTrans) {
-          miqSendOneTrans(url);
+          $.when(miqSendOneTrans(url)).done(attemptAutoRefreshTrigger);
         } else {
           // tack on the id and value to the URL
           var urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
-          miqJqueryRequest(urlstring, {no_encoding: true});
+          $.when(miqJqueryRequest(urlstring, {no_encoding: true})).done(attemptAutoRefreshTrigger);
         }
       });
     }
@@ -116,17 +118,17 @@ $(document).ready(function () {
       data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null')
     };
 
-    if (parms.auto_refresh === true) {
-      dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-    }
-
     if (el.attr('data-miq_sparkle_on')) {
       options.beforeSend = true;
     }
     if (el.attr('data-miq_sparkle_off')) {
       options.complete = true;
     }
-    miqJqueryRequest(url, options);
+    $.when(miqJqueryRequest(url, options)).done(function() {
+      if (parms.auto_refresh === true) {
+        dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+      }
+    });
 
     event.stopPropagation();
   });

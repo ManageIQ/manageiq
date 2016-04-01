@@ -12,11 +12,10 @@ var dialogFieldRefresh = {
     if (selectedValue !== undefined) {
       $('#' + fieldName).selectpicker('val', selectedValue);
     }
-    miqSelectPickerEvent(fieldName, url);
-    $('#' + fieldName).on('change', function() {
+    miqSelectPickerEvent(fieldName, url, {callback: function() {
       dialogFieldRefresh.triggerAutoRefresh(fieldId, triggerAutoRefresh || "true");
       return true;
-    });
+    }});
   },
 
   refreshCheckbox: function(fieldName, fieldId) {
@@ -68,7 +67,7 @@ var dialogFieldRefresh = {
 
       if (data.values.checked_value !== null) {
         if (value[0] !== null) {
-          if (data.values.checked_value.toString() === value[0].toString()) {
+          if (data.values.checked_value.toString() === String(value[0])) {
             option.prop('selected', true);
           }
         }
@@ -107,7 +106,7 @@ var dialogFieldRefresh = {
           .addClass('dynamic-radio-label')
           .text(value[1]);
 
-        if (data.values.checked_value === value[0].toString()) {
+        if (data.values.checked_value === String(value[0])) {
           radio.prop('checked', true);
         }
 
