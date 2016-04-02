@@ -717,6 +717,21 @@ class ChargebackController < ApplicationController
     classification.entries.each { |e| @edit[:cb_assign][:tags][e.id.to_s] = e.description } if classification
   end
 
+  def get_sub_tenants(tenant, parent)
+    data_tenant = []
+    tenant.all_subtenants.each do |subtenant|
+      if subtenant.parent_name == tenant.name
+        data_tenant.push(:name => subtenant.name, :id => subtenant.id, :parent => parent)
+        if subtenant.all_subtenants.count > 0
+          data_tenant.concat(get_sub_tenants(subtenant, subtenant.id))
+        end
+      else
+        next
+      end
+    end
+    data_tenant
+  end
+
   WHITELIST_INSTANCE_TYPE = %w(enterprise storage ext_management_system ems_cluster tenant).freeze
   NOTHING_FORM_VALUE = "nil".freeze
 
@@ -733,8 +748,18 @@ class ChargebackController < ApplicationController
       else
         klass.classify.constantize
       end
+    if klass == "tenant"
+      @edit[:cb_assign][:herarchy] = {}
+    end
     classtype.all.each do |instance|
       @edit[:cb_assign][:cis][instance.id] = instance.name
+      if klass == "tenant" && instance.root?
+        @edit[:cb_assign][:herarchy][instance.id] = {}
+        @edit[:cb_assign][:herarchy][instance.id][:name] = instance.name
+        @edit[:cb_assign][:herarchy][instance.id][:subtenant] = get_sub_tenants(instance, instance.id)
+      else
+        next
+      end
     end
   end
 
