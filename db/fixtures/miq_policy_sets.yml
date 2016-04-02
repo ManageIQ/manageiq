@@ -1,0 +1,6 @@
+---
+- :name: 747a70d0-a8bf-4b63-bdad-1676bc0c5356
+  :description: Container Image default profile
+  :guid: 747a70d0-a8bf-4b63-bdad-1676bc0c5356
+  :miq_policies:
+    - c5ceab70-da38-11e5-9cae-0242782a2608

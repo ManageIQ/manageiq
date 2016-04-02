@@ -78,6 +78,29 @@ describe MiqPolicy do
         expect(miq_policy.mode).to eq("compliance")
       end
     end
+
+    context "loads seed" do
+      it "should contain miq policies" do
+        Condition.seed
+        MiqPolicy.seed
+        specifications = YAML.load_file(File.join(ApplicationRecord::FIXTURE_DIR, "#{MiqPolicy.table_name}.yml"))
+        specifications.reverse!
+        MiqPolicy.all.each do |policy|
+          spec = specifications.pop
+          conditions = policy.conditions
+          expect(policy).to have_attributes(spec.except(:expression, :conditions))
+
+          if policy.expression.nil?
+            expect(spec[:expression]).to be_nil
+          else
+            expect(policy.expression.exp).to eq(spec[:expression].exp)
+          end
+          conditions.each_with_index do |condition, index|
+            expect(condition).to eq(Condition.find_by_guid(spec[:conditions][index]))
+          end
+        end
+      end
+    end
   end
 
   context "instance methods" do

@@ -1,0 +1,24 @@
+---
+- :name: b0868f00-f525-11e5-9643-0242a1565ed5
+  :description: Does not have cve failures with high severity
+  :modifier: allow
+  :expression: !ruby/object:MiqExpression
+       exp:
+         FIND:
+           search:
+             =:
+               field: ContainerImage.openscap_result.openscap_rule_results-result
+               value: fail
+           checkall:
+             REGULAR EXPRESSION DOES NOT MATCH:
+               field: ContainerImage.openscap_result.openscap_rule_results-severity
+               value: High
+       context_type:
+  :towhat: ContainerImage
+  :file_mtime:
+  :created_on:
+  :updated_on:
+  :guid: b0868f00-f525-11e5-9643-0242a1565ed5
+  :filename:
+  :applies_to_exp:
+  :notes:

@@ -1,4 +1,22 @@
 describe Condition do
+  context ".seed" do
+    it "should contain conditions" do
+      Condition.seed
+      specifications = YAML.load_file(File.join(ApplicationRecord::FIXTURE_DIR, "#{Condition.table_name}.yml"))
+      specifications.reverse!
+      Condition.all.each do |condition|
+        spec = specifications.pop
+        expect(condition).to have_attributes(spec.except(:expression, :created_on, :updated_on))
+
+        if condition.expression.nil?
+          expect(spec[:expression]).to be_nil
+        else
+          expect(condition.expression.exp).to eq(spec[:expression].exp)
+        end
+      end
+    end
+  end
+
   describe ".subst" do
     context "expression with <find>" do
       before do

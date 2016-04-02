@@ -1,0 +1,25 @@
+---
+- :miq_policy_guid: c5ceab70-da38-11e5-9cae-0242782a2608
+  :miq_action_name: container_image_analyze
+  :miq_event_definition_name: containerimage_created
+  :qualifier: failure
+  :success_sequence:
+  :failure_sequence: 1
+  :success_synchronous:
+  :failure_synchronous:
+- :miq_policy_guid: de0650f6-2412-4bea-b272-85ae7c9f61f3
+  :miq_action_name: container_image_prevent
+  :miq_event_definition_name: containerimage_scan_complete
+  :qualifier: failure
+  :success_sequence:
+  :failure_sequence: 1
+  :success_synchronous:
+  :failure_synchronous:
+- :miq_policy_guid: de0650f6-2412-4bea-b272-85ae7c9f61f3
+  :miq_action_name: compliance_failed
+  :miq_event_definition_name: containerimage_scan_complete
+  :qualifier: failure
+  :success_sequence:
+  :failure_sequence: 2
+  :success_synchronous:
+  :failure_synchronous:
