@@ -39,7 +39,7 @@
               %th= _('Rate')
           %tbody
             - @edit[:cb_assign][:herarchy].sort_by! { |a| a.first }.each do |id, data|
-              %tr{:'id' => 'tenant_' + id.to_s, :'class' => 'collapsed'}
+              %tr{:id => "tenant_#{id}", :class => 'collapsed'}
                 %td.treegrid-node
                   = h(data[:name])
                 %td
@@ -51,7 +51,7 @@
                   miqInitSelectPicker();
                   miqSelectPickerEvent("#{@edit[:new][:cbshow_typ]}__#{id}", "#{url}")
               - data[:subtenant].each do |tenant|
-                %tr{:'id' => 'tenant_' + tenant[:id].to_s , :'data-parent' => '#tenant_' + tenant[:parent].to_s}
+                %tr{:id => "tenant_#{tenant[:id]}", :'data-parent' => "#tenant_#{tenant[:parent]}"}
                   %td.treegrid-node
                     = h(tenant[:name])
                   %td
