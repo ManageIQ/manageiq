@@ -192,7 +192,7 @@ module ManageIQ::Providers
         ret = []
 
         name            = fw.name
-        source_ip_range = fw.source_ranges.first
+        source_ip_range = fw.source_ranges.nil? ? "0.0.0.0/0" : fw.source_ranges.first
 
         fw.allowed.each do |fw_allowed|
           protocol      = fw_allowed["IPProtocol"].upcase
