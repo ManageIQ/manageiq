@@ -1,5 +1,7 @@
 class Condition < ApplicationRecord
   include UuidMixin
+  include SeedingMixin
+
   before_validation :default_name_to_guid, :on => :create
 
   validates_presence_of     :name, :description, :guid, :modifier, :expression, :towhat
@@ -31,6 +33,10 @@ class Condition < ApplicationRecord
 
   def self.conditions
     pluck(:expression)
+  end
+
+  def self.seed
+    seed_model(self)
   end
 
   def self.evaluate(cond, rec, inputs = {}, attr = :expression)

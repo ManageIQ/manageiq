@@ -1,6 +1,8 @@
 class MiqPolicySet < ApplicationRecord
   acts_as_miq_set
 
+  include SeedingMixin
+
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :destroy_policy_tags
 
@@ -116,6 +118,10 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.seed
+    seed_model(
+      self, :has_many => [:miq_policies, -> (policy_set, policy) { policy_set.add_member(policy) }]
+    )
+
     all.each do |ps|
       if ps.mode.nil?
         _log.info("Updating [#{ps.name}]")

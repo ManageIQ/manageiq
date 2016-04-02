@@ -1,7 +1,24 @@
 class MiqPolicyContent < ApplicationRecord
+  include SeedingMixin
+
   belongs_to :miq_policy
   belongs_to :miq_event_definition
   belongs_to :miq_action
+
+  def self.search_filter_from_hash(hash)
+    {
+      :miq_policy           => MiqPolicy.find_by_guid(hash.delete(:miq_policy_guid)),
+      :miq_action           => MiqAction.find_by_name(hash.delete(:miq_action_name)),
+      :miq_event_definition => MiqEventDefinition.find_by_name(hash.delete(:miq_event_definition_name))
+    }
+  end
+
+  def self.seed
+    seed_model(
+      self,
+      :find_by => method(:search_filter_from_hash)
+    )
+  end
 
   def get_action(qualifier = nil)
     action = miq_action

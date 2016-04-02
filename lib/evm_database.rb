@@ -16,6 +16,12 @@ class EvmDatabase
     MiqReport
     RssFeed
     MiqWidget
+    MiqAction
+    MiqEventDefinition
+    Condition
+    MiqPolicy
+    MiqPolicyContent
+    MiqPolicySet
     VmdbDatabase
   )
 

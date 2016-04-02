@@ -5,6 +5,7 @@ class MiqPolicy < ApplicationRecord
   acts_as_miq_set_member
   include_concern 'ImportExport'
   include ReportableMixin
+  include SeedingMixin
 
   include UuidMixin
   include YAMLImportExportMixin
@@ -356,6 +357,11 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.seed
+    seed_model(
+      self,
+      :has_many => [:conditions, -> (policy, condition) { policy.conditions << condition }]
+    )
+
     all.each do |p|
       attrs = {}
       attrs[:towhat] = "Vm"      if p.towhat.nil?
