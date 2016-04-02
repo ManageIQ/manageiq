@@ -92,10 +92,6 @@ module Vmdb
     config.logger = Vmdb.rails_logger
     config.colorize_logging = false
 
-    initializer :prepare_productization, :after => :append_asset_paths do
-      Vmdb::Productization.new.prepare
-    end
-
     config.before_initialize do
       require_relative 'environments/patches/database_configuration'
 
@@ -106,9 +102,16 @@ module Vmdb
       require 'vmdb_helper'
     end
 
+    # Note: If an initializer doesn't have an after, Rails will add one based
+    # on the top to bottom order of initializer calls in the file.
+    # Because this is easy to mess up, keep your initializers in order.
     initializer :load_vmdb_settings, :before => :load_config_initializers do
       Vmdb::Settings.init
       Vmdb::Loggers.apply_config(::Settings.log)
+    end
+
+    initializer :prepare_productization, :after => :append_asset_paths do
+      Vmdb::Productization.new.prepare
     end
 
     config.after_initialize do
