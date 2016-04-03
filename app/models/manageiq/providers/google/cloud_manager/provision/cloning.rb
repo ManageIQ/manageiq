@@ -10,11 +10,13 @@ module ManageIQ::Providers::Google::CloudManager::Provision::Cloning
 
   def create_disk
     source.with_provider_connection do |google|
-      return google.disks.create(
+      disk = google.disks.create(
         :name         => dest_name,
         :size_gb      => get_option(:boot_disk_size).to_i,
         :zone_name    => dest_availability_zone.ems_ref,
         :source_image => source.name)
+      disk.wait_for(60) { ready? }
+      return disk
     end
   end
 
