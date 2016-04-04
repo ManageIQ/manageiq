@@ -1,10 +1,10 @@
 describe Metric::Common do
-  before(:each) do
-    host   = FactoryGirl.create(:host)
-    @metric = FactoryGirl.create(:metric_rollup_host_hr,
-                                 :resource  => host,
-                                 :timestamp => Time.now.next_week(:sunday).utc
-                                )
+  let(:host) { FactoryGirl.create(:host) }
+  let(:metric) do
+    FactoryGirl.create(:metric_rollup_host_hr,
+                       :resource  => host,
+                       :timestamp => Time.now.next_week(:sunday).utc
+                      )
   end
 
   describe "#v_month" do
@@ -22,7 +22,7 @@ describe Metric::Common do
                                                     :days  => TimeProfile::ALL_DAYS,
                                                     :hours => TimeProfile::ALL_HOURS}
                                   )
-      res = @metric.apply_time_profile(profile)
+      res = metric.apply_time_profile(profile)
       expect(res).to be_truthy
     end
 
@@ -33,7 +33,7 @@ describe Metric::Common do
                                                     :days  => [1],
                                                     :hours => [1]}
                                   )
-      res = @metric.apply_time_profile(profile)
+      res = metric.apply_time_profile(profile)
       expect(res).to be_falsey
     end
   end
@@ -54,6 +54,34 @@ describe Metric::Common do
       m.cpu_usage_rate_average = cpu_rate
       m.derived_vm_numvcpus = num_vcpus
       expect(m.v_derived_cpu_total_cores_used).to eq(expected)
+    end
+  end
+
+  describe ".for_time_range" do
+    it "returns nothing for nil dates" do
+      FactoryGirl.create(:metric, :timestamp => 5.days.ago)
+      expect(Metric.for_time_range(nil, nil)).to be_empty
+    end
+
+    it "returns a single date' worth" do
+      timestamp = 5.days.ago
+      good = FactoryGirl.create(:metric, :timestamp => timestamp)
+      FactoryGirl.create(:metric, :timestamp => 4.days.ago)
+      FactoryGirl.create(:metric, :timestamp => 6.days.ago)
+      expect(Metric.for_time_range(timestamp, timestamp)).to eq([good])
+    end
+
+    it "returns open ended date" do
+      FactoryGirl.create(:metric, :timestamp => 30.days.ago)
+      good = FactoryGirl.create(:metric, :timestamp => 5.days.ago)
+      expect(Metric.for_time_range(10.days.ago, nil)).to eq([good])
+    end
+
+    it "returns range" do
+      FactoryGirl.create(:metric, :timestamp => 30.days.ago)
+      good = FactoryGirl.create(:metric, :timestamp => 5.days.ago)
+      FactoryGirl.create(:metric, :timestamp => 1.day.ago)
+      expect(Metric.for_time_range(10.days.ago, 3.days.ago)).to eq([good])
     end
   end
 end

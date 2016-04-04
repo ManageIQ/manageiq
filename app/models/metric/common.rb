@@ -165,4 +165,18 @@ module Metric::Common
   def nil_out_values_for_apply_time_profile
     (Metric::Rollup::ROLLUP_COLS + ["assoc_ids", "min_max"]).each { |c| send("#{c}=", nil) }
   end
+
+  class_methods do
+    def for_time_range(start_time, end_time)
+      if start_time.nil?
+        none
+      elsif start_time == end_time
+        where(:timestamp => start_time)
+      elsif end_time.nil?
+        where(arel_table[:timestamp].gteq(start_time))
+      else
+        where(:timestamp => start_time..end_time)
+      end
+    end
+  end
 end
