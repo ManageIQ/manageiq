@@ -10,8 +10,9 @@
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
 
-  = render :partial => "layouts/page_header_navbar"
-  .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
+  = render :partial => "layouts/vertical_navbar"
+
+  .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
     .row.toolbar-pf#toolbar
       .col-md-12
         .toolbar-pf-actions
@@ -66,10 +67,10 @@
           = yield :left
         #custom_left_cell
 - else
-  = render :partial => "layouts/page_header_navbar"
   #center_div{:style => "height: 100%;"}
     - if layout_uses_listnav?
-      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary{:style => "overflow: hidden !important"}
+      = render :partial => "layouts/vertical_navbar"
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height{:style => "overflow: hidden !important"}
         - if !@in_a_form && taskbar_in_header?
           .row.toolbar-pf#toolbar
             .col-md-12
@@ -105,8 +106,8 @@
             = render :partial => "layouts/listnav"
 
     - elsif dashboard_no_listnav?
-      = render :partial => "layouts/page_header_navbar"
-      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary
+      = render :partial => "layouts/vertical_navbar"
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary
         .max-height{:style => "position:relative;z-index: 1 !important"}
           .row.toolbar-pf#toolbar
             .col-md-12
@@ -125,8 +126,8 @@
                 .col-md-12
                   = yield
     - else
-      = render :partial => "layouts/page_header_navbar"
-      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary
+      = render :partial => "layouts/vertical_navbar"
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary
         .col-md-12.max-height
           - if !@in_a_form && taskbar_in_header?
             .row.toolbar-pf#toolbar

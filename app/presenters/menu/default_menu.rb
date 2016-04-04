@@ -184,7 +184,7 @@ module Menu
       end
 
       def optimize_menu_section
-        Menu::Section.new(:opt, N_("Optimize"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:opt, N_("Optimize"), 'fa fa-lightbulb-o fa-2x', [
           Menu::Item.new('miq_capacity_utilization', N_('Utilization'), 'utilization', {:feature => 'utilization'}, '/miq_capacity'),
           Menu::Item.new('miq_capacity_planning',    N_('Planning'),    'planning',    {:feature => 'planning'},    '/miq_capacity/planning'),
           Menu::Item.new('miq_capacity_bottlenecks', N_('Bottlenecks'), 'bottlenecks', {:feature => 'bottlenecks'}, '/miq_capacity/bottlenecks')
@@ -204,6 +204,8 @@ module Menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
         [cloud_inteligence_menu_section, compute_menu_section, configuration_menu_section,
          network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
+        # services_menu_section, clouds_menu_section, infrastructure_menu_section,
+        # container_menu_section, middleware_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
          automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
     end

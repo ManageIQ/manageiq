@@ -1,0 +1,53 @@
+.nav-pf-vertical.nav-pf-vertical-with-tertiary-nav
+  %ul.list-group{:id => "maintab"}
+    - Menu::Manager.menu do |menu_section|
+      - if menu_section.visible?
+        %li.list-group-item.secondary-nav-item-pf{"data-target" => menu_section.name, :class => primary_nav_class(menu_section.id)}
+          %a{:href => menu_section.url, :onclick => 'return miqCheckForChanges()'}
+            %span{:class => menu_section.icon}
+            %span.list-group-item-value
+              = h(_(menu_section.name))
+
+          - if menu_section.subsection?
+            .nav-pf-secondary-nav
+              .nav-item-pf-header
+                %a.secondary-collapse-toggle-pf{:href => "#", "data-toggle" => "collapse-secondary-nav"}
+                %span
+                  = h(_(menu_section.name))
+
+              - menu_section.items.each do |menu_item|
+                - if menu_item.visible?
+                  %ul.list-group
+                    %li.list-group-item.tertiary-nav-item-pf{"data-target" => menu_item.name}
+                      %a{:href => menu_item.url, :onclick => 'return miqcheckforchanges()'}
+                        %span
+                          = _(menu_item.name)
+                      .nav-pf-tertiary-nav
+                        .nav-item-pf-header
+                          %a.tertiary-collapse-toggle-pf{:href => "#", "data-toggle" => "collapse-tertiary-nav"}
+                            %span
+                              = h(_(menu_item.name))
+
+                        %ul.list-group
+                          - menu_item.items.each do |menu_item_deep|
+                            %li.list-group-item
+                              %a{:href => menu_item_deep.url, :onclick => 'return miqcheckforchanges()'}
+                                %span.list-group-item-value
+                                  = _(menu_item_deep.name)
+
+          -else
+            .nav-pf-secondary-nav{:id => menu_section.name}
+              .nav-item-pf-header
+                %a.fa.fa-arrow-circle-o-left{:href => "#", "data-toggle" => "collapse-secondary-nav"}
+                %span
+                  = h(_(menu_section.name))
+              - menu_section.items.each do |menu_item|
+                - if menu_item.visible?
+                  %ul.list-group
+                    %li.list-group-item
+                      %a{:href    => menu_item.url,
+                         :onclick => 'return miqcheckforchanges()'}
+                        %span.list-group-item-value
+                          = _(menu_item.name)
+
+
