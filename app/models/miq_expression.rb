@@ -1128,15 +1128,15 @@ class MiqExpression
 
     ret = []
     if  ops["field"]
-      ret << self.class.get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
-      col_type = self.class.get_col_type(ops["field"]) || "string"
+      ret << get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
+      col_type = get_col_type(ops["field"]) || "string"
       if ["like", "not like", "starts with", "ends with", "includes"].include?(operator)
         ret.push(ops["value"])
       else
-        ret.push(self.class.quote(ops["value"], col_type.to_s, :sql))
+        ret.push(MiqExpression.quote(ops["value"], col_type.to_s, :sql))
       end
     elsif ops["count"]
-      val = self.class.get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last
+      val = get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last
       ret << "count(#{val})" # TODO
       ret.push(ops["value"])
     else
@@ -1361,6 +1361,10 @@ class MiqExpression
     else
       str
     end
+  end
+
+  def get_sqltable(path)
+    MiqExpression.get_sqltable(path)
   end
 
   def self.get_sqltable(path)
@@ -1595,6 +1599,10 @@ class MiqExpression
         [value2human(field_class_path, :include_model => include_model), field_assoc_path]
       end
     end.compact
+  end
+
+  def get_col_type(field)
+    MiqExpression.get_col_type(field)
   end
 
   def self.get_col_type(field)
