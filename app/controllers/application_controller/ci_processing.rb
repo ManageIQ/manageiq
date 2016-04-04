@@ -1118,7 +1118,8 @@ module ApplicationController::CiProcessing
     # if only one vm that supports disk reconfiguration is selected, get the disks information
     vmDisks = []
     @reconfigureitems.first.hardware.disks.each do |disk|
-      vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => disk.size.to_s, :add_remove => ''}
+      dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
+      vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => dsize, :hdUnit => dunit, :add_remove => ''}
     end
 
     { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s, :disks => vmDisks}
@@ -1162,7 +1163,13 @@ module ApplicationController::CiProcessing
       vmDisks = []
       if(@req.options[:disk_add])
         @req.options[:disk_add].values.each do |disk|
-          vmDisks << {:hdFilename => "#{disk[:disk_name]}", :hdType => "#{disk[:disk_type] ? 'thin' : 'thick'}", :hdMode =>"#{disk[:mode] ? 'persistent' : 'nonpersistent'}", :hdSize => disk[:size].to_s, :add_remove => 'add'}
+          adsize, adunit = reconfigure_calculations(disk.size)
+          vmDisks << {:hdFilename => "#{disk[:disk_name]}",
+                      :hdType => "#{disk[:disk_type] ? 'thin' : 'thick'}",
+                      :hdMode =>"#{disk[:mode] ? 'persistent' : 'nonpersistent'}",
+                      :hdSize => adsize.to_s,
+                      :hdUnit => adunit,
+                      :add_remove => 'add'}
         end
       end
 
@@ -1179,7 +1186,14 @@ module ApplicationController::CiProcessing
               end
             end
           end
-          vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => disk.size.to_s, :delete_backing => delbacking, :add_remove => removing}
+          dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
+          vmDisks << {:hdFilename => "#{disk.filename}",
+                      :hdType => "#{disk.disk_type}",
+                      :hdMode =>"#{disk.mode}",
+                      :hdSize => "#{dsize}",
+                      :hdUnit => "#{dunit}",
+                      :delete_backing => delbacking,
+                      :add_remove => removing}
         end
       end
       @reconfig_values[:disks] = vmDisks
