@@ -32,6 +32,35 @@ describe CatalogController do
     end
   end
 
+  context "#atomic_form_field_changed" do
+    before :each do
+      controller.instance_variable_set(:@sb, {})
+      edit = {
+        :key          => "prov_edit__new",
+        :rec_id       => 1,
+        :st_prov_type => "generic",
+        :new          => {
+          :name         => "New Name",
+          :description  => "New Description",
+          :st_prov_type => "generic"
+        }
+      }
+      session[:edit] = edit
+    end
+    # these types do not have tabs on the screen, because we don't show tabs if there is only single tab on screen.
+    it "replaces form_div when generic type catalog item type is being added" do
+      post :atomic_form_field_changed, :params => {:display => "1", :id => "new"}
+      expect(response.body).to include("form_div")
+    end
+
+    # these types already have tabs on the screen so it's only matter of show/hide Details tab for those.
+    it "does not replace form_div when non-generic type catalog item type is being added" do
+      session[:edit][:new][:st_prov_type] = "vmware"
+      post :atomic_form_field_changed, :params => {:display => "1", :id => "new"}
+      expect(response.body).not_to include("form_div")
+    end
+  end
+
   context "#atomic_st_edit" do
     it "Atomic Service Template and it's valid Resource Actions are saved" do
       controller.instance_variable_set(:@sb, {})
