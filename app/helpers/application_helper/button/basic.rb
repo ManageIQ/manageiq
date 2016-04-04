@@ -11,7 +11,7 @@ class ApplicationHelper::Button::Basic < Hash
   end
 
   def calculate_properties
-    self[:enabled] = !disabled?
+    self[:enabled] = !disabled? if self[:enabled].nil?
   end
 
   def skip?
