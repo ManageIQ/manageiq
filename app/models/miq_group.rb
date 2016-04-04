@@ -4,7 +4,7 @@ class MiqGroup < ApplicationRecord
   TENANT_GROUP = "tenant"
 
   belongs_to :tenant
-  has_one    :entitlement
+  has_one    :entitlement,   :autosave => true
   has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
@@ -149,11 +149,6 @@ class MiqGroup < ApplicationRecord
     get_filters("belongsto")
   end
 
-  def set_filters(type, filter)
-    self.filters ||= {}
-    self.filters[type.to_s] = filter
-  end
-
   def self.remove_tag_from_all_managed_filters(tag)
     all.each do |miq_group|
       miq_group.remove_tag_from_managed_filter(tag)
@@ -174,12 +169,16 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def set_managed_filters(filter)
-    set_filters("managed", filter)
+    self.entitlement ||= Entitlement.new
+    entitlement.tag_filters = filter
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def set_belongsto_filters(filter)
-    set_filters("belongsto", filter)
+    self.entitlement ||= Entitlement.new
+    entitlement.resource_filters = filter
   end
 
   def miq_user_role_name
