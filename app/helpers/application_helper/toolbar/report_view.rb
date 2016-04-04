@@ -28,6 +28,7 @@ class ApplicationHelper::Toolbar::ReportView < ApplicationHelper::Toolbar::Basic
       'fa fa-download fa-lg',
       N_('Download'),
       nil,
+      :klass => ApplicationHelper::Button::ReportDownloadChoice,
       :items => [
         button(
           :render_report_txt,
