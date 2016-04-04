@@ -107,5 +107,41 @@ describe ReportController do
         end
       end
     end
+
+    context 'edit existing widget' do
+      context 'rss widget' do
+        before do
+          RssFeed.seed
+          controller.instance_variable_set(:@sb, :wtype => 'rf') # RSS Feed widget
+        end
+
+        let(:rss_feed) { RssFeed.first }
+        let(:default_row_count_value) { 5 }
+
+        it 'can change type from external to internal' do
+          external_widget = FactoryGirl.create(:miq_widget, :content_type => 'rss')
+          controller.instance_variable_set(:@edit, :schedule  => miq_schedule,
+                                                   :widget_id => external_widget.id,
+                                                   :new       => {})
+          controller.instance_variable_set(:@_params, :button      => 'save',
+                                                      :start_min   => '10',
+                                                      :start_hour  => '00',
+                                                      :start_date  => '11/13/2015',
+                                                      :timer_typ   => 'Hourly',
+                                                      :title       => 'NewRssWidget',
+                                                      :description => 'All the news',
+                                                      :feed_type   => 'internal',
+                                                      :rss_feed    => rss_feed.id,
+                                                      :row_count   => default_row_count_value,
+                                          )
+          controller.send(:widget_edit)
+          expect(MiqWidget.count).to eq(@previous_count_of_widgets + 1)
+          expect(new_widget.errors.count).to eq(0)
+          expect(new_widget.title).to eq("NewRssWidget")
+          expect(new_widget.resource.id).to eq(rss_feed.id)
+          expect(new_widget.options).to eq(:row_count => default_row_count_value)
+        end
+      end
+    end
   end
 end
