@@ -1163,13 +1163,13 @@ module ApplicationController::CiProcessing
       vmDisks = []
       if(@req.options[:disk_add])
         @req.options[:disk_add].values.each do |disk|
-          adsize, adunit = reconfigure_calculations(disk[:size])
-          vmDisks << {:hdFilename => "#{disk[:disk_name]}",
-                      :hdType => "#{disk[:disk_type] ? 'thick' : 'thin'}",
-                      :hdMode =>"#{disk[:mode] == true ? 'persistent' : 'nonpersistent'}",
+          adsize, adunit = reconfigure_calculations(disk[:disk_size_in_mb])
+          vmDisks << {:hdFilename => disk[:disk_name],
+                      :hdType => disk[:thin_provisioned] ? 'thin' : 'thick',
+                      :hdMode =>disk[:persistent] == true ? 'persistent' : 'nonpersistent',
                       :hdSize => adsize.to_s,
                       :hdUnit => adunit,
-                      :cb_dependent => disk[:dependent],
+                      :cb_dependent => disk[:dependent] == true,
                       :add_remove => 'add'}
         end
       end
@@ -1188,11 +1188,11 @@ module ApplicationController::CiProcessing
             end
           end
           dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-          vmDisks << {:hdFilename => "#{disk.filename}",
-                      :hdType => "#{disk.disk_type}",
-                      :hdMode =>"#{disk.mode}",
-                      :hdSize => "#{dsize}",
-                      :hdUnit => "#{dunit}",
+          vmDisks << {:hdFilename => disk.filename,
+                      :hdType => disk.disk_type.to_s,
+                      :hdMode => disk.mode.to_s,
+                      :hdSize => dsize.to_s,
+                      :hdUnit => dunit.to_s,
                       :delete_backing => delbacking,
                       :add_remove => removing}
         end

@@ -159,11 +159,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           if($scope.reconfigureModel.vmDisks[disk].hdUnit == 'GB')
             dsize *= 1024;
           dmode = ($scope.reconfigureModel.vmDisks[disk].hdMode == 'persistent');
-          dtype = ($scope.reconfigureModel.vmDisks[disk].hdType != 'thin');
+          dtype = ($scope.reconfigureModel.vmDisks[disk].hdType == 'thin');
           $scope.reconfigureModel.vmAddDisks.push({disk_name: $scope.reconfigureModel.vmDisks[disk].hdFilename,
-                                  size: dsize,
-                                  mode: dmode,
-                                  disk_type: dtype,
+                                  disk_size_in_mb: dsize,
+                                  persistent: dmode,
+                                  thin_provisioned: dtype,
                                   dependent: $scope.reconfigureModel.vmDisks[disk].cb_dependent});
         }
       }

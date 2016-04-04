@@ -105,105 +105,106 @@
                                 "auto-focus"  => ""}
             %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
               = _(" Total processors value larger than the maximum allowed")
-  %hr
-  %div
-    %h3
-      = _('Disks')
-      %table{:width => "100%", :align => "bottom"}
-        %tr
-          %td#buttons_on{:align => "right"}
-            %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
-    %table.table.table-striped.table-hover.table-condensed
-      %thead
-        %th= _('Name')
-        %th= _('Type')
-        %th= _('Mode')
-        %th= _('Size')
-        %th.narrow
-        %th.narrow= _('Dependent')
-        %th.narrow= _('Delete Backing')
-        %th
-      %tbody
-        %tr{"ng-show" => "reconfigureModel.addEnabled"}
-          %td
-            %input.form-control{"type"        => "text",
-                                "id"          => "hdName",
-                                "name"        => "hdName",
-                                "ng-model"    => "reconfigureModel.hdFilename",
-                                "placeholder" => "Enter Disk Name",
-                                "ng-change"   => "hdChanged()"}
-          %td
-            = select_tag('hdType',
-                         options_for_select(%w(thick thin)),
-                         "ng-model"                    => "reconfigureModel.hdType",
-                         "ng-change"                   => "hdTypeChanged()",
-                         "data-width"                  => "auto",
-                         "required"                    => "",
-                         "selectpicker-for-select-tag" => "")
-          %td
-            = select_tag('hdMode',
-                          options_for_select(['persistent', 'nonpersistent']),
-                          "ng-model"                    => "reconfigureModel.hdMode",
-                          "ng-change"                   => "hdModeChanged()",
-                          "data-width"                  => "auto",
-                          "required"                    => "",
-                          "selectpicker-for-select-tag" => "",
-                          "width"                       => "10")
-          %td
-            %input.form-control{"type"        => "text",
-                                "id"          => "dvcSize",
-                                "name"        => "dvcSize",
-                                "ng-model"    => "reconfigureModel.hdSize",
-                                "placeholder" => "Enter New Size",
-                                "ng-change"   => "hdChanged()"}
-          %td.narrow
-            = select_tag('hdUnit',
-                     options_for_select(%w(MB GB)),
-                     "ng-model"                    => "reconfigureModel.hdUnit",
-                     "ng-change"                   => "hdUnitChanged()",
-                     "data-width"                  => "auto",
-                     "required"                    => "",
-                     "selectpicker-for-select-tag" => "")
-          %td.narrow
-            %input{"type"      => "checkbox",
-                   "name"      => "cb_dependent",
-                   "ng-model"  => "reconfigureModel.cb_dependent",
-                   "ng-change" => ""}
-          %td.narrow
-          %td
-            %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
-        %tr{"ng-repeat" => "disk in reconfigureModel.vmDisks", "ng-form" => "rowForm", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
-          %td
-            {{disk.hdFilename}}
-          %td
-            {{disk.hdType}}
-          %td
-            {{disk.hdMode}}
-          %td
-            {{disk.hdSize}}
-          %td.narrow
-            {{disk.hdUnit}}
-          %td.narrow
-            %input{"type"      => "checkbox",
-                   "name"      => "cb_dependent",
-                   "ng-model"  => "disk.cb_dependent",
-                   "ng-if"     => "disk.add_remove=='add'",
-                   "ng-disabled" => "disk.add_remove=='add'",
-                   "checkchange" => ""}
-          %td.narrow
-            %input{"type"      => "checkbox",
-                   "name"      => "cb_deletebacking",
-                   "ng-model"  => "disk.cb_deletebacking",
-                   "ng-if"     => "disk.add_remove!='add'",
-                   "ng-disabled" => "disk.add_remove=='remove'"}
-          %td
-            %button.btn.btn-danger.btn-sm{:type => "button",
-                                          "ng-if" => "disk.add_remove == ''",
-                                          "ng-model" => "cb_disks",
-                                          "ng-change" => "",
-                                          "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
-            %button.btn.btn-primary.btn-sm{:type => "button", "ng-if" => "disk.add_remove == 'remove'", "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel delete')
-            %button.btn.btn-primary.btn-sm{:type => "button", "ng-if" => "disk.add_remove == 'add'", "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel add')
+  - if @reconfigitems.length == 1 && @reconfigitems.first.vendor && @reconfigitems.first.vendor == 'vmware'
+    %hr
+    %div
+      %h3
+        = _('Disks')
+        %table{:width => "100%", :align => "bottom"}
+          %tr
+            %td#buttons_on{:align => "right"}
+              %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
+      %table.table.table-striped.table-hover.table-condensed
+        %thead
+          %th= _('Name')
+          %th= _('Type')
+          %th= _('Mode')
+          %th= _('Size')
+          %th.narrow
+          %th.narrow= _('Dependent')
+          %th.narrow= _('Delete Backing')
+          %th
+        %tbody
+          %tr{"ng-show" => "reconfigureModel.addEnabled"}
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "hdName",
+                                  "name"        => "hdName",
+                                  "ng-model"    => "reconfigureModel.hdFilename",
+                                  "placeholder" => "Enter Disk Name",
+                                  "ng-change"   => "hdChanged()"}
+            %td
+              = select_tag('hdType',
+                           options_for_select(%w(thick thin)),
+                           "ng-model"                    => "reconfigureModel.hdType",
+                           "ng-change"                   => "hdTypeChanged()",
+                           "data-width"                  => "auto",
+                           "required"                    => "",
+                           "selectpicker-for-select-tag" => "")
+            %td
+              = select_tag('hdMode',
+                            options_for_select(['persistent', 'nonpersistent']),
+                            "ng-model"                    => "reconfigureModel.hdMode",
+                            "ng-change"                   => "hdModeChanged()",
+                            "data-width"                  => "auto",
+                            "required"                    => "",
+                            "selectpicker-for-select-tag" => "",
+                            "width"                       => "10")
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "dvcSize",
+                                  "name"        => "dvcSize",
+                                  "ng-model"    => "reconfigureModel.hdSize",
+                                  "placeholder" => "Enter New Size",
+                                  "ng-change"   => "hdChanged()"}
+            %td.narrow
+              = select_tag('hdUnit',
+                       options_for_select(%w(MB GB)),
+                       "ng-model"                    => "reconfigureModel.hdUnit",
+                       "ng-change"                   => "hdUnitChanged()",
+                       "data-width"                  => "auto",
+                       "required"                    => "",
+                       "selectpicker-for-select-tag" => "")
+            %td.narrow
+              %input{"type"      => "checkbox",
+                     "name"      => "cb_dependent",
+                     "ng-model"  => "reconfigureModel.cb_dependent",
+                     "ng-change" => ""}
+            %td.narrow
+            %td
+              %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
+          %tr{"ng-repeat" => "disk in reconfigureModel.vmDisks", "ng-form" => "rowForm", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
+            %td
+              {{disk.hdFilename}}
+            %td
+              {{disk.hdType}}
+            %td
+              {{disk.hdMode}}
+            %td
+              {{disk.hdSize}}
+            %td.narrow
+              {{disk.hdUnit}}
+            %td.narrow
+              %input{"type"      => "checkbox",
+                     "name"      => "cb_dependent",
+                     "ng-model"  => "disk.cb_dependent",
+                     "ng-if"     => "disk.add_remove=='add'",
+                     "ng-disabled" => "disk.add_remove=='add'",
+                     "checkchange" => ""}
+            %td.narrow
+              %input{"type"      => "checkbox",
+                     "name"      => "cb_deletebacking",
+                     "ng-model"  => "disk.cb_deletebacking",
+                     "ng-if"     => "disk.add_remove!='add'",
+                     "ng-disabled" => "disk.add_remove=='remove'"}
+            %td
+              %button.btn.btn-danger.btn-sm{:type => "button",
+                                            "ng-if" => "disk.add_remove == ''",
+                                            "ng-model" => "cb_disks",
+                                            "ng-change" => "",
+                                            "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
+              %button.btn.btn-primary.btn-sm{:type => "button", "ng-if" => "disk.add_remove == 'remove'", "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel delete')
+              %button.btn.btn-primary.btn-sm{:type => "button", "ng-if" => "disk.add_remove == 'add'", "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel add')
   %hr
   %h3= _('Affected VMs')
   %table.admintable{:height => "75"}
