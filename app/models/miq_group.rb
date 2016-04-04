@@ -24,7 +24,6 @@ class MiqGroup < ApplicationRecord
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
-  serialize :filters
   serialize :settings
 
   default_value_for :group_type, USER_GROUP
@@ -122,22 +121,30 @@ class MiqGroup < ApplicationRecord
     user_groups.first
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def get_filters(type = nil)
-    if type
-      (filters.respond_to?(:key?) && filters[type.to_s]) || []
-    else
-      filters || {"managed" => [], "belongsto" => []}
-    end
+    filters = case type
+              when "managed"
+                entitlement.try(:tag_filters)
+              when "belongsto"
+                entitlement.try(:resource_filters)
+              when nil # Awkward backwards compatibility
+                {"managed" => entitlement.try(:tag_filters) || [], "belongsto" => entitlement.try(:resource_filters) || []}
+              end
+    filters || []
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def has_filters?
     get_managed_filters.present? || get_belongsto_filters.present?
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def get_managed_filters
     get_filters("managed")
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def get_belongsto_filters
     get_filters("belongsto")
   end
