@@ -529,8 +529,8 @@ module OpsController::Settings::Schedules
         end
       when "ems"          then {"=" => {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}}
       when "host"         then {"=" => {"field" => "#{model}.host-name", "value" => params[:filter_value]}}
-      when "miq_template" then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
-      when "vm"           then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
+      when "miq_template", "vm"
+                          then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
       else                     {"IS NOT NULL" => {"field" => "#{model}-name"}}
       end
     end
