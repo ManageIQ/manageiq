@@ -77,6 +77,30 @@
                          :class               => "selectpicker")
             :javascript
               miqSelectPickerEvent('manager_id', '#{url}')
+    - elsif @edit[:new][:st_prov_type] == "generic_ansible_tower"
+      - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_managers]
+      .form-group
+        %label.col-md-2.control-label
+          = _('Provider')
+        .col-md-8
+          = select_tag('manager_id',
+                       options_for_select(opts, @edit[:new][:manager_id]),
+                       "data-miq_sparkle_on" => true,
+                       :class                => "selectpicker")
+          :javascript
+            miqSelectPickerEvent('manager_id', '#{url}')
+      - if @edit[:new][:manager_id]
+        - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_templates]
+        .form-group
+          %label.col-md-2.control-label
+            = _('Ansible Tower Job Template')
+          .col-md-8
+            = select_tag('template_id',
+                          options_for_select(opts, @edit[:new][:template_id]),
+                          "data-miq_sparkle_on" => true,
+                          :class                => "selectpicker")
+            :javascript
+              miqSelectPickerEvent('template_id', '#{url}')
     .form-group
       %label.col-md-2.control-label{:title => _("Provisioning Entry Point (NameSpace/Class/Instance)")}
         = _('Provisioning Entry Point')

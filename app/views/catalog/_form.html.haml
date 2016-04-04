@@ -4,7 +4,7 @@
       = _('Basic Info')
     = miq_tab_header('details', @sb[:st_form_active_tab]) do
       = _('Details')
-    - unless @edit[:new][:st_prov_type] == "generic_orchestration"
+    - unless @edit[:new][:st_prov_type].start_with?("generic_")
       - if @edit[:new][:service_type] == "composite"
         = miq_tab_header('resources', @sb[:st_form_active_tab]) do
           = _('Resources')
@@ -18,7 +18,7 @@
       = render :partial => "form_basic_info"
     = miq_tab_content('details', @sb[:st_form_active_tab], :class => 'cm-tab') do
       = render :partial => "form_details_info"
-    - unless @edit[:new][:st_prov_type] == "generic_orchestration"
+    - unless @edit[:new][:st_prov_type].start_with?("generic_")
       - if @edit[:new][:service_type] == "composite"
         = miq_tab_content('resources', @sb[:st_form_active_tab]) do
           = render :partial => "form_resources_info"

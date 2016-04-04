@@ -140,6 +140,7 @@ class CatalogController < ApplicationController
       "azure"                 => "Azure",
       "generic"               => "Generic",
       "generic_orchestration" => "Orchestration",
+      "generic_ansible_tower" => "AnsibleTower",
       "google"                => "Google",
       "microsoft"             => "SCVMM",
       "openstack"             => "OpenStack",
@@ -155,7 +156,7 @@ class CatalogController < ApplicationController
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
     # Build Catalog Items tree unless @edit[:ae_tree_select]
-    build_ae_tree(:automate, :automate_tree) if params[:display] || params[:template_id]
+    build_ae_tree(:automate, :automate_tree) if params[:display] || params[:template_id] || params[:manager_id]
     if params[:st_prov_type] # build request screen for selected item type
       @_params[:org_controller] = "service_template"
       prov_set_form_vars if need_prov_dialogs?(params[:st_prov_type])
@@ -163,7 +164,7 @@ class CatalogController < ApplicationController
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
-      default_entry_point(@edit[:new][:st_prov_type]) if %w(generic generic_orchestration).include?(params[:st_prov_type])
+      default_entry_point(@edit[:new][:st_prov_type]) if params[:st_prov_type].start_with?('generic')
       @edit[:rec_id] = @record ? @record.id : nil
       @tabactive = @edit[:new][:current_tab_key]
     end
@@ -171,7 +172,7 @@ class CatalogController < ApplicationController
       # for generic/orchestration type tabs do not show up on screen as there is only a single tab when form is initialized
       # when display in catalog is checked, replace div so tabs can be redrawn
       page.replace("form_div", :partial => "st_form") if params[:st_prov_type] || params[:display]
-      page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id]
+      page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id] || params[:manager_id]
       if params[:display]
         page << "miq_tabs_show_hide('#details_tab', '#{(params[:display] == "1")}')"
       end
@@ -907,6 +908,7 @@ class CatalogController < ApplicationController
       class_service_template(@edit[:new][:st_prov_type]).new
     common_st_record_vars(st)
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
+    add_ansible_tower_job_template_vars(st) if st.kind_of?(ServiceTemplateAnsibleTower)
     st.service_type = "atomic"
 
     if request
@@ -1303,7 +1305,8 @@ class CatalogController < ApplicationController
     @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
                                        .collect { |stc| [stc.name, stc.id] }
                                        .sort
-    available_templates if @record.kind_of?(ServiceTemplateOrchestration)
+    available_orchestration_templates if @record.kind_of?(ServiceTemplateOrchestration)
+    available_ansible_tower_managers if @record.kind_of?(ServiceTemplateAnsibleTower)
 
     # initialize fqnames
     @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
@@ -1441,6 +1444,11 @@ class CatalogController < ApplicationController
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
 
+    get_form_vars_orchestration if @edit[:new][:st_prov_type] == 'generic_orchestration'
+    get_form_vars_ansible_tower if @edit[:new][:st_prov_type] == 'generic_ansible_tower'
+  end
+
+  def get_form_vars_orchestration
     if params[:template_id]
       if params[:template_id] == ""
         @edit[:new][:available_managers] = []
@@ -1448,26 +1456,53 @@ class CatalogController < ApplicationController
         @edit[:new][:manager_id]         = nil
       else
         @edit[:new][:template_id] = params[:template_id]
-        available_managers(params[:template_id])
+        available_orchestration_managers(params[:template_id])
       end
     end
     @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
   end
 
-  def available_managers(template_id)
+  def get_form_vars_ansible_tower
+    if params[:manager_id]
+      if params[:manager_id] == ""
+        @edit[:new][:available_templates] = []
+        @edit[:new][:template_id]         = nil
+        @edit[:new][:manager_id]          = nil
+      else
+        @edit[:new][:manager_id] = params[:manager_id]
+        available_ansible_tower_job_templates(params[:manager_id])
+      end
+    end
+    @edit[:new][:template_id] = params[:template_id] if params[:template_id]
+  end
+
+  def available_orchestration_managers(template_id)
     @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
                                        .eligible_managers
                                        .collect { |m| [m.name, m.id] }
                                        .sort
   end
 
-  def available_templates
+  def available_orchestration_templates
     @edit[:new][:available_templates] = OrchestrationTemplate.available
                                         .collect { |t| [t.name.to_s, t.id] }
                                         .sort
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
-    available_managers(@record.orchestration_template.id) if @record.orchestration_template
+    available_orchestration_managers(@record.orchestration_template.id) if @record.orchestration_template
+  end
+
+  def available_ansible_tower_job_templates(manager_id)
+    @edit[:new][:available_templates] =
+      ExtManagementSystem.find_by(:id => manager_id).configuration_scripts.collect { |t| [t.name, t.id] }.sort
+  end
+
+  def available_ansible_tower_managers
+    @edit[:new][:available_managers] =
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager.all.collect { |t| [t.name, t.id] }.sort
+    @edit[:new][:template_id] = @record.job_template.try(:id)
+    @edit[:new][:manager_id] = @record.job_template.try(:manager).try(:id)
+    available_ansible_tower_job_templates(@edit[:new][:manager_id]) if @edit[:new][:manager_id]
   end
 
   def add_orchestration_template_vars(st)
@@ -1475,6 +1510,11 @@ class CatalogController < ApplicationController
       nil : OrchestrationTemplate.find_by_id(@edit[:new][:template_id])
     st.orchestration_manager  = @edit[:new][:manager_id].nil? ?
       nil : ExtManagementSystem.find_by_id(@edit[:new][:manager_id])
+  end
+
+  def add_ansible_tower_job_template_vars(st)
+    st.job_template = @edit[:new][:template_id].nil? ?
+      nil : ConfigurationScript.find_by(:id => @edit[:new][:template_id])
   end
 
   def st_get_form_vars
