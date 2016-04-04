@@ -134,7 +134,7 @@ module ReportFormatter
     def numeric_axis_formatter
       if mri.graph[:type] =~ /(Bar|Column)/
         custom_format   = Array(mri[:col_formats])[Array(mri[:col_order]).index(raw_column_name)]
-        format, options = javascript_format(mri.graph[:column].split(':')[0], custom_format)
+        format, options = javascript_format(mri.graph[:column].split(/(?<!:):(?!:)/)[0], custom_format)
         return unless format
 
         axis_formatter = "ManageIQ.charts.formatters.#{format}.jqplot(#{options.to_json})"
