@@ -324,6 +324,7 @@ class MiqExpression
   FORMAT_SUB_TYPES[:fixnum] = FORMAT_SUB_TYPES[:decimal] = FORMAT_SUB_TYPES[:integer]
   FORMAT_SUB_TYPES[:mhz_avg] = FORMAT_SUB_TYPES[:mhz]
   FORMAT_SUB_TYPES[:text] = FORMAT_SUB_TYPES[:string]
+  FORMAT_SUB_TYPES[:citext] = FORMAT_SUB_TYPES[:text]
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].inject({}) { |h, (v, k)| h[k] = v; h }
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
 
@@ -1212,7 +1213,7 @@ class MiqExpression
 
   def self.quote(val, typ, mode = :ruby)
     case typ.to_s
-    when "string", "text", "boolean", nil
+    when "string", "citext", "text", "boolean", nil
       val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
       return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
@@ -1258,7 +1259,7 @@ class MiqExpression
       else
         return val
       end
-    when "string", "date", "datetime"
+    when "string", "citext",  "date", "datetime"
       return "\"#{val}\""
     else
       return quote(val, typ)
@@ -1653,7 +1654,7 @@ class MiqExpression
     end
 
     case col_type.to_s.downcase.to_sym
-    when :string
+    when :string, :citext
       return STRING_OPERATORS
     when :integer, :float, :fixnum
       return NUM_OPERATORS
@@ -1729,7 +1730,7 @@ class MiqExpression
          end
 
     case dt
-    when :string, :text
+    when :string, :citext, :text
       return false
     when :integer, :fixnum, :decimal, :float
       return false if send((dt == :float ? :is_numeric? : :is_integer?), value)
