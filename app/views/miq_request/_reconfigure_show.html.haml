@@ -34,14 +34,14 @@
           %label.control-label.col-md-2
             = _("Add Disks")
           .col-md-8
-            = h(@options[:add_disks])
+            = h(@options[:disk_add].size)
             &nbsp;
       - if @options[:disk_remove]
         .form-group
           %label.control-label.col-md-2
             = _("Remove Disks")
           .col-md-8
-            = h(@options[:remove_disks])
+            = h(@options[:disk_remove].size)
             &nbsp;
 
   %fieldset

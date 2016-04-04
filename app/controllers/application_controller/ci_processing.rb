@@ -1118,8 +1118,10 @@ module ApplicationController::CiProcessing
     # if only one vm that supports disk reconfiguration is selected, get the disks information
     vmDisks = []
     @reconfigureitems.first.hardware.disks.each do |disk|
-      dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-      vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => dsize, :hdUnit => dunit, :add_remove => ''}
+      if disk.device_type == 'disk'
+        dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
+        vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => dsize, :hdUnit => dunit, :add_remove => ''}
+      end
     end
 
     { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s, :disks => vmDisks}
@@ -1165,7 +1167,7 @@ module ApplicationController::CiProcessing
         @req.options[:disk_add].values.each do |disk|
           adsize, adunit = reconfigure_calculations(disk[:disk_size_in_mb])
           vmDisks << {:hdFilename => disk[:disk_name],
-                      :hdType => disk[:thin_provisioned] ? 'thin' : 'thick',
+                      :hdType => disk[:thin_provisioned] == true ? 'thin' : 'thick',
                       :hdMode =>disk[:persistent] == true ? 'persistent' : 'nonpersistent',
                       :hdSize => adsize.to_s,
                       :hdUnit => adunit,
@@ -1177,24 +1179,26 @@ module ApplicationController::CiProcessing
       reconfig_item = Vm.find(@reconfigure_items)
       if reconfig_item
         reconfig_item.first.hardware.disks.each do |disk|
-          removing = ''
-          delbacking = false
-          if disk.filename && @req.options[:disk_remove]
-            @req.options[:disk_remove].values.each do |remdisk|
-              if remdisk[:disk_name] == disk.filename
-                removing = 'remove'
-                delbacking = remdisk[:delete_backing]
+          if disk.device_type == 'disk'
+            removing = ''
+            delbacking = false
+            if disk.filename && @req.options[:disk_remove]
+              @req.options[:disk_remove].values.each do |remdisk|
+                if remdisk[:disk_name] == disk.filename
+                  removing = 'remove'
+                  delbacking = remdisk[:delete_backing]
+                end
               end
             end
+            dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
+            vmDisks << {:hdFilename => disk.filename,
+                        :hdType => disk.disk_type.to_s,
+                        :hdMode => disk.mode.to_s,
+                        :hdSize => dsize.to_s,
+                        :hdUnit => dunit.to_s,
+                        :delete_backing => delbacking,
+                        :add_remove => removing}
           end
-          dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-          vmDisks << {:hdFilename => disk.filename,
-                      :hdType => disk.disk_type.to_s,
-                      :hdMode => disk.mode.to_s,
-                      :hdSize => dsize.to_s,
-                      :hdUnit => dunit.to_s,
-                      :delete_backing => delbacking,
-                      :add_remove => removing}
         end
       end
       @reconfig_values[:disks] = vmDisks
