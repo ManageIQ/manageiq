@@ -71,6 +71,28 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
+  context "#update_requester_from_parameters" do
+    let(:user_new) { FactoryGirl.create(:user_with_email) }
+    let(:data_new_user) { {:user_name => user_new.name} }
+    let(:current_user) { FactoryGirl.create(:user_with_email) }
+
+    it "finds and sets a new user if one is passed in" do
+      expect(User).to receive(:lookup_by_identity).and_return(user_new).once
+      expect(MiqProvisionVirtWorkflow.update_requester_from_parameters(data_new_user, current_user)).to eq user_new
+    end
+
+    it "returns the original user if a new one is not passed in" do
+      data_no_user = {}
+      expect(User).to_not receive(:lookup_by_identity)
+      expect(MiqProvisionVirtWorkflow.update_requester_from_parameters(data_no_user, current_user)).to eq current_user
+    end
+
+    it "raises an error if the lookup fails" do
+      expect(User).to receive(:lookup_by_identity).and_return(nil).once
+      expect { MiqProvisionVirtWorkflow.update_requester_from_parameters(data_new_user, current_user) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
   context "#validate email formatting" do
     context "with specific format regex" do
       let(:regex) { {:required_regex => %r{\A[\w!#$\%&'*+/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z}i} }
