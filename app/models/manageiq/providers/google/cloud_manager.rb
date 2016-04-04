@@ -79,6 +79,8 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
       :provider               => "Google",
       :google_project         => google_project,
       :google_json_key_string => google_json_key,
+      :app_name               => I18n.t("product.name"),
+      :app_version            => Vmdb::Appliance.VERSION,
     )
   end
 
