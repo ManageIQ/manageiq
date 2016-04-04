@@ -109,18 +109,6 @@ module Metric::Helper
     return st, et
   end
 
-  def self.range_to_condition(start_time, end_time)
-    if start_time.nil?
-      nil
-    elsif start_time == end_time
-      {:timestamp => start_time}
-    elsif end_time.nil?
-      ["timestamp >= ?", start_time]
-    else
-      {:timestamp => start_time..end_time}
-    end
-  end
-
   def self.remove_duplicate_timestamps(recs)
     return recs if recs.empty? || recs.any? { |r| !r.kind_of?(Metric) || !r.kind_of?(MetricRollup) }
 
