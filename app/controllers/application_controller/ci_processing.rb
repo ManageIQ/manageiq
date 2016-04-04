@@ -1163,12 +1163,13 @@ module ApplicationController::CiProcessing
       vmDisks = []
       if(@req.options[:disk_add])
         @req.options[:disk_add].values.each do |disk|
-          adsize, adunit = reconfigure_calculations(disk.size)
+          adsize, adunit = reconfigure_calculations(disk[:size])
           vmDisks << {:hdFilename => "#{disk[:disk_name]}",
-                      :hdType => "#{disk[:disk_type] ? 'thin' : 'thick'}",
-                      :hdMode =>"#{disk[:mode] ? 'persistent' : 'nonpersistent'}",
+                      :hdType => "#{disk[:disk_type] ? 'thick' : 'thin'}",
+                      :hdMode =>"#{disk[:mode] == true ? 'persistent' : 'nonpersistent'}",
                       :hdSize => adsize.to_s,
                       :hdUnit => adunit,
+                      :cb_dependent => disk[:dependent],
                       :add_remove => 'add'}
         end
       end

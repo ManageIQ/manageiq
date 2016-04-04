@@ -163,7 +163,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           $scope.reconfigureModel.vmAddDisks.push({disk_name: $scope.reconfigureModel.vmDisks[disk].hdFilename,
                                   size: dsize,
                                   mode: dmode,
-                                  disk_type: dtype});
+                                  disk_type: dtype,
+                                  dependent: $scope.reconfigureModel.vmDisks[disk].cb_dependent});
         }
       }
     };
