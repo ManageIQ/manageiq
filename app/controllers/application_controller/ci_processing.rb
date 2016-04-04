@@ -1169,7 +1169,7 @@ module ApplicationController::CiProcessing
                       :hdMode =>disk[:persistent] == true ? 'persistent' : 'nonpersistent',
                       :hdSize => adsize.to_s,
                       :hdUnit => adunit,
-                      :cb_dependent => disk[:dependent] == true,
+                      :cb_dependent => disk[:dependent] == 'true',
                       :add_remove => 'add'}
         end
       end

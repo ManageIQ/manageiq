@@ -125,7 +125,7 @@
           %th.narrow= _('Delete Backing')
           %th
         %tbody
-          %tr{"ng-show" => "reconfigureModel.addEnabled"}
+          %tr{"ng-show" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
             %td
               %input.form-control{"type"        => "text",
                                   "id"          => "hdName",
@@ -155,8 +155,11 @@
                                   "id"          => "dvcSize",
                                   "name"        => "dvcSize",
                                   "ng-model"    => "reconfigureModel.hdSize",
+                                  "ng-pattern"  => "hdpattern",
                                   "placeholder" => "Enter New Size",
                                   "ng-change"   => "hdChanged()"}
+              %span{"style"=>"color:red", "ng-show" => "rowForm.dvcSize.$invalid"}
+                = _(" Valid numeric disk size required ")
             %td.narrow
               = select_tag('hdUnit',
                        options_for_select(%w(MB GB)),
@@ -173,7 +176,7 @@
             %td.narrow
             %td
               %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
-          %tr{"ng-repeat" => "disk in reconfigureModel.vmDisks", "ng-form" => "rowForm", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
+          %tr{"ng-repeat" => "disk in reconfigureModel.vmDisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
             %td
               {{disk.hdFilename}}
             %td
@@ -200,8 +203,6 @@
             %td
               %button.btn.btn-danger.btn-sm{:type => "button",
                                             "ng-if" => "disk.add_remove == ''",
-                                            "ng-model" => "cb_disks",
-                                            "ng-change" => "",
                                             "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
               %button.btn.btn-primary.btn-sm{:type => "button", "ng-if" => "disk.add_remove == 'remove'", "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel delete')
               %button.btn.btn-primary.btn-sm{:type => "button", "ng-if" => "disk.add_remove == 'add'", "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel add')
@@ -223,8 +224,8 @@
                      :class        => "btn btn-primary",
                      :alt          => _("Submit"),
                      "ng-click"    => "submitClicked()",
-                     "ng-disabled" => "angularForm.$pristine || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)",
-                     "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+                     "ng-disabled" => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)",
+                     "ng-class"    => "{'btn-disabled': (angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)}")
         = button_tag("Reset",
              :class        => "btn btn-default btn-disabled",
              :alt          => "Reset changes",

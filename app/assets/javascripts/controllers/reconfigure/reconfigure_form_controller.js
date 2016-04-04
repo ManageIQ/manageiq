@@ -17,13 +17,13 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         vmAddDisks:              [],
         vmRemoveDisks:           []
       };
+      $scope.cb_disks = false;
+      $scope.hdpattern = "^[1-9][0-9]*$";
       $scope.reconfigureFormId = reconfigureFormId;
       $scope.afterGet = false;
       $scope.objectIds = objectIds;
       $scope.cb_memory = $scope.cb_memoryCopy = false;
       $scope.cb_cpu = $scope.cb_cpuCopy = false;
-      $scope.cb_disks = false;
-
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.validateClicked = miqService.validateWithAjax;
       $scope.modelCopy = angular.copy( $scope.reconfigureModel );
@@ -186,7 +186,6 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       $scope.reconfigureModel.addEnabled = false;
 
       $scope.updateDisksAddRemove();
-      $scope.angularForm.$setPristine(false);
 
       if( $scope.reconfigureModel.vmAddDisks.length > 0  || $scope.reconfigureModel.vmRemoveDisks.length > 0)
         $scope.cb_disks = true;
@@ -204,7 +203,6 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           $scope.reconfigureModel.vmDisks[disk]['add_remove'] = 'remove';
       }
       $scope.updateDisksAddRemove();
-      $scope.angularForm.$setPristine(false);
 
       if( $scope.reconfigureModel.vmAddDisks.length > 0  || $scope.reconfigureModel.vmRemoveDisks.length > 0)
         $scope.cb_disks = true;
@@ -227,7 +225,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         }
       }
       $scope.updateDisksAddRemove();
-      if( $scope.reconfigureModel.vmAddDisks.length > 0  || $scope.reconfigureModel.vmRemoveDisks.length > 0)
+
+      if(!_.isEqual($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !_.isEqual($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
         $scope.cb_disks = true;
       else
         $scope.cb_disks = false;
