@@ -4,7 +4,7 @@ $navbar-pf-navbar-navbar-brand-min-width:   270px;
 $navbar-pf-navbar-navbar-brand-padding:     8px 0 2px;
 $dropdown-link-hover-bg:                    #d4edfa;  // sets dropdown link hover
 $link-color:                                #0099d3;  // sets link (also accordion hover, selected table cell) color globally
-//$navbar-pf-border-color:                    #063451;  // sets 3px border color at top of screen
+$navbar-pf-border-color:                    #063451;  // sets 3px border color at top of screen
 
 $navbar-pf-alt-bg-color:                    #0c69a5; // sets backgound color of navigation bar
 $navbar-pf-alt-navbar-toggle-icon-bar-hover-bg: #fff;
@@ -33,6 +33,17 @@ $login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);
 .login-pf #brand img { // sets size of brand.svg on login screen (upstream only)
   height: 38px;
 }
+
+// styling of brand.svg in header (upstream only)
+
+.navbar-brand {
+  margin-top: 8px !important;
+}
+.navbar-brand img {
+  height: 20px;
+}
+
+// styling of custom logo in header
 
 body.whitelabel {
   background: url($img-bg-login-whitelabel);

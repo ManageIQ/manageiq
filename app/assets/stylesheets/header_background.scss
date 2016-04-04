@@ -1,29 +1,9 @@
 /* Bootstrap overrides */
 /* Header background image*/
 
-@media (min-width: $screen-sm) {
-  .navbar-pf-alt {
-    background: image-url($img-bg-navbar);
-    background-repeat: no-repeat;
-    background-position: 100% 0;
-    background-color: $navbar-pf-alt-bg-color;
-  }
-  .navbar-pf .navbar-utility > .active > a,
-  .navbar-pf .navbar-utility > .active > a:hover,
-  .navbar-pf .navbar-utility > .active > a:focus,
-  .navbar-pf .navbar-utility > .open > a,
-  .navbar-pf .navbar-utility > .open > a:hover,
-  .navbar-pf .navbar-utility > .open > a:focus {
-    background: $navbar-pf-bg-color;
-    opacity:0.9;
-  }
-  .navbar-pf .navbar-utility > li > a {
-    background: $navbar-pf-bg-color;
-    opacity:0.7;
-    border-left: 0 !important;
-  }
-  .navbar-pf .navbar-utility > li > a:hover {
-    opacity:0.8;
-    background: $navbar-pf-bg-color;
-  }
+.navbar-pf-vertical {
+  background: image-url($img-bg-navbar);
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  background-color: $navbar-pf-alt-bg-color;
 }
