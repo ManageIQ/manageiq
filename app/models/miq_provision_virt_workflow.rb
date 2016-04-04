@@ -395,26 +395,26 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_vlans(options = {})
-    @allowed_vlan_cache ||= available_vlans(options)
+    @allowed_vlan_cache ||= available_vlans_and_hosts(options)[0]
     filter_by_tags(@allowed_vlan_cache, options)
   end
 
-  def available_vlans(options = {})
+  def available_vlans_and_hosts(options = {})
     @vlan_options ||= options
     vlans = {}
     src = get_source_and_targets
     return vlans if src.blank?
 
+    hosts = get_selected_hosts(src)
     unless @vlan_options[:vlans] == false
       rails_logger('allowed_vlans', 0)
-      hosts = get_selected_hosts(src)
       # TODO: Use Active Record to preload this data?
       MiqPreloader.preload(hosts, :switches => :lans)
       hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
       rails_logger('allowed_vlans', 1)
     end
 
-    vlans
+    return vlans, hosts
   end
 
   def filter_by_tags(target, options)
