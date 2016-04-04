@@ -1,51 +1,47 @@
 describe "tenant quotas API" do
-  let!(:root_tenant) { Tenant.seed }
-
-  it "can list all the quotas form a tenant" do
-    api_basic_authorize action_identifier(:quotas, :read, :subcollection_actions, :get)
-
-    tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
-    quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
-    quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 20)
-
-    run_get "/api/tenants/#{tenant.id}/quotas"
-
-    expect_result_resources_to_include_hrefs(
-      "resources",
-      [
-        "/api/tenants/#{tenant.id}/quotas/#{quota_1.id}",
-        "/api/tenants/#{tenant.id}/quotas/#{quota_2.id}",
-      ]
-    )
-
-    expect_request_success
-  end
-
-  it "can show a single quota from a tenant" do
-    api_basic_authorize action_identifier(:quotas, :read, :subresource_actions, :get)
-
-    tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
-    quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
-
-    run_get "/api/tenants/#{tenant.id}/quotas/#{quota.id}"
-
-    expect_result_to_match_hash(
-      response_hash,
-      "href"      => "/api/tenants/#{tenant.id}/quotas/#{quota.id}",
-      "id"        => quota.id,
-      "tenant_id" => tenant.id,
-      "name"      => "cpu_allocated",
-      "unit"      => "fixnum",
-      "value"     => 1.0
-    )
-    expect_request_success
-  end
+  let(:tenant) { FactoryGirl.create(:tenant) }
 
   context "with an appropriate role" do
+    it "can list all the quotas form a tenant" do
+      api_basic_authorize action_identifier(:quotas, :read, :subcollection_actions, :get)
+
+      quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
+      quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 20)
+
+      run_get "/api/tenants/#{tenant.id}/quotas"
+
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        [
+          "/api/tenants/#{tenant.id}/quotas/#{quota_1.id}",
+          "/api/tenants/#{tenant.id}/quotas/#{quota_2.id}",
+        ]
+      )
+
+      expect_request_success
+    end
+
+    it "can show a single quota from a tenant" do
+      api_basic_authorize action_identifier(:quotas, :read, :subresource_actions, :get)
+
+      quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
+
+      run_get "/api/tenants/#{tenant.id}/quotas/#{quota.id}"
+
+      expect_result_to_match_hash(
+        response_hash,
+        "href"      => "/api/tenants/#{tenant.id}/quotas/#{quota.id}",
+        "id"        => quota.id,
+        "tenant_id" => tenant.id,
+        "name"      => "cpu_allocated",
+        "unit"      => "fixnum",
+        "value"     => 1.0
+      )
+      expect_request_success
+    end
+
     it "can create a quota from a tenant" do
       api_basic_authorize action_identifier(:quotas, :create, :subcollection_actions, :post)
-
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
 
       expect do
         run_post "/api/tenants/#{tenant.id}/quotas/", :name => :cpu_allocated, :value => 1
@@ -57,7 +53,6 @@ describe "tenant quotas API" do
     it "can update a quota from a tenant with POST" do
       api_basic_authorize action_identifier(:quotas, :edit, :subresource_actions, :post)
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       options = {:value => 5}
@@ -72,7 +67,6 @@ describe "tenant quotas API" do
     it "can update a quota from a tenant with PUT" do
       api_basic_authorize action_identifier(:quotas, :edit, :subresource_actions, :put)
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       options = {:value => 5}
@@ -86,7 +80,7 @@ describe "tenant quotas API" do
 
     it "can update multiple quotas from a tenant with POST" do
       api_basic_authorize action_identifier(:quotas, :edit, :subcollection_actions, :post)
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
+
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 2)
 
@@ -110,7 +104,6 @@ describe "tenant quotas API" do
     it "can delete a quota from a tenant with POST" do
       api_basic_authorize action_identifier(:quotas, :delete, :subresource_actions, :post)
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       expect do
@@ -123,11 +116,10 @@ describe "tenant quotas API" do
     it "can delete a quota from a tenant with DELETE" do
       api_basic_authorize action_identifier(:quotas, :delete, :subresource_actions, :delete)
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       expect do
-        run_delete "/api/tenants/#{tenant.id}/quotas/#{quota.id}", gen_request(:delete)
+        run_delete "/api/tenants/#{tenant.id}/quotas/#{quota.id}"
       end.to change(TenantQuota, :count).by(-1)
 
       expect_request_success_with_no_content
@@ -136,7 +128,6 @@ describe "tenant quotas API" do
     it "can delete multiple quotas from a tenant with POST" do
       api_basic_authorize action_identifier(:quotas, :delete, :subcollection_actions, :post)
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 2)
 
@@ -157,8 +148,6 @@ describe "tenant quotas API" do
     it "will not create a tenant quota" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
-
       expect do
         run_post "/api/tenants/#{tenant.id}/quotas/", :name => :cpu_allocated, :value => 1
       end.not_to change(TenantQuota, :count)
@@ -169,7 +158,6 @@ describe "tenant quotas API" do
     it "will not update a tenant quota with POST" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       options = {:value => 5}
@@ -184,7 +172,6 @@ describe "tenant quotas API" do
     it "will not update a tenant quota with PUT" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       options = {:value => 5}
@@ -199,7 +186,6 @@ describe "tenant quotas API" do
     it "will not update multiple tenant quotas with POST" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 2)
 
@@ -218,7 +204,6 @@ describe "tenant quotas API" do
     it "will not delete a tenant quota with POST" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       expect do
@@ -231,7 +216,6 @@ describe "tenant quotas API" do
     it "will not delete a tenant quota with DELETE" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
       expect do
@@ -244,7 +228,6 @@ describe "tenant quotas API" do
     it "will not update multiple tenants with POST" do
       api_basic_authorize
 
-      tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 2)
 
