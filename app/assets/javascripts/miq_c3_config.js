@@ -209,6 +209,7 @@
           expand: false
         }
       },
+      c3mixins.xAxisCategory,
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
@@ -224,6 +225,7 @@
           expand: false
         }
       },
+      c3mixins.xAxisCategory,
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
@@ -239,6 +241,7 @@
           expand: false
         }
       },
+      c3mixins.xAxisCategory,
       c3mixins.pfColorPattern,
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
