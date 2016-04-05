@@ -27,8 +27,8 @@
         %th= _("Variable")
     %tbody
       /Currency code is the same for all the chargeback_rate_details
-      - code_currency = @sb[:selected_rate_details].first.detail_currency.code
-      - @sb[:selected_rate_details].each do |detail|
+      - code_currency = @record.chargeback_rate_details.first.detail_currency.code
+      - @record.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase] }.each do |detail|
         - @cur_group = detail[:group] if @cur_group.nil?
         - if @cur_group != detail[:group]
           - @cur_group = detail[:group]

@@ -1,6 +1,6 @@
 - i = params[:detail_index]
-- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
-- n = @sb[:num_tiers][i.to_i]
+- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@edit[:rec_id] || "new"}")
+- n = @edit[:new][:num_tiers][i.to_i]
 - n = params[:tier_row] if params[:tier_row]
 
 %tr.rdetail.new_tier{:id => "rate_detail_row_#{i}_#{n - 1}"}

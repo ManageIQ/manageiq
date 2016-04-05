@@ -1,5 +1,3 @@
 /In this view, the currency column is updated with the code of the currency selected by the user
-- i = params[:id_column]
-- num_tiers = params[:num_tiers]
-%td{:id => "column_currency_#{i}", :rowspan => num_tiers}
- = params[:code_currency]
+%td{:id => "column_currency_#{id_column}", :rowspan => num_tiers}
+ = code_currency

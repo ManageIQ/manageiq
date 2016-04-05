@@ -1,7 +1,7 @@
 - i = params[:detail_index]
-- r = @sb[:rate_details][i.to_i]
-- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
-- n = @sb[:num_tiers][i.to_i]
+- r = @edit[:new][:details][i.to_i]
+- url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@edit[:rec_id] || "new"}")
+- n = @edit[:new][:num_tiers][i.to_i]
 
 %tr.rdetail{:id => "rate_detail_row_#{i}_0"}
   %td{:rowspan => n.to_s}
@@ -17,11 +17,11 @@
   - if measure.nil?
     /if the rate detail don't have a metric associated, display the per_unit_display
     %td{:rowspan => n.to_s}
-      = r.per_unit_display
+      = r[:per_unit_display]
   - else
     /if the rate detail have a metric associated, display an options field with per_unit selected
     %td{:rowspan => n.to_s}
-      = select_tag("per_unit_#{i}", options_for_select(measure.measures, r.per_unit), "data-miq_observe" => {:url => url}.to_json)
+      = select_tag("per_unit_#{i}", options_for_select(measure[:measures], r[:per_unit]), "data-miq_observe" => {:url => url}.to_json)
   %td
     = text_field_tag("start_#{i}_0", @edit[:new][:tiers][i.to_i][0][:start],
       :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json, :disabled => "disabled")
@@ -44,4 +44,4 @@
                                                        :button       => "add")}');")
   /Show the code of the currency selected by the user
   %td{:id => "column_currency_#{i}", :rowspan => n.to_s}
-    = params[:code_currency]
+    = code_currency
