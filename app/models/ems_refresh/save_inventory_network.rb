@@ -38,7 +38,6 @@ module EmsRefresh::SaveInventoryNetwork
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
 
-    link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
     link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
 
     ems.save!
@@ -135,12 +134,12 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(vm cloud_tenant cloud_network).each do |relation|
+      %i(vm cloud_tenant cloud_network network_port).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
     end
 
-    save_inventory_multi(ems.floating_ips, hashes, deletes, [:ems_ref], nil, [:network_port])
+    save_inventory_multi(ems.floating_ips, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
   end
 
@@ -227,21 +226,6 @@ module EmsRefresh::SaveInventoryNetwork
     end
 
     save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet])
-  end
-
-  def link_floating_ips_to_network_ports(hashes)
-    # Association of floating_ip to network_port. For backwards compatibility, we are keeping relation to Vm, even
-    # when it's redundant, since we can get vm through network_port.
-    hashes.each do |hash|
-      network_port = hash.fetch_path(:network_port, :_object)
-      # It's important we assign also blank network port, marking floating_ip association has been deleted
-
-      # TODO(lsmola) delete the check when we are not supporting nova network and grizzly, this condition
-      # prevents from deleting vm <-> floating_ip association for nova networking
-      next unless hash.key?(:cloud_network) # only neutron has cloud_network associated
-
-      hash[:_object].update_attributes(:network_port => network_port)
-    end
   end
 
   def link_cloud_subnets_to_network_routers(hashes)

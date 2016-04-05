@@ -6,7 +6,8 @@ FactoryGirl.define do
 
   factory :cloud_subnet_openstack, :class  => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet",
                                    :parent => :cloud_subnet
-  factory :cloud_subnet_amazon, :class => "CloudSubnet", :parent => :cloud_subnet
+  factory :cloud_subnet_amazon, :class  => "ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet",
+                                :parent => :cloud_subnet
   factory :cloud_subnet_azure, :class => "CloudSubnet", :parent => :cloud_subnet
   factory :cloud_subnet_google, :class => "CloudSubnet", :parent => :cloud_subnet
 end

@@ -1172,6 +1172,7 @@
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
         :ems_refresh_worker_amazon: {}
+        :ems_refresh_worker_amazon_network: {}
         :ems_refresh_worker_ansible_tower_configuration: {}
         :ems_refresh_worker_atomic: {}
         :ems_refresh_worker_atomic_enterprise: {}

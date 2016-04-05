@@ -11,20 +11,22 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
                            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
   has_many :public_networks, :through => :cloud_subnets
   has_many :security_groups, :through => :network_ports
-  has_many :floating_ips, :through => :network_ports
 
   def floating_ip
-    # Backwards compatibility layer with simplified architecture where VM has only one network
+    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
+    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
     floating_ips.first
   end
 
   def cloud_network
-    # Backwards compatibility layer with simplified architecture where VM has only one network
+    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
+    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
     cloud_networks.first
   end
 
   def cloud_subnet
-    # Backwards compatibility layer with simplified architecture where VM has only one network
+    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
+    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
     cloud_subnets.first
   end
 

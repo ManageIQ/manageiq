@@ -15,6 +15,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
       VCR.use_cassette(described_class.name.underscore) do
         EmsRefresh.refresh(@ems)
+        EmsRefresh.refresh(@ems.network_manager)
       end
       @ems.reload
 
@@ -41,35 +42,35 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_table_counts
-    expect(ExtManagementSystem.count).to eq(1)
+    expect(ExtManagementSystem.count).to eq(2)
     expect(Flavor.count).to eq(55)
     expect(AvailabilityZone.count).to eq(5)
     expect(FloatingIp.count).to eq(5)
-    expect(AuthPrivateKey.count).to eq(11)
-    expect(CloudNetwork.count).to eq(4)
-    expect(CloudSubnet.count).to eq(6)
+    expect(AuthPrivateKey.count).to eq(12)
+    expect(CloudNetwork.count).to eq(5)
+    expect(CloudSubnet.count).to eq(10)
     expect(OrchestrationTemplate.count).to eq(2)
     expect(OrchestrationStack.count).to eq(2)
     expect(OrchestrationStackParameter.count).to eq(5)
     expect(OrchestrationStackOutput.count).to eq(1)
     expect(OrchestrationStackResource.count).to eq(24)
-    expect(SecurityGroup.count).to eq(33)
-    expect(FirewallRule.count).to eq(88)
-    expect(VmOrTemplate.count).to eq(46)
-    expect(Vm.count).to eq(26)
+    expect(SecurityGroup.count).to eq(36)
+    expect(FirewallRule.count).to eq(94)
+    expect(VmOrTemplate.count).to eq(47)
+    expect(Vm.count).to eq(27)
     expect(MiqTemplate.count).to eq(20)
 
     expect(CustomAttribute.count).to eq(0)
     expect(Disk.count).to eq(14)
     expect(GuestDevice.count).to eq(0)
-    expect(Hardware.count).to eq(46)
-    expect(Network.count).to eq(13)
+    expect(Hardware.count).to eq(47)
+    expect(Network.count).to eq(15)
     expect(OperatingSystem.count).to eq(0) # TODO: Should this be 13 (set on all vms)?
     expect(Snapshot.count).to eq(0)
     expect(SystemService.count).to eq(0)
 
-    expect(Relationship.count).to eq(25)
-    expect(MiqQueue.count).to eq(48)
+    expect(Relationship.count).to eq(26)
+    expect(MiqQueue.count).to eq(50)
   end
 
   def assert_ems
@@ -81,11 +82,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(@ems.flavors.size).to eq(55)
     expect(@ems.availability_zones.size).to eq(5)
     expect(@ems.floating_ips.size).to eq(5)
-    expect(@ems.key_pairs.size).to eq(11)
-    expect(@ems.cloud_networks.size).to eq(4)
-    expect(@ems.security_groups.size).to eq(33)
-    expect(@ems.vms_and_templates.size).to eq(46)
-    expect(@ems.vms.size).to eq(26)
+    expect(@ems.key_pairs.size).to eq(12)
+    expect(@ems.cloud_networks.size).to eq(5)
+    expect(@ems.security_groups.size).to eq(36)
+    expect(@ems.vms_and_templates.size).to eq(47)
+    expect(@ems.vms.size).to eq(27)
     expect(@ems.miq_templates.size).to eq(20)
     expect(@ems.orchestration_stacks.size).to eq(2)
 
@@ -347,8 +348,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "private").first
     expect(network).to have_attributes(
       :description => "private",
-      :ipaddress   => "10.171.22.55",
-      :hostname    => "ip-10-171-22-55.ec2.internal"
+      :ipaddress   => "10.65.160.22",
+      :hostname    => "ip-10-65-160-22.ec2.internal"
     )
 
     v.with_relationship_type("genealogy") do
@@ -465,8 +466,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    expect(v.cloud_network).to eq(@cn)
-    expect(v.cloud_subnet).to eq(@subnet)
+    expect(v.cloud_networks.first).to eq(@cn)
+    expect(v.cloud_subnets.first).to eq(@subnet)
     expect(v.security_groups).to eq([@sg_on_cn])
   end
 

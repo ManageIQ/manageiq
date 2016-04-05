@@ -33,16 +33,14 @@ module ManageIQ::Providers
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
       $fog_log.info("#{log_header}...")
-
+      # The order of the below methods does matter, because there are inner dependencies of the data!
       get_security_groups
       get_networks
       get_network_routers
-      get_floating_ips
       get_network_ports
+      get_floating_ips
 
       $fog_log.info("#{log_header}...Complete")
-
-      link_network_ports_associations
 
       @data
     end
@@ -205,7 +203,7 @@ module ManageIQ::Providers
       nil
     end
 
-    def parse_cloud_subnet_network_ports(cloud_subnet_network_port)
+    def parse_cloud_subnet_network_port(cloud_subnet_network_port)
       {
         :address      => cloud_subnet_network_port["ip_address"],
         :cloud_subnet => @data_index.fetch_path(:cloud_subnets, cloud_subnet_network_port["subnet_id"])
@@ -214,7 +212,7 @@ module ManageIQ::Providers
 
     def parse_network_port(network_port)
       uid                        = network_port.id
-      cloud_subnet_network_ports = network_port.fixed_ips.map { |x| parse_cloud_subnet_network_ports(x) }
+      cloud_subnet_network_ports = network_port.fixed_ips.map { |x| parse_cloud_subnet_network_port(x) }
       device                     = find_device_object(network_port)
       security_groups            = network_port.security_groups.blank? ? [] : network_port.security_groups.map do |x|
         @data_index.fetch_path(:security_groups, x)
@@ -319,32 +317,19 @@ module ManageIQ::Providers
       address = ip.floating_ip_address
 
       new_result = {
-        :type                 => self.class.floating_ip_type,
-        :ems_ref              => uid,
-        :address              => address,
-        :fixed_ip_address     => ip.fixed_ip_address,
-        :cloud_tenant         => parent_manager_fetch_path(:cloud_tenants, ip.tenant_id),
-        :cloud_network        => @data_index.fetch_path(:cloud_networks, ip.floating_network_id),
+        :type             => self.class.floating_ip_type,
+        :ems_ref          => uid,
+        :address          => address,
+        :fixed_ip_address => ip.fixed_ip_address,
+        :cloud_tenant     => parent_manager_fetch_path(:cloud_tenants, ip.tenant_id),
+        :cloud_network    => @data_index.fetch_path(:cloud_networks, ip.floating_network_id),
         # TODO(lsmola) expose attributes in FOG
-        :status               => ip.attributes['status'],
-        :network_port_ems_ref => ip.port_id
+        :status           => ip.attributes['status'],
+        :network_port     => @data_index.fetch_path(:network_ports, ip.port_id),
+        :vm               => @data_index.fetch_path(:network_ports, ip.port_id, :device)
       }
 
       return uid, new_result
-    end
-
-    #
-    # Helper methods
-    #
-
-    def link_network_ports_associations
-      return unless @network_service.name == :neutron
-      # link network ports to floating ips
-      return unless (floating_ips = @data.fetch_path(:floating_ips))
-      floating_ips.each do |floating_ip|
-        network_port_ems_ref = floating_ip.delete(:network_port_ems_ref)
-        floating_ip[:network_port] = @data_index.fetch_path(:network_ports, network_port_ems_ref)
-      end
     end
 
     class << self
@@ -372,10 +357,6 @@ module ManageIQ::Providers
         "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort"
       end
     end
-
-    #
-    # Helper methods
-    #
 
     def data_security_groups_by_name
       @data_security_groups_by_name ||= @data[:security_groups].index_by { |sg| sg[:name] }

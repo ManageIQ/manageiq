@@ -23,7 +23,7 @@ cols:
 - emstype_description
 - port
 - total_vms
-- total_miq_templates
+- total_subnets
 - region_description
 
 # Included tables (joined, has_one, has_many) and columns
@@ -43,7 +43,7 @@ col_order:
 - emstype_description
 - zone.name
 - total_vms
-- total_miq_templates
+- total_subnets
 - region_description
 
 # Column titles, in order
@@ -52,7 +52,7 @@ headers:
 - Type
 - EVM Zone
 - Instances
-- Images
+- Subnets
 - Region
 
 # Condition(s) string for the SQL query

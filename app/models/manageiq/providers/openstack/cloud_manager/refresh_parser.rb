@@ -51,6 +51,7 @@ module ManageIQ::Providers
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
       $fog_log.info("#{log_header}...")
+      # The order of the below methods does matter, because there are inner dependencies of the data!
       get_flavors
       get_availability_zones
       get_tenants
@@ -444,10 +445,6 @@ module ManageIQ::Providers
 
       return uid, new_result
     end
-
-    #
-    # Helper methods
-    #
 
     def clean_up_extra_flavor_keys
       @data[:flavors].each do |f|

@@ -6,4 +6,6 @@ FactoryGirl.define do
 
   factory :network_router_openstack, :class  => "ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter",
                                      :parent => :network_router
+  factory :network_router_amazon, :class  => "ManageIQ::Providers::Amazon::NetworkManager::NetworkRouter",
+                                  :parent => :network_router
 end
