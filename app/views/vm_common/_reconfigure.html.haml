@@ -123,7 +123,7 @@
           %th.narrow
           %th.narrow= _('Dependent')
           %th.narrow= _('Delete Backing')
-          %th= _('Action')
+          %th= _('Actions')
         %tbody
           %tr{"ng-show" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
             %td
@@ -169,9 +169,11 @@
                        "required"                    => "",
                        "selectpicker-for-select-tag" => "")
             %td.narrow
-              %input{"type"     => "checkbox",
-                     "name"     => "cb_dependent",
-                     "ng-model" => "reconfigureModel.cb_dependent"}
+              %input{"bs-switch" => "",
+                     :data       => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"      => "checkbox",
+                     "name"      => "cb_dependent",
+                     "ng-model"  => "reconfigureModel.cb_dependent"}
             %td.narrow
             %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
@@ -187,14 +189,18 @@
             %td.narrow
               {{disk.hdUnit}}
             %td.narrow
-              %input{"type"        => "checkbox",
+              %input{"bs-switch"   => "",
+                     :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"        => "checkbox",
                      "name"        => "cb_dependent",
                      "ng-model"    => "disk.cb_dependent",
                      "ng-if"       => "disk.add_remove=='add'",
                      "ng-disabled" => "disk.add_remove=='add'",
                      "checkchange" => ""}
             %td.narrow
-              %input{"type"        => "checkbox",
+              %input{"bs-switch"   => "",
+                     :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"        => "checkbox",
                      "name"        => "cb_deletebacking",
                      "ng-model"    => "disk.cb_deletebacking",
                      "ng-if"       => "disk.add_remove!='add'",
