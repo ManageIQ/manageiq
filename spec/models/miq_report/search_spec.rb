@@ -44,6 +44,7 @@ describe MiqReport do
   end
 
   context "paged_view_search" do
+    # is this still needed?
     it "should not call get_cached_page to load cached results if target class does not respond to id" do
       report = MiqReport.new(
         :name      => "VmdbDatabaseSetting",
