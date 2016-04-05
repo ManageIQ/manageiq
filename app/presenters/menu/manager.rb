@@ -36,7 +36,13 @@ module Menu
     end
 
     def item_in_section?(item_id, section_id)
-      @id_to_section[section_id].items.collect(&:id).include?(item_id)
+      @id_to_section[section_id].items.collect(&:id).include?(item_id) || item_in_subsection?(item_id, section_id)
+    end
+
+    def item_in_subsection?(item_id, section_id)
+      @id_to_section[section_id].items.collect do |item|
+        item.respond_to?(:items) ? item.items.collect(&:id) : nil
+      end.flatten.compact.include?(item_id)
     end
 
     def tab_features_by_id(tab_id)
