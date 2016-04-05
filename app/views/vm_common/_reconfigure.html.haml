@@ -113,7 +113,7 @@
         %table{:width => "100%", :align => "bottom"}
           %tr
             %td#buttons_on{:align => "right"}
-              %button.btn.btn-default.btn-sm{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
+              %button.btn.btn-primary{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
       %table.table.table-striped.table-hover.table-condensed.table-bordered
         %thead
           %th= _('Name')
@@ -123,7 +123,7 @@
           %th.narrow
           %th.narrow= _('Dependent')
           %th.narrow= _('Delete Backing')
-          %th
+          %th= _('Action')
         %tbody
           %tr{"ng-show" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
             %td
@@ -173,7 +173,7 @@
                      "name"     => "cb_dependent",
                      "ng-model" => "reconfigureModel.cb_dependent"}
             %td.narrow
-            %td
+            %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
           %tr{"ng-repeat" => "disk in reconfigureModel.vmdisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
             %td
@@ -199,7 +199,7 @@
                      "ng-model"    => "disk.cb_deletebacking",
                      "ng-if"       => "disk.add_remove!='add'",
                      "ng-disabled" => "disk.add_remove=='remove'"}
-            %td
+            %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                             "ng-if"    => "disk.add_remove == ''",
                                             "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
@@ -211,20 +211,16 @@
                                              "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel add')
   %hr
   %h3= _('Affected VMs')
-  %table.admintable{:height => "75"}
-    %tbody
-      %tr
-        %td
-          - if @reconfigitems
-            - @embedded = true
-            - @gtl_type = "list"
-            = render :partial => "layouts/gtl"
+  - if @reconfigitems
+    - @embedded = true
+    - @gtl_type = "list"
+    = render :partial => "layouts/gtl"
 
   %table{:width => "100%", :align => "bottom"}
     %tr
       %td#buttons_on{:align => "right"}
         = button_tag(_("Submit"),
-                     :class        => "btn btn-default",
+                     :class        => "btn btn-primary",
                      :alt          => _("Submit"),
                      "ng-click"    => "submitClicked()",
                      "ng-disabled" => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)",
