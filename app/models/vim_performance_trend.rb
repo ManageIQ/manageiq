@@ -23,15 +23,11 @@ class VimPerformanceTrend < ActsAsArModel
 
   def self.vms_by_category(options)
     model, interval = options[:interval_name] == "hourly" ? [MetricRollup, 1.hour] : [VimPerformanceDaily, 1.day]
-    cond = [
-      "timestamp = ? and capture_interval_name = ? and resource_type = ? and tag_names like ?",
-      options[:timestamp],
-      options[:interval_name],
-      "VmOrTemplate",
-      "%" + [options[:group_by_category], options[:group_by_tag]].join("/") + "%"
-    ]
-    rows = model.where(cond).to_a
-    return build(rows, options[:interval_name]), interval
+    rows = model.where(:timestamp             => options[:timestamp],
+                       :capture_interval_name => options[:interval_name],
+                       :resource_type         => "VmOrTemplate")
+                .for_tag_names(options[:group_by_category], options[:group_by_tag])
+    [build(rows.to_a, options), interval]
   end
 
   def self.build(perfs, options)
