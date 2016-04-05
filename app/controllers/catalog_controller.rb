@@ -171,7 +171,8 @@ class CatalogController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       # for generic/orchestration type tabs do not show up on screen as there is only a single tab when form is initialized
       # when display in catalog is checked, replace div so tabs can be redrawn
-      page.replace("form_div", :partial => "st_form") if params[:st_prov_type] || params[:display]
+      page.replace("form_div", :partial => "st_form") if params[:st_prov_type] ||
+        (params[:display] && @edit[:new][:st_prov_type].starts_with?("generic"))
       page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id] || params[:manager_id]
       if params[:display]
         page << "miq_tabs_show_hide('#details_tab', '#{(params[:display] == "1")}')"
