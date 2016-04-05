@@ -127,12 +127,13 @@ module VmCommon
   private :websocket_use_ssl?
 
   def launch_html5_console
+    
     # Since the virtual console opens multiple ports, we need to specify * here!
     # After the WebSocket proxying/multiplexing is done on port 443, use the following line as an override:
     # override_content_security_policy_directives(:connect_src => ["'self'", "wss://#{request.env['SERVER_NAME']}"]
     override_content_security_policy_directives(:connect_src => ['*'], :img_src => %w(data: 'self'))
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
-
+    @record = identify_record(params[:id], VmOrTemplate)
     case protocol
     when 'spice'     # spice, vnc - from rhevm
       view = "vm_common/console_spice"
