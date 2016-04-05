@@ -38,6 +38,7 @@
           = javascript_include_tag '/javascripts/timeline/api/scripts/miq_painters.js'
 
       :javascript
+        ManageIQ.charts.provider = "#{Charting.backend}";
         ManageIQ.browser = "#{j browser_info(:name_ui)}";
         ManageIQ.controller = "#{j controller_name}";
         API.autorenew();
