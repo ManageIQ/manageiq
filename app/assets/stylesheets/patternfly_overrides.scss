@@ -400,3 +400,19 @@ iframe, .iframe {
 .icon-red {
   color: red;
 }
+
+/* Action cell */
+
+.action-cell {
+    position: relative;
+    width: 100px;
+}
+
+.action-cell .btn {
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

@@ -3,19 +3,15 @@
   %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
-        %th.narrow
         %th= _("Name")
         %th= _("Description")
         %th= _("Show in Console")
         %th= _("Single Value")
         %th= _("Capture C & U Data")
         %th= _("Default")
+        %th= _("Actions")
     %tbody
       %tr#new_tr{:onclick => remote_function(:url => {:action => 'category_edit', :id => nil}), :title => _("Click to add a new category")}
-        %td.narrow
-          %ul.icons.list-unstyled
-            %li
-              %span.glyphicon.glyphicon-plus
         %td
           = _("<Click on this row to create a new category>")
         %td
@@ -23,21 +19,11 @@
         %td
         %td
         %td
+        %td.action-cell
+          %button.btn.btn-default.btn-block.btn-sm
+            = _("Add")
       - @categories.each do |cat|
         %tr
-          - if cat[:default] == "t" || cat[:default].to_s == "1"
-            %td.narrow{:title => _("Category '%s' cannot be deleted") % cat[:name]}
-              %ul.icons.list-unstyled
-                %li
-                  %span.pficon.pficon-delete
-          - else
-            %td.narrow{:onclick => remote_function(:url => {:action => 'category_delete',
-              :id      => cat[:id]},
-              :confirm => _("Are you sure you want to delete category '%s'?") % cat[:name]),
-              :title   => _("Click to delete this category")}
-              %ul.icons.list-unstyled
-                %li
-                  %span.pficon.pficon-delete
           - t = _("Click to edit this category")
           %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:name])
@@ -52,3 +38,15 @@
           %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             - default = cat[:default] ? true : false
             = h(default)
+
+          - if cat[:default] == "t" || cat[:default].to_s == "1"
+            %td.action-cell{:title => _("Category '%s' cannot be deleted") % cat[:name]}
+              %button.btn.btn-default.btn-block.btn-sm
+                = _("Delete")
+          - else
+            %td.action-cell{:onclick => remote_function(:url => {:action => 'category_delete',
+              :id      => cat[:id]},
+              :confirm => _("Are you sure you want to delete category '%s'?") % cat[:name]),
+              :title   => _("Click to delete this category")}
+              %button.btn.btn-default.btn-block.btn-sm
+                = _("Delete")
