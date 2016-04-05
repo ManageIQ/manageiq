@@ -567,51 +567,6 @@ class ChargebackController < ApplicationController
     @edit[:new][:rate_type] = @rate.rate_type || x_node.split('-').last
     @edit[:new][:details] = []
 
-    # need to figure out a way to do this without reading yaml
-    if rate_details.blank?
-      fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
-      if File.exist?(fixture_file)
-        fixture = YAML.load_file(fixture_file)
-        fixture.each do |cbr|
-          if cbr[:rate_type] == x_node.split('-').last
-            rates = cbr.delete(:rates)
-            rates.each_with_index do |detail, detail_index|
-              detail_new = ChargebackRateDetail.new(:description => detail[:description],
-                                                    :source      => detail[:source],
-                                                    :per_time    => detail[:per_time],
-                                                    :group       => detail[:group],
-                                                    :per_unit    => detail[:per_unit],
-                                                    :metric      => detail[:metric])
-              @edit[:new][:tiers][detail_index] = []
-              cb_tiers = detail.delete(:tiers)
-              rate_tiers = []
-              cb_tiers.each do |tier|
-                tier_new = ChargebackTier.new(:start                     => tier.delete(:start),
-                                              :end                       => tier.delete(:end),
-                                              :fixed_rate                => tier.delete(:fixed_rate),
-                                              :variable_rate             => tier.delete(:variable_rate),
-                                              :chargeback_rate_detail_id => detail_new.id)
-                rate_tiers.append(tier_new)
-              end
-              # if the rate detail has a measure associated
-              unless detail[:measure].nil?
-                # Copy the measure id of the rate_detail linkig with the rate_detail_measure
-                id_measure = ChargebackRateDetailMeasure.find_by(:name => detail[:measure]).id
-                detail_new.chargeback_rate_detail_measure_id = id_measure
-              end
-              # Copy the currency id of the rate detail linking with the rate_detail_currency
-              if detail[:type_currency]
-                id_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency]).id
-                detail_new.chargeback_rate_detail_currency_id = id_currency
-              end
-              rate_details.push(detail_new) unless rate_details.include?(detail_new)
-              tiers.push(rate_tiers)
-            end
-          end
-        end
-      end
-    end
-
     # Select the currency of the first chargeback_rate_detail. All the chargeback_rate_details have the same currency
     @edit[:new][:currency] = rate_details[0].chargeback_rate_detail_currency_id
     @edit[:new][:code_currency] = rate_details[0].detail_currency.code
