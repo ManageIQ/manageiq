@@ -167,6 +167,10 @@ module Metric::Common
   end
 
   class_methods do
+    def for_tag_names(*args)
+      where("tag_names like ?", "%" + args.join("/") + "%")
+    end
+
     def for_time_range(start_time, end_time)
       if start_time.nil?
         none

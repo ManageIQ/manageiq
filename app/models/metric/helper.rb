@@ -1,4 +1,8 @@
 module Metric::Helper
+  def self.class_for_interval_name(interval_name, rollup_class = nil)
+    interval_name == "realtime" ? Metric : (rollup_class || MetricRollup)
+  end
+
   def self.class_and_association_for_interval_name(interval_name)
     interval_name == "realtime" ? [Metric, :metrics] : [MetricRollup, :metric_rollups]
   end

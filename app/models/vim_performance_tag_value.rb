@@ -62,24 +62,14 @@ class VimPerformanceTagValue < ApplicationRecord
     tag_cols = TAG_COLS.key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
 
     if parent_perf.kind_of?(VimPerformanceDaily)
-      klass = MetricRollup
-      conditions = [
-        "resource_type = ? AND resource_id IN (?) AND (timestamp >= ? AND timestamp < ?) AND tag_names LIKE ? AND capture_interval_name = 'hourly'",
-        children.first.class.base_class.name,
-        children.collect(&:id),
-        ts, ts + 1.day, "%#{options[:category]}/%"
-      ]
+      recs = MetricRollup.with_interval_and_time_range("hourly", (ts)..(ts+1.day)).where(:resource => children)
+                         .for_tag_names(options[:category], "") # append trailing slash
     else
-      klass, meth = Metric::Helper.class_and_association_for_interval_name(parent_perf.capture_interval_name)
-      conditions = {
-        :resource_type         => children.first.class.base_class.name,
-        :resource_id           => children.collect(&:id),
-        :timestamp             => parent_perf.timestamp,
-        :capture_interval_name => parent_perf.capture_interval_name
-      }
+      recs = Metric::Helper.class_for_interval_name(parent_perf.capture_interval_name).where(:resource => children)
+                           .with_interval_and_time_range(parent_perf.capture_interval_name, parent_perf.timestamp)
     end
     perf_data = {}
-    perf_data[:perf_recs] = klass.where(conditions)
+    perf_data[:perf_recs] = recs
     perf_data[:categories] = perf_data[:perf_recs].collect do |perf|
       perf.tag_names.split(TAG_SEP).collect { |t| t.split("/").first } unless perf.tag_names.nil?
     end.flatten.compact.uniq
