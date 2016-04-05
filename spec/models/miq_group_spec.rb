@@ -1,100 +1,121 @@
 describe MiqGroup do
-  context "set as Super Administrator" do
-    before(:each) do
-      @miq_group = FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator")
-    end
+  context "filters" do
+    let(:miq_group) { FactoryGirl.create(:miq_group,
+                                         :group_type  => "system",
+                                         :entitlement => entitlement) }
 
-    context "#get_filters" do
-      it "normal" do
-        expected = {:test => "test filter"}
-        @miq_group.filters = expected
-        expect(@miq_group.get_filters).to eq(expected)
-      end
-
-      it "when nil" do
-        @miq_group.filters = nil
-        expect(@miq_group.get_filters).to eq("managed" => [], "belongsto" => [])
-      end
-
-      it "when {}" do
-        @miq_group.filters = {}
-        expect(@miq_group.get_filters).to eq({})
-      end
-    end
-
-    context "#has_filters?" do
-      it "normal" do
-        @miq_group.filters = {"managed" => %w(a)}
-        expect(@miq_group).to be_has_filter
-      end
-
-      it "when other" do
-        @miq_group.filters = {"other" => %(x)}
-        expect(@miq_group).not_to be_has_filter
-      end
-
-      it "when nil" do
-        @miq_group.filters = nil
-        expect(@miq_group).not_to be_has_filter
-      end
-
-      it "when {}" do
-        @miq_group.filters = {}
-        expect(@miq_group).not_to be_has_filter
-      end
-    end
-
-    %w(managed belongsto).each do |type|
-      context "#get_#{type}_filters" do
-        let(:method) { "get_#{type}_filters" }
-
-        it "normal" do
-          expected = {type => "test filter"}
-          @miq_group.filters = expected
-          expect(@miq_group.public_send(method)).to eq(expected[type])
-        end
-
-        it "when nil" do
-          @miq_group.filters = nil
-          expect(@miq_group.public_send(method)).to eq([])
-        end
-
-        it "when []" do
-          @miq_group.filters = []
-          expect(@miq_group.public_send(method)).to eq([])
-        end
-
-        it "missing the #{type} key" do
-          expected = {"something" => "test filter"}
-          @miq_group.filters = expected
-          expect(@miq_group.public_send(method)).to eq([])
+    describe "#get_filters and #has_filters?" do
+      let(:entitlement) { Entitlement.create!(:tag_filters      => ["/managed/operations/analysis_failed"],
+                                              :resource_filters => ["/belongsto/ExtManagementSystem|RHEVM"]) }
+      context "with both filter types" do
+        example do
+          expect(miq_group.get_filters)
+            .to eq({"managed" => ["/managed/operations/analysis_failed"], "belongsto" => ["/belongsto/ExtManagementSystem|RHEVM"]})
+          expect(miq_group.has_filters?).to be_truthy
         end
       end
 
-      it "#set_#{type}_filters" do
-        filters = {type => "test"}
-        @miq_group.public_send("set_#{type}_filters", filters[type])
-        expect(@miq_group.public_send("get_#{type}_filters")).to eq(filters[type])
-        expect(@miq_group.get_filters).to eq(filters)
+      context "with one filter type" do
+        let(:entitlement) { Entitlement.create!(:tag_filters => ["/managed/operations/analysis_failed"]) }
+
+        example do
+          expect(miq_group.get_filters)
+            .to eq({"managed" => ["/managed/operations/analysis_failed"], "belongsto" => []})
+          expect(miq_group.has_filters?).to be_truthy
+        end
+      end
+
+      context "with no filters" do
+        let(:entitlement) { nil }
+
+        example do
+          expect(miq_group.get_filters).to eq({"managed" => [], "belongsto" => []})
+          expect(miq_group.has_filters?).to be_falsey
+        end
+      end
+
+      context "specifying a filter type" do
+        example do
+          expect(miq_group.get_filters("belongsto"))
+            .to eq(["/belongsto/ExtManagementSystem|RHEVM"])
+          expect(miq_group.has_filters?).to be_truthy
+        end
       end
     end
+
+    describe "#get_managed_filters and #get_belongsto_filters" do
+      let(:entitlement) { Entitlement.create!(:tag_filters      => ["/managed/operations/analysis_failed"],
+                                              :resource_filters => ["/belongsto/ExtManagementSystem|RHEVM"]) }
+
+      context "with both filter types" do
+        example do
+          expect(miq_group.get_managed_filters).to eq(["/managed/operations/analysis_failed"])
+          expect(miq_group.get_belongsto_filters).to eq(["/belongsto/ExtManagementSystem|RHEVM"])
+        end
+      end
+
+      context "with no filters" do
+        let(:entitlement) { nil }
+
+        example do
+          expect(miq_group.get_managed_filters).to eq([])
+          expect(miq_group.get_belongsto_filters).to eq([])
+        end
+      end
+    end
+
+    describe "#set_managed_filters" do
+      let(:entitlement) { nil }
+
+      it "sets the tag_filters, properly creating an entitlement if necessary" do
+        expect(miq_group.entitlement).to be_nil
+        miq_group.set_managed_filters(%w(/managed/operations/analysis_failed some_filter))
+        expect(miq_group.entitlement).to be_present
+        expect(miq_group.entitlement).to be_persisted # :autosave
+        expect(miq_group.entitlement.tag_filters).to eq(%w(/managed/operations/analysis_failed some_filter))
+        miq_group.set_managed_filters(%w(some_filter))
+        expect(miq_group.entitlement.changed?).to be_truthy # :autosave
+        miq_group.save!
+        expect(miq_group.entitlement.tag_filters).to eq(%w(some_filter))
+      end
+    end
+
+    describe "#set_belongsto_filters" do
+      let(:entitlement) { nil }
+
+      it "sets the resource_filters, creating an entitlement if necessary" do
+        expect(miq_group.entitlement).to be_nil
+        miq_group.set_belongsto_filters(%w(/belongsto/ExtManagementSystem|RHEVM some_filter))
+        expect(miq_group.entitlement).to be_present
+        expect(miq_group.entitlement).to be_persisted # :autosave
+        expect(miq_group.entitlement.resource_filters).to eq(%w(/belongsto/ExtManagementSystem|RHEVM some_filter))
+        miq_group.set_belongsto_filters(%w(some_filter))
+        expect(miq_group.entitlement.changed?).to be_truthy # :autosave
+        miq_group.save!
+        expect(miq_group.entitlement.resource_filters).to eq(%w(some_filter))
+      end
+    end
+  end
+
+  context "as Super Administrator" do
+    let(:miq_group) { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
     it "should return user role name" do
-      expect(@miq_group.miq_user_role_name).to eq("EvmRole-super_administrator")
+      expect(miq_group.miq_user_role_name).to eq("EvmRole-super_administrator")
     end
 
     it "should set group type to 'system' " do
-      expect(@miq_group.group_type).to eq("system")
+      expect(miq_group.group_type).to eq("system")
     end
 
     it "should return user count" do
       # TODO: - add more users to check for proper user count...
-      expect(@miq_group.user_count).to eq(0)
+      expect(miq_group.user_count).to eq(0)
     end
 
     it "should strip group description of leading and trailing spaces" do
-      @miq_group.description = "      leading and trailing white spaces     "
-      expect(@miq_group.description).to eq("leading and trailing white spaces")
+      miq_group.description = "      leading and trailing white spaces     "
+      expect(miq_group.description).to eq("leading and trailing white spaces")
     end
   end
 
