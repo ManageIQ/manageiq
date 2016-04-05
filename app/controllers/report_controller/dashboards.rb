@@ -115,10 +115,6 @@ module ReportController::Dashboards
     assert_privileges("db_delete")
     db = MiqWidgetSet.find_by_id(params[:id])       # temp var to determine the parent node of deleted items
     process_elements(db, MiqWidgetSet, "destroy")
-    unless flash_errors?
-      add_flash(_("The selected Dashboard was deleted"),
-                :info, true)
-    end
     g = MiqGroup.find(from_cid(@sb[:nodes][2].split('_').first))
     # delete dashboard id from group settings and save
     db_order = g.settings && g.settings[:dashboard_order] ? g.settings[:dashboard_order] : nil
