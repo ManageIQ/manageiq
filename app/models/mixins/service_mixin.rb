@@ -104,16 +104,6 @@ module ServiceMixin
     nil
   end
 
-  def compact_group_indexes
-    # Remove empty group
-    last_idx = last_group_index
-    return if last_idx == 0
-
-    last_idx.downto(0) do |idx|
-      each_group_resource { |r| r.group_idx -= 1 if r.group_idx >= idx } unless self.group_has_resources?(idx)
-    end
-  end
-
   def is_circular_reference?(child_svc)
     circular_reference_check(child_svc).nil? ? false : true
   end

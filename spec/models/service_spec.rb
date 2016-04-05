@@ -233,23 +233,6 @@ describe Service do
         expect(@service.next_group_index(0, -1)).to be_nil
       end
 
-      it "should compact group indexes to remove empty groups" do
-        @service.compact_group_indexes
-        expect(@service.last_group_index).to equal(0)
-
-        @service.service_resources.first.group_idx = 3
-        expect(@service.last_group_index).to equal(3)
-        expect(@service.group_has_resources?(1)).to be_falsey
-
-        @service.compact_group_indexes
-        expect(@service.last_group_index).to equal(1)
-        expect(@service.group_has_resources?(1)).to be_truthy
-
-        @service.remove_all_resources
-        expect(@service.group_has_resources?(0)).to be_falsey
-        @service.compact_group_indexes
-        expect(@service.last_group_index).to equal(0)
-      end
 
       it "should not allow the same VM to be added to more than one services" do
         vm = Vm.first
