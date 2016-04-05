@@ -1,12 +1,8 @@
 class ChargebackRateDetailCurrencyNotNil < ActiveRecord::Migration
   # Migration in order to put a currency by default in rates that were added by a user before the addition of currencies
-  class ChargebackRateDetail < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class ChargebackRateDetail < ActiveRecord::Base; end
 
-  class ChargebackRateDetailCurrency < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class ChargebackRateDetailCurrency < ActiveRecord::Base; end
 
   def up
     chargeback_rate_details = ChargebackRateDetail.where(:chargeback_rate_detail_currency_id => nil)

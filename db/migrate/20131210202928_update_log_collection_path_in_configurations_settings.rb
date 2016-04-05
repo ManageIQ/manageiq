@@ -1,7 +1,6 @@
 class UpdateLogCollectionPathInConfigurationsSettings < ActiveRecord::Migration
   class Configuration < ActiveRecord::Base
     serialize :settings
-    self.inheritance_column = :_type_disabled # disable STI
   end
 
   NEW_PG_CONF_PATH = "/opt/rh/postgresql92/root/var/lib/pgsql/data/*.conf"

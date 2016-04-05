@@ -1,7 +1,5 @@
 class AssignTenantToMiqRequest < ActiveRecord::Migration
   class Tenant < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     # seed and return the current root_tenant
     def self.root_tenant
       create_with(
@@ -13,13 +11,9 @@ class AssignTenantToMiqRequest < ActiveRecord::Migration
     end
   end
 
-  class MiqAeNamespace < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqAeNamespace < ActiveRecord::Base; end
 
-  class MiqGroup < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqGroup < ActiveRecord::Base; end
 
   class ExtManagementSystem < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
@@ -49,9 +43,7 @@ class AssignTenantToMiqRequest < ActiveRecord::Migration
     self.inheritance_column = :_type_disabled # disable STI
   end
 
-  class ServiceTemplateCatalog < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class ServiceTemplateCatalog < ActiveRecord::Base; end
 
   def up
     models = [ExtManagementSystem, MiqAeNamespace, MiqGroup, Provider, Vm,

@@ -1,12 +1,9 @@
 class MigrateFilteredEventsToBlacklistedEvents < ActiveRecord::Migration
   class Configuration < ActiveRecord::Base
     serialize :settings
-    self.inheritance_column = :_type_disabled
   end
 
-  class BlacklistedEvent < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class BlacklistedEvent < ActiveRecord::Base; end
 
   def up
     say_with_time('Migrating filtered events from Configuration to BlacklistedEvent') do

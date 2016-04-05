@@ -1,11 +1,7 @@
 class MiqGroupsAddLdapRole < ActiveRecord::Migration
-  class MiqUserRole < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqUserRole < ActiveRecord::Base; end
 
-  class MiqGroup < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqGroup < ActiveRecord::Base; end
 
   def up
     say_with_time "migrating old ldap groups" do

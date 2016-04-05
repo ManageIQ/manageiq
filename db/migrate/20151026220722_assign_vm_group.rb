@@ -1,7 +1,5 @@
 class AssignVmGroup < ActiveRecord::Migration
   class Tenant < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-
     def self.root_tenant
       where(:ancestry => nil).first
     end

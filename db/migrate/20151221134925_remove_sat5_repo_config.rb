@@ -1,7 +1,5 @@
 class RemoveSat5RepoConfig < ActiveRecord::Migration
-  class MiqDatabase < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class MiqDatabase < ActiveRecord::Base; end
 
   class Authentication < ActiveRecord::Base
     self.inheritance_column = :_type_disabled

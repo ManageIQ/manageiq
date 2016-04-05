@@ -1,7 +1,5 @@
 class AddVmwareRoDatastoresToHostsStorages < ActiveRecord::Migration
-  class HostsStorage < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class HostsStorage < ActiveRecord::Base; end
 
   def up
     rename_table :hosts_storages, :host_storages

@@ -11,8 +11,5 @@ module MigrationStubHelper
     def self.name
       super.split("::")[1..-1].join("::")
     end
-
-    # Disable STI, so we don't have to define every subclass
-    self.inheritance_column = :_type_disabled
   end
 end

@@ -1,11 +1,7 @@
 class RemoveVmDiscoverRowFromMiqEventDefinitions < ActiveRecord::Migration
-  class Relationship < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class Relationship < ActiveRecord::Base; end
 
-  class MiqEventDefinition < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
-  end
+  class MiqEventDefinition < ActiveRecord::Base; end
 
   def up
     say_with_time("Remove event definition vm_discover") do

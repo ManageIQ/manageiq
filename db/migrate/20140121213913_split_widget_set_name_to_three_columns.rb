@@ -1,7 +1,5 @@
 class SplitWidgetSetNameToThreeColumns < ActiveRecord::Migration
-  class MiqSet < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
-  end
+  class MiqSet < ActiveRecord::Base; end
 
   def up
     add_column :miq_sets, :userid,  :string

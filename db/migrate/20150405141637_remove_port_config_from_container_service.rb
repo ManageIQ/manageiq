@@ -1,12 +1,10 @@
 class RemovePortConfigFromContainerService < ActiveRecord::Migration
   class ContainerService < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     has_many :container_service_port_configs,
              :class_name => "RemovePortConfigFromContainerService::ContainerServicePortConfig"
   end
 
   class ContainerServicePortConfig < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     belongs_to :container_service,
                :class_name => "RemovePortConfigFromContainerService::ContainerService"
   end

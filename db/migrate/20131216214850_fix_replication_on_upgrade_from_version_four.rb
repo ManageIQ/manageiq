@@ -4,7 +4,6 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
 
   class Configuration < ActiveRecord::Base
     serialize :settings
-    self.inheritance_column = :_type_disabled # disable STI
   end
 
   V5_DEFAULT_EXCLUDE_TABLES = %w(
