@@ -127,7 +127,6 @@ module VmCommon
   private :websocket_use_ssl?
 
   def launch_html5_console
-    
     # Since the virtual console opens multiple ports, we need to specify * here!
     # After the WebSocket proxying/multiplexing is done on port 443, use the following line as an override:
     # override_content_security_policy_directives(:connect_src => ["'self'", "wss://#{request.env['SERVER_NAME']}"]
