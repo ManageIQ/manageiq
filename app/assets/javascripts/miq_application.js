@@ -1199,7 +1199,7 @@ function miqJqueryRequest(url, options) {
     };
   }
 
-  $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  return $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
 function miqDomElementExists(element) {
