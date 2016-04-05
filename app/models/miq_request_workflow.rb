@@ -1100,7 +1100,7 @@ class MiqRequestWorkflow
     MiqPreloader.preload(hosts, :storages)
 
     storages = hosts.each_with_object({}) do |host, hash|
-      host.storages.each { |s| hash[s.id] = s }
+      host.writable_storages.each { |s| hash[s.id] = s }
     end.values
 
     allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|

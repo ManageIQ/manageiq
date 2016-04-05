@@ -19,7 +19,7 @@ prov.eligible_hosts.each do |h|
   nvms = h.vms.length
 
   if min_registered_vms.nil? || nvms < min_registered_vms
-    s = h.storages.max_by(&:free_space)
+    s = h.writable_storages.max_by(&:free_space)
     unless s.nil?
       host    = h
       storage = s
