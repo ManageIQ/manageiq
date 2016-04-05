@@ -2298,6 +2298,7 @@ class ApplicationController < ActionController::Base
       get_data_size(session_hash)
       dump_session_data(session_hash) if get_vmdb_config[:product][:dump_session]
     end
+    $log.info(session.inspect)
   end
 
   # Following 3 methods moved here to ensure they are loaded at the right time and will be available to all controllers
