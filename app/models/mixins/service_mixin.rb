@@ -18,6 +18,7 @@ module ServiceMixin
     rsc_type = rsc.class.base_class.name.tableize
     raise _("Cannot connect service with nil ID.") if rsc.id.nil? && rsc_type == "service_templates"
 
+    # what is this?
     sr = service_resources.detect { |sr| sr.resource_type == rsc.class.base_class.name && sr.resource_id == rsc.id }
     if sr.nil?
       if options.kind_of?(ServiceResource)
@@ -35,12 +36,15 @@ module ServiceMixin
         sr = service_resources.new(nh.merge(:resource => rsc))
         set_service_type if self.respond_to?(:set_service_type)
         # Create link between services
-        services << rsc if self.class == Service && rsc.class == Service
+        rsc.update_attributes(:parent => self) if self.class == Service && rsc.class == Service
       end
     end
     sr
   end
-  alias_method :<<, :add_resource
+
+  def <<(*args)
+    add_resource(*args)
+  end
 
   def add_resource!(rsc, options = {})
     sr = add_resource(rsc, options)
@@ -105,12 +109,17 @@ module ServiceMixin
   end
 
   def is_circular_reference?(child_svc)
-    circular_reference_check(child_svc).nil? ? false : true
+    return true if child_svc == self
+    if child_svc.kind_of?(Service)
+      ancestor_ids.include?(child_svc.id)
+    elsif child_svc.kind_of?(ServiceTemplate)
+      !!circular_reference_check(child_svc)
+    end
   end
 
   def circular_reference_check(child_svc, parent_svc = self)
     return child_svc if child_svc == parent_svc
-    return nil unless child_svc.kind_of?(Service) || child_svc.kind_of?(ServiceTemplate)
+    return nil unless child_svc.kind_of?(ServiceTemplate)
     parent_services(parent_svc).each do |service|
       return(service) if service.id == child_svc.id
       result = circular_reference_check(child_svc, service)
@@ -120,23 +129,8 @@ module ServiceMixin
   end
 
   def parent_services(svc = self)
+    return svc.ancestors if svc.kind_of?(Service)
     srs = ServiceResource.where(:resource => svc)
     srs.collect { |sr| sr.public_send(sr.resource_type.underscore) }.compact
-  end
-
-  def sub_services(options = {})
-    klass = self.class
-    result = service_resources.collect do |s|
-      svcs = []
-      if s.resource.kind_of?(klass)
-        svcs << s.resource
-        if options[:recursive] == true
-          svcs << s.resource.sub_services(options)
-        end
-      end
-      svcs
-    end
-
-    result.compact.flatten
   end
 end

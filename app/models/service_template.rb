@@ -33,6 +33,25 @@ class ServiceTemplate < ApplicationRecord
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
 
+  # almost feels like service_templates
+  def children
+    klass = self.class
+    service_resources.flat_map do |s|
+      s.resource.kind_of?(klass) ? s.resource : []
+    end
+  end
+
+  def descendants
+    klass = self.class
+    service_resources.flat_map do |s|
+      if s.resource.kind_of?(klass)
+        s.resource.descendants + [s.resource]
+      else
+        []
+      end
+    end
+  end
+
   def custom_actions
     generic_button_group = CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
     custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
