@@ -1,24 +1,26 @@
 class SetCorrectStiTypeOnCloudSubnet < ActiveRecord::Migration
-  def up
-    connection.execute <<-SQL
-      UPDATE cloud_subnets
-      SET type = 'CloudSubnet'
-    SQL
+  CLOUD_SUBNET         = "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet".freeze
+  CLOUD_PUBLIC_CLASS   = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public".freeze
+  CLOUD_PRIVATE_CLASS  = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private".freeze
 
-    # Set OpenStack specific STI types
-    connection.execute <<-SQL
-      UPDATE cloud_subnets s
-      SET type = 'ManageIQ::Providers::Openstack::CloudManager::CloudSubnet'
-      FROM cloud_networks n
-      WHERE s.cloud_network_id = n.id AND ( n.type = 'ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private' OR
-                                            n.type = 'ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public')
-    SQL
+  class CloudNetwork < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled
+  end
+
+  class CloudSubnet < ActiveRecord::Base
+    self.inheritance_column = :_type_disabled
+
+    belongs_to :cloud_network
+  end
+
+  def up
+    CloudSubnet.update_all(:type => "CloudSubnet")
+
+    CloudSubnet.joins(:cloud_network).where(:cloud_networks => {:type => [CLOUD_PUBLIC_CLASS, CLOUD_PRIVATE_CLASS]})
+               .update_all(:type => CLOUD_SUBNET)
   end
 
   def down
-    connection.execute <<-SQL
-      UPDATE cloud_subnets
-      SET type = NULL
-    SQL
+    CloudSubnet.update_all(:type => nil)
   end
 end
