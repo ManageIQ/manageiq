@@ -26,7 +26,7 @@ module ChartingHelper
     case Charting.backend
     when :ziya   then ziya_chart(nil, options.slice(:id, :bgcolor, :width, :height))
     when :jqplot then jqplot_sample(options.slice(:id, :bgcolor, :width, :height))
-    when :c3     then c3chart_sample
+    when :c3     then content_tag(:div, '', :id => options[:id])
     end
   end
 
