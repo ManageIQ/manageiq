@@ -570,7 +570,7 @@ class ChargebackController < ApplicationController
       temp[:currency]         = detail.detail_currency.id
 
       tiers[detail_index] = []
-      detail.chargeback_tiers.each do |tier|
+      detail.chargeback_tiers.order(:start).each do |tier|
         temp2 = tier.slice(:fixed_rate, :variable_rate, :start, :end)
         temp2[:id] = params[:typ] == "copy" ? nil : tier.id
         temp2[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
