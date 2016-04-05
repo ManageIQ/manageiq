@@ -1904,8 +1904,13 @@
           :feature_type: admin
           :hidden: true
           :identifier: ab_group_new
+        - :name: Edit
+          :description: Edit Button Group
+          :feature_type: admin
+          :hidden: true
+          :identifier: ab_group_edit
         - :name: Delete
-          :description: Delete Buttons
+          :description: Delete Button Group
           :feature_type: admin
           :hidden: true
           :identifier: ab_group_delete
@@ -1935,7 +1940,7 @@
           :description: Edit Button
           :feature_type: admin
           :hidden: true
-          :identifier: ab_group_edit
+          :identifier: ab_button_edit
         - :name: Delete
           :description: Delete Buttons
           :feature_type: admin
