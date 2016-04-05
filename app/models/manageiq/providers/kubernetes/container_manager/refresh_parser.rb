@@ -640,10 +640,11 @@ module ManageIQ::Providers::Kubernetes
 
       [
         {
-          :name      => parts[:name],
-          :tag       => parts[:tag],
-          :digest    => parts[:digest],
-          :image_ref => image_ref,
+          :name          => parts[:name],
+          :tag           => parts[:tag],
+          :digest        => parts[:digest],
+          :image_ref     => image_ref,
+          :registered_on => Time.now.utc
         },
         (parts[:host] || parts[:host2]) && {
           :name => parts[:host] || parts[:host2],
