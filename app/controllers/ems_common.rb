@@ -10,7 +10,7 @@ module EmsCommon
     @ems = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@ems)
 
-    @gtl_url = show_link(@ems) << "?"
+    @gtl_url = "/show"
     @showtype = "config"
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 

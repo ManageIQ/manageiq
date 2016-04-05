@@ -18,7 +18,7 @@ class AvailabilityZoneController < ApplicationController
     @availability_zone = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@availability_zone)
 
-    @gtl_url = "/availability_zone/show/" << @availability_zone.id.to_s << "?"
+    @gtl_url = "/show"
     drop_breadcrumb({:name => _("Availabilty Zones"),
                      :url  => "/availability_zones/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display

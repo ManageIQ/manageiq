@@ -17,7 +17,7 @@ class OrchestrationStackController < ApplicationController
     @orchestration_stack = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@orchestration_stack)
 
-    @gtl_url = "/orchestration_stack/show/" << @orchestration_stack.id.to_s << "?"
+    @gtl_url = "/show"
     drop_breadcrumb({:name => _("Orchestration Stacks"),
                      :url  => "/orchestration_stack/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display

@@ -25,7 +25,7 @@ class CloudObjectStoreObjectController < ApplicationController
     @object_store_object = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@object_store_object)
 
-    @gtl_url = "/cloud_object_store_object/show#{@object_store_object.id}?"
+    @gtl_url = "/show"
     drop_breadcrumb(
       {
         :name => ui_lookup(:tables => "cloud_objects"),

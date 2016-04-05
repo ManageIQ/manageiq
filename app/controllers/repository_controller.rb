@@ -23,7 +23,7 @@ class RepositoryController < ApplicationController
                       :url  => "/repository/show/#{@repo.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @repo) # Get the records (into a view) and the paginator
       @showtype = @display
-      @gtl_url = "/repository/show/" << @repo.id.to_s << "?"
+      @gtl_url = "/show"
       notify_about_unauthorized_items(title, _('Repository'))
 
     when "download_pdf", "main", "summary_only"

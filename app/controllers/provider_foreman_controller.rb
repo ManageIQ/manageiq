@@ -248,7 +248,7 @@ class ProviderForemanController < ApplicationController
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
-    @gtl_url = "/provider_foreman/show/#{@record.id}?"
+    @gtl_url = "/show"
     set_summary_pdf_data if "download_pdf" == @display
   end
 

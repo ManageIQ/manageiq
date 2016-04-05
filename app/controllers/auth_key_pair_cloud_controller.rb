@@ -171,7 +171,7 @@ class AuthKeyPairCloudController < ApplicationController
     @auth_key_pair_cloud = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@auth_key_pair_cloud)
 
-    @gtl_url = "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}?"
+    @gtl_url = "/show"
     drop_breadcrumb(
       {:name => _("Key Pairs"), :url => "/auth_key_pair_cloud/show_list?page=#{@current_page}&refresh=y"},
       true

@@ -55,7 +55,7 @@ module ContainersCommonMixin
   def show_container(record, controller_name, display_name)
     return if record_no_longer_exists?(record)
 
-    @gtl_url = "/#{controller_name}/show/" << record.id.to_s << "?"
+    @gtl_url = "/show"
     drop_breadcrumb({:name => display_name,
                      :url  => "/#{controller_name}/show_list?page=#{@current_page}&refresh=y"},
                     true)
