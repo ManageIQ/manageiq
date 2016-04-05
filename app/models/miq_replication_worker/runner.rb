@@ -99,18 +99,26 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   def stop_rubyrep
     if rubyrep_alive?
       _log.info("#{log_prefix} Shutting down replication process...pid=#{@pid}")
-      Process.kill("INT", @pid)
-      wait_on_rubyrep
+      stop_rubyrep_process
       _log.info("#{log_prefix} Shutting down replication process...Complete")
     end
   end
 
+  def stop_rubyrep_process
+    return unless @pid
+    Process.kill("INT", @pid)
+    wait_on_rubyrep
+  end
+
+  # Waits for a rubyrep process to stop.  The process is expected to be
+  #   in the act of shutting down, and thus it will wait 5 minutes
+  #   before issuing a kill.
   def wait_on_rubyrep
     # TODO: Use Process.waitpid or one of its async variants
     begin
       Timeout.timeout(5.minutes.to_i) do
         loop do
-          break unless rubyrep_alive?
+          break unless process_alive?(@pid)
           sleep 1
           heartbeat
         end
@@ -120,10 +128,15 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
       Process.kill(9, @pid)
     end
 
-    $log.info("#{log_prefix} rubyrep Waiting for process with pid=#{@pid}")
+    _log.info("#{log_prefix} rubyrep Waiting for process with pid=#{@pid}")
     pid, status = Process.waitpid2(@pid)
     _log.info("#{log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
 
+    reset_process_info
+  end
+
+  def reset_process_info
+    child_process_heartbeat_file_delete
     @pid = @stdout = @stderr = nil
   end
 
@@ -139,38 +152,54 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   end
 
   def rubyrep_alive?
+    if process_alive?(@pid) && child_process_recently_active?
+      true
+    else
+      reset_process_info
+      false
+    end
+  end
+
+  # TODO: Should this move to MiqProcess as it's a generic check?
+  def process_alive?(pid)
     begin
-      pid_state = MiqProcess.state(@pid) unless @pid.nil?
+      pid_state = MiqProcess.state(pid) unless pid.nil?
     rescue SystemCallError => err
-      $log.error("#{log_prefix} rubyrep Process with pid=#{@pid} SystemCallError '#{err.message}' while checking process state")
+      _log.error("#{log_prefix} rubyrep Process with pid=#{pid} SystemCallError '#{err.message}' while checking process state")
       return false
     end
 
-    return true unless pid_state.nil? || pid_state == :zombie || !child_process_recently_active?
-    $log.info(
-      "#{log_prefix} rubyrep Process with pid=#{@pid} child has not heartbeat since #{child_process_last_heartbeat}"
-    ) unless child_process_recently_active?
+    return true if pid_state && pid_state != :zombie
 
     if pid_state == :zombie
-      pid, status = Process.waitpid2(@pid)
-      _log.info("#{log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
+      zombie_pid, status = Process.waitpid2(pid)
+      _log.info("#{log_prefix} rubyrep Process with pid=#{zombie_pid} exited with a status=#{status}")
     end
 
-    $log.info("#{log_prefix} rubyrep Process with pid=#{@pid} is not alive pid_state=#{pid_state}")
+    _log.info("#{log_prefix} rubyrep Process with pid=#{pid} is not alive pid_state=#{pid_state}")
     false
   end
 
   def child_process_heartbeat_file_init
-    FileUtils.touch(child_process_heartbeat_settings[:file]) if child_process_heartbeat_settings[:file]
+    FileUtils.touch(child_process_heartbeat_settings[:file])
+  end
+
+  def child_process_heartbeat_file_delete
+    FileUtils.rm_f(child_process_heartbeat_settings[:file])
   end
 
   def child_process_recently_active?
-    child_process_last_heartbeat && (child_process_last_heartbeat >= child_process_heartbeat_settings[:threshold].seconds.ago.utc)
+    if child_process_last_heartbeat >= child_process_heartbeat_settings[:threshold].seconds.ago.utc
+      true
+    else
+      stop_rubyrep_process
+      false
+    end
   end
 
   def child_process_last_heartbeat
     hb_file = child_process_heartbeat_settings[:file]
-    File.exist?(hb_file) ? File.mtime(hb_file).utc : nil
+    File.exist?(hb_file) ? File.mtime(hb_file).utc : Time.at(0).utc
   end
 
   def child_process_heartbeat_settings
@@ -183,7 +212,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   def rubyrep_run(verb)
     verb = :local_uninstall if verb == :uninstall
 
-    $log.info("#{log_prefix} rubyrep process for verb=#{verb} starting")
+    _log.info("#{log_prefix} rubyrep process for verb=#{verb} starting")
 
     child_process_heartbeat_file_init
 
