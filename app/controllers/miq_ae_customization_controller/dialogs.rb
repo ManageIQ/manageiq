@@ -381,20 +381,32 @@ module MiqAeCustomizationController::Dialogs
     if nodes.length > 1
       name = :groups
       # node = <id> "-" <original position>
-      parent = items.find { |i| i[:id] == nodes[1].split('-').first.to_i }
+      node_ids = nodes[1].split('-')
+      parent = if node_ids.first.empty?
+                 # unsaved tab
+                 items[node_ids.last.to_i]
+               else
+                 items.find { |i| i[:id] == node_ids.first.to_i }
+               end
       items = parent[name]
     end
     if nodes.length > 2
       name = :fields
-      parent = items.find { |i| i[:id] == nodes[2].split('-').first.to_i }
+      node_ids = nodes[2].split('-')
+      parent = if node_ids.first.empty?
+                 # unsaved box
+                 items[node_ids.last.to_i]
+               else
+                 items.find { |i| i[:id] == node_ids.first.to_i }
+               end
       items = parent[name]
     end
 
     temp = []
     params[:col1].each do |col|
       # col = <original position> "|" <id>
-      id = col.split('|').last.to_i
-      temp << items.find { |i| i[:id] == id }
+      idx = col.split('|').first.to_i
+      temp << items[idx]
     end
 
     # saving original order in sandbox to be used if discard button is pressed
