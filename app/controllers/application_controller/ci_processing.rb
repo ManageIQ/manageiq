@@ -1116,15 +1116,25 @@ module ApplicationController::CiProcessing
     cores_per_socket = '' unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
     memory, memory_type = reconfigure_calculations(memory)
     # if only one vm that supports disk reconfiguration is selected, get the disks information
-    vmDisks = []
+    vmdisks = []
     @reconfigureitems.first.hardware.disks.each do |disk|
       if disk.device_type == 'disk'
         dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-        vmDisks << {:hdFilename => "#{disk.filename}", :hdType => "#{disk.disk_type}", :hdMode =>"#{disk.mode}", :hdSize => dsize, :hdUnit => dunit, :add_remove => ''}
+        vmdisks << {:hdFilename => disk.filename,
+                    :hdType     => disk.disk_type,
+                    :hdMode     => disk.mode,
+                    :hdSize     => dsize,
+                    :hdUnit     => dunit,
+                    :add_remove => ''}
       end
     end
 
-    { :objectIds => @reconfigure_items, :memory => memory, :memory_type => memory_type, :socket_count => socket_count.to_s, :cores_per_socket_count =>cores_per_socket.to_s, :disks => vmDisks}
+    {:objectIds              => @reconfigure_items,
+     :memory                 => memory,
+     :memory_type            => memory_type,
+     :socket_count           => socket_count.to_s,
+     :cores_per_socket_count => cores_per_socket.to_s,
+     :disks                  => vmdisks}
   end
 
   def get_reconfig_limits
@@ -1162,46 +1172,45 @@ module ApplicationController::CiProcessing
 
       @reconfig_values[:disk_add] = @req.options[:disk_add]
       @reconfig_values[:disk_remove] = @req.options[:disk_remove]
-      vmDisks = []
-      if(@req.options[:disk_add])
+      vmdisks = []
+      if @req.options[:disk_add]
         @req.options[:disk_add].values.each do |disk|
           adsize, adunit = reconfigure_calculations(disk[:disk_size_in_mb])
-          vmDisks << {:hdFilename => disk[:disk_name],
-                      :hdType => disk[:thin_provisioned] == true ? 'thin' : 'thick',
-                      :hdMode =>disk[:persistent] == true ? 'persistent' : 'nonpersistent',
-                      :hdSize => adsize.to_s,
-                      :hdUnit => adunit,
+          vmdisks << {:hdFilename   => disk[:disk_name],
+                      :hdType       => disk[:thin_provisioned] == 'true' ? 'thin' : 'thick',
+                      :hdMode       => disk[:persistent] == 'true' ? 'persistent' : 'nonpersistent',
+                      :hdSize       => adsize.to_s,
+                      :hdUnit       => adunit,
                       :cb_dependent => disk[:dependent] == 'true',
-                      :add_remove => 'add'}
+                      :add_remove   => 'add'}
         end
       end
 
       reconfig_item = Vm.find(@reconfigure_items)
       if reconfig_item
         reconfig_item.first.hardware.disks.each do |disk|
-          if disk.device_type == 'disk'
-            removing = ''
-            delbacking = false
-            if disk.filename && @req.options[:disk_remove]
-              @req.options[:disk_remove].values.each do |remdisk|
-                if remdisk[:disk_name] == disk.filename
-                  removing = 'remove'
-                  delbacking = remdisk[:delete_backing]
-                end
+          next if disk.device_type != 'disk'
+          removing = ''
+          delbacking = false
+          if disk.filename && @req.options[:disk_remove]
+            @req.options[:disk_remove].values.each do |remdisk|
+              if remdisk[:disk_name] == disk.filename
+                removing = 'remove'
+                delbacking = remdisk[:delete_backing]
               end
             end
-            dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-            vmDisks << {:hdFilename => disk.filename,
-                        :hdType => disk.disk_type.to_s,
-                        :hdMode => disk.mode.to_s,
-                        :hdSize => dsize.to_s,
-                        :hdUnit => dunit.to_s,
-                        :delete_backing => delbacking,
-                        :add_remove => removing}
           end
+          dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
+          vmdisks << {:hdFilename     => disk.filename,
+                      :hdType         => disk.disk_type.to_s,
+                      :hdMode         => disk.mode.to_s,
+                      :hdSize         => dsize.to_s,
+                      :hdUnit         => dunit.to_s,
+                      :delete_backing => delbacking,
+                      :add_remove     => removing}
         end
       end
-      @reconfig_values[:disks] = vmDisks
+      @reconfig_values[:disks] = vmdisks
     end
 
     @reconfig_values[:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request

@@ -354,13 +354,13 @@ describe VmInfraController do
                             :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
-    get :show, :params => { :id => vm.id }
+    get :show, :params => {:id => vm.id}
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     expect(response.status).to eq(200)
 
-    post :x_button, :params => { :pressed => 'vm_reconfigure', :id => vm.id }
+    post :x_button, :params => {:pressed => 'vm_reconfigure', :id => vm.id}
     expect(response.status).to eq(200)
     expect(response.body).to include('Disks')
   end

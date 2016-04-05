@@ -6,7 +6,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         socket_count:            '1',
         cores_per_socket_count:  '1',
         total_cpus:              '1',
-        vmDisks:                 [],
+        vmdisks:                 [],
         hdFilename:              '',
         hdType:                  'thick',
         hdMode:                  'nonpersistent',
@@ -45,13 +45,13 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
         $scope.cb_memory = data.cb_memory;
         $scope.cb_cpu = data.cb_cpu;
-        $scope.reconfigureModel.vmDisks = angular.copy(data.disks);
+        $scope.reconfigureModel.vmdisks = angular.copy(data.disks);
 
         $scope.updateDisksAddRemove();
 
-        for (var disk in $scope.reconfigureModel.vmDisks)
-          if($scope.reconfigureModel.vmDisks[disk]['add_remove'] == '' )
-            $scope.reconfigureModel.vmDisks[disk]['cb_deletebacking'] = false;
+        for (var disk in $scope.reconfigureModel.vmdisks)
+          if($scope.reconfigureModel.vmdisks[disk]['add_remove'] == '' )
+            $scope.reconfigureModel.vmdisks[disk]['cb_deletebacking'] = false;
 
         if(data.socket_count && data.cores_per_socket_count)
           $scope.reconfigureModel.total_cpus = (parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10)).toString();
@@ -149,28 +149,28 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     $scope.updateDisksAddRemove = function() {
       $scope.reconfigureModel.vmAddDisks.length = 0;
       $scope.reconfigureModel.vmRemoveDisks.length = 0;
-      for (var disk in $scope.reconfigureModel.vmDisks) {
-        if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'remove') {
-          $scope.reconfigureModel.vmRemoveDisks.push({disk_name: $scope.reconfigureModel.vmDisks[disk].hdFilename,
-                                     delete_backing: $scope.reconfigureModel.vmDisks[disk].cb_deletebacking});
+      for (var disk in $scope.reconfigureModel.vmdisks) {
+        if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'remove') {
+          $scope.reconfigureModel.vmRemoveDisks.push({disk_name: $scope.reconfigureModel.vmdisks[disk].hdFilename,
+                                     delete_backing: $scope.reconfigureModel.vmdisks[disk].cb_deletebacking});
         }
-        else if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'add') {
-          var dsize = parseInt($scope.reconfigureModel.vmDisks[disk].hdSize);
-          if($scope.reconfigureModel.vmDisks[disk].hdUnit == 'GB')
+        else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
+          var dsize = parseInt($scope.reconfigureModel.vmdisks[disk].hdSize);
+          if($scope.reconfigureModel.vmdisks[disk].hdUnit == 'GB')
             dsize *= 1024;
-          dmode = ($scope.reconfigureModel.vmDisks[disk].hdMode == 'persistent');
-          dtype = ($scope.reconfigureModel.vmDisks[disk].hdType == 'thin');
-          $scope.reconfigureModel.vmAddDisks.push({disk_name: $scope.reconfigureModel.vmDisks[disk].hdFilename,
+          dmode = ($scope.reconfigureModel.vmdisks[disk].hdMode == 'persistent');
+          dtype = ($scope.reconfigureModel.vmdisks[disk].hdType == 'thin');
+          $scope.reconfigureModel.vmAddDisks.push({disk_name: $scope.reconfigureModel.vmdisks[disk].hdFilename,
                                   disk_size_in_mb: dsize,
                                   persistent: dmode,
                                   thin_provisioned: dtype,
-                                  dependent: $scope.reconfigureModel.vmDisks[disk].cb_dependent});
+                                  dependent: $scope.reconfigureModel.vmdisks[disk].cb_dependent});
         }
       }
     };
 
     $scope.addDisk = function() {
-      $scope.reconfigureModel.vmDisks.push({hdFilename: $scope.reconfigureModel.hdFilename,
+      $scope.reconfigureModel.vmdisks.push({hdFilename: $scope.reconfigureModel.hdFilename,
                                             hdType: $scope.reconfigureModel.hdType,
                                             hdMode: $scope.reconfigureModel.hdMode,
                                             hdSize: $scope.reconfigureModel.hdSize,
@@ -198,9 +198,9 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.deleteDisk = function(name) {
-      for (var disk in $scope.reconfigureModel.vmDisks) {
-        if ($scope.reconfigureModel.vmDisks[disk].hdFilename === name)
-          $scope.reconfigureModel.vmDisks[disk]['add_remove'] = 'remove';
+      for (var disk in $scope.reconfigureModel.vmdisks) {
+        if ($scope.reconfigureModel.vmdisks[disk].hdFilename === name)
+          $scope.reconfigureModel.vmdisks[disk]['add_remove'] = 'remove';
       }
       $scope.updateDisksAddRemove();
 
@@ -211,15 +211,15 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.cancelAddRemoveDisk = function(vmDisk) {
-      for (var disk in $scope.reconfigureModel.vmDisks) {
-        if ($scope.reconfigureModel.vmDisks[disk].hdFilename === vmDisk['hdFilename']) {
-          if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'remove') {
-            $scope.reconfigureModel.vmDisks[disk]['add_remove'] = '';
-            $scope.reconfigureModel.vmDisks[disk]['cb_deletebacking'] = false;
+      for (var disk in $scope.reconfigureModel.vmdisks) {
+        if ($scope.reconfigureModel.vmdisks[disk].hdFilename === vmDisk['hdFilename']) {
+          if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'remove') {
+            $scope.reconfigureModel.vmdisks[disk]['add_remove'] = '';
+            $scope.reconfigureModel.vmdisks[disk]['cb_deletebacking'] = false;
           }
-          else if ($scope.reconfigureModel.vmDisks[disk]['add_remove'] === 'add') {
-            var index = $scope.reconfigureModel.vmDisks.indexOf(vmDisk);
-            $scope.reconfigureModel.vmDisks.splice(index, 1);
+          else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
+            var index = $scope.reconfigureModel.vmdisks.indexOf(vmDisk);
+            $scope.reconfigureModel.vmdisks.splice(index, 1);
             break;
           }
         }
