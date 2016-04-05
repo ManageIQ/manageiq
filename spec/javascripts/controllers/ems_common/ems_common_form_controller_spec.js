@@ -67,8 +67,8 @@ describe('emsCommonFormController', function() {
       expect($scope.emsCommonModel.default_api_port).toEqual(5000);
     });
 
-    it('sets the amqp_api_port to 5000', function() {
-      expect($scope.emsCommonModel.amqp_api_port).toEqual(5000);
+    it('sets the amqp_api_port to 5672', function() {
+      expect($scope.emsCommonModel.amqp_api_port).toEqual(5672);
     });
 
     it('sets the api_version to v2', function() {
