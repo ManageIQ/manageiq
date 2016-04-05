@@ -1,15 +1,15 @@
 class RemoveMiqUserRoleFromMiqGroups < ActiveRecord::Migration[5.0]
   class MiqGroup < ActiveRecord::Base
-    has_one :entitlement, :class_name => RemoveMiqUserRoleFromMiqGroups::Entitlement
+    has_one :entitlement, :class_name => 'RemoveMiqUserRoleFromMiqGroups::Entitlement'
   end
 
   class Entitlement < ActiveRecord::Base
-    belongs_to :miq_group,     :class_name => RemoveMiqUserRoleFromMiqGroups::MiqGroup
-    belongs_to :miq_user_role, :class_name => RemoveMiqUserRoleFromMiqGroups::MiqUserRole
+    belongs_to :miq_group,     :class_name => 'RemoveMiqUserRoleFromMiqGroups::MiqGroup'
+    belongs_to :miq_user_role, :class_name => 'RemoveMiqUserRoleFromMiqGroups::MiqUserRole'
   end
 
   class MiqUserRole < ActiveRecord::Base
-    has_many :entitlements, :class_name => RemoveMiqUserRoleFromMiqGroups::Entitlement
+    has_many :entitlements, :class_name => 'RemoveMiqUserRoleFromMiqGroups::Entitlement'
   end
 
   def up
