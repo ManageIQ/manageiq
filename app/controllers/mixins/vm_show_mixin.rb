@@ -2,6 +2,7 @@ module VmShowMixin
   extend ActiveSupport::Concern
 
   def explorer
+   # $log.info [self.class.to_s, parent.class.to_s, parent.try(:name)].inspect
     @explorer = true
     @lastaction = "explorer"
     @timeline = @timeline_filter = true    # need to set these to load timelines on vm show screen

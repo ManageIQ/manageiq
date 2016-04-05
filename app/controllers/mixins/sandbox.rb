@@ -45,6 +45,7 @@ module Sandbox
     containers_filter_tree
     cs_filter_tree
     customization_templates_tree
+    datacenter_tree
     db_tree
     diagnostics_tree
     dialog_edit_tree
@@ -80,6 +81,7 @@ module Sandbox
     templates_images_filter_tree
     utilization_tree
     vandt_tree
+    vat_tree
     vmdb_tree
     vms_filter_tree
     vms_instances_filter_tree

@@ -38,8 +38,17 @@ class EmsClusterController < ApplicationController
       drop_breadcrumb(:name => @ems_cluster.name + _(" (All VMs - Tree View)"),
                       :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
-      build_dc_tree
-      build_vm_host_array
+#      build_dc_tree
+      #TODO call TreeBuilder instead
+      @sb[:cl_id] = @ems_cluster.id if @ems_cluster
+      unless @ems_cluster
+        @ems_cluster = EmsCluster.find(@sb[:cl_id])
+      end
+      cluster = @ems_cluster
+      @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, cluster)
+      self.x_active_tree = :datacenter_tree
+
+ #     build_vm_host_array
 
     when "all_vms"
       drop_breadcrumb(:name => @ems_cluster.name + _(" (All VMs)"),
@@ -253,48 +262,6 @@ class EmsClusterController < ApplicationController
 
   def breadcrumb_name(_model)
     title_for_clusters
-  end
-
-  # Build the tree object to display the ems_cluster datacenter info
-  def build_dc_tree
-    @sb[:tree_hosts]    = []                    # Capture all Host ids in the tree
-    @sb[:tree_vms_hash] = {}                    # Capture all VM ids in the tree
-    @sb[:cl_id] = @ems_cluster.id if @ems_cluster   # do not want to store cl object in session hash, need to get record incase coming from treesize to rebuild refreshed tree
-    unless @ems_cluster
-      @ems_cluster = EmsCluster.find(@sb[:cl_id])
-    end
-    cluster_node = TreeNodeBuilder.generic_tree_node(
-      "cluster-#{to_cid(@ems_cluster.id)}",
-      @ems_cluster.name,
-      "cluster.png",
-      _("Cluster: %{name}") % {:name => @ems_cluster.name},
-      :cfme_no_click => true,
-      :expand        => true,
-      :style_class   => "cfme-no-cursor-node"
-    )
-    cl_kids = []
-    @sb[:vat] = false if params[:action] != "treesize"        # need to set this, to remember vat, treesize doesnt pass in param[:vat]
-    vat = params[:vat] ? true : (@sb[:vat] ? true : false)    # use @sb[:vat] when coming from treesize
-    @sb[:open_tree_nodes] = [] if params[:action] != "treesize"
-    @ems_cluster.hosts.each do |h|                  # Get hosts
-      cl_kids += get_dc_node(h, cluster_node[:key], vat)
-    end
-    @ems_cluster.resource_pools.each do |rp|        # Get the resource pool nodes
-      cl_kids += get_dc_node(rp, cluster_node[:key], vat)
-    end
-    @ems_cluster.vms.each do |v|                    # Get VMs
-      cl_kids += get_dc_node(v, cluster_node[:key], vat)
-    end
-    cluster_node[:children] = cl_kids unless cl_kids.empty?
-
-    session[:dc_tree] = [cluster_node].to_json
-    session[:tree] = "dc"
-    session[:tree_name] = "cluster_dc_tree"
-  end
-
-  # Add the children of a node that is being expanded (autoloaded)
-  def tree_add_child_nodes(id)
-    t_node = get_dc_child_nodes(id)
   end
 
   def set_config(db_record)

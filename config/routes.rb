@@ -2100,6 +2100,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        tree_autoload_dynatree
         quick_search
       ) +
                adv_search_post +

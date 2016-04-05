@@ -139,11 +139,24 @@ class TreeNodeBuilder
   end
 
   def tooltip(tip)
-    unless tip.blank?
+    if tip.blank? && @options[:tooltip_forced]
+      tip = object.name
+    elsif tip.present?
       tip = tip.kind_of?(Proc) ? tip.call : _(tip)
-      tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.html_safe?
-      @node[:tooltip] = tip
     end
+
+    if tip && @options[:tooltip_prefix_type]
+      prefix = @options[:tooltip_prefix_type]
+      prefix_type = prefix[0].send(prefix[1], object)
+
+      tip = "#{prefix_type}: #{tip}" if prefix_type.present?
+    end
+    if tip && @options[:tooltip_suffix]
+      tip += @options[:tooltip_suffix]
+    end
+
+    tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.nil? || tip.html_safe?
+    @node[:tooltip] = tip
   end
 
   def node_icon(icon)
@@ -163,7 +176,7 @@ class TreeNodeBuilder
   end
 
   def normal_folder_node
-    icon = options[:type] == :vandt ? "blue_folder.png" : "folder.png"
+    icon = options[:type] == :vandt || options[:type] == :vat ? "blue_folder.png" : "folder.png"
     generic_node(object.name, icon, "Folder: #{object.name}")
   end
 

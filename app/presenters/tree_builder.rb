@@ -76,11 +76,13 @@ class TreeBuilder
 
     # Services explorer tree
     when :svcs                    then TreeBuilderServices
-
+        
     # Datastores explorer trees
     when :storage     then TreeBuilderStorage
     when :storage_pod then TreeBuilderStoragePod
 
+    when :datacenter              then TreeBuilderDatacenter
+    when :vat                     then TreeBuilderDatacenter
     end
   end
 
@@ -159,8 +161,10 @@ class TreeBuilder
     when :templates_filter_tree         then [_("All Templates"),                _("All of the Templates that I can see")]
     when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
     when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
-    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), :miq_database]
-    when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
+      when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), :miq_database]
+      when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
+     # when :datacenter_tree               then ["Title" , "Tooltip", :cluster]
+     # when :vat_tree                      then []
     end
   end
 
@@ -334,6 +338,7 @@ class TreeBuilder
   #   :load_children
   # parents --- an Array of parent object ids, starting from tree root + 1, ending with parent's parent; only available when full_ids and not lazy
   def x_get_tree_objects(parent, options, count_only, parents)
+    $log.info [self.class.to_s, parent.class.to_s, parent.try(:name)].inspect
     children_or_count = case parent
                         when nil                 then
                           # options are only required for the following TreeBuilder ancestors:
@@ -368,6 +373,7 @@ class TreeBuilder
                           # TreeBuilderReportDashboards - :type
                           # TreeBuilderVmsFilter - :leaf
                           x_get_tree_custom_kids(parent, count_only, options)
+                        when Host                then x_get_tree_host_kids(parent, count_only)
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
                         when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
                         when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
@@ -377,6 +383,7 @@ class TreeBuilder
                         when MiqRegion           then x_get_tree_region_kids(parent, count_only)
                         when MiqReport           then x_get_tree_r_kids(parent, count_only)
                         when PxeServer           then x_get_tree_pxe_server_kids(parent, count_only)
+                        when ResourcePool        then x_get_resource_pool_kids(parent, count_only)
                         when Service             then x_get_tree_service_kids(parent, count_only)
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(parent, count_only)
@@ -514,7 +521,7 @@ class TreeBuilder
     "cr"  => "ChargebackRate",
     "cs"  => "ConfiguredSystem",
     "ct"  => "CustomizationTemplate",
-    "d"   => "Datacenter",
+    "dc"  => "Datacenter",
     "dg"  => "Dialog",
     "ds"  => "Storage",
     "dsc" => "StorageCluster",
