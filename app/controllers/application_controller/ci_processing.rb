@@ -1118,15 +1118,14 @@ module ApplicationController::CiProcessing
     # if only one vm that supports disk reconfiguration is selected, get the disks information
     vmdisks = []
     @reconfigureitems.first.hardware.disks.each do |disk|
-      if disk.device_type == 'disk'
-        dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-        vmdisks << {:hdFilename => disk.filename,
-                    :hdType     => disk.disk_type,
-                    :hdMode     => disk.mode,
-                    :hdSize     => dsize,
-                    :hdUnit     => dunit,
-                    :add_remove => ''}
-      end
+      next if disk.device_type != 'disk'
+      dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
+      vmdisks << {:hdFilename => disk.filename,
+                  :hdType     => disk.disk_type,
+                  :hdMode     => disk.mode,
+                  :hdSize     => dsize,
+                  :hdUnit     => dunit,
+                  :add_remove => ''}
     end
 
     {:objectIds              => @reconfigure_items,

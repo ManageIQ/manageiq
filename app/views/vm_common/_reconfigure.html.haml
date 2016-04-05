@@ -113,8 +113,8 @@
         %table{:width => "100%", :align => "bottom"}
           %tr
             %td#buttons_on{:align => "right"}
-              %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
-      %table.table.table-striped.table-hover.table-condensed
+              %button.btn.btn-default.btn-sm{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
+      %table.table.table-striped.table-hover.table-condensed.table-bordered
         %thead
           %th= _('Name')
           %th= _('Type')
@@ -174,7 +174,7 @@
                      "ng-model" => "reconfigureModel.cb_dependent"}
             %td.narrow
             %td
-              %button.btn.btn-primary.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
           %tr{"ng-repeat" => "disk in reconfigureModel.vmdisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
             %td
               {{disk.hdFilename}}
@@ -200,13 +200,13 @@
                      "ng-if"       => "disk.add_remove!='add'",
                      "ng-disabled" => "disk.add_remove=='remove'"}
             %td
-              %button.btn.btn-danger.btn-sm{:type      => "button",
+              %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                             "ng-if"    => "disk.add_remove == ''",
                                             "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
-              %button.btn.btn-primary.btn-sm{:type      => "button",
+              %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                              "ng-if"    => "disk.add_remove == 'remove'",
                                              "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel delete')
-              %button.btn.btn-primary.btn-sm{:type      => "button",
+              %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                              "ng-if"    => "disk.add_remove == 'add'",
                                              "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel add')
   %hr
@@ -224,7 +224,7 @@
     %tr
       %td#buttons_on{:align => "right"}
         = button_tag(_("Submit"),
-                     :class        => "btn btn-primary",
+                     :class        => "btn btn-default",
                      :alt          => _("Submit"),
                      "ng-click"    => "submitClicked()",
                      "ng-disabled" => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)",
