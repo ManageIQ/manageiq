@@ -883,14 +883,6 @@
     :options:
     - :collection
     :methods: *70174834086080
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: ops_settings
-    :resource_actions:
-      :get:
-      - :name: read
-        :identifier: ops_settings
   :software:
     :description: Software
     :options:

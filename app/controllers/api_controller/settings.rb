@@ -2,16 +2,16 @@ class ApiController
   module Settings
     def show_settings
       validate_api_action
-      selected_sections = if @req[:c_id]
-                            exposed_settings.include?(@req[:c_id]) ? @req[:c_id] : nil
-                          else
-                            exposed_settings
-                          end
+      category = @req[:c_id]
+      selected_sections =
+        if category
+          raise NotFound, "Settings category #{category} not found" unless exposed_settings.include?(category)
+          category
+        else
+          exposed_settings
+        end
 
-      result = Array(selected_sections).each_with_object({}) do |section, hash|
-        hash[section] = ::Settings[section].to_hash
-      end
-      render_resource :settings, result
+      render_resource :settings, ::Settings.to_hash.slice(*Array(selected_sections).collect(&:to_sym))
     end
 
     private
