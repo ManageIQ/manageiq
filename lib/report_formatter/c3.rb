@@ -2,6 +2,7 @@ module ReportFormatter
   class C3Formatter < Ruport::Formatter
     include ActionView::Helpers::UrlHelper
     include ChartCommon
+    include MiqReport::Formatting
     renders :c3, :for => ReportRenderer
 
     # series handling methods
@@ -56,6 +57,15 @@ module ReportFormatter
             :categories => []
           }
         }
+      end
+      # chart is numeric
+      if mri.graph[:mode] == 'values'
+        custom_format   = Array(mri[:col_formats])[Array(mri[:col_order]).index(raw_column_name)]
+        format, options = javascript_format(mri.graph[:column].split(/(?<!:):(?!:)/)[0], custom_format)
+        return unless format
+
+        axis_formatter = { :function => format, :options => options }
+        mri.chart[:axis][:y] = {:tick => {:format => axis_formatter }}
       end
 
       if chart_is_stacked?
