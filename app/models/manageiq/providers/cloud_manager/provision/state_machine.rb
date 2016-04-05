@@ -6,7 +6,29 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
   def determine_placement
     availability_zone = placement
     options[:dest_availability_zone] = [availability_zone.try(:id), availability_zone.try(:name)]
-    signal :prepare_provision
+    signal :prepare_volumes
+  end
+
+  def prepare_volumes
+    if options[:volumes]
+      phase_context[:requested_volumes] = create_requested_volumes(options[:volumes])
+      signal :poll_volumes_complete
+    else
+      signal :prepare_provision
+    end
+  end
+
+  def poll_volumes_complete
+    status, status_message = do_volume_creation_check(phase_context[:requested_volumes])
+    status_message = "completed prepare provision work queued" if status
+    message = "Volume creation is #{status_message}"
+    _log.info(message)
+    update_and_notify_parent(:message => message)
+    if status
+      signal :prepare_provision
+    else
+      requeue_phase
+    end
   end
 
   def start_clone_task
