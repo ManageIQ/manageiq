@@ -63,8 +63,12 @@ describe('emsCommonFormController', function() {
       expect($scope.emsCommonModel.openstack_infra_providers_exist).toEqual(false);
     });
 
-    it('sets the api_port to 5000', function() {
-      expect($scope.emsCommonModel.api_port).toEqual(5000);
+    it('sets the default_api_port to 5000', function() {
+      expect($scope.emsCommonModel.default_api_port).toEqual(5000);
+    });
+
+    it('sets the amqp_api_port to 5672', function() {
+      expect($scope.emsCommonModel.amqp_api_port).toEqual(5672);
     });
 
     it('sets the api_version to v2', function() {
@@ -140,7 +144,8 @@ describe('emsCommonFormController', function() {
     var emsCommonFormResponse = {
       id: 12345,
       name: 'myOpenstack',
-      hostname: '10.22.33.44',
+      default_hostname: '10.22.33.44',
+      amqp_hostname: '10.20.30.40',
       emstype: 'openstack',
       zone: 'default',
       emstype_vm: false,
@@ -171,8 +176,12 @@ describe('emsCommonFormController', function() {
       expect($scope.emsCommonModel.emstype).toEqual('openstack');
     });
 
-    it('sets the hostname', function () {
-      expect($scope.emsCommonModel.hostname).toEqual('10.22.33.44');
+    it('sets the default hostname', function () {
+      expect($scope.emsCommonModel.default_hostname).toEqual('10.22.33.44');
+    });
+
+    it('sets the amqp hostname', function () {
+      expect($scope.emsCommonModel.amqp_hostname).toEqual('10.20.30.40');
     });
 
     it('sets the zone to default', function() {

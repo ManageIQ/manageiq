@@ -94,6 +94,21 @@ describe ExtManagementSystem do
     end
   end
 
+  context "with multiple endpoints" do
+    let(:ems) { FactoryGirl.build(:ems_openstack, :hostname => "example.org") }
+    before { ems.add_connection_configuration_by_role(:endpoint => {:role => "amqp", :hostname => "amqp.example.org"}) }
+
+    it "will contain seperate ampq endpoint" do
+      expect(ems.default_endpoint.hostname).to eq "example.org"
+      expect(ems.connection_configuration_by_role("amqp").endpoint.hostname).to eq "amqp.example.org"
+    end
+
+    it "will contain multiple endpoints" do
+      expected_endpoints = ["example.org", "amqp.example.org"]
+      expect(ems.hostnames).to match_array(expected_endpoints)
+    end
+  end
+
   context "with two small envs" do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)

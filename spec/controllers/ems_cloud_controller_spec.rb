@@ -52,11 +52,11 @@ describe EmsCloudController do
       expect do
         post :create, :params => {
           "button"           => "add",
-          "hostname"         => "host_openstack",
+          "default_hostname" => "host_openstack",
           "name"             => "foo_openstack",
           "emstype"          => "openstack",
           "provider_region"  => "",
-          "port"             => "5000",
+          "default_port"     => "5000",
           "zone"             => zone.name,
           "default_userid"   => "foo",
           "default_password" => "[FILTERED]",
@@ -72,11 +72,11 @@ describe EmsCloudController do
         post :update, :params => {
           "id"               => openstack.id,
           "button"           => "save",
-          "hostname"         => "host_openstack_updated",
+          "default_hostname" => "host_openstack_updated",
           "name"             => "foo_openstack",
           "emstype"          => "openstack",
           "provider_region"  => "",
-          "port"             => "5000",
+          "default_port"     => "5000",
           "default_userid"   => "bar",
           "default_password" => "[FILTERED]",
           "default_verify"   => "[FILTERED]"
@@ -147,11 +147,11 @@ describe EmsCloudController do
     it 'gets the ems cloud form fields on a get' do
       post :create, :params => {
         "button"           => "add",
-        "hostname"         => "host_openstack",
+        "default_hostname" => "host_openstack",
         "name"             => "foo_openstack",
         "emstype"          => "openstack",
         "provider_region"  => "",
-        "port"             => "5000",
+        "default_port"     => "5000",
         "zone"             => zone.name,
         "default_userid"   => "foo",
         "default_password" => "[FILTERED]",
@@ -168,11 +168,11 @@ describe EmsCloudController do
     it 'strips whitespace from name, hostname and api_port form fields on create' do
       post :create, :params => {
         "button"           => "add",
-        "hostname"         => "  host_openstack     ",
+        "default_hostname" => "  host_openstack     ",
         "name"             => "  foo_openstack     ",
         "emstype"          => "openstack",
         "provider_region"  => "",
-        "api_port"         => "   5000     ",
+        "default_api_port" => "   5000     ",
         "zone"             => zone.name,
         "default_userid"   => "foo",
         "default_password" => "[FILTERED]",
@@ -198,11 +198,11 @@ describe EmsCloudController do
       session[:settings] = {:views => {:vm_summary_cool => ""}}
       post :create, :params => {
         "button"           => "add",
-        "hostname"         => "host_openstack",
+        "default_hostname" => "host_openstack",
         "name"             => "foo_openstack",
         "emstype"          => "openstack",
         "provider_region"  => "",
-        "port"             => "5000",
+        "default_port"     => "5000",
         "zone"             => zone.name,
         "default_userid"   => "foo",
         "default_password" => "[FILTERED]",
