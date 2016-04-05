@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 
 
+## Unreleased - as of Sprint 38 end 2016-03-28
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+38+Ending+Mar+28%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - Amazon as a pluggable provider: almost completed
+  - Azure: http proxy support
+  - Vmware: read-only datastores
+  - Networking providers: new tab
+  - Middleware: New provider type
+  - Hawkular: first middleware provider, inventory and topology
+- Appliance Core Chargeback
+  - Able to assign rates to tenants
+  - Can generate reports by tenant
+  - Currencies added to rates
+- Appliance Core Authentication
+  - Appliance Console External Auth updated to also work with 6.x IPA Servers
+  - SAML Authentication (verified with KeyCloak 1.8)
+- REST API
+  - Enhanced filtering to use MiqExpression
+  - Enhanced API to include Role identifiers for collections and augmented the authorization hash in the entrypoint to include that correlation
+- User Interface
+  - VM: Devices and Network Adapters
+  - Cloud: Key Pairs, Object Stores, Objects, Object Summary
+  - SSUI: Support for Custom Buttons that use Dialogs
+  - Containers: New Container Builds tab, Chargeback
+  - More Bootstrap switches
+  - C3 Charts (jqPlot replacement)
+- SmartState
+  - SCVMM: Support for network-mounted HyperV virtual disks and performance improvements (HyperDisk caching)
+  - Azure
+      - Azure-armrest: added offset/length blob read support.
+      - Added AzureBlobDisk module for MiqDisk.
+      - Implemented MiqAzureVm subclass of MiqVm.
+  - Testing: Added TestEnvHelper class for gems/pending.
+- Ansible Tower
+  - Modeling for AnsibleTowerJob
+  - Support for launching JobTemplates with a limit. (Target specific system)
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+38+Ending+Mar+28%2C+2016%22+label%3Aenhancement)
+
+- Appliance Configuration Revamp
+  - Relies heavily on the config gem
+  - New classes Settings and Vmdb::Settings
+  - `VMDB::Config` is deprecated
+  - `config/*.tmpl.yml` -> `config/settings.yml`
+  - Locally override with `config/settings.local.yml` or `config/settings/development.local.yml` 
+- Replication (pglogical)
+  - New MiqPglogical class: provides generic functionality for remote and global regions
+  - New PglogicalSubscription model: Provides global region functionality as an ActiveRecord model
+- Appliance Core - Tenancy - Splitting MiqGroup
+  - New model created for entitlements
+  - Will enable sharing entitlements across tenants
+  - Will provide more flexibility for defining groups in LDAP
+- Automate
+  - Enhance state-machine fields to support methods
+  - New Syntax: `METHOD::<method_name>`
+- Services Back End
+  - Service Order (Cart) created for each Service Request based on current user and tenant.
+  - VMware add/remove disk methods for reconfigure
+
+
 ## Unreleased - as of Sprint 37 end 2016-03-07
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+37+Ending+Mar+7%2C+2016%22+label%3Aenhancement)
