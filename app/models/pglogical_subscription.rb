@@ -29,10 +29,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def save!
-    raise _("Cannot update an existing subscription") if id
-    ensure_node_created
-    pglogical.subscription_create(new_subscription_name, dsn, [MiqPglogical::REPLICATION_SET_NAME],
-                                  false).check
+    id ? update_subscription : create_subscription
   end
 
   def save
@@ -159,6 +156,36 @@ class PglogicalSubscription < ActsAsArModel
     pglogical.enable
     node_dsn = PG::Connection.parse_connect_args(connection.raw_connection.conninfo_hash.delete_blanks)
     pglogical.node_create(MiqPglogical.local_node_name, node_dsn).check
+  end
+
+  def with_subscription_disabled
+    disable
+    yield
+  ensure
+    enable
+  end
+
+  def update_subscription
+    with_subscription_disabled do
+      provider_node_name = MiqPglogical.region_to_node_name(provider_region)
+      find_password if password.nil?
+      pglogical.node_dsn_update(provider_node_name, dsn)
+    end
+    self
+  end
+
+  # sets this instance's password field to the one in the subscription dsn in the database
+  def find_password
+    s = pglogical.subscription_show_status(id).symbolize_keys
+    dsn_hash = connection.class.parse_dsn(s.delete(:provider_dsn))
+    self.password = dsn_hash[:password]
+  end
+
+  def create_subscription
+    ensure_node_created
+    pglogical.subscription_create(new_subscription_name, dsn, [MiqPglogical::REPLICATION_SET_NAME],
+                                  false).check
+    self
   end
 
   def dsn

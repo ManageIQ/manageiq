@@ -198,17 +198,48 @@ describe PglogicalSubscription do
         expect(sync_structure).to be false
       end.and_return(double(:check => nil))
 
-      described_class.new(:host => "test-2.example.com", :user => "root").save!
+      ret = described_class.new(:host => "test-2.example.com", :user => "root").save!
+      expect(ret).to be_an_instance_of(described_class)
     end
 
-    it "raises when an existing subscription is saved" do
+    it "updates the dsn when an existing subscription is saved" do
       allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
       allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
 
       sub = described_class.find(:first)
-
       sub.host = "other-host.example.com"
-      expect { sub.save! }.to raise_error("Cannot update an existing subscription")
+
+      expect(pglogical).to receive(:subscription_disable).with(sub.id)
+        .and_return(double(:check => nil))
+      expect(pglogical).to receive(:node_dsn_update) do |provider_node_name, new_dsn|
+        expect(provider_node_name).to eq("region_0")
+        expect(new_dsn).to include("host='other-host.example.com'")
+        expect(new_dsn).to include("dbname='vmdb\\'s_test'")
+        expect(new_dsn).to include("user='root'")
+        expect(new_dsn).to include("password='p=as\\' s\\''")
+      end
+      expect(pglogical).to receive(:subscription_enable).with(sub.id)
+        .and_return(double(:check => nil))
+
+      expect(sub.save!).to eq(sub)
+    end
+
+    it "reenables the subscription when the dsn fails to save" do
+      allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+
+      sub = described_class.find(:first)
+      sub.host = "other-host.example.com"
+
+      expect(pglogical).to receive(:subscription_disable).with(sub.id)
+        .and_return(double(:check => nil))
+      expect(pglogical).to receive(:node_dsn_update).and_raise("Some Error")
+      expect(pglogical).to receive(:subscription_enable).with(sub.id)
+        .and_return(double(:check => nil))
+
+      expect { sub.save! }.to raise_error(RuntimeError, "Some Error")
     end
   end
 
