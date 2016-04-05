@@ -659,7 +659,7 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
   }, 250);
 }
 
-function miqBuildChartMenu(col, row, value, category, series, id, message) {
+function miqBuildChartMenu(col, row, _value, category, series, id, _message) {
   var set = id.split('_')[1]; // Get the chart set
   var idx = id.split('_')[2]; // Get the chart index
   var chart_data = ManageIQ.charts.chartData[set];
@@ -1527,7 +1527,6 @@ function chartData(type, data, data2) {
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
   return _.defaultsDeep({}, config, data, data2);
 }
-
 
 $( document ).ready(function() {
     check_for_ellipsis();
