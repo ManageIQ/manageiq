@@ -590,24 +590,100 @@ describe MiqExpression do
     expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/used_disk_storage</value> >= 1048576000')
   end
 
+  describe ".is_numeric?" do
+    it "should return true if digits separated by comma and false if another separator used" do
+      expect(MiqExpression.is_numeric?('10000.55')).to be_truthy
+      expect(MiqExpression.is_numeric?('10,000.55')).to be_truthy
+      expect(MiqExpression.is_numeric?('10 000.55')).to be_falsey
+    end
+
+    it "should return true if there is method attached to number" do
+      expect(MiqExpression.is_numeric?('2,555.hello')).to eq(false)
+      expect(MiqExpression.is_numeric?('2,555.kilobytes')).to eq(true)
+      expect(MiqExpression.is_numeric?('2,555.55.megabytes')).to eq(true)
+    end
+  end
+
+  describe ".is_integer?" do
+    it "should return true if digits separated by comma and false if another separator used" do
+      expect(MiqExpression.is_integer?('2,555')).to eq(true)
+      expect(MiqExpression.is_integer?('2 555')).to eq(false)
+    end
+
+    it "should return true if there is method attached to number" do
+      expect(MiqExpression.is_integer?('2,555.kilobytes')).to eq(true)
+      expect(MiqExpression.is_integer?('2,555.hello')).to eq(false)
+    end
+  end
+
+  describe ".is_plural?" do
+    it "should return true if assotiation of field is 'has_many' or 'has_and_belongs_to_many'" do
+      field = 'ManageIQ::Providers::InfraManager::Vm.storage-region_description' # vm belong_to storage
+      expect(MiqExpression.is_plural?(field)).to be_falsey
+      field = 'ManageIQ::Providers::InfraManager::Vm.repositories-name' # vm has_many repositories
+      expect(MiqExpression.is_plural?(field)).to be_truthy
+    end
+  end
+
   describe ".atom_error" do
-    it "should test atom error" do
-      expect(MiqExpression.atom_error("Host-xx", "regular expression matches", '123[)')).not_to be_falsey
+    it "should return false if value can be evaluated as regular expression" do
+      value = '123[)'
+      expect(MiqExpression.atom_error("Host-xx", "regular expression matches", value)).to be_truthy
+      value = '/foo/'
+      expect(MiqExpression.atom_error("Host-xx", "regular expression matches", value)).to be_falsey
+    end
 
-      expect(MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '')).not_to be_falsey
-      expect(MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123abc')).not_to be_falsey
-      expect(MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123')).to be_falsey
-      expect(MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '123.456')).to be_falsey
-      expect(MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "=", '2,123.456')).to be_falsey
+    it "should return true if operator is 'ruby'" do
+      # Ruby scripts in expressions are no longer supported.
+      expect(MiqExpression.atom_error("VmPerformance-cpu_usage_rate_average", "ruby", '')).to be_truthy
+    end
 
-      expect(MiqExpression.atom_error("Vm-cpu_limit", "=", '')).not_to be_falsey
-      expect(MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5')).not_to be_falsey
-      expect(MiqExpression.atom_error("Vm-cpu_limit", "=", '123.5.abc')).not_to be_falsey
-      expect(MiqExpression.atom_error("Vm-cpu_limit", "=", '123')).to be_falsey
-      expect(MiqExpression.atom_error("Vm-cpu_limit", "=", '2,123')).to be_falsey
+    it "should return false if data type of field is 'string' or 'text'" do
+      field = "Vm-vendor"
+      expect(MiqExpression.atom_error(field, "START WITH", 'red')).to be_falsey
+    end
 
-      expect(MiqExpression.atom_error("Vm-created_on", "=", Time.now.to_s)).to be_falsey
-      expect(MiqExpression.atom_error("Vm-created_on", "=", "123456")).not_to be_falsey
+    it "should return false if field is 'count'" do
+      filed = :count
+      expect(MiqExpression.atom_error(filed, ">=", '1')).to be_falsey
+    end
+
+    it "should return false if data type of field is boolean and value is 'true' or 'false'" do
+      field = "Vm-retired"
+      expect(MiqExpression.atom_error(field, "=", 'false')).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", 'true')).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", 'not')).to be_truthy
+    end
+
+    it "should return false if data type of field is float and value evaluated to float" do
+      field = "VmPerformance-cpu_usage_rate_average"
+      expect(MiqExpression.atom_error(field, "=", '')).to be_truthy
+      expect(MiqExpression.atom_error(field, "=", '123abc')).to be_truthy
+      expect(MiqExpression.atom_error(field, "=", '123')).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", '123.456')).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", '2,123.456')).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", '123.kilobytes')).to be_falsey
+    end
+
+    it "should return false if data type of field is integer and value evaluated to integer" do
+      field = "Vm-cpu_limit"
+      expect(MiqExpression.atom_error(field, "=", '')).to be_truthy
+      expect(MiqExpression.atom_error(field, "=", '123.5')).to be_truthy
+      expect(MiqExpression.atom_error(field, "=", '123.abc')).to be_truthy
+      expect(MiqExpression.atom_error(field, "=", '123')).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", '2,123')).to be_falsey
+    end
+
+    it "should return false if data type of field is datetime and value evaluated to datetime" do
+      field = "Vm-created_on"
+      expect(MiqExpression.atom_error(field, "=", Time.current.to_s)).to be_falsey
+      expect(MiqExpression.atom_error(field, "=", "123456")).to be_truthy
+    end
+
+    it "should return false if most resent date is second element in array" do
+      field = "Vm-state_changed_on"
+      expect(MiqExpression.atom_error(field, "FROM", ["7 Days Ago", "Today"])).to be_falsey
+      expect(MiqExpression.atom_error(field, "FROM", ["Today", "7 Days Ago"])).to be_truthy
     end
   end
 
