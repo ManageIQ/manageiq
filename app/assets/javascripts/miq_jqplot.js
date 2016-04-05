@@ -42,8 +42,8 @@ function load_jqplot_chart(chart_set, index) {
     return;
   }
 
-  var chart_id = "miq_" + chart_set + "_" + index;
-  var chart2_id = "miq_" + chart_set + "_" + index + "_2";
+  var chart_id = "miq_chart_" + chart_set + "_" + index;
+  var chart2_id = "miq_chart_" + chart_set + "_" + index + "_2";
   var data = ManageIQ.charts.chartData[chart_set][index].xml;
   var data2 = ManageIQ.charts.chartData[chart_set][index].xml2;
 
@@ -92,6 +92,27 @@ function jqplot_yaxis_tick_highlight(str, seriesIndex, pointIndex, plot) {
     return plot.options.axes.yaxis.ticks[pointIndex] + ' / ' +
            plot.options.series[seriesIndex].label + ': ' +
            str;
+}
+
+function jqplot_bind_events(chart_set, chart_index) {
+  var el = $("#miq_chart_" + chart_set + "_" + chart_index);
+
+  el.bind('jqplotDataClick', function (event, seriesIndex, pointIndex, data) {
+    miqBuildChartMenuEx(seriesIndex, pointIndex, null, 'CAT', 'SER', chart_set, chart_index);
+
+    setTimeout(function () {
+      $(document).on('click.close_popup', function() {
+        $('.chart_parent.open').removeClass('open').trigger(
+          $.Event('hidden.bs.dropdown'), { relatedTarget: this });
+
+        $('.chart_parent .overlay').hide();
+
+        $(document).off('click.close_popup');
+      });
+    });
+
+    return false;
+  });
 }
 
 $(document).ready(function(){

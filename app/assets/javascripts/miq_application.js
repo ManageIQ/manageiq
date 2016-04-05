@@ -692,6 +692,46 @@ function miqBuildChartMenu(col, row, _value, category, series, id, _message) {
   }
 }
 
+function miqChartBindEvents(chart_set, chart_index) {
+  if (ManageIQ.charts.provider == 'jqplot') {
+    jqplot_bind_events(chart_set, chart_index);
+  } else if (ManageIQ.charts.provider == 'c3') {
+    c3_bind_events(chart_set, chart_index);
+  }
+}
+
+function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, chart_index) {
+  var chart_data = ManageIQ.charts.chartData[chart_set];
+  var chart_el   = $('#miq_chart_parent_'+chart_set+'_'+chart_index);
+  var chartmenu_el = $('#miq_chartmenu_'+chart_set+'_'+chart_index);
+  chartmenu_el.empty();
+
+  if (chart_data[chart_index].menu != null && chart_data[chart_index].menu.length) {
+    var rowcolchart_index = "_" + row + "-" + col + "-" + chart_index;
+
+    for (var i = 0; i < chart_data[chart_index].menu.length; i++) {
+      var menu_id = chart_data[chart_index].menu[i].split(":")[0] + rowcolchart_index;
+      var pid = menu_id.split("-")[0];
+
+      if (chartmenu_el.find('#' + pid).length == 0) {
+        chartmenu_el.append("<li class='dropdown-submenu'>" +
+          "<a tabindex='-1' href='#'>" + pid + "</a>" +
+          "<ul id='" + pid + "' class='dropdown-menu'></ul></li>");
+      }
+
+      var menu_title = chart_data[chart_index].menu[i].split(":")[1];
+      menu_title = menu_title.replace("<series>", series);
+      menu_title = menu_title.replace("<category>", category);
+      $("#" + pid).append("<li><a id='" + menu_id +
+        "' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
+    }
+
+    chartmenu_el.css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
+    chartmenu_el.dropdown('toggle');
+    chart_el.find('.overlay').show();
+  }
+}
+
 // Handle chart context menu clicks
 function miqChartMenuClick(itemId) {
   if ($('#menu_div').length) {
