@@ -6,6 +6,8 @@ class MiqAeImport
       MiqAeYamlImportFs.new(domain, options)
     elsif options['yaml_file'].present?
       MiqAeYamlImportConsolidated.new(domain, options)
+    elsif options['git_dir'].present?
+      MiqAeYamlImportGitfs.new(domain, options)
     end
   end
 end

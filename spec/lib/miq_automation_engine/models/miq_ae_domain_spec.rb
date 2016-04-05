@@ -138,6 +138,87 @@ describe MiqAeDomain do
     end
   end
 
+  context "git enabled domains" do
+    let(:commit_time) { Time.now.utc }
+    let(:commit_time_new) { Time.now.utc + 1.hour }
+    let(:commit_message) { "R2D2" }
+    let(:commit_sha) { "abcd" }
+    let(:branch_name) { "b1" }
+    let(:tag_name) { "t1" }
+    let(:dom1) { FactoryGirl.create(:miq_ae_git_domain) }
+    let(:dom2) { FactoryGirl.create(:miq_ae_domain) }
+    let(:repo) { FactoryGirl.create(:git_repository, :url => "http://a.b.com/x/y") }
+    let(:git_import) { instance_double('MiqAeYamlImportGitfs') }
+    let(:info) { {:time => commit_time, :message => commit_message, :commit_sha => commit_sha} }
+    let(:new_info) { {:time => commit_time_new, :message => "BB-8", :commit_sha => "def"} }
+    let(:commit_hash) do
+      {'commit_msg' => commit_message, 'commit_on' => commit_time,
+       'commit_sha' => commit_sha,     'branch'    => branch_name}
+    end
+
+    it "check if a git domain is locked" do
+      expect(dom1.editable?).to be_falsey
+      expect(dom1.git_enabled?).to be_truthy
+    end
+
+    it "a regular domain should not be git enabled" do
+      expect(dom2.git_enabled?).to be_falsey
+    end
+
+    it "git info" do
+      expect(repo).to receive(:branch_info).with(branch_name).and_return(info)
+
+      dom1.update_git_info(repo, branch_name, nil)
+      dom1.reload
+
+      expect(dom1.attributes).to have_attributes(commit_hash)
+    end
+
+    it "import a domain" do
+      domain_name = dom1.name
+      expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
+      expect(repo).to receive(:branch_info).with(branch_name).and_return(info)
+      allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
+
+      MiqAeDomain.import_git_repo(domain_name, repo, branch_name)
+      dom1 = MiqAeDomain.where(:name => domain_name).first
+      expect(dom1.attributes).to have_attributes(commit_hash)
+    end
+
+    it "import a domain fails" do
+      domain_name = dom1.name
+      expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
+      allow(git_import).to receive(:import) { MiqAeDomain.create(:name => "nada") }
+      expect do
+        MiqAeDomain.import_git_repo(domain_name, repo, branch_name)
+      end.to raise_error(MiqAeException::DomainNotFound)
+    end
+
+    it "git repo changed for non git domain" do
+      expect { dom2.git_repo_changed? }.to raise_error(MiqAeException::InvalidDomain)
+    end
+
+    it "git repo branch changed" do
+      expect(repo).to receive(:branch_info).with(branch_name).twice.and_return(new_info)
+      dom1.update_attributes(:branch => branch_name, :git_repository => repo, :commit_sha => commit_sha)
+      expect(dom1.git_repo_changed?).to be_truthy
+      expect(dom1.changed_info).to have_attributes(new_info)
+    end
+
+    it "git repo tag changed" do
+      expect(repo).to receive(:tag_info).with(tag_name).twice.and_return(new_info)
+      dom1.update_attributes(:tag => tag_name, :git_repository => repo, :commit_sha => commit_sha)
+      expect(dom1.git_repo_changed?).to be_truthy
+      expect(dom1.changed_info).to have_attributes(new_info)
+    end
+
+    it "git repo tag changed with no branch or tag" do
+      dom1.update_attributes(:git_repository => repo, :commit_sha => commit_sha)
+
+      expect { dom1.git_repo_changed? }.to raise_error(RuntimeError)
+    end
+  end
+
   def create_model(attrs = {})
     attrs = default_attributes(attrs)
     ae_fields = {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
