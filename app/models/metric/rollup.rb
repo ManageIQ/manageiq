@@ -1,6 +1,6 @@
 module Metric::Rollup
   ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == "derived" }.compact +
-                 [:stat_containergroup_create_rate, :stat_containergroup_delete_rate]
+                 [:stat_container_group_create_rate, :stat_container_group_delete_rate]
   STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
 
   NON_STORAGE_ROLLUP_COLS = (ROLLUP_COLS - STORAGE_COLS)

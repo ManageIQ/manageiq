@@ -6,8 +6,8 @@ module Metric::Statistic
     container_groups = ContainerGroup.where(:ems_id => obj.id).or(ContainerGroup.where(:old_ems_id => obj.id))
 
     {
-      :stat_containergroup_create_rate => container_groups.where(:created_on => capture_interval).count,
-      :stat_containergroup_delete_rate => container_groups.where(:deleted_on => capture_interval).count
+      :stat_container_group_create_rate => container_groups.where(:created_on => capture_interval).count,
+      :stat_container_group_delete_rate => container_groups.where(:deleted_on => capture_interval).count
     }
   end
 end
