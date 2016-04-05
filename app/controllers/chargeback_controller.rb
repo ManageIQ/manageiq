@@ -132,21 +132,10 @@ class ChargebackController < ApplicationController
       # Detect errors saving tiers
       tiers_valid = @rate_tiers.all? { |tiers| tiers.all?(&:valid?) }
 
-      # Replace the tiers
-      # if tiers_valid
-      #   @rate.chargeback_rate_details.each_with_index do |_detail, i|
-      #     @rate_details[i].save_tiers(@rate_tiers[i])
-      #   end
-      # end
-
-      # Detect errors saving rate details
-      rate_details_valid = @rate_details.all?(&:valid?)
-
-      if tiers_valid && rate_details_valid && @rate.save
+      if tiers_valid && @rate.save
         @rate.chargeback_rate_details.replace(@rate_details)
         @rate.chargeback_rate_details.each_with_index do |_detail, i|
-          #@rate_details[i].save_tiers(@rate_tiers[i])
-          @rate_details[i].chargeback_tiers.replace(@rate_tiers[i])
+          @rate_details[i].save_tiers(@rate_tiers[i])
         end
 
         if params[:button] == "add"

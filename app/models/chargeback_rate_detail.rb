@@ -143,7 +143,14 @@ class ChargebackRateDetail < ApplicationRecord
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
-      self.chargeback_tiers = tiers
+      tiers.each do |tier|
+        unless tier.valid?
+          errors.add(:tier, tier.errors.full_messages.first)
+          return
+        end
+        tier.save
+      end
+      self.chargeback_tiers.replace(tiers)
     else
       temp.errors.each {|a, e| errors.add(a, e)}
     end
