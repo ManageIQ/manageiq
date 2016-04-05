@@ -108,7 +108,7 @@ class Chargeback < ActsAsArModel
       if options[:tag] && (report_user.nil? || !report_user.self_service?)
         recs = recs.where(:resource_type => "VmOrTemplate")
                    .where.not(:resource_id => nil)
-                   .where("tag_names like ? ", "%" + options[:tag].split("/")[2..-1].join("/") + "%")
+                   .for_tag_names(options[:tag].split("/")[2..-1])
       else
         recs = recs.where(:resource_type => "VmOrTemplate", :resource_id => vm_owners.keys)
       end
