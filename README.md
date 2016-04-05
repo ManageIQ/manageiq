@@ -28,7 +28,7 @@ cloud environments.  It has the following feature sets:
 ## Learn more
 
 *  [**Read** developer guides](https://github.com/ManageiQ/guides)
-*  [**Chat** with contributors on irc.freenode.net \#manageiq](http://manageiq.org/community/irc/)
+*  **Chat** with contributors on [irc.freenode.net \#manageiq](http://manageiq.org/community/irc/) or [Gitter](https://gitter.im/ManageIQ/manageiq)
 *  [**File or view bug reports and feature requests** using Issues on Github](https://github.com/ManageIQ/manageiq/issues?state=open)
 *  [**Ask** questions of ManageIQ experts](http://talk.manageiq.org/)
 *  [**Discuss** ManageIQ with developers and power users](http://talk.manageiq.org/)
