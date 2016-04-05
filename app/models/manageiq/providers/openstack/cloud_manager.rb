@@ -181,6 +181,16 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
     raise
   end
 
+  def vm_attach_volume(vm, volume_id, device = nil)
+    volume = find_by_id_filtered(CloudVolume, volume_id)
+    volume.raw_attach_volume(vm.ems_ref, device)
+  end
+
+  def vm_detach_volume(vm, volume_id)
+    volume = find_by_id_filtered(CloudVolume, volume_id)
+    volume.raw_detach_volume(vm.ems_ref)
+  end
+
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
   end
