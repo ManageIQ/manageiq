@@ -696,7 +696,7 @@ function miqChartBindEvents(chart_set, chart_index) {
   if (ManageIQ.charts.provider == 'jqplot') {
     jqplot_bind_events(chart_set, chart_index);
   } else if (ManageIQ.charts.provider == 'c3') {
-    c3_bind_events(chart_set, chart_index);
+    // noop
   }
 }
 
