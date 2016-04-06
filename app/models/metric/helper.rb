@@ -7,6 +7,12 @@ module Metric::Helper
     interval_name == "realtime" ? [Metric, :metrics] : [MetricRollup, :metric_rollups]
   end
 
+  def self.find_for_interval_name(interval_name, time_profile_or_tz = nil, rollup_class = nil)
+    rel = Metric::Helper.class_for_interval_name(interval_name, rollup_class)
+    rel = rel.with_time_profile_or_tz(time_profile_or_tz) if interval_name == 'daily'
+    rel.where(:capture_interval_name => interval_name)
+  end
+
   def self.nearest_realtime_timestamp(ts)
     ts = ts.kind_of?(String) ? ts.dup : ts.utc.iso8601
     sec = ts[17, 2]
