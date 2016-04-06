@@ -32,30 +32,28 @@ module MiqReport::Search
   end
 
   def get_order_info
-    order = nil
     apply_sortby_in_search = db_class.sortable?
-    if apply_sortby_in_search && !sortby.nil?
-      # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
-      order = sortby.to_miq_a.collect do |c|
-        info = col_to_col_info(c)
-        apply_sortby_in_search = false if info[:virtual_reflection] || info[:virtual_column]
+    return [apply_sortby_in_search, nil] if sortby.nil? || !apply_sortby_in_search
+    # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
+    order = sortby.to_miq_a.collect do |c|
+      info = col_to_col_info(c)
+      apply_sortby_in_search = false if info[:virtual_reflection] || info[:virtual_column]
 
-        if c.include?(".")
-          assoc, col = c.split(".")
-          t = get_sqltable(assoc)
-          sql_col = [t, col].join(".")
-        else
-          sql_col = [db_class.table_name, c].join(".")
-        end
-        sql_col = "LOWER(#{sql_col})" if [:string, :text].include?(info[:data_type])
-        sql_col
-      end.join(",")
+      if c.include?(".")
+        assoc, col = c.split(".")
+        t = get_sqltable(assoc)
+        sql_col = [t, col].join(".")
+      else
+        sql_col = [db_class.table_name, c].join(".")
+      end
+      sql_col = "LOWER(#{sql_col})" if [:string, :text].include?(info[:data_type])
+      sql_col
+    end.join(",")
 
-      unless self.order.nil?
-        case self.order.downcase
-        when "ascending"  then order += " asc"
-        when "descending" then order += " desc"
-        end
+    unless self.order.nil?
+      case self.order.downcase
+      when "ascending"  then order += " asc"
+      when "descending" then order += " desc"
       end
     end
 
