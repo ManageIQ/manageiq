@@ -6,6 +6,6 @@ class VmOrTemplateDecorator < Draper::Decorator
   end
 
   def listicon_image
-    "100/vendor-#{vendor.downcase}.png"
+    "svg/vendor-#{vendor.downcase}.svg"
   end
 end
