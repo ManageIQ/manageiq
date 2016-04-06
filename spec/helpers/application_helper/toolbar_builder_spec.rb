@@ -2829,12 +2829,6 @@ describe ApplicationHelper do
         build_toolbar_save_button(@item, @item_out)
       end
 
-      it "gets rid of first directory and anything after last slash when button is 'view_grid', 'view_tile' or 'view_list'" do
-        @item = {:url => '/some/path/to/the/testing/code'}
-        @item_out = {'id' => 'view_list'}
-        expect(subject).to include(:url => '/path/to/the/testing')
-      end
-
       it "saves the value as it is otherwise" do
         expect(subject).to have_key(:url)
       end
@@ -2854,24 +2848,13 @@ describe ApplicationHelper do
       end
 
       it "returns / when button is 'view_grid', 'view_tile' or 'view_list'" do
-        result = url_for_save_button('view_list', '/ems_cloud/1r2?', true)
+        result = url_for_save_button('view_list', '/1r2?', true)
         expect(result).to eq('/')
       end
 
       it "supports compressed ids" do
-        result = url_for_save_button('view_list', '/ems_cloud/1?', true)
+        result = url_for_save_button('view_list', '/1?', true)
         expect(result).to eq('/')
-      end
-    end
-
-    context "when restless routes" do
-      before do
-        allow(controller).to receive(:restful?) { false }
-      end
-
-      it "gets rid of first directory and anything after last slash when button is 'view_grid', 'view_tile' or 'view_list'" do
-        result = url_for_save_button('view_list', '/some/path/to/the/testing/code', false)
-        expect(result).to eq('/path/to/the/testing')
       end
     end
   end
