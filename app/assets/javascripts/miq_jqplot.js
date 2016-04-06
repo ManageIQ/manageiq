@@ -98,7 +98,7 @@ function jqplot_bind_events(chart_set, chart_index) {
   var el = $("#miq_chart_" + chart_set + "_" + chart_index);
 
   el.bind('jqplotDataClick', function (event, seriesIndex, pointIndex, data) {
-    miqBuildChartMenuEx(seriesIndex, pointIndex, null, 'CAT', 'SER', chart_set, chart_index);
+    miqBuildChartMenuEx(pointIndex, seriesIndex, null, 'CAT', 'SER', chart_set, chart_index);
 
     setTimeout(function () {
       $(document).on('click.close_popup', function() {

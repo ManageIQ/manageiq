@@ -230,9 +230,16 @@ module ApplicationController::Performance
   # Handle actions for performance chart context menu clicks
   def perf_menu_click
     # Parse the clicked item to get indexes and selection variables
-    legend_idx = params[:menu_click].split("_").last.split("-").first.to_i - 1
-    data_idx = params[:menu_click].split("_").last.split("-")[-2].to_i - 1
-    chart_idx = params[:menu_click].split("_").last.split("-").last.to_i
+    click_parts = params[:menu_click].split("_").last.split("-")
+
+    legend_idx = click_parts.first.to_i
+    data_idx   = click_parts[-2].to_i
+    chart_idx  = click_parts.last.to_i
+
+    if Charting.backend == :ziya
+      legend_idx -= 1
+      data_idx   -= 1
+    end
 
     cmd, model, typ = params[:menu_click].split("_").first.split("-")
 
