@@ -70,51 +70,57 @@ module Vmdb
       walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_encrypt(v) }
     end
 
-    private_class_method def self.build_template
+    def self.build_template
       ::Config::Options.new.tap do |settings|
         template_sources.each { |s| settings.add_source!(s) }
       end
     end
+    private_class_method :build_template
 
-    private_class_method def self.build(resource)
+    def self.build(resource)
       build_template.tap do |settings|
         settings.add_source!(DatabaseSource.new(resource))
         local_sources.each { |s| settings.add_source!(s) }
       end
     end
+    private_class_method :build
 
-    private_class_method def self.template_sources
+    def self.template_sources
       [
         Rails.root.join("config/settings.yml").to_s,
         Rails.root.join("config/settings/#{Rails.env}.yml").to_s,
         Rails.root.join("config/environments/#{Rails.env}.yml").to_s
       ]
     end
+    private_class_method :template_sources
 
-    private_class_method def self.local_sources
+    def self.local_sources
       [
         Rails.root.join("config/settings.local.yml").to_s,
         Rails.root.join("config/settings/#{Rails.env}.local.yml").to_s,
         Rails.root.join("config/environments/#{Rails.env}.local.yml").to_s
       ]
     end
+    private_class_method :local_sources
 
     # This is a near copy of Config.load_and_set_settings, but we can't use that
     # method as it also calls Config.load_files, which enforces specific file
     # sources and doesn't allow you insert new sources into the middle of the
     # stack.
-    private_class_method def self.reset_settings_constant(settings)
+    def self.reset_settings_constant(settings)
       Kernel.send(:remove_const, ::Config.const_name) if Kernel.const_defined?(::Config.const_name)
       Kernel.const_set(::Config.const_name, settings)
     end
+    private_class_method :reset_settings_constant
 
-    private_class_method def self.walk_passwords(settings)
+    def self.walk_passwords(settings)
       walk(settings) do |key, value, _path, owning|
         yield(key, value, owning) if value.present? && PASSWORD_FIELDS.include?(key.to_sym)
       end
     end
+    private_class_method :walk_passwords
 
-    private_class_method def self.apply_settings_changes(resource, deltas)
+    def self.apply_settings_changes(resource, deltas)
       resource.transaction do
         index = resource.settings_changes.index_by(&:key)
 
@@ -129,21 +135,25 @@ module Vmdb
         resource.settings_changes.destroy(index.values)
       end
     end
+    private_class_method :apply_settings_changes
 
     # Since `#load` occurs very early in the boot process, we must ensure that
     # we do not fail in cases where the database is not yet created, not yet
     # available, or has not yet been seeded.
-    private_class_method def self.my_server
+    def self.my_server
       resource_queryable? ? MiqServer.my_server(true) : nil
     end
+    private_class_method :my_server
 
-    private_class_method def self.resource_queryable?
+    def self.resource_queryable?
       database_connectivity? && SettingsChange.table_exists?
     end
+    private_class_method :resource_queryable?
 
-    private_class_method def self.database_connectivity?
+    def self.database_connectivity?
       conn = ActiveRecord::Base.connection rescue nil
       conn && ActiveRecord::Base.connected?
     end
+    private_class_method :database_connectivity?
   end
 end
