@@ -113,7 +113,8 @@ module ManageIQ::Providers
       end
 
       def process_collection(collection, key)
-        @data[key] ||= []
+        @data[key]       ||= []
+        @data_index[key] ||= {}
 
         collection.each do |item|
           uid, new_result = yield(item)
@@ -466,7 +467,7 @@ module ManageIQ::Providers
       end
 
       def link_volumes_to_base_snapshots
-        @data_index[:cloud_volumes].each do |_, volume|
+        @data_index.fetch_path(:cloud_volumes).each do |_, volume|
           base_snapshot = volume[:base_snapshot]
           next if base_snapshot.nil?
 
