@@ -16,29 +16,19 @@ class VimUsage < ActsAsArModel
 
   def self.vms_by_category(options)
     if options[:interval_name] == "daily"
-      model, interval = [VimPerformanceDaily, 1.day]
+      interval = 1.day
       ts = options[:timestamp].to_time
-      cond = [
-        "(timestamp >= ? and timestamp < ?) and resource_type = ? and tag_names like ?",
-        ts,
-        ts + interval,
-        "VmOrTemplate",
-        "%" + [options[:group_by_category], options[:group_by_tag]].join("/") + "%"
-      ]
+      model = VimPerformanceDaily
+      rows = model.where(:timestamp => ts..(ts+interval), :resource_type => "VmOrTemplate")
+                  .for_tag_names(options[:group_by_category], options[:group_by_tag])
     else
-      klass, meth = Metric::Helper.class_and_association_for_interval_name(options[:interval_name])
-      model, interval = [klass, 1.hour]
-      cond = [
-        "timestamp = ? and capture_interval_name = ? and resource_type = ? and tag_names like ?",
-        options[:timestamp],
-        options[:interval_name],
-        "VmOrTemplate",
-        "%" + [options[:group_by_category], options[:group_by_tag]].join("/") + "%"
-      ]
+      interval = 1.hour
+      model = Metric::Helper.class_for_interval_name(options[:interval_name])
+      rows = model.where(:capture_interval_name => options[:interval_name])
+                  .where(:timestamp => options[:timestamp], :resource_type => "VmOrTemplate")
+                  .for_tag_names(options[:group_by_category], options[:group_by_tag])
     end
-
-    rows = model.where(cond).to_a
-    return build(rows, options[:interval_name]), interval
+    [build(rows.to_a, options[:interval_name]), interval]
   end
 
   def self.build(perfs, interval)
