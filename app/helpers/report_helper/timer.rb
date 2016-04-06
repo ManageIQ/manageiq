@@ -26,6 +26,18 @@ module ReportHelper
       end
     end
 
+    def update_from_miq_schedule(run_at, timezone)
+      self.typ    = run_at[:interval][:unit].titleize
+      self.months = run_at[:interval][:value] if run_at[:interval][:unit] == 'monthly'
+      self.weeks  = run_at[:interval][:value] if run_at[:interval][:unit] == 'weekly'
+      self.days   = run_at[:interval][:value] if run_at[:interval][:unit] == 'daily'
+      self.hours  = run_at[:interval][:value] if run_at[:interval][:unit] == 'hourly'
+      t = run_at[:start_time].utc.in_time_zone(timezone)
+      self.start_hour = t.strftime("%H")
+      self.start_min = t.strftime("%M")
+      self.start_date = "#{t.month}/#{t.day}/#{t.year}"
+    end
+
     def flush_to_miq_schedule(run_at, timezone)
       run_at ||= {}
       run_at[:start_time] = "#{start_time_in_utc(timezone)} Z"

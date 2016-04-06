@@ -399,19 +399,12 @@ module ReportController::Widgets
       @edit[:new][:timer].typ = 'Hourly'
       @edit[:new][:timer][:start_hour] = "00"
       @edit[:new][:timer][:start_min] = "00"
+      @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}"
     else
       sched = params[:action] == "widget_copy" ? @widget.miq_schedule : @edit[:schedule]
-      @edit[:new][:timer][:typ] = sched.run_at[:interval][:unit].titleize
-      @edit[:new][:timer][:months] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "monthly"
-      @edit[:new][:timer][:weeks] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "weekly"
-      @edit[:new][:timer][:days] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "daily"
-      @edit[:new][:timer][:hours] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "hourly"
       @edit[:tz] = sched.run_at && sched.run_at[:tz] ? sched.run_at[:tz] : session[:user_tz]
-      t = sched.run_at[:start_time].to_time.in_time_zone(@edit[:tz])
-      @edit[:new][:timer][:start_hour] = t.strftime("%H")
-      @edit[:new][:timer][:start_min] = t.strftime("%M")
+      @edit[:new][:timer].update_from_miq_schedule(sched.run_at, @edit[:tz])
     end
-    @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}" # Set the start date
 
     if @sb[:wtype] == "r"
       @pivotby1 = @edit[:new][:pivotby1] = NOTHING_STRING # Initialize groupby fields to nothing
