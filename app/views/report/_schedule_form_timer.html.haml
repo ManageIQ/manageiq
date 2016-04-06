@@ -34,7 +34,7 @@
         = hidden_span_if(@edit[:new][:timer].typ.downcase != "weekly", :id => "weekly_span") do
           = _("every")
           = select_tag("timer_weeks",
-            options_for_select(TIMER_WEEKS, @edit[:new][:timer_weeks]),
+            options_for_select(TIMER_WEEKS, @edit[:new][:timer].weeks),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();

@@ -579,7 +579,7 @@ module ApplicationHelper
     t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
     @edit[:new][:timer] ||= ReportHelper::Timer.new
     @edit[:new][:timer][:months] = "1"
-    @edit[:new][:timer_weeks]  = "1"
+    @edit[:new][:timer][:weeks]  = "1"
     @edit[:new][:timer_days]    = "1"
     @edit[:new][:timer_hours]   = "1"
     if schedule.run_at.nil?
@@ -589,7 +589,7 @@ module ApplicationHelper
     else
       @edit[:new][:timer][:typ]  = schedule.run_at[:interval][:unit].titleize
       @edit[:new][:timer][:months] = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "monthly"
-      @edit[:new][:timer_weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
+      @edit[:new][:timer][:weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer_hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
       t                          = schedule.run_at[:start_time].utc.in_time_zone(@edit[:tz])

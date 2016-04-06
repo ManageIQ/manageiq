@@ -27,11 +27,12 @@ describe ReportController do
       context "valid attributes" do
         before :each do
           timer = ReportHelper::Timer.new('Hourly')
+          timer[:weeks] = 1
           controller.instance_variable_set(:@edit,
                                            :schedule => miq_schedule, :new => {:title => "NewCustomWidget",
                                                                                :description => "NewCustomWidget",
                                                                                :enabled => true, :roles => ["_ALL_"],
-                                                                               :groups => [], :timer_weeks => "1",
+                                                                               :groups => [],
                                                                                :timer_days => "1", :timer_hours => "1",
                                                                                :timer => timer,
                                                                                :start_hour => "00",
@@ -58,11 +59,12 @@ describe ReportController do
       context "invalid attributes" do
         before :each do
           timer = ReportHelper::Timer.new('Hourly')
+          timer[:weeks] = 1
           controller.instance_variable_set(:@edit,
                                            :schedule => miq_schedule, :new => {:title => "",
                                                                                :description => "",
                                                                                :enabled => true, :roles => ["_ALL_"],
-                                                                               :groups => [], :timer_weeks => "1",
+                                                                               :groups => [],
                                                                                :timer_days => "1", :timer_hours => "1",
                                                                                :timer => timer,
                                                                                :start_hour => "00",

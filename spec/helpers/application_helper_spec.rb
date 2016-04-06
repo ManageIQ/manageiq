@@ -825,15 +825,15 @@ describe ApplicationHelper do
         @run_at[:interval][:unit] = 'weekly'
         helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
-          :timer_weeks => @interval,
           :start_hour  => @hour,
           :start_min   => @min,
           :start_date  => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :weeks => @interval,
           :typ => 'Weekly'
         )
-        expect(@edit[:new]).not_to include(:timer_weeks => '1')
+        expect(@edit[:new][:timer].to_h).not_to include(:weeks => '1')
       end
 
       it "sets values as daily" do
