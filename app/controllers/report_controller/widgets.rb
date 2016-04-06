@@ -389,18 +389,19 @@ module ReportController::Widgets
       @edit[:new][:shortcut_keys] = @edit[:new][:shortcuts].keys  # Save the keys array so we can compare the hash order
       @edit[:avail_shortcuts] = widget_build_avail_shortcuts
     end
+    @edit[:new][:timer] = ReportHelper::Timer.new
     @edit[:new][:timer_weeks] = "1"
     @edit[:new][:timer_days] = "1"
     @edit[:new][:timer_hours] = "1"
     if @edit[:schedule].run_at.nil? # New widget or schedule missing, default sched options
       @edit[:tz] = session[:user_tz]
       t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:timer_typ] = "Hourly"
+      @edit[:new][:timer].typ = 'Hourly'
       @edit[:new][:start_hour] = "00"
       @edit[:new][:start_min] = "00"
     else
       sched = params[:action] == "widget_copy" ? @widget.miq_schedule : @edit[:schedule]
-      @edit[:new][:timer_typ] = sched.run_at[:interval][:unit].titleize
+      @edit[:new][:timer][:typ] = sched.run_at[:interval][:unit].titleize
       @edit[:new][:timer_months] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "monthly"
       @edit[:new][:timer_weeks] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "daily"
@@ -551,7 +552,8 @@ module ReportController::Widgets
     end
 
     # Schedule settings box
-    @edit[:new][:timer_typ]    = params[:timer_typ]    if params[:timer_typ]
+    @edit[:new][:timer] ||= ReportHelper::Timer.new
+    @edit[:new][:timer][:typ]  = params[:timer_typ]    if params[:timer_typ]
     @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
     @edit[:new][:timer_weeks]  = params[:timer_weeks]  if params[:timer_weeks]
     @edit[:new][:timer_days]   = params[:timer_days]   if params[:timer_days]
@@ -691,8 +693,8 @@ module ReportController::Widgets
     @edit[:schedule].run_at[:start_time] = "#{run_at} Z"
     @edit[:schedule].run_at[:tz]         = @edit[:tz]
     @edit[:schedule].run_at[:interval] ||= {}
-    @edit[:schedule].run_at[:interval][:unit] = @edit[:new][:timer_typ].downcase
-    case @edit[:new][:timer_typ].downcase
+    @edit[:schedule].run_at[:interval][:unit] = @edit[:new][:timer][:typ].downcase
+    case @edit[:new][:timer][:typ].downcase
     when "monthly"
       @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_months]
     when "weekly"

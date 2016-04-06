@@ -390,7 +390,8 @@ module ReportController::Schedules
     elsif params[:repfilter_typ] && params[:repfilter_typ] == "<Choose>"
       @edit[:new][:repfilter] = nil
     end
-    @edit[:new][:timer_typ] = params[:timer_typ] if params[:timer_typ]
+    @edit[:new][:timer] ||= ReportHelper::Timer.new
+    @edit[:new][:timer][:typ] = params[:timer_typ] if params[:timer_typ]
     @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
     @edit[:new][:timer_weeks] = params[:timer_weeks] if params[:timer_weeks]
     @edit[:new][:timer_days] = params[:timer_days] if params[:timer_days]
@@ -493,8 +494,8 @@ module ReportController::Schedules
     schedule.run_at[:start_time] = "#{run_at} Z"
     schedule.run_at[:tz] = @edit[:tz]
     schedule.run_at[:interval] ||= {}
-    schedule.run_at[:interval][:unit] = @edit[:new][:timer_typ].downcase
-    case @edit[:new][:timer_typ].downcase
+    schedule.run_at[:interval][:unit] = @edit[:new][:timer][:typ].downcase
+    case @edit[:new][:timer][:typ].downcase
     when "monthly"
       schedule.run_at[:interval][:value] = @edit[:new][:timer_months]
     when "weekly"
