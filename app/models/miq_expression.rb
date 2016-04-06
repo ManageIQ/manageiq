@@ -643,7 +643,12 @@ class MiqExpression
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
       table = Arel::Table.new(field.table_name)
       clause = table[field.column].eq(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
-    when "<", ">", ">=", "<=", "!=", "before", "after"
+    when ">"
+      field = Field.parse(exp[operator]["field"])
+      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
+      table = Arel::Table.new(field.table_name)
+      clause = table[field.column].gt(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
+    when "<", ">=", "<=", "!=", "before", "after"
       col_type = self.class.get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if col_type == :date || col_type == :datetime
 
