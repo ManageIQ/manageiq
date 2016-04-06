@@ -337,6 +337,19 @@
       "Route":true,
       "Kubernetes":true,
       "Openshift":true
-    }
-  }
+    },
+    "icons": {
+      "ContainerReplicator":{"type":"glyph","icon":"","fontfamily":"PatternFlyIcons-webfont"},
+      "ContainerGroup":{"type":"glyph","icon":"","fontfamily":"FontAwesome"},
+      "ContainerNode":{"type":"glyph","icon":"","fontfamily":"PatternFlyIcons-webfont"},
+      "ContainerService":{"type":"glyph","icon":"","fontfamily":"PatternFlyIcons-webfont"},
+      "ContainerRoute":{"type":"glyph","icon":"","fontfamily":"PatternFlyIcons-webfont"},
+      "Container":{"type":"glyph","icon":"","fontfamily":"FontAwesome"},
+      "Host":{"type":"glyph","icon":"","fontfamily":"PatternFlyIcons-webfont"},
+      "Vm":{"type":"glyph","icon":"","fontfamily":"PatternFlyIcons-webfont"},
+      "Kubernetes":{"type":"image","icon":"/assets/svg/vendor-kubernetes-72d5f7ebb2b7162e35b2ff33e0d7e094a7d2c23d662e99835735d3350401f088.svg"},
+      "Openshift":{"type":"image","icon":"/assets/svg/vendor-openshift-1d618a8a9b84a545ce01bf41e996f2614b8cf433e1845fcf953af8ff43788707.svg"},
+      "OpenshiftEnterprise":{"type":"image","icon":"/assets/svg/vendor-openshift_enterprise-1d618a8a9b84a545ce01bf41e996f2614b8cf433e1845fcf953af8ff43788707.svg"},
+      "Atomic":{"type":"image","icon":"/assets/svg/vendor-atomic-95bd9f968d89cf797db7c62abfd49d60c2cbfaf925653c9e763d153a0bf00ef8.svg"},
+      "AtomicEnterprise":{"type":"image","icon":"/assets/svg/vendor-atomic_enterprise-17db41265b1c7e2722e63241c9762d391e9ed9384113ddf48642e777c8c0b6c7.svg"}}}
 }

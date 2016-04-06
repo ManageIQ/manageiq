@@ -22,49 +22,27 @@
     font-size: 19px;
 }
 
-.kube-topology g text.icon {
+.kube-topology g text.glyph {
     font-size: 20px;
     fill: #1186C1;
-    font-family: PatternFlyIcons-webfont;
 }
 
-.kube-topology g.Container text.icon {
-    font-family: FontAwesome;
+.kube-topology g.Container text.glyph {
     font-size: 15px;
 }
 
-.kube-topology g.ContainerGroup text.icon {
-    font-family: FontAwesome;
+.kube-topology g.ContainerGroup text.glyph {
     font-size: 18px;
 }
 
-.kube-topology g.Vm text.icon, .kube-topology g.Host text.icon {
+.kube-topology g.Vm text.glyph, .kube-topology g.Host text.glyph {
     fill: #636363;
 }
 
-.kube-topology g.ContainerNode text.icon {
+.kube-topology g.ContainerNode text.glyph {
     font-size: 25px;
 }
 
-.kube-topology g.ContainerManager text.icon {
+.kube-topology g.ContainerManager text.glyph {
     font-size: 38px;
 }
-
-.kube-topology g.ContainerManager text.icon.Kubernetes {
-    fill: #326de6;
-}
-
-.kube-topology g.ContainerManager text.icon.Openshift, .kube-topology g.ContainerManager text.icon.OpenshiftEnterprise {
-    fill: #da2430;
-}
-
-.kube-topology g.ContainerManager text.icon.Atomic {
-    font-family: icomoon;
-    fill: #666666;
-}
-
-.kube-topology g.ContainerManager text.icon.AtomicEnterprise  {
-    font-family: icomoon;
-    fill: #0088ce;
-}
-

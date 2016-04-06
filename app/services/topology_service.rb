@@ -29,10 +29,11 @@ class TopologyService
      :miq_id => entity.id}
   end
 
-  def populate_topology(topo_items, links, kinds)
+  def populate_topology(topo_items, links, kinds, icons)
     {:items     => topo_items,
      :relations => links,
-     :kinds     => kinds
+     :kinds     => kinds,
+     :icons     => icons
     }
   end
 end

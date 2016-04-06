@@ -6,6 +6,7 @@ ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location', 't
 function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyService) {
   var self = this;
   $scope.vs = null;
+  var icons = null;
 
   var d3 = window.d3;
   $scope.refresh = function() {
@@ -23,6 +24,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       $scope.items = data.data.items;
       $scope.relations = data.data.relations;
       $scope.kinds = data.data.kinds;
+      icons = data.data.icons;
 
       if (currentSelectedKinds && (Object.keys(currentSelectedKinds).length != Object.keys($scope.kinds).length)) {
         $scope.kinds = currentSelectedKinds;
@@ -141,18 +143,30 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       return self.dblclick(d);
     });
 
-    added.append("text")
-        .text(function(d) {
-          return self.getIcon(d);
-        })
-      .attr('class', function(d) {
-          switch(d.item.kind) {
-            case 'ContainerManager':
-              return 'icon '+ d.item.display_kind;
-            default:
-              return 'icon';
+    added.append("image")
+      .attr("xlink:href", function (d) {
+        var iconInfo = self.getIcon(d);
+        switch(iconInfo.type) {
+          case 'image':
+            return iconInfo.icon;
+          case "glyph":
+            return null;
+        }
+      })
+      .attr("height", function(d) {
+          var iconInfo = self.getIcon(d);
+          if (iconInfo.type != 'image') {
+            return 0;
           }
-        })
+          return 40;
+      })
+      .attr("width", function(d) {
+        var iconInfo = self.getIcon(d);
+        if (iconInfo.type != 'image') {
+          return 0;
+        }
+        return 40;
+      })
       .attr("y", function(d) {
         return self.getDimensions(d).y;
       })
@@ -162,6 +176,28 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .on("contextmenu", function(d){
         self.contextMenu(this, d);
       });
+
+    added.append("text")
+      .each(function(d) {
+        var iconInfo = self.getIcon(d);
+        if (iconInfo.type != 'glyph')
+          return;
+
+        $(this).text(iconInfo.icon)
+          .attr("class","glyph")
+          .attr('font-family', iconInfo.fontfamily);
+      })
+        
+      .attr("y", function(d) {
+        return self.getDimensions(d).y;
+      })
+      .attr("x", function(d) {
+        return self.getDimensions(d).x;
+      })
+      .on("contextmenu", function(d){
+        self.contextMenu(this, d);
+      });
+
 
     added.append("text")
       .attr("x", 26)
@@ -183,7 +219,6 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       return topologyService.tooltip(d).join("\n");
     });
 
-
     $scope.vs = vertices;
 
     /* Don't do default rendering */
@@ -195,35 +230,11 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
   };
 
   this.getIcon = function getIcon(d) {
-    switch (d.item.kind) {
-      case 'Container':
-        return '\uF1B2'; // fa-cube
-      case "ContainerNode":
-        return '\uE621';  // pficon-container-node
-      case "ContainerRoute":
-        return '\uE625'; // pficon-route
-      case "ContainerService":
-        return '\uE61E'; // pficon-service
-      case "Vm":
-        return '\uE90f'; // pficon-virtual-machine
-      case "Host":
-        return '\uE600'; // pficon-screen
-      case "ContainerGroup":
-        return '\uF1B3'; // fa-cubes
-      case "ContainerReplicator":
-        return '\uE624'; // pficon-replicator
-      case "ContainerManager":
-        switch (d.item.display_kind) {
-          case "Kubernetes":
-            return '\uE627'; // pficon-kubernetes
-          case "Openshift":
-          case "OpenshiftEnterprise":
-            return '\uE626';  // pficon-openshift
-          case "Atomic":
-            return '\uE62c'; // vendor-atomic
-          case "AtomicEnterprise":
-            return '\uE62d'; //vendor-atomic-enterprise
-        }
+    switch(d.item.kind) {
+      case 'ContainerManager':
+        return icons[d.item.display_kind];
+      default:
+        return icons[d.item.kind];
     }
   };
 
@@ -231,7 +242,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     var defaultDimensions = topologyService.defaultElementDimensions();
     switch (d.item.kind) {
       case "ContainerManager":
-        return { x: defaultDimensions.x, y: 16, r: 28 };
+        return { x: -20, y: -20, r: 28 };
       case "Container":
         return { x: 1, y: 5, r: 13 };
       case "ContainerGroup":
