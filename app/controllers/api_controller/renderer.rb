@@ -168,6 +168,14 @@ class ApiController
       raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
     end
 
+    #
+    # Method name for optional accessor of virtual attributes
+    #
+    def virtual_attribute_accessor(type, attr)
+      method = "fetch_#{type}_#{attr}"
+      respond_to?(method) ? method : nil
+    end
+
     private
 
     def resource_search(id, type, klass)
@@ -240,9 +248,10 @@ class ApiController
       add_hash json, result
     end
 
-    def fetch_direct_virtual_attribute(_type, resource, attr)
+    def fetch_direct_virtual_attribute(type, resource, attr)
       return unless attr_accessible?(resource, attr)
-      value = resource.public_send(attr)
+      virtattr_accessor = virtual_attribute_accessor(type, attr)
+      value = virtattr_accessor.nil? ? resource.public_send(attr) : send(virtattr_accessor, resource)
       result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
       # set nil vtype above to "#{type}/#{resource.id}/#{attr}" to support id normalization
       [value, result]
