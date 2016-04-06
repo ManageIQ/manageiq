@@ -11,6 +11,7 @@ class VmdbDatabaseSetting < ApplicationRecord
   virtual_column :minimum_value,    :type => :integer
   virtual_column :maximum_value,    :type => :integer
   virtual_column :vmdb_database_id, :type => :integer
+  virtual_column :value,            :type => :string
 
   attr_writer :vmdb_database
 
