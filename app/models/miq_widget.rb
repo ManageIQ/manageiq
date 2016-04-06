@@ -548,6 +548,16 @@ class MiqWidget < ApplicationRecord
     widget
   end
 
+  def set_rss_properties(feed_type, rss_feed_id = nil, url = nil)
+    if feed_type == 'internal'
+      self.resource = RssFeed.find(rss_feed_id) if rss_feed_id
+      options.delete(:url)
+    else
+      options[:url] = url
+      self.resource = nil
+    end
+  end
+
   def sync_schedule(schedule_info)
     return if schedule_info.nil?
 

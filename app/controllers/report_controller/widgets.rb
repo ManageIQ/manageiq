@@ -656,13 +656,7 @@ module ReportController::Widgets
     #      widget.miq_widget_shortcuts = ws
     #    end
     if @sb[:wtype] == "rf"
-      if @edit[:new][:feed_type] == "internal"
-        widget.resource = RssFeed.find(@edit[:new][:rss_feed_id]) if @edit[:new][:rss_feed_id]
-        widget.options.delete(:url)
-      else
-        widget.resource = nil
-        widget.options[:url] = @edit[:new][:url]
-      end
+      widget.set_rss_properties(@edit[:new][:feed_type], @edit[:new][:rss_feed_id], @edit[:new][:url])
     else
       widget.resource = @edit[:rpt]
     end
