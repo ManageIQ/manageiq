@@ -650,16 +650,6 @@ describe MiqExpression do
     end
   end
 
-  it "supports yaml" do
-    exp = YAML.load '--- !ruby/object:MiqExpression
-    exp:
-      "=":
-        field: Host-enabled_inbound_ports
-        value: "22,427,5988,5989"
-    '
-    expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
-  end
-
   it "tests numeric set expressions" do
     exp = MiqExpression.new("=" => {"field" => "Host-enabled_inbound_ports", "value" => "22,427,5988,5989"})
     expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
