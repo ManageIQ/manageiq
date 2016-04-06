@@ -25,5 +25,13 @@ module ReportHelper
         self.start_min = '00'
       end
     end
+
+    def start_time_in_utc(timezone)
+      create_time_in_utc("#{start_date} #{start_hour}:#{start_min}:00", timezone)
+    end
+  end
+
+  class Timer
+    include Mixins::TimeHelper
   end
 end

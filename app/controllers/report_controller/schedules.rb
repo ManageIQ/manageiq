@@ -478,8 +478,7 @@ module ReportController::Schedules
     schedule.sched_action[:options][:email] = copy_hash(@edit[:new][:email]) if @edit[:new][:send_email]
 
     schedule.run_at ||= {}
-    run_at = create_time_in_utc("#{@edit[:new][:timer][:start_date]} #{@edit[:new][:timer][:start_hour]}:#{@edit[:new][:timer][:start_min]}:00",
-                                @edit[:tz])
+    run_at = @edit[:new][:timer].start_time_in_utc(@edit[:tz])
     schedule.run_at[:start_time] = "#{run_at} Z"
     schedule.run_at[:tz] = @edit[:tz]
     schedule.run_at[:interval] ||= {}

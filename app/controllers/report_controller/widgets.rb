@@ -678,7 +678,7 @@ module ReportController::Widgets
     @edit[:schedule].towhat       = "MiqWidget"
     @edit[:schedule].sched_action = {:method => "generate_widget"}
     @edit[:schedule].run_at ||= {}
-    run_at = create_time_in_utc("#{@edit[:new][:timer][:start_date]} #{@edit[:new][:timer][:start_hour]}:#{@edit[:new][:timer][:start_min]}:00", @edit[:tz])
+    run_at = @edit[:new][:timer].start_time_in_utc(@edit[:tz])
     @edit[:schedule].run_at[:start_time] = "#{run_at} Z"
     @edit[:schedule].run_at[:tz]         = @edit[:tz]
     @edit[:schedule].run_at[:interval] ||= {}
