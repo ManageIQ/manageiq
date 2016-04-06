@@ -32,12 +32,12 @@ module MiqReport::Search
   end
 
   def get_order_info
-    apply_sortby_in_search = db_class.sortable?
-    return [apply_sortby_in_search, nil] if sortby.nil? || !apply_sortby_in_search
+    return [true, nil] if sortby.nil? # apply limits (note: without order it is non-deterministic)
+    return [false, nil] unless db_class.sortable?
     # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
     order = sortby.to_miq_a.collect do |c|
       info = col_to_col_info(c)
-      apply_sortby_in_search = false if info[:virtual_reflection] || info[:virtual_column]
+      return [false, nil] if info[:virtual_reflection] || info[:virtual_column]
 
       if c.include?(".")
         assoc, col = c.split(".")
@@ -57,7 +57,7 @@ module MiqReport::Search
       end
     end
 
-    return apply_sortby_in_search, order
+    [true, order]
   end
 
   def get_parent_targets(parent, assoc)
