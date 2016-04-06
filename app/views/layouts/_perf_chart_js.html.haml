@@ -1,6 +1,6 @@
 - if chart_data[chart_index][:xml2]
   %div{"style" => "width: #{width + 20}px; margin-bottom: 50px"}
-    %div.chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}"}
+    .chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}"}
       %div
         %h3= charts[chart_index][:title]
         .overlay-container{"style" => "position: relative"}
@@ -18,7 +18,7 @@
           $("#miq_chartmenu_#{chart_set}_#{chart_index}").empty();
           $("#miq_chart_parent_#{chart_set}_#{chart_index} .overlay").hide();
         });
-    %div.chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}_2"}
+    .chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}_2"}
       %div
         .overlay-container{"style" => "position: relative"}
           = chart_no_url(:id      => "miq_chart_#{chart_set}_#{chart_index}_2",
@@ -36,7 +36,7 @@
           $("#miq_chart_parent_#{chart_set}_#{chart_index}_2 .overlay").hide();
         });
 - else
-  %div.chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}", "style" => "width: #{width + 20}px; margin-bottom: 50px"}
+  .chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}", "style" => "width: #{width + 20}px; margin-bottom: 50px"}
     %div
       %h3= charts[chart_index][:title]
       .overlay-container{"style" => "position: relative"}
