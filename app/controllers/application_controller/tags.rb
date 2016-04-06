@@ -340,7 +340,7 @@ module ApplicationController::Tags
     # Set to first category, if not already set
     @edit[:cat] ||= cats.min_by(&:description)
 
-    @tagitems = @tagging.constantize.find(@object_ids).sort_by { |t| t.name.downcase } unless @object_ids.blank?
+    @tagitems = @tagging.constantize.find(@object_ids).sort_by { |t| t.name.try(:downcase) } unless @object_ids.blank?
 
     @view = get_db_view(@tagging)               # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@tagitems, @view.cols + ['id'])
