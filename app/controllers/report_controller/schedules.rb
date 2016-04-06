@@ -391,22 +391,11 @@ module ReportController::Schedules
       @edit[:new][:repfilter] = nil
     end
     @edit[:new][:timer] ||= ReportHelper::Timer.new
-    @edit[:new][:timer][:typ] = params[:timer_typ] if params[:timer_typ]
-    @edit[:new][:timer][:months] = params[:timer_months] if params[:timer_months]
-    @edit[:new][:timer][:weeks] = params[:timer_weeks] if params[:timer_weeks]
-    @edit[:new][:timer][:days] = params[:timer_days] if params[:timer_days]
-    @edit[:new][:timer][:hours] = params[:timer_hours] if params[:timer_hours]
-    @edit[:new][:timer][:start_date] = params[:miq_date_1] if params[:miq_date_1]
-    @edit[:new][:timer][:start_hour] = params[:start_hour] if params[:start_hour]
-    @edit[:new][:timer][:start_min] = params[:start_min] if params[:start_min]
+    @edit[:new][:timer].update_from_hash(params)
 
     if params[:time_zone]
       @edit[:tz] = params[:time_zone]
       @timezone_abbr = Time.now.in_time_zone(@edit[:tz]).strftime("%Z")
-      t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:timer][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Reset the start date
-      @edit[:new][:timer][:start_hour] = "00" # Reset time to midnight
-      @edit[:new][:timer][:start_min] = "00"
     end
 
     @edit[:new][:filter] = "" if @edit[:new][:filter] == "<Choose>"
