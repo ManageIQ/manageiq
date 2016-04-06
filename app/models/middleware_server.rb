@@ -1,4 +1,4 @@
-class MiddlewareServer < ActiveRecord::Base
+class MiddlewareServer < ApplicationRecord
   include ReportableMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -12,7 +12,7 @@ class MiddlewareServer < ActiveRecord::Base
   METRICS_HWK_MIQ = {
     "WildFly Memory Metrics~Heap Used"                                  => "mw_heap_used",
     "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"    => "mw_agregated_servlet_time",
-    "WildFly Memory Metrics~NonHeap Committed"                          => "mw_nonheap_comitted",
+    "WildFly Memory Metrics~NonHeap Committed"                          => "mw_non_heap_committed",
     "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"    => "mw_aggregated_expired_web_sessions",
     "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions" => "mw_aggregated_max_active_web_sessions",
     "WildFly Memory Metrics~Accumulated GC Duration"                    => "mw_accumulated_gc_duration",
@@ -32,11 +32,4 @@ class MiddlewareServer < ActiveRecord::Base
 
   delegate :metrics_available, :to => :metrics_capture
   delegate :collect_live_metric, :to => :metrics_capture
-
-  def first_and_last_capture(*)
-    firsts, lasts = metrics_capture.metrics_available.collect do |metric|
-      metrics_capture.first_and_last_capture(metric)
-    end.transpose
-    [firsts.min, lasts.max]
-  end
 end

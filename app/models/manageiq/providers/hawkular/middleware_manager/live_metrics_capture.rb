@@ -74,8 +74,8 @@ module ManageIQ::Providers
     end
 
     def counters(metric_id, starts, ends, bucket_duration)
-      compute_derivates(sort_and_normalize(@counters.get_data(metric_id, :starts => starts, :ends => ends,
-                                                              :bucketDuration => bucket_duration)))
+      sort_and_normalize(@counters.get_rate(metric_id, :starts => starts, :ends => ends,
+                                          :bucket_duration => bucket_duration))
     end
 
     def availabilities(metric_id, starts, ends, bucket_duration)
@@ -88,17 +88,6 @@ module ManageIQ::Providers
       # as it's still in progress.
       norm_data = (data.sort_by { |x| x['start'] }).slice(0..-2)
       norm_data.reject { |x| x.values.include?('NaN') }
-    end
-
-    def compute_derivates(counters)
-      counters.each_cons(2).map do |prv, n|
-        # Add min, median, max, percentile95th, etc. if needed
-        {
-          'start' => n['start'],
-          'end'   => n['end'],
-          'avg'   => n['avg'] - prv['avg']
-        }
-      end
     end
 
     def process_data(metric, data)

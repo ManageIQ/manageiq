@@ -725,6 +725,15 @@ module ApplicationController::Performance
                              from_dt,
                              to_dt,
                              interval_type]
+      elsif @perf_record.kind_of?(MiddlewareServer)
+        rpt = perf_get_chart_rpt("vim_perf_#{interval_type}_middleware")
+        rpt.where_clause = ["resource_type = ? and resource_id = ? and timestamp >= ? and timestamp <= ? " \
+                            "and capture_interval_name = ?",
+                            @perf_options[:model],
+                            @perf_record.id,
+                            from_dt,
+                            to_dt,
+                            interval_type]
       else  # Doing VIM performance on a normal CI
         suffix = @perf_record.kind_of?(AvailabilityZone) ? "_cloud" : "" # Get special cloud version with 'Instances' headers
         rpt = perf_get_chart_rpt("vim_perf_#{interval_type}#{suffix}")
@@ -741,7 +750,8 @@ module ApplicationController::Performance
     when "realtime"
       f, to_dt = @perf_record.first_and_last_capture("realtime")
       from_dt = to_dt.nil? ? nil : to_dt - @perf_options[:rt_minutes]
-      rpt = perf_get_chart_rpt("vim_perf_realtime")
+      suffix = @perf_record.kind_of?(MiddlewareServer) ? "_middleware" : ""
+      rpt = perf_get_chart_rpt("vim_perf_realtime#{suffix}")
       rpt.tz = @perf_options[:tz]
       rpt.extras = Hash.new
       rpt.extras[:realtime] = true
@@ -1463,7 +1473,6 @@ module ApplicationController::Performance
     # FIXME: rename xml, xml2 to something like 'chart_data'
     report.to_chart(@settings[:display][:reporttheme], false,
                     MiqReport.graph_options(options[:width], options[:height], options))
-
     chart_xml = {
       :xml      => report.chart,            # Save the graph xml
       :main_col => options[:columns].first  # And the main (first) column of the chart
