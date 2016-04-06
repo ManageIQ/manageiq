@@ -47,6 +47,8 @@ class ApplicationHelper::Toolbar::OrchestrationTemplatesCenter < ApplicationHelp
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => false,
+      :onwhen  => "1+",
       :items => [
         button(
           :orchestration_template_tag,

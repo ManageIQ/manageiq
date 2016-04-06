@@ -5,6 +5,8 @@ class ApplicationHelper::Toolbar::CloudTenantsCenter < ApplicationHelper::Toolba
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => false,
+      :onwhen  => "1+",
       :items => [
         button(
           :cloud_tenant_tag,

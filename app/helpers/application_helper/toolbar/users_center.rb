@@ -45,6 +45,8 @@ class ApplicationHelper::Toolbar::UsersCenter < ApplicationHelper::Toolbar::Basi
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => false,
+      :onwhen  => "1+",
       :items => [
         button(
           :rbac_user_tags_edit,
