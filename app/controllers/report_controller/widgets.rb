@@ -646,7 +646,11 @@ module ReportController::Widgets
     #      end
     #      widget.miq_widget_shortcuts = ws
     #    end
-    widget.options[:url] = @edit[:new][:url] unless @edit[:new][:url].blank?
+    if @sb[:wtype] == "rf"
+      widget.set_rss_properties(@edit[:new][:feed_type], @edit[:new][:rss_feed_id], @edit[:new][:url])
+    else
+      widget.resource = @edit[:rpt]
+    end
     widget.options[:col_order] = [] if @edit[:new][:pivotby1]
     widget.options[:col_order].push(@edit[:new][:pivotby1]) if !@edit[:new][:pivotby1].blank? && @edit[:new][:pivotby1] != "<<< Nothing >>>"
     widget.options[:col_order].push(@edit[:new][:pivotby2]) if !@edit[:new][:pivotby2].blank? && @edit[:new][:pivotby2] != "<<< Nothing >>>"
@@ -674,11 +678,6 @@ module ReportController::Widgets
         widget.visibility[:roles] = ["_ALL_"]
       end
       widget.visibility.delete(:groups) if widget.visibility[:groups]
-    end
-    if @edit[:new][:rss_feed_id]
-      widget.resource = RssFeed.find(@edit[:new][:rss_feed_id])
-    else
-      widget.resource = @edit[:rpt]
     end
 
     # schedule settings
