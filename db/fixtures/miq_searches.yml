@@ -401,6 +401,16 @@
     search_type: global
     db: Storage
 - attributes:
+    name: default_Store Type / GlusterFS
+    description: Store Type / GlusterFS
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Storage-store_type
+          value: GLUSTERFS
+    search_type: global
+    db: Storage
+- attributes:
     name: default_Store Type / VMFS
     description: Store Type / VMFS
     filter: !ruby/object:MiqExpression
