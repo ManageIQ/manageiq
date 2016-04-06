@@ -409,8 +409,8 @@ module ApplicationController::CiProcessing
         options[:number_of_cpus] = vccores.to_i * vsockets.to_i
       end
       # set the disk_add and disk_remove options
-      options[:disk_add] = params[:vmAddDisks].deep_symbolize_keys if params[:vmAddDisks]
-      options[:disk_remove] = params[:vmRemoveDisks].deep_symbolize_keys if params[:vmRemoveDisks]
+      options[:disk_add] = params[:vmAddDisks].deep_symbolize_keys.values if params[:vmAddDisks]
+      options[:disk_remove] = params[:vmRemoveDisks].deep_symbolize_keys.values if params[:vmRemoveDisks]
       if(params[:id] && params[:id] != 'new')
         @request_id = params[:id]
       end
@@ -1173,7 +1173,7 @@ module ApplicationController::CiProcessing
       @reconfig_values[:disk_remove] = @req.options[:disk_remove]
       vmdisks = []
       if @req.options[:disk_add]
-        @req.options[:disk_add].values.each do |disk|
+        @req.options[:disk_add].each do |disk|
           adsize, adunit = reconfigure_calculations(disk[:disk_size_in_mb])
           vmdisks << {:hdFilename   => disk[:disk_name],
                       :hdType       => disk[:thin_provisioned] == 'true' ? 'thin' : 'thick',
@@ -1192,7 +1192,7 @@ module ApplicationController::CiProcessing
           removing = ''
           delbacking = false
           if disk.filename && @req.options[:disk_remove]
-            @req.options[:disk_remove].values.each do |remdisk|
+            @req.options[:disk_remove].each do |remdisk|
               if remdisk[:disk_name] == disk.filename
                 removing = 'remove'
                 delbacking = remdisk[:delete_backing] == 'true'

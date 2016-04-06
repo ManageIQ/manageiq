@@ -159,11 +159,10 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
             dsize *= 1024;
           dmode = ($scope.reconfigureModel.vmdisks[disk].hdMode == 'persistent');
           dtype = ($scope.reconfigureModel.vmdisks[disk].hdType == 'thin');
-          $scope.reconfigureModel.vmAddDisks.push({disk_name: $scope.reconfigureModel.vmdisks[disk].hdFilename,
-                                  disk_size_in_mb: dsize,
-                                  persistent: dmode,
-                                  thin_provisioned: dtype,
-                                  dependent: $scope.reconfigureModel.vmdisks[disk].cb_dependent});
+          $scope.reconfigureModel.vmAddDisks.push({disk_size_in_mb: dsize,
+                                                   persistent: dmode,
+                                                   thin_provisioned: dtype,
+                                                   dependent: $scope.reconfigureModel.vmdisks[disk].cb_dependent});
         }
       }
     };
@@ -224,7 +223,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       }
       $scope.updateDisksAddRemove();
 
-      if(!_.isEqual($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !_.isEqual($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
+      if(!angular.equals($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
         $scope.cb_disks = true;
       else
         $scope.cb_disks = false;
@@ -261,6 +260,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       $scope.cb_cpu = $scope.cb_cpuCopy;
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.angularForm.$setPristine(true);
+      $scope.updateDisksAddRemove();
+      if(!angular.equals($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
+        $scope.cb_disks = true;
+      else
+        $scope.cb_disks = false;
       miqService.miqFlash("warn", __("All changes have been reset"));
     };
 

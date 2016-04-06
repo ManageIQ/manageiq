@@ -235,9 +235,9 @@
              :class        => "btn btn-default btn-disabled",
              :alt          => "Reset changes",
              :title        => "Reset changes",
-             "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
+             "ng-class"    => "{'btn-disabled': angularForm.$pristine && !cb_disks}",
              "ng-click"    => "resetClicked()",
-             "ng-disabled" => "angularForm.$pristine",
+             "ng-disabled" => "angularForm.$pristine && !cb_disks",
              "ng-hide"     => "newRecord")
         = button_tag(_("Cancel"),
                      :class     => "btn btn-default",
