@@ -2,10 +2,6 @@ class VmdbDatabaseSetting < ApplicationRecord
   self.table_name = 'pg_catalog.pg_settings'
   self.primary_key = 'name'
 
-  def self.sortable?
-    true
-  end
-
   virtual_belongs_to :vmdb_database
   virtual_column :description,      :type => :string
   virtual_column :minimum_value,    :type => :integer

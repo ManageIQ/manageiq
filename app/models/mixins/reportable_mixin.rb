@@ -1,10 +1,6 @@
 module ReportableMixin
   extend ActiveSupport::Concern
   module ClassMethods
-    def sortable?
-      true
-    end
-
     def search(count = :all, options = {})
       conditions = options.delete(:conditions)
       filter = options.delete(:filter)

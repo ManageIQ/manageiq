@@ -45,7 +45,6 @@ module MiqReport::Search
 
   def get_order_info
     return [] if sortby.nil? # apply limits (note: without order it is non-deterministic)
-    return nil unless db_class.sortable?
     # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
     order = Array.wrap(sortby).collect do |c|
       sql_col, sql_type = association_column(c)
