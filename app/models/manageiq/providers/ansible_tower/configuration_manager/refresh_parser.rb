@@ -68,7 +68,14 @@ module ManageIQ::Providers
           :virtual_instance_ref => host.instance_id,
         }
 
+        cross_link_host(new_result)
+
         return uid, new_result
+      end
+
+      def cross_link_host(new_result)
+        vm = Vm.where(:uid_ems => new_result[:virtual_instance_ref]).first
+        new_result[:counterpart] = vm
       end
 
       def parse_inventory(inventory)
