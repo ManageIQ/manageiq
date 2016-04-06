@@ -63,7 +63,7 @@
       %label.control-label.col-md-2
         = _("Starting Date")
       .col-md-8
-        = datepicker_input_tag("miq_date_1", @edit[:new][:start_date],
+        = datepicker_input_tag("miq_date_1", @edit[:new][:timer].start_date,
           :readonly               => "true",
           "data-miq_observe_date" => {:url => url}.to_json)
     .form-group

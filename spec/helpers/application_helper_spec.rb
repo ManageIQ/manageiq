@@ -812,9 +812,9 @@ describe ApplicationHelper do
         expect(@edit[:new]).to include(
           :start_hour   => @hour,
           :start_min    => @min,
-          :start_date   => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :start_date => @date,
           :months => @interval,
           :typ => 'Monthly'
         )
@@ -827,9 +827,9 @@ describe ApplicationHelper do
         expect(@edit[:new]).to include(
           :start_hour  => @hour,
           :start_min   => @min,
-          :start_date  => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :start_date => @date,
           :weeks => @interval,
           :typ => 'Weekly'
         )
@@ -842,9 +842,9 @@ describe ApplicationHelper do
         expect(@edit[:new]).to include(
           :start_hour => @hour,
           :start_min  => @min,
-          :start_date => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :start_date => @date,
           :days => @interval,
           :typ => 'Daily'
         )
@@ -857,9 +857,9 @@ describe ApplicationHelper do
         expect(@edit[:new]).to include(
           :start_hour  => @hour,
           :start_min   => @min,
-          :start_date  => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :start_date => @date,
           :hours => @interval,
           :typ => 'Hourly'
         )

@@ -596,7 +596,7 @@ module ApplicationHelper
       @edit[:new][:start_hour]   = t.strftime("%H")
       @edit[:new][:start_min]    = t.strftime("%M")
     end
-    @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Set the start date
+    @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}" # Set the start date
   end
 
   # Check if a parent chart has been selected and applies

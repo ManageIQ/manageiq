@@ -190,7 +190,7 @@ module ReportController::Schedules
       if params[:time_zone]
         page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
-        page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
+        page << "$('#miq_date_1').val('#{@edit[:new][:timer].start_date}');"
         page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
         page << "$('#start_min').val('#{@edit[:new][:start_min].to_i}');"
         page.replace_html("tz_span", @timezone_abbr)
@@ -396,7 +396,7 @@ module ReportController::Schedules
     @edit[:new][:timer][:weeks] = params[:timer_weeks] if params[:timer_weeks]
     @edit[:new][:timer][:days] = params[:timer_days] if params[:timer_days]
     @edit[:new][:timer][:hours] = params[:timer_hours] if params[:timer_hours]
-    @edit[:new][:start_date] = params[:miq_date_1] if params[:miq_date_1]
+    @edit[:new][:timer][:start_date] = params[:miq_date_1] if params[:miq_date_1]
     @edit[:new][:start_hour] = params[:start_hour] if params[:start_hour]
     @edit[:new][:start_min] = params[:start_min] if params[:start_min]
 
@@ -404,7 +404,7 @@ module ReportController::Schedules
       @edit[:tz] = params[:time_zone]
       @timezone_abbr = Time.now.in_time_zone(@edit[:tz]).strftime("%Z")
       t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Reset the start date
+      @edit[:new][:timer][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Reset the start date
       @edit[:new][:start_hour] = "00" # Reset time to midnight
       @edit[:new][:start_min] = "00"
     end
@@ -489,7 +489,7 @@ module ReportController::Schedules
     schedule.sched_action[:options][:email] = copy_hash(@edit[:new][:email]) if @edit[:new][:send_email]
 
     schedule.run_at ||= {}
-    run_at = create_time_in_utc("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}:00",
+    run_at = create_time_in_utc("#{@edit[:new][:timer][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}:00",
                                 @edit[:tz])
     schedule.run_at[:start_time] = "#{run_at} Z"
     schedule.run_at[:tz] = @edit[:tz]

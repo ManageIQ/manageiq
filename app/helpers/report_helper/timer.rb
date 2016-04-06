@@ -5,5 +5,6 @@ module ReportHelper
     :weeks,
     :days,
     :hours,
+    :start_date,
   )
 end
