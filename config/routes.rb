@@ -1915,6 +1915,7 @@ Vmdb::Application.routes.draw do
         retire
         show
         show_list
+        stacks_ot_info
         tagging_edit
         protect
       ),
@@ -1931,6 +1932,7 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        stacks_ot_copy
         protect
         tagging_edit
         tag_edit_form_field_changed

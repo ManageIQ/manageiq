@@ -6,6 +6,7 @@
 - width ||= "auto"
 - read_only ||= false
 - no_focus ||= false
+- angular ||= false
 
 :javascript
   if (miqDomElementExists('#{text_area_id}')) {
@@ -18,7 +19,12 @@
       readOnly:      #{read_only ? "'nocursor'".html_safe : false}
     });
     ManageIQ.editor.on('change', function (cm, change) {
-      miqSendOneTrans('#{url}');
+      if (#{angular}) {
+        ManageIQ.editor.save();
+        $(textarea).trigger("change");
+      } else {
+        miqSendOneTrans('#{url}');
+      }
     });
     ManageIQ.editor.on('blur', function (cm, change) {
       ManageIQ.editor.save();

@@ -16,7 +16,8 @@ class ApplicationHelper::Toolbar::StackOrchestrationTemplateCenter < Application
           :orchestration_template_copy,
           'fa fa-files-o fa-lg',
           t = N_('Copy this Orchestration Template as orderable'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::OrchestrationTemplateCopyOrderable),
       ]
     )
   ])

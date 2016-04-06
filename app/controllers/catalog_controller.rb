@@ -831,6 +831,7 @@ class CatalogController < ApplicationController
     x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
     self.x_node = "ot-#{to_cid(ot.id)}"
     x_tree[:open_nodes].push(x_node)
+    add_flash(params[:flash_message]) if params.key?(:flash_message)
     explorer
   end
 
