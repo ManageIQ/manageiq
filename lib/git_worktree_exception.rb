@@ -10,4 +10,6 @@ module GitWorktreeException
   class GitEntryMissing < RuntimeError; end
   class GitRepositoryMissing < RuntimeError; end
   class DirectoryAlreadyExists < RuntimeError; end
+  class BranchMissing < RuntimeError; end
+  class TagMissing < RuntimeError; end
 end
