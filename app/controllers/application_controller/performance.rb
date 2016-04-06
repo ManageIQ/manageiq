@@ -235,6 +235,7 @@ module ApplicationController::Performance
     legend_idx = params[:menu_click].split("_").last.split("-").first.to_i - 1
     data_idx = params[:menu_click].split("_").last.split("-")[-2].to_i - 1
     chart_idx = params[:menu_click].split("_").last.split("-").last.to_i
+
     cmd, model, typ = params[:menu_click].split("_").first.split("-")
 
     # Swap in 'Instances' for 'VMs' in AZ breadcrumbs (poor man's cloud/infra split hack)
@@ -405,6 +406,7 @@ module ApplicationController::Performance
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
       perf_gen_data(refresh = "n")
+
       return unless @charts      # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
@@ -894,7 +896,7 @@ module ApplicationController::Performance
 
   def gen_perf_chart(chart, rpt, idx, zoom_action)
     options = chart.merge(
-      :zoom_url      => perf_zoom_url(zoom_action, idx.nil? ? 'clear' : idx.to_s),
+      :zoom_url      => zoom_url = perf_zoom_url(zoom_action, idx.nil? ? 'clear' : idx.to_s),
       :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
       :axis_skip     => 3
     )
@@ -902,7 +904,7 @@ module ApplicationController::Performance
 
     process_chart_trends(chart, rpt, options)
 
-    generated_chart = perf_gen_chart(rpt, options).merge(:menu => chart[:menu])
+    generated_chart = perf_gen_chart(rpt, options).merge(:menu => chart[:menu], :zoom_url => zoom_url)
 
     # Grab title from chart in case formatting added units
     chart[:title] = rpt.title
@@ -1354,10 +1356,10 @@ module ApplicationController::Performance
             chart_data.push(nil)              # Push a placeholder onto the chart data array
           else
             perf_remove_chart_cols(chart)
-            options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
+            options = chart.merge(:zoom_url      => zoom_url = perf_zoom_url("perf_chart_chooser", idx.to_s),
                                   :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                   :axis_skip     => 3)
-            menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
+            menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu], :zoom_url => zoom_url}
             chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
             chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           end
@@ -1366,11 +1368,11 @@ module ApplicationController::Performance
       else                                    # Gen chart based on index
         chart = chart_layout[perf_options[:index].to_i]
         perf_remove_chart_cols(chart)
-        options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
+        options = chart.merge(:zoom_url      => zoom_url = perf_zoom_url("perf_chart_chooser", "clear"),
                               :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
-                              :axis_skip => 3,
-                              :width => 1000, :height => 700)
-        menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
+                              :axis_skip     => 3,
+                              :width         => 1000, :height => 700)
+        menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu], :zoom_url => zoom_url}
         chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         charts.push(chart)
@@ -1383,9 +1385,9 @@ module ApplicationController::Performance
             chart_data.push(nil)              # Push a placeholder onto the chart data array
           else
             perf_remove_chart_cols(chart)
-            options = chart.merge(:zoom_url  => perf_zoom_url("perf_chart_chooser", idx.to_s),
+            options = chart.merge(:zoom_url  => zoom_url = perf_zoom_url("perf_chart_chooser", idx.to_s),
                                   :axis_skip => 29)
-            menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
+            menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu], :zoom_url => zoom_url}
             chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
             chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           end
@@ -1394,10 +1396,11 @@ module ApplicationController::Performance
       else                                    # Gen chart based on index
         chart = chart_layout[perf_options[:index].to_i]
         perf_remove_chart_cols(chart)
-        options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
+        options = chart.merge(:zoom_url  => zoom_url = perf_zoom_url("perf_chart_chooser", "clear"),
                               :axis_skip => 29,
-                              :width => 1000, :height => 700)
-        menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
+                              :width     => 1000,
+                              :height    => 700)
+        menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu], :zoom_url => zoom_url}
         chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
         chart[:title] = rpt.title           # Grab title from chart in case formatting added units
         charts.push(chart)
@@ -1410,11 +1413,11 @@ module ApplicationController::Performance
             chart_data.push(nil)              # Push a placeholder onto the chart data array
           else
             perf_remove_chart_cols(chart)
-            options = chart.merge(:zoom_url      => perf_zoom_url("perf_chart_chooser", idx.to_s),
+            options = chart.merge(:zoom_url      => zoom_url = perf_zoom_url("perf_chart_chooser", idx.to_s),
                                   :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                   :axis_skip     => 3)
             process_chart_trends(chart, rpt, options)
-            menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
+            menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu], :zoom_url => zoom_url}
             chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
             chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           end
@@ -1424,12 +1427,12 @@ module ApplicationController::Performance
         chart = chart_layout[perf_options[:index].to_i]
         if chart
           perf_remove_chart_cols(chart)
-          options = chart.merge(:zoom_url => perf_zoom_url("perf_chart_chooser", "clear"),
+          options = chart.merge(:zoom_url => zoom_url = perf_zoom_url("perf_chart_chooser", "clear"),
                                 :link_data_url => "javascript:miqChartLinkData( _col_, _row_, _value_, _category_, _series_, _id_ )",
                                 :axis_skip => 3,
                                 :width => 1000, :height => 700)
           process_chart_trends(chart, rpt, options)
-          menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu]}
+          menu_opts = perf_options[:model].starts_with?("Parent") ? {} : {:menu => chart[:menu], :zoom_url => zoom_url}
           chart_data.push(perf_gen_chart(rpt, options).merge(menu_opts))
           chart[:title] = rpt.title           # Grab title from chart in case formatting added units
           charts.push(chart)
