@@ -8,10 +8,10 @@ class GitRepository < ApplicationRecord
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
 
-  VALID_KEYS = %w(commit_sha commit_message commit_time).freeze
+  INFO_KEYS = %w(commit_sha commit_message commit_time).freeze
 
   def refresh
-    @repo = Dir.exist?(dirname) ? update_repo : init_repo
+    @repo = Dir.exist?(directory_name) ? update_repo : init_repo
     refresh_branches
     refresh_tags
     self.last_refresh_on = Time.now.utc
@@ -22,18 +22,20 @@ class GitRepository < ApplicationRecord
     refresh unless @repo
     branch = git_branches.detect { |item| item.name == name }
     raise "Branch #{name} not found" unless branch
-    branch.attributes.slice(*VALID_KEYS)
+    branch.attributes.slice(*INFO_KEYS)
   end
 
   def tag_info(name)
     refresh unless @repo
     tag = git_tags.detect { |item| item.name == name }
     raise "GIT Tag #{name} not found" unless tag
-    tag.attributes.slice(*VALID_KEYS)
+    tag.attributes.slice(*INFO_KEYS)
   end
 
-  def dirname
-    @directory ||= directory_name
+  def directory_name
+    parsed = URI.parse(url)
+    raise "Invalid URL missing path" if parsed.path.blank?
+    File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
   end
 
   private
@@ -50,7 +52,7 @@ class GitRepository < ApplicationRecord
       stored_branch ? stored_branch.update_attributes(attrs) : git_branches.create!(attrs)
       current_branches.delete(stored_branch) if stored_branch
     end
-    current_branches.each { |branch| git_branches.delete(branch) }
+    git_branches.delete(current_branches)
   end
 
   def refresh_tags
@@ -65,12 +67,12 @@ class GitRepository < ApplicationRecord
       stored_tag ? stored_tag.update_attributes(attrs) : git_tags.create!(attrs)
       current_tags.delete(stored_tag) if stored_tag
     end
-    current_tags.each { |tag| git_tags.delete(tag) }
+    git_tags.delete(current_tags)
   end
 
   def init_repo
     repo_block do
-      params = {:clone => true, :url => url, :path => dirname}
+      params = {:clone => true, :url => url, :path => directory_name}
       params[:ssl_no_verify] = (verify_ssl == OpenSSL::SSL::VERIFY_NONE)
       if authentications.any?
         params[:username] = authentications.first.userid
@@ -82,7 +84,7 @@ class GitRepository < ApplicationRecord
 
   def update_repo
     repo_block do
-      GitWorktree.new(:path => dirname).tap do |repo|
+      GitWorktree.new(:path => directory_name).tap do |repo|
         repo.send(:fetch_and_merge)
       end
     end
@@ -94,11 +96,5 @@ class GitRepository < ApplicationRecord
     raise MiqException::MiqUnreachableError, err.message
   rescue => err
     raise MiqException::Error, err.message
-  end
-
-  def directory_name
-    parsed = URI.parse(url)
-    raise "Invalid URL missing path" if parsed.path.blank?
-    File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
   end
 end

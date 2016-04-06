@@ -11,12 +11,13 @@ describe GitRepository do
 
   it "default dirname" do
     repo = FactoryGirl.create(:git_repository,
-                              :url => "http://www.something.com/repos/manageiq")
-    expect(repo.dirname).to eq(File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, 'repos/manageiq'))
+                              :url => "http://www.example.com/repos/manageiq")
+    expect(repo.directory_name).to eq(File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, 'repos/manageiq'))
   end
 
   context "repo" do
     let(:gwt) { instance_double('GitWorktree') }
+    let(:git_url) { 'http://www.example.com/repo/manageiq' }
     let(:branch_list) { %w(b1 b2) }
     let(:tag_list) { %w(t1 t2) }
     let(:info) { {:time => Time.now.utc, :message => "R2D2", :commit_sha => "abcdef"} }
@@ -30,6 +31,7 @@ describe GitRepository do
        't2' => {:time => Time.now.utc + 5, :message => "T2", :commit_sha => "123456"}
       }
     end
+    let(:repo) { FactoryGirl.create(:git_repository, :url => git_url) }
 
     it "#refresh" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
@@ -42,8 +44,6 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
       expect(repo).to receive(:init_repo).with(no_args).and_call_original
 
       repo.refresh
@@ -62,8 +62,6 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
       attrs = repo.branch_info('b1')
       expect(attrs['commit_sha']).to eq(info[:commit_sha])
     end
@@ -78,9 +76,6 @@ describe GitRepository do
       allow(gwt).to receive(:tag_info) do |name|
         tag_info_hash[name]
       end
-
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
 
       attrs = repo.tag_info('t1')
       expect(attrs['commit_sha']).to eq(tag_info_hash['t1'][:commit_sha])
@@ -97,8 +92,6 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
       expect { repo.tag_info('nothing') }.to raise_error(RuntimeError)
     end
 
@@ -113,8 +106,6 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
       expect { repo.branch_info('nothing') }.to raise_error(RuntimeError)
     end
 
@@ -130,8 +121,6 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
       repo.refresh
       repo.git_branches << FactoryGirl.create(:git_branch, :name => 'DUMMY')
       expect(repo.git_branches.collect(&:name)).to match_array(branch_list + ['DUMMY'])
@@ -151,8 +140,6 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      repo = FactoryGirl.create(:git_repository,
-                                :url     => "http://www.nonexistent.com/manageiq")
       repo.refresh
       repo.git_tags << FactoryGirl.create(:git_tag, :name => 'DUMMY')
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list + ['DUMMY'])
