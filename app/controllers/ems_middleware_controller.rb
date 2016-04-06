@@ -17,4 +17,9 @@ class EmsMiddlewareController < ApplicationController
   def index
     redirect_to :action => 'show_list'
   end
+
+  def listicon_image(item, _view)
+    icon = item.decorate.try(:listicon_image)
+    "svg/#{icon}.svg"
+  end
 end

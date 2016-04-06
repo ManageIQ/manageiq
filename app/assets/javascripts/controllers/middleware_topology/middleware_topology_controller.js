@@ -71,7 +71,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
             return self.dblclick(d);});
         added.append("image")
             .attr("xlink:href",function(d) {
-                return "/assets/100/" + class_name(d) + ".png";
+                return "/assets/svg/" + class_name(d) + ".svg";
             })
             .attr("y", function(d) { return getDimensions(d).y})
             .attr("x", function(d) { return getDimensions(d).x})
@@ -93,18 +93,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
     });
 
     function class_name(d) {
-        var class_name = "";
-        switch (d.item.kind) {
-            case "MiddlewareDeployment":
-                class_name = "middleware_deployment";
-                break;
-            case "MiddlewareServer":
-                class_name = "middleware_server";
-                break;
-            case "MiddlewareManager":
-                class_name = "vendor-hawkular";
-                break;
-        }
+        var class_name = d.item.icon;
         return class_name;
     }
 

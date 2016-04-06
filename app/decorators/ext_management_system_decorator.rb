@@ -6,6 +6,6 @@ class ExtManagementSystemDecorator < Draper::Decorator
   end
 
   def listicon_image
-    "svg/vendor-#{image_name}.svg"
+    "100/vendor-#{image_name}.png"
   end
 end
