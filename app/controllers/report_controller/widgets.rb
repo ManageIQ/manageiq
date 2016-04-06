@@ -677,24 +677,7 @@ module ReportController::Widgets
     @edit[:schedule].description  = widget.description
     @edit[:schedule].towhat       = "MiqWidget"
     @edit[:schedule].sched_action = {:method => "generate_widget"}
-    @edit[:schedule].run_at ||= {}
-    run_at = @edit[:new][:timer].start_time_in_utc(@edit[:tz])
-    @edit[:schedule].run_at[:start_time] = "#{run_at} Z"
-    @edit[:schedule].run_at[:tz]         = @edit[:tz]
-    @edit[:schedule].run_at[:interval] ||= {}
-    @edit[:schedule].run_at[:interval][:unit] = @edit[:new][:timer][:typ].downcase
-    case @edit[:new][:timer][:typ].downcase
-    when "monthly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:months]
-    when "weekly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:weeks]
-    when "daily"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:days]
-    when "hourly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:hours]
-    else
-      @edit[:schedule].run_at[:interval].delete(:value)
-    end
+    @edit[:schedule].run_at = @edit[:new][:timer].flush_to_miq_schedule(@edit[:schedule].run_at, @edit[:tz])
     widget.miq_schedule = @edit[:schedule]
   end
 

@@ -26,6 +26,29 @@ module ReportHelper
       end
     end
 
+    def flush_to_miq_schedule(run_at, timezone)
+      run_at ||= {}
+      run_at[:start_time] = "#{start_time_in_utc(timezone)} Z"
+      run_at[:tz]         = timezone
+      run_at[:interval] ||= {}
+      run_at[:interval][:unit] = typ.downcase
+      case typ.downcase
+      when 'monthly'
+        run_at[:interval][:value] = months
+      when 'weekly'
+        run_at[:interval][:value] = weeks
+      when 'daily'
+        run_at[:interval][:value] = days
+      when 'hourly'
+        run_at[:interval][:value] = hours
+      else
+        run_at[:interval].delete(:value)
+      end
+      run_at
+    end
+
+    private
+
     def start_time_in_utc(timezone)
       create_time_in_utc("#{start_date} #{start_hour}:#{start_min}:00", timezone)
     end

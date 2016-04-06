@@ -476,25 +476,7 @@ module ReportController::Schedules
     schedule.sched_action = {:method => "run_report", :options => schedule_options}
 
     schedule.sched_action[:options][:email] = copy_hash(@edit[:new][:email]) if @edit[:new][:send_email]
-
-    schedule.run_at ||= {}
-    run_at = @edit[:new][:timer].start_time_in_utc(@edit[:tz])
-    schedule.run_at[:start_time] = "#{run_at} Z"
-    schedule.run_at[:tz] = @edit[:tz]
-    schedule.run_at[:interval] ||= {}
-    schedule.run_at[:interval][:unit] = @edit[:new][:timer][:typ].downcase
-    case @edit[:new][:timer][:typ].downcase
-    when "monthly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer][:months]
-    when "weekly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer][:weeks]
-    when "daily"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer][:days]
-    when "hourly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer][:hours]
-    else
-      schedule.run_at[:interval].delete(:value)
-    end
+    schedule.run_at = @edit[:new][:timer].flush_to_miq_schedule(schedule.run_at, @edit[:tz])
 
     # Build the filter expression
     exp = {}
