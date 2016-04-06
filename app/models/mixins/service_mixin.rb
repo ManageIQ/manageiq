@@ -28,7 +28,7 @@ module ServiceMixin
         nh = options
       end
 
-      if self.is_circular_reference?(rsc)
+      if circular_reference?(rsc)
         raise MiqException::MiqServiceCircularReferenceError,
               _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
                 {:resource_name => rsc.name, :name => name}
@@ -108,7 +108,7 @@ module ServiceMixin
     nil
   end
 
-  def is_circular_reference?(child_svc)
+  def circular_reference?(child_svc)
     return true if child_svc == self
     if child_svc.kind_of?(Service)
       ancestor_ids.include?(child_svc.id)

@@ -52,15 +52,15 @@ class Service < ApplicationRecord
     end
     super
   end
-  alias_method :<<, :add_resource
+  alias :<< add_resource
 
-  alias_method :parent_service, :parent
+  alias parent_service parent
   alias_attribute :service, :parent
 
   def has_parent?
     !root?
   end
-  alias_method :has_parent, :has_parent?
+  alias has_parent has_parent?
 
   def request_class
     ServiceReconfigureRequest
@@ -70,16 +70,16 @@ class Service < ApplicationRecord
     'service_reconfigure'
   end
 
-  alias_method :root_service, :root
-  alias_method :services, :children
-  alias_method :direct_service_children, :children
+  alias root_service root
+  alias services children
+  alias direct_service_children children
 
   def indirect_service_children
     descendants(:from_depth => 2)
   end
   Vmdb::Deprecation.deprecate_methods(self, :indirect_service_children)
 
-  alias_method :all_service_children, :descendants
+  alias descendants all_service_children
 
   def indirect_vms
     MiqPreloader.preload_and_map(indirect_service_children, :direct_vms)
