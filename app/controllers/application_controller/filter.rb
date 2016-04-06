@@ -420,7 +420,9 @@ module ApplicationController::Filter
     # See if only a text value changed
     if params[:chosen_value] || params[:chosen_regkey] || params[:chosen_regval] ||
        params[:chosen_cvalue || params[:chosen_suffix]] || params[:alias]
-      render :update do |_page| end      # Render nothing back to the page
+      render :update do |page|
+        page << javascript_prologue
+      end
     else                                # Something else changed so update the exp_editor form
       render :update do |page|
         page << javascript_prologue
@@ -949,7 +951,10 @@ module ApplicationController::Filter
     if @edit[:in_explorer]
       replace_right_cell
     else
-      render(:update) { |page| page.redirect_to(:action => 'show_list') }
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to(:action => 'show_list')
+      end
     end
   end
   private :quick_search_apply_click
