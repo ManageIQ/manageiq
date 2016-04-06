@@ -26,14 +26,13 @@ describe ReportController do
 
       context "valid attributes" do
         before :each do
-          timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015')
+          timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015', '00')
           controller.instance_variable_set(:@edit,
                                            :schedule => miq_schedule, :new => {:title => "NewCustomWidget",
                                                                                :description => "NewCustomWidget",
                                                                                :enabled => true, :roles => ["_ALL_"],
                                                                                :groups => [],
                                                                                :timer => timer,
-                                                                               :start_hour => "00",
                                                                                :start_min => "10",
                                                                                :repfilter => report_id})
           controller.send(:widget_edit)
@@ -55,14 +54,13 @@ describe ReportController do
 
       context "invalid attributes" do
         before :each do
-          timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015')
+          timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015', '00')
           controller.instance_variable_set(:@edit,
                                            :schedule => miq_schedule, :new => {:title => "",
                                                                                :description => "",
                                                                                :enabled => true, :roles => ["_ALL_"],
                                                                                :groups => [],
                                                                                :timer => timer,
-                                                                               :start_hour => "00",
                                                                                :start_min => "10",
                                                                                :repfilter => report_id})
           controller.send(:widget_edit)

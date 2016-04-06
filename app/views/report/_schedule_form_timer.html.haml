@@ -75,7 +75,7 @@
         )
       .col-md-8
         = select_tag("start_hour",
-          options_for_select((0..23).to_a, @edit[:new][:start_hour].to_i),
+          options_for_select((0..23).to_a, @edit[:new][:timer].start_hour.to_i),
           :class => "selectpicker selectWidth")
         :javascript
           miqInitSelectPicker();

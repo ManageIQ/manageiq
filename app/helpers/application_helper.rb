@@ -584,7 +584,7 @@ module ApplicationHelper
     @edit[:new][:timer][:hours]  = "1"
     if schedule.run_at.nil?
       @edit[:new][:timer].typ = 'Once'
-      @edit[:new][:start_hour]   = "00"
+      @edit[:new][:timer][:start_hour] = "00"
       @edit[:new][:start_min]    = "00"
     else
       @edit[:new][:timer][:typ]  = schedule.run_at[:interval][:unit].titleize
@@ -593,7 +593,7 @@ module ApplicationHelper
       @edit[:new][:timer][:days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer][:hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
       t                          = schedule.run_at[:start_time].utc.in_time_zone(@edit[:tz])
-      @edit[:new][:start_hour]   = t.strftime("%H")
+      @edit[:new][:timer][:start_hour] = t.strftime("%H")
       @edit[:new][:start_min]    = t.strftime("%M")
     end
     @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}" # Set the start date
