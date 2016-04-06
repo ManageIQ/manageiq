@@ -84,7 +84,7 @@
         -# TRANSLATORS: this h means hours
         = _("h")
         = select_tag("start_min",
-          options_for_select((0..55).step(5).to_a, @edit[:new][:start_min].to_i),
+          options_for_select((0..55).step(5).to_a, @edit[:new][:timer].start_min.to_i),
           :class => "selectpicker selectWidth")
         :javascript
           miqInitSelectPicker();

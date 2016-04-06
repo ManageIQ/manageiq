@@ -795,12 +795,10 @@ describe ApplicationHelper do
       it "sets defaults" do
         schedule = double(:run_at => nil)
         helper.set_edit_timer_from_schedule schedule
-        expect(@edit[:new]).to include(
-          :start_min  => "00"
-        )
         expect(@edit[:new][:timer].to_h).to include(
           :typ => 'Once',
           :start_hour => "00",
+          :start_min => '00'
         )
       end
     end
@@ -809,12 +807,10 @@ describe ApplicationHelper do
       it "sets values as monthly" do
         @run_at[:interval][:unit] = 'monthly'
         helper.set_edit_timer_from_schedule @schedule
-        expect(@edit[:new]).to include(
-          :start_min    => @min,
-        )
         expect(@edit[:new][:timer].to_h).to include(
           :start_date => @date,
           :start_hour => @hour,
+          :start_min => @min,
           :months => @interval,
           :typ => 'Monthly'
         )
@@ -824,12 +820,10 @@ describe ApplicationHelper do
       it "sets values as weekly" do
         @run_at[:interval][:unit] = 'weekly'
         helper.set_edit_timer_from_schedule @schedule
-        expect(@edit[:new]).to include(
-          :start_min   => @min,
-        )
         expect(@edit[:new][:timer].to_h).to include(
           :start_date => @date,
           :start_hour => @hour,
+          :start_min   => @min,
           :weeks => @interval,
           :typ => 'Weekly'
         )
@@ -839,12 +833,10 @@ describe ApplicationHelper do
       it "sets values as daily" do
         @run_at[:interval][:unit] = 'daily'
         helper.set_edit_timer_from_schedule @schedule
-        expect(@edit[:new]).to include(
-          :start_min  => @min,
-        )
         expect(@edit[:new][:timer].to_h).to include(
           :start_date => @date,
           :start_hour => @hour,
+          :start_min  => @min,
           :days => @interval,
           :typ => 'Daily'
         )
@@ -854,12 +846,10 @@ describe ApplicationHelper do
       it "sets values as hourly" do
         @run_at[:interval][:unit] = 'hourly'
         helper.set_edit_timer_from_schedule @schedule
-        expect(@edit[:new]).to include(
-          :start_min   => @min,
-        )
         expect(@edit[:new][:timer].to_h).to include(
           :start_date => @date,
           :start_hour => @hour,
+          :start_min   => @min,
           :hours => @interval,
           :typ => 'Hourly'
         )

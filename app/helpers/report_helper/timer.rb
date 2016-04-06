@@ -7,5 +7,6 @@ module ReportHelper
     :hours,
     :start_date,
     :start_hour,
+    :start_min,
   )
 end

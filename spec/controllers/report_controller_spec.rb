@@ -830,13 +830,12 @@ describe ReportController do
         controller.miq_report_schedule_disable
         allow(controller).to receive_messages(:load_edit => true)
         allow(controller).to receive(:replace_right_cell)
-        timer = ReportHelper::Timer.new('Once', 1, 1, 1, 1, '12/04/2015', '00')
+        timer = ReportHelper::Timer.new('Once', 1, 1, 1, 1, '12/04/2015', '00', '00')
         controller.instance_variable_set(:@edit,
                                          :sched_id => nil, :new => {:name => "test_1", :description => "test_1",
                                                                     :enabled => true, :send_email => false,
                                                                     :email => {:send_if_empty => true},
                                                                     :timer => timer,
-                                                                    :start_min => "00",
                                                                     :filter => "Configuration Management",
                                                                     :subfilter => "Virtual Machines",
                                                                     :repfilter => miq_report.id},
