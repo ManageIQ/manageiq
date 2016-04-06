@@ -390,15 +390,10 @@ module ReportController::Widgets
       @edit[:avail_shortcuts] = widget_build_avail_shortcuts
     end
     @edit[:new][:timer] = ReportHelper::Timer.new
-    @edit[:new][:timer][:weeks] = "1"
-    @edit[:new][:timer][:days] = "1"
-    @edit[:new][:timer][:hours] = "1"
     if @edit[:schedule].run_at.nil? # New widget or schedule missing, default sched options
       @edit[:tz] = session[:user_tz]
       t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
       @edit[:new][:timer].typ = 'Hourly'
-      @edit[:new][:timer][:start_hour] = "00"
-      @edit[:new][:timer][:start_min] = "00"
       @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}"
     else
       sched = params[:action] == "widget_copy" ? @widget.miq_schedule : @edit[:schedule]

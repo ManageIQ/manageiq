@@ -577,15 +577,9 @@ module ApplicationHelper
 
   def set_edit_timer_from_schedule(schedule)
     @edit[:new][:timer] ||= ReportHelper::Timer.new
-    @edit[:new][:timer][:months] = "1"
-    @edit[:new][:timer][:weeks]  = "1"
-    @edit[:new][:timer][:days]   = "1"
-    @edit[:new][:timer][:hours]  = "1"
     if schedule.run_at.nil?
       t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
       @edit[:new][:timer].typ = 'Once'
-      @edit[:new][:timer][:start_hour] = "00"
-      @edit[:new][:timer][:start_min] = "00"
       @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}"
     else
       @edit[:new][:timer].update_from_miq_schedule(schedule.run_at, @edit[:tz])

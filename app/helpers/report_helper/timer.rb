@@ -9,6 +9,11 @@ module ReportHelper
     :start_hour,
     :start_min,
   ) do
+    def initialize(typ = nil, months = 1, weeks = 1, days = 1, hours = 1, start_date = nil, start_hour = '00',
+                   start_min = '00')
+      super
+    end
+
     def update_from_hash(params)
       self.typ = params[:timer_typ] if params[:timer_typ]
       self.months = params[:timer_months] if params[:timer_months]
