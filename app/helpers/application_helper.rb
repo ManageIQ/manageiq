@@ -255,7 +255,7 @@ module ApplicationHelper
     when "OrchestrationStackParameter" then "parameters"
     when "OrchestrationStackResource"  then "resources"
     when 'AdvancedSetting', 'CloudNetwork', 'Filesystem', 'FirewallRule', 'GuestApplication', 'Patch', 'RegistryItem',
-         'ScanHistory'
+         'ScanHistory', 'OpenscapRuleResult'
                                        then view.db.tableize
     when "SystemService"
       case parent.class.base_class.to_s.downcase

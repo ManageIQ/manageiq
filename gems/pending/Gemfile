@@ -36,6 +36,7 @@ gem "net-sftp",                "~>2.1.2",           :require => false
 gem "net-scp",                 "~>1.2.1",           :require => false
 gem "nokogiri",                "~>1.6.0",           :require => false
 gem "openshift_client",        "=1.1.0",            :require => false
+gem "openscap",                "~>0.4.3",           :require => false
 gem "ovirt",                   "~>0.7.2",           :require => false
 gem "pg",                      "~>0.18.2",          :require => false
 gem "psych",                   "~>2.0.12"

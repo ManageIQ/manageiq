@@ -13,7 +13,7 @@ module ContainerImageHelper
     end
 
     def textual_group_configuration
-      %i(guest_applications)
+      %i(guest_applications openscap openscap_html last_scan)
     end
 
     def textual_group_smart_management

@@ -13,6 +13,8 @@ class ContainerImage < ApplicationRecord
   has_many :guest_applications, :dependent => :destroy
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
   has_one :operating_system, :through => :computer_system
+  has_one :openscap_result, :dependent => :destroy
+  has_many :openscap_rule_results, :through => :openscap_result
 
   # Needed for scanning
   delegate :my_zone, :to => :ext_management_system
