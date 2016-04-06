@@ -158,6 +158,11 @@ module Mixins
         client_key      = @ems.authentication_password ? @ems.authentication_password : ""
       end
 
+      if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
+        project         = @ems.project
+        service_account = @ems.authentication_token
+      end
+
       render :json => {:name                            => @ems.name,
                        :emstype                         => @ems.emstype,
                        :zone                            => zone,
@@ -177,9 +182,11 @@ module Mixins
                        :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0,
                        :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :amqp_userid                     => amqp_userid,
+                       :service_account                 => service_account ? service_account : "",
                        :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
                        :client_id                       => client_id ? client_id : "",
                        :client_key                      => client_key ? client_key : "",
+                       :project                         => project ? project : "",
                        :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
                       }
     end
