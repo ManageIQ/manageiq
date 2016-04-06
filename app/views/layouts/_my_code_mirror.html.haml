@@ -8,6 +8,7 @@
 - read_only ||= false
 - multi_mode ||= false
 - no_focus ||= false
+- angular ||= false
 
 - if multi_mode
   - modes.each do |mode|
@@ -32,7 +33,12 @@
       readOnly:      #{read_only ? "'nocursor'".html_safe : false}
     });
     ManageIQ.editor.on('change', function (cm, change) {
-      miqSendOneTrans('#{url}');
+      if (#{angular}) {
+        ManageIQ.editor.save();
+        $(textarea).trigger("change");
+      } else {
+        miqSendOneTrans('#{url}');
+      }
     });
     ManageIQ.editor.on('blur', function (cm, change) {
       ManageIQ.editor.save();

@@ -102,6 +102,9 @@ class OrchestrationStackController < ApplicationController
       end
     elsif params[:pressed] == "make_ot_orderable"
       make_ot_orderable
+    elsif params[:pressed] == "orchestration_template_copy"
+      orchestration_template_copy
+      return
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
@@ -145,6 +148,26 @@ class OrchestrationStackController < ApplicationController
     end
   end
 
+  def stacks_orchestration_template_info
+    ot = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    render :json => {
+      :template_id          => ot.id,
+      :template_name        => ot.name,
+      :template_description => ot.description,
+      :template_draft       => ot.draft,
+      :template_content     => ot.content
+    }
+  end
+
+  def stacks_ot_copy
+    case params[:button]
+    when "cancel"
+      stacks_ot_copy_cancel
+    when "add"
+      stacks_ot_copy_submit
+    end
+  end
+
   private ############################
 
   def make_ot_orderable
@@ -161,6 +184,28 @@ class OrchestrationStackController < ApplicationController
         add_flash(_("Orchestration template \"%{name}\" is now orderable") % {:name => template.name})
       end
     end
+  end
+
+  def orchestration_template_copy
+    @record = find_by_id_filtered(OrchestrationStack, params[:id])
+    if false # @record.orchestration_template.orderable?
+      add_flash(_("Orchestration template \"%{name}\" is already orderable") % {:name => @record.orchestration_template.name}, :error)
+      render_flash
+    else
+      render :update do |page|
+        page.replace(:main_div, :partial => "copy_orchestration_template")
+      end
+    end
+  end
+
+  def stacks_ot_copy_cancel
+    add_flash(_("Copy of Orchestration Template was cancelled by the user"))
+    # FIXME: ot copy cancel code comes here
+  end
+
+  def stacks_ot_copy_submit
+    assert_privileges('orchestration_template_copy')
+    # FIXME: ot copy & save code comes here
   end
 
   def get_session_data
