@@ -1298,7 +1298,6 @@
         - miq_report_results
         - miq_reports
         - miq_searches
-        - miq_servers_product_updates
         - miq_sets
         - miq_schedules
         - miq_shortcuts

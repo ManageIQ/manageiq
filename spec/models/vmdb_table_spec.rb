@@ -50,7 +50,7 @@ describe VmdbTable do
       VmdbTable.atStartup
       MiqDatabase.seed
       @db = MiqDatabase.first
-      @test_tables = %w(miq_servers_product_updates ui_tasks miq_regions miq_databases)
+      @test_tables = %w(schema_migrations ui_tasks miq_regions miq_databases)
       @unpopulated_tables = %w(hosts vms)
       @populated_tables = %w(miq_regions miq_databases)
     end
@@ -107,19 +107,11 @@ describe VmdbTable do
       it "will handle tables with models" do
         expect(VmdbTable.new(:name => "miq_databases").record_count).to eq(1)
       end
-
-      it "will handle tables without models" do
-        expect(VmdbTable.new(:name => "miq_servers_product_updates").record_count).to be >= 0
-      end
     end
 
     context "#model_name" do
       it "will handle tables with models" do
         expect(VmdbTable.new(:name => "miq_databases").model_name).to eq("MiqDatabase")
-      end
-
-      it "will handle tables without models" do
-        expect(VmdbTable.new(:name => "miq_servers_product_updates").model_name).to eq("MiqServersProductUpdates")
       end
     end
 
@@ -127,17 +119,9 @@ describe VmdbTable do
       it "will handle tables with models" do
         expect(VmdbTable.new(:name => "miq_databases").model).to eq(MiqDatabase)
       end
-
-      it "will handle tables without models" do
-        expect(VmdbTable.new(:name => "miq_servers_product_updates").model).to be_nil
-      end
     end
 
     context "#export" do
-      it "will handle tables without models" do
-        expect { VmdbTable.new(:name => "miq_servers_product_updates").export }.not_to raise_error
-      end
-
       it "will return nil if no data in tables" do
         expect(YAML).to receive(:dump).never
         expect(VmdbTable.new(:name => "vms").export).to be_nil
