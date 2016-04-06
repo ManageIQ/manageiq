@@ -1,5 +1,5 @@
 module ManageIQ::Providers
-  module Openstack
+  module Nuage
     module RefreshParserCommon
       module HelperMethods
         def process_collection(collection, key, &block)
