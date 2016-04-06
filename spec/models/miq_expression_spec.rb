@@ -39,7 +39,7 @@ describe MiqExpression do
 
     it "generates the SQL for a != expression" do
       sql, * = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.name != 'foo'")
+      expect(sql).to eq("\"vms\".\"name\" != 'foo'")
     end
 
     it "generates the SQL for a LIKE expression" do

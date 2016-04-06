@@ -659,7 +659,11 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
       clause = field.lteq(exp[operator]["value"]).to_sql
-    when "!=", "before", "after"
+    when "!="
+      field = Field.parse(exp[operator]["field"])
+      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
+      clause = field.not_eq(exp[operator]["value"]).to_sql
+    when "before", "after"
       col_type = self.class.get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if col_type == :date || col_type == :datetime
 
