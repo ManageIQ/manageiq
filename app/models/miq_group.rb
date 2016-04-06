@@ -65,9 +65,11 @@ class MiqGroup < ApplicationRecord
       end
       group.miq_user_role = user_role
       group.sequence      = index + 1
-      group.filters       = ldap_to_filters[group_name]
       group.group_type    = SYSTEM_GROUP
       group.tenant        = root_tenant
+
+      group.set_managed_filters(ldap_to_filters.fetch_path(group_name, "managed"))
+      group.set_belongsto_filters(ldap_to_filters.fetch_path(group_name, "belongsto"))
 
       if group.changed?
         mode = group.new_record? ? "Created" : "Updated"
