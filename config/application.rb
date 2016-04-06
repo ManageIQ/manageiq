@@ -60,6 +60,9 @@ module Vmdb
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    # Set the manifest file name so that we are sure it gets overwritten on updates
+    config.assets.manifest = Rails.root.join("public/assets/.sprockets-manifest.json").to_s
+
     # Customize any additional options below...
 
     # HACK: By default, Rails.configuration.eager_load_paths contains all of the directories
