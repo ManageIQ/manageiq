@@ -13,7 +13,7 @@
         = item.total_miq_templates
 
   .flobj{:class => "c#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.image_name)}.png")}
+    %img{:src => image_path("svg/vendor-#{h(item.image_name)}.svg")}
 
   .flobj{:class => "d#{size}"}
     - case item.authentication_status
@@ -35,7 +35,7 @@
   .flobj
     %img{:src => image_path("#{size}/base-single.png")}
   .flobj{:class => "e#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.image_name)}.png"), :width => width * 1.8, :height => width * 1.8}
+    %img{:src => image_path("svg/vendor-#{h(item.image_name)}.svg"), :width => width * 1.8, :height => width * 1.8}
 
 - if typ == :listnav
   -# Listnav, no href needed

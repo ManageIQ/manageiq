@@ -6,7 +6,7 @@
   .flobj{:class => "b#{size}"}
     %img{:src => image_path("72/currentstate-#{h(item.normalized_state.downcase)}.png")}
   .flobj{:class => "c#{size}"}
-    %img{:src => image_path("100/vendor-#{h(item.vendor.downcase)}.png")}
+    %img{:src => image_path("svg/vendor-#{h(item.vendor.downcase)}.svg")}
 
   - if item.get_policies.length > 0
     .flobj{:class => "g#{size}"}

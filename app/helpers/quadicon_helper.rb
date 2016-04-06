@@ -60,7 +60,7 @@ module QuadiconHelper
   end
 
   def img_for_vendor(item)
-    "100/vendor-#{h(item.vendor)}.png"
+    "svg/vendor-#{h(item.vendor)}.svg"
   end
 
   def img_for_auth_status(item)
@@ -74,7 +74,7 @@ module QuadiconHelper
   end
 
   def img_for_host_vendor(item)
-    "100/vendor-#{h(item.vmm_vendor_display.downcase)}.png"
+    "svg/vendor-#{h(item.vmm_vendor_display.downcase)}.svg"
   end
 
   def render_quadicon_text(item, row)
