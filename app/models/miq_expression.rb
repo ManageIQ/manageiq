@@ -442,19 +442,19 @@ class MiqExpression
     when "equal", "=", "<", ">", ">=", "<=", "!=", "before", "after"
       col_type = get_col_type(expr[operator]["field"]) if expr[operator]["field"]
       return _to_ruby({"date_time_with_logical_operator" => expr}, context, tz) if col_type == :date || col_type == :datetime
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "includes all"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
     when "includes any"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       clause = "(#{operands[1]} - #{operands[0]}) != #{operands[1]}"
     when "includes only", "limited to"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       clause = "(#{operands[0]} - #{operands[1]}) == []"
     when "like", "not like", "starts with", "ends with", "includes"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       case operator.downcase
       when "starts with"
         operands[1] = "/^" + re_escape(operands[1].to_s) + "/"
@@ -466,7 +466,7 @@ class MiqExpression
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
       clause = "!(" + clause + ")" if operator.downcase == "not like"
     when "regular expression matches", "regular expression does not match"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       operands[1] = "/" + operands[1].to_s + "/" unless operands[1].starts_with?("/") && (operands[1].ends_with?("/") || operands[1][-2..-2] == "/")
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "and", "or"
@@ -474,10 +474,10 @@ class MiqExpression
     when "not", "!"
       clause = normalize_ruby_operator(operator) + "(" + _to_ruby(expr[operator], context, tz) + ")"
     when "is null", "is not null", "is empty", "is not empty"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "contains"
-      operands = self.class.operands2rubyvalue(operator, expr[operator], context)
+      operands = operands2rubyvalue(operator, expr[operator], context)
       clause = operands.join(" #{normalize_operator(operator)} ")
     when "find"
       # FIND Vm.users-name = 'Administrator' CHECKALL Vm.users-enabled = 1
@@ -493,14 +493,14 @@ class MiqExpression
       check =~ /^check(.*)$/; mode = $1.downcase
       clause = "<find><search>" + _to_ruby(expr[operator]["search"], context, tz) + "</search><check mode=#{mode}>" + _to_ruby(expr[operator][check], context, tz) + "</check></find>"
     when "key exists"
-      clause = self.class.operands2rubyvalue(operator, expr[operator], context)
+      clause = operands2rubyvalue(operator, expr[operator], context)
     when "value exists"
-      clause = self.class.operands2rubyvalue(operator, expr[operator], context)
+      clause = operands2rubyvalue(operator, expr[operator], context)
     when "ruby"
       raise _("Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.")
     when "is"
       col_name = expr[operator]["field"]
-      col_ruby, _dummy = self.class.operands2rubyvalue(operator, {"field" => col_name}, context)
+      col_ruby, _dummy = operands2rubyvalue(operator, {"field" => col_name}, context)
       col_type = get_col_type(col_name)
       value = expr[operator]["value"]
       if col_type == :date
@@ -519,7 +519,7 @@ class MiqExpression
       end
     when "from"
       col_name = expr[operator]["field"]
-      col_ruby, _dummy = self.class.operands2rubyvalue(operator, {"field" => col_name}, context)
+      col_ruby, _dummy = operands2rubyvalue(operator, {"field" => col_name}, context)
       col_type = get_col_type(col_name)
 
       start_val, end_val = expr[operator]["value"]
@@ -540,7 +540,7 @@ class MiqExpression
 
       col_name = expr[operator]["field"]
       col_type = get_col_type(col_name)
-      col_ruby, _dummy = self.class.operands2rubyvalue(operator, {"field" => col_name}, context)
+      col_ruby, _dummy = operands2rubyvalue(operator, {"field" => col_name}, context)
 
       normalized_operator = normalize_ruby_operator(operator)
       mode = case normalized_operator
@@ -1152,7 +1152,7 @@ class MiqExpression
     ret
   end
 
-  def self.operands2rubyvalue(operator, ops, context_type)
+  def operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
     operator = operator.downcase
     ops["tag"] = ops["field"] if operator == "contains" && !ops["tag"] # process values in contains as tags
@@ -1284,6 +1284,10 @@ class MiqExpression
     Regexp.escape(s).gsub(/\//, '\/')
   end
 
+  def preprocess_managed_tag(tag)
+    MiqExpression.preprocess_managed_tag(tag)
+  end
+  
   def self.preprocess_managed_tag(tag)
     path, val = tag.split("-")
     path_arr = path.split(".")
@@ -1295,6 +1299,10 @@ class MiqExpression
       return [name].concat(path_arr).join(".") + "-" + val
     end
     tag
+  end
+
+  def value2tag(tag, val = nil)
+    MiqExpression.value2tag(tag, val)
   end
 
   def self.value2tag(tag, val = nil)
