@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe GitRepository do
   it "no url" do
-    expect { FactoryGirl.create(:git_repository, :dirname => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { FactoryGirl.create(:git_repository) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "invalid url" do
@@ -13,13 +13,6 @@ describe GitRepository do
     repo = FactoryGirl.create(:git_repository,
                               :url => "http://www.something.com/repos/manageiq")
     expect(repo.dirname).to eq(File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, 'repos/manageiq'))
-  end
-
-  it "passed in dirname" do
-    repo = FactoryGirl.create(:git_repository,
-                              :dirname => '/tmp/repodir',
-                              :url     => "http://www.a.com/repos/manageiq")
-    expect(repo.dirname).to eq('/tmp/repodir')
   end
 
   context "repo" do
@@ -38,7 +31,7 @@ describe GitRepository do
       }
     end
 
-    it "init" do
+    it "#refresh" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
@@ -50,7 +43,6 @@ describe GitRepository do
       end
 
       repo = FactoryGirl.create(:git_repository,
-                                :dirname => File.join(Dir.tmpdir, "junk"),
                                 :url     => "http://www.nonexistent.com/manageiq")
       expect(repo).to receive(:init_repo).with(no_args).and_call_original
 
@@ -59,29 +51,7 @@ describe GitRepository do
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
     end
 
-    it "update" do
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
-      expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
-      expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
-      expect(gwt).to receive(:fetch_and_merge).with(no_args).and_return({})
-      allow(gwt).to receive(:branch_info) do |name|
-        branch_info_hash[name]
-      end
-      allow(gwt).to receive(:tag_info) do |name|
-        tag_info_hash[name]
-      end
-
-      repo = FactoryGirl.create(:git_repository,
-                                :dirname => Dir.tmpdir,
-                                :url     => "http://www.nonexistent.com/manageiq")
-      expect(repo).to receive(:update_repo).with(no_args).and_call_original
-
-      repo.refresh
-      expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
-      expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
-    end
-
-    it "branch info" do
+    it "#branch_info" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
@@ -93,13 +63,12 @@ describe GitRepository do
       end
 
       repo = FactoryGirl.create(:git_repository,
-                                :dirname => File.join(Dir.tmpdir, "junk"),
                                 :url     => "http://www.nonexistent.com/manageiq")
       attrs = repo.branch_info('b1')
       expect(attrs['commit_sha']).to eq(info[:commit_sha])
     end
 
-    it "tag info" do
+    it "#tag_info" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
@@ -111,14 +80,13 @@ describe GitRepository do
       end
 
       repo = FactoryGirl.create(:git_repository,
-                                :dirname => File.join(Dir.tmpdir, "junk"),
                                 :url     => "http://www.nonexistent.com/manageiq")
 
       attrs = repo.tag_info('t1')
       expect(attrs['commit_sha']).to eq(tag_info_hash['t1'][:commit_sha])
     end
 
-    it "missing tag" do
+    it "#tag_info missing tag" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
@@ -130,12 +98,11 @@ describe GitRepository do
       end
 
       repo = FactoryGirl.create(:git_repository,
-                                :dirname => File.join(Dir.tmpdir, "junk"),
                                 :url     => "http://www.nonexistent.com/manageiq")
       expect { repo.tag_info('nothing') }.to raise_error(RuntimeError)
     end
 
-    it "missing branch" do
+    it "#branch_info missing branch" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
@@ -147,9 +114,50 @@ describe GitRepository do
       end
 
       repo = FactoryGirl.create(:git_repository,
-                                :dirname => File.join(Dir.tmpdir, "junk"),
                                 :url     => "http://www.nonexistent.com/manageiq")
       expect { repo.branch_info('nothing') }.to raise_error(RuntimeError)
+    end
+
+    it "#refresh branches deleted" do
+      expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
+      expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
+
+      allow(gwt).to receive(:branch_info) do |name|
+        branch_info_hash[name]
+      end
+      allow(gwt).to receive(:tag_info) do |name|
+        tag_info_hash[name]
+      end
+
+      repo = FactoryGirl.create(:git_repository,
+                                :url     => "http://www.nonexistent.com/manageiq")
+      repo.refresh
+      repo.git_branches << FactoryGirl.create(:git_branch, :name => 'DUMMY')
+      expect(repo.git_branches.collect(&:name)).to match_array(branch_list + ['DUMMY'])
+      repo.refresh
+      expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
+    end
+
+    it "#refresh tags deleted" do
+      expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
+      expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
+
+      allow(gwt).to receive(:branch_info) do |name|
+        branch_info_hash[name]
+      end
+      allow(gwt).to receive(:tag_info) do |name|
+        tag_info_hash[name]
+      end
+
+      repo = FactoryGirl.create(:git_repository,
+                                :url     => "http://www.nonexistent.com/manageiq")
+      repo.refresh
+      repo.git_tags << FactoryGirl.create(:git_tag, :name => 'DUMMY')
+      expect(repo.git_tags.collect(&:name)).to match_array(tag_list + ['DUMMY'])
+      repo.refresh
+      expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
     end
   end
 end

@@ -1,9 +1,13 @@
 class GitRepository < ApplicationRecord
   include AuthenticationMixin
+
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
-  before_save :default_values
+
+  default_value_for :verify_ssl, 1
+
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
+
   VALID_KEYS = %w(commit_sha commit_message commit_time).freeze
 
   def refresh
@@ -28,10 +32,14 @@ class GitRepository < ApplicationRecord
     tag.attributes.slice(*VALID_KEYS)
   end
 
+  def dirname
+    @directory ||= directory_name
+  end
+
   private
 
   def refresh_branches
-    current_branches = git_branches
+    current_branches = git_branches.to_a
     @repo.branches(:remote).each do |branch|
       stored_branch = current_branches.detect { |item| item.name == branch }
       hash = @repo.branch_info(branch)
@@ -40,11 +48,13 @@ class GitRepository < ApplicationRecord
                :commit_time    => hash[:time],
                :commit_message => hash[:message]}
       stored_branch ? stored_branch.update_attributes(attrs) : git_branches.create!(attrs)
+      current_branches.delete(stored_branch) if stored_branch
     end
+    current_branches.each { |branch| git_branches.delete(branch) }
   end
 
   def refresh_tags
-    current_tags = git_tags
+    current_tags = git_tags.to_a
     @repo.tags.each do |tag|
       stored_tag = current_tags.detect { |item| item.name == tag }
       hash = @repo.tag_info(tag)
@@ -53,13 +63,15 @@ class GitRepository < ApplicationRecord
                :commit_time    => hash[:time],
                :commit_message => hash[:message]}
       stored_tag ? stored_tag.update_attributes(attrs) : git_tags.create!(attrs)
+      current_tags.delete(stored_tag) if stored_tag
     end
+    current_tags.each { |tag| git_tags.delete(tag) }
   end
 
   def init_repo
     repo_block do
       params = {:clone => true, :url => url, :path => dirname}
-      params[:ssl_no_verify] = verify_ssl.nil? || verify_ssl == 0
+      params[:ssl_no_verify] = (verify_ssl == 0)
       if authentications.any?
         params[:username] = authentications.first.userid
         params[:password] = authentications.first.password
@@ -84,12 +96,7 @@ class GitRepository < ApplicationRecord
     raise MiqException::Error, err.message
   end
 
-  def default_values
-    self.dirname ||= default_dir_name
-    self.verify_ssl ||= 1
-  end
-
-  def default_dir_name
+  def directory_name
     parsed = URI.parse(url)
     raise "Invalid URL missing path" if parsed.path.blank?
     File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
