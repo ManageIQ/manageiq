@@ -128,12 +128,46 @@ module ManageIQ::Providers::Kubernetes
       new_result
     end
 
+    def find_host_by_provider_id(provider_id)
+      scheme, instance_uri = provider_id.split("://", 2)
+      prov, name_field = {
+        "gce" => [ManageIQ::Providers::Google::CloudManager, :name],
+        "aws" => [ManageIQ::Providers::Amazon::CloudManager, :uid_ems],
+      }[scheme]
+      instance_id = instance_uri.split('/').last
+
+      prov::Vm.find_by(name_field => instance_id) if !prov.nil? && !instance_id.blank?
+    end
+
+    def find_host_by_bios_uuid(new_result)
+      uuid_provider_types = [ManageIQ::Providers::Redhat::InfraManager::Vm.name,
+                             ManageIQ::Providers::Openstack::CloudManager::Vm.name,
+                             ManageIQ::Providers::Vmware::InfraManager::Vm.name]
+      identity_system = new_result[:identity_system].try(:downcase)
+      Vm.find_by(:uid_ems => identity_system,
+                 :type    => uuid_provider_types) if identity_system
+    end
+
+    def cross_link_node(new_result)
+      # Establish a relationship between this node and the vm it is on (if it is in the system)
+      host_instance = nil
+      unless new_result[:identity_infra].blank?
+        host_instance = find_host_by_provider_id(new_result[:identity_infra])
+      end
+      unless host_instance
+        host_instance = find_host_by_bios_uuid(new_result)
+      end
+
+      new_result[:lives_on_id] = host_instance.try(:id)
+      new_result[:lives_on_type] = host_instance.try(:type)
+    end
+
     def parse_node(node)
       new_result = parse_base_item(node)
 
       new_result.merge!(
         :type           => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
-        :identity_infra => node.spec.externalID,
+        :identity_infra => node.spec.providerID,
         :labels         => parse_labels(node),
         :lives_on_id    => nil,
         :lives_on_type  => nil
@@ -168,20 +202,7 @@ module ManageIQ::Providers::Kubernetes
       new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
-
-      # Establish a relationship between this node and the vm it is on (if it is in the system)
-      # supported relationships: oVirt, Openstack and VMware.
-      types = [ManageIQ::Providers::Redhat::InfraManager::Vm.name,
-               ManageIQ::Providers::Openstack::CloudManager::Vm.name,
-               ManageIQ::Providers::Vmware::InfraManager::Vm.name]
-
-      # Searching for the underlying instance for Openstack or oVirt.
-      identity_system = new_result[:identity_system].try(:downcase)
-      vms = Vm.where(:uid_ems => identity_system, :type => types) if identity_system
-      if vms.to_a.size == 1
-        new_result[:lives_on_id] = vms.first.id
-        new_result[:lives_on_type] = vms.first.type
-      end
+      cross_link_node(new_result)
 
       new_result
     end

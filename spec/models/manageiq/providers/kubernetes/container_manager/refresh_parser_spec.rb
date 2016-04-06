@@ -533,6 +533,93 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
+  describe "cross_link_node" do
+    context "expected failures" do
+      before :each do
+        @node = OpenStruct.new(
+          :identity_system => "f0c1fe7e-9c09-11e5-bb22-28d2447dcefe",
+        )
+      end
+
+      after :each do
+        parser.send(:cross_link_node, @node)
+        expect(@node[:lives_on_id]).to eq(nil)
+        expect(@node[:lives_on_type]).to eq(nil)
+      end
+
+      it "fails when provider type is wrong" do
+        @node[:identity_infra] = "aws://aws_project/europe-west1/instance_id/"
+        @ems = FactoryGirl.create(:ems_google,
+                                  :provider_region => "europe-west1",
+                                  :project         => "aws_project")
+        @vm = FactoryGirl.create(:vm_google,
+                                 :ext_management_system => @ems,
+                                 :name                  => "instance_id")
+      end
+    end
+
+    context "succesful attempts" do
+      before :each do
+        @node = OpenStruct.new(
+          :identity_system => "f0c1fe7e-9c09-11e5-bb22-28d2447dcefe",
+        )
+      end
+
+      after :each do
+        parser.send(:cross_link_node, @node)
+        expect(@node[:lives_on_id]).to eq(@vm.id)
+        expect(@node[:lives_on_type]).to eq(@vm.type)
+      end
+
+      it "cross links google" do
+        @node[:identity_infra] = "gce://gce_project/europe-west1/instance_id/"
+        @ems = FactoryGirl.create(:ems_google,
+                                  :provider_region => "europe-west1",
+                                  :project         => "gce_project")
+        @vm = FactoryGirl.create(:vm_google,
+                                 :ext_management_system => @ems,
+                                 :name                  => "instance_id")
+      end
+
+      it "cross links amazon" do
+        @node[:identity_infra] = "aws:///us-west-1/aws-id"
+        @ems = FactoryGirl.create(:ems_amazon,
+                                  :provider_region => "us-west-1")
+        @vm = FactoryGirl.create(:vm_amazon,
+                                 :uid_ems               => "aws-id",
+                                 :ext_management_system => @ems)
+      end
+
+      it 'cross links with missing data in ProviderID' do
+        @node[:identity_infra] = "gce:////instance_id/"
+        @ems = FactoryGirl.create(:ems_google,
+                                  :provider_region => "europe-west1",
+                                  :project         => "gce_project")
+        @vm = FactoryGirl.create(:vm_google,
+                                 :ext_management_system => @ems,
+                                 :name                  => "instance_id")
+      end
+
+      it 'cross links with malformed provider id' do
+        @node[:identity_infra] = "gce://instance_id"
+        @ems = FactoryGirl.create(:ems_google,
+                                  :provider_region => "europe-west1",
+                                  :project         => "gce_project")
+        @vm = FactoryGirl.create(:vm_google,
+                                 :ext_management_system => @ems,
+                                 :name                  => "instance_id")
+      end
+
+      it "cross links by uuid" do
+        @node[:identity_infra] = nil
+        @ems = FactoryGirl.create(:ems_openstack)
+        @vm = FactoryGirl.create(:vm_openstack,
+                                 :uid_ems               => @node[:identity_system],
+                                 :ext_management_system => @ems)
+      end
+    end
+  end
+
   describe "parse_node" do
     it "handles node without capacity" do
       expect(parser.send(
@@ -545,7 +632,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
             :creationTimestamp => '2015-12-06T11:10:21Z'
           },
           :spec     => {
-            :externalID => '10.35.17.99'
+            :providerID => 'aws:///zone/aws-id'
           },
           :status   => {
             :nodeInfo => {
@@ -560,7 +647,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :ems_created_on             => '2015-12-06T11:10:21Z',
         :container_conditions       => [],
         :container_runtime_version  => nil,
-        :identity_infra             => '10.35.17.99',
+        :identity_infra             => 'aws:///zone/aws-id',
         :identity_machine           => 'id',
         :identity_system            => 'uuid',
         :kubernetes_kubelet_version => nil,
@@ -585,7 +672,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       })
     end
 
-    it "handles node without memory, cpu and pods" do
+    it "handles node without providerID, memory, cpu and pods" do
       expect(parser.send(
         :parse_node,
         RecursiveOpenStruct.new(
@@ -612,7 +699,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :ems_created_on             => '2015-12-06T11:10:21Z',
         :container_conditions       => [],
         :container_runtime_version  => nil,
-        :identity_infra             => '10.35.17.99',
+        :identity_infra             => nil,
         :identity_machine           => 'id',
         :identity_system            => 'uuid',
         :kubernetes_kubelet_version => nil,
@@ -648,7 +735,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
             :creationTimestamp => '2016-01-01T11:10:21Z'
           },
           :spec     => {
-            :externalID => '10.35.17.99'
+            :providerID => 'aws:///zone/aws-id'
           },
           :status   => {
             :capacity => {}
@@ -660,7 +747,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :ems_ref              => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
           :ems_created_on       => '2016-01-01T11:10:21Z',
           :container_conditions => [],
-          :identity_infra       => '10.35.17.99',
+          :identity_infra       => 'aws:///zone/aws-id',
           :labels               => [],
           :lives_on_id          => nil,
           :lives_on_type        => nil,
