@@ -12,7 +12,7 @@ class TransferRateValueToTiers < ActiveRecord::Migration
       if detail.respond_to?(:rate)
         ChargebackTier.create(:chargeback_rate_detail_id => detail.id,
                               :start                     => 0,
-                              :end                       => Float::INFINITY,
+                              :finish                    => Float::INFINITY,
                               :fixed_rate                => 0.0,
                               :variable_rate             => detail.rate)
       end

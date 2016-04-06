@@ -132,10 +132,10 @@ class ChargebackRate < ApplicationRecord
           tiers = rate_detail.delete(:tiers)
           tiers.each do |tier|
             tier_start = ChargebackTier.to_float(tier.delete(:start))
-            tier_end = ChargebackTier.to_float(tier.delete(:end))
+            tier_finish = ChargebackTier.to_float(tier.delete(:finish))
             fixed_rate = tier.delete(:fixed_rate)
             variable_rate = tier.delete(:variable_rate)
-            cbt = ChargebackTier.create(:start => tier_start, :end => tier_end, :fixed_rate => fixed_rate, :variable_rate => variable_rate)
+            cbt = ChargebackTier.create(:start => tier_start, :finish => tier_finish, :fixed_rate => fixed_rate, :variable_rate => variable_rate)
             rate_tiers.append(cbt)
           end
           rate_detail[:chargeback_tiers] = rate_tiers

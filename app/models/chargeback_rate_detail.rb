@@ -12,7 +12,7 @@ class ChargebackRateDetail < ApplicationRecord
     variable_rate = 0.0
     chargeback_tiers.each do |tier|
       next if value < rate_adjustment(tier.start)
-      next if value >= rate_adjustment(tier.end)
+      next if value >= rate_adjustment(tier.finish)
       fixed_rate = tier.fixed_rate
       variable_rate = tier.variable_rate
       break
@@ -117,7 +117,7 @@ class ChargebackRateDetail < ApplicationRecord
       ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
         # Example: Daily @ .02 per MHz from 0.0 to Infinity
         s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
-             "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.end}\n"
+             "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.finish}\n"
       end
       s.chomp
     end
@@ -201,6 +201,6 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def consecutive_tiers?(tier, previous_tier)
-    tier.start == previous_tier.end
+    tier.start == previous_tier.finish
   end
 end

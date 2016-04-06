@@ -298,8 +298,8 @@ class ChargebackController < ApplicationController
     tier_list[tier_index] = {}
 
     tier                 = tier_list[tier_index]
-    tier[:start]         = tier_list[tier_index - 1][:end]
-    tier[:end]           = Float::INFINITY
+    tier[:start]         = tier_list[tier_index - 1][:finish]
+    tier[:finish]        = Float::INFINITY
     tier[:fixed_rate]    = 0.0
     tier[:variable_rate] = 0.0
 
@@ -571,7 +571,7 @@ class ChargebackController < ApplicationController
 
       tiers[detail_index] = []
       detail.chargeback_tiers.order(:start).each do |tier|
-        temp2 = tier.slice(:fixed_rate, :variable_rate, :start, :end)
+        temp2 = tier.slice(:fixed_rate, :variable_rate, :start, :finish)
         temp2[:id] = params[:typ] == "copy" ? nil : tier.id
         temp2[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
         tiers[detail_index].push(temp2)
@@ -592,7 +592,7 @@ class ChargebackController < ApplicationController
     @edit[:key] = "cbrate_edit__#{@rate.id || "new"}"
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
-      end
+  end
 
   # Get variables from edit form
   def cb_rate_get_form_vars
@@ -608,7 +608,7 @@ class ChargebackController < ApplicationController
       # Save tiers into @edit
       (0..@edit[:new][:num_tiers][detail_index].to_i - 1).each do |tier_index|
         tier = @edit[:new][:tiers][detail_index][tier_index] || {}
-        %i{fixed_rate variable_rate start end}.each do |field|
+        %i{fixed_rate variable_rate start finish}.each do |field|
           key = "#{field}_#{detail_index}_#{tier_index}".to_sym
           tier[field] = params[key] if params[key]
         end
@@ -633,8 +633,8 @@ class ChargebackController < ApplicationController
       rate_tiers = []
       @edit[:new][:tiers][detail_index].each do |tier|
         rate_tier = tier[:id] ? ChargebackTier.find(tier[:id]) : ChargebackTier.new
-        rate_tier.start = tier[:start]
-        rate_tier.end   = tier[:end]
+        rate_tier.start  = tier[:start]
+        rate_tier.finish = tier[:finish]
         rate_tier.chargeback_rate_detail_id = rate_detail.id
         rate_tier.fixed_rate  = tier[:fixed_rate]
         rate_tier.variable_rate = tier[:variable_rate]

@@ -31,7 +31,7 @@ RSpec.describe "chargebacks API" do
   it "can fetch chargeback rate details" do
     chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
     chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                         :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                         :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                          :variable_rate => 0.0)
     chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
     chargeback_rate = FactoryGirl.create(:chargeback_rate,
@@ -50,7 +50,7 @@ RSpec.describe "chargebacks API" do
   it "can fetch an individual chargeback rate detail" do
     chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_1")
     chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                         :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                         :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                          :variable_rate => 0.0)
     chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
     chargeback_rate = FactoryGirl.create(:chargeback_rate,
@@ -99,7 +99,7 @@ RSpec.describe "chargebacks API" do
     it "can edit a chargeback rate detail through POST" do
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_0")
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                           :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                           :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
@@ -115,7 +115,7 @@ RSpec.describe "chargebacks API" do
     it "can edit a chargeback rate detail through PATCH" do
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_0")
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                           :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                           :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
@@ -131,7 +131,7 @@ RSpec.describe "chargebacks API" do
     it "can delete a chargeback rate detail" do
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                           :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                           :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
@@ -147,7 +147,7 @@ RSpec.describe "chargebacks API" do
     it "can delete a chargeback rate detail through POST" do
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                           :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                           :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
@@ -173,7 +173,7 @@ RSpec.describe "chargebacks API" do
     it "cannot edit a chargeback rate detail" do
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_1")
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                           :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                           :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
@@ -189,7 +189,7 @@ RSpec.describe "chargebacks API" do
     it "cannot delete a chargeback rate detail" do
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
-                                           :start => 0, :end => Float::INFINITY, :fixed_rate => 0.0,
+                                           :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save

@@ -45,7 +45,7 @@
           %td
             = tier.start ? tier.start : 0
           %td
-            = tier.end ? tier.end : Float::INFINITY.to_s
+            = tier.finish ? tier.finish : Float::INFINITY.to_s
           %td{:align => "right"}
             = tier.fixed_rate ? tier.fixed_rate : 0.0
           %td{:align => "right"}
@@ -58,7 +58,7 @@
             %td
               = tier.start
             %td
-              = tier.end
+              = tier.finish
             %td{:align => "right"}
               = tier.fixed_rate
             %td{:align => "right"}

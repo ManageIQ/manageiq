@@ -14,7 +14,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Allocated CPU Count
@@ -26,7 +26,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 1.0
           :variable_rate: 0.0
     - :description: Used Memory
@@ -39,7 +39,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Allocated Memory
@@ -52,7 +52,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Used Network I/O
@@ -65,11 +65,11 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: 100
+          :finish: 100
           :fixed_rate: 0.5
           :variable_rate: 0.0
         - :start: 100
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.5
           :variable_rate: 0.005
     - :description: Used Disk I/O
@@ -82,7 +82,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.005
     - :description: Fixed Compute Cost 1
@@ -92,7 +92,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Fixed Compute Cost 2
@@ -102,7 +102,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.0
 - :description: Default
@@ -120,7 +120,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 1.0
           :variable_rate: 0.0
     - :description: Used Disk Storage
@@ -133,7 +133,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 2.0
     - :description: Fixed Storage Cost 1
@@ -143,7 +143,7 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Fixed Storage Cost 2
@@ -153,6 +153,6 @@
       :type_currency: Dollars
       :tiers:
         - :start: 0
-          :end: Infinity
+          :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.0

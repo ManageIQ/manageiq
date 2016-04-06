@@ -4,7 +4,7 @@ describe ChargebackRateDetail do
     fixed_rate = 5.0
     variable_rate = 8.26
     tier_start = 0
-    tier_end = Float::INFINITY
+    tier_finish = Float::INFINITY
     per_time = 'monthly'
     per_unit = 'megabytes'
     cbd = FactoryGirl.build(:chargeback_rate_detail,
@@ -14,7 +14,7 @@ describe ChargebackRateDetail do
     cbt = FactoryGirl.create(:chargeback_tier,
                              :chargeback_rate_detail_id => cbd.id,
                              :start                     => tier_start,
-                             :end                       => tier_end,
+                             :finish                    => tier_finish,
                              :fixed_rate                => fixed_rate,
                              :variable_rate             => variable_rate)
     cbd.update(:chargeback_tiers => [cbt])
@@ -35,7 +35,7 @@ describe ChargebackRateDetail do
     ].each do |rate|
       cbd = FactoryGirl.build(:chargeback_rate_detail)
       FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => cbd.id, :start => 0,
-                         :end => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
+                         :finish => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
       expect(cbd.hourly_rate).to eq(0.0)
     end
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
@@ -55,14 +55,14 @@ describe ChargebackRateDetail do
                                :chargeback_rate_detail_measure_id => cbdm.id
                               )
       cbt = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => cbd.id, :start => 0,
-                               :end => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
+                               :finish => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
       cbd.update(:chargeback_tiers => [cbt])
       expect(cbd.hourly_rate).to eq(hourly_rate)
     end
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'annually')
     cbt = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => cbd.id, :start => 0,
-                             :end => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
+                             :finish => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect  { cbd.hourly_rate }.to raise_error(RuntimeError, "rate time unit of 'annually' not supported")
   end
@@ -94,21 +94,21 @@ describe ChargebackRateDetail do
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :group => 'fixed', :per_time => 'monthly')
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
-                       :end => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
+                       :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("3.0 Monthly")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly')
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
-                             :end => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
+                             :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("Monthly @ 1.0 + 2.0 per Cpu from 0.0 to Infinity")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :per_time => 'monthly')
     cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0.0, :chargeback_rate_detail_id => cbd.id,
-                             :end => 5.0, :fixed_rate => 1.0, :variable_rate => 2.0)
+                             :finish => 5.0, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5.0, :chargeback_rate_detail_id => cbd.id,
-                             :end => Float::INFINITY, :fixed_rate => 5.0, :variable_rate => 2.5)
+                             :finish => Float::INFINITY, :fixed_rate => 5.0, :variable_rate => 2.5)
     cbd.update(:chargeback_tiers => [cbt1, cbt2])
     expect(cbd.friendly_rate).to eq("Monthly @ 1.0 + 2.0 per Megabytes from 0.0 to 5.0\n\
 Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
@@ -154,7 +154,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
         cbt = FactoryGirl.create(:chargeback_tier,
                                  :chargeback_rate_detail_id => cbd.id,
                                  :start                     => 0,
-                                 :end                       => Float::INFINITY,
+                                 :finish                    => Float::INFINITY,
                                  :fixed_rate                => 0.0,
                                  :variable_rate             => 0.0)
         cbd.update(:chargeback_tiers => [cbt])
@@ -197,44 +197,44 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
   context "tier set correctness" do
     it "add an initial invalid tier" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => 5)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 5)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
 
       expect(cbd.contiguous_tiers?).to be false
     end
 
     it "add an initial valid tier" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
 
       expect(cbd.contiguous_tiers?).to be true
     end
 
     it "add an invalid tier to an existing tier set" do
-      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
       cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
 
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 6, :end => Float::INFINITY)
-      cbt1.end = 5
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 6, :finish => Float::INFINITY)
+      cbt1.finish = 5
       cbd.chargeback_tiers << cbt2
 
       expect(cbd.contiguous_tiers?).to be false
     end
 
     it "add a valid tier to an existing tier set" do
-      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
       cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
 
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 5, :end => Float::INFINITY)
-      cbt1.end = 5
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
+      cbt1.finish = 5
       cbd.chargeback_tiers << cbt2
 
       expect(cbd.contiguous_tiers?).to be true
     end
 
     it "remove a tier from an existing tier set, leaving the set invalid" do
-      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :end => 5)
-      cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => 5)
+      cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
       cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2])
 
       cbd.chargeback_tiers = [cbt1]
@@ -243,18 +243,18 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     end
 
     it "remove a tier from an existing set of tiers" do
-      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :end => 5)
-      cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => 5)
+      cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
       cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2])
 
-      cbt1.end = Float::INFINITY
+      cbt1.finish = Float::INFINITY
       cbd.chargeback_tiers = [cbt1]
 
       expect(cbd.contiguous_tiers?).to be true
     end
 
     it "remove last tier" do
-      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
       cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
       cbd.chargeback_tiers = []
 
@@ -262,32 +262,32 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     end
 
     it "tiers should contain no gaps" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => 5)
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 6, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 5)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 6, :finish => Float::INFINITY)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt2, cbt1])
 
       expect(cbd.contiguous_tiers?).to be false
     end
 
     it "must contain one start" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => 1)
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 1)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt2, cbt1])
 
       expect(cbd).not_to be_valid
     end
 
     it "must start at 0" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 1, :end => 10)
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 10, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 1, :finish => 10)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 10, :finish => Float::INFINITY)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt2, cbt1])
 
       expect(cbd).not_to be_valid
     end
 
     it "must end at infinity" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => 1)
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 1, :end => 1000)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 1)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 1, :finish => 1000)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt2, cbt1])
 
       expect(cbd).not_to be_valid
@@ -295,8 +295,8 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     end
 
     it "middle tier must not start infinity" do
-      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :end => Float::INFINITY)
-      cbt2 = FactoryGirl.build(:chargeback_tier, :start => Float::INFINITY, :end => Float::INFINITY)
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => Float::INFINITY, :finish => Float::INFINITY)
       cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt2, cbt1])
 
       expect(cbd).not_to be_valid

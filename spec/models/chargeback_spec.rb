@@ -90,7 +90,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -103,7 +103,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @count_hourly_rate.to_s
                               )
@@ -126,7 +126,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -139,7 +139,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -163,7 +163,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -185,7 +185,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -211,7 +211,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @count_hourly_rate.to_s
                               )
@@ -227,7 +227,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @count_hourly_rate.to_s
                               )
@@ -333,7 +333,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -346,7 +346,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @count_hourly_rate.to_s
                               )
@@ -370,7 +370,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -383,7 +383,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -406,7 +406,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -428,7 +428,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @hourly_rate.to_s
                               )
@@ -451,7 +451,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @count_hourly_rate.to_s
                               )
@@ -465,7 +465,7 @@ describe Chargeback do
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
-                               :end                       => Float::INFINITY,
+                               :finish                    => Float::INFINITY,
                                :fixed_rate                => 0.0,
                                :variable_rate             => @count_hourly_rate.to_s
                               )
