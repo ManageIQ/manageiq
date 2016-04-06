@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::MiqAeMethodsCenter < ApplicationHelper::Toolba
           N_('Select a single Method to edit'),
           N_('Edit Selected Method'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_ae_method_copy,
@@ -43,7 +43,7 @@ class ApplicationHelper::Toolbar::MiqAeMethodsCenter < ApplicationHelper::Toolba
           N_('Select Methods to copy'),
           N_('Copy selected Methods'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_ae_method_delete,
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::MiqAeMethodsCenter < ApplicationHelper::Toolba
           N_('Remove Methods'),
           :url_parms => "main_div",
           :confirm   => N_("Are you sure you want to remove the selected Methods?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::TimeProfilesCenter < ApplicationHelper::Toolba
           N_('Select a single Time Profile to edit'),
           N_('Edit selected Time Profile'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :tp_copy,
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::TimeProfilesCenter < ApplicationHelper::Toolba
           N_('Select a single Time Profile to copy'),
           N_('Copy selected Time Profile'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :tp_delete,
@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::TimeProfilesCenter < ApplicationHelper::Toolba
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Time Profiles will be permanently removed from the VMDB. Are you sure you want to delete the selected Time Profiles?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

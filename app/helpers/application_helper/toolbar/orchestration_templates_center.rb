@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::OrchestrationTemplatesCenter < ApplicationHelp
           t,
           :klass     => ApplicationHelper::Button::OrchestrationTemplateEditRemove,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :orchestration_template_copy,
@@ -27,7 +27,7 @@ class ApplicationHelper::Toolbar::OrchestrationTemplatesCenter < ApplicationHelp
           t,
           :klass     => ApplicationHelper::Button::OrchestrationTemplateEditRemove,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :orchestration_template_remove,
@@ -36,7 +36,7 @@ class ApplicationHelper::Toolbar::OrchestrationTemplatesCenter < ApplicationHelp
           t,
           :confirm   => N_("Remove selected Orchestration Templates?"),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -54,7 +54,7 @@ class ApplicationHelper::Toolbar::OrchestrationTemplatesCenter < ApplicationHelp
           N_('Edit tags for the selected Items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

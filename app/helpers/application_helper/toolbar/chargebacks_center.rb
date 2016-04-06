@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::ChargebacksCenter < ApplicationHelper::Toolbar
           t = N_('Edit the selected Chargeback Rate'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :chargeback_rates_copy,
@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::ChargebacksCenter < ApplicationHelper::Toolbar
           t = N_('Copy the selected Chargeback Rate to a new Chargeback Rate'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :chargeback_rates_delete,
@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::ChargebacksCenter < ApplicationHelper::Toolbar
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Chargeback Rate will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Chargeback Rates?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

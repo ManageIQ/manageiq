@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::MiqAeInstancesCenter < ApplicationHelper::Tool
           N_('Select a single Instance to edit'),
           N_('Edit Selected Instance'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_ae_instance_copy,
@@ -43,7 +43,7 @@ class ApplicationHelper::Toolbar::MiqAeInstancesCenter < ApplicationHelper::Tool
           N_('Select Instances to copy'),
           N_('Copy selected Instances'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_ae_instance_delete,
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::MiqAeInstancesCenter < ApplicationHelper::Tool
           N_('Remove Instances'),
           :url_parms => "main_div",
           :confirm   => N_("Are you sure you want to remove the selected Instances?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::FlavorsCenter < ApplicationHelper::Toolbar::Ba
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::FlavorsCenter < ApplicationHelper::Toolbar::Ba
           N_('Edit Tags for the selected Flavors'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

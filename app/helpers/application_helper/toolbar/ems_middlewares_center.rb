@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
           N_('Select a single #{ui_lookup(:table=>"ems_middleware")} to edit'),
           N_('Edit Selected #{ui_lookup(:table=>"ems_middleware")}'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :ems_middleware_delete,
@@ -27,7 +27,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
           N_('Remove #{ui_lookup(:tables=>"ems_middlewares")} from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"ems_middlewares\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"ems_middlewares\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -38,7 +38,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -47,7 +47,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
           N_('Edit Tags for this #{ui_lookup(:table=>"ems_middleware")}'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

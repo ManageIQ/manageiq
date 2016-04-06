@@ -13,7 +13,7 @@ class ApplicationHelper::Toolbar::ConfiguredSystemAnsibletowerCenter < Applicati
           N_('Edit Tags'),
           :url       => "tagging",
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

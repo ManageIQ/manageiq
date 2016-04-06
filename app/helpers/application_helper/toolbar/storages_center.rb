@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::StoragesCenter < ApplicationHelper::Toolbar::B
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::StoragesCenter < ApplicationHelper::Toolbar::B
           N_('Perform SmartState Analysis'),
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected \#{ui_lookup(:tables=>\"storages\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :storage_delete,
@@ -24,7 +24,7 @@ class ApplicationHelper::Toolbar::StoragesCenter < ApplicationHelper::Toolbar::B
           N_('Remove #{ui_lookup(:tables=>"storages")} from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"storages\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"storages\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::StoragesCenter < ApplicationHelper::Toolbar::B
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -44,7 +44,7 @@ class ApplicationHelper::Toolbar::StoragesCenter < ApplicationHelper::Toolbar::B
           N_('Edit Tags for the selected #{ui_lookup(:tables=>"storages")}'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::AvailabilityZonesCenter < ApplicationHelper::T
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::AvailabilityZonesCenter < ApplicationHelper::T
           N_('Edit Tags for the selected Availability Zones'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Refresh Relationships and Power States'),
           :url_parms => "main_div",
           :confirm   => N_("Refresh relationships and power states for all items related to the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_compare,
@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Select two or more items to compare'),
           N_('Compare Selected items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "2+"),
         separator,
         button(
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Select a single item to edit'),
           N_('Edit Selected item'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :vm_ownership,
@@ -40,7 +40,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Set Ownership for the selected items'),
           N_('Set Ownership'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_delete,
@@ -49,7 +49,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
       ]
@@ -61,7 +61,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -70,7 +70,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Manage Policies for the selected items'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_policy_sim,
@@ -78,7 +78,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('View Policy Simulation for the selected items'),
           N_('Policy Simulation'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_tag,
@@ -86,7 +86,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Edit tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_check_compliance,
@@ -95,7 +95,7 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           N_('Check Compliance of Last Known Configuration'),
           :url_parms => "main_div",
           :confirm   => N_("Initiate Check Compliance of the last known configuration for the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

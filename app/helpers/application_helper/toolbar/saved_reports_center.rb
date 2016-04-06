@@ -19,7 +19,7 @@ class ApplicationHelper::Toolbar::SavedReportsCenter < ApplicationHelper::Toolba
           'product product-report fa-lg',
           t = N_('Show full screen Report'),
           t,
-          :enabled => "false",
+          :enabled => false,
           :onwhen  => "1",
           :url     => "/report_only",
           :popup   => true,
@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::SavedReportsCenter < ApplicationHelper::Toolba
           t,
           :url_parms => "main_div",
           :confirm   => N_("The selected Saved Reports will be permanently removed from the database. Are you sure you want to delete the selected Saved Reports?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::PersistentVolumesCenter < ApplicationHelper::T
       t = N_('Policy'),
       t,
       :image   => "policy",
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -51,7 +51,7 @@ class ApplicationHelper::Toolbar::PersistentVolumesCenter < ApplicationHelper::T
           N_('Edit Tags'),
           :image     => "tag",
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

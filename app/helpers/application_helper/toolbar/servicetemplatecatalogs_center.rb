@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::ServicetemplatecatalogsCenter < ApplicationHel
           N_('Select a single Item to edit'),
           N_('Edit Selected Item'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :st_catalog_delete,
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::ServicetemplatecatalogsCenter < ApplicationHel
           N_('Remove Items from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Items will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

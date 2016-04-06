@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ProviderForemanCenter < ApplicationHelper::Too
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :provider_foreman_refresh_provider,
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::ProviderForemanCenter < ApplicationHelper::Too
           :url       => "refresh",
           :url_parms => "main_div",
           :confirm   => N_("Refresh relationships for all items related to the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::ProviderForemanCenter < ApplicationHelper::Too
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Provider'),
           t,
-          :enabled => "true",
+          :enabled => true,
           :url     => "new"),
         button(
           :provider_foreman_edit_provider,
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::ProviderForemanCenter < ApplicationHelper::Too
           N_('Edit Selected item'),
           :url       => "edit",
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :provider_foreman_delete_provider,
@@ -42,7 +42,7 @@ class ApplicationHelper::Toolbar::ProviderForemanCenter < ApplicationHelper::Too
           :url       => "delete",
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
       ]

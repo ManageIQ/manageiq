@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::CloudTenantsCenter < ApplicationHelper::Toolba
           N_('Edit tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

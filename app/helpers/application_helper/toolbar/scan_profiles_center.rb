@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::ScanProfilesCenter < ApplicationHelper::Toolba
           t = N_('Edit the selected Analysis Profiles'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :ap_copy,
@@ -30,7 +30,7 @@ class ApplicationHelper::Toolbar::ScanProfilesCenter < ApplicationHelper::Toolba
           t = N_('Copy the selected Analysis Profiles'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :ap_delete,
@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::ScanProfilesCenter < ApplicationHelper::Toolba
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Analysis Profiles and ALL of their components will be permanently removed from the VMDB.  Are you sure you want to delete the selected Analysis Profiles?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

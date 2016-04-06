@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::UserRolesCenter < ApplicationHelper::Toolbar::
           N_('Select a single Role to edit'),
           N_('Edit the selected Role'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :rbac_role_copy,
@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::UserRolesCenter < ApplicationHelper::Toolbar::
           N_('Select a single Role to copy'),
           N_('Copy the selected Role to a new Role'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :rbac_role_delete,
@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::UserRolesCenter < ApplicationHelper::Toolbar::
           N_('Delete selected Roles'),
           :url_parms => "main_div",
           :confirm   => N_("Delete all selected Roles?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

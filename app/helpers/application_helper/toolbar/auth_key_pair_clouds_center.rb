@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::AuthKeyPairCloudsCenter < ApplicationHelper::T
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::AuthKeyPairCloudsCenter < ApplicationHelper::T
           N_('Edit tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::AuthKeyPairCloudsCenter < ApplicationHelper::T
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"auth_key_pair_cloud\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"auth_key_pair_cloud\")}"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

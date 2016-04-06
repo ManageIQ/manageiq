@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Refresh Relationships and Power States'),
           :url_parms => "main_div",
           :confirm   => N_("Refresh relationships and power states for all items related to the selected Templates?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_template_scan,
@@ -24,7 +24,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Perform SmartState Analysis'),
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected Templates?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_template_compare,
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Select two or more Templates to compare'),
           N_('Compare Selected Templates'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "2+"),
         separator,
         button(
@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Select a single Template to edit'),
           N_('Edit Selected Template'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_template_ownership,
@@ -49,7 +49,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Set Ownership for the selected Templates'),
           N_('Set Ownership'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_template_delete,
@@ -58,7 +58,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Remove Templates from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Templates and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Templates?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -69,7 +69,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -78,7 +78,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Manage Policies for the selected Templates'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_template_policy_sim,
@@ -86,7 +86,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('View Policy Simulation for the selected Templates'),
           N_('Policy Simulation'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_template_tag,
@@ -94,7 +94,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Edit tags for the selected Templates'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_template_check_compliance,
@@ -103,7 +103,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Check Compliance of Last Known Configuration'),
           :url_parms => "main_div",
           :confirm   => N_("Initiate Check Compliance of the last known configuration for the selected Templates?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -121,7 +121,7 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Clone this Template'),
           N_('Clone selected Template'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
       ]
     ),

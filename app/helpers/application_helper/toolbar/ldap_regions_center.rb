@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::LdapRegionsCenter < ApplicationHelper::Toolbar
           N_('Select a single LDAP Region to edit'),
           N_('Edit the selected LDAP Region'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :ldap_region_delete,
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::LdapRegionsCenter < ApplicationHelper::Toolbar
           N_('Delete selected LDAP Regions'),
           :url_parms => "main_div",
           :confirm   => N_("Delete all selected LDAP Regions?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

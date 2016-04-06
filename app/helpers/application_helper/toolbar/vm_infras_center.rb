@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Refresh Relationships and Power States'),
           :url_parms => "main_div",
           :confirm   => N_("Refresh relationships and power states for all items related to the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_scan,
@@ -24,7 +24,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Perform SmartState Analysis'),
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_collect_running_processes,
@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Extract Running Processes'),
           :confirm   => N_("Extract Running Processes for the selected items?"),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_compare,
@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Select two or more items to compare'),
           N_('Compare Selected items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "2+"),
         separator,
         button(
@@ -50,7 +50,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Select a single item to edit'),
           N_('Edit Selected item'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :vm_ownership,
@@ -58,7 +58,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Set Ownership for the selected items'),
           N_('Set Ownership'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_delete,
@@ -67,7 +67,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
@@ -76,7 +76,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('CPU/Memory Recommendations of selected item'),
           N_('Right-Size Recommendations'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :vm_reconfigure,
@@ -84,7 +84,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Reconfigure the Memory/CPUs of selected items'),
           N_('Reconfigure Selected items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -95,7 +95,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -104,7 +104,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Manage Policies for the selected items'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_policy_sim,
@@ -112,7 +112,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('View Policy Simulation for the selected items'),
           N_('Policy Simulation'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_tag,
@@ -120,7 +120,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Edit tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_check_compliance,
@@ -129,7 +129,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Check Compliance of Last Known Configuration'),
           :url_parms => "main_div",
           :confirm   => N_("Initiate Check Compliance of the last known configuration for the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -153,7 +153,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Clone this item'),
           N_('Clone selected item'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :vm_publish,
@@ -161,7 +161,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           t = N_('Publish selected VM to a Template'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :vm_migrate,
@@ -169,7 +169,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Migrate selected items to another Host/Datastore'),
           N_('Migrate selected items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_retire,
@@ -177,7 +177,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Set Retirement Dates for the selected items'),
           N_('Set Retirement Dates'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_retire_now,
@@ -186,7 +186,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Retire selected items'),
           :url_parms => "main_div",
           :confirm   => N_("Retire the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -197,7 +197,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
       'fa fa-power-off fa-lg',
       N_('Power Operations'),
       N_('Power'),
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -208,7 +208,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :image     => "guest_shutdown",
           :url_parms => "main_div",
           :confirm   => N_("Shutdown the Guest OS on the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_guest_restart,
@@ -218,7 +218,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :image     => "guest_restart",
           :url_parms => "main_div",
           :confirm   => N_("Restart the Guest OS on the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
@@ -229,7 +229,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :image     => "power_on",
           :url_parms => "main_div",
           :confirm   => N_("Power On the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_stop,
@@ -239,7 +239,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :image     => "power_off",
           :url_parms => "main_div",
           :confirm   => N_("Power Off the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_suspend,
@@ -249,7 +249,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :image     => "power_suspend",
           :url_parms => "main_div",
           :confirm   => N_("Suspend the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :vm_reset,
@@ -259,7 +259,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :image     => "power_reset",
           :url_parms => "main_div",
           :confirm   => N_("Reset the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
