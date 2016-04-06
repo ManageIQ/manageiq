@@ -9,6 +9,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       hostname: '',
       default_hostname: '',
       amqp_hostname: '',
+      ssh_keypair_hostname: '',
       project: '',
       default_api_port: '',
       amqp_api_port: '',
@@ -79,6 +80,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.hostname                        = data.hostname;
         $scope.emsCommonModel.default_hostname                = data.default_hostname;
         $scope.emsCommonModel.amqp_hostname                   = data.amqp_hostname;
+        $scope.emsCommonModel.ssh_keypair_hostname            = data.ssh_keypair_hostname;
         $scope.emsCommonModel.project                         = data.project;
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
@@ -87,6 +89,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port : '5000';
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port : '5672';
+        $scope.emsCommonModel.ssh_keypair_api_port            = angular.isDefined(data.ssh_keypair_api_port) && data.ssh_keypair_api_port != '' ? data.ssh_keypair_api_port : '';
         $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
