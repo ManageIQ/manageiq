@@ -19,7 +19,7 @@ describe MiqExpression do
 
     it "generates the SQL for a < expression" do
       sql, * = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_sql
-      expect(sql).to eq("hardwares.cpu_sockets < 2")
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" < '2'")
     end
 
     it "generates the SQL for a <= expression" do
