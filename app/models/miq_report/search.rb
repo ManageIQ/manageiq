@@ -37,8 +37,7 @@ module MiqReport::Search
     if apply_sortby_in_search && !sortby.nil?
       # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
       order = sortby.to_miq_a.collect do |c|
-        col  = col_to_expression_col(c)
-        info = MiqExpression.get_col_info(col)
+        info = col_to_col_info(c)
         apply_sortby_in_search = false if info[:virtual_reflection] || info[:virtual_column]
 
         if c.include?(".")
