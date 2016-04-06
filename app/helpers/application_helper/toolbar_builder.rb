@@ -1366,7 +1366,7 @@ class ApplicationHelper::ToolbarBuilder
     )
   end
 
-  def url_for_save_button(name, url_tpl, controller_restful)
+  def url_for_button(name, url_tpl, controller_restful)
     url = safer_eval(url_tpl)
 
     if %w(view_grid view_tile view_list).include?(name) && controller_restful && url =~ %r{^\/(\d+|\d+r\d+)\?$}
@@ -1378,7 +1378,7 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_toolbar_save_button(item, props)
-    props[:url] = url_for_save_button(props[:id], item[:url], controller_restful?) if item[:url]
+    props[:url] = url_for_button(props[:id], item[:url], controller_restful?) if item[:url]
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     props
   end
