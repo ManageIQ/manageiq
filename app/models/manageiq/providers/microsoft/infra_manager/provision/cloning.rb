@@ -121,9 +121,9 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
       Get-SCVMMServer localhost | Out-Null;\
 
       $vm = New-SCVirtualMachine \
-        -Name #{dest_name} \
+        -Name '#{dest_name}' \
         -VMHost #{dest_host} \
-        -Path #{dest_mount_point} \
+        -Path '#{dest_mount_point}' \
         -VMTemplate #{template_ps_script}; \
       Set-SCVirtualMachine -VM $vm \
         #{cpu_ps_script} \
@@ -134,6 +134,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
   end
 
   def start_clone(_clone_options)
+    $scvmm_log.debug(build_ps_script)
     json_results = source.ext_management_system.run_powershell_script(build_ps_script)
     vm_json      = ManageIQ::Providers::Microsoft::InfraManager.parse_json_results(json_results)
     phase_context[:new_vm_ems_ref] = vm_json["ID"]
