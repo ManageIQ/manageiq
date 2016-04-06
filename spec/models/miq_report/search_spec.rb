@@ -25,6 +25,24 @@ describe MiqReport do
         expect(order).to eq("LOWER(vms.name)")
       end
 
+      it "detects a virtual association (and that it can't be sorted)" do
+        @miq_report.sortby = ["miq_provision_template.name"]
+        apply_sortby_in_search, _order = @miq_report.get_order_info
+        expect(apply_sortby_in_search).to be_falsy
+      end
+
+      it "detects a virtual column (and that it can't be sorted)" do
+        @miq_report.sortby = ["active"]
+        apply_sortby_in_search, _order = @miq_report.get_order_info
+        expect(apply_sortby_in_search).to be_falsy
+      end
+
+      it "detects a virtual column when any of the fields are a virtual column (and that it can't be sorted)" do
+        @miq_report.sortby = %w(name active id)
+        apply_sortby_in_search, _order = @miq_report.get_order_info
+        expect(apply_sortby_in_search).to be_falsy
+      end
+
       context "works when there are columns from other tables specified in sortby" do
         it "works with association where table_name can be guessed at" do
           @miq_report.sortby = ["name", "operating_system.product_name"]
