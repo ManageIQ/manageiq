@@ -12,7 +12,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
   end
 
-  def remote_console_acquire_ticket(protocol, proxy_miq_server = nil)
+  def remote_console_acquire_ticket(userid, protocol, proxy_miq_server = nil)
     send("remote_console_#{protocol.to_s.downcase}_acquire_ticket", proxy_miq_server)
   end
 
@@ -29,7 +29,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :zone        => my_zone,
-      :args        => [protocol, proxy_miq_server]
+      :args        => [userid, protocol, proxy_miq_server]
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -48,7 +48,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   # VMRC
   #
 
-  def remote_console_vmrc_acquire_ticket(_proxy_miq_server = nil)
+  def remote_console_vmrc_acquire_ticket(_userid, _proxy_miq_server = nil)
     validate_remote_console_acquire_ticket("vmrc")
     ext_management_system.remote_console_vmrc_acquire_ticket
   end
@@ -63,7 +63,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   # VNC
   #
 
-  def remote_console_vnc_acquire_ticket(proxy_miq_server = nil)
+  def remote_console_vnc_acquire_ticket(userid, proxy_miq_server = nil)
     validate_remote_console_acquire_ticket("vnc")
 
     if proxy_miq_server
@@ -79,6 +79,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
       proxy_address = proxy_port = nil
     end
 
+    binding.pry
     host_address = proxy_address ? host.guid : host.address
     password     = SecureRandom.base64[0, 8]  # Random password from the Base64 character set
 
@@ -100,6 +101,19 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
       vim_vm.setRemoteDisplayVncAttributes(:enabled => true, :port => host_port, :password => password)
     end
     update_attributes(:vnc_port => host_port)
+
+    Console.where(:vm_id => id).each { |c| c.destroy }
+    c = Console.new(
+      :user_id    => userid, # User.find # :userid => userid
+      :vm_id      => id,
+      :host_name  => host_address,
+      :port       => host_port,
+      :ssl        => false,
+      :protocol   => 'vnc',
+      :secret     => password,
+      :url_secret => SecureRandom.hex
+    )
+    c.save!
 
     return password, host_address, host_port, proxy_address, proxy_port
   end
