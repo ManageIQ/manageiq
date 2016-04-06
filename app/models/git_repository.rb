@@ -3,7 +3,7 @@ class GitRepository < ApplicationRecord
 
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
 
-  default_value_for :verify_ssl, 1
+  default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
@@ -71,7 +71,7 @@ class GitRepository < ApplicationRecord
   def init_repo
     repo_block do
       params = {:clone => true, :url => url, :path => dirname}
-      params[:ssl_no_verify] = (verify_ssl == 0)
+      params[:ssl_no_verify] = (verify_ssl == OpenSSL::SSL::VERIFY_NONE)
       if authentications.any?
         params[:username] = authentications.first.userid
         params[:password] = authentications.first.password
