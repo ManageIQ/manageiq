@@ -25,6 +25,10 @@
     :gp: &70174834085860
     - :get
     - :post
+    :gud: &70174834085621
+    - :get
+    - :put
+    - :delete
     :gpd: &70174834085620
     - :get
     - :post
@@ -767,11 +771,17 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834085621
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
     - :tasks
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
   :service_templates:
     :description: Service Templates
     :identifier: catalog_items_accord
