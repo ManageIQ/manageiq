@@ -42,7 +42,7 @@
         = hidden_span_if(@edit[:new][:timer].typ.downcase != "monthly", :id => "monthly_span") do
           = _("every")
           = select_tag("timer_months",
-            options_for_select(TIMER_MONTHS, @edit[:new][:timer_months]),
+            options_for_select(TIMER_MONTHS, @edit[:new][:timer].months),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();

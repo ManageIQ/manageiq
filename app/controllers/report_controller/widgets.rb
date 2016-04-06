@@ -402,7 +402,7 @@ module ReportController::Widgets
     else
       sched = params[:action] == "widget_copy" ? @widget.miq_schedule : @edit[:schedule]
       @edit[:new][:timer][:typ] = sched.run_at[:interval][:unit].titleize
-      @edit[:new][:timer_months] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "monthly"
+      @edit[:new][:timer][:months] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "monthly"
       @edit[:new][:timer_weeks] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer_hours] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "hourly"
@@ -554,7 +554,7 @@ module ReportController::Widgets
     # Schedule settings box
     @edit[:new][:timer] ||= ReportHelper::Timer.new
     @edit[:new][:timer][:typ]  = params[:timer_typ]    if params[:timer_typ]
-    @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
+    @edit[:new][:timer][:months] = params[][:timer_months] if params[:timer_months]
     @edit[:new][:timer_weeks]  = params[:timer_weeks]  if params[:timer_weeks]
     @edit[:new][:timer_days]   = params[:timer_days]   if params[:timer_days]
     @edit[:new][:timer_hours]  = params[:timer_hours]  if params[:timer_hours]
@@ -696,7 +696,7 @@ module ReportController::Widgets
     @edit[:schedule].run_at[:interval][:unit] = @edit[:new][:timer][:typ].downcase
     case @edit[:new][:timer][:typ].downcase
     when "monthly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_months]
+      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:months]
     when "weekly"
       @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_weeks]
     when "daily"

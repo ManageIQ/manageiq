@@ -392,7 +392,7 @@ module ReportController::Schedules
     end
     @edit[:new][:timer] ||= ReportHelper::Timer.new
     @edit[:new][:timer][:typ] = params[:timer_typ] if params[:timer_typ]
-    @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
+    @edit[:new][:timer][:months] = params[:timer_months] if params[:timer_months]
     @edit[:new][:timer_weeks] = params[:timer_weeks] if params[:timer_weeks]
     @edit[:new][:timer_days] = params[:timer_days] if params[:timer_days]
     @edit[:new][:timer_hours] = params[:timer_hours] if params[:timer_hours]
@@ -497,7 +497,7 @@ module ReportController::Schedules
     schedule.run_at[:interval][:unit] = @edit[:new][:timer][:typ].downcase
     case @edit[:new][:timer][:typ].downcase
     when "monthly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_months]
+      schedule.run_at[:interval][:value] = @edit[:new][:timer][:months]
     when "weekly"
       schedule.run_at[:interval][:value] = @edit[:new][:timer_weeks]
     when "daily"

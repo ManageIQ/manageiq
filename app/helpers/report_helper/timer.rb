@@ -1,5 +1,6 @@
 module ReportHelper
   Timer = Struct.new(
-    :typ
+    :typ,
+    :months,
   )
 end

@@ -578,7 +578,7 @@ module ApplicationHelper
   def set_edit_timer_from_schedule(schedule)
     t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
     @edit[:new][:timer] ||= ReportHelper::Timer.new
-    @edit[:new][:timer_months] = "1"
+    @edit[:new][:timer][:months] = "1"
     @edit[:new][:timer_weeks]  = "1"
     @edit[:new][:timer_days]    = "1"
     @edit[:new][:timer_hours]   = "1"
@@ -588,7 +588,7 @@ module ApplicationHelper
       @edit[:new][:start_min]    = "00"
     else
       @edit[:new][:timer][:typ]  = schedule.run_at[:interval][:unit].titleize
-      @edit[:new][:timer_months] = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "monthly"
+      @edit[:new][:timer][:months] = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "monthly"
       @edit[:new][:timer_weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer_hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
