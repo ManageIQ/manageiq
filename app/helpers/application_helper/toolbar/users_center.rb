@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::UsersCenter < ApplicationHelper::Toolbar::Basi
           N_('Select a single User to edit'),
           N_('Edit the selected User'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :rbac_user_copy,
@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::UsersCenter < ApplicationHelper::Toolbar::Basi
           N_('Select a single User to copy'),
           N_('Copy the selected User to a new User'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :rbac_user_delete,
@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::UsersCenter < ApplicationHelper::Toolbar::Basi
           N_('Delete selected Users'),
           :url_parms => "main_div",
           :confirm   => N_("Delete all selected Users?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::UsersCenter < ApplicationHelper::Toolbar::Basi
           t = N_('Edit \'#{session[:customer_name]}\' Tags for the selected Users'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

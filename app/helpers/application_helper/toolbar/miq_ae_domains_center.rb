@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
           N_('Select a single Domains to edit'),
           N_('Edit Selected Domains'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_ae_domain_delete,
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
           N_('Remove Domains'),
           :url_parms => "main_div",
           :confirm   => N_("Are you sure you want to remove the selected Domains?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(

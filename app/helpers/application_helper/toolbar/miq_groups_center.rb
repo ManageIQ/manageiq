@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::MiqGroupsCenter < ApplicationHelper::Toolbar::
           N_('Select a single Group to edit'),
           N_('Edit the selected Group'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :rbac_group_delete,
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::MiqGroupsCenter < ApplicationHelper::Toolbar::
           N_('Delete selected Groups'),
           :url_parms => "main_div",
           :confirm   => N_("Delete all selected Groups?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
@@ -50,7 +50,7 @@ class ApplicationHelper::Toolbar::MiqGroupsCenter < ApplicationHelper::Toolbar::
           t = N_('Edit \'#{session[:customer_name]}\' Tags for the selected Groups'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

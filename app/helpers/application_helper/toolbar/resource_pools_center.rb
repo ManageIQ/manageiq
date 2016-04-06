@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ResourcePoolsCenter < ApplicationHelper::Toolb
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::ResourcePoolsCenter < ApplicationHelper::Toolb
           N_('Remove Resource Pools from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Resource Pools and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Resource Pools?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::ResourcePoolsCenter < ApplicationHelper::Toolb
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::ResourcePoolsCenter < ApplicationHelper::Toolb
           N_('Manage Policies for the selected Resource Pools'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :resource_pool_tag,
@@ -43,7 +43,7 @@ class ApplicationHelper::Toolbar::ResourcePoolsCenter < ApplicationHelper::Toolb
           N_('Edit Tags for the selected Resource Pools'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

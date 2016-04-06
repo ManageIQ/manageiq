@@ -160,7 +160,7 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
       N_('Compare selected Templates'),
       nil,
       :url_parms => "main_div",
-      :enabled   => "false",
+      :enabled   => false,
       :onwhen    => "2+"),
   ])
 end

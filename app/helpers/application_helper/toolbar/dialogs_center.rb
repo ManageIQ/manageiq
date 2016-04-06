@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           t = N_('Edit the selected Dialog'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :dialog_copy,
@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           t = N_('Copy the selected Dialog to a new Dialog'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :dialog_delete,
@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Dialogs?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::DialogCenter < ApplicationHelper::Toolbar::Bas
       'pficon pficon-add-circle-o fa-lg',
       N_('Add'),
       nil,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :dialog_add_tab,

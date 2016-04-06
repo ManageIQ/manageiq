@@ -156,7 +156,7 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
       N_('Compare selected Templates'),
       nil,
       :url_parms => "main_div",
-      :enabled   => "false",
+      :enabled   => false,
       :onwhen    => "2+"),
   ])
 end

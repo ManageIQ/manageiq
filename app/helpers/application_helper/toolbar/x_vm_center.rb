@@ -273,7 +273,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       N_('Compare selected VMs'),
       nil,
       :url_parms => "main_div",
-      :enabled   => "false",
+      :enabled   => false,
       :onwhen    => "2+"),
   ])
 end

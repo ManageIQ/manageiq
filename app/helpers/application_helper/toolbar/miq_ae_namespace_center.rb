@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::MiqAeNamespaceCenter < ApplicationHelper::Tool
           t = N_('Edit Selected Item'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_ae_class_copy,
@@ -42,7 +42,7 @@ class ApplicationHelper::Toolbar::MiqAeNamespaceCenter < ApplicationHelper::Tool
           N_('Select Classes to copy'),
           N_('Copy selected Classes'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_ae_namespace_delete,
@@ -51,7 +51,7 @@ class ApplicationHelper::Toolbar::MiqAeNamespaceCenter < ApplicationHelper::Tool
           t,
           :url_parms => "main_div",
           :confirm   => N_("Are you sure you want to remove selected Items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

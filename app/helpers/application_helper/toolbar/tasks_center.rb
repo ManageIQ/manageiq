@@ -13,7 +13,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
       'pficon pficon-delete fa-lg',
       N_('Delete Tasks'),
       nil,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :miq_task_delete,
@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
           N_('Delete'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected tasks will be permanently removed from the database. Are you sure you want to delete the selected tasks?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :miq_task_deleteolder,
@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
           N_('Delete Older'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: Tasks that are older than selected task will be permanently removed from the database. Are you sure you want to delete older tasks?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_task_deleteall,
@@ -40,7 +40,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
           N_('Delete All'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: Finished tasks will be permanently removed from the database. Are you sure you want to delete all finished tasks?"),
-          :enabled   => "true"),
+          :enabled   => true),
       ]
     ),
   ])
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
       N_('Cancel Job'),
       :url_parms => "main_div",
       :confirm   => N_("Warning: The selected task will be cancelled. Are you sure you want to cancel the task?"),
-      :enabled   => "false",
+      :enabled   => false,
       :onwhen    => "1"),
   ])
 end

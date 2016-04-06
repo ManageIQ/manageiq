@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
           N_('Select a single service to edit'),
           N_('Edit Selected Service'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :service_delete,
@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
           N_('Remove Services from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Services and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Services?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
           N_('Set Ownership for the selected Services'),
           N_('Set Ownership'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -43,7 +43,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
           N_('Edit tags for the selected Items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -63,7 +63,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
       'fa fa-recycle fa-lg',
       t = N_('Lifecycle'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -72,7 +72,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
           N_('Set Retirement Dates for the selected items'),
           N_('Set Retirement Dates'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :service_retire_now,
@@ -81,7 +81,7 @@ class ApplicationHelper::Toolbar::ServicesCenter < ApplicationHelper::Toolbar::B
           N_('Retire selected items'),
           :url_parms => "main_div",
           :confirm   => N_("Retire the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

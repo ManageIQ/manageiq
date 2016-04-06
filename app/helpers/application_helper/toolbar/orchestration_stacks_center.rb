@@ -13,7 +13,7 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
           N_('Remove #{ui_lookup(:tables=>"orchestration_stack")} from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"orchestration_stack\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"orchestration_stack\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -24,7 +24,7 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
           N_('Edit Tags for the selected #{ui_lookup(:tables=>"orchestration_stack")}'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -44,7 +44,7 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
       'fa fa-recycle fa-lg',
       t = N_('Lifecycle'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
           'fa fa-clock-o fa-lg',
           N_('Set Retirement Dates for the selected #{ui_lookup(:tables=>"orchestration_stack")}'),
           N_('Set Retirement Dates'),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+",
           :url_parms => "main_div"),
         button(
@@ -61,7 +61,7 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
           t = N_('Retire selected #{ui_lookup(:tables => "orchestration_stack")}'),
           t,
           :confirm   => N_("Retire the selected \#{ui_lookup(:tables => \"orchestration_stack\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+",
           :url_parms => "main_div"),
       ]

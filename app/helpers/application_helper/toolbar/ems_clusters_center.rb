@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
           N_('Perform SmartState Analysis'),
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :ems_cluster_compare,
@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
           N_('Select two or more items to compare'),
           N_('Compare Selected items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "2+"),
         separator,
         button(
@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -44,7 +44,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -53,7 +53,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
           N_('Manage Policies for the selected items'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :ems_cluster_tag,
@@ -61,7 +61,7 @@ class ApplicationHelper::Toolbar::EmsClustersCenter < ApplicationHelper::Toolbar
           N_('Edit Tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

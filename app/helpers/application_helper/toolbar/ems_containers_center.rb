@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           N_('Refresh Items and Relationships for all #{ui_lookup(:table=>"ems_containers")}'),
           N_('Refresh Items and Relationships'),
           :confirm   => N_("Refresh Items and Relationships related to  \#{ui_lookup(:table=>\"ems_containers\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :url_parms => "main_div",
           :onwhen    => "1+"),
         separator,
@@ -28,7 +28,7 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           N_('Select a single #{ui_lookup(:table=>"ems_container")} to edit'),
           N_('Edit Selected #{ui_lookup(:table=>"ems_container")}'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :ems_container_delete,
@@ -37,7 +37,7 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           N_('Remove #{ui_lookup(:tables=>"ems_containers")} from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"ems_containers\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"ems_containers\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -57,7 +57,7 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           N_('Edit Tags for this #{ui_lookup(:table=>"ems_container")}'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

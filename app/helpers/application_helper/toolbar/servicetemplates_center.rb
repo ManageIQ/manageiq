@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::ServicetemplatesCenter < ApplicationHelper::To
           N_('Select a single Item to edit'),
           N_('Edit Selected Item'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :catalogitem_delete,
@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::ServicetemplatesCenter < ApplicationHelper::To
           N_('Remove Items from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -42,7 +42,7 @@ class ApplicationHelper::Toolbar::ServicetemplatesCenter < ApplicationHelper::To
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -51,7 +51,7 @@ class ApplicationHelper::Toolbar::ServicetemplatesCenter < ApplicationHelper::To
           N_('Edit tags for the selected Items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

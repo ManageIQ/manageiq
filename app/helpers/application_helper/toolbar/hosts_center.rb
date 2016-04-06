@@ -13,7 +13,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Refresh Relationships and Power States'),
           :url_parms => "main_div",
           :confirm   => N_("Refresh relationships and power states for all items related to the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_scan,
@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Perform SmartState Analysis'),
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_compare,
@@ -30,7 +30,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Select two or more items to compare'),
           N_('Compare Selected items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "2+"),
         button(
           :host_discover,
@@ -52,7 +52,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           t = N_('Edit Selected items'),
           t,
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_delete,
@@ -61,7 +61,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Remove items from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -72,7 +72,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -81,7 +81,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Manage Policies for the selected items'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_tag,
@@ -89,7 +89,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Edit Tags for the selected items'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_check_compliance,
@@ -98,7 +98,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Check Compliance of Last Known Configuration'),
           :url_parms => "main_div",
           :confirm   => N_("Initiate Check Compliance of the last known configuration for the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_analyze_check_compliance,
@@ -107,7 +107,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Analyze then Check Compliance'),
           :url_parms => "main_div",
           :confirm   => N_("Analyze then Check Compliance for the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -125,7 +125,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Request to Provision items'),
           N_('Provision items'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -136,7 +136,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
       'fa fa-power-off fa-lg',
       N_('Power Operations'),
       N_('Power'),
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -147,7 +147,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :image     => "standby",
           :confirm   => N_("Shutdown the selected items to Standy Mode?"),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_shutdown,
@@ -157,7 +157,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :image     => "guest_shutdown",
           :url_parms => "main_div",
           :confirm   => N_("Shutdown the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :host_reboot,
@@ -167,7 +167,7 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :image     => "guest_restart",
           :url_parms => "main_div",
           :confirm   => N_("Restart the selected items?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(

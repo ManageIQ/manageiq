@@ -13,7 +13,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
           N_('Refresh Relationships and Power States'),
           :url_parms => "main_div",
           :confirm   => N_("Refresh relationships and power states for all items related to the selected \#{ui_lookup(:tables=>\"ems_infras\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :ems_infra_discover,
@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
           N_('Select a single #{ui_lookup(:table=>"ems_infra")} to edit'),
           N_('Edit Selected #{ui_lookup(:table=>"ems_infra")}'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :ems_infra_delete,
@@ -44,7 +44,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
           N_('Remove #{ui_lookup(:tables=>"ems_infras")} from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"ems_infras\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"ems_infras\")}?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -55,7 +55,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -64,7 +64,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
           N_('Manage Policies for the selected #{ui_lookup(:tables=>"ems_infras")}'),
           N_('Manage Policies'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         button(
           :ems_infra_tag,
@@ -72,7 +72,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
           N_('Edit Tags for the selected #{ui_lookup(:tables=>"ems_infras")}'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

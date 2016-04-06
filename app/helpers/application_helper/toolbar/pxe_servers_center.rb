@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::PxeServersCenter < ApplicationHelper::Toolbar:
           N_('Select a single PXE Servers to edit'),
           N_('Edit Selected PXE Servers'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :pxe_server_delete,
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::PxeServersCenter < ApplicationHelper::Toolbar:
           N_('Remove PXE Servers from the VMDB'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected PXE Servers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected PXE Servers?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
@@ -36,7 +36,7 @@ class ApplicationHelper::Toolbar::PxeServersCenter < ApplicationHelper::Toolbar:
           N_('Refresh Relationships'),
           :url_parms => "main_div",
           :confirm   => N_("Refresh Relationships for selected PXE Servers?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

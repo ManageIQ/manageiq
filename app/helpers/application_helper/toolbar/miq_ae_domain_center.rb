@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainCenter < ApplicationHelper::Toolbar
           N_('Select a single Namespace to edit'),
           N_('Edit Selected Namespace'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1"),
         button(
           :miq_ae_namespace_delete,
@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainCenter < ApplicationHelper::Toolbar
           N_('Remove Namespaces'),
           :url_parms => "main_div",
           :confirm   => N_("Are you sure you want to remove the selected Namespaces?"),
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

@@ -36,7 +36,7 @@ class ApplicationHelper::Toolbar::ContainerServicesCenter < ApplicationHelper::T
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => false,
       :onwhen  => "1+",
       :items   => [
         button(
@@ -45,7 +45,7 @@ class ApplicationHelper::Toolbar::ContainerServicesCenter < ApplicationHelper::T
           N_('Edit Tags for this #{ui_lookup(:table=>"container_services")}'),
           N_('Edit Tags'),
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

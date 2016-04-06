@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::T
       'fa fa-recycle fa-lg',
       t = N_('Lifecycle'),
       t,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :configured_system_provision,
@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::T
           t,
           :url       => "provision",
           :url_parms => "main_div",
-          :enabled   => "true"),
+          :enabled   => true),
       ]
     ),
     select(
@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::T
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :configured_system_tag,
@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::T
           N_('Edit Tags'),
           :url       => "tagging",
           :url_parms => "main_div",
-          :enabled   => "true"),
+          :enabled   => true),
       ]
     ),
   ])

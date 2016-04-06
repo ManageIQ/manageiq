@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHe
       'fa fa-recycle fa-lg',
       t = N_('Lifecycle'),
       t,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :provider_foreman_configured_system_provision,
@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHe
           t,
           :url       => "provision",
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),
@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHe
           N_('Edit Tags'),
           :url       => "tagging",
           :url_parms => "main_div",
-          :enabled   => "false",
+          :enabled   => false,
           :onwhen    => "1+"),
       ]
     ),

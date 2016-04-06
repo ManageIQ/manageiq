@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ConfigurationProfileForemanCenter < Applicatio
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :enabled => "true",
+      :enabled => true,
       :items   => [
         button(
           :provider_foreman_refresh_provider,
