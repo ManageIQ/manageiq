@@ -17,7 +17,7 @@ class StorageController < ApplicationController
     @storage = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@storage)
 
-    @gtl_url = "/storage/show/" << @storage.id.to_s << "?"
+    @gtl_url = "/show"
     #   drop_breadcrumb({:name=>ui_lookup(:tables=>"storages"), :url=>"/storage/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display

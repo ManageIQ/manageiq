@@ -250,10 +250,10 @@ module ReportController::Reports::Editor
     @in_a_form = true
     if ["new", "copy", "create"].include?(request.parameters["action"])
       # drop_breadcrumb( {:name=>"Add Report", :url=>"/report/new"} )
-      @gtl_url = "/report/new/?"
+      @gtl_url = "/new"
     else
       # drop_breadcrumb( {:name=>"Edit Report", :url=>"/report/edit"} )
-      @gtl_url = "/report/edit/?"
+      @gtl_url = "/edit"
     end
   end
 

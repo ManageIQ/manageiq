@@ -17,7 +17,7 @@ class ResourcePoolController < ApplicationController
     @record = identify_record(params[:id])
     return if record_no_longer_exists?(@record)
 
-    @gtl_url = "/resource_pool/show/" << @record.id.to_s << "?"
+    @gtl_url = "/show"
     drop_breadcrumb({:name => _("Resource Pools"),
                      :url  => "/resource_pool/show_list?page=#{@current_page}&refresh=y"}, true)
 

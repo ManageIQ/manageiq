@@ -29,7 +29,7 @@ class CloudVolumeSnapshotController < ApplicationController
     @snapshot = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@snapshot)
 
-    @gtl_url = "/cloud_volume_snapshot/show/#{@snapshot.id}?"
+    @gtl_url = "/show"
     drop_breadcrumb(
       {
         :name => ui_lookup(:tables => 'cloud_volume_snapshot'),

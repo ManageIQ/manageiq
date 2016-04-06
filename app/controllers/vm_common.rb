@@ -231,7 +231,7 @@ module VmCommon
     else
       rec_cls = "vm"
     end
-    @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
+    @gtl_url = "/show"
     if ["download_pdf", "main", "summary_only"].include?(@display)
       get_tagdata(@record)
       drop_breadcrumb({:name => _("Virtual Machines"),
@@ -355,7 +355,7 @@ module VmCommon
 
     @button_group = "vm"
 
-    @gtl_url = "/#{@button_group}/show/" << @record.id.to_s << "?"
+    @gtl_url = "/show"
     get_tagdata(@record)
     drop_breadcrumb({:name => _("Virtual Machines"),
                      :url  => "/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
@@ -1215,7 +1215,7 @@ module VmCommon
     @listicon = "scan_history"
     @showtype = "scan_history"
     @lastaction = "scan_history"
-    @gtl_url = "/vm/scan_history/?"
+    @gtl_url = "/scan_history"
     @no_checkboxes = true
     @showlinks = true
 

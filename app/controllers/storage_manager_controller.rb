@@ -243,7 +243,7 @@ class StorageManagerController < ApplicationController
     @sm = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@sm)
 
-    @gtl_url = "/storage_manager/show/" << @sm.id.to_s << "?"
+    @gtl_url = "/show"
     @showtype = "config"
     drop_breadcrumb({:name => ui_lookup(:tables => "storage_managers"), :url => "/storage_manager/show_list?page=#{@current_page}&refresh=y"}, true)
 

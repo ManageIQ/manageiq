@@ -26,7 +26,7 @@ class HostController < ApplicationController
     @host = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@host, 'Host')
 
-    @gtl_url = "/host/show/" << @host.id.to_s << "?"
+    @gtl_url = "/show"
     @showtype = "config"
     set_config(@host)
     case @display

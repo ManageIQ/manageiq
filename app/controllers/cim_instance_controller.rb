@@ -112,7 +112,7 @@ class CimInstanceController < ApplicationController
     @record = identify_record(params[:id])
     return if record_no_longer_exists?(@record)
 
-    @gtl_url = "/#{self.class.table_name}/show/#{@record.id}?"
+    @gtl_url = "/show"
 
     case @display
     when "download_pdf", "main", "summary_only"

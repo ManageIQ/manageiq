@@ -46,7 +46,7 @@ class CloudTenantController < ApplicationController
     @cloud_tenant = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@cloud_tenant)
 
-    @gtl_url = "/cloud_tenant/show/" << @cloud_tenant.id.to_s << "?"
+    @gtl_url = "/show"
     drop_breadcrumb({:name => _("Cloud Tenants"), :url => "/cloud_tenant/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display

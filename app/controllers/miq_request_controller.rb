@@ -116,7 +116,7 @@ class MiqRequestController < ApplicationController
 
     drop_breadcrumb(:name => bc_name, :url => "/miq_request/show_list?typ=#{@request_tab}")
     @lastaction = "show_list"
-    @gtl_url = "/miq_request/show_list/?"
+    @gtl_url = "/show_list"
 
     @settings[:views][:miqrequest] = params[:type] if params[:type]   # new gtl type came in, set it
     @gtl_type = @settings[:views][:miqrequest]                        # set the var for the UI to use

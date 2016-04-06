@@ -25,7 +25,7 @@ class CloudVolumeController < ApplicationController
     @volume = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@volume)
 
-    @gtl_url = "/cloud_volume/show/" << @volume.id.to_s << "?"
+    @gtl_url = "/show"
     drop_breadcrumb({:name => _("Cloud Volumes"), :url => "/cloud_volume/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display

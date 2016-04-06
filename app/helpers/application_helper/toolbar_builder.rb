@@ -1366,24 +1366,19 @@ class ApplicationHelper::ToolbarBuilder
     )
   end
 
-  def url_for_save_button(name, url_tpl, controller_restful)
+  def url_for_button(name, url_tpl, controller_restful)
     url = safer_eval(url_tpl)
 
-    if %w(view_grid view_tile view_list).include?(name)
-      # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
-      url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/, "")
-      ridx = url.rindex('/')
-      url = url.slice(0..ridx - 1) if ridx
-
+    if %w(view_grid view_tile view_list).include?(name) && controller_restful && url =~ %r{^\/(\d+|\d+r\d+)\?$}
       # handle restful routes - we want just / if the url is just an id
-      url = '/' if controller_restful && url =~ %r{^\/(\d+|\d+r\d+)\?$}
+      url = '/'
     end
 
     url
   end
 
   def build_toolbar_save_button(item, props)
-    props[:url] = url_for_save_button(props['id'], item[:url], controller_restful?) if item[:url]
+    props[:url] = url_for_button(props[:id], item[:url], controller_restful?) if item[:url]
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     props
   end

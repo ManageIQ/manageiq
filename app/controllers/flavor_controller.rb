@@ -16,7 +16,7 @@ class FlavorController < ApplicationController
     @showtype   = "config"
     @flavor     = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@flavor)
-    @gtl_url = "/flavor/show/#{@flavor.id}?"
+    @gtl_url = "/show"
 
     case @display
     when "download_pdf", "main", "summary_only"
