@@ -1,7 +1,8 @@
 describe ServiceOrder do
-  let(:admin)         { FactoryGirl.create(:user_admin) }
-  let(:service_order) { FactoryGirl.create(:service_order, :state => 'cart') }
-  let(:user_obj)      { FactoryGirl.create(:user) }
+  let(:tenant)        { Tenant.seed }
+  let(:admin)         { FactoryGirl.create(:user_with_group, :userid => "admin") }
+  let(:service_order) { FactoryGirl.create(:service_order, :state => 'cart', :user => user, :tenant => tenant) }
+  let(:user)          { FactoryGirl.create(:user_with_group, :tenant => tenant) }
   let(:ems)           { FactoryGirl.create(:ems_vmware) }
   let(:vm)            { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
   let(:vm_template)   { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
@@ -62,5 +63,17 @@ describe ServiceOrder do
       :name  => 'service order',
       :state => 'ordered'
     )
+  end
+
+  it "should add to cart properly with an existing user service_order" do
+    service_order
+    expect(ServiceOrder.add_to_cart(request, user)).to eq(service_order)
+    expect(service_order.miq_requests.first).to eq(request)
+  end
+
+  it "should add to cart properly creating a new admin service_order" do
+    so = ServiceOrder.add_to_cart(request, admin)
+    expect(so).not_to eq(service_order)
+    expect(so.miq_requests.first).to eq(request)
   end
 end
