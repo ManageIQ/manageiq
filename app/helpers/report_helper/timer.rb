@@ -3,5 +3,6 @@ module ReportHelper
     :typ,
     :months,
     :weeks,
+    :days,
   )
 end

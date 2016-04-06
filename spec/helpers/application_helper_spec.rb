@@ -840,15 +840,15 @@ describe ApplicationHelper do
         @run_at[:interval][:unit] = 'daily'
         helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
-          :timer_days => @interval,
           :start_hour => @hour,
           :start_min  => @min,
           :start_date => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :days => @interval,
           :typ => 'Daily'
         )
-        expect(@edit[:new]).not_to include(:timer_days => '1')
+        expect(@edit[:new][:timer].to_h).not_to include(:days => '1')
       end
 
       it "sets values as hourly" do

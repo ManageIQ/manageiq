@@ -394,7 +394,7 @@ module ReportController::Schedules
     @edit[:new][:timer][:typ] = params[:timer_typ] if params[:timer_typ]
     @edit[:new][:timer][:months] = params[:timer_months] if params[:timer_months]
     @edit[:new][:timer][:weeks] = params[:timer_weeks] if params[:timer_weeks]
-    @edit[:new][:timer_days] = params[:timer_days] if params[:timer_days]
+    @edit[:new][:timer][:days] = params[:timer_days] if params[:timer_days]
     @edit[:new][:timer_hours] = params[:timer_hours] if params[:timer_hours]
     @edit[:new][:start_date] = params[:miq_date_1] if params[:miq_date_1]
     @edit[:new][:start_hour] = params[:start_hour] if params[:start_hour]
@@ -501,7 +501,7 @@ module ReportController::Schedules
     when "weekly"
       schedule.run_at[:interval][:value] = @edit[:new][:timer][:weeks]
     when "daily"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_days]
+      schedule.run_at[:interval][:value] = @edit[:new][:timer][:days]
     when "hourly"
       schedule.run_at[:interval][:value] = @edit[:new][:timer_hours]
     else
