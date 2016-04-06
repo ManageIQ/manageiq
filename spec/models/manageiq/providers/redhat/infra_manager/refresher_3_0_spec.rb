@@ -630,9 +630,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
-      [EmsFolder, "Datacenters"] => {
+      [EmsFolder, "Datacenters", {:hidden => true}] => {
         [Datacenter, "DC-iSCSI"] => {
-          [EmsFolder, "host"] => {
+          [EmsFolder, "host", {:hidden => true}] => {
             [EmsCluster, "Cluster1-iSCSI"] => {
               [ResourcePool, "Default for Cluster Cluster1-iSCSI"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"]   => {},
@@ -642,7 +642,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm"]   => {
+          [EmsFolder, "vm", {:hidden => true}]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "Template1"]  => {},
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "Brandon-Clone1"]   => {},
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "CLI-Provision-1"]  => {},
@@ -651,7 +651,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
           }
         },
         [Datacenter, "DC2"]      => {
-          [EmsFolder, "host"] => {
+          [EmsFolder, "host", {:hidden => true}] => {
             [EmsCluster, "DC2-iSCSI"]   => {
               [ResourcePool, "Default for Cluster DC2-iSCSI"] => {}
             },
@@ -666,7 +666,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm"]   => {
+          [EmsFolder, "vm", {:hidden => true}]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM"]         => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-V5"]      => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v5-Base"] => {},
@@ -680,7 +680,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
           }
         },
         [Datacenter, "Default"]  => {
-          [EmsFolder, "host"] => {
+          [EmsFolder, "host", {:hidden => true}] => {
             [EmsCluster, "Cluster2"] => {
               [ResourcePool, "Default for Cluster Cluster2"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOff"] => {},
@@ -700,7 +700,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               [ResourcePool, "Default for Cluster Default"] => {}
             }
           },
-          [EmsFolder, "vm"]   => {
+          [EmsFolder, "vm", {:hidden => true}]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "empty"]               => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EmsRefreshSpec"]      => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-50011"]           => {},

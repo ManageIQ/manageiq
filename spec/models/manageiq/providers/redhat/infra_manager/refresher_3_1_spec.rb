@@ -675,9 +675,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
-      [EmsFolder, "Datacenters"] => {
+      [EmsFolder, "Datacenters", {:hidden => true}] => {
         [Datacenter, "Default"] => {
-          [EmsFolder, "host"] => {
+          [EmsFolder, "host", {:hidden => true}] => {
             [EmsCluster, "iSCSI"] => {
               [ResourcePool, "Default for Cluster iSCSI"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "BD-F17-Desktop"]                => {},
@@ -704,7 +704,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm"]   => {
+          [EmsFolder, "vm", {:hidden => true}]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "CFME_Base"]               => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50017"]              => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50025"]              => {},
@@ -736,7 +736,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
           }
         },
         [Datacenter, "NFS"]     => {
-          [EmsFolder, "host"] => {
+          [EmsFolder, "host", {:hidden => true}] => {
             [EmsCluster, "NFS"] => {
               [ResourcePool, "Default for Cluster NFS"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "MK_AUG_05_003_DELETE"] => {},
@@ -748,7 +748,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
               }
             }
           },
-          [EmsFolder, "vm"]   => {
+          [EmsFolder, "vm", {:hidden => true}]   => {
             [ManageIQ::Providers::Redhat::InfraManager::Template, "757e824d-6d97-4568-be29-9346c354e802"] => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "bd-clone-template"]                    => {},
             [ManageIQ::Providers::Redhat::InfraManager::Template, "bd-temp1"]                             => {},

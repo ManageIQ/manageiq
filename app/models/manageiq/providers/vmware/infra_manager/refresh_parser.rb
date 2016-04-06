@@ -24,6 +24,7 @@ module ManageIQ::Providers
 
         link_ems_metadata(result, inv)
         link_root_folder(result)
+        set_hidden_folders(result)
         set_default_rps(result)
 
         result
@@ -1054,12 +1055,13 @@ module ManageIQ::Providers
           child_mors = get_mors(data, 'childEntity')
 
           new_result = {
-            :type          => EmsFolder.name,
-            :ems_ref       => mor,
-            :ems_ref_obj   => mor,
-            :uid_ems       => mor,
-            :name          => data["name"],
-            :child_uids    => child_mors
+            :type        => EmsFolder.name,
+            :ems_ref     => mor,
+            :ems_ref_obj => mor,
+            :uid_ems     => mor,
+            :name        => data["name"],
+            :child_uids  => child_mors,
+            :hidden      => false
           }
           result << new_result
           result_uids[mor] = new_result
@@ -1076,12 +1078,13 @@ module ManageIQ::Providers
           child_mors = get_mors(data, 'hostFolder') + get_mors(data, 'vmFolder') + get_mors(data, 'datastoreFolder')
 
           new_result = {
-            :type          => Datacenter.name,
-            :ems_ref       => mor,
-            :ems_ref_obj   => mor,
-            :uid_ems       => mor,
-            :name          => data["name"],
-            :child_uids    => child_mors
+            :type        => Datacenter.name,
+            :ems_ref     => mor,
+            :ems_ref_obj => mor,
+            :uid_ems     => mor,
+            :name        => data["name"],
+            :child_uids  => child_mors,
+            :hidden      => false
           }
           result << new_result
           result_uids[mor] = new_result
@@ -1099,12 +1102,13 @@ module ManageIQ::Providers
           name       = data.fetch_path('summary', 'name')
 
           new_result = {
-            :type          => StorageCluster.name,
-            :ems_ref       => mor,
-            :ems_ref_obj   => mor,
-            :uid_ems       => mor,
-            :name          => name,
-            :child_uids    => child_mors
+            :type        => StorageCluster.name,
+            :ems_ref     => mor,
+            :ems_ref_obj => mor,
+            :uid_ems     => mor,
+            :name        => name,
+            :child_uids  => child_mors,
+            :hidden      => false
           }
 
           result << new_result
@@ -1269,6 +1273,22 @@ module ManageIQ::Providers
           data[:ems_root] = found
         else
           _log.warn "Unable to find a root folder."
+        end
+      end
+
+      def self.set_hidden_folders(data)
+        return if data[:ems_root].nil?
+
+        # Mark the root folder as hidden
+        data[:ems_root][:hidden] = true
+
+        # Mark all child folders of each Datacenter as hidden
+        # e.g.: "vm", "host", "datastore"
+        data[:folders].select { |f| f[:type] == "Datacenter" }.each do |dc|
+          dc_children = dc.fetch_path(:ems_children, :folders)
+          dc_children.to_miq_a.each do |f|
+            f[:hidden] = true
+          end
         end
       end
 

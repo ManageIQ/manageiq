@@ -908,7 +908,7 @@ class MiqRequestWorkflow
   end
 
   def get_ems_folders(folder, dh = {}, full_path = "")
-    if folder.evm_object_class == :EmsFolder && !EmsFolder::NON_DISPLAY_FOLDERS.include?(folder.name)
+    if folder.evm_object_class == :EmsFolder && !folder.hidden?
       full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
       dh[folder.id] = full_path unless folder.type == "Datacenter"
     end

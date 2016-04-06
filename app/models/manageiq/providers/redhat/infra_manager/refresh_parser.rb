@@ -613,6 +613,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       :name         => 'Datacenters',
       :type         => 'EmsFolder',
       :uid_ems      => 'root_dc',
+      :hidden       => true,
 
       :ems_children => {:folders => []}
     }]
@@ -623,8 +624,8 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     inv.each do |data|
       uid = data[:id]
 
-      host_folder = {:name => 'host', :type => 'EmsFolder', :uid_ems => "#{uid}_host"}
-      vm_folder   = {:name => 'vm',   :type => 'EmsFolder', :uid_ems => "#{uid}_vm"}
+      host_folder = {:name => 'host', :type => 'EmsFolder', :uid_ems => "#{uid}_host", :hidden => true}
+      vm_folder   = {:name => 'vm',   :type => 'EmsFolder', :uid_ems => "#{uid}_vm",   :hidden => true}
 
       # Link clusters to datacenter host folder
       clusters = cluster_uids.values.select { |c| c[:datacenter_id] == uid }
