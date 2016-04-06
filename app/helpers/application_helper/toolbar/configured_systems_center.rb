@@ -25,6 +25,8 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsCenter < ApplicationHelper::T
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => false,
+      :onwhen  => "1+",
       :items => [
         button(
           :provider_foreman_configured_system_tag,

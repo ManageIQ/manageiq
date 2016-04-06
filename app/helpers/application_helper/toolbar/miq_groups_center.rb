@@ -43,6 +43,8 @@ class ApplicationHelper::Toolbar::MiqGroupsCenter < ApplicationHelper::Toolbar::
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => false,
+      :onwhen  => "1+",
       :items => [
         button(
           :rbac_group_tags_edit,

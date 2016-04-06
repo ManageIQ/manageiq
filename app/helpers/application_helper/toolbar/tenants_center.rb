@@ -40,6 +40,8 @@ class ApplicationHelper::Toolbar::TenantsCenter < ApplicationHelper::Toolbar::Ba
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => false,
+      :onwhen  => "1+",
       :items => [
         button(
           :rbac_tenant_tags_edit,
