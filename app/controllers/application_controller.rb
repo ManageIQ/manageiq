@@ -1071,11 +1071,7 @@ class ApplicationController < ActionController::Base
     timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user) if timed_out.nil?
     reset_session
 
-    session[:start_url] = if RequestRefererService.access_whitelisted?(request, controller_name, action_name)
-                            url_for(:controller => controller_name,
-                                    :action     => action_name,
-                                    :id         => params[:id])
-                          end
+    session[:start_url] = url_for(:controller => controller_name, :action => action_name, :id => params[:id])
 
     respond_to do |format|
       format.html do
@@ -1150,17 +1146,7 @@ class ApplicationController < ActionController::Base
 
     return if action_name == 'auth_error'
 
-    trusted_referer = session[:saml_login_request]
     session[:saml_login_request] = nil
-
-    if RequestRefererService.allowed_access?(request, controller_name, action_name, session['referer'], trusted_referer)
-      # if we came in directly and were allowed then
-      # we need to make sure we have the referer in the session for future requests
-      session['referer'] = request.base_url + '/' unless session['referer'].present?
-    else
-      head :forbidden
-      return
-    end
 
     pass = %w(button x_button).include?(action_name) ? handle_button_rbac : handle_generic_rbac
     $audit_log.failure("Username [#{current_userid}], Role ID [#{current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass

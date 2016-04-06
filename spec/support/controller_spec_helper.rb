@@ -23,12 +23,10 @@ module ControllerSpecHelper
 
   shared_context "valid session" do
     let(:privilege_checker_service) { double("PrivilegeCheckerService", :valid_session?  => true) }
-    let(:request_referer_service)   { double("RequestRefererService",   :allowed_access? => true) }
 
     before do
       allow(controller).to receive(:set_user_time_zone)
       allow(PrivilegeCheckerService).to receive(:new).and_return(privilege_checker_service)
-      allow(RequestRefererService).to receive(:new).and_return(request_referer_service)
     end
   end
 

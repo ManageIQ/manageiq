@@ -476,7 +476,6 @@ class DashboardController < ApplicationController
 
     case validation.result
     when :pass
-      session['referer'] = request.base_url + '/'
       session[:saml_login_request] = true
       redirect_to validation.url
       return
@@ -550,7 +549,6 @@ class DashboardController < ApplicationController
     when :wait_for_task
       # noop, page content already set by initiate_wait_for_task
     when :pass
-      session['referer'] = request.base_url + '/'
       render :update do |page|
         page << javascript_prologue
         page.redirect_to(validation.url)
@@ -718,7 +716,7 @@ class DashboardController < ApplicationController
 
   def session_reset
     # save some fields to recover back into session hash after session is cleared
-    keys_to_restore = [:winH, :winW, :referer, :browser, :user_TZO]
+    keys_to_restore = [:winH, :winW, :browser, :user_TZO]
     data_to_restore = keys_to_restore.each_with_object({}) { |k, v| v[k] = session[k] }
 
     session.clear

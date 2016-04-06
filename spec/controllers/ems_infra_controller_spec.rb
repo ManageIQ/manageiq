@@ -163,7 +163,6 @@ describe EmsInfraController do
       EvmSpecHelper.create_guid_miq_server_zone
       login_as FactoryGirl.create(:user)
       @ems = FactoryGirl.create(:ems_vmware)
-      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
     end
 
     let(:url_params) { {} }

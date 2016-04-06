@@ -344,7 +344,6 @@ describe EmsCloudController do
       session[:settings] = {:views     => {:vm_summary_cool => "summary"},
                             :quadicons => {}}
       @ems = FactoryGirl.create(:ems_amazon)
-      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
     end
 
     subject { get :show, :id => @ems.id }
