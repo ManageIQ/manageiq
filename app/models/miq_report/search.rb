@@ -41,8 +41,7 @@ module MiqReport::Search
 
       if c.include?(".")
         assoc, col = c.split(".")
-        t = get_sqltable(assoc)
-        sql_col = [t, col].join(".")
+        sql_col = [get_sqltable(assoc), col].join(".")
       else
         sql_col = [db_class.table_name, c].join(".")
       end
