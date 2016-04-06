@@ -16,12 +16,13 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
                  :orchestration_template => template)
   end
 
-  def raw_update_stack(template, parameters)
+  def raw_update_stack(template, options)
     ext_management_system.with_provider_connection(:service => "Orchestration") do |connection|
       stack    = connection.stacks.get(name, ems_ref)
       template ||= connection.get_stack_template(stack).body
+      update_options = {:template => template}.merge(options)
 
-      connection.patch_stack(stack, 'template' => template, 'parameters' => parameters)
+      connection.patch_stack(stack, update_options)
     end
   rescue => err
     _log.error "stack=[#{name}], error: #{err}"
