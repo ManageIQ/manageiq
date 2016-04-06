@@ -287,6 +287,28 @@ class Tenant < ApplicationRecord
     end
   end
 
+  #   Tenant
+  #      Tenant A
+  #      Tenant B
+  #
+  # @return [Array(JSON({name => String, id => Numeric, parent => Numeric}))] all subtenants of a tenant
+  # e.g.:
+  #   [
+  #     {name=>"Tenant A",id=>2,parent=>1},
+  #     {name=>"Tenant B",id=>3,parent=>1}
+  #   ]
+  def build_tenant_tree
+    data_tenant = []
+    all_subtenants.each do |subtenant|
+      next unless subtenant.parent_name == name
+      data_tenant.push(:name => subtenant.name, :id => subtenant.id, :parent => id)
+      if subtenant.all_subtenants.count > 0
+        data_tenant.concat(subtenant.build_tenant_tree)
+      end
+    end
+    data_tenant
+  end
+
   private
 
   # when a root tenant has an attribute with a nil value,

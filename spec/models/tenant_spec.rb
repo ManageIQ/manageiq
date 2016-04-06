@@ -856,4 +856,20 @@ describe Tenant do
       expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
     end
   end
+
+  describe ".build_tenant_tree" do
+    let!(:tenant)   { FactoryGirl.create(:tenant) }
+    let!(:tenantA)  { FactoryGirl.create(:tenant, :parent => tenant) }
+    let!(:tenantA1) { FactoryGirl.create(:tenant, :parent => tenantA) }
+
+    it "returns subtenants of a tenant" do
+      expected_array = [{:name => tenantA.name, :id => tenantA.id, :parent => tenant.id},
+                        {:name => tenantA1.name, :id => tenantA1.id, :parent => tenantA.id}]
+      expect(tenant.build_tenant_tree).to match_array(expected_array)
+    end
+
+    it "returns [] of a tenant without subtenants" do
+      expect(tenantA1.build_tenant_tree).to be_empty
+    end
+  end
 end

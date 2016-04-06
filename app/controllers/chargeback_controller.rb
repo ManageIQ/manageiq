@@ -733,8 +733,13 @@ class ChargebackController < ApplicationController
       else
         klass.classify.constantize
       end
+    @edit[:cb_assign][:hierarchy] ||= {}
     classtype.all.each do |instance|
       @edit[:cb_assign][:cis][instance.id] = instance.name
+      next unless klass == "tenant" && instance.root?
+      @edit[:cb_assign][:hierarchy][instance.id] = {}
+      @edit[:cb_assign][:hierarchy][instance.id][:name] = instance.name
+      @edit[:cb_assign][:hierarchy][instance.id][:subtenant] = instance.build_tenant_tree
     end
   end
 
@@ -746,6 +751,7 @@ class ChargebackController < ApplicationController
       @edit[:new][key] = params[key].to_s if params[key]
     end
   end
+
 
   # Get variables from edit form
   def cb_assign_get_form_vars
