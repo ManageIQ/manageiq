@@ -126,6 +126,10 @@ miqBuildCalendar();
 EOD
   end
 
+  def javascript_prologue
+    'throw "error";'
+  end
+
   def js_format_date(value)
     value.nil? ? 'undefined' : "new Date('#{value.iso8601}')"
   end

@@ -1,6 +1,6 @@
 jQuery.evalLog = function (text) {
   try {
-    jQuery.globalEval(text);
+    jQuery.globalEval(text.slice('throw "error";'.length));
   } catch (ex) {
     if (typeof console !== "undefined" && typeof console.error !== "undefined") {
       console.error('exception caught evaling RJS');
