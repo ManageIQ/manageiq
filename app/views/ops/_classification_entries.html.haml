@@ -4,9 +4,9 @@
   %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
-        %th.narrow
         %th= _("Name")
         %th= _("Description")
+        %th.action-cell= _("Actions")
     %tbody
       - if entry != nil && entry == "new"
         = render :partial => "classification_entry", :locals => {:entry => "new", :edit => true}
