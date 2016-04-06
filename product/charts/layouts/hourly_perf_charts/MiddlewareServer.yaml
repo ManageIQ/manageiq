@@ -1,0 +1,20 @@
+# Middleware Server hourly performance chart layouts
+---
+- :title: JVM Heap Usage (Bytes)
+  :type: Line
+  :columns:
+  - mw_heap_used
+  - mw_heap_committed
+  - mw_heap_max
+
+- :title: JVM Non Heap Usage (Bytes)
+  :type: Line
+  :columns:
+  - mw_non_heap_used
+  - mw_non_heap_committed
+
+- :title: GC Duration (ms)
+  :type: Line
+  :columns:
+  - mw_accumulated_gc_duration
+

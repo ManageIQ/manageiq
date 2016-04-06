@@ -13,17 +13,18 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   let(:eap) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
-                       :feed                  => '9d9dc5f7-40aa-458a-beb2-aebfc55092bc',
+                       :feed                  => 'cda13e2a-e206-4e87-8bca-8cfdd5aea484',
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
 
   it "#collect_live_metrics for all metrics available" do
-    end_time = Time.new(2016, 3, 18, 0, 0, 0, "+01:00")      # Fixed time for testing
-    start_time = Time.new(2016, 3, 17, 0, 0, 0, "+01:00")    # Fixed time for testing
-    interval = 20                                            # Interval in seconds
+    start_time = Time.new(2016, 4, 5, 0, 0, 0, "+02:00")    # Fixed time for testing
+    end_time = Time.new(2016, 4, 7, 0, 0, 0, "+02:00")      # Fixed time for testing
+    interval = 3600                                         # Interval in seconds
     VCR.use_cassette(described_class.name.underscore.to_s,
-                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+                     :allow_unused_http_interactions => true,
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
       metrics_available = eap.metrics_available
       metrics_data = eap.collect_live_metrics(metrics_available, start_time, end_time, interval)
       keys = metrics_data.keys
@@ -32,11 +33,12 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for three metrics" do
-    end_time = Time.new(2016, 3, 18, 0, 0, 0, "+01:00")      # Fixed time for testing
-    start_time = Time.new(2016, 3, 17, 0, 0, 0, "+01:00")    # Fixed time for testing
-    interval = 20                                            # Interval in seconds
+    start_time = Time.new(2016, 4, 5, 0, 0, 0, "+02:00")    # Fixed time for testing
+    end_time = Time.new(2016, 4, 7, 0, 0, 0, "+02:00")      # Fixed time for testing
+    interval = 3600                                         # Interval in seconds
     VCR.use_cassette(described_class.name.underscore.to_s,
-                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+                     :allow_unused_http_interactions => true,
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
       metrics_available = eap.metrics_available
       expect(metrics_available.size).to be > 3
       metrics_data = eap.collect_live_metrics(metrics_available[0, 3],
@@ -51,7 +53,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
 
   it "#first_and_last_capture" do
     VCR.use_cassette(described_class.name.underscore.to_s,
-                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+                     :allow_unused_http_interactions => true,
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
       capture = eap.first_and_last_capture
       expect(capture[0]).to be < capture[1]
     end
