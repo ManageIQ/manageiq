@@ -123,8 +123,8 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
     super(options)
   end
 
-  def available_vlans(options = {})
-    vlans = super
+  def available_vlans_and_hosts(options = {})
+    vlans, hosts = super
 
     # Remove certain networks
     vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
@@ -136,7 +136,7 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
       rails_logger('allowed_dvs', 1)
     end
 
-    vlans
+    return vlans, hosts
   end
 
   def allowed_dvs(_options = {}, hosts = nil)

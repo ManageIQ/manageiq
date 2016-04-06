@@ -105,7 +105,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
 
       it '#allowed_vlans' do
         allow(workflow).to receive(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
-        vlans = workflow.allowed_vlans(:vlans => true, :dvs => false)
+        vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => false)
         lan_keys = [@lan11.name, @lan13.name, @lan12.name]
         expect(vlans.keys).to match_array(lan_keys)
         expect(vlans.values).to match_array(lan_keys)
@@ -162,6 +162,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
                                          :host_id => @host1.id)
           dvs = workflow.allowed_dvs({}, nil)
           expect(dvs).to eql(@host1_dvs_hash)
+        end
+
+        it 'called by available_vlans_and_hosts' do
+          allow(workflow).to receive(:allowed_dvs).and_return(@combined_dvs_hash)
+          expect(workflow).to receive(:allowed_dvs).with(anything, match_array([@host1, @host2]))
+          workflow.available_vlans_and_hosts
         end
       end
     end
