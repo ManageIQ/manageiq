@@ -7,6 +7,7 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :configuration_manager, :class_name => 'ManageIQ::Providers::ConfigurationManager'
   belongs_to :configuration_organization
   belongs_to :configuration_profile
+  belongs_to :counterpart, :polymorphic => true
   belongs_to :customization_script_medium
   belongs_to :customization_script_ptable
   belongs_to :inventory_root_group, :class_name => "EmsFolder"
