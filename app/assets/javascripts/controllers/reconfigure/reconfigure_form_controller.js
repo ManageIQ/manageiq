@@ -7,7 +7,6 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         cores_per_socket_count:  '1',
         total_cpus:              '1',
         vmdisks:                 [],
-        hdFilename:              '',
         hdType:                  'thick',
         hdMode:                  'nonpersistent',
         hdSize:                  '',
@@ -51,7 +50,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
         for (var disk in $scope.reconfigureModel.vmdisks)
           if($scope.reconfigureModel.vmdisks[disk]['add_remove'] == '' )
-            $scope.reconfigureModel.vmdisks[disk]['cb_deletebacking'] = false;
+            $scope.reconfigureModel.vmdisks[disk]['delete_backing'] = false;
 
         if(data.socket_count && data.cores_per_socket_count)
           $scope.reconfigureModel.total_cpus = (parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10)).toString();
@@ -152,7 +151,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       for (var disk in $scope.reconfigureModel.vmdisks) {
         if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'remove') {
           $scope.reconfigureModel.vmRemoveDisks.push({disk_name: $scope.reconfigureModel.vmdisks[disk].hdFilename,
-                                     delete_backing: $scope.reconfigureModel.vmdisks[disk].cb_deletebacking});
+                                     delete_backing: $scope.reconfigureModel.vmdisks[disk].delete_backing});
         }
         else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
           var dsize = parseInt($scope.reconfigureModel.vmdisks[disk].hdSize);
@@ -170,14 +169,13 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.addDisk = function() {
-      $scope.reconfigureModel.vmdisks.push({hdFilename: $scope.reconfigureModel.hdFilename,
+      $scope.reconfigureModel.vmdisks.push({hdFilename:'',
                                             hdType: $scope.reconfigureModel.hdType,
                                             hdMode: $scope.reconfigureModel.hdMode,
                                             hdSize: $scope.reconfigureModel.hdSize,
                                             hdUnit: $scope.reconfigureModel.hdUnit,
                                             cb_dependent: $scope.reconfigureModel.cb_dependent,
                                             add_remove: 'add'});
-      $scope.reconfigureModel.hdFilename = '';
       $scope.reconfigureModel.hdType = 'thick';
       $scope.reconfigureModel.hdMode = 'nonpersistent';
       $scope.reconfigureModel.hdSize = '';
@@ -258,7 +256,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
     $scope.resetClicked = function() {
       $scope.$broadcast ('resetClicked');
-      $scope.reconfigureModel = angular.copy( $scope.modelCopy );
+      $scope.reconfigureModel = angular.copy($scope.modelCopy);
       $scope.cb_memory = $scope.cb_memoryCopy;
       $scope.cb_cpu = $scope.cb_cpuCopy;
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;

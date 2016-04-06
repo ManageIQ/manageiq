@@ -127,12 +127,6 @@
         %tbody
           %tr{"ng-show" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
             %td
-              %input.form-control{"type"        => "text",
-                                  "id"          => "hdName",
-                                  "name"        => "hdName",
-                                  "ng-model"    => "reconfigureModel.hdFilename",
-                                  "placeholder" => "Enter Disk Name",
-                                  "ng-change"   => "hdChanged()"}
             %td
               = select_tag('hdType',
                            options_for_select(%w(thick thin)),
@@ -189,22 +183,23 @@
             %td.narrow
               {{disk.hdUnit}}
             %td.narrow
-              %input{"bs-switch"   => "",
-                     :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
-                     "type"        => "checkbox",
-                     "name"        => "cb_dependent",
-                     "ng-model"    => "disk.cb_dependent",
-                     "ng-if"       => "disk.add_remove=='add'",
-                     "ng-disabled" => "disk.add_remove=='add'",
-                     "checkchange" => ""}
+              %input{"bs-switch"     => "",
+                     :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"          => "checkbox",
+                     "name"          => "cb_dependent",
+                     "ng-model"      => "disk.cb_dependent",
+                     "switch-active" => "{{disk.add_remove!='add'}}",
+                     "ng-readonly"   => "disk.add_remove=='add'",
+                     "ng-if"         => "disk.add_remove=='add'"}
             %td.narrow
-              %input{"bs-switch"   => "",
-                     :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
-                     "type"        => "checkbox",
-                     "name"        => "cb_deletebacking",
-                     "ng-model"    => "disk.cb_deletebacking",
-                     "ng-if"       => "disk.add_remove!='add'",
-                     "ng-disabled" => "disk.add_remove=='remove'"}
+              %input{"bs-switch"     => "",
+                     :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"          => "checkbox",
+                     "name"          => "cb_deletebacking",
+                     "ng-model"      => "disk.delete_backing",
+                     "ng-readonly"   => "disk.add_remove=='remove'",
+                     "switch-active" => "{{disk.add_remove!='remove'}}",
+                     "ng-if"         => "disk.add_remove!='add'"}
             %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                             "ng-if"    => "disk.add_remove == ''",
@@ -226,11 +221,16 @@
     %tr
       %td#buttons_on{:align => "right"}
         = button_tag(_("Submit"),
-                     :class        => "btn btn-primary",
-                     :alt          => _("Submit"),
-                     "ng-click"    => "submitClicked()",
-                     "ng-disabled" => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)",
-                     "ng-class"    => "{'btn-disabled': (angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)}")
+                     :class     => "btn btn-primary btn-disabled",
+                     :alt       => _("Submit"),
+                     :style     => "cursor:not-allowed",
+                     "ng-click" => "disabledClick($event)",
+                     "ng-show"  => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)")
+        = button_tag(_("Submit"),
+                     :class     => "btn btn-primary",
+                     :alt       => _("Submit"),
+                     "ng-click" => "submitClicked()",
+                     "ng-show"  => "!((angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks))")
         = button_tag("Reset",
              :class        => "btn btn-default btn-disabled",
              :alt          => "Reset changes",

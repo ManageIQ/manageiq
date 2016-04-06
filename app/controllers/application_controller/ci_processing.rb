@@ -1195,7 +1195,7 @@ module ApplicationController::CiProcessing
             @req.options[:disk_remove].values.each do |remdisk|
               if remdisk[:disk_name] == disk.filename
                 removing = 'remove'
-                delbacking = remdisk[:delete_backing]
+                delbacking = remdisk[:delete_backing] == 'true'
               end
             end
           end

@@ -72,7 +72,7 @@ var checkForOverallFormPristinity = function(scope, ctrl) {
   var modelObject = _.cloneDeep(scope[scope.model]);
   delete modelObject[ctrl.$name];
 
-  scope.angularForm.$pristine = _.isEqual(modelCopyObject, modelObject);
+  scope.angularForm.$pristine = angular.equals(modelCopyObject, modelObject);
 
   if (scope.angularForm.$pristine)
     scope.angularForm.$setPristine();
