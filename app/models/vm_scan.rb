@@ -32,7 +32,8 @@ class VmScan < Job
       :data               => {'snapshot_create' => 'scanning',
                               'scanning'        => 'scanning',
                               'snapshot_delete' => 'snapshot_delete',
-                              'synchronizing'   => 'synchronizing'}
+                              'synchronizing'   => 'synchronizing',
+                              'finished'        => 'finished'}
     }
   end
 
