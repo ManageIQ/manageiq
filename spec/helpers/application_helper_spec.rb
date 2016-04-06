@@ -855,15 +855,15 @@ describe ApplicationHelper do
         @run_at[:interval][:unit] = 'hourly'
         helper.set_edit_timer_from_schedule @schedule
         expect(@edit[:new]).to include(
-          :timer_hours => @interval,
           :start_hour  => @hour,
           :start_min   => @min,
           :start_date  => @date
         )
         expect(@edit[:new][:timer].to_h).to include(
+          :hours => @interval,
           :typ => 'Hourly'
         )
-        expect(@edit[:new]).not_to include(:timer_hours => '1')
+        expect(@edit[:new][:timer].to_h).not_to include(:hours => '1')
       end
     end
   end

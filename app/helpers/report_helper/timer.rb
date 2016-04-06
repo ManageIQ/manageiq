@@ -4,5 +4,6 @@ module ReportHelper
     :months,
     :weeks,
     :days,
+    :hours,
   )
 end

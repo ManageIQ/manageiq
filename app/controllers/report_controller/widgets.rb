@@ -392,7 +392,7 @@ module ReportController::Widgets
     @edit[:new][:timer] = ReportHelper::Timer.new
     @edit[:new][:timer][:weeks] = "1"
     @edit[:new][:timer][:days] = "1"
-    @edit[:new][:timer_hours] = "1"
+    @edit[:new][:timer][:hours] = "1"
     if @edit[:schedule].run_at.nil? # New widget or schedule missing, default sched options
       @edit[:tz] = session[:user_tz]
       t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
@@ -405,7 +405,7 @@ module ReportController::Widgets
       @edit[:new][:timer][:months] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "monthly"
       @edit[:new][:timer][:weeks] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer][:days] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "daily"
-      @edit[:new][:timer_hours] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "hourly"
+      @edit[:new][:timer][:hours] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "hourly"
       @edit[:tz] = sched.run_at && sched.run_at[:tz] ? sched.run_at[:tz] : session[:user_tz]
       t = sched.run_at[:start_time].to_time.in_time_zone(@edit[:tz])
       @edit[:new][:start_hour] = t.strftime("%H")
@@ -557,7 +557,7 @@ module ReportController::Widgets
     @edit[:new][:timer][:months] = params[][:timer_months] if params[:timer_months]
     @edit[:new][:timer][:weeks]  = params[:timer_weeks]    if params[:timer_weeks]
     @edit[:new][:timer][:days]   = params[:timer_days]     if params[:timer_days]
-    @edit[:new][:timer_hours]  = params[:timer_hours]  if params[:timer_hours]
+    @edit[:new][:timer][:hours]  = params[:timer_hours]    if params[:timer_hours]
     @edit[:new][:start_date]   = params[:miq_date_1]   if params[:miq_date_1]
     @edit[:new][:start_hour]   = params[:start_hour]   if params[:start_hour]
     @edit[:new][:start_min]    = params[:start_min]    if params[:start_min]
@@ -702,7 +702,7 @@ module ReportController::Widgets
     when "daily"
       @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:days]
     when "hourly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_hours]
+      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer][:hours]
     else
       @edit[:schedule].run_at[:interval].delete(:value)
     end
