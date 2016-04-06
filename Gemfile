@@ -56,7 +56,7 @@ gem "high_voltage",                   "~>2.4.0"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "puma",                           "~>2.13"
+gem "puma",                           "~>3.3.0"
 gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "secure_headers",                 "~>3.0.0"
