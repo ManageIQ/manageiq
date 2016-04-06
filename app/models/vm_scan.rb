@@ -33,7 +33,7 @@ class VmScan < Job
                               'scanning'        => 'scanning',
                               'snapshot_delete' => 'snapshot_delete',
                               'synchronizing'   => 'synchronizing',
-                              'finished'   => 'finished'}
+                              'finished'        => 'finished'}
     }
   end
 
