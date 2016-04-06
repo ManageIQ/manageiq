@@ -37,6 +37,7 @@ module OpsController::Diagnostics
       add_flash(_("CFME Appliance restart initiated successfully"))
     end
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -109,6 +110,7 @@ module OpsController::Diagnostics
       id = params[:id] ? params[:id] : "new"
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           page << "miqSparkle(false);"
         end
@@ -131,7 +133,8 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(_("Error during 'Save': %{message}") % {:message => bang.message}, :error)
         @changed = true
-        render :update do |page|                    # Use RJS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace_html("diagnostics_collect_logs", :partial => "ops/log_collection")
         end
       else
@@ -160,6 +163,7 @@ module OpsController::Diagnostics
       end
 
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg", :locals => {:div_num => ""})
       end
     when nil # Reset or first time in
@@ -204,7 +208,8 @@ module OpsController::Diagnostics
     @log = $log.contents(120, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("diagnostics_evm_log", :partial => "diagnostics_evm_log_tab")
       page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
     end
@@ -215,7 +220,8 @@ module OpsController::Diagnostics
     @log = $audit_log.contents(nil, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("diagnostics_audit_log", :partial => "diagnostics_audit_log_tab")
       page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
     end
@@ -226,7 +232,8 @@ module OpsController::Diagnostics
     @log = $rails_log.contents(nil, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("diagnostics_production_log", :partial => "diagnostics_production_log_tab")
       page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
     end
@@ -236,7 +243,8 @@ module OpsController::Diagnostics
     return unless load_edit("curepair_edit__new", "replace_cell__explorer")
     @selected_server = Zone.find_by_id(@sb[:selected_server_id])
     cu_repair_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_divcu_repair", :partial => "layouts/flash_msg", :locals => {:div_num => "cu_repair"})
       page.replace_html("diagnostics_cu_repair", :partial => "diagnostics_cu_repair_tab")
       page << "ManageIQ.calendar.calDateFrom = null;"
@@ -271,7 +279,8 @@ module OpsController::Diagnostics
       end
     end
 
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_divcu_repair", :partial => "layouts/flash_msg", :locals => {:div_num => "cu_repair"})
       page.replace_html("diagnostics_cu_repair", :partial => "diagnostics_cu_repair_tab")
       page << "ManageIQ.calendar.calDateFrom = null;"
@@ -292,6 +301,7 @@ module OpsController::Diagnostics
       add_flash(_("Reset/synchronization process successfully initiated"))
     end
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
@@ -333,6 +343,7 @@ module OpsController::Diagnostics
     @schedule.sched_action = {:method => "db_backup"}
     if @flash_array
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_divvalidate", :partial => "layouts/flash_msg", :locals => {:div_num => "validate"})
         page << "miqSparkle(false);"
       end
@@ -345,7 +356,8 @@ module OpsController::Diagnostics
       @schedule.run_adhoc_db_backup
       add_flash(_("Database Backup successfully initiated"))
       diagnostics_set_form_vars
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
         page.replace_html("diagnostics_database", :partial => "diagnostics_database_tab")
         page << "miqSparkle(false);"
@@ -354,7 +366,8 @@ module OpsController::Diagnostics
       @schedule.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
         page << "miqSparkle(false);"
       end
@@ -418,7 +431,8 @@ module OpsController::Diagnostics
     else
       add_flash(_("Database Garbage Collection successfully initiated"))
     end
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
       page << "miqSparkle(false);"
     end
@@ -430,7 +444,8 @@ module OpsController::Diagnostics
   rescue StandardError => bang
     add_flash(_("Error during Orphaned Records delete for user %{id}: %{message}") % {:id      => params[:userid],
                                                                                       :message => bang.message}, :error)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -443,7 +458,8 @@ module OpsController::Diagnostics
     AuditEvent.success(audit)
     add_flash(_("Orphaned Records for userid %{id} were successfully deleted") % {:id => params[:userid]})
     orphaned_records_get
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html 'diagnostics_orphaned_data', :partial => 'diagnostics_savedreports'
     end
   end
@@ -464,6 +480,7 @@ module OpsController::Diagnostics
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|
+        page << javascript_prologue
         page.replace_html("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "diagnostics_server_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -478,6 +495,7 @@ module OpsController::Diagnostics
     @sb[:center_tb_filename] = center_toolbar_filename
     c_tb = build_toolbar(@sb[:center_tb_filename])
     render :update do |page|
+      page << javascript_prologue
       # page.replace_html("main_div", :partial=>"layouts/gtl")
       page.replace_html(@sb[:active_tab], :partial => "#{@sb[:active_tab]}_tab")
       if c_tb.present?
@@ -792,6 +810,7 @@ module OpsController::Diagnostics
     @sb[:center_tb_filename] = center_toolbar_filename
     c_tb = build_toolbar(@sb[:center_tb_filename])
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("selected_#{@sb[:active_tab].split('_').last}_div", :partial => "selected")
       #   Replace tree
@@ -830,6 +849,7 @@ module OpsController::Diagnostics
     end
     @server_tree = build_server_tree(parent).to_json
     render :update do |page|
+      page << javascript_prologue
       #   Replace tree
       page.replace("selected_#{@sb[:active_tab].split('_').last}_div", :partial => "selected")
     end

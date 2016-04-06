@@ -60,6 +60,7 @@ class RepositoryController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
           {:model => ui_lookup(:model => "Repository")}
       end
@@ -70,6 +71,7 @@ class RepositoryController < ApplicationController
           construct_edit
           AuditEvent.success(build_created_audit(@repo, @edit))
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "Repository"), :name => @repo.name}
           end
           return
@@ -85,6 +87,7 @@ class RepositoryController < ApplicationController
       @in_a_form = true
       drop_breadcrumb(:name => _("Add New Repository"), :url => "/repository/new")
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -115,6 +118,7 @@ class RepositoryController < ApplicationController
     when "cancel"
       session[:edit] = nil  # clean out the saved info
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => @lastaction, :id => @repo.id, :display => session[:repo_display],
           :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Repository"), :name => @repo.name}
       end
@@ -126,6 +130,7 @@ class RepositoryController < ApplicationController
           session[:edit] = nil  # clean out the saved info
           flash = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "Repository"), :name => @repo.name}
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => 'show', :id => @repo.id.to_s, :flash_msg => flash
           end
         else
@@ -136,6 +141,7 @@ class RepositoryController < ApplicationController
                           :url  => "/repository/edit/#{@repo.id}")
           @in_a_form = true
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
@@ -145,6 +151,7 @@ class RepositoryController < ApplicationController
                         :url  => "/repository/edit/#{@repo.id}")
         @in_a_form = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -152,6 +159,7 @@ class RepositoryController < ApplicationController
       add_flash(_("All changes have been reset"), :warning)
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'edit', :id => @repo.id
       end
     end
@@ -202,6 +210,7 @@ class RepositoryController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",

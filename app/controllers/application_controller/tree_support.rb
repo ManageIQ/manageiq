@@ -5,6 +5,7 @@ module ApplicationController::TreeSupport
     @record = find_record
     item = "h_#{@record.name}"
     render :update do |page|
+      page << javascript_prologue
       if session[:squash_open] == false
         page << "$('#squash_img i').attr('class','fa fa-angle-double-up fa-lg')"
         page << "$('#squash_img').prop('title', 'Collapse All')"
@@ -34,6 +35,7 @@ module ApplicationController::TreeSupport
     nodes = klass_name ? TreeBuilder.tree_add_child_nodes(@sb, klass_name, params[:id]) :
         tree_add_child_nodes(params[:id])
     render :update do |page|
+      page << javascript_prologue
       page << nodes.to_json
     end
   end
@@ -42,6 +44,7 @@ module ApplicationController::TreeSupport
     # set temp list of hosts/vms to be shown on DC tree on mousein event
     build_vm_host_array if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
     render :update do |page|
+      page << javascript_prologue
       if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
         page.replace("dc_tree_quads_div", :partial => "layouts/dc_tree_quads")
       end

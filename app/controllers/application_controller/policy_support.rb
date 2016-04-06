@@ -15,7 +15,8 @@ module ApplicationController::PolicySupport
         @edit[:new][profile_id] = session[:pol_items].length # Added, set to all checked
       end
       changed = (@edit[:new] != @edit[:current])
-      render :update do |page|                      # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         if @edit[:new][profile_id] == @edit[:current][profile_id]
           page << "miqDynatreeNodeAddClass('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}','dynatree-title')"
         else
@@ -110,6 +111,7 @@ module ApplicationController::PolicySupport
     end
     policy_sim_build_screen
     render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div", :partial => "layouts/policy_sim")
     end
   end
@@ -120,6 +122,7 @@ module ApplicationController::PolicySupport
     session[:policies].delete(params[:del_pol].to_i)
     policy_sim_build_screen
     render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div", :partial => "layouts/policy_sim")
     end
   end
@@ -138,6 +141,7 @@ module ApplicationController::PolicySupport
       policy_escaped = j(params[:policy])
       cat            = params[:cat]
       render :update do |page|
+        page << javascript_prologue
         if @catinfo[cat]
           @catinfo[cat] = false
           page << javascript_show("cat_#{policy_escaped}_div")
@@ -151,6 +155,7 @@ module ApplicationController::PolicySupport
     else
       add_flash(_("Button not yet implemented"), :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end
     end
@@ -182,6 +187,7 @@ module ApplicationController::PolicySupport
       @refresh_partial = "layouts/protect"
     else
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'protect'   # redirect to build policy screen
       end
     end

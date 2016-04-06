@@ -64,7 +64,8 @@ module ApplicationController::Buttons
       move_cols_down if params[:button] == "down"
       @changed = (@edit[:new] != @edit[:current])
       @refresh_partial = "group_order_form"
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
         page.replace(@refresh_div, :partial => "shared/buttons/#{@refresh_partial}") if @refresh_div
         page << "miqSparkle(false);"
@@ -73,6 +74,7 @@ module ApplicationController::Buttons
     else
       add_flash(_("No Button Group was selected!"), :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -111,7 +113,8 @@ module ApplicationController::Buttons
       @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
       visibility_box_edit
     end
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if params.key?(:instance_name) || params.key?(:other_name) || params.key?(:target_class)
         page.replace("ab_form", :partial => "shared/buttons/ab_form")
       end
@@ -129,6 +132,7 @@ module ApplicationController::Buttons
   # AJAX routine for user selected
   def button_select
     render :update do |page|
+      page << javascript_prologue
       if params[:id] == "new"
         page.redirect_to :action => 'button_new'    # redirect to new
       else
@@ -167,6 +171,7 @@ module ApplicationController::Buttons
     else
       custom_button.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -204,7 +209,8 @@ module ApplicationController::Buttons
     group_get_form_vars
     @custom_button_set = @edit[:custom_button_set_id] ? CustomButtonSet.find_by_id(@edit[:custom_button_set_id]) : CustomButtonSet.new
     @changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace(@refresh_div, :partial => "shared/buttons/#{@refresh_partial}") if @refresh_div
       if @flash_array
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -245,6 +251,7 @@ module ApplicationController::Buttons
     else
       custom_button_set.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -287,7 +294,8 @@ module ApplicationController::Buttons
       else
         add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
       end
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -442,6 +450,7 @@ module ApplicationController::Buttons
         @lastaction = "automate_button"
         @layout = "miq_ae_automate_button"
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -495,6 +504,7 @@ module ApplicationController::Buttons
           @lastaction = "automate_button"
           @layout = "miq_ae_automate_button"
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
@@ -516,6 +526,7 @@ module ApplicationController::Buttons
         @lastaction = "automate_button"
         @layout = "miq_ae_automate_button"
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -535,6 +546,7 @@ module ApplicationController::Buttons
           @lastaction = "automate_button"
           @layout = "miq_ae_automate_button"
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end

@@ -55,6 +55,7 @@ class OntapStorageSystemController < CimInstanceController
     @sb[:ccs_id] = params[:id]
     @record = OntapStorageSystem.find(params[:id])
     render :update do |page|
+      page << javascript_prologue
       area = request.parameters["controller"]
       if role_allows(:feature => "#{area}_tag")
         page.redirect_to :action => 'create_ld'
@@ -89,6 +90,7 @@ class OntapStorageSystemController < CimInstanceController
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(previous_breadcrumb_url)
       end
     else
@@ -96,6 +98,7 @@ class OntapStorageSystemController < CimInstanceController
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end
     end
@@ -107,6 +110,7 @@ class OntapStorageSystemController < CimInstanceController
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to(previous_breadcrumb_url)
     end
   end

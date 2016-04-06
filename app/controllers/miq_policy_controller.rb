@@ -27,7 +27,8 @@ class MiqPolicyController < ApplicationController
       if @lastaction != "fetch_yaml"
         add_flash(_("Export cancelled by user"))
       end
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "explorer"
       end
     when "export"
@@ -38,7 +39,8 @@ class MiqPolicyController < ApplicationController
       end
       if @sb[:new][:choices_chosen].length == 0 # At least one member is required
         add_flash(_("At least 1 item must be selected for export"), :error)
-        render :update do |page|                    # Use JS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace_html("profile_export_div", :partial => "export")
           page << "miqSparkle(false);"
         end
@@ -56,12 +58,14 @@ class MiqPolicyController < ApplicationController
             filename = "Alerts"
           end
           session[:export_data] = MiqPolicy.export_to_yaml(@sb[:new][:choices_chosen], db)
-          render :update do |page|          # Use RJS to update the display
+          render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => 'fetch_yaml', :fname => filename, :escape => false
           end
         rescue StandardError => bang
           add_flash(_("Error during export: %{error_message}") % {:error_message => bang.message}, :error)
-          render :update do |page|                    # Use JS to update the display
+          render :update do |page|
+            page << javascript_prologue
             page.replace_html("profile_export_div", :partial => "export")
             page << "miqSparkle(false);"
           end
@@ -192,6 +196,7 @@ class MiqPolicyController < ApplicationController
       end
 
       render :update do |page|
+        page << javascript_prologue
         page.replace_html("profile_export_div", :partial => "export")
         page << "miqSparkle(false);"
       end
@@ -199,6 +204,7 @@ class MiqPolicyController < ApplicationController
       miq_policy_import_service.cancel_import(@import_file_upload_id)
 
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'export', :flash_msg => _("Import cancelled by user")
       end
 
@@ -222,7 +228,8 @@ class MiqPolicyController < ApplicationController
     else
       @sb[:new][:choices_chosen] = []
     end
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if prev_dbtype != @sb[:dbtype]    # If any export db type has changed
         # page.redirect_to :action=>"export", :dbtype=>params[:dbtype], :typ=>"export"
         page.replace_html("profile_export_div", :partial => "export")
@@ -237,6 +244,7 @@ class MiqPolicyController < ApplicationController
     @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
     build_policy_tree(@polArr)
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("main_div", :partial => "vm/policies")
     end
@@ -300,7 +308,8 @@ class MiqPolicyController < ApplicationController
     @tag_name = temp_tagname.split('__')[1]
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("form_options_div", :partial => "form_options")
       if changed != session[:changed]
         session[:changed] = changed
@@ -338,7 +347,8 @@ class MiqPolicyController < ApplicationController
     @log = $policy_log.contents(nil, 1000)
     @server = MiqServer.my_server
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div", :partial => "layouts/log_viewer")
     end
   end
@@ -424,7 +434,8 @@ class MiqPolicyController < ApplicationController
     session[sortdir_key]     = @sortdir
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => "#{what}_get_all", :button_div => 'policy_bar'})
         page << "miqSparkleOff();"
       end
@@ -753,7 +764,8 @@ class MiqPolicyController < ApplicationController
       @changed = (@assign[:new] != @assign[:current])
     end
     get_tags_tree if @action_type_changed || @snmp_trap_refresh
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @edit
         if @action_type_changed || @snmp_trap_refresh
           page.replace("action_options_div", :partial => "action_options")

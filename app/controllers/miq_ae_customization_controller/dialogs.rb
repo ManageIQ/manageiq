@@ -28,6 +28,7 @@ module MiqAeCustomizationController::Dialogs
 
     # Use JS to update the display
     render :update do |page|
+      page << javascript_prologue
       if @flash_array
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       else
@@ -93,6 +94,7 @@ module MiqAeCustomizationController::Dialogs
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       # Use RJS to update the display
       render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div",
                      :partial => "layouts/x_gtl",
                      :locals  => {:action_url => "dialog_list"})
@@ -416,7 +418,8 @@ module MiqAeCustomizationController::Dialogs
     parent[name] = temp
 
     dialog_edit_build_tree
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       session[:changed] = changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
       page.replace_html("custom_left_cell", :partial => "dialog_edit_tree")
@@ -433,6 +436,7 @@ module MiqAeCustomizationController::Dialogs
     @record = @edit[:dialog]
     if params[:entry_id] == "new"
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("field_values_div", :partial => "field_values", :locals => {:entry => "new", :edit => true})
         page << javascript_focus("entry_value")
@@ -447,6 +451,7 @@ module MiqAeCustomizationController::Dialogs
       # end
       entry = params[:entry_id]
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("field_values_div", :partial => "field_values", :locals => {:entry => entry, :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
@@ -514,6 +519,7 @@ module MiqAeCustomizationController::Dialogs
 
     # Use JS to update the display
     render :update do |page|
+      page << javascript_prologue
       page.replace("field_values_div", :partial => "field_values", :locals => {:entry => nil})
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
@@ -553,6 +559,7 @@ module MiqAeCustomizationController::Dialogs
 
     # Use JS to update the display
     render :update do |page|
+      page << javascript_prologue
       page.replace("field_values_div", :partial => "field_values", :locals => {:entry => nil})
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
@@ -610,7 +617,8 @@ module MiqAeCustomizationController::Dialogs
     if params[:classification_name]
       @cat = Classification.find_by_name(params["classification_name"])
       field_value_build_screen                                          # Build the Classification Edit screen
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace(:tab_div, :partial => "settings_co_tags_tab")
       end
     end

@@ -154,6 +154,7 @@ module EmsCommon
         AuditEvent.success(build_created_audit(add_ems, @edit))
         session[:edit] = nil  # Clear the edit object from the session object
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:tables => @table_name), :name => add_ems.name}
         end
       else
@@ -167,6 +168,7 @@ module EmsCommon
         drop_breadcrumb(:name => _("Add New %{table}") % {:table => ui_lookup(:table => @table_name)},
                         :url  => "/#{@table_name}/new")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -192,7 +194,8 @@ module EmsCommon
     get_form_vars
 
     changed = edit_changed?
-    render :update do |page|                  # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if params[:server_emstype] || params[:security_protocol]   # Server/protocol type changed
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
       end
@@ -245,6 +248,7 @@ module EmsCommon
     session[:edit] = nil  # clean out the saved info
     _model = model
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
                        :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
                        {:model => ui_lookup(:model => _model.to_s), :name => @ems.name})
@@ -267,6 +271,7 @@ module EmsCommon
       AuditEvent.success(build_saved_audit(update_ems, @edit))
       session[:edit] = nil  # clean out the saved info
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show', :id => @ems.id.to_s, :flash_msg => flash
       end
       return
@@ -293,6 +298,7 @@ module EmsCommon
     set_verify_status
     session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to :action => 'edit', :id => @ems.id.to_s
     end
   end
@@ -398,12 +404,14 @@ module EmsCommon
         drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
         session[:tl_record_id] = @record.id
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to  polymorphic_path(@record, :display => 'timeline')
         end
         return
       end
       if params[:pressed] == "refresh_server_summary"
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to  :back
         end
         return
@@ -419,6 +427,7 @@ module EmsCommon
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",

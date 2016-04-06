@@ -129,6 +129,7 @@ module ApplicationController::Explorer
 
     if @refresh_partial == "layouts/flash_msg"
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     elsif @refresh_partial
@@ -138,6 +139,7 @@ module ApplicationController::Explorer
       add_flash(_("Button not yet implemented %{model}:%{action}") %
         {:model => model, :action => action}, :error) unless @flash_array
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end

@@ -257,6 +257,7 @@ class HostController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action    => 'show_list',
                          :flash_msg => _("Add of new %{model} was cancelled by the user") %
                            {:model => ui_lookup(:model => "Host")}
@@ -271,6 +272,7 @@ class HostController < ApplicationController
         AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, params[:button] == "add"))
         message = _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "Host"), :name => @host.name}
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action    => 'show_list',
                            :flash_msg => message
         end
@@ -282,6 +284,7 @@ class HostController < ApplicationController
         end
         drop_breadcrumb(:name => _("Add New Host"), :url => "/host/new")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -297,6 +300,7 @@ class HostController < ApplicationController
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -344,12 +348,14 @@ class HostController < ApplicationController
           {:models => ui_lookup(:models => "Host")}
         # redirect_to :action => @lastaction, :display=>session[:host_display], :flash_msg=>flash
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => @lastaction, :display => session[:host_display], :flash_msg => flash
         end
       else
         @host = find_by_id_filtered(Host, params[:id])
         flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Host"), :name => @host.name}
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => @lastaction, :id => @host.id, :display => session[:host_display], :flash_msg => flash
         end
       end
@@ -366,6 +372,7 @@ class HostController < ApplicationController
           AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, false))
           session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => "show", :id => @host.id.to_s
           end
           return
@@ -377,6 +384,7 @@ class HostController < ApplicationController
           drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
           @in_a_form = true
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
@@ -392,6 +400,7 @@ class HostController < ApplicationController
         if @error || @error.blank?
           # redirect_to :action => 'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => 'show_list', :flash_msg => _("Credentials/Settings saved successfully")
           end
         else
@@ -399,6 +408,7 @@ class HostController < ApplicationController
           @in_a_form = true
           # redirect_to :action => 'edit', :flash_msg=>@error, :flash_error =>true
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
@@ -409,6 +419,7 @@ class HostController < ApplicationController
       @in_a_form = true
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'edit', :id => @host.id.to_s
       end
     when "validate"
@@ -425,6 +436,7 @@ class HostController < ApplicationController
         verify_host.verify_credentials(params[:type], :remember_host => params.key?(:remember_host))
       rescue Net::SSH::HostKeyMismatch => e   # Capture the Host key mismatch from the verify
         render :update do |page|
+          page << javascript_prologue
           new_url = url_for(:action => "update", :button => "validate", :type => params[:type], :remember_host => "true", :escape => false)
           page << "if (confirm('The Host SSH key has changed, do you want to accept the new key?')) miqAjax('#{new_url}');"
         end
@@ -435,6 +447,7 @@ class HostController < ApplicationController
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -545,6 +558,7 @@ class HostController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "host_delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif params[:pressed].ends_with?("_edit") || ["host_miq_request_new", "#{pfx}_miq_request_new",
@@ -557,6 +571,7 @@ class HostController < ApplicationController
         if @redirect_controller
           if ["host_miq_request_new", "#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
             render :update do |page|
+              page << javascript_prologue
               if flash_errors?
                 page.replace("flash_msg_div", :partial => "layouts/flash_msg")
               else
@@ -571,11 +586,13 @@ class HostController < ApplicationController
             end
           else
             render :update do |page|
+              page << javascript_prologue
               page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id, :org_controller => @org_controller
             end
           end
         else
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => @refresh_partial, :id => @redirect_id
           end
         end

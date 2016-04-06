@@ -168,7 +168,8 @@ class CatalogController < ApplicationController
       @edit[:rec_id] = @record ? @record.id : nil
       @tabactive = @edit[:new][:current_tab_key]
     end
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       # for generic/orchestration type tabs do not show up on screen as there is only a single tab when form is initialized
       # when display in catalog is checked, replace div so tabs can be redrawn
       page.replace("form_div", :partial => "st_form") if params[:st_prov_type] ||
@@ -340,6 +341,7 @@ class CatalogController < ApplicationController
 
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -365,11 +367,13 @@ class CatalogController < ApplicationController
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
       else
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -393,7 +397,8 @@ class CatalogController < ApplicationController
     st_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:resource_id] || params[:display]
       page.replace_html("resources_info_div", :partial => "form_resources_info") if params[:resource_id] || @group_idx
       if params[:display]
@@ -461,7 +466,8 @@ class CatalogController < ApplicationController
     rearrange_groups_array
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("basic_info_div", :partial => "form_basic_info")
       page.replace_html("resources_info_div", :partial => "form_resources_info")
       if changed != session[:changed]
@@ -521,6 +527,7 @@ class CatalogController < ApplicationController
     @edit[:new][ae_tree_key] = ''
     # build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree unless @edit[:ae_tree_select]
     render :update do |page|
+      page << javascript_prologue
       @changed = (@edit[:new] != @edit[:current])
       x_node_set(@edit[:active_id], :automate_tree)
       page << javascript_hide("ae_tree_select_div")
@@ -604,6 +611,7 @@ class CatalogController < ApplicationController
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
           return
@@ -629,7 +637,8 @@ class CatalogController < ApplicationController
     return unless load_edit("st_catalog_edit__#{id}", "replace_cell__explorer")
     st_catalog_get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << javascript_for_miq_button_visibility(changed)
       page << "miqSparkle(false);"
@@ -709,6 +718,7 @@ class CatalogController < ApplicationController
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     ot_edit_get_form_vars
     render :update do |page|
+      page << javascript_prologue
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
     end
@@ -783,6 +793,7 @@ class CatalogController < ApplicationController
     @edit[:new][:content] = params[:content] if params[:content]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
     render :update do |page|
+      page << javascript_prologue
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
       page << "miqSparkle(false);"
@@ -899,6 +910,7 @@ class CatalogController < ApplicationController
 
     if @flash_array
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
       return
@@ -931,6 +943,7 @@ class CatalogController < ApplicationController
       end
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -1124,6 +1137,7 @@ class CatalogController < ApplicationController
 
   def ot_action_submit_flash
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
@@ -1145,6 +1159,7 @@ class CatalogController < ApplicationController
       add_flash(_("Error when creating a Service Dialog from Orchestration Template: %{error_message}") %
         {:error_message => bang.message}, :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else

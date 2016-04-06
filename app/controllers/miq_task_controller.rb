@@ -72,6 +72,7 @@ class MiqTaskController < ApplicationController
                                        params[:entry] || params[:sort_choice] || params[:user_choice])
       get_jobs(tasks_condition(@tasks_options[@tabform]))
       render :update do |page|
+        page << javascript_prologue
         page.replace_html("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => @lastaction})
         page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
                                         :locals  => {:pages      => @pages,
@@ -271,7 +272,8 @@ class MiqTaskController < ApplicationController
     canceljobs      if params[:pressed] == "miq_task_canceljob"
     reloadjobs      if params[:pressed] == "miq_task_reload"
 
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       unless @refresh_partial.nil?
         if @refresh_div == "flash_msg_div"
           page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
@@ -303,6 +305,7 @@ class MiqTaskController < ApplicationController
     @edit[:opts][:state_choice] = params[:state_choice] if params[:state_choice]
 
     render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(@tasks_options[@tabform] != @edit[:opts])
     end
   end
@@ -323,6 +326,7 @@ class MiqTaskController < ApplicationController
     @pp_choices = PPCHOICES2                             # Get special pp choices for jobs/tasks lists
 
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
       page.replace("main_div", :partial => "layouts/tasks")

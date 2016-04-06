@@ -27,10 +27,12 @@ class MiqRequestController < ApplicationController
     return if params[:pressed] == "miq_request_edit" && @refresh_partial == "reconfigure"
     if !@flash_array.nil? && params[:pressed] == "miq_request_delete"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif ["miq_request_copy", "miq_request_edit"].include?(params[:pressed])
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :controller     => @redirect_controller,
                          :action         => @refresh_partial,
                          :id             => @redirect_id,
@@ -42,12 +44,14 @@ class MiqRequestController < ApplicationController
     elsif params[:pressed].ends_with?("_edit")
       if @refresh_partial == "show_list"
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action      => @refresh_partial,
                            :flash_msg   => _("Default Requests can not be edited"),
                            :flash_error => true
         end
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => @refresh_partial, :id => @redirect_id
         end
       end
@@ -56,12 +60,14 @@ class MiqRequestController < ApplicationController
         show
         c_tb = build_toolbar(center_toolbar_filename)
         render :update do |page|
+          page << javascript_prologue
           page.replace("request_div", :partial => "miq_request/request")
           page << javascript_pf_toolbar_reload('center_tb', c_tb)
         end
       elsif @display == "miq_provisions"
         show
         render :update do |page|
+          page << javascript_prologue
           page.replace("gtl_div", :partial => "layouts/gtl")  # Replace the provisioned vms list
         end
       else
@@ -69,12 +75,14 @@ class MiqRequestController < ApplicationController
         @_params[:refresh] = "y"
         show_list
         render :update do |page|
+          page << javascript_prologue
           page.replace("prov_options_div", :partial => "prov_options")
           page.replace("gtl_div", :partial => "layouts/gtl")
         end
       end
     else
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         unless @refresh_partial.nil?
           if @refresh_div == "flash_msg_div"
             page.replace(@refresh_div, :partial => @refresh_partial)
@@ -195,6 +203,7 @@ class MiqRequestController < ApplicationController
       session[:flash_msgs] = @flash_array.dup
       @edit = nil
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => @lastaction, :id => session[:edit][:request].id
       end
     elsif params[:button] == "submit"
@@ -210,6 +219,7 @@ class MiqRequestController < ApplicationController
       session[:flash_msgs] = @flash_array.dup                     # Put msg in session for next transaction to display
       @edit = nil
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "show_list"
       end
     else  # First time in, set up @edit hash
@@ -234,7 +244,8 @@ class MiqRequestController < ApplicationController
   # AJAX driven routine to check for changes in ANY field on the form
   def stamp_field_changed
     return unless load_edit("stamp_edit__#{params[:id]}", "show")
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @edit[:reason].blank?
         @edit[:reason] = params[:reason] if params[:reason]
         unless @edit[:reason].blank?
@@ -297,6 +308,7 @@ class MiqRequestController < ApplicationController
         end
       end
       render :update do |page|
+        page << javascript_prologue
         if @error_div
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         else
@@ -317,7 +329,8 @@ class MiqRequestController < ApplicationController
     @options[:host_sortcol] = "name"
     # only build host grid if that field is visible/exists in dialog
     build_host_grid(@options[:wf].allowed_hosts, @options[:host_sortdir], @options[:host_sortcol]) if !@options[:wf].get_field(:src_host_ids, :service).blank? || !@options[:wf].get_field(:placement_host_name, :environment).blank?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html(@options[:current_tab_key],
                         :partial => dialog_partial_for_workflow,
                         :locals  => {:wf => @options[:wf], :dialog => @options[:current_tab_key]}
@@ -336,11 +349,13 @@ class MiqRequestController < ApplicationController
       @edit[:wf].send(method, @edit[:new]) unless method.nil?
     rescue StandardError => bang
       add_flash(_("Error retrieving LDAP info: %{error_message}") % {:error_message => bang.message}, :error)
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace_html("requester_div", :partial => "shared/views/prov_dialog",
                                            :locals  => {:wf => @edit[:wf], :dialog => :requester})
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -367,7 +382,8 @@ class MiqRequestController < ApplicationController
     applied_states_blank = @sb[:def_prov_options][resource_type][:applied_states].blank?
     add_flash(_("At least one status must be selected"), :warning) if applied_states_blank
 
-    render :update do |page| # Do nothing to the page
+    render :update do |page|
+      page << javascript_prologue
       unless applied_states_blank
         # Options have changed?
         page << javascript_for_miq_button_visibility(res_type != @sb[:def_prov_options][resource_type])
@@ -395,6 +411,7 @@ class MiqRequestController < ApplicationController
     grid_options, js_options = replace_list_grid
 
     render :update do |page|
+      page << javascript_prologue
       page.replace("prov_options_div", :partial => "prov_options")
       if @view.table.data.length >= 1
         page << javascript_hide("no_records_div")

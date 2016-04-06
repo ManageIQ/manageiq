@@ -7,6 +7,7 @@ module OpsController::Settings::Ldap
 
     if !params[:button] && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
       render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "ldap_regions_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -51,6 +52,7 @@ module OpsController::Settings::Ldap
 
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -76,6 +78,7 @@ module OpsController::Settings::Ldap
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -97,7 +100,8 @@ module OpsController::Settings::Ldap
   def ldap_region_form_field_changed
     return unless load_edit("ldap_region_edit__#{params[:id]}", "replace_cell__explorer")
     ldap_region_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       @changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(@changed)
       page << "miqSparkle(false);"
@@ -112,6 +116,7 @@ module OpsController::Settings::Ldap
       if ldap_regions.empty?
         add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "ldap_region")}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -120,6 +125,7 @@ module OpsController::Settings::Ldap
       if params[:id].nil? || LdapRegion.find_by_id(params[:id]).nil?
         add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "ldap_region")}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -154,6 +160,7 @@ module OpsController::Settings::Ldap
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div_entries", :partial => "layouts/flash_msg", :locals => {:div_num => "entries"})
       end
     elsif params[:button] == "cancel"
@@ -181,6 +188,7 @@ module OpsController::Settings::Ldap
 
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -204,6 +212,7 @@ module OpsController::Settings::Ldap
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -216,7 +225,8 @@ module OpsController::Settings::Ldap
         server[:hostname] = params[:entry][:hostname]
         if params[:entry][:hostname] == ""
           add_flash(_("Hostname is required"), :error)
-          render :update do |page|                    # Use JS to update the display
+          render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div_entries", :partial => "layouts/flash_msg", :locals => {:div_num => "entries"})
           end
           return
@@ -236,6 +246,7 @@ module OpsController::Settings::Ldap
         @in_a_form = true
         @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("ldap_server_entries_div", :partial => "ldap_server_entries", :locals => {:entry => nil, :edit => false, :domain_id => params[:id]})
           page << javascript_for_miq_button_visibility(@changed)
         end
@@ -258,7 +269,8 @@ module OpsController::Settings::Ldap
   def ldap_domain_form_field_changed
     return unless load_edit("ldap_domain_edit__#{params[:id]}", "replace_cell__explorer")
     ldap_domain_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @authusertype_changed
         if @edit[:new][:user_type] == "dn-cn"
           page << javascript_hide("upn-mail_prefix")
@@ -284,7 +296,8 @@ module OpsController::Settings::Ldap
   def ldap_entry_changed
     return unless load_edit("ldap_domain_edit__#{params[:id]}", "replace_cell__explorer")
     ldap_domain_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << "$('#entry_port').val('#{params[:entry_mode] == "ldaps" ? '636' : '389'}');"
       page << "miqSparkle(false);"
     end
@@ -296,6 +309,7 @@ module OpsController::Settings::Ldap
     if params[:id].nil? || LdapDomain.find_by_id(params[:id]).nil?
       add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "ldap_domain")}, :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
@@ -313,7 +327,8 @@ module OpsController::Settings::Ldap
     return unless load_edit("ldap_domain_edit__#{params[:domain_id]}", "replace_cell__explorer")
     ldap_domain_get_form_vars
     if params[:id] == "new"
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("ldap_server_entries_div", :partial => "ldap_server_entries", :locals => {:entry => "new", :edit => true, :domain_id => params[:domain_id]})
         page << javascript_focus('entry_name')
@@ -322,7 +337,8 @@ module OpsController::Settings::Ldap
       session[:entry] = "new"
     else
       entry = params[:id]
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("ldap_server_entries_div", :partial => "ldap_server_entries", :locals => {:entry => entry, :edit => true, :domain_id => params[:domain_id]})
         page << javascript_focus("entry_#{j_str(params[:field])}")
@@ -339,6 +355,7 @@ module OpsController::Settings::Ldap
     @edit[:new][:ldap_servers].delete_at(params[:id].to_i)
     @changed = true
     render :update do |page|
+      page << javascript_prologue
       page.replace("ldap_server_entries_div", :partial => "ldap_server_entries", :locals => {:entry => nil, :edit => false, :domain_id => params[:domain_id]})
       page << javascript_for_miq_button_visibility(@changed)
     end

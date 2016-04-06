@@ -35,6 +35,7 @@ module ReportController::Dashboards
         @in_a_form = true
         @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -96,6 +97,7 @@ module ReportController::Dashboards
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -130,7 +132,8 @@ module ReportController::Dashboards
   def db_form_field_changed
     return unless load_edit("db_edit__#{params[:id]}", "replace_cell__explorer")
     db_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       if params[:widget]
         page.replace("form_div", :partial => "db_form")
@@ -151,7 +154,8 @@ module ReportController::Dashboards
   def db_widget_dd_done
     set_edit_new_cols
     db_available_widgets_options
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       if params[:widget]
         page.replace("form_div", :partial => "db_form")
@@ -173,7 +177,8 @@ module ReportController::Dashboards
     @edit[:new][:col3].delete(w) if @edit[:new][:col3].include?(w)
     db_available_widgets_options
     @in_a_form = true
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       if params[:widget]
         page.replace("form_div", :partial => "db_form")

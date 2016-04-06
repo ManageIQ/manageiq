@@ -23,6 +23,7 @@ module OpsController::Settings::Zones
       end
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         end
         return
@@ -82,7 +83,8 @@ module OpsController::Settings::Zones
     return unless load_edit("zone_edit__#{params[:id]}", "replace_cell__explorer")
     zone_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial,
                                  :locals  => {:type => "zones", :action_url => 'zone_field_changed'}) if @refresh_div
 

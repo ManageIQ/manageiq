@@ -128,7 +128,8 @@ module MiqAeCustomizationController::OldDialogs
   def old_dialogs_form_field_changed
     return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
     old_dialogs_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
     end
@@ -165,6 +166,7 @@ module MiqAeCustomizationController::OldDialogs
     if params[:ppsetting] || params[:searchtag] || params[:entry] ||
        params[:sort_choice] || params[:page]
       render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div",
                      :partial => "layouts/x_gtl",
                      :locals  => {:action_url => "old_dialogs_list",
@@ -258,6 +260,7 @@ module MiqAeCustomizationController::OldDialogs
       end
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -272,6 +275,7 @@ module MiqAeCustomizationController::OldDialogs
         end
         @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else

@@ -64,7 +64,8 @@ module OpsController::Settings::CapAndU
     @changed = (@edit[:new] != @edit[:current]) # UI edit form, C&U collection form
     # C&U tab
     # need to create an array of items, if their or their children's capture has been changed then make the changed one blue.
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << "$('#clusters_div').#{params[:all_clusters] == 'true' ? "hide" : "show"}()" if params[:all_clusters]
       page << "$('#storages_div').#{params[:all_storages] == 'true' ? "hide" : "show"}()" if params[:all_storages]

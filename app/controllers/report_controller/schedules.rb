@@ -103,6 +103,7 @@ module ReportController::Schedules
     if scheds.empty? && params[:id].nil?
       add_flash(_("No Report Schedules were selected to be Run now"), :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     elsif params[:id]
@@ -149,6 +150,7 @@ module ReportController::Schedules
       add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -175,7 +177,8 @@ module ReportController::Schedules
       @folders ||= []
       report_selection_menus
     end
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if params[:filter_typ]
         @edit[:new][:subfilter] = nil
         @edit[:new][:repfilter] = @reps = nil
@@ -260,6 +263,7 @@ module ReportController::Schedules
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         drop_breadcrumb(:name => "Edit Schedule", :url => "/miq_schedule/edit")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end

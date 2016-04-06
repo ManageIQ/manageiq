@@ -58,11 +58,13 @@ class ConfigurationController < ApplicationController
 
     if params[:pressed].ends_with?("_edit", "_copy")
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => @refresh_partial, :id => @redirect_id
       end
     else
       c_tb = build_toolbar(center_toolbar_filename)
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("main_div", :partial => "ui_4") # Replace the main div area contents
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
@@ -90,7 +92,8 @@ class ConfigurationController < ApplicationController
     get_form_vars
     @assigned_filters = []
     @changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << javascript_for_miq_button_visibility_changed(@changed)
     end
@@ -123,6 +126,7 @@ class ConfigurationController < ApplicationController
       end
     end
     render :update do |page|
+      page << javascript_prologue
       # needed to compare each array element's attributes to find out if something has changed
       @edit[:current].each_with_index do |_arr, i|
         id = @edit[:new][i].id
@@ -144,7 +148,8 @@ class ConfigurationController < ApplicationController
     @edit[:new][:views][VIEW_RESOURCES[params[:resource]]] = params[:view] # Capture the new view setting
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace 'tab_div', :partial => "ui_2"
     end
   end
@@ -156,7 +161,8 @@ class ConfigurationController < ApplicationController
     @edit[:new][:display][:theme] = params[:theme]      # Capture the new setting
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace 'tab_div', :partial => "ui_1"
     end
   end
@@ -167,7 +173,8 @@ class ConfigurationController < ApplicationController
     @edit[:new][:display][:nav_style] = params[:nav_style]    # Capture the new setting
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace 'tab_div', :partial => "ui_1"
     end
   end
@@ -179,7 +186,8 @@ class ConfigurationController < ApplicationController
     @edit[:new][:display][:bg_color] = params[:bg_color]      # Capture the new setting
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace 'tab_div', :partial => "ui_1"
     end
   end
@@ -435,7 +443,8 @@ class ConfigurationController < ApplicationController
     return unless load_edit("config_edit__ui4", "configuration")
     timeprofile_get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace('timeprofile_days_hours_div',
                    :partial => "timeprofile_days_hours",
                    :locals  => {:disabled => false}) if @redraw
@@ -487,6 +496,7 @@ class ConfigurationController < ApplicationController
       add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "TimeProfile")})
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
       end
     when "add"
@@ -502,6 +512,7 @@ class ConfigurationController < ApplicationController
       unless @flash_array.nil?
         drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -514,6 +525,7 @@ class ConfigurationController < ApplicationController
         @in_a_form = true
         drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -521,6 +533,7 @@ class ConfigurationController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
         end
       end
@@ -535,6 +548,7 @@ class ConfigurationController < ApplicationController
       params[:id] = @timeprofile.id.to_s
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
       end
     elsif params[:button] == "reset"
@@ -546,6 +560,7 @@ class ConfigurationController < ApplicationController
                       :url  => "/configuration/timeprofile_edit")
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
       end
     elsif params[:button] == "save"
@@ -563,6 +578,7 @@ class ConfigurationController < ApplicationController
         drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -578,6 +594,7 @@ class ConfigurationController < ApplicationController
         drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -585,6 +602,7 @@ class ConfigurationController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"), :name => timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
         end
       end

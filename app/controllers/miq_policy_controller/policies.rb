@@ -97,6 +97,7 @@ module MiqPolicyController::Policies
     if MiqPolicy.find_by_description(new_desc)
       add_flash(_("%{model} \"%{name}\" already exists") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc}, :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else

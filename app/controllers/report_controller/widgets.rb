@@ -77,6 +77,7 @@ module ReportController::Widgets
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -127,7 +128,8 @@ module ReportController::Widgets
   def widget_form_field_changed
     return unless load_edit("widget_edit__#{params[:id]}", "replace_cell__explorer")
     widget_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if params[:filter_typ]
         @edit[:new][:subfilter] = nil
         @edit[:new][:repfilter] = @reps = nil
@@ -170,7 +172,8 @@ module ReportController::Widgets
     params[:col1].each { |sc| new_hash[sc.to_i] = @edit[:new][:shortcuts][sc.to_i] }
     @edit[:new][:shortcuts] = new_hash
     @edit[:new][:shortcut_keys] = @edit[:new][:shortcuts].keys  # Save the keys array so we can compare the hash order
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
     end
@@ -183,7 +186,8 @@ module ReportController::Widgets
     @edit[:new][:shortcuts].delete(params[:shortcut].to_i)
     @edit[:new][:shortcut_keys] = @edit[:new][:shortcuts].keys  # Save the keys array so we can compare the hash order
     @edit[:avail_shortcuts] = widget_build_avail_shortcuts
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("form_filter_div", :partial => "widget_form_filter")
       page << "miqInitDashboardCols();"
       changed = (@edit[:new] != @edit[:current])
@@ -197,7 +201,8 @@ module ReportController::Widgets
     return unless load_edit("widget_edit__#{params[:id]}", "replace_cell__explorer")
     @widget = @edit[:widget_id] ? MiqWidget.find_by_id(@edit[:widget_id]) : MiqWidget.new
     @edit[:new][:shortcuts][params[:shortcut].to_i] = MiqShortcut.find_by_id(params[:shortcut].to_i).description
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("form_filter_div", :partial => "widget_form_filter")
       page << "miqInitDashboardCols();"
       changed = (@edit[:new] != @edit[:current])

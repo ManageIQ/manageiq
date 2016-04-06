@@ -23,6 +23,7 @@ module ApplicationController::Automate
     end
     c_tb = build_toolbar(center_toolbar_filename)
     render :update do |page|
+      page << javascript_prologue
       # IE7 doesn't redraw the tree until the screen is clicked, so redirect back to this method for a refresh
       if is_browser_ie? && browser_info(:version) == "7"
         page.redirect_to :action => 'resolve'
@@ -57,6 +58,7 @@ module ApplicationController::Automate
     (AE_MAX_RESOLUTION_FIELDS - @resolve[:new][:attrs].length).times { @edit[:new][:attrs].push([]) }
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div", :partial => "shared/buttons/ab_list")
       page << javascript_for_miq_button_visibility_changed(@changed)
       page << "miqSparkle(false);"
@@ -93,6 +95,7 @@ module ApplicationController::Automate
 
     # workaround to get "Simulate button" work from customization explorer
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to :action => 'resolve', :controller => "miq_ae_tools", :simulate => "simulate", :escape => false
     end
   end
@@ -175,6 +178,7 @@ module ApplicationController::Automate
   def resolve_reset
     c_tb = build_toolbar(center_toolbar_filename)
     render :update do |page|
+      page << javascript_prologue
       page.replace("left_cell_bottom", :partial => "resolve_form_buttons")
       page.replace("resolve_form_div", :partial => "resolve_form") unless params[:tab_id]
       page.replace("results_tabs",     :partial => "results_tabs")

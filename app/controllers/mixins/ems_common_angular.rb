@@ -23,6 +23,7 @@ module Mixins
                    :name  => update_ems.name}
       ems_path = ems_path(update_ems, :flash_msg => flash_msg)
       render :update do |page|
+        page << javascript_prologue
         if @lastaction == "show"
           page.redirect_to ems_path
         else
@@ -46,6 +47,7 @@ module Mixins
         AuditEvent.success(build_saved_audit(update_ems, @edit))
         ems_path = ems_path(update_ems, :flash_msg => flash)
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to ems_path
         end
       else
@@ -95,6 +97,7 @@ module Mixins
         flash_msg = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:tables => @table_name),
                                                            :name  => ems.name}
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action    => 'show_list',
                            :flash_msg => flash_msg
         end
@@ -107,6 +110,7 @@ module Mixins
         drop_breadcrumb(:name => _("Add New %{tables}") % {:tables => ui_lookup(:tables => table_name)},
                         :url  => new_ems_path)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -120,6 +124,7 @@ module Mixins
     def create_ems_button_cancel
       model_name = model.to_s
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(:action    => @lastaction,
                          :display   => session[:ems_display],
                          :flash_msg => _("Add of %{model} was cancelled by the user") %

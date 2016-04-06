@@ -9,6 +9,7 @@ module ApplicationController::DialogRunner
       replace_right_cell
     else
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action    => 'show',
                          :id        => session[:edit][:target_id],
                          :flash_msg => flash  # redirect to miq_request show_list screen
@@ -27,7 +28,8 @@ module ApplicationController::DialogRunner
         result = @edit[:wf].submit_request
       rescue StandardError => bang
         add_flash(_("Error during 'Provisioning': %{error_message}") % {:error_message => bang.message}, :error)
-        render :update do |page|                    # Use RJS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -36,7 +38,8 @@ module ApplicationController::DialogRunner
           result[:errors].each do |err|
             add_flash(err, :error)
           end
-          render :update do |page|                    # Use JS to update the display
+          render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
@@ -48,6 +51,7 @@ module ApplicationController::DialogRunner
               add_flash(flash)
               # redirect to miq_request show_list screen
               render :update do |page|
+                page << javascript_prologue
                 page.redirect_to :controller => 'miq_request',
                                  :action     => 'show_list',
                                  :flash_msg  => flash
@@ -55,6 +59,7 @@ module ApplicationController::DialogRunner
             else
               model = ("#{controller_name.camelize}Controller").constantize.model
               render :update do |page|
+                page << javascript_prologue
                 if restful_routed?(model)
                   page.redirect_to polymorphic_path(model.where(:id => session[:edit][:target_id]).first,
                                                     :flash_msg => flash)
@@ -78,13 +83,15 @@ module ApplicationController::DialogRunner
         replace_right_cell("dialog_provision")
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'dialog_load', :flash_msg => flash, :flash_warning => true, :escape => false  # redirect to miq_request show_list screen
         end
       end
     else
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
       add_flash(_("%{button_name} Button not yet implemented") % {:button_name => params[:button].capitalize}, :error)
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -97,6 +104,7 @@ module ApplicationController::DialogRunner
 
     # Use JS to update the display
     render :update do |page|
+      page << javascript_prologue
       page << "miqSparkle(false);"
     end
   end
@@ -174,6 +182,7 @@ module ApplicationController::DialogRunner
       replace_right_cell("dialog_provision")
     else
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'dialog_load'
       end
     end

@@ -6,6 +6,7 @@ module OpsController::Settings::Schedules
     schedule_build_list
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "schedules_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -68,6 +69,7 @@ module OpsController::Settings::Schedules
       rescue StandardError => bang
         add_flash(_("Error when adding a new schedule: %{message}") % {:message => bang.message}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -172,6 +174,7 @@ module OpsController::Settings::Schedules
         add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "miq_schedule")},
                   :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -183,6 +186,7 @@ module OpsController::Settings::Schedules
       if params[:id].nil? || MiqSchedule.find_by_id(params[:id]).nil?
         add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "miq_schedule")}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -206,6 +210,7 @@ module OpsController::Settings::Schedules
     if schedules.empty?
       add_flash(msg, :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -242,6 +247,7 @@ module OpsController::Settings::Schedules
       add_flash(_('Depot Settings successfuly validated'))
     end
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end

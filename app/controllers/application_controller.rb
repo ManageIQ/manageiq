@@ -124,7 +124,8 @@ class ApplicationController < ActionController::Base
   def render_exception(msg)
     respond_to do |format|
       format.js do
-        render :update do |page|    # AJAX, replace the main area with error
+        render :update do |page|
+          page << javascript_prologue
           page.replace_html("center_div", :partial => "layouts/exception_contents", :locals => {:message => msg})
           page << "miqSparkle(false);"
           page << javascript_hide_if_exists("adv_searchbox_div")
@@ -165,6 +166,7 @@ class ApplicationController < ActionController::Base
     @keep_compare = true
     panel = params[:panel]
     render :update do |page|
+      page << javascript_prologue
       if @panels[panel] == 'down'
         @panels[panel] = 'up'
         page << "$('##{j_str(panel)}').slideUp('medium');"
@@ -230,6 +232,7 @@ class ApplicationController < ActionController::Base
   def browser_refresh_task(task_id)
     session[:async][:interval] += 250 if session[:async][:interval] < 5000    # Slowly move up to 5 second retries
     render :update do |page|
+      page << javascript_prologue
       ajax_call = remote_function(:url => {:action => 'wait_for_task', :task_id => task_id})
       page << "setTimeout(\"#{ajax_call}\", #{session[:async][:interval]});"
     end
@@ -292,6 +295,7 @@ class ApplicationController < ActionController::Base
                                                  :per_page => @sb[:pages][:perpage]).join)
 
     render :update do |page|
+      page << javascript_prologue
       page.replace("report_html_div", :partial => "layouts/report_html")
       page.replace_html("paging_div", :partial => 'layouts/saved_report_paging_bar',
                                       :locals  => {:pages => @sb[:pages]})
@@ -399,6 +403,7 @@ class ApplicationController < ActionController::Base
 
     @changed = (@edit[:new] != @edit[:current]) if pfx == "pxe"
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div#{flash_div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => flash_div_num})
     end
   end
@@ -419,6 +424,7 @@ class ApplicationController < ActionController::Base
   def render_flash(add_flash_text = nil, severity = nil)
     add_flash(add_flash_text, severity) if add_flash_text
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       yield(page) if block_given?
     end
@@ -647,6 +653,7 @@ class ApplicationController < ActionController::Base
         redirect_to_action = lastaction
       end
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
       end
     else
@@ -1081,6 +1088,7 @@ class ApplicationController < ActionController::Base
 
       format.js do
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => 'dashboard', :action => 'login', :timeout => timed_out
         end
       end
@@ -1122,6 +1130,7 @@ class ApplicationController < ActionController::Base
     unless pass
       if request.xml_http_request?
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(:controller => 'dashboard', :action => 'auth_error')
         end
       else
@@ -1753,6 +1762,7 @@ class ApplicationController < ActionController::Base
     if @redirect_controller
       if ["#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
         render :update do |page|
+          page << javascript_prologue
           if flash_errors?
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           else
@@ -1765,16 +1775,19 @@ class ApplicationController < ActionController::Base
         end
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
         end
       end
     else
       if params[:pressed] == "ems_cloud_edit" && params[:id]
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to edit_ems_cloud_path(params[:id])
         end
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => @refresh_partial, :id => @redirect_id
         end
       end
@@ -1824,7 +1837,8 @@ class ApplicationController < ActionController::Base
       grid_options, js_options = replace_list_grid
     end
 
-    render :update do |page|                        # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
       page << "miqSetButtons(0, 'center_tb');" # Reset the center toolbar
       if layout_uses_listnav?

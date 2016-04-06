@@ -95,6 +95,7 @@ class ProviderForemanController < ApplicationController
 
     if ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(provisioning_ids)
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :controller     => "miq_request",
                          :action         => "prov_edit",
                          :prov_id        => provisioning_ids,
