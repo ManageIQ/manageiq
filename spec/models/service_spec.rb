@@ -1,16 +1,4 @@
 describe Service do
-  it "#all_service_children" do
-    service     = FactoryGirl.create(:service)
-    service_c1  = FactoryGirl.create(:service, :service => service)
-    service_c2  = FactoryGirl.create(:service, :service => service)
-    service_c21 = FactoryGirl.create(:service, :service => service_c2)
-    service_c22 = FactoryGirl.create(:service, :service => service_c2)
-
-    expect(service_c1.all_service_children).to match_array []
-    expect(service_c2.all_service_children).to match_array [service_c21, service_c22]
-    expect(service.all_service_children).to    match_array [service_c1, service_c2, service_c21, service_c22]
-  end
-
   context "service events" do
     before(:each) do
       @service = FactoryGirl.create(:service)
@@ -80,11 +68,6 @@ describe Service do
     it "#all_vms" do
       expect(@service_c1.all_vms).to match_array [@vm_1]
       expect(@service.all_vms).to    match_array [@vm, @vm_1]
-    end
-
-    it "#root_service" do
-      expect(@service.root_service).to eq(@service)
-      expect(@service_c1.root_service).to eq(@service)
     end
 
     it "#direct_service" do
@@ -256,17 +239,30 @@ describe Service do
     end
   end
 
+  describe "#children" do
+    it "returns children" do
+      create_deep_tree
+      expect(@service.children).to match_array([@service_c1, @service_c2])
+      expect(@service.services).to match_array([@service_c1, @service_c2]) # alias
+      expect(@service.direct_service_children).to match_array([@service_c1, @service_c2]) # alias
+    end
+  end
+
   describe "#descendants" do
     it "returns all descendants" do
       create_deep_tree
       expect(@service.descendants).to match_array([@service_c1, @service_c11, @service_c12, @service_c121, @service_c2])
+      expect(@service.all_service_children).to match_array([@service_c1, @service_c11, @service_c12, @service_c121,
+                                                            @service_c2]) # alias
     end
 
     it "returns middle of tree descendants" do
       create_deep_tree
       expect(@service_c1.descendants).to match_array([@service_c11, @service_c12, @service_c121])
+      expect(@service_c1.all_service_children).to match_array([@service_c11, @service_c12, @service_c121])
     end
   end
+
 
   describe "#subtree" do
     it "returns sub tree" do
@@ -292,6 +288,52 @@ describe Service do
     it "returns top level ancestors" do
       create_deep_tree
       expect(@service.ancestors).to be_empty
+    end
+  end
+
+  describe "#parent_service" do
+    it "returns no parent" do
+      service = FactoryGirl.create(:service)
+      expect(service.parent).to be_nil
+    end
+
+    it "returns parent" do
+      service = FactoryGirl.create(:service)
+      service_c1 = FactoryGirl.create(:service, :service => service)
+
+      expect(service_c1.parent).to eq(service)
+      expect(service_c1.parent_service).to eq(service) # alias
+    end
+  end
+
+  describe "#has_parent" do
+    it "has no parent" do
+      service = FactoryGirl.create(:service)
+      expect(service.has_parent).to be_falsey
+      expect(service.has_parent?).to be_falsey # alias
+    end
+
+    it "has parent" do
+      service = FactoryGirl.create(:service)
+      service_c1 = FactoryGirl.create(:service, :service => service)
+
+      expect(service_c1.has_parent).to be_truthy
+      expect(service_c1.has_parent?).to be_truthy # alias
+    end
+  end
+
+  describe "#root" do
+    it "has root as self" do
+      service = FactoryGirl.create(:service)
+      expect(service.root).to eq(service)
+      expect(service.root_service).to eq(service) # alias
+    end
+
+    it "has root as parent" do
+      service = FactoryGirl.create(:service)
+      service_c1 = FactoryGirl.create(:service, :service => service)
+      expect(service_c1.root).to eq(service)
+      expect(service_c1.root_service).to eq(service) # alias
     end
   end
 

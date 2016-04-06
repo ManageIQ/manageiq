@@ -79,7 +79,7 @@ class Service < ApplicationRecord
   end
   Vmdb::Deprecation.deprecate_methods(self, :indirect_service_children)
 
-  alias descendants all_service_children
+  alias all_service_children descendants
 
   def indirect_vms
     MiqPreloader.preload_and_map(indirect_service_children, :direct_vms)
