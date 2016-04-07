@@ -3,6 +3,38 @@ require 'recursive-open-struct'
 describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   let(:parser)  { described_class.new }
 
+  describe "parse_namespaces" do
+    it "handles simple data" do
+      expect(parser.send(:parse_namespaces,
+                         RecursiveOpenStruct.new(
+                           :metadata => {
+                             :name              => "proj2",
+                             :selfLink          => "/api/v1/namespaces/proj2",
+                             :uid               => "554c1eaa-f4f6-11e5-b943-525400c7c086",
+                             :resourceVersion   => "150569",
+                             :creationTimestamp => "2016-03-28T15:04:13Z",
+                             :labels            => {:department => "Warp-drive"},
+                             :annotations       => {:"openshift.io/description"  => "",
+                                                    :"openshift.io/display-name" => "Project 2"}
+                           },
+                           :spec     => {:finalizers => ["openshift.io/origin", "kubernetes"]},
+                           :status   => {:phase => "Active"}
+                         )
+                        )).to eq(:ems_ref          => "554c1eaa-f4f6-11e5-b943-525400c7c086",
+                                 :name             => "proj2",
+                                 :ems_created_on   => "2016-03-28T15:04:13Z",
+                                 :resource_version => "150569",
+                                 :labels           => [
+                                   {
+                                     :section => "labels",
+                                     :name    => "department",
+                                     :value   => "Warp-drive",
+                                     :source  => "kubernetes"
+                                   }
+                                 ])
+    end
+  end
+
   describe "parse_image_name" do
     example_ref = "docker://abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     example_images = [{:image_name => "example",
