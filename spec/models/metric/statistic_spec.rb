@@ -7,10 +7,10 @@ describe Metric::Statistic do
 
     hour = Time.parse(Metric::Helper.nearest_hourly_timestamp(Time.now)).utc
 
-    let(:c1) { FactoryGirl.create(:container_group, :created_on => hour - 10.minutes) }
-    let(:c2) { FactoryGirl.create(:container_group, :created_on => hour - 50.minutes) }
-    let(:c3) { FactoryGirl.create(:container_group, :created_on => hour - 120.minutes) }
-    let(:c4) { FactoryGirl.create(:container_group, :created_on => hour + 1.minute) }
+    let(:c1) { FactoryGirl.create(:container_group, :ems_created_on => hour - 10.minutes) }
+    let(:c2) { FactoryGirl.create(:container_group, :ems_created_on => hour - 50.minutes) }
+    let(:c3) { FactoryGirl.create(:container_group, :ems_created_on => hour - 120.minutes) }
+    let(:c4) { FactoryGirl.create(:container_group, :ems_created_on => hour + 1.minute) }
 
     let(:c5) { FactoryGirl.create(:container_group, :deleted_on => hour - 10.minutes) }
     let(:c6) { FactoryGirl.create(:container_group, :deleted_on => hour - 50.minutes) }
