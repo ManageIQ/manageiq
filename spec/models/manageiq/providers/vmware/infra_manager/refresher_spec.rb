@@ -197,6 +197,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :vmm_product      => "ESXi",
       :vmm_buildnumber  => "260247",
       :power_state      => "on",
+      :maintenance      => false,
       :connection_state => "connected"
     )
 

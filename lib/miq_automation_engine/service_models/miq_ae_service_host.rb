@@ -21,6 +21,9 @@ module MiqAeMethodService
     expose :domain
     expose :files,                 :association => true
     expose :directories,           :association => true
+    expose :set_node_maintenance
+    expose :unset_node_maintenance
+    expose :external_get_node_maintenance
 
     METHODS_WITH_NO_ARGS = %w(scan)
     METHODS_WITH_NO_ARGS.each do |m|
