@@ -55,6 +55,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqSmartProxyWorker
     MiqSmisRefreshWorker
     MiqStorageMetricsCollectorWorker
+    MiqWebsocketWorker
     MiqUiWorker
     MiqVimBrokerWorker
     MiqVmdbStorageBridgeWorker
@@ -119,6 +120,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::EventCatcher
     ManageIQ::Providers::AtomicEnterprise::ContainerManager::EventCatcher
     MiqUiWorker
+    MiqWebsocketWorker
   ).freeze
 
   module ClassMethods

@@ -16,6 +16,7 @@ class MiqUiWorker < MiqWorker
   BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ui.conf'
   REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ui'
   STARTING_PORT              = 3000
+  PROTOCOL                   = 'http'
   LB_METHOD                  = :busy
   REDIRECTS                  = '/'
   CLUSTER                    = 'evmcluster_ui'

@@ -1,4 +1,5 @@
 describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
+  let(:user) { FactoryGirl.create(:user) }
   let(:ems) do
     FactoryGirl.create(:ems_vmware,
                        :hostname    => '192.168.252.16',
@@ -10,26 +11,18 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
   context '#remote_console_acquire_ticket' do
     it 'with :mks' do
-      expect(vm).to receive(:remote_console_mks_acquire_ticket).with(nil)
-      vm.remote_console_acquire_ticket(:mks)
+      expect(vm).to receive(:remote_console_mks_acquire_ticket).with(user.userid)
+      vm.remote_console_acquire_ticket(user.userid, :mks)
     end
 
     it 'with :vmrc' do
-      expect(vm).to receive(:remote_console_vmrc_acquire_ticket).with(nil)
-      vm.remote_console_acquire_ticket(:vmrc)
+      expect(vm).to receive(:remote_console_vmrc_acquire_ticket).with(user.userid)
+      vm.remote_console_acquire_ticket(user.userid, :vmrc)
     end
 
-    context 'with :vnc' do
-      it 'without a proxy' do
-        expect(vm).to receive(:remote_console_vnc_acquire_ticket).with(nil)
-        vm.remote_console_acquire_ticket(:vnc)
-      end
-
-      it 'with a proxy' do
-        server = double("MiqServer")
-        expect(vm).to receive(:remote_console_vnc_acquire_ticket).with(server)
-        vm.remote_console_acquire_ticket(:vnc, server)
-      end
+    it 'with :vnc' do
+      expect(vm).to receive(:remote_console_vnc_acquire_ticket).with(user.userid)
+      vm.remote_console_acquire_ticket(user.userid, :vnc)
     end
   end
 
@@ -43,30 +36,30 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     end
 
     it 'with :mks' do
-      vm.remote_console_acquire_ticket_queue(:mks, 'admin')
+      vm.remote_console_acquire_ticket_queue(:mks, user.userid)
 
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].method_name).to eq('remote_console_acquire_ticket')
-      expect(q_all[0].args).to eq([:mks, nil])
+      expect(q_all[0].args).to eq([user.userid, :mks])
     end
 
     it 'with :vmrc' do
-      vm.remote_console_acquire_ticket_queue(:vmrc, 'admin')
+      vm.remote_console_acquire_ticket_queue(:vmrc, user.userid)
 
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].method_name).to eq('remote_console_acquire_ticket')
-      expect(q_all[0].args).to eq([:vmrc, nil])
+      expect(q_all[0].args).to eq([user.userid, :vmrc])
     end
 
     it 'with :vnc' do
-      vm.remote_console_acquire_ticket_queue(:vnc, 'admin', 1234)
+      vm.remote_console_acquire_ticket_queue(:vnc, user.userid)
 
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].method_name).to eq('remote_console_acquire_ticket')
-      expect(q_all[0].args).to eq([:vnc, 1234])
+      expect(q_all[0].args).to eq([user.userid, :vnc])
     end
   end
 
@@ -139,56 +132,37 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       end
       allow(vm).to receive(:with_provider_object).and_yield(vim_vm)
 
-      vm.remote_console_vnc_acquire_ticket
+      vm.remote_console_vnc_acquire_ticket(user.userid)
     end
 
-    it 'without a proxy miq_server' do
+    it 'will set the attributes on the requester side' do
       expect(vm).to receive(:with_provider_object)
 
-      password, host_address, host_port, proxy_address, proxy_port = vm.remote_console_vnc_acquire_ticket
+      config = vm.remote_console_vnc_acquire_ticket(user.userid)
 
-      expect(password).to match(%r{^[A-Za-z0-9+/]{8}$})
-      expect(host_address).to eq('192.168.252.4')
-      expect(host_port).to eq(5901)
-      expect(proxy_address).to be_nil
-      expect(proxy_port).to    be_nil
+      expect(config[:secret]).to match(%r{^[A-Za-z0-9+/]{8}$})
+      expect(config[:url]).to match(%r{^ws/console/[0-9a-f]{32}/?$})
+      expect(config[:proto]).to eq('vnc')
     end
 
-    context 'with a proxy miq_server' do
-      it 'with no proxy configured' do
-        server = double('MiqServer')
-        allow(server).to receive_message_chain(:get_config, :config => {:server => {:vnc_proxy_address => nil, :vnc_proxy_port => nil}})
-        expect(vm).to receive(:with_provider_object)
+    it 'will save the ticket to the database' do
+      expect(vm).to receive(:with_provider_object)
 
-        password, host_address, host_port, proxy_address, proxy_port = vm.remote_console_vnc_acquire_ticket(server)
+      config = vm.remote_console_vnc_acquire_ticket(user.userid)
+      match = config[:url].match(%r{^ws/console/([0-9a-f]{32})/?$})
+      expect(match).not_to be_nil
 
-        expect(password).to match(%r{^[A-Za-z0-9+/]{8}$})
-        expect(host_address).to eq('192.168.252.4')
-        expect(host_port).to eq(5901)
-        expect(proxy_address).to be_nil
-        expect(proxy_port).to    be_nil
-      end
-
-      it 'with a proxy configured' do
-        server = double('MiqServer')
-        allow(server).to receive_message_chain(:get_config, :config => {:server => {:vnc_proxy_address => '1.2.3.4', :vnc_proxy_port => '5800'}}) # NOTE: Ports are actually stored as a String in the configuration
-        expect(vm).to receive(:with_provider_object)
-
-        password, host_address, host_port, proxy_address, proxy_port = vm.remote_console_vnc_acquire_ticket(server)
-
-        expect(password).to match(%r{^[A-Za-z0-9+/]{8}$})
-        expect(host_address).to eq(host.guid)
-        expect(host_port).to eq(5901)
-        expect(proxy_address).to eq('1.2.3.4')
-        expect(proxy_port).to eq(5800)
-      end
+      record = SystemConsole.find_by(:url_secret => match[1])
+      expect(record.host_name).to eq('192.168.252.4')
+      expect(record.port).to eq(5901)
+      expect(record.protocol).to eq('vnc')
     end
 
     it 'will reclaim the port number from old VMs' do
       allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:with_provider_object)
       vm_old = FactoryGirl.create(:vm_with_ref, :host => host, :vnc_port => 5901)
 
-      vm.remote_console_vnc_acquire_ticket
+      vm.remote_console_vnc_acquire_ticket(user.userid)
 
       vm_old.reload
       expect(vm_old.vnc_port).to be_nil

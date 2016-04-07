@@ -20,6 +20,7 @@ describe "Server Role Management" do
         smartstate,SmartState Analysis,0,false,zone
         storage_inventory,Storage Inventory,1,false,zone
         user_interface,User Interface,0,false,region
+        websocket,Websocket,0,false,region
         web_services,Web Services,0,false,region
       CSV
       allow(ServerRole).to receive(:seed_data).and_return(@csv)

@@ -88,6 +88,7 @@ module MiqServer::EnvironmentManagement
       MiqApache::Control.kill_all
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
+      MiqWebsocketWorker.install_apache_proxy_config
     end
   end
 
