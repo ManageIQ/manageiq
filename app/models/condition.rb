@@ -90,7 +90,7 @@ class Condition < ApplicationRecord
     eval(expr) ? true : false
   end
 
-  def self.subst(expr, rec, _inputs)
+  def self.subst(expr, rec, _inputs = nil)
     findexp = /<find>(.+?)<\/find>/im
     if expr =~ findexp
       expr = expr.gsub!(findexp) { |_s| _subst_find(rec, $1.strip) }
