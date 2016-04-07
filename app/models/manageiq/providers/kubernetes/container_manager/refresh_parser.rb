@@ -314,8 +314,10 @@ module ManageIQ::Providers::Kubernetes
       new_result
     end
 
-    def parse_namespaces(container_projects)
-      parse_base_item(container_projects).except(:namespace)
+    def parse_namespaces(namespace)
+      new_result = parse_base_item(namespace).except(:namespace)
+      new_result[:labels] = parse_labels(namespace)
+      new_result
     end
 
     def parse_persistent_volume(persistent_volume)
