@@ -12,7 +12,7 @@ module ReportFormatter
     # Generates the body of the timeline
     def build_document_body
       mri = options.mri
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
       # Calculate the earliest time of events to show
       unless mri.timeline[:last_unit].nil?
         #       START of TIMELINE TIMEZONE Code
@@ -54,7 +54,7 @@ module ReportFormatter
 
     def tl_event(tl_xml, row, col)
       mri = options.mri
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
       etime = row[col]
       return if etime.nil?                              # Skip nil dates - Sprint 41
       return if !@start_time.nil? && etime < @start_time # Skip if before start time limit

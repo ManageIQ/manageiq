@@ -26,7 +26,7 @@ module ReportFormatter
 
     def build_document_body
       mri = options.mri
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
       output << "<table class='table table-striped table-bordered'>"
       output << "<thead>"
       output << "<tr>"

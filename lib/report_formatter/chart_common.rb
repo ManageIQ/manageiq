@@ -64,7 +64,7 @@ module ReportFormatter
 
     # C&U performance charts (Cluster, Host, VM based)
     def build_performance_chart_area(maxcols, divider)
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
       nils2zero = false # Allow gaps in charts for nil values
 
       #### To do - Uncomment to handle long term averages

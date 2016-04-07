@@ -192,7 +192,7 @@ module MiqReport::Formatting
     col = options[:column]
     col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
 
-    val = val.in_time_zone(get_time_zone("UTC"))
+    val = val.in_time_zone(default_time_zone)
     if val.respond_to?("beginning_of_#{sfx}")
       stime = val.send("beginning_of_#{sfx}")
       etime = val.send("end_of_#{sfx}")

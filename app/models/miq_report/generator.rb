@@ -837,7 +837,7 @@ module MiqReport::Generator
     self.append_to_title!(" (filtered for #{user.name})")
   end
 
-  def get_time_zone(default_tz = nil)
-    time_profile ? time_profile.tz || tz || default_tz : tz || default_tz
+  def default_time_zone(default_tz = nil)
+    time_profile.try!(:tz) || tz || default_tz || TimeProfile::DEFAULT_TZ
   end
 end

@@ -68,7 +68,7 @@ module MiqReport::Generator::Sorting
   end
 
   def build_value_for_sort_suffix(value, suffix)
-    value = value.in_time_zone(get_time_zone("UTC")) if value && value.kind_of?(Time)
+    value = value.in_time_zone(default_time_zone) if value && value.kind_of?(Time)
     value = value.to_time.utc.beginning_of_day            if value && value.kind_of?(Date)
     suffix = suffix.to_sym if suffix
 
