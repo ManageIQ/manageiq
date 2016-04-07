@@ -64,8 +64,8 @@ module ReportFormatter
         format, options = javascript_format(mri.graph[:column].split(/(?<!:):(?!:)/)[0], custom_format)
         return unless format
 
-        axis_formatter = { :function => format, :options => options }
-        mri.chart[:axis][:y] = {:tick => {:format => axis_formatter }}
+        axis_formatter = {:function => format, :options => options}
+        mri.chart[:axis][:y] = {:tick => {:format => axis_formatter}}
       end
 
       if chart_is_stacked?
