@@ -135,6 +135,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def collect_compliance_data(image)
     return unless image_inspector_client.respond_to? :fetch_oscap_arf
+    _log.info "collecting compliance data for #{options[:docker_image_id]}"
     openscap_result = image.openscap_result || OpenscapResult.new(:container_image => image)
     openscap_result.attach_raw_result(image_inspector_client.fetch_oscap_arf)
     openscap_result.save
