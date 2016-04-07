@@ -508,7 +508,7 @@ module ApplicationController::TreeSupport
           :title    => ems.name,
           :tooltip  => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
           :addClass => "cfme-no-cursor-node",      # No cursor pointer
-          :icon     => ActionController::Base.helpers.image_path("100/vendor-#{ems.image_name}.png")
+          :icon     => ActionController::Base.helpers.image_path("svg/vendor-#{ems.image_name}.svg")
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true
