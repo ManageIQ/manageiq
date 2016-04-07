@@ -1,22 +1,4 @@
 describe EmsFolder do
-  context "#hidden?" do
-    it "when not hidden" do
-      folder = FactoryGirl.build(:ems_folder, :name                  => "vm",
-                                              :hidden                => false,
-                                              :ext_management_system => FactoryGirl.build(:ems_openstack)
-                                )
-      expect(folder).to_not be_hidden
-    end
-
-    it "when hidden" do
-      folder = FactoryGirl.build(:ems_folder, :name                  => "vm",
-                                              :hidden                => true,
-                                              :ext_management_system => FactoryGirl.build(:ems_vmware)
-                                )
-      expect(folder).to be_hidden
-    end
-  end
-
   context "with folder tree" do
     before(:each) do
       @root = FactoryGirl.create(:ems_folder, :name => "root")
