@@ -600,8 +600,16 @@ module VmCommon
     show_association('cloud_subnets', 'Subnets', 'cloud_subnet', :cloud_subnets, CloudSubnet)
   end
 
+  def cloud_networks
+    show_association('cloud_subnets', 'Networks', 'cloud_subnet', :cloud_subnets, CloudNetwork)
+  end
+
   def network_routers
     show_association('network_routers', 'Routers', 'network_router', :network_routers, NetworkRouter)
+  end
+
+  def network_ports
+    show_association('network_ports', 'Ports', 'network_ports', :network_ports, NetworkPort)
   end
 
   def snap

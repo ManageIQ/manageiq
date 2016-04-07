@@ -47,6 +47,10 @@ module Mixins
       nested_list("cloud_subnet", CloudSubnet)
     end
 
+    def display_network_routers
+      nested_list("network_router", NetworkRouter)
+    end
+
     def nested_list(table_name, model)
       title = ui_lookup(:tables => table_name)
       drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},

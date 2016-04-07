@@ -100,7 +100,7 @@ module EmsCommon
      ContainerProject, ContainerImageRegistry, AvailabilityZone,
      MiddlewareServer, MiddlewareDeployment,
      CloudTenant, CloudVolume, Flavor,
-     SecurityGroup, FloatingIp, NetworkRouter, CloudSubnet].detect do |klass|
+     SecurityGroup, FloatingIp, NetworkRouter, NetworkPort, CloudSubnet, CloudNetwork].detect do |klass|
       name = klass.name.underscore.pluralize
       [display_name, session_display].include?(name)
     end
