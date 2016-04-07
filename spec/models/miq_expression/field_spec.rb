@@ -44,12 +44,12 @@ RSpec.describe MiqExpression::Field do
 
     it "can parse the associations when there is one present" do
       field = "Vm.host-name"
-      expect(described_class.parse(field).associations).to contain_exactly("host")
+      expect(described_class.parse(field).associations).to eq(["host"])
     end
 
     it "can parse the associations when there are many present" do
       field = "Vm.host.hardware-id"
-      expect(described_class.parse(field).associations).to contain_exactly("host", "hardware")
+      expect(described_class.parse(field).associations).to eq(%w(host hardware))
     end
   end
 
