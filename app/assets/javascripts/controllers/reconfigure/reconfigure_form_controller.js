@@ -7,11 +7,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         cores_per_socket_count:  '1',
         total_cpus:              '1',
         vmdisks:                 [],
-        hdType:                  'thick',
-        hdMode:                  'nonpersistent',
+        hdType:                  'thin',
+        hdMode:                  'persistent',
         hdSize:                  '',
         hdUnit:                  'MB',
-        cb_dependent:            false,
+        cb_dependent:            true,
         addEnabled:              false,
         vmAddDisks:              [],
         vmRemoveDisks:           []
@@ -167,6 +167,15 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       }
     };
 
+    $scope.resetAddValues = function() {
+      $scope.reconfigureModel.hdType = 'thin';
+      $scope.reconfigureModel.hdMode = 'persistent';
+      $scope.reconfigureModel.hdSize = '';
+      $scope.reconfigureModel.hdUnit = 'MB';
+      $scope.reconfigureModel.cb_dependent = true;
+      $scope.reconfigureModel.addEnabled = false;
+    };
+
     $scope.addDisk = function() {
       $scope.reconfigureModel.vmdisks.push({hdFilename:'',
                                             hdType: $scope.reconfigureModel.hdType,
@@ -175,12 +184,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
                                             hdUnit: $scope.reconfigureModel.hdUnit,
                                             cb_dependent: $scope.reconfigureModel.cb_dependent,
                                             add_remove: 'add'});
-      $scope.reconfigureModel.hdType = 'thick';
-      $scope.reconfigureModel.hdMode = 'nonpersistent';
-      $scope.reconfigureModel.hdSize = '';
-      $scope.reconfigureModel.hdUnit = 'MB';
-      $scope.reconfigureModel.cb_dependent = false;
-      $scope.reconfigureModel.addEnabled = false;
+      $scope.resetAddValues();
 
       $scope.updateDisksAddRemove();
 
@@ -192,6 +196,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
     $scope.enableDiskAdd = function(){
       $scope.reconfigureModel.addEnabled = true;
+    };
+
+    $scope.hideAddDisk = function(){
+      $scope.reconfigureModel.addEnabled = false;
+      $scope.resetAddValues();
     };
 
     $scope.deleteDisk = function(name) {

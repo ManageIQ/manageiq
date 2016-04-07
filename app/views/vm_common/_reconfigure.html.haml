@@ -113,7 +113,13 @@
         %table{:width => "100%", :align => "bottom"}
           %tr
             %td#buttons_on{:align => "right"}
-              %button.btn.btn-primary{:type => "button", "ng-click" => "enableDiskAdd()",  :align => "left"}= _('Add Disk')
+              %button.btn.btn-primary{:type      => "button",
+                                      "ng-click" => "enableDiskAdd()",
+                                      :align     => "left",
+                                      "ng-show"  => "!reconfigureModel.addEnabled"}= _('Add Disk')
+              %button.btn.btn-default.btn-sm{:type      => "button",
+                                             "ng-click" => "hideAddDisk()",
+                                             "ng-show"  => "reconfigureModel.addEnabled"}= ('Cancel Add')
       %table.table.table-striped.table-hover.table-condensed.table-bordered
         %thead
           %th= _('Name')
@@ -125,7 +131,7 @@
           %th.narrow= _('Delete Backing')
           %th= _('Actions')
         %tbody
-          %tr{"ng-show" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
+          %tr{"ng-if" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
             %td
             %td
               = select_tag('hdType',
@@ -149,6 +155,7 @@
                                   "id"          => "dvcSize",
                                   "name"        => "dvcSize",
                                   "ng-model"    => "reconfigureModel.hdSize",
+                                  "required"    => "",
                                   "ng-pattern"  => "hdpattern",
                                   "placeholder" => "Enter New Size",
                                   "ng-change"   => "hdChanged()"}
@@ -170,7 +177,7 @@
                      "ng-model"  => "reconfigureModel.cb_dependent"}
             %td.narrow
             %td.action-cell
-              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Save ')
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Add ')
           %tr{"ng-repeat" => "disk in reconfigureModel.vmdisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
             %td
               {{disk.hdFilename}}

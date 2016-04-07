@@ -411,14 +411,30 @@ module ApplicationController::CiProcessing
       # set the disk_add and disk_remove options
       if params[:vmAddDisks]
         params[:vmAddDisks].values.each do |p|
-          p.transform_values!{|v| v == 'true' ? true : v == 'false' ? false : v }
-          end
+          p.transform_values!{ |v|
+            case v
+              when 'true'
+                true
+              when 'false'
+                false
+              else
+                v
+            end }
+        end
         options[:disk_add] = params[:vmAddDisks].values
       end
 
       if params[:vmRemoveDisks]
         params[:vmRemoveDisks].values.each do |p|
-          p.transform_values!{|v| v == 'true' ? true : v == 'false' ? false : v }
+          p.transform_values!{ |v|
+            case v
+            when 'true'
+              true
+            when 'false'
+              false
+            else
+              v
+            end }
         end
         options[:disk_remove] = params[:vmRemoveDisks].values
       end
