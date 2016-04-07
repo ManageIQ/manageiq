@@ -34,10 +34,7 @@ module ApplicationController::TreeSupport
     klass_name = x_tree[:klass_name] if x_active_tree
     nodes = klass_name ? TreeBuilder.tree_add_child_nodes(@sb, klass_name, params[:id]) :
         tree_add_child_nodes(params[:id])
-    render :update do |page|
-      page << javascript_prologue
-      page << nodes.to_json
-    end
+    render :json => nodes
   end
 
   def tree_autoload_quads
