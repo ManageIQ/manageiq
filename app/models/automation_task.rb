@@ -1,6 +1,6 @@
 class AutomationTask < MiqRequestTask
   alias_attribute :automation_request, :miq_request
-
+  has_one :container_deployment
   AUTOMATE_DRIVES = false
 
   def self.get_description(_request_obj)
