@@ -34,7 +34,8 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_flavor
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
-      assert_specific_template
+      assert_specific_image_template
+      assert_specific_snapshot_template
       assert_specific_cloud_volume
       assert_specific_cloud_volume_snapshot
     end
@@ -48,16 +49,16 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(CloudNetwork.count).to        eql(1)
     expect(SecurityGroup.count).to       eql(1)
     expect(FirewallRule.count).to        eql(6)
-    expect(VmOrTemplate.count).to        eql(473)
+    expect(VmOrTemplate.count).to        eql(474)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(471)
+    expect(MiqTemplate.count).to         eql(472)
     expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(4)
-    expect(OperatingSystem.count).to     eql(473)
+    expect(OperatingSystem.count).to     eql(474)
     expect(Relationship.count).to        eql(4)
-    expect(MiqQueue.count).to            eql(473)
+    expect(MiqQueue.count).to            eql(474)
     expect(CloudVolume.count).to         eql(4)
     expect(CloudVolumeSnapshot.count).to eql(1)
   end
@@ -66,11 +67,11 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(@ems.flavors.size).to            eql(18)
     expect(@ems.key_pairs.size).to          eql(4)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(473)
+    expect(@ems.vms_and_templates.size).to  eql(474)
     expect(@ems.cloud_networks.size).to     eql(1)
     expect(@ems.security_groups.size).to    eql(1)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(471)
+    expect(@ems.miq_templates.size).to      eq(472)
   end
 
   def assert_specific_zone
@@ -374,7 +375,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.hardware.networks.size).to      eql(2)
   end
 
-  def assert_specific_template
+  def assert_specific_image_template
     name      = "rhel-7-v20151104"
     @template = ManageIQ::Providers::Google::CloudManager::Template.where(:name => name).first
     expected_location = "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/images/rhel-7-v20151104"
@@ -406,6 +407,43 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
     expect(@template.ext_management_system).to         eq(@ems)
     expect(@template.operating_system.product_name).to eq("linux_redhat")
+    expect(@template.custom_attributes.size).to        eq(0)
+    expect(@template.snapshots.size).to                eq(0)
+  end
+
+  def assert_specific_snapshot_template
+    name      = "wheezy-snapshot-1"
+    @template = ManageIQ::Providers::Google::CloudManager::Template.where(:name => name).first
+    expected_location =
+      "https://www.googleapis.com/compute/v1/projects/civil-tube-113314/global/snapshots/wheezy-snapshot-1"
+
+    expect(@template).to have_attributes(
+      :template              => true,
+      :ems_ref               => "9048940034142591751",
+      :ems_ref_obj           => nil,
+      :uid_ems               => "9048940034142591751",
+      :vendor                => "google",
+      :power_state           => "never",
+      :location              => expected_location,
+      :tools_status          => nil,
+      :boot_time             => nil,
+      :standby_action        => nil,
+      :connection_state      => nil,
+      :cpu_affinity          => nil,
+      :memory_reserve        => nil,
+      :memory_reserve_expand => nil,
+      :memory_limit          => nil,
+      :memory_shares         => nil,
+      :memory_shares_level   => nil,
+      :cpu_reserve           => nil,
+      :cpu_reserve_expand    => nil,
+      :cpu_limit             => nil,
+      :cpu_shares            => nil,
+      :cpu_shares_level      => nil
+    )
+
+    expect(@template.ext_management_system).to         eq(@ems)
+    expect(@template.operating_system.product_name).to eq("unknown")
     expect(@template.custom_attributes.size).to        eq(0)
     expect(@template.snapshots.size).to                eq(0)
   end
