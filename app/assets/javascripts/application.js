@@ -2,6 +2,7 @@
 //= require jquery
 //= require jquery_overrides
 //= require i18n
+//= require tertiary-nav
 //= require patternfly
 //= require jquery-ujs
 //= require angular
