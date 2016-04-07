@@ -237,7 +237,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(@host.switches.size).to eq(2)
     switch = @host.switches.find_by_name("vSwitch0")
     expect(switch).to have_attributes(
-      :uid_ems           => "vSwitch0",
+      :uid_ems           => "#{@ems.guid}|#{@host.ems_ref}|vSwitch0",
       :name              => "vSwitch0",
       :ports             => 128,
       :allow_promiscuous => false,

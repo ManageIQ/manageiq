@@ -141,8 +141,8 @@ module ManageIQ::Providers
           product_name = product["name"].nil? ? nil : product["name"].to_s.gsub(/^VMware\s*/i, "")
 
           # Collect the hardware, networking, and scsi inventories
-          switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv)
-          lans, lan_uids[mor] = host_inv_to_lan_hashes(host_inv, switch_uids[mor])
+          switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv, ems_inv[:ems].guid)
+          _lans, lan_uids[mor] = host_inv_to_lan_hashes(host_inv, switch_uids[mor], ems_inv[:ems].guid)
 
           hardware = host_inv_to_hardware_hash(host_inv)
           hardware[:guest_devices], guest_device_uids[mor] = host_inv_to_guest_device_hashes(host_inv, switch_uids[mor])
@@ -337,7 +337,8 @@ module ManageIQ::Providers
         result
       end
 
-      def self.host_inv_to_switch_hashes(inv)
+      def self.host_inv_to_switch_hashes(inv, ems_guid)
+        host_mor = inv['MOR']
         inv = inv.fetch_path('config', 'network')
 
         result = []
@@ -345,7 +346,8 @@ module ManageIQ::Providers
         return result, result_uids if inv.nil?
 
         inv['vswitch'].to_miq_a.each do |data|
-          name = uid = data['name']
+          name = data['name']
+          uid = "#{ems_guid}|#{host_mor}|#{data['name']}"
           pnics = data['pnic'].to_miq_a
 
           security_policy = data.fetch_path('spec', 'policy', 'security') || {}
@@ -370,7 +372,8 @@ module ManageIQ::Providers
         return result, result_uids
       end
 
-      def self.host_inv_to_lan_hashes(inv, switch_uids)
+      def self.host_inv_to_lan_hashes(inv, switch_uids, ems_guid)
+        host_mor = inv['MOR']
         inv = inv.fetch_path('config', 'network')
 
         result = []
@@ -382,7 +385,7 @@ module ManageIQ::Providers
           next if spec.nil?
 
           # Find the switch to which this lan is connected
-          switch = switch_uids[spec['vswitchName']]
+          switch = switch_uids["#{ems_guid}|#{host_mor}|#{spec['vswitchName']}"]
           next if switch.nil?
 
           name = uid = spec['name']
