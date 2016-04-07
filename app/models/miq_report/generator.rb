@@ -200,6 +200,7 @@ module MiqReport::Generator
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
 
     klass = db.kind_of?(Class) ? db : Object.const_get(db)
+    interval = db_options.present? && db_options[:interval]
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
     includes = get_include_for_find(include)
@@ -240,7 +241,7 @@ module MiqReport::Generator
         build_correlate_tag_cols
       end
 
-    elsif !db_options.blank? && db_options[:interval] == 'daily' && klass <= MetricRollup
+    elsif interval == 'daily' && klass <= MetricRollup
       # Ad-hoc daily performance reports
       #   Daily for: Performance - Clusters...
       unless conditions.nil?
@@ -250,7 +251,7 @@ module MiqReport::Generator
         # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
       end
 
-      time_range = Metric::Helper.time_range_from_offset("daily", db_options[:start_offset], db_options[:end_offset], tz)
+      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
       results = VimPerformanceDaily
                 .find_entries(ext_options.merge(:class => klass))
@@ -264,7 +265,7 @@ module MiqReport::Generator
                                        :userid       => options[:userid],
                                        :miq_group_id => options[:miq_group_id])
       results = Metric::Helper.remove_duplicate_timestamps(results)
-    elsif !db_options.blank? && db_options.key?(:interval)
+    elsif interval
       # Ad-hoc performance reports
 
       start_time = Time.now.utc - db_options[:start_offset].seconds
