@@ -126,21 +126,23 @@ class ContainerDashboardService
     metrics.each do |m|
       next if m.resource.nil? # Metrics are purged asynchronously and might be missing their node
       provider_name = @ems.present? ? @ems.name : m.resource.ext_management_system.name
+      cpu_usage = m.cpu_usage_rate_average.present? ? m.cpu_usage_rate_average : nil
+      mem_usage = m.mem_usage_absolute_average.present? ? m.mem_usage_absolute_average : nil
 
       node_cpu_usage << {
         :id       => m.resource.id,
         :node     => m.resource.name,
         :provider => provider_name,
-        :total    => m.derived_vm_numvcpus.round,
-        :percent  => (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+        :total    => m.derived_vm_numvcpus.present? ? m.derived_vm_numvcpus.round : nil,
+        :percent  => cpu_usage ? (mcpu_usage / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
       }
 
       node_memory_usage << {
         :id       => m.resource.id,
         :node     => m.resource.name,
         :provider => m.resource.ext_management_system.name,
-        :total    => m.derived_memory_available.round,
-        :percent  => (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) # pf accepts fractions 90% = 0.90
+        :total    => m.derived_memory_available.present? ? m.derived_memory_available.round : nil,
+        :percent  => mem_usage ? (mem_usage / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
       }
     end
 
