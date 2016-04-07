@@ -1,7 +1,6 @@
 - return if !%w(ems_cloud ems_infra).include?(controller_name)
 
-.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}",
-            "ng-if" => "emsCommonModel.emstype != '' && (emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra')"}
+.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}"}
   %label.col-md-2.control-label{"for" => "textInput-markup"}
     = _('Hostname (or IPv4 or IPv6 address)')
   .col-md-8

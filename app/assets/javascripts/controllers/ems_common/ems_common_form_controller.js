@@ -37,7 +37,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       azure_tenant_id: '',
       subscription: ''
       host_default_vnc_port_start: '',
-      host_default_vnc_port_end: ''
+      host_default_vnc_port_end: '',
+      ems_controller: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
@@ -64,6 +65,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.api_version                     = 'v2';
         $scope.emsCommonModel.default_security_protocol       = 'ssl';
         $scope.emsCommonModel.amqp_security_protocol          = 'ssl';
+        $scope.emsCommonModel.ems_controller                  = data.ems_controller;
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -107,6 +109,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.host_default_vnc_port_start     = data.host_default_vnc_port_start;
         $scope.emsCommonModel.host_default_vnc_port_end       = data.host_default_vnc_port_end;
+
+        $scope.emsCommonModel.ems_controller                  = data.ems_controller;
 
         if($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
