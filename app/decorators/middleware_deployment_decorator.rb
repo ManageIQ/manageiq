@@ -1,4 +1,4 @@
-class MiddlewareServerDecorator < Draper::Decorator
+class MiddlewareDeploymentDecorator < Draper::Decorator
   delegate_all
 
   def fonticon
@@ -15,14 +15,12 @@ class MiddlewareServerDecorator < Draper::Decorator
   # we want to display a different icon depending of the type
   # of server we have.
   def item_image
-    case product
-    when 'Hawkular'
-      'vendor-hawkular'
-    when 'JBoss EAP'
-      'vendor-jboss-eap'
+    if name.end_with? '.ear'
+      'middleware_deployment_ear'
+    elsif name.end_with? '.war'
+      'middleware_deployment_war'
     else
-      'vendor-wildfly'
+      'middleware_deployment'
     end
   end
-
 end

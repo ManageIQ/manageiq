@@ -25,7 +25,7 @@ class MiddlewareServerController < ApplicationController
 
   def listicon_image(item, _view)
     icon = item.decorate.try(:listicon_image)
-    "100/#{icon}.png"
+    "svg/#{icon}.svg"
   end
 
   private ############################
