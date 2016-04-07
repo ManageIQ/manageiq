@@ -402,7 +402,7 @@ describe('emsCommonFormController in the context of ems infra provider', functio
       zone: 'default',
       emstype_vm: false,
       openstack_infra_providers_exist: false,
-      api_port: '5000',
+      default_api_port: '5000',
       api_version: 'v2'
     };
     $httpBackend = _$httpBackend_;
@@ -443,7 +443,7 @@ describe('emsCommonFormController in the context of ems infra provider', functio
     });
 
     it('sets the api_port to 5000', function () {
-      expect($scope.emsCommonModel.api_port).toEqual(5000);
+      expect($scope.emsCommonModel.default_api_port).toEqual(5000);
     });
 
     it('sets the api_version to v2', function () {
