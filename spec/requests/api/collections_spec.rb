@@ -114,7 +114,7 @@ describe ApiController do
     end
 
     example "query Rates" do
-      FactoryGirl.create(:chargeback_rate_detail)
+      FactoryGirl.build(:chargeback_rate_detail)
       test_collection_query(:rates, rates_url, ChargebackRateDetail)
     end
 

@@ -2,9 +2,23 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
-
-  validates :rate, :numericality => true
+  has_many :chargeback_tiers, :dependent => :destroy
   validates :group, :source, :presence => true
+  validate :contiguous_tiers?
+
+  # Set the rates according to the tiers
+  def find_rate(value)
+    fixed_rate = 0.0
+    variable_rate = 0.0
+    chargeback_tiers.each do |tier|
+      next if value < rate_adjustment(tier.start)
+      next if value >= rate_adjustment(tier.finish)
+      fixed_rate = tier.fixed_rate
+      variable_rate = tier.variable_rate
+      break
+    end
+    return fixed_rate, variable_rate
+  end
 
   PER_TIME_MAP = {
     :hourly  => "Hour",
@@ -17,20 +31,31 @@ class ChargebackRateDetail < ApplicationRecord
   def cost(value)
     return 0.0 unless self.enabled?
     value = 1 if group == 'fixed'
+    (fixed_rate, variable_rate) = find_rate(value)
+    hourly(fixed_rate) + hourly(variable_rate) * value
+  end
 
-    value * hourly_rate
+  def hourly(rate)
+    case per_time
+    when "hourly"  then rate
+    when "daily"   then rate / 24
+    when "weekly"  then rate / 24 / 7
+    when "monthly" then rate / 24 / 30
+    when "yearly"  then rate / 24 / 365
+    else raise "rate time unit of '#{per_time}' not supported"
+    end
   end
 
   def hourly_rate
-    rate = self.rate.to_s.to_f
-    return 0.0 if rate.zero?
+    _fixed_rate, variable_rate = find_rate(0.0)
+    return 0.0 if variable_rate.zero?
 
     hr = case per_time
-         when "hourly"  then rate
-         when "daily"   then rate / 24
-         when "weekly"  then rate / 24 / 7
-         when "monthly" then rate / 24 / 30
-         when "yearly"  then rate / 24 / 365
+         when "hourly"  then variable_rate
+         when "daily"   then variable_rate / 24
+         when "weekly"  then variable_rate / 24 / 7
+         when "monthly" then variable_rate / 24 / 30
+         when "yearly"  then variable_rate / 24 / 365
          else raise _("rate time unit of '%{time_type}' not supported") % {:time_type => per_time}
          end
 
@@ -80,15 +105,21 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def friendly_rate
+    (fixed_rate, variable_rate) = find_rate(0.0)
     value = read_attribute(:friendly_rate)
     return value unless value.nil?
 
     if group == 'fixed'
       # Example: 10.00 Monthly
-      "#{rate} #{per_time.to_s.capitalize}"
+      "#{fixed_rate + variable_rate} #{per_time.to_s.capitalize}"
     else
-      # Example: Daily @ .02 per MHz
-      "#{per_time.to_s.capitalize} @ #{rate} per #{per_unit_display}"
+      s = ""
+      ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
+        # Example: Daily @ .02 per MHz from 0.0 to Infinity
+        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
+             "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.finish}\n"
+      end
+      s.chomp
     end
   end
 
@@ -103,12 +134,73 @@ class ChargebackRateDetail < ApplicationRecord
 
   # New method created in order to show the rates in a easier to understand way
   def show_rates(code_currency)
-    rate = self.rate.to_s
-    return code_currency if rate.to_f.zero?
-
     hr = ChargebackRateDetail::PER_TIME_MAP[per_time.to_sym]
     rate_display = "#{detail_currency.code} / #{hr}"
     rate_display_unit = "#{rate_display} / #{per_unit_display}"
     per_unit.nil? ? rate_display : rate_display_unit
+  end
+
+  def save_tiers(tiers)
+    temp = self.class.new(:chargeback_tiers => tiers)
+    if temp.contiguous_tiers?
+      tiers.each do |tier|
+        unless tier.valid?
+          errors.add(:tier, tier.errors.full_messages.first)
+          return
+        end
+        tier.save
+      end
+      self.chargeback_tiers.replace(tiers)
+    else
+      temp.errors.each {|a, e| errors.add(a, e)}
+    end
+  end
+
+  # Check that tiers are complete and disjoint
+  def contiguous_tiers?
+    error = false
+
+    # Note, we use sort_by vs. order since we need to call this method against
+    # the in memory chargeback_tiers association and NOT hit the database.
+    tiers = chargeback_tiers.sort_by(&:start)
+
+    tiers.each_with_index do |tier, index|
+      if single_tier?(tier,tiers)
+        error = true if !tier.starts_with_zero? || !tier.ends_with_infinity?
+      elsif first_tier?(tier,tiers)
+        error = true if !tier.starts_with_zero? || tier.ends_with_infinity?
+      elsif last_tier?(tier,tiers)
+        error = true if !consecutive_tiers?(tier, tiers[index - 1])
+        error = true if !tier.ends_with_infinity?
+      elsif middle_tier?(tier,tiers)
+        error = true if !consecutive_tiers?(tier, tiers[index - 1])
+        error = true if tier.ends_with_infinity?
+      end
+
+      break if error
+    end
+    errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
+
+    !error
+  end
+
+  def first_tier?(tier,tiers)
+    tier == tiers.first
+  end
+
+  def last_tier?(tier,tiers)
+    tier == tiers.last
+  end
+
+  def single_tier?(tier,tiers)
+    first_tier?(tier, tiers) && last_tier?(tier, tiers)
+  end
+
+  def middle_tier?(tier,tiers)
+    !first_tier?(tier, tiers) && !last_tier?(tier, tiers)
+  end
+
+  def consecutive_tiers?(tier, previous_tier)
+    tier.start == previous_tier.finish
   end
 end
