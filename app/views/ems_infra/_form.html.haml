@@ -40,21 +40,6 @@
                               "style"       => "color: black; font-weight: normal;"}
             = @emstype_display
 
-    .form-group{"ng-class" => "{'has-error': angularForm.realm.$invalid}", "ng-if" => "emsCommonModel.emstype == 'scvmm' && emsCommonModel.security_protocol == 'kerberos'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
-        = _('Realm')
-      .col-md-8
-        %input.form-control{"type"           => "text",
-                            "id"             => "textInput-markup",
-                            "name"           => "realm",
-                            "ng-model"       => "emsCommonModel.realm",
-                            "maxlength"      => "#{MAX_NAME_LEN}",
-                            "required"       => "",
-                            "checkchange"    => "",
-                            "auto-focus"     => ""}
-        %span.help-block{"ng-show" => "angularForm.realm.$error.required"}
-          = _("Required")
-
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack_infra'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _("API Version")
