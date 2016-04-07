@@ -36,6 +36,8 @@ class MiqPolicy < ApplicationRecord
 
   @@built_in_policies = nil
 
+  UI_FOLDERS = [Host, Vm, ContainerImage].freeze
+
   def self.built_in_policies
     return @@built_in_policies.dup unless @@built_in_policies.nil?
 

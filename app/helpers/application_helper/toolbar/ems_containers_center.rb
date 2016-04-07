@@ -59,6 +59,14 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           :url_parms => "main_div",
           :enabled   => false,
           :onwhen    => "1+"),
+        button(
+          :ems_container_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Manage Policies'),
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1+"),
       ]
     ),
   ])

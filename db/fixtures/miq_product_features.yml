@@ -3177,6 +3177,10 @@
       :description: Edit Tags of Containers Providers
       :feature_type: control
       :identifier: ems_container_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Containers Providers
+      :feature_type: control
+      :identifier: ems_container_protect
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
@@ -3718,10 +3722,18 @@
       :description: Edit Tags of Container Images
       :feature_type: control
       :identifier: container_image_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Container Images
+      :feature_type: control
+      :identifier: container_image_protect
     - :name: Analysis
-      :description: Perform SmartState Analysis on VMs
+      :description: Perform SmartState Analysis on Containers
       :feature_type: control
       :identifier: container_image_scan
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: container_image_check_compliance
 
 # ContainerImageRegistry
 - :name: Registries

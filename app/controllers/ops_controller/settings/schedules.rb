@@ -567,6 +567,9 @@ module OpsController::Settings::Schedules
     if role_allows(:feature => "host_check_compliance")
       @action_type_options_for_select.push([_("Host Compliance Check"), "host_check_compliance"])
     end
+    if role_allows(:feature => "container_image_check_compliance")
+      @action_type_options_for_select.push([_("Container Image Compliance Check"), "container_image_check_compliance"])
+    end
     @action_type_options_for_select.push([_("Database Backup"), "db_backup"])
 
     @vm_options_for_select = [

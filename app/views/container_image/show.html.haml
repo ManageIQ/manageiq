@@ -6,5 +6,8 @@
     = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
   - when "item"
     = render(:partial => "layouts/#{@showtype}")
+  - when "compliance_history"
+    = render(:partial => "shared/views/#{@showtype}")
+
   - else
     = render :partial => @showtype

@@ -9,6 +9,9 @@ describe MiqPolicy do
       @ps = FactoryGirl.create(:miq_policy_set)
       @p  = FactoryGirl.create(:miq_policy)
       @ps.add_member(@p)
+
+      @ps2 = FactoryGirl.create(:miq_policy_set)
+      @p2  = FactoryGirl.create(:miq_policy)
     end
 
     it "should return the correct conditions" do

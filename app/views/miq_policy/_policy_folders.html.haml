@@ -4,11 +4,14 @@
     %tbody
       - @folders.each do |f|
         - if %w(Compliance Control).include?(f)
+          - model_name = f.split.first
           - click = f.downcase
         - else
-          - click = "#{f.split.last.downcase}_xx-#{f.split[1].downcase}-#{f.split[0].downcase}"
+          - model_name = f.split[0..-2].join.camelize(:lower)
+          - type = f.split[-1].downcase
+          - click = "#{type}_xx-#{type}-#{model_name}"
         %tr{:onclick => "miqDynatreeActivateNode('policy_tree', 'xx-#{click}');", :title => _("Open Folder")}
           %td.narrow
-            %img{:src => image_path("100/#{f.split.first.downcase}.png")}
+            %img{:src => image_path("100/#{model_name.underscore}.png")}
           %td
             = _("%s Policies") % h(f == "Vm" ? ui_lookup(:model => f) : f)
