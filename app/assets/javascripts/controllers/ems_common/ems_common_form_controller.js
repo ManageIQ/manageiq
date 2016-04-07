@@ -10,9 +10,12 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       default_hostname: '',
       amqp_hostname: '',
       ssh_keypair_hostname: '',
+      metrics_hostname: '',
       project: '',
       default_api_port: '',
       amqp_api_port: '',
+      ssh_keypair_port: '',
+      metrics_port: '',
       api_version: '',
       default_security_protocol: '',
       realm: '',
@@ -83,6 +86,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_hostname                = data.default_hostname;
         $scope.emsCommonModel.amqp_hostname                   = data.amqp_hostname;
         $scope.emsCommonModel.ssh_keypair_hostname            = data.ssh_keypair_hostname;
+        $scope.emsCommonModel.metrics_hostname                = data.metrics_hostname;
         $scope.emsCommonModel.project                         = data.project;
 
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
@@ -92,6 +96,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port : '5000';
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port : '5672';
         $scope.emsCommonModel.ssh_keypair_api_port            = angular.isDefined(data.ssh_keypair_api_port) && data.ssh_keypair_api_port != '' ? data.ssh_keypair_api_port : '';
+        $scope.emsCommonModel.metrics_api_port                = angular.isDefined(data.metrics_api_port) && data.metrics_api_port != '' ? data.metrics_api_port : '';
         $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
@@ -100,6 +105,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.provider_region                 = data.provider_region;
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
+        $scope.emsCommonModel.metrics_userid                  = data.metrics_userid;
 
         $scope.emsCommonModel.ssh_keypair_userid              = data.ssh_keypair_userid;
 
