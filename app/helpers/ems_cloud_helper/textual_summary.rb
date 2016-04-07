@@ -25,7 +25,8 @@ module EmsCloudHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    {:label => _("Region"), :value => @ems.description}
+    label_val = (@ems.type.include? "Google") ? _("Preferred Region") : _("Region")
+    {:label => label_val, :value => @ems.description}
   end
 
   def textual_hostname
