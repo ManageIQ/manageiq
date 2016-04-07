@@ -1,4 +1,4 @@
-require 'fog'
+require 'fog/openstack'
 
 $LOAD_PATH.push(Rails.root.to_s)
 require_relative 'openstack/interaction_methods'

@@ -1,4 +1,4 @@
-require 'fog'
+require 'fog/openstack'
 # TODO(lsmola) how do I load this?
 # require 'models/ems_refresh/refreshers/openstack/refresh_spec_environments'
 

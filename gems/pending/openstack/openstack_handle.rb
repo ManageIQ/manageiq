@@ -1,6 +1,6 @@
 require 'openstack/openstack_handle/handled_list'
 require 'openstack/openstack_handle/handle'
-require 'fog'
+require 'fog/openstack'
 require 'openstack/openstack_handle/compute_delegate'
 require 'openstack/openstack_handle/identity_delegate'
 require 'openstack/openstack_handle/network_delegate'
