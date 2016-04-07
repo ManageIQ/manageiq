@@ -710,7 +710,7 @@ class MiqExpression
       end
     when "is"
       col_name = exp[operator]["field"]
-      col_sql, dummy = operands2sqlvalue(operator, "field" => col_name)
+      col_sql, _dummy = operands2sqlvalue(operator, "field" => col_name)
       col_type = self.class.get_col_type(col_name)
       value = exp[operator]["value"]
       if col_type == :date
@@ -729,7 +729,7 @@ class MiqExpression
       end
     when "from"
       col_name = exp[operator]["field"]
-      col_sql, dummy = operands2sqlvalue(operator, "field" => col_name)
+      col_sql, _dummy = operands2sqlvalue(operator, "field" => col_name)
       col_type = self.class.get_col_type(col_name)
 
       start_val, end_val = exp[operator]["value"]
@@ -750,7 +750,7 @@ class MiqExpression
 
       col_name = exp[operator]["field"]
       col_type = self.class.get_col_type(col_name)
-      col_sql, dummy = operands2sqlvalue(operator, "field" => col_name)
+      col_sql, _dummy = operands2sqlvalue(operator, "field" => col_name)
 
       normalized_operator = self.class.normalize_sql_operator(operator)
       mode = case normalized_operator
