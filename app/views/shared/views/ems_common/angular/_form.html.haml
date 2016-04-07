@@ -62,7 +62,7 @@
 
     .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
-        = _('Region')
+        = _('Preferred Region')
       .col-md-8
         = select_tag('provider_region',
                      options_for_select([["<#{_('Choose')}>", nil]] + Array(@google_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
