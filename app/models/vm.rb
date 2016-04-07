@@ -1,6 +1,7 @@
 class Vm < VmOrTemplate
   default_scope { where(:template => false) }
-
+  has_one :container_deployment, :through => :deployments_node_deployment
+  has_one :container_node_deployment
   include_concern 'Operations'
 
   def self.base_model

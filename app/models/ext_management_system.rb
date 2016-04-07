@@ -27,7 +27,7 @@ class ExtManagementSystem < ApplicationRecord
 
   belongs_to :provider
   belongs_to :tenant
-
+  has_many :container_deployments
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
   has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
