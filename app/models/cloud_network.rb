@@ -2,6 +2,8 @@ class CloudNetwork < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 
+  acts_as_miq_taggable
+
   # TODO(lsmola) NetworkManager, once all providers use network manager rename this to
   # "ManageIQ::Providers::NetworkManager"
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::BaseManager"
@@ -37,6 +39,11 @@ class CloudNetwork < ApplicationRecord
       extra_attributes_load(action)
     end
   end
+
+  def total_vms
+    vms.count
+  end
+  virtual_column :total_vms, :type => :integer, :uses => :vms
 
   private
 
