@@ -51,6 +51,11 @@ RSpec.describe MiqExpression::Field do
       field = "Vm.host.hardware-id"
       expect(described_class.parse(field).associations).to eq(%w(host hardware))
     end
+
+    it "will raise a parse error when given a field with unsupported syntax" do
+      field = "Vm,host+name"
+      expect { described_class.parse(field) }.to raise_error(MiqExpression::Field::ParseError)
+    end
   end
 
   describe "#date?" do

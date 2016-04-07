@@ -5,8 +5,10 @@ class MiqExpression::Field
 -(?<column>[a-z]+(_[a-z]+)*)
 /x
 
+  ParseError = Class.new(StandardError)
+
   def self.parse(field)
-    match = FIELD_REGEX.match(field)
+    match = FIELD_REGEX.match(field) or raise ParseError, field
     new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:column])
   end
 
