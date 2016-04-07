@@ -113,18 +113,18 @@ describe('dialogFieldRefresh', function() {
 
     it('sets up the select picker event', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
-      expect(window.miqSelectPickerEvent).toHaveBeenCalledWith('fieldName', 'url');
+      expect(window.miqSelectPickerEvent).toHaveBeenCalledWith('fieldName', 'url', {callback: jasmine.any(Function)});
     });
 
-    it('triggers the auto refresh when the drop down changes', function() {
+    it('triggers the auto refresh when the drop down changes', function(done) {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
-      $("#" + fieldName).trigger('change');
+      done();
       expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'true');
     });
 
-    it('triggers autorefresh with "false" when triggerAutoRefresh arg is false', function() {
+    it('triggers autorefresh with "false" when triggerAutoRefresh arg is false', function(done) {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url, 'false');
-      $("#" + fieldName).trigger('change');
+      done();
       expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'false');
     });
   });

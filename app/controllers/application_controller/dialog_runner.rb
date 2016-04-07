@@ -97,17 +97,6 @@ module ApplicationController::DialogRunner
 
     # Use JS to update the display
     render :update do |page|
-      @edit[:wf].dialog.dialog_tabs.each do |tab|
-        tab.dialog_groups.each do |group|
-          group.dialog_fields.each_with_index do |field, _i|
-            params.each do |p|
-              if p[0] == field.name
-                url = url_for(:action => 'dialog_field_changed', :id => "#{@edit[:rec_id] || "new"}")
-              end
-            end
-          end
-        end
-      end
       page << "miqSparkle(false);"
     end
   end

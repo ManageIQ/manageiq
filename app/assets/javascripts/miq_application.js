@@ -1008,14 +1008,16 @@ function miqSendDateRequest(el) {
   //  tack on the id and value to the URL
   var urlstring = url + '?' + el.prop('id') + '=' + el.val();
 
-  if (parms.auto_refresh === true) {
-    dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-  }
+  var attemptAutoRefreshTrigger = function() {
+    if (parms.auto_refresh === true) {
+      dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+    }
+  };
 
   if (el.attr('data-miq_sparkle_on')) {
-    miqJqueryRequest(urlstring, {beforeSend: true});
+    $.when(miqJqueryRequest(urlstring, {beforeSend: true})).done(attemptAutoRefreshTrigger);
   } else {
-    miqJqueryRequest(urlstring);
+    $.when(miqJqueryRequest(urlstring)).done(attemptAutoRefreshTrigger);
   }
 }
 
@@ -1208,7 +1210,7 @@ function miqJqueryRequest(url, options) {
     };
   }
 
-  $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  return $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
 function miqDomElementExists(element) {
@@ -1235,11 +1237,13 @@ function miqInitSelectPicker() {
 function miqSelectPickerEvent(element, url, options){
   $('#' + element).on('change', function(){
     var selected = $('#' + element).val();
-    options =  typeof options !== 'undefined' ? options : {}
-    options['no_encoding'] = true;
+    options =  typeof options !== 'undefined' ? options : {};
+    options.no_encoding = true;
 
     var firstarg = ! _.contains(url, '?');
-    miqJqueryRequest(url + (firstarg ? '?' : '&') + element + '=' + escape(selected), options);
+    $.when(miqJqueryRequest(url + (firstarg ? '?' : '&') + element + '=' + escape(selected), options)).done(function() {
+      options.callback.call();
+    });
     return true;
   });
 }
