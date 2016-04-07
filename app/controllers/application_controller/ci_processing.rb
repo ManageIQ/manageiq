@@ -409,8 +409,20 @@ module ApplicationController::CiProcessing
         options[:number_of_cpus] = vccores.to_i * vsockets.to_i
       end
       # set the disk_add and disk_remove options
-      options[:disk_add] = params[:vmAddDisks].deep_symbolize_keys.values if params[:vmAddDisks]
-      options[:disk_remove] = params[:vmRemoveDisks].deep_symbolize_keys.values if params[:vmRemoveDisks]
+      if params[:vmAddDisks]
+        params[:vmAddDisks].values.each do |p|
+          p.transform_values!{|v| v == 'true' ? true : v == 'false' ? false : v }
+          end
+        options[:disk_add] = params[:vmAddDisks].values
+      end
+
+      if params[:vmRemoveDisks]
+        params[:vmRemoveDisks].values.each do |p|
+          p.transform_values!{|v| v == 'true' ? true : v == 'false' ? false : v }
+        end
+        options[:disk_remove] = params[:vmRemoveDisks].values
+      end
+
       if(params[:id] && params[:id] != 'new')
         @request_id = params[:id]
       end
@@ -1176,11 +1188,11 @@ module ApplicationController::CiProcessing
         @req.options[:disk_add].each do |disk|
           adsize, adunit = reconfigure_calculations(disk[:disk_size_in_mb])
           vmdisks << {:hdFilename   => disk[:disk_name],
-                      :hdType       => disk[:thin_provisioned] == 'true' ? 'thin' : 'thick',
-                      :hdMode       => disk[:persistent] == 'true' ? 'persistent' : 'nonpersistent',
+                      :hdType       => disk[:thin_provisioned] ? 'thin' : 'thick',
+                      :hdMode       => disk[:persistent] ? 'persistent' : 'nonpersistent',
                       :hdSize       => adsize.to_s,
                       :hdUnit       => adunit,
-                      :cb_dependent => disk[:dependent] == 'true',
+                      :cb_dependent => disk[:dependent],
                       :add_remove   => 'add'}
         end
       end
@@ -1195,7 +1207,7 @@ module ApplicationController::CiProcessing
             @req.options[:disk_remove].each do |remdisk|
               if remdisk[:disk_name] == disk.filename
                 removing = 'remove'
-                delbacking = remdisk[:delete_backing] == 'true'
+                delbacking = remdisk[:delete_backing]
               end
             end
           end
