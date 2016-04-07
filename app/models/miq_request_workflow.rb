@@ -1042,7 +1042,7 @@ class MiqRequestWorkflow
   end
 
   def storage_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name, :free_space, :total_space, :storage_domain_type])
+    build_ci_hash_struct(ci, [:name, :free_space, :total_space, :storage_domain_type, :storage_cluster])
   end
 
   def snapshot_to_hash_struct(ci)

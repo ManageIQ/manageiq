@@ -34,6 +34,7 @@ class Storage < ApplicationRecord
   # validates_uniqueness_of   :location
 
   include RelationshipMixin
+  self.default_relationship_type = "ems_metadata"
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -75,6 +76,10 @@ class Storage < ApplicationRecord
   def ext_management_systems
     @ext_management_systems ||= ExtManagementSystem.joins(:hosts => :storages).where(
       :host_storages => {:storage_id => id}).distinct.to_a
+  end
+
+  def storage_cluster
+    parent.kind_of?(StorageCluster)? parent.name: nil
   end
 
   def ext_management_systems_in_zone(zone_name)
