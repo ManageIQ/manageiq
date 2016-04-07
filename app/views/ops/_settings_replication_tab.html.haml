@@ -1,0 +1,193 @@
+- if @sb[:active_tab] == "settings_replication"
+  - @angular_form = true
+
+  %form.form-horizontal#form_div{"name"          => "angularForm",
+                                 "ng-controller" => "pglogicalReplicationFormController",
+                                 "ng-show"       => "afterGet"}
+    = render :partial => "layouts/flash_msg"
+    .form-group{"ng-class" => "{'has-error': angularForm.subscriptions.$invalid}"}
+      %label.col-md-2.control-label
+        = _('Type')
+      .col-md-2
+        = select_tag('replication_type',
+                          options_for_select([["<#{_('None')}>", 'none'], ["Global", 'global'], ["Remote", 'remote']]),
+                          "ng-model"                    => "pglogicalReplicationModel.replication_type",
+                          "ng-change"                   => "replicationTypeChanged()",
+                          "miqrequired"                 => "",
+                          "checkchange"                 => "",
+                          "selectpicker-for-select-tag" => "")
+
+    .subscriptions_div{"ng-if" => "pglogicalReplicationModel.replication_type == 'global'"}
+      %h3
+        = _('Subscriptions')
+      %br
+        %span{"style"=>"color:red", "ng-show" => "subscriptionInValidMessage()"}
+          = _("At least 1 subscription must be added to save server replication type")
+      %table{:width => "100%", :align => "bottom"}
+        %tr
+          %td#buttons_on{:align => "right"}
+            %button.btn.btn-primary.btn-sm{:type => "button", "ng-disabled" => "addInProgress()",  "ng-click" => "enableSubscriptionAdd()",  :align => "left"}= _('Add Subscription')
+      %table.table.table-striped.table-hover.table-condensed.table-bordered
+        %thead
+          %th= _('Database')
+          %th= _('Host')
+          %th= _('Username')
+          %th= _('Password')
+          %th= _('Port')
+          %th=_('Actions')
+        %tbody
+          %tr{"ng-show" => "pglogicalReplicationModel.addEnabled"}
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "host",
+                                  "name"        => "host",
+                                  "ng-model"    => "pglogicalReplicationModel.database",
+                                  "ng-required" => true}
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "host",
+                                  "name"        => "host",
+                                  "ng-model"    => "pglogicalReplicationModel.host",
+                                  "ng-required" => true}
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "userid",
+                                  "name"        => "userid",
+                                  "ng-model"    => "pglogicalReplicationModel.username",
+                                  "ng-required" => true}
+            %td
+              %input.form-control{"type"        => "password",
+                                  "id"          => "password",
+                                  "name"        => "password",
+                                  "ng-model"    => "pglogicalReplicationModel.password",
+                                  "placeholder" => placeholder_if_present("pglogicalReplicationModel.password"),
+                                  "ng-required" => true}
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "port",
+                                  "name"        => "port",
+                                  "ng-model"    => "pglogicalReplicationModel.port"}
+            %td.action-cell
+              %button.btn.btn-default.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()",  "ng-click" => "addSubscription()"}= _('Accept')
+              %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
+                %i.fa.fa-ellipsis-v.pull-right
+              %ul.dropdown-menu.pull-right
+                %li
+                  %a{:class => "disabled", "ng-show" => "!subscriptionValid()"}
+                    = _('Validate')
+                %li
+                  %a{"ng-show" => "subscriptionValid()", "ng-click" => "validateSubscription()"}
+                    = _('Validate')
+                %li
+                  %a{"ng-click" => "discardSubscription()"}
+                    = _('Discard')
+
+          %tr{"ng-repeat" => "subscription in pglogicalReplicationModel.subscriptions", "ng-form" => "rowForm", "ng-class" => "{'danger': showCancelDelete($index)}"}
+            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'database')}"}
+              {{subscription.database}}
+            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'database')}"}
+              %input.form-control{"type"        => "text",
+                                  "id"          => "database",
+                                  "name"        => "database",
+                                  "ng-model"    => "pglogicalReplicationModel.database",
+                                  "ng-change"   => "showChanged($index, 'database')",
+                                  "ng-required" => true}
+
+            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'host')}"}
+              {{subscription.host}}
+            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'host')}"}
+              %input.form-control{"type"        => "text",
+                                  "id"          => "host",
+                                  "name"        => "host",
+                                  "ng-model"    => "pglogicalReplicationModel.host",
+                                  "ng-required" => true}
+
+            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'username')}"}
+              {{subscription.username}}
+            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'username')}"}
+              %input.form-control{"type"        => "text",
+                                  "id"          => "username",
+                                  "name"        => "username",
+                                  "ng-model"    => "pglogicalReplicationModel.username",
+                                  "ng-required" => true}
+
+            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'password')}"}
+              ●●●●●●●●
+            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'password')}"}
+              %input.form-control{"type"        => "password",
+                                  "id"          => "password",
+                                  "name"        => "password",
+                                  "ng-model"    => "pglogicalReplicationModel.password",
+                                  "ng-required" => true}
+
+            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'port')}"}
+              {{subscription.port}}
+            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'port')}"}
+              %input.form-control{"type"        => "text",
+                                  "id"          => "port",
+                                  "name"        => "port",
+                                  "ng-model"    => "pglogicalReplicationModel.port"}
+
+            %td{:class => "action-cell", "ng-show" => "showCancelDelete($index)"}
+              %button.btn.btn-default.btn-sm{:type => "button", "ng-click" => "cancelDelete($index)"}= _('Cancel Delete')
+
+            %td{:class => "action-cell", "ng-show" => "!showCancelDelete($index) && !pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)"}
+              %button.btn.btn-default.btn-sm{:type => "button", "ng-disabled" => "addInProgress()",  "ng-click" => "enableSubscriptionUpdate($index)"}= _('Update')
+              %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
+                %i.fa.fa-ellipsis-v.pull-right
+              %ul.dropdown-menu.pull-right
+                %li
+                  %a{"ng-click" => "removeSubscription($index)"}
+                    = _('Delete')
+                %li
+                  %a{"ng-click" => "validateSubscription($index)"}
+                    = _('Validate')
+            %td{:class => "action-cell", "ng-show" => "!showCancelDelete($index) && pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index"}
+              %button.btn.btn-default.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()", "ng-click" => "addSubscription($index)"}= _('Accept')
+              %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
+                %i.fa.fa-ellipsis-v.pull-right
+              %ul.dropdown-menu.pull-right
+                %li
+                  %a{:class => "disabled", "ng-show" => "!subscriptionValid()"}
+                    = _('Validate')
+                %li
+                  %a{"ng-show" => "subscriptionValid()", "ng-click" => "validateSubscription($index)"}
+                    = _('Validate')
+                %li
+                  %a{"ng-click" => "discardSubscription($index)"}
+                    = _('Discard')
+
+    .button-group{:align => "right"}
+      = button_tag(_("Save"),
+                   :class     => "btn btn-primary btn-disabled",
+                   :alt       => _("Save"),
+                   :style     => "cursor:not-allowed",
+                   "ng-click" => "disabledClick($event)",
+                   "ng-show"  => "!saveEnabled()")
+      = button_tag(_("Save"),
+                   :class     => "btn btn-primary",
+                   :alt       => _("Save"),
+                   "ng-click" => "saveClicked()",
+                   "ng-show"  => "saveEnabled()")
+      = button_tag("Reset",
+           :class        => "btn btn-default btn-disabled",
+           :alt          => "Reset changes",
+           :title        => "Reset changes",
+           "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
+           "ng-click"    => "resetClicked()",
+           "ng-disabled" => "angularForm.$pristine",
+           "ng-hide"     => "newRecord")
+
+  :javascript
+    ManageIQ.angular.app.value('pglogicalReplicationFormId', 'new');
+    miq_bootstrap('#form_div');
