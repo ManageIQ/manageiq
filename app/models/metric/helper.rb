@@ -32,7 +32,7 @@ module Metric::Helper
     nearest_realtime_timestamp(ts + 20.seconds)
   end
 
-  def self.nearest_hourly_timestamp(ts)
+  def self.nearest_hourly_timestamp(ts = Time.now.utc)
     ts = ts.kind_of?(Time) ? ts.utc.iso8601 : ts.dup
     ts[14..-1] = "00:00Z"
     ts
