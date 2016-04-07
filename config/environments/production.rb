@@ -10,13 +10,12 @@ Vmdb::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  # TODO: enable static asset server for now so rails serves the images/css, etc.
   config.serve_static_files = false
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
-  # Don't fallback to assets pipeline if a precompiled asset is missed
+  # Fallback to the asset pipeline if a precompiled asset is missed.
   # TODO: Once everything is in the asset pipeline, this should be set back to false.
   config.assets.compile = true
 
