@@ -13,7 +13,8 @@
     %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
       = _("Required")
 
-.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'rhevm'"}
+.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}",
+            "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'rhevm'"}
   %label.col-md-2.control-label{"for" => "textInput-markup"}
     = _('API Port')
   .col-md-8
