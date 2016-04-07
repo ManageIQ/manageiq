@@ -3,9 +3,9 @@ require 'recursive-open-struct'
 describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   let(:parser)  { described_class.new }
 
-  describe "parse_namespaces" do
+  describe "parse_namespace" do
     it "handles simple data" do
-      expect(parser.send(:parse_namespaces,
+      expect(parser.send(:parse_namespace,
                          RecursiveOpenStruct.new(
                            :metadata => {
                              :name              => "proj2",
