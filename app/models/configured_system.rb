@@ -63,6 +63,11 @@ class ConfiguredSystem < ApplicationRecord
     tag_hash[ConfigurationRealm]
   end
 
+  def counterparts
+    return [] unless counterpart
+    [counterpart] + counterpart.counterparts.where.not(:id => id)
+  end
+
   def tag_hash
     @tag_hash ||= configuration_tags.index_by(&:class)
   end
