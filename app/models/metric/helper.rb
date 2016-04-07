@@ -159,13 +159,20 @@ module Metric::Helper
 
   # interval_name of daily:
   #   Get yesterday at 23:00 in specified TZ. Then convert that to UTC. Then subtract offsets
+  # interval_name of hourly (and others)
+  #   Just your typical x.seconds.ago
+  #
   # @param start_offset [Fixnum]
   # @param end_offset [Fixnum|nil]
   # @return [Range<Datetime,Datetime>] timestamp range for offsets
   def self.time_range_from_offset(interval_name, start_offset, end_offset, tz = nil)
-    tz ||= Metric::Helper.get_time_zone
-    time_in_tz = Time.now.in_time_zone(tz)
-    now = time_in_tz.hour == 23 ? time_in_tz.utc : (time_in_tz.midnight - 1.hour).utc
+    if interval_name == "daily"
+      tz ||= Metric::Helper.get_time_zone
+      time_in_tz = Time.now.in_time_zone(tz)
+      now = time_in_tz.hour == 23 ? time_in_tz.utc : (time_in_tz.midnight - 1.hour).utc
+    else
+      now = Time.now.utc
+    end
 
     start_time = now - start_offset.seconds
     end_time   = end_offset.nil? ? now : now - end_offset.seconds

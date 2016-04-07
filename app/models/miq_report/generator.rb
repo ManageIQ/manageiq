@@ -268,14 +268,13 @@ module MiqReport::Generator
     elsif interval
       # Ad-hoc performance reports
 
-      start_time = Time.now.utc - db_options[:start_offset].seconds
-      end_time   =  db_options[:end_offset].nil? ? Time.now.utc : Time.now.utc - db_options[:end_offset].seconds
+      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
 
       # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
       exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
       where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
 
-      results = klass.with_interval_and_time_range(db_options[:interval], start_time..end_time)
+      results = klass.with_interval_and_time_range(interval, time_range)
                      .where(where_clause).includes(includes).limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
