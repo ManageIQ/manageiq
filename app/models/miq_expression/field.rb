@@ -1,23 +1,21 @@
 class MiqExpression::Field
   FIELD_REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
-\.?(?<association>[a-z_]+)?
+\.?(?<associations>[a-z_\.]+)*
 -(?<column>[a-z]+(_[a-z]+)*)
 /x
 
-  ParseError = Class.new(StandardError)
-
   def self.parse(field)
-    match = FIELD_REGEX.match(field) or raise ParseError, field
-    new(match[:model_name].constantize, match[:association], match[:column])
+    match = FIELD_REGEX.match(field)
+    new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:column])
   end
 
-  attr_reader :model, :association, :column
+  attr_reader :model, :associations, :column
   delegate :table_name, :to => :target
 
-  def initialize(model, association, column)
+  def initialize(model, associations, column)
     @model = model
-    @association = association
+    @associations = associations
     @column = column
   end
 
@@ -32,10 +30,10 @@ class MiqExpression::Field
   private
 
   def target
-    if association
-      association.classify.constantize
-    else
+    if associations.none?
       model
+    else
+      associations.last.classify.constantize
     end
   end
 
