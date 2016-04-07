@@ -1,7 +1,7 @@
 module MiqPreloader
-  def self.preload(records, associations, _options = {})
+  def self.preload(records, associations, preload_scope = nil)
     preloader = ActiveRecord::Associations::Preloader.new
-    preloader.preload(records, associations)
+    preloader.preload(records, associations, preload_scope)
   end
 
   # it will load records and their associations, and return the children
