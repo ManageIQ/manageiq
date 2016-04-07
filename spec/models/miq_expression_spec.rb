@@ -526,6 +526,45 @@ describe MiqExpression do
       expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/used_disk_storage</value> >= 1048576000')
     end
 
+    context "integration" do
+      it "should escape strings" do
+        filter = YAML.load '--- !ruby/object:MiqExpression
+        exp:
+          INCLUDES:
+            field: Vm.registry_items-data
+            value: $foo
+        '
+        expect(filter.to_ruby).to eq("<value ref=vm, type=text>/virtual/registry_items/data</value> =~ /\\$foo/")
+
+        data = {"registry_items.data" => "C:\\Documents and Users\\O'Neill, April\\", "/virtual/registry_items/data" => "C:\\Documents and Users\\O'Neill, April\\"}
+        expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
+      end
+
+      it "should test context hash" do
+        data = {"name" => "VM_1", "guest_applications.version" => "3.1.2.7193", "guest_applications.release" => nil, "guest_applications.vendor" => "VMware, Inc.", "id" => 9, "guest_applications.name" => "VMware Tools", "guest_applications.package_name" => nil}
+
+        filter = YAML.load '--- !ruby/object:MiqExpression
+        exp:
+          "=":
+            field: Vm.guest_applications-name
+            value: VMware Tools
+        context_type: hash
+        '
+        expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
+        expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"VMware Tools\" == \"VMware Tools\"")
+
+        filter = YAML.load '--- !ruby/object:MiqExpression
+        exp:
+          REGULAR EXPRESSION MATCHES:
+            field: Vm.guest_applications-vendor
+            value: /^[^.]*ware.*$/
+        context_type: hash
+        '
+        expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
+        expect(Condition.subst(filter.to_ruby, data, {})).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
+      end
+    end
+
     context "date/time support" do
       context "static dates and times with no timezone" do
         it "generates the ruby for an AFTER expression with date value" do
@@ -825,43 +864,6 @@ describe MiqExpression do
     it "false value" do
       expect(described_class.value2tag("MiqGroup.vms-disconnected", false)).to eq ["miqgroup", "/virtual/vms/disconnected/false"]
     end
-  end
-
-  it "should escape strings" do
-    filter = YAML.load '--- !ruby/object:MiqExpression
-    exp:
-      INCLUDES:
-        field: Vm.registry_items-data
-        value: $foo
-    '
-    expect(filter.to_ruby).to eq("<value ref=vm, type=text>/virtual/registry_items/data</value> =~ /\\$foo/")
-
-    data = {"registry_items.data" => "C:\\Documents and Users\\O'Neill, April\\", "/virtual/registry_items/data" => "C:\\Documents and Users\\O'Neill, April\\"}
-    expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
-  end
-
-  it "should test context hash" do
-    data = {"name" => "VM_1", "guest_applications.version" => "3.1.2.7193", "guest_applications.release" => nil, "guest_applications.vendor" => "VMware, Inc.", "id" => 9, "guest_applications.name" => "VMware Tools", "guest_applications.package_name" => nil}
-
-    filter = YAML.load '--- !ruby/object:MiqExpression
-    exp:
-      "=":
-        field: Vm.guest_applications-name
-        value: VMware Tools
-    context_type: hash
-    '
-    expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
-    expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"VMware Tools\" == \"VMware Tools\"")
-
-    filter = YAML.load '--- !ruby/object:MiqExpression
-    exp:
-      REGULAR EXPRESSION MATCHES:
-        field: Vm.guest_applications-vendor
-        value: /^[^.]*ware.*$/
-    context_type: hash
-    '
-    expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
-    expect(Condition.subst(filter.to_ruby, data, {})).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
   end
 
   describe ".is_numeric?" do
