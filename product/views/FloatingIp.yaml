@@ -21,7 +21,6 @@ db: FloatingIp
 cols:
 - address
 - fixed_ip_address
-- instance_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
