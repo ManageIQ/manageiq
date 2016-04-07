@@ -72,6 +72,7 @@ describe VmOrTemplateController do
       feature = MiqProductFeature.find_all_by_identifier(["dashboard_show"])
       login_as FactoryGirl.create(:user, :features => feature)
       controller.instance_variable_set(:@sb, {})
+      request.env["HTTP_REFERER"] = "http://localhost:3000/dashboard/show"
       get :show, :params => {:id => @vm.id}
       expect(response).to redirect_to(:controller => "dashboard", :action => 'show')
       expect(assigns(:flash_array).first[:message]).to include("is not authorized to access")

@@ -375,6 +375,7 @@ describe EmsCloudController do
       allow(controller).to receive(:role_allows).and_return(true)
       allow(wf).to receive(:submit_request).and_return({})
       page = double('page')
+      allow(page).to receive(:<<).with(any_args)
       expect(page).to receive(:redirect_to).with("/ems_cloud/#{@ems.id}?flash_msg=Order+Request+was+Submitted")
       expect(controller).to receive(:render).with(:update).and_yield(page)
       controller.send(:dialog_form_button_pressed)

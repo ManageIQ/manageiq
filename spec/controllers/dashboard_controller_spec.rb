@@ -99,6 +99,7 @@ describe DashboardController do
 
     it "SAML Login should redirect to the protected page" do
       page = double("page")
+      allow(page).to receive(:<<).with(any_args)
       expect(page).to receive(:redirect_to).with(controller.saml_protected_page)
       expect(controller).to receive(:render).with(:update).and_yield(page)
       controller.send(:initiate_saml_login)

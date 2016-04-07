@@ -151,6 +151,7 @@ describe CatalogController do
       allow(controller).to receive(:role_allows).and_return(true)
       allow(wf).to receive(:submit_request).and_return({})
       page = double('page')
+      allow(page).to receive(:<<).with(any_args)
       expect(page).to receive(:redirect_to).with(:controller => "miq_request",
                                              :action     => "show_list",
                                              :flash_msg  => "Order Request was Submitted")
