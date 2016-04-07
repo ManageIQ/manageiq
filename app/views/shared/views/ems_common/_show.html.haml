@@ -2,7 +2,7 @@
   - arr = %w(container_images container_image_registries containers container_replicators container_routes)
   - arr.concat(%w(container_builds container_projects container_nodes container_services container_groups availability_zones))
   - arr.concat(%w(middleware_servers middleware_deployments))
-  - arr.concat(%w(security_groups floating_ips cloud_subnets network_routers))
+  - arr.concat(%w(security_groups floating_ips cloud_subnets network_routers network_ports cloud_networks))
   - arr.concat(%w(cloud_tenants ems_clusters flavors resource_group hosts instances images miq_templates cloud_volumes))
   - arr.concat(%w(cloud_volume_snapshots orchestration_stacks vms storages miq_proxies persistent_volumes cloud_object_store_containers))
   - if arr.include?(@display) && @showtype != "compare"
