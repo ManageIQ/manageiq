@@ -141,6 +141,24 @@ describe ConvertConfigurationsToSettingsChanges do
         :settings      => storage_data
       )
 
+      broker_notify_data = {
+        "exclude" => {
+          "HostSystem" => {
+            "config.property1" => nil,
+            "config.property2" => nil
+          },
+          "VirtualMachine" => {
+            "config.property3" => nil,
+            "config.property4" => nil
+          }
+        },
+      }
+      config_stub.create!(
+        :typ           => "broker_notify_properties",
+        :miq_server_id => 3,
+        :settings      => broker_notify_data
+      )
+
       migrate
 
       deltas = settings_change_stub.where(:resource_id => 1)
@@ -161,6 +179,22 @@ describe ConvertConfigurationsToSettingsChanges do
         :resource_id   => 2,
         :key           => "/storage/alignment/boundary",
         :value         => "1.byte",
+      )
+
+      deltas = settings_change_stub.where(:resource_id => 3).order(:key)
+      expect(deltas.size).to eq(2)
+
+      expect(deltas[0]).to have_attributes(
+        :resource_type => "MiqServer",
+        :resource_id   => 3,
+        :key           => "/broker_notify_properties/exclude/HostSystem",
+        :value         => %w(config.property1 config.property2),
+      )
+      expect(deltas[1]).to have_attributes(
+        :resource_type => "MiqServer",
+        :resource_id   => 3,
+        :key           => "/broker_notify_properties/exclude/VirtualMachine",
+        :value         => %w(config.property3 config.property4),
       )
     end
   end

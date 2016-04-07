@@ -56,8 +56,8 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     _log.info("#{log_prefix} Enabling Broker's Update Manager Notification")
 
-    @exclude_props = VMDB::Config.new("broker_notify_properties").config[:exclude] || {}
-    @exclude_props.deep_stringify_keys!
+    @exclude_props =
+      Settings.broker_notify_properties.exclude.map { |k, v| [k.to_s, v.to_set] }.to_h
 
     if @exclude_props.empty?
       _log.info("#{log_prefix} Not excluding any properties for broker notification.")
@@ -171,9 +171,9 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     change_set.reject!    { |c| !EmsRefresh::VcUpdates.selected_property?(type, c["name"]) }
 
     exclude_props = @exclude_props[obj_type]
-    unless exclude_props.nil?
-      changed_props.reject! { |p| exclude_props.key?(p) }
-      change_set.reject!    { |c| exclude_props.key?(c["name"]) }
+    if exclude_props
+      changed_props.reject! { |p| exclude_props.include?(p) }
+      change_set.reject!    { |c| exclude_props.include?(c["name"]) }
     end
 
     return if changed_props.empty?
