@@ -157,10 +157,10 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype != "azure") &&
       ($scope.emsCommonModel.emstype == "ec2" ||
       ($scope.emsCommonModel.emstype == "openstack" && $scope.emsCommonModel.default_hostname ||
-       $scope.emsCommonModel.emstype == "scvmm" && $scope.emsCommonModel.hostname ||
-       $scope.emsCommonModel.emstype == "openstack_infra" && $scope.emsCommonModel.hostname ||
-       $scope.emsCommonModel.emstype == "rhevm" && $scope.emsCommonModel.hostname && $scope.emsCommonModel.api_port ||
-       $scope.emsCommonModel.emstype == "vmwarews" && $scope.emsCommonModel.hostname)) &&
+       $scope.emsCommonModel.emstype == "scvmm" && $scope.emsCommonModel.default_hostname ||
+       $scope.emsCommonModel.emstype == "openstack_infra" && $scope.emsCommonModel.default_hostname ||
+       $scope.emsCommonModel.emstype == "rhevm" && $scope.emsCommonModel.default_hostname && $scope.emsCommonModel.default_api_port ||
+       $scope.emsCommonModel.emstype == "vmwarews" && $scope.emsCommonModel.default_hostname)) &&
       ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
@@ -178,13 +178,13 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "ssh_keypair" && $scope.emsCommonModel.emstype == "openstack_infra") &&
-      ($scope.emsCommonModel.hostname != '' && $scope.angularForm.hostname.$valid) &&
+      ($scope.emsCommonModel.ssh_keypair_hostname != '' && $scope.angularForm.ssh_keypair_hostname.$valid && $scope.emsCommonModel.ssh_keypair_api_port != '') &&
       ($scope.emsCommonModel.ssh_keypair_userid != '' && $scope.angularForm.ssh_keypair_userid.$valid &&
       $scope.emsCommonModel.ssh_keypair_password != '' && $scope.angularForm.ssh_keypair_password.$valid &&
       $scope.emsCommonModel.ssh_keypair_verify != '' && $scope.angularForm.ssh_keypair_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "metrics" && $scope.emsCommonModel.emstype == "rhevm") &&
-      ($scope.emsCommonModel.hostname != '' && $scope.angularForm.hostname.$valid && $scope.emsCommonModel.api_port != '') &&
+      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid && $scope.emsCommonModel.metrics_api_port != '') &&
       ($scope.emsCommonModel.metrics_userid != '' && $scope.angularForm.metrics_userid.$valid &&
       $scope.emsCommonModel.metrics_password != '' && $scope.angularForm.metrics_password.$valid &&
       $scope.emsCommonModel.metrics_verify != '' && $scope.angularForm.metrics_verify.$valid)) {
