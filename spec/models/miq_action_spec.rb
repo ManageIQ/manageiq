@@ -173,6 +173,29 @@ describe MiqAction do
     end
   end
 
+  context "#action_container_image_analyze" do
+    let(:container_image) { FactoryGirl.create(:container_image) }
+    let(:container_image_registry) { FactoryGirl.create(:container_image_registry) }
+    let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
+    let(:event_loop) { FactoryGirl.create(:miq_event_definition, :name => "request_container_image_scan") }
+    let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_analyze") }
+
+    it "scans container images" do
+      expect(container_image).to receive(:scan).once
+      action.action_container_image_analyze(action, container_image, :event => event)
+    end
+
+    it "avoids non container images" do
+      expect(container_image_registry).to receive(:scan).exactly(0).times
+      action.action_container_image_analyze(action, container_image_registry, :event => event)
+    end
+
+    it "avoids an event loop" do
+      expect(container_image_registry).to receive(:scan).exactly(0).times
+      action.action_container_image_analyze(action, container_image_registry, :event => event_loop)
+    end
+  end
+
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do
