@@ -377,6 +377,8 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   def assert_specific_template
     name      = "rhel-7-v20151104"
     @template = ManageIQ::Providers::Google::CloudManager::Template.where(:name => name).first
+    expected_location = "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/images/rhel-7-v20151104"
+
     expect(@template).to have_attributes(
       :template              => true,
       :ems_ref               => "5670907071397924697",
@@ -384,7 +386,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :uid_ems               => "5670907071397924697",
       :vendor                => "google",
       :power_state           => "never",
-      :location              => "unknown",
+      :location              => expected_location,
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,

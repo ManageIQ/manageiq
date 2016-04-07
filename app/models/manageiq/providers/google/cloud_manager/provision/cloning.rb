@@ -8,21 +8,23 @@ module ManageIQ::Providers::Google::CloudManager::Provision::Cloning
     end
   end
 
-  def create_disk
-    source.with_provider_connection do |google|
-      return google.disks.create(
-        :name         => dest_name,
-        :size_gb      => get_option(:boot_disk_size).to_i,
-        :zone_name    => dest_availability_zone.ems_ref,
-        :source_image => source.name)
-    end
+  def initial_disk
+    {
+      :boot             => true,
+      :autoDelete       => true,
+      :initializeParams => {
+        :name        => dest_name,
+        :diskSizeGb  => get_option(:boot_disk_size).to_i,
+        :sourceImage => source.location,
+      },
+    }
   end
 
   def prepare_for_clone_task
     clone_options = super
 
     clone_options[:name] = dest_name
-    clone_options[:disks] = [create_disk.get_as_boot_disk(true, true)]
+    clone_options[:disks] = [initial_disk]
     clone_options[:machine_type] = instance_type.ems_ref
     clone_options[:zone_name] = dest_availability_zone.ems_ref
 

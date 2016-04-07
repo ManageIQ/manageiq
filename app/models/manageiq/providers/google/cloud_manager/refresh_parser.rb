@@ -269,6 +269,7 @@ module ManageIQ::Providers
           :type               => type,
           :uid_ems            => uid,
           :ems_ref            => uid,
+          :location           => image.self_link,
           :name               => name,
           :vendor             => "google",
           :raw_power_state    => "never",
