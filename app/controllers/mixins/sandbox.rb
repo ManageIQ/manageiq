@@ -72,6 +72,8 @@ module Sandbox
     schedules_tree
     settings_tree
     stcat_tree
+    storage_tree
+    storage_pod_tree
     svccat_tree
     svcs_tree
     templates_filter_tree
@@ -125,6 +127,8 @@ module Sandbox
     schedules
     settings
     stcat
+    storage
+    storage_pod
     svccat
     svcs
     templates_filter

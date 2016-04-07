@@ -117,6 +117,8 @@ class ApplicationHelper::ToolbarChooser
           return center_toolbar_filename_ops
         elsif @layout == "pxe"
           return center_toolbar_filename_pxe
+        elsif @layout == "storage"
+          return center_toolbar_filename_storage
         elsif @layout == "report"
           return center_toolbar_filename_report
         elsif @layout == "miq_ae_customization"
@@ -406,6 +408,24 @@ class ApplicationHelper::ToolbarChooser
     "blank_view_tb"
   end
 
+  def center_toolbar_filename_storage
+    if x_active_tree == :storage_tree
+      if x_node == "root"
+        return "storages_center_tb"
+      else
+        return "storage_center_tb"
+      end
+    elsif x_active_tree == :storage_pod_tree
+      if x_node.split('-').length == 3
+        # folder node selected
+        return "storages_center_tb"
+      else
+        return "storage_center_tb"
+      end
+    end
+    "blank_view_tb"
+  end
+
   # Return non-explorer based toolbar file name
   def center_toolbar_filename_classic
     # Original non vmx view code follows
@@ -451,7 +471,7 @@ class ApplicationHelper::ToolbarChooser
               ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
               container_image_registry ems_infra flavor host container_build
               ontap_file_share ontap_logical_disk container_topology middleware_topology middleware_server
-              ontap_storage_system orchestration_stack resource_pool storage storage_manager
+              ontap_storage_system orchestration_stack resource_pool storage_manager
               timeline usage).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"

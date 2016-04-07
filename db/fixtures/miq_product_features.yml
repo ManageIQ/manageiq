@@ -1013,6 +1013,38 @@
       :feature_type: admin
       :identifier: storage_delete
 
+# Datastore Clusters
+- :name: Datastores Clusters
+  :description: Everything under Datastores Clusters
+  :feature_type: node
+  :identifier: storage_pod
+  :children:
+  - :name: View
+    :description: View Datastores Clusters
+    :feature_type: view
+    :identifier: storage_pod_view
+    :children:
+    - :name: List
+      :description: Display Lists of Datastores Clusters
+      :feature_type: view
+      :identifier: storage_pod_show_list
+    - :name: Show
+      :description: Display Individual Datastore Clusters
+      :feature_type: view
+      :identifier: storage_pod_show
+  - :name: Operate
+    :description: Perform Operations on Datastores
+    :feature_type: control
+  - :name: Modify
+    :description: Modify Datastores
+    :feature_type: admin
+    :identifier: storage_pod_admin
+    :children:
+    - :name: Remove
+      :description: Remove Datastores from the VMDB
+      :feature_type: admin
+      :identifier: storage_pod_delete
+
 # Dashboard
 - :name: Dashboard
   :description: Everything under Dashboard

@@ -60,7 +60,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
   def x_get_tree_folder_kids(object, count_only, type)
     objects = []
     case type
-    when :vandt, :handc
+    when :vandt, :handc, :storage_pod
       objects =  rbac_filtered_sorted_objects(object.folders_only, "name", :match_via_descendants => VmOrTemplate)
       objects += rbac_filtered_sorted_objects(object.datacenters_only, "name", :match_via_descendants => VmOrTemplate)
       objects += rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => VmOrTemplate)

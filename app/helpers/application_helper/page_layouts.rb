@@ -27,6 +27,8 @@ module ApplicationHelper::PageLayouts
       report
       rss
       server_build
+      storage
+      storage_pod
     ).include?(@layout)
 
     return false if dashboard_no_listnav?

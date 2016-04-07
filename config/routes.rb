@@ -2147,6 +2147,7 @@ Vmdb::Application.routes.draw do
         dialog_load
         disk_files
         download_data
+        explorer
         files
         index
         perf_chart_chooser
@@ -2155,12 +2156,16 @@ Vmdb::Application.routes.draw do
         show_list
         snapshot_files
         tagging_edit
+        tree_select
         vm_ram_files
         vm_misc_files
+        x_show
       ) +
                compare_get,
       :post => %w(
+        accordion_select
         button
+        explorer
         files
         listnav_search_selected
         panel_control
@@ -2173,15 +2178,22 @@ Vmdb::Application.routes.draw do
         show_association
         show_details
         show_list
+        storage_list
+        storage_pod_list
         tag_edit_form_field_changed
+        tagging
         tagging_edit
+        tree_autoload_dynatree
+        tree_select
         wait_for_task
+        x_show
       ) +
                adv_search_post +
                compare_post +
                dialog_runner_post +
                exp_post +
-               save_post
+               save_post +
+               x_post
     },
 
     :storage_manager          => {

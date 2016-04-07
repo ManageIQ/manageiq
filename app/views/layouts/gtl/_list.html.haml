@@ -155,6 +155,10 @@
               - click = "miqDynatreeActivateNode('settings_tree', 'sis-#{to_cid(row['id'])}');"
             - when "ChargebackRate"
               - click = "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_cr-#{to_cid(row['id'])}');"
+            - when "Storage"
+              - click = "miqDynatreeActivateNode('storage_tree', 'ds-#{to_cid(row['id'])}');"
+            - when "StorageCluster"
+              - click = "miqDynatreeActivateNode('storage_pod_tree', 'dsc-#{to_cid(row['id'])}');"
             - when "MiqDialog"
               - click = "miqDynatreeActivateNode('old_dialogs_tree', '#{TreeBuilder.get_prefix_for_model("MiqDialog")}-#{to_cid(row['id'])}');"
             - when "MiqWorker"
@@ -264,6 +268,10 @@
                     - click = "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_cr-#{to_cid(row['id'])}');"
                   - when "MiqDialog"
                     - click = "miqDynatreeActivateNode('old_dialogs_tree', '#{TreeBuilder.get_prefix_for_model("MiqDialog")}-#{to_cid(row['id'])}');"
+                  - when "Storage"
+                    - click = "miqDynatreeActivateNode('storage_tree', 'ds-#{to_cid(row['id'])}');"
+                  - when "StorageCluster"
+                    - click = "miqDynatreeActivateNode('storage_pod_tree', 'dsc-#{to_cid(row['id'])}');"
                   - when "MiqWorker"
                     - click = remote_function(:url => {:action => 'diagnostics_worker_selected', :id => "#{row['id']}"})
                   - else

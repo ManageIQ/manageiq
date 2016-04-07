@@ -1,5 +1,7 @@
 class StorageController < ApplicationController
   include AuthorizationMessagesMixin
+  include_concern 'StorageD'
+  include_concern 'StoragePod'
 
   before_action :check_privileges
   before_action :get_session_data
@@ -7,14 +9,34 @@ class StorageController < ApplicationController
   after_action :set_session_data
 
   def index
-    redirect_to :action => 'show_list'
+    redirect_to :action => 'explorer'
   end
 
-  def show
+  def show_list
+    redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
+  end
+
+  def show_new(id = nil)
+    @flash_array = [] if params[:display]
+    @sb[:action] = nil
+
+    @display = params[:display] || "main"
+    @lastaction = "show"
+    @showtype = "config"
+    @record = find_record( Storage, id || params[:id])
+    return if record_no_longer_exists?(@record)
+
+    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+
+    @gtl_url = "/show"
+    set_summary_pdf_data if "download_pdf" == @display
+  end
+
+  def show(record = nil)
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
-
-    @storage = @record = identify_record(params[:id])
+    @record = @storage = find_record( Storage, record || params[:id])
+    # @storage = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@storage)
 
     @gtl_url = "/show"
@@ -24,7 +46,7 @@ class StorageController < ApplicationController
     when "all_miq_templates", "all_vms"
       title, kls = (@display == "all_vms" ? ["VMs", Vm] : ["Templates", MiqTemplate])
       drop_breadcrumb(:name => _("%{name} (All Registered %{title})") % {:name => @storage.name, :title => title},
-                      :url  => "/storage/show/#{@storage.id}?display=#{@display}")
+                      :url  => "/storage/x_show/#{@storage.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @storage, :association => @display)  # Get the records (into a view) and the paginator
       @showtype = @display
       notify_about_unauthorized_items(title, _('Host'))
@@ -32,7 +54,7 @@ class StorageController < ApplicationController
     when "hosts"
       @view, @pages = get_view(Host, :parent => @storage) # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => _("%{name} (All Registered Hosts)") % {:name => @storage.name},
-                      :url  => "/storage/show/#{@storage.id}?display=hosts")
+                      :url  => "/storage/x_show/#{@storage.id}?display=hosts")
       @showtype = "hosts"
       notify_about_unauthorized_items(_('Hosts'), ui_lookup(:table => "storages"))
 
@@ -42,41 +64,41 @@ class StorageController < ApplicationController
       @summary_view = session[:vm_summary_cool]
       drop_breadcrumb({:name => ui_lookup(:tables => "storages"), :url => "/storage/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => "%{name} (Summary)" % {:name => @storage.name},
-                      :url  => "/storage/show/#{@storage.id}?display=main")
+                      :url  => "/storage/x_show/#{@storage.id}?display=main")
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
       @showtype = "performance"
       drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @storage.name},
-                      :url  => "/storage/show/#{@storage.id}?display=#{@display}&refresh=n")
+                      :url  => "/storage/x_show/#{@storage.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Intialize perf chart options, charts will be generated async
 
     when "storage_extents"
       drop_breadcrumb(:name => _(" (All %{tables})") % {:name   => @storage.name,
                                                         :tables => ui_lookup(:tables => "cim_base_storage_extent")},
-                      :url  => "/storage/show/#{@storage.id}?display=storage_extents")
+                      :url  => "/storage/x_show/#{@storage.id}?display=storage_extents")
       @view, @pages = get_view(CimBaseStorageExtent, :parent => @storage, :parent_method => :base_storage_extents)  # Get the records (into a view) and the paginator
       @showtype = "storage_extents"
 
     when "ontap_storage_systems"
       drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @storage.name,
                                                                :tables => ui_lookup(:tables => "ontap_storage_system")},
-                      :url  => "/storage/show/#{@storage.id}?display=ontap_storage_systems")
+                      :url  => "/storage/x_show/#{@storage.id}?display=ontap_storage_systems")
       @view, @pages = get_view(OntapStorageSystem, :parent => @storage, :parent_method => :storage_systems) # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_systems"
 
     when "ontap_storage_volumes"
       drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @storage.name,
                                                                :tables => ui_lookup(:tables => "ontap_storage_volume")},
-                      :url  => "/storage/show/#{@storage.id}?display=ontap_storage_volumes")
+                      :url  => "/storage/x_show/#{@storage.id}?display=ontap_storage_volumes")
       @view, @pages = get_view(OntapStorageVolume, :parent => @storage, :parent_method => :storage_volumes) # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_volumes"
 
     when "ontap_file_shares"
       drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @storage.name,
                                                                :tables => ui_lookup(:tables => "ontap_file_share")},
-                      :url  => "/storage/show/#{@storage.id}?display=ontap_file_shares")
+                      :url  => "/storage/x_show/#{@storage.id}?display=ontap_file_shares")
       @view, @pages = get_view(OntapFileShare, :parent => @storage, :parent_method => :file_shares) # Get the records (into a view) and the paginator
       @showtype = "ontap_file_shares"
     end
@@ -88,10 +110,6 @@ class StorageController < ApplicationController
     end
   end
 
-  # Show the main Storage list view
-  def show_list
-    process_show_list
-  end
 
   # handle buttons pressed on the button bar
   def button
@@ -215,8 +233,6 @@ class StorageController < ApplicationController
                      'debris_files')
   end
 
-  private ############################
-
   # gather up the storage records from the DB
   def get_storages
     page = params[:page].nil? ? 1 : params[:page].to_i
@@ -242,6 +258,464 @@ class StorageController < ApplicationController
   #     end
   #   end
   # end
+
+  def accordion_select
+    @lastaction = "explorer"
+
+    @sb[:storage_search_text] ||= {}
+    @sb[:storage_search_text]["#{x_active_accord}_search_text"] = @search_text
+
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{x_active_accord}_tree"
+    get_node_info(x_node)
+
+    @search_text = @sb[:storage_search_text]["#{x_active_accord}_search_text"]
+
+    load_or_clear_adv_search
+    replace_right_cell(x_node)
+  end
+
+  def load_or_clear_adv_search
+    adv_search_build("Storage")
+    session[:edit] = @edit
+    @explorer = true
+
+    if x_tree[:type] != :storage || x_node == "root"
+      listnav_search_selected(0)
+    else
+      @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
+
+      if x_tree[:type] == :storage && (@nodetype == "ms")
+        search_id = @nodetype == "root" ? 0 : from_cid(id)
+        listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
+        if @edit[:adv_search_applied] &&
+          MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
+          %w(reload tree_select).include?(params[:action])
+          self.x_node = params[:id]
+          quick_search_show
+          return
+        end
+      end
+    end
+  end
+
+  def x_show
+    @explorer = true
+    @vm = @record = identify_record(params[:id], Storage)
+    respond_to do |format|
+      format.js do                  # AJAX, select the node
+        unless @record
+          redirect_to :action => "explorer"
+          return
+        end
+        params[:id] = x_build_node_id(@record)  # Get the tree node id
+        tree_select
+      end
+      format.html do                # HTML, redirect to explorer
+        tree_node_id = TreeBuilder.build_node_id(@record)
+        session[:exp_parms] = {:id => tree_node_id}
+        redirect_to :action => "explorer"
+      end
+      format.any { head :not_found }  # Anything else, just send 404
+    end
+  end
+
+  def tree_select
+    self.x_active_tree = params[:tree] if params[:tree]
+    self.x_node        = params[:id]
+
+    load_or_clear_adv_search
+    apply_node_search_text if x_active_tree == :storage_tree
+
+    get_node_info(x_node)
+    replace_right_cell(x_node)
+  end
+
+  def tree_record
+    if x_active_tree == :storage_tree
+      @record = storage_tree_rec
+    elsif x_active_tree == :storage_pod_tree
+      @record = storage_pod_tree_rec
+    end
+  end
+
+  def storage_tree_rec
+    nodes = x_node.split('-')
+    case nodes.first
+      when "root" then find_record(Storage, params[:id])
+      when "ds"   then find_record(Storage, params[:id])
+      when "xx" then
+        case nodes.second
+          when "ds"   then find_record(Storage, params[:id])
+        end
+    end
+  end
+
+  def storage_pod_tree_rec
+    nodes = x_node.split('-')
+    case nodes.first
+      when "xx"  then find_record(Storage, params[:id])
+      when "dsc" then find_record(EmsFolder, from_cid(params[:id]))
+    end
+  end
+
+  def find_record(model, id)
+    raise _("Invalid input") unless is_integer?(from_cid(id))
+    begin
+      record = model.where(:id => from_cid(id)).first
+    rescue ActiveRecord::RecordNotFound, StandardError => ex
+      if @explorer
+        self.x_node = "root"
+        add_flash(ex.message, :error, true)
+        session[:flash_msgs] = @flash_array.dup
+      end
+    end
+    record
+  end
+
+
+  def show_record(_id = nil)
+    @display = params[:display] || "main" unless control_selected?
+    @lastaction = "show"
+    @showtype   = "config"
+
+    if @record.nil?
+      add_flash(_("Error: Record no longer exists in the database"), :error)
+      if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
+        @delete_node = params[:id]                  # Set node to be removed from the tree
+      end
+      return
+    end
+
+    if @record.class.base_model.to_s == "Storage"
+      rec_cls = @record.class.base_model.to_s.underscore
+    end
+    return unless %w(download_pdf main).include?(@display)
+    @showtype = "main"
+    @button_group = "storage_pod_#{rec_cls}" if x_active_accord == :storage_pod
+    @button_group = "storage_#{rec_cls}" if x_active_accord == :storage
+  end
+
+
+  def explorer
+    @breadcrumbs = []
+    @explorer = true
+    @lastaction = "explorer"
+    @sb[:open_tree_nodes] ||= []
+
+    build_accordions_and_trees
+
+    @right_cell_div ||= "storage_list"
+    @right_cell_text ||= _("All Datastores")
+
+    params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
+    session.delete(:exp_parms)
+    @in_a_form = false
+    if params[:id]  # If a tree node id came in, show in one of the trees
+      nodetype, id = params[:id].split("-")
+      # treebuilder initializes x_node to root first time in locals_for_render,
+      # need to set this here to force & activate node when link is clicked outside of explorer.
+      @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
+    end
+    render :layout => "application"
+  end
+
+  def tagging
+    assert_privileges("storage_tag") if x_active_accord == :storage
+    tagging_edit('Storage', false)
+    render_tagging_form
+  end
+
+  def storage_delete
+    deletestorages
+  end
+
+  def features
+    [{:role     => "storage",
+      :role_any => true,
+      :name     => :storage,
+      :title    => _("Datastores")},
+     {:role     => "storage_pod",
+      :role_any => true,
+      :name     => :storage_pod,
+      :title    => _("Datastore Clusters")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
+
+  def get_node_info(node)
+    node = valid_active_node(node)
+    case x_active_tree
+      when :storage_tree     then storage_get_node_info(node)
+      when :storage_pod_tree then storage_pod_get_node_info(node)
+     end
+    @right_cell_text += @edit[:adv_search_applied][:text] if x_tree && x_tree[:type] == :storage && @edit && @edit[:adv_search_applied]
+
+    if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
+      x_history_add_item(:id     => x_node,
+                         :qs_exp => @edit[:adv_search_applied][:qs_exp],
+                         :text   => @right_cell_text)
+    else
+      x_history_add_item(:id => node, :text => @right_cell_text)  # Add to history pulldown array
+    end
+  end
+
+  def leaf_record
+    get_node_info(x_node)
+    @delete_node = params[:id] if @replace_trees
+    type, _id = x_node.split("_").last.split("-")
+    type && ["Storage"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
+  def storage_record?(node = x_node)
+    type, _id = node.split("_").last.split("-")
+    type && ["Storage"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
+  def valid_storage_record?(record)
+    record.try(:id)
+  end
+
+  def replace_right_cell(nodetype = "root", replace_trees = [])
+    replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
+    # FIXME
+    @explorer = true
+    record_showing = leaf_record
+
+    trees = {}
+    if replace_trees
+      trees[:storage]             = storage_build_tree     if replace_trees.include?(:storage)
+      trees[:storage_pod]         = storage_pod_build_tree if replace_trees.include?(:storage_pod)
+    end
+
+   presenter = ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node      # Remove a new node from the tree
+   )
+    r = proc { |opts| render_to_string(opts) }
+    update_partials(record_showing, presenter, r)
+    replace_search_box(presenter, r)
+    c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
+    h_tb = build_toolbar('x_history_tb')
+
+    replace_trees_by_presenter(presenter, trees)
+
+    # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
+    presenter[:reload_toolbars][:center] = c_tb if c_tb.present?
+    presenter.set_visibility(c_tb.present?, :toolbar)
+
+    # Rebuild the toolbars
+    presenter.reload_toolbars(:history => h_tb)
+    case x_active_tree
+      when :storage_tree
+        presenter.update(:main_div, r[:partial => "storage_list"])
+      when :storage_pod_tree
+        presenter.update(:main_div, r[:partial => "storage_pod_list"])
+    end
+
+    # FIXME: check where @right_cell_text is set and replace that with loca variable
+    presenter[:right_cell_text] = @right_cell_text
+
+    if !@view || @in_a_form ||
+      (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
+      if @in_a_form
+        presenter.hide(:toolbar)
+        # in case it was hidden for summary screen, and incase there were no records on show_list
+        presenter.show(:paging_div, :form_buttons_div)
+      else
+        presenter.hide(:form_buttons_div)
+      end
+      presenter.hide(:pc_div_1)
+    else
+      presenter.hide(:form_buttons_div).show(:pc_div_1)
+    end
+
+    presenter[:record_id] = determine_record_id_for_presenter
+
+    presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+
+    # Save open nodes, if any were added
+    presenter[:osf_node] = x_node
+    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
+    # Render the JS responses to update the explorer screen
+    render :js => presenter.to_html
+  end
+
+  def search_text_type(node)
+    return "storage" if storage_record?(node)
+    node
+  end
+
+  def apply_node_search_text
+    setup_search_text_for_node
+    previous_nodetype = search_text_type(@sb[:storage_search_text][:previous_node])
+    current_nodetype = search_text_type(@sb[:storage_search_text][:current_node])
+
+    @sb[:storage_search_text]["#{previous_nodetype}_search_text"] = @search_text
+    @search_text = @sb[:storage_search_text]["#{current_nodetype}_search_text"]
+    @sb[:storage_search_text]["#{x_active_accord}_search_text"] = @search_text
+  end
+
+  def setup_search_text_for_node
+    @sb[:storage_search_text] ||= {}
+    @sb[:storage_search_text][:current_node] ||= x_node
+    @sb[:storage_search_text][:previous_node] = @sb[:storage_search_text][:current_node]
+    @sb[:storage_search_text][:current_node] = x_node
+  end
+
+  def update_partials(record_showing, presenter, r)
+    if record_showing
+      get_tagdata(@record)
+      presenter.hide(:form_buttons_div)
+      path_dir = "storage"
+      presenter.update(:main_div, r[:partial => "#{path_dir}/main",
+                                    :locals => {:controller => 'storage'}])
+    elsif valid_storage_record?(@record)
+      presenter.hide(:form_buttons_div)
+      presenter.update(:main_div, r[:partial => "storage_list",
+                                    :locals  => {:controller => 'storage'}])
+    else
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+    end
+  end
+
+  def replace_search_box(presenter, r)
+    # Replace the searchbox
+    presenter.replace(:adv_searchbox_div,
+                      r[:partial => 'layouts/x_adv_searchbox',
+                        :locals  => {:nameonly => x_active_tree == :storage}])
+
+    presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+  end
+
+
+  def handle_bottom_cell(presenter, r)
+    # Handle bottom cell
+    if @pages || @in_a_form
+      if @pages && !@in_a_form
+        @ajax_paging_buttons = true
+        if @sb[:action] && @record # Came in from an action link
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols',
+                                          :locals  => {:action_url    => @sb[:action],
+                                                       :action_method => @sb[:action],
+                                                       :action_id     => @record.id}])
+        else
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
+        end
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
+      elsif @in_a_form
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
+      end
+      presenter.show(:paging_div)
+    else
+      presenter.hide(:paging_div)
+    end
+  end
+
+  def rendering_objects
+    presenter = ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node,
+    )
+    r = proc { |opts| render_to_string(opts) }
+    return presenter, r
+  end
+
+  def locals_for_tagging
+    {:action_url   => 'tagging',
+     :multi_record => true,
+     :record_id    => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+    }
+  end
+
+  def update_tagging_partials(presenter, r)
+    presenter.update(:main_div, r[:partial => 'layouts/tagging',
+                                  :locals  => locals_for_tagging])
+    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
+                                          :locals  => locals_for_tagging])
+  end
+
+  def render_tagging_form
+    return if %w(cancel save).include?(params[:button])
+    @in_a_form = true
+    @right_cell_text = _("Edit Tags for Datastore")
+    clear_flash_msg
+    presenter, r = rendering_objects
+    update_tagging_partials(presenter, r)
+    # update_title(presenter)
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+    render :js => presenter.to_html
+  end
+
+  def update_tree_and_render_list(replace_trees)
+    @explorer = true
+    get_node_info(x_node)
+    presenter, r = rendering_objects
+    replace_explorer_trees(replace_trees, presenter, r)
+
+    presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+    render :js => presenter.to_html
+  end
+
+  def rebuild_toolbars(record_showing, presenter)
+    center_tb = "blank_view_tb"
+    record_showing = true
+
+    if !@in_a_form && !@sb[:action]
+      center_tb ||= center_toolbar_filename
+      c_tb = build_toolbar(center_tb)
+
+      if record_showing
+        v_tb  = build_toolbar("x_summary_view_tb")
+      else
+        v_tb  = build_toolbar("x_gtl_view_tb")
+      end
+    end
+
+    h_tb = build_toolbar("x_history_tb") unless @in_a_form
+
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
+
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
+
+    presenter[:record_id] = @record ? @record.id : nil
+
+    # Hide/show searchbox depending on if a list is showing
+    presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)
+    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
+
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter.hide(:quicksearchbox)
+    presenter[:hide_modal] = true
+
+    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
+  end
+
+  def display_adv_searchbox
+    !(@record || @in_a_form )
+  end
+
+  def clear_flash_msg
+    @flash_array = nil if params[:button] != "reset"
+  end
+
+  def breadcrumb_name(_model)
+    "#{ui_lookup(:ui_title => 'storage')} #{ui_lookup(:model => 'Storage')}"
+  end
+
+  def tagging_explorer_controller?
+    @explorer
+  end
+
+  def storage_scan
+    scanstorage
+  end
+
+  private
 
   def get_session_data
     @title      = _("Storage")

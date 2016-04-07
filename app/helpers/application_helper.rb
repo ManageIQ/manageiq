@@ -807,7 +807,7 @@ module ApplicationHelper
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
-       orchestration_stack cim_base_storage_extent storage_manager).include?(@layout)
+       orchestration_stack cim_base_storage_extent storage storage_manager).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
@@ -1317,7 +1317,7 @@ module ApplicationHelper
   def tree_with_advanced_search?
     %i(containers images cs_filter foreman_providers instances providers vandt
      images_filter instances_filter templates_filter templates_images_filter containers_filter
-     vms_filter vms_instances_filter).include?(x_tree[:type])
+     vms_filter vms_instances_filter storage).include?(x_tree[:type])
   end
 
   def show_advanced_search?

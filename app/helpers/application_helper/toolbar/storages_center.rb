@@ -43,6 +43,7 @@ class ApplicationHelper::Toolbar::StoragesCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for the selected #{ui_lookup(:tables=>"storages")}'),
           N_('Edit Tags'),
+          :url       => "tagging",
           :url_parms => "main_div",
           :enabled   => false,
           :onwhen    => "1+"),
