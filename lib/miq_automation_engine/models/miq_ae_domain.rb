@@ -52,7 +52,7 @@ class MiqAeDomain < MiqAeNamespace
   def self.import_git_repo(domain_name, git_repo, branch = nil, tag = nil)
     MiqAeDomain.where(:name => domain_name).first.try(:destroy)
     branch = 'origin/master' if branch.nil? && tag.nil?
-    options = {'git_dir' => git_repo.dirname, 'branch' => branch, 'tag' => tag, 'preview' => false}
+    options = {'git_dir' => git_repo.directory_name, 'branch' => branch, 'tag' => tag, 'preview' => false}
     MiqAeImport.new(domain_name, options).import
     domain = MiqAeDomain.where(:name => domain_name).first
     raise MiqAeException::DomainNotFound, "Domain #{domain_name} not found after import" unless domain
