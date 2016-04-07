@@ -90,10 +90,10 @@ class Condition < ApplicationRecord
     eval(expr) ? true : false
   end
 
-  def self.subst(expr, rec, inputs)
+  def self.subst(expr, rec, _inputs)
     findexp = /<find>(.+?)<\/find>/im
     if expr =~ findexp
-      expr = expr.gsub!(findexp) { |_s| _subst_find(rec, inputs, $1.strip) }
+      expr = expr.gsub!(findexp) { |_s| _subst_find(rec, $1.strip) }
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression after substitution: [#{expr}]")
     end
 
@@ -102,15 +102,15 @@ class Condition < ApplicationRecord
 
     # <mode>/virtual/operating_system/product_name</mode>
     # <mode WE/JWSref=host>/managed/environment/prod</mode>
-    expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) { |_s| _subst(rec, inputs, $2.strip, $3.strip, $1.strip) }
+    expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) { |_s| _subst(rec, $2.strip, $3.strip, $1.strip) }
 
     # <mode /virtual/operating_system/product_name />
-    expr.gsub!(/<(value|exist|count|registry)([^>]+)\/>/im) { |_s| _subst(rec, inputs, nil, $2.strip, $1.strip) }
+    expr.gsub!(/<(value|exist|count|registry)([^>]+)\/>/im) { |_s| _subst(rec, nil, $2.strip, $1.strip) }
 
     expr
   end
 
-  def self._subst(rec, _inputs, opts, tag, mode)
+  def self._subst(rec, opts, tag, mode)
     ohash, ref, _object = options2hash(opts, rec)
 
     case mode.downcase
@@ -145,7 +145,7 @@ class Condition < ApplicationRecord
     result
   end
 
-  def self._subst_find(rec, inputs, expr)
+  def self._subst_find(rec, expr)
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression before substitution: [#{expr}]")
     searchexp = /<search>(.+)<\/search>/im
     expr =~ searchexp
@@ -187,7 +187,6 @@ class Condition < ApplicationRecord
       raise _("Illegal operator, '%{operator}'") % {:operator => operator} unless %w(== != < > <= >=).include?(operator)
 
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
-      _ = inputs # used by eval (presumably?)
       result = !!left.to_f.send(operator, right.to_f)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression result: [#{result}]")
       return result
