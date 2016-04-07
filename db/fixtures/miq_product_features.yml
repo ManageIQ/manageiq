@@ -3431,6 +3431,64 @@
       :feature_type: control
       :identifier: floating_ip_tag
 
+# Cloud Network
+- :name: Cloud Networks
+  :description: Everything under Cloud Networks
+  :feature_type: node
+  :identifier: cloud_network
+  :children:
+  - :name: View
+    :description: View Cloud Networks
+    :feature_type: view
+    :identifier: cloud_network_view
+    :children:
+    - :name: List
+      :description: Display Lists of Cloud Networks
+      :feature_type: view
+      :identifier: cloud_network_show_list
+    - :name: Show
+      :description: Display Individual Cloud Networks
+      :feature_type: view
+      :identifier: cloud_network_show
+  - :name: Operate
+    :description: Perform Operations on Cloud Networks
+    :feature_type: control
+    :identifier: cloud_network_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Cloud Network
+      :feature_type: control
+      :identifier: cloud_network_tag
+
+# Network Port
+- :name: Network Ports
+  :description: Everything under Network Ports
+  :feature_type: node
+  :identifier: network_port
+  :children:
+  - :name: View
+    :description: View Network Ports
+    :feature_type: view
+    :identifier: network_port_view
+    :children:
+    - :name: List
+      :description: Display Lists of Network Ports
+      :feature_type: view
+      :identifier: network_port_show_list
+    - :name: Show
+      :description: Display Individual Network Ports
+      :feature_type: view
+      :identifier: network_port_show
+  - :name: Operate
+    :description: Perform Operations on Network Ports
+    :feature_type: control
+    :identifier: network_port_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Network Port
+      :feature_type: control
+      :identifier: network_port_tag
+
 # Cloud Subnet
 - :name: Cloud Subnets
   :description: Everything under Cloud Subnets
