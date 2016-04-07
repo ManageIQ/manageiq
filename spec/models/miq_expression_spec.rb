@@ -338,7 +338,7 @@ describe MiqExpression do
     end
   end
 
-  describe ".to_ruby" do
+  describe "#to_ruby" do
     it "detects value empty array" do
       exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "[]"})
       expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\[\\]/")
