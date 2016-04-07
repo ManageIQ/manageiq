@@ -37,7 +37,18 @@ atomic uninstall -n <name> manageiq
 
 ## Pull and use latest image from Docker Hub
 
-TBD
+### On standard distribution
+```
+docker run --privileged -di -p 3000:3000 -p 4000:4000 -p 5900-5999:5900-5999 docker.io/manageiq/manageiq
+```
+
+### On Atomic host
+
+```
+atomic install docker.io/manageiq/manageiq
+atomic run docker.io/manageiq/manageiq
+```
+Note due to resource limitations you can not run more than a single container of manageiq on the same Atomic host
 
 ## Access
 The web interface is exposed at port 3000. Default login credentials.
