@@ -43,8 +43,10 @@ module Vmdb
     end
 
     def self.save!(miq_server, hash)
-      raise "configuration invalid" unless VMDB::Config::Validator.new(hash).valid?
-      diff = HashDiffer.diff(template_settings.to_hash, hash)
+      new_settings = for_resource(miq_server).merge!(hash).to_hash
+      raise "configuration invalid" unless VMDB::Config::Validator.new(new_settings).valid?
+
+      diff = HashDiffer.diff(template_settings.to_hash, new_settings)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
       apply_settings_changes(miq_server, deltas)
@@ -80,7 +82,7 @@ module Vmdb
     def self.build(resource)
       build_template.tap do |settings|
         settings.add_source!(DatabaseSource.new(resource))
-        local_sources.each { |s| settings.add_source!(s) }
+        local_sources.each { |s| settings.add_source!(s) } if resource.try(:is_local?)
       end
     end
     private_class_method :build

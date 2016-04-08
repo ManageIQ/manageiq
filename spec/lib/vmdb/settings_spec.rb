@@ -53,14 +53,6 @@ describe Vmdb::Settings do
       )
     end
 
-    it "with a previous change, now not specified" do
-      miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
-
-      described_class.save!(miq_server, {})
-
-      expect(miq_server.reload.settings_changes.count).to eq 0
-    end
-
     it "with a previous change, now back to the default" do
       default = Settings.api.token_ttl
       miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
@@ -71,37 +63,84 @@ describe Vmdb::Settings do
     end
 
     it "with a previous change, now to a new value" do
-      change = miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
+      update = miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
 
       described_class.save!(miq_server, :api => {:token_ttl => "2.hours"})
 
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 1
       expect(miq_server.settings_changes.first).to have_attributes(
-        :id    => change.id,
+        :id    => update.id,
         :key   => "/api/token_ttl",
         :value => "2.hours"
       )
     end
 
     it "with a mix of changes" do
-      change  = miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
+      default = Settings.api.authentication_timeout
+      update  = miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
       _delete = miq_server.settings_changes.create!(:key => "/api/authentication_timeout", :value => "1.hour")
 
       described_class.save!(miq_server,
-        :api => {:token_ttl => "2.hours"},
-        :drift_states => {:history => {:keep_drift_states => "1.hour"}}
+        :api => {
+          :token_ttl              => "2.hours", # Updated
+          :authentication_timeout => default,   # Deleted (back to default)
+        },
+        :drift_states => {
+          :history => {
+            :keep_drift_states    => "1.hour"   # Added
+          }
+        }
       )
 
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 2
+
+      changes = miq_server.settings_changes.order(:key)
       # Updated
-      expect(miq_server.settings_changes.find_by(:key => "/api/token_ttl")).to have_attributes(
-        :id    => change.id,
+      expect(changes[0]).to have_attributes(
+        :id    => update.id,
+        :key   => "/api/token_ttl",
         :value => "2.hours"
       )
       # Added
-      expect(miq_server.settings_changes.find_by(:key => "/drift_states/history/keep_drift_states")).to have_attributes(
+      expect(changes[1]).to have_attributes(
+        :key   => "/drift_states/history/keep_drift_states",
+        :value => "1.hour"
+      )
+    end
+
+    it "with a previous change, now not specified" do
+      miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
+
+      described_class.save!(miq_server, {})
+
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(
+        :key   => "/api/token_ttl",
+        :value => "1.hour"
+      )
+    end
+
+    it "with previous changes, but only specifying one of them" do
+      miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
+      miq_server.settings_changes.create!(:key => "/api/authentication_timeout", :value => "1.hours")
+
+      described_class.save!(miq_server, :api => {:authentication_timeout => "2.hours"})
+
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 2
+
+      changes = miq_server.settings_changes.order(:key)
+      # Updated
+      expect(changes[0]).to have_attributes(
+        :key   => "/api/authentication_timeout",
+        :value => "2.hours"
+      )
+      # Unchanged
+      expect(changes[1]).to have_attributes(
+        :key   => "/api/token_ttl",
         :value => "1.hour"
       )
     end
