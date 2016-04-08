@@ -165,6 +165,7 @@ class ChargebackController < ApplicationController
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end

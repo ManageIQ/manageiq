@@ -2,8 +2,7 @@ class VmOrTemplateController < ApplicationController
   include VmCommon        # common methods for vm controllers
   include VmShowMixin
 
-  # Exception due to open.window() in newer IE versions not sending request.referer
-  before_action :check_privileges, :except => [:launch_vmware_console]
+  before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
   after_action :set_session_data

@@ -847,7 +847,8 @@ module ApplicationController::Filter
     @edit = session[:edit]
     @edit[:new_search_name] = params[:search_name] if params[:search_name]
     @edit[:search_type] = params[:search_type].to_s == "1" ? "global" : nil if params[:search_type]
-    render :update do |_page|
+    render :update do |page|
+      page << javascript_prologue
     end
   end
 
