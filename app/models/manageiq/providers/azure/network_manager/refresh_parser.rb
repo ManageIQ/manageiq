@@ -5,7 +5,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
   include Vmdb::Logging
 
   VALID_LOCATION = /\w+/
-  TYPE_DEPLOYMENT = "microsoft.resources/deployments"
+  TYPE_DEPLOYMENT = "microsoft.resources/deployments".freeze
 
   def self.ems_inv_to_hashes(ems, options = nil)
     new(ems, options).ems_inv_to_hashes
@@ -40,6 +40,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
   end
 
   private
+
   def parent_manager_fetch_path(collection, ems_ref)
     @parent_manager_data ||= {}
     return @parent_manager_data.fetch_path(collection, ems_ref) if @parent_manager_data.has_key_path?(collection,

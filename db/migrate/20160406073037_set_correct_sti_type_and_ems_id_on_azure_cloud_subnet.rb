@@ -14,7 +14,7 @@ class SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet < ActiveRecord::Migration[5.0]
   def up
     # Fill a missing link of CloudSubnet to EMS and a correct STI
     ExtManagementSystem
-      .where({:type => 'ManageIQ::Providers::Azure::NetworkManager'}).each do |ems|
+      .where(:type => 'ManageIQ::Providers::Azure::NetworkManager').each do |ems|
       CloudSubnet
         .joins('left join cloud_networks on cloud_networks.id = cloud_subnets.cloud_network_id')
         .where(:cloud_subnets  => {:type   => nil},

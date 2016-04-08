@@ -56,7 +56,6 @@ class SeparateAzureNetworkManagerFromAzureCloudManager < ActiveRecord::Migration
     ExtManagementSystem
       .joins('join ext_management_systems as network_manager on network_manager.parent_ems_id = ext_management_systems.id')
       .where(:ext_management_systems => {:type => 'ManageIQ::Providers::Azure::CloudManager'}).each do |cloud_manager|
-
       network_manager = ExtManagementSystem.where(:parent_ems_id => cloud_manager.id).first
       affected_classes.each do |network_model_class|
         network_model_class

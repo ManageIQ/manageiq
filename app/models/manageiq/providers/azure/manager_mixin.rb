@@ -92,7 +92,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
         name = "Azure-#{region_name} #{name_counter}"
       end
 
-      new_ems = self.create!(
+      new_ems = create!(
         :name            => name,
         :provider_region => region_name,
         :zone            => Zone.default_zone,

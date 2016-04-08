@@ -132,10 +132,10 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
 
       subnet_row_entries.each do |x|
         expect(x[:cloud_subnet].reload).to have_attributes(
-                                             :type   => x[:type_out],
-                                             :name   => x[:name],
-                                             :ems_id => x[:ems_out].try(:[], :ems).try(:[], :id)
-                                           )
+          :type   => x[:type_out],
+          :name   => x[:name],
+          :ems_id => x[:ems_out].try(:[], :ems).try(:[], :id)
+        )
       end
     end
   end
@@ -168,10 +168,10 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
 
       subnet_row_entries.each do |x|
         expect(x[:cloud_subnet].reload).to have_attributes(
-                                             :type   => x[:type_in],
-                                             :name   => x[:name],
-                                             :ems_id => x[:ems_out].try(:[], :ems).try(:[], :id)
-                                           )
+          :type   => x[:type_in],
+          :name   => x[:name],
+          :ems_id => x[:ems_out].try(:[], :ems).try(:[], :id)
+        )
       end
     end
   end

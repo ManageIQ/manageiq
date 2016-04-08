@@ -3,51 +3,51 @@ require_migration
 describe SeparateAzureNetworkManagerFromAzureCloudManager do
   def name_key(model_name)
     case model_name
-      when :floating_ip
-        :fixed_ip_address
-      else
-        :name
+    when :floating_ip
+      :fixed_ip_address
+    else
+      :name
     end
   end
 
   def create_record(x, order, name, network_manager = nil)
     case order
-      when :in
-        x[name] = send("#{name}_stub").create!(:type          => x[:type_in],
-                                               name_key(name) => x[:name],
-                                               :ems_id        => x[:ems_in][:ems].id)
-      when :out
-        case x[:ems_out]
-          when 'new_ems'
-            x[:ems_out] = {:ems => network_manager}
-        end
+    when :in
+      x[name] = send("#{name}_stub").create!(:type          => x[:type_in],
+                                             name_key(name) => x[:name],
+                                             :ems_id        => x[:ems_in][:ems].id)
+    when :out
+      case x[:ems_out]
+      when 'new_ems'
+        x[:ems_out] = {:ems => network_manager}
+      end
 
-        x[name] = send("#{name}_stub").create!(:type          => x[:type_out],
-                                               name_key(name) => x[:name],
-                                               :ems_id        => x[:ems_out][:ems].id)
+      x[name] = send("#{name}_stub").create!(:type          => x[:type_out],
+                                             name_key(name) => x[:name],
+                                             :ems_id        => x[:ems_out][:ems].id)
     end
   end
 
   def verify_record(x, order, name)
     case order
-      when :in
-        expect(x[name].reload).to have_attributes(
-                                    :type          => x[:type_in],
-                                    name_key(name) => x[:name],
-                                    :ems_id        => x[:ems_in][:ems].id,
-                                  )
-      when :out
-        expect(x[name].reload).to have_attributes(
-                                    :type          => x[:type_out],
-                                    name_key(name) => x[:name],
-                                  )
-        if x[:ems_out].include?("new_ems")
-          expect(ems_row_entries.select { |e| e[:ems_in] }).to_not include(x[name].ems_id)
-        else
-          expect(x[name]).to have_attributes(
-                               :ems_id => x[:ems_out][:ems].id,
-                             )
-        end
+    when :in
+      expect(x[name].reload).to have_attributes(
+        :type          => x[:type_in],
+        name_key(name) => x[:name],
+        :ems_id        => x[:ems_in][:ems].id,
+      )
+    when :out
+      expect(x[name].reload).to have_attributes(
+        :type          => x[:type_out],
+        name_key(name) => x[:name],
+      )
+      if x[:ems_out].include?("new_ems")
+        expect(ems_row_entries.select { |e| e[:ems_in] }).to_not include(x[name].ems_id)
+      else
+        expect(x[name]).to have_attributes(
+          :ems_id => x[:ems_out][:ems].id,
+        )
+      end
     end
   end
 
