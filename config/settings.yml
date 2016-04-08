@@ -1202,6 +1202,7 @@
         :ems_refresh_worker_atomic: {}
         :ems_refresh_worker_atomic_enterprise: {}
         :ems_refresh_worker_azure: {}
+        :ems_refresh_worker_azure_network: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
