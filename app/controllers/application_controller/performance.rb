@@ -1501,7 +1501,11 @@ module ApplicationController::Performance
                   :id        => @perf_record.id,
                   :chart_idx => idx) +
           "')"
-    url.gsub!(/'/, '\\\\\&')             # Escape single quotes for ZiYa XML rendering
+    if Charting.backend == :ziya
+      url = "javascript:#{url}"
+      url.gsub!(/'/, '\\\\\&') # escape single quotes for ziya xml rendering
+    end
+    url
   end
 
   # Generate the html view of the chart report
