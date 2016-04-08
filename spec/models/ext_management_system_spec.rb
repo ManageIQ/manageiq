@@ -12,6 +12,7 @@ describe ExtManagementSystem do
       "atomic"                      => "Atomic",
       "atomic_enterprise"           => "Atomic Enterprise",
       "azure"                       => "Azure",
+      "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
       "ec2_network"                 => "Amazon EC2 Network",
       "foreman_configuration"       => "Foreman Configuration",
@@ -186,7 +187,8 @@ describe ExtManagementSystem do
         next if ems == ManageIQ::Providers::Amazon::CloudManager # Amazon is tested in ems_amazon_spec.rb
         # TODO(lsmola) NetworkManager, test this if NetworkManager becomes not dependent on cloud manager
         next if [ManageIQ::Providers::Openstack::NetworkManager,
-                 ManageIQ::Providers::Amazon::NetworkManager].include? ems
+                 ManageIQ::Providers::Amazon::NetworkManager,
+                 ManageIQ::Providers::Azure::NetworkManager].include? ems
         t = ems.name.underscore
 
         context t do
@@ -223,7 +225,8 @@ describe ExtManagementSystem do
         t = ems.name.underscore
         # TODO(lsmola) NetworkManager, test this when we have a standalone NetworkManager
         next if [ManageIQ::Providers::Openstack::NetworkManager,
-                 ManageIQ::Providers::Amazon::NetworkManager].include? ems
+                 ManageIQ::Providers::Amazon::NetworkManager,
+                 ManageIQ::Providers::Azure::NetworkManager].include? ems
 
         context t do
           it "duplicate name" do
