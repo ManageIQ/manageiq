@@ -97,7 +97,8 @@ describe('reconfigureFormController', function() {
                            memory:                 $scope.reconfigureModel.memory,
                            memory_type:            $scope.reconfigureModel.memory_type,
                            socket_count:           $scope.reconfigureModel.socket_count,
-                           cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count};
+                           cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count,
+                           vmAddDisks: [  ], vmRemoveDisks: [  ] };
 
       expect(miqService.miqAjaxButton).toHaveBeenCalledWith('reconfigure_update/1000000000003?button=submit', submitContent);
     });

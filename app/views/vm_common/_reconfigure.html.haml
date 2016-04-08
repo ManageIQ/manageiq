@@ -18,20 +18,20 @@
              "switch-off-text" => "No"}
     #memory_div{"ng-if" => "cb_memory"}
       .col-md-4
-        %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
-                            "name"        => "memory",
-                            "ng-model"    => "reconfigureModel.memory",
-                            "ng-change"    => "cbChange()",
-                            "maxlength"   => "50",
-                            "ng-pattern"  => "/^[-+]?[0-9]+$/",
-                            "miqrequired" => "",
-                            "checkchange" => "",
-                            "auto-focus"  => "",
+        %input.form-control{"type"              => "text",
+                            "id"                => "textInput-markup",
+                            "name"              => "memory",
+                            "ng-model"          => "reconfigureModel.memory",
+                            "ng-change"         => "cbChange()",
+                            "maxlength"         => "50",
+                            "ng-pattern"        => "/^[-+]?[0-9]+$/",
+                            "miqrequired"       => "",
+                            "checkchange"       => "",
+                            "auto-focus"        => "",
                             "validate-multiple" => "4",
-                            :miqmin       => "#{@reconfig_limits[:min__vm_memory]}",
-                            :miqmax       => "#{@reconfig_limits[:max__vm_memory]}",
-                            :memtype      => "{{reconfigureModel.memory_type}}"}
+                            :miqmin             => "#{@reconfig_limits[:min__vm_memory]}",
+                            :miqmax             => "#{@reconfig_limits[:max__vm_memory]}",
+                            :memtype            => "{{reconfigureModel.memory_type}}"}
         %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$invalid"}
           = _(" Memory value not in range or not a multiple of 4")
         %span{"style"=>"color:red", "ng-show" => "angularForm.memory.$required"}
@@ -56,12 +56,9 @@
          "ng-change"       => "cbChange()",
          "switch-on-text"  => "Yes",
          "switch-off-text" => "No"}
-
-    #cpu_div{"ng-if" => "cb_cpu"}
-
-      %hr
-      %h3
-        = _('Processor Options')
+    %br
+    #cpu_div{"ng-if" => "cb_cpu", :style => "margin-left: 20px"}
+      %h3= _(' Processor Options')
       - if @socket_options.length > 1
         .form-group{"ng-class" => "{'has-error': angularForm.socket_count.$invalid}"}
           %label.col-md-2.control-label
@@ -97,50 +94,163 @@
           %label.col-sm-2.control-label
             = _('Total Processors')
           .col-md-2
-            %input.form-control{"type"        => "text",
-                                "id"          => "total_cpus",
-                                "name"        => "total_cpus",
-                                "ng-model"    => "reconfigureModel.total_cpus",
-                                :readonly     => '',
-                                "maxlength"   => "50",
-                                "validate_total"  => "",
-                                "miqmax"      => "#{@reconfig_limits[:max__total_vcpus]}",
-                                "auto-focus"  => ""}
-            %span{"style"=>"color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
+            %input.form-control{"type"           => "text",
+                                "id"             => "total_cpus",
+                                "name"           => "total_cpus",
+                                "ng-model"       => "reconfigureModel.total_cpus",
+                                :readonly        => '',
+                                "maxlength"      => "50",
+                                "validate_total" => "",
+                                "miqmax"         => "#{@reconfig_limits[:max__total_vcpus]}",
+                                "auto-focus"     => ""}
+            %span{"style" => "color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
               = _(" Total processors value larger than the maximum allowed")
-
-  %hr
+  - if @reconfigitems.length == 1 && @reconfigitems.first.vendor && @reconfigitems.first.vendor == 'vmware'
+    %hr
+    %div
+      %h3
+        = _('Disks')
+        %table{:width => "100%", :align => "bottom"}
+          %tr
+            %td#buttons_on{:align => "right"}
+              %button.btn.btn-primary{:type      => "button",
+                                      "ng-click" => "enableDiskAdd()",
+                                      :align     => "left",
+                                      "ng-show"  => "!reconfigureModel.addEnabled"}= _('Add Disk')
+              %button.btn.btn-default.btn-sm{:type      => "button",
+                                             "ng-click" => "hideAddDisk()",
+                                             "ng-show"  => "reconfigureModel.addEnabled"}= ('Cancel Add')
+      %table.table.table-striped.table-hover.table-condensed.table-bordered
+        %thead
+          %th= _('Name')
+          %th= _('Type')
+          %th= _('Mode')
+          %th= _('Size')
+          %th.narrow
+          %th.narrow= _('Dependent')
+          %th.narrow= _('Delete Backing')
+          %th= _('Actions')
+        %tbody
+          %tr{"ng-if"       => "reconfigureModel.addEnabled",
+              "ng-form"     => "rowForm",
+              "ng-disabled" => "{'has-error': rowForm.value.$invalid}"}
+            %td
+            %td
+              = select_tag('hdType',
+                           options_for_select(%w(thick thin)),
+                           "ng-model"                    => "reconfigureModel.hdType",
+                           "ng-change"                   => "",
+                           "data-width"                  => "auto",
+                           "required"                    => "",
+                           "selectpicker-for-select-tag" => "")
+            %td
+              = select_tag('hdMode',
+                            options_for_select(%w(persistent nonpersistent)),
+                            "ng-model"                    => "reconfigureModel.hdMode",
+                            "ng-change"                   => "hdModeChanged()",
+                            "data-width"                  => "auto",
+                            "required"                    => "",
+                            "selectpicker-for-select-tag" => "",
+                            "width"                       => "10")
+            %td
+              %input.form-control{"type"        => "text",
+                                  "id"          => "dvcSize",
+                                  "name"        => "dvcSize",
+                                  "ng-model"    => "reconfigureModel.hdSize",
+                                  "required"    => "",
+                                  "ng-pattern"  => "hdpattern",
+                                  "placeholder" => "Enter New Size",
+                                  "ng-change"   => "hdChanged()"}
+              %span{"style" => "color:red", "ng-show" => "rowForm.dvcSize.$invalid"}
+                = _(" Valid numeric disk size required ")
+            %td.narrow
+              = select_tag('hdUnit',
+                       options_for_select(%w(MB GB)),
+                       "ng-model"                    => "reconfigureModel.hdUnit",
+                       "ng-change"                   => "hdUnitChanged()",
+                       "data-width"                  => "auto",
+                       "required"                    => "",
+                       "selectpicker-for-select-tag" => "")
+            %td.narrow
+              %input{"bs-switch" => "",
+                     :data       => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"      => "checkbox",
+                     "name"      => "cb_dependent",
+                     "ng-model"  => "reconfigureModel.cb_dependent"}
+            %td.narrow
+            %td.action-cell
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()", "ng-disabled" => "rowForm.dvcSize.$invalid"}= _(' Add ')
+          %tr{"ng-repeat" => "disk in reconfigureModel.vmdisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
+            %td
+              {{disk.hdFilename}}
+            %td
+              {{disk.hdType}}
+            %td
+              {{disk.hdMode}}
+            %td
+              {{disk.hdSize}}
+            %td.narrow
+              {{disk.hdUnit}}
+            %td.narrow
+              %input{"bs-switch"     => "",
+                     :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"          => "checkbox",
+                     "name"          => "cb_dependent",
+                     "ng-model"      => "disk.cb_dependent",
+                     "switch-active" => "{{disk.add_remove!='add'}}",
+                     "ng-readonly"   => "disk.add_remove=='add'",
+                     "ng-if"         => "disk.add_remove=='add'"}
+            %td.narrow
+              %input{"bs-switch"     => "",
+                     :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"          => "checkbox",
+                     "name"          => "cb_deletebacking",
+                     "ng-model"      => "disk.delete_backing",
+                     "ng-readonly"   => "disk.add_remove=='remove'",
+                     "switch-active" => "{{disk.add_remove!='remove'}}",
+                     "ng-if"         => "disk.add_remove!='add'"}
+            %td.action-cell
+              %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
+                                            "ng-if"    => "disk.add_remove == ''",
+                                            "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
+              %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
+                                             "ng-if"    => "disk.add_remove == 'remove'",
+                                             "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel Delete')
+              %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
+                                             "ng-if"    => "disk.add_remove == 'add'",
+                                             "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel Add')
   %hr
   %h3= _('Affected VMs')
-  %table.admintable{:height => "75"}
-    %tbody
-      %tr
-        %td
-          - if @reconfigitems
-            - @embedded = true
-            - @gtl_type = "list"
-            = render :partial => "layouts/gtl"
+  - if @reconfigitems
+    - @embedded = true
+    - @gtl_type = "list"
+    = render :partial => "layouts/gtl"
 
   %table{:width => "100%", :align => "bottom"}
     %tr
       %td#buttons_on{:align => "right"}
         = button_tag(_("Submit"),
-                     :class        => "btn btn-primary",
-                     :alt          => _("Submit"),
-                     "ng-click"    => "submitClicked()",
-                     "ng-disabled" => "angularForm.$pristine || angularForm.$invalid || (!cb_memory && !cb_cpu)",
-                     "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+                     :class     => "btn btn-primary btn-disabled",
+                     :alt       => _("Submit"),
+                     :style     => "cursor:not-allowed",
+                     "ng-click" => "disabledClick($event)",
+                     "ng-show"  => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)")
+        = button_tag(_("Submit"),
+                     :class     => "btn btn-primary",
+                     :alt       => _("Submit"),
+                     "ng-click" => "submitClicked()",
+                     "ng-show"  => "!((angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks))")
         = button_tag("Reset",
              :class        => "btn btn-default btn-disabled",
              :alt          => "Reset changes",
              :title        => "Reset changes",
-             "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
+             "ng-class"    => "{'btn-disabled': angularForm.$pristine && !cb_disks}",
              "ng-click"    => "resetClicked()",
-             "ng-disabled" => "angularForm.$pristine",
+             "ng-disabled" => "angularForm.$pristine && !cb_disks",
              "ng-hide"     => "newRecord")
         = button_tag(_("Cancel"),
                      :class     => "btn btn-default",
-                     :alt          => _("Cancel"),
+                     :alt       => _("Cancel"),
                      "ng-click" => "cancelClicked()")
 
 :javascript
