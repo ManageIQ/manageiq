@@ -2,7 +2,7 @@ module Menu
   class DefaultMenu
     class << self
       def cloud_inteligence_menu_section
-        Menu::Section.new(:vi, N_("Cloud Intelligence"), [
+        Menu::Section.new(:vi, N_("Cloud Intelligence"), 'fa fa-dashboard fa-2x', [
           Menu::Item.new('dashboard',  N_('Dashboard'),  'dashboard',  {:feature => 'dashboard_view'},           '/dashboard/'),
           Menu::Item.new('report',     N_('Reports'),    'miq_report', {:feature => 'miq_report', :any => true}, '/report/explorer'),
           # Menu::Item.new('usage',    N_('Usage'),      'usage',      {:feature => 'usage'},                    '/report/usage/'), #  / Hiding usage for now - release 5.2
@@ -13,7 +13,7 @@ module Menu
       end
 
       def services_menu_section
-        Menu::Section.new(:svc, N_("Services"), [
+        Menu::Section.new(:svc, N_("Services"), 'fa fa-plus fa-2x', [
           Menu::Item.new('services',       N_('My Services'), 'service',             {:feature => 'service', :any => true},             '/service/explorer'),
           Menu::Item.new('catalogs',       N_('Catalogs'),    'catalog',             {:feature => 'catalog', :any => true},             '/catalog/explorer'),
           Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer_accords', {:feature => 'vm_explorer_accords', :any => true}, '/vm_or_template/explorer'),
@@ -22,7 +22,7 @@ module Menu
       end
 
       def clouds_menu_section
-        Menu::Section.new(:clo, N_("Clouds"), [
+        Menu::Section.new(:clo, N_("Clouds"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ems_cloud',           N_('Providers'),           'ems_cloud',                 {:feature => 'ems_cloud_show_list'},                     '/ems_cloud'),
           Menu::Item.new('availability_zone',   N_('Availability Zones'),  'availability_zone',         {:feature => 'availability_zone_show_list'},             '/availability_zone'),
           Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
@@ -43,7 +43,7 @@ module Menu
         hosts_name    = hybrid_name(Host,       N_("Hosts"),    N_("Nodes"),            N_("Hosts / Nodes"))
         clusters_name = hybrid_name(EmsCluster, N_("Clusters"), N_("Deployment Roles"), N_("Clusters / Deployment Roles"))
 
-        Menu::Section.new(:inf, N_("Infrastructure"), [
+        Menu::Section.new(:inf, N_("Infrastructure"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',     {:feature => 'ems_infra_show_list'},     '/ems_infra'),
           Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',   {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
           Menu::Item.new('host',             hosts_name,             'host',          {:feature => 'host_show_list'},          '/host'),
@@ -78,7 +78,7 @@ module Menu
       private :deferred_ui_lookup
 
       def container_menu_section
-        Menu::Section.new(:cnt, N_("Containers"), [
+        Menu::Section.new(:cnt, N_("Containers"), 'fa fa-plus fa-2x', [
           Menu::Item.new('container_dashboard', N_('Overview'), 'container_dashboard',  {:feature => 'container_dashboard'}, '/container_dashboard'),
           Menu::Item.new('ems_container',     N_('Providers'),     'ems_container',     {:feature => 'ems_container_show_list'},     '/ems_container'),
           Menu::Item.new('container_project', deferred_ui_lookup(:tables => 'container_project'), 'container_project', {:feature => 'container_project_show_list'}, '/container_project'),
@@ -116,7 +116,7 @@ module Menu
       end
 
       def middleware_menu_section
-        Menu::Section.new(:mdl, N_("Middleware"), [
+        Menu::Section.new(:mdl, N_("Middleware"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ems_middleware', N_('Providers'), 'ems_middleware', {:feature => 'ems_middleware_show_list'}, '/ems_middleware'),
           Menu::Item.new('middleware_server', deferred_ui_lookup(:tables => 'middleware_server'), 'middleware_server', {:feature => 'middleware_server_show_list'}, '/middleware_server'),
           Menu::Item.new('middleware_deployment', deferred_ui_lookup(:tables => 'middleware_deployment'), 'middleware_deployment', {:feature => 'middleware_deployment_show_list'}, '/middleware_deployment'),
@@ -126,7 +126,7 @@ module Menu
       end
 
       def network_menu_section
-        Menu::Section.new(:net, N_("Networks"), [
+        Menu::Section.new(:net, N_("Networks"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ems_network',    N_('Providers'),       'ems_network',    {:feature => 'ems_network_show_list'},    '/ems_network'),
           Menu::Item.new('security_group', N_('Security Groups'), 'security_group', {:feature => 'security_group_show_list'}, '/security_group'),
           Menu::Item.new('floating_ip',    N_('Floating IP'),     'floating_ip',    {:feature => 'floating_ip_show_list'},    '/floating_ip'),
@@ -136,7 +136,7 @@ module Menu
       end
 
       def storage_menu_section
-        Menu::Section.new(:sto, N_("Storage"), [
+        Menu::Section.new(:sto, N_("Storage"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ontap_storage_system', deferred_ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
           Menu::Item.new('ontap_logical_disk',   deferred_ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
           Menu::Item.new('ontap_storage_volume', deferred_ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
@@ -146,7 +146,7 @@ module Menu
       end
 
       def control_menu_section
-        Menu::Section.new(:con, N_("Control"), [
+        Menu::Section.new(:con, N_("Control"), 'fa fa-plus fa-2x', [
           Menu::Item.new('miq_policy',        N_('Explorer'),        'control_explorer',     {:feature => 'control_explorer_view'}, '/miq_policy/explorer'),
           Menu::Item.new('miq_policy_rsop',   N_('Simulation'),      'policy_simulation',    {:feature => 'policy_simulation'},     '/miq_policy/rsop'),
           Menu::Item.new('miq_policy_export', N_('Import / Export'), 'policy_import_export', {:feature => 'policy_import_export'},  '/miq_policy/export'),
@@ -155,7 +155,7 @@ module Menu
       end
 
       def automate_menu_section
-        Menu::Section.new(:aut, N_("Automate"), [
+        Menu::Section.new(:aut, N_("Automate"), 'fa fa-plus fa-2x', [
           Menu::Item.new('miq_ae_class',         N_('Explorer'),        'miq_ae_class_explorer',         {:feature => 'miq_ae_domain_view'},            '/miq_ae_class/explorer'),
           Menu::Item.new('miq_ae_tools',         N_('Simulation'),      'miq_ae_class_simulation',       {:feature => 'miq_ae_class_simulation'},       '/miq_ae_tools/resolve'),
           Menu::Item.new('miq_ae_customization', N_('Customization'),   'miq_ae_customization_explorer', {:feature => 'miq_ae_customization_explorer'}, '/miq_ae_customization/explorer'),
@@ -166,7 +166,7 @@ module Menu
       end
 
       def optimize_menu_section
-        Menu::Section.new(:opt, N_("Optimize"), [
+        Menu::Section.new(:opt, N_("Optimize"), 'fa fa-plus fa-2x', [
           Menu::Item.new('miq_capacity_utilization', N_('Utilization'), 'utilization', {:feature => 'utilization'}, '/miq_capacity'),
           Menu::Item.new('miq_capacity_planning',    N_('Planning'),    'planning',    {:feature => 'planning'},    '/miq_capacity/planning'),
           Menu::Item.new('miq_capacity_bottlenecks', N_('Bottlenecks'), 'bottlenecks', {:feature => 'bottlenecks'}, '/miq_capacity/bottlenecks')
@@ -174,7 +174,7 @@ module Menu
       end
 
       def configuration_menu_section
-        Menu::Section.new(:set, N_("Configure"), [
+        Menu::Section.new(:set, N_("Configure"), 'fa fa-plus fa-2x', [
           Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
           Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
           Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
