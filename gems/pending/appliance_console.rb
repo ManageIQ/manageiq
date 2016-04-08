@@ -200,7 +200,7 @@ Static Network Configuration
           begin
             network_configured = eth0.apply_static(new_ip, new_mask, new_gw, [new_dns1, new_dns2], new_search_order)
           rescue ArgumentError => e
-            say("\nNetwork configuration failed: #{e.massage}")
+            say("\nNetwork configuration failed: #{e.message}")
             press_any_key
             next
           end
