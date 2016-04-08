@@ -112,6 +112,7 @@
               .form-group
                 %label.col-md-3.control-label
                   = _('Volumes')
+                .col-md-8
                   %ul.list-inline= render_view_buttons(:cloudvolume, @edit[:new][:views][:cloudvolume])
             - if role_allows(:feature => "auth_key_pair_cloud_show_list")
               .form-group
