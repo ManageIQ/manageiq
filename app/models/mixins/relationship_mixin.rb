@@ -133,21 +133,21 @@ module RelationshipMixin
 
   # Returns the relationship of the parent of the record, nil for a root node
   def parent_rel(*args)
-    rels = parent_rels(*args)
+    rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
     rels.first
   end
 
   # Returns the parent of the record, nil for a root node
   def parent(*args)
-    rels = parents(*args)
+    rels = parents(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
     rels.first
   end
 
   # Returns the class/id pair of the parent of the record, nil for a root node
   def parent_id(*args)
-    rels = parent_ids(*args)
+    rels = parent_ids(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
     rels.first
   end
@@ -403,12 +403,13 @@ module RelationshipMixin
   #   the first is returned, unless :raise_on_multiple is passed as true.
   def relationship(*args)
     options = args.extract_options!
-    raise _("Multiple relationships found") if options[:raise_on_multiple] && has_multiple_relationships?
-    relationships.first
-  end
-
-  def has_multiple_relationships?
-    relationships.size > 1
+    if options[:raise_on_multiple]
+      rels = relationships.take(2)
+      raise _("Multiple relationships found") if rels.length > 1
+      rels.first
+    else
+      relationships.first
+    end
   end
 
   # Adds a new relationship for this node
