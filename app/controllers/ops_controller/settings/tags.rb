@@ -4,6 +4,7 @@ module OpsController::Settings::Tags
   # AJAX routine for user selected
   def category_select
     render :update do |page|
+      page << javascript_prologue
       if params[:id] == "new"
         page.redirect_to :action => 'category_new'    # redirect to new
       else
@@ -25,12 +26,14 @@ module OpsController::Settings::Tags
       AuditEvent.success(audit)
       add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "Classification"), :name => c_name})
       category_get_all
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace_html 'settings_co_categories', :partial => 'settings_co_categories_tab'
       end
     else
       category.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -65,6 +68,7 @@ module OpsController::Settings::Tags
       end
       unless @flash_array.nil?
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -80,6 +84,7 @@ module OpsController::Settings::Tags
         rescue StandardError => bang
           add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
@@ -103,6 +108,7 @@ module OpsController::Settings::Tags
           session[:changed] = @changed
           @changed = true
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
@@ -135,7 +141,8 @@ module OpsController::Settings::Tags
     return unless load_edit("category_edit__#{params[:id]}", "replace_cell__explorer")
     category_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial,
                                  :locals  => {:type => "classifications", :action_url => 'category_field_changed'}) if @refresh_div
       page << javascript_for_miq_button_visibility_changed(@changed)
@@ -148,7 +155,8 @@ module OpsController::Settings::Tags
     if params[:classification_name]
       @cat = Classification.find_by_name(params["classification_name"])
       ce_build_screen                                         # Build the Classification Edit screen
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace(:tab_div, :partial => "settings_co_tags_tab")
       end
     end
@@ -158,7 +166,8 @@ module OpsController::Settings::Tags
   def ce_select
     ce_get_form_vars
     if params[:id] == "new"
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("classification_entries_div", :partial => "classification_entries", :locals => {:entry => "new", :edit => true})
         page << javascript_focus('entry_name')
@@ -167,7 +176,8 @@ module OpsController::Settings::Tags
       session[:entry] = "new"
     else
       entry = Classification.find(params[:id])
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("classification_entries_div", :partial => "classification_entries", :locals => {:entry => entry, :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
@@ -196,6 +206,7 @@ module OpsController::Settings::Tags
     unless entry.errors.empty?
       entry.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << javascript_focus('entry_name')
       end
@@ -208,6 +219,7 @@ module OpsController::Settings::Tags
     end
     ce_build_screen # Build the Classification Edit screen
     render :update do |page|
+      page << javascript_prologue
       page.replace(:tab_div, :partial => "settings_co_tags_tab")
       unless no_changes
         page << jquery_pulsate_element("#{entry.id}_tr")
@@ -228,12 +240,14 @@ module OpsController::Settings::Tags
     if entry.destroy
       AuditEvent.success(audit)
       ce_build_screen                               # Build the Classification Edit screen
-      render :update do |page|                      # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace(:tab_div, :partial => "settings_co_tags_tab")
       end
     else
       entry.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << javascript_focus('entry_name')
       end

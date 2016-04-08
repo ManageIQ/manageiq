@@ -157,6 +157,7 @@ class ResourcePoolController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "resource_pool_delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif ["#{pfx}_miq_request_new", "#{pfx}_migrate", "#{pfx}_clone",

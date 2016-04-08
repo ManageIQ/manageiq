@@ -99,6 +99,7 @@ describe DashboardController do
 
     it "SAML Login should redirect to the protected page" do
       page = double("page")
+      allow(page).to receive(:<<).with(any_args)
       expect(page).to receive(:redirect_to).with(controller.saml_protected_page)
       expect(controller).to receive(:render).with(:update).and_yield(page)
       controller.send(:initiate_saml_login)
@@ -339,11 +340,9 @@ describe DashboardController do
     it "verify certain keys are restored after session is cleared" do
       winH               = '600'
       winW               = '800'
-      referer            = 'foo'
       user_TZO           = '5'
       browser_info       = {:name => 'firefox', :version => '32'}
       session[:browser]  = browser_info
-      session['referer'] = referer
       session[:user_TZO] = user_TZO
       session[:winH]     = winH
       session[:winW]     = winW
@@ -351,7 +350,6 @@ describe DashboardController do
 
       controller.send(:session_reset)
 
-      expect(session['referer']).to eq(referer)
       expect(session[:browser]).to eq(browser_info)
       expect(session[:winH]).to eq(winH)
       expect(session[:winW]).to eq(winW)

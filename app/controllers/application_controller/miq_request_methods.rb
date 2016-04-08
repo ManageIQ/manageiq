@@ -25,7 +25,8 @@ module ApplicationController::MiqRequestMethods
       refresh_divs = prov_get_form_vars  # Get changed option, returns true if divs need refreshing
       build_grid if refresh_divs
       changed = (@edit[:new] != @edit[:current])
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         # Going thru all dialogs to see if model has set any of the dialog display to hide/ignore
         all_dialogs = @edit[:wf].get_all_dialogs
         all_dialogs.each do |dialog_name, dialog|
@@ -79,6 +80,7 @@ module ApplicationController::MiqRequestMethods
         replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
             page.redirect_to :action => "show_list", :controller => "vm"
           else
@@ -102,7 +104,8 @@ module ApplicationController::MiqRequestMethods
         validate_preprov
       end
       if @flash_array
-        render :update do |page|                    # Use JS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -115,6 +118,7 @@ module ApplicationController::MiqRequestMethods
           replace_right_cell
         else
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :controller     => @redirect_controller,
                              :action         => "prov_edit",
                              :src_vm_id      => @src_vm_id,
@@ -133,13 +137,15 @@ module ApplicationController::MiqRequestMethods
       @edit[:vm_sortcol] = params[:sort_choice]
       templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
       build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
-      render :update do |page|                        # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
         page << "miqSparkle(false);"
       end
     elsif params[:sel_id]
       @edit = session[:edit]
-      render :update do |page|                        # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page << "$('#row_#{j_str(@edit[:src_vm_id])}').removeClass('selected');" if @edit[:src_vm_id]
         page << "$('#row_#{j_str(params[:sel_id])}').addClass('selected');"
         session[:changed] = true
@@ -530,7 +536,8 @@ module ApplicationController::MiqRequestMethods
     end
 
     send("build_#{what}_grid", values, @edit[sortdir], @edit[sortcol])
-    render :update do |page|                        # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("prov_#{what}_div", :partial => "miq_request/prov_#{what}_grid", :locals => {:field_id => params[:field_id]})
       page << "miqSparkle(false);"
     end
@@ -571,6 +578,7 @@ module ApplicationController::MiqRequestMethods
       replace_right_cell
     else
       render :update do |page|
+        page << javascript_prologue
         if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
           page.redirect_to :action => "show_list", :controller => "vm"
         else
@@ -603,6 +611,7 @@ module ApplicationController::MiqRequestMethods
       @sb[:action] = @edit = session[:edit] =  nil                                                # Clear out session[:edit]
       if role_allows(:feature => "miq_request_show_list", :any => true)
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => 'miq_request',
                            :action     => 'show_list',
                            :flash_msg  => flash,
@@ -617,7 +626,8 @@ module ApplicationController::MiqRequestMethods
       @edit[:new][:current_tab_key] = @error_div.split('_')[0].to_sym if @error_div
       @edit[:wf].refresh_field_values(@edit[:new])
       build_grid
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("prov_wf_div", :partial => "/miq_request/prov_wf") if @error_div
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end

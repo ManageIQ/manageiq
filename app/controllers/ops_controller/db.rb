@@ -45,7 +45,8 @@ module OpsController::Db
 
     # Came in from outside show_list partial
     if params[:action] == "list_view_filter" || params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace_html("gtl_div", :partial => 'layouts/x_gtl', :locals => {:action_url => "db_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -102,13 +103,15 @@ module OpsController::Db
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
       add_flash(_("Export generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
-      render :update do |page|                      # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       end
     else
       session[:export_data_id] = miq_task.id
-      render :update do |page|                      # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page << "miqSparkle(false);"
         page << "DoNav('#{url_for(:action => "send_download_data")}');"
       end
@@ -119,7 +122,8 @@ module OpsController::Db
     ids = find_checked_items
     ids = [params[:id]] if ids.empty?
     VmdbTable.analyze_queue(ids.collect(&:to_i))
-    render :update do |page|                      # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -129,7 +133,8 @@ module OpsController::Db
     ids = find_checked_items
     ids = [params[:id]] if ids.empty?
     VmdbTable.reindex_queue(ids.collect(&:to_i))
-    render :update do |page|                      # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -139,7 +144,8 @@ module OpsController::Db
     ids = find_checked_items
     ids = [params[:id]] if ids.empty?
     VmdbTable.vacuum_queue(ids.collect(&:to_i))
-    render :update do |page|                      # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -149,7 +155,8 @@ module OpsController::Db
     ids = find_checked_items
     ids = [params[:id]] if ids.empty?
     VmdbTable.vacuum_full_queue(ids.collect(&:to_i))
-    render :update do |page|                      # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -236,6 +243,7 @@ module OpsController::Db
     assert_privileges("db_refresh")
     db_get_info
     render :update do |page|
+      page << javascript_prologue
       page.replace_html(@sb[:active_tab], :partial => "db_details_tab")
       page << "miqSparkle(false);"    # Need to turn off sparkle in case original ajax element gets replaced
     end

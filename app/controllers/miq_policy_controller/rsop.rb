@@ -38,6 +38,7 @@ module MiqPolicyController::Rsop
       end
       c_tb = build_toolbar(center_toolbar_filename)
       render :update do |page|
+        page << javascript_prologue
         page.replace_html("main_div", :partial => "rsop_results")
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << "miqSparkle(false);"
@@ -45,7 +46,8 @@ module MiqPolicyController::Rsop
     elsif params[:button] == "reset"
       @sb[:rsop] = {}     # Reset all RSOP stored values
       session[:changed] = session[:rsop_tree] = nil
-      render :update do |page|  # Redraw the screen
+      render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'rsop'
       end
     else  # No params, first time in
@@ -81,7 +83,8 @@ module MiqPolicyController::Rsop
     end
     @rsop_events = MiqEventDefinitionSet.all.collect { |e| [e.description, e.id.to_s] }.sort
     @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect { |e| [e.description, e.id.to_s] }.sort unless @sb[:rsop][:event].nil?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       session[:changed] = @sb[:rsop][:filter_value] && @sb[:rsop][:event_value] ? true : false
       page.replace("rsop_form_div", :partial => "rsop_form")
       if session[:changed]
@@ -138,6 +141,7 @@ module MiqPolicyController::Rsop
   def rsop_button_pressed
     c_tb = build_toolbar(center_toolbar_filename)
     render :update do |page|
+      page << javascript_prologue
       if params[:action] == "rsop_toggle"
         if @sb[:rsop][:open] == true
           page << "miqDynatreeToggleExpand('rsop_tree', true);"

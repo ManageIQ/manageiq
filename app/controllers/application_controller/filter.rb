@@ -51,7 +51,8 @@ module ApplicationController::Filter
     end
 
     if flash_errors?
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
       end
     else
@@ -66,7 +67,8 @@ module ApplicationController::Filter
       end
       changed = (@edit[:new] != @edit[:current])
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
         #       page.replace("form_expression_div", :partial=>"form_expression")
         if !@edit[:adv_search_open].nil?
@@ -96,7 +98,8 @@ module ApplicationController::Filter
     token = params[:token].to_i
     if token == @edit[@expkey][:exp_token] || # User selected same token as already selected
        (@edit[@expkey][:exp_token] && @edit[:edit_exp].key?("???")) # or new token in process
-      render :update do |page|                        # Leave the page as is
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
       end
     else
@@ -111,6 +114,7 @@ module ApplicationController::Filter
       end
       @edit[@expkey][:exp_token] = token
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
         page.replace("exp_editor_div", :partial => "layouts/exp_editor")
         page << "$('#exp_#{token}').css({'background-color': 'yellow'})"
@@ -416,9 +420,12 @@ module ApplicationController::Filter
     # See if only a text value changed
     if params[:chosen_value] || params[:chosen_regkey] || params[:chosen_regval] ||
        params[:chosen_cvalue || params[:chosen_suffix]] || params[:alias]
-      render :update do |_page| end      # Render nothing back to the page
+      render :update do |page|
+        page << javascript_prologue
+      end
     else                                # Something else changed so update the exp_editor form
       render :update do |page|
+        page << javascript_prologue
         if !@refresh_partial.nil?
           if @refresh_div == "flash_msg_div"
             page.replace(@refresh_div + div_num, :partial => @refresh_partial, :locals => {:div_num => div_num})
@@ -450,6 +457,7 @@ module ApplicationController::Filter
     exp_get_prefill_types unless @edit[:adv_search_open]
 
     render :update do |page|
+      page << javascript_prologue
       if @edit[:adv_search_open] == true
         @edit[:adv_search_open] = false
         page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-true.png')}')"
@@ -497,6 +505,7 @@ module ApplicationController::Filter
             quick_search_show
           else
             render :update do |page|
+              page << javascript_prologue
               page.redirect_to :action => 'show_list' # Redirect to build the list screen
             end
           end
@@ -736,6 +745,7 @@ module ApplicationController::Filter
         replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'show_list'                 # redirect to build the list screen
         end
       end
@@ -775,6 +785,7 @@ module ApplicationController::Filter
     end
 
     render :update do |page|
+      page << javascript_prologue
       if ["load", "save"].include?(params[:button])
         page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => params[:button]})
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer",
@@ -825,6 +836,7 @@ module ApplicationController::Filter
       end
     end
     render :update do |page|
+      page << javascript_prologue
       page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => 'load'})
       page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {:mode => 'load'})
     end
@@ -835,7 +847,8 @@ module ApplicationController::Filter
     @edit = session[:edit]
     @edit[:new_search_name] = params[:search_name] if params[:search_name]
     @edit[:search_type] = params[:search_type].to_s == "1" ? "global" : nil if params[:search_type]
-    render :update do |_page|
+    render :update do |page|
+      page << javascript_prologue
     end
   end
 
@@ -907,6 +920,7 @@ module ApplicationController::Filter
     end
     build_listnav_search_list(@view.db) if @flash_array.blank?
     render :update do |page|
+      page << javascript_prologue
       if @flash_array.blank?
         page.replace(:listnav_div, :partial => "layouts/listnav")
       else
@@ -938,7 +952,10 @@ module ApplicationController::Filter
     if @edit[:in_explorer]
       replace_right_cell
     else
-      render(:update) { |page| page.redirect_to(:action => 'show_list') }
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to(:action => 'show_list')
+      end
     end
   end
   private :quick_search_apply_click
@@ -952,6 +969,7 @@ module ApplicationController::Filter
     session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
 
     render :update do |page|
+      page << javascript_prologue
       page << "miqDynatreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');" if @edit[:in_explorer]
       page << "$('#quicksearchbox').modal('hide');"
       page << "miqSparkle(false);"
@@ -974,6 +992,7 @@ module ApplicationController::Filter
     else
       any_empty = @edit[:qs_tokens].values.any? { |v| v[:value].to_s.empty? }
       render :update do |page|
+        page << javascript_prologue
         page << javascript_for_miq_button_visibility(!any_empty, 'quick_search')
       end
     end
@@ -989,6 +1008,7 @@ module ApplicationController::Filter
     @edit[:qs_tokens]    = create_tokens(@qs_exp_table, @edit[:adv_search_applied][:exp])
 
     render :update do |page|
+      page << javascript_prologue
       page.replace(:user_input_filter, :partial => "layouts/user_input_filter")
       page << "$('#advsearchModal').modal('hide');"
       page << "$('#quicksearchbox').modal('show');"

@@ -50,6 +50,7 @@ class ContainerController < ApplicationController
         add_flash(_("Button not yet implemented %{model}: %{action}") % {:model => model, :action => action}, :error)
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end

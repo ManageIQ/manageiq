@@ -63,6 +63,7 @@ module ApplicationController::ReportDownloads
     if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
       add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
+        page << javascript_prologue
         page << "if (miqDomElementExists('flash_msg_div_report_list')){"
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
                                                   :locals  => {:div_num => "_report_list"})
@@ -74,6 +75,7 @@ module ApplicationController::ReportDownloads
     else
       @sb[:render_rr_id] = miq_task.miq_report_result.id
       render :update do |page|
+        page << javascript_prologue
         page << "miqSparkle(false);"
         page << "DoNav('#{url_for(:action => "send_report_data")}');"
       end

@@ -2,6 +2,7 @@ module AutomateTreeHelper
   def at_tree_select_toggle(edit_key)
     build_ae_tree(:automate, :automate_tree)
     render :update do |page|
+      page << javascript_prologue
       tree_close = proc do
         @edit[:ae_tree_select] = false
         @changed = (@edit[:new] != @edit[:current])
@@ -113,6 +114,7 @@ module AutomateTreeHelper
     end
     inc_domain_chk = 'include_domain_prefix_chk'
     render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(@changed, 'automate')
       @changed ? page << javascript_enable_field(inc_domain_chk) : page << javascript_disable_field(inc_domain_chk)
       page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)

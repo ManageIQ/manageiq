@@ -134,6 +134,7 @@ module OpsController::Settings::RHN
       add_flash(_(bang.message), :error)
       @in_a_form = true
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
@@ -244,6 +245,7 @@ module OpsController::Settings::RHN
   def rhn_organizations
     rhn_fire_available_organizations do |_organizations|
       render :update do |page|
+        page << javascript_prologue
         # TODO: replace following line with this after 5.2: page << set_spinner_off
         page << "miqSparkle(false);"
       end
@@ -266,6 +268,7 @@ module OpsController::Settings::RHN
     # rhn_fire_available_organizations is async, if wait_for_task is completed, render the results
     if params[:task_id]
       render :update do |page|
+        page << javascript_prologue
         if 'rhn_satellite6' == @edit[:new][:register_to]
           page.replace_html('settings_rhn', :partial => 'settings_rhn_edit_tab')
         else
@@ -309,6 +312,7 @@ module OpsController::Settings::RHN
 
     settings_get_info('root')
     render :update do |page|
+      page << javascript_prologue
       page.replace_html('settings_rhn', :partial => 'settings_rhn_tab')
     end
   end

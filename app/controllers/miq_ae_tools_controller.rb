@@ -48,7 +48,8 @@ class MiqAeToolsController < ApplicationController
     assert_privileges("refresh_log")
     @log = $miq_ae_logger.contents if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div",
                         :partial => "layouts/log_viewer",
                         :locals  => {:legend_text => _("Last 1000 lines from the Automation log")})
@@ -69,7 +70,8 @@ class MiqAeToolsController < ApplicationController
   # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
     get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if params.key?(:instance_name) || params.key?(:starting_object) ||
          params.key?(:target_class) || params.key?(:target_id) ||
          params.key?(:other_name) || params.key?(:target_attr_name)
@@ -234,7 +236,8 @@ Methods updated/added: %{method_stats}") % stat_options)
       self.x_node = "root" if x_active_tree == :ae_tree && x_tree
       add_flash(_("All custom classes and instances have been reset to default"))
     end
-    render :update do |page|          # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end

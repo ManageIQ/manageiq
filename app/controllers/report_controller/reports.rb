@@ -72,7 +72,8 @@ module ReportController::Reports
       end
     end
     miq_task.destroy
-    render :update do |page|                      # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("form_preview", :partial => "form_preview")
       page << "miqSparkle(false);"
     end
@@ -85,6 +86,7 @@ module ReportController::Reports
     if rpt.miq_widgets.exists?
       add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
       end
     else
@@ -97,6 +99,7 @@ module ReportController::Reports
         add_flash(_("%{model} \"%{name}\": Error during 'miq_report_delete': %{message}") %
                     {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :message =>  bang.message}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
         end
         return

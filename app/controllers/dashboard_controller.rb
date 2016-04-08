@@ -288,6 +288,7 @@ class DashboardController < ApplicationController
     ws = create_user_dashboard(@sb[:active_db_id])
     @sb[:dashboards] = nil  # Reset dashboards hash so it gets recreated
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to :action => 'show'
     end
   end
@@ -301,6 +302,7 @@ class DashboardController < ApplicationController
 
     w = params[:widget].to_i
     render :update do |page|
+      page << javascript_prologue
       if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
         page << javascript_del_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
         page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-up fa-fw")
@@ -332,6 +334,7 @@ class DashboardController < ApplicationController
     @sb[:report_result_id] = widget.contents_for_user(current_user).miq_report_result_id
 
     render :update do |page|
+      page << javascript_prologue
       page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})
       page << "$('#lightbox-panel').fadeIn(300);"
       page << "miqLoadCharts();"
@@ -372,6 +375,7 @@ class DashboardController < ApplicationController
       ws.remove_member(w) if w
       save_user_dashboards
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show'
       end
     else
@@ -398,6 +402,7 @@ class DashboardController < ApplicationController
       save_user_dashboards
       w.create_initial_content_for_user(session[:userid])
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show'
       end
     else
@@ -434,7 +439,8 @@ class DashboardController < ApplicationController
 
   # AJAX login retry method
   def login_retry
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       #     if MiqServer.my_server(true).logon_status == :starting
       logon_details = MiqServer.my_server(true).logon_status_details
       if logon_details[:status] == :starting
@@ -450,6 +456,7 @@ class DashboardController < ApplicationController
   # Initiate a SAML Login from the main login page
   def initiate_saml_login
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to(saml_protected_page)
     end
   end
@@ -469,7 +476,6 @@ class DashboardController < ApplicationController
 
     case validation.result
     when :pass
-      session['referer'] = request.base_url + '/'
       session[:saml_login_request] = true
       redirect_to validation.url
       return
@@ -499,6 +505,7 @@ class DashboardController < ApplicationController
       when "more"
         @more = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("login_more_div", :partial => "login_more")
           page << javascript_focus('user_new_password')
           page << javascript_show("back_button")
@@ -507,6 +514,7 @@ class DashboardController < ApplicationController
         return
       when "back"
         render :update do |page|
+          page << javascript_prologue
           page.replace("login_more_div", :partial => "login_more")
           page << javascript_focus('user_name')
           page << javascript_hide("back_button")
@@ -530,6 +538,7 @@ class DashboardController < ApplicationController
        params[:action] == "authenticate"
 
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(root_path)
       end
       return
@@ -540,14 +549,15 @@ class DashboardController < ApplicationController
     when :wait_for_task
       # noop, page content already set by initiate_wait_for_task
     when :pass
-      session['referer'] = request.base_url + '/'
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(validation.url)
       end
     when :fail
       clear_current_user
       add_flash(validation.flash_msg || _("Error: Authentication failed"), :error)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << javascript_show("flash_div")
         page << "miqSparkle(false);"
@@ -577,6 +587,7 @@ class DashboardController < ApplicationController
     if params[:id]
       build_timeline
       render :update do |page|
+        page << javascript_prologue
         if @ajax_action
           page << "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
         end
@@ -600,6 +611,7 @@ class DashboardController < ApplicationController
 
     @timeline = true
     render :update do |page|
+      page << javascript_prologue
       page << javascript_highlight("report_#{session[:last_rpt_id]}_link", false)  if session[:last_rpt_id]
       center_tb_buttons = {
         'timeline_txt' => "text",
@@ -655,6 +667,7 @@ class DashboardController < ApplicationController
     session[:group_changed] = true
     url = start_url_for_user(nil) || url_for(:controller => params[:controller], :action => 'show')
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to(url)
     end
   end
@@ -703,7 +716,7 @@ class DashboardController < ApplicationController
 
   def session_reset
     # save some fields to recover back into session hash after session is cleared
-    keys_to_restore = [:winH, :winW, :referer, :browser, :user_TZO]
+    keys_to_restore = [:winH, :winW, :browser, :user_TZO]
     data_to_restore = keys_to_restore.each_with_object({}) { |k, v| v[k] = session[k] }
 
     session.clear

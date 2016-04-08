@@ -36,15 +36,18 @@ module VmCommon
 
     if !@flash_array.nil? && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif params[:pressed].ends_with?("_edit")
       if @redirect_controller
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id, :org_controller => @org_controller
         end
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => @refresh_partial, :id => @redirect_id
         end
       end
@@ -513,7 +516,8 @@ module VmCommon
     base = params[:id].split('-')
     session[:base_vm] = "_h-#{base[1]}"
     @display = "vmtree_info"
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.redirect_to :action => "show", :id => base[1], :vm_tree => "vmtree_info"
     end
   end
@@ -531,7 +535,8 @@ module VmCommon
     @button_group = "snapshot"
     @explorer = true
     c_tb = build_toolbar("x_vm_center_tb")
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << "$('#toolbar').show();" if c_tb.present?
       page << javascript_pf_toolbar_reload('center_tb', c_tb)
 
@@ -863,6 +868,7 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     build_policy_tree(@polArr)
     render :update do |page|
+      page << javascript_prologue
       page.replace_html("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace_html("main_div", :partial => "vm_common/policies")
     end
@@ -875,6 +881,7 @@ module VmCommon
     @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
     build_policy_tree(@polArr)
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("main_div", :partial => "vm_common/policies")
     end
@@ -888,6 +895,7 @@ module VmCommon
     @in_a_form = true
     if params[:button] == "back"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(previous_breadcrumb_url)
       end
     end
@@ -930,7 +938,8 @@ module VmCommon
     return unless load_edit("evm_relationship_edit__new")
     evm_relationship_get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(changed)
     end
   end
@@ -952,6 +961,7 @@ module VmCommon
         replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'show', :id => @record.id, :flash_msg => msg
         end
       end
@@ -966,6 +976,7 @@ module VmCommon
         replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'show', :id => @record.id, :flash_msg => msg
         end
       end
@@ -978,6 +989,7 @@ module VmCommon
         replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'evm_relationship', :id => @record.id, :flash_msg => _("All changes have been reset"), :flash_warning => true, :escape => true
         end
       end
@@ -1008,6 +1020,7 @@ module VmCommon
       policy_escaped = j(params[:policy])
       cat            = params[:cat]
       render :update do |page|
+        page << javascript_prologue
         if @catinfo[cat]
           @catinfo[cat] = false
           page << javascript_show("cat_#{policy_escaped}_div")
@@ -1087,7 +1100,8 @@ module VmCommon
     return unless load_edit("vm_edit__#{params[:id]}")
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div",
                         :partial => "vm_common/form") if %w(allright left right).include?(params[:button])
       page << javascript_for_miq_button_visibility(changed) if changed
@@ -1110,6 +1124,7 @@ module VmCommon
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Vm"), :name => @record.name})
         session[:flash_msgs] = @flash_array.dup
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(previous_breadcrumb_url)
         end
       end
@@ -1156,6 +1171,7 @@ module VmCommon
         else
           session[:flash_msgs] = @flash_array.dup
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to(previous_breadcrumb_url)
           end
         end
@@ -1171,6 +1187,7 @@ module VmCommon
         replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(:action => "edit", :controller => "vm", :id => params[:id])
         end
       end
@@ -1221,6 +1238,7 @@ module VmCommon
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       render :update do |page|
+        page << javascript_prologue
         page.replace_html("gtl_div", :partial => "layouts/gtl")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
@@ -1343,6 +1361,7 @@ module VmCommon
       @vm = @record = identify_record(params[:id], VmOrTemplate)
     end
     render :update do |page|
+      page << javascript_prologue
       if @flash_array
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"

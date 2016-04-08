@@ -93,7 +93,8 @@ class ChargebackController < ApplicationController
     session[:rates_sortdir] = @sortdir
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "cb_rates_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false)"
@@ -121,6 +122,7 @@ class ChargebackController < ApplicationController
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("Description is required"), :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -163,6 +165,7 @@ class ChargebackController < ApplicationController
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -190,7 +193,8 @@ class ChargebackController < ApplicationController
   def cb_rate_form_field_changed
     return unless load_edit("cbrate_edit__#{params[:id]}", "replace_cell__chargeback")
     cb_rate_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       # Update the new column with the code of the currency selected by the user
       first_new_detail = @edit[:new][:details].first
@@ -231,12 +235,14 @@ class ChargebackController < ApplicationController
         add_flash(_("No %{records} were selected for deletion") %
           {:records => ui_lookup(:models => "ChargebackRate")}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
       if flash_errors? && @flash_array.count == 1
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -249,6 +255,7 @@ class ChargebackController < ApplicationController
       if params[:id].nil? || ChargebackRate.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -259,6 +266,7 @@ class ChargebackController < ApplicationController
       self.x_node = "xx-#{cb_rate.rate_type}"
       if flash_errors?
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -274,7 +282,8 @@ class ChargebackController < ApplicationController
   def cb_assign_field_changed
     return unless load_edit("cbassign_edit__#{x_node}", "replace_cell__chargeback")
     cb_assign_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       page.replace("cb_assignment_div", :partial => "cb_assignments") if params[:cbshow_typ] || params[:cbtag_cat]      # only replace if cbshow_typ or cbtag_cat has changed
       page << javascript_for_miq_button_visibility(changed)
@@ -341,7 +350,8 @@ class ChargebackController < ApplicationController
         ChargebackRate.set_assignments(rate_type, @edit[:set_assignments])
       rescue StandardError => bang
         add_flash(_("Error during 'Rate assignments': %{error_message}") % {:error_message => bang.message}, :error)
-        render :update do |page|                    # Use RJS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -910,6 +920,7 @@ class ChargebackController < ApplicationController
   def add_row(i, pos, code_currency)
     locals = {:code_currency => code_currency}
     render :update do |page|
+      page << javascript_prologue
       # Update the first row to change the colspan
       page.replace("rate_detail_row_#{i}_0",
                    :partial => "tier_first_row",
@@ -926,6 +937,7 @@ class ChargebackController < ApplicationController
   def replace_rows(detail_index, tiers, tier_to_remove_index, code_currency)
     @changed = session[:changed] = (@edit[:new] != @edit[:current])
     render :update do |page|
+      page << javascript_prologue
       page.replace("rate_detail_row_#{detail_index}_0", :partial => "tier_first_row", :locals => {:code_currency => code_currency})
       tiers.each_with_index do |_tier, tier_index|
         next if tier_index <= tier_to_remove_index

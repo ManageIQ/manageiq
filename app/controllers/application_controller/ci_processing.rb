@@ -45,6 +45,7 @@ module ApplicationController::CiProcessing
       ownership
     else
       render :update do |page|
+        page << javascript_prologue
         if role_allows(:feature => "vm_ownership")
           page.redirect_to :controller => "#{rec_cls}", :action => 'ownership'              # redirect to build the ownership screen
         end
@@ -100,7 +101,8 @@ module ApplicationController::CiProcessing
     return unless load_edit("ownership_edit__new")
     ownership_get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(changed)
     end
   end
@@ -122,6 +124,7 @@ module ApplicationController::CiProcessing
       else
         session[:flash_msgs] = @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(previous_breadcrumb_url)
         end
       end
@@ -148,6 +151,7 @@ module ApplicationController::CiProcessing
         result["missing_ids"].each { |msg| add_flash(msg, :error) } if result["missing_ids"]
         result["error_updating"].each { |msg| add_flash(msg, :error) } if result["error_updating"]
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -161,6 +165,7 @@ module ApplicationController::CiProcessing
         else
           session[:flash_msgs] = @flash_array
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to(previous_breadcrumb_url)
           end
         end
@@ -173,6 +178,7 @@ module ApplicationController::CiProcessing
         request.parameters[:controller] == "service" ? replace_right_cell("ownership") : replace_right_cell
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action        => 'ownership',
                            :flash_msg     => _("All changes have been reset"),
                            :flash_warning => true,
@@ -220,6 +226,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("Retire %{name}") % {:name => rec_cls.to_s.pluralize},
                       :url  => "/#{session[:controller]}/retire")
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :controller => rec_cls, :action => 'retire'      # redirect to build the retire screen
       end
     end
@@ -293,6 +300,7 @@ module ApplicationController::CiProcessing
       else
         session[:flash_msgs] = @flash_array.dup
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to previous_breadcrumb_url
         end
       end
@@ -343,6 +351,7 @@ module ApplicationController::CiProcessing
       replace_right_cell if @orig_action == "x_history"
     else
       render :update do |page|
+        page << javascript_prologue
         if role_allows(:feature => "vm_right_size")
           page.redirect_to :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false           # redirect to build the ownership screen
         end
@@ -383,6 +392,7 @@ module ApplicationController::CiProcessing
       else
         session[:flash_msgs] = @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(previous_breadcrumb_url)
         end
       end
@@ -405,11 +415,13 @@ module ApplicationController::CiProcessing
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
           end
         else
           url = previous_breadcrumb_url.split('/')
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :controller => url[1], :action => url[2], :flash_msg => flash
           end
         end
@@ -419,6 +431,7 @@ module ApplicationController::CiProcessing
       end
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -864,7 +877,8 @@ module ApplicationController::CiProcessing
 
   # AJAX driven routine to check for changes in ANY field on the discover form
   def discover_field_changed
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if params[:from_first]
         # params[:from][:first] =~ /[a-zA-Z]/
         if params[:from_first] =~ /[\D]/
@@ -1074,6 +1088,7 @@ module ApplicationController::CiProcessing
       @refresh_partial = "vm_common/reconfigure"
     else
       render :update do |page|
+        page << javascript_prologue
         if role_allows(:feature => "vm_reconfigure")
           page.redirect_to :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false         # redirect to build the ownership screen
         end
@@ -1485,6 +1500,7 @@ module ApplicationController::CiProcessing
         @refresh_partial = "layouts/policy_sim"
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => 'vm', :action => 'policy_sim'   # redirect to build the policy simulation screen
         end
       end

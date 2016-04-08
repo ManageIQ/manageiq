@@ -114,7 +114,8 @@ module ReportController::Reports::Editor
     get_form_vars
     build_edit_screen
     @changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
       page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page.replace("chart_sample_div", :partial => "form_chart_sample") if @refresh_div == "chart_div"
@@ -137,6 +138,7 @@ module ReportController::Reports::Editor
     return unless load_edit("report_edit__#{params[:id]}", "replace_cell__explorer")
     @expkey = $&.to_sym if params[:button].to_s =~ /^(record|display)_filter$/
     render :update do |page|
+      page << javascript_prologue
       page.replace("filter_div", :partial => "form_filter")
       page << "miqSparkle(false);"
     end

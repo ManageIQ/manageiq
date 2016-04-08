@@ -28,6 +28,7 @@ module ApplicationController::Tags
     classify_build_entries_pulldown
 
     render :update do |page|
+      page << javascript_prologue
       page.replace("value_div", :partial => "layouts/classify_value")
     end
   end
@@ -60,6 +61,7 @@ module ApplicationController::Tags
 
     tag_edit_build_entries_pulldown
     render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       if changed != session[:changed]
         session[:changed] = changed
@@ -81,6 +83,7 @@ module ApplicationController::Tags
     end
     classify_build_screen
     render :update do |page|
+      page << javascript_prologue
       page.replace("value_div", :partial => "layouts/classify_value")
       page.replace("table_div", :partial => "layouts/classify_table")
       page << jquery_pulsate_element("#{entry.id}_tr")
@@ -95,6 +98,7 @@ module ApplicationController::Tags
     end
     classify_build_screen
     render :update do |page|
+      page << javascript_prologue
       page.replace("value_div", :partial => "layouts/classify_value")
       page.replace("table_div", :partial => "layouts/classify_table")
     end
@@ -183,6 +187,7 @@ module ApplicationController::Tags
       @edit = nil                               # clean out the saved info
       session[:flash_msgs] = @flash_array.dup   # Put msg in session for next transaction to display
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(previous_breadcrumb_url)
       end
     end
@@ -202,6 +207,7 @@ module ApplicationController::Tags
       @edit = nil
       session[:flash_msgs] = @flash_array.dup   # Put msg in session for next transaction to display
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(previous_breadcrumb_url)
       end
     end
@@ -386,6 +392,7 @@ module ApplicationController::Tags
     get_tag_items
     drop_breadcrumb(:name => _("Tag Assignment"), :url => "/#{session[:controller]}/tagging_edit")
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to :action => 'tagging_edit',
                        :id     => params[:id],
                        :db     => db,

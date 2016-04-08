@@ -49,6 +49,7 @@ module OpsController::Settings
     @edit = session[:edit]  # Need to reload @edit so it stays in the session
     port = params[:user_proxies_mode] == "ldap" ? "389" : "636"
     render :update do |page|
+      page << javascript_prologue
       page << "$('#user_proxies_ldapport').val('#{port}');"
     end
   end
@@ -57,7 +58,8 @@ module OpsController::Settings
   def forest_select
     forest_get_form_vars
     if params[:ldaphost_id] == "new"
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => "new", :edit => true})
       end
@@ -67,7 +69,8 @@ module OpsController::Settings
       @edit[:new][:authentication][:user_proxies].each do |f|
         entry = f if f[:ldaphost] == params[:ldaphost_id]
       end
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => entry, :edit => true})
       end
@@ -84,7 +87,8 @@ module OpsController::Settings
     end
     @edit[:new][:authentication][:user_proxies].delete_at(idx) unless idx.nil?
     @changed = (@edit[:new] != @edit[:current].config)
-    render :update do |page|                        # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << javascript_for_miq_button_visibility(@changed)
       page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => nil, :edit => false})
@@ -119,7 +123,8 @@ module OpsController::Settings
       end
     end
     @changed = (@edit[:new] != @edit[:current].config)
-    render :update do |page|                        # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(@changed)
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("forest_entries_div", :partial => "ldap_forest_entries", :locals => {:entry => nil, :edit => false})  if no_changes
@@ -140,6 +145,7 @@ module OpsController::Settings
       end
     end
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
@@ -161,6 +167,7 @@ module OpsController::Settings
       unless @flash_array.nil?
         session[:changed] = @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -174,6 +181,7 @@ module OpsController::Settings
         end
         @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -196,6 +204,7 @@ module OpsController::Settings
     region_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(changed)
     end
   end

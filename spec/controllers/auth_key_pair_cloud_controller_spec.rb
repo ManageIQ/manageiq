@@ -30,7 +30,6 @@ describe AuthKeyPairCloudController do
         :new        => {:assignments => [@tag1.id, @tag2.id]}
       }
       session[:edit] = edit
-      session[:referer] = request.env["HTTP_REFERER"] = "http://localhost"
     end
 
     after(:each) do

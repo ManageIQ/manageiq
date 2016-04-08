@@ -57,7 +57,8 @@ module ApplicationController::Compare
     build_sections_tree
     compare_to_json(@compare)
     if params[:ppsetting]                     # Came in from per page setting
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
         page << "miqSparkle(false);"
       end
@@ -90,7 +91,8 @@ module ApplicationController::Compare
     else
       img_src = "squashed-all-true"
     end
-    render :update do |page| # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       asset = ActionController::Base.helpers.image_path("toolbars/#{img_src}.png")
       page << "$('#expand_collapse').prop('src', '#{asset}');"
     end
@@ -108,7 +110,8 @@ module ApplicationController::Compare
       @items_per_page = params[:ppsetting].to_i           # Set the new per page value
     end
     compare_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @sb[:miq_temp_params] == "different"
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'compare_all');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'compare_all');"
@@ -149,7 +152,8 @@ module ApplicationController::Compare
     @exists_mode = session[:miq_exists_mode]
     @compare.set_base_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       # page.replace("view_buttons_div", :partial=>"layouts/view_buttons")   # Replace the view buttons
       page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
@@ -163,7 +167,8 @@ module ApplicationController::Compare
     session[:miq_compressed] = !session[:miq_compressed]
     @compressed = session[:miq_compressed]
     compare_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @compressed
         page << "ManageIQ.toolbars.enableItem('#view_tb', 'compare_expanded');"
         page << "ManageIQ.toolbars.unmarkItem('#view_tb', 'compare_expanded');"
@@ -187,7 +192,8 @@ module ApplicationController::Compare
     session[:miq_exists_mode] = !session[:miq_exists_mode]
     @exists_mode = session[:miq_exists_mode]
     compare_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @exists_mode
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'comparemode_details');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'comparemode_details');"
@@ -212,7 +218,8 @@ module ApplicationController::Compare
     elsif session[:compare_state].include?(params["rowId"]) && params["state"].to_i == -1
       session[:compare_state].delete(params["rowId"])
     end
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << "miqSparkle(false);"
       # head :ok
     end
@@ -231,6 +238,7 @@ module ApplicationController::Compare
     @compare.remove_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
     render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
     end
@@ -560,8 +568,8 @@ module ApplicationController::Compare
     if params[:ppsetting] # Came in from per page setting
       render :update do |page| # Use RJS to update the display
         # Replace the main div area contents
+        page << javascript_prologue
         page.replace_html("main_div", :partial => "layouts/compare", :id => @drift_obj.id)
-        page << "miqSparkle(false);"
       end
     else
       @showtype = "drift"
@@ -590,7 +598,8 @@ module ApplicationController::Compare
                     :url  => "/#{@sb[:compare_db].downcase}/drift")
     @lastaction = "drift"
     @showtype = "drift"
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @sb[:miq_drift_params] == "different"
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'drift_all');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'drift_all');"
@@ -642,7 +651,8 @@ module ApplicationController::Compare
     elsif params[:check] == "compare_miq"
       compare_checked
     else
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page << "miqSparkle(false);"
         # head :ok
       end
@@ -673,7 +683,8 @@ module ApplicationController::Compare
     session[:miq_exists_mode] = !session[:miq_exists_mode]
     @exists_mode = session[:miq_exists_mode]
     drift_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @exists_mode
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'driftmode_details');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'driftmode_details');"
@@ -696,7 +707,8 @@ module ApplicationController::Compare
     session[:miq_compressed] = !session[:miq_compressed]
     @compressed = session[:miq_compressed]
     drift_to_json(@compare)
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @compressed
         page << "ManageIQ.toolbars.enableItem('#view_tb', 'drift_expanded');"
         page << "ManageIQ.toolbars.unmarkItem('#view_tb', 'drift_expanded');"
@@ -888,6 +900,7 @@ module ApplicationController::Compare
         compare_miq(@sb[:compare_db])
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'compare_miq'    # redirect to build the compare screen
         end
       end
@@ -935,6 +948,7 @@ module ApplicationController::Compare
         drift
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => controller_name, :action => 'drift', :id => @drift_obj.id
         end
       end
@@ -965,7 +979,8 @@ module ApplicationController::Compare
       end
     end
     send("#{mode}_to_json", @compare)
-    render :update do |page| # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
       page << "miqSparkle(false);"
     end

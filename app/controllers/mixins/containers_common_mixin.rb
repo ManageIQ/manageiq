@@ -35,6 +35,7 @@ module ContainersCommonMixin
       scan_images
 
       render :update do |page|
+        page << javascript_prologue
         if @lastaction == "show"
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         else

@@ -127,7 +127,8 @@ class AvailabilityZoneController < ApplicationController
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render :update do |page| # Use RJS to update the display
+        render :update do |page|
+          page << javascript_prologue
           unless @refresh_partial.nil?
             if @refresh_div == "flash_msg_div"
               page.replace(@refresh_div, :partial => @refresh_partial)

@@ -55,7 +55,8 @@ module MiqPolicyController::MiqActions
         action.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        render :update do |page|                    # Use RJS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end

@@ -7,7 +7,8 @@ module PxeController::PxeCustomizationTemplates
     return unless load_edit("ct_edit__#{params[:id]}", "replace_cell__explorer")
     @prev_typ = @edit[:new][:typ]
     template_get_form_vars
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       if params[:typ] && @prev_typ != @edit[:new][:typ]
         @edit[:new][:script] = ""
@@ -45,7 +46,8 @@ module PxeController::PxeCustomizationTemplates
     session[:ct_sortdir] = @sortdir
 
     if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "template_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -117,6 +119,7 @@ module PxeController::PxeCustomizationTemplates
       end
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -138,6 +141,7 @@ module PxeController::PxeCustomizationTemplates
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end

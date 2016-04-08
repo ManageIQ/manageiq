@@ -31,6 +31,7 @@ class AuthKeyPairCloudController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "auth_key_pair_cloud_delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         # redirect to build the retire screen
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
@@ -40,6 +41,7 @@ class AuthKeyPairCloudController < ApplicationController
         replace_gtl_main_div
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => "new"
         end
       end
@@ -81,6 +83,7 @@ class AuthKeyPairCloudController < ApplicationController
     get_form_vars
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
+      page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << javascript_for_miq_button_visibility(true)
     end
@@ -104,6 +107,7 @@ class AuthKeyPairCloudController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action    => 'show_list',
                          :flash_msg => _("Add of new %{model} was cancelled by the user") % {
                            :model => ui_lookup(:table => 'auth_key_pair_cloud')
@@ -133,6 +137,7 @@ class AuthKeyPairCloudController < ApplicationController
         session[:edit] = nil
         session[:flash_msgs] = @flash_array.dup if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => "show_list"
         end
       else
@@ -143,6 +148,7 @@ class AuthKeyPairCloudController < ApplicationController
           :url  => "/auth_key_pair_cloud/new"
         )
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -158,6 +164,7 @@ class AuthKeyPairCloudController < ApplicationController
         add_flash(_(action_details), :error) unless details.nil?
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end

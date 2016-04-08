@@ -83,7 +83,8 @@ class VmCloudController < ApplicationController
     @edit ||= {}
     @edit[:new] ||= {}
     @edit[:new][:flavor] = params[:id]
-    render :update do |page| # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("main_div",
                         :partial => "vm_common/resize") if %w(allright left right).include?(params[:button])
       page << javascript_for_miq_button_visibility(true)

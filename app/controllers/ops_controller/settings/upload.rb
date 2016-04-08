@@ -50,7 +50,8 @@ module OpsController::Settings::Upload
     end
     add_flash(msg, :info)
     @sb[:good] = nil
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html("settings_import", :partial => "settings_import_tab")
     end
   end

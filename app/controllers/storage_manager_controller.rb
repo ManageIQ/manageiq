@@ -31,15 +31,18 @@ class StorageManagerController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "storage_manager_delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
     elsif params[:pressed].ends_with?("_edit")
       if @redirect_controller
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
         end
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => @refresh_partial, :id => @redirect_id
         end
       end
@@ -47,7 +50,8 @@ class StorageManagerController < ApplicationController
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render :update do |page|                    # Use RJS to update the display
+        render :update do |page|
+          page << javascript_prologue
           unless @refresh_partial.nil?
             if @refresh_div == "flash_msg_div"
               page.replace(@refresh_div, :partial => @refresh_partial)
@@ -76,6 +80,7 @@ class StorageManagerController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
           {:model => ui_lookup(:table => "StorageManager")}
       end
@@ -83,6 +88,7 @@ class StorageManagerController < ApplicationController
       if @edit[:new][:sm_type].nil?
         add_flash(_("Type is required"), :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -99,6 +105,7 @@ class StorageManagerController < ApplicationController
         AuditEvent.success(build_created_audit(add_sm, @edit))
         session[:edit] = nil  # Clear the edit object from the session object
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "StorageManager"), :name => add_sm.name}
         end
       else
@@ -111,6 +118,7 @@ class StorageManagerController < ApplicationController
         end
         drop_breadcrumb(:name => _("Add New Storage Manager"), :url => "/storage_manager/new")
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -119,6 +127,7 @@ class StorageManagerController < ApplicationController
       if @edit[:new][:sm_type].blank?
         add_flash(_("Type is required"), :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -134,6 +143,7 @@ class StorageManagerController < ApplicationController
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -155,7 +165,8 @@ class StorageManagerController < ApplicationController
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
 
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if changed != session[:changed]
         session[:changed] = changed
         page << javascript_for_miq_button_visibility(changed)
@@ -181,6 +192,7 @@ class StorageManagerController < ApplicationController
       session[:edit] = nil  # clean out the saved info
       flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "StorageManager"), :name => @sm.name}
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => @lastaction, :id => @sm.id, :display => session[:sm_display], :flash_msg => flash
       end
     when "save"
@@ -191,6 +203,7 @@ class StorageManagerController < ApplicationController
         AuditEvent.success(build_saved_audit(update_sm, @edit))
         session[:edit] = nil  # clean out the saved info
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => 'show', :id => @sm.id.to_s, :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "StorageManager"), :name => update_sm.name}
         end
         return
@@ -205,6 +218,7 @@ class StorageManagerController < ApplicationController
         session[:changed] = changed
         @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -215,6 +229,7 @@ class StorageManagerController < ApplicationController
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'edit', :id => @sm.id.to_s
       end
     when "validate"
@@ -230,6 +245,7 @@ class StorageManagerController < ApplicationController
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end

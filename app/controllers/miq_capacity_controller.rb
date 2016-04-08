@@ -96,7 +96,8 @@ class MiqCapacityController < ApplicationController
                  (vm_opts[:memory] && @sb[:planning][:options][:trend_memory]) ||
                  (vm_opts[:storage] && @sb[:planning][:options][:trend_storage])
             add_flash(_("At least one VM Option must be selected"), :error)
-            render :update do |page|                    # Use JS to update the display
+            render :update do |page|
+              page << javascript_prologue
               page.replace("planning_options_div", :partial => "planning_options")
               page << "miqSparkle(false);"
             end
@@ -109,6 +110,7 @@ class MiqCapacityController < ApplicationController
               if @sb[:planning][:no_data] # to prevent double render error, making sure it's not wait_for_task transaction
                 add_flash(_("No Utilization data available to generate planning results"), :warning)
                 render :update do |page|
+                  page << javascript_prologue
                   page.replace("planning_options_div", :partial => "planning_options")
                   page << "miqSparkle(false);"
                 end
@@ -136,6 +138,7 @@ class MiqCapacityController < ApplicationController
       v_tb = build_toolbar("miq_capacity_view_tb")
     end
     render :update do |page|
+      page << javascript_prologue
       page << javascript_pf_toolbar_reload('view_tb', v_tb)
       if @sb[:active_tab] == 'report' && v_tb.present?
         page << "$('#toolbar').show();"
@@ -227,7 +230,8 @@ class MiqCapacityController < ApplicationController
       perf_planning_gen_data
       planning_replace_right_cell
     else
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         unless params[:trend_cpu_val] || # Don't replace the div when input fields change
                params[:trend_vcpus_val] ||
                params[:trend_memory_val] ||
@@ -539,7 +543,8 @@ class MiqCapacityController < ApplicationController
       session[:changed] = false
       add_flash(_("Planning options have been reset by the user"))
       v_tb = build_toolbar("miq_capacity_view_tb")
-      render :update do |page|  # Redraw the screen
+      render :update do |page|
+        page << javascript_prologue
         page << "$('#toolbar').show();"
         page << javascript_pf_toolbar_reload('view_tb', v_tb) if v_tb.present?
         page << javascript_for_miq_button_visibility(session[:changed])
@@ -725,7 +730,8 @@ class MiqCapacityController < ApplicationController
 
   def send_button_changes
     changed = (@edit[:new] != @edit[:current])
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if @action_type_changed || @tag_selected || @snmp_trap_refresh
         page.replace("action_options_div", :partial => "action_options")
       elsif @alert_refresh

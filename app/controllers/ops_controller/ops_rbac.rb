@@ -28,6 +28,7 @@ module OpsController::OpsRbac
 
   def rbac_change_tab
     render :update do |page|
+      page << javascript_prologue
       page << "miqSparkle(false);"
     end
   end
@@ -125,6 +126,7 @@ module OpsController::OpsRbac
       rescue StandardError => bang
         add_flash(_("Error when adding a new tenant: %{message}") % {:message => bang.message}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -202,6 +204,7 @@ module OpsController::OpsRbac
       rescue StandardError => bang
         add_flash(_("Error when saving tenant quota: %{message}") % {:message => bang.message}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
@@ -270,6 +273,7 @@ module OpsController::OpsRbac
       if users.empty?
         add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => "Administrator"}, :error)
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -299,6 +303,7 @@ module OpsController::OpsRbac
       end
       if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
@@ -537,7 +542,8 @@ module OpsController::OpsRbac
       end
     end
     if !@flash_array.nil?
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
@@ -554,12 +560,14 @@ module OpsController::OpsRbac
       rescue StandardError => bang
         @edit[:ldap_groups_by_user] = []
         add_flash(_("Error during 'LDAP Group Look Up': %{message}") % {:message => bang.message}, :error)
-        render :update do |page|                    # Use JS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           page.replace("ldap_user_div", :partial => "ldap_auth_users")
         end
       else
-        render :update do |page|                    # Use JS to update the display
+        render :update do |page|
+          page << javascript_prologue
           page.replace("ldap_user_div", :partial => "ldap_auth_users")
         end
       end
@@ -668,6 +676,7 @@ module OpsController::OpsRbac
     if [:group, :role].include?(key) && record && record.read_only && params[:typ] != "copy"
       add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
       return
@@ -753,7 +762,8 @@ module OpsController::OpsRbac
   def rbac_list(rec_type)
     rbac_build_list(rec_type)
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|                    # Use RJS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "rbac_#{rec_type.pluralize}_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"
@@ -810,7 +820,8 @@ module OpsController::OpsRbac
       bad ||= @edit[:new][:group_tenant].blank?
     end
 
-    render :update do |page|              # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if %w(up down).include?(params[:button])
         page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
         page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div

@@ -41,7 +41,8 @@ module OpsController::Settings::Common
       @changed = (@edit[:new] != @edit[:current])
     end
 
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
 
       case @sb[:active_tab]
@@ -167,6 +168,7 @@ module OpsController::Settings::Common
 
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|
+      page << javascript_prologue
       page << javascript_for_miq_button_visibility(changed)
     end
   end
@@ -191,6 +193,7 @@ module OpsController::Settings::Common
     end
 
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
@@ -213,6 +216,7 @@ module OpsController::Settings::Common
     end
 
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
@@ -230,6 +234,7 @@ module OpsController::Settings::Common
                   {:email => @sb[:new_to]})
     end
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
@@ -351,6 +356,7 @@ module OpsController::Settings::Common
             rescue StandardError => bang
               add_flash(_("Error when saving new server name: %{message}") % {:message => bang.message}, :error)
               render :update do |page|
+                page << javascript_prologue
                 page.replace("flash_msg_div", :partial => "layouts/flash_msg")
               end
               return
@@ -381,6 +387,7 @@ module OpsController::Settings::Common
           replace_right_cell(@nodetype, [:settings])
         elsif @sb[:active_tab] == "settings_custom_logos"
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to :action => 'explorer', :flash_msg => @flash_array[0][:message], :flash_error => @flash_array[0][:level] == :error, :escape => false  # redirect to build the server screen
           end
           return
@@ -404,6 +411,7 @@ module OpsController::Settings::Common
       unless @flash_array.nil?
         session[:changed] = @changed = true
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return

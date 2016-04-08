@@ -130,6 +130,8 @@ class ExplorerPresenter
   private
 
   def process
+    @out << javascript_prologue
+
     # see if any miq expression vars need to be set
     unless @options[:exp].empty?
       @out << "ManageIQ.expEditor.first.type = '#{@options[:exp][:val1_type]}';"  if @options[:exp][:val1_type]

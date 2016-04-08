@@ -124,6 +124,7 @@ class OrchestrationStackController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "orchestration_stack_delete" && @single_delete
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",

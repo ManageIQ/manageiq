@@ -44,7 +44,6 @@ describe CloudTenantController do
         :new        => {:assignments => [@tag1.id, @tag2.id]}
       }
       session[:edit] = edit
-      session[:referer] = request.env["HTTP_REFERER"] = "http://localhost"
     end
 
     after(:each) do
@@ -76,7 +75,6 @@ describe CloudTenantController do
       EvmSpecHelper.create_guid_miq_server_zone
       @tenant = FactoryGirl.create(:cloud_tenant)
       login_as FactoryGirl.create(:user)
-      allow_any_instance_of(RequestRefererService).to receive(:referer_valid?).and_return(true)
     end
 
     subject do

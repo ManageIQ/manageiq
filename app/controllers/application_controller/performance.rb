@@ -50,6 +50,7 @@ module ApplicationController::Performance
     end
 
     render :update do |page|
+      page << javascript_prologue
       if @parent_chart_data
         page << 'ManageIQ.charts.chartData = ' + {
           "candu"  => @chart_data,
@@ -129,6 +130,7 @@ module ApplicationController::Performance
       perf_gen_top_data                   # Generate top data
       return unless @charts               # Return if no charts got created (first time thru async rpt gen)
       render :update do |page|
+        page << javascript_prologue
         page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data}.to_json + ';'
         page.replace("candu_charts_div",
                      :partial => "layouts/perf_charts",
@@ -247,6 +249,7 @@ module ApplicationController::Performance
     if cmd == "Display" && model == "Current" && typ == "Top"                   # Display the CI selected from a Top chart
       return unless perf_menu_record_valid(data_row["resource_type"], data_row["resource_id"], data_row["resource_name"])
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(:controller => data_row["resource_type"].underscore,
                          :action     => "show",
                          :id         => data_row["resource_id"],
@@ -268,6 +271,7 @@ module ApplicationController::Performance
                _("%{model} (%{tag} running %{time})") % {:tag => bc_tag, :model => bc_model, :time => dt}
              end
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(:controller    => model.downcase.singularize,
                            :action        => "show_list",
                            :menu_click    => params[:menu_click],
@@ -286,6 +290,7 @@ module ApplicationController::Performance
       else
         bc = request.parameters["controller"] == "storage" ? "#{bc_model} #{dt}" : "#{bc_model} #{state} #{dt}"
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(:controller    => model.downcase.singularize,
                            :action        => "show_list",
                            :menu_click    => params[:menu_click],
@@ -329,6 +334,7 @@ module ApplicationController::Performance
           show_timeline
         else
           render :update do |page|
+            page << javascript_prologue
             page.redirect_to(:id         => @perf_record.id,
                              :action     => "show",
                              :display    => "timeline",
@@ -372,6 +378,7 @@ module ApplicationController::Performance
           show_timeline
         else
           render :update do |page|
+            page << javascript_prologue
             if data_row["resource_type"] == "VmOrTemplate"
               tree_node_id = TreeBuilder.build_node_id(@record.class.base_model, @record.id)
               session[:exp_parms] = {:display => "timeline", :refresh => "n", :id => tree_node_id}
@@ -401,6 +408,7 @@ module ApplicationController::Performance
       return unless @charts      # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
+        page << javascript_prologue
         if @parent_chart_data
           page << 'ManageIQ.charts.chartData = ' + {
             "candu"  => @chart_data,
@@ -434,6 +442,7 @@ module ApplicationController::Performance
       return unless @charts        # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
+        page << javascript_prologue
         if @parent_chart_data
           page << 'ManageIQ.charts.chartData = ' + {
             "candu"  => @chart_data,
@@ -477,6 +486,7 @@ module ApplicationController::Performance
       session[:sandboxes][cont][:perf_options].merge!(new_opts)
 
       render :update do |page|
+        page << javascript_prologue
         if data_row["resource_type"] == "VmOrTemplate"
           prefix = TreeBuilder.get_prefix_for_model(@record.class.base_model)
           tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
@@ -504,6 +514,7 @@ module ApplicationController::Performance
         msg = "No #{bc_tag} #{bc_model} were running #{dt}"
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(:id          => @perf_record.id,
                            :action      => "perf_top_chart",
                            :menu_choice => params[:menu_click],
@@ -522,6 +533,7 @@ module ApplicationController::Performance
         msg = _("No %{model} were running %{time}") % {:model => model, :time => dt}
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to(:id          => @perf_record.id,
                            :action      => "perf_top_chart",
                            :menu_choice => params[:menu_click],
@@ -537,6 +549,7 @@ module ApplicationController::Performance
 
     msg ? add_flash(msg, :warning) : add_flash(_("Unknown error has occurred"), :error)
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
@@ -547,6 +560,7 @@ module ApplicationController::Performance
     rec = find_by_model_and_id_check_rbac(model, id, resource_name)
     unless @flash_array.blank?
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       end

@@ -42,7 +42,6 @@ describe ReportController, "::Reports" do
     before do
       EvmSpecHelper.local_miq_server # timezone stuff
       login_as FactoryGirl.create(:user, :features => :miq_report_delete)
-      request.env['HTTP_REFERER'] = session['referer'] = controller.controller_name+"/" # work around referer security
     end
 
     it "deletes the report" do

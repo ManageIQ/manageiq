@@ -28,7 +28,8 @@ class AlertController < ApplicationController
 
   def role_selected
     show_list
-    render :update do |page|                    # Use RJS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace 'tab_div', :partial => 'rss_list'
     end
   end

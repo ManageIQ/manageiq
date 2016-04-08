@@ -8,6 +8,7 @@ module OpsController::Settings::AnalysisProfiles
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|
+        page << javascript_prologue
         page.replace_html("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "aps_list"})
         page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
@@ -58,7 +59,8 @@ module OpsController::Settings::AnalysisProfiles
     ap_get_form_vars
     if params[:edit_entry] == "edit_file"
       session[:edit_filename] = params[:file_name]
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("ap_form_div", :partial => "ap_form", :locals => {:entry => session[:edit_filename], :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
@@ -68,7 +70,8 @@ module OpsController::Settings::AnalysisProfiles
       session[:reg_data] = {}
       session[:reg_data][:key] = params[:reg_key]  if params[:reg_key]
       session[:reg_data][:value] = params[:reg_value] if params[:reg_value]
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("ap_form_div", :partial => "ap_form", :locals => {:entry => session[:reg_data], :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
@@ -88,7 +91,8 @@ module OpsController::Settings::AnalysisProfiles
         end
       end
 
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("ap_form_div", :partial => "ap_form", :locals => {:entry => session[:nteventlog_data], :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
@@ -98,7 +102,8 @@ module OpsController::Settings::AnalysisProfiles
       session[:edit_filename] = ""
       session[:reg_data] = {}
       session[:nteventlog_data] = {}
-      render :update do |page|                    # Use JS to update the display
+      render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("ap_form_div", :partial => "ap_form", :locals => {:entry => "new", :edit => true})
         page << javascript_focus('entry_name')
@@ -150,6 +155,7 @@ module OpsController::Settings::AnalysisProfiles
     @edit[:current] = ap_sort_array(@edit[:current])
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|
+      page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("ap_form_div", :partial => "ap_form", :locals => {:entry => "new", :edit => false})
       page << javascript_for_miq_button_visibility(changed)
@@ -243,6 +249,7 @@ module OpsController::Settings::AnalysisProfiles
           # ap_build_edit_screen
           # replace_right_cell("root",[:settings])
           render :update do |page|
+            page << javascript_prologue
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         else
@@ -282,6 +289,7 @@ module OpsController::Settings::AnalysisProfiles
             @changed = session[:changed] = (@edit[:new] != @edit[:current])
             # ap_build_edit_screen
             render :update do |page|
+              page << javascript_prologue
               page.replace("flash_msg_div", :partial => "layouts/flash_msg")
             end
           end
@@ -349,7 +357,8 @@ module OpsController::Settings::AnalysisProfiles
     @sb[:ap_active_tab] = params[:tab_id]
     @edit = session[:edit]
     @scan = session[:edit][:scan]
-    render :update do |page|                      # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page << "miqSparkle(false);"
     end
   end
@@ -363,7 +372,8 @@ module OpsController::Settings::AnalysisProfiles
     changed = (@edit[:new] != @edit[:current])
     ap_build_edit_screen
 
-    render :update do |page|                    # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       if changed != session[:changed]
         session[:changed] = changed
         page << javascript_for_miq_button_visibility(changed)
@@ -432,7 +442,8 @@ module OpsController::Settings::AnalysisProfiles
     @edit[:new] = ap_sort_array(@edit[:new])
     @edit[:current] = ap_sort_array(@edit[:current])
     @changed = session[:changed] = (@edit[:new] != @edit[:current])
-    render :update do |page|                        # Use JS to update the display
+    render :update do |page|
+      page << javascript_prologue
       page.replace("ap_form_div", :partial => "ap_form")
       page << javascript_for_miq_button_visibility(@changed)
     end
