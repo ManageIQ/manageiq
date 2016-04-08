@@ -1817,7 +1817,7 @@ module VmCommon
     table = request.parameters["controller"]
     case @sb[:action]
     when "compare", "drift"
-      partial = "layouts/#{@sb[:action]}"
+      partial = "layouts/compare"
       if @sb[:action] == "compare"
         header = _("Compare %{model}") % {:model => ui_lookup(:model => @sb[:compare_db])}
       else
