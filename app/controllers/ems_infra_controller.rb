@@ -56,29 +56,48 @@ class EmsInfraController < ApplicationController
         end
       end
 
-      begin
-        # Check if stack is ready to be updated
-        update_ready = @stack.update_ready?
-      rescue => ex
-        log_and_flash_message(_("Unable to initiate scaling, obtaining of status failed: %{message}") %
-                                {:message => ex})
+      update_stack(@stack, scale_parameters_formatted, params[:id], return_message)
+    end
+  end
+
+  def scaledown
+    assert_privileges("ems_infra_scale")
+    redirect_to :action => 'show', :id => params[:id] if params[:cancel]
+
+    # Hiding the toolbars
+    @in_a_form = true
+
+    drop_breadcrumb(:name => _("Scale Infrastructure Provider Down"), :url => "/ems_infra/scaling")
+    @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
+    # TODO: Currently assumes there is a single stack per infrastructure provider. This should
+    # be improved to support multiple stacks.
+    @stack = @infra.direct_orchestration_stacks.first
+    if @stack.nil?
+      log_and_flash_message(_("Orchestration stack could not be found."))
+      return
+    end
+
+    @compute_hosts = @infra.hosts.select { |host| host.name.include?('Compute') }
+
+    return unless params[:scaledown]
+
+    host_ids = params[:host_ids]
+    if host_ids.nil?
+      log_and_flash_message(_("No compute hosts were selected for scale down."))
+    else
+      hosts = host_ids.map { |host_id| find_by_id_filtered(Host, host_id) }
+
+      # verify selected nodes can be removed
+      has_invalid_nodes, error_return_message = verify_hosts_for_scaledown(hosts)
+      if has_invalid_nodes
+        log_and_flash_message(error_return_message)
         return
       end
 
-      if !update_ready
-        add_flash(_("Provider is not ready to be scaled, another operation is in progress."), :error)
-      elsif scale_parameters_formatted.length > 0
-        # A value was changed
-        begin
-          @stack.raw_update_stack(nil, scale_parameters_formatted)
-          redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
-        rescue => ex
-          log_and_flash_message(_("Unable to initiate scaling: %{message}") % {:message => ex})
-        end
-      else
-        # No values were changed
-        add_flash(_("A value must be changed or provider will not be scaled."), :error)
-      end
+      # figure out scaledown parameters and update stack
+      stack_parameters = get_scaledown_parameters(hosts, @infra, @compute_hosts)
+      return_message = _(" Scaling down to %{a} compute nodes") % {:a => stack_parameters['ComputeCount']}
+      update_stack(@stack, stack_parameters, params[:id], return_message)
     end
   end
 
@@ -88,5 +107,78 @@ class EmsInfraController < ApplicationController
   def log_and_flash_message(message)
     add_flash(message, :error)
     $log.error(message)
+  end
+
+  def update_stack(stack, stack_parameters, provider_id, return_message)
+    begin
+      # Check if stack is ready to be updated
+      update_ready = stack.update_ready?
+    rescue => ex
+      log_and_flash_message(_("Unable to update stack, obtaining of status failed: %{message}") %
+                            {:message => ex})
+      return
+    end
+
+    if !update_ready
+      add_flash(_("Provider stack is not ready to be updated, another operation is in progress."), :error)
+    elsif !stack_parameters.empty?
+      # A value was changed
+      begin
+        stack.raw_update_stack(nil, stack_parameters)
+        redirect_to :action => 'show', :id => provider_id, :flash_msg => return_message
+      rescue => ex
+        log_and_flash_message(_("Unable to initiate scaling: %{message}") % {:message => ex})
+      end
+    else
+      # No values were changed
+      add_flash(_("A value must be changed or provider stack will not be updated."), :error)
+    end
+  end
+
+  def verify_hosts_for_scaledown(hosts)
+    has_invalid_nodes = false
+    error_return_message = _("Not all hosts can be removed from the deployment.")
+
+    hosts.each do |host|
+      unless host.maintenance
+        has_invalid_nodes = true
+        error_return_message += _(" %{host_uid_ems} needs to be in maintenance mode before it can be removed ") %
+                                {:host_uid_ems => host.uid_ems}
+      end
+      if host.number_of(:vms) > 0
+        has_invalid_nodes = true
+        error_return_message += _(" %{host_uid_ems} needs to be evacuated before it can be removed ") %
+                                {:host_uid_ems => host.uid_ems}
+      end
+      unless host.name.include?('Compute')
+        has_invalid_nodes = true
+        error_return_message += _(" %{host_uid_ems} is not a compute node ") % {:host_uid_ems => host.uid_ems}
+      end
+    end
+
+    return has_invalid_nodes, error_return_message
+  end
+
+  def get_scaledown_parameters(hosts, provider, compute_hosts)
+    resources_by_physical_resource_id = {}
+    provider.orchestration_stacks.each do |s|
+      s.resources.each do |r|
+        resources_by_physical_resource_id[r.physical_resource] = r
+      end
+    end
+
+    host_physical_resource_ids = hosts.map(&:ems_ref_obj)
+    parent_resource_names = []
+    host_physical_resource_ids.each do |pr_id|
+      host_resource = resources_by_physical_resource_id[pr_id]
+      host_stack = find_by_id_filtered(OrchestrationStack, host_resource.stack_id)
+      parent_host_resource = resources_by_physical_resource_id[host_stack.ems_ref]
+      parent_resource_names << parent_host_resource.logical_resource
+    end
+
+    stack_parameters = {}
+    stack_parameters['ComputeCount'] = compute_hosts.length - hosts.length
+    stack_parameters['ComputeRemovalPolicies'] = [{:resource_list => parent_resource_names}]
+    return stack_parameters
   end
 end

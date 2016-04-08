@@ -106,6 +106,15 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_openstack_infra_with_stack_and_compute_nodes,
+          :parent => :ems_openstack_infra do
+    after :create do |x|
+      x.orchestration_stacks << FactoryGirl.create(:orchestration_stack_openstack_infra)
+      x.hosts += [FactoryGirl.create(:host_openstack_infra_compute),
+                  FactoryGirl.create(:host_openstack_infra_compute_maintenance)]
+    end
+  end
+
   factory :ems_openstack_infra_with_authentication,
           :parent => :ems_openstack_infra do
     after :create do |x|

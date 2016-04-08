@@ -31,6 +31,12 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           t,
           :url => "/scaling"),
         button(
+          :ems_infra_scaledown,
+          'pficon pficon-edit fa-lg',
+          t = N_('Scale this #{ui_lookup(:table=>"ems_infra")} down'),
+          t,
+          :url => "/scaledown"),
+        button(
           :ems_infra_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"ems_infra")} from the VMDB'),

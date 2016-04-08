@@ -939,6 +939,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         scaling
+        scaledown
       ) +
                compare_get,
       :post => %w(
@@ -960,6 +961,7 @@ Vmdb::Application.routes.draw do
         update
         wait_for_task
         scaling
+        scaledown
       ) +
                adv_search_post +
                compare_post +
