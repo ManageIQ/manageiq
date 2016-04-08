@@ -145,7 +145,6 @@ source "https://rails-assets.org" do
   gem "rails-assets-moment-timezone",                 "~>0.4.0"
   gem "rails-assets-himdel--moment-strftime",         "~>0.1.7"
   gem "rails-assets-numeral",                         "~>1.5.3"
-  gem "rails-assets-slickgrid",                       "~>2.1.0"
   gem "rails-assets-himdel--spice-html5-bower",       "~>0.1.5"
   gem "rails-assets-spin.js",                         "~>2.3.2"
   gem "rails-assets-sprintf",                         "~>1.0.3"

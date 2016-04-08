@@ -5,7 +5,6 @@
  *
  *= require c3
  *= require main
- *= require slickgrid/slick.grid
  *= require jquery.jqplot
  *= require automate_import_export
  *= require dialog_import_export

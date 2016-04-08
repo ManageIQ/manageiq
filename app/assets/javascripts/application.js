@@ -55,13 +55,6 @@
 //= require miq_ujs_bindings
 //= require dynatree/jquery.dynatree
 //= require miq_dynatree
-//= require slickgrid/lib/jquery.event.drag-2.2
-//= require slickgrid/slick.core
-//= require slickgrid/slick.grid
-//= require slickgrid/slick.dataview
-//= require slickgrid/plugins/slick.autotooltips
-//= require slickgrid/plugins/slick.rowselectionmodel
-//= require slickgrid/plugins/slick.checkboxselectcolumn
 //= require codemirror
 //= require codemirror/modes/yaml
 //= require spin.js/spin
