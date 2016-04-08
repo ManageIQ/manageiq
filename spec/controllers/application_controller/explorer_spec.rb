@@ -47,26 +47,6 @@ describe VmInfraController do
       end
     end
 
-    context "#x_settings_changed" do
-      let(:user) { FactoryGirl.create(:user, :userid => 'wilma', :settings => {}) }
-      before(:each) do
-        set_user_privileges user
-      end
-
-      it "sets the width of left pane for session's user" do
-        session[:settings] = {}
-        allow(User).to receive(:find_by_userid).and_return(user)
-
-        controller.instance_variable_set(:@settings,  {})
-        expect(user).to receive(:save)
-        width = '100'
-        get :x_settings_changed, :params => { :width => width }
-
-        expect(user.settings[:explorer][controller.controller_name][:width]).to eq(width)
-        expect(session[:settings][:explorer][controller.controller_name][:width]).to eq(width)
-      end
-    end
-
     context '#x_history_add_item' do
       def make_item(i)
         {

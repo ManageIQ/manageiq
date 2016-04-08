@@ -188,10 +188,4 @@ describe MiqAeClassController do
       expect(post("/miq_ae_class/x_history")).to route_to("miq_ae_class#x_history")
     end
   end
-
-  describe "#x_settings_changed" do
-    it "routes with POST" do
-      expect(post("/miq_ae_class/x_settings_changed")).to route_to("miq_ae_class#x_settings_changed")
-    end
-  end
 end

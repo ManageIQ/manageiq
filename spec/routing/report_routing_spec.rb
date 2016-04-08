@@ -336,12 +336,6 @@ describe "routes for ReportController" do
     end
   end
 
-  describe "#x_settings_changed" do
-    it "routes with POST" do
-      expect(post("/report/x_settings_changed")).to route_to("report#x_settings_changed")
-    end
-  end
-
   describe "#x_show" do
     it "routes with POST" do
       expect(post("/report/x_show")).to route_to("report#x_show")

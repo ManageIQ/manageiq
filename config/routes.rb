@@ -111,7 +111,6 @@ Vmdb::Application.routes.draw do
     x_button
     x_history
     x_search_by_name
-    x_settings_changed
     x_show
   )
 
@@ -236,7 +235,6 @@ Vmdb::Application.routes.draw do
         tree_select
         x_button
         x_history
-        x_settings_changed
         x_show
       ) +
                button_post +
@@ -1387,7 +1385,6 @@ Vmdb::Application.routes.draw do
         validate_method_data
         x_button
         x_history
-        x_settings_changed
         x_show
       )
     },
@@ -1431,7 +1428,6 @@ Vmdb::Application.routes.draw do
         upload_import_file
         x_button
         x_history
-        x_settings_changed
         x_show
       ) +
                button_post
@@ -1834,7 +1830,6 @@ Vmdb::Application.routes.draw do
         wait_for_task
         x_button
         x_show
-        x_settings_changed
         zone_edit
         zone_field_changed
         ldap_region_add
@@ -1957,7 +1952,6 @@ Vmdb::Application.routes.draw do
         tree_select
         x_button
         x_history
-        x_settings_changed
       )
     },
 
@@ -2019,7 +2013,6 @@ Vmdb::Application.routes.draw do
         widget_shortcut_reset
         x_button
         x_history
-        x_settings_changed
         x_show
       ) +
                exp_post
@@ -2110,7 +2103,6 @@ Vmdb::Application.routes.draw do
         tree_select
         x_button
         x_history
-        x_settings_changed
         x_show
       ) +
                dialog_runner_post

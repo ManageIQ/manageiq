@@ -30,26 +30,6 @@ module ApplicationController::Explorer
     end
   end
 
-  # Capture explorer settings changes and save them for a user
-  def x_settings_changed
-    @edit = session[:edit]  # Set @edit so it is preserved in the session object
-    @keep_compare = true if session[:miq_compare] # if explorer was resized when on compare screen, keep compare object in session
-
-    if params.key?(:width)
-      # Store the new settings in the user record and in @settings (session)
-      if current_user
-        user_settings = current_user.settings || {}
-        user_settings[:explorer] ||= {}
-        user_settings[:explorer][params[:controller]] ||= {}
-        user_settings[:explorer][params[:controller]][:width] = params['width']
-        @settings[:explorer] = user_settings[:explorer]
-        current_user.update_attributes(:settings => user_settings)
-      end
-    end
-
-    render :js => ''
-  end
-
   # FIXME: the code below has to be converted into proper actions called though
   # proper routes, this is just a small step to fix the current situation
   X_BUTTON_ALLOWED_ACTIONS = {

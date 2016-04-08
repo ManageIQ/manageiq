@@ -109,10 +109,4 @@ describe 'routes for ServiceController' do
       expect(post("/service/x_show")).to route_to("service#x_show")
     end
   end
-
-  describe "#x_settings_changed" do
-    it "routes with POST" do
-      expect(post("/service/x_settings_changed")).to route_to("service#x_settings_changed")
-    end
-  end
 end

@@ -51,7 +51,6 @@ describe 'routes for ProviderForeman' do
     x_button
     x_history
     x_search_by_name
-    x_settings_changed
     x_show
   ).each do |task|
     describe "##{task}" do
