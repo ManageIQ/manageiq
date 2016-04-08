@@ -13,6 +13,11 @@ module MiqReport::Search
     end
   end
 
+  ORDER_OPS = {"ascending" => "asc", "descending" => "desc"}.freeze
+  def order_op
+    MiqReport::Search::ORDER_OPS[order.downcase] if order
+  end
+
   def get_sqltable(assoc)
     r = db_class.reflection_with_virtual(assoc.to_sym)
     raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class.name} if r.nil?
@@ -47,13 +52,10 @@ module MiqReport::Search
       end
       sql_col = "LOWER(#{sql_col})" if [:string, :text].include?(info[:data_type])
       sql_col
-    end.join(",")
+    end
 
-    unless self.order.nil?
-      case self.order.downcase
-      when "ascending"  then order += " asc"
-      when "descending" then order += " desc"
-      end
+    if (order_op = self.order_op)
+      order = order.map { |col| col + " #{order_op}" }
     end
 
     [true, order]

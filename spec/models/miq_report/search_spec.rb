@@ -15,14 +15,14 @@ describe MiqReport do
         @miq_report.sortby = "name"
         apply_sortby_in_search, order = @miq_report.get_order_info
         expect(apply_sortby_in_search).to be_truthy
-        expect(order).to eq("LOWER(vms.name)")
+        expect(order).to eq(%w(LOWER(vms.name)))
       end
 
       it "works when there is a column specified as array in sortby" do
         @miq_report.sortby = ["name"]
         apply_sortby_in_search, order = @miq_report.get_order_info
         expect(apply_sortby_in_search).to be_truthy
-        expect(order).to eq("LOWER(vms.name)")
+        expect(order).to eq(%w(LOWER(vms.name)))
       end
 
       it "detects a virtual association (and that it can't be sorted)" do
@@ -48,14 +48,14 @@ describe MiqReport do
           @miq_report.sortby = ["name", "operating_system.product_name"]
           apply_sortby_in_search, order = @miq_report.get_order_info
           expect(apply_sortby_in_search).to be_truthy
-          expect(order).to eq("LOWER(vms.name),LOWER(operating_systems.product_name)")
+          expect(order).to eq(%w(LOWER(vms.name) LOWER(operating_systems.product_name)))
         end
 
         it "works with association where table_name can not be guessed at" do
           @miq_report.sortby = ["name", "linux_initprocesses.name", "evm_owner.name"]
           apply_sortby_in_search, order = @miq_report.get_order_info
           expect(apply_sortby_in_search).to be_truthy
-          expect(order).to eq("LOWER(vms.name),LOWER(system_services.name),LOWER(users.name)")
+          expect(order).to eq(%w(LOWER(vms.name) LOWER(system_services.name) LOWER(users.name)))
         end
       end
     end
