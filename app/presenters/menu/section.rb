@@ -30,5 +30,11 @@ module Menu
     def leaf?
       false
     end
+
+    def contains_item_id?(item_id)
+     items.detect do |el|
+       el.id == item_id || (el.kind_of?(Section) && el.contains_item_id?(item_id))
+     end.present?
+    end
   end
 end
