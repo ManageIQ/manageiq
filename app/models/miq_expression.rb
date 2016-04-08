@@ -665,18 +665,18 @@ class MiqExpression
 
       operands = self.class.operands2sqlvalue(operator, exp[operator])
       clause = operands.join(" #{self.class.normalize_sql_operator(operator)} ")
-    when "like", "not like", "starts with", "ends with", "includes"
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
-      case operator.downcase
-      when "starts with"
-        operands[1] = "'" + operands[1].to_s + "%'"
-      when "ends with"
-        operands[1] = "'%" + operands[1].to_s + "'"
-      when "like", "not like", "includes"
-        operands[1] = "'%" + operands[1].to_s + "%'"
-      end
-      clause = operands.join(" #{self.class.normalize_sql_operator(operator)} ")
-      clause = "!(" + clause + ")" if operator.downcase == "not like"
+    when "like", "includes"
+      field = Field.parse(exp[operator]["field"])
+      clause = field.matches("%#{exp[operator]["value"]}%").to_sql
+    when "starts with"
+      field = Field.parse(exp[operator]["field"])
+      clause = field.matches("#{exp[operator]["value"]}%").to_sql
+    when "ends with"
+      field = Field.parse(exp[operator]["field"])
+      clause = field.matches("%#{exp[operator]["value"]}").to_sql
+    when "not like"
+      field = Field.parse(exp[operator]["field"])
+      clause = field.does_not_match("%#{exp[operator]["value"]}%").to_sql
     when "and", "or"
       operands = exp[operator].collect do|operand|
         o = _to_sql(operand, tz) if operand.present?
