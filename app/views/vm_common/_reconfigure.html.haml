@@ -131,7 +131,9 @@
           %th.narrow= _('Delete Backing')
           %th= _('Actions')
         %tbody
-          %tr{"ng-if" => "reconfigureModel.addEnabled",  "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
+          %tr{"ng-if"       => "reconfigureModel.addEnabled",
+              "ng-form"     => "rowForm",
+              "ng-disabled" => "{'has-error': rowForm.value.$invalid}"}
             %td
             %td
               = select_tag('hdType',
@@ -177,7 +179,7 @@
                      "ng-model"  => "reconfigureModel.cb_dependent"}
             %td.narrow
             %td.action-cell
-              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()"}= _(' Add ')
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()", "ng-disabled" => "rowForm.dvcSize.$invalid"}= _(' Add ')
           %tr{"ng-repeat" => "disk in reconfigureModel.vmdisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
             %td
               {{disk.hdFilename}}
@@ -213,10 +215,10 @@
                                             "ng-click" => "deleteDisk(disk.hdFilename)"}= _('Delete')
               %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                              "ng-if"    => "disk.add_remove == 'remove'",
-                                             "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel delete')
+                                             "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel Delete')
               %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                              "ng-if"    => "disk.add_remove == 'add'",
-                                             "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel add')
+                                             "ng-click" => "cancelAddRemoveDisk(disk)"}= _('Cancel Add')
   %hr
   %h3= _('Affected VMs')
   - if @reconfigitems
