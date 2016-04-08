@@ -300,11 +300,12 @@ class MiqWorker::Runner
   end
 
   def sync_log_level
-    Vmdb::Loggers.apply_config(vmdb_config.config[:log])
+    # TODO: Can this be removed since the VMDB::Config::Activator will do this anyway?
+    Vmdb::Loggers.apply_config(::Settings.log)
   end
 
   def sync_worker_settings
-    @worker_settings = self.class.corresponding_model.worker_settings(:config => vmdb_config)
+    @worker_settings = self.class.corresponding_model.worker_settings(:config => ::Settings.to_hash)
     @poll = @worker_settings[:poll]
     poll_method
   end

@@ -75,6 +75,7 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_log_level
-    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
+    # TODO: Can this be removed since the VMDB::Config::Activator will do this anyway?
+    Vmdb::Loggers.apply_config(::Settings.log)
   end
 end

@@ -16,7 +16,7 @@ module MiqServer::WorkerManagement::Monitor::Settings
   end
 
   def sync_worker_monitor_settings
-    @worker_monitor_settings = @vmdb_config.config[:server][:worker_monitor]
+    @worker_monitor_settings = ::Settings.server.worker_monitor.to_hash
     @worker_monitor_settings.keys.each do |k|
       @worker_monitor_settings[k] = @worker_monitor_settings[k].to_i_with_method if @worker_monitor_settings[k].respond_to?(:to_i_with_method)
     end

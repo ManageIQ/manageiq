@@ -117,8 +117,7 @@ module MiqServer::EnvironmentManagement
   end
 
   def disk_usage_threshold
-    @vmdb_config = VMDB::Config.new("vmdb")
-    @vmdb_config.config.fetch_path(:server, :events, :disk_usage_gt_percent) || 80
+    ::Settings.server.events.disk_usage_gt_percent || 80
   end
 
   def check_disk_usage(disks)
