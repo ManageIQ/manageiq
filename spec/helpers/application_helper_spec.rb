@@ -1630,7 +1630,7 @@ describe ApplicationHelper do
   end
 
   describe '#view_to_association' do
-    [%w(AdvancedSetting advanced_settings), %w(CloudNetwork cloud_networks), %w(OrchestrationStackOutput outputs),
+    [%w(AdvancedSetting advanced_settings), %w(OrchestrationStackOutput outputs),
      %w(OrchestrationStackParameter parameters), %w(OrchestrationStackResource resources), %w(Filesystem filesystems),
      %w(FirewallRule firewall_rules), %w(GuestApplication guest_applications), %w(Patch patches),
      %w(RegistryItem registry_items), %w(ScanHistory scan_histories)].each do |spec|
