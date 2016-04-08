@@ -1,6 +1,6 @@
 module Menu
-  Section = Struct.new(:id, :name, :items, :placement, :before, :type, :href) do
-    def initialize(an_id, name, items = [], placement = :default, before = nil, type = :default, href = nil)
+  Section = Struct.new(:id, :name, :icon, :items, :placement, :before, :type, :href) do
+    def initialize(an_id, name, icon, items = [], placement = :default, before = nil, type = :default, href = nil)
       super
     end
 
@@ -16,6 +16,10 @@ module Menu
       auth
     end
 
+    def subsection?
+      @subsection ||= Array(items).detect { |el| el.kind_of?(Section) }
+    end
+
     def url
       case type
       when :big_iframe then "/dashboard/iframe?sid=#{id}"
@@ -25,6 +29,12 @@ module Menu
 
     def leaf?
       false
+    end
+
+    def contains_item_id?(item_id)
+     items.detect do |el|
+       el.id == item_id || (el.kind_of?(Section) && el.contains_item_id?(item_id))
+     end.present?
     end
   end
 end

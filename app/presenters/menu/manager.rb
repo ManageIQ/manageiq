@@ -36,7 +36,7 @@ module Menu
     end
 
     def item_in_section?(item_id, section_id)
-      @id_to_section[section_id].items.collect(&:id).include?(item_id)
+      @id_to_section[section_id].contains_item_id?(item_id)
     end
 
     def tab_features_by_id(tab_id)
