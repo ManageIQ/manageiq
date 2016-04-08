@@ -117,17 +117,100 @@ describe MiqWorker do
     end
   end
 
+  describe ".worker_settings" do
+    let(:settings) do
+      {
+        :workers => {
+          :worker_base => {
+            :defaults => {:memory_threshold => "100.megabytes"},
+            :queue_worker_base => {
+              :defaults => {:memory_threshold => "300.megabytes"},
+              :ems_refresh_worker => {
+                :defaults => {:memory_threshold => "500.megabytes"},
+                :ems_refresh_worker_amazon => {
+                  :memory_threshold => "700.megabytes"
+                }
+              }
+            }
+          }
+        }
+      }
+    end
+
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      stub_settings(settings)
+    end
+
+    context "at a concrete subclass" do
+      let(:actual) { ManageIQ::Providers::Amazon::CloudManager::RefreshWorker.worker_settings[:memory_threshold] }
+
+      it "with overrides" do
+        expect(actual).to eq(700.megabytes)
+      end
+
+      it "without overrides" do
+        settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :ems_refresh_worker_amazon, {})
+        stub_settings(settings)
+
+        expect(actual).to eq(500.megabytes)
+      end
+    end
+
+    context "at the BaseManager level" do
+      let(:actual) { ManageIQ::Providers::BaseManager::RefreshWorker.worker_settings[:memory_threshold] }
+      it "with overrides" do
+        expect(actual).to eq(500.megabytes)
+      end
+
+      it "without overrides" do
+        settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :defaults, {})
+        stub_settings(settings)
+
+        expect(actual).to eq(300.megabytes)
+      end
+    end
+
+    context "at the MiqQueueWorkerBase level" do
+      let(:actual) { MiqQueueWorkerBase.worker_settings[:memory_threshold] }
+      it "with overrides" do
+        expect(actual).to eq(300.megabytes)
+      end
+
+      it "without overrides" do
+        settings.store_path(:workers, :worker_base, :queue_worker_base, :defaults, {})
+        stub_settings(settings)
+
+        expect(actual).to eq(100.megabytes)
+      end
+    end
+
+    it "at the base class" do
+      actual = MiqWorker.worker_settings[:memory_threshold]
+      expect(actual).to eq(100.megabytes)
+    end
+
+    it "uses passed in config" do
+      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
+      stub_settings(settings)
+
+      config = VMDB::Config.new("vmdb")
+      actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker.worker_settings(:config => config)[:memory_threshold]
+      expect(actual).to eq(1.terabyte)
+    end
+  end
+
   context "with two servers" do
-    before(:each) do
+    before do
       allow(described_class).to receive(:nice_increment).and_return("+10")
 
       @zone = FactoryGirl.create(:zone)
       @server = FactoryGirl.create(:miq_server, :zone => @zone)
       allow(MiqServer).to receive(:my_server).and_return(@server)
-      @worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => @server)
+      @worker = FactoryGirl.create(:ems_refresh_worker_amazon, :miq_server => @server)
 
       @server2 = FactoryGirl.create(:miq_server, :zone => @zone)
-      @worker2 = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => @server2)
+      @worker2 = FactoryGirl.create(:ems_refresh_worker_amazon, :miq_server => @server2)
     end
 
     it ".server_scope" do
@@ -145,60 +228,66 @@ describe MiqWorker do
       end
     end
 
-    context "worker_settings" do
+    describe "#worker_settings" do
+      let(:config1) do
+        {
+          :workers => {
+            :worker_base => {
+              :defaults => {:memory_threshold => "100.megabytes"},
+              :queue_worker_base => {
+                :defaults => {:memory_threshold => "300.megabytes"},
+                :ems_refresh_worker => {
+                  :defaults => {:memory_threshold => "500.megabytes"},
+                  :ems_refresh_worker_amazon => {
+                    :memory_threshold => "700.megabytes"
+                  }
+                }
+              }
+            }
+          }
+        }
+      end
+
+      let(:config2) do
+        {
+          :workers => {
+            :worker_base => {
+              :defaults => {:memory_threshold => "200.megabytes"},
+              :queue_worker_base => {
+                :defaults => {:memory_threshold => "400.megabytes"},
+                :ems_refresh_worker => {
+                  :defaults => {:memory_threshold => "600.megabytes"},
+                  :ems_refresh_worker_amazon => {
+                    :memory_threshold => "800.megabytes"
+                  }
+                }
+              }
+            }
+          }
+        }
+      end
+
       before do
-        @config1 = {
-          :workers => {
-            :worker_base => {
-              :defaults          => {:count => 1},
-              :queue_worker_base => {
-                :defaults           => {:count => 3},
-                :ems_refresh_worker => {:count => 5}
-              }
-            }
-          }
-        }
-
-        @config2 = {
-          :workers => {
-            :worker_base => {
-              :defaults          => {:count => 2},
-              :queue_worker_base => {
-                :defaults           => {:count => 4},
-                :ems_refresh_worker => {:count => 6}
-              }
-            }
-          }
-        }
-        allow(@server).to receive(:get_config).with("vmdb").and_return(@config1)
-        allow(@server2).to receive(:get_config).with("vmdb").and_return(@config2)
+        Vmdb::Settings.save!(@server,  config1)
+        Vmdb::Settings.save!(@server2, config2)
       end
 
-      context "#worker_settings" do
-        it "uses the worker's server" do
-          expect(@worker.worker_settings[:count]).to eq(5)
-          expect(@worker2.worker_settings[:count]).to eq(6)
-        end
-
-        it "uses passed in config" do
-          expect(@worker.worker_settings(:config => @config2)[:count]).to eq(6)
-          expect(@worker2.worker_settings(:config => @config1)[:count]).to eq(5)
-        end
-
-        it "uses closest parent's defaults" do
-          @config1[:workers][:worker_base][:queue_worker_base][:ems_refresh_worker].delete(:count)
-          expect(@worker.worker_settings[:count]).to eq(3)
-        end
+      it "uses the worker's miq_server" do
+        expect(@worker.worker_settings[:memory_threshold]).to  eq(700.megabytes)
+        expect(@worker2.worker_settings[:memory_threshold]).to eq(800.megabytes)
       end
 
-      context ".worker_settings" do
-        it "uses MiqServer.my_server" do
-          expect(MiqEmsRefreshWorker.worker_settings[:count]).to eq(5)
-        end
+      it "uses passed in config" do
+        expect(@worker.worker_settings(:config => config2)[:memory_threshold]).to  eq(800.megabytes)
+        expect(@worker2.worker_settings(:config => config1)[:memory_threshold]).to eq(700.megabytes)
+      end
 
-        it "uses passed in config" do
-          expect(MiqEmsRefreshWorker.worker_settings(:config => @config2)[:count]).to eq(6)
-        end
+      it "without overrides" do
+        @server.settings_changes.where(
+          :key => "/workers/worker_base/queue_worker_base/ems_refresh_worker/ems_refresh_worker_amazon/memory_threshold"
+        ).delete_all
+        expect(@worker.worker_settings[:memory_threshold]).to  eq(500.megabytes)
+        expect(@worker2.worker_settings[:memory_threshold]).to eq(800.megabytes)
       end
     end
   end
@@ -218,30 +307,6 @@ describe MiqWorker do
       expect(MiqEmsMetricsCollectorWorker.config_settings_path).to eq(
         %i(workers worker_base queue_worker_base ems_metrics_collector_worker)
       )
-    end
-  end
-
-  describe ".worker_settings" do
-    let(:capu_worker) do
-      ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
-    end
-    let(:config) { @server.get_config }
-
-    before do
-      @server = EvmSpecHelper.local_miq_server
-    end
-
-    it "merges parent values" do
-      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], "250.megabytes")
-      config.save
-      expect(capu_worker.worker_settings[:memory_threshold]).to eq(250.megabytes)
-    end
-
-    it "reads child value" do
-      config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, [:defaults, :memory_threshold], "250.megabytes")
-      config.set_worker_setting!(capu_worker, :memory_threshold, "200.megabytes")
-      config.save
-      expect(capu_worker.worker_settings[:memory_threshold]).to eq(200.megabytes)
     end
   end
 

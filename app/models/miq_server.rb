@@ -133,7 +133,6 @@ class MiqServer < ApplicationRecord
     _log.info("#{msg}")
     puts "** #{msg}"
 
-    @vmdb_config = VMDB::Config.new("vmdb")
     starting_server_record
 
     #############################################################

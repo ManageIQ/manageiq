@@ -7,9 +7,17 @@ module Vmdb
   class Settings
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
 
+    cattr_accessor :last_loaded
+
     def self.init
       ::Config.overwrite_arrays = true
       reset_settings_constant(for_resource(my_server))
+      self.last_loaded = Time.now.utc
+    end
+
+    def self.reload!
+      ::Settings.reload!
+      activate
     end
 
     def self.walk(settings = ::Settings, path = [], &block)

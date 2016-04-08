@@ -34,10 +34,8 @@ module MiqServer::WorkerManagement::Heartbeat
     # Special process the sync_ messages to send the current values of what to synchronize
     messages.collect do |message, *args|
       case message
-      when "sync_config"
-        [message, {:config => @vmdb_config}]
       when "sync_active_roles"
-        [message, {:roles  => @active_role_names}]
+        [message, {:roles => @active_role_names}]
       else
         [message, *args]
       end

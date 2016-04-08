@@ -12,7 +12,8 @@ describe VMDB::Config do
 
   context ".save_file" do
     it "normal" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
+      stub_my_server_settings
 
       data = Settings.to_hash
       data.store_path(:api, :token_ttl, "1.day")
@@ -33,7 +34,8 @@ describe VMDB::Config do
   end
 
   it "#save" do
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
+    stub_my_server_settings
 
     config = VMDB::Config.new("vmdb")
     config.config.store_path(:api, :token_ttl, "1.day")
@@ -44,11 +46,23 @@ describe VMDB::Config do
   end
 
   it "#set_worker_setting!" do
+    EvmSpecHelper.local_miq_server
+    stub_my_server_settings
+
     config = VMDB::Config.new("vmdb")
     config.set_worker_setting!(:MiqEmsMetricsCollectorWorker, :memory_threshold, "1.terabyte")
 
     fq_keys = [:workers, :worker_base, :queue_worker_base, :ems_metrics_collector_worker, :memory_threshold]
     v = config.config.fetch_path(fq_keys).to_i_with_method
     expect(v).to eq(1.terabyte)
+  end
+
+  # HACK: Temporary fix because zone name is stored in the configuration, but
+  #   when calling EvmSpecHelper.local_miq_server, it does not update the
+  #   corresponding settings.  enqueue_for_server expects that the zone is set,
+  #   and this can get messed up during Config activation during a change.
+  def stub_my_server_settings
+    server = MiqServer.my_server
+    allow(server).to receive(:enqueue_for_server)
   end
 end

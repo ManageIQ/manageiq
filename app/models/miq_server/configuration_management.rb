@@ -12,28 +12,16 @@ module MiqServer::ConfigurationManagement
   def set_config(config)
     config = config.config if config.respond_to?(:config)
     Vmdb::Settings.save!(self, config)
-    settings_updated
+
+    # Reload the settings immediately for this worker. This is typically a UI
+    #   worker making the change, who will need to see the changes right away.
+    reload_settings
+    # Reload the settings for all workers on the server whether local or remote.
+    enqueue_for_server('reload_settings') if started?
   end
 
-  def settings_updated
-    if is_local?
-      ::Settings.reload!
-      Vmdb::Settings.activate
-    elsif started?
-      settings_updated_queue
-    end
-  end
-
-  def settings_updated_queue
-    MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => "settings_updated",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => nil,
-      :role        => nil,
-      :server_guid => guid
-    )
+  def reload_settings
+    Vmdb::Settings.reload! if is_local?
   end
 
   # Callback from VMDB::Config::Activator#activate when the configuration has
@@ -57,7 +45,7 @@ module MiqServer::ConfigurationManagement
 
   def sync_config
     @blacklisted_events = true
-    @vmdb_config = VMDB::Config.new("vmdb")
+    @config_last_loaded = Vmdb::Settings.last_loaded
     sync_log_level
     sync_worker_monitor_settings
     sync_child_worker_settings
@@ -65,8 +53,8 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_config_changed?
-    stale = @vmdb_config.stale?
-    @vmdb_config = VMDB::Config.new("vmdb") if stale
+    stale = @config_last_loaded != Vmdb::Settings.last_loaded
+    @config_last_loaded = Vmdb::Settings.last_loaded if stale
     stale || @blacklisted_events.nil?
   end
 

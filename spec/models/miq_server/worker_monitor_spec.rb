@@ -306,7 +306,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_config', {:config => nil}]])
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_config']])
           end
         end
 
@@ -327,7 +327,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "exit message followed by active_roles and config" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['exit'], ['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]])
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['exit'], ['sync_active_roles', {:roles => nil}], ['sync_config']])
           end
         end
 
@@ -337,7 +337,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]])
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_active_roles', {:roles => nil}], ['sync_config']])
           end
         end
 
