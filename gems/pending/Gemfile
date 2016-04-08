@@ -21,8 +21,7 @@ gem "excon",                   "~>0.40",            :require => false
 gem "ezcrypto",                "=0.7",              :require => false
 gem "ffi",                     "~>1.9.3",           :require => false
 gem "ffi-vix_disk_lib",        "~>1.0.2",           :require => false  # used by lib/VixDiskLib
-gem "fog",                     "~>1.37.0",          :require => false
-gem "fog-core",                "!=1.31.1",          :require => false
+gem "fog-openstack",           "~>0.1.2",           :require => false
 gem "httpclient",              "~>2.5.3",           :require => false
 gem "image-inspector-client",  "~>1.0.1",           :require => false
 gem "kubeclient",              "=1.1.3",            :require => false
