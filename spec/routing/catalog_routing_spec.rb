@@ -70,7 +70,6 @@ describe 'routes for CatalogController' do
     tree_select
     x_button
     x_history
-    x_settings_changed
     x_show
   ).each do |path|
     describe "##{path}" do

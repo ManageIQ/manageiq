@@ -158,10 +158,4 @@ describe PxeController do
       expect(post("/pxe/x_history")).to route_to("pxe#x_history")
     end
   end
-
-  describe "#x_settings_changed" do
-    it "routes with POST" do
-      expect(post("/pxe/x_settings_changed")).to route_to("pxe#x_settings_changed")
-    end
-  end
 end

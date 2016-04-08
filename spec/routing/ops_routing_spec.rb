@@ -107,7 +107,6 @@ describe "routing for OpsController" do
     wait_for_task
     x_button
     x_show
-    x_settings_changed
     zone_edit
     zone_field_changed
   ).each do |task|

@@ -51,7 +51,6 @@ describe MiqAeCustomizationController do
     upload_import_file
     x_button
     x_history
-    x_settings_changed
     x_show
   ).each do |path|
     describe "##{path}" do
