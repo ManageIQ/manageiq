@@ -48,16 +48,16 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(CloudNetwork.count).to        eql(1)
     expect(SecurityGroup.count).to       eql(1)
     expect(FirewallRule.count).to        eql(6)
-    expect(VmOrTemplate.count).to        eql(431)
+    expect(VmOrTemplate.count).to        eql(473)
     expect(Vm.count).to                  eql(2)
-    expect(MiqTemplate.count).to         eql(429)
+    expect(MiqTemplate.count).to         eql(471)
     expect(Disk.count).to                eql(2)
     expect(GuestDevice.count).to         eql(0)
     expect(Hardware.count).to            eql(2)
     expect(Network.count).to             eql(4)
-    expect(OperatingSystem.count).to     eql(431)
+    expect(OperatingSystem.count).to     eql(473)
     expect(Relationship.count).to        eql(4)
-    expect(MiqQueue.count).to            eql(431)
+    expect(MiqQueue.count).to            eql(473)
     expect(CloudVolume.count).to         eql(4)
     expect(CloudVolumeSnapshot.count).to eql(1)
   end
@@ -66,11 +66,11 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(@ems.flavors.size).to            eql(18)
     expect(@ems.key_pairs.size).to          eql(4)
     expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(431)
+    expect(@ems.vms_and_templates.size).to  eql(473)
     expect(@ems.cloud_networks.size).to     eql(1)
     expect(@ems.security_groups.size).to    eql(1)
     expect(@ems.vms.size).to                eql(2)
-    expect(@ems.miq_templates.size).to      eq(429)
+    expect(@ems.miq_templates.size).to      eq(471)
   end
 
   def assert_specific_zone
@@ -260,7 +260,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "default External NAT").first
     expect(network).to have_attributes(
       :description => "default External NAT",
-      :ipaddress   => "104.196.56.26",
+      :ipaddress   => "104.196.142.207",
       :hostname    => nil
     )
   end
