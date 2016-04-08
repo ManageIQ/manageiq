@@ -1,39 +1,26 @@
 describe ServiceOrder do
-  let(:tenant)        { Tenant.seed }
+  def create_request
+    FactoryGirl.create(:service_template_provision_request,
+                       :process   => false,
+                       :requester => admin)
+  end
+
   let(:admin)         { FactoryGirl.create(:user_with_group, :userid => "admin") }
-  let(:service_order) { FactoryGirl.create(:service_order, :state => 'cart', :user => user, :tenant => tenant) }
   let(:user)          { FactoryGirl.create(:user_with_group, :tenant => tenant) }
-  let(:ems)           { FactoryGirl.create(:ems_vmware) }
-  let(:vm)            { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
-  let(:vm_template)   { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
-  let(:request) do
-    FactoryGirl.create(:service_template_provision_request,
-                       :description => 'Service Request',
-                       :requester   => admin,
-                       :options     => {:service_order_id => service_order.id})
+  let(:request)       { create_request }
+  let(:request2)      { create_request }
+  let(:request3)      { create_request }
+  let(:service_order) do
+    FactoryGirl.create(:service_order, :state  => ServiceOrder::STATE_CART,
+                                       :user   => user,
+                                       :tenant => tenant)
   end
-  let(:request2) do
-    FactoryGirl.create(:service_template_provision_request,
-                       :description => 'Service Request',
-                       :requester   => admin,
-                       :options     => {:service_order_id => service_order.id})
-  end
-  let(:request3) do
-    FactoryGirl.create(:service_template_provision_request,
-                       :description => 'Service Request',
-                       :requester   => admin,
-                       :options     => {:service_order_id => service_order.id})
-  end
+  let(:tenant) { Tenant.seed }
 
   it "should add an miq_request properly" do
-    request
-
     expect request.service_order == service_order.id
     expect request.process == false
-    expect(ServiceOrder.first).to have_attributes(
-      :name  => 'service order',
-      :state => 'cart'
-    )
+    expect(service_order.state).to eq(ServiceOrder::STATE_CART)
   end
 
   it "should add multiple miq_requests properly" do
@@ -41,28 +28,47 @@ describe ServiceOrder do
       expect r.service_order == service_order.id
       expect r.process == false
     end
-    service_order = ServiceOrder.first
-    expect(service_order).to have_attributes(
-      :name  => 'service order',
-      :state => 'cart'
-    )
+    expect(service_order.state).to eq(ServiceOrder::STATE_CART)
     expect service_order.miq_requests.count == MiqRequest.count
   end
 
-  it "should checkout properly" do
-    r1 = request
-    r2 = request2
-    r3 = request3
+  it "should checkout properly for cart service order" do
+    service_order.miq_requests << [request, request2, request3]
     service_order.checkout
-    [r1, r2, r3].each do |r|
-      r.reload
-      expect r.service_order == service_order.id
-      expect r.process == true
-    end
-    expect(ServiceOrder.first).to have_attributes(
-      :name  => 'service order',
-      :state => 'ordered'
-    )
+    expect(service_order).to be_ordered
+  end
+
+  it "should raise an error on checkout for ordered service order" do
+    service_order.update_attributes(:miq_requests => [request], :state => ServiceOrder::STATE_ORDERED)
+    error_message = "Invalid operation [checkout] for Service Order in state [ordered]"
+    expect { service_order.checkout }.to raise_error(RuntimeError, error_message)
+  end
+
+  it "should allow you to order immediately" do
+    ServiceOrder.order_immediately(request, user)
+    expect(request.service_order.miq_requests.count).to eq(1)
+  end
+
+  it "should clear the cart properly" do
+    service_order.miq_requests << [request, request2]
+    expect(service_order.miq_requests.count).to eq(2)
+    service_order.clear
+    expect(service_order.miq_requests.count).to eq(0)
+  end
+
+  it "should clear the cart properly when the service order is destroyed" do
+    service_order.miq_requests << [request, request2]
+    expect(service_order.miq_requests.count).to eq(2)
+    service_order.destroy
+    expect(ServiceOrder.count).to eq(0)
+    expect(MiqRequest.count).to eq(0)
+  end
+
+  it "should raise an error while trying to clear the cart on an ordered service order" do
+    service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    service_order.miq_requests << request
+    error_message = "Invalid operation [clear] for Service Order in state [ordered]"
+    expect { service_order.clear }.to raise_error(RuntimeError, error_message)
   end
 
   it "should add to cart properly with an existing user service_order" do
@@ -75,5 +81,19 @@ describe ServiceOrder do
     so = ServiceOrder.add_to_cart(request, admin)
     expect(so).not_to eq(service_order)
     expect(so.miq_requests.first).to eq(request)
+  end
+
+  it "should remove from cart properly" do
+    service_order.miq_requests << [request, request2]
+    expect(service_order.miq_requests.count).to eq(2)
+    ServiceOrder.remove_from_cart(request, user)
+    expect(service_order.miq_requests.count).to eq(1)
+  end
+
+  it "should raise an error while trying to remove from cart on ordered service order" do
+    service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    service_order.miq_requests << [request, request2]
+    error_message = "Invalid operation [remove_from_cart] for Service Order in state [ordered]"
+    expect { ServiceOrder.remove_from_cart(request, user) }.to raise_error(RuntimeError, error_message)
   end
 end
