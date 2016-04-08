@@ -350,6 +350,112 @@ describe MiqExpression do
       expect { exp.to_ruby }.to raise_error(RuntimeError, "Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.")
     end
 
+    it "generates the ruby for a STARTS WITH expression" do
+      actual = described_class.new("STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /^foo/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an ENDS WITH expression" do
+      actual = described_class.new("ENDS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /foo$/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an AND expression" do
+      actual = described_class.new("AND" => [{"=" => {"field" => "Vm-name", "value" => "foo"}},
+                                             {"=" => {"field" => "Vm-vendor", "value" => "bar"}}]).to_ruby
+      expected = "(<value ref=vm, type=string>/virtual/name</value> == \"foo\" and <value ref=vm, type=string>/virtual/vendor</value> == \"bar\")"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an OR expression" do
+      actual = described_class.new("OR" => [{"=" => {"field" => "Vm-name", "value" => "foo"}},
+                                            {"=" => {"field" => "Vm-vendor", "value" => "bar"}}]).to_ruby
+      expected = "(<value ref=vm, type=string>/virtual/name</value> == \"foo\" or <value ref=vm, type=string>/virtual/vendor</value> == \"bar\")"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a NOT expression" do
+      actual = described_class.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_ruby
+      expected = "!(<value ref=vm, type=string>/virtual/name</value> == \"foo\")"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a ! expression" do
+      actual = described_class.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_ruby
+      expected = "!(<value ref=vm, type=string>/virtual/name</value> == \"foo\")"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an IS NULL expression" do
+      actual = described_class.new("IS NULL" => {"field" => "Vm-name"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> == \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an IS NOT NULL expression" do
+      actual = described_class.new("IS NOT NULL" => {"field" => "Vm-name"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> != \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an IS EMPTY expression" do
+      actual = described_class.new("IS EMPTY" => {"field" => "Vm-name"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> == \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an IS NOT EMPTY expression" do
+      actual = described_class.new("IS NOT EMPTY" => {"field" => "Vm-name"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> != \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkall" do
+      actual = described_class.new(
+        "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkall" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkany" do
+      actual = described_class.new(
+        "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkany" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkcount" do
+      actual = described_class.new(
+        "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkcount" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> > 2</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a KEY EXISTS expression" do
+      actual = described_class.new("KEY EXISTS" => {"field" => "Host-settings", "value" => "foo"}).to_ruby
+      expected = ["<value ref=host, type=string>/virtual/settings</value>", "\"foo\""]
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a VALUE EXISTS expression" do
+      actual = described_class.new("VALUE EXISTS" => {"field" => "Host-settings", "value" => "foo"}).to_ruby
+      expected = ["<value ref=host, type=string>/virtual/settings</value>", "\"foo\""]
+      expect(actual).to eq(expected)
+    end
+
+    it "raises an error for an expression with an invalid operator" do
+      expression = described_class.new("FOOBAR" => {"field" => "Vm-name", "value" => "baz"})
+      expect { expression.to_ruby }.to raise_error(/operator 'FOOBAR' is not supported/)
+    end
+
     context "date/time support" do
       context "static dates and times with no timezone" do
         it "generates the ruby for an AFTER expression with date value" do
