@@ -18,7 +18,12 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
   private
 
   def full_to_deltas(full_config)
-    deltas = Vmdb::Settings::HashDiffer.changes(TEMPLATES[full_config.typ], full_config.settings.deep_symbolize_keys)
+    config      = full_config.settings.deep_symbolize_keys
+    config_type = full_config.typ
+
+    adjust_config!(config_type, config)
+
+    deltas = Vmdb::Settings::HashDiffer.changes(TEMPLATES[config_type], config)
     deltas.each do |d|
       d.merge!(
         :resource_type => "MiqServer",
@@ -26,7 +31,17 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
         :created_at    => full_config.created_on,
         :updated_at    => full_config.updated_on,
       )
-      d[:key] = "/#{full_config.typ}#{d[:key]}" unless full_config.typ == "vmdb"
+      d[:key] = "/#{config_type}#{d[:key]}" unless config_type == "vmdb"
+    end
+  end
+
+  def adjust_config!(type, config)
+    case type
+    when "broker_notify_properties"
+      # Convert the various exclude sections from a Hash like
+      #   {:key1 => nil, :key2 => nil} to an Array like ["key1", "key2"]
+      excludes = config[:exclude]
+      excludes.keys.each { |k| excludes[k] = excludes[k].keys.collect(&:to_s) }
     end
   end
 
