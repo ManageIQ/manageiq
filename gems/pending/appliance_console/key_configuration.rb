@@ -83,7 +83,7 @@ module ApplianceConsole
         scp.download!(key_path, KEY_FILE)
       end
       File.exist?(KEY_FILE)
-    rescue Net::SSH::AuthenticationFailed, SocketError => e
+    rescue => e
       say("Failed to fetch key: #{e.message}")
       false
     end
