@@ -124,7 +124,20 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
   end
 
   def available_vlans(options = {})
-    vlans = super
+    @vlan_options ||= options
+    vlans = {}
+    src = get_source_and_targets
+    return vlans if src.blank?
+
+    hosts = nil
+    unless @vlan_options[:vlans] == false
+      rails_logger('allowed_vlans', 0)
+      hosts = get_selected_hosts(src)
+      # TODO: Use Active Record to preload this data?
+      MiqPreloader.preload(hosts, :switches => :lans)
+      hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
+      rails_logger('allowed_vlans', 1)
+    end
 
     # Remove certain networks
     vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
