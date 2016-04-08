@@ -18,10 +18,10 @@ module MiqReport::Search
     MiqReport::Search::ORDER_OPS[order.downcase] if order
   end
 
-  def get_sqltable(assoc)
+  def association_klass(assoc)
     r = db_class.reflection_with_virtual(assoc.to_sym)
     raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class.name} if r.nil?
-    r.klass.table_name
+    r.klass
   end
 
   def get_cached_page(limit, offset, includes, options)
@@ -46,16 +46,16 @@ module MiqReport::Search
 
       if c.include?(".")
         assoc, col = c.split(".")
-        sql_col = [get_sqltable(assoc), col].join(".")
+        sql_col = association_klass(assoc).arel_attribute(col)
       else
-        sql_col = [db_class.table_name, c].join(".")
+        sql_col = db_class.arel_attribute(c)
       end
-      sql_col = "LOWER(#{sql_col})" if [:string, :text].include?(info[:data_type])
+      sql_col = sql_col.lower if [:string, :text].include?(info[:data_type])
       sql_col
     end
 
     if (order_op = self.order_op)
-      order = order.map { |col| col + " #{order_op}" }
+      order = order.map { |col| col.send(order_op) }
     end
 
     [true, order]
