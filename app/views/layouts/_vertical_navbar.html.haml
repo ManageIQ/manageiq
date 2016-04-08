@@ -25,8 +25,8 @@
                       .nav-pf-tertiary-nav
                         .nav-item-pf-header
                           %a.tertiary-collapse-toggle-pf{:href => "#", "data-toggle" => "collapse-tertiary-nav"}
-                            %span
-                              = h(_(menu_item.name))
+                          %span
+                            = h(_(menu_item.name))
 
                         %ul.list-group
                           - menu_item.items.each do |menu_item_deep|
