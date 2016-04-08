@@ -37,7 +37,8 @@ class ApplicationHelper::Toolbar::DriftView < ApplicationHelper::Toolbar::Basic
           'fa fa-file-pdf-o fa-lg',
           N_('Download comparison report in PDF format'),
           N_('Download as PDF'),
-          :url => "/drift_to_pdf"),
+          :klass => ApplicationHelper::Button::Pdf,
+          :url   => "/drift_to_pdf"),
       ]
     ),
   ])
