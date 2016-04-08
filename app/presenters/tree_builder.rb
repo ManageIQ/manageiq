@@ -85,7 +85,7 @@ class TreeBuilder
     when :storage_pod then TreeBuilderStoragePod
 
     when :datacenter              then TreeBuilderDatacenter
-    when :vat                     then TreeBuilderDatacenter
+    when :vat                     then TreeBuilderVat
     end
   end
 

@@ -1,18 +1,24 @@
-class TreeBuilderVat < TreeBuilder
+class TreeBuilderVat < TreeBuilderDatacenter
 
   def initialize(name, type, sandbox, build = true, root = nil, vat = nil)
-    sandbox[:vat_root] = root if root
     sandbox[:vat] = vat unless vat.nil?
-    @root = sandbox[:vat_root]
     @vat = sandbox[:vat]
     @user_id = User.current_userid
-    super(name, type, sandbox, build)
+    super(name, type, sandbox, build, root)
   end
 
-  def tree_init_options(_tree_name)
-    {:full_ids            => true,
-    }
+  def self.prefix_type(object)
+    case object
+      when Host         then "Host"
+      when EmsCluster   then "Cluster"
+      when ResourcePool then "Resource Pool"
+      when Datacenter   then "Datacenter"
+      when Vm           then "Vm"
+      else                   ""
+    end
   end
+
+  private
 
   def set_locals_for_render
     locals = super
@@ -24,37 +30,16 @@ class TreeBuilderVat < TreeBuilder
         :onclick                     => 'miqOnClickHostNet',
     )
   end
- # ems_node = TreeNodeBuilder.generic_tree_node(
-  #    "ems-#{to_cid(@ems.id)}",
 
- #     @ems.name,
-
- #     "vendor-#{@ems.image_name}.png",
-  #    "#{ui_lookup(:table => @table_name)}: #{@ems.name}",
-   #   :cfme_no_click => true,
-    #  :expand        => true,
-     # :style_class   => "cfme-no-cursor-node"
-  #)
   def root_options
     image = "vendor-#{@root.image_name}".to_sym
-    [@root.name, "VAT: #{@root.name}", image]
+    [@root.name, @root.name, image]
   end
 
   def x_get_tree_roots(count_only = false, _options)
-    if @root.kind_of?(EmsCluster)
-      hosts = count_only_or_objects(count_only, @root.hosts)
-      resource_pools = count_only_or_objects(count_only, @root.resource_pools)
-      vms = count_only_or_objects(count_only, @root.vms)
-      hosts + resource_pools + vms
-    elsif @root.kind_of?(ResourcePool)
-      resource_pools = count_only_or_objects(count_only, @root.resource_pools)
-      vms = count_only_or_objects(count_only, @root.vms)
-      resource_pools + vms
-    elsif @root.kind_of?(ExtManagementSystem)
-      folders = count_only_or_objects(count_only, @root.children.first.folders_only)
-      datacenters = count_only_or_objects(count_only, @root.children.first.datacenters_only)
-      folders + datacenters
-    end
+    folders = count_only_or_objects(count_only, @root.children.first.folders_only)
+    datacenters = count_only_or_objects(count_only, @root.children.first.datacenters_only)
+    folders + datacenters
   end
 
   def x_get_tree_datacenter_kids(parent, count_only = false, type)
