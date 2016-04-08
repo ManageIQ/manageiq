@@ -115,19 +115,9 @@ public/stylesheets/jmaki-standard-right-sidebar.css
 # tmp/
 tmp/*
 
-# vendor/bundle
+# vendor/
 vendor/bundle
-
-# vendor/plugins/
-vendor/plugins/rails-dev-boost
-vendor/plugins/ruby-prof
-vendor/plugins/rails_upgrade
-
-# vendor/plugins/princely/
-vendor/plugins/princely/.gitignore
-
-# vendor/plugins/rails_sql_views/
-vendor/plugins/rails_sql_views/.gitignore
+vendor/assets/bower_components/
 
 # ignore included plugins in bundler.d
 bundler.d/*
