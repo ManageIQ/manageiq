@@ -14,16 +14,14 @@ class LaunchAnsibleJob
   end
 
   def main
-    target
-    job_template
-    run
+    run(job_template, target)
   end
 
   private
 
   def target
     vm = @handle.root['vm'] || vm_from_request
-    @server_ip = vm.name if vm
+    vm.name if vm
   end
 
   def vm_from_request
@@ -49,12 +47,13 @@ class LaunchAnsibleJob
   end
 
   def job_template
-    @job_template = var_search(@handle.object, 'job_template') || job_template_by_name || job_template_by_id
+    job_template = var_search(@handle.object, 'job_template') || job_template_by_name || job_template_by_id
 
-    if @job_template.nil?
+    if job_template.nil?
       @handle.log(:error, "Job Template not specified")
       exit(MIQ_ERROR)
     end
+    job_template
   end
 
   def job_template_by_name
@@ -73,15 +72,15 @@ class LaunchAnsibleJob
     ansible_vars(@handle.object, {})
   end
 
-  def run
-    @handle.log(:info, "Processing Job Template #{@job_template.name}")
+  def run(job_template, target)
+    @handle.log(:info, "Processing Job Template #{job_template.name}")
     args = {:extra_vars => extra_variables}
-    args[:limit] = @server_ip if @server_ip
+    args[:limit] = target if target
     @handle.log(:info, "Job Arguments #{args}")
 
-    job = @handle.vmdb(JOB_CLASS).create_job(@job_template, args)
+    job = @handle.vmdb(JOB_CLASS).create_job(job_template, args)
 
-    @handle.log(:info, "Scheduled Job ID #{job.id}")
+    @handle.log(:info, "Scheduled Job ID: #{job.id} Ansible Job ID: #{job.ems_ref}")
     @handle.set_state_var(:ansible_job_id, job.id)
   end
 end
