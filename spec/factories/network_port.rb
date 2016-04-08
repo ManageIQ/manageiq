@@ -8,4 +8,6 @@ FactoryGirl.define do
                                    :parent => :network_port
   factory :network_port_amazon, :class  => "ManageIQ::Providers::Amazon::NetworkManager::NetworkPort",
                                 :parent => :network_port
+  factory :network_port_azure, :class  => "ManageIQ::Providers::Azure::NetworkManager::NetworkPort",
+                               :parent => :network_port
 end
