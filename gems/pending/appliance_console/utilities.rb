@@ -7,9 +7,13 @@ require "appliance_console/logging"
 module ApplianceConsole
   module Utilities
     def self.rake(task, params)
+      rake_run(task, params).success?
+    end
+
+    def self.rake_run(task, params)
       result = AwesomeSpawn.run("rake #{task}", :chdir => RAILS_ROOT, :params => params)
       ApplianceConsole::Logging.logger.error(result.error) if result.failure?
-      result.success?
+      result
     end
 
     def self.db_connections

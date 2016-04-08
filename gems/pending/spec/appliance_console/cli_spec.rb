@@ -387,6 +387,37 @@ describe ApplianceConsole::Cli do
     end
   end
 
+  context "#extauth_opts" do
+    it "should handle setting external auth options with partial key" do
+      extauth_opts = double
+      expect(ApplianceConsole::ExternalAuthOptions).to receive(:new).and_return(extauth_opts)
+      expect(extauth_opts).to receive(:parse)
+        .with("sso_enabled=true")
+        .and_return("/authentication/sso_enabled" => true)
+      expect(extauth_opts).to receive(:update_configuration).with("/authentication/sso_enabled" => true)
+      subject.parse(%w(--extauth-opts sso_enabled=true)).run
+    end
+
+    it "should handle setting external auth options with fully qualified key" do
+      extauth_opts = double
+      expect(ApplianceConsole::ExternalAuthOptions).to receive(:new).and_return(extauth_opts)
+      expect(extauth_opts).to receive(:parse)
+        .with("/authentication/local_login_disabled=false")
+        .and_return("/authentication/local_login_disabled" => false)
+      expect(extauth_opts).to receive(:update_configuration).with("/authentication/local_login_disabled" => false)
+      subject.parse(%w(--extauth-opts /authentication/local_login_disabled=false)).run
+    end
+
+    it "should fail with invalid external auth options" do
+      extauth_opts = double
+      expect(ApplianceConsole::ExternalAuthOptions).to receive(:new).and_return(extauth_opts)
+      expect(extauth_opts).to receive(:parse).with("invalid_auth_option=true").and_return({})
+      expect do
+        subject.parse(%w(--extauth-opts invalid_auth_option=true)).run
+      end.to raise_error(/Must specify at least one/)
+    end
+  end
+
   private
 
   def expect_v2_key(exists = true)
