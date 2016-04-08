@@ -37,6 +37,11 @@ describe MiqExpression do
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" >= 2")
     end
 
+    it "generates the SQL for a != expression" do
+      sql, * = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to eq("vms.name != 'foo'")
+    end
+
     it "generates the SQL for a LIKE expression" do
       sql, * = MiqExpression.new("LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_sql
       expect(sql).to eq("vms.name LIKE '%foo%'")
