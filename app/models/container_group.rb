@@ -17,6 +17,7 @@ class ContainerGroup < ApplicationRecord
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
   belongs_to :container_project
+  belongs_to :old_container_project, :foreign_key => "old_container_project_id", :class_name => 'ContainerProject'
   belongs_to :container_build_pod
   has_many :container_volumes, :foreign_key => :parent_id, :dependent => :destroy
 

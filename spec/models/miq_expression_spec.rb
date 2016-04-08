@@ -1572,7 +1572,7 @@ describe MiqExpression do
       end
 
       it "Supports classes derived form ActsAsArModel" do
-        result = described_class.model_details("Chargeback", :typ => "all", :include_model => false, :include_tags => true)
+        result = described_class.model_details("ChargebackVm", :typ => "all", :include_model => false, :include_tags => true)
         expect(result.map(&:first)[0]).to eq(" CPU Total Cost")
       end
     end

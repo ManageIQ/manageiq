@@ -51,7 +51,7 @@ describe Chargeback do
 
   it "succeeds without a userid" do
     @options.delete(:userid)
-    expect { Chargeback.build_results_for_report_chargeback(@options) }.not_to raise_error
+    expect { ChargebackVm.build_results_for_report_ChargebackVm(@options) }.not_to raise_error
   end
 
   context "Daily" do
@@ -80,7 +80,7 @@ describe Chargeback do
       @metric_size = @vm1.metric_rollups.size
     end
 
-    subject { Chargeback.build_results_for_report_chargeback(@options).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
@@ -279,7 +279,7 @@ describe Chargeback do
                         }
     end
 
-    subject { Chargeback.build_results_for_report_chargeback(@options_tenant).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options_tenant).first.first }
 
     it "report a chargeback of a subtenant" do
       tier = FactoryGirl.create(:chargeback_tier)
@@ -323,7 +323,7 @@ describe Chargeback do
       @metric_size = @vm1.metric_rollups.size
     end
 
-    subject { Chargeback.build_results_for_report_chargeback(@options).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,

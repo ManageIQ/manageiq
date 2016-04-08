@@ -605,8 +605,8 @@ module ApplicationHelper
         return :performance
       elsif model == UiConstants::TREND_MODEL
         return :trend
-      elsif model == "Chargeback"
-        return :chargeback
+      elsif model.starts_with?("Chargeback")
+        return model.downcase.to_sym
       end
     end
     nil

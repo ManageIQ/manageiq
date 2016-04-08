@@ -59,6 +59,10 @@ module MiqReport::Formatting
       elsif col.to_s.ends_with?("_value")
         col = db_options[:trend_col] || col
       end
+    elsif db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
+      if col == "cpu_used_metric" || col == "cpu_metric"
+        options[:format] = :cores
+      end
     end
     format = options.delete(:format)
     return "" if value.nil?

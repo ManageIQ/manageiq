@@ -678,7 +678,8 @@ en:
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
-      Chargeback:               Chargeback
+      ChargebackVm:             Chargeback for Vms
+      ChargebackContainerProject: Chargeback for Projects
       ChargebackRate:           Chargeback Rate
       CimStorageExtent:         Storage - Extent
       Classification:           Category
