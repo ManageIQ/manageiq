@@ -96,6 +96,7 @@ module MiqAeEngine
       if object_type
         vmdb_object = object_type.constantize.find_by_id(object_id)
         automate_attrs[create_automation_attribute_key(vmdb_object)] = object_id
+        vmdb_object.before_ae_starts(options) if vmdb_object.respond_to?(:before_ae_starts)
       end
 
       automate_attrs['User::user']      = user_id            unless user_id.nil?

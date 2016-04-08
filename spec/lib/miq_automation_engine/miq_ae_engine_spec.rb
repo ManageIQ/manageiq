@@ -766,4 +766,29 @@ module MiqAeEngineSpec
       expect(ws.root['_missing_instance']).to eq('FRED')
     end
   end
+
+  describe MiqAeEngine do
+    before do
+      TestClass = Class.new do
+        def before_ae_starts(_options)
+        end
+      end
+    end
+
+    context "deliver to automate" do
+      let(:test_class) { TestClass.new }
+      let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
+      let(:user) { FactoryGirl.create(:user_with_group) }
+      let(:options) { {:user_id => user.id, :object_type => "MiqAeEngineSpec::TestClass"} }
+
+      it "#before_ae_starts" do
+        allow(MiqAeEngine).to receive(:create_automation_object).with(any_args).and_return(nil)
+        allow(TestClass).to receive(:find_by_id).with(any_args).and_return(test_class)
+        allow(MiqAeEngine).to receive(:resolve_automation_object).with(any_args).and_return(workspace)
+        allow(MiqAeEngine).to receive(:create_automation_attribute_key).with(any_args).and_return("abc")
+        expect(test_class).to receive(:before_ae_starts).once.with(options)
+        MiqAeEngine.deliver(options)
+      end
+    end
+  end
 end
