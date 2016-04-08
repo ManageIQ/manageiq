@@ -17,6 +17,18 @@
           :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.02
+    - :description: Used CPU Cores
+      :group: cpu
+      :source: used
+      :metric: cpu_usage_rate_average
+      :per_time: daily
+      :per_unit: cpu core
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 1.0
+          :variable_rate: 0.02
     - :description: Allocated CPU Count
       :group: cpu
       :source: allocated
