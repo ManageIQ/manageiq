@@ -20,6 +20,7 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   def initialize(options = {})
     @options = options
     @ems = options[:ems]
+    @config = options.fetch(:ceilometer, {})
   end
 
   def start
@@ -39,20 +40,13 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
     while @monitor_events
       begin
         $log.info("Quering Openstack Ceilometer for events newer than #{latest_event_timestamp}...") if $log
-        query_options = [{
-          'field' => 'start_timestamp',
-          'op'    => 'gt',
-          'value' => latest_event_timestamp || ''
-        }]
-        # TODO(maufart): add filtered events fetch method into fog-openstack and refactor then
         events = list_events(query_options).sort_by(&:generated)
         @since = events.last.generated unless events.empty?
 
-        amqp_events = events.map do |event|
+        amqp_events = filter_unwanted_events(events).map do |event|
           converted_event = OpenstackCeilometerEventConverter.new(event)
-          $log.debug("Openstack Ceilometer received a new event:") if $log
-          $log.debug(event.inspect) if $log
-          amqp_event(nil, converted_event.metadata, converted_event.payload)
+          $log.debug("Openstack Ceilometer is processing a new event: #{event.inspect}") if $log
+          openstack_event(nil, converted_event.metadata, converted_event.payload)
         end
 
         yield amqp_events
@@ -71,6 +65,21 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   end
 
   private
+
+  def filter_unwanted_events(events)
+    $log.debug("Openstack Ceilometer received a new events batch: (before filtering)") if $log && events.any?
+    $log.debug(events.inspect) if $log && events.any?
+    @event_type_regex ||= Regexp.new(@config[:event_types_regex].to_s)
+    events.select { |event| @event_type_regex.match(event.event_type) }
+  end
+
+  def query_options
+    [{
+      'field' => 'start_timestamp',
+      'op'    => 'gt',
+      'value' => latest_event_timestamp || ''
+    }]
+  end
 
   def list_events(query_options)
     provider_connection.list_events(query_options).body.map do |event_hash|

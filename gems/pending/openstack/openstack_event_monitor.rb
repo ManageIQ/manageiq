@@ -100,12 +100,12 @@ class OpenstackEventMonitor
   end
   private_class_method :event_monitor_key
 
-  def amqp_event(_delivery_info, metadata, payload)
-    OpenstackAmqpEvent.new(payload,
-                           :user_id      => payload["user_id"],
-                           :priority     => metadata["priority"],
-                           :content_type => metadata["content_type"],
-                          )
+  def openstack_event(_delivery_info, metadata, payload)
+    OpenstackEvent.new(payload,
+                       :user_id      => payload["user_id"],
+                       :priority     => metadata["priority"],
+                       :content_type => metadata["content_type"],
+                      )
   end
 end
 

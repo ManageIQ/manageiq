@@ -1101,6 +1101,8 @@
         :capacity: 50
         :amqp_port: 5672
         :amqp_heartbeat: 30
+        :ceilometer:
+          :event_types_regex: ".*"
       :event_catcher_openstack_infra:
         :poll: 15.seconds
         :topics:
@@ -1121,6 +1123,8 @@
         :capacity: 50
         :amqp_port: 5672
         :amqp_heartbeat: 30
+        :ceilometer:
+          :event_types_regex: ".*"
       :event_catcher_amazon:
         :poll: 15.seconds
       :event_catcher_kubernetes:

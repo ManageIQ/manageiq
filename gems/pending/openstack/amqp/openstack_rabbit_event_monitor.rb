@@ -125,7 +125,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       queue.subscribe do |delivery_info, metadata, payload|
         begin
           payload = JSON.parse(payload)
-          event = amqp_event(delivery_info, metadata, payload)
+          event = openstack_event(delivery_info, metadata, payload)
           @events_array_mutex.synchronize do
             @events << event
             $log.debug("MIQ(#{self.class.name}##{__method__}) Received Rabbit (amqp) event on #{exchange} from #{@options[:hostname]}: #{payload["event_type"]}") if $log
