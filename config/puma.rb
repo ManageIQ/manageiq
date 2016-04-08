@@ -18,3 +18,4 @@
 # connection from the connection pool.
 #
 threads 5, 5
+tag "MIQ: Web Server Worker"

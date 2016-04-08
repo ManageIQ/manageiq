@@ -145,7 +145,7 @@ class MiqProcess
 
   def self.is_worker?(pid)
     command_line = self.command_line(pid)
-    command_line.start_with?(MiqWorker::PROCESS_TITLE_PREFIX)
+    command_line.include?(MiqWorker::PROCESS_TITLE_PREFIX)
   end
 
   LINUX_STATES = {
