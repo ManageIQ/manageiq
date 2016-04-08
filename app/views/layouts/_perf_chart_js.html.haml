@@ -1,5 +1,5 @@
 - if chart_data[chart_index][:xml2]
-  %div{"style" => "width: #{width + 20}px; margin-bottom: 50px"}
+  %div{"style" => "width: #{width + 21}px; margin-bottom: 50px"}
     .chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}"}
       %div
         %h3= charts[chart_index][:title]
@@ -45,6 +45,10 @@
                        :width   => width,
                        :height  => height)
         .overlay{"style" => "display: none; position: absolute; top: 0; left: 0; bottom: 0; right: 0; z-index: 500"}
+        - if chart_data[chart_index][:zoom_url]
+          %div{:style => 'bottom: 20px; left: 20px; z-index: 10000; position: absolute;'}
+            %a{:href => '#', :onClick => chart_data[chart_index][:zoom_url]}
+              %img{:src => image_path(zoom_icon(chart_data[chart_index][:zoom_url]))}
     %ul.dropdown-menu{"role"            => "menu",
                       "aria-labelledby" => "miq_chart_#{chart_set}_#{chart_index}",
                       "id"              => "miq_chartmenu_#{chart_set}_#{chart_index}",

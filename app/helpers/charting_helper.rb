@@ -39,4 +39,8 @@ module ChartingHelper
     when :c3     then c3chart_local(data, options.slice(:id))
     end
   end
+
+  def zoom_icon(zoom_url)
+    zoom_url =~ /clear$/ ? '24/chart_unzoom.png' : '16/chart_zoom.png'
+  end
 end
