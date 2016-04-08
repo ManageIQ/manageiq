@@ -1239,7 +1239,6 @@
         - chargeback_rates
         - conditions
         - conditions_miq_policies
-        - configurations
         - custom_buttons
         - customization_specs
         - database_backups
