@@ -164,10 +164,8 @@ class TreeBuilder
     when :templates_filter_tree         then [_("All Templates"),                _("All of the Templates that I can see")]
     when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
     when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
-      when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), :miq_database]
-      when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
-     # when :datacenter_tree               then ["Title" , "Tooltip", :cluster]
-     # when :vat_tree                      then []
+    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), :miq_database]
+    when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
     end
   end
 
