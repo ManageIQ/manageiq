@@ -41,7 +41,6 @@ class ResourcePoolController < ApplicationController
       drop_breadcrumb(:name => _("%{name} (All VMs - Tree View)") % {:name => @record.name},
                       :url  => "/resource_pool/show/#{@record.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
-  #   build_dc_tree
 
       cluster = @record
       @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, cluster)

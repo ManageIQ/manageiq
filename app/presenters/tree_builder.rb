@@ -338,7 +338,6 @@ class TreeBuilder
   #   :load_children
   # parents --- an Array of parent object ids, starting from tree root + 1, ending with parent's parent; only available when full_ids and not lazy
   def x_get_tree_objects(parent, options, count_only, parents)
-    $log.info [self.class.to_s, parent.class.to_s, parent.try(:name)].inspect
     children_or_count = case parent
                         when nil                 then
                           # options are only required for the following TreeBuilder ancestors:
