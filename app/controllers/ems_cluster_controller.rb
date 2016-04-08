@@ -38,11 +38,7 @@ class EmsClusterController < ApplicationController
       drop_breadcrumb(:name => @ems_cluster.name + _(" (All VMs - Tree View)"),
                       :url  => "/ems_cluster/show/#{@ems_cluster.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
-
-      @sb[:cl_id] = @ems_cluster.id if @ems_cluster
-      unless @ems_cluster
-        @ems_cluster = EmsCluster.find(@sb[:cl_id])
-      end
+      
       cluster = @ems_cluster
       @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, cluster)
       self.x_active_tree = :datacenter_tree

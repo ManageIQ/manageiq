@@ -1,7 +1,4 @@
 class TreeBuilderDatacenter < TreeBuilder
-  # cluster = EmsCluster.find(@sb[:cl_id])
-  # user_id = session[:userid]
-
   def node_builder
     TreeNodeBuilderDatacenter
   end
@@ -13,40 +10,19 @@ class TreeBuilderDatacenter < TreeBuilder
     super(name, type, sandbox, build)
   end
 
-  # Get correct prefix
-  def self.prefix_type(object)
-    case object
-      when Host         then "Host"
-      when EmsCluster   then "Cluster"
-      when ResourcePool then "Resource Pool"
-      when Datacenter   then "Datacenter"
-      when Vm           then "Vm"
-      else                   ""
-    end
-  end
-
   private
 
-  # always same
   def tree_init_options(_tree_name)
-    {:full_ids            => true,
-     :tooltip_forced      => true,
-     :tooltip_suffix      => _(" (Click to view)"),
-     :tooltip_prefix_type => [self.class, :prefix_type],
-     }
+    {:full_ids => true}
   end
 
-  # just change id_prefix
-  # TODO nastavit
   def set_locals_for_render
     locals = super
-    locals.merge!(
-        :id_prefix                   => "dc_",
-        :autoload                    => true,
-        :url                         => '/vm/show/',
-        :open_close_all_on_dbl_click => true,
-        :onclick                     => 'miqOnClickHostNet',
-    )
+    locals.merge!(:id_prefix                   => "dc_",
+                  :autoload                    => true,
+                  :url                         => '/vm/show/',
+                  :open_close_all_on_dbl_click => true,
+                  :onclick                     => 'miqOnClickHostNet',)
   end
 
   def root_options
@@ -57,7 +33,6 @@ class TreeBuilderDatacenter < TreeBuilder
     end
   end
 
-  # level 1 - vratit cl_kids z ems_cluster
   def x_get_tree_roots(count_only = false, _options)
     if @root.kind_of?(EmsCluster)
       hosts = count_only_or_objects(count_only, @root.hosts)
@@ -92,6 +67,7 @@ class TreeBuilderDatacenter < TreeBuilder
     elsif parent.name == "datastore" && parent.parent.kind_of?(Datacenter)
       # Skip showing the datastore folder and sub-folders
     elsif parent.name == "vm" && parent.parent.kind_of?(Datacenter)
+      #
     else
       folders = count_only_or_objects(count_only, parent.folders_only)
       datacenters = count_only_or_objects(count_only, parent.datacenters_only)
@@ -114,7 +90,7 @@ class TreeBuilderDatacenter < TreeBuilder
     objects
   end
 
-  def  x_get_tree_cluster_kids(parent, count_only = false)
+  def x_get_tree_cluster_kids(parent, count_only = false)
     resource_pools = count_only_or_objects(count_only, parent.resource_pools)
     hosts = count_only_or_objects(count_only, parent.hosts)
     vms = count_only_or_objects(count_only, parent.vms)
