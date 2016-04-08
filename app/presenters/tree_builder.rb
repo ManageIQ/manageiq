@@ -2,6 +2,9 @@ class TreeBuilder
   include CompressedIds
   attr_reader :name, :type, :tree_nodes
 
+  def node_builder
+    TreeNodeBuilder
+  end
   def self.class_for_type(type)
     case type
     when :filter           then raise('Obsolete tree type.')
@@ -82,7 +85,7 @@ class TreeBuilder
     when :storage_pod then TreeBuilderStoragePod
 
     when :datacenter              then TreeBuilderDatacenter
-    when :vat                     then TreeBuilderDatacenter
+    when :vat                     then TreeBuilderVat
     end
   end
 
@@ -439,7 +442,7 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    TreeNodeBuilder.build(object, pid, options)
+    node_builder.build(object, pid, options)
   end
 
   # Called with object, tree node parent id, tree options

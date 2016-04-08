@@ -2,6 +2,10 @@ class TreeBuilderDatacenter < TreeBuilder
   # cluster = EmsCluster.find(@sb[:cl_id])
   # user_id = session[:userid]
 
+  def node_builder
+    TreeNodeBuilderDatacenter
+  end
+
   def initialize(name, type, sandbox, build = true, root = nil)
     sandbox[:datacenter_root] = root if root
     @root = sandbox[:datacenter_root]
@@ -64,8 +68,6 @@ class TreeBuilderDatacenter < TreeBuilder
       resource_pools = count_only_or_objects(count_only, @root.resource_pools)
       vms = count_only_or_objects(count_only, @root.vms)
       resource_pools + vms
-    elsif @root.kind_of?(ExtManagementSystem)
-      count_only_or_objects(count_only, @root.children)
     end
   end
 
