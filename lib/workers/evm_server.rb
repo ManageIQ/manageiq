@@ -8,6 +8,10 @@ class EvmServer
     [:mode, 'EVM Server Mode', String],
   ]
 
+  ##
+  # String used as a title for a linux process. Visible in ps, htop, ...
+  SERVER_PROCESS_TITLE = 'MIQ Server'.freeze
+
   def initialize(cfg = {})
     @cfg = cfg
 
@@ -57,12 +61,21 @@ class EvmServer
     end
 
     PidFile.create(MiqServer.pidfile)
+    set_process_title
     MiqServer.start
   rescue Interrupt => e
     process_hard_signal(e.message)
   rescue SignalException => e
     raise unless SOFT_INTERRUPT_SIGNALS.include?(e.message)
     process_soft_signal(e.message)
+  end
+
+  ##
+  # Sets the server process' name if it is possible.
+  #
+  # Will do nothing on ruby<2.1, because .setproctitle was introduced in 2.1
+  def set_process_title
+    Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
   end
 
   def self.start(*args)
