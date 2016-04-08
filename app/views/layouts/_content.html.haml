@@ -9,13 +9,16 @@
   - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 3
   - maindiv = 12 - sidewidth
   - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
-  .container-fluid.resizable-sidebar.max-height{:style => "overflow: hidden; height: 100%;"}
-    .row.scrollable-sm#center_div{:style => "height: 100%"}
+
+  = render :partial => "layouts/vertical_navbar"
+
+  .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
+    .row.toolbar-pf#toolbar
+      .col-md-12
+        .toolbar-pf-actions
+          = render_toolbars(calculate_toolbars)
+    .row.max-height
       #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
-        .row.toolbar-pf#toolbar
-          .col-md-12
-            .toolbar-pf-actions
-              = render_toolbars(calculate_toolbars)
         #main-content.row
           .col-md-12
             .row
@@ -64,44 +67,48 @@
           = yield :left
         #custom_left_cell
 - else
-  .container-fluid{:style => "overflow: hidden; height: 100%;"}
-    .row.scrollable-sm#center_div{:style => "height: 100%"}
-      - if layout_uses_listnav?
-        .col-md-10.col-md-push-2.max-height
-          - if !@in_a_form && taskbar_in_header?
-            .row.toolbar-pf#toolbar
-              .col-md-12
-                .toolbar-pf-actions
-                  - if  @layout == "dashboard"
-                    = render :partial => "/layouts/tabs"
-                  = render_toolbars(calculate_toolbars)
-          #main-content.row
+  #center_div{:style => "height: 100%;"}
+    - if layout_uses_listnav?
+      = render :partial => "layouts/vertical_navbar"
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height{:style => "overflow: hidden !important"}
+        - if !@in_a_form && taskbar_in_header?
+          .row.toolbar-pf#toolbar
             .col-md-12
-              .row
-                .col-md-7
-                  = render :partial => "layouts/breadcrumbs"
-                  - if layout_uses_tabs?
-                    = render :partial => 'layouts/tabs'
-                .col-md-5
-                  %br
-                  = render :partial => 'layouts/searchbar'
-              .row
-                .col-md-12
-                  = yield
-          - unless @in_a_form
-            .row.toolbar-pf#paging_div
-              = render(:partial => 'layouts/pagingcontrols',
-                       :locals  => {:pages      => @pages,
-                                    :action_url => action_url_for_views,
-                                    :db         => @view.try(:db),
-                                    :headers    => @view.try(:headers),
-                                    :button_div => 'center_tb'})
+              .toolbar-pf-actions
+                - if  @layout == "dashboard"
+                  = render :partial => "/layouts/tabs"
+                = render_toolbars(calculate_toolbars)
+        .row.max-height
+          .col-md-10.col-md-push-2.max-height
+            #main-content.row
+              .col-md-12
+                .row
+                  .col-md-7
+                    = render :partial => "layouts/breadcrumbs"
+                    - if layout_uses_tabs?
+                      = render :partial => 'layouts/tabs'
+                  .col-md-5
+                    %br
+                    = render :partial => 'layouts/searchbar'
+                .row
+                  .col-md-12
+                    = yield
+            - unless @in_a_form
+              .row.toolbar-pf#paging_div
+                = render(:partial => 'layouts/pagingcontrols',
+                         :locals  => {:pages      => @pages,
+                                      :action_url => action_url_for_views,
+                                      :db         => @view.try(:db),
+                                      :headers    => @view.try(:headers),
+                                      :button_div => 'center_tb'})
 
-        .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left
-          = render :partial => "layouts/listnav"
+          .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left.max-height
+            = render :partial => "layouts/listnav"
 
-      - elsif dashboard_no_listnav?
-        .col-md-12.max-height
+    - elsif dashboard_no_listnav?
+      = render :partial => "layouts/vertical_navbar"
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary
+        .max-height{:style => "position:relative;z-index: 1 !important"}
           .row.toolbar-pf#toolbar
             .col-md-12
               .toolbar-pf-actions
@@ -118,7 +125,9 @@
               .row
                 .col-md-12
                   = yield
-      - else
+    - else
+      = render :partial => "layouts/vertical_navbar"
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary
         .col-md-12.max-height
           - if !@in_a_form && taskbar_in_header?
             .row.toolbar-pf#toolbar
@@ -137,14 +146,14 @@
               .row
                 .col-md-12
                   = yield
-          - if layout_uses_paging? && !@in_a_form
-            .row.toolbar-pf#paging_div
-              = render(:partial => 'layouts/pagingcontrols',
-                       :locals  => {:pages      => @pages,
-                                    :action_url => action_url_for_views,
-                                    :db         => @view.try(:db),
-                                    :headers    => @view.try(:headers),
-                                    :button_div => 'center_tb'})
+      - if layout_uses_paging? && !@in_a_form
+        .row.toolbar-pf#paging_div
+          = render(:partial => 'layouts/pagingcontrols',
+                   :locals  => {:pages      => @pages,
+                                :action_url => action_url_for_views,
+                                :db         => @view.try(:db),
+                                :headers    => @view.try(:headers),
+                                :button_div => 'center_tb'})
 
 - if show_advanced_search?
   :javascript

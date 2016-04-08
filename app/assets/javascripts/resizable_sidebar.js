@@ -134,5 +134,5 @@ $.fn.resizableSidebar = function() {
 };
 
 $(function() {
-  $('div.container-fluid.resizable-sidebar').resizableSidebar();
+  $('div.container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.resizable-sidebar').resizableSidebar();
 });

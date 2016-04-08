@@ -23,7 +23,6 @@
   line-height: 26px;
 }
 
-
 #main-content {
   overflow: auto;
 }
@@ -31,9 +30,6 @@
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: $screen-sm) {
-  body {
-    padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-  }
   .scrollable-sm {
     height: 100% !important; //overrides the height calculations used to create the scrollable area
     overflow: auto;
@@ -43,23 +39,12 @@
 /* This media query makes the left column and the main area independently scrollable and sets the paging_div at the bottom of the column */
 
 @media (min-width: $screen-sm) {
-  body {
-    padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
-  }
 
   .login-pf body {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
-  .scrollable {
-    height: 100%;
-    overflow: auto;
-  }
 
-  /* compensates for left-padding of first rendered form-group */
-  .toolbar-pf > .col-md-12 {
-    padding-left: 0 !important;
-  }
 
   #paging_div {
     bottom: 0;
@@ -86,19 +71,8 @@
 
 /* Style changes applied when customer logo is active */
 
-nav.whitelabeled .navbar-header {
-  height: 39px !important;
-}
-
-nav.whitelabeled .navbar-utility > li > a {
-  padding: 14px 10px;
-}
-
-nav.whitelabeled .navbar-utility span.pficon-user {
-  padding-top: 5px;
-}
-
 li.brand-white-label.whitelabeled {
+  margin-top: 10px;
   width: 350px;
   height: 38px;
   background: url(/upload/custom_logo.png) right top no-repeat;
@@ -107,15 +81,6 @@ li.brand-white-label.whitelabeled {
 
 /* Navigation overrides */
 
-.persistent-secondary .dropdown-menu {
-  top: auto;
-  left: auto;
-}
-
-.navbar-pf .navbar-primary.persistent-secondary > li > .navbar-persistent > li {
-  font-size: 12px;
-  padding-bottom: 1px;
-}
 
 /* Login overrides */
 
@@ -328,7 +293,7 @@ iframe, .iframe {
 }
 .resizer-box {
   position: absolute;
-  bottom: 40px;
+  bottom: 50px;
   left: -18px;
   width: 38px
 }
