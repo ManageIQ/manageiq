@@ -7,7 +7,7 @@ describe EmsNetworkController do
     setup_zone
   end
 
-  %w(openstack).each do |t|
+  %w(openstack amazon azure).each do |t|
     context "for #{t}" do
       before :each do
         @ems = FactoryGirl.create("ems_#{t}".to_sym, :name => "Cloud Manager").network_manager
