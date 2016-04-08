@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Azure_NetworkManager_FloatingIp < MiqAeServiceFloatingIp
+  end
+end

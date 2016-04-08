@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Azure_NetworkManager_SecurityGroup < MiqAeServiceSecurityGroup
+  end
+end
