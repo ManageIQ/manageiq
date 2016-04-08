@@ -597,7 +597,10 @@ class ChargebackController < ApplicationController
       "weekly"  => "Weekly",
       "monthly" => "Monthly"
     }
-    @rate.id = nil if params[:typ] == "copy"
+    if params[:typ] == "copy"
+      @rate.id = nil
+      @edit[:new][:description] = "copy of #{@rate.description}"
+    end
     @edit[:rec_id] = @rate.id || nil
     @edit[:key] = "cbrate_edit__#{@rate.id || "new"}"
     @edit[:current] = copy_hash(@edit[:new])
