@@ -139,6 +139,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     openscap_result = image.openscap_result || OpenscapResult.new(:container_image => image)
     openscap_result.attach_raw_result(image_inspector_client.fetch_oscap_arf)
     openscap_result.save
+  rescue ImageInspectorClient::InspectorClientException => e
+    _log.error("collecting compliance data for #{options[:docker_image_id]} with error: #{e}")
   end
 
   def synchronize
