@@ -47,49 +47,6 @@ describe('dialog_import_export.js', function() {
         'status': 200
       };
 
-      var gridConstructor = Slick.Grid;
-      var dataViewConstructor = Slick.Data.DataView;
-      var checkboxSelectColumnConstructor = Slick.CheckboxSelectColumn;
-
-      spyOn(window.Slick, 'Grid').and.callFake(function() {
-        var fakeDataView = new dataViewConstructor();
-        grid = new gridConstructor('#import-grid', fakeDataView, []);
-        spyOn(grid, 'setSelectionModel');
-        spyOn(grid, 'registerPlugin');
-        spyOn(grid.getData(), 'getItems').and.callFake(function() {
-          return [{id: 321, status_icon: '/equal-green'}, {id: 322, status_icon: '/not-equal-green'}];
-        });
-        spyOn(grid, 'setSelectedRows');
-        spyOn(grid, 'invalidate');
-        spyOn(grid, 'render');
-        return grid;
-      });
-
-      spyOn(window.Slick, 'CheckboxSelectColumn').and.callFake(function() {
-        checkboxSelector = new checkboxSelectColumnConstructor();
-        spyOn(checkboxSelector, 'getColumnDefinition');
-        return checkboxSelector;
-      });
-
-      spyOn(window.Slick.Data, 'DataView').and.callFake(function() {
-        dataView = new dataViewConstructor();
-        spyOn(dataView, 'beginUpdate');
-        spyOn(dataView, 'setItems');
-        spyOn(dataView, 'endUpdate');
-        return dataView;
-      });
-    });
-
-    it('sets up the slick data view', function() {
-      renderServiceDialogJson(data, importFileUploadId);
-      expect(window.Slick.Data.DataView).toHaveBeenCalledWith({inlineFilters: true});
-    });
-
-    it('sets up the slick checkbox select column', function() {
-      renderServiceDialogJson(data, importFileUploadId);
-      expect(window.Slick.CheckboxSelectColumn).toHaveBeenCalledWith({cssClass: "import-checkbox"});
-    });
-
     it('updates the data view', function() {
       renderServiceDialogJson(data, importFileUploadId);
       expect(dataView.beginUpdate).toHaveBeenCalled();

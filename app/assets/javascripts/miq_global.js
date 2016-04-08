@@ -60,12 +60,6 @@ if (typeof(ManageIQ) === 'undefined') {
       valueStyles: null,
       prefillCount: 0,
     },
-    slick: {
-      slickColumns: null,
-      slickGrid: null,
-      slickRows: null,
-      slickDataView: null,
-    },
     widget: {
       dashboardUrl: null, // set dashboard widget drag drop url
       menuXml: null,
