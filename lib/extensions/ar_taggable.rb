@@ -51,21 +51,23 @@ module ActsAsTaggable
       query
     end
 
+    # @param list [Array<Array<String>>] list of tags
+    #   the inner list holds a single category grouped together. These are treated as an IN (aka OR) clause
+    #   the outer list holds multiple categories. All of these need to match and treaded as an AND clause
+    #   so the end result is the AND of a bunch of OR clauses.
+    #
+    # find_tagged_with(:any) is used for the inner list to handle the IN (aka OR)
+    # find_tagged_with(:all) is used for multiple inner lists
     def find_tags_by_grouping(list, options = {})
       options[:ns] = Tag.get_namespace(options)
 
-      # If array is flat (contains no inner arrays) we can let find_tagged_with
-      # do all the work. This will be much faster.
-      # Otherwise we'll need to call find_tagged_with for each inner list, prune the results
-      # and honor offset and limit here.
-      inner_lists = false
-      list.each do |item|
-        if item.kind_of?(Array) && item.length > 1
-          inner_lists = true
-          break
-        end
-      end
-      return find_tagged_with(options.merge(:all => list)) unless inner_lists == true
+      # any inner arrays with only 1 element doesn't need an 'IN' clause.
+      # These can all be handled together in a single 'AND' query
+      #
+      # the inner_lists need to be added as separate queries.
+      inner_lists, fixed_conditions = list.partition { |item| item.kind_of?(Array) && item.length > 1 }
+
+      return find_tagged_with(options.merge(:all => fixed_conditions)) if inner_lists.empty?
 
       offset = options.delete(:offset)
       limit = options.delete(:limit)
