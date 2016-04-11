@@ -9,6 +9,7 @@ ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
 ems_metrics_processor,Capacity & Utilization Data Processor,0,false,zone
 ems_operations,Provider Operations,0,false,zone
 event,Event Monitor,1,false,zone
+git_owner,GIT Repositories Owner,1,false,zone
 notifier,Notifier,1,false,region
 reporting,Reporting,0,false,region
 rhn_mirror,RHN Mirror,0,false,region
