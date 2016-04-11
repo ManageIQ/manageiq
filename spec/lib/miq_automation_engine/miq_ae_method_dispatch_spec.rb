@@ -91,7 +91,7 @@ describe "MiqAeMethodDispatch" do
                                    'ae_instances' => ae_instances))
   end
 
-  it "long running method" do
+  it "long running method", :skip => "Fails sporadically because 2 seconds is not long enough" do
     File.delete(@pidfile) if File.exist?(@pidfile)
     setup_model(rip_van_winkle_script)
     # Set the timeout to 2 seconds so we can terminate
