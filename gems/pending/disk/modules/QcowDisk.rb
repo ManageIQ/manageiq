@@ -116,7 +116,7 @@ module QcowDisk
     @downstreamDisk = dInfo.downstreamDisk
     self.diskType = "#{diskType}-#{@downstreamDisk.diskType}" if @downstreamDisk
 
-    # save the handle for Qcow disks in case of opening their parent disks
+    # Ensure all the disks in the chain are opened before we return (required to address RHEV SSA UID issues).
     backing_file_handle
   end
 
