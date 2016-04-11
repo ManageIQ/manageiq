@@ -70,7 +70,7 @@ module VmOrTemplate::Scanning
   # TODO: Vmware specfic
   def require_snapshot_for_scan?
     return false unless self.runnable?
-    return false if ['RedHat'].include?(vendor)
+    return false if ['redhat'].include?(vendor.downcase)
     return false if host && host.platform == "windows"
     true
   end

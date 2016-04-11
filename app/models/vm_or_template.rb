@@ -1297,7 +1297,7 @@ class VmOrTemplate < ApplicationRecord
     # Return location if it contains a fully-qualified file URI
     return location if location.starts_with?('file://')
     # Return location for RHEV-M VMs
-    return rhevm_config_path if vendor.to_s == 'RedHat'
+    return rhevm_config_path if vendor.to_s.downcase == 'redhat'
 
     case storage.store_type
     when "VMFS"  then "[#{storage.name}] #{location}"
