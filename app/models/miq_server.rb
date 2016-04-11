@@ -243,7 +243,6 @@ class MiqServer < ApplicationRecord
     end
 
     server.update_attributes(server_hash)
-    my_server_clear_cache
 
     _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
     _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
