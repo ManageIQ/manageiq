@@ -29,6 +29,10 @@ class MiqExpression::Field
     column_type == :datetime
   end
 
+  def string?
+    column_type == :string
+  end
+
   def target
     if associations.none?
       model
