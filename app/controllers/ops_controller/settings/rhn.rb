@@ -125,8 +125,10 @@ module OpsController::Settings::RHN
     auth    = {:registration =>  {:userid => credentials[:userid], :password => credentials[:password]}}
     options = {:required => [:userid, :password]}
     db.update_authentication(auth, options)
-    db.registration_organization = credentials[:registration_type] == "sm_hosted" ? nil : @edit[:new][:customer_org]
-    db.registration_organization_display_name = @edit[:organizations].try(:key, @edit[:new][:customer_org])
+    unless credentials[:registration_type] == "sm_hosted"
+      db.registration_organization = @edit[:new][:customer_org]
+      db.registration_organization_display_name = @edit[:organizations].key(@edit[:new][:customer_org])
+    end
 
     begin
       db.save!
@@ -172,7 +174,7 @@ module OpsController::Settings::RHN
       if miq_task.status != 'Ok'
         add_flash(_("Credential validation returned: %{message}") % {:message => miq_task.message}, :error)
       else
-        # task succeeded, we have the array of organization names in miq_task.task_results
+        # task succeeded, we have the hash of org names to org keys in miq_task.task_results
         add_flash(_("Credential validation was successful"))
         yield miq_task.task_results
       end
@@ -256,11 +258,12 @@ module OpsController::Settings::RHN
     rhn_load_session
     rhn_fire_available_organizations do |organizations|
       if 'rhn_satellite6' == @edit[:new][:register_to]
+        # Hash of display names to key names
         @edit[:organizations] = organizations
         if @edit[:organizations].length == 1
-          @edit[:new][:customer_org] = @edit[:organizations].first
+          @edit[:new][:customer_org_display], @edit[:new][:customer_org] = @edit[:organizations].first
         else
-          @edit[:new][:customer_org] = nil unless @edit[:organizations].include?(@edit[:new][:customer_org])
+          @edit[:new][:customer_org] = nil unless @edit[:organizations].key?(@edit[:new][:customer_org_display])
         end
       end
     end
@@ -327,19 +330,20 @@ module OpsController::Settings::RHN
     username, password = db.auth_user_pwd(:registration)
     proxy_username, proxy_password = db.auth_user_pwd(:registration_http_proxy)
     @edit[:new] ||= {
-      :register_to       => db.registration_type,
-      :customer_userid   => username,
-      :customer_password => password,
-      :customer_verify   => '',
-      :customer_org      => db.registration_organization,
-      :server_url        => db.registration_server,
-      :repo_name         => db.update_repo_name,
+      :register_to          => db.registration_type,
+      :customer_userid      => username,
+      :customer_password    => password,
+      :customer_verify      => '',
+      :customer_org         => db.registration_organization,
+      :customer_org_display => db.registration_organization_display_name,
+      :server_url           => db.registration_server,
+      :repo_name            => db.update_repo_name,
 
-      :use_proxy         => db.registration_http_proxy_server.to_s.empty? ? 0 : 1,
-      :proxy_address     => db.registration_http_proxy_server,
-      :proxy_userid      => proxy_username,
-      :proxy_password    => proxy_password,
-      :proxy_verify      => '',
+      :use_proxy            => db.registration_http_proxy_server.to_s.empty? ? 0 : 1,
+      :proxy_address        => db.registration_http_proxy_server,
+      :proxy_userid         => proxy_username,
+      :proxy_password       => proxy_password,
+      :proxy_verify         => '',
     }
     @edit[:key] = "#{@sb[:active_tab]}__rhn_edit"
     @edit[:current] = copy_hash(@edit[:new])

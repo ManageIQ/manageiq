@@ -572,9 +572,8 @@ module OpsController::Settings::Common
 
     case @sb[:active_tab]                                               # No @edit[:current].config for Filters since there is no config file
     when 'settings_rhn_edit'
-      for key in [:proxy_address, :use_proxy, :proxy_userid, :proxy_password, :proxy_verify,
-                  :register_to, :server_url, :repo_name, :customer_org,
-                  :customer_userid, :customer_password, :customer_verify]
+      [:proxy_address, :use_proxy, :proxy_userid, :proxy_password, :proxy_verify, :register_to, :server_url, :repo_name,
+       :customer_org, :customer_org_display, :customer_userid, :customer_password, :customer_verify].each do |key|
         new[key] = params[key] if params[key]
       end
       if params[:register_to] || params[:action] == "repo_default_name"
