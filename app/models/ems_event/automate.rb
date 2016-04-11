@@ -20,7 +20,6 @@ class EmsEvent
       return if target.nil? || policy_event.nil? || policy_src.nil?
 
       inputs = {
-        target.class.name.downcase.singularize.to_sym => target,
         policy_src.class.table_name.to_sym            => policy_src,
         :ems_event                                    => self
       }
