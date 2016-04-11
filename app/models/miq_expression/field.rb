@@ -13,7 +13,7 @@ class MiqExpression::Field
   end
 
   attr_reader :model, :associations, :column
-  delegate :arel_table, :to => :target
+  delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :to => :arel_attribute
 
   def initialize(model, associations, column)
     @model = model
@@ -29,10 +29,6 @@ class MiqExpression::Field
     column_type == :datetime
   end
 
-  def arel_attribute
-    arel_table[column]
-  end
-
   def target
     if associations.none?
       model
@@ -42,6 +38,12 @@ class MiqExpression::Field
   end
 
   private
+
+  delegate :arel_table, :to => :target
+
+  def arel_attribute
+    arel_table[column]
+  end
 
   def column_type
     target.type_for_attribute(column).type
