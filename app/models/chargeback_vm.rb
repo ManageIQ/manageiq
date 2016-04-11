@@ -52,14 +52,8 @@ class ChargebackVm < Chargeback
     #   :owner => <userid>
     #   :tag => /managed/environment/prod (Mutually exclusive with :user)
     #   :chargeback_type => detail | summary
-    _log.info("Calculating chargeback costs...")
 
-    tz = Metric::Helper.get_time_zone(options[:ext_options])
-    # TODO: Support time profiles via options[:ext_options][:time_profile]
-
-    interval = options[:interval] || "daily"
-    cb = new
-    report_user = User.find_by(:userid => options[:userid])
+    @report_user = User.find_by(:userid => options[:userid])
 
     # Find Vms by user or by tag
     if options[:owner]
@@ -71,7 +65,7 @@ class ChargebackVm < Chargeback
       vms = user.vms
     elsif options[:tag]
       vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
-      vms &= report_user.accessible_vms if report_user && report_user.self_service?
+      vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
     elsif options[:tenant_id]
       tenant = Tenant.find(options[:tenant_id])
       if tenant.nil?
@@ -84,66 +78,34 @@ class ChargebackVm < Chargeback
     end
     return [[]] if vms.empty?
 
-    vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
-    options[:ext_options] ||= {}
+    @vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
 
-    base_rollup = MetricRollup.includes(
-      :resource           => :hardware,
-      :parent_host        => :tags,
-      :parent_ems_cluster => :tags,
-      :parent_storage     => :tags,
-      :parent_ems         => :tags)
-                              .select(*Metric::BASE_COLS).order("resource_id, timestamp")
-    perf_cols = MetricRollup.attribute_names
-    rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
-      rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
+    build_results_for_report_chargeback(options)
+  end
+
+  def self.get_keys_and_extra_fields(perf, ts_key)
+    key = "#{perf.resource_id}_#{ts_key}"
+    @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
+
+    [key, {"vm_name" => perf.resource_name, "owner_name" => @vm_owners[perf.resource_id]}]
+  end
+
+  def self.where_clause(records, options)
+    if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
+      records.where(:resource_type => "VmOrTemplate")
+          .where.not(:resource_id => nil)
+          .for_tag_names(options[:tag].split("/")[2..-1])
+    else
+      records.where(:resource_type => "VmOrTemplate", :resource_id => @vm_owners.keys)
     end
-    base_rollup = base_rollup.select(*rate_cols)
+  end
 
-    timerange = get_report_time_range(options, interval, tz)
-    data = {}
+  def self.report_cb_model
+    "Vm"
+  end
 
-    timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      recs = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
-      if options[:tag] && (report_user.nil? || !report_user.self_service?)
-        recs = recs.where(:resource_type => "VmOrTemplate")
-                   .where.not(:resource_id => nil)
-                   .for_tag_names(options[:tag].split("/")[2..-1])
-      else
-        recs = recs.where(:resource_type => "VmOrTemplate", :resource_id => vm_owners.keys)
-      end
-
-      recs = Metric::Helper.remove_duplicate_timestamps(recs)
-      _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
-
-      unless recs.empty?
-        ts_key = get_group_key_ts(recs.first, interval, tz)
-
-        recs.each do |perf|
-          next if perf.resource.nil?
-          key = "#{perf.resource_id}_#{ts_key}"
-          vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
-
-          if data[key].nil?
-            start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
-            data[key] = {
-              "start_date"    => start_ts,
-              "end_date"      => end_ts,
-              "display_range" => display_range,
-              "interval_name" => interval,
-              "vm_name"       => perf.resource_name,
-              "owner_name"    => vm_owners[perf.resource_id]
-            }
-          end
-
-          rates_to_apply = cb.get_rates(perf)
-          calculate_costs(perf, data[key], rates_to_apply)
-        end
-      end
-    end
-    _log.info("Calculating chargeback costs...Complete")
-
-    [data.map { |r| new(r.last) }]
+  def self.report_name_field
+    "vm_name"
   end
 
   def self.report_col_options

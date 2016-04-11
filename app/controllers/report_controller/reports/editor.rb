@@ -526,7 +526,7 @@ module ReportController::Reports::Editor
         build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
       end
       if model_report_type(@edit[:new][:model]).to_s.starts_with?("chargeback")
-        @edit[:new][:cb_model] = @edit[:new][:model] == "ChargebackVm" ? "Vm" : "ContainerProject"
+        @edit[:new][:cb_model] = @edit[:new][:model].constantize.report_cb_model
         @edit[:new][:cb_interval] ||= "daily"                   # Default to Daily
         @edit[:new][:cb_interval_size] ||= 1
         @edit[:new][:cb_end_interval_offset] ||= 1
@@ -1247,7 +1247,7 @@ module ReportController::Reports::Editor
     # Add in the chargeback static fields
     if rpt.db.starts_with?("Chargeback") # For chargeback, add in static fields
       rpt.cols = %w(start_date display_range)
-      name_col = rpt.db == "ChargebackVm" ? "vm_name" : "project_name"
+      name_col = @edit[:new][:model].constantize.report_name_field
       rpt.cols += [name_col]
       if @edit[:new][:cb_groupby] == "date"
         rpt.col_order = ["display_range", name_col]

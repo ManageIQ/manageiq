@@ -1,4 +1,64 @@
 class Chargeback < ActsAsArModel
+  def self.build_results_for_report_chargeback(options)
+    _log.info("Calculating chargeback costs...")
+
+    tz = Metric::Helper.get_time_zone(options[:ext_options])
+    # TODO: Support time profiles via options[:ext_options][:time_profile]
+
+    interval = options[:interval] || "daily"
+    cb = new
+
+    options[:ext_options] ||= {}
+
+    base_rollup = MetricRollup.includes(
+      :resource           => :hardware,
+      :parent_host        => :tags,
+      :parent_ems_cluster => :tags,
+      :parent_storage     => :tags,
+      :parent_ems         => :tags)
+                              .select(*Metric::BASE_COLS).order("resource_id, timestamp")
+    perf_cols = MetricRollup.attribute_names
+    rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
+      rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
+    end
+    base_rollup = base_rollup.select(*rate_cols)
+
+    timerange = get_report_time_range(options, interval, tz)
+    data = {}
+
+    timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
+      recs = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
+      recs = where_clause(recs, options)
+      recs = Metric::Helper.remove_duplicate_timestamps(recs)
+      _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
+
+      unless recs.empty?
+        ts_key = get_group_key_ts(recs.first, interval, tz)
+
+        recs.each do |perf|
+          next if perf.resource.nil?
+          key, extra_fields = get_keys_and_extra_fields(perf, ts_key)
+
+          if data[key].nil?
+            start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
+            data[key] = {
+              "start_date"    => start_ts,
+              "end_date"      => end_ts,
+              "display_range" => display_range,
+              "interval_name" => interval,
+            }.merge(extra_fields)
+          end
+
+          rates_to_apply = cb.get_rates(perf)
+          calculate_costs(perf, data[key], rates_to_apply)
+        end
+      end
+    end
+    _log.info("Calculating chargeback costs...Complete")
+
+    [data.map { |r| new(r.last) }]
+  end
+
   def get_rates(perf)
     @rates ||= {}
     @enterprise ||= MiqEnterprise.my_enterprise
