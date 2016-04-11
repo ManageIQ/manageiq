@@ -85,7 +85,7 @@ gem "inifile",                        "~>3.0",     :require => false
 gem "logging",                        "~>1.8",     :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",   :require => false
 gem "net-ping",                       "~>1.7.4",   :require => false
-gem "net-ssh",                        "~>2.9.2",   :require => false
+gem "net-ssh",                        :git => 'https://github.com/net-ssh/net-ssh.git', :tag => 'v4.0.0.alpha4', :require => false
 gem "omniauth",                       "~>1.3.1",   :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",   :require => false
