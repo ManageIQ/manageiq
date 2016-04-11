@@ -53,6 +53,7 @@ module ReportFormatter
     end
 
     def tl_event(tl_xml, row, col)
+      tl_message = TimelineMessage.new
       mri = options.mri
       tz = mri.get_time_zone(Time.zone.name)
       etime = row[col]
@@ -210,68 +211,10 @@ module ReportFormatter
 
       e_text = ''
       col_order.each_with_index do |co, co_idx|
-        val = ''
-        # Look for fields that have matching link fields and put in the link
-        if co == "vm_name" && !rec.vm_or_template_id.nil?
-          val = "&lt;a href='/vm/show/#{to_cid(rec.vm_or_template_id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "src_vm_name" && !rec.src_vm_id.nil?
-          val = "&lt;a href='/vm/show/#{to_cid(rec.src_vm__id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "dest_vm_name" && !rec.dest_vm_or_template_id.nil?
-          val = "&lt;a href='/vm/show/#{to_cid(rec.dest_vm_or_template_id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "host_name" && !rec.host_id.nil?
-          val = "&lt;a href='/host/show/#{to_cid(rec.host_id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "dest_host_name" && !rec.dest_host_id.nil?
-          val = "&lt;a href='/host/show/#{to_cid(rec.dest_host_id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "ems_cluster_name" && !rec.ems_cluster_id.nil?
-          val = "&lt;a href='/ems_cluster/show/#{to_cid(rec.ems_cluster_id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "ext_management_system.name" && rec.ext_management_system && !rec.ext_management_system.id.nil?
-          provider_id = rec.ext_management_system.id
-          if ems_cloud
-            # restful route is used for cloud provider unlike infrastructure provider
-            val = "&lt;a href='/ems_cloud/#{provider_id}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif ems_container
-            val = "&lt;a href='/ems_container/show/#{to_cid(provider_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          else
-            val = "&lt;a href='/ems_infra/show/#{to_cid(provider_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          end
-        elsif co == "availability_zone.name" && !rec.availability_zone_id.nil?
-          val = "&lt;a href='/availability_zone/show/#{to_cid(rec.availability_zone_id)}'&gt;#{row[co]}&lt;/a&gt;"
-        elsif co == "container_node_name"
-          if rec.container_node_id
-            val = "<a href='/container_node/show/#{to_cid(rec.container_node_id.id)}'>#{row[co]}</a>"
-          end
-        elsif co == "container_group_name"
-          if rec.container_group_id
-            val = "<a href='/container_group/show/#{to_cid(rec.container_group.id)}'>#{row[co]}</a>"
-          end
-        elsif co == "container_name"
-          if rec.container_id
-            val = "<a href='/container/tree_select/?id=cnt-#{to_cid(rec.container_id)}'>#{row[co]}</a>;"
-          end
-        elsif co == "container_replicator_name" && rec.container_replicator_id
-          if rec.container_replicator_id
-            val = "<a href='/container_replicator/show/#{to_cid(rec.container_replicator_id)}'>#{row[co]}</a>"
-          end
-        elsif mri.db == "BottleneckEvent" && co == "resource_name"
-          case rec.resource_type
-          when "ExtManagementSystem"
-            db = ems_cloud ? "ems_cloud" : "ems_infra"
-          else
-            db = rec.resource_type.underscore
-          end
-          val = "&lt;a href='/#{db}/show/#{to_cid(rec.resource_id)}'&gt;#{rec.resource_name}&lt;/a&gt;"
-        else  # Not a link field, just put in the text
-          # START of TIMELINE TIMEZONE Code
-          if row[co].kind_of?(Time)
-            val = format_timezone(row[co], tz, "gtl")
-          elsif TIMELINE_TIME_COLUMNS.include?(co)
-            val = format_timezone(Time.parse(row[co].to_s), tz, "gtl")
-          else
-            val = row[co].to_s
-          end
-          # END of TIMELINE TIMEZONE Code
-          #           e_text += row[co].to_s
-        end
+        flags = {:ems_cloud     => ems_cloud,
+                 :ems_container => ems_container,
+                 :time_zone     => tz}
+        val = tl_message.message_html(co, row, rec, flags)
         e_text += "<b>#{headers[co_idx]}:</b> #{val}<br/>" unless val.to_s.empty? || co == "id"
       end
       e_text = e_text.chomp('<br/>')
