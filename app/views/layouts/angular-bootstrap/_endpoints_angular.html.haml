@@ -1,5 +1,7 @@
 - return if !%w(ems_cloud ems_infra).include?(controller_name)
 
+- prefix ||= "default"
+
 .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}"}
   %label.col-md-2.control-label{"for" => "textInput-markup"}
     = _('Hostname (or IPv4 or IPv6 address)')
@@ -40,9 +42,9 @@
                      "required"                    => "",
                      "selectpicker-for-select-tag" => "")
   .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
-    = select_tag('security_protocol',
+    = select_tag("#{prefix}_security_protocol",
                      options_for_select([["<#{_('Choose>')}", nil]] + @scvmm_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
-                     "ng-model"                    => "emsCommonModel.security_protocol",
+                     "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                      "checkchange"                 => "",
                      "required"                    => "",
                      "ng-change"                   => "scvmmSecurityProtocolChanged()",

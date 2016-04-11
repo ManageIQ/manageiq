@@ -21,6 +21,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       realm: '',
       security_protocol: '',
       amqp_security_protocol: '',
+      ssh_keypair_security_protocol: '',
       provider_region: '',
       default_userid: '',
       default_password: '',
@@ -66,8 +67,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_api_port                = 5000;
         $scope.emsCommonModel.amqp_api_port                   = 5672;
         $scope.emsCommonModel.api_version                     = 'v2';
-        $scope.emsCommonModel.default_security_protocol       = 'ssl';
-        $scope.emsCommonModel.amqp_security_protocol          = 'ssl';
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
         miqService.sparkleOff();
       });
@@ -101,7 +100,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
         $scope.emsCommonModel.security_protocol               = data.security_protocol;
-        $scope.emsCommonModel.amqp_security_protocol          = angular.isDefined(data.amqp_security_protocol) ? data.amqp_security_protocol : 'ssl';
+        $scope.emsCommonModel.amqp_security_protocol          = data.amqp_security_protocol;
+        $scope.emsCommonModel.ssh_keypair_security_protocol   = data.ssh_keypair_security_protocol;
         $scope.emsCommonModel.provider_region                 = data.provider_region;
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
@@ -260,18 +260,18 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   $scope.providerTypeChanged = function() {
     $scope.emsCommonModel.api_port = "";
-    $scope.emsCommonModel.security_protocol = "";
+    $scope.emsCommonModel.default_security_protocol = "";
     $scope.note = "";
-    if ($scope.emsCommonModel.emstype === 'openstack_infra') {
+    if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
       $scope.emsCommonModel.api_port = "5000";
-    } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.security_protocol === 'kerberos'){
+    } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     }
   };
 
   $scope.scvmmSecurityProtocolChanged = function() {
     $scope.note = "";
-    if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.security_protocol === 'kerberos'){
+    if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     }
   };
