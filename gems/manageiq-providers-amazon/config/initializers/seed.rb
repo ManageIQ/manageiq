@@ -1,0 +1,1 @@
+EvmDatabase::RAILS_ENGINE_MODEL_CLASS_NAMES << 'ManageIQ::Providers::Amazon::AeDatastore'

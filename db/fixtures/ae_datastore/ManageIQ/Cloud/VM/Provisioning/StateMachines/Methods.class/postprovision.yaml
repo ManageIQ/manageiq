@@ -8,7 +8,5 @@ object:
     inherits: 
     description: 
   fields:
-  - amazon_meth1:
-      value: amazon_PostProvision
   - openstack_meth1:
       value: openstack_PostProvision

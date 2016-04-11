@@ -1,0 +1,11 @@
+---
+object_type: domain
+version: 1.0
+object:
+  attributes:
+    name: Amazon
+    description: Amazon domain
+    display_name: 
+    system: true
+    priority: 10
+    enabled: true
