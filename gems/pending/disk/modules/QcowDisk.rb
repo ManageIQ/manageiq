@@ -115,6 +115,9 @@ module QcowDisk
     @dOffset = dInfo.offset
     @downstreamDisk = dInfo.downstreamDisk
     self.diskType = "#{diskType}-#{@downstreamDisk.diskType}" if @downstreamDisk
+
+    # Ensure all the disks in the chain are opened before we return (required to address RHEV SSA UID issues).
+    backing_file_handle
   end
 
   def getBase
