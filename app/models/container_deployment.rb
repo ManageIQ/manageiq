@@ -330,7 +330,6 @@ eos
   end
 
   def create_deployment(params, user)
-    byebug
     self.version = "v3"
     self.kind = params["providerType"].include?("openshiftOrigin") ? "origin" : "openshift-enterprise"
     self.method_type = params["provisionOn"]
