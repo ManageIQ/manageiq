@@ -7,7 +7,7 @@ shared_examples_for "A controller that has advanced search routes" do |restful|
     if restful
       it "does not route with GET" do
         expect(get("/#{controller_name}/quick_search")).to route_to(:action     => "show",
-                                                                    :controller => "ems_cloud",
+                                                                    :controller => controller_name,
                                                                     :id         => "quick_search")
       end
     else
@@ -31,7 +31,7 @@ shared_examples_for "A controller that has advanced search routes" do |restful|
     if restful
       it "does not route with GET" do
         expect(get("/#{controller_name}/adv_search_clear")).to route_to(:action     => "show",
-                                                                        :controller => "ems_cloud",
+                                                                        :controller => controller_name,
                                                                         :id         => "adv_search_clear")
       end
     else

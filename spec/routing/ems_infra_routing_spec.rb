@@ -3,9 +3,8 @@ require "routing/shared_examples"
 describe EmsInfraController do
   let(:controller_name) { "ems_infra" }
 
-  it_behaves_like "A controller that has advanced search routes"
+  it_behaves_like "A controller that has advanced search routes", true
   it_behaves_like "A controller that has compare routes"
-  it_behaves_like "A controller that has CRUD routes"
   it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like "A controller that has discovery routes"
   it_behaves_like "A controller that has download_data routes"
@@ -15,10 +14,6 @@ describe EmsInfraController do
 
   %w(
     dialog_load
-    edit
-    index
-    new
-    show
     show_list
   ).each do |task|
     describe "##{task}" do
@@ -34,7 +29,6 @@ describe EmsInfraController do
     form_field_changed
     listnav_search_selected
     save_default_search
-    show
     show_list
     tree_autoload_dynatree
     tree_autoload_quads

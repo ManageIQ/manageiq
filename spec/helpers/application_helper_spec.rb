@@ -1581,7 +1581,7 @@ describe ApplicationHelper do
 
     context 'When controller is ems_infra and action is show' do
       it 'returns false' do
-        expect(helper.restful_routed_action?('ems_infra', 'show')).to eq(false)
+        expect(helper.restful_routed_action?('ems_infra', 'show')).to eq(true)
       end
     end
 

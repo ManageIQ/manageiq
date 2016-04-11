@@ -28,14 +28,14 @@ describe TextualSummaryHelper do
         ems.hosts << FactoryGirl.create(:host)
 
         result = helper.textual_link(ems.hosts)
-        expect(result[:link]).to eq("/ems_infra/show/#{ems.id}?display=hosts")
+        expect(result[:link]).to eq("/ems_infra/#{ems.id}?display=hosts")
       end
 
       it "uses the controller-action-id path for the base show screen" do
         ems = FactoryGirl.create(:ems_openstack_infra)
 
         result = helper.textual_link(ems)
-        expect(result[:link]).to eq("/ems_infra/show/#{ems.id}")
+        expect(result[:link]).to eq("/ems_infra/#{ems.id}")
       end
     end
   end
