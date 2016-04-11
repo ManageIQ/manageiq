@@ -13,7 +13,7 @@ class MiqExpression::Field
   end
 
   attr_reader :model, :associations, :column
-  delegate :table_name, :to => :target
+  delegate :arel_table, :to => :target
 
   def initialize(model, associations, column)
     @model = model
