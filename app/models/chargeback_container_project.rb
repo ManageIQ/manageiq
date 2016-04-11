@@ -42,10 +42,10 @@ class ChargebackContainerProject < Chargeback
     raise "must provide option :entity_id" if id.nil?
 
     @groups = if id == "all"
-               ContainerGroup.all
-             else
-               ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', id, id)
-             end
+                ContainerGroup.all
+              else
+                ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', id, id)
+              end
 
     @groups = @groups.includes(:container_project, :old_container_project)
     return [[]] if @groups.empty?
@@ -65,12 +65,8 @@ class ChargebackContainerProject < Chargeback
     [key, {"project_name"  => project.name}]
   end
 
-  def self.where_clause(records, options)
+  def self.where_clause(records, _options)
     records.where(:resource_type => ContainerGroup.name, :resource_id => @groups.pluck(:id))
-  end
-
-  def self.report_cb_model
-    "ContainerProject"
   end
 
   def self.report_name_field

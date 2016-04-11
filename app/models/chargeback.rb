@@ -166,4 +166,8 @@ class Chargeback < ActsAsArModel
 
     start_time..end_time
   end
+
+  def self.report_cb_model(model)
+    model.gsub(/^Chargeback/, "")
+  end
 end # class Chargeback

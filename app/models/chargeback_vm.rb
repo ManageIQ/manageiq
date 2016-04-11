@@ -100,10 +100,6 @@ class ChargebackVm < Chargeback
     end
   end
 
-  def self.report_cb_model
-    "Vm"
-  end
-
   def self.report_name_field
     "vm_name"
   end
