@@ -11,14 +11,18 @@ end
 module ActsAsTaggable
   extend ActiveSupport::Concern
 
+  # @param tags [String,Array]
+  # @param separator [String] Separator used if tags is a string
+  # @return array of unique tag names
   def self.split_tag_names(tags, separator)
-    tag_names = []
-    if tags.kind_of?(Array)
-      tag_names.push(tags)
-    elsif tags.kind_of?(String)
-      tag_names.push((separator.kind_of?(Proc) ? separator.call(tags) : tags.split(separator)))
-    end
-    tag_names.flatten.map(&:strip).uniq.compact
+    case tags
+    when Array
+      tags.flatten.compact
+    when String
+      tags.split(separator)
+    else
+      []
+    end.map(&:strip).uniq
   end
 
   module ClassMethods
