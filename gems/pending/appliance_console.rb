@@ -36,6 +36,11 @@ I18n.backend.load_translations
 $terminal.wrap_at = 80
 $terminal.page_at = 25
 
+def summary_entry(field, value)
+  dfield = "#{field}:"
+  "#{dfield.ljust(24)} #{value}"
+end
+
 require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
@@ -116,21 +121,22 @@ module ApplianceConsole
       configured = ApplianceConsole::DatabaseConfiguration.configured?
 
       summary_attributes = [
-        "Hostname:", host,
-        "IP Address:", ip,
-        "Netmask:", mask,
-        "Gateway:", gw,
-        "Primary DNS:", dns1,
-        "Secondary DNS:", dns2,
-        "Search Order:", order,
-        "MAC Address:", mac,
-        "Timezone:", timezone,
-        "Local Database:", ApplianceConsole::Utilities.pg_status,
-        "#{I18n.t("product.name")} Database:", configured ? "postgres @ #{dbhost || "localhost"}" : "not configured",
-        "Database/Region:", configured ? "#{database} / #{region || 0}" : "not configured",
-        "External Auth:", ExternalHttpdAuthentication.config_status,
-        "#{I18n.t("product.name")} Version:", version,
-        "#{I18n.t("product.name")} Console:", configured ? "https://#{ip}" : "not configured"
+        summary_entry("Hostname", host),
+        summary_entry("IP Address", ip),
+        summary_entry("Netmask", mask),
+        summary_entry("Gateway", gw),
+        summary_entry("Primary DNS", dns1),
+        summary_entry("Secondary DNS", dns2),
+        summary_entry("Search Order", order),
+        summary_entry("MAC Address", mac),
+        summary_entry("Timezone", timezone),
+        summary_entry("Local Database", ApplianceConsole::Utilities.pg_status),
+        summary_entry("#{I18n.t("product.name")} Database",
+                      configured ? "postgres @ #{dbhost || "localhost"}" : "not configured"),
+        summary_entry("Database/Region", configured ? "#{database} / #{region || 0}" : "not configured"),
+        summary_entry("External Auth", ExternalHttpdAuthentication.config_status),
+        summary_entry("#{I18n.t("product.name")} Version", version),
+        summary_entry("#{I18n.t("product.name")} Console", configured ? "https://#{ip}" : "not configured")
       ]
 
       clear_screen
@@ -140,7 +146,7 @@ Welcome to the #{I18n.t("product.name")} Virtual Appliance.
 
 To modify the configuration, use a web browser to access the management page.
 
-#{$terminal.list(summary_attributes, :columns_across, 2)}
+#{$terminal.list(summary_attributes)}
         EOL
 
       press_any_key
