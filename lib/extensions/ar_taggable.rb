@@ -127,17 +127,6 @@ module ActsAsTaggable
     end
   end
 
-  def tag_remove(list, options = {})
-    # remove taggings from object
-    ns = Tag.get_namespace(options)
-    Tag.parse(list).each do |name|
-      taggings
-        .includes(:tag)
-        .where(Tag.arel_table[:name].eq File.join(ns, name))
-        .destroy_all
-    end
-  end
-
   def tagged_with(options = {})
     tagging = Tagging.arel_table
     query = Tag.includes(:taggings).references(:taggings)
