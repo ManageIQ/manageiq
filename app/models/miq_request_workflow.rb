@@ -813,12 +813,37 @@ class MiqRequestWorkflow
   def set_request_values(values)
     # Ensure that tags selected in the pre-dialog get applied to the request
     values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
-
+    values[:volumes] = prepare_volumes_fields(values)
     values[:requester_group] ||= @requester.current_group.description
     email = values[:owner_email]
     if email.present? && values[:owner_group].blank?
       values[:owner_group] = User.find_by_lower_email(email, @requester).try(:miq_group_description)
     end
+  end
+
+  def prepare_volumes_fields(values)
+    # the provision dialog doesn't handle arrays,
+    # so we have to hack around it to support an arbitrary
+    # number of volumes being added at once.
+    # This looks for volume form fields in the input, and converts
+    # them into an array of hashes that can be understood
+    # by prepare_volumes
+    prepare_volumes = true
+    volumes = []
+    keys = %w(volume_name volume_size volume_delete_on_terminate)
+    while prepare_volumes
+      new_volume = {}
+      keys.each do |k|
+        key = :"#{k}_#{volumes.length + 1}"
+        new_volume[key] = values[key] unless values[key].blank?
+      end
+      if new_volume.blank?
+        prepare_volumes = false
+      else
+        volumes.push new_volume
+      end
+    end
+    volumes
   end
 
   def password_helper(values, encrypt = true)
