@@ -79,7 +79,9 @@ class TreeBuilder
 
     # Services explorer tree
     when :svcs                    then TreeBuilderServices
-        
+
+    when :sa                      then TreeBuilderStorageAdapters
+
     # Datastores explorer trees
     when :storage     then TreeBuilderStorage
     when :storage_pod then TreeBuilderStoragePod
@@ -363,6 +365,7 @@ class TreeBuilder
                         when Datacenter          then x_get_tree_datacenter_kids(parent, count_only, options[:type])
                         when EmsFolder           then x_get_tree_folder_kids(parent, count_only, options[:type])
                         when EmsCluster          then x_get_tree_cluster_kids(parent, count_only)
+                        when GuestDevice         then x_get_tree_guest_device_kids(parent, count_only)
                         when Hash                then
                           # TreeBuilderAlertProfile - :type
                           # TreeBuilderArchived - :leaf
@@ -399,7 +402,8 @@ class TreeBuilder
                         when Condition           then x_get_tree_co_kids(parent, count_only)
                         when MiqEventDefinition  then x_get_tree_ev_kids(parent, count_only, parents)
                         when MiqPolicy           then x_get_tree_po_kids(parent, count_only)
-
+                        when MiqScsiLun          then x_get_tree_lun_kids(parent, count_only)
+                        when MiqScsiTarget       then x_get_tree_target_kids(parent, count_only)
                         when MiqSearch           then nil
                         when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
                         end

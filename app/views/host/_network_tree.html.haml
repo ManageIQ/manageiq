@@ -1,6 +1,6 @@
 -# Network or Storage Adpater Tree
 %div{:id => "#{session[:tree_name]}box", :style => "width: 100%"}
-  = render(:partial => "layouts/dynatree",
+  -# = render(:partial => "layouts/dynatree",
            :locals  => {:tree_id                     => "#{session[:tree_name]}box",
                         :tree_name                   => session[:tree_name],
                         :json_tree                   => instance_variable_get(:"@#{session[:tree_name]}"),
@@ -10,4 +10,6 @@
                         :onclick                     => "miqOnClickHostNet",
                         :exp_tree                    => true,
                         :open_close_all_on_dbl_click => true})
-
+  = render(:partial => 'shared/tree',
+                 :locals  => {:tree => @sa_tree,
+                             :name => @sa_tree.name.to_s})

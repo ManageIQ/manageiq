@@ -87,7 +87,12 @@ class HostController < ApplicationController
     when "storage_adapters"
       drop_breadcrumb(:name => _("%{name} (Storage Adapters)")% {:name => @host.name},
                       :url  => "/host/show/#{@host.id}?display=storage_adapters")
-      build_sa_tree
+      #TODO remove
+      #build_sa_tree
+
+      host = @host
+      @sa_tree = TreeBuilderStorageAdapters.new(:sa_tree, :sa, @sb, true, host)
+      self.x_active_tree = :sa_tree
 
     when "miq_templates", "vms"
       title = @display == "vms" ? _("VMs") : _("Templates")

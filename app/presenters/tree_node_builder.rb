@@ -72,6 +72,10 @@ class TreeNodeBuilder
     when DialogField          then generic_node(object.label, "dialog_field.png")
     when EmsFolder            then ems_folder_node
     when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
+    when GuestDevice          then generic_node(object.device_name,
+                                                "sa_#{object.controller_type.downcase}.png",
+                                                _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type,
+                                                                                         :name => object.device_name})
     when Host                 then generic_node(object.name, "host.png",    "#{ui_lookup(:table => "host")}: #{object.name}")
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
@@ -88,6 +92,8 @@ class TreeNodeBuilder
     when MiqReportResult      then miq_report_node(format_timezone(object.last_run_on, Time.zone, 'gtl'),
                                                    get_rr_status_image(object), object.name, object.status.downcase)
     when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
+    when MiqScsiLun           then generic_node("Karel", "Karel")
+    when MiqScsiTarget        then miq_scsi_target(object.iscsi_name, object.target)
     when MiqServer            then miq_server_node
     when MiqTemplate          then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
     when MiqAlert             then generic_node(object.description, "miq_alert.png")
@@ -260,6 +266,16 @@ class TreeNodeBuilder
     else # normal Folders
       normal_folder_node
     end
+  end
+
+  def miq_scsi_target(iscsi_name, target)
+    name = if iscsi_name.blank?
+             _("SCSI Target %{target}") % {:target => target}
+           else
+             _("SCSI Target %{target} (%{name})") % {:target => target, :name => iscsi_name}
+           end
+    target_text = name.blank? ? "[empty]" : name
+    generic_node(name, "target_scsi.png", _("Target: %{text}") % {:text => target_text})
   end
 
   def miq_server_node
