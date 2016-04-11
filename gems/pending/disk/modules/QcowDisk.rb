@@ -115,6 +115,9 @@ module QcowDisk
     @dOffset = dInfo.offset
     @downstreamDisk = dInfo.downstreamDisk
     self.diskType = "#{diskType}-#{@downstreamDisk.diskType}" if @downstreamDisk
+
+    # save the handle for Qcow disks in case of opening their parent disks
+    backing_file_handle
   end
 
   def getBase
