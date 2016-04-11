@@ -330,7 +330,6 @@ eos
   end
 
   def create_deployment(params, user)
-    byebug
     self.version = "v3"
     self.kind = params["providerType"].include?("openshiftOrigin") ? "origin" : "openshift-enterprise"
     self.method_type = params["provisionOn"]
@@ -347,6 +346,7 @@ eos
     create_deployment_authentication("ssh" => {"userid" => params["deploymentUsername"], "auth_key" => params["deploymentKey"], "public_key" => params["public_key"]}, "mode" => "ssh")
     create_deployment_authentication("rhsm" => {"userid" => params["rhnUsername"], "password" => params["rhnPassword"], "rhsm_sku" => params["rhnSKU"]}, "mode" => "rhsm")
     save!
+    byebug
     create_automation_request(generate_automation_params(params), user)
   end
 
