@@ -60,15 +60,27 @@ describe ManageIQ::Providers::Azure::CloudManager do
       @alt_client_id  = 'testuser'
       @alt_client_key = 'secret'
       @alt_tenant_id  = 'ABCDEFGHIJABCDEFGHIJ0123456789AB'
+
+      # A true thread may fail the test with VCR
+      allow(Thread).to receive(:new) do |*args, &block|
+        block.call(*args)
+        Class.new do
+          def join; end
+        end.new
+      end
+    end
+
+    after do
+      # Necessary since we're dealing with multiple cassettes
+      ::Azure::Armrest::ArmrestService.clear_caches
     end
 
     def recorded_discover(example)
       cassette_name = example.description.tr(" ", "_").delete(",").underscore
-      VCR.use_cassette(
-        "#{described_class.name.underscore}/discover/#{cassette_name}",
-        :allow_unused_http_interactions => true,
-        :decode_compressed_response     => true
-      ) { ManageIQ::Providers::Azure::CloudManager.discover(@client_id, @client_key, @tenant_id) }
+      name = "#{described_class.name.underscore}/discover/#{cassette_name}"
+      VCR.use_cassette(name, :allow_unused_http_interactions => true, :decode_compressed_response => true) do
+        ManageIQ::Providers::Azure::CloudManager.discover(@client_id, @client_key, @tenant_id)
+      end
     end
 
     def assert_region(ems, name)
