@@ -144,6 +144,22 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
+  :currencies:
+    :description: Currencies
+    :identifier: currency
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: ChargebackRateDetailCurrency
+  :measures:
+    :description: Measures
+    :identifier: measure
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: ChargebackRateDetailMeasure
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
