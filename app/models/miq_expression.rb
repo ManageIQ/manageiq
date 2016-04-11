@@ -689,9 +689,12 @@ class MiqExpression
       end
     when "not", "!"
       clause = self.class.normalize_sql_operator(operator) + " " + _to_sql(exp[operator], tz)
-    when "is null", "is not null"
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
-      clause = "(#{operands[0]} #{self.class.normalize_sql_operator(operator)})"
+    when "is null"
+      field = Field.parse(exp[operator]["field"])
+      clause = field.eq(nil).to_sql
+    when "is not null"
+      field = Field.parse(exp[operator]["field"])
+      clause = field.not_eq(nil).to_sql
     when "is empty", "is not empty"
       col      = exp[operator]["field"]
       col_type = col_details[col].nil? ? :string : col_details[col][:data_type]

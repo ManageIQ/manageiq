@@ -116,12 +116,12 @@ describe MiqExpression do
 
     it "generates the SQL for an IS NULL expression" do
       sql, * = MiqExpression.new("IS NULL" => {"field" => "Vm-name"}).to_sql
-      expect(sql).to eq("(vms.name IS NULL)")
+      expect(sql).to eq("\"vms\".\"name\" IS NULL")
     end
 
     it "generates the SQL for an IS NOT NULL expression" do
       sql, * = MiqExpression.new("IS NOT NULL" => {"field" => "Vm-name"}).to_sql
-      expect(sql).to eq("(vms.name IS NOT NULL)")
+      expect(sql).to eq("\"vms\".\"name\" IS NOT NULL")
     end
 
     it "generates the SQL for an IS EMPTY expression" do
