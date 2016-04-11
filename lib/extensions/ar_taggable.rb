@@ -36,9 +36,7 @@ module ActsAsTaggable
       tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator] || ' ')
       raise "No tags were passed to :any or :all options" if tag_names.empty?
 
-      ns = Tag.get_namespace(options)
-      fq_tag_names = tag_names.collect { |tag_name| File.join(ns, tag_name) }
-      tag_ids = Tag.where(:name => fq_tag_names).pluck(:id)
+      tag_ids = Tag.for_names(tag_names, Tag.get_namespace(options)).pluck(:id)
       # Bailout if not all tags passed in exist. (may want to do this with :any as well)
       return none if options[:all] && tag_ids.length != tag_names.length
 
