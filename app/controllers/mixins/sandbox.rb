@@ -68,6 +68,7 @@ module Sandbox
     rbac_tree
     reports_tree
     roles_tree
+    sa_tree
     sandt_tree
     savedreports_tree
     schedules_tree
