@@ -612,9 +612,8 @@ class VmConfig
         vimDs = miqvm.vim.getVimDataStore(ds)
       end
 
-      configType = "vmx"
-      require configType + "Config"
-      extend Kernel.const_get(configType.capitalize + "Config")
+      require "metadata/VmConfig/vmxConfig"
+      extend Kernel.const_get("VmxConfig")
       snapshot_file = File.join(dir, File.basename(name, ".*") + ".vmsd")
       Timeout.timeout(60) do
         process_file(convert_vmsd(vimDs.get_file_content(snapshot_file)))
