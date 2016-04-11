@@ -1,4 +1,4 @@
-require 'openstack/amqp/openstack_ceilometer_event_monitor'
+require 'openstack/events/openstack_ceilometer_event_monitor'
 
 describe OpenstackCeilometerEventMonitor do
   context "collecting events" do
@@ -36,7 +36,7 @@ describe OpenstackCeilometerEventMonitor do
           "timestamp"  => "2016-03-14T14:22:00.000"
         }
         expect(events.length).to eq 1
-        expect(events.first.class.name).to eq 'OpenstackAmqpEvent'
+        expect(events.first.class.name).to eq 'OpenstackEvent'
         expect(events.first.payload).to eq expected_payload
         subject.stop
       end

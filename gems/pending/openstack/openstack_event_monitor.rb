@@ -110,4 +110,4 @@ class OpenstackEventMonitor
 end
 
 # Dynamically load all event monitor plugins
-Dir.glob(File.join(File.dirname(__FILE__), "amqp/*event_monitor.rb")).each { |f| require f }
+Dir.glob(File.join(File.dirname(__FILE__), "events/*event_monitor.rb")).each { |f| require f }

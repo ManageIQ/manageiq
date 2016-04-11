@@ -1,4 +1,4 @@
-require 'openstack/amqp/openstack_ceilometer_event_converter'
+require 'openstack/events/openstack_ceilometer_event_converter'
 
 describe OpenstackCeilometerEventConverter do
   let(:fog_event) do

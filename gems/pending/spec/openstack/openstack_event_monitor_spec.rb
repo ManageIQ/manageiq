@@ -1,5 +1,5 @@
 require 'openstack/openstack_event_monitor'
-require 'openstack/amqp/openstack_rabbit_event_monitor'
+require 'openstack/events/openstack_rabbit_event_monitor'
 
 describe OpenstackEventMonitor do
   before :each do

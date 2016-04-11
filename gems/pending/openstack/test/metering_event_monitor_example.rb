@@ -5,7 +5,7 @@ EMS_PASSWORD.freeze = ""
 # Following lines with require seem to be broken, copy code to rails console...
 # require_relative '../../bundler_setup'
 require 'openstack/openstack_handle'
-# require 'openstack/ampq/openstack_ceilometer_event_monitor'
+# require 'openstack/events/openstack_ceilometer_event_monitor'
 
 def dump_attrs(obj, pref = "")
   unless obj.respond_to?(:attributes)

@@ -1,4 +1,4 @@
-require 'openstack/amqp/openstack_rabbit_event_monitor'
+require 'openstack/events/openstack_rabbit_event_monitor'
 
 describe OpenstackRabbitEventMonitor do
   before do
