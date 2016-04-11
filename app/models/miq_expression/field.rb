@@ -29,8 +29,6 @@ class MiqExpression::Field
     column_type == :datetime
   end
 
-  private
-
   def target
     if associations.none?
       model
@@ -38,6 +36,8 @@ class MiqExpression::Field
       associations.last.classify.constantize
     end
   end
+
+  private
 
   def column_type
     target.type_for_attribute(column).type
