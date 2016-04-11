@@ -3,8 +3,7 @@ module MiqPolicyMixin
 
   def add_policy(policy)
     ns = "/miq_policy"
-    cat = "assignment"
-    cat += "/" + policy.class.to_s.underscore
+    cat = "assignment/#{policy.class.to_s.underscore}"
     tag = policy.id.to_s
 
     tag_add(tag, :ns => ns, :cat => cat)
@@ -13,8 +12,7 @@ module MiqPolicyMixin
 
   def remove_policy(policy)
     ns = "/miq_policy"
-    cat = "assignment"
-    cat += "/" + policy.class.to_s.underscore
+    cat = "assignment/#{policy.class.to_s.underscore}"
     tag = policy.id.to_s
 
     tags = tag_list(:ns => ns, :cat => cat).split
