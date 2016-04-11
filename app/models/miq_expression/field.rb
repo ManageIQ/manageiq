@@ -39,10 +39,8 @@ class MiqExpression::Field
 
   private
 
-  delegate :arel_table, :to => :target
-
   def arel_attribute
-    arel_table[column]
+    target.arel_attribute(column)
   end
 
   def column_type
