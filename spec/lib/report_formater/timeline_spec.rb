@@ -29,3 +29,59 @@ describe ReportFormatter::ReportTimeline do
     end
   end
 end
+
+describe ReportFormatter::TimelineMessage do
+  describe '#message_html on container event' do
+    row = {}
+    let(:ems) { FactoryGirl.create(:ems_redhat, :id => 42) }
+    let(:event) do
+      FactoryGirl.create(:ems_event,
+                         :event_type            => 'CONTAINER_CREATED',
+                         :ems_id                => 6,
+                         :container_group_name  => 'hawkular-cassandra-1-wb1z6',
+                         :container_namespace   => 'openshift-infra',
+                         :container_name        => 'hawkular-cassandra-1',
+                         :ext_management_system => ems)
+    end
+
+    flags = {:ems_cloud     => false,
+             :ems_container => true,
+             :time_zone     => nil}
+    tests = {'event_type'                 => 'test timeline',
+             'ext_management_system.name' => '<a href="/ems_container/42">test timeline</a>',
+             'container_node_name'        => ''}
+
+    tests.each do |column, href|
+      it "Evaluate column #{column} content" do
+        row[column] = 'test timeline'
+        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags)
+        expect(val).to eq(href)
+      end
+    end
+  end
+
+  describe '#message_html on vm event' do
+    row = {}
+    let(:vm) { FactoryGirl.create(:vm_redhat, :id => 42) }
+    let(:event) do
+      FactoryGirl.create(:ems_event,
+                         :event_type     => 'VM_CREATED',
+                         :vm_or_template => vm)
+    end
+
+    flags = {:ems_cloud     => false,
+             :ems_container => false,
+             :time_zone     => nil}
+    tests = {'event_type'                 => 'test timeline',
+             'ext_management_system.name' => '',
+             'src_vm_name'                => '<a href="/vm/show/42">test timeline</a>'}
+
+    tests.each do |column, href|
+      it "Evaluate column #{column} content" do
+        row[column] = 'test timeline'
+        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags)
+        expect(val).to eq(href)
+      end
+    end
+  end
+end
