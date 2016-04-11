@@ -7,6 +7,7 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
     $scope.formId = tenantQuotaFormId;
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
+    $scope.model = "tenantQuotaModel";
 
     ManageIQ.angular.scope = $scope;
     $scope.newRecord = false;
@@ -35,21 +36,13 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
       $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
       miqService.sparkleOff();
     });
-
-    $scope.$watch("tenantQuotaModel", function() {
-      $scope.form = $scope.angularForm;
-      $scope.model = "tenantQuotaModel";
-    });
   };
 
   var tenantManageQuotasButtonClicked = function(buttonName, serializeFields) {
     miqService.sparkleOn();
     var url = '/ops/rbac_tenant_manage_quotas/' + tenantQuotaFormId + '?button=' + buttonName + '&divisible=' + tenantType;
-    if(serializeFields === undefined) {
-      miqService.miqAjaxButton(url);
-    } else {
-      miqService.miqAjaxButton(url, serializeFields);
-    }
+
+    miqService.miqAjaxButton(url, serializeFields);
   };
 
   $scope.cancelClicked = function() {
@@ -82,13 +75,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
     }
     tenantManageQuotasButtonClicked('save', { 'quotas' : data});
     $scope.angularForm.$setPristine(true);
-  };
-
-  $scope.toggleValueForWatch =   function(watchValue, initialValue) {
-    if($scope[watchValue] == initialValue)
-      $scope[watchValue] = "NO-OP";
-    else if($scope[watchValue] == "NO-OP")
-      $scope[watchValue] = initialValue;
   };
 
   $scope.check_quotas_changed = function() {

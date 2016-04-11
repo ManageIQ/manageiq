@@ -293,7 +293,7 @@ describe('scheduleFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=cancel');
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=cancel', undefined);
     });
   });
 

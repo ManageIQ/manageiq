@@ -52,10 +52,6 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
           miqService.sparkleOff();
         });
       }
-
-      $scope.$watch("providerForemanModel.name", function() {
-        $scope.form = $scope.angularForm;
-      });
     };
 
     $scope.canValidateBasicInfo = function () {
@@ -78,11 +74,8 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
     var providerForemanEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
       var url = '/provider_foreman/edit/' + providerForemanFormId + '?button=' + buttonName;
-      if (serializeFields === undefined) {
-        miqService.miqAjaxButton(url);
-      } else {
-        miqService.miqAjaxButton(url, serializeFields);
-      }
+
+      miqService.miqAjaxButton(url, serializeFields);
     };
 
     $scope.cancelClicked = function() {
