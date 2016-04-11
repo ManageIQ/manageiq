@@ -678,6 +678,8 @@ class ChargebackController < ApplicationController
           temp = {:cb_rate => ChargebackRate.find(@edit[:new][key])}
           model = if @edit[:new][:cbshow_typ] == "enterprise"
                     MiqEnterprise
+                  elsif @edit[:new][:cbshow_typ] == "ems_container"
+                    ExtManagementSystem
                   else
                     Object.const_get(@edit[:new][:cbshow_typ].camelize) rescue nil
                   end
@@ -706,6 +708,8 @@ class ChargebackController < ApplicationController
     @edit[:current_assignment] = ChargebackRate.get_assignments(x_node.split('-').last)
     unless @edit[:current_assignment].empty?
       @edit[:new][:cbshow_typ] =  case @edit[:current_assignment][0][:object]
+                                  when ManageIQ::Providers::ContainerManager
+                                    "ems_container"
                                   when EmsCluster
                                     "ems_cluster"
                                   when ExtManagementSystem
@@ -755,7 +759,7 @@ class ChargebackController < ApplicationController
     classification.entries.each { |e| @edit[:cb_assign][:tags][e.id.to_s] = e.description } if classification
   end
 
-  WHITELIST_INSTANCE_TYPE = %w(enterprise storage ext_management_system ems_cluster tenant).freeze
+  WHITELIST_INSTANCE_TYPE = %w(enterprise storage ext_management_system ems_cluster tenant ems_container).freeze
   NOTHING_FORM_VALUE = "nil".freeze
 
   def get_cis_all
@@ -765,14 +769,18 @@ class ChargebackController < ApplicationController
     unless WHITELIST_INSTANCE_TYPE.include?(klass)
       raise ArgumentError, "Received: #{klass}, expected one of #{WHITELIST_INSTANCE_TYPE}"
     end
-    classtype =
+    all_of_classtype =
       if klass == "enterprise"
-        MiqEnterprise
+        MiqEnterprise.all
+      elsif klass == "ext_management_system"
+        ExtManagementSystem.all.reject { |prov| prov.is_a? ManageIQ::Providers::ContainerManager }
+      elsif klass == "ems_container"
+        ManageIQ::Providers::ContainerManager.all
       else
-        klass.classify.constantize
+        klass.classify.constantize.all
       end
     @edit[:cb_assign][:hierarchy] ||= {}
-    classtype.all.each do |instance|
+    all_of_classtype.each do |instance|
       @edit[:cb_assign][:cis][instance.id] = instance.name
       next unless klass == "tenant" && instance.root?
       @edit[:cb_assign][:hierarchy][instance.id] = {}
