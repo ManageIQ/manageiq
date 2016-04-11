@@ -136,6 +136,7 @@ module Mixins
       assert_privileges("#{permission_prefix}_edit")
       @ems = model.new if params[:id] == 'new'
       @ems = find_by_id_filtered(model, params[:id]) if params[:id] != 'new'
+      default_security_protocol = @ems.default_endpoint.security_protocol ? @ems.default_endpoint.security_protocol : 'ssl'
 
       if @ems.zone.nil? || @ems.my_zone == ""
         zone = "default"
@@ -145,16 +146,15 @@ module Mixins
       amqp_userid = ""
       amqp_hostname = ""
       amqp_port = ""
+      amqp_security_protocol = ""
 
       if @ems.connection_configurations.amqp.try(:endpoint)
         amqp_hostname = @ems.connection_configurations.amqp.endpoint.hostname
         amqp_port = @ems.connection_configurations.amqp.endpoint.port
+        amqp_security_protocol = @ems.connection_configurations.amqp.endpoint.security_protocol ? @ems.connection_configurations.amqp.endpoint.security_protocol : 'ssl'
       end
       if @ems.has_authentication_type?(:amqp)
         amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
-        # fixed in PR #7157
-        # amqp_security_protocol =
-        # @ems.connections.amqp.endpoint.security_protocol ? @ems.connections.amqp.endpoint.security_protocol : 'ssl'
       end
 
       if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
@@ -178,11 +178,8 @@ module Mixins
                        :default_api_port                => @ems.connection_configurations.default.endpoint.port,
                        :amqp_api_port                   => amqp_port,
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
-                       :security_protocol               => @ems.security_protocol ? @ems.security_protocol : 'ssl',
-                       # TODO: (Julian) Seperate Security Protocals fixed in PR #7157
-                       # :default_security_protocol       =>
-                       #  @ems.default_endpoint.security_protocol ? @ems.default_endpoint.security_protocol : 'ssl',
-                       # :amqp_security_protocol          => amqp_security_protocol
+                       :default_security_protocol       => default_security_protocol,
+                       :amqp_security_protocol          => amqp_security_protocol,
                        :provider_region                 => @ems.provider_region,
                        :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0,
                        :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
@@ -212,18 +209,19 @@ module Mixins
       ems.api_version       = params[:api_version].strip if params[:api_version]
       ems.provider_id       = params[:provider_id]
       ems.zone              = Zone.find_by_name(params[:zone])
-      ems.security_protocol = params[:security_protocol].strip if params[:security_protocol]
+      ems.security_protocol = params[:default_security_protocol].strip if params[:default_security_protocol]
 
       hostname = params[:default_hostname].strip if params[:default_hostname]
       port = params[:default_api_port].strip if params[:default_api_port]
       amqp_hostname = params[:amqp_hostname].strip if params[:amqp_hostname]
       amqp_port = params[:amqp_api_port].strip if params[:amqp_api_port]
+      amqp_security_protocol = params[:amqp_security_protocol].strip if params[:amqp_security_protocol]
       default_endpoint = {}
       amqp_endpoint = {}
 
       if ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager)
-        default_endpoint = {:role => :default, :hostname => hostname, :port => port}
-        amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port}
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
+        amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
       end
 
       if ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
@@ -231,11 +229,11 @@ module Mixins
       end
 
       if ems.kind_of?(ManageIQ::Providers::Microsoft::InfraManager)
-        ems.security_protocol = params[:security_protocol]
+        ems.security_protocol = params[:default_security_protocol]
         ems.realm = params[:realm]
       elsif ems.supports_security_protocol?
         # TODO the behavior should be probably rewritten to support methods
-        ems.security_protocol = params[:security_protocol].strip if params[:security_protocol]
+        ems.security_protocol = params[:default_security_protocol].strip if params[:default_security_protocol]
       end
 
       if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
@@ -307,7 +305,7 @@ module Mixins
                      :azure_tenant_id   => params[:azure_tenant_id],
                      :port              => params[:port],
                      :api_version       => params[:api_version],
-                     :security_protocol => params[:security_protocol],
+                     :security_protocol => params[:default_security_protocol],
                      :provider_id       => params[:provider_id],
                      :zone              => params[:zone]
       }

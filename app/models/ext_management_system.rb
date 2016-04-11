@@ -104,6 +104,8 @@ class ExtManagementSystem < ApplicationRecord
            :hostname=,
            :port,
            :port=,
+           :security_protocol,
+           :security_protocol=,
            :to => :default_endpoint
 
   alias_method :address, :hostname # TODO: Remove all callers of address
@@ -111,6 +113,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
   virtual_column :hostname,                :type => :string,  :uses => :endpoints
   virtual_column :port,                    :type => :integer, :uses => :endpoints
+  virtual_column :security_protocol,       :type => :string,  :uses => :endpoints
 
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
