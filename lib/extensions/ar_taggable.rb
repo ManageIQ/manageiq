@@ -26,6 +26,12 @@ module ActsAsTaggable
   end
 
   module ClassMethods
+    # @option options :cat [String|nil] optional category for the tags
+    # @option options :ns  [String|nil] optional namespace for the tags
+
+    # @option options :any [String] list of tags that at least one is required
+    # @option options :all [String] list of tags that are all required (ignored if any is provided)
+    # @option options :separator delimiter for the tags provied by all and any
     def find_tagged_with(options = {})
       options = {:separator => ' '}.merge(options)
       options[:ns] = Tag.get_namespace(options)
