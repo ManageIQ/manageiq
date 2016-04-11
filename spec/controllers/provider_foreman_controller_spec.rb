@@ -1,8 +1,10 @@
 describe ProviderForemanController do
   render_views
+
+  let(:tags) { ["/managed/quota_max_memory/2048"] }
   before(:each) do
     @zone = EvmSpecHelper.local_miq_server.zone
-    tag = Tag.add("/managed/quota_max_memory/2048", :ns => "")
+    Tag.find_or_create_by(:name => tags.first)
 
     @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "testForeman", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
@@ -35,7 +37,7 @@ describe ProviderForemanController do
     controller.instance_variable_set(:@sb, :active_tree => :configuration_manager_providers_tree)
 
     [@configured_system, @configured_system2a, @configured_system2b, @configured_system_unprovisioned2].each do |cs|
-      cs.tag_with(tag, :namespace => '')
+      cs.tag_with(tags, :namespace => '')
     end
 
     @provider_ans = ManageIQ::Providers::AnsibleTower::Provider.create(:name => "ansibletest", :url => "10.8.96.108", :zone => @zone)
@@ -442,7 +444,7 @@ describe ProviderForemanController do
       login_as user_with_feature %w(providers_accord configured_systems_filter_accord)
     end
     it "builds foreman tree with no nodes after rbac filtering" do
-      user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
+      user_filters = {'belongs' => [], 'managed' => [tags]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       first_child = find_treenode_for_foreman_provider(@provider)
@@ -450,7 +452,7 @@ describe ProviderForemanController do
     end
 
     it "builds foreman tree with only those nodes that contain the filtered configured systems" do
-      user_filters = {'belongs' => [], 'managed' => [["/managed/quota_max_memory/2048"]]}
+      user_filters = {'belongs' => [], 'managed' => [tags]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       Classification.seed
       quota_2gb_tag = Classification.where("description" => "2GB").first

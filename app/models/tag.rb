@@ -10,13 +10,6 @@ class Tag < ApplicationRecord
     File.join(Tag.get_namespace(options), name)
   end
 
-  def self.add(list, options = {})
-    ns = Tag.get_namespace(options)
-    Tag.parse(list).each do |name|
-      Tag.find_or_create_by(:name => find_by_name(File.join(ns, name)))
-    end
-  end
-
   def self.remove(list, options = {})
     ns = Tag.get_namespace(options)
     Tag.parse(list).each do |name|
