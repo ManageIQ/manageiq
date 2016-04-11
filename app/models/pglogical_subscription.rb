@@ -14,12 +14,21 @@ class PglogicalSubscription < ActsAsArModel
     :provider_region_name => :string
   )
 
-  def self.find(*args)
-    subs = pglogical.enabled? ? pglogical.subscriptions : []
-    case args.first
-    when :all then subs.collect { |s| new(subscription_to_columns(s)) }
-    when :first, :last then subs.presence && new(subscription_to_columns(subs.send(args.first)))
-    end
+  delegate :all, :first, :last, :to => :subscriptions
+  def self.all(*_args)
+    subscriptions.collect { |s| subscription_to_object(s) }
+  end
+
+  def self.first(*_args)
+    subscription_to_object(subscriptions.first)
+  end
+
+  def self.last(*_args)
+    subscription_to_object(subscriptions.last)
+  end
+
+  def self.find(cnt, *args)
+    send(cnt, *args) if [:all, :first, :last].include?(cnt)
   end
 
   def save!
@@ -43,7 +52,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def self.delete_all
-    find(:all).each(&:delete)
+    all.each(&:delete)
   end
 
   def disable
@@ -98,6 +107,16 @@ class PglogicalSubscription < ActsAsArModel
     attrs
   end
   private_class_method :provider_node_attributes
+
+  def self.subscriptions
+    pglogical.enabled? ? pglogical.subscriptions.collect { |s| subscription_to_object(s) } : []
+  end
+  private_class_method :subscriptions
+
+  def self.subscription_to_object(s)
+    new(subscription_to_columns(s)) if s
+  end
+  private_class_method :subscription_to_object
 
   private
 
