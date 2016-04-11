@@ -1,3 +1,4 @@
+gem "net-ssh", "=4.0.0.alpha3"
 require 'net/ssh'
 
 LOCAL_BOOK = 'local_book.yaml'.freeze
@@ -53,8 +54,8 @@ def pre_deployment
               ]
   $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
   begin
-    Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
-                   :key_data => $evm.root['private_key']) do |ssh|
+    agent_socket = "/tmp/ssh_manageiq/ssh_manageiq_#{$evm.root['automation_task'].automation_request.options[:attrs][:deployment_id]}"
+    Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true, :agent_socket_factory => ->{ UNIXSocket.open(agent_socket) }) do |ssh|
       $evm.log(:info, "Connected to deployment master, ip address: #{$evm.root['deployment_master']}")
       system "scp -o 'StrictHostKeyChecking no' inventory.yaml #{$evm.root['user']}@#{$evm.root['deployment_master']}:~/"
       failed_execute = false
