@@ -18,6 +18,12 @@ class ApplicationHelper::Toolbar::StackOrchestrationTemplateCenter < Application
           t = N_('Copy this Orchestration Template as orderable'),
           t,
           :klass => ApplicationHelper::Button::OrchestrationTemplateCopyOrderable),
+        button(
+          :orchestration_templates_view,
+          'fa pficon-info fa-lg',
+          t = N_('View this Orchestration Template in Catalogs'),
+          t,
+          :klass => ApplicationHelper::Button::OrchestrationTemplateViewInCatalog),
       ]
     )
   ])

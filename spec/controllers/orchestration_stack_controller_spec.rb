@@ -130,5 +130,15 @@ describe OrchestrationStackController do
         expect(response).to render_template(:partial => "orchestration_stack/_copy_orchestration_template")
       end
     end
+
+    context "view stack's orchestration template in catalog" do
+      it "redirects to catalog controller" do
+        record = FactoryGirl.create(:orchestration_stack_cloud_with_template)
+        post :button, :params => {:id => record.id, :pressed => "orchestration_templates_view"}
+        expect(response.status).to eq(200)
+        expect(response.body).to include("window.location.href")
+        expect(response.body).to include("/catalog/ot_show/")
+      end
+    end
   end
 end

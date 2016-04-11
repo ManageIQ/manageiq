@@ -104,6 +104,9 @@ class OrchestrationStackController < ApplicationController
     elsif params[:pressed] == "orchestration_template_copy"
       orchestration_template_copy
       return
+    elsif params[:pressed] == "orchestration_templates_view"
+      orchestration_templates_view
+      return
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
@@ -257,6 +260,14 @@ class OrchestrationStackController < ApplicationController
                            :flash_message => flash_message)
         end
       end
+    end
+  end
+
+  def orchestration_templates_view
+    template = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    render :update do |page|
+      page << javascript_prologue
+      page.redirect_to(:controller => 'catalog', :action => 'ot_show', :id => template.id)
     end
   end
 
