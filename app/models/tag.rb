@@ -10,14 +10,6 @@ class Tag < ApplicationRecord
     File.join(Tag.get_namespace(options), name)
   end
 
-  def self.remove(list, options = {})
-    ns = Tag.get_namespace(options)
-    Tag.parse(list).each do |name|
-      tag = Tag.find_by_name(File.join(ns, name))
-      tag.destroy unless tag.nil?
-    end
-  end
-
   def self.tags(options = {})
     query = Tag.includes(:taggings)
     query = query.where(Tagging.arel_table[:taggable_type].eq options[:taggable_type])
