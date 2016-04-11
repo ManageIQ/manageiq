@@ -33,11 +33,10 @@ module ActsAsTaggable
     # @option options :all [String] list of tags that are all required (ignored if any is provided)
     # @option options :separator delimiter for the tags provied by all and any
     def find_tagged_with(options = {})
-      options = {:separator => ' '}.merge(options)
-      options[:ns] = Tag.get_namespace(options)
+      ns = Tag.get_namespace(options)
 
-      tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator])
-      fq_tag_names = tag_names.collect { |tag_name| File.join(options[:ns], tag_name) }
+      tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator] || ' ')
+      fq_tag_names = tag_names.collect { |tag_name| File.join(ns, tag_name) }
       raise "No tags were passed to :any or :all options" if fq_tag_names.empty?
 
       tag_ids = Tag.where(:name => fq_tag_names).pluck(:id)
