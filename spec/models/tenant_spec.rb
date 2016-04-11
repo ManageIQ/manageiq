@@ -439,6 +439,24 @@ describe Tenant do
     let(:t1_1) { FactoryGirl.create(:tenant, :name => 'T1_1', :domain => 'a.a.com', :parent => t1) }
     let(:t2_2) { FactoryGirl.create(:tenant, :name => 'T2_1', :domain => 'b.b.com', :parent => t2) }
 
+    context "reset priority" do
+      it "#reset_domain_priority_by_ordered_ids" do
+        FactoryGirl.create(:miq_ae_domain, :name => 'ManageIQ', :priority => 0,
+                           :tenant_id => root_tenant.id, :system => true)
+        FactoryGirl.create(:miq_ae_domain, :name => 'Redhat', :priority => 1,
+                           :tenant_id => root_tenant.id, :system => true)
+        dom3 = FactoryGirl.create(:miq_ae_domain, :name => 'A', :tenant_id => root_tenant.id)
+        dom4 = FactoryGirl.create(:miq_ae_domain, :name => 'B', :tenant_id => root_tenant.id)
+
+        expect(root_tenant.visible_domains.collect(&:name)).to eq(%w(B A Redhat ManageIQ))
+        ids = [dom4.id, dom3.id]
+        root_tenant.reset_domain_priority_by_ordered_ids(ids)
+        expect(root_tenant.visible_domains.collect(&:name)).to eq(%w(A B Redhat ManageIQ))
+        dom4.reload
+        expect(dom4.priority).to eq(2)
+      end
+    end
+
     context "visibility" do
       before do
         dom1
