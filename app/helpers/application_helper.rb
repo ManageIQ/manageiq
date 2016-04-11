@@ -813,12 +813,11 @@ module ApplicationHelper
        container_route container_project container_replicator container_image
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
-       host service repository storage ems_cloud ems_cluster flavor
-       ems_network security_group floating_ip cloud_subnet network_router
+       host service storage ems_cloud ems_cluster flavor ems_network
+       security_group floating_ip cloud_subnet network_router
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
-       orchestration_stack cim_base_storage_extent storage_manager
-       ).include?(@layout)
+       orchestration_stack cim_base_storage_extent storage_manager).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
@@ -1094,7 +1093,7 @@ module ApplicationHelper
                         ems_network security_group floating_ip cloud_subnet network_router
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
-                        policy policy_group policy_profile repository resource_pool retired scan_profile
+                        policy policy_group policy_profile resource_pool retired scan_profile
                         service snia_local_file_system storage storage_manager templates)
 
   def render_gtl_view_tb?
@@ -1129,13 +1128,12 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(auth_key_pair_cloud cloud_object_store_container cloud_object_store_object cloud_volume cloud_volume_snapshot
-          container_node container_service ems_container container_group ems_cloud ems_cluster container_route
-          container_project container_replicator container_image container_image_registry container_build
-          ems_infra host miq_template offline orchestration_stack persistent_volume repository ems_middleware
-          middleware_server middleware_deployment
-          ems_network security_group floating_ip cloud_subnet network_router
-          resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
+      %w(auth_key_pair_cloud cloud_object_store_container cloud_object_store_object cloud_volume cloud_volume_snapshot
+         container_node container_service ems_container container_group ems_cloud ems_cluster container_route
+         container_project container_replicator container_image container_image_registry container_build
+         ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
+         middleware_server middleware_deployment ems_network security_group floating_ip cloud_subnet network_router
+         resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
@@ -1150,7 +1148,7 @@ module ApplicationHelper
              ems_middleware middleware_server middleware_deployment flavor
              ems_network security_group floating_ip cloud_subnet network_router
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
-             ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
+             ontap_storage_system ontap_storage_volume orchestration_stack resource_pool
              scan_profile service snia_local_file_system storage
              storage_manager timeline).include?(@layout)
       @layout
@@ -1164,7 +1162,7 @@ module ApplicationHelper
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router
-                     orchestration_stack repository resource_pool retired service
+                     orchestration_stack resource_pool retired service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && tree_with_advanced_search? && !@record)

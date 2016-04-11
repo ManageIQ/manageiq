@@ -43,7 +43,6 @@ class MiqExpression
     OrchestrationStack
     OrchestrationTemplate
     PolicyEvent
-    Repository
     ResourcePool
     SecurityGroup
     Service
@@ -137,7 +136,6 @@ class MiqExpression
     operating_systems
     patches
     registry_items
-    repositories
     resource_pools
     security_groups
     service_templates
@@ -232,7 +230,6 @@ class MiqExpression
     'Host'                                        => 'host',
     'MiqGroup'                                    => 'miq_group',
     'MiqTemplate'                                 => 'miq_template',
-    'Repository'                                  => 'repository',
     'ResourcePool'                                => 'resource_pool',
     'Service'                                     => 'service',
     'Storage'                                     => 'storage',

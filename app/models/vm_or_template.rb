@@ -60,7 +60,6 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :ems_cluster
 
   belongs_to                :storage
-  has_many                  :repositories, :through => :storage
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
@@ -626,7 +625,7 @@ class VmOrTemplate < ApplicationRecord
     return nil if path.blank?
     vm_hash = {}
     begin
-      vm_hash[:name], vm_hash[:location], vm_hash[:store_type] = Repository.parse_path(path)
+      vm_hash[:name], vm_hash[:location] = repository_parse_path(path)
     rescue => err
       _log.warn("Warning: [#{err.message}]")
       vm_hash[:location] = location2uri(path)
@@ -637,6 +636,33 @@ class VmOrTemplate < ApplicationRecord
     vmobj = VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
   end
 
+  def self.repository_parse_path(path)
+    path.gsub!(/\\/, "/")
+    #it's empty string for local type
+    storage_name = ""
+                    # NAS
+    relative_path = if path.starts_with? "//"
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
+                      # path is a UNC
+                      storage_name = path.split("/")[0..3].join("/")
+                      path.split("/")[4..path.length].join("/") if path.length > 4
+                    #VMFS
+                    elsif path.starts_with? "["
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
+                      # path is a VMWare storage name
+                      /^\[(.*)\](.*)$/ =~ path
+                      storage_name = $1
+                      temp_path = $2.strip
+                      # Some esx servers add a leading "/".
+                      # This needs to be striped off to allow matching on location
+                      temp_path.sub(/^\//,'')
+                    # local
+                    else
+                      raise _("path, '%{path}', is malformed") % {:path => path}
+                      path
+                    end
+    return storage_name, (relative_path.empty? ? "/" : relative_path)
+  end
   #
   # Relationship methods
   #
@@ -1296,8 +1322,8 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specific
   # Parses a full path into the Storage and location
   def self.parse_path(path)
-    # TODO: Review the name of this method such that the return types don't conflict with those of Repository.parse_path
-    storage_name, relative_path, type = Repository.parse_path(path)
+    # TODO: Review the name of this method such that the return types don't conflict with those of self.repository_parse_path
+    storage_name, relative_path = repository_parse_path(path)
 
     storage = Storage.find_by_name(storage_name)
     if storage.nil?

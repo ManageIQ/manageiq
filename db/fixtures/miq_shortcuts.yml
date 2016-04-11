@@ -159,11 +159,6 @@
   :url: /storage/show_list
   :rbac_feature_name: storage_show_list
   :startup: true
-- :name: repositories
-  :description: Infrastructure / Repositories
-  :url: /repository/show_list
-  :rbac_feature_name: repository_show_list
-  :startup: true
 - :name: configuration_management
   :description: Infrastructure / Configuration Management
   :url: provider_foreman/explorer

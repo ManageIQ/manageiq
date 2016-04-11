@@ -184,7 +184,7 @@ module MiqReport::Generator::Html
     onclick = nil
 
     # Handle CI based report rows
-    if ['EmsCluster', 'ExtManagementSystem', 'Host', 'Repository', 'Storage', 'Vm', 'Service'].include?(db) && data_row['id']
+    if ['EmsCluster', 'ExtManagementSystem', 'Host', 'Storage', 'Vm', 'Service'].include?(db) && data_row['id']
       controller = db == "ExtManagementSystem" ? "management_system" : db.underscore
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
       title = data_row['name'] ?

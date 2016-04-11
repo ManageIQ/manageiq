@@ -51,7 +51,6 @@
   - policy_import_export
   - provider_foreman_explorer
   - pxe
-  - repository
   - resource_pool
   - rss
   - security_group
@@ -135,9 +134,6 @@
   - policy_simulation
   - pxe_image_type_view
   - pxe_server_view
-  - repository_show
-  - repository_show_list
-  - repository_tag
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -241,9 +237,6 @@
   - policy_simulation
   - pxe_image_type_view
   - pxe_server_view
-  - repository_show
-  - repository_show_list
-  - repository_tag
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -411,13 +404,6 @@
   - miq_template_tag
   - miq_template_timeline
   - pxe
-  - repository_new
-  - repository_delete
-  - repository_edit
-  - repository_refresh
-  - repository_show
-  - repository_show_list
-  - repository_tag
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -531,9 +517,6 @@
   - miq_template_timeline
   - policy_log
   - policy_simulation
-  - repository_show
-  - repository_show_list
-  - repository_tag
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -626,9 +609,6 @@
   - miq_template_timeline
   - policy_log
   - policy_simulation
-  - repository_show
-  - repository_show_list
-  - repository_tag
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -718,9 +698,6 @@
   - miq_template_snapshot
   - miq_template_tag
   - miq_template_timeline
-  - repository_show
-  - repository_show_list
-  - repository_tag
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -958,7 +935,6 @@
   - rbac_role_view
   - rbac_tenant
   - rbac_user
-  - repository
   - resource_pool
   - rss
   - security_group
@@ -1018,7 +994,6 @@
   - pxe
   - rbac_tenant_view
   - rbac_tenant_manage_quotas
-  - repository
   - resource_pool
   - rss
   - security_group
