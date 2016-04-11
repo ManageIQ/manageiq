@@ -1,6 +1,6 @@
-require_relative "./replication_helper"
-
 describe "pglogical replication" do
+  self.use_transactional_tests = false
+
   let(:slave_db_name)        { Rails.configuration.database_configuration[Rails.env]["database"] }
   let(:master_db_name)       { "#{slave_db_name}_master" }
   let(:replication_set_name) { "test_rep_set" }
