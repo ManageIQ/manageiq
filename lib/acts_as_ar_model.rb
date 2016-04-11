@@ -142,51 +142,29 @@ class ActsAsArModel
   # Find routines
   #
 
-  def self.where(*args)
-    return aar_scope.where(*args) if self.respond_to?(:aar_scope)
-    raise NotImplementedError
-  end
-
-  def self.find(*args)
-    return aar_scope.find(*args) if self.respond_to?(:aar_scope)
-    raise NotImplementedError
-  end
-
   def self.all(*args)
-    if !self.respond_to?(:aar_scope)
-      find(:all, *args)
-    elsif args.empty? || args.size == 1 && args.first.respond_to?(:empty?) && args.first.empty?
-      # avoid warnings
-      aar_scope
-    else
-      aar_scope.all(*args)
-    end
+    find(:all, *args)
   end
 
   def self.first(*args)
-    return aar_scope.first(*args) if self.respond_to?(:aar_scope)
     find(:first, *args)
   end
 
   def self.last(*args)
-    return aar_scope.last(*args) if self.respond_to?(:aar_scope)
     find(:last, *args)
   end
 
   def self.count(*args)
-    return aar_scope.count(*args) if self.respond_to?(:aar_scope)
     all(*args).size
   end
 
   def self.find_by_id(*id)
-    return aar_scope.find_by_id(*id) if self.respond_to?(:aar_scope)
     options = id.extract_options!
     options.merge!(:conditions => {:id => id.first})
     first(options)
   end
 
   def self.find_all_by_id(*ids)
-    return aar_scope.find_all_by_id(*args) if self.respond_to?(:aar_scope)
     options = ids.extract_options!
     options.merge!(:conditions => {:id => ids.flatten})
     all(options)
