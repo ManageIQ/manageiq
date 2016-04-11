@@ -642,23 +642,23 @@ class MiqExpression
     when "equal", "="
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.arel_table[field.column].eq(exp[operator]["value"]).to_sql
+      clause = field.arel_attribute.eq(exp[operator]["value"]).to_sql
     when ">"
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.arel_table[field.column].gt(exp[operator]["value"]).to_sql
+      clause = field.arel_attribute.gt(exp[operator]["value"]).to_sql
     when ">="
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.arel_table[field.column].gteq(exp[operator]["value"]).to_sql
+      clause = field.arel_attribute.gteq(exp[operator]["value"]).to_sql
     when "<"
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.arel_table[field.column].lt(exp[operator]["value"]).to_sql
+      clause = field.arel_attribute.lt(exp[operator]["value"]).to_sql
     when "<="
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.arel_table[field.column].lteq(exp[operator]["value"]).to_sql
+      clause = field.arel_attribute.lteq(exp[operator]["value"]).to_sql
     when "!=", "before", "after"
       col_type = self.class.get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if col_type == :date || col_type == :datetime

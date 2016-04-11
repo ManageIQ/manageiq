@@ -29,6 +29,10 @@ class MiqExpression::Field
     column_type == :datetime
   end
 
+  def arel_attribute
+    arel_table[column]
+  end
+
   def target
     if associations.none?
       model
