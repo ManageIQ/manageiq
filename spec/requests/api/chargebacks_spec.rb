@@ -69,6 +69,62 @@ RSpec.describe "chargebacks API" do
     expect_request_success
   end
 
+  it "can list of all currencies" do
+    currency = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+
+    api_basic_authorize
+    run_get '/api/currencies'
+
+    expect_result_resources_to_include_hrefs(
+      "resources", ["/api/currencies/#{currency.id}"]
+    )
+    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_request_success
+  end
+
+  it "can show an individual currency" do
+    currency = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+
+    api_basic_authorize
+    run_get "/api/currencies/#{currency.id}"
+
+    expect_result_to_match_hash(
+      response_hash,
+      "name" => currency.name,
+      "id"   => currency.id,
+      "href" => "/api/currencies/#{currency.id}"
+    )
+    expect_request_success
+  end
+
+  it "can list of all measures" do
+    measure = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+
+    api_basic_authorize
+    run_get '/api/measures'
+
+    expect_result_resources_to_include_hrefs(
+      "resources", ["/api/measures/#{measure.id}"]
+    )
+    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_request_success
+  end
+
+  it "can show an individual measure" do
+    measure = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+
+    api_basic_authorize
+    run_get "/api/measures/#{measure.id}"
+
+    expect_result_to_match_hash(
+      response_hash,
+      "name" => measure.name,
+      "id"   => measure.id,
+      "href" => "/api/measures/#{measure.id}",
+    )
+    expect_request_success
+  end
+
   context "with an appropriate role" do
     it "can create a new chargeback rate" do
       api_basic_authorize action_identifier(:chargebacks, :create, :collection_actions)
