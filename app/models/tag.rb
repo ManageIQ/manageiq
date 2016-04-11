@@ -86,11 +86,14 @@ class Tag < ApplicationRecord
     end
   end
 
+  # @option options :ns [String, nil]
+  # @option options :cat [String, nil] optional category to add to the end (with a slash)
+  # @return [String] downcases namespace or category
   def self.get_namespace(options)
-    options = {:ns => '/user'}.merge(options)
-    ns = options[:ns]
-    ns = "" if [:none, "none", "*", nil].include?(options[:ns])
-    options[:cat].nil? ? ns.downcase : [ns, options[:cat]].join("/").downcase
+    ns = options.fetch(:ns, '/user')
+    ns = "" if [:none, "none", "*", nil].include?(ns)
+    ns += "/" + options[:cat] if options[:cat]
+    ns.downcase
   end
 
   def self.filter_ns(tags, ns)
