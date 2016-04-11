@@ -141,6 +141,7 @@ describe('miq_application.js', function() {
       var html = '<div class="col-md-4 ui-sortable" id="col1"><div id="t_0|10000000000764" title="Drag this Tab to a new location"></div><div id="t_3|" title="Drag this Tab to a new location" class=""></div><div id="t_1|10000000000765" title="Drag this Tab to a new location"></div><div id="t_2|10000000000766" title="Drag this Tab to a new location"></div></div>'
       setFixtures(html);
     });
+
     it('updates element Id with new order', function () {
       ManageIQ.widget.dashboardUrl = 'dialog_res_reorder';
       miqUpdateElementsId($('.col-md-4'));
@@ -148,6 +149,27 @@ describe('miq_application.js', function() {
         return e.id;
       }).toArray().join(" ");
       expect(str).toEqual("t_0|10000000000764 t_1| t_2|10000000000765 t_3|10000000000766")
+    });
+  });
+
+  describe('miqSelectPickerEvent', function () {
+    beforeEach(function () {
+      var html = '<input id="miq-select-picker-1" value="bar">';
+      setFixtures(html);
+    });
+
+    it("doesn't die on null callback", function() {
+      spyOn(window, 'miqJqueryRequest').and.returnValue({
+        done: function(fn) { fn(); },
+      });
+
+      miqSelectPickerEvent('miq-select-picker-1', '/foo/');
+
+      $('#miq-select-picker-1').val('quux').trigger('change');
+
+      expect(miqJqueryRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=quux', {
+        no_encoding: true,
+      });
     });
   });
 
