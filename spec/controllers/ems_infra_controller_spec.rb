@@ -306,4 +306,49 @@ describe EmsInfraController do
       end
     end
   end
+
+  describe "#build_credentials" do
+    before(:each) do
+      @ems = FactoryGirl.create(:ems_openstack_infra)
+    end
+    context "#build_credentials only contains credentials that it supports and has a username for in params" do
+      let(:default_creds) { {:userid => "default_userid", :password => "default_password"} }
+      let(:amqp_creds)    { {:userid => "amqp_userid",    :password => "amqp_password"} }
+      let(:ssh_keypair_creds)  { {:userid => "ssh_keypair_userid", :auth_key => "ssh_keypair_password"} }
+
+      it "uses the passwords from params for validation if they exist" do
+        controller.instance_variable_set(:@_params,
+                                         :default_userid       => default_creds[:userid],
+                                         :default_password     => default_creds[:password],
+                                         :amqp_userid          => amqp_creds[:userid],
+                                         :amqp_password        => amqp_creds[:password],
+                                         :ssh_keypair_userid   => ssh_keypair_creds[:userid],
+                                         :ssh_keypair_password => ssh_keypair_creds[:auth_key])
+        expect(@ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
+        expect(@ems).to receive(:supports_authentication?).with(:ssh_keypair).and_return(true)
+        expect(@ems).to receive(:supports_authentication?).with(:oauth)
+        expect(@ems).to receive(:supports_authentication?).with(:auth_key)
+        expect(controller.send(:build_credentials, @ems)).to eq(:default     => default_creds,
+                                                                :amqp        => amqp_creds,
+                                                                :ssh_keypair => ssh_keypair_creds)
+      end
+
+      it "uses the stored passwords for validation if passwords dont exist in params" do
+        controller.instance_variable_set(:@_params,
+                                         :default_userid     => default_creds[:userid],
+                                         :amqp_userid        => amqp_creds[:userid],
+                                         :ssh_keypair_userid => ssh_keypair_creds[:userid])
+        expect(@ems).to receive(:authentication_password).and_return(default_creds[:password])
+        expect(@ems).to receive(:authentication_password).with(:amqp).and_return(amqp_creds[:password])
+        expect(@ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
+        expect(@ems).to receive(:authentication_key).with(:ssh_keypair).and_return(ssh_keypair_creds[:auth_key])
+        expect(@ems).to receive(:supports_authentication?).with(:ssh_keypair).and_return(true)
+        expect(@ems).to receive(:supports_authentication?).with(:oauth)
+        expect(@ems).to receive(:supports_authentication?).with(:auth_key)
+        expect(controller.send(:build_credentials, @ems)).to eq(:default     => default_creds,
+                                                                :amqp        => amqp_creds,
+                                                                :ssh_keypair => ssh_keypair_creds)
+      end
+    end
+  end
 end
