@@ -1228,16 +1228,21 @@ function miqInitSelectPicker() {
   $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
 }
 
-function miqSelectPickerEvent(element, url, options){
-  $('#' + element).on('change', function(){
-    var selected = $('#' + element).val();
-    options =  typeof options !== 'undefined' ? options : {};
-    options.no_encoding = true;
+function miqSelectPickerEvent(element, url, options) {
+  options = options || {};
+  options.no_encoding = true;
+  var firstarg = ! _.contains(url, '?');
 
-    var firstarg = ! _.contains(url, '?');
-    $.when(miqJqueryRequest(url + (firstarg ? '?' : '&') + element + '=' + escape(selected), options)).done(function() {
-      options.callback.call();
+  $('#' + element).on('change', function() {
+    var selected = $(this).val();
+    var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + escape(selected);
+
+    miqJqueryRequest(finalUrl, options).done(function() {
+      if (options.callback) {
+        options.callback();
+      }
     });
+
     return true;
   });
 }
