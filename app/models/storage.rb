@@ -78,8 +78,8 @@ class Storage < ApplicationRecord
       :host_storages => {:storage_id => id}).distinct.to_a
   end
 
-  def storage_cluster
-    parent.kind_of?(StorageCluster)? parent.name: nil
+  def storage_clusters
+    parents().select{ |parent| parent.kind_of?(StorageCluster) }
   end
 
   def ext_management_systems_in_zone(zone_name)

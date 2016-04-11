@@ -1042,7 +1042,10 @@ class MiqRequestWorkflow
   end
 
   def storage_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name, :free_space, :total_space, :storage_domain_type, :storage_cluster])
+    storage_cluster = ci.storage_clusters.detect{ |cluster| cluster.ems_id == get_source_and_targets[:ems].try(:id) }
+    hash_struct = build_ci_hash_struct(ci, [:name, :free_space, :total_space, :storage_domain_type])
+    hash_struct.storage_cluster = storage_cluster.nil?? nil : storage_cluster.name
+    hash_struct
   end
 
   def snapshot_to_hash_struct(ci)
