@@ -476,6 +476,7 @@ module UiConstants
     "enterprise"            => _("The Enterprise"),
     "ext_management_system" => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ext_management_systems")},
     "ems_cluster"           => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ems_cluster")},
+    "ems_container"         => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "ems_container")},
     "vm-tags"               => _("Tagged %{tables}") % {:tables => ui_lookup(:tables => "vm")},
     "tenant"                => _("Tenants")
   }
