@@ -1501,7 +1501,7 @@ module VmCommon
           options.merge!({:association => "#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent => rec})
           options[:where_clause] = MiqExpression.merge_where_clauses(
             options[:where_clause],
-            "NOT #{VmOrTemplate::ARCHIVED_CONDITIONS} OR #{VmOrTemplate::ORPHANED_CONDITIONS}"
+            "(NOT (#{VmOrTemplate::ARCHIVED_CONDITIONS})) AND (NOT (#{VmOrTemplate::ORPHANED_CONDITIONS}))"
           )
           process_show_list(options)
           model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model => rec.class.base_class.to_s)
