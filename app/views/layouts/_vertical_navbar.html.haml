@@ -51,5 +51,6 @@
                           = _(menu_item.name)
 :javascript
   $(function () {
+    $('.navbar-toggle').off('click');
     $().setupVerticalTertiaryNavigation(true);
   });
