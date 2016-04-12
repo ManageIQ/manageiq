@@ -3,6 +3,9 @@ describe('containerTopologyController', function() {
     var mock_data =  getJSONFixture('container_topology_response.json');
     var replicator = { id:"396086e5-7b0d-11e5-8286-18037327aaeb",  item:{display_kind:"Replicator", name:"replicator1", kind:"ContainerReplicator", id:"396086e5-7b0d-11e5-8286-18037327aaeb", miq_id:"10"}};
     var atomic_ent_provider = { id:"4",  item:{display_kind:"AtomicEnterprise", name:"myProvider", kind:"ContainerManager", id:"4", miq_id:"4"}};
+    var openshift = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
+    var vm = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
+    var pod = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3"}};
 
     beforeEach(module('topologyApp'));
 
@@ -42,28 +45,22 @@ describe('containerTopologyController', function() {
 
     describe('the topology gets correct icons', function() {
       it('in graph elements', function() {
-        var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2"}};
-        expect($controller.getIcon(d).icon).toContain("/assets/svg/vendor-openshift");
-        expect($controller.getIcon(d).type).toEqual("image");
+        expect($controller.getIcon(openshift).icon).toContain("/assets/svg/vendor-openshift");
+        expect($controller.getIcon(openshift).type).toEqual("image");
         expect($controller.getIcon(atomic_ent_provider).icon).toContain("/assets/svg/vendor-atomic_enterprise");
-        d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3"}};
-        expect($controller.getIcon(d).icon).toEqual("\uF1B3");
-        expect($controller.getIcon(d).type).toEqual("glyph");
-        d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4"}};
-        expect($controller.getIcon(d).icon).toEqual("\uE90f");
+        expect($controller.getIcon(pod).icon).toEqual("\uF1B3");
+        expect($controller.getIcon(pod).type).toEqual("glyph");
+        expect($controller.getIcon(vm).icon).toEqual("\uE90f");
         expect($controller.getIcon(replicator).icon).toEqual("\uE624");
       });
     });
 
     describe('dimensions are returned correctly', function() {
       it('of all objects', function() {
-        var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
-        expect($controller.getDimensions(d)).toEqual({ x: -20, y: -20, r: 28 });
+        expect($controller.getDimensions(openshift)).toEqual({ x: -20, y: -20, r: 28 });
         expect($controller.getDimensions(atomic_ent_provider)).toEqual({ x: -20, y: -20, r: 28 });
-        d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30"}};
-        expect($controller.getDimensions(d)).toEqual({ x: 1, y: 6, r: 17 });
-        d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
-        expect($controller.getDimensions(d)).toEqual({ x: 0, y: 9, r: 21 });
+        expect($controller.getDimensions(pod)).toEqual({ x: 1, y: 6, r: 17 });
+        expect($controller.getDimensions(vm)).toEqual({ x: 0, y: 9, r: 21 });
         expect($controller.getDimensions(replicator)).toEqual({ x: -1, y: 8, r: 17 });
       });
     });
