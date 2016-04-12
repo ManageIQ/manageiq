@@ -159,14 +159,10 @@ module Mixins
 
       ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
 
-      if @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
+      if @ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager) || @ems.id
         security_protocol = @ems.security_protocol ? @ems.security_protocol : 'ssl'
       else
-        if @ems.id
-          security_protocol = @ems.security_protocol ? @ems.security_protocol : 'ssl'
-        else
-          security_protocol = 'kerberos'
-        end
+        security_protocol = 'kerberos'
       end
 
       @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
@@ -214,22 +210,22 @@ module Mixins
                        :ems_controller                  => controller_name
       } if controller_name == "ems_cloud"
 
-      render :json => {:name                            => @ems.name,
-                       :emstype                         => @ems.emstype,
-                       :zone                            => zone,
-                       :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
-                       :hostname                        => @ems.hostname,
-                       :api_port                        => @ems.port,
-                       :api_version                     => @ems.api_version,
-                       :security_protocol               => security_protocol,
-                       :provider_region                 => @ems.provider_region,
-                       :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
-                       :amqp_userid                     => amqp_userid,
-                       :ssh_keypair_userid              => ssh_keypair_userid,
-                       :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
-                       :host_default_vnc_port_start     => host_default_vnc_port_start ? host_default_vnc_port_start : "",
-                       :host_default_vnc_port_end       => host_default_vnc_port_end ? host_default_vnc_port_end : "",
-                       :ems_controller                  => controller_name
+      render :json => {:name                        => @ems.name,
+                       :emstype                     => @ems.emstype,
+                       :zone                        => zone,
+                       :provider_id                 => @ems.provider_id ? @ems.provider_id : "",
+                       :hostname                    => @ems.hostname,
+                       :api_port                    => @ems.port,
+                       :api_version                 => @ems.api_version,
+                       :security_protocol           => security_protocol,
+                       :provider_region             => @ems.provider_region,
+                       :default_userid              => @ems.authentication_userid ? @ems.authentication_userid : "",
+                       :amqp_userid                 => amqp_userid,
+                       :ssh_keypair_userid          => ssh_keypair_userid,
+                       :emstype_vm                  => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
+                       :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
+                       :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
+                       :ems_controller              => controller_name
       } if controller_name == "ems_infra"
     end
 

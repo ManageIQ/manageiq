@@ -723,7 +723,7 @@ module EmsCommon
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:protocols] = retrieve_openstack_security_protocols
       else
-        @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
+        @edit[:protocols] = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
       end
     end
     @edit[:new][:port] = params[:port] if params[:port]
