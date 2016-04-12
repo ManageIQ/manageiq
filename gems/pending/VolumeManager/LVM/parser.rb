@@ -29,7 +29,7 @@ class Lvm2MdParser
     md.lines do |line|
       line.strip!
       level -= 1 if line[0, 1] == HASH_END || line[0, 1] == ARRAY_END
-      $log.info((level > 0 ? "    " * level : "") + line)
+      $log.debug((level > 0 ? "    " * level : "") + line)
       level += 1 if line[-1, 1] == HASH_START || line[-1, 1] == ARRAY_START
     end
   end
