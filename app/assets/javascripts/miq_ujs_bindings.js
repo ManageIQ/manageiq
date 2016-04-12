@@ -53,11 +53,20 @@ $(document).ready(function () {
   });
 
   // Bind in the observe support. If interval is configured, use the observe_field function
+  var attemptAutoRefreshTrigger = function(parms) {
+    return function() {
+      if (parms.auto_refresh === true) {
+        dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+      }
+    }
+  };
+
   $(document).on('focus', '[data-miq_observe]', function () {
     var parms = $.parseJSON(this.getAttribute('data-miq_observe'));
     var interval = parms.interval;
     var url = parms.url;
     var submit = parms.submit;
+
     if (typeof interval == "undefined") {
       // No interval passed, use event observer
       var el = $(this);
@@ -80,31 +89,23 @@ $(document).ready(function () {
         if (el.attr('data-miq_sparkle_off')) {
           options.complete = true;
         }
-        $.when(miqJqueryRequest(url, options)).done(function() {
-          if (parms.auto_refresh === true) {
-            dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-          }
-        });
+
+        $.when(miqJqueryRequest(url, options)).done(attemptAutoRefreshTrigger(parms));
       });
     } else {
       $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
       var el = $(this);
       el.observe_field(interval, function () {
-        var attemptAutoRefreshTrigger = function() {
-          if (parms.auto_refresh === true) {
-            dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-          }
-        };
         var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
         if (typeof submit != "undefined") {
           // If submit element passed in
-          $.when(miqJqueryRequest(url, {data: miqSerializeForm(submit)})).done(attemptAutoRefreshTrigger);
+          $.when(miqJqueryRequest(url, {data: miqSerializeForm(submit)})).done(attemptAutoRefreshTrigger(parms));
         } else if (oneTrans) {
-          $.when(miqSendOneTrans(url)).done(attemptAutoRefreshTrigger);
+          $.when(miqSendOneTrans(url)).done(attemptAutoRefreshTrigger(parms));
         } else {
           // tack on the id and value to the URL
           var urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
-          $.when(miqJqueryRequest(urlstring, {no_encoding: true})).done(attemptAutoRefreshTrigger);
+          $.when(miqJqueryRequest(urlstring, {no_encoding: true})).done(attemptAutoRefreshTrigger(parms));
         }
       });
     }
@@ -124,11 +125,8 @@ $(document).ready(function () {
     if (el.attr('data-miq_sparkle_off')) {
       options.complete = true;
     }
-    $.when(miqJqueryRequest(url, options)).done(function() {
-      if (parms.auto_refresh === true) {
-        dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
-      }
-    });
+
+    $.when(miqJqueryRequest(url, options)).done(attemptAutoRefreshTrigger(parms));
 
     event.stopPropagation();
   });
