@@ -87,15 +87,15 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
-  describe "#table_name" do
-    it "returns the table name of the model when there are no associations" do
+  describe "#target" do
+    it "returns the model when there are no associations" do
       field = described_class.new(Vm, [], "name")
-      expect(field.table_name).to eq("vms")
+      expect(field.target).to eq(Vm)
     end
 
-    it "returns the table name of the target association if there are associations" do
+    it "returns the model of the target association if there are associations" do
       field = described_class.new(Vm, ["guest_applications"], "name")
-      expect(field.table_name).to eq("guest_applications")
+      expect(field.target).to eq(GuestApplication)
     end
   end
 end

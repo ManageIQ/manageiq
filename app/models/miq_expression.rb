@@ -642,28 +642,23 @@ class MiqExpression
     when "equal", "="
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      table = Arel::Table.new(field.table_name)
-      clause = table[field.column].eq(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
+      clause = field.eq(exp[operator]["value"]).to_sql
     when ">"
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      table = Arel::Table.new(field.table_name)
-      clause = table[field.column].gt(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
+      clause = field.gt(exp[operator]["value"]).to_sql
     when ">="
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      table = Arel::Table.new(field.table_name)
-      clause = table[field.column].gteq(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
+      clause = field.gteq(exp[operator]["value"]).to_sql
     when "<"
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      table = Arel::Table.new(field.table_name)
-      clause = table[field.column].lt(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
+      clause = field.lt(exp[operator]["value"]).to_sql
     when "<="
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      table = Arel::Table.new(field.table_name)
-      clause = table[field.column].lteq(Arel::Nodes::Quoted.new(exp[operator]["value"])).to_sql
+      clause = field.lteq(exp[operator]["value"]).to_sql
     when "!=", "before", "after"
       col_type = self.class.get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if col_type == :date || col_type == :datetime
