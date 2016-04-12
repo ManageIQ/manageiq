@@ -347,7 +347,7 @@ module ApplicationController::MiqRequestMethods
       "name"            => _("Name"),
       "free_space"      => _("Free Space"),
       "total_space"     => _("Total Space"),
-      "storage_cluster" => "Storage Cluster",
+      "storage_cluster" => _("Storage Cluster"),
     }
 
     integer_fields = %w(free_space total_space)

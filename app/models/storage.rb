@@ -79,7 +79,7 @@ class Storage < ApplicationRecord
   end
 
   def storage_clusters
-    parents().select{ |parent| parent.kind_of?(StorageCluster) }
+    parents.select { |parent| parent.kind_of?(StorageCluster) }
   end
 
   def ext_management_systems_in_zone(zone_name)
