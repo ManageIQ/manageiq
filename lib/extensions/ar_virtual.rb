@@ -20,9 +20,42 @@ module VirtualIncludes
   end
 end
 
+module VirtualArel
+  extend ActiveSupport::Concern
+
+  included do
+    class_attribute :_virtual_arel, :instance_accessor => false
+    self._virtual_arel = {}
+  end
+
+  module ClassMethods
+    # not thrilled with this
+    def arel_attribute_alias?(column_name)
+      _virtual_arel.key?(column_name.to_s)
+    end
+
+    def arel_attribute(column_name, arel_table = self.arel_table)
+      load_schema
+      if virtual_attribute?(column_name)
+        col = _virtual_arel[column_name.to_s]
+        col.call(arel_table) if col
+      else
+        super
+      end
+    end
+
+    private
+
+    def define_virtual_arel(name, arel)
+      self._virtual_arel = _virtual_arel.merge(name => arel)
+    end
+  end
+end
+
 module VirtualAttributes
   extend ActiveSupport::Concern
   include VirtualIncludes
+  include VirtualArel
 
   module Type
     # TODO: do we actually need symbol types?
@@ -101,16 +134,17 @@ module VirtualAttributes
 
       virtual_attributes_to_define.each do |name, (type, options)|
         if type.is_a?(Symbol)
-          type = ActiveRecord::Type.lookup(type, **options.except(:uses))
+          type = ActiveRecord::Type.lookup(type, **options.except(:uses, :arel))
         end
 
-        define_virtual_attribute(name, type, **options.slice(:uses))
+        define_virtual_attribute(name, type, **options.slice(:uses, :arel))
       end
     end
 
-    def define_virtual_attribute(name, cast_type, uses: nil)
+    def define_virtual_attribute(name, cast_type, uses: nil, arel: nil)
       attribute_types[name] = cast_type
-      define_virtual_include name, uses
+      define_virtual_include name, uses if uses
+      define_virtual_arel name, arel if arel
     end
   end
 end

@@ -125,7 +125,6 @@ class VmOrTemplate < ApplicationRecord
   include ReportableMixin
 
   virtual_column :active,                               :type => :boolean
-  virtual_column :archived,                             :type => :boolean
   virtual_column :orphaned,                             :type => :boolean
   virtual_column :disconnected,                         :type => :boolean
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
@@ -1376,6 +1375,7 @@ class VmOrTemplate < ApplicationRecord
     ems_id.nil? && storage_id.nil?
   end
   alias_method :archived, :archived?
+  virtual_attribute :archived, :boolean, :arel => ->(t) { t[:ems_id].eq(nil).and(t[:storage_id].eq(nil)) }
 
   def orphaned?
     ems_id.nil? && !storage_id.nil?
