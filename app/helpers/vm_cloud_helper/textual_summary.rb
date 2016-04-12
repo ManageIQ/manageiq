@@ -10,8 +10,9 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history security_groups
-       service cloud_network cloud_subnet orchestration_stack floating_ips cloud_subnets network_routers)
+    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history service
+       cloud_network cloud_subnet orchestration_stack cloud_networks cloud_subnets network_routers security_groups
+       floating_ips network_ports)
   end
 
   def textual_group_template_cloud_relationships
@@ -568,6 +569,30 @@ module VmCloudHelper::TextualSummary
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:action => 'cloud_subnets', :id => @record, :display => "cloud_subnets")
+    end
+    h
+  end
+
+  def textual_network_ports
+    label = ui_lookup(:tables => "network_port")
+    num   = @record.number_of(:network_ports)
+    h     = {:label => label, :image => "network_port", :value => num}
+    if num > 0 && role_allows(:feature => "network_port_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'network_ports', :id => @record, :display => "network_ports")
+    end
+    h
+  end
+
+  def textual_cloud_networks
+    label = ui_lookup(:tables => "cloud_network")
+    num   = @record.number_of(:cloud_networks)
+    h     = {:label => label, :image => "cloud_network", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_network_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'cloud_networks', :id => @record, :display => "cloud_networks")
     end
     h
   end
