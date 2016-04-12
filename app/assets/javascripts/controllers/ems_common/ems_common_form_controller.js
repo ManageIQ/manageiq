@@ -31,7 +31,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       service_account: '',
       emstype_vm: false,
       ems_common: true,
-      azure_tenant_id: ''
+      azure_tenant_id: '',
+      subscription: ''
     };
     $scope.formId = emsCommonFormId;
     $scope.afterGet = false;
@@ -91,6 +92,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.service_account                 = data.service_account;
 
         $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
+        $scope.emsCommonModel.subscription                    = data.subscription;
 
         if($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;

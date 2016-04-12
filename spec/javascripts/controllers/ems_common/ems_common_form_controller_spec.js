@@ -214,6 +214,7 @@ describe('emsCommonFormController', function() {
       id: 12345,
       name: 'Azure',
       azure_tenant_id: '10.22.33.44',
+      subscription: '12345659-1234-41a4-a7ad-3ce6d1091234',
       emstype: 'azure',
       zone: 'default',
       emstype_vm: false,
@@ -246,6 +247,10 @@ describe('emsCommonFormController', function() {
 
     it('sets the azure_tenant_id', function () {
       expect($scope.emsCommonModel.azure_tenant_id).toEqual('10.22.33.44');
+    })
+
+    it('sets the subscription', function () {
+      expect($scope.emsCommonModel.subscription).toEqual('12345659-1234-41a4-a7ad-3ce6d1091234');
     });
 
     it('sets the zone to default', function() {
