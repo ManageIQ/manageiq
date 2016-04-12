@@ -19,6 +19,10 @@ class EmsInfraController < ApplicationController
     ems_infra_path(*args)
   end
 
+  def new_ems_path
+    new_ems_infra_path
+  end
+
   def index
     redirect_to :action => 'show_list'
   end
