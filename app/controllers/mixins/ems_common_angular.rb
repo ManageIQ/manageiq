@@ -245,7 +245,7 @@ module Mixins
 
       if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
         ems.azure_tenant_id = params[:azure_tenant_id]
-        ems.subscription    = params[:subscription]
+        ems.subscription    = params[:subscription] unless params[:subscription].blank?
       end
 
       build_connection(ems, default_endpoint, amqp_endpoint)
