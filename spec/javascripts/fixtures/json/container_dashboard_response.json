@@ -46,23 +46,19 @@
       "nodeCpuUsage": [
         {
           "id": 1,
-          "info": {
-            "node": "oshift01.eng.lab.tlv.redhat.com",
-            "provider": "Molecule",
-            "total": 2
-          },
-          "value": 0.18
+          "node": "oshift01.eng.lab.tlv.redhat.com",
+          "provider": "Molecule",
+          "total": 2,
+          "percent": 0.18
         }
       ],
       "nodeMemoryUsage":[
         {
           "id":1,
-          "info":{
-            "node":"oshift01.eng.lab.tlv.redhat.com",
-            "provider":"Molecule",
-            "total": 7822
-          },
-          "value": 0.82
+          "node":"oshift01.eng.lab.tlv.redhat.com",
+          "provider":"Molecule",
+          "total": 7822,
+          "percent": 0.82
         }
       ]
     },
