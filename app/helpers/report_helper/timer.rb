@@ -18,9 +18,10 @@ module ReportHelper
       %w(typ moths weeks days hours).each do |i|
         self[i] = params[:"timer_#{i}"] if params[:"timer_#{i}"]
       end
+      %w(start_hour start_min).each do |i|
+        self[i] = params[i.to_sym] if params[i.to_sym]
+      end
       self.start_date = params[:miq_date_1] if params[:miq_date_1]
-      self.start_hour = params[:start_hour] if params[:start_hour]
-      self.start_min = params[:start_min] if params[:start_min]
       if params[:time_zone]
         t = Time.now.in_time_zone(params[:timezone]) + 1.day # Default date/time to tomorrow in selected time zone
         self.start_date = "#{t.month}/#{t.day}/#{t.year}" # Reset the start date
