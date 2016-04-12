@@ -3,7 +3,8 @@ module CloudTenantHelper::TextualSummary
   # Groups
   #
   def textual_group_relationships
-    %i(ems_cloud security_groups instances images cloud_object_store_containers cloud_volumes cloud_volume_snapshots)
+    %i(ems_cloud security_groups instances images cloud_object_store_containers cloud_volumes cloud_volume_snapshots
+       cloud_networks cloud_subnets network_routers security_groups floating_ips network_ports)
   end
 
   def textual_group_tags
@@ -31,7 +32,7 @@ module CloudTenantHelper::TextualSummary
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => 'instances')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
@@ -42,7 +43,7 @@ module CloudTenantHelper::TextualSummary
     num   = @record.number_of(:miq_templates)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => 'images')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'images')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
@@ -66,7 +67,7 @@ module CloudTenantHelper::TextualSummary
     h     = {:label => label, :image => "cloud_volume", :value => num}
     if num > 0 && role_allows(:feature => "cloud_volume_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
-      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => "cloud_volumes")
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => "cloud_volumes")
     end
     h
   end
@@ -77,7 +78,7 @@ module CloudTenantHelper::TextualSummary
     h     = {:label => label, :image => "cloud_volume_snapshot", :value => num}
     if num > 0 && role_allows(:feature => "cloud_volume_snapshot_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
-      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => "cloud_volume_snapshots")
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => "cloud_volume_snapshots")
     end
     h
   end
@@ -87,9 +88,32 @@ module CloudTenantHelper::TextualSummary
     num   = @record.number_of(:cloud_object_store_containers)
     h     = {:label => label, :image => "cloud_object_store_container", :value => num}
     if num > 0 && role_allows(:feature => "cloud_object_store_container_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @cloud_tenant, :display => 'cloud_object_store_containers')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_object_store_containers')
       h[:title] = _("Show all %{models}") % {:models => label}
     end
     h
+  end
+
+  def textual_security_groups
+    @record.security_groups
+  end
+
+  def textual_floating_ips
+    @record.floating_ips
+  end
+
+  def textual_network_routers
+    @record.network_routers
+  end
+
+  def textual_network_ports
+    @record.network_ports
+  end
+
+  def textual_cloud_networks
+    @record.cloud_networks
+  end
+  def textual_cloud_subnets
+    @record.cloud_subnets
   end
 end

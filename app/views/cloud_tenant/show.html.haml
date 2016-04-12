@@ -6,8 +6,10 @@
   - elsif @showtype == "download_pdf"
     = render :partial => "layouts/show_pdf"
   - else
-    - if %w(instances images security_groups cloud_object_store_containers cloud_volumes cloud_volume_snapshots).include?(@display) && @showtype != "compare"
-      = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@cloud_tenant.id}"}
+    - arr = %w(floating_ips network_ports cloud_tenants cloud_networks cloud_subnets network_routers instances images)
+    - arr.concat(%w(security_groups cloud_object_store_containers cloud_volumes cloud_volume_snapshots))
+    - if arr.include?(@display) && @showtype != "compare"
+      = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
     - elsif @showtype == "compare"
       = render :partial => "layouts/compare"
     - elsif @showtype == "drift_history"
