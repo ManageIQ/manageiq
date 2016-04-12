@@ -1,21 +1,21 @@
 require "ansible_tower_client"
 
 describe ManageIQ::Providers::AnsibleTower::Provider do
+  subject { FactoryGirl.build(:provider_ansible_tower) }
+
   describe "#connect" do
-    let(:provider) { FactoryGirl.build(:provider_ansible_tower) }
-    let(:attrs)    { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER} }
+    let(:attrs) { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER} }
 
     it "with no port" do
       expect(AnsibleTowerClient::Connection).to receive(:new).with(attrs)
-      provider.connect(attrs)
+      subject.connect(attrs)
     end
 
     it "with a port" do
-      provider.url     = "example.com:555"
       attrs[:base_url] = "example.com:555"
 
       expect(AnsibleTowerClient::Connection).to receive(:new).with(attrs)
-      provider.connect(attrs)
+      subject.connect(attrs)
     end
   end
 
@@ -40,5 +40,22 @@ describe ManageIQ::Providers::AnsibleTower::Provider do
       expect(OperatingSystem.count).to       eq(0)
       expect(Hardware.count).to              eq(0)
     end
+  end
+
+  context "#url=" do
+    it "with full URL" do
+      subject.url = "https://server.example.com:1234/api/v1"
+      expect(subject.url).to eq("https://server.example.com:1234/api/v1")
+    end
+
+    it "missing scheme" do
+      subject.url = "server.example.com:1234/api/v1"
+      expect(subject.url).to eq("https://server.example.com:1234/api/v1")
+    end
+  end
+
+  it "with only hostname" do
+    subject.url = "server.example.com"
+    expect(subject.url).to eq("https://server.example.com/api/v1")
   end
 end

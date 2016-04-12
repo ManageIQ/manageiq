@@ -7,9 +7,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
 
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
-  delegate :url,
-           :url=,
-           :to => :default_endpoint
+  delegate :url, :to => :default_endpoint
 
   virtual_column :url, :type => :string, :uses => :endpoints
 
@@ -88,7 +86,18 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     EmsRefresh.queue_refresh(Array.wrap(provider_ids).collect { |id| [base_class, id] })
   end
 
+  def url=(new_url)
+    new_url  = "https://#{new_url}" unless new_url =~ %r{\Ahttps?:\/\/} # HACK: URI can't properly parse a URL with no scheme
+    uri      = URI(new_url)
+    uri.path = default_api_path if uri.path.blank?
+    default_endpoint.url = uri.to_s
+  end
+
   private
+
+  def default_api_path
+    "/api/v1".freeze
+  end
 
   def ensure_managers
     build_configuration_manager unless configuration_manager
