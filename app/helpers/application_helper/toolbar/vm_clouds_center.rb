@@ -153,7 +153,7 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           t = N_('Migrate selected Instance'),
           t,
           :url_parms => 'main_div',
-          :enabled   => 'false',
+          :enabled   => false,
           :onwhen    => '1')
       ]
     ),
