@@ -40,6 +40,18 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    sqlite-devel            \
                    sysvinit-tools          \
                    which                   \
+                   httpd                   \
+                   mod_ssl                 \
+                   mod_auth_kerb           \
+                   mod_authnz_pam          \
+                   mod_intercept_form_submit \
+                   mod_lookup_identity     \
+                   initscripts             \
+                   npm                     \
+                   chrony                  \
+                   psmisc                  \
+                   lvm2                    \
+                   openldap-clients        \
                    &&                      \
     yum clean all
 
@@ -93,7 +105,7 @@ RUN ln -s /manageiq/bin/evmserver.sh /usr/bin && \
 RUN systemctl enable evmserverd memcached
 
 ## Expose required container ports
-EXPOSE 3000 4000 5900-5999
+EXPOSE 80 443 3000 4000 5900-5999
 
 # Atomic Labels
 # The UNINSTALL label by DEFAULT will attempt to delete a container (rm) and image (rmi) if the container NAME is the same as the actual IMAGE
@@ -115,6 +127,8 @@ LABEL name="manageiq" \
                     --name ${NAME}_run \
                     -v /etc/localtime:/etc/localtime:ro \
                     --volumes-from ${NAME}_volume \
+                    -p 80:80 \
+                    -p 443:443 \
                     -p 3000:3000 \
                     -p 4000:4000 \
                     -p 5900-5999:5900-5999 \
