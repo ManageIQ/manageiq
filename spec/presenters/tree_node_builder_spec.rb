@@ -273,7 +273,9 @@ describe TreeNodeBuilder do
     end
 
     it 'ServiceTemplate node' do
-      template = FactoryGirl.build(:service_template, :name => 'test template')
+      template = FactoryGirl.build(:service_template,
+        :name   => 'test template',
+        :tenant => FactoryGirl.create(:tenant))
       node = TreeNodeBuilder.build(template, nil, {})
       expect(node).not_to be_nil
     end
