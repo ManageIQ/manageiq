@@ -79,6 +79,29 @@ module ManageIQ::Providers
                                      authentication_password('default'))
     end
 
+    def self.raw_operations_connect(hostname, port, username, password)
+      require 'hawkular_all'
+      host_port = URI::HTTP.build(:host => hostname, :port => port.to_i).to_s
+      host_port.sub!('http://', '') # Api can't internally deal with the schema
+      credentials = {:username => username, :password => password}
+      ::Hawkular::Operations::OperationsClient.new(:host => host_port, :credentials => credentials)
+    end
+
+    def operations_connect
+      self.class.raw_operations_connect(hostname,
+                                        port,
+                                        authentication_userid('default'),
+                                        authentication_password('default'))
+    end
+
+    def reload_middleware_server(ems_ref)
+      run_generic_operation(:Reload, ems_ref)
+    end
+
+    def stop_middleware_server(ems_ref)
+      run_generic_operation(:Shutdown, ems_ref)
+    end
+
     # UI methods for determining availability of fields
     def supports_port?
       true
@@ -90,6 +113,34 @@ module ManageIQ::Providers
 
     def self.description
       @description ||= "Hawkular".freeze
+    end
+
+    private
+
+    # Trigger running a (Hawkular) operation on the
+    # selected target server. This server is identified
+    # by ems_ref, which in Hawkular terms is the
+    # fully qualified resource path from Hawkular inventory
+    def run_generic_operation(operation, ems_ref)
+      client = operations_connect
+
+      the_operation = {
+        :operationName => operation,
+        :resourcePath  => ems_ref.to_s
+      }
+
+      actual_data = {}
+      client.invoke_generic_operation(the_operation) do |on|
+        on.success do |data|
+          _log.debug "Success on websocket-operation #{data}"
+          actual_data[:data] = data
+        end
+        on.failure do |error|
+          actual_data[:data] = {}
+          actual_data[:error] = error
+          _log.error 'error callback was called, reason: ' + error.to_s
+        end
+      end
     end
   end
 end
