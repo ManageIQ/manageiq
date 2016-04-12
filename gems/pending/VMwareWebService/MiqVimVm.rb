@@ -12,14 +12,19 @@ require 'vmware/vcenter_thumb_print'
 class MiqVimVm
   include MiqVimVdlVcConnectionMod
 
-  EVM_SNAPSHOT_NAME    = "EvmSnapshot" # TODO: externalize - not VIM specific
-  CH_SNAPSHOT_NAME     = /^Consolidate Helper/
-  VCB_SNAPSHOT_NAME    = '_VCB-BACKUP_'
-  NETAPP_SNAPSHOT_NAME = /^smvi/
+  EVM_SNAPSHOT_NAME         = "EvmSnapshot".freeze # TODO: externalize - not VIM specific
+  CH_SNAPSHOT_NAME          = /^Consolidate Helper/
+  VCB_SNAPSHOT_NAME         = '_VCB-BACKUP_'.freeze
+  NETAPP_SNAPSHOT_NAME      = /^smvi/
+  VIRTUAL_SCSI_CONTROLLERS  = %w( VirtualBusLogicController
+                                  VirtualLsiLogicController
+                                  VirtualLsiLogicSASController
+                                  ParaVirtualSCSIController
+                                ).freeze
 
   attr_reader :name, :localPath, :dsPath, :hostSystem, :uuid, :vmh, :devices, :invObj, :annotation, :customValues, :vmMor
 
-  MIQ_ALARM_PFX = "MiqControl"
+  MIQ_ALARM_PFX = "MiqControl".freeze
 
   def initialize(invObj, vmh)
     @invObj                 = invObj
@@ -850,25 +855,18 @@ class MiqVimVm
   def getScsiCandU
     devs = getProp("config.hardware")["config"]["hardware"]["device"]
     ctrlrHash = {}
-    devs.each do |dev|
-      next unless (key = dev["key"])
-      next unless dev["deviceInfo"]
-      next unless (label = dev["deviceInfo"]["label"])
-      ctrlrHash[key] = 0 if label =~ /^SCSI\s[Cc]ontroller\s.*$/
-    end
+
+    scsi_dev = devs.detect { |x| VIRTUAL_SCSI_CONTROLLERS.include?(x.xsiType) } || {}
+    key = scsi_dev['key']
+    ctrlrHash[key] = 0 if key
 
     ctrlrHash.each_key do |ck|
-      devs.each do |dev|
-        next unless (controllerKey = dev["controllerKey"])
-        next if controllerKey != ck
-        next unless (unitNumber = dev["unitNumber"])
-        unitNumber = unitNumber.to_i
-        ctrlrHash[ck] = unitNumber if unitNumber > ctrlrHash[ck]
-      end
+      control = devs.detect { |x| x['controllerKey'] == ck } || {}
+      unit_number = control['unitNumber'].to_i
+      ctrlrHash[ck] = unit_number if unit_number > ctrlrHash[ck]
     end
 
     ctrlrHash.each { |k, v| return([k, v + 1]) }
-    ([nil, nil])
   end # def getScsiCandU
 
   #

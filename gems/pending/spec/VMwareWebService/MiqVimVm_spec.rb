@@ -132,5 +132,57 @@ describe MiqVimVm do
         expect(result['datastore-snap']).to eq(300)
       end
     end
+
+    context "#getScsiCandU" do
+      let(:miq_vim_vm) do
+        {"config" => {"hardware" =>
+        {"device" => [{"key" => "1000",
+                       "deviceInfo" => {"label" => "SCSI controller 0", "summary" => "VMware paravirtual SCSI"},
+                       "slotInfo" => {"pciSlotNumber" => "160"},
+                       "controllerKey" => "100",
+                       "unitNumber" => "3",
+                       "busNumber" => "0",
+                       "device" => ["2000"],
+                       "hotAddRemove" => "true",
+                       "sharedBus" => "noSharing",
+                       "scsiCtlrUnitNumber" => "7"},
+                      {"key" => "100",
+                       "deviceInfo" => {"label" => "PCI controller 0", "summary" => "PCI controller 0"},
+                       "busNumber" => "0",
+                       "device" => %w(500 12000 1000 15000 4000)}]}}
+        }
+      end
+
+      before(:each) do
+        allow(@inv_obj).to receive(:getMoProp).with("vm-100", "config.hardware").and_return(miq_vim_vm)
+      end
+
+      it "returns the next available unit number" do
+        allow_any_instance_of(Hash).to receive(:xsiType).and_return("ParaVirtualSCSIController")
+        scsi_controller_hash = @vim_vm.getScsiCandU
+        pci_controller = @inv_obj.getMoProp("vm-100", "config.hardware")["config"]["hardware"]["device"][1]
+        scsi_controller = @inv_obj.getMoProp("vm-100", "config.hardware")["config"]["hardware"]["device"][0]
+
+        expect(pci_controller["key"]).to eq "100"
+        expect(pci_controller["unitNumber"]).to be_nil
+        expect(scsi_controller["controllerKey"]).to eq "100"
+        expect(scsi_controller["unitNumber"]).to eq "3"
+        expect(scsi_controller_hash.class).to eq Array
+        expect(scsi_controller_hash.size).to eq 2
+        expect(scsi_controller_hash[0]).to eq "1000"
+        expect(scsi_controller_hash[1]).to eq 1
+      end
+
+      it "returns the next available unit number for an LSI controller type" do
+        allow_any_instance_of(Hash).to receive(:xsiType).and_return("VirtualLsiLogicSASController")
+        scsi_controller_hash = @vim_vm.getScsiCandU
+        pci_controller = @inv_obj.getMoProp("vm-100", "config.hardware")["config"]["hardware"]["device"][1]
+
+        expect(pci_controller["key"]).to eq "100"
+        expect(scsi_controller_hash.size).to eq 2
+        expect(scsi_controller_hash[0]).to eq "1000"
+        expect(scsi_controller_hash[1]).to eq 1
+      end
+    end
   end
 end
