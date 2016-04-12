@@ -16,7 +16,7 @@ class SecurityGroup < ApplicationRecord
   has_and_belongs_to_many :network_ports
 
   def total_vms
-    vms.count
+    vms.size
   end
   virtual_column :total_vms, :type => :integer, :uses => :vms
 

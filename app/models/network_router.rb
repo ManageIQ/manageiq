@@ -33,7 +33,7 @@ class NetworkRouter < ApplicationRecord
   end
 
   def total_vms
-    vms.count
+    vms.size
   end
   virtual_column :total_vms, :type => :integer, :uses => :vms
 
