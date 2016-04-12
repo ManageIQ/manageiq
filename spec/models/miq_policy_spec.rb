@@ -100,6 +100,16 @@ describe MiqPolicy do
       end
     end
 
+    describe '#miq_event_definitions' do
+      before do
+        policy.miq_policy_contents.push(FactoryGirl.create(:miq_policy_content))
+      end
+
+      it 'lists event definition' do
+        expect(policy.miq_event_definitions).to eq([event])
+      end
+    end
+
     describe "#sync_events, #add_event, #delete_event" do
       let(:new_events) { [FactoryGirl.create(:miq_event_definition), FactoryGirl.create(:miq_event_definition)] }
 

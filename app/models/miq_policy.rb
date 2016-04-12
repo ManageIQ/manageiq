@@ -89,7 +89,7 @@ class MiqPolicy < ApplicationRecord
   end
 
   def miq_event_definitions
-    miq_policy_contents.collect(&:miq_event_definition).uniq
+    miq_policy_contents.collect(&:miq_event_definition).compact.uniq
   end
   alias_method :events, :miq_event_definitions
 
