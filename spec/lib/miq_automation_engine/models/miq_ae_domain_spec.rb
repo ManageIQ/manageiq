@@ -147,13 +147,13 @@ describe MiqAeDomain do
     let(:tag_name) { "t1" }
     let(:dom1) { FactoryGirl.create(:miq_ae_git_domain) }
     let(:dom2) { FactoryGirl.create(:miq_ae_domain) }
-    let(:repo) { FactoryGirl.create(:git_repository, :url => "http://a.b.com/x/y") }
+    let(:repo) { FactoryGirl.create(:git_repository, :url => "http://www.example.com/x/y") }
     let(:git_import) { instance_double('MiqAeYamlImportGitfs') }
-    let(:info) { {:commit_time => commit_time, :commit_message => commit_message, :commit_sha => commit_sha} }
-    let(:new_info) { {:commit_time => commit_time_new, :commit_message => "BB-8", :commit_sha => "def"} }
+    let(:info) { {'commit_time' => commit_time, 'commit_message' => commit_message, 'commit_sha' => commit_sha} }
+    let(:new_info) { {'commit_time' => commit_time_new, 'commit_message' => "BB-8", 'commit_sha' => "def"} }
     let(:commit_hash) do
       {'commit_message' => commit_message, 'commit_time' => commit_time,
-       'commit_sha'     => commit_sha,     'branch'      => branch_name}
+       'commit_sha' => commit_sha, 'ref' => branch_name}
     end
 
     it "check if a git domain is locked" do
@@ -168,7 +168,7 @@ describe MiqAeDomain do
     it "git info" do
       expect(repo).to receive(:branch_info).with(branch_name).and_return(info)
 
-      dom1.update_git_info(repo, branch_name, nil)
+      dom1.update_git_info(repo, branch_name, MiqAeDomain::BRANCH)
       dom1.reload
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
@@ -180,7 +180,7 @@ describe MiqAeDomain do
       allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
 
       MiqAeDomain.import_git_repo(domain_name, repo, branch_name)
-      dom1 = MiqAeDomain.where(:name => domain_name).first
+      dom1 = MiqAeDomain.find_by_name(domain_name)
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
 
@@ -199,16 +199,18 @@ describe MiqAeDomain do
 
     it "git repo branch changed" do
       expect(repo).to receive(:branch_info).with(branch_name).twice.and_return(new_info)
-      dom1.update_attributes(:branch => branch_name, :git_repository => repo, :commit_sha => commit_sha)
+      dom1.update_attributes(:ref => branch_name, :git_repository => repo,
+                             :ref_type => MiqAeDomain::BRANCH, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy
-      expect(dom1.changed_info).to have_attributes(new_info)
+      expect(dom1.latest_ref_info).to have_attributes(new_info)
     end
 
     it "git repo tag changed" do
       expect(repo).to receive(:tag_info).with(tag_name).twice.and_return(new_info)
-      dom1.update_attributes(:tag => tag_name, :git_repository => repo, :commit_sha => commit_sha)
+      dom1.update_attributes(:ref => tag_name, :ref_type => MiqAeDomain::TAG,
+                             :git_repository => repo, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy
-      expect(dom1.changed_info).to have_attributes(new_info)
+      expect(dom1.latest_ref_info).to have_attributes(new_info)
     end
 
     it "git repo tag changed with no branch or tag" do

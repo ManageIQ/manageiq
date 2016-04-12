@@ -10,9 +10,13 @@ class MiqAeDomain < MiqAeNamespace
   belongs_to :tenant
   belongs_to :git_repository
 
+  BRANCH = 'branch'.freeze
+  TAG    = 'tag'.freeze
+  DEFAULT_BRANCH = 'origin/master'.freeze
+
   EXPORT_EXCLUDE_KEYS = [/^id$/, /^(?!tenant).*_id$/, /^created_on/, /^updated_on/,
                          /^updated_by/, /^reserved$/, /^commit_message/,
-                         /^commit_time/, /^commit_sha/, /^branch/, /^tag$/,
+                         /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
                          /^last_import_on/].freeze
 
   include TenancyMixin
@@ -49,26 +53,23 @@ class MiqAeDomain < MiqAeNamespace
     version_field.try(:fetch_path, 'field', 'default_value')
   end
 
-  def self.import_git_repo(domain_name, git_repo, branch = nil, tag = nil)
-    MiqAeDomain.where(:name => domain_name).first.try(:destroy)
-    branch = 'origin/master' if branch.nil? && tag.nil?
-    options = {'git_dir' => git_repo.directory_name, 'branch' => branch, 'tag' => tag, 'preview' => false}
-    MiqAeImport.new(domain_name, options).import
-    domain = MiqAeDomain.where(:name => domain_name).first
+  def self.import_git_repo(domain_name, git_repo, ref = DEFAULT_BRANCH, ref_type = BRANCH)
+    MiqAeDomain.find_by_name(domain_name).try(:destroy)
+    MiqAeImport.new(domain_name, import_options(git_repo, ref, ref_type)).import
+    domain = MiqAeDomain.find_by_name(domain_name)
     raise MiqAeException::DomainNotFound, "Domain #{domain_name} not found after import" unless domain
-    domain.update_git_info(git_repo, branch, tag)
+    domain.update_git_info(git_repo, ref, ref_type)
   end
 
-  def update_git_info(git_repo, branch, tag)
-    self.branch = branch
+  def update_git_info(git_repo, ref, ref_type)
+    self.ref = ref
     self.git_repository = git_repo
-    self.tag = tag
-    save
-    info = changed_info
+    self.ref_type = ref_type
+    info = latest_ref_info
     update_attributes!(:last_import_on => Time.now.utc,
-                       :commit_sha     => info[:commit_sha],
-                       :commit_message => info[:commit_message],
-                       :commit_time    => info[:commit_time],
+                       :commit_sha     => info['commit_sha'],
+                       :commit_message => info['commit_message'],
+                       :commit_time    => info['commit_time'],
                        :system         => true)
   end
 
@@ -77,15 +78,18 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def git_repo_changed?
-    commit_sha != changed_info[:commit_sha]
+    commit_sha != latest_ref_info['commit_sha']
   end
 
-  def changed_info
+  def latest_ref_info
     raise MiqAeException::InvalidDomain, "Not GIT enabled" unless git_enabled?
-    raise "No branch or tag selected" if branch.nil? && tag.nil?
-    info = git_repository.branch_info(branch) if branch
-    info ||= git_repository.tag_info(tag) if tag
-    info
+    raise "No branch or tag selected for this domain" if ref.nil? && ref_type.nil?
+    case ref_type
+    when BRANCH
+      git_repository.branch_info(ref)
+    when TAG
+      git_repository.tag_info(ref)
+    end
   end
 
   private
@@ -112,4 +116,17 @@ class MiqAeDomain < MiqAeNamespace
     about = about_class
     File.join(MiqAeDatastore::DATASTORE_DIRECTORY, "#{about.fqname}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
+
+  def self.import_options(git_repo, ref, ref_type)
+    options = {'git_dir' => git_repo.directory_name, 'preview' => false}
+    case ref_type
+    when BRANCH
+      options['branch'] = ref
+    when TAG
+      options['tag'] = ref
+    end
+    options
+  end
+
+  private_class_method :import_options
 end

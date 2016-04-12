@@ -1,4 +1,3 @@
-require 'spec_helper'
 describe MiqAeYamlImportGitfs do
   before do
     @git_db = "TestGit.git"
@@ -64,6 +63,12 @@ describe MiqAeYamlImportGitfs do
     method_dir = "#{klass_dir}/#{MiqAeYamlImportExportMixin::METHOD_FOLDER_NAME}"
     add_file("#{method_dir}/#{method}.yaml")
     add_file("#{method_dir}/#{method}.rb")
+  end
+
+  it "#load_repo missing directory" do
+    expect do
+      MiqAeYamlImportGitfs.new(@domain, 'git_dir' => '/blah/blah/nada')
+    end.to raise_error(MiqAeException::DirectoryNotFound)
   end
 
   it "#load_file" do

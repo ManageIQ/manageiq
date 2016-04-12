@@ -5,7 +5,7 @@ class MiqAeNamespace < ApplicationRecord
 
   EXPORT_EXCLUDE_KEYS = [/^id$/, /_id$/, /^created_on/, /^updated_on/,
                          /^updated_by/, /^reserved$/, /^commit_message/,
-                         /^commit_time/, /^commit_sha/, /^branch/, /^tag$/,
+                         /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
                          /^last_import_on/].freeze
 
   belongs_to :parent,        :class_name => "MiqAeNamespace",  :foreign_key => :parent_id
