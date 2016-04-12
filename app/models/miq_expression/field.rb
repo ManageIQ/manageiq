@@ -47,7 +47,7 @@ class MiqExpression::Field
     if associations.none?
       model
     else
-      associations.last.classify.constantize
+      reflections.last.klass
     end
   end
 
