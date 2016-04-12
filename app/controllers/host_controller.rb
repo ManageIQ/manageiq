@@ -518,6 +518,7 @@ class HostController < ApplicationController
       deletehosts if params[:pressed] == "host_delete"
       comparemiq if params[:pressed] == "host_compare"
       refreshhosts if params[:pressed] == "host_refresh"
+      maintenancehosts if params[:pressed] == "host_toggle_maintenance"
       scanhosts if params[:pressed] == "host_scan"
       check_compliance_hosts if params[:pressed] == "host_check_compliance"
       analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"

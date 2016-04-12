@@ -303,6 +303,14 @@ class Host < ApplicationRecord
     nil
   end
 
+  def validate_set_node_maintenance
+    validate_unsupported("Maintenance mode is unavailable")
+  end
+
+  def validate_unset_node_maintenance
+    validate_unsupported("Maintenance mode is unavailable")
+  end
+
   def validate_unsupported(message_prefix)
     {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} Host."}
   end

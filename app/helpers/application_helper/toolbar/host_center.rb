@@ -26,6 +26,13 @@ class ApplicationHelper::Toolbar::HostCenter < ApplicationHelper::Toolbar::Basic
           t,
           :url => "/edit"),
         button(
+          :host_toggle_maintenance,
+          'pficon pficon-edit fa-lg',
+          N_('Toggle maintenance mode for this item'),
+          N_('Toggle Maintenance Mode'),
+          :klass   => ApplicationHelper::Button::HostToggleMaintenance,
+          :confirm => N_("Toggle maintenance mode for this item?")),
+        button(
           :host_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove this item from the VMDB'),
