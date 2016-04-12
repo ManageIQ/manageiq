@@ -49,16 +49,11 @@ module ReportHelper
       run_at[:interval] ||= {}
       run_at[:interval][:unit] = typ.downcase
       case typ.downcase
-      when 'monthly'
-        run_at[:interval][:value] = months
-      when 'weekly'
-        run_at[:interval][:value] = weeks
-      when 'daily'
-        run_at[:interval][:value] = days
-      when 'hourly'
-        run_at[:interval][:value] = hours
-      else
-        run_at[:interval].delete(:value)
+      when 'monthly' then run_at[:interval][:value] = months
+      when 'weekly'  then run_at[:interval][:value] = weeks
+      when 'daily'   then run_at[:interval][:value] = days
+      when 'hourly'  then run_at[:interval][:value] = hours
+      else run_at[:interval].delete(:value)
       end
       run_at
     end
