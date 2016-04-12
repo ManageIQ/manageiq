@@ -141,7 +141,7 @@ module Menu
       end
 
       def network_menu_section
-        Menu::Section.new(:net, N_("Networks"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:net, N_("Networks"), 'fa pficon-network fa-2x', [
           Menu::Item.new('ems_network',      N_('Providers'),       'ems_network',      {:feature => 'ems_network_show_list'},    '/ems_network'),
           Menu::Item.new('cloud_network',    N_('Networks'),        'cloud_network',    {:feature => 'cloud_network_show_list'},  '/cloud_network'),
           Menu::Item.new('cloud_subnet',     N_('Subnets'),         'cloud_subnet',     {:feature => 'cloud_subnet_show_list'},   '/cloud_subnet'),
