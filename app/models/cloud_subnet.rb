@@ -42,7 +42,7 @@ class CloudSubnet < ApplicationRecord
   virtual_column :dns_nameservers_show, :type => :string, :uses => :dns_nameservers
 
   def total_vms
-    vms.count
+    vms.size
   end
   virtual_column :total_vms, :type => :integer, :uses => :vms
 
