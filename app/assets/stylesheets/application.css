@@ -15,6 +15,7 @@
  *= require schedule_editor
  *= require miq_dynatree
  *= require codemirror
+ *= require codemirror/themes/eclipse
  *= require jqplot
  *= require kubernetes-topology-graph/dist/topology-graph
  *= require jquery-ui-miq-theme/jquery-ui-1.9.2.custom

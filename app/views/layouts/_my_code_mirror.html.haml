@@ -1,26 +1,12 @@
 - text_area_id ||= "miqNone"
 - url ||= "form_field_changed"
 - mode ||= "yaml"
-- theme ||= "eclipse"
 - line_numbers ||= false
 - height ||= "auto"
 - width ||= "auto"
 - read_only ||= false
-- multi_mode ||= false
 - no_focus ||= false
 
-- if multi_mode
-  - modes.each do |mode|
-    = javascript_include_tag "codemirror/modes/#{mode}"
-- elsif mode == "htmlmixed"
-  = javascript_include_tag "codemirror/modes/javascript"
-  = javascript_include_tag "codemirror/modes/css"
-  = javascript_include_tag "codemirror/modes/#{mode}"
-  = javascript_include_tag "codemirror/modes/xml"
-- else
-  = javascript_include_tag "codemirror/modes/#{mode}"
-- unless theme == "default"
-  = stylesheet_link_tag "codemirror/themes/#{theme}"
 :javascript
   if (miqDomElementExists('#{text_area_id}')) {
     var textarea = $('##{text_area_id}')[0];
@@ -28,7 +14,7 @@
       mode:          '#{mode}',
       lineNumbers:   #{line_numbers},
       matchBrackets: true,
-      theme:         '#{theme}',
+      theme:         'eclipse',
       readOnly:      #{read_only ? "'nocursor'".html_safe : false}
     });
     ManageIQ.editor.on('change', function (cm, change) {
