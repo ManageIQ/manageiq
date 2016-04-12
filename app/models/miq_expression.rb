@@ -725,23 +725,21 @@ class MiqExpression
         clause = "#{model.table_name}.id IN (SELECT DISTINCT #{ref.foreign_key} FROM #{ref.table_name} WHERE #{inner_where})"
       end
     when "is"
-      col_name = exp[operator]["field"]
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
-      col_type = self.class.get_col_type(col_name)
+      field = Field.parse(exp[operator]["field"])
       value = exp[operator]["value"]
-      if col_type == :date
+      if field.date?
         if self.class.date_time_value_is_relative?(value)
-          start_val = self.class.quote(self.class.normalize_date_time(value, "UTC", "beginning").to_date, :date, :sql)
-          end_val   = self.class.quote(self.class.normalize_date_time(value, "UTC", "end").to_date, :date, :sql)
-          clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+          start_val = self.class.normalize_date_time(value, "UTC", "beginning").to_date
+          end_val = self.class.normalize_date_time(value, "UTC", "end").to_date
+          clause = field.between(start_val..end_val).to_sql
         else
-          value  = self.class.quote(self.class.normalize_date_time(value, "UTC", "beginning").to_date, :date, :sql)
-          clause = "#{col_sql} = #{value}"
+          value  = self.class.normalize_date_time(value, "UTC", "beginning").to_date
+          clause = field.eq(value).to_sql
         end
       else
-        start_val = self.class.quote(self.class.normalize_date_time(value, tz, "beginning").utc, :datetime, :sql)
-        end_val   = self.class.quote(self.class.normalize_date_time(value, tz, "end").utc, :datetime, :sql)
-        clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+        start_val = self.class.normalize_date_time(value, tz, "beginning").utc
+        end_val   = self.class.normalize_date_time(value, tz, "end").utc
+        clause = field.between(start_val..end_val).to_sql
       end
     when "from"
       col_name = exp[operator]["field"]
