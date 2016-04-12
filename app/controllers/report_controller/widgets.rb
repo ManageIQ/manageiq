@@ -155,9 +155,9 @@ module ReportController::Widgets
       if params[:time_zone]
         page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
-        page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
-        page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
-        page << "$('#start_min').val('#{@edit[:new][:start_min].to_i}');"
+        page << "$('#miq_date_1').val('#{@edit[:new][:timer].start_date}');"
+        page << "$('#start_hour').val('#{@edit[:new][:timer].start_hour.to_i}');"
+        page << "$('#start_min').val('#{@edit[:new][:timer].start_min.to_i}');"
         page.replace_html("tz_span", @timezone_abbr)
       end
       changed = (@edit[:new] != @edit[:current])
@@ -394,28 +394,17 @@ module ReportController::Widgets
       @edit[:new][:shortcut_keys] = @edit[:new][:shortcuts].keys  # Save the keys array so we can compare the hash order
       @edit[:avail_shortcuts] = widget_build_avail_shortcuts
     end
-    @edit[:new][:timer_weeks] = "1"
-    @edit[:new][:timer_days] = "1"
-    @edit[:new][:timer_hours] = "1"
+    @edit[:new][:timer] = ReportHelper::Timer.new
     if @edit[:schedule].run_at.nil? # New widget or schedule missing, default sched options
       @edit[:tz] = session[:user_tz]
       t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:timer_typ] = "Hourly"
-      @edit[:new][:start_hour] = "00"
-      @edit[:new][:start_min] = "00"
+      @edit[:new][:timer].typ = 'Hourly'
+      @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}"
     else
       sched = params[:action] == "widget_copy" ? @widget.miq_schedule : @edit[:schedule]
-      @edit[:new][:timer_typ] = sched.run_at[:interval][:unit].titleize
-      @edit[:new][:timer_months] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "monthly"
-      @edit[:new][:timer_weeks] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "weekly"
-      @edit[:new][:timer_days] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "daily"
-      @edit[:new][:timer_hours] = sched.run_at[:interval][:value] if sched.run_at[:interval][:unit] == "hourly"
       @edit[:tz] = sched.run_at && sched.run_at[:tz] ? sched.run_at[:tz] : session[:user_tz]
-      t = sched.run_at[:start_time].to_time.in_time_zone(@edit[:tz])
-      @edit[:new][:start_hour] = t.strftime("%H")
-      @edit[:new][:start_min] = t.strftime("%M")
+      @edit[:new][:timer].update_from_miq_schedule(sched.run_at, @edit[:tz])
     end
-    @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Set the start date
 
     if @sb[:wtype] == "r"
       @pivotby1 = @edit[:new][:pivotby1] = NOTHING_STRING # Initialize groupby fields to nothing
@@ -556,22 +545,12 @@ module ReportController::Widgets
     end
 
     # Schedule settings box
-    @edit[:new][:timer_typ]    = params[:timer_typ]    if params[:timer_typ]
-    @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
-    @edit[:new][:timer_weeks]  = params[:timer_weeks]  if params[:timer_weeks]
-    @edit[:new][:timer_days]   = params[:timer_days]   if params[:timer_days]
-    @edit[:new][:timer_hours]  = params[:timer_hours]  if params[:timer_hours]
-    @edit[:new][:start_date]   = params[:miq_date_1]   if params[:miq_date_1]
-    @edit[:new][:start_hour]   = params[:start_hour]   if params[:start_hour]
-    @edit[:new][:start_min]    = params[:start_min]    if params[:start_min]
+    @edit[:new][:timer] ||= ReportHelper::Timer.new
+    @edit[:new][:timer].update_from_hash(params)
 
     if params[:time_zone]
       @edit[:tz] = params[:time_zone]
       @timezone_abbr = Time.now.in_time_zone(@edit[:tz]).strftime("%Z")
-      t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Reset the start date
-      @edit[:new][:start_hour] = "00" # Reset time to midnight
-      @edit[:new][:start_min] = "00"
     end
 
     if @sb[:wtype] == "r"
@@ -690,24 +669,7 @@ module ReportController::Widgets
     @edit[:schedule].description  = widget.description
     @edit[:schedule].towhat       = "MiqWidget"
     @edit[:schedule].sched_action = {:method => "generate_widget"}
-    @edit[:schedule].run_at ||= {}
-    run_at = create_time_in_utc("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}:00", @edit[:tz])
-    @edit[:schedule].run_at[:start_time] = "#{run_at} Z"
-    @edit[:schedule].run_at[:tz]         = @edit[:tz]
-    @edit[:schedule].run_at[:interval] ||= {}
-    @edit[:schedule].run_at[:interval][:unit] = @edit[:new][:timer_typ].downcase
-    case @edit[:new][:timer_typ].downcase
-    when "monthly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_months]
-    when "weekly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_weeks]
-    when "daily"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_days]
-    when "hourly"
-      @edit[:schedule].run_at[:interval][:value] = @edit[:new][:timer_hours]
-    else
-      @edit[:schedule].run_at[:interval].delete(:value)
-    end
+    @edit[:schedule].run_at = @edit[:new][:timer].flush_to_miq_schedule(@edit[:schedule].run_at, @edit[:tz])
     widget.miq_schedule = @edit[:schedule]
   end
 

@@ -26,16 +26,13 @@ describe ReportController do
 
       context "valid attributes" do
         before :each do
+          timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015', '00', '10')
           controller.instance_variable_set(:@edit,
                                            :schedule => miq_schedule, :new => {:title => "NewCustomWidget",
                                                                                :description => "NewCustomWidget",
                                                                                :enabled => true, :roles => ["_ALL_"],
-                                                                               :groups => [], :timer_weeks => "1",
-                                                                               :timer_days => "1", :timer_hours => "1",
-                                                                               :timer_typ => "Hourly",
-                                                                               :start_hour => "00",
-                                                                               :start_min => "10",
-                                                                               :start_date => "11/13/2015",
+                                                                               :groups => [],
+                                                                               :timer => timer,
                                                                                :repfilter => report_id})
           controller.send(:widget_edit)
         end
@@ -56,16 +53,13 @@ describe ReportController do
 
       context "invalid attributes" do
         before :each do
+          timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015', '00', '10')
           controller.instance_variable_set(:@edit,
                                            :schedule => miq_schedule, :new => {:title => "",
                                                                                :description => "",
                                                                                :enabled => true, :roles => ["_ALL_"],
-                                                                               :groups => [], :timer_weeks => "1",
-                                                                               :timer_days => "1", :timer_hours => "1",
-                                                                               :timer_typ => "Hourly",
-                                                                               :start_hour => "00",
-                                                                               :start_min => "10",
-                                                                               :start_date => "11/13/2015",
+                                                                               :groups => [],
+                                                                               :timer => timer,
                                                                                :repfilter => report_id})
           controller.send(:widget_edit)
         end

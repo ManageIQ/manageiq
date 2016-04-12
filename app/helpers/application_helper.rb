@@ -576,26 +576,14 @@ module ApplicationHelper
   ############# End of methods that generate JS lines for render page blocks
 
   def set_edit_timer_from_schedule(schedule)
-    t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-    @edit[:new][:timer_months] = "1"
-    @edit[:new][:timer_weeks]  = "1"
-    @edit[:new][:timer_days]    = "1"
-    @edit[:new][:timer_hours]   = "1"
+    @edit[:new][:timer] ||= ReportHelper::Timer.new
     if schedule.run_at.nil?
-      @edit[:new][:timer_typ]    = "Once"
-      @edit[:new][:start_hour]   = "00"
-      @edit[:new][:start_min]    = "00"
+      t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
+      @edit[:new][:timer].typ = 'Once'
+      @edit[:new][:timer].start_date = "#{t.month}/#{t.day}/#{t.year}"
     else
-      @edit[:new][:timer_typ]    = schedule.run_at[:interval][:unit].titleize
-      @edit[:new][:timer_months] = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "monthly"
-      @edit[:new][:timer_weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
-      @edit[:new][:timer_days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
-      @edit[:new][:timer_hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
-      t                          = schedule.run_at[:start_time].utc.in_time_zone(@edit[:tz])
-      @edit[:new][:start_hour]   = t.strftime("%H")
-      @edit[:new][:start_min]    = t.strftime("%M")
+      @edit[:new][:timer].update_from_miq_schedule(schedule.run_at, @edit[:tz])
     end
-    @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Set the start date
   end
 
   # Check if a parent chart has been selected and applies

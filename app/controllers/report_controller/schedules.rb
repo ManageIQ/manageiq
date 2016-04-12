@@ -193,9 +193,9 @@ module ReportController::Schedules
       if params[:time_zone]
         page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
-        page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
-        page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
-        page << "$('#start_min').val('#{@edit[:new][:start_min].to_i}');"
+        page << "$('#miq_date_1').val('#{@edit[:new][:timer].start_date}');"
+        page << "$('#start_hour').val('#{@edit[:new][:timer].start_hour.to_i}');"
+        page << "$('#start_min').val('#{@edit[:new][:timer].start_min.to_i}');"
         page.replace_html("tz_span", @timezone_abbr)
       end
       if @email_refresh
@@ -394,22 +394,12 @@ module ReportController::Schedules
     elsif params[:repfilter_typ] && params[:repfilter_typ] == "<Choose>"
       @edit[:new][:repfilter] = nil
     end
-    @edit[:new][:timer_typ] = params[:timer_typ] if params[:timer_typ]
-    @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
-    @edit[:new][:timer_weeks] = params[:timer_weeks] if params[:timer_weeks]
-    @edit[:new][:timer_days] = params[:timer_days] if params[:timer_days]
-    @edit[:new][:timer_hours] = params[:timer_hours] if params[:timer_hours]
-    @edit[:new][:start_date] = params[:miq_date_1] if params[:miq_date_1]
-    @edit[:new][:start_hour] = params[:start_hour] if params[:start_hour]
-    @edit[:new][:start_min] = params[:start_min] if params[:start_min]
+    @edit[:new][:timer] ||= ReportHelper::Timer.new
+    @edit[:new][:timer].update_from_hash(params)
 
     if params[:time_zone]
       @edit[:tz] = params[:time_zone]
       @timezone_abbr = Time.now.in_time_zone(@edit[:tz]).strftime("%Z")
-      t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Reset the start date
-      @edit[:new][:start_hour] = "00" # Reset time to midnight
-      @edit[:new][:start_min] = "00"
     end
 
     @edit[:new][:filter] = "" if @edit[:new][:filter] == "<Choose>"
@@ -490,26 +480,7 @@ module ReportController::Schedules
     schedule.sched_action = {:method => "run_report", :options => schedule_options}
 
     schedule.sched_action[:options][:email] = copy_hash(@edit[:new][:email]) if @edit[:new][:send_email]
-
-    schedule.run_at ||= {}
-    run_at = create_time_in_utc("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}:00",
-                                @edit[:tz])
-    schedule.run_at[:start_time] = "#{run_at} Z"
-    schedule.run_at[:tz] = @edit[:tz]
-    schedule.run_at[:interval] ||= {}
-    schedule.run_at[:interval][:unit] = @edit[:new][:timer_typ].downcase
-    case @edit[:new][:timer_typ].downcase
-    when "monthly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_months]
-    when "weekly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_weeks]
-    when "daily"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_days]
-    when "hourly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_hours]
-    else
-      schedule.run_at[:interval].delete(:value)
-    end
+    schedule.run_at = @edit[:new][:timer].flush_to_miq_schedule(schedule.run_at, @edit[:tz])
 
     # Build the filter expression
     exp = {}

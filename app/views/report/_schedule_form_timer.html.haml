@@ -15,34 +15,34 @@
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("timer_typ", "#{url}");
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "daily", :id => "daily_span") do
+        = hidden_span_if(@edit[:new][:timer].typ.downcase != "daily", :id => "daily_span") do
           = _("every")
           = select_tag("timer_days",
-            options_for_select(TIMER_DAYS, @edit[:new][:timer_days]),
+            options_for_select(TIMER_DAYS, @edit[:new][:timer].days),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent("timer_days", "#{url}");
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "hourly", :id => "hourly_span") do
+        = hidden_span_if(@edit[:new][:timer].typ.downcase != "hourly", :id => "hourly_span") do
           = _("every")
           = select_tag("timer_hours",
-            options_for_select(TIMER_HOURS, @edit[:new][:timer_hours]),
+            options_for_select(TIMER_HOURS, @edit[:new][:timer].hours),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent("timer_hours", "#{url}");
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "weekly", :id => "weekly_span") do
+        = hidden_span_if(@edit[:new][:timer].typ.downcase != "weekly", :id => "weekly_span") do
           = _("every")
           = select_tag("timer_weeks",
-            options_for_select(TIMER_WEEKS, @edit[:new][:timer_weeks]),
+            options_for_select(TIMER_WEEKS, @edit[:new][:timer].weeks),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent("timer_weeks", "#{url}");
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "monthly", :id => "monthly_span") do
+        = hidden_span_if(@edit[:new][:timer].typ.downcase != "monthly", :id => "monthly_span") do
           = _("every")
           = select_tag("timer_months",
-            options_for_select(TIMER_MONTHS, @edit[:new][:timer_months]),
+            options_for_select(TIMER_MONTHS, @edit[:new][:timer].months),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -63,7 +63,7 @@
       %label.control-label.col-md-2
         = _("Starting Date")
       .col-md-8
-        = datepicker_input_tag("miq_date_1", @edit[:new][:start_date],
+        = datepicker_input_tag("miq_date_1", @edit[:new][:timer].start_date,
           :readonly               => "true",
           "data-miq_observe_date" => {:url => url}.to_json)
     .form-group
@@ -75,7 +75,7 @@
         )
       .col-md-8
         = select_tag("start_hour",
-          options_for_select((0..23).to_a, @edit[:new][:start_hour].to_i),
+          options_for_select((0..23).to_a, @edit[:new][:timer].start_hour.to_i),
           :class => "selectpicker selectWidth")
         :javascript
           miqInitSelectPicker();
@@ -84,7 +84,7 @@
         -# TRANSLATORS: this h means hours
         = _("h")
         = select_tag("start_min",
-          options_for_select((0..55).step(5).to_a, @edit[:new][:start_min].to_i),
+          options_for_select((0..55).step(5).to_a, @edit[:new][:timer].start_min.to_i),
           :class => "selectpicker selectWidth")
         :javascript
           miqInitSelectPicker();
