@@ -169,6 +169,14 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     end
   end
 
+  def before_ae_starts(_options)
+    reload
+    unless state.to_s.downcase == "active"
+      _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
+      update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
+    end
+  end
+
   def after_ae_delivery(ae_result)
     _log.info("ae_result=#{ae_result.inspect}")
     reload

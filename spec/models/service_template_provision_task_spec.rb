@@ -49,6 +49,16 @@ describe ServiceTemplateProvisionTask do
                          :resource_type   => 'ServiceTemplate').id
     end
 
+    describe "#before_ae_starts" do
+      it "updates the task state to active when task starts" do
+        @task_0.before_ae_starts({})
+        expect(@task_0).to have_attributes(
+          :state   => 'active',
+          :status  => 'Ok',
+          :message => 'In Process')
+      end
+    end
+
     it "deliver_to_automate" do
       automate_args = {
         :object_type      => 'ServiceTemplateProvisionTask',
