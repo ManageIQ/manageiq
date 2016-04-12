@@ -56,6 +56,12 @@
 //= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require codemirror
+//= require codemirror/modes/css
+//= require codemirror/modes/htmlmixed
+//= require codemirror/modes/javascript
+//= require codemirror/modes/ruby
+//= require codemirror/modes/shell
+//= require codemirror/modes/xml
 //= require codemirror/modes/yaml
 //= require spin.js/spin
 //= require spin.js/jquery.spin
