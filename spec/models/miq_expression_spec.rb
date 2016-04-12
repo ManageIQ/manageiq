@@ -241,13 +241,13 @@ describe MiqExpression do
       it "generates the SQL for a FROM expression" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on BETWEEN '2011-01-09' AND '2011-01-10'")
+        expect(sql).to eq("\"vms\".\"retires_on\" BETWEEN '2011-01-09' AND '2011-01-10'")
       end
 
       it "generates the SQL for a FROM expression with MM/DD/YYYY dates" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["01/09/2011", "01/10/2011"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on BETWEEN '2011-01-09' AND '2011-01-10'")
+        expect(sql).to eq("\"vms\".\"retires_on\" BETWEEN '2011-01-09' AND '2011-01-10'")
       end
 
       it "generates the SQL for a FROM expression with date/time" do
@@ -255,7 +255,7 @@ describe MiqExpression do
           "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]}
         )
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on BETWEEN '2011-01-10T08:00:00Z' AND '2011-01-10T17:00:00Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-10 08:00:00' AND '2011-01-10 17:00:00'")
       end
 
       it "generates the SQL for a FROM expression with two identical datetimes" do
@@ -263,7 +263,7 @@ describe MiqExpression do
           "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]}
         )
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on BETWEEN '2011-01-10T00:00:00Z' AND '2011-01-10T00:00:00Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-10 00:00:00' AND '2011-01-10 00:00:00'")
       end
     end
 
@@ -297,25 +297,25 @@ describe MiqExpression do
       it "generates the SQL for a FROM expression with a 'Last Hour'/'This Hour' value for a datetime field" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Hour", "This Hour"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on BETWEEN '2011-01-11T16:00:00Z' AND '2011-01-11T17:59:59Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-11 16:00:00' AND '2011-01-11 17:59:59'")
       end
 
       it "generates the SQL for a FROM expression with a 'Last Week'/'Last Week' value for a date field" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on BETWEEN '2011-01-03' AND '2011-01-09'")
+        expect(sql).to eq("\"vms\".\"retires_on\" BETWEEN '2011-01-03' AND '2011-01-09'")
       end
 
       it "generates the SQL for a FROM expression with a 'Last Week'/'Last Week' value for a datetime field" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on BETWEEN '2011-01-03T00:00:00Z' AND '2011-01-09T23:59:59Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-03 00:00:00' AND '2011-01-09 23:59:59.999999'")
       end
 
       it "generates the SQL for a FROM expression with an 'n Months Ago'/'Last Month' value for a datetime field" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "Last Month"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on BETWEEN '2010-11-01T00:00:00Z' AND '2010-12-31T23:59:59Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2010-11-01 00:00:00' AND '2010-12-31 23:59:59.999999'")
       end
 
       it "generates the SQL for an IS expression with a 'Today' value for a date field" do
