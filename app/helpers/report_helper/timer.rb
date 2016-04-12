@@ -15,11 +15,9 @@ module ReportHelper
     end
 
     def update_from_hash(params)
-      self.typ = params[:timer_typ] if params[:timer_typ]
-      self.months = params[:timer_months] if params[:timer_months]
-      self.weeks = params[:timer_weeks] if params[:timer_weeks]
-      self.days = params[:timer_days] if params[:timer_days]
-      self.hours = params[:timer_hours] if params[:timer_hours]
+      %w(typ moths weeks days hours).each do |i|
+        self[i] = params[:"timer_#{i}"] if params[:"timer_#{i}"]
+      end
       self.start_date = params[:miq_date_1] if params[:miq_date_1]
       self.start_hour = params[:start_hour] if params[:start_hour]
       self.start_min = params[:start_min] if params[:start_min]
