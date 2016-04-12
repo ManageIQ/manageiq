@@ -877,6 +877,12 @@
         :identifier: service_tag
       - :name: unassign
         :identifier: service_tag
+  :settings:
+    :description: Settings
+    :identifier: ops_settings
+    :options:
+    - :collection
+    :methods: *70174834086080
   :software:
     :description: Software
     :options:

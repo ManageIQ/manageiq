@@ -5,6 +5,7 @@ class ApiController < ApplicationController
   class AuthenticationError < StandardError; end
   class Forbidden < StandardError; end
   class BadRequestError < StandardError; end
+  class NotFound < StandardError; end
   class UnsupportedMediaTypeError < StandardError; end
 
   def handle_options_request
@@ -30,6 +31,7 @@ class ApiController < ApplicationController
     ApiController::AuthenticationError       => :unauthorized,
     ApiController::Forbidden                 => :forbidden,
     ApiController::BadRequestError           => :bad_request,
+    ApiController::NotFound                  => :not_found,
     ApiController::UnsupportedMediaTypeError => :unsupported_media_type
   }
 
@@ -76,6 +78,7 @@ class ApiController < ApplicationController
   include_concern 'ServiceDialogs'
   include_concern 'ServiceRequests'
   include_concern 'ServiceTemplates'
+  include_concern 'Settings'
   include_concern 'Software'
   include_concern 'Tags'
   include_concern 'Tenants'
