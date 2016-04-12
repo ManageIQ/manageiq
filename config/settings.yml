@@ -172,6 +172,7 @@
       - USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
+      - virtualMachines_write_EndRequest
       - VmConnectedEvent
       - VmCreatedEvent
       - VmDeployedEvent
@@ -288,6 +289,7 @@
       - USER_REMOVE_VM_FINISHED
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
+      - virtualMachines_delete_EndRequest
       - VmDisconnectedEvent
       - VmRemovedEvent
       - image.delete
@@ -619,6 +621,9 @@
       - USER_SUSPEND_VM_FINISH_FAILURE
       - USER_SUSPEND_VM_FINISH_SUCCESS
       - USER_SUSPEND_VM_OK
+      - virtualMachines_deallocate_EndRequest
+      - virtualMachines_start_EndRequest
+      - virtualMachines_restart_EndRequest
       - VM_DOWN
       - VM_DOWN_ERROR
       - VM_PAUSED_ENOSPC
@@ -1122,6 +1127,8 @@
         :amqp_port: 5672
         :amqp_heartbeat: 30
       :event_catcher_amazon:
+        :poll: 15.seconds
+      :event_catcher_azure:
         :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
