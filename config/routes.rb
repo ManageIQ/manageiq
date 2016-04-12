@@ -2296,7 +2296,9 @@ Vmdb::Application.routes.draw do
         security_groups
         floating_ips
         network_routers
+        network_ports
         cloud_subnets
+        cloud_networks
         show
         squash_toggle
         tagging_edit
