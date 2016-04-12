@@ -57,11 +57,11 @@ class ManageIQ::Providers::Azure::NetworkManager < ManageIQ::Providers::NetworkM
            :allow_nil => true
 
   def self.ems_type
-    @ems_type ||= "azure".freeze
+    @ems_type ||= "azure_network".freeze
   end
 
   def self.description
-    @description ||= "Azure".freeze
+    @description ||= "Azure Network".freeze
   end
 
   def self.hostname_required?
