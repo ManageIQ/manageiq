@@ -543,7 +543,6 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     # orchestration stack can have cloud networks
     cloud_network = CloudNetwork.find_by(:name => 'spec0deply1vnet')
-    # TODO(lsmola) fix the relation to orchestration stack
-    # expect(cloud_network.orchestration_stack).to eql(@orch_stack)
+    expect(cloud_network.orchestration_stack).to eql(@orch_stack)
   end
 end

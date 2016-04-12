@@ -101,20 +101,18 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
       @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
     end
 
-    uid = resource_uid(@subscription_id,
-                       cloud_network.resource_group.downcase,
-                       cloud_network.type.downcase,
-                       cloud_network.name)
+    uid = cloud_network.id
 
     new_result = {
       :type                => self.class.cloud_network_type,
-      :ems_ref             => cloud_network.id,
+      :ems_ref             => uid,
       :name                => cloud_network.name,
       :cidr                => cloud_network.properties.address_space.address_prefixes.join(", "),
       :enabled             => true,
       :cloud_subnets       => cloud_subnets,
-      :orchestration_stack => parent_manager_fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
+      :orchestration_stack => parent_manager_fetch_path(:orchestration_stacks_resources, uid).try(:stack),
     }
+
     return uid, new_result
   end
 

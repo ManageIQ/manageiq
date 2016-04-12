@@ -50,6 +50,7 @@ class ManageIQ::Providers::Azure::NetworkManager < ManageIQ::Providers::NetworkM
            :cloud_object_store_objects,
            :key_pairs,
            :orchestration_stacks,
+           :orchestration_stacks_resources,
            :direct_orchestration_stacks,
            :vms,
            :hosts,
