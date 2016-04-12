@@ -13,7 +13,7 @@ class MiqExpression::Field
   end
 
   attr_reader :model, :associations, :column
-  delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :to => :arel_attribute
+  delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
   def initialize(model, associations, column)
     @model = model
