@@ -8,7 +8,6 @@ Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system "gem install bundler --conservative"
   system "bundle check || bundle install"
-  system "which bower || npm install -g bower"
   system "bower install --allow-root -F --config.analytics=false"
 
   puts "\n== Copying sample files =="
