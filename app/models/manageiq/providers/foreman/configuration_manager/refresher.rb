@@ -3,16 +3,16 @@ module ManageIQ::Providers
     class ConfigurationManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
       include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
-      def parse_inventory(manager, targets)
+      def parse_legacy_inventory(manager)
         manager.with_provider_connection do |connection|
-          raw_ems_data = connection.inventory.refresh_configuration(targets)
+          raw_ems_data = connection.inventory.refresh_configuration
           fetch_provisioning_manager_data(raw_ems_data, manager.provider.provisioning_manager)
           ConfigurationManager::RefreshParser.configuration_inv_to_hashes(raw_ems_data)
         end
       end
 
-      def save_inventory(manager, targets, hashes)
-        EmsRefresh.save_configuration_manager_inventory(manager, hashes, targets[0])
+      def save_inventory(manager, target, hashes)
+        EmsRefresh.save_configuration_manager_inventory(manager, hashes, target)
         EmsRefresh.queue_refresh(manager.provider.provisioning_manager) if hashes[:needs_provisioning_refresh]
       end
 

@@ -3,8 +3,9 @@ module ManageIQ::Providers
     class ConfigurationManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
       include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
-      def parse_inventory(configuration_manager, _targets)
+      def parse_legacy_inventory(configuration_manager)
         configuration_manager.with_provider_connection do |connection|
+          # TODO clean up with @ems_data
           configuration_manager.api_version = connection.version
           configuration_manager.save
         end
