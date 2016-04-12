@@ -13,10 +13,30 @@ object:
   schema:
   - field:
       aetype: attribute
+      name: quota_source_type
+      display_name: Quota Source Type
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: tenant
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
       name: warn_vms
       display_name: VM Warning Count
       datatype: integer
-      priority: 1
+      priority: 2
       owner: 
       default_value: 
       substitute: true
@@ -36,7 +56,7 @@ object:
       name: max_vms
       display_name: VM Maximum Count
       datatype: integer
-      priority: 2
+      priority: 3
       owner: 
       default_value: 
       substitute: true
@@ -56,7 +76,7 @@ object:
       name: warn_storage
       display_name: Storage Warning Limit
       datatype: integer
-      priority: 3
+      priority: 4
       owner: 
       default_value: 
       substitute: true
@@ -76,7 +96,7 @@ object:
       name: max_storage
       display_name: Storage Maximum Limit
       datatype: integer
-      priority: 4
+      priority: 5
       owner: 
       default_value: 
       substitute: true
@@ -96,7 +116,7 @@ object:
       name: warn_cpu
       display_name: CPU Warning Count
       datatype: integer
-      priority: 5
+      priority: 6
       owner: 
       default_value: 
       substitute: true
@@ -116,7 +136,7 @@ object:
       name: max_cpu
       display_name: CPU Maximum Count
       datatype: integer
-      priority: 6
+      priority: 7
       owner: 
       default_value: 
       substitute: true
@@ -136,7 +156,7 @@ object:
       name: warn_memory
       display_name: Memory Warning Limit
       datatype: integer
-      priority: 7
+      priority: 8
       owner: 
       default_value: 
       substitute: true
@@ -156,7 +176,7 @@ object:
       name: max_memory
       display_name: Memory Maximum Limit
       datatype: integer
-      priority: 8
+      priority: 9
       owner: 
       default_value: 
       substitute: true
@@ -176,7 +196,7 @@ object:
       name: quota_source
       display_name: ''
       datatype: string
-      priority: 9
+      priority: 10
       owner: 
       default_value: 
       substitute: true
@@ -196,7 +216,7 @@ object:
       name: limits
       display_name: 
       datatype: string
-      priority: 10
+      priority: 11
       owner: 
       default_value: 
       substitute: true
@@ -216,7 +236,7 @@ object:
       name: used
       display_name: 
       datatype: string
-      priority: 11
+      priority: 12
       owner: 
       default_value: 
       substitute: true
@@ -236,7 +256,7 @@ object:
       name: requested
       display_name: 
       datatype: string
-      priority: 12
+      priority: 13
       owner: 
       default_value: 
       substitute: true
@@ -256,7 +276,7 @@ object:
       name: validate
       display_name: 
       datatype: string
-      priority: 13
+      priority: 14
       owner: 
       default_value: 
       substitute: true
@@ -276,7 +296,7 @@ object:
       name: finished
       display_name: 
       datatype: string
-      priority: 14
+      priority: 15
       owner: 
       default_value: 
       substitute: true
