@@ -52,64 +52,77 @@ describe PglogicalSubscription do
     allow(described_class).to receive(:pglogical).and_return(pglogical)
   end
 
-  describe ".find" do
-    context "with records" do
-      before do
-        allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
-        allow(pglogical).to receive(:enabled?).and_return(true)
-      end
-
-      it "retrieves all the records with :all" do
-        actual_attrs = described_class.find(:all).map(&:attributes)
-        expect(actual_attrs).to match_array(expected_attrs)
-      end
-
-      it "retrieves the first record with :first" do
-        rec = described_class.find(:first)
-        expect(rec.attributes).to eq(expected_attrs.first)
-      end
-
-      it "retrieves the last record with :last" do
-        rec = described_class.find(:last)
-        expect(rec.attributes).to eq(expected_attrs.last)
-      end
+  describe ".all" do
+    it "returns all records" do
+      with_records
+      actual_attrs = described_class.all.map(&:attributes)
+      expect(actual_attrs).to match_array(expected_attrs)
     end
 
-    context "with no records" do
-      before do
-        allow(pglogical).to receive(:subscriptions).and_return([])
-        allow(pglogical).to receive(:enabled?).and_return(true)
-      end
-
-      it "returns an empty array with :all" do
-        expect(described_class.find(:all)).to be_empty
-      end
-
-      it "returns nil with :first" do
-        expect(described_class.find(:first)).to be_nil
-      end
-
-      it "returns nil with :last" do
-        expect(described_class.find(:last)).to be_nil
-      end
+    it "supports find(:all)" do
+      with_records
+      actual_attrs = described_class.find(:all).map(&:attributes)
+      expect(actual_attrs).to match_array(expected_attrs)
     end
 
-    context "with pglogical disabled" do
-      before do
-        allow(pglogical).to receive(:enabled?).and_return(false)
-      end
+    it "returns no records" do
+      with_no_records
+      expect(described_class.all).to be_empty
+      expect(described_class.find(:all)).to be_empty
+    end
 
-      it "returns an empty array with :all" do
-        expect(described_class.find(:all)).to be_empty
-      end
+    it "returns an empty array for disabled" do
+      with_pglogical_disabled
+      expect(described_class.all).to be_empty
+    end
+  end
 
-      it "returns nil with :first" do
-        expect(described_class.find(:first)).to be_nil
-      end
+  describe ".first" do
+    it "retrieves the first record" do
+      with_records
+      rec = described_class.first
+      expect(rec.attributes).to eq(expected_attrs.first)
+    end
 
-      it "returns nil with :last" do
-        expect(described_class.find(:last)).to be_nil
-      end
+    it "supports find(:first)" do
+      with_records
+      rec = described_class.find(:first)
+      expect(rec.attributes).to eq(expected_attrs.first)
+    end
+
+    it "returns nil with no records" do
+      with_no_records
+      expect(described_class.first).to be_nil
+      expect(described_class.find(:first)).to be_nil
+    end
+
+    it "returns nil for disabled" do
+      with_pglogical_disabled
+      expect(described_class.first).to be_nil
+    end
+  end
+
+  describe ".last" do
+    it "retrieves the last record" do
+      with_records
+      rec = described_class.find(:last)
+      expect(rec.attributes).to eq(expected_attrs.last)
+    end
+
+    it "supports find(:last)" do
+      with_records
+      rec = described_class.find(:last)
+      expect(rec.attributes).to eq(expected_attrs.last)
+    end
+
+    it "returns nil with no records" do
+      with_no_records
+      expect(described_class.find(:last)).to be_nil
+    end
+
+    it "returns nil for disabled" do
+      with_pglogical_disabled
+      expect(described_class.last).to be_nil
     end
   end
 
@@ -159,5 +172,21 @@ describe PglogicalSubscription do
 
       sub.delete
     end
+  end
+
+  private
+
+  def with_records
+    allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
+    allow(pglogical).to receive(:enabled?).and_return(true)
+  end
+
+  def with_no_records
+    allow(pglogical).to receive(:subscriptions).and_return([])
+    allow(pglogical).to receive(:enabled?).and_return(true)
+  end
+
+  def with_pglogical_disabled
+    allow(pglogical).to receive(:enabled?).and_return(false)
   end
 end
