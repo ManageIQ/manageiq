@@ -217,14 +217,15 @@ module ManageIQ::Providers
       security_groups            = network_port.security_groups.blank? ? [] : network_port.security_groups.map do |x|
         @data_index.fetch_path(:security_groups, x)
       end
+      mac_address                = network_port.attributes[:mac_address]
 
       new_result = {
         :type                              => self.class.network_port_type,
-        :name                              => network_port.name,
+        :name                              => network_port.name.blank? ? mac_address : network_port.name,
         :ems_ref                           => uid,
         :status                            => network_port.status,
         :admin_state_up                    => network_port.admin_state_up,
-        :mac_address                       => network_port.attributes[:mac_address],
+        :mac_address                       => mac_address,
         :device_owner                      => network_port.device_owner,
         :device_ref                        => network_port.device_id,
         :device                            => device,
