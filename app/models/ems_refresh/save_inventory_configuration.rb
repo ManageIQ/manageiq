@@ -37,7 +37,10 @@ module EmsRefresh
 
     def save_configuration_scripts_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(manager.configuration_scripts, hashes, delete_missing_records, [:manager_ref], nil, [:configuration_script])
+      # these records are cross referenced to the hashes
+      # get the id out and store in this record
+      hashes.each { |hash| hash[:inventory_root_group_id] = hash.fetch_path(:inventory_root_group, :id) }
+      save_inventory_assoc(manager.configuration_scripts, hashes, delete_missing_records, [:manager_ref], nil, [:configuration_script, :inventory_root_group])
     end
 
     def save_ems_folders_inventory(manager, hashes, target)
