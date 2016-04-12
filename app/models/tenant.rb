@@ -242,7 +242,7 @@ class Tenant < ApplicationRecord
 
   def reset_domain_priority_by_ordered_ids(ids)
     uneditable_domains = visible_domains - editable_domains
-    uneditable_domains.delete_if { |domain| domain.name == 'ManageIQ' }
+    uneditable_domains.delete_if { |domain| domain.name == MiqAeDatastore::MANAGEIQ_DOMAIN }
     MiqAeDomain.reset_priority_by_ordered_ids(uneditable_domains.collect(&:id) + ids)
   end
 
