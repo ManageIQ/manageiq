@@ -12,6 +12,14 @@ FactoryGirl.define do
     per_unit    "megahertz"
   end
 
+  factory :chargeback_rate_detail_cpu_cores_used, :parent => :chargeback_rate_detail do
+    description "Used CPU in Cores"
+    group       "cpu"
+    source      "used"
+    metric      "cpu_usage_rate_average"
+    per_unit    "cores"
+  end
+
   factory :chargeback_rate_detail_cpu_allocated, :parent => :chargeback_rate_detail do
     description "Allocated CPU Count"
     group       "cpu"

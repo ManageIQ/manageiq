@@ -394,6 +394,18 @@
       :suffix: " KBps"
     :precision: 0
 
+  :cores:
+    :description: Cores
+    :columns:
+    :sub_types:
+      - :cores
+      - :cores_avg
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: " Cores"
+    :precision: 3
+
   :mhz:
     :description: Megahertz (12 Mhz)
     :columns:
