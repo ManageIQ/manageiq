@@ -33,6 +33,16 @@ class MiqExpression::Field
     column_type == :string
   end
 
+  def reflections
+    klass = model
+    associations.collect do |association|
+      klass.reflect_on_association(association).tap do |reflection|
+        return unless reflection
+        klass = reflection.klass
+      end
+    end
+  end
+
   def target
     if associations.none?
       model
