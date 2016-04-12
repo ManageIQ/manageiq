@@ -2,7 +2,7 @@ describe PglogicalSubscription do
   let(:subscriptions) do
     [
       {
-        "subscription_name" => "subscription_example_com",
+        "subscription_name" => "region_0_subscription",
         "status"            => "replicating",
         "provider_node"     => "region_0",
         "provider_dsn"      => "dbname = 'vmdb\\'s_test' host='example.com' user='root' port='' password='p=as\\' s\\''",
@@ -11,7 +11,7 @@ describe PglogicalSubscription do
         "forward_origins"   => ["all"]
       },
       {
-        "subscription_name" => "subscription_test_example_com",
+        "subscription_name" => "region_1_subscription",
         "status"            => "disabled",
         "provider_node"     => "region_1",
         "provider_dsn"      => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
@@ -25,7 +25,7 @@ describe PglogicalSubscription do
   let(:expected_attrs) do
     [
       {
-        "id"                   => "subscription_example_com",
+        "id"                   => "region_0_subscription",
         "status"               => "replicating",
         "dbname"               => "vmdb's_test",
         "host"                 => "example.com",
@@ -34,7 +34,7 @@ describe PglogicalSubscription do
         "provider_region_name" => "The region"
       },
       {
-        "id"              => "subscription_test_example_com",
+        "id"              => "region_1_subscription",
         "status"          => "disabled",
         "dbname"          => "vmdb_test2",
         "host"            => "test.example.com",
@@ -117,6 +117,8 @@ describe PglogicalSubscription do
     it "creates the node when there are no subscriptions" do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
 
       # node created
       expect(pglogical).to receive(:enable)
@@ -124,7 +126,7 @@ describe PglogicalSubscription do
 
       # subscription is created
       expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
-        expect(name).to eq("subscription_test_2_example_com")
+        expect(name).to eq("region_2_subscription")
         expect(dsn).to include("host='test-2.example.com'")
         expect(dsn).to include("user='root'")
         expect(replication_sets).to eq(['miq'])
@@ -152,7 +154,7 @@ describe PglogicalSubscription do
 
       sub = described_class.find(:first)
 
-      expect(pglogical).to receive(:subscription_drop).with("subscription_example_com", true)
+      expect(pglogical).to receive(:subscription_drop).with("region_0_subscription", true)
       expect(MiqRegion).to receive(:destroy_region)
         .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), 0)
       expect(pglogical).to receive(:node_drop).with("region_#{MiqRegion.my_region_number}", true)

@@ -25,8 +25,8 @@ class PglogicalSubscription < ActsAsArModel
   def save!
     raise _("Cannot update an existing subscription") if id
     create_node.check if !pglogical.enabled? || self.class.count == 0
-    id = "subscription_#{host.gsub(/\.|-/, "_")}"
-    pglogical.subscription_create(id, dsn, [MiqPglogical::REPLICATION_SET_NAME], false).check
+    pglogical.subscription_create(new_subscription_name, dsn, [MiqPglogical::REPLICATION_SET_NAME],
+                                  false).check
   end
 
   def save
@@ -101,6 +101,12 @@ class PglogicalSubscription < ActsAsArModel
 
   private
 
+  def new_subscription_name
+    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |_conn|
+      "region_#{MiqRegionRemote.region_number_from_sequence}_subscription"
+    end
+  end
+
   def node_name
     MiqPglogical::NODE_PREFIX + MiqRegion.my_region_number.to_s
   end
@@ -117,9 +123,13 @@ class PglogicalSubscription < ActsAsArModel
       :dbname   => dbname,
       :host     => host,
       :user     => user,
-      :password => MiqPassword.try_decrypt(password),
+      :password => decrypted_password,
       :port     => port
     }.delete_blanks
     PG::Connection.parse_connect_args(conf)
+  end
+
+  def decrypted_password
+    MiqPassword.try_decrypt(password)
   end
 end
