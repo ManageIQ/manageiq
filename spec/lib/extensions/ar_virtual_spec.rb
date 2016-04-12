@@ -87,6 +87,11 @@ describe VirtualFields do
         TestClass.virtual_column :vcol1, :type => :string, :uses => :col1
         expect(TestClass.virtual_includes(:vcol1)).to eq(:col1)
       end
+
+      it "with arel" do
+        TestClass.virtual_column :vcol1, :type => :boolean, :arel => -> (t) { t[:vcol].lower }
+        expect(TestClass.arel_attribute("vcol1").to_sql).to eq(%{LOWER("test_classes"."vcol")})
+      end
     end
 
     context ".virtual_columns=" do

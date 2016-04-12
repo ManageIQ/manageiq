@@ -18,10 +18,17 @@ module MiqReport::Search
     MiqReport::Search::ORDER_OPS[order.downcase] if order
   end
 
-  def association_klass(assoc)
-    r = db_class.reflection_with_virtual(assoc.to_sym)
-    raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class.name} if r.nil?
-    r.klass
+  # @param assoc [String] associations and a column name
+  # @raise if an association is not valid
+  # @return nil if there is a virtual association in the path
+  # @return [Class, String] ActiveRecord base object and column name for the association
+  def association_column(assoc)
+    parts = assoc.split(".")
+    col = parts.pop
+    klass = db_class.follow_associations_with_virtual(parts)
+    raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class} if klass.nil?
+    # only return attribute if it is accessible directly (not through virtual columns)
+    [klass.arel_attribute(col), klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
   end
 
   def get_cached_page(limit, offset, includes, options)
@@ -41,17 +48,9 @@ module MiqReport::Search
     return [false, nil] unless db_class.sortable?
     # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
     order = sortby.to_miq_a.collect do |c|
-      info = col_to_col_info(c)
-      return [false, nil] if info[:virtual_reflection] || info[:virtual_column]
-
-      if c.include?(".")
-        assoc, col = c.split(".")
-        sql_col = association_klass(assoc).arel_attribute(col)
-      else
-        sql_col = db_class.arel_attribute(c)
-      end
-      sql_col = sql_col.lower if [:string, :text].include?(info[:data_type])
-      sql_col
+      sql_col, sql_type = association_column(c)
+      return [false, nil] if sql_col.nil?
+      [:string, :text].include?(sql_type) ? sql_col.lower : sql_col
     end
 
     if (order_op = self.order_op)

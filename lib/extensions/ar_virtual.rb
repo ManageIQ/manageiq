@@ -171,6 +171,14 @@ module VirtualReflections
       virtual_reflection(association) || reflect_on_association(association)
     end
 
+    def follow_associations(association_names)
+      association_names.inject(self) { |klass, name| klass.try!(:reflect_on_association, name).try!(:klass) }
+    end
+
+    def follow_associations_with_virtual(association_names)
+      association_names.inject(self) { |klass, name| klass.try!(:reflection_with_virtual, name).try!(:klass) }
+    end
+
     private
 
     def add_virtual_reflection(reflection, name, uses, _options)
