@@ -9,7 +9,12 @@ class MiqExpression::Field
 
   def self.parse(field)
     match = FIELD_REGEX.match(field) or raise ParseError, field
-    new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:column])
+    model = match[:model_name].constantize
+    klass = model
+    associations = match[:associations].to_s.split(".").collect do |association|
+      klass = klass.reflection_with_virtual(association).klass
+    end
+    new(model, associations, match[:column])
   end
 
   attr_reader :model, :associations, :column
@@ -33,7 +38,7 @@ class MiqExpression::Field
     if associations.none?
       model
     else
-      associations.last.classify.constantize
+      associations.last
     end
   end
 

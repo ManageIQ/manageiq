@@ -44,12 +44,17 @@ RSpec.describe MiqExpression::Field do
 
     it "can parse the associations when there is one present" do
       field = "Vm.host-name"
-      expect(described_class.parse(field).associations).to eq(["host"])
+      expect(described_class.parse(field).associations).to eq([Host])
     end
 
     it "can parse the associations when there are many present" do
       field = "Vm.host.hardware-id"
-      expect(described_class.parse(field).associations).to eq(%w(host hardware))
+      expect(described_class.parse(field).associations).to eq([Host, Hardware])
+    end
+
+    it "can parse the associations when one overrides the class name" do
+      field = "Vm.users-name"
+      expect(described_class.parse(field).associations).to eq([Account])
     end
 
     it "will raise a parse error when given a field with unsupported syntax" do
@@ -82,7 +87,7 @@ RSpec.describe MiqExpression::Field do
     end
 
     it "returns true for a :datetime type column on an association" do
-      field = described_class.new(Vm, ["guest_applications"], "install_time")
+      field = described_class.new(Vm, [GuestApplication], "install_time")
       expect(field).to be_datetime
     end
   end
@@ -94,7 +99,7 @@ RSpec.describe MiqExpression::Field do
     end
 
     it "returns the model of the target association if there are associations" do
-      field = described_class.new(Vm, ["guest_applications"], "name")
+      field = described_class.new(Vm, [GuestApplication], "name")
       expect(field.target).to eq(GuestApplication)
     end
   end
