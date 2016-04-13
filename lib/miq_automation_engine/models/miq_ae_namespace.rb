@@ -3,6 +3,11 @@ class MiqAeNamespace < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
+  EXPORT_EXCLUDE_KEYS = [/^id$/, /_id$/, /^created_on/, /^updated_on/,
+                         /^updated_by/, /^reserved$/, /^commit_message/,
+                         /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
+                         /^last_import_on/].freeze
+
   belongs_to :parent,        :class_name => "MiqAeNamespace",  :foreign_key => :parent_id
   has_many   :ae_namespaces, :class_name => "MiqAeNamespace",  :foreign_key => :parent_id,    :dependent => :destroy
   has_many   :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) },    :class_name => "MiqAeClass",      :foreign_key => :namespace_id, :dependent => :destroy
