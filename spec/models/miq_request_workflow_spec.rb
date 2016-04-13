@@ -337,7 +337,7 @@ describe MiqRequestWorkflow do
     end
 
     it "returns an empty hash if no resource pools are found" do
-      src = {:ems =>  ems, :folder => ems_folder}
+      src = {:ems => ems, :folder => ems_folder}
       expect(workflow.folder_to_respool(src)).to be_empty
     end
   end
@@ -397,6 +397,23 @@ describe MiqRequestWorkflow do
     it 'other' do
       expect(workflow.cast_value('data', :other)).to eq('data')
       expect(workflow.cast_value(1, :other)).to      eq(1)
+    end
+  end
+
+  context "#storage_to_hash_struct" do
+    let(:storage) { FactoryGirl.create(:storage) }
+
+    it 'filters out storage_clusters not in same ems' do
+      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => MiqHashStruct.new(:id => ems.id))
+      storage_cluster1 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1', :ems_id => ems.id)
+      storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2', :ems_id => ems.id + 1)
+      storage_cluster1.add_child(storage)
+      storage_cluster2.add_child(storage)
+      expect(workflow.storage_to_hash_struct(storage).storage_cluster).to eq(storage_cluster1.name)
+    end
+
+    it 'says nil if not a storage_cluster' do
+      expect(workflow.storage_to_hash_struct(storage).storage_cluster).to be_nil
     end
   end
 end

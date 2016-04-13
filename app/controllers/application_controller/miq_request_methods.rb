@@ -350,9 +350,10 @@ module ApplicationController::MiqRequestMethods
     sort_order ||= "DESC"
 
     headers = {
-      "name"        => _("Name"),
-      "free_space"  => _("Free Space"),
-      "total_space" => _("Total Space"),
+      "name"            => _("Name"),
+      "free_space"      => _("Free Space"),
+      "total_space"     => _("Total Space"),
+      "storage_cluster" => _("Storage Cluster"),
     }
 
     integer_fields = %w(free_space total_space)

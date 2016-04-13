@@ -505,4 +505,35 @@ describe Storage do
       expect(storage.smartstate_analysis_count_for_host_id(host.id)).to eq(2)
     end
   end
+
+  context '#storage_clusters' do
+    it 'returns only parents' do
+      # A storage mounted on different VCs will have multiple parents
+      storage          = FactoryGirl.create(:storage)
+      storage_cluster1 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1')
+      storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2')
+      _storage_cluster = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster3')
+      storage_cluster1.add_child(storage)
+      storage_cluster2.add_child(storage)
+      expect(storage.storage_clusters).to match_array([storage_cluster1, storage_cluster2])
+    end
+
+    it 'returns parents of type storage_cluster only' do
+      # A storage mounted on different VCs will have multiple parents
+      storage          = FactoryGirl.create(:storage)
+      ems_folder       = FactoryGirl.create(:ems_folder,      :name => 'test_folder')
+      storage_cluster1 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1')
+      storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2')
+      ems_folder.add_child(storage)
+      storage_cluster1.add_child(storage)
+      storage_cluster2.add_child(storage)
+      expect(storage.storage_clusters).to match_array([storage_cluster1, storage_cluster2])
+      expect(storage.parents).to match_array([ems_folder, storage_cluster1, storage_cluster2])
+    end
+
+    it 'return [] if not in any storage cluster' do
+      storage = FactoryGirl.create(:storage)
+      expect(storage.storage_clusters).to match_array([])
+    end
+  end
 end
