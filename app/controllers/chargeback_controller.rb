@@ -571,7 +571,14 @@ class ChargebackController < ApplicationController
     @edit[:new][:code_currency] = rate_details[0].detail_currency.code
 
     rate_details.each_with_index do |detail, detail_index|
-      temp                    = detail.slice(:per_time, :per_unit, :detail_measure, :group, :source)
+      temp = detail.slice(:per_time, :per_unit, :detail_measure, :group, :source)
+
+      if temp[:detail_measure].present?
+        detail_measure = temp.delete(:detail_measure)
+        temp[:detail_measure] = {}
+        temp[:detail_measure][:measures] = detail_measure.measures
+      end
+
       temp[:id]               = params[:typ] == "copy" ? nil : detail.id
       temp[:per_time]         ||= "hourly"
       temp[:group]            = detail.group
