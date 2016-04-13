@@ -9,7 +9,7 @@
               = h(_(menu_section.name))
 
           - if menu_section.subsection?
-            .nav-pf-secondary-nav
+            .nav-pf-secondary-nav{:id => "#menu-#{menu_section.id}"}
               .nav-item-pf-header
                 %a.secondary-collapse-toggle-pf{:href => "#", "data-toggle" => "collapse-secondary-nav"}
                 %span
@@ -49,8 +49,3 @@
                       %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges()'}
                         %span.list-group-item-value
                           = _(menu_item.name)
-:javascript
-  $(function () {
-    $('.navbar-toggle').off('click');
-    $().setupVerticalTertiaryNavigation(true);
-  });

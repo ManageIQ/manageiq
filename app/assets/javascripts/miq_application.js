@@ -1576,7 +1576,7 @@ function chartData(type, data, data2) {
   return _.defaultsDeep({}, config, data, data2);
 }
 
-$( document ).ready(function() {
-    check_for_ellipsis();
-    $().setupVerticalNavigation(true);
+$(function () {
+  check_for_ellipsis();
+  $().setupVerticalTertiaryNavigation(true);
 });
