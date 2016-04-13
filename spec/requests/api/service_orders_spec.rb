@@ -151,4 +151,58 @@ RSpec.describe "service orders API" do
     end.to change(ServiceOrder, :count).by(-2)
     expect_request_success
   end
+
+  context "service requests subcollection" do
+    context "with an appropriate role" do
+      it "can list a shopping cart's service requests" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        _shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize action_identifier(:service_requests, :read, :subcollection_actions, :get)
+
+        url = "#{service_orders_url("cart")}/service_requests"
+        run_get url
+
+        expected_href = a_string_matching("#{url}/#{service_request.id}")
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include("count"     => 1,
+                                         "name"      => "service_requests",
+                                         "resources" => [a_hash_including("href" => expected_href)],
+                                         "subcount"  => 1)
+      end
+
+      it "can show a shopping cart's service request" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        _shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize action_identifier(:service_requests, :read, :subresource_actions, :get)
+
+        url = "#{service_orders_url("cart")}/service_requests/#{service_request.id}"
+        run_get url
+
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include("id" => service_request.id, "href" => a_string_matching(url))
+      end
+    end
+
+    context "without an appropriate role" do
+      it "will not list a shopping cart's service requests" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        _shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize
+
+        run_get "#{service_orders_url("cart")}/service_requests"
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "will not show a service orders's shopping cart" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        _shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize
+
+        run_get "#{service_orders_url("cart")}/service_requests/#{service_request.id}"
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end

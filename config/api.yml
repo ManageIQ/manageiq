@@ -920,6 +920,8 @@
     - :collection
     :methods: *70174834084700
     :klass: ServiceOrder
+    :subcollections:
+    - :service_requests
     :collection_actions:
       :get:
       - :name: read
@@ -959,6 +961,14 @@
       - :name: read
         :identifier: miq_request_view
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
+    :subresource_actions:
       :get:
       - :name: read
         :identifier: miq_request_view
