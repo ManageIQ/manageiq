@@ -1240,9 +1240,8 @@ module OpsController::OpsRbac
   end
 
   def tab_features_for_node(node)
-    node.ends_with?("_tab_all_vm_rules") ?
-      MiqProductFeature.feature_children(node.split("_tab_").last) :
-      Menu::Manager.tab_features_by_name(node.split("_tab_").last)
+    feature_id = node.split('_tab_')
+    node =~ /_tab_all_vm_rules$/ ? MiqProductFeature.feature_children(feature_id) : Menu::Manager.section(feature_id)
   end
 
   # Walk the features tree, removing features up to the top

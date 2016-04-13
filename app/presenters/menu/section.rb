@@ -5,13 +5,17 @@ module Menu
     end
 
     def features
+      Array(items).collect { |el| el.try(:feature) }.compact
+    end
+
+    def features_recursive
       Array(items).collect { |el| el.try(:feature) || el.try(:features) }.flatten.compact
     end
 
     def visible?
       userid = User.current_userid
       store = Vmdb::PermissionStores.instance
-      auth  = store.can?(id) && User.current_user.role_allows_any?(:identifiers => features)
+      auth  = store.can?(id) && User.current_user.role_allows_any?(:identifiers => features_recursive)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], main tab [#{id}]")
       auth
     end
@@ -35,6 +39,15 @@ module Menu
      items.detect do |el|
        el.id == item_id || (el.kind_of?(Section) && el.contains_item_id?(item_id))
      end.present?
+    end
+
+    def preprocess_sections(section_hash)
+      items.each do |el|
+        if el.kind_of?(Section)
+          section_hash[el.id] = el
+          el.preprocess_sections(section_hash)
+        end
+      end
     end
   end
 end

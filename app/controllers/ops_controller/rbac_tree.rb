@@ -11,6 +11,43 @@ class OpsController
       @role_features = role_features
     end
 
+    def remove_accords_suffix(name)
+      name.sub(/_accords$/, '')
+    end
+
+    def all_checked(kids)
+      return false if kids.empty? # empty list is considered not checked
+      kids.length == (kids.collect { |k| k if k[:select] }.compact).length
+    end
+
+    def build_section(section, parent_checked)
+      kids = []
+      node = {
+        :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{section.id}",
+        :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :title   => _(section.name),
+        :tooltip => _("%{title} Main Tab") % {:title => section.name},
+      }
+
+      section.items.each do |item|
+        if item.kind_of?(Menu::Section) # recurse for sections
+          feature = build_section(item, true) # FIXME: parent_checked
+          kids.push(feature)
+        else # kind_of?(Menu::Item) # add item features
+          next if item.feature.nil?
+          feature_name = remove_accords_suffix(item.feature)
+          next unless MiqProductFeature.feature_exists?(feature_name) # FIXME: feature name? or :feature for items
+          feature = rbac_features_tree_add_node(feature_name, node[:key], parent_checked)
+          kids.push(feature) unless feature.nil?
+        end
+      end
+
+      node[:select] = parent_checked || all_checked(kids)
+      node[:children] = kids
+
+      node
+    end
+
     def build
       root_feature = MiqProductFeature.feature_root
       root = MiqProductFeature.feature_details(root_feature)
@@ -25,7 +62,7 @@ class OpsController
       }
 
       top_nodes = []
-      @all_vm_node = { # FIXME: handle the below special name!
+      @all_vm_node = {
         :key      => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
         :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title    => t = _("Access Rules for all Virtual Machines"),
@@ -35,89 +72,49 @@ class OpsController
       }
       rbac_features_tree_add_node("all_vm_rules", root_node[:key], @all_vm_node[:select])
 
-      Menu::Manager.each_feature_title_with_subitems do |feature_title, subitems|
-        t_kids = []
-        t_node = {
-          :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{feature_title}",
-          :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
-          :title   => _(feature_title),
-          :tooltip => _("%{title} Main Tab") % {:title => feature_title}
-        }
+      #Menu::Manager.each_feature_title_with_subitems do |feature_title, subitems|
+      Menu::Manager.each do |section|
+        # skip storage node unless it's enabled in product setting
+        next if section.id == :sto && !VMDB::Config.new("vmdb").config[:product][:storage]
 
-        subitems.each do |f| # Go thru the features of this tab
-          f_tab = f.ends_with?("_accords") ? f.split("_accords").first : f  # Remove _accords suffix if present, to get tab feature name
-          next unless MiqProductFeature.feature_exists?(f_tab)
-          feature = rbac_features_tree_add_node(f_tab, t_node[:key], root_node[:select])
-          t_kids.push(feature) unless feature.nil?
-        end
-
-        if root_node[:select]                 # Root node is checked
-          t_node[:select] = true
-        elsif !t_kids.empty?                  # If kids are present
-          full_chk = (t_kids.collect { |k| k if k[:select] }.compact).length
-          part_chk = (t_kids.collect { |k| k unless k[:select] }.compact).length
-          if full_chk == t_kids.length
-            t_node[:select] = true            # All kids are checked
-          elsif full_chk > 0 || part_chk > 0
-            t_node[:select] = false           # Some kids are checked or partially checked
-          end
-        end
-
-        t_node[:children] = t_kids unless t_kids.empty?
-        # only show storage node if product setting is set to show the nodes
-        case feature_title.downcase
-        when "storage" then top_nodes.push(t_node) if VMDB::Config.new("vmdb").config[:product][:storage]
-        else            top_nodes.push(t_node)
-        end
+        top_nodes.push(build_section(section, root_node[:select]))
       end
       top_nodes << @all_vm_node
-      root_node[:children] = top_nodes unless top_nodes.empty?
+
+      root_node[:children] = top_nodes
       root_node
     end
 
     def rbac_features_tree_add_node(feature, _pid, parent_checked = false)
       details = MiqProductFeature.feature_details(feature)
+      return if details[:hidden]
 
-      unless details[:hidden]
-        f_kids = [] # Array to hold node children
-        f_node = {
-          :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
-          :icon    => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
-          :title   => _(details[:name]),
-          :tooltip => _(details[:description]) || _(details[:name])
-        }
-        f_node[:hideCheckbox] = true if details[:protected]
+      kids = []
+      node = {
+        :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
+        :icon    => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
+        :title   => _(details[:name]),
+        :tooltip => _(details[:description]) || _(details[:name])
+      }
+      node[:hideCheckbox] = true if details[:protected]
 
-        # Go thru the features children
-        MiqProductFeature.feature_children(feature).each do |f|
-          feat = rbac_features_tree_add_node(f,
-                                             f_node[:key],
-                                             parent_checked || @role_features.include?(feature)) if f
-          next unless feat
+      MiqProductFeature.feature_children(feature).each do |f|
+        feat = rbac_features_tree_add_node(f,
+                                           node[:key],
+                                           parent_checked || @role_features.include?(feature)) if f
+        next unless feat
 
-          # exceptional handling for named features
-          if %w(image instance miq_template vm).index(f)
-            @all_vm_node[:children].push(feat)
-          else
-            f_kids.push(feat)
-          end
+        # exceptional handling for named features
+        if %w(image instance miq_template vm).index(f)
+          @all_vm_node[:children].push(feat)
+        else
+          kids.push(feat)
         end
-        f_node[:children] = f_kids unless f_kids.empty? # Add in the node's children, if any
-
-        if parent_checked || # Parent is checked
-           @role_features.include?(feature)  # This feature is checked
-          f_node[:select] = true
-        elsif !f_kids.empty?                  # If kids are present
-          full_chk = (f_kids.collect { |k| k if k[:select] }.compact).length
-          part_chk = (f_kids.collect { |k| k unless k[:select] }.compact).length
-          if full_chk == f_kids.length
-            f_node[:select] = true            # All kids are checked
-          elsif full_chk > 0 || part_chk > 0
-            f_node[:select] = false # Some kids are checked
-          end
-        end
-        f_node
       end
+
+      node[:children] = kids
+      node[:select] = parent_checked || @role_features.include?(feature) || all_checked(kids)
+      node
     end
   end
 end

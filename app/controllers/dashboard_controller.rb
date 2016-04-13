@@ -91,7 +91,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    tab_features = Menu::Manager.tab_features_by_id(tab)
+    tab_features = Menu::Manager.section(tab).features
     case tab
     when :vi
       tab_features.detect do |f|
