@@ -188,6 +188,29 @@ describe Classification do
       expect(any_tagged_with(Host, [full_tag_name(ent2), full_tag_name(ent1)])).to include(host2)
     end
 
+    it "find with multiple tags" do
+      cat1 = Classification.find_by_name "test_single_value_category"
+      ent11 = cat1.entries[0]
+      ent12 = cat1.entries[1]
+
+      cat2 = Classification.find_by_name "test_multi_value_category"
+      ent21 = cat2.entries[0]
+      ent22 = cat2.entries[1]
+
+      ent11.assign_entry_to(host2)
+      ent21.assign_entry_to(host2)
+
+      # success
+      expect(any_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])).to include(host2)
+      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent11)]])).to include(host2)
+
+      # failure
+      expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])
+            ).not_to include(host2)
+      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent22)]])).not_to include(host2)
+      expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to include(host2)
+    end
+
     it "should test find by entry" do
       cat = Classification.find_by_name "test_multi_value_category"
       ent1 = cat.entries[0]
@@ -440,6 +463,10 @@ describe Classification do
 
   def tagged_with(target, options)
     target.find_tagged_with(options.merge!(:ns => Classification::DEFAULT_NAMESPACE))
+  end
+
+  def grouped_with(taget, options)
+    target.find_tags_by_grouping(options.merge!(:ns => Classification::DEFAULT_NAMESPACE))
   end
 
   def full_tag_name(tag)
