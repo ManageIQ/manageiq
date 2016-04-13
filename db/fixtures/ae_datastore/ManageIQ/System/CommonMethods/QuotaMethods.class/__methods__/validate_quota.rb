@@ -1,6 +1,6 @@
-GIGA_SIZE = 1_073_741_824.0
-MEGA_SIZE = 1_048_576.0
-KILO_SIZE = 1024.0
+#
+# Description: Validate quota items.
+#
 
 def request_info
   @service = ($evm.root['vmdb_object_type'] == 'service_template_provision_task') ? true : false
@@ -17,16 +17,21 @@ def quota_check(item, used, requested, quota_max, quota_warn)
   return unless quota_max + quota_warn > 0
   if quota_exceeded?(item, used, requested, quota_max)
     quota_exceeded(item, reason(item, used, requested, quota_max), false)
-  elsif quota_exceeded?(item, used, requested, quota_warn)
+  elsif quota_exceeded?(item, used, requested, quota_warn, true)
     quota_exceeded(item, reason(item, used, requested, quota_warn), true)
   end
 end
 
-def quota_exceeded?(item, used, requested, quota)
+def quota_exceeded?(item, used, requested, quota, warn = false)
   return false if quota.zero?
   if used + requested > quota
-    $evm.log(:info, "#{item} Quota exceeded: Used(#{display_value(item, used, 2)})" \
+    if warn
+      $evm.log(:info, "Quota #{item} warning: Used(#{display_value(item, used, 2)})" \
       " + Requested(#{display_value(item, requested, 2)}) > Quota(#{display_value(item, quota, 2)})")
+    else
+      $evm.log(:info, "Quota #{item} exceeded: Used(#{display_value(item, used, 2)})" \
+      " + Requested(#{display_value(item, requested, 2)}) > Quota(#{display_value(item, quota, 2)})")
+    end
     return true
   end
   false
@@ -43,30 +48,19 @@ end
 
 def quota_limit_exceeded(item, reason)
   key = reason_key(item, nil)
-  $evm.log(:info, "Quota maximum allowed exceeded for key: #{key} reason: #{reason}")
+  $evm.log(:info, "Quota maximum exceeded for key: #{key} reason: #{reason}")
   @max_exceeded[key] = reason
 end
 
 def quota_warn_exceeded(item, reason)
   key = reason_key(item, "warn_")
-  $evm.log(:info, "Quota Warning limit exceeded for key: #{key} reason: #{reason}")
+  $evm.log(:info, "Quota warning for key: #{key} reason: #{reason}")
   @warn_exceeded[key] = reason
 end
 
 def display_value(item, value, _precision)
   return value unless %w(memory storage).include?(item)
-  case
-  when value == 1
-    "1 Byte"
-  when value < KILO_SIZE
-    "%d Bytes" % (value)
-  when value < MEGA_SIZE
-    "%.2f KB" % (value / KILO_SIZE)
-  when value < GIGA_SIZE
-    "%.2f MB" % (value / MEGA_SIZE)
-  else
-    "%.2f GB" % (value / GIGA_SIZE)
-  end
+  value.to_s(:human_size)
 end
 
 def reason(item, used, requested, limits)
@@ -86,6 +80,7 @@ def check_quota_results
   unless @max_exceeded.empty?
     max_message = message_text(nil, "Request exceeds maximum allowed for the following: ", @max_exceeded)
     message = set_exceeded_results(message, max_message, :quota_max_exceeded, "error")
+    return
   end
   unless @warn_exceeded.empty?
     warn_message = message_text('warn_', "Request exceeds warning limits for the following: ", @warn_exceeded)

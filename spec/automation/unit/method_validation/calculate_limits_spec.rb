@@ -35,9 +35,9 @@ describe "Quota Validation" do
     ws = run_automate_method(@miq_provision_request, 'group')
     root = ws.root
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqGroup)
-    expect(root['quota_limit_max'][:storage]).to eq(2048)
+    expect(root['quota_limit_max'][:storage]).to eq(2.terabytes)
     expect(root['quota_limit_max'][:cpu]).to eq(4)
     expect(root['quota_limit_max'][:vms]).to eq(4)
-    expect(root['quota_limit_max'][:memory]).to eq(2048)
+    expect(root['quota_limit_max'][:memory]).to eq(2.gigabytes)
   end
 end

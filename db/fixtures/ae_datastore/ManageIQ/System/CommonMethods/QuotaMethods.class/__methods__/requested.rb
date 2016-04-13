@@ -18,8 +18,12 @@ def calculate_requested(options_hash = {})
             else
               get_total_requested(options_hash, :storage)
             end
+  memory = get_total_requested(options_hash, :vm_memory)
+  if %w(amazon openstack google).exclude?(@miq_request.source.vendor)
+    memory = memory.megabytes
+  end
   {:storage => storage,
-   :memory  => get_total_requested(options_hash, :vm_memory) * 1024**2,
+   :memory  => memory,
    :cpu     => get_total_requested(options_hash, :number_of_cpus),
    :vms     => get_total_requested(options_hash, :number_of_vms)}
 end
