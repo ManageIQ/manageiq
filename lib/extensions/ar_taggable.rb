@@ -37,19 +37,24 @@ module ActsAsTaggable
       raise "No tags were passed to :any or :all options" if tag_names.empty?
 
       tag_ids = Tag.for_names(tag_names, Tag.get_namespace(options)).pluck(:id)
-      # Bailout if not all tags passed in exist. (may want to do this with :any as well)
-      return none if options[:all] && tag_ids.length != tag_names.length
+      if options[:all]
+        return none if tag_ids.length != tag_names.length
+        with_all_tags(tag_ids)
+      else
+        with_any_tags(tag_ids)
+      end
+    end
 
+    def with_any_tags(tag_ids)
+      distinct.joins(:taggings).where(:taggings => {:tag_id => tag_ids})
+    end
+
+    def with_all_tags(tag_ids)
       taggings = Tagging.arel_table
       self_arel = arel_table
-      query = distinct.joins(:taggings).where(taggings[:tag_id].in tag_ids)
-
-      if options[:all]
-        grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] }
-        query = query.group(*grouping_cols).having(taggings[:id].count.gteq tag_names.length)
-      end
-
-      query
+      grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] }
+      with_any_tags(tag_ids)
+        .group(*grouping_cols).having(taggings[:id].count.gteq tag_ids.length)
     end
 
     # @param list [Array<Array<String>>] list of tags
