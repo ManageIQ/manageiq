@@ -399,4 +399,23 @@ describe MiqRequestWorkflow do
       expect(workflow.cast_value(1, :other)).to      eq(1)
     end
   end
+
+  context "#storage_to_hash_struct" do
+    before do
+      @storage = FactoryGirl.create(:storage, :name => 'test_storage_vmfs', :store_type => 'VMFS')
+    end
+
+    it 'filters out storage_clusters not in same ems' do
+      allow(workflow).to receive(:get_source_and_targets).and_return({:ems => MiqHashStruct.new({:id => ems.id})})
+      storage_cluster1 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1', :ems_id => ems.id)
+      storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2', :ems_id => ems.id+1)
+      storage_cluster1.add_child(@storage)
+      storage_cluster2.add_child(@storage)
+      expect(workflow.storage_to_hash_struct(@storage).storage_cluster).to eq(storage_cluster1.name)
+    end
+
+    it 'says nil if not a storage_cluster' do
+      expect(workflow.storage_to_hash_struct(@storage).storage_cluster).to be_nil
+    end
+  end
 end

@@ -5,4 +5,7 @@ FactoryGirl.define do
 
   factory :datacenter, :parent => :ems_folder, :class => "Datacenter" do
   end
+
+  factory :storage_cluster, :parent => :ems_folder, :class => "StorageCluster" do
+  end
 end

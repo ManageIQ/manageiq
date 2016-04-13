@@ -505,4 +505,25 @@ describe Storage do
       expect(storage.smartstate_analysis_count_for_host_id(host.id)).to eq(2)
     end
   end
+
+  context '#storage_clusters' do
+    it 'filters parents of storage_cluster' do
+      # A storage mounted on different VCs will have multiple parents
+      storage          = FactoryGirl.create(:storage,               :name => 'test_storage_vmfs', :store_type => 'VMFS')
+      ems_folder       = FactoryGirl.create(:ems_folder,            :name => 'test_folder')
+      storage_cluster1 = FactoryGirl.create(:storage_cluster,       :name => 'test_storage_cluster1')
+      storage_cluster2 = FactoryGirl.create(:storage_cluster,       :name => 'test_storage_cluster2')
+      ems_folder.add_child(storage)
+      storage_cluster1.add_child(storage)
+      storage_cluster2.add_child(storage)
+      expect(storage.storage_clusters.to_set).to eq([storage_cluster1, storage_cluster2].to_set)
+      expect(storage.parents.to_set).to eq([ems_folder, storage_cluster1, storage_cluster2].to_set)
+    end
+
+    it 'return [] if not in any storage cluster' do
+      storage = FactoryGirl.create(:storage, :name => 'test_storage_vmfs', :store_type => 'VMFS')
+      expect(storage.storage_clusters.length).to eq(0)
+    end
+  end
+
 end
