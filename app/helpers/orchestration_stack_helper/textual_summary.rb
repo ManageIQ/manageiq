@@ -56,7 +56,6 @@ module OrchestrationStackHelper::TextualSummary
   def textual_orchestration_template
     template = @record.orchestration_template
     return nil if template.nil?
-    return nil unless template.orderable
     label = ui_lookup(:table => "orchestration_template")
     h = {:label => label, :image => "orchestration_template", :value => template.name}
     if role_allows(:feature => "orchestration_templates_view")
