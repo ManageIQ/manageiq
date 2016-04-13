@@ -238,57 +238,72 @@ describe GitWorktree do
     end
   end
 
-  context "branches" do
+  describe "git branches" do
     let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
     let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
 
-    it "get list of branches" do
-      expect(test_repo.branches).to match_array(%w(master branch1 branch2))
+    describe "#branches" do
+      it "all branches" do
+        expect(test_repo.branches).to match_array(%w(master branch1 branch2))
+      end
+
+      it "local branches only" do
+        expect(test_repo.branches(:local)).to match_array(%w(master branch1 branch2))
+      end
+
+      it "remote branches only" do
+        expect(test_repo.branches(:remote)).to be_empty
+      end
     end
 
-    it "get list of local branches" do
-      expect(test_repo.branches(:local)).to match_array(%w(master branch1 branch2))
+    describe "#file_list" do
+      it "get list of files in a branch" do
+        test_repo.branch = 'branch2'
+
+        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+      end
     end
 
-    it "get list of remote branches" do
-      expect(test_repo.branches(:remote)).to be_empty
+    describe "#branch_info" do
+      it "get branch info" do
+        expect(test_repo.branch_info('branch2').keys).to match_array([:time, :message, :commit_sha])
+      end
     end
 
-    it "get list of files in a branch" do
-      test_repo.branch = 'branch2'
-
-      expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
-    end
-
-    it "get branch info" do
-      expect(test_repo.branch_info('branch2').keys).to match_array([:time, :message, :commit_sha])
-    end
-
-    it "non existent branch" do
-      expect { test_repo.branch = 'nada' }.to raise_exception(GitWorktreeException::BranchMissing)
+    describe "#branch" do
+      it "non existent branch" do
+        expect { test_repo.branch = 'nada' }.to raise_exception(GitWorktreeException::BranchMissing)
+      end
     end
   end
 
-  context "tags" do
+  describe 'git tags' do
     let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
     let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
 
-    it "get list of tags" do
-      expect(test_repo.tags).to match_array(%w(tag1 tag2))
+    describe "#tags" do
+      it "get list of tags" do
+        expect(test_repo.tags).to match_array(%w(tag1 tag2))
+      end
     end
 
-    it "get list of files in a tag" do
-      test_repo.tag = 'tag2'
-
-      expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+    describe "#file_list" do
+      it "get list of files in a tag" do
+        test_repo.tag = 'tag2'
+        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+      end
     end
 
-    it "get tag info" do
-      expect(test_repo.tag_info('tag2').keys).to match_array([:time, :message, :commit_sha])
+    describe "#tag_info" do
+      it "get tag info" do
+        expect(test_repo.tag_info('tag2').keys).to match_array([:time, :message, :commit_sha])
+      end
     end
 
-    it "non existent tag" do
-      expect { test_repo.tag = 'nada' }.to raise_exception(GitWorktreeException::TagMissing)
+    describe "#tag" do
+      it "non existent tag" do
+        expect { test_repo.tag = 'nada' }.to raise_exception(GitWorktreeException::TagMissing)
+      end
     end
   end
 end
