@@ -134,12 +134,14 @@ class ChargebackController < ApplicationController
       # Detect errors saving tiers
       tiers_valid = @rate_tiers.all? { |tiers| tiers.all?(&:valid?) }
 
-      if tiers_valid && @rate.save
-        @rate.chargeback_rate_details.replace(@rate_details)
-        @rate.chargeback_rate_details.each_with_index do |_detail, i|
-          @rate_details[i].save_tiers(@rate_tiers[i])
-        end
+      @rate.chargeback_rate_details.replace(@rate_details)
+      @rate.chargeback_rate_details.each_with_index do |_detail, i|
+        @rate_details[i].save_tiers(@rate_tiers[i])
+      end
 
+      tiers_valid &&= @rate_details.all?{ |rate_detail| rate_detail.errors.messages.blank? }
+
+      if tiers_valid && @rate.save
         if params[:button] == "add"
           AuditEvent.success(build_created_audit(@rate, @edit))
           add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "ChargebackRate"), :name => @rate.description})
