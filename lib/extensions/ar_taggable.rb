@@ -42,10 +42,31 @@ module ActsAsTaggable
       taggings = Tagging.arel_table
       self_arel = arel_table
       query = distinct.joins(:taggings).where(taggings[:tag_id].in tag_ids)
+      order_values = query.order_values
 
       if options[:all]
-        grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] }
+        grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] } + order_values
         query = query.group(*grouping_cols).having(taggings[:id].count.gteq tag_names.length)
+      end
+
+      # if this has a function in it (String or arel) then lets munge the select clause
+      funky_columns = Array.wrap(query.order_values).detect do |col|
+        if col.nil? || col.kind_of?(Symbol)
+          false
+        elsif col.kind_of?(String)
+          col.include?("(")
+        else
+          !col.kind_of?(Arel::Attributes::Attribute)
+        end
+      end
+
+      if funky_columns
+        if query.select_values.empty?
+          grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] } + order_values
+          query = query.select(*grouping_cols)
+        else
+          query = query.select(order_values)
+        end
       end
 
       query
