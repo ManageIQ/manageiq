@@ -730,7 +730,7 @@ en:
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
       ManageIQ::Providers::InfraManager::Template:                          Template
-      ManageIQ::Providers::MiddlewareManager:                               Middleware Manager
+      ManageIQ::Providers::MiddlewareManager:                               Middleware Provider
       ManageIQ::Providers::NetworkManager:                                  Network Manager
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (Openstack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
