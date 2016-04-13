@@ -11,6 +11,7 @@
   - about
   - all_vm_rules
   - availability_zone
+  - compute
   - flavor
   - floating_ip
   - bottlenecks
@@ -70,6 +71,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -173,6 +175,7 @@
   - about
   - all_vm_rules
   - bottlenecks
+  - compute
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -275,6 +278,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - dashboard
   - miq_request_admin
   - miq_request_view
@@ -325,6 +329,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -460,6 +465,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -557,6 +563,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -648,6 +655,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -738,6 +746,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - miq_request_admin
   - miq_request_view
   - my_settings_default_views
@@ -778,6 +787,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
@@ -837,6 +847,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - compute
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
@@ -893,6 +904,7 @@
   :miq_product_feature_identifiers:
   - about
   - availability_zone
+  - compute
   - flavor
   - bottlenecks
   - chargeback
@@ -956,6 +968,7 @@
   - availability_zone
   - flavor
   - bottlenecks
+  - compute
   - chargeback
   - ontap_storage_system
   - ontap_logical_disk

@@ -638,75 +638,80 @@
       :feature_type: control
       :identifier: flavor_tag
 
-# EmsInfra
-- :name: Infrastructure Providers
-  :description: Everything under Infrastructure Providers
+# Compute top level
+- :name: Compute
+  :description: Compute menu
   :feature_type: node
-  :identifier: ems_infra
+  :identifier: compute
   :children:
-  - :name: View
-    :description: View Infrastructure Providers
-    :feature_type: view
-    :identifier: ems_infra_view
+  - :name: Infrastructure Providers
+    :description: Everything under Infrastructure Providers
+    :feature_type: node
+    :identifier: ems_infra
     :children:
-    - :name: List
-      :description: Display Lists of Infrastructure Providers
+    - :name: View
+      :description: View Infrastructure Providers
       :feature_type: view
-      :identifier: ems_infra_show_list
-    - :name: Show
-      :description: Display Individual Infrastructure Providers
-      :feature_type: view
-      :identifier: ems_infra_show
-    - :name: Timeline
-      :description: Display Timelines for Infrastructure Providers
-      :feature_type: view
-      :identifier: ems_infra_timeline
-  - :name: Operate
-    :description: Perform Operations on Infrastructure Providers
-    :feature_type: control
-    :identifier: ems_infra_control
-    :children:
-    - :name: Discover
-      :description: Discover Infrastructure Providers
+      :identifier: ems_infra_view
+      :children:
+      - :name: List
+        :description: Display Lists of Infrastructure Providers
+        :feature_type: view
+        :identifier: ems_infra_show_list
+      - :name: Show
+        :description: Display Individual Infrastructure Providers
+        :feature_type: view
+        :identifier: ems_infra_show
+      - :name: Timeline
+        :description: Display Timelines for Infrastructure Providers
+        :feature_type: view
+        :identifier: ems_infra_timeline
+    - :name: Operate
+      :description: Perform Operations on Infrastructure Providers
       :feature_type: control
-      :identifier: ems_infra_discover
-    - :name: Edit Tags
-      :description: Edit Tags of Infrastructure Providers
-      :feature_type: control
-      :identifier: ems_infra_tag
-    - :name: Manage Policies
-      :description: Manage Policies of Infrastructure Providers
-      :feature_type: control
-      :identifier: ems_infra_protect
-    - :name: Refresh
-      :description: Refresh Infrastructure Providers
-      :feature_type: control
-      :identifier: ems_infra_refresh
-  - :name: Modify
-    :description: Modify Infrastructure Providers
-    :feature_type: admin
-    :identifier: ems_infra_admin
-    :children:
-    - :name: Remove
-      :description: Remove Infrastructure Providers from the VMDB
+      :identifier: ems_infra_control
+      :children:
+      - :name: Discover
+        :description: Discover Infrastructure Providers
+        :feature_type: control
+        :identifier: ems_infra_discover
+      - :name: Edit Tags
+        :description: Edit Tags of Infrastructure Providers
+        :feature_type: control
+        :identifier: ems_infra_tag
+      - :name: Manage Policies
+        :description: Manage Policies of Infrastructure Providers
+        :feature_type: control
+        :identifier: ems_infra_protect
+      - :name: Refresh
+        :description: Refresh Infrastructure Providers
+        :feature_type: control
+        :identifier: ems_infra_refresh
+    - :name: Modify
+      :description: Modify Infrastructure Providers
       :feature_type: admin
-      :identifier: ems_infra_delete
-    - :name: Edit
-      :description: Edit an Infrastructure Provider
-      :feature_type: admin
-      :identifier: ems_infra_edit
-    - :name: Add
-      :description: Add an Infrastructure Provider
-      :feature_type: admin
-      :identifier: ems_infra_new
-    - :name: Scale
-      :description: Scale an Infrastructure Provider
-      :feature_type: admin
-      :identifier: ems_infra_scale
-    - :name: Scale Down
-      :description: Scale an Infrastructure Provider down
-      :feature_type: admin
-      :identifier: ems_infra_scaledown
+      :identifier: ems_infra_admin
+      :children:
+      - :name: Remove
+        :description: Remove Infrastructure Providers from the VMDB
+        :feature_type: admin
+        :identifier: ems_infra_delete
+      - :name: Edit
+        :description: Edit an Infrastructure Provider
+        :feature_type: admin
+        :identifier: ems_infra_edit
+      - :name: Add
+        :description: Add an Infrastructure Provider
+        :feature_type: admin
+        :identifier: ems_infra_new
+      - :name: Scale
+        :description: Scale an Infrastructure Provider
+        :feature_type: admin
+        :identifier: ems_infra_scale
+      - :name: Scale Down
+        :description: Scale an Infrastructure Provider down
+        :feature_type: admin
+        :identifier: ems_infra_scaledown
 
 # Datacenters
 - :name: Datacenters
