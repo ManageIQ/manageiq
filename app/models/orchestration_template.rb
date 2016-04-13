@@ -126,7 +126,7 @@ class OrchestrationTemplate < ApplicationRecord
     return save! if draft?
 
     old_template = self.class.find_with_content(content)
-    return save! if old_template.nil? || old_template.orderable
+    return save! if old_template.nil? || old_template.orderable || old_template.id == id
 
     new_record? ? replace_with_old_template(old_template) : transfer_stacks(old_template)
   end
