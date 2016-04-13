@@ -10,7 +10,6 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   has_many :cloud_subnets, :through    => :network_ports,
                            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
   has_many :public_networks, :through => :cloud_subnets
-  has_many :security_groups, :through => :network_ports
 
   def floating_ip
     # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
