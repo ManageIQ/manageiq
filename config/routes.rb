@@ -1401,8 +1401,6 @@ Vmdb::Application.routes.draw do
         dialog_accordion_json
         explorer
         export_service_dialogs
-        review_import
-        service_dialog_json
       ),
       :post => %w(
         ab_group_reorder

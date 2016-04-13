@@ -1,63 +1,78 @@
-%iframe.import-hidden-iframe{:name => "upload_target"}
+= render :partial => 'layouts/flash_msg'
 
-.import-flash-message
-  .alert
-    %span.icon-placeholder
-      %span.pficon
-      %span.pficon
-    %strong.message
+- if @import
+  %h3
+    = _('Import Service Dialogs')
+  = form_tag('import_service_dialogs', :id => 'import-service-dialogs', :remote => true) do
+    %table#import-grid.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th.narrow
+            %input{:type => 'checkbox', :id => 'check-all'}
+          %th
+            = _('Dialog name')
+          %th
+            = _('Status')
+      %tbody
+        - @import.each do |item|
+          %tr
+            %td.narrow
+              %input{:type => 'checkbox', :name => 'dialogs_to_import[]', :value => item[:name]}
+            %td
+              = item[:name]
+            %td
+              %img{:src => item[:status_icon]}
+              &nbsp;
+              = item[:status]
+    .pull-right
+      = hidden_field_tag(:import_file_upload_id, @import_file_upload_id, :class => "hidden-import-file-upload-id")
+      = submit_tag(_('Commit'), :alt => _("Commit Changes"), :class => "btn btn-primary import-commit")
+      = submit_tag(_('Cancel'), :alt => _("Cancel Changes"), :class => "btn btn-default import-cancel")
 
-.import-or-export
+- else
   %h3
     = _('Import')
-  = form_tag({:action => "upload_import_file"},
-             :class     => "form-horizontal",
-             :target    => "upload_target",
-             :multipart => true,
-             :method    => :post) do
+  = form_tag('upload_import_file', :id => 'upload-service-dialogs', :remote => true) do
     .form-group
-      .col-md-4
-        = file_field("upload", "file",
-                     :class             => "lifestyle",
-                     "data-buttonName"  => "btn-default")
-        :javascript
-          $(":file").filestyle({icon: false, placeholder: "No file chosen"});
-      .col-md-6
-        = button_tag(_("Upload"), :id => "upload_service_dialog_import", :class => "btn btn-default", :action => "submit")
+      .row
+        .col-md-4
+          = file_field("upload", "file", :class => "lifestyle", "data-buttonName" => "btn-default")
+          :javascript
+            $(":file").filestyle({
+              icon: false,
+              placeholder: "No file chosen"
+            });
+        .col-md-6
+          = button_tag(_("Upload"), :id => "upload_service_dialog_import", :class => "btn btn-default", :action => "submit")
 
   %hr
-  %h3= _('Export')
-  = form_tag({:action => "export_service_dialogs"},
-             :method => :get) do
-    = select_tag("service_dialogs[]",
-      options_for_select(@dialog_exports),
-      :class    => "service-dialog-export",
-      :multiple => true)
-    = button_tag(_("Export"),
-      :class => "btn btn-primary",
-      :type  => "submit")
-
-.import-data
-  %form#import-form
-    %h3= _('Import Service Dialogs')
-
-    #import-grid{:style => "width: #{@winW - 50}px; height: #{center_div_height + 5}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
-
-    %table{:width => "100%"}
-      %tr
-        %td{:align => "right"}
-          #buttons
-            = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
-            = button_tag(:type => "button", :alt => "Commit Changes", :class => "btn btn-primary import-commit") do
-              = _('Commit')
-            = button_tag(:type => "button", :alt => "Cancel Changes", :class => "btn btn-default import-cancel") do
-              = _('Cancel')
+  %h3
+    = _('Export')
+  = form_tag('export_service_dialogs', :method => :get) do
+    = select_tag("service_dialogs[]", options_for_select(@dialog_exports), :class => "service-dialog-export", :multiple => true)
+    = button_tag(_("Export"), :class => "btn btn-primary", :type => "submit")
 
 :javascript
-  $(function() {
-    $('#upload_service_dialog_import').click(function() {
-      miqSparkleOn();
+  $(function () {
+    $("#toolbar").hide();
+
+    $('#upload-service-dialogs').submit(function (e) {
+       miqSparkleOn();
+       var data = new FormData(this);
+       miqJqueryRequest($(this).prop('action'), {
+         data:        data,
+         processData: false,
+         contentType: false,
+         cache:       false
+       });
+       e.preventDefault();
+     });
+
+    $('#check-all').click(function (e) {
+      $("table#import-grid tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
     });
 
-    ImportSetup.listenForPostMessages(getAndRenderServiceDialogJson);
+    $("#import-service-dialogs").submit(function (e) {
+      miqSparkleOn();
+    });
   });

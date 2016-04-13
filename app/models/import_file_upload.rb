@@ -5,9 +5,9 @@ class ImportFileUpload < ApplicationRecord
     MiqPolicy.import_from_array(uploaded_yaml_content, :preview => true)
   end
 
-  def service_dialog_json
+  def service_dialog_list
     sorted_service_dialogs = uploaded_yaml_content.sort_by { |service_dialog| service_dialog["label"].downcase }
-    service_dialogs = sorted_service_dialogs.collect.with_index do |dialog, index|
+    sorted_service_dialogs.collect.with_index do |dialog, index|
       status_icon = Dialog.exists?(:label => dialog["label"]) ? "checkmark" : "equal-green"
       status = determine_status(status_icon)
 
@@ -18,8 +18,6 @@ class ImportFileUpload < ApplicationRecord
         :status      => status
       }
     end
-
-    service_dialogs.to_json
   end
 
   def widget_list

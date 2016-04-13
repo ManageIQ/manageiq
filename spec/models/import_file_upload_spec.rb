@@ -14,7 +14,7 @@ describe ImportFileUpload do
     end
   end
 
-  describe "#service_dialog_json" do
+  describe "#service_dialog_list" do
     before do
       import_file_upload.create_binary_blob(:binary => "---\n- label: Dialog2\n- label: dialog\n  not_label: test\n")
       allow(Dialog).to receive(:exists?).with(:label => "dialog").and_return(exists?)
@@ -25,7 +25,7 @@ describe ImportFileUpload do
       let(:exists?) { true }
 
       it "returns json with a checkmark status icon" do
-        expected_json = [{
+        expected_list = [{
           :id          => 0,
           :name        => "dialog",
           :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
@@ -35,9 +35,9 @@ describe ImportFileUpload do
           :name        => "Dialog2",
           :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
           :status      => "This object already exists in the database with the same name"
-        }].to_json
+        }]
 
-        expect(import_file_upload.service_dialog_json).to eq(expected_json)
+        expect(import_file_upload.service_dialog_list).to eq(expected_list)
       end
     end
 
@@ -45,7 +45,7 @@ describe ImportFileUpload do
       let(:exists?) { false }
 
       it "returns json with an equal-green status icon" do
-        expected_json = [{
+        expected_list = [{
           :id          => 0,
           :name        => "dialog",
           :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
@@ -55,9 +55,9 @@ describe ImportFileUpload do
           :name        => "Dialog2",
           :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
           :status      => "New object"
-        }].to_json
+        }]
 
-        expect(import_file_upload.service_dialog_json).to eq(expected_json)
+        expect(import_file_upload.service_dialog_list).to eq(expected_list)
       end
     end
   end
