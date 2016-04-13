@@ -33,7 +33,7 @@ class GitWorktree
   end
 
   def branches(where = nil)
-    where.nil? ? @repo.branches.each_name().sort : @repo.branches.each_name(where).sort
+    where.nil? ? @repo.branches.each_name.sort : @repo.branches.each_name(where).sort
   end
 
   def branch=(name)
