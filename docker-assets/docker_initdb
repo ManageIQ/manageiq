@@ -20,7 +20,7 @@ if [ -x ${APPLIANCE_PG_CHECKDB} ]; then
 				sleep 5
                         fi
                         psql --list | grep -q vmdb
-                        test $? -ne 0 && echo "!! MIQ database could not be found, re-run ${BASEDIR}/bin/docker_setup?" && exit 1
+                        test $? -ne 0 && echo "!! MIQ database could not be found, re-run ${BASEDIR}/bin/setup?" && exit 1
                         echo "** MIQ vmdb was found"
                         exit 0
                 else
@@ -39,8 +39,8 @@ if [ -x ${APPLIANCE_PG_CHECKDB} ]; then
 			pidof memcached
 			test $? -ne 0 && /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d
                         echo "** Starting DB setup"
-                        ${BASEDIR}/bin/docker_setup
-                        test $? -ne 0 && echo "!! ${BASEDIR}/bin/docker_setup failed to run" && exit 1
+                        ${BASEDIR}/bin/setup
+                        test $? -ne 0 && echo "!! ${BASEDIR}/bin/setup failed to run" && exit 1
                         echo "** MIQ database has been initialized"
                         systemctl enable -q ${APPLIANCE_PG_SERVICE}
                         exit 0
