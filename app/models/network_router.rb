@@ -8,6 +8,7 @@ class NetworkRouter < ApplicationRecord
   # "ManageIQ::Providers::NetworkManager"
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::BaseManager"
   belongs_to :cloud_tenant
+  belongs_to :cloud_network
 
   has_many :cloud_subnets
   has_many :network_ports, :through => :cloud_subnets
