@@ -108,7 +108,7 @@ module ManageIQ::Providers
 
       networks.each do |n|
         new_net = @data_index.fetch_path(:cloud_networks, n.id)
-        new_net[:cloud_subnets] = n.subnets.collect { |s| parse_subnet(s) }
+        new_net[:cloud_subnets] = n.subnets.collect { |s| parse_subnet(s, n) }
 
         # Lets store also subnets into indexed data, so we can reference them elsewhere
         new_net[:cloud_subnets].each do |x|
@@ -265,12 +265,13 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def parse_subnet(subnet)
+    def parse_subnet(subnet, network)
       {
         :type                           => self.class.cloud_subnet_type,
         :name                           => subnet.name,
         :ems_ref                        => subnet.id,
         :cidr                           => subnet.cidr,
+        :status                         => (network.status.to_s.downcase == "active") ? "active" : "inactive",
         :network_protocol               => "ipv#{subnet.ip_version}",
         :gateway                        => subnet.gateway_ip,
         :dhcp_enabled                   => subnet.enable_dhcp,

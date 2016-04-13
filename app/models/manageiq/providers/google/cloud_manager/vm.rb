@@ -1,6 +1,8 @@
 class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
 
+  has_and_belongs_to_many :security_groups, :join_table => :security_groups_vms, :foreign_key => :vm_id
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.servers.get(name, availability_zone.name)
