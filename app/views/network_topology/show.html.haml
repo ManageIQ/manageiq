@@ -1,0 +1,72 @@
+- tooltipOptions = {"tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
+.container_topology{'data-ng-app' => "netTopologyApp", 'ng-controller' => "networkTopologyController"}
+  .row.toolbar-pf
+    .col-md-12
+      = render :partial => "shared/topology_header"
+  .legend
+    %label#selected
+    %div{'ng-if' => "kinds"}
+      %kubernetes-topology-icon{tooltipOptions, :kind => "CloudSubnet"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.CloudSubnet
+            %circle{:r => "17"}
+            -# pficon-network
+            %text{:y => "8"} &#xE909;
+        %label
+          = _("Cloud Subnets")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "Vm"}
+        %svg.kube-topology
+          %g.EntityLegend.Infra
+            %circle{:r => "17"}
+            -# pficon-virtual-machine
+            %text{:y => "9"} &#xE90f;
+        %label
+          = _("VMs")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "SecurityGroup"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.SecurityGroup
+            %circle{:r => "17"}
+            -# pficon-cloud-security
+            %text{:x => "1", :y => "6"} &#xE903;
+        %label
+          = _("Security Groups")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "FloatingIp"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.FloatingIp
+            %circle{:r => "17"}
+            -# fa-map-marker
+            %text{:y => "7"} &#xF041;
+        %label
+          = _("Floating Ips")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "CloudNetwork"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.CloudNetwork
+            %circle{:r => "17"}
+            -# pficon-service
+            %text{:x => "-2", :y => "10"} &#xE62C
+        %label
+          = _("Cloud Networks")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "NetworkRouter"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.NetworkRouter
+            %circle{:r => "17"}
+            -# pficon-route
+            %text{:y => "8"} &#xE625;
+        %label
+          = _("Network Routers")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "CloudTenant"}
+        %svg.kube-topology
+          %g.EntityLegend.Cloud.CloudTenant
+            %circle{:r => "17"}
+            -# pficon-cloud-tenant
+            %text{:y => "9"} &#xE904;
+        %label
+          = _("Cloud Tenants")
+
+  .alert.alert-info.alert-dismissable
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
+      %span.pficon.pficon-close
+    %span.pficon.pficon-info
+    %strong
+      = _("Click on the legend to show/hide entities, and double click/right click the entities in the graph to navigate to their summary pages.")
+  %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}
