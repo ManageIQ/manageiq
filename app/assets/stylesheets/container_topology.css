@@ -1,4 +1,5 @@
-.kube-topology line.ContainerServiceContainerGroup, .kube-topology line.ContainerReplicatorContainerGroup, .kube-topology line.ContainerServiceContainerRoute {
+.kube-topology line.ContainerServiceContainerGroup, .kube-topology line.ContainerReplicatorContainerGroup, .kube-topology line.ContainerServiceContainerRoute,
+.kube-topology line.ContainerGroupContainerService, .kube-topology line.ContainerGroupContainerReplicator {
     stroke-linecap: round;
     stroke-dasharray: 5.5;
 }

@@ -32,7 +32,8 @@ describe ContainerTopologyService do
     let(:vm_rhev) { FactoryGirl.create(:vm_redhat, :uid_ems => "558d9a08-7b13-11e5-8546-129aa6621998", :ext_management_system => ems_rhev) }
 
     it "provider has unknown status when no authentication exists" do
-      allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_openshift])
+      allow(container_topology_service).to receive(:retrieve_providers).with(anything, ManageIQ::Providers::ContainerManager).and_return([ems_openshift])
+      container_topology_service.instance_variable_set(:@entity, ems_openshift)
       expect(subject[:items]).to eq(
         "ContainerManager" + ems_openshift.compressed_id.to_s         => {:name         => ems_openshift.name,
                                                                           :status       => "Unknown",
@@ -52,6 +53,7 @@ describe ContainerTopologyService do
       vm_rhev.update_attributes(:host => host, :raw_power_state => "up")
 
       allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_kube])
+      container_topology_service.instance_variable_set(:@entity, ems_kube)
       container_replicator = ContainerReplicator.create(:ext_management_system => ems_kube,
                                                         :ems_ref               => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
                                                         :name                  => "replicator1")
@@ -125,7 +127,7 @@ describe ContainerTopologyService do
 
       expect(subject[:relations].size).to eq(8)
       expect(subject[:relations]).to include(
-        {:source => "ContainerReplicator" + container_replicator.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s},
+        {:source => "ContainerGroup" + container_group.compressed_id.to_s, :target => "ContainerReplicator" + container_replicator.compressed_id.to_s},
         {:source => "ContainerService" + container_service.compressed_id.to_s, :target => "ContainerRoute" + container_route.compressed_id.to_s},
         # cross provider correlations
         {:source => "Vm" + vm_rhev.compressed_id.to_s, :target => "Host" + host.compressed_id.to_s},
@@ -133,7 +135,7 @@ describe ContainerTopologyService do
         {:source => "ContainerNode" + container_node.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s},
         {:source => "ContainerManager" + ems_kube.compressed_id.to_s, :target => "ContainerNode" + container_node.compressed_id.to_s},
         {:source => "ContainerGroup" + container_group.compressed_id.to_s, :target => "Container" + container.compressed_id.to_s},
-        {:source => "ContainerService" + container_service.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s}
+        {:source => "ContainerGroup" + container_group.compressed_id.to_s, :target => "ContainerService" + container_service.compressed_id.to_s}
       )
     end
 
@@ -141,7 +143,7 @@ describe ContainerTopologyService do
       # vm and host test cross provider correlation to infra provider
       vm_rhev.update_attributes(:raw_power_state => "down")
       allow(container_topology_service).to receive(:retrieve_providers).and_return([ems_kube])
-
+      container_topology_service.instance_variable_set(:@entity, ems_kube)
       container_group = ContainerGroup.create(:ext_management_system => ems_kube, :container_node => container_node,
                                               :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb",
                                               :phase => "Running", :container_definitions => [container_def])
@@ -191,7 +193,7 @@ describe ContainerTopologyService do
 
       expect(subject[:relations].size).to eq(5)
       expect(subject[:relations]).to include(
-        {:source => "ContainerService" + container_service.compressed_id.to_s, :target => "ContainerGroup" + container_group.compressed_id.to_s},
+        {:source => "ContainerGroup" + container_group.compressed_id.to_s, :target => "ContainerService" + container_service.compressed_id.to_s},
         # cross provider correlation
         {:source => "ContainerNode" + container_node.compressed_id.to_s, :target => "Vm" + vm_rhev.compressed_id.to_s},
         {:source => "ContainerManager" + ems_kube.compressed_id.to_s, :target => "ContainerNode" + container_node.compressed_id.to_s},
