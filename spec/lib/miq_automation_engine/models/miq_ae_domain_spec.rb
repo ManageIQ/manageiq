@@ -180,7 +180,7 @@ describe MiqAeDomain do
       allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
 
       MiqAeDomain.import_git_repo(domain_name, repo, branch_name)
-      dom1 = MiqAeDomain.find_by_name(domain_name)
+      dom1 = MiqAeDomain.find_by(:name => domain_name)
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
 
