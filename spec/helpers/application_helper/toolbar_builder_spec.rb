@@ -710,6 +710,20 @@ describe ApplicationHelper do
       end
     end
 
+    context "CustomButtonSet" do
+      before do
+        @record = CustomButtonSet.new
+        @sb = {:active_tree => :sandt_tree}
+      end
+
+      %w(ab_button_new ab_group_edit ab_group_delete).each do |id|
+        it "hides #{id} action from toolbar when user has view permission only" do
+          @id = id
+          expect(subject).to be_truthy
+        end
+      end
+    end
+
     context "when with EmsCluster" do
       before do
         @record = EmsCluster.new
@@ -1091,6 +1105,20 @@ describe ApplicationHelper do
       it "otherwise" do
         @id = 'xx'
         expect(subject).to be_falsey
+      end
+    end
+
+    context "ServiceTemplate" do
+      before do
+        @record = ServiceTemplate.new
+        @sb = {:active_tree => :sandt_tree}
+      end
+
+      %w(ab_button_new ab_group_new catalogitem_edit catalogitem_delete).each do |id|
+        it "hides #{id} action from toolbar when user has view permission only" do
+          @id = id
+          expect(subject).to be_truthy
+        end
       end
     end
 
@@ -1586,6 +1614,20 @@ describe ApplicationHelper do
             @report = ''
             expect(subject).to be_falsey
           end
+        end
+      end
+    end
+
+    context "NilClass" do
+      before do
+        @record = nil
+        @sb = {:active_tree => :sandt_tree}
+      end
+
+      %w(ab_button_new ab_group_new ab_group_reorder).each do |id|
+        it "hides #{id} action from toolbar when user has view permission only" do
+          @id = id
+          expect(subject).to be_truthy
         end
       end
     end

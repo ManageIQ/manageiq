@@ -168,10 +168,6 @@
         :description: Add Atomic Catalog Item
         :feature_type: admin
         :identifier: atomic_catalogitem_new
-      - :name: Edit Button
-        :description: Edit Button
-        :feature_type: admin
-        :identifier: ab_button_edit
     - :name: Operate
       :description: Perform Operations on Catalog Items
       :feature_type: control
@@ -1858,8 +1854,13 @@
           :feature_type: admin
           :hidden: true
           :identifier: ab_group_new
+        - :name: Edit
+          :description: Edit Button Group
+          :feature_type: admin
+          :hidden: true
+          :identifier: ab_group_edit
         - :name: Delete
-          :description: Delete Buttons
+          :description: Delete Button Group
           :feature_type: admin
           :hidden: true
           :identifier: ab_group_delete
@@ -1889,7 +1890,7 @@
           :description: Edit Button
           :feature_type: admin
           :hidden: true
-          :identifier: ab_group_edit
+          :identifier: ab_button_edit
         - :name: Delete
           :description: Delete Buttons
           :feature_type: admin

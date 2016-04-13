@@ -665,6 +665,16 @@ class ApplicationHelper::ToolbarBuilder
       when "condition_remove"
         return true if x_active_tree == :condition_tree || !role_allows(:feature => "condition_delete")
       end
+    when "CustomButton"
+      case id
+      when "ab_button_edit", "ab_button_delete", "ab_button_simulate"
+        return !role_allows_button_manipulation if x_active_tree == :sandt_tree
+      end
+    when "CustomButtonSet"
+      case id
+      when "ab_group_edit", "ab_group_delete", "ab_button_new"
+        return !role_allows_button_manipulation if x_active_tree == :sandt_tree
+      end
     when "Host"
       case id
       when "host_protect"
@@ -768,6 +778,20 @@ class ApplicationHelper::ToolbarBuilder
       when "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"
         return true
       end
+    when "MiqTemplate"
+      case id
+      when "miq_template_clone"
+        return true unless @record.is_available?(:clone)
+      when "miq_template_policy_sim", "miq_template_protect"
+        return true if @record.host && @record.host.vmm_product.downcase == "workstation"
+      when "miq_template_refresh"
+        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
+      when "miq_template_scan", "image_scan"
+        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
+        return true unless @record.has_proxy?
+      when "miq_template_refresh", "miq_template_reload"
+        return true unless @perf_options[:typ] == "realtime"
+      end
     when "ScanItemSet"
       case id
       when "scan_delete"
@@ -782,6 +806,15 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Service", "ServiceOrchestration"
       return build_toolbar_hide_button_service(id)
+    when "ServiceTemplate"
+      case id
+      when "ab_group_new", "ab_button_new"
+        return !role_allows_button_manipulation
+      when /^history_\d*/
+        return false
+      else
+        return !role_allows(:feature => id)
+      end
     when "Vm"
       case id
       when "vm_clone"
@@ -830,24 +863,12 @@ class ApplicationHelper::ToolbarBuilder
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "MiqTemplate"
-      case id
-      when "miq_template_clone"
-        return true unless @record.is_available?(:clone)
-      when "miq_template_policy_sim", "miq_template_protect"
-        return true if @record.host && @record.host.vmm_product.downcase == "workstation"
-      when "miq_template_refresh"
-        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "miq_template_scan", "image_scan"
-        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
-        return true unless @record.has_proxy?
-      when "miq_template_refresh", "miq_template_reload"
-        return true unless @perf_options[:typ] == "realtime"
-      end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       return true unless role_allows(:feature => id)
     when "NilClass"
       case id
+      when "ab_group_new", "ab_button_new", "ab_group_reorder"
+        return !role_allows_button_manipulation if x_active_tree == :sandt_tree
       when "action_new"
         return true unless role_allows(:feature => "action_new")
       when "alert_profile_new"
@@ -891,6 +912,12 @@ class ApplicationHelper::ToolbarBuilder
       end
     end
     false  # No reason to hide, allow the button to show
+  end
+
+  def role_allows_button_manipulation
+    %w(catalogitem_new catalogitem_edit atomic_catalogitem_new atomic_catalogitem_edit).any? do |feature|
+      role_allows(:feature => feature)
+    end
   end
 
   # Determine if a button should be disabled
