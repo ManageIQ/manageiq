@@ -163,11 +163,13 @@ describe Classification do
       ent2 = cat.entries[1]
 
       ent1.assign_entry_to(host1)
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to_not be_empty
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to include(host1)
+      expect(any_tagged_with(Host, full_tag_name(ent1))).to include(host1)
+
 
       ent2.assign_entry_to(host1)
-      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to_not be_empty
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to     be_empty
+      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to include(host1)
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).not_to include(host1)
     end
 
     it "should test assign multi entry to" do
@@ -176,12 +178,14 @@ describe Classification do
       ent2 = cat.entries[1]
 
       ent1.assign_entry_to(host2)
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to_not be_empty
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to include(host2)
 
       ent2.assign_entry_to(host2)
-      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to_not be_empty
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to_not be_empty
-      expect(all_tagged_with(Host, "#{ent1.name} #{ent2.name}", ent1.parent.name)).to_not be_empty
+      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to include(host2)
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to include(host2)
+      expect(all_tagged_with(Host, "#{ent1.name} #{ent2.name}", ent1.parent.name)).to include(host2)
+      expect(any_tagged_with(Host, [ent2.name, ent1.name], ent2.parent.name)).to include(host2)
+      expect(any_tagged_with(Host, [full_tag_name(ent2), full_tag_name(ent1)])).to include(host2)
     end
 
     it "should test find by entry" do
@@ -426,15 +430,19 @@ describe Classification do
     end
   end
 
-  def all_tagged_with(target, all, category)
+  def all_tagged_with(target, all, category = nil)
     tagged_with(target, :all => all, :cat => category)
   end
 
-  def any_tagged_with(target, any, category)
+  def any_tagged_with(target, any, category = nil)
     tagged_with(target, :any => any, :cat => category)
   end
 
   def tagged_with(target, options)
     target.find_tagged_with(options.merge!(:ns => Classification::DEFAULT_NAMESPACE))
+  end
+
+  def full_tag_name(tag)
+    Classification.name2tag(tag.name, tag.parent, "") # avoid "managed", it will get added later
   end
 end
