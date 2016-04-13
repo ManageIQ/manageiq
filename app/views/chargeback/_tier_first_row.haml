@@ -26,7 +26,7 @@
     = text_field_tag("start_#{i}_0", @edit[:new][:tiers][i.to_i][0][:start],
       :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json, :disabled => "disabled")
   %td
-    = text_field_tag("end_#{i}_0", @edit[:new][:tiers][i.to_i][0][:finish],
+    = text_field_tag("finish_#{i}_0", @edit[:new][:tiers][i.to_i][0][:finish],
       :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %td{:align => 'right'}
     = text_field_tag("fixed_rate_#{i}_0", @edit[:new][:tiers][i.to_i][0][:fixed_rate],
