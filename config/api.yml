@@ -744,6 +744,8 @@
     - :collection
     :methods: *70174834084700
     :klass: ServiceOrder
+    :subcollections:
+    - :service_requests
     :collection_actions:
       :post:
       - :name: create
@@ -772,6 +774,14 @@
     :subcollections:
     - :request_tasks
     - :tasks
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
   :service_templates:
     :description: Service Templates
     :identifier: catalog_items_accord
