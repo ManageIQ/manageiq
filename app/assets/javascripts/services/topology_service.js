@@ -45,6 +45,9 @@ ManageIQ.angular.app.service('topologyService', function() {
       case "ContainerManager":
         entity_url = "ems_container";
         break;
+      case "NetworkManager":
+        entity_url = "ems_network";
+        break;
       case "MiddlewareManager":
         entity_url = "ems_middleware";
         break;
@@ -68,6 +71,7 @@ ManageIQ.angular.app.service('topologyService', function() {
   this.getItemStatusClass = function(d) {
     switch (d.item.status) {
       case "OK":
+      case "Active":
       case "On":
       case "Ready":
       case "Running":
