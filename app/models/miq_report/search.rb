@@ -44,12 +44,12 @@ module MiqReport::Search
   end
 
   def get_order_info
-    return [true, nil] if sortby.nil? # apply limits (note: without order it is non-deterministic)
-    return [false, nil] unless db_class.sortable?
+    return [] if sortby.nil? # apply limits (note: without order it is non-deterministic)
+    return nil unless db_class.sortable?
     # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
     order = sortby.to_miq_a.collect do |c|
       sql_col, sql_type = association_column(c)
-      return [false, nil] if sql_col.nil?
+      return nil if sql_col.nil?
       [:string, :text].include?(sql_type) ? sql_col.lower : sql_col
     end
 
@@ -57,7 +57,7 @@ module MiqReport::Search
       order = order.map { |col| col.send(order_op) }
     end
 
-    [true, order]
+    order
   end
 
   def get_parent_targets(parent, assoc)
@@ -90,10 +90,10 @@ module MiqReport::Search
     self.extras ||= {}
     return get_cached_page(limit, offset, includes, options) if self.extras[:target_ids_for_paging] && db_class.column_names.include?('id')
 
-    apply_sortby_in_search, order = get_order_info
+    order = get_order_info
 
     search_options = options.merge(:class => db, :conditions => conditions, :results_format => :objects, :include_for_find => includes)
-    search_options.merge!(:limit => limit, :offset => offset, :order => order) if apply_sortby_in_search
+    search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
 
     if options[:parent]
       targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
@@ -108,7 +108,7 @@ module MiqReport::Search
 
     search_results ||= []
 
-    unless apply_sortby_in_search
+    if order.nil?
       options[:limit]   = limit
       options[:offset]  = offset
     else
@@ -122,7 +122,7 @@ module MiqReport::Search
       attrs[:targets_hash] = {}
       search_results.each { |obj| attrs[:targets_hash][obj.id] = obj }
     end
-    attrs[:apply_sortby_in_search] = apply_sortby_in_search
+    attrs[:apply_sortby_in_search] = !!order
     self.extras[:attrs_for_paging] = attrs.merge(:targets_hash => nil) unless self.extras[:target_ids_for_paging].nil?
 
     _log.debug("Attrs: #{attrs.merge(:targets_hash => "...").inspect}")
