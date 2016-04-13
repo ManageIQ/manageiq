@@ -20,7 +20,7 @@
     "angular": "^1.5.3",
     "angular-animate": "^1.5.3",
     "angular-mocks": "^1.5.3",
-    "angular-patternfly-sass": "^3.3.3",
+    "angular-patternfly-sass": "3.3.4",
     "angular-sanitize": "^1.5.3",
     "bootstrap-filestyle": "^1.2.1",
     "bootstrap-hover-dropdown": "^2.0.11",
