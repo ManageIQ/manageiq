@@ -183,7 +183,10 @@ class TimeProfile < ApplicationRecord
     TimeProfile.rollup_daily_metrics.detect { |tp| tp.match_user_tz?(user_id, user_tz) }
   end
 
+  # @param tz [nil|TimeProfile|TimeZone] (default timezone "UTC")
+  # @return [TimeProfile] time profile that uses this time zone
   def self.default_time_profile(tz = DEFAULT_TZ)
+    return tz if tz.kind_of?(TimeProfile)
     tz ||= DEFAULT_TZ
     rollup_daily_metrics.find_all_with_entire_tz.detect { |tp| tp.tz_or_default == tz }
   end
