@@ -84,14 +84,16 @@ module ManageIQ::Providers
       end
 
       def parse_job_template(job_template)
+        inventory_root_group = @data_index.fetch_path(:ems_folders, job_template.inventory_id)
         uid = job_template.name
 
         new_result = {
-          :manager_ref => job_template.id.to_s,
-          :name        => job_template.name,
-          :description => job_template.description,
-          :variables   => job_template.extra_vars,
-          :survey_spec => job_template.survey_spec
+          :description          => job_template.description,
+          :inventory_root_group => inventory_root_group,
+          :manager_ref          => job_template.id.to_s,
+          :name                 => job_template.name,
+          :survey_spec          => job_template.survey_spec,
+          :variables            => job_template.extra_vars,
         }
 
         return uid, new_result

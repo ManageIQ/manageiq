@@ -32,8 +32,8 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
   def assert_counts
     expect(Provider.count).to                                    eq(1)
     expect(configuration_manager).to                             have_attributes(:api_version => "2.4.2")
-    expect(configuration_manager.configured_systems.count).to    eq(75)
-    expect(configuration_manager.configuration_scripts.count).to eq(7)
+    expect(configuration_manager.configured_systems.count).to    eq(68)
+    expect(configuration_manager.configuration_scripts.count).to eq(11)
     expect(configuration_manager.inventory_groups.count).to      eq(7)
   end
 
@@ -41,7 +41,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
     expect(expected_configured_system).to have_attributes(
       :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
       :hostname             => "Ansible-Host",
-      :manager_ref          => "48",
+      :manager_ref          => "145",
       :virtual_instance_ref => "4233080d-7467-de61-76c9-c8307b6e4830",
     )
     expect(expected_configured_system.inventory_root_group).to eq(expected_inventory_root_group)
@@ -49,12 +49,13 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
 
   def assert_configuration_script_with_nil_survey_spec
     expect(expected_configuration_script).to have_attributes(
-      :name        => "Ansible-JobTemplate",
       :description => "Ansible-JobTemplate-Description",
       :manager_ref => "149",
-      :variables   => "{\n \"abc\": 123\n}",
-      :survey_spec => nil
+      :name        => "Ansible-JobTemplate",
+      :survey_spec => nil,
+      :variables   => "abc: 123\n",
     )
+    expect(expected_configuration_script.inventory_root_group).to have_attributes(:ems_ref => "2")
   end
 
   def assert_configuration_script_with_survey_spec
@@ -72,8 +73,8 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
 
   def assert_inventory_root_group
     expect(expected_inventory_root_group).to have_attributes(
-      :name    => "VC 6.0",
-      :ems_ref => "5",
+      :name    => "Dev VC60",
+      :ems_ref => "17",
       :type    => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup",
     )
   end
@@ -89,6 +90,6 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
   end
 
   def expected_inventory_root_group
-    @expected_inventory_root_group ||= configuration_manager.inventory_groups.where(:name => "VC 6.0").first
+    @expected_inventory_root_group ||= configuration_manager.inventory_groups.where(:name => "Dev VC60").first
   end
 end

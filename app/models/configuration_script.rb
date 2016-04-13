@@ -1,7 +1,7 @@
 class ConfigurationScript < ActiveRecord::Base
-  belongs_to  :manager,
-              :class_name  => 'ManageIQ::Providers::ConfigurationManager',
-              :foreign_key => :configuration_manager_id
+  belongs_to :inventory_root_group, :class_name => "EmsFolder"
+  belongs_to :manager,              :class_name => "ExtManagementSystem", :foreign_key => :configuration_manager_id
+
   include ProviderObjectMixin
 
   def run(vars = {})

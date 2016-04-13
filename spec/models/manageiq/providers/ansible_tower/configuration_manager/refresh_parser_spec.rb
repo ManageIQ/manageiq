@@ -15,7 +15,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
   let(:mock_api)          { double("AnsibleTowerClient::Api") }
   let(:all_hosts)         { (1..2).collect { |i| AnsibleTowerClient::Host.new(mock_api, "related" => {"inventory" => "url"}, "id" => i, "name" => "host#{i}", "inventory" => i, "instance_id" => "vmwareVm-#{i}") } }
   let(:all_inventories)   { (1..2).collect { |i| AnsibleTowerClient::Inventory.new(mock_api, "id" => i, "name" => "inventory#{i}") } }
-  let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new(mock_api, "id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload") } }
+  let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new(mock_api, "id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload", "inventory" => i, "related" => {"inventory" => "blah/#{i}"}) } }
 
   it "#configuration_manager_inv_to_hashes" do
     allow_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:survey_spec).and_return('some_hash_payload')
@@ -34,11 +34,12 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
 
     expect(parser.instance_variable_get(:@data)[:configuration_scripts].count).to eq(2)
     expect(parser.instance_variable_get(:@data)[:configuration_scripts].first).to eq(
-      :manager_ref => "1",
-      :name        => "template1",
-      :description => "description1",
-      :variables   => "some_json_payload",
-      :survey_spec => "some_hash_payload"
+      :description          => "description1",
+      :inventory_root_group => {:type => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup", :ems_ref => "1", :name => "inventory1"},
+      :manager_ref          => "1",
+      :name                 => "template1",
+      :survey_spec          => "some_hash_payload",
+      :variables            => "some_json_payload",
     )
 
     expect(parser.instance_variable_get(:@data)[:ems_folders].count).to eq(2)
