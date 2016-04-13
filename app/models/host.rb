@@ -42,6 +42,7 @@ class Host < ApplicationRecord
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
   belongs_to                :ems_cluster
+  belongs_to                :usm_host
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
   has_many                  :vms_and_templates, :dependent => :nullify
