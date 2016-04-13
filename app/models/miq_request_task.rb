@@ -40,6 +40,7 @@ class MiqRequestTask < ApplicationRecord
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request
     parent = miq_request_task || miq_request
+    parent.reload
     parent.update_request_status
   end
 
