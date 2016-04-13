@@ -63,23 +63,6 @@ module MiqReport::Generator
     "#{table2class(table)}-#{col}"
   end
 
-  # this is different from col_to_expression_col. It includes the base reporting table
-  # so virtual relations can be properly detected.
-  # col_to_expression should probably be deprecated, but that may introduce quirks with
-  # string comparisons that I'm not ready to debug. sorry. kb
-  # @return [String] A column to pass into MiqExpression of the form: report_table.association-column
-  def col_to_complete_expression_col(col)
-    parts = col.split(".")
-    column = parts.pop
-    parts.unshift(table2class(db))
-    "#{parts.join(".")}-#{column}"
-  end
-
-  # there is also a miq_report#get_col_info defined, but it is not the same as MiqEpression.get_col_info
-  def col_to_col_info(col)
-    MiqExpression.get_col_info col_to_complete_expression_col(col)
-  end
-
   def table2class(table)
     @table2class ||= {}
 

@@ -1,4 +1,6 @@
 describe MiqReport do
+  include ArelSpecHelper
+
   context "::Search" do
     before(:each) do
       @miq_report = MiqReport.new(:db => "Vm")
@@ -15,14 +17,14 @@ describe MiqReport do
         @miq_report.sortby = "name"
         apply_sortby_in_search, order = @miq_report.get_order_info
         expect(apply_sortby_in_search).to be_truthy
-        expect(order).to eq("LOWER(vms.name)")
+        expect(stringify_arel(order)).to eq(["LOWER(\"vms\".\"name\")"])
       end
 
       it "works when there is a column specified as array in sortby" do
         @miq_report.sortby = ["name"]
         apply_sortby_in_search, order = @miq_report.get_order_info
         expect(apply_sortby_in_search).to be_truthy
-        expect(order).to eq("LOWER(vms.name)")
+        expect(stringify_arel(order)).to eq(["LOWER(\"vms\".\"name\")"])
       end
 
       it "detects a virtual association (and that it can't be sorted)" do
@@ -31,14 +33,28 @@ describe MiqReport do
         expect(apply_sortby_in_search).to be_falsy
       end
 
-      it "detects a virtual column (and that it can't be sorted)" do
-        @miq_report.sortby = ["active"]
+      it "detects a sortable virtual column" do
+        @miq_report.sortby = ["archived"]
+        apply_sortby_in_search, order = @miq_report.get_order_info
+        expect(apply_sortby_in_search).to be_truthy
+        expect(stringify_arel(order).join(",")).to match(/ems_id.*null/i)
+      end
+
+      it "detects a sortable virtual column in a list" do
+        @miq_report.sortby = %w(name archived id)
+        apply_sortby_in_search, order = @miq_report.get_order_info
+        expect(apply_sortby_in_search).to be_truthy
+        expect(stringify_arel(order).join(",")).to match(/name.*ems_id.*null.*id/i)
+      end
+
+      it "detects an unsortable virtual column" do
+        @miq_report.sortby = ["is_evm_appliance"]
         apply_sortby_in_search, _order = @miq_report.get_order_info
         expect(apply_sortby_in_search).to be_falsy
       end
 
-      it "detects a virtual column when any of the fields are a virtual column (and that it can't be sorted)" do
-        @miq_report.sortby = %w(name active id)
+      it "detects an unsortable virtual column in a list" do
+        @miq_report.sortby = %w(name is_evm_appliance id)
         apply_sortby_in_search, _order = @miq_report.get_order_info
         expect(apply_sortby_in_search).to be_falsy
       end
@@ -48,16 +64,30 @@ describe MiqReport do
           @miq_report.sortby = ["name", "operating_system.product_name"]
           apply_sortby_in_search, order = @miq_report.get_order_info
           expect(apply_sortby_in_search).to be_truthy
-          expect(order).to eq("LOWER(vms.name),LOWER(operating_systems.product_name)")
+          expect(stringify_arel(order)).to eq(%w{LOWER("vms"."name") LOWER("operating_systems"."product_name")})
         end
 
-        it "works with association where table_name can not be guessed at" do
+        it "works with association where table_name can not be guessed" do
           @miq_report.sortby = ["name", "linux_initprocesses.name", "evm_owner.name"]
           apply_sortby_in_search, order = @miq_report.get_order_info
           expect(apply_sortby_in_search).to be_truthy
-          expect(order).to eq("LOWER(vms.name),LOWER(system_services.name),LOWER(users.name)")
+          expect(stringify_arel(order)).to eq(%w{LOWER("vms"."name") LOWER("system_services"."name") LOWER("users"."name")})
         end
       end
+    end
+
+    it "is not sortable for a complex virtual column" do
+      @miq_report.sortby = ["is_evm_appliance"]
+      apply_sortby_in_search, order = @miq_report.get_order_info
+      expect(apply_sortby_in_search).to be_falsy
+      expect(order).to be_nil
+    end
+
+    it "is sortable for a simple virtual column" do
+      @miq_report.sortby = ["archived"]
+      apply_sortby_in_search, order = @miq_report.get_order_info
+      expect(apply_sortby_in_search).to be_truthy
+      expect(stringify_arel(order).join(",")).to match(/"vms"."ems_id"/)
     end
   end
 
