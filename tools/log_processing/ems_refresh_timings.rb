@@ -21,7 +21,7 @@ Usage:
 Options:
 EOS
     opt :sort_by, 'Column to sort by, options are start_time, end_time, '\
-                  'total_time, ems, target_type, and target',
+                  'duration, ems, target_type, and target',
         :type => :string, :default => 'start_time'
     opt :target, 'Filter by specific targets, comma separated', :type => :strings
     opt :target_type, 'Filter by specific target types, comma separated', :type => :strings
@@ -74,7 +74,8 @@ def parse_refresh_timings(line, targets)
     # Add other useful information to the refresh timings
     refresh_timings[:ems]         = ems
     refresh_timings[:end_time]    = Time.parse(line.time + ' UTC').utc
-    refresh_timings[:start_time]  = refresh_timings[:end_time] - refresh_timings[:total_time]
+    refresh_timings[:duration]    = refresh_timings[:total_time] || refresh_timings[:ems_refresh]
+    refresh_timings[:start_time]  = refresh_timings[:end_time] - refresh_timings[:duration]
     refresh_timings[:target]      = refresh_target[:target]
     refresh_timings[:target_type] = refresh_target[:target_type]
 
@@ -87,7 +88,7 @@ def sort_timings(timings, sort_key)
 end
 
 def print_results(all_timings, opts)
-  columns = [:start_time, :end_time, :total_time, :ems, :target_type, :target]
+  columns = [:start_time, :end_time, :duration, :ems, :target_type, :target]
   puts sort_timings(all_timings, opts[:sort_by]).tableize(:columns => columns)
 end
 
@@ -103,7 +104,7 @@ def print_stats(timings)
     values.each do |key, timing|
       durations << {
         type.to_sym => key,
-        :duration   => mean(timing.collect { |t| t[:total_time] })
+        :duration   => mean(timing.collect { |t| t[:duration] })
       }
     end
 
