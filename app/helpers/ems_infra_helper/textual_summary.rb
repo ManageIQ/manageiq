@@ -19,6 +19,9 @@ module EmsInfraHelper::TextualSummary
     %i(zone tags)
   end
 
+  def textual_group_topology
+  end
+
   #
   # Items
   #
