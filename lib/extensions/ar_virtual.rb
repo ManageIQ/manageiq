@@ -29,11 +29,6 @@ module VirtualArel
   end
 
   module ClassMethods
-    # not thrilled with this
-    def arel_attribute_alias?(column_name)
-      _virtual_arel.key?(column_name.to_s)
-    end
-
     def arel_attribute(column_name, arel_table = self.arel_table)
       load_schema
       if virtual_attribute?(column_name)
