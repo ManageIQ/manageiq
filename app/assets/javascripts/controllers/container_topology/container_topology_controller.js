@@ -187,7 +187,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
           .attr("class","glyph")
           .attr('font-family', iconInfo.fontfamily);
       })
-        
+
       .attr("y", function(d) {
         return self.getDimensions(d).y;
       })
@@ -208,7 +208,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr('class', function() {
          var class_name = "attached-label";
          if ($scope.checkboxModel.value) {
-           return class_name + ' visible';container
+           return class_name + ' visible';
          }
          else {
            return class_name;
