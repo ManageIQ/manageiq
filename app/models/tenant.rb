@@ -240,6 +240,12 @@ class Tenant < ApplicationRecord
     ae_domains.where(:system => false).count > 0
   end
 
+  def reset_domain_priority_by_ordered_ids(ids)
+    uneditable_domains = visible_domains - editable_domains
+    uneditable_domains.delete_if { |domain| domain.name == MiqAeDatastore::MANAGEIQ_DOMAIN }
+    MiqAeDomain.reset_priority_by_ordered_ids(uneditable_domains.collect(&:id) + ids)
+  end
+
   # The default tenant is the tenant to be used when
   # the url does not map to a known domain or subdomain
   #

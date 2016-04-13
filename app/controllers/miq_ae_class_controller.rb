@@ -1581,7 +1581,7 @@ class MiqAeClassController < ApplicationController
       domains = @edit[:new][:domain_order].reverse!.collect do |domain|
         MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id
       end
-      MiqAeDomain.reset_priority_by_ordered_ids(domains)
+      current_tenant.reset_domain_priority_by_ordered_ids(domains)
       add_flash(_("Priority Order was saved"))
       @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell([:ae])
