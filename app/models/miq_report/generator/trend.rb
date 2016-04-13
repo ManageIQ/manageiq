@@ -29,22 +29,21 @@ module MiqReport::Generator::Trend
 
       includes = include.blank? ? [] : include.keys
 
-      start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
+      time_range = Metric::Helper.time_range_from_offset("daily", db_options[:start_offset], db_options[:end_offset], tz)
       trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
 
       recs = VimPerformanceDaily.find_entries(:class => trend_klass, :tz => tz, :time_profile => time_profile)
-             .where(where_clause).where(:timestamp => start_time..end_time).includes(includes)
+                                .where(where_clause).where(:timestamp => time_range).includes(includes)
       results = Rbac.filtered(recs, :class        => db_options[:trend_db],
                                     :filter       => db_options[:trend_filter],
                                     :userid       => options[:userid],
                                     :miq_group_id => options[:miq_group_id])
     else
-      start_time = Time.now.utc - db_options[:start_offset].seconds
-      end_time   =  db_options[:end_offset].nil? ? Time.now.utc : Time.now.utc - db_options[:end_offset].seconds
+      time_range = Metric::Helper.time_range_from_offset('hourly', db_options[:start_offset], db_options[:end_offset])
 
       # Search and filter performance data
       trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
-      recs = trend_klass.with_interval_and_time_range('hourly', start_time..end_time).where(where_clause)
+      recs = trend_klass.with_interval_and_time_range('hourly', time_range).where(where_clause)
       results = Rbac.filtered(recs, :class        => db_options[:trend_db],
                                     :filter       => db_options[:trend_filter],
                                     :userid       => options[:userid],

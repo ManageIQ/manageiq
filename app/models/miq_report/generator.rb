@@ -183,6 +183,7 @@ module MiqReport::Generator
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
 
     klass = db.kind_of?(Class) ? db : Object.const_get(db)
+    interval = db_options.present? && db_options[:interval]
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
     includes = get_include_for_find(include)
@@ -223,7 +224,7 @@ module MiqReport::Generator
         build_correlate_tag_cols
       end
 
-    elsif !db_options.blank? && db_options[:interval] == 'daily' && klass <= MetricRollup
+    elsif interval == 'daily' && klass <= MetricRollup
       # Ad-hoc daily performance reports
       #   Daily for: Performance - Clusters...
       unless conditions.nil?
@@ -233,12 +234,12 @@ module MiqReport::Generator
         # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
       end
 
-      start_time, end_time = Metric::Helper.get_time_range_from_offset(db_options[:start_offset], db_options[:end_offset], :tz => tz)
+      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
       results = VimPerformanceDaily
                 .find_entries(ext_options.merge(:class => klass))
                 .where(where_clause)
-                .where(:timestamp => start_time..end_time)
+                .where(:timestamp => time_range)
                 .includes(includes)
                 .references(includes)
                 .limit(options[:limit])
@@ -247,17 +248,16 @@ module MiqReport::Generator
                                        :userid       => options[:userid],
                                        :miq_group_id => options[:miq_group_id])
       results = Metric::Helper.remove_duplicate_timestamps(results)
-    elsif !db_options.blank? && db_options.key?(:interval)
+    elsif interval
       # Ad-hoc performance reports
 
-      start_time = Time.now.utc - db_options[:start_offset].seconds
-      end_time   =  db_options[:end_offset].nil? ? Time.now.utc : Time.now.utc - db_options[:end_offset].seconds
+      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
 
       # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
       exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
       where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
 
-      results = klass.with_interval_and_time_range(db_options[:interval], start_time..end_time)
+      results = klass.with_interval_and_time_range(interval, time_range)
                      .where(where_clause).includes(includes).limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
