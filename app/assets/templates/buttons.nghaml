@@ -5,14 +5,14 @@
           "ng-click" => "disabledClick($event)",
           :style     => "cursor:not-allowed",
           "ng-show"  => "newRecord && !saveable(angularForm)"}
-    Add
+    {{addText}} 
 
   %button{:class     => "btn btn-primary",
           :alt       => "Add",
           :title     => "Add",
           "ng-click" => "addClicked($event, true)",
           "ng-show"  => "newRecord && saveable(angularForm)"}
-    Add
+    {{addText}} 
 
   %button{:class     => "btn btn-primary btn-disabled",
           :alt       => "Save changes",
@@ -20,14 +20,14 @@
           "ng-click" => "disabledClick($event)",
           :style     => "cursor:not-allowed",
           "ng-show"  => "!newRecord && !saveable(angularForm)"}
-    Save
+    {{saveText}} 
 
   %button{:class     => "btn btn-primary",
           :alt       => "Save changes",
           :title     => "Save changes",
           "ng-click" => "saveClicked($event, true)",
           "ng-show"  => "!newRecord && saveable(angularForm)"}
-    Save
+    {{saveText}} 
 
   %button{:class        => "btn btn-default btn-disabled",
           :alt          => "Reset changes",
@@ -36,10 +36,10 @@
           "ng-click"    => "resetClicked()",
           "ng-disabled" => "angularForm.$pristine",
           "ng-hide"     => "newRecord"}
-    Reset
+    {{resetText}} 
 
   %button{:class     => "btn btn-default",
           :alt       => "Cancel",
           :title     => "Cancel",
           "ng-click" => "cancelClicked($event)"}
-    Cancel
+    {{cancelText}} 
