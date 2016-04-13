@@ -1,7 +1,7 @@
 class MiqAeDomain < MiqAeNamespace
   default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
-  # TODO: Once all the specs start passing in the tenant object, enforce its presence
+  
   validates_presence_of :tenant, :message => "object is needed to own the domain"
   after_destroy :squeeze_priorities
   default_value_for :system,  false

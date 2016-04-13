@@ -8,7 +8,7 @@ FactoryGirl.define do
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do
     system true
-    git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.sample.com/abc') }
+    git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.example.com/abc') }
   end
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
