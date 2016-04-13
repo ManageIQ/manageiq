@@ -3,7 +3,7 @@
     = render :partial => "form_filter_performance"
   - if @edit[:new][:model] == TREND_MODEL
     -# No additional filters for trend reports
-  - elsif @edit[:new][:model] == "Chargeback"
+  - elsif @edit[:new][:model].start_with?("Chargeback")
     = render :partial => "form_filter_chargeback"
   - else
     -# Show expression editors for all other reports

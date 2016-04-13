@@ -8,7 +8,13 @@
         %label.control-label.col-md-2
           = _('Show Costs by')
         .col-md-8
-          - opts = [["<#{_('Choose')}>", nil], [_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"], [_('Tenant'), "tenant"]]
+          - opts = [["<#{_('Choose')}>", nil]]
+          - if @edit[:new][:model] == "ChargebackContainerProject"
+            - opts += [[ui_lookup(:model => @edit[:new][:cb_model]), "entity"]]
+          - elsif @edit[:new][:model] == "ChargebackVm"
+            - opts += [[_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"], [_('Tenant'), "tenant"]]
+          - else
+            - opts += [[_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"], [_(@edit[:new][:cb_model].to_s), "entity"]]
           = select_tag("cb_show_typ",
             options_for_select(opts, @edit[:new][:cb_show_typ]),
             :class                 => "selectpicker")
@@ -63,6 +69,19 @@
               :javascript
                 miqInitSelectPicker();
                 miqSelectPickerEvent('cb_tag_value', '#{url}', {beforeSend: true, complete: true});
+      - elsif @edit[:new][:cb_show_typ] == "entity"
+        .form-group
+          %label.control-label.col-md-2
+            = _(@edit[:new][:cb_model].to_s)
+          .col-md-8
+            - opts = [["<#{_('Choose %{entity}')}>" % {:entity => ui_lookup(:table => @edit[:new][:cb_model].to_s)}, nil], [_("All #{ui_lookup(:tables => @edit[:new][:cb_model].to_s)}"), :all]]
+            - opts += Array(@edit[:cb_all_entities_of_type][@edit[:new][:cb_model].to_sym].invert).sort_by { |a| a.first.downcase } if @edit[:cb_all_entities_of_type][@edit[:new][:cb_model].to_sym].present?
+            = select_tag('cb_entity_id',
+              options_for_select(opts, @edit[:new][:cb_entity_id]),
+              :class                 => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent('cb_entity_id', '#{url}', {beforeSend: true, complete: true});
     - else
       .form-group
         %label.control-label.col-md-2
@@ -74,7 +93,7 @@
         = _('Group by')
       .col-md-8
         = select_tag("cb_groupby",
-          options_for_select([["#{_('Date')}", "date"], ["#{_('VM/Instance')}", "vm"]], @edit[:new][:cb_groupby]),
+          options_for_select([["#{_('Date')}", "date"], ["#{_('VM/Instance/Project')}", "vm"]], @edit[:new][:cb_groupby]),
           :class                 => "selectpicker")
         :javascript
           miqInitSelectPicker();

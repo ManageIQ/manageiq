@@ -343,7 +343,7 @@ module ReportController::Reports::Editor
         ["#{req}_3", "Filter"],
         ["#{req}_7", "Preview"]
       ]
-    elsif @edit[:new][:model] == "Chargeback"
+    elsif @edit[:new][:model].to_s.starts_with?("Chargeback")
       @tabs = [
         ["#{req}_1", "Columns"],
         ["#{req}_2", "Formatting"],
@@ -525,7 +525,8 @@ module ReportController::Reports::Editor
         @edit[:new][:tz] = session[:user_tz]
         build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
       end
-      if model_report_type(@edit[:new][:model]) == :chargeback
+      if model_report_type(@edit[:new][:model]).to_s.starts_with?("chargeback")
+        @edit[:new][:cb_model] = Chargeback.report_cb_model(@edit[:new][:model])
         @edit[:new][:cb_interval] ||= "daily"                   # Default to Daily
         @edit[:new][:cb_interval_size] ||= 1
         @edit[:new][:cb_end_interval_offset] ||= 1
@@ -631,6 +632,14 @@ module ReportController::Reports::Editor
       @edit[:new][:cb_tenant_id] = params[:cb_tenant_id].blank? ? nil : params[:cb_tenant_id].to_i
     elsif params.key?(:cb_tag_value)
       @edit[:new][:cb_tag_value] = params[:cb_tag_value].blank? ? nil : params[:cb_tag_value]
+    elsif params.key?(:cb_model)
+      @edit[:new][:cb_model] = params[:cb_model].blank? ? nil : params[:cb_model]
+      reset_report_col_fields
+      build_edit_screen
+      @refresh_div = "form_div"
+      @refresh_partial = "form"
+    elsif params.key?(:cb_entity_id)
+      @edit[:new][:cb_entity_id] = params[:cb_entity_id].blank? ? nil : params[:cb_entity_id]
     elsif params.key?(:cb_groupby)
       @edit[:new][:cb_groupby] = params[:cb_groupby]
     elsif params[:cb_interval]
@@ -1167,8 +1176,8 @@ module ReportController::Reports::Editor
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct1])
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct2]) if @edit[:new][:perf_target_pct2]
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct3]) if @edit[:new][:perf_target_pct3]
-    elsif model_report_type(rpt.db) == :chargeback
-      rpt.db_options[:rpt_type]     = "chargeback"
+    elsif model_report_type(rpt.db).to_s.starts_with?("chargeback")
+      rpt.db_options[:rpt_type]     = @edit[:new][:model]
       options                       = {}  # CB options go in db_options[:options] key
       options[:interval]            = @edit[:new][:cb_interval]
       options[:interval_size]       = @edit[:new][:cb_interval_size]
@@ -1181,6 +1190,9 @@ module ReportController::Reports::Editor
         if @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
           options[:tag] = "/managed/#{@edit[:new][:cb_tag_cat]}/#{@edit[:new][:cb_tag_value]}"
         end
+      elsif @edit[:new][:cb_show_typ] == "entity"
+        options[:cb_model] = @edit[:new][:cb_model]
+        options[:entity_id] = @edit[:new][:cb_entity_id]
       end
       rpt.db_options[:options] = options
     end
@@ -1233,20 +1245,22 @@ module ReportController::Reports::Editor
     rpt.sortby = @edit[:new][:sortby1] == NOTHING_STRING ? nil : []  # Clear sortby if sortby1 not present, else set up array
 
     # Add in the chargeback static fields
-    if rpt.db == "Chargeback" # For chargeback, add in static fields
-      rpt.cols = ["start_date", "display_range", "vm_name"]
+    if rpt.db.starts_with?("Chargeback") # For chargeback, add in static fields
+      rpt.cols = %w(start_date display_range)
+      name_col = @edit[:new][:model].constantize.report_name_field
+      rpt.cols += [name_col]
       if @edit[:new][:cb_groupby] == "date"
-        rpt.col_order = ["display_range", "vm_name"]
-        rpt.sortby = ["start_date", "vm_name"]
+        rpt.col_order = ["display_range", name_col]
+        rpt.sortby = ["start_date", name_col]
       elsif @edit[:new][:cb_groupby] == "vm"
-        rpt.col_order = ["vm_name", "display_range"]
-        rpt.sortby = ["vm_name", "start_date"]
+        rpt.col_order = [name_col, "display_range"]
+        rpt.sortby = [name_col, "start_date"]
       end
       rpt.col_order.each do |c|
         rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
         rpt.col_formats.push(nil) # No formatting needed on the static cols
       end
-      rpt.col_options = Chargeback.report_col_options
+      rpt.col_options = @edit[:new][:model].constantize.report_col_options
       rpt.order = "Ascending"
       rpt.group = "y"
       rpt.tz = @edit[:new][:tz]
@@ -1435,7 +1449,6 @@ module ReportController::Reports::Editor
     @edit[:new][:cb_interval_size] = nil
     @edit[:new][:cb_end_interval_offset] = nil
 
-    # Get performance options hash fields for performance/trend reports
     if [:performance, :trend].include?(model_report_type(@rpt.db))
       @edit[:new][:perf_interval] = @rpt.db_options[:interval]
       @edit[:new][:perf_avgs] = @rpt.db_options[:calc_avgs_by]
@@ -1453,7 +1466,7 @@ module ReportController::Reports::Editor
       @edit[:new][:perf_limit_col] = @rpt.db_options[:limit_col]
       @edit[:new][:perf_limit_val] = @rpt.db_options[:limit_val]
       @edit[:new][:perf_target_pct1], @edit[:new][:perf_target_pct2], @edit[:new][:perf_target_pct3] = @rpt.db_options[:target_pcts]
-    elsif model_report_type(@rpt.db) == :chargeback
+    elsif model_report_type(@rpt.db).to_s.starts_with?("chargeback")
       @edit[:new][:tz] = @rpt.tz ? @rpt.tz : session[:user_tz]    # Set the timezone, default to user's
       options = @rpt.db_options[:options]
       if options.key?(:owner) # Get the owner options
@@ -1470,6 +1483,10 @@ module ReportController::Reports::Editor
         cat = Classification.find_by_name(@edit[:new][:cb_tag_cat])
         cat.entries.each { |e| @edit[:cb_tags][e.name] = e.description } if cat  # Collect the tags, if category is valid
       end
+
+      @edit[:new][:cb_show_typ] = "entity"
+      @edit[:new][:cb_model] = options[:cb_model]
+      @edit[:new][:cb_entity_id] = options[:entity_id]
       @edit[:new][:cb_interval] = options[:interval]
       @edit[:new][:cb_interval_size] = options[:interval_size]
       @edit[:new][:cb_end_interval_offset] = options[:end_interval_offset]
@@ -1493,6 +1510,15 @@ module ReportController::Reports::Editor
     cats.delete_if { |c| c.read_only? || c.entries.length == 0 }  # Remove categories that are read only or have no entries
     @edit[:cb_cats] = {}
     cats.each { |c| @edit[:cb_cats][c.name] = c.description }
+
+    @edit[:cb_all_entities_of_type] = {}
+
+    [Vm, ContainerProject].each do |ent| # get all records of these entities
+      @edit[:cb_all_entities_of_type][ent.name.to_sym] = {}
+      ent.all.each do |rec|
+        @edit[:cb_all_entities_of_type][ent.name.to_sym][rec.id] = rec.name
+      end
+    end
 
     # Build trend limit cols array
     if model_report_type(@rpt.db) == :trend
@@ -1718,7 +1744,7 @@ module ReportController::Reports::Editor
     end
 
     # Remove the non-cost and owner columns from the arrays for Chargeback
-    if rpt.db == "Chargeback"
+    if rpt.db.starts_with?("Chargeback")
       f_len = fields.length
       for f_idx in 1..f_len # Go thru fields in reverse
         f_key = fields[f_len - f_idx].last

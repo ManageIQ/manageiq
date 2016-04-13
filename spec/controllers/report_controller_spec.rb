@@ -123,7 +123,7 @@ describe ReportController do
         end
 
         it "sets chargeback model" do
-          model = "Chargeback"
+          model = "ChargebackVm"
           controller.instance_variable_set(:@_params, :chosen_model => model)
           controller.send(:gfv_model)
           edit_new = assigns(:edit)[:new]

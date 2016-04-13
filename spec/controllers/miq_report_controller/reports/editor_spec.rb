@@ -6,7 +6,7 @@ describe ReportController do
         login_as user
         rep = FactoryGirl.create(
           :miq_report,
-          :db         => "Chargeback",
+          :db         => "ChargebackVm",
           :db_options => {:options => {:owner => user.userid}},
           :col_order  => ["name"],
           :headers    => ["Name"]
@@ -25,7 +25,7 @@ describe ReportController do
         login_as user
         rep = FactoryGirl.create(
           :miq_report,
-          :db         => "Chargeback",
+          :db         => "ChargebackVm",
           :name       => 'name',
           :title      => 'title',
           :db_options => {:options => {:owner => user.userid}},
@@ -37,7 +37,7 @@ describe ReportController do
         edit = {
           :rpt_id  => rep.id,
           :new     => {
-            :model  => "Chargeback",
+            :model  => "ChargebackVm",
             :name   => 'name',
             :title  => 'title',
             :tz     => "Eastern Time (US & Canada)",
