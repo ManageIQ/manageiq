@@ -73,6 +73,16 @@ describe PglogicalSubscription do
         rec = described_class.find(:last)
         expect(rec.attributes).to eq(expected_attrs.last)
       end
+
+      it "retrieves the specified record with an id" do
+        expected = expected_attrs.first
+        rec = described_class.find(expected["id"])
+        expect(rec.attributes).to eq(expected)
+      end
+
+      it "raises when no record is found with an id" do
+        expect { described_class.find("doesnt_exist") }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
     context "with no records" do
@@ -92,6 +102,10 @@ describe PglogicalSubscription do
       it "returns nil with :last" do
         expect(described_class.find(:last)).to be_nil
       end
+
+      it "raises with an id" do
+        expect { described_class.find("doesnt_exist") }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
     context "with pglogical disabled" do
@@ -110,6 +124,33 @@ describe PglogicalSubscription do
       it "returns nil with :last" do
         expect(described_class.find(:last)).to be_nil
       end
+
+      it "raises with an id" do
+        expect { described_class.find("doesnt_exist") }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe ".find_by_id" do
+    it "returns the specified record with records" do
+      allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
+      allow(pglogical).to receive(:enabled?).and_return(true)
+
+      expected = expected_attrs.first
+      rec = described_class.find_by_id(expected["id"])
+      expect(rec.attributes).to eq(expected)
+    end
+
+    it "returns nil without records" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+
+      expect(described_class.find_by_id("some_subscription")).to be_nil
+    end
+
+    it "returns nil with pglogical disabled" do
+      allow(pglogical).to receive(:enabled?).and_return(false)
+      expect(described_class.find_by_id("some_subscription")).to be_nil
     end
   end
 

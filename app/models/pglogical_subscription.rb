@@ -15,11 +15,17 @@ class PglogicalSubscription < ActsAsArModel
   )
 
   def self.find(*args)
-    subs = pglogical.enabled? ? pglogical.subscriptions : []
     case args.first
-    when :all then subs.collect { |s| new(subscription_to_columns(s)) }
-    when :first, :last then subs.presence && new(subscription_to_columns(subs.send(args.first)))
+    when :all then find_all
+    when :first, :last then find_one(args.first)
+    else find_id(args.first)
     end
+  end
+
+  def self.find_by_id(to_find)
+    find(to_find)
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def save!
@@ -98,6 +104,30 @@ class PglogicalSubscription < ActsAsArModel
     attrs
   end
   private_class_method :provider_node_attributes
+
+  def self.subscriptions
+    pglogical.enabled? ? pglogical.subscriptions : []
+  end
+  private_class_method :subscriptions
+
+  def self.find_all
+    subscriptions.collect { |s| new(subscription_to_columns(s)) }
+  end
+  private_class_method :find_all
+
+  def self.find_one(which)
+    s = subscriptions.send(which)
+    new(subscription_to_columns(s)) if s
+  end
+  private_class_method :find_one
+
+  def self.find_id(to_find)
+    subscriptions.each do |s|
+      return new(subscription_to_columns(s)) if s.symbolize_keys[:subscription_name] == to_find
+    end
+    raise ActiveRecord::RecordNotFound, "Coundn't find subscription with id #{to_find}"
+  end
+  private_class_method :find_id
 
   private
 
