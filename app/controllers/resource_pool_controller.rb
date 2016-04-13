@@ -42,9 +42,9 @@ class ResourcePoolController < ApplicationController
                       :url  => "/resource_pool/show/#{@record.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
 
+      self.x_active_tree = :datacenter_tree
       cluster = @record
       @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, cluster)
-      self.x_active_tree = :datacenter_tree
 
     when "all_vms"
       drop_breadcrumb(:name => "%{name} (All VMs)" % {:name => @record.name},

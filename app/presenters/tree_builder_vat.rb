@@ -27,7 +27,11 @@ class TreeBuilderVat < TreeBuilderDatacenter
   def x_get_tree_datacenter_kids(parent, count_only = false, type)
     # Get rid of unwanted folder level
     parent = @vat ? parent.folders.find { |x| x.name == "vm" } : parent.folders.find { |x| x.name == "host" }
-    x_get_tree_folder_kids(parent, count_only, type)
+    if parent.nil?
+      count_only ? 0 : []
+    else
+      x_get_tree_folder_kids(parent, count_only, type)
+    end
   end
 
   def x_get_tree_folder_kids(parent, count_only, _type)
