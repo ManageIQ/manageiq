@@ -82,7 +82,7 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def latest_ref_info
-    raise MiqAeException::InvalidDomain, "Not GIT enabled" unless git_enabled?
+    raise MiqAeException::InvalidDomain, "Not Git enabled" unless git_enabled?
     raise "No branch or tag selected for this domain" if ref.nil? && ref_type.nil?
     case ref_type
     when BRANCH

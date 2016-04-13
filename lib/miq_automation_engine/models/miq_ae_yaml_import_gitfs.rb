@@ -7,7 +7,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
 
   def load_repo
     unless Dir.exist?(@options['git_dir'])
-      raise MiqAeException::DirectoryNotFound, "GIT repo dir: #{@options['git_dir']} not found"
+      raise MiqAeException::DirectoryNotFound, "Git repo dir: #{@options['git_dir']} not found"
     end
     @gwt = GitWorktree.new(:path => @options['git_dir'])
     @gwt.branch = @options['branch'] if @options['branch']
