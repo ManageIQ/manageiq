@@ -163,13 +163,13 @@ describe Classification do
       ent2 = cat.entries[1]
 
       ent1.assign_entry_to(host1)
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to include(host1)
-      expect(any_tagged_with(Host, full_tag_name(ent1))).to include(host1)
-
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host, full_tag_name(ent1))).to eq([host1])
+      expect(all_tagged_with(Host, ent1.name, ent1.parent.name)).to eq([host1])
 
       ent2.assign_entry_to(host1)
-      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to include(host1)
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).not_to include(host1)
+      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).not_to eq([host1])
     end
 
     it "should test assign multi entry to" do
@@ -178,14 +178,18 @@ describe Classification do
       ent2 = cat.entries[1]
 
       ent1.assign_entry_to(host2)
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to include(host2)
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to eq([host2])
+      expect(all_tagged_with(Host, ent1.name, ent1.parent.name)).to eq([host2])
+
+      expect(any_tagged_with(Host, [ent1.name, ent2.name], ent1.parent.name)).to eq([host2])
+      expect(all_tagged_with(Host, [ent1.name, ent2.name], ent1.parent.name)).to be_empty
 
       ent2.assign_entry_to(host2)
-      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to include(host2)
-      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to include(host2)
-      expect(all_tagged_with(Host, "#{ent1.name} #{ent2.name}", ent1.parent.name)).to include(host2)
-      expect(any_tagged_with(Host, [ent2.name, ent1.name], ent2.parent.name)).to include(host2)
-      expect(any_tagged_with(Host, [full_tag_name(ent2), full_tag_name(ent1)])).to include(host2)
+      expect(any_tagged_with(Host, ent2.name, ent2.parent.name)).to eq([host2])
+      expect(any_tagged_with(Host, ent1.name, ent1.parent.name)).to eq([host2])
+      expect(all_tagged_with(Host, "#{ent1.name} #{ent2.name}", ent1.parent.name)).to eq([host2])
+      expect(any_tagged_with(Host, [ent2.name, ent1.name], ent2.parent.name)).to eq([host2])
+      expect(any_tagged_with(Host, [full_tag_name(ent2), full_tag_name(ent1)])).to eq([host2])
     end
 
     it "find with multiple tags" do
@@ -201,14 +205,30 @@ describe Classification do
       ent21.assign_entry_to(host2)
 
       # success
-      expect(any_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])).to include(host2)
-      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent11)]])).to include(host2)
+      expect(any_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])).to eq([host2])
+      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent11)]])).to eq([host2])
 
       # failure
       expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])
-            ).not_to include(host2)
-      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent22)]])).not_to include(host2)
-      expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to include(host2)
+            ).not_to eq([host2])
+      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent22)]])).not_to eq([host2])
+      expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to eq([host2])
+    end
+
+    it "finds tagged items with order clause" do
+      cat1 = Classification.find_by_name "test_single_value_category"
+      ent11 = cat1.entries[0]
+
+      ent11.assign_entry_to(host1)
+
+      expect(all_tagged_with(Host.order('name'), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order('name'), ent11.name, ent11.parent.name)).to eq([host1])
+
+      expect(all_tagged_with(Host.order('lower(name)'), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order('lower(name)'), ent11.name, ent11.parent.name)).to eq([host1])
+
+      expect(all_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
     end
 
     it "should test find by entry" do
