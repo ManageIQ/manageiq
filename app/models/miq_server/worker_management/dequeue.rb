@@ -56,15 +56,15 @@ module MiqServer::WorkerManagement::Dequeue
   end
 
   def prefetch_max_per_worker
-    @vmdb_config.config[:server][:prefetch_max_per_worker] || 100
+    ::Settings.server.prefetch_max_per_worker || 100
   end
 
   def prefetch_min_per_worker
-    @vmdb_config.config[:server][:prefetch_min_per_worker] || 10
+    ::Settings.server.prefetch_min_per_worker || 10
   end
 
   def prefetch_stale_threshold
-    (@vmdb_config.config[:server][:prefetch_stale_threshold] || 30.seconds).to_i_with_method
+    (::Settings.server.prefetch_stale_threshold || 30.seconds).to_i_with_method
   end
 
   def prefetch_below_threshold?(queue_name, wcount)

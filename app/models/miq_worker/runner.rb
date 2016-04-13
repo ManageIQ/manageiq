@@ -8,7 +8,6 @@ class MiqWorker::Runner
   include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :active_roles, :server
-  attr_writer   :vmdb_config
 
   INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
@@ -20,10 +19,6 @@ class MiqWorker::Runner
 
   def self.start_worker(*args)
     new(*args).start
-  end
-
-  def vmdb_config
-    @vmdb_config ||= VMDB::Config.new("vmdb")
   end
 
   def poll_method
@@ -278,15 +273,14 @@ class MiqWorker::Runner
     _log.info("#{log_prefix} Synchronizing active roles complete...")
   end
 
-  def message_sync_config(*args)
+  def message_sync_config(*_args)
     _log.info("#{log_prefix} Synchronizing configuration...")
-    opts = args.extract_options!
-    sync_config(opts[:config])
+    sync_config
     _log.info("#{log_prefix} Synchronizing configuration complete...")
   end
 
-  def sync_config(config = nil)
-    self.vmdb_config = config
+  def sync_config
+    Vmdb::Settings.reload!
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
@@ -300,11 +294,12 @@ class MiqWorker::Runner
   end
 
   def sync_log_level
-    Vmdb::Loggers.apply_config(vmdb_config.config[:log])
+    # TODO: Can this be removed since the VMDB::Config::Activator will do this anyway?
+    Vmdb::Loggers.apply_config(::Settings.log)
   end
 
   def sync_worker_settings
-    @worker_settings = self.class.corresponding_model.worker_settings(:config => vmdb_config)
+    @worker_settings = self.class.corresponding_model.worker_settings(:config => ::Settings.to_hash)
     @poll = @worker_settings[:poll]
     poll_method
   end

@@ -133,7 +133,6 @@ class MiqServer < ApplicationRecord
     _log.info("#{msg}")
     puts "** #{msg}"
 
-    @vmdb_config = VMDB::Config.new("vmdb")
     starting_server_record
 
     #############################################################
@@ -302,43 +301,43 @@ class MiqServer < ApplicationRecord
   end
 
   def monitor_poll
-    ((@vmdb_config && @vmdb_config.config[:server][:monitor_poll]) || 5.seconds).to_i_with_method
+    (::Settings.server.monitor_poll || 5.seconds).to_i_with_method
   end
 
   def stop_poll
-    ((@vmdb_config && @vmdb_config.config[:server][:stop_poll]) || 10.seconds).to_i_with_method
+    (::Settings.server.stop_poll || 10.seconds).to_i_with_method
   end
 
   def heartbeat_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:heartbeat_frequency]) || 30.seconds).to_i_with_method
+    (::Settings.server.heartbeat_frequency || 30.seconds).to_i_with_method
   end
 
   def server_dequeue_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:server_dequeue_frequency]) || 5.seconds).to_i_with_method
+    (::Settings.server.server_dequeue_frequency || 5.seconds).to_i_with_method
   end
 
   def server_monitor_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:server_monitor_frequency]) || 60.seconds).to_i_with_method
+    (::Settings.server.server_monitor_frequency || 60.seconds).to_i_with_method
   end
 
   def server_log_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:server_log_frequency]) || 5.minutes).to_i_with_method
+    (::Settings.server.server_log_frequency || 5.minutes).to_i_with_method
   end
 
   def server_log_timings_threshold
-    ((@vmdb_config && @vmdb_config.config[:server][:server_log_timings_threshold]) || 1.second).to_i_with_method
+    (::Settings.server.server_log_timings_threshold || 1.second).to_i_with_method
   end
 
   def worker_dequeue_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:worker_dequeue_frequency]) || 3.seconds).to_i_with_method
+    (::Settings.server.worker_dequeue_frequency || 3.seconds).to_i_with_method
   end
 
   def worker_messaging_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:worker_messaging_frequency]) || 5.seconds).to_i_with_method
+    (::Settings.server.worker_messaging_frequency || 5.seconds).to_i_with_method
   end
 
   def worker_monitor_frequency
-    ((@vmdb_config && @vmdb_config.config[:server][:worker_monitor_frequency]) || 15.seconds).to_i_with_method
+    (::Settings.server.worker_monitor_frequency || 15.seconds).to_i_with_method
   end
 
   def threshold_exceeded?(name, now = Time.now.utc)

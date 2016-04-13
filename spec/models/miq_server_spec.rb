@@ -143,7 +143,6 @@ describe MiqServer do
     end
 
     context "#ntp_reload" do
-      let(:config)     { @miq_server.get_config("vmdb") }
       let(:server_ntp) { {:server => ["server.pool.com"]} }
       let(:zone_ntp)   { {:server => ["zone.pool.com"]} }
       let(:chrony)     { double }
@@ -155,8 +154,7 @@ describe MiqServer do
 
         it "syncs with server settings with zone and server configured" do
           @zone.update_attribute(:settings, :ntp => zone_ntp)
-          config.config = {:ntp => server_ntp}
-          config.save
+          stub_settings(:ntp => server_ntp)
 
           expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
           expect(chrony).to receive(:clear_servers)
@@ -166,8 +164,7 @@ describe MiqServer do
 
         it "syncs with zone settings if server not configured" do
           @zone.update_attribute(:settings, :ntp => zone_ntp)
-          config.config = {}
-          config.save
+          stub_settings({})
 
           expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
           expect(chrony).to receive(:clear_servers)
@@ -177,8 +174,7 @@ describe MiqServer do
 
         it "syncs with default zone settings if server and zone not configured" do
           @zone.update_attribute(:settings, {})
-          config.config = {}
-          config.save
+          stub_settings({})
 
           expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
           expect(chrony).to receive(:clear_servers)

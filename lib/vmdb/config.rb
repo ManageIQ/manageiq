@@ -56,10 +56,6 @@ module VMDB
       MiqServer.my_server.set_config(config)
     end
 
-    def stale?
-      full_config != ::Settings.to_hash
-    end
-
     # NOTE: Used by Configuration -> Advanced
     def self.get_file
       Vmdb::Settings.encrypt_passwords!(::Settings.to_hash).to_yaml
@@ -84,18 +80,6 @@ module VMDB
     # protected
     def self.filter_settings_by_name(settings, name)
       name == "vmdb" ? settings : settings[name.to_sym]
-    end
-
-    private
-
-    def full_config
-      if name == "vmdb"
-        config
-      else
-        ::Settings.to_hash.tap do |settings|
-          settings[name.to_sym] = config
-        end
-      end
     end
   end
 end
