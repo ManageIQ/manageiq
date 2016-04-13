@@ -1,5 +1,6 @@
 class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :AvailabilityZone
+  require_nested :EventCatcher
   require_nested :EventParser
   require_nested :Flavor
   require_nested :Provision
@@ -87,6 +88,8 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     # specify Compute as the default
     when 'compute', nil
       ::Fog::Compute.new(config)
+    when 'pubsub'
+      ::Fog::Google::Pubsub.new(config.except(:provider))
     else
       raise ArgumentError, "Unknown service: #{options[:service]}"
     end
@@ -95,7 +98,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   def connect(options = {})
     require 'fog/google'
 
-    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
 
     auth_token = authentication_token(options[:auth_type])
     self.class.raw_connect(project, auth_token, options)
