@@ -263,7 +263,6 @@ describe Service do
     end
   end
 
-
   describe "#subtree" do
     it "returns sub tree" do
       create_deep_tree

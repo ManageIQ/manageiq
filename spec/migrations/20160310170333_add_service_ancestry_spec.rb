@@ -5,6 +5,13 @@ describe AddServiceAncestry do
   let(:service_stub) { migration_stub(:Service) }
 
   migration_context :up do
+    # nodes:
+    # s1
+    #   s11
+    #     s111
+    #     s112
+    # s2
+    #   s21 (created before parent)
     it "updates tree" do
       s21  = service_stub.create!
       s1   = service_stub.create!

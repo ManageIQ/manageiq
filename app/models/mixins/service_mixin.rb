@@ -18,7 +18,8 @@ module ServiceMixin
     rsc_type = rsc.class.base_class.name.tableize
     raise _("Cannot connect service with nil ID.") if rsc.id.nil? && rsc_type == "service_templates"
 
-    # what is this?
+    # fetch the corresponding service resource
+    # may want to use a query for this
     sr = service_resources.detect { |sr| sr.resource_type == rsc.class.base_class.name && sr.resource_id == rsc.id }
     if sr.nil?
       if options.kind_of?(ServiceResource)

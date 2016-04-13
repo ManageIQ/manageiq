@@ -15,9 +15,6 @@ class AddServiceAncestry < ActiveRecord::Migration[5.0]
     add_column :services, :ancestry, :string
     add_index :services, :ancestry
 
-    Service.connection.schema_cache.clear!
-    Service.reset_column_information
-
     say_with_time("Converting Services from service_id ancestry") do
       update_service_parent(nil)
     end
@@ -28,9 +25,6 @@ class AddServiceAncestry < ActiveRecord::Migration[5.0]
   def down
     add_column :services, :service_id, :bigint
     add_index :services, :service_id
-
-    Service.connection.schema_cache.clear!
-    Service.reset_column_information
 
     say_with_time("Converting Services from ancestry to service_id") do
       Service.all.each do |service|
