@@ -664,10 +664,10 @@ class MiqExpression
       col_type = self.class.get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if col_type == :date || col_type == :datetime
 
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
+      operands = operands2sqlvalue(operator, exp[operator])
       clause = operands.join(" #{self.class.normalize_sql_operator(operator)} ")
     when "like", "not like", "starts with", "ends with", "includes"
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
+      operands = operands2sqlvalue(operator, exp[operator])
       case operator.downcase
       when "starts with"
         operands[1] = "'" + operands[1].to_s + "%'"
@@ -691,12 +691,12 @@ class MiqExpression
     when "not", "!"
       clause = self.class.normalize_sql_operator(operator) + " " + _to_sql(exp[operator], tz)
     when "is null", "is not null"
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
+      operands = operands2sqlvalue(operator, exp[operator])
       clause = "(#{operands[0]} #{self.class.normalize_sql_operator(operator)})"
     when "is empty", "is not empty"
       col      = exp[operator]["field"]
       col_type = col_details[col].nil? ? :string : col_details[col][:data_type]
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
+      operands = operands2sqlvalue(operator, exp[operator])
       clause   = "(#{operands[0]} #{operator.sub(/empty/i, "NULL")})"
       if col_type == :string
         conjunction = (operator.downcase == 'is empty') ? 'OR' : 'AND'
@@ -727,7 +727,7 @@ class MiqExpression
       end
     when "is"
       col_name = exp[operator]["field"]
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
+      col_sql, _dummy = operands2sqlvalue(operator, "field" => col_name)
       col_type = self.class.get_col_type(col_name)
       value = exp[operator]["value"]
       if col_type == :date
@@ -746,7 +746,7 @@ class MiqExpression
       end
     when "from"
       col_name = exp[operator]["field"]
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
+      col_sql, _dummy = operands2sqlvalue(operator, "field" => col_name)
       col_type = self.class.get_col_type(col_name)
 
       start_val, end_val = exp[operator]["value"]
@@ -767,7 +767,7 @@ class MiqExpression
 
       col_name = exp[operator]["field"]
       col_type = self.class.get_col_type(col_name)
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
+      col_sql, _dummy = operands2sqlvalue(operator, "field" => col_name)
 
       normalized_operator = self.class.normalize_sql_operator(operator)
       mode = case normalized_operator
@@ -1144,21 +1144,21 @@ class MiqExpression
     ret
   end
 
-  def self.operands2sqlvalue(operator, ops)
+  def operands2sqlvalue(operator, ops)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
     operator = operator.downcase
 
     ret = []
     if  ops["field"]
-      ret << get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
-      col_type = get_col_type(ops["field"]) || "string"
+      ret << self.class.get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
+      col_type = self.class.get_col_type(ops["field"]) || "string"
       if ["like", "not like", "starts with", "ends with", "includes"].include?(operator)
         ret.push(ops["value"])
       else
-        ret.push(quote(ops["value"], col_type.to_s, :sql))
+        ret.push(self.class.quote(ops["value"], col_type.to_s, :sql))
       end
     elsif ops["count"]
-      val = get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last
+      val = self.class.get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last
       ret << "count(#{val})" # TODO
       ret.push(ops["value"])
     else
