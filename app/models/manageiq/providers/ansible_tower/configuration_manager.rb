@@ -1,4 +1,5 @@
 class ManageIQ::Providers::AnsibleTower::ConfigurationManager < ManageIQ::Providers::ConfigurationManager
+  require_nested :ConfigurationScript
   require_nested :ConfiguredSystem
   require_nested :Refresher
   require_nested :RefreshParser

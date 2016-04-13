@@ -39,6 +39,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
       :manager_ref          => "1",
       :name                 => "template1",
       :survey_spec          => "some_hash_payload",
+      :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
       :variables            => "some_json_payload",
     )
 

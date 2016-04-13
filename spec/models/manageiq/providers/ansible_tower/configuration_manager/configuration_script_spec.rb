@@ -1,6 +1,6 @@
 require 'ansible_tower_client'
 require 'faraday'
-describe ConfigurationScript do
+describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript do
   let(:faraday_connection) { instance_double("Faraday::Connection", :post => post, :get => get, :patch => '') }
   let(:post) { instance_double("Faraday::Result", :body => {}.to_json) }
   let(:get) { instance_double("Faraday::Result", :body => {'id' => 1}.to_json) }
