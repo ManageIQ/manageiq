@@ -1,0 +1,213 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: Automation Requests
+    display_name: 
+    name: Deployment
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: analyze_deployment
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: METHOD::analyze_deployment
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: provision
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: METHOD::provision
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: post_provision
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: METHOD::post_provision
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: check_ssh
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: METHOD::check_ssh
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: pre_validate
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: METHOD::pre_validate
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: create_ansible_inventory
+      display_name: 
+      datatype: 
+      priority: 6
+      owner: 
+      default_value: METHOD::create_ansible_inventory
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: master_pre_deployment
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: METHOD::pre_deployment
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: ansible_deployment
+      display_name: 
+      datatype: 
+      priority: 8
+      owner: 
+      default_value: METHOD::deployment
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: add_provider
+      display_name: 
+      datatype: 
+      priority: 9
+      owner: 
+      default_value: METHOD::add_provider
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: clean_up
+      display_name: 
+      datatype: 
+      priority: 10
+      owner: 
+      default_value: METHOD::cleanup
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry:
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
