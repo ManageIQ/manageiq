@@ -1,0 +1,12 @@
+---
+object_type: method
+version: 1.0
+object:
+  attributes:
+    name: post_provision
+    display_name: 
+    description: 
+    scope: instance
+    language: ruby
+    location: inline
+  inputs: []
