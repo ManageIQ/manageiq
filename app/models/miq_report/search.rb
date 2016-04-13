@@ -47,7 +47,7 @@ module MiqReport::Search
     return [] if sortby.nil? # apply limits (note: without order it is non-deterministic)
     return nil unless db_class.sortable?
     # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
-    order = sortby.to_miq_a.collect do |c|
+    order = Array.wrap(sortby).collect do |c|
       sql_col, sql_type = association_column(c)
       return nil if sql_col.nil?
       [:string, :text].include?(sql_type) ? sql_col.lower : sql_col
