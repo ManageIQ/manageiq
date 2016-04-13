@@ -72,16 +72,24 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   # Connections
   #
 
-  def self.raw_connect(google_project, google_json_key)
+  def self.raw_connect(google_project, google_json_key, options)
     require 'fog/google'
 
-    ::Fog::Compute.new(
+    config = {
       :provider               => "Google",
       :google_project         => google_project,
       :google_json_key_string => google_json_key,
       :app_name               => I18n.t("product.name"),
       :app_version            => Vmdb::Appliance.VERSION,
-    )
+    }
+
+    case options[:service]
+    # specify Compute as the default
+    when 'compute', nil
+      ::Fog::Compute.new(config)
+    else
+      raise ArgumentError, "Unknown service: #{options[:service]}"
+    end
   end
 
   def connect(options = {})
@@ -90,11 +98,11 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     auth_token = authentication_token(options[:auth_type])
-    self.class.raw_connect(project, auth_token)
+    self.class.raw_connect(project, auth_token, options)
   end
 
   def gce
-    @gce ||= connect(:service => "GCE")
+    @gce ||= connect(:service => "compute")
   end
 
   # Operations
