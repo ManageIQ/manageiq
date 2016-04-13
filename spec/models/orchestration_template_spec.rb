@@ -258,6 +258,15 @@ describe OrchestrationTemplate do
           expect(described_class.find_by(:id => existing_discovered_template.id)).to be_nil
         end
       end
+
+      context "when there is no conflict" do
+        it "converts a discovered template to orderable" do
+          allow(existing_discovered_template).to receive_messages(:validate_format => nil)
+          expect(existing_discovered_template.orderable).to be_falsey
+          expect(existing_discovered_template.save_as_orderable!).to be_truthy
+          expect(existing_discovered_template.orderable).to be_truthy
+        end
+      end
     end
   end
 
