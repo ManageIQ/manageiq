@@ -175,7 +175,7 @@
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
       - virtualMachines_write_EndRequest
-      - compute_instance_insert
+      - GceOperationDone_compute.instances.insert
       - VmConnectedEvent
       - VmCreatedEvent
       - VmDeployedEvent
@@ -299,7 +299,7 @@
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
       - virtualMachines_delete_EndRequest
-      - compute_instance_delete
+      - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
       - image.delete
@@ -634,8 +634,8 @@
       - virtualMachines_deallocate_EndRequest
       - virtualMachines_start_EndRequest
       - virtualMachines_restart_EndRequest
-      - compute_instance_start
-      - compute_instance_stop
+      - GceOperationDone_compute.instances.start
+      - GceOperationDone_compute.instances.stop
       - VM_DOWN
       - VM_DOWN_ERROR
       - VM_PAUSED_ENOSPC
@@ -1152,6 +1152,8 @@
         :poll: 15.seconds
       :event_catcher_hawkular:
         :poll: 10.seconds
+      :event_catcher_google:
+        :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
       :event_catcher_openshift:
