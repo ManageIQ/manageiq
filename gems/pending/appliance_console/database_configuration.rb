@@ -218,11 +218,9 @@ FRIENDLY
     def validate!
       pool = ModelWithNoBackingTable.establish_connection(settings_hash.delete_if { |_n, v| v.blank? })
       begin
-        conn = pool.connection
+        pool.connection
       ensure
-        # Disconnect and remove this new connection from the connection pool, to completely clear it out
-        conn.disconnect! if conn
-        ActiveRecord::Base.connection_handler.remove_connection(ModelWithNoBackingTable)
+        ModelWithNoBackingTable.remove_connection
       end
     end
 
