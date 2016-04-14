@@ -12,6 +12,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     VCR.use_cassette(described_class.name.underscore.to_s) do # , :record => :new_episodes) do
       EmsRefresh.refresh(@ems_hawkular)
     end
+
     @ems_hawkular.reload
 
     expect(@ems_hawkular.middleware_servers.count).to be > 0
