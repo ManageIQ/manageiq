@@ -1228,6 +1228,52 @@ Vmdb::Application.routes.draw do
         exp_post
     },
 
+    :cloud_network             => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        panel_control
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
+    },
+
+    :network_port             => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        panel_control
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        exp_post
+    },
+
     :network_router           => {
       :get  => %w(
         download_data
@@ -2250,7 +2296,9 @@ Vmdb::Application.routes.draw do
         security_groups
         floating_ips
         network_routers
+        network_ports
         cloud_subnets
+        cloud_networks
         show
         squash_toggle
         tagging_edit

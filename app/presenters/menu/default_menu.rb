@@ -127,10 +127,12 @@ module Menu
       def network_menu_section
         Menu::Section.new(:net, N_("Networks"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ems_network',    N_('Providers'),       'ems_network',    {:feature => 'ems_network_show_list'},    '/ems_network'),
-          Menu::Item.new('security_group', N_('Security Groups'), 'security_group', {:feature => 'security_group_show_list'}, '/security_group'),
-          Menu::Item.new('floating_ip',    N_('Floating IP'),     'floating_ip',    {:feature => 'floating_ip_show_list'},    '/floating_ip'),
+          Menu::Item.new('cloud_network',  N_('Networks'),        'cloud_network',  {:feature => 'cloud_network_show_list'},  '/cloud_network'),
           Menu::Item.new('cloud_subnet',   N_('Subnets'),         'cloud_subnet',   {:feature => 'cloud_subnet_show_list'},   '/cloud_subnet'),
           Menu::Item.new('network_router', N_('Network Router'),  'network_router', {:feature => 'network_router_show_list'}, '/network_router'),
+          Menu::Item.new('security_group', N_('Security Groups'), 'security_group', {:feature => 'security_group_show_list'}, '/security_group'),
+          Menu::Item.new('floating_ip',    N_('Floating IP'),     'floating_ip',    {:feature => 'floating_ip_show_list'},    '/floating_ip'),
+          Menu::Item.new('network_port',   N_('Network Ports'),   'network_port',   {:feature => 'network_port_show_list'},   '/network_port'),
         ])
       end
 

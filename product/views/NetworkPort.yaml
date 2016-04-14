@@ -9,45 +9,45 @@
 #
 
 # Report title
-title: Floating Ip
+title: Network Port
 
 # Menu name
-name: FloatingIp
+name: NetworkPort
 
 # Main DB table report is based on
-db: FloatingIp
+db: NetworkPort
 
 # Columns to fetch from the main table
 cols:
-- address
-- fixed_ip_address
+- name
+- mac_address
 
 # Included tables (joined, has_one, has_many) and columns
 include:
   ext_management_system:
     columns:
     - name
-  vm:
-    columns:
-    - name
+#  device:
+#    columns:
+#    - name
 
 # Included tables and columns for query performance
 include_for_find:
   :ext_management_system: {}
-  :vm: {}
+#  :device: {}
 
 # Order of columns (from all tables)
 col_order:
-- address
-- fixed_ip_address
-- vm.name
+- name
+- mac_address
+#- device.name
 - ext_management_system.name
 
 # Column titles, in order
 headers:
-- Adress
-- Fixed Address
-- Instance name
+- Name
+- Mac Adress
+#- Instance name
 - Network Provider
 
 # Condition(s) string for the SQL query
@@ -58,7 +58,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- name
+- mac_address
 
 # Group rows (y=yes,n=no,c=count)
 group: n

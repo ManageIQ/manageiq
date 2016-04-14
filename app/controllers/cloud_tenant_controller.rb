@@ -1,5 +1,6 @@
 class CloudTenantController < ApplicationController
   include AuthorizationMessagesMixin
+  include Mixins::GenericShowMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -38,83 +39,9 @@ class CloudTenantController < ApplicationController
     render_button_partial(pfx)
   end
 
-  def show
-    @display = params[:display] || "main" unless control_selected?
-
-    @lastaction = "show"
-    @showtype = "main"
-    @cloud_tenant = @record = identify_record(params[:id])
-    return if record_no_longer_exists?(@cloud_tenant)
-
-    @gtl_url = "/show"
-    drop_breadcrumb({:name => _("Cloud Tenants"), :url => "/cloud_tenant/show_list?page=#{@current_page}&refresh=y"}, true)
-
-    case @display
-    when "download_pdf", "main", "summary_only"
-      get_tagdata(@cloud_tenant)
-      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @cloud_tenant.name},
-                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}")
-      @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
-    when "ems_cloud"
-      drop_breadcrumb(:name => "%{name} (%{table}(s))" % {:name  => @cloud_tenant.name,
-                                                          :table => ui_lookup(:table => "ems_cloud")},
-                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=ems_cloud")
-      @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
-      @showtype = "ems_cloud"
-    when "instances", "images"
-      table = @display == "instances" ? "vm_cloud" : "template_cloud"
-      title = ui_lookup(:tables => table)
-      kls   = @display == "instances" ? ManageIQ::Providers::CloudManager::Vm : ManageIQ::Providers::CloudManager::Template
-      drop_breadcrumb(:name => _("%{name} (All %{titles})") % {:name => @cloud_tenant.name, :titles => title},
-                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
-      @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
-      @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
-    when "security_groups"
-      table = "security_groups"
-      title = ui_lookup(:tables => table)
-      kls   = SecurityGroup
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @cloud_tenant.name,:title => title},
-                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
-      @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
-      @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
-    when "cloud_volumes"
-      table = "cloud_volumes"
-      title = ui_lookup(:tables => table)
-      kls   = CloudVolume
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @cloud_tenant.name, :title => title},
-                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
-      @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
-      @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
-    when "cloud_volume_snapshots"
-      table = "cloud_volume_snapshots"
-      title = ui_lookup(:tables => table)
-      kls   = CloudVolumeSnapshot
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @cloud_tenant.name, :title => title},
-                      :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}")
-      @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
-      @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
-    when "cloud_object_store_containers"
-      table = "cloud_object_stores"
-      title = ui_lookup(:tables => table)
-      kls   = CloudObjectStoreContainer
-      drop_breadcrumb(
-        :name => @cloud_tenant.name + " (All #{title})",
-        :url  => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"
-      )
-      @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
-      @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_tenant"))
-    end
-
-    # Came in from outside show_list partial
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    end
+  def self.display_methods
+    %w(instances images security_groups cloud_volumes cloud_volume_snapshots cloud_object_store_containers floating_ips
+       network_ports cloud_networks cloud_subnets network_routers)
   end
 
   def show_list

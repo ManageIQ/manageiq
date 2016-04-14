@@ -21,22 +21,34 @@ db: CloudNetwork
 cols:
 - name
 - status
+- total_vms
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  ext_management_system:
+    columns:
+    - name
+
+# Included tables and columns for query performance
+include_for_find:
+  :ext_management_system: {}
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - name
 - status
+- total_vms
+- ext_management_system.name
 
 # Column titles, in order
 headers:
 - Name
 - Status
+- Instances
+- Network Provider
 
 # Condition(s) string for the SQL query
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order: Ascending
@@ -59,8 +71,8 @@ group: n
 #   StackedColumn
 #   StackedThreedColumn
 
-graph: 
+graph:
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
-dims: 
+dims:

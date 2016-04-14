@@ -220,6 +220,8 @@ module ApplicationHelper
                 SecurityGroup
                 FloatingIp
                 NetworkRouter
+                NetworkPort
+                CloudNetwork
                 CloudSubnet).include?(view.db)
             return url_for(:controller => controller, :action => "show") + "/"
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
@@ -254,7 +256,7 @@ module ApplicationHelper
     when "OrchestrationStackOutput"    then "outputs"
     when "OrchestrationStackParameter" then "parameters"
     when "OrchestrationStackResource"  then "resources"
-    when 'AdvancedSetting', 'CloudNetwork', 'Filesystem', 'FirewallRule', 'GuestApplication', 'Patch', 'RegistryItem',
+    when 'AdvancedSetting', 'Filesystem', 'FirewallRule', 'GuestApplication', 'Patch', 'RegistryItem',
          'ScanHistory', 'OpenscapRuleResult'
                                        then view.db.tableize
     when "SystemService"
@@ -321,7 +323,7 @@ module ApplicationHelper
     when "MiqWorker"
       controller = request.parameters[:controller]
       action = "diagnostics_worker_selected"
-    when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
+    when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
       controller = request.parameters[:controller]
     when /^ManageIQ::Providers::(\w+)Manager$/
       controller = "ems_#{$1.underscore}"
@@ -801,8 +803,8 @@ module ApplicationHelper
        container_route container_project container_replicator container_image
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
-       host service storage ems_cloud ems_cluster flavor ems_network
-       security_group floating_ip cloud_subnet network_router
+       host service storage ems_cloud ems_cluster flavor
+       ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
        orchestration_stack cim_base_storage_extent storage_manager).include?(@layout)
@@ -1078,7 +1080,7 @@ module ApplicationHelper
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume container_build
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
-                        ems_network security_group floating_ip cloud_subnet network_router
+                        ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
                         policy policy_group policy_profile resource_pool retired scan_profile
@@ -1120,7 +1122,8 @@ module ApplicationHelper
          container_node container_service ems_container container_group ems_cloud ems_cluster container_route
          container_project container_replicator container_image container_image_registry container_build
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
-         middleware_server middleware_deployment ems_network security_group floating_ip cloud_subnet network_router
+         middleware_server middleware_deployment
+         ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
          resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1134,7 +1137,7 @@ module ApplicationHelper
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment flavor
-             ems_network security_group floating_ip cloud_subnet network_router
+             ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack resource_pool
              scan_profile service snia_local_file_system storage
@@ -1149,7 +1152,7 @@ module ApplicationHelper
                      persistent_volume container_build
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
-                     ems_network security_group floating_ip cloud_subnet network_router
+                     ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
                      orchestration_stack resource_pool retired service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
