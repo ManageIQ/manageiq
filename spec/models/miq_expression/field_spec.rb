@@ -80,14 +80,14 @@ RSpec.describe MiqExpression::Field do
       expect(field.reflections).to match([an_object_having_attributes(:klass => Account)])
     end
 
-    it "returns nil if the field has virtual associations" do
+    it "raises an error if the field has virtual associations" do
       field = described_class.new(Vm, ["processes"], "name")
-      expect(field.reflections).to be_nil
+      expect { field.reflections }.to raise_error(/One or more associations are invalid: processes/)
     end
 
-    it "returns nil if the field has invalid associations" do
+    it "raises an error if the field has invalid associations" do
       field = described_class.new(Vm, %w(foo bar), "name")
-      expect(field.reflections).to be_nil
+      expect { field.reflections }.to raise_error(/One or more associations are invalid: foo, bar/)
     end
   end
 
