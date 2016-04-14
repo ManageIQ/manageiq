@@ -10,7 +10,8 @@ class NetworkPort < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :device, :polymorphic => true
 
-  has_and_belongs_to_many :security_groups
+  has_many :network_port_security_groups
+  has_many :security_groups, :through => :network_port_security_groups
 
   has_one :floating_ip
   # TODO(lsmola) can this really happen? If not remove it
