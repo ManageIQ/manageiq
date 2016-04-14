@@ -112,6 +112,10 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
   };
 
   var buildContextMenuOptions = function(popup, data) {
+    if (data.item.kind == "Tag") {
+      return false;
+    }
+
     topologyService.addContextMenuOption(popup, "Go to summary page", data, self.dblclick);
   };
 
@@ -225,6 +229,9 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
   });
 
   this.dblclick = function dblclick(d) {
+    if (d.item.kind == "Tag") {
+      return false;
+    }
     window.location.assign(topologyService.geturl(d));
   };
 
@@ -242,7 +249,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
     switch (d.item.kind) {
       case "NetworkManager":
         return { x: -20, y: -20, r: 28 };
-      case "FloatingIp":
+      case "FloatingIp", "Tag":
         return { x: defaultDimensions.x, y: defaultDimensions.y, r: 13 };
       case "NetworkRouter":
         return { x: defaultDimensions.x, y: defaultDimensions.y, r: defaultDimensions.r };
