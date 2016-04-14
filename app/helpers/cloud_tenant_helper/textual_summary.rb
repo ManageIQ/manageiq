@@ -23,10 +23,6 @@ module CloudTenantHelper::TextualSummary
     textual_link(@record.ext_management_system)
   end
 
-  def textual_security_groups
-    @record.security_groups
-  end
-
   def textual_instances
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
