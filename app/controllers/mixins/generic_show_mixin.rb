@@ -61,7 +61,7 @@ module Mixins
 
     def nested_list(table_name, model)
       title = ui_lookup(:tables => table_name)
-      drop_breadcrumb(:name =>  _("%{name} (Summary)") % {:name => @record.name},
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record.name},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}")
       drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
