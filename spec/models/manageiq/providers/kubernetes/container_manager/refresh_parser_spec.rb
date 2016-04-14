@@ -328,8 +328,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         ["1Gi",  1_073_741_824],
         ["1Ti",  1_099_511_627_776]
       ].each do |iec, bytes|
-        expect(parser.send(:parse_iec_number, iec)).to eq(bytes)
+        expect(iec.to_iec_integer).to eq(bytes)
       end
+    end
+
+    it "parse capacity hash correctly" do
+      hash = {:storage => "10Gi", :foo => "10"}
+      expect(parser.send(:parse_resource_list, hash)).to eq({:storage => 10.gigabytes, :foo => 10})
+    end
+
+    it "parse capacity hash with bad value correctly" do
+      hash = {:storage => "10Gi", :foo => "10wrong"}
+      expect(parser.send(:parse_resource_list, hash)).to eq({:storage => 10.gigabytes})
     end
   end
 
@@ -716,7 +726,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :type                    => 'PersistentVolume',
           :status_phase            => 'Available',
           :access_modes            => 'ReadWriteOnce',
-          :capacity                => 'storage=10Gi',
+          :capacity                => {:storage => 10.gigabytes},
           :claim_name              => nil,
           :common_fs_type          => nil,
           :common_partition        => nil,

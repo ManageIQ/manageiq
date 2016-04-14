@@ -148,4 +148,16 @@ class String
   def foreign_key(separate_class_name_and_id_with_underscore = true)
     ActiveSupport::Inflector.foreign_key(self, separate_class_name_and_id_with_underscore)
   end unless method_defined?(:foreign_key)
+
+  # Support with IEC size format
+  # http://physics.nist.gov/cuu/Units/binary.html
+  IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti).freeze
+  def to_iec_integer
+    exp_index = IEC_SIZE_SUFFIXES.index(self[-2..-1])
+    if exp_index.nil?
+      Integer(self)
+    else
+      Integer(self[0..-3]) * 1024**(exp_index + 1)
+    end
+  end
 end
