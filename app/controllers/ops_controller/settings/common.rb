@@ -534,7 +534,8 @@ module OpsController::Settings::Common
       }
     end
 
-    @smartproxy_affinity_tree = build_smartproxy_affinity_tree(@selected_zone)
+    @smartproxy_affinity_tree_json = build_smartproxy_affinity_tree(@selected_zone).to_json # TODO remove
+    @smartproxy_affinity_tree = TreeBuilderSmartproxyAffinity.new("smartproxy_affinity_tree", :smartproxy_affinity, @sb, @selected_zone)
 
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
@@ -1132,6 +1133,7 @@ module OpsController::Settings::Common
     @edit[:default_verify_status] = (w[:password] == w[:verify])
   end
 
+  # TODO remove
   def build_smartproxy_affinity_node(zone, server, node_type)
     affinities = server.send("vm_scan_#{node_type}_affinity").collect(&:id)
     {
@@ -1149,6 +1151,7 @@ module OpsController::Settings::Common
     }
   end
 
+  # TODO remove
   def build_smartproxy_affinity_tree(zone)
     zone.miq_servers.select(&:is_a_proxy?).sort_by { |s| [s.name, s.id] }.collect do |s|
       title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name} [#{s.id}]"
