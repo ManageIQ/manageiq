@@ -113,7 +113,7 @@ class Tag < ApplicationRecord
   end
 
   # @param tag_names [Array<String>] list of non namespaced tags
-  def self.for_names(tag_names, ns = nil)
+  def self.for_names(tag_names, ns)
     fq_tag_names = tag_names.collect { |tag_name| File.join(ns, tag_name) }
     where(:name => fq_tag_names)
   end
