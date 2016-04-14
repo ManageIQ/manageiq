@@ -1,12 +1,9 @@
 describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow do
   include WorkflowSpecHelper
 
-  let(:admin) { FactoryGirl.create(:user_with_group) }
-  let(:system) do
-    FactoryGirl.create(:configured_system_foreman,
-                       :hostname              => 'host',
-                       :configuration_manager => FactoryGirl.create(:configuration_manager_foreman))
-  end
+  let(:admin)   { FactoryGirl.create(:user_with_group) }
+  let(:manager) { FactoryGirl.create(:configuration_manager_foreman) }
+  let(:system)  { FactoryGirl.create(:configured_system_foreman, :manager => manager) }
 
   it "#allowed_configuration_profiles" do
     cp       = FactoryGirl.build(:configuration_profile, :name => "test profile")
@@ -48,7 +45,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqProvisionConfiguredSystemRequest)
       expect(request.request_type).to eq("provision_via_foreman")
-      expect(request.description).to eq("Foreman install on [host]")
+      expect(request.description).to eq("Foreman install on [#{system.name}]")
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
       expect(request.requester_name).to eq(admin.name)
