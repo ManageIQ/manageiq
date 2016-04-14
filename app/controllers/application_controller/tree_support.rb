@@ -62,7 +62,7 @@ module ApplicationController::TreeSupport
         nil,
         :style_class => "cfme-no-cursor-node"
       )
-      c_node[:title] = "<b>" + __("Compliance Check on:") + "</b>" + c_node[:title].to_s
+      c_node[:title] = "<b>" + _("Compliance Check on:") + "</b>" + c_node[:title].to_s
       c_kids = []
       temp_pol_id = nil
       p_node = {}
