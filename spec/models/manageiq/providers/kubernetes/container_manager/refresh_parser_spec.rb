@@ -328,7 +328,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         ["1Gi",  1_073_741_824],
         ["1Ti",  1_099_511_627_776]
       ].each do |iec, bytes|
-        expect(parser.send(:parse_iec_number, iec)).to eq(bytes)
+        expect(PersistentVolume.parse_iec_number iec).to eq(bytes)
       end
     end
   end
@@ -716,7 +716,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :type                    => 'PersistentVolume',
           :status_phase            => 'Available',
           :access_modes            => 'ReadWriteOnce',
-          :capacity                => 'storage=10Gi',
+          :capacity                => {:storage => 10737418240},
           :claim_name              => nil,
           :common_fs_type          => nil,
           :common_partition        => nil,

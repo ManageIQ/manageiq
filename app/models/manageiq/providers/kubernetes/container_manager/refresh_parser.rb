@@ -151,7 +151,7 @@ module ManageIQ::Providers::Kubernetes
       end
 
       node_memory = node.status.try(:capacity).try(:memory)
-      node_memory &&= parse_iec_number(node_memory) / 1.megabyte
+      node_memory &&= PersistentVolume.parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
         :hardware         => {
@@ -165,7 +165,7 @@ module ManageIQ::Providers::Kubernetes
       }
 
       max_container_groups = node.status.try(:capacity).try(:pods)
-      new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
+      new_result[:max_container_groups] = max_container_groups && PersistentVolume.parse_iec_number(max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
 
@@ -324,7 +324,9 @@ module ManageIQ::Providers::Kubernetes
       new_result.merge!(
         :type           => 'PersistentVolume',
         :parent_type    => 'ManageIQ::Providers::ContainerManager',
-        :capacity       => persistent_volume.spec.capacity.to_h.map { |k, v| "#{k}=#{v}" }.join(','),
+        :capacity       => persistent_volume.spec.capacity.to_h.transform_values do |iec_number|
+          PersistentVolume.parse_iec_number(iec_number)
+        end,
         :access_modes   => persistent_volume.spec.accessModes.join(','),
         :reclaim_policy => persistent_volume.spec.persistentVolumeReclaimPolicy,
         :status_phase   => persistent_volume.status.phase,
@@ -713,16 +715,6 @@ module ManageIQ::Providers::Kubernetes
         :common_partition        => [volume.gcePersistentDisk.try(:partition),
                                      volume.awsElasticBlockStore.try(:partition)].compact.first
       }
-    end
-
-    IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti)
-    def parse_iec_number(value)
-      exp_index = IEC_SIZE_SUFFIXES.index(value[-2..-1])
-      if exp_index.nil?
-        return Integer(value)
-      else
-        return Integer(value[0..-3]) * 1024**(exp_index + 1)
-      end
     end
   end
 end
