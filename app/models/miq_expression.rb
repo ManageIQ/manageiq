@@ -15,7 +15,7 @@ class MiqExpression
     ManageIQ::Providers::ConfigurationManager
     Container
     ContainerGroup
-    ContainerImages
+    ContainerImage
     ContainerNode
     ContainerProject
     ContainerService
