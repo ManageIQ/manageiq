@@ -16,7 +16,8 @@ describe MiqReport do
     @show_title   = true
     @options = MiqReport.graph_options(600, 400)
 
-    allow(Charting).to receive(:detect_available_plugin).and_return(JqplotCharting)
+    allow(Charting).to receive(:backend).and_return(:jqplot)
+    allow(Charting).to receive(:format).and_return(:jqplot)
   end
 
   context 'graph_options' do
