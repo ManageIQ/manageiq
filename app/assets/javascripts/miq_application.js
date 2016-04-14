@@ -1501,7 +1501,7 @@ function miqWidgetToolbarClick(e) {
 }
 
 function miqInitAccordions() {
-  var height = $('#left_div').height();
+  var height = $('#left_div').height() - $('#toolbar').outerHeight();
   var panel = $('.panel-heading').outerHeight();
   var count = $('#accordion > .panel .panel-body').length;
   $('#accordion > .panel .panel-body').each(function (k, v) {
