@@ -27,7 +27,7 @@
           %g.EntityLegend.Network.SecurityGroup
             %circle{:r => "17"}
             -# pficon-cloud-security
-            %text{:x => "1", :y => "6"} &#xE903;
+            %text{:x => "0", :y => "9"} &#xE903;
         %label
           = _("Security Groups")
       %kubernetes-topology-icon{tooltipOptions, :kind => "FloatingIp"}
@@ -43,7 +43,7 @@
           %g.EntityLegend.Network.CloudNetwork
             %circle{:r => "17"}
             -# pficon-service
-            %text{:x => "-2", :y => "10"} &#xE62C
+            %text{:x => "0", :y => "9"} &#xE62C
         %label
           = _("Cloud Networks")
       %kubernetes-topology-icon{tooltipOptions, :kind => "NetworkRouter"}
@@ -51,7 +51,7 @@
           %g.EntityLegend.Network.NetworkRouter
             %circle{:r => "17"}
             -# pficon-route
-            %text{:y => "8"} &#xE625;
+            %text{:x => "-1",:y => "7"} &#xE625;
         %label
           = _("Network Routers")
       %kubernetes-topology-icon{tooltipOptions, :kind => "CloudTenant"}
@@ -62,6 +62,14 @@
             %text{:y => "9"} &#xE904;
         %label
           = _("Cloud Tenants")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "Tag"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.FloatingIp
+            %circle{:r => "17"}
+            -# pficon-cloud-tenant
+            %text{:y => "9"} &#xF02b;
+        %label
+          = _("Tags")
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
