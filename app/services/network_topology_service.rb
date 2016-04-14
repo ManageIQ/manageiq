@@ -98,17 +98,16 @@ class NetworkTopologyService < TopologyService
   def entity_status(entity)
     case entity
     when Vm
-      status = entity.power_state.capitalize
+      entity.power_state.capitalize
     when ManageIQ::Providers::NetworkManager
-      status = entity.authentications.empty? ? 'Unknown' : entity.authentications.first.status.capitalize
+      entity.authentications.empty? ? 'Unknown' : entity.authentications.first.status.capitalize
     when NetworkRouter, CloudSubnet, CloudNetwork, FloatingIp
-      status = entity.status ? entity.status.downcase.capitalize : 'Unknown'
+      entity.status ? entity.status.downcase.capitalize : 'Unknown'
     when CloudTenant
-      status = entity.enabled? ? "OK" : "Unknown"
+      entity.enabled? ? "OK" : "Unknown"
     else
-      status = 'Unknown'
+      'Unknown'
     end
-    status
   end
 
   def build_kinds
