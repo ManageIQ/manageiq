@@ -1,7 +1,33 @@
-.toolbar-pf#paging_div {
-  border-top: 1px solid #c7c7c7;
-  height: 44px;
-  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+/* This media query makes the left column and the main area independently scrollable and sets the paging_div at the bottom of the column */
+
+@media (min-width: $screen-sm) {
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+  }
+  #main-content { /* inserts height calculation for scrollable area */
+    overflow: auto;
+  }
+  .max-height {
+    height: 100%;
+  }
+  .no-padding { /* removings left-right padding from column */
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .login-pf body {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+  .toolbar-pf#paging_div { /* sets paging_div at bottom of screen and styles */
+    bottom: 0;
+    border-top: 1px solid #c7c7c7;
+    height: 44px;
+    background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+  }
 }
 
 .toolbar-pf#paging_div ul.pagination {
@@ -21,36 +47,6 @@
 
 .toolbar-pf .form-group.text {
   line-height: 26px;
-}
-
-#main-content {
-  overflow: auto;
-}
-
-/* This media query makes the entire main row scrollable once the columns have collapsed */
-
-@media (max-width: $screen-sm) {
-  .scrollable-sm {
-    height: 100% !important; //overrides the height calculations used to create the scrollable area
-    overflow: auto;
-  }
-}
-
-/* This media query makes the left column and the main area independently scrollable and sets the paging_div at the bottom of the column */
-
-@media (min-width: $screen-sm) {
-
-  .login-pf body {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-  }
-  #paging_div {
-    bottom: 0;
-  }
-}
-
-.max-height {
-  height: 100%;
 }
 
 /* Overrides patternfly style for disabled accordion items */

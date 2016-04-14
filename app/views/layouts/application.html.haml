@@ -43,8 +43,6 @@
         ManageIQ.controller = "#{j controller_name}";
         API.autorenew();
 
-      %style html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}
-
     - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
     %body{:id => id, :onresize => "miqOnResize();", :onload => is_browser_ie? ? '' : 'miqOnLoad();', 'data-controller' => controller_name}
 
