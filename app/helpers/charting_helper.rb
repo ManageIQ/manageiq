@@ -26,7 +26,7 @@ module ChartingHelper
     case Charting.backend
     when :ziya   then ziya_chart(nil, options.slice(:id, :bgcolor, :width, :height))
     when :jqplot then jqplot_sample(options.slice(:id, :bgcolor, :width, :height))
-    when :c3     then c3chart_sample
+    when :c3     then content_tag(:div, '', :id => options[:id])
     end
   end
 
@@ -38,5 +38,9 @@ module ChartingHelper
     when :jqplot then jqplot(data, options.slice(:id, :bgcolor, :width, :height))
     when :c3     then c3chart_local(data, options.slice(:id))
     end
+  end
+
+  def zoom_icon(zoom_url)
+    zoom_url =~ /clear$/ ? '24/chart_unzoom.png' : '16/chart_zoom.png'
   end
 end

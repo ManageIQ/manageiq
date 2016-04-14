@@ -659,7 +659,7 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
   }, 250);
 }
 
-function miqBuildChartMenu(col, row, value, category, series, id, message) {
+function miqBuildChartMenu(col, row, _value, category, series, id, _message) {
   var set = id.split('_')[1]; // Get the chart set
   var idx = id.split('_')[2]; // Get the chart index
   var chart_data = ManageIQ.charts.chartData[set];
@@ -692,8 +692,51 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
   }
 }
 
+function miqChartBindEvents(chart_set, chart_index) {
+  if (ManageIQ.charts.provider == 'jqplot') {
+    jqplot_bind_events(chart_set, chart_index);
+  } else if (ManageIQ.charts.provider == 'c3') {
+    // noop
+  }
+}
+
+function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, chart_index) {
+  var chart_data = ManageIQ.charts.chartData[chart_set];
+  var chart_el   = $('#miq_chart_parent_'+chart_set+'_'+chart_index);
+  var chartmenu_el = $('#miq_chartmenu_'+chart_set+'_'+chart_index);
+  chartmenu_el.empty();
+
+  if (chart_data[chart_index].menu != null && chart_data[chart_index].menu.length) {
+    var rowcolchart_index = "_" + row + "-" + col + "-" + chart_index;
+
+    for (var i = 0; i < chart_data[chart_index].menu.length; i++) {
+      var menu_id = chart_data[chart_index].menu[i].split(":")[0] + rowcolchart_index;
+      var pid = menu_id.split("-")[0];
+
+      if (chartmenu_el.find('#' + pid).length == 0) {
+        chartmenu_el.append("<li class='dropdown-submenu'>" +
+          "<a tabindex='-1' href='#'>" + pid + "</a>" +
+          "<ul id='" + pid + "' class='dropdown-menu'></ul></li>");
+      }
+
+      var menu_title = chart_data[chart_index].menu[i].split(":")[1];
+      menu_title = menu_title.replace("<series>", series);
+      menu_title = menu_title.replace("<category>", category);
+      $("#" + pid).append("<li><a id='" + menu_id +
+        "' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
+    }
+
+    chartmenu_el.css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
+    chartmenu_el.dropdown('toggle');
+    chart_el.find('.overlay').show();
+  }
+}
+
 // Handle chart context menu clicks
 function miqChartMenuClick(itemId) {
+  // remove the event handler that closes the menu
+  $(document).off('click.close_popup');
+
   if ($('#menu_div').length) {
     $('#menu_div').hide();
   }
@@ -1532,7 +1575,6 @@ function chartData(type, data, data2) {
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
   return _.defaultsDeep({}, config, data, data2);
 }
-
 
 $( document ).ready(function() {
     check_for_ellipsis();
