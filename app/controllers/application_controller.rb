@@ -1941,6 +1941,44 @@ class ApplicationController < ActionController::Base
     prov_redirect("publish")
   end
 
+  def remember_tab_url(inbound_url)
+    # Customize URLs for controllers that don't use breadcrumbs
+    case controller_name
+    when "dashboard", "report", "alert", "chargeback"
+      session[:tab_url][:vi] = inbound_url if ["show", "show_list", "timeline", "jobs", "ui_jobs", "usage", "chargeback", "explorer"].include?(action_name)
+    when "support"
+      session[:tab_url][:set] = inbound_url if ["index"].include?(action_name)
+    when "configuration", "miq_task", "ops"
+      session[:tab_url][:set] = inbound_url if ["explorer", "index"].include?(action_name)
+    when "miq_ae_tools", "miq_ae_class", "miq_ae_customization"
+      session[:tab_url][:aut] = inbound_url if ["explorer", "resolve", "index", "explorer", "log", "import_export", "automate_button"].include?(action_name)
+    when "miq_policy" # Only grab controller and action for policy URLs
+      session[:tab_url][:con] = {:controller => controller_name, :action => action_name} if ["explorer", "rsop", "export", "log"].include?(action_name)
+    when "miq_capacity"
+      session[:tab_url][:opt] = inbound_url if ["utilization", "planning", "bottlenecks", "waste"].include?(action_name)
+    when "catalog", "vm", "vm_or_template", "miq_template", "service"
+      session[:tab_url][:compute] = session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
+    when "availability_zone", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
+      session[:tab_url][:compute] = session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
+    when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
+      session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
+    when "container", "container_group", "container_node", "container_service", "ems_container",
+         "container_route", "container_project", "container_replicator", "persistent_volume",
+         "container_image_registry", "container_image", "container_topology", "container_dashboard",
+         "container_build"
+      session[:tab_url][:compute] = session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
+    when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip"
+      session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
+    when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
+      session[:tab_url][:compute] = session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
+    when "miq_request"
+      session[:tab_url][:compute] = session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
+      session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
+    when "provider_foreman"
+      session[:tab_url][:conf] = inbound_url if %w(show explorer).include?(action_name)
+    end
+  end
+
   def get_global_session_data
     # Set the current userid in the User class for this thread for models to use
     User.current_user = current_user
@@ -2001,42 +2039,7 @@ class ApplicationController < ActionController::Base
         }
       end
 
-      # Customize URLs for controllers that don't use breadcrumbs
-      case controller_name
-      when "dashboard", "report", "alert", "chargeback"
-        session[:tab_url][:vi] = inbound_url if ["show", "show_list", "timeline", "jobs", "ui_jobs", "usage", "chargeback", "explorer"].include?(action_name)
-      when "support"
-        session[:tab_url][:set] = inbound_url if ["index"].include?(action_name)
-      when "configuration", "miq_task", "ops"
-        session[:tab_url][:set] = inbound_url if ["explorer", "index"].include?(action_name)
-      when "miq_ae_tools", "miq_ae_class", "miq_ae_customization"
-        session[:tab_url][:aut] = inbound_url if ["explorer", "resolve", "index", "explorer", "log", "import_export", "automate_button"].include?(action_name)
-      when "miq_policy" # Only grab controller and action for policy URLs
-        session[:tab_url][:con] = {:controller => controller_name, :action => action_name} if ["explorer", "rsop", "export", "log"].include?(action_name)
-      when "miq_capacity"
-        session[:tab_url][:opt] = inbound_url if ["utilization", "planning", "bottlenecks", "waste"].include?(action_name)
-      when "catalog", "vm", "vm_or_template", "miq_template", "service"
-        session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "availability_zone", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
-        session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
-        session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "container", "container_group", "container_node", "container_service", "ems_container",
-           "container_route", "container_project", "container_replicator", "persistent_volume",
-           "container_image_registry", "container_image", "container_topology", "container_dashboard",
-           "container_build"
-        session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
-      when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip",
-           "network_topology", "cloud_network", "network_port"
-        session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
-      when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
-        session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
-      when "miq_request"
-        session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
-        session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
-      when "provider_foreman"
-        session[:tab_url][:inf] = inbound_url if %w(show explorer).include?(action_name)
-      end
+      remember_tab_url(inbound_url)
     end
 
     # Get all of the global variables used by most of the controllers

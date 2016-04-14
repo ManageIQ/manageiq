@@ -91,7 +91,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    tab_features = Menu::Manager.section(tab).features
+    tab_features = Menu::Manager.section(tab).features_recursive
     case tab
     when :vi
       tab_features.detect do |f|
@@ -106,7 +106,9 @@ class DashboardController < ApplicationController
           end
         end
       end
-    when :clo, :inf, :cnt, :svc, :mdl, :net
+    when :conf
+      redirect_to(:controller => "provider_foreman", :action => "show_list") if role_allows(:feature => 'provider_foreman_explorer')
+    when :compute, :clo, :inf, :cnt, :svc, :mdl, :net
       tab_features.detect do |f|
         if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
           redirect_to :controller => EXPLORER_FEATURE_LINKS[f], :action => "explorer"
@@ -155,6 +157,7 @@ class DashboardController < ApplicationController
       tab_features.detect { |f| role_allows(:feature => "#{f}_show_list") }.tap do |f|
         redirect_to(:controller => f) if f
       end
+    # FIXME: there should be some default
     end
   end
 
