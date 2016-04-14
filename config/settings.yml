@@ -175,6 +175,7 @@
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
       - virtualMachines_write_EndRequest
+      - compute_instance_insert
       - VmConnectedEvent
       - VmCreatedEvent
       - VmDeployedEvent
@@ -298,6 +299,7 @@
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
       - virtualMachines_delete_EndRequest
+      - compute_instance_delete
       - VmDisconnectedEvent
       - VmRemovedEvent
       - image.delete
@@ -632,6 +634,8 @@
       - virtualMachines_deallocate_EndRequest
       - virtualMachines_start_EndRequest
       - virtualMachines_restart_EndRequest
+      - compute_instance_start
+      - compute_instance_stop
       - VM_DOWN
       - VM_DOWN_ERROR
       - VM_PAUSED_ENOSPC
