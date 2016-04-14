@@ -30,6 +30,7 @@ describe "layouts/listnav/_floating_ip.html.haml" do
       it "relationships links uses restful path in #{t.camelize}" do
         @record = @floating_ip
         render
+        expect(response).to include("href=\"/floating_ip/show/#{@record.id}?display=main\">Summary")
         expect(response).to include("Show this Floating Ip&#39;s parent Network Provider\" href=\"/ems_network/show/#{@record.ext_management_system.id}\">")
       end
     end
