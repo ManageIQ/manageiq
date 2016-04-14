@@ -17,7 +17,7 @@ class OpsController
 
     def all_checked(kids)
       return false if kids.empty? # empty list is considered not checked
-      kids.length == (kids.collect { |k| k if k[:select] }.compact).length
+      kids.length == kids.collect { |k| k if k[:select] }.compact.length
     end
 
     def build_section(section, parent_checked)
@@ -72,7 +72,6 @@ class OpsController
       }
       rbac_features_tree_add_node("all_vm_rules", root_node[:key], @all_vm_node[:select])
 
-      #Menu::Manager.each_feature_title_with_subitems do |feature_title, subitems|
       Menu::Manager.each do |section|
         # skip storage node unless it's enabled in product setting
         next if section.id == :sto && !VMDB::Config.new("vmdb").config[:product][:storage]

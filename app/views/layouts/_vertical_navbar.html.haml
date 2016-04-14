@@ -36,7 +36,7 @@
                                   %span.list-group-item-value
                                     = _(menu_item_deep.name)
 
-          -else
+          - else
             .nav-pf-secondary-nav{:id => "#menu-#{menu_section.id}"}
               .nav-item-pf-header
                 %a.secondary-collapse-toggle-pf.fa.fa-arrow-circle-o-left{:href => "#", "data-toggle" => "collapse-secondary-nav"}

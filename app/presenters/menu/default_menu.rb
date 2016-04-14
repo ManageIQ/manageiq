@@ -7,7 +7,8 @@ module Menu
           clouds_menu_section,
           infrastructure_menu_section,
           container_menu_section,
-          middleware_menu_section])
+          middleware_menu_section
+        ])
       end
 
       def configuration_menu_section
@@ -71,8 +72,6 @@ module Menu
                          'storage',       {:feature => 'storage_show_list'},       '/storage'),
           Menu::Item.new('pxe',              N_('PXE'),              'pxe',           {:feature => 'pxe', :any => true},       '/pxe/explorer'),
           Menu::Item.new('miq_request_host', N_('Requests'),         nil,             {:feature => 'miq_request_show_list'},   '/miq_request?typ=host'),
-#          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer',
-#                         {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer')
         ])
       end
 
@@ -204,8 +203,6 @@ module Menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
         [cloud_inteligence_menu_section, compute_menu_section, configuration_menu_section,
          network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
-        # services_menu_section, clouds_menu_section, infrastructure_menu_section,
-        # container_menu_section, middleware_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
          automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
     end
