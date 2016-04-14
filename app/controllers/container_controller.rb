@@ -112,6 +112,7 @@ class ContainerController < ApplicationController
       # treebuilder initializes x_node to root first time in locals_for_render,
       # need to set this here to force & activate node when link is clicked outside of explorer.
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
+      get_node_info(x_node)
     end
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
