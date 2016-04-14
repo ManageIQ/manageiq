@@ -12,6 +12,16 @@ class ApiController
       end
     end
 
+    def clear_resource_service_orders(type, id, _data)
+      service_order = resource_search(id, type, collection_class(type))
+      begin
+        service_order.clear
+      rescue => e
+        raise BadRequestError, e.message
+      end
+      service_order
+    end
+
     def find_service_orders(id)
       if id == "cart"
         ServiceOrder.cart_for(@auth_user_obj)

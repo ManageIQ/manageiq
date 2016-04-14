@@ -379,6 +379,44 @@ RSpec.describe "service orders API" do
         expect(response_hash).to include(expected)
         expect(shopping_cart.reload.miq_requests).not_to include(service_request_1, service_request_2)
       end
+
+      it "can clear a shopping cart" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize action_identifier(:service_orders, :clear)
+
+        run_post service_orders_url("cart"), :action => :clear
+
+        expected = {
+          "href" => a_string_matching(service_orders_url(shopping_cart.id)),
+          "id"   => shopping_cart.id
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+        expect(shopping_cart.reload.miq_requests).to be_empty
+      end
+
+      it "notifies that a shopping cart cannot be cleared if it has already been checked out" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize action_identifier(:service_orders, :clear)
+
+        shopping_cart.checkout
+        run_post service_orders_url(shopping_cart.id), :action => :clear
+
+        expected = {
+          "error" => a_hash_including(
+            "kind"    => "bad_request",
+            "message" => a_string_matching(/Invalid operation \[clear\]/)
+          )
+        }
+        expect(response).to have_http_status(:bad_request)
+        expect(response_hash).to include(expected)
+      end
     end
 
     context "without an appropriate role" do
@@ -499,6 +537,21 @@ RSpec.describe "service orders API" do
             {:href => service_requests_url(service_request_2.id)}
           ]
         )
+
+        expect(response).to have_http_status(:forbidden)
+        expect(shopping_cart.reload.miq_requests).to include(service_request_1, service_request_2)
+      end
+
+      it "will not clear a shopping cart" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize
+
+        run_post service_orders_url("cart"), :action => :clear
 
         expect(response).to have_http_status(:forbidden)
         expect(shopping_cart.reload.miq_requests).to include(service_request_1, service_request_2)

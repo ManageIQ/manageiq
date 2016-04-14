@@ -942,6 +942,8 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: svc_catalog_provision
+      - :name: clear
+        :identifier: svc_catalog_provision
       :delete:
       - :name: delete
         :identifier: svc_catalog_provision
