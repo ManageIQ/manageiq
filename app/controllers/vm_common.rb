@@ -208,7 +208,8 @@ module VmCommon
         action = "explorer"
       else
         url = request.env['HTTP_REFERER'].split('/')
-        add_flash(_("User '#{current_userid}' is not authorized to access '#{ui_lookup(:table => controller_name)}'"), :warning)
+        add_flash(_("User '%{username}' is not authorized to access '%{controller_name}'") %
+          {:username => current_userid, :controller_name => ui_lookup(:table => controller_name)}, :warning)
         session[:flash_msgs] = @flash_array.dup
         redirect_controller  = url[3]
         action               = url[4]
@@ -294,20 +295,20 @@ module VmCommon
       @view, @pages = get_view(OntapLogicalDisk, :parent => @record, :parent_method => :logical_disks)  # Get the records (into a view) and the paginator
       @showtype = "ontap_logical_disks"
     elsif @display == "ontap_storage_systems"
-      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
-        {:tables => ui_lookup(:tables => "ontap_storage_system")},
+      drop_breadcrumb(:name => @record.name + _(" (All %{storages})") %
+        {:storages => ui_lookup(:tables => "ontap_storage_system")},
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_storage_systems")
       @view, @pages = get_view(OntapStorageSystem, :parent => @record, :parent_method => :storage_systems)  # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_systems"
     elsif @display == "ontap_storage_volumes"
-      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
-        {:tables => ui_lookup(:tables => "ontap_storage_volume")},
+      drop_breadcrumb(:name => @record.name + _(" (All %{storage_volumes})") %
+        {:storage_volumes => ui_lookup(:tables => "ontap_storage_volume")},
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_storage_volumes")
       @view, @pages = get_view(OntapStorageVolume, :parent => @record, :parent_method => :storage_volumes)  # Get the records (into a view) and the paginator
       @showtype = "ontap_storage_volumes"
     elsif @display == "ontap_file_shares"
-      drop_breadcrumb(:name => @record.name + _(" (All %{tables})") %
-        {:tables => ui_lookup(:tables => "ontap_file_share")},
+      drop_breadcrumb(:name => @record.name + _(" (All %{file_shares})") %
+        {:file_shares => ui_lookup(:tables => "ontap_file_share")},
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=ontap_file_shares")
       @view, @pages = get_view(OntapFileShare, :parent => @record, :parent_method => :file_shares)  # Get the records (into a view) and the paginator
       @showtype = "ontap_file_shares"
@@ -594,23 +595,23 @@ module VmCommon
   end
 
   def floating_ips
-    show_association('floating_ips', 'Floating IPs', 'floating_ip', :floating_ips, FloatingIp)
+    show_association('floating_ips', _('Floating IPs'), 'floating_ip', :floating_ips, FloatingIp)
   end
 
   def cloud_subnets
-    show_association('cloud_subnets', 'Subnets', 'cloud_subnet', :cloud_subnets, CloudSubnet)
+    show_association('cloud_subnets', _('Subnets'), 'cloud_subnet', :cloud_subnets, CloudSubnet)
   end
 
   def cloud_networks
-    show_association('cloud_subnets', 'Networks', 'cloud_subnet', :cloud_subnets, CloudNetwork)
+    show_association('cloud_subnets', _('Networks'), 'cloud_subnet', :cloud_subnets, CloudNetwork)
   end
 
   def network_routers
-    show_association('network_routers', 'Routers', 'network_router', :network_routers, NetworkRouter)
+    show_association('network_routers', _('Routers'), 'network_router', :network_routers, NetworkRouter)
   end
 
   def network_ports
-    show_association('network_ports', 'Ports', 'network_port', :network_ports, NetworkPort)
+    show_association('network_ports', _('Ports'), 'network_port', :network_ports, NetworkPort)
   end
 
   def snap
@@ -1429,23 +1430,23 @@ module VmCommon
     @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
     model, title =  case x_active_tree.to_s
                     when "images_filter_tree"
-                      ["ManageIQ::Providers::CloudManager::Template", "Images"]
+                      ["ManageIQ::Providers::CloudManager::Template", _("Images")]
                     when "images_tree"
-                      ["ManageIQ::Providers::CloudManager::Template", "Images by Provider"]
+                      ["ManageIQ::Providers::CloudManager::Template", _("Images by Provider")]
                     when "instances_filter_tree"
-                      ["ManageIQ::Providers::CloudManager::Vm", "Instances"]
+                      ["ManageIQ::Providers::CloudManager::Vm", _("Instances")]
                     when "instances_tree"
-                      ["ManageIQ::Providers::CloudManager::Vm", "Instances by Provider"]
+                      ["ManageIQ::Providers::CloudManager::Vm", _("Instances by Provider")]
                     when "vandt_tree"
-                      ["VmOrTemplate", "VMs & Templates"]
+                      ["VmOrTemplate", _("VMs & Templates")]
                     when "vms_instances_filter_tree"
                       ["Vm", "VMs & Instances"]
                     when "templates_images_filter_tree"
-                      ["MiqTemplate", "Templates & Images"]
+                      ["MiqTemplate", _("Templates & Images")]
                     when "templates_filter_tree"
-                      ["ManageIQ::Providers::InfraManager::Template", "Templates"]
+                      ["ManageIQ::Providers::InfraManager::Template", _("Templates")]
                     when "vms_filter_tree"
-                      ["ManageIQ::Providers::InfraManager::Vm", "VMs"]
+                      ["ManageIQ::Providers::InfraManager::Vm", _("VMs")]
                     else
                       [nil, nil]
                     end
@@ -1539,7 +1540,7 @@ module VmCommon
     # After adding to history, add name filter suffix if showing a list
     unless ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
       unless @search_text.blank?
-        @right_cell_text += _(" (Names with \"%{text}\")") % {:text => @search_text}
+        @right_cell_text += _(" (Names with \"%{search_text}\")") % {:search_text => @search_text}
       end
     end
   end
@@ -1847,14 +1848,18 @@ module VmCommon
     when "compare", "drift"
       partial = "layouts/compare"
       if @sb[:action] == "compare"
-        header = _("Compare %{model}") % {:model => ui_lookup(:model => @sb[:compare_db])}
+        header = _("Compare %{vm_or_template}") % {:vm_or_template => ui_lookup(:model => @sb[:compare_db])}
       else
-        header = _("Drift for %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:model => @sb[:compare_db])}
+        header = _("Drift for %{vm_or_template} \"%{name}\"") %
+          {:name => name, :vm_or_template => ui_lookup(:model => @sb[:compare_db])}
       end
       action = nil
     when "clone", "migrate", "publish"
       partial = "miq_request/prov_edit"
-      header = _("%{task} %{model}") % {:task => @sb[:action].capitalize, :model => ui_lookup(:table => table)}
+      task_headers = {"clone"   => _("Clone %{vm_or_template}"),
+                      "migrate" => _("Migrate %{vm_or_template}"),
+                      "publish" => _("Publish %{vm_or_template}")}
+      header = task_headers[@sb[:action]] % {:vm_or_template => ui_lookup(:table => table)}
       action = "prov_edit"
     when "dialog_provision"
       partial = "shared/dialogs/dialog_provision"
@@ -1862,75 +1867,82 @@ module VmCommon
       action = "dialog_form_button_pressed"
     when "edit"
       partial = "vm_common/form"
-      header = _("Editing %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      header = _("Editing %{vm_or_template} \"%{name}\"") %
+        {:name => name, :vm_or_template => ui_lookup(:table => table)}
       action = "edit_vm"
     when "evm_relationship"
       partial = "vm_common/evm_relationship"
-      header = _("Edit CFME Server Relationship for %{model} \"%{name}\"") % {:model => ui_lookup(:table => table), :name => name}
+      header = _("Edit CFME Server Relationship for %{vm_or_template} \"%{name}\"") %
+        {:vm_or_template => ui_lookup(:table => table), :name => name}
       action = "evm_relationship_update"
     when "miq_request_new"
       partial = "miq_request/pre_prov"
       typ = request.parameters[:controller] == "vm_cloud" ? "an #{ui_lookup(:table => "template_cloud")}" : "a #{ui_lookup(:table => "template_infra")}"
-      header = _("Provision %{model} - Select %{typ}") % {:model => ui_lookup(:tables => table), :typ => typ}
+      header = _("Provision %{vm_or_template} - Select %{typ}") %
+        {:vm_or_template => ui_lookup(:tables => table), :typ => typ}
       action = "pre_prov"
     when "pre_prov"
       partial = "miq_request/prov_edit"
-      header = _("Provision %{tables}") % {:tables => ui_lookup(:tables => table)}
+      header = _("Provision %{vms_or_templates}") % {:vms_or_templates => ui_lookup(:tables => table)}
       action = "pre_prov_continue"
     when "pre_prov_continue"
       partial = "miq_request/prov_edit"
-      header = _("Provision %{tables}") % {:tables => ui_lookup(:tables => table)}
+      header = _("Provision %{vms_or_templates}") % {:vms_or_templates => ui_lookup(:tables => table)}
       action = "prov_edit"
     when "ownership"
       partial = "shared/views/ownership"
-      header = _("Set Ownership for %{table}") % {:table => ui_lookup(:table => table)}
+      header = _("Set Ownership for %{vms_or_templates}") % {:vms_or_templates => ui_lookup(:table => table)}
       action = "ownership_update"
     when "performance"
       partial = "layouts/performance"
-      header = _("Capacity & Utilization data for %{model} \"%{name}\"") % {:model => ui_lookup(:table => table), :name => name}
+      header = _("Capacity & Utilization data for %{vm_or_template} \"%{name}\"") %
+        {:vm_or_template => ui_lookup(:table => table), :name => name}
       x_history_add_item(:id => x_node, :text => header, :button => params[:pressed], :display => params[:display])
       action = nil
     when "policy_sim"
       if params[:action] == "policies"
         partial = "vm_common/policies"
-        header = _("%{table} Policy Simulation") % {:table => ui_lookup(:table => table)}
+        header = _("%{vm_or_template} Policy Simulation") % {:vm_or_template => ui_lookup(:table => table)}
         action = nil
       else
         partial = "layouts/policy_sim"
-        header = _("%{table} Policy Simulation") % {:table => ui_lookup(:table => table)}
+        header = _("%{vm_or_template} Policy Simulation") % {:vm_or_template => ui_lookup(:table => table)}
         action = nil
       end
     when "protect"
       partial = "layouts/protect"
-      header = _("%{table} Policy Assignment") % {:table => ui_lookup(:table => table)}
+      header = _("%{vm_or_template} Policy Assignment") % {:vm_or_template => ui_lookup(:table => table)}
       action = "protect"
     when "reconfigure"
       partial = "vm_common/reconfigure"
-      header = _("Reconfigure %{table}") % {:table => ui_lookup(:table => table)}
+      header = _("Reconfigure %{vm_or_template}") % {:vm_or_template => ui_lookup(:table => table)}
       action = "reconfigure_update"
     when "resize"
       partial = "vm_common/resize"
-      header = _("Reconfiguring %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      header = _("Reconfiguring %{vm_or_template} \"%{name}\"") %
+        {:vm_or_template => name, :model => ui_lookup(:table => table)}
       action = "resize_vm"
     when "retire"
       partial = "shared/views/retire"
-      header = _("Set/Remove retirement date for %{table}") % {:table => ui_lookup(:table => table)}
+      header = _("Set/Remove retirement date for %{vm_or_template}") % {:vm_or_template => ui_lookup(:table => table)}
       action = "retire"
     when "right_size"
       partial = "vm_common/right_size"
-      header = _("Right Size Recommendation for %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      header = _("Right Size Recommendation for %{vm_or_template} \"%{name}\"") %
+        {:vm_or_template => name, :model => ui_lookup(:table => table)}
       action = nil
     when "tag"
       partial = "layouts/tagging"
-      header = _("Edit Tags for %{table}") % {:table => ui_lookup(:table => table)}
+      header = _("Edit Tags for %{vm_or_template}") % {:vm_or_template => ui_lookup(:table => table)}
       action = "tagging_edit"
     when "snapshot_add"
       partial = "vm_common/snap"
-      header = _("Adding a new %{model}") % {:model => ui_lookup(:model => "Snapshot")}
+      header = _("Adding a new %{snapshot}") % {:snapshot => ui_lookup(:model => "Snapshot")}
       action = "snap_vm"
     when "timeline"
       partial = "layouts/tl_show"
-      header = _("Timelines for %{model} \"%{name}\"") % {:model => ui_lookup(:table => table), :name => name}
+      header = _("Timelines for %{virtual_machine} \"%{name}\"") %
+        {:virtual_machine => ui_lookup(:table => table), :name => name}
       x_history_add_item(:id => x_node, :text => header, :button => params[:pressed])
       action = nil
     else
@@ -1945,18 +1957,18 @@ module VmCommon
         partial = "#{@showtype == "compliance_history" ? "shared/views" : "vm_common"}/#{@showtype}"
       end
       if @showtype == "item"
-        header = _("%{action} \"%{item_name}\" for %{model} \"%{name}\"") % {
-          :model     => ui_lookup(:table => table),
-          :name      => name,
-          :item_name => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
-          :action    => action_type(@sb[:action], 1)
+        header = _("%{action} \"%{item_name}\" for %{vm_or_template} \"%{name}\"") % {
+          :vm_or_template => ui_lookup(:table => table),
+          :name           => name,
+          :item_name      => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
+          :action         => action_type(@sb[:action], 1)
         }
         x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
       else
-        header = _("\"%{action}\" for %{model} \"%{name}\"") % {
-          :model  => ui_lookup(:table => table),
-          :name   => name,
-          :action => action_type(@sb[:action], 2)
+        header = _("\"%{action}\" for %{vm_or_template} \"%{name}\"") % {
+          :vm_or_template => ui_lookup(:table => table),
+          :name           => name,
+          :action         => action_type(@sb[:action], 2)
         }
         if @display && @display != "main"
           x_history_add_item(:id => x_node, :text => header, :display => @display)
