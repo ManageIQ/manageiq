@@ -72,6 +72,7 @@ ManageIQ.angular.app.service('topologyService', function() {
     switch (d.item.status) {
       case "OK":
       case "Active":
+      case "Available":
       case "On":
       case "Ready":
       case "Running":
