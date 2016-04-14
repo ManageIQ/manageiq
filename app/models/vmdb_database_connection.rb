@@ -27,10 +27,6 @@ class VmdbDatabaseConnection < ApplicationRecord
   virtual_column :pid, :type => :integer
   virtual_column :blocked_by, :type => :integer
 
-  def self.sortable?
-    false
-  end
-
   def self.log_statistics(output = $log)
     require 'csv'
 
