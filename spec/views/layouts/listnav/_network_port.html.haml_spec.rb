@@ -31,6 +31,7 @@ describe "layouts/listnav/_network_port.html.haml" do
       it "relationships links uses restful path in #{t.camelize}" do
         @record = @network_port
         render
+        expect(response).to include("href=\"/network_port/show/#{@record.id}?display=main\">Summary")
         expect(response).to include("Show this Network Port&#39;s parent Network Provider\" href=\"/ems_network/show/#{@record.ext_management_system.id}\">")
       end
     end
