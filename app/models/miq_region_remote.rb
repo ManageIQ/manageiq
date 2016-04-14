@@ -112,9 +112,7 @@ class MiqRegionRemote < ApplicationRecord
       conn = pool.connection
       yield conn
     ensure
-      # Disconnect and remove this new connection from the connection pool, to completely clear it out
-      conn.disconnect! if conn
-      ActiveRecord::Base.connection_handler.connection_pools.delete(name)
+      remove_connection
     end
   end
 end
