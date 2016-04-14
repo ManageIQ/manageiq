@@ -26,18 +26,19 @@ module ActsAsTaggable
   end
 
   module ClassMethods
+    # @option options :cat [String|nil] optional category for the tags
+    # @option options :ns  [String|nil] optional namespace for the tags
+
+    # @option options :any [String] list of tags that at least one is required
+    # @option options :all [String] list of tags that are all required (ignored if any is provided)
+    # @option options :separator delimiter for the tags provied by all and any
     def find_tagged_with(options = {})
-      options = {:separator => ' '}.merge(options)
-      options[:ns] = Tag.get_namespace(options)
+      tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator] || ' ')
+      raise "No tags were passed to :any or :all options" if tag_names.empty?
 
-      tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator])
-      fq_tag_names = tag_names.collect { |tag_name| File.join(options[:ns], tag_name) }
-      raise "No tags were passed to :any or :all options" if fq_tag_names.empty?
-
-      tag_ids = Tag.where(:name => fq_tag_names).pluck(:id)
-
-      # Bailout if not enough tags were found
-      return none if options[:all] && tag_ids.length != fq_tag_names.length
+      tag_ids = Tag.for_names(tag_names, Tag.get_namespace(options)).pluck(:id)
+      # Bailout if not all tags passed in exist. (may want to do this with :any as well)
+      return none if options[:all] && tag_ids.length != tag_names.length
 
       taggings = Tagging.arel_table
       self_arel = arel_table
@@ -51,21 +52,23 @@ module ActsAsTaggable
       query
     end
 
+    # @param list [Array<Array<String>>] list of tags
+    #   the inner list holds a single category grouped together. These are treated as an IN (aka OR) clause
+    #   the outer list holds multiple categories. All of these need to match and treaded as an AND clause
+    #   so the end result is the AND of a bunch of OR clauses.
+    #
+    # find_tagged_with(:any) is used for the inner list to handle the IN (aka OR)
+    # find_tagged_with(:all) is used for multiple inner lists
     def find_tags_by_grouping(list, options = {})
       options[:ns] = Tag.get_namespace(options)
 
-      # If array is flat (contains no inner arrays) we can let find_tagged_with
-      # do all the work. This will be much faster.
-      # Otherwise we'll need to call find_tagged_with for each inner list, prune the results
-      # and honor offset and limit here.
-      inner_lists = false
-      list.each do |item|
-        if item.kind_of?(Array) && item.length > 1
-          inner_lists = true
-          break
-        end
-      end
-      return find_tagged_with(options.merge(:all => list)) unless inner_lists == true
+      # any inner arrays with only 1 element doesn't need an 'IN' clause.
+      # These can all be handled together in a single 'AND' query
+      #
+      # the inner_lists need to be added as separate queries.
+      inner_lists, fixed_conditions = list.partition { |item| item.kind_of?(Array) && item.length > 1 }
+
+      return find_tagged_with(options.merge(:all => fixed_conditions)) if inner_lists.empty?
 
       offset = options.delete(:offset)
       limit = options.delete(:limit)

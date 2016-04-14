@@ -112,6 +112,12 @@ class Tag < ApplicationRecord
     list
   end
 
+  # @param tag_names [Array<String>] list of non namespaced tags
+  def self.for_names(tag_names, ns = nil)
+    fq_tag_names = tag_names.collect { |tag_name| File.join(ns, tag_name) }
+    where(:name => fq_tag_names)
+  end
+
   def self.find_by_classification_name(name, region_id = Classification.my_region_number,
                                        ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
     in_region(region_id).find_by_name(Classification.name2tag(name, parent_id, ns))
