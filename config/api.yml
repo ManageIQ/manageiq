@@ -951,7 +951,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
@@ -968,6 +968,9 @@
       :get:
       - :name: read
         :identifier: miq_request_view
+      :post:
+      - :name: add
+        :identifier: svc_catalog_provision
     :subresource_actions:
       :get:
       - :name: read

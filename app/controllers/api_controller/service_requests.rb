@@ -14,5 +14,52 @@ class ApiController
         klass.where(:source_id => object.id)
       end
     end
+
+    def service_requests_add_resource(target, _type, _id, data)
+      result = add_service_request(target, data)
+      add_parent_href_to_result(result)
+      log_result(result)
+      result
+    end
+
+    private
+
+    def service_request_ident(service_request)
+      "Service Request id:#{service_request.id} description:'#{service_request.description}'"
+    end
+
+    def service_request_subcollection_action(type, id)
+      klass = collection_class(:service_requests)
+      result =
+        begin
+          service_request = resource_search(id, type, klass)
+          yield(service_request) if block_given?
+        rescue => e
+          action_result(false, e.to_s)
+        end
+      add_subcollection_resource_to_result(result, type, service_request) if service_request
+      add_parent_href_to_result(result)
+      log_result(result)
+      result
+    end
+
+    def add_service_request(target, data)
+      if target.state != ServiceOrder::STATE_CART
+        raise BadRequestError, "Must specify a cart to add a service request to"
+      end
+      workflow = service_request_workflow(data)
+      validation = add_request_to_cart(workflow)
+      if validation[:errors].present?
+        action_result(false, validation[:errors].join(", "))
+      elsif validation[:request].nil?
+        action_result(false, "Unable to add service request")
+      else
+        result = action_result(true, "Adding service_request")
+        add_subcollection_resource_to_result(result, :service_requests, validation[:request])
+        result
+      end
+    rescue => e
+      action_result(false, e.to_s)
+    end
   end
 end
