@@ -1162,8 +1162,9 @@ module OpsController::OpsRbac
       @set_filter_values.push(value)
     end
     rbac_group_make_subarrays # Need to have category arrays of item arrays for and/or logic
-    group.set_managed_filters(@set_filter_values)
-    group.set_belongsto_filters(@edit[:new][:belongsto].values) # Set belongs to to hash values
+    group.entitlement ||= Entitlement.new
+    group.entitlement.set_managed_filters(@set_filter_values)
+    group.entitlement.set_belongsto_filters(@edit[:new][:belongsto].values) # Set belongs to to hash values
   end
 
   # Need to make arrays by category containing arrays of items so the filtering logic can apply

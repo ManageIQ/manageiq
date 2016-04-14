@@ -160,7 +160,7 @@ class Tag < ApplicationRecord
   private
 
   def remove_from_managed_filters
-    MiqGroup.remove_tag_from_all_managed_filters(name)
+    Entitlement.remove_tag_from_all_managed_filters(name)
   end
 
   def name_path
