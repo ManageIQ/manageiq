@@ -1,0 +1,67 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/alerts/events?startTime=1460395364000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 11 Apr 2016 17:23:44 GMT
+      X-Total-Count:
+      - '1'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '558'
+      Link:
+      - <http://localhost:8080/hawkular/alerts/events?startTime=1460395364000>; rel="current",
+        <http://localhost:8080/hawkular/alerts/events?startTime=1460395364000&page=0>;
+        rel="last"
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALVTXWvbMBT9K0J7rRx/xZFTNihpQgvd1iVhY7ONke3rVJ0j
+        uZacNJT2t+862WAPeyiUyU+6X+fco+PkicIOlF0fWqBTOv86/7SmZ9SCEspe
+        VxjyuetHRRAxXkPIwiDwGQ9LzsZ+CN4kEBEvauyQQy3EfDKOfc5CEBULx3XB
+        hHBd5nluGdVVBDz2sLa0cotoXhi5QTwO4jDwwjNaCStWuu/KgUiutIKcnqJH
+        HhMRRKEXe0gBYhZW45gVwH0Wcz7mHGrEDkY3uhRNfgltow8XbdvIUlip1RJM
+        q5WBAVtY2OjugBOvxP5n34iOnOq3KMNx9Uc7KLFcfl4O9VqdIk/0IxgjNgO7
+        me6biihtSQtdrbstSU4zMqIVEST5CzsjG4kKk+JApBqkRnDSCntHkpE9f426
+        o/r8Vct358f1X14y0sFDD8ZCNfBJfNeLmBviM6y9ydQPfmRTshCywbTVpDoy
+        J4nFBmbktm2ABY6L3150Waq8KbkXO+E0Qm2c+WMJ7bDWlDyl9Nvi5vtsfeN6
+        3J2SFXQ7WYIhe4nLbaUxUm1GvcJe2YiigQEJVAWqlGBSSt5/IEmqCJ6U3hfa
+        GAfVNBJpqxJ6Ja2Tpin9J6133d1D2w9pIs0fLJKcpiixxZvz++WcI/lTZjCT
+        OVrMOMurL5erLKVnb6bg5Pnierla57dXF6t5nr+ZUqqyZ7TeTOBPgC5qbtEt
+        6Lr/ZRf6/Jz9AkJCADQIBAAA
+    http_version: 
+  recorded_at: Mon, 11 Apr 2016 17:23:44 GMT
+recorded_with: VCR 2.9.3

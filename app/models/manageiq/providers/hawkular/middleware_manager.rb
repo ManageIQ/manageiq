@@ -1,5 +1,8 @@
+# TODO: remove the module and just make this:
+# class ManageIQ::Providers::Hawkular::MiddlewareManager < ManageIQ::Providers::MiddlewareManager
 module ManageIQ::Providers
   class Hawkular::MiddlewareManager < ManageIQ::Providers::MiddlewareManager
+    require_nested :EventCatcher
     require_nested :MiddlewareDeployment
     require_nested :MiddlewareServer
     require_nested :RefreshParser
@@ -10,6 +13,7 @@ module ManageIQ::Providers
 
     DEFAULT_PORT = 80
     default_value_for :port, DEFAULT_PORT
+
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
 
@@ -25,6 +29,8 @@ module ManageIQ::Providers
 
       true
     end
+
+    # Inventory
 
     def self.raw_connect(hostname, port, username, password)
       require 'hawkular_all'
@@ -63,8 +69,8 @@ module ManageIQ::Providers
 
     def self.raw_metrics_connect(hostname, port, username, password)
       require 'hawkular_all'
-      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/metrics').to_s
-      options = {}
+      url         = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/metrics').to_s
+      options     = {}
       credentials = {
         :username => username,
         :password => password
@@ -102,6 +108,23 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref)
     end
 
+    def self.raw_alerts_connect(hostname, port, username, password)
+      require 'hawkular_all'
+      url         = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
+      credentials = {
+        :username => username,
+        :password => password
+      }
+      ::Hawkular::Alerts::AlertsClient.new(url, credentials)
+    end
+
+    def alerts_connect
+      self.class.raw_alerts_connect(hostname,
+                                    port,
+                                    authentication_userid('default'),
+                                    authentication_password('default'))
+    end
+
     # UI methods for determining availability of fields
     def supports_port?
       true
@@ -113,6 +136,16 @@ module ManageIQ::Providers
 
     def self.description
       @description ||= "Hawkular".freeze
+    end
+
+    def self.event_monitor_class
+      ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
+    end
+
+    # To blacklist defined event types by default add them here...
+    def self.default_blacklisted_event_names
+      %w(
+      )
     end
 
     private
@@ -136,7 +169,7 @@ module ManageIQ::Providers
           actual_data[:data] = data
         end
         on.failure do |error|
-          actual_data[:data] = {}
+          actual_data[:data]  = {}
           actual_data[:error] = error
           _log.error 'error callback was called, reason: ' + error.to_s
         end

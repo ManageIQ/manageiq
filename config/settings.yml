@@ -113,6 +113,8 @@
   :foreman_provisioning:
     :refresh_interval: 1.hour
   :full_refresh_threshold: 100
+  :hawkular:
+    :refresh_interval: 15.minutes
   :kubernetes:
     :refresh_interval: 15.minutes
   :openshift:
@@ -204,6 +206,12 @@
       - VmBeingCreatedEvent
       - VmBeingDeployedEvent
       :name: Creation/Addition
+    :application:
+      :critical:
+      - hawkular_deployment.error
+      :detail:
+      - hawkular_deployment.success
+      :name: Application
     :configuration:
       :critical:
       - ClusterReconfiguredEvent
@@ -903,6 +911,8 @@
   :level_rails: info
   :level_aws: info
   :level_aws_in_evm: error
+  :level_mw: info
+  :level_mw_in_evm: error
   :level_kube: info
   :level_kube_in_evm: error
   :level_api: info
@@ -1130,6 +1140,8 @@
         :poll: 15.seconds
       :event_catcher_azure:
         :poll: 15.seconds
+      :event_catcher_hawkular:
+        :poll: 10.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
       :event_catcher_openshift:

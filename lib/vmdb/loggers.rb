@@ -29,6 +29,7 @@ module Vmdb
       apply_config_value(config, $rhevm_log, :level_rhevm, :level_rhevm_in_evm)
       apply_config_value(config, $aws_log,   :level_aws,   :level_aws_in_evm)
       apply_config_value(config, $kube_log,  :level_kube,  :level_kube_in_evm)
+      apply_config_value(config, $mw_log,    :level_mw,    :level_mw_in_evm)
       apply_config_value(config, $scvmm_log, :level_scvmm, :level_scvmm_in_evm)
       apply_config_value(config, $api_log,   :level_api,   :level_api_in_evm)
       apply_config_value(config, $fog_log,   :level_fog,   :level_fog_in_evm)
@@ -38,9 +39,8 @@ module Vmdb
 
     def self.create_loggers
       if ENV.key?("CI")
-        $log = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log =
-          $rhevm_log = $aws_log = $kube_log = $scvmm_log = $api_log =
-          $miq_ae_logger = Vmdb.null_logger
+        $log     = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
+        $aws_log = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = Vmdb.null_logger
       else
         path_dir = Rails.root.join("log")
 
@@ -53,6 +53,7 @@ module Vmdb
         $rhevm_log     = MirroredLogger.new(path_dir.join("rhevm.log"),      "<RHEVM> ")
         $aws_log       = MirroredLogger.new(path_dir.join("aws.log"),        "<AWS> ")
         $kube_log      = MirroredLogger.new(path_dir.join("kubernetes.log"), "<KUBERNETES> ")
+        $mw_log        = MirroredLogger.new(path_dir.join("middleware.log"), "<MIDDLEWARE> ")
         $scvmm_log     = MirroredLogger.new(path_dir.join("scvmm.log"),      "<SCVMM> ")
         $api_log       = MirroredLogger.new(path_dir.join("api.log"),        "<API> ")
         $websocket_log = MirroredLogger.new(path_dir.join("websocket.log"),  "<WEBSOCKET> ")
@@ -67,6 +68,7 @@ module Vmdb
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
     end
+
     private_class_method :configure_external_loggers
 
     def self.apply_config_value(config, logger, key, mirror_key = nil)
@@ -76,9 +78,9 @@ module Vmdb
     end
 
     def self.apply_config_value_logged(config, logger, level_method, key)
-      old_level = logger.send(level_method)
+      old_level      = logger.send(level_method)
       new_level_name = (config[key] || "INFO").to_s.upcase
-      new_level = VMDBLogger.const_get(new_level_name)
+      new_level      = VMDBLogger.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
         logger.send("#{level_method}=", new_level)
