@@ -123,12 +123,8 @@ module ReportFormatter
                       elsif rec[:container_node_name]
                         rec[:container_node_name]
                       end
-          elsif ems                             #   or EMS name
-            e_title = ems.name
-          else
-            e_title = "MS no longer exists"
           end
-          e_title ||= "No VM, Host, or MS"
+          e_title ||= ems ? ems.name : "No VM, Host, or MS"
           e_icon = ActionController::Base.helpers.image_path("timeline/#{timeline_icon("vm_event", rec.event_type.downcase)}.png")
           # See if this is EVM's special event
           if rec.event_type == "GeneralUserEvent"
