@@ -116,6 +116,10 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.seed
+    fixture_file = File.join(FIXTURE_DIR, "miq_policy_sets.yml")
+    fixtures = File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
+    MiqPolicy.import_from_array(fixtures, :save => true)
+
     all.each do |ps|
       if ps.mode.nil?
         _log.info("Updating [#{ps.name}]")
