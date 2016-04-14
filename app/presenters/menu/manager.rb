@@ -94,7 +94,7 @@ module Menu
 
     def valid_sections
       # format is {"vi" => :vi, "svc" => :svc . . }
-      @valid_sections ||= @menu.each_with_object({}) { |section, acc| acc[section.id.to_s] = section.id }
+      @valid_sections ||= @id_to_section.keys.index_by(&:to_s)
     end
   end
 end
