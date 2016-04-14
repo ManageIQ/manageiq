@@ -2,7 +2,7 @@ require 'tmpdir'
 require 'pathname'
 
 describe MiqProductFeature do
-  let(:expected_feature_count) { 1006 }
+  let(:expected_feature_count) { 1007 }
 
   # - container_dashboard
   # - miq_report_widget_editor

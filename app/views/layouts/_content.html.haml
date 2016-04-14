@@ -75,7 +75,7 @@
           .row.toolbar-pf#toolbar
             .col-md-12
               .toolbar-pf-actions
-                - if  @layout == "dashboard"
+                - if @layout == "dashboard"
                   = render :partial => "/layouts/tabs"
                 = render_toolbars(calculate_toolbars)
         .row.max-height

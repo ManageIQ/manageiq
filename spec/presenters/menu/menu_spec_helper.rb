@@ -3,7 +3,7 @@ module MenuSpecHelper
 type: section
 name: Red Hat
 id: redhat
-before: svc
+before: compute
 section_type: big_iframe
 href: http://www.redhat.com
 EOF
