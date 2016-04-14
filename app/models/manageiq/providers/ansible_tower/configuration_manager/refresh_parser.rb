@@ -93,6 +93,7 @@ module ManageIQ::Providers
           :manager_ref          => job_template.id.to_s,
           :name                 => job_template.name,
           :survey_spec          => job_template.survey_spec,
+          :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
           :variables            => job_template.extra_vars,
         }
 

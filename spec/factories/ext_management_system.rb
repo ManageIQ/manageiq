@@ -244,7 +244,10 @@ FactoryGirl.define do
   end
 
   trait(:configuration_script) do
-    after(:create) { |x| x.configuration_scripts << FactoryGirl.create(:configuration_script) }
+    after(:create) do |x|
+      type = (x.type.split("::")[0..2] + ["ConfigurationManager", "ConfigurationScript"]).join("::")
+      x.configuration_scripts << FactoryGirl.create(:configuration_script, :type => type)
+    end
   end
 
   factory :configuration_manager_foreman_with_authentication,
