@@ -11,7 +11,13 @@ module Rbac
     ConfiguredSystem
     Container
     ContainerGroup
+    ContainerImage
+    ContainerImageRegistry
     ContainerNode
+    ContainerProject
+    ContainerReplicator
+    ContainerRoute
+    ContainerService
     EmsCluster
     EmsFolder
     ExtManagementSystem
