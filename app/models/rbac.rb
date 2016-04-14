@@ -19,6 +19,7 @@ module Rbac
     Host
     MiqCimInstance
     OrchestrationTemplate
+    OrchestrationStack
     ResourcePool
     SecurityGroup
     Service
